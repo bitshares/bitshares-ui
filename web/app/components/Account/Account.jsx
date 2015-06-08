@@ -33,7 +33,7 @@ class Account extends Component {
         if (nextProps.accountName !== this.props.accountName) {
             this._getAccount(nextProps.accountName);
             let id = this.props.account_name_to_id[this.props.accountName];
-            if (id !== "1.3.11") { 
+            if (id !== this.props.activeAccount.id) { 
                 AccountActions.unSubscribe(id);
             }
         }
@@ -42,7 +42,7 @@ class Account extends Component {
     componentWillUnmount() {
         let name = this.props.accountName;
         let id = this.props.account_name_to_id[name];
-        if (id !== "1.3.11") {
+        if (id !== this.props.activeAccount.id) {
             AccountActions.unSubscribe(id);
         }
     }

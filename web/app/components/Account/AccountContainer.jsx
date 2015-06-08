@@ -29,6 +29,9 @@ class AccountContainer extends React.Component {
                     account_id_to_name: () => {
                         return AccountStore.getState().account_id_to_name;
                     },
+                    activeAccount: () => {
+                        return AccountStore.getState().currentAccount;
+                    },
                     isUnlocked: () => {
                         return SessionStore.getState().isUnlocked;
                     },
