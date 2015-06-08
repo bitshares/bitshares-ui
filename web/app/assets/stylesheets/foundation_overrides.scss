@@ -1,0 +1,66 @@
+.title-bar.primary {
+  padding: 0;
+
+  .title {
+    font-size: 1.0625rem;
+  }
+}
+
+.button {
+  margin-bottom: 0;
+}
+
+.title-bar.primary .action-sheet a {
+  color: $body-font-color;
+}
+
+.action-sheet {
+  width: auto;
+  min-width: 12em;
+
+  .no-first-element-top-border > :first-child > a {
+    border-top: none;
+  }
+}
+
+.has-error,
+div.has-error > label,
+div.has-error > input,
+div.has-error > input:hover,
+div.has-error > input:focus {
+  border-color: #a94442;
+  color: #a94442;
+}
+
+.menu-bar.primary > li > a.active {
+  background: #414141;
+  color: #fff;
+}
+
+.menu-bar.secondary > li > a.active {
+  background: #ededed;
+  color: #000;
+}
+
+.table > thead >tr>th{
+    border-bottom: 2px solid #ddd;
+    padding: 5px;
+}
+
+.table > tbody >tr>td{
+    border-top: 1px solid #ddd;
+    padding: 5px;
+}
+
+.table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th {
+  background-color: #f5f5f5;
+}
+
+.inline {
+  display: inline-block;
+}
+
+a {
+  cursor: pointer;
+  color: #008CBA;
+}

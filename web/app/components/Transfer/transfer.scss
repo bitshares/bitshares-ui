@@ -1,0 +1,29 @@
+ol.prog-tracker {
+	margin: 0;
+    padding: 0;
+    li {
+		display: inline-block;
+	    text-align: center;
+	    line-height: 2rem;
+	    padding-left: 0.75rem;
+	    padding-right: 0.75rem;
+	}
+}
+
+ol.prog-tracker li.prog-tracker-done, ol.prog-tracker li.prog-tracker-current {
+    color: black;
+    border-bottom: 4px solid yellowgreen;
+}
+ol.prog-tracker li.prog-tracker-todo {
+    color: silver; 
+    border-bottom: 4px solid silver;
+}
+
+.prog-tracker-current {
+	font-weight: bold;
+}
+
+.prog-tracker-todo {
+	color: #8B8B8B;
+}
+

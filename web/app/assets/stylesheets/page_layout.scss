@@ -1,0 +1,30 @@
+.page-layout > .grid-block {
+  padding: 1rem 1.75rem 1rem 1.75rem;
+}
+
+.page-layout .grid-content {
+  padding: 0;
+}
+
+.left-column {
+  background-color: #fafafa;
+}
+
+.main-content {
+  background-color: #f3f3f3;
+}
+
+.right-column {
+  background-color: #eaeaea;
+  padding-left: 1.75em;
+}
+
+#mobile-menu {
+	margin-top: 49px;
+}
+
+#account-notify {
+    position: absolute;
+    right: 0.5em;
+    width: 30em;
+}

@@ -1,0 +1,17 @@
+.form-label.select {
+  padding: 0;
+  border: none;
+
+  select {
+    margin: 0;
+    border: none;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    font-size: 0.9rem;
+  }
+
+}
+
+.has-error input, .has-error select, .has-error textarea {
+  border-color: #a94442;
+}

@@ -1,0 +1,94 @@
+{
+  "name": "webgui",
+  "version": "0.0.1",
+  "description": "gui powered by react and graphene",
+  "homepage": "https://github.com/cryptonomex/graphene_ui",
+  "author": "Cryptonomex, Inc.",
+  "license" : "LicenseRef-LICENSE",
+  "engines": {
+    "node": "0.12.2",
+    "npm": "2.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cryptonomex/graphene_ui"
+  },
+  "scripts": {
+    "postinstall": "bower install",
+    "test": "jest",
+    "start": "webpack-dev-server --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
+    "build": "webpack --progress --colors"
+  },
+  "dependencies": {
+    "alt": "~0.16.4",
+    "babel-core": "~5.2.17",
+    "babel-loader": "~5.0.0",
+    "classnames": "^2.1.1",
+    "cookies-js": "^1.2.1",
+    "counterpart": "^0.16.7",
+    "css-loader": "^0.12.0",
+    "extract-text-webpack-plugin": "^0.8.0",
+    "file-loader": "^0.8.1",
+    "immutable": "~3.7.2",
+    "jdenticon": "git+https://github.com/svk31/jdenticon",
+    "js-sha256": "^0.2.3",
+    "json-loader": "^0.5.1",
+    "keyboardjs": "^0.4.2",
+    "newforms": "^0.12.1",
+    "node-libs-browser": "^0.5.0",
+    "node-sass": "^3.0.0",
+    "react": "~0.13.2",
+    "react-foundation-apps": "git+http://github.com/valzav/react-foundation-apps.git",
+    "react-hot-loader": "~1.2.7",
+    "react-input-autosize": "^0.4.3",
+    "react-interpolate-component": "^0.7.1",
+    "react-intl": "^1.2.0",
+    "react-router": "~0.13.3",
+    "react-select": "^0.4.9",
+    "react-tools": "~0.13.2",
+    "react-tooltip": "^0.2.4",
+    "react-translate-component": "^0.9.0",
+    "sass-loader": "^1.0.1",
+    "style-loader": "^0.12.2",
+    "svg-inline-loader": "^0.1.0",
+    "svgo": "^0.5.1",
+    "svgo-loader": "^1.1.0",
+    "tcomb": "~1.0.3",
+    "webpack": "^1.9.6",
+    "webpack-dev-server": "^1.8.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^3.1.1",
+    "babel-jest": "^5.2.0",
+    "coffee-loader": "^0.7.2",
+    "eslint": "^0.20.0",
+    "eslint-plugin-react": "^2.2.0",
+    "jest-cli": "~0.4.1",
+    "script-loader": "^0.6.1"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testPathDirs": [
+      "<rootDir>/__tests__"
+    ],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/tcomb",
+      "<rootDir>/node_modules/immutable"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "coffee"
+    ],
+    "testFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/utils/"
+    ]
+  }
+}

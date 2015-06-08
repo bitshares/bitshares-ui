@@ -1,0 +1,82 @@
+.header.menu-group {
+  justify-content: flex-start;
+}
+
+.icon > svg {
+  position: relative;
+  top: 3px;
+  > path {
+    fill : #fff;
+  }
+}
+
+.header {
+  padding-left: 0 !important;
+  .menu-bar > li {
+    padding: 0;
+    > a {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      @include breakpoint(large) {
+        padding-left: 1.75rem;
+        padding-right: 1.75rem;
+      }
+    }
+  }
+}
+
+.header .logo > a {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  font-size: 1.1rem;
+  color: #ccc !important;
+  &.active, &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.grp-menu-items-group {
+  flex-flow: row nowrap;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.grp-menu-item {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  .button:hover {
+    background: #414141 !important;
+  }
+  > a, .button {
+    color: #fff;
+    padding: 1rem 0.4rem 1rem 0.4rem;
+    @include breakpoint(large) {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+    font-size: 1rem;
+    &:hover {
+      background: #414141;
+      color: #fff;
+    }
+  }
+  > a > .icon {
+    position: relative;
+    top: -1px;
+  }
+  .button {
+    position: relative;
+    top: -1px;
+  }
+}
+
+#account_drop_down a.button {
+  padding-left: 0;
+}
+
+.user-icon > a {
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}

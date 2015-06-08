@@ -1,0 +1,110 @@
+var Immutable = require("immutable");
+
+class WebSocketRpc {
+
+    constructor(ws_server) {
+        var WebSocketClient = typeof (WebSocket) !== "undefined" ? WebSocket : require("websocket").w3cwebsocket;
+        this.web_socket = new WebSocketClient(ws_server);
+        this.current_reject = null;
+        var self = this;
+        this.connect_promise = new Promise((resolve, reject) => {
+            //console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
+            self.current_reject = reject;
+            self.web_socket.onopen = () => resolve("con!");
+            self.web_socket.onerror = (error) => {
+                console.log("!!! WebSocket Error ", ws_server);
+                if (self.current_reject) {
+                    self.current_reject(error);
+                }
+            };
+            self.web_socket.onmessage = (message) => self.listener(JSON.parse(message.data));
+        });
+        this.current_callback_id = 0;
+        this.callbacks = {};
+        this.subscriptions = {};
+        this.unsub = {};
+    }
+
+    call(params) {
+        // console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
+        this.current_callback_id += 1;
+        var self = this;
+
+        if (params[1] === "subscribe_to_objects" || params[1] === "subscribe_to_market") {
+            self.subscriptions[self.current_callback_id] = {callback: params[2][0], params: Immutable.fromJS(params[2][1])};
+            params[2][0] = this.current_callback_id;
+        }
+        if (params[1] === "unsubscribe_from_objects" || params[1] === "unsubscribe_from_market") {
+            let unSubParams = Immutable.fromJS(params[2][0]);
+            for (let id in self.subscriptions) {
+                if (Immutable.is(self.subscriptions[id].params, unSubParams)) {
+                    self.unsub[this.current_callback_id] = id;
+                    break;
+                }
+            }
+        }
+
+        var request = {method: "call", params: params};
+        request.id = this.current_callback_id;
+        
+        
+        return new Promise((resolve, reject) => {
+            self.callbacks[self.current_callback_id] = {time: new Date(), resolve: resolve, reject: reject};
+            self.web_socket.onerror = (error) => {
+                console.log("!!! WebSocket Error ", error);
+                reject(error);
+            };
+            self.web_socket.send(JSON.stringify(request));
+        });
+
+    }
+
+    listener(response) {
+        //console.log("[websocketrpc] <--- reply ----", response);
+        let sub = false, callback = null;
+
+        if (response.method === "notice") {
+            sub = true;
+            response.id = response.params[0];
+        } 
+
+        if (!sub) {
+            callback = this.callbacks[response.id];
+        } else {
+            callback = this.subscriptions[response.id].callback;
+        }
+
+        if (callback && !sub) {
+            if (response.error) {
+                callback.reject(response.error);
+            } else {
+                callback.resolve(response.result);
+            }
+            delete this.callbacks[response.id];
+
+            if (this.unsub[response.id]) {
+                delete this.subscriptions[this.unsub[response.id]];
+                delete this.unsub[response.id];
+            }
+
+        } else if(callback && sub) {
+            callback(response.params[1]);
+        } else {
+            console.log("Warning: unknown websocket response: ", response);
+        }
+    }
+
+    login(user, password) {
+        var self = this;
+        return this.connect_promise.then( () => {
+            return self.call([1, "login", [user, password]]);
+        });
+    }
+
+    close() {
+        this.web_socket.close();
+    }
+
+}
+
+module.exports = WebSocketRpc;
