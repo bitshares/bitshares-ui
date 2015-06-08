@@ -3,7 +3,7 @@ import Router from "react-router";
 
 const { Route, RouteHandler, DefaultRoute } = Router;
 
-import IntlStore from "stores/IntlStore";
+import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
 import Apis from "rpc_api/ApiInstances";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Discover from "./components/Discover/DiscoverContainer";
@@ -58,7 +58,7 @@ class App extends BaseComponent {
                 let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
                 return Promise.all([
                     AccountActions.getAccount(current_account_id),
-                    AssetActions.getAsset("1.4.0"),
+                    AssetActions.getAssetList("A", 100),
                     BlockchainActions.subscribeGlobals(),
                     localePromise
                 ]);

@@ -8,6 +8,14 @@ class AssetActions {
         // Create asset action here...
     }
 
+    getAssetList(start, count) {
+        Apis.instance().db_api().exec("list_assets", [
+            start, count
+        ]).then(result => {
+            this.dispatch(result);
+        })
+    }
+
     getAsset(id) {
         let assetPromise;
         if (utils.is_object_id(id)) {

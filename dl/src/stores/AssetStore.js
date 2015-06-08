@@ -2,7 +2,10 @@ var BaseStore = require("./BaseStore");
 var Immutable = require("immutable");
 var alt = require("../alt-instance");
 var AssetActions = require("../actions/AssetActions");
-import {Asset} from "./tcomb_structs";
+import {
+    Asset
+}
+from "./tcomb_structs";
 
 class AssetStore extends BaseStore {
     constructor() {
@@ -11,13 +14,19 @@ class AssetStore extends BaseStore {
         this.asset_symbol_to_id = {};
 
         this.bindListeners({
-            onCreateAsset: AssetActions.createAsset,
+            onGetAssetList: AssetActions.getAssetList,
             onGetAsset: AssetActions.getAsset
         });
     }
 
-    onCreateAsset() {
-        // Handle asset creation
+    onGetAssetList(assets) {
+        assets.forEach(asset => {
+            this.assets = this.assets.set(
+                asset.id,
+                Asset(asset)
+            );
+        });
+
     }
 
     onGetAsset(asset) {
