@@ -27,9 +27,11 @@ class MemberStats extends React.Component {
         return (
             <div>
               <hr/>
+              <h4>Lifetime Member</h4>
               <h5><Translate component="span" content="account.member.stats" /></h5>
               <ul style={styles.ulStyle}>
-                <li><Translate component="span" content="account.member.join" /> <FormattedDate value={reg_date}/>:</li>
+                <li><Translate component="span" content="account.member.join" /> <FormattedDate value={reg_date}/></li>
+                <li>Exprires on <FormattedDate value={reg_date}/></li>
                 <li><Translate component="span" content="account.member.reg" />: <Link to="account" params={{name: names[registrar]}}>{names[registrar]}</Link></li>
                 <li><Translate component="span" content="account.member.ref" />: <Link to="account" params={{name: names[referrer]}}>{names[referrer]}</Link></li>
                 <li><Translate component="span" content="account.member.referrals" />: 
@@ -41,9 +43,13 @@ class MemberStats extends React.Component {
               </ul>
               <h5 style={styles.inline}><Translate component="span" content="account.member.rewards" /></h5> {isMyAccount && isUnlocked ? <button className="hollow button tiny">Claim</button> : null}
               <ul style={styles.ulStyle}>
-                <li><Translate component="span" content="account.member.cashback" />: <FormattedNumber value={rewards.cashback}/> BTS</li>
-                <li><Translate component="span" content="account.member.vested" />: <FormattedNumber value={rewards.vested}/> BTS</li>
+                <li>
+                    <li>Vested <FormattedNumber value={rewards.cashback}/> BTS</li>
+                    <li>Vesting <FormattedNumber value={rewards.cashback}/> BTS</li>
+                </li>
               </ul>
+              <a className="button" href>Claim</a>
+              <h5>Permissions</h5>
             </div>
         );
     }

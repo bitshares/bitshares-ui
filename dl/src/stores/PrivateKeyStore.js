@@ -1,14 +1,14 @@
 var Immutable = require("immutable");
 var alt = require("../alt-instance");
-var KeyActions = require("../actions/KeyActions");
+var PrivateKeyActions = require("../actions/PrivateKeyActions");
 var Utils = require("../common/utils");
 import {Key} from "./tcomb_structs";
 
 
-class KeyStore {
+class PrivateKeyStore {
     constructor() {
         this.bindListeners({
-            onAddKey: KeyActions.addKey
+            onAddKey: PrivateKeyActions.addKey
         });
     }
 
@@ -18,4 +18,4 @@ class KeyStore {
 
 }
 
-module.exports = alt.createStore(KeyStore, "KeyStore");
+module.exports = alt.createStore(PrivateKeyStore, "PrivateKeyStore");

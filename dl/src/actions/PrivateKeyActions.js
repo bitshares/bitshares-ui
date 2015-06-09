@@ -1,7 +1,7 @@
 var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
 
-class KeyActions {
+class PrivateKeyActions {
 
     addKey(key) {
         this.dispatch(key);
@@ -9,4 +9,4 @@ class KeyActions {
 
 }
 
-module.exports = alt.createActions(KeyActions);
+module.exports = alt.createActions(PrivateKeyActions);

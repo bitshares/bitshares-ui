@@ -8,6 +8,7 @@ var Apis = (function () {
     var db_api;
     var network_api;
     var history_api;
+    var indexedDB;
     
     function init() {
         //console.log("[ApiInstances.js] ----- init ----->");

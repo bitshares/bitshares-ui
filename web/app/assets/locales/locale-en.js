@@ -22,11 +22,11 @@ module.exports = {
         name: "Account name",
         member: {
             stats: "Member stats",
-            join: "Join date",
+            join: "Joined on",
             reg: "Registered by",
             ref: "Referred by",
             referrals: "Referrals",
-            rewards: "Lifetime rewards",
+            rewards: "Cashback Rewards",
             cashback: "Cashback",
             vested: "Vested"
         },
