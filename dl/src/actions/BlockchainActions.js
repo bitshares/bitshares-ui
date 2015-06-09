@@ -14,9 +14,9 @@ class BlockchainActions {
             Apis.instance().db_api().exec("unsubscribe_from_objects", [
                     ["2.0.0", "2.1.0"]
                 ])
-                .then((result) => {
-                    console.log("unsubscription success:", result);
-                    if (result) {
+                .then((unSubResult) => {
+                    console.log("unsubscription success:", unSubResult);
+                    if (unSubResult) {
                         subs.globals = false;
                     }
                 }).catch((error) => {
@@ -31,7 +31,6 @@ class BlockchainActions {
         };
 
         if (!subs.globals) {
-            subs.globals = true;
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_objects", [
                         subscription, ["2.0.0", "2.1.0"]
@@ -41,7 +40,10 @@ class BlockchainActions {
                     ])
                 ])
                 .then((result) => {
-                    console.log("subscription success:", result[0]);
+                    console.log("global subscription success:", result[0]);
+                    if (result[0]) {
+                        subs.globals = true;
+                    }
                     this.dispatch(result[1]);
                 }).catch((error) => {
                     console.log("Error in BlockchainActions.subscribeDynGlobal subscribe: ", error);

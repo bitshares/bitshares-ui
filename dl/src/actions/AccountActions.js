@@ -19,10 +19,11 @@ class AccountActions {
     }
 
     unSubscribe(id) {
-        api.unSubscribeAccount(accountSubs[id]).then(result => {
-            console.log("unsub result:", result);
-            console.log("unSubscribe from:", id);
-            delete accountSubs[id];
+        api.unSubscribeAccount(accountSubs[id]).then(unSubResult => {
+            if (unSubResult) {
+                console.log("unSubscribe from:", id);
+                delete accountSubs[id];
+            }
         });
     }
 
@@ -64,8 +65,10 @@ class AccountActions {
                         let statObject = result[0][0].statistics;
                         api.subscribeAccount(subscription, statObject)
                             .then(subResult => {
-                                accountSubs[name_or_id] = statObject; // subResult now returns null, unable to verify success..
-                                console.log("subscribed to account", name_or_id, ":", subResult);
+                                if (subResult) {
+                                    accountSubs[name_or_id] = statObject;
+                                    console.log("subscribed to account", name_or_id, ":", subResult);
+                                }
                             });
                     }
                     this.dispatch(result);
@@ -85,8 +88,10 @@ class AccountActions {
                             let statObject = results[0][0].statistics;
                             api.subscribeAccount(subscription, statObject)
                                 .then(subResult => {
-                                    accountSubs[id] = statObject; // subResult now returns null, unable to verify success..
-                                    console.log("subscribed to account", id, ":", subResult);
+                                    if (subResult) {
+                                        accountSubs[id] = statObject;
+                                        console.log("subscribed to account", id, ":", subResult);
+                                    }
                                 });
                         }
 
