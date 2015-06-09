@@ -94,7 +94,7 @@ class Account extends Component {
 
         // Get current balances
         if (ba) {
-            console.log("ba:", ba);
+            // console.log("ba:", ba);
             isMember = true;
 
             // followButton = isUnlocked && !ba.isMyAccount ? <button className="button">Follow</button> : null;

@@ -2,9 +2,11 @@ import React from "react";
 import {PropTypes} from "react";
 import WitnessActions from "actions/WitnessActions";
 import {Link} from "react-router";
+import intlData from "../Utility/intlData";
 import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
+import {FormattedDate} from "react-intl";
 
 class Discover extends React.Component {
 
@@ -113,6 +115,11 @@ class Discover extends React.Component {
                 return (
                         <tr key={block.id}>
                             <td><Link to="block" params={{height: block.id}}>#{block.id}</Link></td>
+                            <td><FormattedDate
+                                value={block.timestamp}
+                                formats={intlData.formats}
+                                format="short"
+                            /></td>
                             <td>{witness_id_to_name.get(block.witness) ? <Link to="account" params={{name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> : null}</td>
                             <td>{block.transactions.length}</td>
                         </tr>
@@ -130,7 +137,6 @@ class Discover extends React.Component {
             );
         }).toArray();
 
-
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
@@ -146,6 +152,7 @@ class Discover extends React.Component {
                                 <thead>
                                     <tr>
                                         <th><Translate component="span" content="explorer.block.id" /></th>
+                                        <th><Translate component="span" content="explorer.block.date" /></th>
                                         <th><Translate component="span" content="explorer.block.witness" /></th>
                                         <th><Translate component="span" content="explorer.block.count" /></th>
                                     </tr>

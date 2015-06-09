@@ -119,7 +119,6 @@ class Block extends BaseComponent {
             }
         }
 
-
         return (
             <div className="grid-block small-offset-2">
                 <div className="grid-content">
