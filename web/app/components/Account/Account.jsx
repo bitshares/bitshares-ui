@@ -58,6 +58,8 @@ class Account extends Component {
             !Immutable.is(nextProps.assets, this.props.assets) ||
             !Immutable.is(nextProps.accountHistories, this.props.accountHistories) ||
             !Immutable.is(nextProps.balances, this.props.balances) ||
+            !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
+            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
             nextProps.accountName !== this.props.accountName
           );
     }
@@ -65,7 +67,9 @@ class Account extends Component {
     render() {
 
         let currentAccountName = this.props.accountName,
-          {browseAccounts, isUnlocked, account_name_to_id, assets, accountHistories, accountBalances, account_id_to_name} = this.props, 
+          {browseAccounts, 
+            isUnlocked, account_name_to_id, assets, accountHistories, 
+            accountBalances, account_id_to_name, witnesses, witness_id_to_name} = this.props, 
           isMember = false,
           balances = [],
           names = null,
@@ -121,7 +125,15 @@ class Account extends Component {
                     history = accountHistories.get(ba.id).map((trx, index) => {
                         if (index < 10) {
                             return (
-                              <Operation key={index} block={trx.block_num} index={index} op={trx.op} accounts={account_id_to_name} assets={assets} current={currentAccountName}/>
+                              <Operation
+                                key={index}
+                                op={trx.op}
+                                block={trx.block_num}
+                                accounts={account_id_to_name}
+                                assets={assets}
+                                current={currentAccountName}
+                                witnesses={witnesses}
+                                witness_id_to_name={witness_id_to_name}/>
                             );
                         }
                     });

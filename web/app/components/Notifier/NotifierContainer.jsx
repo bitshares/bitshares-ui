@@ -3,6 +3,7 @@ import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import AltContainer from "alt/AltContainer";
 import Notifier from "./Notifier";
+import WitnessStore from "stores/WitnessStore";
 
 class NotifierContainer extends React.Component {
 
@@ -10,7 +11,7 @@ class NotifierContainer extends React.Component {
 
         return (
               <AltContainer 
-                  stores={[AccountStore, AssetStore]}
+                  stores={[AccountStore, AssetStore, WitnessStore]}
                   inject={{
                     assets: () => {
                         return AssetStore.getState().assets;
@@ -23,6 +24,12 @@ class NotifierContainer extends React.Component {
                     },
                     accountHistories: () => {
                         return AccountStore.getState().accountHistories;
+                    },
+                    witnesses: () => {
+                        return WitnessStore.getState().witnesses;
+                    },
+                    witness_id_to_name: () => {
+                        return WitnessStore.getState().witness_id_to_name;
                     }
                   }} 
                   >

@@ -3,7 +3,7 @@ import Notification from "react-foundation-apps/lib/notification";
 import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {Link} from "react-router";
-import TransactionRow from "../Account/TransactionRow";
+import Operation from "../Account/Operation";
 
 class Notifier extends React.Component {
 
@@ -29,14 +29,21 @@ class Notifier extends React.Component {
 
     render() {
 
-        let {assets, account_id_to_name, currentAccount} = this.props;
+        let {assets, account_id_to_name, currentAccount, witnesses, witness_id_to_name} = this.props;
         let id = currentAccount.id,
             trx, info;
 
         if (this.props.accountHistories.get(id)) {
             trx = this.props.accountHistories.get(id)[0];
             if (trx) {
-                info = <TransactionRow op={trx.op} block={trx.block_num} accounts={account_id_to_name} assets={assets} current={currentAccount.name}/>;
+                info = <Operation
+                            op={trx.op}
+                            block={trx.block_num}
+                            accounts={account_id_to_name}
+                            assets={assets}
+                            current={currentAccount.name}
+                            witnesses={witnesses}
+                            witness_id_to_name={witness_id_to_name}/>;
             }
         }
 
