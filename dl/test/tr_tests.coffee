@@ -34,6 +34,7 @@ create_account_with_brain_key "brainkey" "newaccountname" "1.3.11" "1.3.0" 0 tru
 ###
 describe "tr_tests", ->
 
+    broadcast = process.env.GPH_TEST_NO_BROADCAST is undefined
     genesis_private = PrivateKey.fromWif "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
     #genesis_active_1_3_0_public = PublicKey.fromBtsPublic "GPH6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
     api = null
@@ -57,7 +58,7 @@ describe "tr_tests", ->
             registrar = 11
             referrer = 0
             referrer_percent = 0
-            broadcast = yes
+            broadcast
         ).then (result)->
             th.print_result result
             #th.print_hex ""
@@ -69,7 +70,7 @@ describe "tr_tests", ->
     it "wallet.transfer nomemo", (done)->
         wallet.transfer(
             "1.3.11", "1.3.0", 1, "1.4.0", memo = null
-            broadcast = yes
+            broadcast
         ).then (result)->
             th.print_result result
             #th.print_hex ""
@@ -80,7 +81,7 @@ describe "tr_tests", ->
     it "wallet.transfer encmemo", (done)->
         wallet.transfer(
             "1.3.11", "1.3.0", 1, "1.4.0", memo = "memo"
-            broadcast = yes
+            broadcast
         ).then (result)->
             th.print_result result
             #th.print_hex ""
@@ -94,7 +95,7 @@ describe "tr_tests", ->
             "1.2.1", null #genesis_private
             "1.2.0"
             10, 1, PrivateKey.fromSeed("nathan")
-            broadcast = yes
+            broadcast
         ).then (result)->
             th.print_result result
             #th.print_hex ""
@@ -115,7 +116,7 @@ describe "tr_tests", ->
             expire = 10
             signer_private_id = 1
             signer_private_key = PrivateKey.fromSeed("nathan")
-            broadcast = yes
+            broadcast
         ).then (result)->
             th.print_result result
             #th.print_hex ""
