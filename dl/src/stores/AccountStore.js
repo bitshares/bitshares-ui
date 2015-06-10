@@ -1,13 +1,8 @@
-var BaseStore = require("./BaseStore");
-var Immutable = require("immutable");
-var alt = require("../alt-instance");
-var AccountActions = require("../actions/AccountActions");
-import {
-    Account
-}
-from "./tcomb_structs";
-
-//var Utils = require("../common/utils");
+import BaseStore from "./BaseStore";
+import Immutable from "immutable";
+import alt from "../alt-instance";
+import AccountActions from "../actions/AccountActions";
+import {Account} from "./tcomb_structs";
 
 function json_to_account(json) {
     return Account({
@@ -62,8 +57,6 @@ class AccountStore extends BaseStore {
                 result.account,
                 result.balances
             );
-
-
         } else {
             let account = result[0][0];
 

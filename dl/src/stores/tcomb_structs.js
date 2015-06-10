@@ -5,7 +5,7 @@ let Account = t.struct({
     annotations: t.Arr,
     registrar: t.Str,
     referrer: t.Str,
-    referrer_percent: t.Num,
+    referrer_rewards_percentage: t.Num,
     name: t.Str,
     owner: t.Obj,
     active: t.Obj,
