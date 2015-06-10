@@ -27,7 +27,7 @@ class AccountActions {
         });
     }
 
-    getAccount(name_or_id) {
+    getAccount(name_or_id, sub) {
         let subscription = (result) => {
             console.log("sub result:", result);
             let accountId = null;
@@ -61,7 +61,7 @@ class AccountActions {
                     api.getHistory(name_or_id, 10)
                 ])
                 .then(result => {
-                    if (!accountSubs[name_or_id]) {
+                    if (!accountSubs[name_or_id] && sub) {
                         let statObject = result[0][0].statistics;
                         api.subscribeAccount(subscription, statObject)
                             .then(subResult => {
@@ -84,7 +84,7 @@ class AccountActions {
                         api.getBalances(id),
                         api.getHistory(id, 10)
                     ]).then((results) => {
-                        if (!accountSubs[name_or_id]) {
+                        if (!accountSubs[name_or_id] && sub) {
                             let statObject = results[0][0].statistics;
                             api.subscribeAccount(subscription, statObject)
                                 .then(subResult => {

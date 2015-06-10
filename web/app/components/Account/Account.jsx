@@ -8,7 +8,7 @@ import {FormattedNumber} from "react-intl";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
-import TransactionRow from "./TransactionRow";
+import Operation from "./Operation";
 import Translate from "react-translate-component";
 
 class Account extends Component {
@@ -23,9 +23,9 @@ class Account extends Component {
     _getAccount(name) {
         let id = this.props.account_name_to_id[name];
         if (id) {
-            AccountActions.getAccount(id);
+            AccountActions.getAccount(id, true);
         } else {
-            AccountActions.getAccount(name);
+            AccountActions.getAccount(name, true);
         }
     }
 
@@ -121,7 +121,7 @@ class Account extends Component {
                     history = accountHistories.get(ba.id).map((trx, index) => {
                         if (index < 10) {
                             return (
-                              <TransactionRow key={index} block={trx.block_num} index={index} op={trx.op} accounts={account_id_to_name} assets={assets} current={currentAccountName}/>
+                              <Operation key={index} block={trx.block_num} index={index} op={trx.op} accounts={account_id_to_name} assets={assets} current={currentAccountName}/>
                             );
                         }
                     });
