@@ -35,6 +35,8 @@ import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
 import Notifier from "./components/Notifier/NotifierContainer";
 import cookies from "cookies-js";
+import iDB from "idb-instance"
+import PrivateKeyActions from "actions/PrivateKeyActions";
 
 require("./assets/loader");
 
@@ -52,6 +54,11 @@ class App extends BaseComponent {
         }
 
         Apis.instance().init_promise.then(() => {
+            let idb_instance = iDB.init_instance(indexedDB);
+            idb_instance.init_promise.then( db => {
+                console.log("[App.jsx:59] ----- idb ----->", db);
+                PrivateKeyActions.addKey("test-key-3");
+            });
             AccountActions.getAllAccounts().then(current_account_id => {
                 return current_account_id;
             }).then(current_account_id => {

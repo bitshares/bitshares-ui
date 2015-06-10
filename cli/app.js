@@ -6,6 +6,10 @@ var Apis = require('../dl/src/rpc_api/ApiInstances');
 var ApplicationApi = require('../dl/src/rpc_api/ApplicationApi');
 var WalletApi = require('../dl/src/rpc_api/WalletApi');
 
+var iDB = require("../dl/src/idb-instance");
+var fakeIndexedDB = require('fake-indexeddb');
+iDB.init_instance(fakeIndexedDB);
+
 Apis.instance().init_promise.then(() => {
     var repl_instance = repl.start({
         prompt: "Graphene > ",
