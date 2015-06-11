@@ -22,14 +22,15 @@ class WalletApi {
         this.application_api = new ApplicationApi()
     }
     
-    new_transaction() {
-        var expire_minutes = 10
+    new_transaction(expire_minutes = 10) {
+        //var expire_minutes = 10
         var tr = new tr_op.signed_transaction()
         tr.set_expire_minutes(expire_minutes)
         return tr
     }
     
     sign_and_broadcast( tr ) {
+        vt.required(tr, "transaction")
         var signer_private_key_id = 1
         var signer_private_key = PrivateKey.fromSeed("nathan")
         var broadcast = true
