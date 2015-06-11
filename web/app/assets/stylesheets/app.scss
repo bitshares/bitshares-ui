@@ -21,3 +21,20 @@
 .no-overflow {
   overflow: hidden;
 }
+
+.account-card {
+    max-width: 30rem;
+}
+
+.card:hover {
+    border: 1px solid #4D2828;
+}
+
+.card div:first-child {
+    padding: 5px;
+    text-align: center;
+}
+
+.card:hover a>div:first-child {
+    background-color: rgb(202, 202, 202);
+}

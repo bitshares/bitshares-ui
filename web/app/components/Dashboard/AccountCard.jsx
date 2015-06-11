@@ -46,11 +46,9 @@ class AccountCard extends React.Component {
             return (
                     <div className="grid-content account-card">
                         <div className="card">
-                            <div style={{padding: "5px"}}>
-                                <center>
+                            <div>
                                 {this.state.newAccount.length > 0 ? <AccountImage account={this.state.newAccount} size={{height: 150, width: 150}}/> : 
                                 <span style={{fontSize: "150px", color: "#B2B2B2"}}>+</span>}
-                                </center>
                             </div>
                             <div className="card-divider">
                                 <input type="text" onChange={this._onInput.bind(this)} value={this.state.newAccount}/>
@@ -83,10 +81,8 @@ class AccountCard extends React.Component {
             <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
                 <div className="card">
                     <Link to="account" params={{name: account.name}}>
-                        <div style={{padding: "5px"}}>
-                            <center>
-                                <AccountImage account={account.name} size={{height: 150, width: 150}}/>
-                            </center>
+                        <div>
+                            <AccountImage account={account.name} size={{height: 150, width: 150}}/>
                         </div>
                         <div style={{color: "black"}} className="card-divider">
                             {account.name}

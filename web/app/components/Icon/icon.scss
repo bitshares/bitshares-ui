@@ -2,3 +2,12 @@
   width: 1rem;
   height: 1rem;
 }
+
+.icon-10x > svg, span.icon-10x {
+  width: 10rem;
+  height: 10rem;
+}
+
+.icon.fill-black > svg > path {
+    fill:black;
+}

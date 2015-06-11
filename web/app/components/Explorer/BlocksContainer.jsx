@@ -1,18 +1,16 @@
 import React from "react";
 import AccountStore from "stores/AccountStore";
-import AssetStore from "stores/AssetStore";
 import BlockchainStore from "stores/BlockchainStore";
 import WitnessStore from "stores/WitnessStore";
 import AltContainer from "alt/AltContainer";
-import Discover from "./Discover";
+import Blocks from "./Blocks";
 
-class DiscoverContainer extends React.Component {
+class BlocksContainer extends React.Component {
 
     render() {
-
         return (
               <AltContainer 
-                  stores={[AccountStore, AssetStore, BlockchainStore, WitnessStore]}
+                  stores={[AccountStore, BlockchainStore, WitnessStore]}
                   inject={{
                     latestBlocks: () => {
                         return BlockchainStore.getState().latestBlocks;
@@ -20,8 +18,8 @@ class DiscoverContainer extends React.Component {
                     dynGlobalObject: () => {
                         return BlockchainStore.getState().dynGlobalObject;
                     },
-                    assets: () => {
-                        return AssetStore.getState().assets;
+                    globalObject: () => {
+                        return BlockchainStore.getState().globalObject;
                     },
                     accounts: () => {
                         return AccountStore.getState().accounts;
@@ -34,10 +32,10 @@ class DiscoverContainer extends React.Component {
                     }
                   }} 
                   >
-                <Discover/>
+                <Blocks/>
               </AltContainer>
         );
     }
 }
 
-export default DiscoverContainer;
+export default BlocksContainer;

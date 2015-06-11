@@ -26,7 +26,7 @@ class MobileMenu extends React.Component {
               <section style={{marginTop: "3rem"}} className="block-list">
                 <ul>
                     <li onClick={this.onClick}><Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link></li>
-                    <li onClick={this.onClick}><Link to="discover"><Translate component="span" content="header.explorer" /></Link></li>
+                    <li onClick={this.onClick}><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
                     <li onClick={this.onClick}><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>
                     <li onClick={this.onClick}><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                     {isUnlocked ? <li onClick={this.onClick}><Link to="settings">Settings</Link></li> : null}

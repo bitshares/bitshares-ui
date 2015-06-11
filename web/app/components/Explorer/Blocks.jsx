@@ -8,14 +8,13 @@ import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate} from "react-intl";
 
-class Discover extends React.Component {
+class Blocks extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.latestBlocks, this.props.latestBlocks) ||
             !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
-            !Immutable.is(nextProps.assets, this.props.assets)
+            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name)
             );
     }
 
@@ -89,13 +88,10 @@ class Discover extends React.Component {
 
     render() {
 
-        let {latestBlocks, accounts, witnesses, witness_id_to_name} = this.props;
+        let {latestBlocks, accounts, witnesses, witness_id_to_name, globalObject} = this.props;
         let blocks = null;
-        // console.log("latestBlocks:", latestBlocks, this.props);
 
         if (latestBlocks && latestBlocks.size === 10) {
-            // console.log("witness_id_to_name:", witness_id_to_name);
-
 
             let missingWitnesses = [];
             latestBlocks.forEach(block => {
@@ -127,27 +123,27 @@ class Discover extends React.Component {
             }).toArray();
         }
 
-        let assets = this.props.assets.map((asset) => {
-            return (
-                <tr key={asset.symbol}>
-                    <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
-                    <td>{asset.id}</td>
-                    <td>{asset.issuer}</td>
-                </tr>
-            );
-        }).toArray();
+        // console.log("globalObject:", globalObject);
+        let params = [];
+        let index = 0;
+        for (let key in globalObject.parameters) {
+            if (globalObject.parameters.hasOwnProperty(key)) {
+                params.push(<li key={index}>{key} : {globalObject.parameters[key]} </li>);
+                index++;
+            }
+        }
 
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
-                    <div className="grid-block medium-3 left-column">
-                        <div className="grid-content">
-                            <h3><Translate component="span" content="explorer.accounts" /></h3>
-                         </div>
+                    <div className="grid-block shrink">
+                        <ul>
+                            {params}
+                        </ul>
                     </div>
-                    <div className="grid-block medium-6 main-content">
+                    <div className="grid-block">
                         <div className="grid-content">
-                            <h3><Translate component="span" content="explorer.blocks" /></h3>
+                            <h3><Translate component="span" content="explorer.blocks.recent" /></h3>
                             <table className="table">
                                 <thead>
                                     <tr>
@@ -164,43 +160,26 @@ class Discover extends React.Component {
                             </table>
                         </div>
                     </div>
-                    <div className="grid-block medium-3 right-column">
-                        <div className="grid-content">
-                            <h3><Translate component="span" content="explorer.assets.title" /></h3>
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                    <th><Translate component="span" content="explorer.assets.id" /></th>
-                                    <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {assets}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         );
     }
 }
 
-Discover.defaultProps = {
+Blocks.defaultProps = {
     latestBlocks: {},
     assets: {},
     accounts: {},
     height: 1
 };
 
-Discover.propTypes = {
+Blocks.propTypes = {
     latestBlocks: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired,
     accounts: PropTypes.object.isRequired,
     height: PropTypes.number.isRequired
 };
 
-Discover.contextTypes = { router: React.PropTypes.func.isRequired };
+Blocks.contextTypes = { router: React.PropTypes.func.isRequired };
 
-export default Discover;
+export default Blocks;

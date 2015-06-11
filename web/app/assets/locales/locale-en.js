@@ -160,8 +160,14 @@ module.exports = {
         }
     },
     explorer: {
-        accounts: "Accounts",
-        blocks: "Blocks",
+        accounts: {
+            title: "Accounts"
+        },
+        blocks: {
+            title: "Blockchain",
+            globals: "Global parameters",
+            recent: "Recent blocks"
+        },
         block: {
             title: "Block",
             id: "Block ID",
@@ -179,10 +185,24 @@ module.exports = {
         },
         assets: {
             title: "Assets",
+            market: "SmartCoins",
+            user: "User Issued Assets",
             symbol: "Symbol",
             id: "ID",
             issuer: "Issuer",
             precision: "Precision"
+        },
+        witnesses: {
+            title: "Witnesses"
+        },
+        delegates: {
+            title: "Delegates"
+        },
+        workers: {
+            title: "Workers"
+        },
+        proposals: {
+            title: "Proposals"
         }
     }
 };

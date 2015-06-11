@@ -6,15 +6,18 @@ const { Route, RouteHandler, DefaultRoute } = Router;
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
 import Apis from "rpc_api/ApiInstances";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
-import Discover from "./components/Discover/DiscoverContainer";
+import Explorer from "./components/Explorer/Explorer";
+import Blocks from "./components/Explorer/BlocksContainer";
+import Assets from "./components/Explorer/AssetsContainer";
+import Witnesses from "./components/Explorer/WitnessesContainer";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import AccountContainer from "./components/Account/AccountContainer";
-import Wallet from "./components/Wallet/Wallet";
-import Accounts from "./components/Wallet/Accounts";
-import Receive from "./components/Wallet/Receive";
-import Assets from "./components/Wallet/Assets";
-import History from "./components/Wallet/History";
+// import Wallet from "./components/Wallet/Wallet";
+// import Accounts from "./components/Wallet/Accounts";
+// import Receive from "./components/Wallet/Receive";
+// import Assets from "./components/Wallet/Assets";
+// import History from "./components/Wallet/History";
 import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
 import TransferPage from "./components/Transfer/TransferPage";
@@ -35,7 +38,7 @@ import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
 import Notifier from "./components/Notifier/NotifierContainer";
 import cookies from "cookies-js";
-import iDB from "idb-instance"
+import iDB from "idb-instance";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 
 require("./assets/loader");
@@ -105,15 +108,11 @@ class App extends BaseComponent {
 let routes = (
     <Route handler={App}>
         <Route name="dashboard" path="/dashboard" handler={DashboardContainer}/>
-        <Route name="discover" path="/discover" handler={Discover}/>
+        <Route name="explorer" path="/explorer" handler={Explorer}/>
+        <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
+        <Route name="assets" path="/explorer/assets" handler={Assets}/>
+        <Route name="witnesses" path="/explorer/witnesses" handler={Witnesses}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
-        <Route name="wallet" path="wallet" handler={Wallet}>
-            <Route name="accounts" path="accounts" handler={Accounts}/>
-            <Route name="receive" path="receive" handler={Receive}/>
-            <Route name="assets" path="assets" handler={Assets}/>
-            <Route name="history" path="history" handler={History}/>
-            <DefaultRoute handler={Accounts}/>
-        </Route>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
