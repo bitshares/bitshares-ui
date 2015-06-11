@@ -46,6 +46,7 @@ class Header extends BaseComponent {
 
     render() {
         let currentAccount = this.state.currentAccount, itemRows = [], accountsDropDown = null, plusDropDown = null, accountLink = null;
+
         let isUnlocked = this.props.isUnlocked;
 
         let settings = counterpart.translate("header.settings");
@@ -55,8 +56,6 @@ class Header extends BaseComponent {
             for (let name in this.state.account_name_to_id) {
                 itemRows.push(<li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>);
             }
-
-            //accountLink = <li><Link to="account" params={{name: currentAccount.name}}>Account</Link></li>;
 
             let account_display_name = currentAccount.name.length > 20 ? `${currentAccount.name.slice(0, 20)}..` : currentAccount.name;
 

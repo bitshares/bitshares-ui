@@ -4,7 +4,6 @@ var iDB = (function () {
     var idb;
 
     function openIndexedDB(indexedDBimpl) {
-        //var WebSocketClient = typeof (WebSocket) !== "undefined" ? WebSocket : require("websocket").w3cwebsocket;
 
         return new Promise((resolve, reject) => {
             var openRequest = indexedDBimpl.open("graphene_db", 1);

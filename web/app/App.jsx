@@ -60,8 +60,8 @@ class App extends BaseComponent {
         Apis.instance().init_promise.then(() => {
             let idb_instance = iDB.init_instance(indexedDB);
             idb_instance.init_promise.then( db => {
-                console.log("[App.jsx:59] ----- idb ----->", db);
-                PrivateKeyActions.addKey("test-key-3");
+                //console.log("[App.jsx:59] ----- idb ----->", db);
+                //PrivateKeyActions.addKey("test-key-3");
             });
             AccountActions.getAllAccounts().then(current_account_id => {
                 return current_account_id;
