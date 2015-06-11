@@ -64,9 +64,9 @@ class Operation extends React.Component {
         }
 
         let missing = new Array(ids.length);
-
+        
         ids.forEach((id, index) => {
-            if (!this.props.assets.get(id)) {
+            if (id && !this.props.assets.get(id)) {
                 AssetActions.getAsset(id);
                 missing[index] = true;
             }
@@ -84,7 +84,7 @@ class Operation extends React.Component {
         let missing = new Array(ids.length);
 
         ids.forEach((id, index) => {
-            if (!this.props.accounts[id]) {
+            if (id && !this.props.accounts[id]) {
                 AccountActions.getAccount(id);
                 missing[index] = true;
             }
@@ -97,17 +97,17 @@ class Operation extends React.Component {
         if (!Array.isArray(witnessIds)) {
             witnessIds = [witnessIds];
         }
-        let missing = new Array(ids.length);
+        let missing = new Array(witnessIds.length);
         let missingWitnessIds = new Array(witnessIds.length);
 
         let missingAccounts = [];
         witnessIds.forEach((id, index) => {
             // Check for missing witness data
-            if (!witnesses.get(id)) {
+            if (id && !witnesses.get(id)) {
                 missingWitnessIds.push(id);
                 missing[index] = true;
             // Check for missing witness account data
-            } else if (!witness_id_to_name.get(id)) {
+            } else if (id && !witness_id_to_name.get(id)) {
                 missingAccounts.push(witnesses.get(id).witness_account);
                 missing[index] = true;
             }
@@ -131,6 +131,7 @@ class Operation extends React.Component {
 
         let missingFee = this.getAssets(op[1].fee.asset_id)[0];
 
+        console.log(op);
         switch (op[0]) { // For a list of trx types, see chain_types.coffee
 
             case 0: // transfer
@@ -285,17 +286,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 11: // asset_create
-                color = "warning";            
-                column = (
-                    <td style={style.right_td}>
-                        <Translate component="span" content="transaction.create_asset" />
-                        &nbsp;<Link to="asset" params={{symbol: op[1].symbol}}>{op[1].symbol}</Link>
-                    </td>
-                );
-                break;
-
-            case 12: // asset_update
+            case 11: // asset_update
                 let missingAssets = this.getAssets(op[1].asset_to_update);
 
                 column = (
@@ -305,6 +296,16 @@ class Operation extends React.Component {
                     </td>
                 );
                 break;      
+
+            case 12: // asset_create
+                color = "warning";            
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.create_asset" />
+                        &nbsp;<Link to="asset" params={{symbol: op[1].symbol}}>{op[1].symbol}</Link>
+                    </td>
+                );
+                break;
 
             case 13: // asset_update_bitasset
                 let missingAssets = this.getAssets(op[1].asset_to_update);
@@ -464,6 +465,241 @@ class Operation extends React.Component {
                     ); 
                 }
 
+                break;         
+
+            case 24: // proposal_create
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.proposal_create" />
+                    </td>
+                );
+                break;      
+
+            case 25: // proposal_update
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.proposal_update" />
+                    </td>
+                );
+                break;   
+
+            case 26: // proposal_delete
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.proposal_delete" />
+                    </td>
+                );
+                break;  
+
+            case 27: // withdraw_permission_create
+                let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].authorized_account]);
+
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.withdraw_permission_create" />
+                        &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].withdraw_from_account]}}>{accounts[op[1].withdraw_from_account]}</Link> : null}
+                        <Translate component="span" content="transaction.to" />
+                        &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].authorized_account]}}>{accounts[op[1].authorized_account]}</Link> : null}
+                    </td>
+                );
+
+                break; 
+
+            case 28: // withdraw_permission_update
+                let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].authorized_account]);
+
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.withdraw_permission_update" />
+                        &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].withdraw_from_account]}}>{accounts[op[1].withdraw_from_account]}</Link> : null}
+                        <Translate component="span" content="transaction.to" />
+                        &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].authorized_account]}}>{accounts[op[1].authorized_account]}</Link> : null}
+                    </td>
+                );
+
+                break; 
+
+            case 29: // withdraw_permission_claim
+                let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].withdraw_to_account]);
+
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.withdraw_permission_claim" />
+                        &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].withdraw_from_account]}}>{accounts[op[1].withdraw_from_account]}</Link> : null}
+                        <Translate component="span" content="transaction.to" />
+                        &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].withdraw_to_account]}}>{accounts[op[1].withdraw_to_account]}</Link> : null}
+                    </td>
+                );
+
+                break;                 
+
+            case 30: // withdraw_permission_delete
+                let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].authorized_account]);
+
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.withdraw_permission_delete" />
+                        &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].withdraw_from_account]}}>{accounts[op[1].withdraw_from_account]}</Link> : null}
+                        <Translate component="span" content="transaction.to" />
+                        &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].authorized_account]}}>{accounts[op[1].authorized_account]}</Link> : null}
+                    </td>
+                );
+
+                break;      
+
+            case 31: // fill_order
+                color = "warning";
+                let missingAssets = this.getAssets([op[1].pays.asset_id, op[1].receives.asset_id]);
+
+                column = (
+                        <td style={style.right_td}>
+                            <Translate component="span" content="transaction.paid" />
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={assets.get(op[1].pays.asset_id)} /> : null}
+                            &nbsp;<Translate component="span" content="transaction.obtain" />
+                            &nbsp;{!missingAssets[1] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={assets.get(op[1].receives.asset_id)} /> : null}
+                        </td>
+                );
+
+                break;   
+
+            case 32: // global_parameters_update
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.global_parameters_update" />
+                    </td>
+                );
+
+                break;      
+
+            case 33: // file_write
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.file_write" />
+                    </td>
+                );
+
+                break;       
+
+            case 34: // vesting_balance_create
+                let missingAssets = this.getAssets([op[1].amount.asset_id]);
+                let missingAccounts = this.getAccounts([op[1].creator, op[1].owner]);
+                
+                column = (
+                    <td style={style.right_td}>
+                        &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].creator]}}>{accounts[op[1].creator]}</Link> : null}
+                        <Translate component="span" content="transaction.vesting_balance_create" />
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                        &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].owner]}}>{accounts[op[1].owner]}</Link> : null}
+                    </td>
+                );
+
+                break;                     
+
+            case 35: // vesting_balance_withdraw
+                let missingAssets = this.getAssets([op[1].amount.asset_id]);
+                
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.vesting_balance_withdraw" />
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                    </td>
+                );
+
+                break;        
+
+            case 36: // bond_create_offer
+                let missingAssets = this.getAssets([op[1].amount.asset_id]);
+                
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.bond_create_offer" />
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                    </td>
+                );
+
+                break;                     
+
+            case 37: // bond_cancel_offer
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.bond_cancel_offer" />
+                        &nbsp;{op[1].offer_id}
+                    </td>
+                );
+
+                break;  
+
+            case 38: // bond_accept_offer
+                let missingAssets = this.getAssets([op[1].amount_borrowed.asset_id]);
+                let missingAccounts = this.getAccounts([op[1].lender, op[1].borrower]);
+
+                if (current === accounts[op[1].lender]) {
+                    column = (
+                        <td style={style.right_td}>
+                            <Translate component="span" content="transaction.bond_accept_offer" />
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={assets.get(op[1].amount_borrowed.asset_id)} /> : null}
+                            <Translate component="span" content="transaction.to" />
+                            &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].borrower]}}>{accounts[op[1].borrower]}</Link> : null}
+                        </td>
+                    );
+                } else if (current === accounts[op[1].borrower]) {
+                    column = (
+                        <td style={style.right_td}>
+                            <Translate component="span" content="transaction.bond_accept_offer" />
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={assets.get(op[1].amount_borrowed.asset_id)} /> : null}
+                            <Translate component="span" content="transaction.from" />
+                            &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].lender]}}>{accounts[op[1].lender]}</Link> : null}
+                        </td>
+                    );
+                }
+
+                break;  
+
+            case 39: // bond_claim_collateral
+                let missingAssets = this.getAssets([op[1].collateral_claimed.asset_id]);
+                let missingAccounts = this.getAccounts([op[1].lender, op[1].claimer]);
+
+                if (current === accounts[op[1].lender]) {
+                    column = (
+                        <td style={style.right_td}>
+                            <Translate component="span" content="transaction.bond_pay_collateral" />
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={assets.get(op[1].collateral_claimed.asset_id)} /> : null}
+                            <Translate component="span" content="transaction.to" />
+                            &nbsp;{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].claimer]}}>{accounts[op[1].claimer]}</Link> : null}
+                        </td>
+                    );
+                } else if (current === accounts[op[1].claimer]) {
+                    column = (
+                        <td style={style.right_td}>
+                            <Translate component="span" content="transaction.bond_claim_collateral" />
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={assets.get(op[1].collateral_claimed.asset_id)} /> : null}
+                            <Translate component="span" content="transaction.from" />
+                            &nbsp;{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].lender]}}>{accounts[op[1].lender]}</Link> : null}
+                        </td>
+                    );
+                }
+
+                break; 
+
+            case 40: // worker_create
+                let missingAssets = this.getAssets("1.4.0");
+
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.create_worker" /> 
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={assets.get("1.4.0")} /> : null}
+                    </td>
+                );
+                
+                break;
+
+            case 41: // custom
+                column = (
+                    <td style={style.right_td}>
+                        <Translate component="span" content="transaction.custom" /> 
+                    </td>
+                );
+                
                 break;                
 
             default: 
