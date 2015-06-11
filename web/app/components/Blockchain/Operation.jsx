@@ -8,8 +8,10 @@ import counterpart from "counterpart";
 import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
 import WitnessActions from "actions/WitnessActions";
-
+import {operations} from "chain/chain_types";
 require("./operations.scss");
+
+let ops = Object.keys(operations);
 
 class TransactionLabel extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -116,7 +118,9 @@ class Operation extends React.Component {
     }
 
     linkToAccount(name) {
-        if(!name) return <span>-</span>;
+        if(!name) {
+            return <span>-</span>;
+        }
         return <Link to="account" params={{name: name}}>{name}</Link>;
     }
 
@@ -127,9 +131,9 @@ class Operation extends React.Component {
 
         let missingFee = this.getAssets(op[1].fee.asset_id)[0];
 
-        switch (op[0]) { // For a list of trx types, see chain_types.coffee
+        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
-            case 0: // transfer
+            case "transfer":  
                 color = "success";
                 let missingAssets = this.getAssets([op[1].amount.asset_id]);
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
@@ -154,7 +158,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 1: // limit_order
+            case "limit_order_create": 
                 color = "warning";
                 let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
 
@@ -172,7 +176,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 2: // short_order
+            case "short_order_create": 
                 color = "short";
                 let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].collateral.asset_id]);
 
@@ -186,7 +190,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 3: // limit_order_cancel
+            case "limit_order_cancel":  
                 color = "cancel";            
                 column = (
                     <td className="right-td">
@@ -196,7 +200,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 4: // short_order_cancel
+            case "short_order_cancel": 
                 color = "cancel";            
                 column = (
                     <td className="right-td">
@@ -205,7 +209,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 5: // call_order_update
+            case "call_order_update":
                 color = "warning";            
                 column = (
                     <td className="right-td">
@@ -214,7 +218,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 6: // key_create
+            case "key_create":
                 column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.create_key" />
@@ -222,7 +226,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 7: // account_create
+            case "account_create":
                 let missingAccounts = this.getAccounts(op[1].registrar);
 
                 if (current === accounts[op[1].registrar]) {
@@ -243,7 +247,7 @@ class Operation extends React.Component {
                 }
                 break;
 
-            case 8: // account_update
+            case "account_update":
                 let missingAccounts = this.getAccounts(op[1].account);
 
                 column = (
@@ -255,7 +259,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 9: // account_whitelist
+            case "account_whitelist":
                 let missingAccounts = this.getAccounts(op[1].account);
 
                 column = (
@@ -267,7 +271,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 10: // account_upgrade
+            case "account_upgrade":
                 let missingAccounts = this.getAccounts([op[1].account_to_upgrade]);
 
                 column = (
@@ -278,7 +282,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 11: // account_transfer
+            case "account_transfer":
                 let missingAccounts = this.getAccounts([op[1].account_id, op[1].new_owner]);
 
                 column = (
@@ -292,7 +296,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 12: // asset_create
+            case "asset_create":
                 color = "warning";            
                 column = (
                     <td className="right-td">
@@ -302,7 +306,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 13: // asset_update
+            case "asset_update":
                 let missingAssets = this.getAssets(op[1].asset_to_update);
 
                 column = (
@@ -313,7 +317,7 @@ class Operation extends React.Component {
                 );
                 break;  
 
-            case 14: // asset_update_bitasset
+            case "asset_update_bitasset":
                 let missingAssets = this.getAssets(op[1].asset_to_update);
 
                 column = (
@@ -324,7 +328,7 @@ class Operation extends React.Component {
                 );
                 break;     
 
-            case 15: // asset_update_feed_producers
+            case "asset_update_feed_producers":
                 let missingAssets = this.getAssets(op[1].asset_to_update);
 
                 column = (
@@ -335,7 +339,7 @@ class Operation extends React.Component {
                 );
                 break;   
 
-            case 16: // asset_issue
+            case "asset_issue":
                 let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
                 let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
 
@@ -361,7 +365,7 @@ class Operation extends React.Component {
 
                 break;  
 
-            case 17: // asset_burn
+            case "asset_burn":
                 let missingAssets = this.getAssets(op[1].amount_to_burn.asset_id);
 
                 column = (
@@ -372,7 +376,7 @@ class Operation extends React.Component {
                 );
                 break;   
 
-            case 18: // asset_fund_fee_pool
+            case "asset_fund_fee_pool":
                 let missingAssets = this.getAssets(op[1].asset_id);
                 
                 column = (
@@ -383,7 +387,7 @@ class Operation extends React.Component {
                 );
                 break;  
 
-            case 19: // asset_settle
+            case "asset_settle":
                 let missingAssets = this.getAssets(op[1].amount.asset_id);
                 
                 column = (
@@ -394,7 +398,7 @@ class Operation extends React.Component {
                 );
                 break;  
 
-            case 20: // asset_global_settle
+            case "asset_global_settle":
                 let missingAssets = this.getAssets([op[1].asset_to_settle, op[1].price.base.asset_id]);
                 
                 column = (
@@ -411,7 +415,7 @@ class Operation extends React.Component {
                 );
                 break; 
 
-            case 21: // asset_publish_feed
+            case "asset_publish_feed":
                 let missingAssets = this.getAssets(op[1].asset_id);
                 
                 column = (
@@ -422,7 +426,7 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case 22: // delegate_create
+            case "delegate_create":
                 let missingAccounts = this.getAccounts(op[1].delegate_account);
                 
                 column = (
@@ -434,7 +438,7 @@ class Operation extends React.Component {
                 
                 break;
 
-            case 23: // witness_create
+            case "witness_create":
                 let missingAccounts = this.getAccounts(op[1].witness_account);
 
                 column = (
@@ -446,7 +450,7 @@ class Operation extends React.Component {
 
                 break;
 
-            case 24: // witness_withdraw_pay
+            case "witness_withdraw_pay":
                 let missingAccounts = this.getAccounts(op[1].to_account);
                 let missingAssets = this.getAssets("1.4.0");
                 let missingWitnesses = this.fetchWitnesses(op[1].witness_account, witnesses, witness_id_to_name);
@@ -473,7 +477,7 @@ class Operation extends React.Component {
 
                 break;         
 
-            case 25: // proposal_create
+            case "proposal_create":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.proposal_create" />
@@ -481,7 +485,7 @@ class Operation extends React.Component {
                 );
                 break;      
 
-            case 26: // proposal_update
+            case "proposal_update":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.proposal_update" />
@@ -489,7 +493,7 @@ class Operation extends React.Component {
                 );
                 break;   
 
-            case 27: // proposal_delete
+            case "proposal_delete":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.proposal_delete" />
@@ -497,7 +501,7 @@ class Operation extends React.Component {
                 );
                 break;  
 
-            case 28: // withdraw_permission_create
+            case "withdraw_permission_create":
                 let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].authorized_account]);
 
                 column = (
@@ -511,7 +515,7 @@ class Operation extends React.Component {
 
                 break; 
 
-            case 29: // withdraw_permission_update
+            case "withdraw_permission_update":
                 let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].authorized_account]);
 
                 column = (
@@ -525,7 +529,7 @@ class Operation extends React.Component {
 
                 break; 
 
-            case 30: // withdraw_permission_claim
+            case "withdraw_permission_claim":
                 let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].withdraw_to_account]);
 
                 column = (
@@ -539,7 +543,7 @@ class Operation extends React.Component {
 
                 break;                 
 
-            case 31: // withdraw_permission_delete
+            case "withdraw_permission_delete":
                 let missingAccounts = this.getAccounts([op[1].withdraw_from_account, op[1].authorized_account]);
 
                 column = (
@@ -553,7 +557,7 @@ class Operation extends React.Component {
 
                 break;      
 
-            case 32: // fill_order
+            case "fill_order":
                 color = "success";
                 let missingAssets = this.getAssets([op[1].pays.asset_id, op[1].receives.asset_id]);
 
@@ -568,7 +572,7 @@ class Operation extends React.Component {
 
                 break;   
 
-            case 33: // global_parameters_update
+            case "global_parameters_update":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.global_parameters_update" />
@@ -577,7 +581,7 @@ class Operation extends React.Component {
 
                 break;      
 
-            case 34: // file_write
+            case "file_write":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.file_write" />
@@ -586,7 +590,7 @@ class Operation extends React.Component {
 
                 break;       
 
-            case 35: // vesting_balance_create
+            case "vesting_balance_create":
                 let missingAssets = this.getAssets([op[1].amount.asset_id]);
                 let missingAccounts = this.getAccounts([op[1].creator, op[1].owner]);
                 
@@ -601,7 +605,7 @@ class Operation extends React.Component {
 
                 break;                     
 
-            case 36: // vesting_balance_withdraw
+            case "vesting_balance_withdraw":
                 let missingAssets = this.getAssets([op[1].amount.asset_id]);
                 
                 column = (
@@ -613,7 +617,7 @@ class Operation extends React.Component {
 
                 break;        
 
-            case 37: // bond_create_offer
+            case "bond_create_offer":
                 let missingAssets = this.getAssets([op[1].amount.asset_id]);
                 
                 column = (
@@ -625,7 +629,7 @@ class Operation extends React.Component {
 
                 break;                     
 
-            case 38: // bond_cancel_offer
+            case "bond_cancel_offer":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.bond_cancel_offer" />
@@ -635,7 +639,7 @@ class Operation extends React.Component {
 
                 break;  
 
-            case 39: // bond_accept_offer
+            case "bond_accept_offer":
                 let missingAssets = this.getAssets([op[1].amount_borrowed.asset_id]);
                 let missingAccounts = this.getAccounts([op[1].lender, op[1].borrower]);
 
@@ -661,7 +665,7 @@ class Operation extends React.Component {
 
                 break;  
 
-            case 40: // bond_claim_collateral
+            case "bond_claim_collateral":
                 let missingAssets = this.getAssets([op[1].collateral_claimed.asset_id]);
                 let missingAccounts = this.getAccounts([op[1].lender, op[1].claimer]);
 
@@ -687,7 +691,7 @@ class Operation extends React.Component {
 
                 break; 
 
-            case 41: // worker_create
+            case "worker_create":
                 let missingAssets = this.getAssets("1.4.0");
 
                 column = (
@@ -699,7 +703,7 @@ class Operation extends React.Component {
                 
                 break;
 
-            case 42: // custom
+            case "custom":
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.custom" /> 
