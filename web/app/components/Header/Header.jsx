@@ -116,7 +116,7 @@ class Header extends BaseComponent {
                 <div className="show-for-medium large-4 medium-6">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
-                            <Link to="account" data-tip={current} params={{name: currentAccount.name}}><Icon name="user"/></Link>
+                            {currentAccount ? <Link to="account" data-tip={current} params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
                         </div>
                         <div className="grp-menu-item">
                             {accountsDropDown}

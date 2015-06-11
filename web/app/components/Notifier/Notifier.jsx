@@ -30,6 +30,9 @@ class Notifier extends React.Component {
     render() {
 
         let {assets, account_id_to_name, currentAccount, witnesses, witness_id_to_name} = this.props;
+
+        if(!currentAccount) { return <div></div>; }
+        
         let id = currentAccount.id,
             trx, info;
 
@@ -47,7 +50,7 @@ class Notifier extends React.Component {
             }
         }
 
-        if(!trx) { return null; }
+        if(!trx) { return <div></div>; }
 
         return (
             <Notification.Static id='account-notify' title="New transaction" image="">
