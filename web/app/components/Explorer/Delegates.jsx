@@ -1,10 +1,10 @@
 import React from "react";
 import {PropTypes, Component} from "react";
 import Immutable from "immutable";
-import WitnessActions from "actions/WitnessActions";
+import DelegateActions from "actions/DelegateActions";
 import AccountImage from "../Account/AccountImage";
 
-class WitnessCard extends React.Component {
+class DelegateCard extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return nextProps.name !== this.props.name;
@@ -27,30 +27,29 @@ class WitnessCard extends React.Component {
     }
 }
 
-WitnessCard.defaultProps = {
+DelegateCard.defaultProps = {
     name: ""
 };
 
-class WitnessList extends React.Component {
+class DelegateList extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-                !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-                !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name)
+                !Immutable.is(nextProps.delegates, this.props.delegates) ||
+                !Immutable.is(nextProps.delegate_id_to_name, this.props.delegate_id_to_name)
             );
     }
 
     render() {
 
-        let {witness_id_to_name, witnesses} = this.props;
+        let {delegate_id_to_name, delegates} = this.props;
         let itemRows = null;
-        if (witnesses.size > 0) {
-            itemRows = witnesses
+        if (delegates.size > 0) {
+            itemRows = delegates
                 .map((a) => {
-                    // console.log("witness:", a, witness_id_to_name.get(a.id));
                     return (
-                        <WitnessCard key={a.id} name={witness_id_to_name.get(a.id)}>
-                        </WitnessCard>
+                        <DelegateCard key={a.id} name={delegate_id_to_name.get(a.id)}>
+                        </DelegateCard>
                     );
                 }).toArray();
         } 
@@ -65,65 +64,64 @@ class WitnessList extends React.Component {
 
 
 
-class Witnesses extends Component {
+class Delegates extends Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
+            !Immutable.is(nextProps.delegates, this.props.delegates) ||
+            !Immutable.is(nextProps.delegate_id_to_name, this.props.delegate_id_to_name) ||
             !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject)
         );
     }
 
-    _fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
-        if (!Array.isArray(witnessIds)) {
-            witnessIds = [witnessIds];
+    _fetchDelegates(delegateIds, delegates, delegate_id_to_name) {
+        if (!Array.isArray(delegateIds)) {
+            delegateIds = [delegateIds];
         }
 
         let missing = [];
         let missingAccounts = [];
-        witnessIds.forEach(id => {
+        delegateIds.forEach(id => {
             // Check for missing witness data
-            if (!witnesses.get(id)) {
+            if (!delegates.get(id)) {
                 missing.push(id);
             // Check for missing witness account data
-            } else if (!witness_id_to_name.get(id)) {
-                missingAccounts.push(witnesses.get(id).witness_account);
+            } else if (!delegate_id_to_name.get(id)) {
+                missingAccounts.push(delegates.get(id).delegate_account);
             }
         });
 
         if (missing.length > 0) {
-            WitnessActions.getWitnesses(missing);
+            DelegateActions.getDelegates(missing);
         } 
 
         if (missingAccounts.length > 0) {
-            WitnessActions.getWitnessAccounts(missingAccounts);
+            DelegateActions.getDelegateAccounts(missingAccounts);
         }
     }
 
     render() {
-        let {witness_id_to_name, witnesses, dynGlobalObject, globalObject} = this.props;
-        let activeWitnesses = [];
-        for (let key in globalObject.active_witnesses) {
-            if (globalObject.active_witnesses.hasOwnProperty(key)) {
-                activeWitnesses.push(globalObject.active_witnesses[key]);
+        let {delegate_id_to_name, delegates, dynGlobalObject, globalObject} = this.props;
+        let activeDelegates = [];
+        for (let key in globalObject.active_delegates) {
+            if (globalObject.active_delegates.hasOwnProperty(key)) {
+                activeDelegates.push(globalObject.active_delegates[key]);
             }
         }
 
-        this._fetchWitnesses(activeWitnesses, witnesses, witness_id_to_name);
+        this._fetchDelegates(activeDelegates, delegates, delegate_id_to_name);
        
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
                     <div className="grid-block shrink">
                         <div className="grid-content">
-                            <h4>Currently active witness: {witness_id_to_name.get(dynGlobalObject.current_witness)}</h4>
-                            <h5>Total number of witnesses active: {Object.keys(globalObject.active_witnesses).length}</h5>
+                            <h5>Total number of delegates active: {Object.keys(globalObject.active_delegates).length}</h5>
                             <br/>
                         </div>
                     </div>
                     <div className="grid-block" style={{alignItems: "flex-start"}}>
-                        <WitnessList witnesses={witnesses} witness_id_to_name={witness_id_to_name}/>
+                        <DelegateList delegates={delegates} delegate_id_to_name={delegate_id_to_name}/>
                     </div>
                 </div>
             </div>
@@ -132,14 +130,14 @@ class Witnesses extends Component {
 }
 
 
-Witnesses.defaultProps = {
+Delegates.defaultProps = {
     accounts: {},
     assets: {}
 };
 
-Witnesses.propTypes = {
+Delegates.propTypes = {
     accounts: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired
 };
 
-export default Witnesses;
+export default Delegates;

@@ -52,7 +52,13 @@ let Witness = t.struct({
     last_secret: t.Str,
     accumulated_income: t.Num,
     vote_id: t.Str
-}, "Block");
+}, "Witness");
+
+let Delegate = t.struct({
+    id: t.Str,
+    delegate_account: t.Str,
+    vote_id: t.Str
+}, "Delegate");
 
 let GlobalObject = t.struct({
     active_delegates: t.Arr,
@@ -61,7 +67,7 @@ let GlobalObject = t.struct({
     id: t.Str,
     next_available_vote_id: t.Num,
     parameters: t.Obj
-});
+}, "GlobalObject");
 
 let DynGlobalObject = t.struct({
     current_witness: t.Str,
@@ -72,7 +78,7 @@ let DynGlobalObject = t.struct({
     random: t.Str,
     time: t.Dat,
     witness_budget: t.Num
-});
+}, "DynGlobalObject");
 
 let LimitOrder = t.struct({
     expiration: t.Dat,
@@ -80,7 +86,7 @@ let LimitOrder = t.struct({
     id: t.Str,
     sell_price: t.Obj,
     seller: t.Str
-});
+}, "LimitOrder");
 
 let ShortOrder = t.struct({
     expiration: t.Dat,
@@ -88,7 +94,7 @@ let ShortOrder = t.struct({
     id: t.Str,
     sell_price: t.Obj,
     seller: t.Str
-});
+}, "ShortOrder");
 
 let LimitTrx = t.struct({
     amount_to_sell: t.Obj,
@@ -97,7 +103,7 @@ let LimitTrx = t.struct({
     fill_or_kill: t.Bool,
     min_to_receive: t.Obj,
     seller: t.Str
-});
+}, "LimitTrx");
 
 let ShortTrx = t.struct({
     amount_to_sell: t.Obj,
@@ -107,7 +113,7 @@ let ShortTrx = t.struct({
     initial_collateral_ratio: t.Num,
     maintenance_collateral_ratio: t.Num,
     seller: t.Str
-});
+}, "ShortTrx");
 
 module.exports = {
     Account: Account,
@@ -115,6 +121,7 @@ module.exports = {
     Block: Block,
     Key: Key,
     Witness: Witness,
+    Delegate: Delegate,
     GlobalObject: GlobalObject,
     DynGlobalObject: DynGlobalObject,
     LimitTrx: LimitTrx,

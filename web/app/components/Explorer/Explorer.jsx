@@ -66,7 +66,7 @@ class Explorer extends React.Component {
                                 </Link> 
                             </ExplorerCard>
                             <ExplorerCard>
-                                <Link to="blocks">
+                                <Link to="delegates">
                                     <div>
                                         <Icon name="users" size="10x" fillClass="fill-black"/>
                                     </div>
