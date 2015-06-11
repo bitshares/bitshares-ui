@@ -64,9 +64,16 @@ class Account extends Component {
           );
     }
 
+    upgradeAccountClickHandler(e){
+        e.preventDefault();
+        let account_id = this.props.account_name_to_id[this.props.accountName];
+        AccountActions.upgradeAccount(account_id);
+        return false;
+    }
+
     render() {
 
-        let currentAccountName = this.props.accountName,
+        let accountName = this.props.accountName,
           {browseAccounts, 
             isUnlocked, account_name_to_id, assets, accountHistories, 
             accountBalances, account_id_to_name, witnesses, witness_id_to_name} = this.props, 
@@ -81,7 +88,7 @@ class Account extends Component {
         //     return null;
         // }
 
-        let ba = account_name_to_id[currentAccountName] ? browseAccounts.get(account_name_to_id[currentAccountName]) : null;
+        let ba = account_name_to_id[accountName] ? browseAccounts.get(account_name_to_id[accountName]) : null;
 
         // isMember = browseAccount.isMember;
 
@@ -99,7 +106,7 @@ class Account extends Component {
         // Get current balances
         if (ba) {
             // console.log("ba:", ba);
-            isMember = true;
+            isMember = (ba.id === ba.lifetime_referrer);
 
             // followButton = isUnlocked && !ba.isMyAccount ? <button className="button">Follow</button> : null;
 
@@ -131,7 +138,7 @@ class Account extends Component {
                                 block={trx.block_num}
                                 accounts={account_id_to_name}
                                 assets={assets}
-                                current={currentAccountName}
+                                current={accountName}
                                 witnesses={witnesses}
                                 witness_id_to_name={witness_id_to_name}/>
                             );
@@ -162,7 +169,7 @@ class Account extends Component {
                       registrar={ba.registrar}
                       referrer={ba.referrer}
                       names={account_id_to_name}
-                    /> : null}
+                    /> : <a className="button" href onClick={this.upgradeAccountClickHandler.bind(this)}>Upgrade</a>}
                     {connections}
                 </div>
               </div>
