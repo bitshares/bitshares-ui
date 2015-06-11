@@ -1,7 +1,7 @@
 import React from "react";
 import Notification from "react-foundation-apps/lib/notification";
 import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
-import Operation from "../Account/Operation";
+import Operation from "../Blockchain/Operation";
 
 class Notifier extends React.Component {
 

@@ -8,7 +8,7 @@ import {FormattedNumber} from "react-intl";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
-import Operation from "./Operation";
+import Operation from "../Blockchain/Operation";
 import Translate from "react-translate-component";
 
 class Account extends Component {
