@@ -267,7 +267,18 @@ class Operation extends React.Component {
 
                 break;
 
-            case 10: // account_transfer
+            case 10: // account_upgrade
+                let missingAccounts = this.getAccounts([op[1].account_to_upgrade]);
+
+                column = (
+                    <td className="right-td">
+                        <Translate component="span" content="transaction.upgrade_account" />
+                    </td>
+                );
+
+                break;
+
+            case 11: // account_transfer
                 let missingAccounts = this.getAccounts([op[1].account_id, op[1].new_owner]);
 
                 column = (
