@@ -59,7 +59,7 @@ class PublicKey
         assert.equal config.address_prefix, prefix, "Expecting key to begin with #{config.address_prefix}, instead got #{prefix}"
         public_key = public_key.slice config.address_prefix.length
         
-        public_key = new Buffer(base58.decode public_key, 'binary')
+        public_key = new Buffer(base58.decode(public_key), 'binary')
         checksum = public_key.slice -4
         public_key = public_key.slice 0, -4
         new_checksum = hash.ripemd160 public_key

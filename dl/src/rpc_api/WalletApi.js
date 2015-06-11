@@ -22,9 +22,27 @@ class WalletApi {
         this.application_api = new ApplicationApi()
     }
     
+    new_transaction() {
+        var expire_minutes = 10
+        var tr = new tr_op.signed_transaction()
+        tr.set_expire_minutes(expire_minutes)
+        return tr
+    }
+    
+    sign_and_broadcast( tr ) {
+        var signer_private_key_id = 1
+        var signer_private_key = PrivateKey.fromSeed("nathan")
+        var broadcast = true
+        return tr.finalize(
+            signer_private_key_id,
+            signer_private_key,
+            broadcast
+        )
+    }
+    
     /** Console print any transaction object with zero default values. */
-    template(transaction_object_name) {
-        tr_helper.template(transaction_object_name)
+    template(transaction_object_name, indent) {
+        tr_helper.template(transaction_object_name, indent)
     }
 
     create_account_with_brain_key(

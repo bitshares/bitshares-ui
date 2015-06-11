@@ -25,6 +25,7 @@ _my.signed_transaction = ->
     
     add_operation: (operation) ->
         required operation, "operation"
+        required operation.get_operations, "operation.get_operations()"
         results = operation.get_operations()
         for result in results
             unless Array.isArray result
@@ -32,10 +33,11 @@ _my.signed_transaction = ->
             @operations.push result
         return
     
-    add_operation_type: (operation, type) ->
+    add_type_operation: (name, operation) ->
+        required name, "name"
         required operation, "operation"
-        required type, "type"
-        required type.operation_name, "operation_name"
+        type = so_type[name]
+        required type, "Unknown operation #{name}"
         operation_id = ChainTypes.operations[type.operation_name]
         if operation_id is undefined
             throw new Error "unknown operation: #{type.operation_name}"
@@ -51,6 +53,10 @@ _my.signed_transaction = ->
                 for op in tr.operations
                     if op[1]["finalize"]
                         op[1].finalize()
+                    unless op[1].fee
+                        op[1].fee = 
+                            amount: "0"
+                            asset_id: "1.4.0"
                 
                 tr_buffer = so_type.transaction.toBuffer tr
                 # Debug
