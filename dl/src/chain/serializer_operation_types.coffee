@@ -240,7 +240,6 @@ account_update = new Serializer(
     num_witness: uint16
     num_committee: uint16
     vote: optional set vote_id
-    upgrade_to_prime: bool
 )
 
 account_whitelist = new Serializer( 
@@ -249,6 +248,13 @@ account_whitelist = new Serializer(
     authorizing_account: protocol_id_type "account"
     account_to_list: protocol_id_type "account"
     new_listing: uint8
+)
+
+account_upgrade = new Serializer( 
+    "account_upgrade"
+    fee: asset
+    account_to_upgrade: protocol_id_type "account"
+    upgrade_to_lifetime_member: bool
 )
 
 account_transfer = new Serializer( 
@@ -493,6 +499,7 @@ fee_schedule = new Serializer(
     account_len5_fee: uint32
     account_len4_fee: uint32
     account_len3_fee: uint32
+    account_len2_fee: uint32
     account_premium_fee: uint32
     account_whitelist_fee: uint32
     delegate_create_fee: uint32
@@ -511,7 +518,8 @@ fee_schedule = new Serializer(
     data_fee: uint32
     signature_fee: uint32
     global_parameters_update_fee: uint32
-    prime_upgrade_fee: uint32
+    membership_annual_fee: uint32
+    membership_lifetime_fee: uint32
     withdraw_permission_update_fee: uint32
     create_bond_offer_fee: uint32
     cancel_bond_offer_fee: uint32
@@ -528,7 +536,6 @@ fee_schedule = new Serializer(
 chain_parameters = new Serializer( 
     "chain_parameters"
     current_fees: fee_schedule
-    witness_pay_percent_of_accumulated: uint32
     block_interval: uint8
     maintenance_interval: uint32
     maximum_transaction_size: uint32
@@ -540,13 +547,15 @@ chain_parameters = new Serializer(
     maximum_asset_feed_publishers: uint8
     maximum_authority_membership: uint16
     burn_percent_of_fee: uint16
-    witness_percent_of_fee: uint16
+    network_percent_of_fee: uint16
+    lifetime_referrer_percent_of_fee: uint16
     max_bulk_discount_percent_of_fee: uint16
     cashback_vesting_period_seconds: uint32
+    cashback_vesting_threshold: int64
     bulk_discount_threshold_min: int64
     bulk_discount_threshold_max: int64
-    count_non_prime_votes: bool
-    allow_non_prime_whitelists: bool
+    count_non_member_votes: bool
+    allow_non_member_whitelists: bool
     witness_pay_per_block: int64
     worker_budget_per_day: int64
 )
@@ -675,6 +684,7 @@ operation.st_operations = [
     account_create    
     account_update    
     account_whitelist    
+    account_upgrade    
     account_transfer    
     asset_create    
     asset_update    
