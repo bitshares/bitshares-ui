@@ -155,6 +155,14 @@ class Transfer extends BaseComponent {
         let {accounts, currentAccount, assets, accountBalances} = this.props;
         let al = this.props.accounts_list;
         let account_choices = Object.keys(al).map(k => [`["${al[k]}","${k}"]`, k]);
+        if (!account_choices[0]) {
+            return (
+                <div className="grid-block">
+                    <div className="grid-block page-layout transfer-top">
+                    </div>
+                </div>
+                );
+        }
         let account = null;
         let balancesComp = null, finalBalances = null;
         let from = transfer.from ? transfer.from : JSON.parse(account_choices[0][0]);

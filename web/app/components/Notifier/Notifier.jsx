@@ -1,14 +1,12 @@
 import React from "react";
 import Notification from "react-foundation-apps/lib/notification";
 import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
-import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router";
 import Operation from "../Account/Operation";
 
 class Notifier extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        let id = nextProps.currentAccount.id;
+        let id = nextProps.currentAccount ? nextProps.currentAccount.id : null;
         let ch = this.props.accountHistories.get(id);
         let nh = nextProps.accountHistories.get(id);
         if (nh && ch && nh[0]) {
@@ -32,7 +30,7 @@ class Notifier extends React.Component {
         let {assets, account_id_to_name, currentAccount, witnesses, witness_id_to_name} = this.props;
 
         if(!currentAccount) { return <div></div>; }
-        
+
         let id = currentAccount.id,
             trx, info;
 
