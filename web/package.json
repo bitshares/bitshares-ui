@@ -43,6 +43,7 @@
     "react-input-autosize": "^0.4.3",
     "react-interpolate-component": "^0.7.1",
     "react-intl": "^1.2.0",
+    "react-json-inspector": "^5.0.3",
     "react-router": "~0.13.3",
     "react-select": "^0.4.9",
     "react-tools": "~0.13.2",
