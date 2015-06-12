@@ -1,3 +1,7 @@
+import {object_type} from "chain/chain_types";
+var opTypes = Object.keys(object_type);
+console.log(opTypes);
+
 let id_regex = /\b\d+(\.\d+){2}\b/;
 
 var Utils = {
@@ -13,6 +17,12 @@ var Utils = {
 
     get_asset_precision: (precision) => {
         return Math.pow(10, precision);
+    },
+
+    order_type: (id) => {
+        var type = id.split(".")[1];
+        console.log("type:", type, opTypes[type]);
+        return opTypes[type];
     }
 
 };
