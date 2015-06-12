@@ -198,7 +198,11 @@ module.exports = {
             common_options: "Options",
             new_options: "Nouvelles options",
             new_producers: "Nouveaux fornisseurs de flux",
-            asset_issue: "Montant à créer"
+            asset_issue: "Montant à créer",
+            max_margin_period_sec: "Periode max de marge (s)",
+            call_limit: "Limite de couverture",
+            short_limit: "Limite de short",
+            settlement_price: "Prix de règlement"
         },
         assets: {
             title: "Actifs",

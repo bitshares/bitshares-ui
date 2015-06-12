@@ -200,7 +200,11 @@ module.exports = {
             common_options: "Common options",
             new_options: "New options",
             new_producers: "New feed producers",
-            asset_issue: "Amount to issue"
+            asset_issue: "Amount to issue",
+            max_margin_period_sec: "Max margin period (s)",
+            call_limit: "Call limit",
+            short_limit: "Short limit",
+            settlement_price: "Settlement price"
         },
         assets: {
             title: "Assets",

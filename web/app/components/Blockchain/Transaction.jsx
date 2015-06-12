@@ -121,7 +121,7 @@ class Transaction extends React.Component {
         trx.operations.forEach((op, opIndex) => {
             let missingFee = this.getAssets([op[1].fee.asset_id])[0];
 
-            // console.log("block op:", op);
+            console.log("block op:", op);
             let rows = [];
             let color = "";
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -583,6 +583,70 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="transfer.amount" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+
+                    break;
+
+                case "asset_publish_feed":
+                    color = "warning";
+                    let missingAssets = this.getAssets(op[1].asset_id);
+                    let feed = op[1].feed;
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.asset.title" />:</td>
+                            <td>{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_id).symbol}}>{assets.get(op[1].asset_id).symbol}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.max_margin_period_sec" />:</td>
+                            <td>{feed.max_margin_period_sec.toString()}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.coll_ratio" />:</td>
+                            <td>{feed.required_initial_collateral.toString()}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.coll_maint" />:</td>
+                            <td>{feed.required_maintenance_collateral.toString()}</td>
+                        </tr>
+                    );                                        
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.call_limit" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset
+                                                        amount={feed.call_limit.quote.amount / feed.call_limit.base.amount}
+                                                        asset={assets.get(feed.call_limit.quote.asset_id)}
+                                                        base={assets.get(feed.call_limit.base.asset_id)}/> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.short_limit" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset
+                                                        amount={feed.short_limit.quote.amount / feed.short_limit.base.amount}
+                                                        asset={assets.get(feed.short_limit.quote.asset_id)}
+                                                        base={assets.get(feed.short_limit.base.asset_id)}/> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.settlement_price" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset
+                                                        amount={feed.settlement_price.quote.amount / feed.settlement_price.base.amount}
+                                                        asset={assets.get(feed.settlement_price.quote.asset_id)}
+                                                        base={assets.get(feed.settlement_price.base.asset_id)}/> : null}</td>
                         </tr>
                     );
 
