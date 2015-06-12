@@ -87,7 +87,7 @@ helper.template=(serializer_operation_type_name, indent = 0)->
     so = so_type[serializer_operation_type_name]
     unless so
         throw new Error "unknown serializer_operation_type #{serializer_operation_type_name}"
-    object = so.toObject undefined, yes
+    object = so.toObject undefined, {use_default: yes, annotate: yes}
     console.log JSON.stringify object,null,indent
     return
 
@@ -95,7 +95,7 @@ helper.new_operation=(serializer_operation_type_name)->
     so = so_type[serializer_operation_type_name]
     unless so
         throw new Error "unknown serializer_operation_type #{serializer_operation_type_name}"
-    object = so.toObject undefined, yes
+    object = so.toObject undefined, {use_default: yes, annotate: yes}
     so.fromObject object
 
 helper.instance=(object_id)->

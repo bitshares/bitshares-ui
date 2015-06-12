@@ -2,6 +2,7 @@ ChainTypes = require './chain_types'
 ObjectId = require './object_id'
 Signature = require '../ecc/signature'
 ByteBuffer = require('../common/bytebuffer')
+hash = require('../common/hash')
 Long = ByteBuffer.Long
 Aes = require '../ecc/aes'
 
@@ -52,28 +53,58 @@ _my.signed_transaction = ->
     set_expire_minutes:(min)->
         @ref_block_prefix = Math.round(Date.now()/1000) + (min*60)
     
+    ###* Always returns a promise.  If broadcast is true it returns the result
+    from the server, if not it returns the json transaction object.  ###
     finalize:(key_ids, private_keys, broadcast = no)->
         ((tr, key_ids, private_keys, broadcast)->
-            lookup.resolve().then ()->
-                for op in tr.operations
-                    if op[1]["finalize"]
-                        op[1].finalize()
-                
-                tr_buffer = so_type.transaction.toBuffer tr
-                # Debug
-                # ByteBuffer.fromBinary(tr_buffer.toString('binary')).printDebug()
-                key_ids = [ key_ids ] unless Array.isArray key_ids
-                private_keys = [ private_keys ] unless Array.isArray private_keys
-                for i in [0...private_keys.length] by 1
-                    key_id = key_ids[i]
-                    private_key = private_keys[i]
-                    sig = Signature.signBuffer tr_buffer, private_key
-                    tr.signatures.push [ key_id, sig.toBuffer() ]
-                tr_object = so_type.signed_transaction.toObject(tr)
-                return tr_object unless broadcast
-                api.network_api().exec("broadcast_transaction", [tr_object])
-            , (error)->
-                console.error 'finalize error', error, error.stack
+            new Promise (resolve, reject)->
+                lookup.resolve().then ()->
+                    for op in tr.operations
+                        if op[1]["finalize"]
+                            op[1].finalize()
+                    
+                    tr_buffer = so_type.transaction.toBuffer tr
+                    # Debug
+                    # ByteBuffer.fromBinary(tr_buffer.toString('binary')).printDebug()
+                    key_ids = [ key_ids ] unless Array.isArray key_ids
+                    private_keys = [ private_keys ] unless Array.isArray private_keys
+                    for i in [0...private_keys.length] by 1
+                        key_id = key_ids[i]
+                        private_key = private_keys[i]
+                        sig = Signature.signBuffer tr_buffer, private_key
+                        tr.signatures.push [ key_id, sig.toBuffer() ]
+                    
+                    tr_object = so_type.signed_transaction.toObject(tr)
+                    
+                    unless broadcast
+                        resolve tr_object
+                        return
+                    
+                    ((private_key, tr_buffer, tr_object)->
+                        api.network_api().exec("broadcast_transaction", [tr_object]).then (result)->
+                            resolve result
+                            return
+                        .catch (error)->
+                            signer_public = private_key.toPublicKey()
+                            #console.log error # logged in GrapheneApi
+                            message = error.message
+                            message = "" unless message
+                            reject (
+                                message + "\n" +
+                                'graphene-ui signer ' +
+                                'address ' + signer_public.toBtsAddy() +
+                                ' digest ' + hash.sha256(tr_buffer).toString('hex') +
+                                ' public ' + signer_public.toBtsPublic() +
+                                ' transaction ' + tr_buffer.toString('hex') +
+                                ' ' + JSON.stringify(tr_object)
+                            )
+                            return
+                        return
+                    )(private_key, tr_buffer, tr_object)
+                .catch (error)->
+                    reject(error)
+                    #console.error 'finalize error', error, error.stack
+                    return
         )(@, key_ids, private_keys, broadcast)
     
 _my.key_create = ->

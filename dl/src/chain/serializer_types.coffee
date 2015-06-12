@@ -17,8 +17,8 @@ Types.uint8 =
     appendByteBuffer:(b, object)->
         b.writeUint8 object; return
     fromObject:(object)-> object
-    toObject:(object, use_default = no)->
-        return 0 if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return 0 if debug.use_default and object is undefined
         int = parseInt object
         vt.require_range 0,0xFF,int, "uint8 #{object}"
         int
@@ -28,8 +28,8 @@ Types.uint16 =
         b.writeUint16 object
         return
     fromObject:(object)-> object
-    toObject:(object, use_default = no)->
-        return 0 if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return 0 if debug.use_default and object is undefined
         int = parseInt object
         vt.require_range 0,0xFFFF,int, "uint16 #{object}"
         int
@@ -39,8 +39,8 @@ Types.uint32 =
         b.writeUint32 object
         return
     fromObject:(object)-> object
-    toObject:(object, use_default = no)->
-        return 0 if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return 0 if debug.use_default and object is undefined
         int = parseInt object
         vt.require_range 0,0xFFFFFFFF,int, "uint32 #{object}"
         int
@@ -49,8 +49,8 @@ Types.varint32 =
     appendByteBuffer:(b, object)->
         b.writeVarint32 object; return
     fromObject:(object)-> object
-    toObject:(object, use_default = no)->
-        return 0 if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return 0 if debug.use_default and object is undefined
         int = parseInt object
         vt.require_range 0,0xFFFFFFFF,int, "uint32 #{object}"
         int
@@ -62,8 +62,8 @@ Types.int64 =
         return
     fromObject:(object)->
         Long.fromString "" + vt.require_digits object
-    toObject:(object, use_default = no)->
-        return "0" if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return "0" if debug.use_default and object is undefined
         object.toString()
 Types.uint64 =
     fromByteBuffer:(b)->
@@ -73,8 +73,8 @@ Types.uint64 =
         return
     fromObject:(object)->
         Long.fromString "" + vt.require_digits object
-    toObject:(object, use_default = no)->
-        return "0" if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return "0" if debug.use_default and object is undefined
         object.toString()
 
 Types.string =
@@ -88,8 +88,8 @@ Types.string =
         return
     fromObject:(object)->
         new Buffer object
-    toObject:(object, use_default = no)->
-        return "" if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return "" if debug.use_default and object is undefined
         object.toString()
 
 Types.bytes = (size)->
@@ -110,8 +110,8 @@ Types.bytes = (size)->
         return
     fromObject:(object)->
         new Buffer object, 'hex'
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             zeros=(num)-> new Array( num ).join( "00" )
             return zeros size
         object.toString 'hex'
@@ -126,8 +126,8 @@ Types.bool =
         return
     fromObject:(object)->
         if object then 1 else 0
-    toObject:(object, use_default = no)->
-        return no if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return no if debug.use_default and object is undefined
         if object then yes else no
 
 Types.array = (st_operation)->
@@ -142,11 +142,11 @@ Types.array = (st_operation)->
     fromObject:(object)->
         for o in object
             st_operation.fromObject o
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
-            return [ st_operation.toObject(undefined, yes) ]
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
+            return [ st_operation.toObject(object, debug) ]
         for o in object
-            st_operation.toObject o
+            st_operation.toObject o, debug
 
 Types.time_point_sec =
     fromByteBuffer:(b)-> b.readUint32()
@@ -155,8 +155,8 @@ Types.time_point_sec =
         return
     fromObject:(object)->
         Math.round( (new Date(object)).getTime() / 1000 )
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             return (new Date(0)).toISOString().split('.')[0]
         int = parseInt object
         vt.require_range 0,0xFFFFFFFF,int, "uint32 #{object}"
@@ -177,12 +177,12 @@ Types.fixed_array = (count, st_operation)->
     fromObject:(object)->
         for i in [0...count] by 1
             st_operation.fromObject object[i]
-    toObject:(object, use_default = no)->
-        return if use_default and object is undefined
+    toObject:(object, debug = {})->
+        return if debug.use_default and object is undefined
             for i in [0...count] by 1
-                st_operation.toObject undefined, yes
+                st_operation.toObject undefined, debug
         for i in [0...count] by 1
-            st_operation.toObject object[i]
+            st_operation.toObject object[i], debug
 
 ### Supports instance numbers (11) or object types (1.3.11).  Object type
 validation is enforced when an object type is used. ###
@@ -203,9 +203,9 @@ id_type = (reserved_spaces, object_type)->
         if vt.is_digits object
             return vt.to_number object
         vt.get_instance reserved_spaces, object_type, object
-    toObject:(object, use_default = no)->
+    toObject:(object, debug = {})->
         object_type_id = ChainTypes.object_type[object_type]
-        if use_default and object is undefined
+        if debug.use_default and object is undefined
             return "#{reserved_spaces}.#{object_type_id}.0"
         object = object.resolve if object.resolve isnt undefined
         if /^[0-9]+\.[0-9]+\.[0-9]+$/.test object
@@ -227,8 +227,8 @@ Types.object_id_type =
     fromObject:(object)->
         object = object.resolve if object.resolve isnt undefined
         ObjectId.fromString object
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             return "0.0.0"
         if object.resolve isnt undefined
             object = object.resolve
@@ -254,8 +254,8 @@ Types.vote_id =
         vt.require_range 0,0xffffff,id,"vote id #{object}"
         type:type
         id:id
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             return "0:0"
         object.id + ":" + object.type
 
@@ -266,7 +266,7 @@ Types.optional = (st_operation)->
             return undefined
         st_operation.fromByteBuffer b
     appendByteBuffer:(b, object)->
-        if object
+        if object isnt null and object isnt undefined
             b.writeUint8 1
             st_operation.appendByteBuffer b, object
         else
@@ -275,16 +275,19 @@ Types.optional = (st_operation)->
     fromObject:(object)->
         return undefined if object is undefined
         st_operation.fromObject object
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
-            object = st_operation.toObject undefined, yes
-            if typeof object is "object"
-                object.__optional = "parent is optional"
+    toObject:(object, debug = {})->
+        # toObject is only null save if use_default is true
+        result_object = if not debug.use_default and object is undefined
+            undefined
+        else
+            st_operation.toObject object, debug
+        
+        if debug.annotate
+            if typeof result_object is "object"
+                result_object.__optional = "parent is optional"
             else
-                object = __optional: object
-            return object
-        return undefined if object is undefined
-        st_operation.toObject object
+                result_object = __optional: result_object
+        result_object
 
 Types.static_variant = (_st_operations)->
     st_operations: _st_operations
@@ -311,15 +314,15 @@ Types.static_variant = (_st_operations)->
             type_id
             st_operation.fromObject object[1]
         ]
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
-            return [0, @st_operations[0].toObject(undefined, yes)]
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
+            return [0, @st_operations[0].toObject(undefined, debug)]
         type_id = object[0]
         st_operation = @st_operations[type_id]
         vt.required st_operation, "operation #{type_id}"
         [
             type_id
-            st_operation.toObject object[1]
+            st_operation.toObject object[1], debug
         ]
 
 # todo, map has unique keys
@@ -342,18 +345,18 @@ Types.map = (key_st_operation, value_st_operation)->
                 key_st_operation.fromObject o[0]
                 value_st_operation.fromObject o[1]
             ]
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             return [
                 [
-                    key_st_operation.toObject(undefined, yes)
-                    value_st_operation.toObject(undefined, yes)
+                    key_st_operation.toObject(undefined, debug)
+                    value_st_operation.toObject(undefined, debug)
                 ]
             ]
         for o in object
             [
-                key_st_operation.toObject o[0]
-                value_st_operation.toObject o[1]
+                key_st_operation.toObject o[0], debug
+                value_st_operation.toObject o[1], debug
             ]
 
 Types.public_key =
@@ -363,8 +366,8 @@ Types.public_key =
         fp.public_key b, object
     fromObject:(object)->
         PublicKey.fromBtsPublic object
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             return "GPHXyz...public_key"
         object.toBtsPublic()
 
@@ -375,8 +378,8 @@ Types.address =
         fp.ripemd160 b, object
     fromObject:(object)->
          Address.fromString object
-    toObject:(object, use_default = no)->
-        if use_default and object is undefined
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
             return "GPHXyz...address"
         new Address(object.public_key).toString()
 

@@ -48,19 +48,27 @@ class Serializer
         
         result
     
-    toObject: (serialized_object, use_default = no)->
+    toObject: (serialized_object, debug = {})->
         result = {}
         field = null
         try
             for field in Object.keys @types
                 type = @types[field]
-                object = type.toObject serialized_object?[field], use_default
+                object = type.toObject serialized_object?[field], debug
                 result[field] = object
-        
+                if(debug.hex_dump)
+                    b = new ByteBuffer ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN
+                    type.appendByteBuffer(b, object)
+                    b = b.copy 0, b.offset
+                    console.error(
+                        @operation_name+'.'+field
+                        b.toHex()
+                    )
         catch error
             EC.throw @operation_name+'.'+field, error
         
         result
+    
     
     # <helper_functions>
     

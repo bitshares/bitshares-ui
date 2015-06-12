@@ -29,11 +29,10 @@ class WalletApi {
         return tr
     }
     
-    sign_and_broadcast( tr ) {
+    sign_and_broadcast( tr, broadcast = true ) {
         vt.required(tr, "transaction")
         var signer_private_key_id = 1
         var signer_private_key = PrivateKey.fromSeed("nathan")
-        var broadcast = true
         return tr.finalize(
             signer_private_key_id,
             signer_private_key,
