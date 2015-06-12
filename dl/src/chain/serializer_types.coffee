@@ -257,7 +257,7 @@ Types.vote_id =
     toObject:(object, use_default = no)->
         if use_default and object is undefined
             return "0:0"
-        object.id +":"+ object.type
+        object.id + ":" + object.type
 
 Types.optional = (st_operation)->
     vt.required st_operation, "st_operation"

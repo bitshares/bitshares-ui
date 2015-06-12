@@ -41,7 +41,12 @@ _my.signed_transaction = ->
         operation_id = ChainTypes.operations[type.operation_name]
         if operation_id is undefined
             throw new Error "unknown operation: #{type.operation_name}"
-        @operations.push [operation_id, operation]
+        unless operation.fee
+            operation.fee =
+                amount: "0"
+                asset_id: "1.4.0"
+        operation_instance = type.fromObject operation
+        @operations.push [operation_id, operation_instance]
         return
     
     set_expire_minutes:(min)->
@@ -53,10 +58,6 @@ _my.signed_transaction = ->
                 for op in tr.operations
                     if op[1]["finalize"]
                         op[1].finalize()
-                    unless op[1].fee
-                        op[1].fee = 
-                            amount: "0"
-                            asset_id: "1.4.0"
                 
                 tr_buffer = so_type.transaction.toBuffer tr
                 # Debug
