@@ -6,13 +6,20 @@ import utils from "common/utils";
 
 class FormattedAsset extends Component {
     shouldComponentUpdate(nextProps) {
-        return (nextProps.amount !== this.props.amount || 
-            nextProps.asset.symbol !== this.props.asset.symbol
+        let symbol = (this.props.asset && nextProps.asset) ? nextProps.asset.symbol !== this.props.asset.symbol : true;
+        return (
+            nextProps.amount !== this.props.amount || 
+            symbol
             );
     }
 
     render() {
         let {amount, asset, base} = this.props;
+
+        if (!asset) {
+            return <span></span>;
+        }
+
         let precision = utils.get_asset_precision(asset.precision);
         let decimals = Math.max(2, asset.precision - 2); 
 
@@ -41,8 +48,14 @@ class FormattedAsset extends Component {
     }
 }
 
+FormattedAsset.defaultProps = {
+    amount: 0,
+    base: undefined,
+    asset: undefined
+};
+
 FormattedAsset.propTypes = {
-    amount: PropTypes.number,
+    amount: PropTypes.number.isRequired,
     base: PropTypes.object,
     asset: PropTypes.object.isRequired
 };
