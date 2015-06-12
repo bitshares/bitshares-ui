@@ -51,9 +51,9 @@ module.exports = {
         },
         back: "BACK",
         confirm: "CONFIRM",
-        broadcast: "Your transfer has been broadcasted to the network",
+        broadcast: "Your transfer has been broadcast to the network",
         again: "MAKE ANOTHER TRANSFER",
-        see: "SEE MY TRANSFERSS"
+        see: "SEE MY TRANSFERS"
     },
     transaction: {
         sent: "Sent",
@@ -70,18 +70,23 @@ module.exports = {
         coll_maint: "Collateral maintenance ratio",
         "create_key": "Created a public key",
         reg_account: "Registered the account",
+        was_reg_account: "registered by",
         create_asset: "Created the asset",
         limit_order: "Placed limit order to sell",
         limit_order_cancel: "Cancelled limit order with id",
         short_order: "Placed short order to sell",
+        short_order_cancel: "Cancelled short with id",
         at: "at",
         coll_of: "with collateral of",
         call_order_update: "Updated call order",
         upgrade_account: "Upgraded the account to lifetime member",
         update_account: "Updated account",
         whitelist_account: "Whitelisted the account",
+        whitelisted_by: "Was whitelisted by the account",
         transfer_account: "Transferred the account",
         update_asset: "Updated the asset",
+        update_feed_producers: "Updated the feed producers of asset",
+        feed_producer: "Became a feed producer for the asset",
         asset_issue: "Issued",
         was_issued: "Was issued",
         by: "by",
@@ -115,6 +120,7 @@ module.exports = {
         bond_pay_collateral: "Paid collateral of",
         create_worker: "Created a worker with a pay of",
         custom: "Created a custom operation",
+        order_id: "Order ID",
         trxTypes: {
             0: "Transfer",
             1: "Limit order",
@@ -183,7 +189,18 @@ module.exports = {
             trx: "Transaction",
             op_type: "Operation type",
             fee_payer: "Fee paying account",
-            key: "Public key"
+            key: "Public key",
+            transactions: "Transaction count",
+            account_upgrade: "Account to upgrade",
+            lifetime: "Upgrade to lifetime member",
+            authorizing_account: "Authorizing account",
+            listed_account: "Listed account",
+            new_listing: "New listing",
+            asset_update: "Asset to update",
+            common_options: "Common options",
+            new_options: "New options",
+            new_producers: "New feed producers",
+            asset_issue: "Amount to issue"
         },
         assets: {
             title: "Assets",
@@ -194,17 +211,26 @@ module.exports = {
             issuer: "Issuer",
             precision: "Precision"
         },
+        asset: {
+            title: "Asset"
+        },
         witnesses: {
             title: "Witnesses"
-        },
+        },      
         delegates: {
             title: "Delegates"
+        },
+        delegate: {
+            title: "Delegate"
         },
         workers: {
             title: "Workers"
         },
         proposals: {
             title: "Proposals"
+        },
+        account: {
+            title: "Account"
         }
     }
 };

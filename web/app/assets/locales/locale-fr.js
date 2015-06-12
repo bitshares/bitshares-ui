@@ -70,6 +70,7 @@ module.exports = {
         coll_maint: "Ratio de Collateral de maintenance",
         create_key: "A créé une cléf public",
         reg_account: "A créé le compte",
+        was_reg_account: " a été créé par",
         create_asset: "A créé l'actif",
         limit_order: "A placé un ordre à limite pour vendre",
         limit_order_cancel: "Annulation de l'ordre à limite avec id",
@@ -80,8 +81,11 @@ module.exports = {
         upgrade_account: "A mis à niveau le compte",
         update_account: "A mis à jour le compte",
         whitelist_account: "A whitelisté le compte",
+        whitelisted_by: "A été whitelisté par le compte",
         transfer_account: "A transferé le compte",
         update_asset: "A mis à jour l'actif",
+        update_feed_producers: "A mis à jour les fornisseurs de flux de l'actif",
+        feed_producer: "Est devenu un fornisseur de flux pour l'actif",
         asset_issue: "A assigné",
         was_issued: "A été assigné",
         by: "par",
@@ -114,6 +118,7 @@ module.exports = {
         bond_pay_collateral: "A payé un collateral de",
         create_worker: "A créé un ouvrier avec un salaire de",
         custom: "A créé une operation spéciale",
+        order_id: "ID de l'ordre",
         trxTypes: {
             0: "Transfert",
             1: "Ordre à limite",
@@ -161,8 +166,14 @@ module.exports = {
         }
     },
     explorer: {
-        accounts: "Comptes",
-        blocks: "Blocs",
+        accounts: {
+            title: "Comptes"
+        },
+        blocks: {
+            title: "Blockchain",
+            globals: "Parametres globaux",
+            recent: "Blocs recent"
+        },
         block: {
             title: "Bloc",
             id: "ID du bloc",
@@ -176,15 +187,48 @@ module.exports = {
             trx: "Transaction",
             op_type: "Type d'operation",
             fee_payer: "Compte payant le frai",
-            key: "Cléf public"
-
+            key: "Cléf public",
+            transactions: "Nombre de transactions",
+            account_upgrade: "Compte à mettre à niveau",
+            lifetime: "Devenir membre à vie",
+            authorizing_account: "Compte donnant l'autorisation",
+            listed_account: "Compte etant autorisé",
+            new_listing: "Nouvel autorisation",
+            asset_update: "Actif à mettre à jour",
+            common_options: "Options",
+            new_options: "Nouvelles options",
+            new_producers: "Nouveaux fornisseurs de flux",
+            asset_issue: "Montant à créer"
         },
         assets: {
             title: "Actifs",
+            market: "SmartCoins",
+            user: "Actifs des utilisateurs",
             symbol: "Symbol",
             id: "ID",
             issuer: "Créateur",
             precision: "Précision"
+        },
+        asset: {
+            title: "Actif"
+        },
+        witnesses: {
+            title: "Témoins"
+        },
+        delegates: {
+            title: "Délégués"
+        },
+        delegate: {
+            title: "Delegate"
+        },
+        workers: {
+            title: "Ouvriers"
+        },
+        proposals: {
+            title: "Propositions"
+        },
+        account: {
+            title: "Compte"
         }
 
     }

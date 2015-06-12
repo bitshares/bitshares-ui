@@ -204,7 +204,8 @@ class Operation extends React.Component {
                 color = "cancel";            
                 column = (
                     <td className="right-td">
-                        <Translate component="span" content="transaction.limit_order_cancel" />
+                        <Translate component="span" content="transaction.short_order_cancel" />
+                        &nbsp;{op[1].order}
                     </td>
                 );
                 break;
@@ -239,9 +240,9 @@ class Operation extends React.Component {
                 } else {
                     column = (
                         <td className="right-td">
-                            {!missingAccounts[0] ? this.linkToAccount(accounts[op[1].registrar]) : op[1].registrar}
-                            &nbsp;<Translate component="span" content="transaction.reg_account" /> 
                             {this.linkToAccount(op[1].name)}
+                            &nbsp;<Translate component="span" content="transaction.was_reg_account" /> 
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].registrar]) : op[1].registrar}
                         </td>
                     );    
                 }
@@ -260,14 +261,23 @@ class Operation extends React.Component {
                 break;
 
             case "account_whitelist":
-                let missingAccounts = this.getAccounts(op[1].account);
+                let missingAccounts = this.getAccounts([op[1].authorizing_account, op[1].account_to_list]);
 
-                column = (
-                    <td className="right-td">
-                        <Translate component="span" content="transaction.whitelist_account" />
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(1) : null}
-                    </td>
-                );
+                if (current === accounts[op[1].authorizing_account]) {
+                    column = (
+                        <td className="right-td">
+                            <Translate component="span" content="transaction.whitelist_account" />
+                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].account_to_list]) : null}
+                        </td>
+                    );
+                } else {
+                    column = (
+                        <td className="right-td">
+                            <Translate component="span" content="transaction.whitelisted_by" />
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].authorizing_account]) : null}
+                        </td>
+                    );
+                }
 
                 break;
 
@@ -297,7 +307,7 @@ class Operation extends React.Component {
                 break;
 
             case "asset_create":
-                color = "warning";            
+                color = "warning";          
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.create_asset" />
@@ -307,39 +317,40 @@ class Operation extends React.Component {
                 break;
 
             case "asset_update":
-                let missingAssets = this.getAssets(op[1].asset_to_update);
-
-                column = (
-                    <td className="right-td">
-                        <Translate component="span" content="transaction.update_asset" />
-                        &nbsp;{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}
-                    </td>
-                );
-                break;  
-
             case "asset_update_bitasset":
                 let missingAssets = this.getAssets(op[1].asset_to_update);
-
+                color = "warning";
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.update_asset" />
                         &nbsp;{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}
                     </td>
                 );
-                break;     
+                break;
 
             case "asset_update_feed_producers":
+                color = "warning";
                 let missingAssets = this.getAssets(op[1].asset_to_update);
 
-                column = (
-                    <td className="right-td">
-                        <Translate component="span" content="transaction.update_asset" />
-                        &nbsp;{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}
-                    </td>
-                );
+                if (current === accounts[op[1].issuer]) {
+                    column = (
+                        <td className="right-td">
+                            <Translate component="span" content="transaction.update_feed_producers" />
+                            &nbsp;{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}
+                        </td>
+                    );
+                } else {
+                    column = (
+                        <td className="right-td">
+                            <Translate component="span" content="transaction.feed_producer" />
+                            &nbsp;{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}
+                        </td>
+                    );
+                }
                 break;   
 
             case "asset_issue":
+                color = "warning";
                 let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
                 let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
 
@@ -366,6 +377,7 @@ class Operation extends React.Component {
                 break;  
 
             case "asset_burn":
+                color = "cancel";
                 let missingAssets = this.getAssets(op[1].amount_to_burn.asset_id);
 
                 column = (
@@ -377,6 +389,7 @@ class Operation extends React.Component {
                 break;   
 
             case "asset_fund_fee_pool":
+                color = "warning";
                 let missingAssets = this.getAssets(op[1].asset_id);
                 
                 column = (
@@ -388,6 +401,7 @@ class Operation extends React.Component {
                 break;  
 
             case "asset_settle":
+                color = "warning";
                 let missingAssets = this.getAssets(op[1].amount.asset_id);
                 
                 column = (
@@ -399,6 +413,7 @@ class Operation extends React.Component {
                 break;  
 
             case "asset_global_settle":
+                color = "warning";
                 let missingAssets = this.getAssets([op[1].asset_to_settle, op[1].price.base.asset_id]);
                 
                 column = (
@@ -416,6 +431,7 @@ class Operation extends React.Component {
                 break; 
 
             case "asset_publish_feed":
+                color = "warning";
                 let missingAssets = this.getAssets(op[1].asset_id);
                 
                 column = (
