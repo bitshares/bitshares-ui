@@ -70,8 +70,8 @@ class AccountCard extends React.Component {
 
         let accountBalances = balances.map((balance) => {
             return (
-                <div key={balance.asset_id} className="text-group">
-                    <span className="right">
+                <div style={{textAlign: "left", padding: "5px"}} key={balance.asset_id} className="text-group">
+                    <span>
                         <FormattedAsset amount={parseFloat(balance.amount)} asset={assets.get(balance.asset_id)}/>
                     </span>
                 </div>);
