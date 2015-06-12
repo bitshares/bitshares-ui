@@ -25,6 +25,7 @@ class AssetStore extends BaseStore {
                 asset.id,
                 Asset(asset)
             );
+            this.asset_symbol_to_id[asset.symbol] = asset.id;
         });
 
     }
