@@ -8,8 +8,15 @@ import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import AssetActions from "actions/AssetActions";
+import AccountActions from "actions/AccountActions";
+import Immutable from "immutable";
+import {operations} from "chain/chain_types";
+import Inspector from "react-json-inspector";
 
 require("./operations.scss");
+require("./json-inspector.scss");
+
+let ops = Object.keys(operations);
 
 class OpType extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -39,11 +46,10 @@ class OpType extends React.Component {
 class OperationTable extends React.Component {
 
     render() {
-        
 
         return (
             <div>
-                <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}</h6>
+                <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6>
                 <table style={{marginBottom: "1em"}} className="table">
                     <caption></caption>
                     <tbody>
@@ -64,7 +70,7 @@ class Transaction extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.trx.operations.ref_block_prefix !== this.props.trx.operations.ref_block_prefix ||
-            nextProps.assets !== this.props.assets
+            !Immutable.is(nextProps.assets, this.props.assets)
             );
     }
 
@@ -110,226 +116,512 @@ class Transaction extends React.Component {
 
         info = [];
 
+        let opCount = trx.operations.length;
+
         trx.operations.forEach((op, opIndex) => {
             let missingFee = this.getAssets([op[1].fee.asset_id])[0];
 
-            console.log("block op:", op);
-            switch (op[0]) { // For a list of trx types, see chain_types.coffee
+            // console.log("block op:", op);
+            let rows = [];
+            let color = "";
+            switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
-                case 0: // transfer
-
-                    let missing = this.getAssets([op[1].amount.asset_id]);
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="success" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                            <tr>
-                                <td><Translate component="span" content="transfer.from" />:</td>
-                                <td>{accounts[op[1].from] ? <Link to="account" params={{name: accounts[op[1].from]}}>{accounts[op[1].from]}</Link> : op[1].from}</td>
-                            </tr>
-                            <tr>
-                                <td><Translate component="span" content="transfer.to" />:</td>
-                                <td>{accounts[op[1].to] ? <Link to="account" params={{name: accounts[op[1].to]}}>{accounts[op[1].to]}</Link> : op[1].to}</td>
-                            </tr>
-                            <tr>
-                                <td><Translate component="span" content="transfer.amount" />:</td>
-                                <td>{!missing[0] ? <FormattedAsset amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}</td>
-                            </tr>
-                        </OperationTable>
+                case "transfer":
+                    color = "success";
+                    let missingAssets = this.getAssets([op[1].amount.asset_id]);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.from" />:</td>
+                            <td>{accounts[op[1].from] ? <Link to="account" params={{name: accounts[op[1].from]}}>{accounts[op[1].from]}</Link> : null}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.to" />:</td>
+                            <td>{accounts[op[1].to] ? <Link to="account" params={{name: accounts[op[1].to]}}>{accounts[op[1].to]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+
                     break;
 
-                case 1: // limit_order_create
-                    let missing = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="warning" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.amount_sell" />:</td>
-                                    <td>{!missing[0] ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.min_receive" />:</td>
-                                    <td>{!missing[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.seller" />:</td>
-                                    <td>{accounts[op[1].seller] ? <Link to="account" params={{name: accounts[op[1].seller]}}>{accounts[op[1].seller]}</Link> : op[1].seller}</td>
-                                </tr>                                
-                                <tr>
-                                    <td><Translate component="span" content="transaction.expiration" />:</td>
-                                    <td>
-                                        <FormattedDate
-                                            value={op[1].expiration}
-                                            formats={intlData.formats}
-                                            format="full"
-                                        />
-                                    </td>
-                                </tr>
-
-                        </OperationTable>
+                case "limit_order_create":
+                    color = "warning";
+                    let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.amount_sell" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.min_receive" />:</td>
+                            <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.seller" />:</td>
+                            <td>{accounts[op[1].seller] ? <Link to="account" params={{name: accounts[op[1].seller]}}>{accounts[op[1].seller]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.expiration" />:</td>
+                            <td>
+                                <FormattedDate
+                                    value={op[1].expiration}
+                                    formats={intlData.formats}
+                                    format="full"
+                                />
+                            </td>
+                        </tr>
+                    );
+
                     break;
 
-                case 2: // short_order_create
+                case "short_order_create":
+                    color = "short";
                     this.getAssets([op[1].amount_to_sell.asset_id, op[1].collateral.asset_id]);
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="short" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.amount_sell" />:</td>
-                                    <td>{assets.get(op[1].amount_to_sell.asset_id) ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.collateral" />:</td>
-                                    <td>{assets.get(op[1].collateral.asset_id) ? <FormattedAsset amount={op[1].collateral.amount} asset={assets.get(op[1].collateral.asset_id)} /> : null}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.coll_ratio" />:</td>
-                                    <td>{op[1].initial_collateral_ratio}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.coll_maint" />:</td>
-                                    <td>{op[1].maintenance_collateral_ratio}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="transaction.seller" />:</td>
-                                    <td>{accounts[op[1].seller] ? <Link to="account" params={{name: accounts[op[1].seller]}}>{accounts[op[1].seller]}</Link> : op[1].seller}</td>
-                                </tr>                                
-                                <tr>
-                                    <td><Translate component="span" content="transaction.expiration" />:</td>
-                                    <td>
-                                        <FormattedDate
-                                            value={op[1].expiration}
-                                            formats={intlData.formats}
-                                            format="full"
-                                        />
-                                    </td>
-                                </tr>
-                        </OperationTable>
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.amount_sell" />:</td>
+                            <td>{assets.get(op[1].amount_to_sell.asset_id) ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.collateral" />:</td>
+                            <td>{assets.get(op[1].collateral.asset_id) ? <FormattedAsset amount={op[1].collateral.amount} asset={assets.get(op[1].collateral.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.coll_ratio" />:</td>
+                            <td>{op[1].initial_collateral_ratio}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.coll_maint" />:</td>
+                            <td>{op[1].maintenance_collateral_ratio}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.seller" />:</td>
+                            <td>{accounts[op[1].seller] ? <Link to="account" params={{name: accounts[op[1].seller]}}>{accounts[op[1].seller]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.expiration" />:</td>
+                            <td>
+                                <FormattedDate
+                                    value={op[1].expiration}
+                                    formats={intlData.formats}
+                                    format="full"
+                                />
+                            </td>
+                        </tr>
+                    );
+
                     break;
 
-                case 3: // limit_order_cancel
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="cancel" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="transfer.limit_order_cancel" />:</td>
-                                    <td>{op[1].order}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                                    <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : op[1].fee_paying_account}</td>
-                                </tr>
-                        </OperationTable>
+                case "limit_order_cancel":
+                    color = "cancel";
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.order_id" />:</td>
+                            <td>{op[1].order}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
+                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
                     break;
 
-                case 4: // short_order_cancel
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="cancel" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="transfer.short_order_cancel" />:</td>
-                                    <td>{op[1].order}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                                    <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : op[1].fee_paying_account}</td>
-                                </tr>
-                        </OperationTable>
+                case "short_order_cancel":
+                    color = "cancel";
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.order_id" />:</td>
+                            <td>{op[1].order}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
+                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
                     break;        
 
-                case 5: // call_order_update
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="default" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="transfer.limit_order_cancel" />:</td>
-                                    <td>{op[1].order}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                                    <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : op[1].fee_paying_account}</td>
-                                </tr>
-                        </OperationTable>
+                case "call_order_update":
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.order_id" />:</td>
+                            <td>{op[1].order}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
+                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
                     break;                                 
 
-                case 6: // key_create
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="default" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                                    <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : op[1].fee_paying_account}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="explorer.block.key" />:</td>
-                                    <td>{op[1].key_data[1]}</td>
-                                </tr>
-                        </OperationTable>
+                case "key_create":
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
+                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.key" />:</td>
+                            <td>{op[1].key_data[1]}</td>
+                        </tr>
+                    );
+
                     break;
 
-                case 7: // account_create
+                case "account_create":
                     let missingAccounts = this.getAccounts([op[1].registrar, op[1].referrer]);
 
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="default" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                                <tr>
-                                    <td><Translate component="span" content="account.name" />:</td>
-                                    <td><Link to="account" params={{name: op[1].name}}>{op[1].name}</Link></td>
-                                </tr>                                
-                                <tr>
-                                    <td><Translate component="span" content="account.member.reg" />:</td>
-                                    <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].registrar]}}>{accounts[op[1].registrar]}</Link> : op[1].registrar}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate component="span" content="account.member.ref" />:</td>
-                                    <td>{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].referrer]}}>{accounts[op[1].referrer]}</Link> : op[1].referrer}</td>
-                                </tr>
-                        </OperationTable>
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="account.name" />:</td>
+                            <td><Link to="account" params={{name: op[1].name}}>{op[1].name}</Link></td>
+                        </tr>
                     );
+                    rows.push(                            
+                        <tr>
+                            <td><Translate component="span" content="account.member.reg" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].registrar]}}>{accounts[op[1].registrar]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="account.member.ref" />:</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].referrer]}}>{accounts[op[1].referrer]}</Link> : null}</td>
+                        </tr>
+                    );
+
                     break;
 
-                case 8: // account_update
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="default" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
+                case "account_update":
+                    let missingAccounts = this.getAccounts([op[1].registrar, op[1].referrer]);
+                    rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.name" />:</td>
                                     <td><Link to="account" params={{name: op[1].name}}>{op[1].name}</Link></td>
-                                </tr>                                
+                                </tr>
+                    );
+                    rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.member.reg" />:</td>
-                                    <td>{accounts[op[1].registrar] ? <Link to="account" params={{name: accounts[op[1].registrar]}}>{accounts[op[1].registrar]}</Link> : op[1].registrar}</td>
+                                    <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].registrar]}}>{accounts[op[1].registrar]}</Link> : null}</td>
                                 </tr>
+                    );
+                    rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.member.ref" />:</td>
-                                    <td>{accounts[op[1].referrer] ? <Link to="account" params={{name: accounts[op[1].referrer]}}>{accounts[op[1].referrer]}</Link> : op[1].referrer}</td>
+                                    <td>{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].referrer]}}>{accounts[op[1].referrer]}</Link> : null}</td>
                                 </tr>
-                        </OperationTable>
                     );
+                    break;       
+
+                case "account_whitelist":
+                    let missingAccounts = this.getAccounts([op[1].authorizing_account, op[1].account_to_list]);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.authorizing_account" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].authorizing_account]}}>{accounts[op[1].authorizing_account]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.listed_account" />:</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].account_to_list]}}>{accounts[op[1].account_to_list]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(    
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.new_listing" />:</td>
+                            <td>{op[1].new_listing.toString()}</td>
+                        </tr>
+                    );
+
                     break;                    
 
-                case 12: // Asset create
-                    info.push(
-                        <OperationTable key={opIndex} index={opIndex} color="warning" type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
-                            <tr>
-                                <td><Translate component="span" content="explorer.assets.issuer" />:</td>
-                                <td>{accounts[op[1].issuer] ? <Link to="account" params={{name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : op[1].from}</td>
-                            </tr>
-                            <tr>
-                                <td><Translate component="span" content="explorer.assets.symbol" />:</td>
-                                <td><Link to="asset" params={{symbol: op[1].symbol}}>{op[1].symbol}</Link></td>
-                            </tr>
-                            <tr>
-                                <td><Translate component="span" content="explorer.assets.precision" />:</td>
-                                <td>{op[1].precision}</td>
-                            </tr>
-                        </OperationTable>                        
+                case "account_upgrade":
+                    let missingAccounts = this.getAccounts([op[1].account_to_upgrade]);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.account_upgrade" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].account_to_upgrade]}}>{accounts[op[1].account_to_upgrade]}</Link> : null}</td>
+                        </tr>
                     );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.lifetime" />:</td>
+                            <td>{op[1].upgrade_to_lifetime_member.toString()}</td>
+                        </tr>                                  
+                    );
+                    break;   
+
+                case "account_transfer":
+                    let missingAccounts = this.getAccounts([op[1].account_id, op[1].new_owner]);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.from" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].account_id]}}>{accounts[op[1].account_id]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.lifetime" />:</td>
+                            <td>{op[1].upgrade_to_lifetime_member.toString()}</td>
+                        </tr>                                  
+                    );
+
+                    break;  
+
+                case "asset_create":
+                    color = "warning";
+                    let missingAccounts = this.getAccounts([op[1].issuer]);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.assets.issuer" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.assets.symbol" />:</td>
+                            <td><Link to="asset" params={{symbol: op[1].symbol}}>{op[1].symbol}</Link></td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.assets.precision" />:</td>
+                            <td>{op[1].precision}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.common_options" />:</td>
+                            <td><Inspector data={ op[1].common_options } search={false}/></td>
+                        </tr>
+                    );
+
                     break;
 
+                case "asset_update":
+                case "asset_update_bitasset":
+                    color = "warning";
+                    let missingAssets = this.getAssets(op[1].asset_to_update);
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.asset_update" />:</td>
+                            <td>{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.assets.issuer" />:</td>
+                            <td>{accounts[op[1].issuer] ? <Link to="account" params={{name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.new_options" />:</td>
+                            <td><Inspector data={ op[1].new_options } search={false}/></td>
+                        </tr>
+                    );
+
+                    break;
+
+                case "asset_update_feed_producers":
+                    color = "warning";
+                    console.log("op:", op);
+                    let missingAssets = this.getAssets(op[1].asset_to_update);
+                    let producers = [];
+                    op[1].new_feed_producers.forEach(producer => {
+                        let missingAsset = this.getAccounts([producer])[0];
+                        producers.push(!missingAsset ? <div><Link to="account" params={{name: accounts[producer]}}>{accounts[producer]}</Link><br/></div> : null);
+                    });
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.asset_update" />:</td>
+                            <td>{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_to_update).symbol}}>{assets.get(op[1].asset_to_update).symbol}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.new_producers" />:</td>
+                            <td>{producers}</td>
+                        </tr>
+                    );
+
+                    break;
+
+                case "asset_issue":
+                    color = "warning";
+                    let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
+                    let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
+                    
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.assets.issuer" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.asset_issue" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={assets.get(op[1].asset_to_issue.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.to" />:</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{name: accounts[op[1].issue_to_account]}}>{accounts[op[1].issue_to_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    break;
+
+                case "asset_burn":
+                    color = "cancel";
+                    let missingAssets = this.getAssets(op[1].amount_to_burn.asset_id);
+                    let missingAccounts = this.getAccounts([op[1].payer]);
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.account.title" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].payer]}}>{accounts[op[1].payer]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_burn.amount} asset={assets.get(op[1].amount_to_burn.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+
+                    break;
+
+                case "asset_fund_fee_pool":
+                    color = "warning";
+                    let missingAssets = this.getAssets(op[1].asset_id);
+                    let missingAccounts = this.getAccounts([op[1].from_account]);
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.account.title" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].from_account]}}>{accounts[op[1].from_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.asset.title" />:</td>
+                            <td>{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].asset_id).symbol}}>{assets.get(op[1].asset_id).symbol}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount} asset={assets.get(op[1].asset_id)} /> : null}</td>
+                        </tr>
+                    );
+
+                    break;      
+
+                case "asset_settle":
+                    color = "warning";
+                    let missingAssets = this.getAssets(op[1].amount.asset_id);
+                   let missingAccounts = this.getAccounts([op[1].account]);
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.account.title" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].account]}}>{accounts[op[1].account]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.asset.title" />:</td>
+                            <td>{!missingAssets[0] ? <Link to="asset" params={{symbol: assets.get(op[1].amount.asset_id).symbol}}>{assets.get(op[1].amount.asset_id).symbol}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+
+                    break;
+
+                case "delegate_create":
+                    let missingAccounts = this.getAccounts(op[1].delegate_account);
+                    
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.delegate.title" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].delegate_account]}}>{accounts[op[1].delegate_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    break;    
+
+                case "witness_create":
+                    let missingAccounts = this.getAccounts(op[1].witness_account);
+                    
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.witness" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{name: accounts[op[1].witness_account]}}>{accounts[op[1].witness_account]}</Link> : null}</td>
+                        </tr>
+                    );
+
+                    break;                           
+
                 default: 
-                    info.push(
-                            null
-                        );
+                    rows = null;
+                    break;
             }
+
+            info.push(
+                <OperationTable key={opIndex} opCount={opCount} index={opIndex} color={color} type={op[0]} fee={op[1].fee} missingFee={missingFee} assets={assets}>
+                    {rows}
+                </OperationTable>
+            );
         });
 
         return (
