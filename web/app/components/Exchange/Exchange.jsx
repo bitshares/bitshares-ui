@@ -57,17 +57,15 @@ class Exchange extends BaseComponent {
     }
 
     componentDidMount() {
-        // Leaving this hardcoded for now, should fetch asset ids for quoteSymbol and baseSymbol instead
-        // let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
-        // let baseID = this.props.asset_symbol_to_id[this.props.baseSymbol];
-        MarketsActions.subscribeMarket("1.4.0", "1.4.1");
+        let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
+        let baseID = this.props.asset_symbol_to_id[this.props.baseSymbol];
+        MarketsActions.subscribeMarket(baseID, quoteID);
     }
 
     componentWillUnmount() {
-        // Leaving this hardcoded for now, should fetch asset ids for quoteSymbol and baseSymbol instead
-        // let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
-        // let baseID = this.props.asset_symbol_to_id[this.props.baseSymbol];
-        MarketsActions.unSubscribeMarket("1.4.0", "1.4.1");
+        let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
+        let baseID = this.props.asset_symbol_to_id[this.props.baseSymbol];
+        MarketsActions.unSubscribeMarket(baseID, quoteID);
     }
 
     _buyQuantityChanged(e) { this.setState({buyQuantity: e.target.value }); }
@@ -102,6 +100,14 @@ class Exchange extends BaseComponent {
                 </tr>
             );
         }
+
+        this.props.limit_orders.map(order => {
+            console.log("real limit order:", order);
+        });
+
+        this.props.short_orders.map(order => {
+            console.log("real short order:", order);
+        });
 
         return (
             <div className="grid-block vertical">

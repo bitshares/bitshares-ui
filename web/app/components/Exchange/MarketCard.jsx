@@ -9,7 +9,7 @@ class MarketCard extends React.Component {
 
     render() {
 
-        let {assets, market} = this.props;
+        let {market} = this.props;
         let marketID = market.quoteSymbol + "_" + market.baseSymbol;
         let marketName = market.quoteSymbol + " vs " + market.baseSymbol;
 
