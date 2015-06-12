@@ -7,14 +7,16 @@ class MarketsActions {
 
     subscribeMarket(idA, idB) {
         let subID = idA + "_" + idB;
+
         let subscription = (result) => {
             console.log("markets subscription result:", result);
             this.dispatch({
-                sub: result
+                sub: result[0]
             });
         };
 
         if (!subs[subID]) {
+            // get_short_orders throws an error for UIAs, need a way to determine whether the asset is an MIA or UIA
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, idA, idB
@@ -28,12 +30,11 @@ class MarketsActions {
                 ])
                 .then((result) => {
                     console.log("market subscription success:", result[0]);
-                    if (result[0]) {
-                        subs[subID] = true;
-                    }
+                    subs[subID] = true;
                     this.dispatch({
                         limits: result[1],
-                        shorts: result[2]
+                        shorts: result[2],
+                        market: subID
                     });
                 }).catch((error) => {
                     console.log("Error in MarketsActions.subscribeMarket: ", error);
@@ -51,9 +52,7 @@ class MarketsActions {
                 ])
                 .then((unSubResult) => {
                     console.log(subID, "market unsubscription success:", unSubResult);
-                    if (unSubResult) {
-                        delete subs[subID];
-                    }
+                    delete subs[subID];
                 }).catch((error) => {
                     console.log("Error in MarketsActions.unSubscribeMarket: ", error);
                 });
