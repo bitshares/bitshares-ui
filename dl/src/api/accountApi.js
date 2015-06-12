@@ -17,7 +17,7 @@ class Api {
     }
 
     getBalances(id) {
-        return Apis.instance().db_api().exec("get_account_balances", [id, ["1.4.0"]]);
+        return Apis.instance().db_api().exec("get_account_balances", [id, []]);
     }
 
     getHistory(id, count) {
