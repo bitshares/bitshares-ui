@@ -58,8 +58,9 @@ class Exchange extends BaseComponent {
 
     componentDidMount() {
         let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
+        let mia = this.props.assets.get(quoteID).bitasset_data_id !== null;
         let baseID = this.props.asset_symbol_to_id[this.props.baseSymbol];
-        MarketsActions.subscribeMarket(baseID, quoteID);
+        MarketsActions.subscribeMarket(baseID, quoteID, mia);
     }
 
     componentWillUnmount() {
@@ -80,6 +81,9 @@ class Exchange extends BaseComponent {
 
         var buyTotal = this.state.buyQuantity * this.state.buyPrice;
         var sellTotal = this.state.sellQuantity * this.state.sellPrice;
+
+        let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
+        let isMarketAsset = this.props.assets.get(quoteID).bitasset_data_id !== null;
 
         function orderBookEntry(order) {
             return (
@@ -105,9 +109,11 @@ class Exchange extends BaseComponent {
             console.log("real limit order:", order);
         });
 
-        this.props.short_orders.map(order => {
-            console.log("real short order:", order);
-        });
+        if (isMarketAsset) {
+            this.props.short_orders.map(order => {
+                console.log("real short order:", order);
+            });
+        }
 
         return (
             <div className="grid-block vertical">

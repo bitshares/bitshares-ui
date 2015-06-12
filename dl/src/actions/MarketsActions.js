@@ -5,7 +5,7 @@ let subs = {};
 
 class MarketsActions {
 
-    subscribeMarket(idA, idB) {
+    subscribeMarket(idA, idB, mia) {
         let subID = idA + "_" + idB;
 
         let subscription = (result) => {
@@ -16,7 +16,12 @@ class MarketsActions {
         };
 
         if (!subs[subID]) {
-            // get_short_orders throws an error for UIAs, need a way to determine whether the asset is an MIA or UIA
+            let shortPromise = mia ? 
+                Apis.instance().db_api().exec("get_short_orders", [
+                    idB, 100
+                ]) :
+                null;
+
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, idA, idB
@@ -24,9 +29,7 @@ class MarketsActions {
                     Apis.instance().db_api().exec("get_limit_orders", [
                         idA, idB, 100
                     ]),
-                    Apis.instance().db_api().exec("get_short_orders", [
-                        idB, 100
-                    ])
+                    shortPromise
                 ])
                 .then((result) => {
                     console.log("market subscription success:", result[0]);

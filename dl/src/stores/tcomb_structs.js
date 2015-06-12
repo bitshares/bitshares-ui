@@ -25,6 +25,7 @@ let Account = t.struct({
 let Asset = t.struct({
     annotations: t.Arr,
     dynamic_asset_data_id: t.Str,
+    bitasset_data_id: t.maybe(t.Str),
     id: t.Str,
     issuer: t.Str,
     options: t.Obj,
