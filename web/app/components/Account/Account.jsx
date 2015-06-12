@@ -10,6 +10,9 @@ import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
 import Operation from "../Blockchain/Operation";
 import Translate from "react-translate-component";
+import Trigger from "react-foundation-apps/lib/trigger";
+import Modal from "react-foundation-apps/lib/modal";
+import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
 
 class Account extends Component {
 
@@ -68,7 +71,34 @@ class Account extends Component {
         e.preventDefault();
         let account_id = this.props.account_name_to_id[this.props.accountName];
         AccountActions.upgradeAccount(account_id);
+        ZfApi.publish("confirm_upgrade_modal", "close");
         return false;
+    }
+
+    renderUpgradeButtonAndConfirmModal() {
+        return (
+            <div>
+                <Trigger open="confirm_upgrade_modal">
+                    <a className="button">Upgrade</a>
+                </Trigger>
+                <Modal id="confirm_upgrade_modal" overlay={true}>
+                    <Trigger close="">
+                        <a href="#" className="close-button">&times;</a>
+                    </Trigger>
+                    <div className="grid-block vertical">
+                        <div className="shrink grid-content">
+                            <p>Please confirm account upgrade</p>
+                        </div>
+                        <div className="grid-content button-group">
+                            <a className="button" href onClick={this.upgradeAccountClickHandler.bind(this)}>Confirm</a>
+                            <Trigger close="confirm_upgrade_modal">
+                                <a href className="button">Cancel</a>
+                            </Trigger>
+                        </div>
+                    </div>
+                </Modal>
+            </div>
+        );
     }
 
     render() {
@@ -169,7 +199,7 @@ class Account extends Component {
                       registrar={ba.registrar}
                       referrer={ba.referrer}
                       names={account_id_to_name}
-                    /> : <a className="button" href onClick={this.upgradeAccountClickHandler.bind(this)}>Upgrade</a>}
+                    /> : this.renderUpgradeButtonAndConfirmModal() }
                     {connections}
                 </div>
               </div>

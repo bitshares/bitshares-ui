@@ -27,7 +27,8 @@ class AccountStore extends BaseStore {
             onGetAccount: AccountActions.getAccount,
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onTransfer: AccountActions.transfer,
-            onCreateAccount: AccountActions.createAccount
+            onCreateAccount: AccountActions.createAccount,
+            onUpgradeAccount: AccountActions.upgradeAccount
         });
 
         // this._export("getAccount", "getCurrent");
@@ -107,11 +108,16 @@ class AccountStore extends BaseStore {
     }
 
     onTransfer(result) {
-        console.log("[AccountStore.js:90] ----- onTransfer ----->", result);
+        console.log("[AccountStore.js:111] ----- onTransfer ----->", result);
     }
 
     onCreateAccount(name) {
-        console.log("[AccountStore.js:121] ----- onCreateAccount ----->", name);
+        console.log("[AccountStore.js:115] ----- onCreateAccount ----->", name);
+    }
+
+    onUpgradeAccount(account_id) {
+        console.log("[AccountStore.js:119] ----- onUpgradeAccount ----->", account_id);
+        AccountActions.getAccount(account_id);
     }
 
 }
