@@ -7,6 +7,8 @@ import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate} from "react-intl";
+import Inspector from "react-json-inspector";
+require("../Blockchain/json-inspector.scss");
 
 class Blocks extends React.Component {
 
@@ -124,21 +126,21 @@ class Blocks extends React.Component {
         }
 
         // console.log("globalObject:", globalObject);
-        let params = [];
-        let index = 0;
-        for (let key in globalObject.parameters) {
-            if (globalObject.parameters.hasOwnProperty(key)) {
-                params.push(<li key={index}>{key} : {globalObject.parameters[key]} </li>);
-                index++;
-            }
-        }
+        // let params = [];
+        // let index = 0;
+        // for (let key in globalObject.parameters) {
+        //     if (globalObject.parameters.hasOwnProperty(key)) {
+        //         params.push(<li key={index}>{key} : {globalObject.parameters[key]} </li>);
+        //         index++;
+        //     }
+        // }
 
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
                     <div className="grid-block shrink">
                         <ul>
-                            {params}
+                            <li><Translate component="span" content="explorer.blocks.globals" />: <Inspector data={ globalObject.parameters } search={false}/></li>
                         </ul>
                     </div>
                     <div className="grid-block">
