@@ -28,7 +28,7 @@ class FormattedAsset extends Component {
             return (
                     <span>
                         <FormattedNumber 
-                            value={amount / precision}
+                            value={amount}
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
                         /> {asset.symbol + "/" + base.symbol}
