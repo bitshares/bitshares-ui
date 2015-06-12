@@ -3,6 +3,8 @@ import BaseComponent from "./BaseComponent";
 import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
+import AccountStore from "stores/AccountStore";
+import PrivateKeyActions from "actions/PrivateKeyActions";
 
 class CreateAccount extends BaseComponent {
     constructor() {
@@ -14,7 +16,6 @@ class CreateAccount extends BaseComponent {
         let form = this.refs.accountForm.getForm();
         let isValid = form.validate();
         // TODP: validate account name
-        console.log("[CreateAccount.jsx:16] ----- onFormChange ----->", form, isValid);
         this.setState({validAccountName: isValid});
     }
 
@@ -23,10 +24,25 @@ class CreateAccount extends BaseComponent {
         let form = this.refs.accountForm.getForm();
         let isValid = form.validate();
         let name = form.cleanedData.name;
-        console.log("[CreateAccount.jsx:19] ----- onSubmit ----->", form, isValid, name);
         if(isValid) {
-            AccountActions.createAccount(name).then( () => {
+            AccountActions.createAccount(name).then( (keys_data) => {
                 return AccountActions.getAccount(name).then( () => {
+                    let account_store_state = AccountStore.getState();
+                    let account = account_store_state.browseAccounts.get(account_store_state.account_name_to_id[name]);
+                    let owner_key = {
+                        id: "owner:" + name,
+                        object_id: account.owner.auths[0][0],
+                        privkey: keys_data.owner_privkey.toWif(),
+                        pubkey: keys_data.owner_pubkey.toBtsPublic()
+                    };
+                    let active_key = {
+                        id: "active:" + name,
+                        object_id: account.active.auths[0][0],
+                        privkey: keys_data.active_privkey.toWif(),
+                        pubkey: keys_data.active_pubkey.toBtsPublic()
+                    };
+                    PrivateKeyActions.addKey(owner_key);
+                    PrivateKeyActions.addKey(active_key);
                     this.context.router.transitionTo("account", {name: name});
                 });
             });

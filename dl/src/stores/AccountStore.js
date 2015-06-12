@@ -117,7 +117,6 @@ class AccountStore extends BaseStore {
 
     onUpgradeAccount(account_id) {
         console.log("[AccountStore.js:119] ----- onUpgradeAccount ----->", account_id);
-        AccountActions.getAccount(account_id);
     }
 
 }

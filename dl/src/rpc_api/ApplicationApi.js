@@ -1,25 +1,24 @@
-
-var Aes = require('../ecc/aes')
-var PrivateKey = require('../ecc/key_private')
-var PublicKey = require('../ecc/key_public')
-var ChainTypes = require('../chain/chain_types')
-var chain_config = require('../chain/config')
-var Long = require('../common/bytebuffer').Long
+var Aes = require('../ecc/aes');
+var PrivateKey = require('../ecc/key_private');
+var PublicKey = require('../ecc/key_public');
+var ChainTypes = require('../chain/chain_types');
+var chain_config = require('../chain/config');
+var Long = require('../common/bytebuffer').Long;
 
 var helper = require('../chain/transaction_helper'),
     get_owner_private = helper.get_owner_private,
-    get_active_private = helper.get_active_private
+    get_active_private = helper.get_active_private;
 
-var tr_op = require('../chain/transaction_operations')
+var tr_op = require('../chain/transaction_operations');
 
 var so_type = require('../chain/serializer_operation_types'),
     signed_transaction_type = so_type.signed_transaction,
-    transfer_type = so_type.transfer
+    transfer_type = so_type.transfer;
 
 var is_empty_user_input = require('../common/validation').
-    is_empty_user_input
+    is_empty_user_input;
     
-var api = require('./ApiInstances').instance()
+var api = require('./ApiInstances').instance();
 
 class ApplicationApi {
     
@@ -27,37 +26,44 @@ class ApplicationApi {
         brain_key,
         new_account_name,
         registrar_id,
-        referrer_id = 0,
-        referrer_percent = 100,
-        expire_minutes = 10,
+        referrer_id,
+        referrer_percent,
+        expire_minutes,
         signer_private_key_id,
         signer_private_key,
-        broadcast = false
+        broadcast
     ) {
-        var owner_privkey = get_owner_private(brain_key)
-        var active_privkey = get_active_private(owner_privkey)
+        var owner_privkey = get_owner_private(brain_key);
+        var active_privkey = get_active_private(owner_privkey);
         
-        var owner_pubkey = owner_privkey.toPublicKey()
-        var active_pubkey = active_privkey.toPublicKey()
+        var owner_pubkey = owner_privkey.toPublicKey();
+        var active_pubkey = active_privkey.toPublicKey();
         
-        var tr = new tr_op.signed_transaction()
-        tr.set_expire_minutes(expire_minutes)
+        var tr = new tr_op.signed_transaction();
+        tr.set_expire_minutes(expire_minutes);
         {
             var cop = new tr_op.account_create(
                 tr_op.key_create.fromPublicKey(owner_pubkey),
                 tr_op.key_create.fromPublicKey(active_pubkey)
-            )
-            cop.name = new_account_name
-            cop.registrar = registrar_id
-            cop.referrer = referrer_id
-            cop.referrer_percent = referrer_percent
-            tr.add_operation(cop)
+            );
+            cop.name = new_account_name;
+            cop.registrar = registrar_id;
+            cop.referrer = referrer_id;
+            cop.referrer_percent = referrer_percent;
+            tr.add_operation(cop);
         }
-        return tr.finalize(
+        let trx_promise = tr.finalize(
             signer_private_key_id,
             signer_private_key,
             broadcast
-        )
+        );
+        return {
+            trx_promise: trx_promise,
+            owner_privkey: owner_privkey,
+            active_privkey: active_privkey,
+            owner_pubkey: owner_pubkey,
+            active_pubkey: active_pubkey
+        };
     }
     
     transfer(
@@ -71,10 +77,10 @@ class ApplicationApi {
         signer_private_key,
         broadcast = false
     ) {
-        var memo = {}
+        var memo = {};
         if( ! is_empty_user_input(memo_message)) {
-            memo.from = from_account_id
-            memo.from_privkey = signer_private_key
+            memo.from = from_account_id;
+            memo.from_privkey = signer_private_key;
             memo.to = to_account_id
         }
         return this.transfer_extended(
@@ -90,7 +96,7 @@ class ApplicationApi {
             signer_private_key_id,
             signer_private_key,
             broadcast
-        )
+        );
     }
     
     /**
@@ -110,17 +116,17 @@ class ApplicationApi {
         signer_private_key,
         broadcast = false
     ) {
-        var tr = new tr_op.signed_transaction()
-        tr.set_expire_minutes(expire_minutes)
+        var tr = new tr_op.signed_transaction();
+        tr.set_expire_minutes(expire_minutes);
         {
-            var top = new tr_op.transfer( memo_from_privkey )
-            top.from = from_account_id
-            top.to = to_account_id
-            top.amount.amount = amount
-            top.amount.asset_id = asset
-            top.memo.from = memo_from
-            top.memo.to = memo_to
-            top.memo.message = memo_message
+            var top = new tr_op.transfer( memo_from_privkey );
+            top.from = from_account_id;
+            top.to = to_account_id;
+            top.amount.amount = amount;
+            top.amount.asset_id = asset;
+            top.memo.from = memo_from;
+            top.memo.to = memo_to;
+            top.memo.message = memo_message;
             tr.add_operation(top)
         }
         return tr.finalize(
@@ -146,4 +152,4 @@ class ApplicationApi {
     //    })
     
 }
-module.exports = ApplicationApi
+module.exports = ApplicationApi;

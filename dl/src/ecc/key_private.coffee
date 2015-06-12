@@ -33,7 +33,7 @@ class PrivateKey
         new_checksum = hash.sha256 private_key
         new_checksum = hash.sha256 new_checksum
         new_checksum = new_checksum.slice 0, 4
-        assert.deepEqual checksum, new_checksum#, 'Invalid checksum'
+        assert.deepEqual checksum, new_checksum #, 'Invalid checksum'
         PrivateKey.fromBuffer private_key.slice 1
         
     toWif: ->

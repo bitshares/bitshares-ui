@@ -79,7 +79,7 @@ class AccountActions {
             return api.lookupAccounts(name_or_id, 1)
                 .then((account) => {
                     let id = account[0][1];
-                    Promise.all([
+                    return Promise.all([
                         api.getAccountsByID(id),
                         api.getBalances(id),
                         api.getHistory(id, 10)
@@ -94,7 +94,6 @@ class AccountActions {
                                     }
                                 });
                         }
-
                         this.dispatch(results);
                     }).catch((error) => {
                         console.log("Error in AccountActions.getAccount: ", error);
@@ -133,12 +132,11 @@ class AccountActions {
     }
 
     createAccount(name) {
-        return wallet_api.create_account_with_brain_key("brainkey", name, 11, 0, 0);
-        // return api.createAccount(name).then( () => {
-        //     this.dispatch(name);
-        // }).catch(error => {
-        //     console.log("Error in AccountActions.createAccount: ", error);
-        // });
+        let result = wallet_api.create_account_with_brain_key("brainkey", name, 11, 0, 0);
+        return result.trx_promise.then( () => {
+            this.dispatch(name);
+            return result;
+        });
     }
 
     upgradeAccount(account_id) {
@@ -146,6 +144,7 @@ class AccountActions {
         tr.add_type_operation("account_upgrade", { "account_to_upgrade": account_id, "upgrade_to_lifetime_member": true });
         return wallet_api.sign_and_broadcast(tr).then( result => {
             this.dispatch(account_id);
+            AccountActions.getAccount(account_id);
         }).catch(error => {
             console.log("[AccountActions.js:150] ----- upgradeAccount error ----->", error);
         });

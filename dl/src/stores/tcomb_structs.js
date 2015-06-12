@@ -45,7 +45,10 @@ let Block = t.struct({
 }, "Block");
 
 let Key = t.struct({
-    id: t.Num
+    id: t.Str,
+    object_id: t.Str,
+    privkey: t.Str,
+    pubkey: t.Str
 }, "Key");
 
 let Witness = t.struct({
