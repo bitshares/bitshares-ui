@@ -12,6 +12,7 @@ class MarketsActions {
 
         let subscription = (result) => {
             console.log("markets subscription result:", result);
+
             this.dispatch({
                 sub: result[0]
             });
@@ -95,7 +96,8 @@ class MarketsActions {
             seller: account
         };
 
-        this.dispatch({newOrderID: epochTime, order: order});
+        // TODO: enable the optimistic dispatch. It causes the order to appear twice, due to the subscription to market
+        // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
 
         tr.add_type_operation("limit_order_create", {
@@ -117,6 +119,7 @@ class MarketsActions {
 
     // TODO: What prevents a caller from entering someone else's order number in the "order" field?
     cancelLimitOrder(accountID, orderID) {
+        console.log("cancel action:", accountID, orderID);
         this.dispatch({newOrderID: orderID});
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
