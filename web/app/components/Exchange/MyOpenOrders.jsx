@@ -27,7 +27,7 @@ class MyOpenOrders extends React.Component {
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
                         </td>
-                        <td>{order.for_sale}</td>
+                        <td>{((order.for_sale * order.sell_price.quote.amount) / order.sell_price.base.amount) / this.props.quote.precision}</td>
                         <td>{order.sell_price.base.amount / order.sell_price.quote.amount }</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
@@ -39,8 +39,8 @@ class MyOpenOrders extends React.Component {
                 <thead>
                 <tr>
                     <th>{/* "Cancel button" column */}</th>
-                    <th>Quantity ({this.props.quoteSymbol})</th>
-                    <th>Price ({this.props.baseSymbol})</th>
+                    <th>Quantity ({this.props.quote.symbol})</th>
+                    <th>Price ({this.props.base.symbol})</th>
                     <th>{/* "Buy/Sell" column */}</th>
                 </tr>
                 </thead>
