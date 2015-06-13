@@ -93,7 +93,7 @@ class MarketsActions {
     cancelLimitOrder(accountID, feeAmount, feeAssetID, orderID) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
-            "fee": { "amount": feeAmount, "asset_id": feeAssetId },
+            "fee": { "amount": feeAmount, "asset_id": feeAssetID },
             "fee_paying_account": accountID,
             "order": orderID
         });
