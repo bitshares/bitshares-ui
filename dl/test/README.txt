@@ -83,8 +83,6 @@ var trx = ["asset_update_feed_producers", {"issuer":"1.3.11","asset_to_update":"
 
 var trx = ["asset_issue", {"issuer":"1.3.11","asset_to_issue":{"amount":"1245470","asset_id":"1.4.2"},"issue_to_account":"1.3.11"}]
 
-var trx = ["asset_issue", {"issuer":"1.3.11","asset_to_issue":{"amount":"1245470","asset_id":"1.4.2"},"issue_to_account":"1.3.11"}]
-
 var trx = ["asset_burn", {"payer":"1.3.11","amount_to_burn":{"amount":"1000","asset_id":"1.4.4"}}]
 
 var trx = ["asset_fund_fee_pool", {"from_account":"1.3.11","asset_id":"1.4.0","amount":"15410"}]
