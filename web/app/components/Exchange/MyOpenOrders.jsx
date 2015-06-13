@@ -13,9 +13,9 @@ class MyOpenOrders extends BaseComponent {
                 <tr>
                     {/*TODO: use icon cross-circle instead of plus-circle. */}
                     <td>
-                        <button onClick={function() { this.props.onCancel(order.id) }.bind(this)}>
-                            <Icon name="plus-circle" fillClass="fill-black" />
-                        </button>
+                        <a onClick={function() { this.props.onCancel(order.id) }.bind(this)}>
+                            <Icon name="cross-circle" fillClass="fill-black" />
+                        </a>
                     </td>
                     <td>{order.for_sale}</td>
                     <td>{order.sell_price.quote.amount / order.sell_price.base.amount }</td>
