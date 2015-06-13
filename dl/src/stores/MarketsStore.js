@@ -3,7 +3,6 @@ var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
 var market_utils = require("../common/market_utils");
 
-console.log("market_utils:", market_utils);
 import {
     LimitOrder,
     ShortOrder
@@ -42,7 +41,7 @@ class MarketsStore {
 
         if (result.limits) {
             result.limits.forEach(order => {
-                console.log("limit orders:", order);
+                // console.log("limit orders:", order);
                 order.expiration = new Date(order.expiration);
                 this.activeMarketLimits = this.activeMarketLimits.set(
                     order.id,
@@ -63,32 +62,22 @@ class MarketsStore {
 
         if (result.sub) {
             result.sub.forEach(newOrder => {
-                let o = newOrder[0][1];
-                let orderType = market_utils.order_type(newOrder[1][1]);
-                let order = {};
-                console.log("parse:", market_utils.parse_order(newOrder));
+                let {order, orderType} = market_utils.parse_order(newOrder);
+                // console.log("parsed order:", order);
                 switch (orderType) {
 
                     case "limit_order":
-                        o.expiration = new Date(o.expiration);
-                        order = {
-                            expiration: o.expiration,
-                            for_sale: o.amount_to_sell.amount,
-                            id: newOrder[1][1]
 
-
-                        };
                         this.activeMarketLimits = this.activeMarketLimits.set(
-                            newOrder.id,
-                            LimitOrder(newOrder[0][1])
+                            order.id,
+                            LimitOrder(order)
                         );
                         break;
 
                     case "short_order":
-                        o.expiration = new Date(o.expiration);
                         this.activeMarketShorts = this.activeMarketShorts.set(
-                            newOrder.id,
-                            ShortOrder(newOrder[0][1])
+                            order.id,
+                            ShortOrder(order)
                         );
                         break;
 

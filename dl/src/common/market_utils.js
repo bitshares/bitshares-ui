@@ -18,7 +18,30 @@ class MarketUtils {
 
             case "limit_order":
                 o.expiration = new Date(o.expiration);
-                console.log("newOrder:", orderType, newOrder);
+                console.log("new limit order:", orderType, newOrder);
+
+                order = {
+                    expiration: o.expiration,
+                    for_sale: o.amount_to_sell.amount,
+                    id: newOrder[1][1],
+                    sell_price: {
+                        base: {
+                            amount: 1,
+                            asset_id: o.amount_to_sell.asset_id
+                        },
+                        quote: {
+                            amount: o.min_to_receive.amount / o.amount_to_sell.amount,
+                            asset_id: o.min_to_receive.asset_id                            
+                        }
+                    },
+                    seller: o.seller
+                };
+
+                break;
+
+            case "short_order":
+                o.expiration = new Date(o.expiration);
+                console.log("new short order:", orderType, newOrder);
 
                 order = {
                     expiration: o.expiration,
@@ -36,18 +59,16 @@ class MarketUtils {
                     },
                     seller: o.seller
                 };
-
-                break;
-
-            case "short_order":
-                o.expiration = new Date(o.expiration);
                 break;
 
             default:
                 break;
         }
 
-        return order;
+        return {
+            order: order,
+            orderType: orderType
+        };
     }
 
     static order_type (id) {
