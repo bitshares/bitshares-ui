@@ -8,3 +8,4 @@ module.exports.ByteBufferNB = ByteBufferNB; // node Buffer backed
 module.exports.ByteBufferAB = ByteBufferAB; // ArrayBuffer backed
 */
 module.exports = require('../../lib/bytebuffer_3.5.4.js')
+//module.exports = require('bytebuffer')
