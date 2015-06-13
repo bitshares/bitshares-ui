@@ -11,8 +11,12 @@ class MyOpenOrders extends BaseComponent {
         function orderEntry(order) {
             return (
                 <tr>
-                    {/*TODO: use icon cross-circle instead of plus-circle. Wire this to an order cancel operation */}
-                    <td><a><Icon name="plus-circle" inverse="1" fillClass="fill-black" /></a></td>
+                    {/*TODO: use icon cross-circle instead of plus-circle. */}
+                    <td>
+                        <button onClick={function() { this.props.onCancel(order.id) }.bind(this)}>
+                            <Icon name="plus-circle" fillClass="fill-black" />
+                        </button>
+                    </td>
                     <td>{order.for_sale}</td>
                     <td>{order.sell_price.quote.amount / order.sell_price.base.amount }</td>
                     {/*TODO: add expiration data <td>{order.expiration}</td> */}
@@ -20,12 +24,7 @@ class MyOpenOrders extends BaseComponent {
             );
         }
 
-        if(this.props.orders.count() == 0) {
-            return (
-                <p>No open orders.</p>
-            );
-        }
-        else {
+        if(this.props.orders.size > 0) {
             return (
                 <table className="table">
                     <thead>
@@ -37,10 +36,15 @@ class MyOpenOrders extends BaseComponent {
                     </thead>
                     <tbody>
                     {
-                        this.props.orders.map(orderEntry)
+                        this.props.orders.map(orderEntry, this)
                     }
                     </tbody>
                 </table>
+            );
+        }
+        else {
+            return (
+                <p>No open orders.</p>
             );
         }
     }

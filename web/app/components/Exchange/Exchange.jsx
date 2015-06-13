@@ -47,15 +47,25 @@ class Exchange extends BaseComponent {
 
     createLimitOrder(buyID, sellID, amount, price) {
         MarketsActions.createLimitOrder(
+            "1.3.11", // user's account id TODO: insert this
             "0", // fee amount
             "1.4.0", // fee asset id
-            "1.3.11", // user id
             amount,
             sellID,
             amount * price,
             buyID,
             "2020-01-01T00:00:00", // expiration
             false // fill or kill
+        );
+    }
+
+    cancelLimitOrder(orderID) {
+        console.log("cancelling" + orderID);
+        MarketsActions.createLimitOrder(
+            "1.3.11", // user's account id TODO: insert this
+            "0", // fee amount
+            "1.4.0", // fee asset id
+            orderID // order id to cancel
         );
     }
 
@@ -127,7 +137,7 @@ class Exchange extends BaseComponent {
                     <div className="grid-block medium-3 left-column">
                         <div className="grid-content">
                             <p>MY OPEN ORDERS</p>
-                            <MyOpenOrders orders={this.props.limit_orders} baseSymbol={this.props.baseSymbol} quoteSymbol={this.props.quoteSymbol} />
+                            <MyOpenOrders orders={this.props.limit_orders} baseSymbol={this.props.baseSymbol} quoteSymbol={this.props.quoteSymbol} onCancel={this.cancelLimitOrder.bind(this)} />
                             <p>OPEN ORDERS</p>
                             <table className="table">
                                 <thead>

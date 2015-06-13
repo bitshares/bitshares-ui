@@ -76,15 +76,27 @@ class MarketsActions {
     }
 
     // TODO: security. What prevents a caller from entering someone else's sellAccount in the "seller" field?
-    createLimitOrder(feeAmount, feeAssetId, sellAccount, sellAmount, sellAssetId, buyAmount, buyAssetId, expiration, isFillOrKill) {
+    createLimitOrder(account, feeAmount, feeAssetId, sellAmount, sellAssetId, buyAmount, buyAssetId, expiration, isFillOrKill) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_create", {
             "fee": { "amount": feeAmount, "asset_id": feeAssetId },
-            "seller": sellAccount,
+            "seller": account,
             "amount_to_sell": { "amount": sellAmount,"asset_id": sellAssetId },
             "min_to_receive": { "amount": buyAmount,"asset_id": buyAssetId },
             "expiration": expiration,
-            "fill_or_kill": isFillOrKill });
+            "fill_or_kill": isFillOrKill
+        });
+        wallet_api.sign_and_broadcast(tr);
+    }
+
+    // TODO: What prevents a caller from entering someone else's order number in the "order" field?
+    cancelLimitOrder(accountID, feeAmount, feeAssetID, orderID) {
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("limit_order_cancel", {
+            "fee": { "amount": feeAmount, "asset_id": feeAssetId },
+            "fee_paying_account": accountID,
+            "order": orderID
+        });
         wallet_api.sign_and_broadcast(tr);
     }
 }
