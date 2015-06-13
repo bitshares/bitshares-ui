@@ -45,7 +45,7 @@ class Exchange extends BaseComponent {
         };
     }
 
-    createLimitOrder(buyID, sellID, amount, price) {
+    _createLimitOrder(buyID, sellID, amount, price) {
         let {account} = this.props;
         MarketsActions.createLimitOrder(
             account.id, 
@@ -161,7 +161,7 @@ class Exchange extends BaseComponent {
                         <p>TRADE</p>
                         <div className="grid-block medium-6 main-content">
                             <div className="grid-content">
-                                <form onSubmit={this.createLimitOrder.bind(this, quoteID, baseID, this.state.buyAmount, this.state.buyPrice)}>
+                                <form onSubmit={this._createLimitOrder.bind(this, quoteID, baseID, this.state.buyAmount, this.state.buyPrice)}>
                                     <label>
                                         Quantity ({this.props.quoteSymbol}):
                                         <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
@@ -177,7 +177,7 @@ class Exchange extends BaseComponent {
                         </div>
                         <div className="grid-block medium-6 main-content">
                             <div className="grid-content">
-                                <form onSubmit={this.createLimitOrder.bind(this, baseID, quoteID, this.state.sellAmount, this.state.sellPrice)}>
+                                <form onSubmit={this._createLimitOrder.bind(this, baseID, quoteID, this.state.sellAmount, this.state.sellPrice)}>
                                     <label>
                                         Quantity ({this.props.quoteSymbol}):
                                         <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />

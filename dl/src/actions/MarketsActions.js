@@ -75,22 +75,49 @@ class MarketsActions {
         // });
     }
 
-    // TODO: security. What prevents a caller from entering someone else's sellAccount in the "seller" field?
-    createLimitOrder(account, sellAmount, sellAssetId, buyAmount, buyAssetId, expiration, isFillOrKill) {
+    // TODO: What prevents a caller from entering someone else's sellAccount in the "seller" field?
+    createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
+        var epochTime = new Date().getTime();
+        var order = {
+            expiration: expiration,
+            for_sale: sellAmount,
+            id: "unknown", // order ID unknown until server reply. TODO: populate ASAP, for cancels. Is never populated
+            sell_price: {
+                base: {
+                    amount: sellAmount,
+                    asset_id: sellAssetID
+                },
+                quote: {
+                    amount: buyAmount,
+                    asset_id: buyAssetID
+                }
+            },
+            seller: account
+        };
+
+        this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
+
         tr.add_type_operation("limit_order_create", {
             "seller": account,
-            "amount_to_sell": { "amount": sellAmount, "asset_id": sellAssetId },
-            "min_to_receive": { "amount": buyAmount, "asset_id": buyAssetId },
+            "amount_to_sell": { "amount": sellAmount, "asset_id": sellAssetID },
+            "min_to_receive": { "amount": buyAmount, "asset_id": buyAssetID },
             "expiration": expiration,
             "fill_or_kill": isFillOrKill
         });
-        wallet_api.sign_and_broadcast(tr);
+        wallet_api.sign_and_broadcast(tr).then(result => {
+            console.log("order result:", result);
+            // TODO: update order ID from the server's response, if possible
+        })
+        .catch(error => {
+            console.log("order error:", error);
+            this.dispatch({failedOrderID: epochTime});
+        });
     }
 
     // TODO: What prevents a caller from entering someone else's order number in the "order" field?
     cancelLimitOrder(accountID, orderID) {
-        this.dispatch({init: orderID});
+        this.dispatch({newOrderID: orderID});
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
             "fee_paying_account": accountID,
@@ -101,7 +128,7 @@ class MarketsActions {
         })
         .catch(error => {
             console.log("cancel error:", error);
-            this.dispatch({failed: orderID});
+            this.dispatch({failedOrderID: orderID});
         });
     }
 }

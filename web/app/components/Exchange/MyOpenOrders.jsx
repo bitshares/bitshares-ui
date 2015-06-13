@@ -32,6 +32,7 @@ class MyOpenOrders extends BaseComponent {
                         <th>{/* "Cancel button" column */}</th>
                         <th>Quantity ({this.props.quoteSymbol})</th>
                         <th>Price ({this.props.baseSymbol})</th>
+                        <th>{/* "Buy/Sell" column */}</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -16,12 +16,14 @@ class MarketsStore {
         this.asset_symbol_to_id = {};
         this.activeMarketShorts = Immutable.Map();
         this.activeMarketLimits = Immutable.Map();
-        this.limitCancel = {};
+        this.pendingCreateLimitOrders = {};
+        this.pendingCancelLimitOrders = {};
         this.activeMarket = null;
 
         this.bindListeners({
             onSubscribeMarket: MarketsActions.subscribeMarket,
             onGetMarkets: MarketsActions.getMarkets,
+            onCreateLimitOrder: MarketsActions.createLimitOrder,
             onCancelLimitOrder: MarketsActions.cancelLimitOrder
         });
 
@@ -101,21 +103,37 @@ class MarketsStore {
         }
     }
 
-    onCancelLimitOrder(cancel) {
-        if (cancel.init) { // Optimistic update
-            this.limitCancel[cancel.init] = this.activeMarketLimits.get(cancel.init);
-            this.activeMarketLimits = this.activeMarketLimits.delete(cancel.init);
-        }
-
-        if (cancel.failed) { // Undo removal if cancel failed
+    onCreateLimitOrder(e) {
+        if (e.newOrderID) { // Optimistic update
+            this.pendingCreateLimitOrders[e.newOrderID] = e.order;
             this.activeMarketLimits = this.activeMarketLimits.set(
-                cancel.failed,
-                this.limitCancel[cancel.failed]
+                e.newOrderID,
+                e.order
             );
 
-            delete this.limitCancel[cancel.failed];
         }
 
+        if (e.failedOrderID) { // Undo order if failed
+            this.activeMarketLimits = this.activeMarketLimits.delete(e.failedOrderID);
+
+            delete this.pendingCancelLimitOrders[e.failedOrderID];
+        }
+    }
+
+    onCancelLimitOrder(e) {
+        if (e.newOrderID) { // Optimistic update
+            this.pendingCancelLimitOrders[e.newOrderID] = this.activeMarketLimits.get(e.newOrderID);
+            this.activeMarketLimits = this.activeMarketLimits.delete(e.newOrderID);
+        }
+
+        if (e.failedOrderID) { // Undo removal if cancel failed
+            this.activeMarketLimits = this.activeMarketLimits.set(
+                e.failedOrderID,
+                this.pendingCancelLimitOrders[e.failedOrderID]
+            );
+
+            delete this.pendingCancelLimitOrders[e.failedOrderID];
+        }
     }
 
     onGetMarkets(markets) {
