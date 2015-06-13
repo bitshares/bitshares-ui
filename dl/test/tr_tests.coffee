@@ -59,7 +59,7 @@ describe "tr_tests", ->
             referrer = 0
             referrer_percent = 0
             broadcast
-        ).then (result)->
+        ).trx_promise.then (result)->
             th.print_result result
             #th.print_hex ""
             done()

@@ -1,62 +1,64 @@
 ChainTypes = require './chain_types.coffee'
 Long = require('../common/bytebuffer').Long
 
-MAX_SAFE_INT = 9007199254740991
+###*
+Most validations are skipped and the value returned unchanged when 
+an empty string, null, or undefined is encountered (except "required"). 
 
+Validations support a string format for dealing with large numbers.
+###
 module.exports=
 
     is_empty: is_empty=(value)->
         value is null or value is undefined
     
-    required: required=(value, field_name="")->
+    required: (value, field_name="")->
         if is_empty value
             throw new Error "value required for #{field_name}: #{value}"
         value
     
-    require_string: require_string=(value)->
+    string: (value)->
         return value if is_empty value
         if typeof value isnt "string"
             throw new Error "string required: #{value}"
         value
     
-    require_number: require_number=(value)->
+    number: (value)->
         return value if is_empty value
         if typeof value isnt "number"
             throw new Error "number required: #{value}"
         value
     
-    ###
-        Allows a string of digits (potentially very large number) or 
-        a number type.  An empty string or empty value is allowed.
-    ###
-    require_digits: require_digits=(value, field_name="")->
-        return value if typeof value is "numeric"
-        unless /^[0-9]*$/.test value
-            throw new Error "Only digits allowed in #{field_name}: #{value}"
+    whole_number: (value, field_name="")->
+        return value if is_empty value
+        if /\./.test value
+            throw new Error "whole number required #{field_name}: #{value}"
+        value
+    
+    unsigned: (value, field_name="")->
+        return value if is_empty value
+        if /-/.test value
+            throw new Error "unsigned required #{field_name}: #{value}"
         value
     
     is_digits: is_digits=(value)->
         return yes if typeof value is "numeric"
         /^[0-9]+$/.test value
 
-    
-    to_number: to_number=(value)->
+    to_number: to_number=(value, field_name="")->
         return value if is_empty value
+        no_overflow_53 value, field_name
         int_value = if typeof value is "number"
             value
         else
             parseInt value
-        if int_value > MAX_SAFE_INT
-            throw new Error "overflow #{value}"
         int_value
     
     to_long:(value, field_name="")->
         return value if is_empty value
         return value if Long.isLong value
-        @require_digits value, field_name
+        no_overflow_64 value, field_name
         if typeof value is "number"
-            if value > MAX_SAFE_INT
-                throw new Error "overflow #{value}"
             value = ""+value
         Long.fromString value
     
@@ -73,8 +75,10 @@ module.exports=
             throw new Error "unmatched #{regex} #{field_name}: #{value}"
         match
     
+    # Does not support over 53 bits
     require_range:(min,max,value, field_name="")->
         return value if is_empty value
+        number = to_number value
         if value < min or value > max
             throw new Error "out of range #{value} #{field_name}: #{value}"
         value
@@ -88,7 +92,7 @@ module.exports=
         unless object_type
             throw new Error "Unknown object type #{type} #{field_name}: #{value}"
         re = new RegExp "#{reserved_spaces}\.#{object_type}\.[0-9]+$"
-        unless re.test require_string value
+        unless re.test value
             throw new Error "Expecting #{type} in format "+
                 "#{reserved_spaces}.#{object_type}.[0-9]+ "+
                 "instead of #{value} #{field_name}: #{value}"
@@ -125,3 +129,37 @@ module.exports=
         return value if is_empty value
         require_object_type 2, type, value, field_name
         to_number value.split('.')[2]
+
+MAX_SAFE_INT = 9007199254740991
+MIN_SAFE_INT =-9007199254740991
+
+# signed / unsigned decimal
+no_overflow_53 = (value, field_name="")->
+    if typeof value is "number"
+        if value > MAX_SAFE_INT or value < MIN_SAFE_INT
+            throw new Error "overflow #{field_name}: #{value}"
+        return
+    if typeof value is "string"
+        int = parseInt value
+        if value > MAX_SAFE_INT or value < MIN_SAFE_INT
+            throw new Error "overflow #{field_name}: #{value}"
+        return
+    if Long.isLong value
+        # typeof value.toInt() is 'number'
+        no_overflow_53 value.toInt(), field_name
+        return
+    throw "unsupported type #{field_name}: (#{typeof value}) #{value}"
+
+# signed / unsigned whole numbers only
+no_overflow_64 = (value, field_name="")->
+    # https://github.com/dcodeIO/Long.js/issues/20
+    return if Long.isLong value
+    if typeof value is "string"
+        if Long.fromString(value).toString() != value.trim()
+            throw new Error "overflow #{field_name}: #{value}"
+        return
+    if typeof value is "number"
+        if value > MAX_SAFE_INT or value < MIN_SAFE_INT
+            throw new Error "overflow #{field_name}: #{value}"
+        return
+    throw "unsupported type #{field_name}: (#{typeof value}) #{value}"

@@ -5,6 +5,7 @@ var promisify = require("repl-promised").promisify;
 var Apis = require('../dl/src/rpc_api/ApiInstances');
 var ApplicationApi = require('../dl/src/rpc_api/ApplicationApi');
 var WalletApi = require('../dl/src/rpc_api/WalletApi');
+var DebugApi = require('../dl/src/rpc_api/DebugApi');
 
 var iDB = require("../dl/src/idb-instance");
 var fakeIndexedDB = require('fake-indexeddb');
@@ -28,6 +29,7 @@ Apis.instance().init_promise.then(() => {
     repl_instance.context.$g.net = network_api;
     repl_instance.context.$g.app = new ApplicationApi();
     repl_instance.context.$g.wallet = new WalletApi();
+    repl_instance.context.debug = new DebugApi();
     var hist_file = process.env.HOME + "/.graphene_history";
     repl_history(repl_instance, hist_file);
 }).catch(error => {
