@@ -1,5 +1,4 @@
 import React from "react";
-import BaseComponent from "../BaseComponent";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
 
@@ -31,9 +30,9 @@ let history = {
     ]
 };
 
-class Exchange extends BaseComponent {
-    constructor(props) {
-        super(props);
+class Exchange extends React.Component {
+    constructor() {
+        super();
 
         this.state = {
             orderBook: orderBook,
@@ -136,7 +135,12 @@ class Exchange extends BaseComponent {
                     <div className="grid-block medium-3 left-column">
                         <div className="grid-content">
                             <p>MY OPEN ORDERS</p>
-                            <MyOpenOrders orders={this.props.limit_orders} baseSymbol={this.props.baseSymbol} quoteSymbol={this.props.quoteSymbol} onCancel={this._cancelLimitOrder.bind(this)} />
+                            <MyOpenOrders
+                                orders={limit_orders}
+                                account={account.id}
+                                baseSymbol={this.props.baseSymbol}
+                                quoteSymbol={this.props.quoteSymbol}
+                                onCancel={this._cancelLimitOrder.bind(this)} />
                             <p>OPEN ORDERS</p>
                             <table className="table">
                                 <thead>

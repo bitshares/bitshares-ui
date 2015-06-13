@@ -1,52 +1,54 @@
 import React from "react";
-import BaseComponent from "../BaseComponent";
 import Icon from "../Icon/Icon";
+import Immutable from "immutable";
 
-class MyOpenOrders extends BaseComponent {
-    constructor(props) {
-        super(props);
-    }
+class MyOpenOrders extends React.Component {
+    // shouldComponentUpdate(nextProps) {
+    //     return (
+    //         nextProps.account.id !== this.props.account.id ||
+    //         !Immutable.is(nextProps.orders, this.props.orders)
+    //         );
+    // }
 
     render() {
-        function orderEntry(order) {
-            return (
-                <tr>
-                    {/*TODO: use icon cross-circle instead of plus-circle. */}
-                    <td>
-                        <a onClick={function() { this.props.onCancel(order.id) }.bind(this)}>
-                            <Icon name="cross-circle" fillClass="fill-black" />
-                        </a>
-                    </td>
-                    <td>{order.for_sale}</td>
-                    <td>{order.sell_price.quote.amount / order.sell_price.base.amount }</td>
-                    {/*TODO: add expiration data <td>{order.expiration}</td> */}
-                </tr>
-            );
-        }
+        let {orders, account} = this.props;
+        console.log("orders:", orders.toJS());
+        let orderRows = null;
 
-        if(this.props.orders.size > 0) {
-            return (
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th>{/* "Cancel button" column */}</th>
-                        <th>Quantity ({this.props.quoteSymbol})</th>
-                        <th>Price ({this.props.baseSymbol})</th>
+        if(orders.size > 0) {
+            orderRows = orders.filter(a => {
+                // console.log(account, a);
+                return a.seller === account; 
+            }).map(order => {
+                return (
+                     <tr key={order.id}>
+                        {/*TODO: use icon cross-circle instead of plus-circle. */}
+                        <td>
+                            <a onClick={this.props.onCancel.bind(this, order.id)}>
+                                <Icon name="cross-circle" fillClass="fill-black" />
+                            </a>
+                        </td>
+                        <td>{order.for_sale}</td>
+                        <td>{order.sell_price.quote.amount / order.sell_price.base.amount }</td>
+                        {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.props.orders.map(orderEntry, this)
-                    }
-                    </tbody>
-                </table>
-            );
+                    );
+            }).toArray();
         }
-        else {
-            return (
-                <p>No open orders.</p>
-            );
-        }
+        return (
+            <table className="table">
+                <thead>
+                <tr>
+                    <th>{/* "Cancel button" column */}</th>
+                    <th>Quantity ({this.props.quoteSymbol})</th>
+                    <th>Price ({this.props.baseSymbol})</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {orderRows}
+                </tbody>
+            </table>
+        );
     }
 }
 
