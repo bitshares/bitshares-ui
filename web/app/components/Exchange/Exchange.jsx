@@ -46,10 +46,9 @@ class Exchange extends BaseComponent {
     }
 
     createLimitOrder(buyID, sellID, amount, price) {
+        let {account} = this.props;
         MarketsActions.createLimitOrder(
-            "1.3.11", // user's account id TODO: insert this
-            "0", // fee amount
-            "1.4.0", // fee asset id
+            account.id, 
             amount,
             sellID,
             amount * price,
@@ -60,10 +59,10 @@ class Exchange extends BaseComponent {
     }
 
     _cancelLimitOrder(orderID) {
+        console.log("cancelling limit order:", orderID);
+        let {account} = this.props;
         MarketsActions.cancelLimitOrder(
-            "1.3.11", // user's account id TODO: insert this
-            "0", // fee amount
-            "1.4.0", // fee asset id
+            account.id,
             orderID // order id to cancel
         );
     }
@@ -87,6 +86,7 @@ class Exchange extends BaseComponent {
     _sellPriceChanged(e) { this.setState({sellPrice: e.target.value }); }
 
     render() {
+        let {account, limit_orders, short_orders} = this.props;
         var spread = this.state.orderBook.bids.length > 0 && this.state.orderBook.asks.length > 0 ?
             this.state.orderBook.asks[0].price - this.state.orderBook.bids[this.state.orderBook.bids.length - 1].price :
             "N/A";
@@ -118,13 +118,13 @@ class Exchange extends BaseComponent {
             );
         }
 
-        this.props.limit_orders.map(order => {
-            console.log("real limit order:", order);
+        limit_orders.map(order => {
+            // console.log("real limit order:", order);
         });
 
         if (isMarketAsset) {
-            this.props.short_orders.map(order => {
-                console.log("real short order:", order);
+            short_orders.map(order => {
+                // console.log("real short order:", order);
             });
         }
 

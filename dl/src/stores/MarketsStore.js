@@ -1,8 +1,9 @@
 var Immutable = require("immutable");
 var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
-var utils = require("../common/utils");
+var market_utils = require("../common/market_utils");
 
+console.log("market_utils:", market_utils);
 import {
     LimitOrder,
     ShortOrder
@@ -15,20 +16,23 @@ class MarketsStore {
         this.asset_symbol_to_id = {};
         this.activeMarketShorts = Immutable.Map();
         this.activeMarketLimits = Immutable.Map();
+        this.limitCancel = {};
         this.activeMarket = null;
+
         this.bindListeners({
             onSubscribeMarket: MarketsActions.subscribeMarket,
-            onGetMarkets: MarketsActions.getMarkets
+            onGetMarkets: MarketsActions.getMarkets,
+            onCancelLimitOrder: MarketsActions.cancelLimitOrder
         });
+
     }
 
 
     onSubscribeMarket(result) {
         console.log("onSubscribeMarket:", result);
 
-        if (result.market !== this.activeMarket) {
+        if (result.market && (result.market !== this.activeMarket)) {
             console.log("switch active market:", this.activeMarket, "to", result.market);
-            console.log(this.activeMarketLimits.toJS(), this.activeMarketShorts.toJS());
             this.activeMarket = result.market;
             this.activeMarketLimits.clear();
             this.activeMarketShorts.clear();
@@ -38,6 +42,7 @@ class MarketsStore {
 
         if (result.limits) {
             result.limits.forEach(order => {
+                console.log("limit orders:", order);
                 order.expiration = new Date(order.expiration);
                 this.activeMarketLimits = this.activeMarketLimits.set(
                     order.id,
@@ -58,20 +63,29 @@ class MarketsStore {
 
         if (result.sub) {
             result.sub.forEach(newOrder => {
-                let orderType = utils.order_type(newOrder[1][1]);
-
+                let o = newOrder[0][1];
+                let orderType = market_utils.order_type(newOrder[1][1]);
+                let order = {};
+                console.log("parse:", market_utils.parse_order(newOrder));
                 switch (orderType) {
 
                     case "limit_order":
-                        newOrder.expiration = new Date(newOrder.expiration);
+                        o.expiration = new Date(o.expiration);
+                        order = {
+                            expiration: o.expiration,
+                            for_sale: o.amount_to_sell.amount,
+                            id: newOrder[1][1]
+
+
+                        };
                         this.activeMarketLimits = this.activeMarketLimits.set(
                             newOrder.id,
                             LimitOrder(newOrder[0][1])
                         );
-                        break;                    
+                        break;
 
                     case "short_order":
-                        newOrder.expiration = new Date(newOrder.expiration);
+                        o.expiration = new Date(o.expiration);
                         this.activeMarketShorts = this.activeMarketShorts.set(
                             newOrder.id,
                             ShortOrder(newOrder[0][1])
@@ -85,6 +99,23 @@ class MarketsStore {
             });
 
         }
+    }
+
+    onCancelLimitOrder(cancel) {
+        if (cancel.init) { // Optimistic update
+            this.limitCancel[cancel.init] = this.activeMarketLimits.get(cancel.init);
+            this.activeMarketLimits = this.activeMarketLimits.delete(cancel.init);
+        }
+
+        if (cancel.failed) { // Undo removal if cancel failed
+            this.activeMarketLimits = this.activeMarketLimits.set(
+                cancel.failed,
+                this.limitCancel[cancel.failed]
+            );
+
+            delete this.limitCancel[cancel.failed];
+        }
+
     }
 
     onGetMarkets(markets) {
