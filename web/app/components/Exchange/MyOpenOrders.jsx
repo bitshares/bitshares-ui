@@ -3,12 +3,12 @@ import Icon from "../Icon/Icon";
 import Immutable from "immutable";
 
 class MyOpenOrders extends React.Component {
-    // shouldComponentUpdate(nextProps) {
-    //     return (
-    //         nextProps.account.id !== this.props.account.id ||
-    //         !Immutable.is(nextProps.orders, this.props.orders)
-    //         );
-    // }
+    shouldComponentUpdate(nextProps) {
+        return (
+            nextProps.account.id !== this.props.account.id ||
+            !Immutable.is(nextProps.orders, this.props.orders)
+            );
+    }
 
     render() {
         let {orders, account} = this.props;
@@ -29,7 +29,7 @@ class MyOpenOrders extends React.Component {
                             </a>
                         </td>
                         <td>{order.for_sale}</td>
-                        <td>{order.sell_price.quote.amount / order.sell_price.base.amount }</td>
+                        <td>{order.sell_price.base.amount / order.sell_price.quote.amount }</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );

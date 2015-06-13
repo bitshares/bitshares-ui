@@ -1,6 +1,7 @@
 import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
+import utils from "common/utils";
 
 require("./exchange.scss");
 
@@ -45,12 +46,16 @@ class Exchange extends React.Component {
     }
 
     createLimitOrder(buyID, sellID, amount, price) {
-        let {account} = this.props;
+        let {account, assets, asset_symbol_to_id, quoteSymbol} = this.props;
+
+        let quotePrecision = utils.get_asset_precision(assets.get(sellID).precision);
+        amount = amount * quotePrecision;
+        console.log("sell id:", sellID);
         MarketsActions.createLimitOrder(
             account.id, 
-            amount,
-            sellID,
             amount * price,
+            sellID,
+            amount,
             buyID,
             "2020-01-01T00:00:00", // expiration
             false // fill or kill
@@ -85,7 +90,7 @@ class Exchange extends React.Component {
     _sellPriceChanged(e) { this.setState({sellPrice: e.target.value }); }
 
     render() {
-        let {account, limit_orders, short_orders} = this.props;
+        let {account, limit_orders, short_orders, baseSymbol, quoteSymbol} = this.props;
         var spread = this.state.orderBook.bids.length > 0 && this.state.orderBook.asks.length > 0 ?
             this.state.orderBook.asks[0].price - this.state.orderBook.bids[this.state.orderBook.bids.length - 1].price :
             "N/A";
@@ -93,8 +98,8 @@ class Exchange extends React.Component {
         var buyTotal = this.state.buyAmount * this.state.buyPrice;
         var sellTotal = this.state.sellAmount * this.state.sellPrice;
 
-        let baseID = this.props.asset_symbol_to_id[this.props.baseSymbol];
-        let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
+        let baseID = this.props.asset_symbol_to_id[baseSymbol];
+        let quoteID = this.props.asset_symbol_to_id[quoteSymbol];
         let isMarketAsset = this.props.assets.get(quoteID).bitasset_data_id !== null;
 
         function orderBookEntry(order) {
@@ -138,22 +143,22 @@ class Exchange extends React.Component {
                             <MyOpenOrders
                                 orders={limit_orders}
                                 account={account.id}
-                                baseSymbol={this.props.baseSymbol}
-                                quoteSymbol={this.props.quoteSymbol}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
                                 onCancel={this._cancelLimitOrder.bind(this)} />
                             <p>OPEN ORDERS</p>
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th>Quantity ({this.props.quoteSymbol})</th>
-                                    <th>Price ({this.props.baseSymbol})</th>
+                                    <th>Quantity ({quoteSymbol})</th>
+                                    <th>Price ({baseSymbol})</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         this.state.orderBook.bids.map(orderBookEntry)
                                     }
-                                    <tr><td colSpan="2" className="text-center">Spread: {spread} {this.props.baseSymbol}</td></tr>
+                                    <tr><td colSpan="2" className="text-center">Spread: {spread} {baseSymbol}</td></tr>
                                     {
                                         this.state.orderBook.asks.map(orderBookEntry)
                                     }
@@ -167,15 +172,15 @@ class Exchange extends React.Component {
                             <div className="grid-content">
                                 <form onSubmit={this.createLimitOrder.bind(this, quoteID, baseID, this.state.buyAmount, this.state.buyPrice)}>
                                     <label>
-                                        Quantity ({this.props.quoteSymbol}):
+                                        Quantity ({quoteSymbol}):
                                         <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
                                     </label>
                                     <label>
-                                        Price: ({this.props.baseSymbol} per {this.props.quoteSymbol}):
+                                        Price: ({baseSymbol} per {quoteSymbol}):
                                         <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
                                     </label>
-                                    <p>Total ({this.props.baseSymbol}): { buyTotal }</p>
-                                    <input type="submit" className="button" value={"Buy " + this.props.quoteSymbol} />
+                                    <p>Total ({baseSymbol}): { buyTotal }</p>
+                                    <input type="submit" className="button" value={"Buy " + quoteSymbol} />
                                 </form>
                             </div>
                         </div>
@@ -183,15 +188,15 @@ class Exchange extends React.Component {
                             <div className="grid-content">
                                 <form onSubmit={this.createLimitOrder.bind(this, baseID, quoteID, this.state.sellAmount, this.state.sellPrice)}>
                                     <label>
-                                        Quantity ({this.props.quoteSymbol}):
+                                        Quantity ({quoteSymbol}):
                                         <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
                                     </label>
                                     <label>
-                                        Price: ({this.props.baseSymbol} per {this.props.quoteSymbol}):
+                                        Price: ({baseSymbol} per {quoteSymbol}):
                                         <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
                                     </label>
-                                    <p>Total ({this.props.baseSymbol}): { sellTotal }</p>
-                                    <input type="submit" className="button" value={"Sell " + this.props.quoteSymbol} />
+                                    <p>Total ({baseSymbol}): { sellTotal }</p>
+                                    <input type="submit" className="button" value={"Sell " + quoteSymbol} />
                                 </form>
                             </div>
                         </div>
