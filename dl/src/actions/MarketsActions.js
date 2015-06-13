@@ -1,7 +1,9 @@
 var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
+import WalletApi from "rpc_api/WalletApi";
 
 let subs = {};
+let wallet_api = new WalletApi();
 
 class MarketsActions {
 
@@ -71,6 +73,19 @@ class MarketsActions {
         // }).catch((error) => {
         //     console.log("Error in AssetStore.updateAsset: ", error);
         // });
+    }
+
+    // TODO: security. What prevents a caller from entering someone else's sellAccount in the "seller" field?
+    createLimitOrder(feeAmount, feeAssetId, sellAccount, sellAmount, sellAssetId, buyAmount, buyAssetId, expiration, isFillOrKill) {
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("limit_order_create", {
+            "fee": { "amount": feeAmount, "asset_id": feeAssetId },
+            "seller": sellAccount,
+            "amount_to_sell": { "amount": sellAmount,"asset_id": sellAssetId },
+            "min_to_receive": { "amount": buyAmount,"asset_id": buyAssetId },
+            "expiration": expiration,
+            "fill_or_kill": isFillOrKill });
+        wallet_api.sign_and_broadcast(tr);
     }
 }
 

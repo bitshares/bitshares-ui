@@ -6,27 +6,27 @@ require("./exchange.scss");
 
 let orderBook = {
     bids: [
-        {expiration: 0, quantity: 5, price: 120},
-        {expiration: 0, quantity: 800, price: 130},
-        {expiration: 0, quantity: 12, price: 140},
-        {expiration: 0, quantity: 10, price: 154}
+        {expiration: 0, amount: 5, price: 120},
+        {expiration: 0, amount: 800, price: 130},
+        {expiration: 0, amount: 12, price: 140},
+        {expiration: 0, amount: 10, price: 154}
     ],
     asks: [
-        {expiration: 0, quantity: 10, price: 160},
-        {expiration: 0, quantity: 32, price: 170},
-        {expiration: 0, quantity: 400, price: 180},
-        {expiration: 0, quantity: 4, price: 190}
+        {expiration: 0, amount: 10, price: 160},
+        {expiration: 0, amount: 32, price: 170},
+        {expiration: 0, amount: 400, price: 180},
+        {expiration: 0, amount: 4, price: 190}
     ]
 };
 
 let history = {
     orders: [
-        {timestamp: new Date(15,6,1,11,38,0,0), type: 0, quantity: 5, price: 150},
-        {timestamp: new Date(15,6,1,11,37,0,0), type: 0, quantity: 10, price: 152},
-        {timestamp: new Date(15,6,1,11,36,0,0), type: 1, quantity: 1, price: 155},
-        {timestamp: new Date(15,6,1,11,35,0,0), type: 1, quantity: 80, price: 154},
-        {timestamp: new Date(15,6,1,11,34,0,0), type: 1, quantity: 1, price: 148},
-        {timestamp: new Date(15,6,1,11,33,0,0), type: 0, quantity: 1, price: 145}
+        {timestamp: new Date(15,6,1,11,38,0,0), type: 0, amount: 5, price: 150},
+        {timestamp: new Date(15,6,1,11,37,0,0), type: 0, amount: 10, price: 152},
+        {timestamp: new Date(15,6,1,11,36,0,0), type: 1, amount: 1, price: 155},
+        {timestamp: new Date(15,6,1,11,35,0,0), type: 1, amount: 80, price: 154},
+        {timestamp: new Date(15,6,1,11,34,0,0), type: 1, amount: 1, price: 148},
+        {timestamp: new Date(15,6,1,11,33,0,0), type: 0, amount: 1, price: 145}
     ]
 };
 
@@ -39,21 +39,37 @@ class Exchange extends BaseComponent {
             history: history,
             assetA: "CORE",
             assetB: "BitUSD",
-            buyQuantity: 5,
+            buyAmount: 5,
             buyPrice: orderBook.asks[0].price,
-            sellQuantity: 5,
+            sellAmount: 5,
             sellPrice: orderBook.bids[orderBook.bids.length - 1].price
         };
-
-        this._bind("_buyQuantityChanged", "_buyPriceChanged", "_sellQuantityChanged", "_sellPriceChanged");
     }
 
     buyClicked() {
-        alert("buy");
+        MarketsActions.createLimitOrder("0",
+            "1.4.0",
+            "1.3.11",
+            this.state.buyAmount,
+            "1.4.0",
+            this.state.buyAmount * this.state.buyPrice,
+            "1.4.1",
+            "2020-01-01T00:00:00",
+            false
+        );
     }
 
     sellClicked() {
-        alert("sell");
+        MarketsActions.createLimitOrder("0",
+            "1.4.0",
+            "1.3.11",
+            this.state.sellAmount,
+            "1.4.1",
+            this.state.sellAmount * this.state.sellPrice,
+            "1.4.0",
+            "2020-01-01T00:00:00",
+            false
+        );
     }
 
     componentDidMount() {
@@ -69,9 +85,9 @@ class Exchange extends BaseComponent {
         MarketsActions.unSubscribeMarket(baseID, quoteID);
     }
 
-    _buyQuantityChanged(e) { this.setState({buyQuantity: e.target.value }); }
+    _buyAmountChanged(e) { this.setState({buyAmount: e.target.value }); }
     _buyPriceChanged(e) { this.setState({buyPrice: e.target.value }); }
-    _sellQuantityChanged(e) { this.setState({sellQuantity: e.target.value }); }
+    _sellAmountChanged(e) { this.setState({sellAmount: e.target.value }); }
     _sellPriceChanged(e) { this.setState({sellPrice: e.target.value }); }
 
     render() {
@@ -79,8 +95,8 @@ class Exchange extends BaseComponent {
             this.state.orderBook.asks[0].price - this.state.orderBook.bids[this.state.orderBook.bids.length - 1].price :
             "N/A";
 
-        var buyTotal = this.state.buyQuantity * this.state.buyPrice;
-        var sellTotal = this.state.sellQuantity * this.state.sellPrice;
+        var buyTotal = this.state.buyAmount * this.state.buyPrice;
+        var sellTotal = this.state.sellAmount * this.state.sellPrice;
 
         let quoteID = this.props.asset_symbol_to_id[this.props.quoteSymbol];
         let isMarketAsset = this.props.assets.get(quoteID).bitasset_data_id !== null;
@@ -88,7 +104,7 @@ class Exchange extends BaseComponent {
         function orderBookEntry(order) {
             return (
                 <tr>
-                    <td>{order.quantity}</td>
+                    <td>{order.amount}</td>
                     <td>{order.price}</td>
                 </tr>
             );
@@ -98,7 +114,7 @@ class Exchange extends BaseComponent {
             let priceTrendCssClass = order.type === 1 ? "orderHistoryBid" : "orderHistoryAsk";
             return (
                 <tr>
-                    <td>{order.quantity}</td>
+                    <td>{order.amount}</td>
                     <td className={priceTrendCssClass}>{order.price}</td>
                     <td>{order.timestamp.getHours()}:{order.timestamp.getMinutes()}</td>
                 </tr>
@@ -146,14 +162,14 @@ class Exchange extends BaseComponent {
                         <p>TRADE</p>
                         <div className="grid-block medium-6 main-content">
                             <div className="grid-content">
-                                <form onSubmit={this.buyClicked}>
+                                <form onSubmit={this.buyClicked.bind(this)}>
                                     <label>
                                         Quantity ({this.state.assetB}):
-                                        <input type="text" id="buyQuantity" value={this.state.buyQuantity} onChange={this._buyQuantityChanged} />
+                                        <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
                                     </label>
                                     <label>
                                         Price: (per {this.state.assetB}):
-                                        <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged} />
+                                        <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
                                     </label>
                                     <p>Total ({this.state.assetA}): { buyTotal }</p>
                                     <input type="submit" className="button" value={"Buy " + this.state.assetB} />
@@ -162,14 +178,14 @@ class Exchange extends BaseComponent {
                         </div>
                         <div className="grid-block medium-6 main-content">
                             <div className="grid-content">
-                                <form onSubmit={this.sellClicked}>
+                                <form onSubmit={this.sellClicked.bind(this)}>
                                     <label>
                                         Quantity ({this.state.assetB}):
-                                        <input type="text" id="sellQuantity" value={this.state.sellQuantity} onChange={this._sellQuantityChanged} />
+                                        <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
                                     </label>
                                     <label>
                                         Price: (per {this.state.assetB}):
-                                        <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged} />
+                                        <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
                                     </label>
                                     <p>Total ({this.state.assetA}): { sellTotal }</p>
                                     <input type="submit" className="button" value={"Sell " + this.state.assetB} />
