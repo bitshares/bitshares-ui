@@ -25,7 +25,9 @@ let Account = t.struct({
 let Asset = t.struct({
     annotations: t.Arr,
     bitasset_data_id: t.maybe(t.Str),
+    bitasset_data: t.maybe(t.Obj),
     dynamic_asset_data_id: t.Str,
+    dynamic_data: t.maybe(t.Obj),
     id: t.Str,
     issuer: t.Str,
     market_asset: t.Bool,
@@ -34,15 +36,15 @@ let Asset = t.struct({
     symbol: t.Str
 }, "Asset");
 
-let BitAssetData = t.struct({
-    current_feed: t.Obj,
-    current_feed_publication_time: t.Str,
-    feeds: t.Arr,
-    force_settled_volume: t.Num,
-    id: t.Str,
-    is_prediction_market: t.Bool,
-    options: t.Obj
-}, "BitAssetData");
+// let BitAssetData = t.struct({
+//     current_feed: t.Obj,
+//     current_feed_publication_time: t.Str,
+//     feeds: t.Arr,
+//     force_settled_volume: t.Num,
+//     id: t.Str,
+//     is_prediction_market: t.Bool,
+//     options: t.Obj
+// }, "BitAssetData");
 
 let Block = t.struct({
     delegate_signature: t.Str,
@@ -136,7 +138,6 @@ let ShortTrx = t.struct({
 module.exports = {
     Account: Account,
     Asset: Asset,
-    BitAssetData: BitAssetData,
     Block: Block,
     Key: Key,
     Witness: Witness,

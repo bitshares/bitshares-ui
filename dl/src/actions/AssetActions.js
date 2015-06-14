@@ -11,39 +11,45 @@ class AssetActions {
     }
 
     getAssetList(start, count) {
-        // console.log("get assetlist:", start, count);
         let id = start + "_" + count;
         if (!inProgress[id]) {
+            inProgress[id] = true;
             Apis.instance().db_api().exec("list_assets", [
                     start, count
                 ]).then(assets => {
                     let bitAssetIDS = [];
-                    let bitasset_to_asset = {};
+                    let dynamicIDS = [];
+
                     assets.forEach(asset => {
+                        dynamicIDS.push(asset.dynamic_asset_data_id);
+
                         if (asset.bitasset_data_id) {
                             bitAssetIDS.push(asset.bitasset_data_id);
-                            bitasset_to_asset[asset.bitasset_data_id] = asset.id;
                         }
                     });
+
+                    let dynamicPromise = Apis.instance().db_api().exec("get_objects", [
+                        dynamicIDS
+                    ]);
 
                     let bitAssetPromise = bitAssetIDS.length > 0 ? Apis.instance().db_api().exec("get_objects", [
                         bitAssetIDS
                     ]) : null;
 
-                    if (!bitAssetPromise) {
-                        this.dispatch({
-                            assets: assets
-                        });
-                    } else {
-                        bitAssetPromise.then(bitasset_data => {
+                    Promise.all([
+                            dynamicPromise,
+                            bitAssetPromise
+                        ])
+                        .then(results => {
+                            console.log("results:", results);
                             this.dispatch({
                                 assets: assets,
-                                bitasset_data: bitasset_data,
-                                bitasset_to_asset: bitasset_to_asset
+                                dynamic_data: results[0],
+                                bitasset_data: results[1]
                             });
+                            delete inProgress[id];
+
                         });
-                    }
-                    delete inProgress[id];
                 })
                 .catch(error => {
                     console.log("Error in AssetStore.getAssetList: ", error);
@@ -68,15 +74,24 @@ class AssetActions {
 
             return assetPromise.then((asset) => {
                 if (asset[0].bitasset_data_id) {
-                    Apis.instance().db_api().exec("get_objects", [
+                    let bitAssetPromise = asset[0].bitasset_data_id ? Apis.instance().db_api().exec("get_objects", [
                         [asset[0].bitasset_data_id]
-                    ]).then(bitasset_data => {
-                        this.dispatch({
-                            asset: asset[0],
-                            bitasset_data: bitasset_data[0]
+                    ]) : null;
+
+                    Promise.all([
+                            Apis.instance().db_api().exec("get_objects", [
+                                [asset[0].dynamic_asset_data_id]
+                            ]),
+                            bitAssetPromise
+                        ])
+                        .then(results => {
+                            this.dispatch({
+                                asset: asset[0],
+                                dynamic_data: results[0][0],
+                                bitasset_data: results[1][0]
+                            });
+                            delete inProgress[id];
                         });
-                        delete inProgress[id];
-                    });
                 } else {
                     this.dispatch({
                         asset: asset[0]
