@@ -7,6 +7,10 @@ let wallet_api = new WalletApi();
 
 class MarketsActions {
 
+    changeBase(market) {
+        this.dispatch(market);
+    }
+
     subscribeMarket(idA, idB, mia) {
         let subID = idA + "_" + idB;
 

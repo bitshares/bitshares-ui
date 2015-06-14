@@ -18,16 +18,21 @@ class MarketsStore {
         this.pendingCreateLimitOrders = {};
         this.pendingCancelLimitOrders = {};
         this.activeMarket = null;
+        this.baseMarket = "CORE";
 
         this.bindListeners({
             onSubscribeMarket: MarketsActions.subscribeMarket,
             onGetMarkets: MarketsActions.getMarkets,
             onCreateLimitOrder: MarketsActions.createLimitOrder,
-            onCancelLimitOrder: MarketsActions.cancelLimitOrder
+            onCancelLimitOrder: MarketsActions.cancelLimitOrder,
+            onChangeBase: MarketsActions.changeBase
         });
 
     }
 
+    onChangeBase(market) {
+        this.baseMarket = market;
+    }
 
     onSubscribeMarket(result) {
         console.log("onSubscribeMarket:", result);
@@ -35,10 +40,8 @@ class MarketsStore {
         if (result.market && (result.market !== this.activeMarket)) {
             console.log("switch active market:", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
-            this.activeMarketLimits.clear();
-            this.activeMarketShorts.clear();
-
-            console.log(this.activeMarketLimits.toJS(), this.activeMarketShorts.toJS());
+            this.activeMarketLimits = this.activeMarketLimits.clear();
+            this.activeMarketShorts = this.activeMarketShorts.clear();
         }
 
         if (result.limits) {

@@ -9,7 +9,7 @@ import Markets from "./Markets";
 class MarketsContainer extends React.Component {
 
     componentDidMount() {
-      AssetActions.getAssetList("A", 100);
+        AssetActions.getAssetList("A", 100);
     }
 
     render() {
@@ -20,6 +20,9 @@ class MarketsContainer extends React.Component {
                   inject={{
                     markets: () => {
                         return MarketsStore.getState().markets;
+                    },
+                    baseMarket: () => {
+                        return MarketsStore.getState().baseMarket;
                     },
                     assets: () => {
                         return AssetStore.getState().assets;
