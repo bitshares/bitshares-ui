@@ -29,7 +29,7 @@ class MarketUtils {
                             asset_id: o.amount_to_sell.asset_id
                         },
                         quote: {
-                            amount: o.min_to_receive.amount / o.amount_to_sell.amount,
+                            amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount),
                             asset_id: o.min_to_receive.asset_id                            
                         }
                     },
@@ -48,7 +48,7 @@ class MarketUtils {
                     id: newOrder[1][1],
                     sell_price: {
                         base: {
-                            amount: o.min_to_receive.amount / o.amount_to_sell.amount,
+                            amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount, 10),
                             asset_id: o.min_to_receive.asset_id
                         },
                         quote: {

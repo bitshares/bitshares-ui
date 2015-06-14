@@ -6,10 +6,10 @@ import AltContainer from "alt/AltContainer";
 import Exchange from "./Exchange";
 import utils from "common/utils";
 
-class MarketsContainer extends React.Component {
+class ExchangeContainer extends React.Component {
 
     render() {
-        let assets = AssetStore.getState().assets
+        let assets = AssetStore.getState().assets;
 
         let symbols = this.context.router.getCurrentParams().marketID.split("_");
         let quote = { symbol: symbols[0] };
@@ -17,7 +17,7 @@ class MarketsContainer extends React.Component {
         quote.precision = utils.get_asset_precision(assets.get(quote.id).precision);
 
         let base = { symbol: symbols[1] };
-        base.id = AssetStore.getState().asset_symbol_to_id[base.symbol],
+        base.id = AssetStore.getState().asset_symbol_to_id[base.symbol];
         base.precision = utils.get_asset_precision(assets.get(base.id).precision);
 
         return (
@@ -44,6 +44,6 @@ class MarketsContainer extends React.Component {
     }
 }
 
-MarketsContainer.contextTypes = { router: React.PropTypes.func.isRequired };
+ExchangeContainer.contextTypes = { router: React.PropTypes.func.isRequired };
 
-export default MarketsContainer;
+export default ExchangeContainer;

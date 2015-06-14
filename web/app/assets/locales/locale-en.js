@@ -236,5 +236,9 @@ module.exports = {
         account: {
             title: "Account"
         }
+    },
+    settings: {
+        inversed: "Market orientation preference",
+        unit: "Preferred unit of account"
     }
 };

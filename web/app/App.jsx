@@ -22,7 +22,7 @@ import AccountContainer from "./components/Account/AccountContainer";
 import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
 import TransferPage from "./components/Transfer/TransferPage";
-import Settings from "./components/Settings/Settings";
+import Settings from "./components/Settings/SettingsContainer";
 import Logout from "./components/Logout";
 import Login from "./components/Login";
 import BlockContainer from "./components/Blockchain/BlockContainer";

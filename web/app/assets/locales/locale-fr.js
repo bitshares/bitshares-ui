@@ -234,6 +234,9 @@ module.exports = {
         account: {
             title: "Compte"
         }
-
+    },
+    settings: {
+        inversed: "Orientation préféré pour les marchés",
+        unit: "Unité de valeur préféré"
     }
 };

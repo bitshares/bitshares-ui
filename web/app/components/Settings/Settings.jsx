@@ -3,6 +3,8 @@ import counterpart from "counterpart";
 import IntlActions from "actions/IntlActions";
 import Translate from "react-translate-component";
 import cookies from "cookies-js";
+import SettingsActions from "actions/SettingsActions";
+
 
 class Settings extends React.Component {
 
@@ -12,11 +14,35 @@ class Settings extends React.Component {
         if (e.target.value !== myLocale) {
             IntlActions.switchLocale(e.target.value);
             cookies.set("graphene_locale", e.target.value, { expires: Infinity });
+            SettingsActions.changeSetting({setting: "locale", value: e.target.value });
         }
     }
 
+    _onChangeSetting(setting, e) {
+        e.preventDefault();
+        let {currencies, orientation} = this.props.defaults;
+        let value = null;
+        switch (setting) {
+            case "inverseMarket":
+                value = orientation.indexOf(e.target.value) === 0; // USD/CORE is true, CORE/USD is false
+                break;
+
+            case "unit":
+                value = currencies.indexOf(e.target.value);
+                break;
+
+            default:
+                break;
+        }
+
+        if (value !== null) {
+            SettingsActions.changeSetting({setting: setting, value: value });
+        }
+
+    }
+
     render() {
-        let locales = ["en", "fr"];
+        let {currencies, locales, orientation} = this.props.defaults;
         let myLocale = counterpart.getLocale();
 
         var options = locales.map(function(locale) {
@@ -38,6 +64,11 @@ class Settings extends React.Component {
             }
         });
 
+
+        let unitOptions = currencies.map((unit, index) => {
+            return <option key={index}>{unit}</option>;
+        });
+
         return (
             <div className="grid-block">
                 <div className="grid-block small-offset-3 small-6">
@@ -49,6 +80,27 @@ class Settings extends React.Component {
                                     <li className="with-dropdown">
                                     <select style={{lineHeight: "1.2em"}} onChange={this._onChangeLanguage}>
                                         {options}
+                                    </select>
+                                    </li>
+                                </ul>
+                        </section>
+                        <section className="block-list">
+                            <header><Translate component="span" content="settings.inversed" />:</header>
+                                <ul>
+                                    <li className="with-dropdown">
+                                    <select style={{lineHeight: "1.2em"}} onChange={this._onChangeSetting.bind(this, "inverseMarket")}>
+                                        <option>{orientation[0]}</option>
+                                        <option>{orientation[1]}</option>
+                                    </select>
+                                    </li>
+                                </ul>
+                        </section>
+                        <section className="block-list">
+                            <header><Translate component="span" content="settings.unit" />:</header>
+                                <ul>
+                                    <li className="with-dropdown">
+                                    <select style={{lineHeight: "1.2em"}} onChange={this._onChangeSetting.bind(this, "unit")}>
+                                        {unitOptions}
                                     </select>
                                     </li>
                                 </ul>
