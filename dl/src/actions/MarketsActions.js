@@ -10,16 +10,33 @@ class MarketsActions {
     subscribeMarket(idA, idB, mia) {
         let subID = idA + "_" + idB;
 
-        let subscription = (result) => {
-            console.log("markets subscription result:", result);
+        let subscription = (subResult) => {
+            console.log("markets subscription result:", subResult);
+            let shortPromise = mia ?
+                Apis.instance().db_api().exec("get_short_orders", [
+                    idB, 100
+                ]) :
+                null;
 
-            this.dispatch({
-                sub: result[0]
-            });
+            Promise.all([
+                    Apis.instance().db_api().exec("get_limit_orders", [
+                        idA, idB, 100
+                    ]),
+                    shortPromise
+                ])
+                .then((result) => {
+                    this.dispatch({
+                        limits: result[0],
+                        shorts: result[1],
+                        market: subID
+                    });
+                }).catch((error) => {
+                    console.log("Error in MarketsActions.subscribeMarket: ", error);
+                });
         };
 
         if (!subs[subID]) {
-            let shortPromise = mia ? 
+            let shortPromise = mia ?
                 Apis.instance().db_api().exec("get_short_orders", [
                     idB, 100
                 ]) :
@@ -104,37 +121,49 @@ class MarketsActions {
 
         tr.add_type_operation("limit_order_create", {
             "seller": account,
-            "amount_to_sell": { "amount": sellAmount, "asset_id": sellAssetID },
-            "min_to_receive": { "amount": buyAmount, "asset_id": buyAssetID },
+            "amount_to_sell": {
+                "amount": sellAmount,
+                "asset_id": sellAssetID
+            },
+            "min_to_receive": {
+                "amount": buyAmount,
+                "asset_id": buyAssetID
+            },
             "expiration": expiration,
             "fill_or_kill": isFillOrKill
         });
         wallet_api.sign_and_broadcast(tr).then(result => {
-            console.log("order result:", result);
-            // TODO: update order ID from the server's response, if possible
-        })
-        .catch(error => {
-            console.log("order error:", error);
-            this.dispatch({failedOrderID: epochTime});
-        });
+                console.log("order result:", result);
+                // TODO: update order ID from the server's response, if possible
+            })
+            .catch(error => {
+                console.log("order error:", error);
+                this.dispatch({
+                    failedOrderID: epochTime
+                });
+            });
     }
 
     // TODO: What prevents a caller from entering someone else's order number in the "order" field?
     cancelLimitOrder(accountID, orderID) {
         console.log("cancel action:", accountID, orderID);
-        this.dispatch({newOrderID: orderID});
+        this.dispatch({
+            newOrderID: orderID
+        });
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
             "fee_paying_account": accountID,
             "order": orderID
         });
         wallet_api.sign_and_broadcast(tr).then(result => {
-            console.log("cancel result:", result);
-        })
-        .catch(error => {
-            console.log("cancel error:", error);
-            this.dispatch({failedOrderID: orderID});
-        });
+                console.log("cancel result:", result);
+            })
+            .catch(error => {
+                console.log("cancel error:", error);
+                this.dispatch({
+                    failedOrderID: orderID
+                });
+            });
     }
 }
 

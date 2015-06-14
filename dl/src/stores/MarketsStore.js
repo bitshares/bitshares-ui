@@ -1,7 +1,7 @@
 var Immutable = require("immutable");
 var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
-var market_utils = require("../common/market_utils");
+// var market_utils = require("../common/market_utils");
 
 import {
     LimitOrder,
@@ -43,7 +43,7 @@ class MarketsStore {
 
         if (result.limits) {
             result.limits.forEach(order => {
-                // console.log("limit orders:", order);
+                order.for_sale = parseInt(order.for_sale, 10);
                 order.expiration = new Date(order.expiration);
                 this.activeMarketLimits = this.activeMarketLimits.set(
                     order.id,
@@ -62,34 +62,32 @@ class MarketsStore {
             });
         }
 
-        if (result.sub) {
-            result.sub.forEach(newOrder => {
-                let {order, orderType} = market_utils.parse_order(newOrder);
-                // console.log("parsed order:", order);
-                switch (orderType) {
+        // if (result.sub) {
+        //     result.sub.forEach(newOrder => {
+        //         let {order, orderType} = market_utils.parse_order(newOrder);
+                
+        //         switch (orderType) {
+        //             case "limit_order":
+        //                 this.activeMarketLimits = this.activeMarketLimits.set(
+        //                     order.id,
+        //                     LimitOrder(order)
+        //                 );
+        //                 break;
 
-                    case "limit_order":
+        //             case "short_order":
+        //                 this.activeMarketShorts = this.activeMarketShorts.set(
+        //                     order.id,
+        //                     ShortOrder(order)
+        //                 );
+        //                 break;
 
-                        this.activeMarketLimits = this.activeMarketLimits.set(
-                            order.id,
-                            LimitOrder(order)
-                        );
-                        break;
+        //             default:
+        //                 break;
+        //         }
 
-                    case "short_order":
-                        this.activeMarketShorts = this.activeMarketShorts.set(
-                            order.id,
-                            ShortOrder(order)
-                        );
-                        break;
+        //     });
 
-                    default:
-                        break;
-                }
-
-            });
-
-        }
+        // }
     }
 
     onCreateLimitOrder(e) {

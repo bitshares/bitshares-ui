@@ -9,7 +9,7 @@ class MarketUtils {
         this.order_type = this.order_type.bind(this);
     }
 
-    static parse_order (newOrder) {
+    static parse_order(newOrder) {
         let o = newOrder[0][1];
         let orderType = this.order_type(newOrder[1][1]);
         let order = {};
@@ -25,12 +25,13 @@ class MarketUtils {
                     id: newOrder[1][1],
                     sell_price: {
                         base: {
-                            amount: 1,
-                            asset_id: o.amount_to_sell.asset_id
+                            amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount),
+                            asset_id: o.min_to_receive.asset_id
                         },
                         quote: {
-                            amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount),
-                            asset_id: o.min_to_receive.asset_id                            
+                            amount: 1,
+                            asset_id: parseInt(o.amount_to_sell.asset_id, 10)
+
                         }
                     },
                     seller: o.seller
@@ -70,7 +71,7 @@ class MarketUtils {
         };
     }
 
-    static order_type (id) {
+    static order_type(id) {
         if (typeof id !== "string") {
             return false;
         }
