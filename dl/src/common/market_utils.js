@@ -3,7 +3,6 @@ import {
 }
 from "chain/chain_types";
 var opTypes = Object.keys(object_type);
-console.log(opTypes);
 
 class MarketUtils {
     constructor() {
@@ -72,6 +71,9 @@ class MarketUtils {
     }
 
     static order_type (id) {
+        if (typeof id !== "string") {
+            return false;
+        }
         var type = id.split(".")[1];
         return opTypes[type];
     }

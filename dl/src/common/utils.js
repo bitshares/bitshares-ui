@@ -1,10 +1,3 @@
-import {
-    object_type
-}
-from "chain/chain_types";
-var opTypes = Object.keys(object_type);
-console.log(opTypes);
-
 let id_regex = /\b\d+(\.\d+){2}\b/;
 
 var Utils = {
