@@ -116,6 +116,15 @@ let ShortOrder = t.struct({
     seller: t.Str
 }, "ShortOrder");
 
+let CallOrder = t.struct({
+    borrower: t.Str,
+    call_price: t.Obj,
+    collateral: t.Num,
+    debt: t.Num,
+    id: t.Str,
+    maintenance_collateral_ratio: t.Num
+}, "CallOrder");
+
 let LimitTrx = t.struct({
     amount_to_sell: t.Obj,
     expiration: t.Dat,
@@ -147,5 +156,6 @@ module.exports = {
     LimitTrx: LimitTrx,
     ShortTrx: ShortTrx,
     LimitOrder: LimitOrder,
-    ShortOrder: ShortOrder
+    ShortOrder: ShortOrder,
+    CallOrder: CallOrder
 };

@@ -2,6 +2,7 @@ import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
 import OpenOrders from "./OpenOrders.jsx";
+import utils from "common/utils";
 
 require("./exchange.scss");
 
@@ -36,24 +37,24 @@ class Exchange extends React.Component {
         super();
 
         this.state = {
-            orderBook: orderBook,
             history: history,
             buyAmount: 5,
-            buyPrice: orderBook.asks[0].price,
+            buyPrice: 160,
             sellAmount: 5,
-            sellPrice: orderBook.bids[orderBook.bids.length - 1].price
+            sellPrice: 170,
+            sub: false
         };
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, e) {
         e.preventDefault();
-        console.log("sell id:", sellAsset.id);
+        console.log("sell id:", sellAsset);
 
         MarketsActions.createLimitOrder(
             this.props.account.id,
-            sellAssetAmount * sellAsset.precision,
+            sellAssetAmount * utils.get_asset_precision(sellAsset.precision),
             sellAsset.id,
-            buyAssetAmount * buyAsset.precision,
+            buyAssetAmount * utils.get_asset_precision(buyAsset.precision),
             buyAsset.id,
             "2020-01-01T00:00:00", // expiration. TODO: set to a value chosen by the user
             false // fill or kill
@@ -70,13 +71,35 @@ class Exchange extends React.Component {
         );
     }
 
+    _subToMarket(props) {
+        let {quote, base, asset_symbol_to_id, assets} = props;
+        if (asset_symbol_to_id[quote] && asset_symbol_to_id[base]) {
+            let quote_id = asset_symbol_to_id[quote];
+            let base_id = asset_symbol_to_id[base];
+            let baseAsset = assets.get(base_id);
+            let quoteAsset = assets.get(quote_id);
+            if (quoteAsset && baseAsset && !this.state.sub) {
+                MarketsActions.subscribeMarket(baseAsset, quoteAsset);
+                this.setState({sub: true});
+            }
+        }
+    }
+
     componentDidMount() {
-        let isMarketIssued = this.props.assets.get(this.props.quote.id).bitasset_data_id !== null;
-        MarketsActions.subscribeMarket(this.props.base.id, this.props.quote.id, isMarketIssued);
+        this._subToMarket(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.state.sub && nextProps.assets.size > 0) {
+            this._subToMarket(nextProps);
+        }
     }
 
     componentWillUnmount() {
-        MarketsActions.unSubscribeMarket(this.props.base.id, this.props.quote.id);
+        let {quote, base, asset_symbol_to_id} = this.props;
+        let quote_id = asset_symbol_to_id[quote];
+        let base_id = asset_symbol_to_id[base];
+        MarketsActions.unSubscribeMarket(quote_id, base_id);
     }
 
     _buyAmountChanged(e) { this.setState({buyAmount: e.target.value }); }
@@ -85,24 +108,17 @@ class Exchange extends React.Component {
     _sellPriceChanged(e) { this.setState({sellPrice: e.target.value }); }
 
     render() {
-        let {account, limit_orders, short_orders, base, quote} = this.props;
-        var spread = this.state.orderBook.bids.length > 0 && this.state.orderBook.asks.length > 0 ?
-            this.state.orderBook.asks[0].price - this.state.orderBook.bids[this.state.orderBook.bids.length - 1].price :
-            "N/A";
+        let {asset_symbol_to_id, assets, account, limit_orders, short_orders, base: baseSymbol, quote: quoteSymbol} = this.props;
+        let base = null, quote = null;
 
+        if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
+            let quote_id = asset_symbol_to_id[quoteSymbol];
+            let base_id = asset_symbol_to_id[baseSymbol];
+            base = assets.get(base_id);
+            quote = assets.get(quote_id);
+        }
         var buyTotal = this.state.buyAmount * this.state.buyPrice;
         var sellTotal = this.state.sellAmount * this.state.sellPrice;
-
-        let isMarketAsset = this.props.assets.get(quote.id).bitasset_data_id !== null;
-
-        function orderBookEntry(order) {
-            return (
-                <tr>
-                    <td>{order.amount}</td>
-                    <td>{order.price}</td>
-                </tr>
-            );
-        }
 
         function orderHistoryEntry(order) {
             let priceTrendCssClass = order.type === 1 ? "orderHistoryBid" : "orderHistoryAsk";
@@ -128,12 +144,16 @@ class Exchange extends React.Component {
                                 account={account.id}
                                 base={base}
                                 quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
                                 onCancel={this._cancelLimitOrder.bind(this)} />
                             
                             <OpenOrders
                                 orders={limit_orders}
                                 base={base}
                                 quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
                                 />
                         </div>
                     </div>
@@ -143,15 +163,15 @@ class Exchange extends React.Component {
                             <div className="grid-content">
                                 <form onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
                                     <label>
-                                        Quantity ({quote.symbol}):
+                                        Quantity ({quoteSymbol}):
                                         <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
                                     </label>
                                     <label>
-                                        Price: ({base.symbol} per {quote.symbol}):
+                                        Price: ({baseSymbol} per {quoteSymbol}):
                                         <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
                                     </label>
-                                    <p>Total ({base.symbol}): { buyTotal }</p>
-                                    <input type="submit" className="button" value={"Buy " + quote.symbol} />
+                                    <p>Total ({baseSymbol}): { buyTotal }</p>
+                                    <input type="submit" className="button" value={"Buy " + quoteSymbol} />
                                 </form>
                             </div>
                         </div>
@@ -159,15 +179,15 @@ class Exchange extends React.Component {
                             <div className="grid-content">
                                 <form onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
                                     <label>
-                                        Quantity ({quote.symbol}):
+                                        Quantity ({quoteSymbol}):
                                         <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
                                     </label>
                                     <label>
-                                        Price: ({base.symbol} per {quote.symbol}):
+                                        Price: ({baseSymbol} per {quoteSymbol}):
                                         <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
                                     </label>
-                                    <p>Total ({base.symbol}): { sellTotal }</p>
-                                    <input type="submit" className="button" value={"Sell " + quote.symbol} />
+                                    <p>Total ({baseSymbol}): { sellTotal }</p>
+                                    <input type="submit" className="button" value={"Sell " + quoteSymbol} />
                                 </form>
                             </div>
                         </div>

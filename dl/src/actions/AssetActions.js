@@ -41,7 +41,6 @@ class AssetActions {
                             bitAssetPromise
                         ])
                         .then(results => {
-                            console.log("results:", results);
                             this.dispatch({
                                 assets: assets,
                                 dynamic_data: results[0],
@@ -73,31 +72,24 @@ class AssetActions {
             }
 
             return assetPromise.then((asset) => {
-                if (asset[0].bitasset_data_id) {
-                    let bitAssetPromise = asset[0].bitasset_data_id ? Apis.instance().db_api().exec("get_objects", [
-                        [asset[0].bitasset_data_id]
-                    ]) : null;
+                let bitAssetPromise = asset[0].bitasset_data_id ? Apis.instance().db_api().exec("get_objects", [
+                    [asset[0].bitasset_data_id]
+                ]) : null;
 
-                    Promise.all([
-                            Apis.instance().db_api().exec("get_objects", [
-                                [asset[0].dynamic_asset_data_id]
-                            ]),
-                            bitAssetPromise
-                        ])
-                        .then(results => {
-                            this.dispatch({
-                                asset: asset[0],
-                                dynamic_data: results[0][0],
-                                bitasset_data: results[1][0]
-                            });
-                            delete inProgress[id];
+                Promise.all([
+                        Apis.instance().db_api().exec("get_objects", [
+                            [asset[0].dynamic_asset_data_id]
+                        ]),
+                        bitAssetPromise
+                    ])
+                    .then(results => {
+                        this.dispatch({
+                            asset: asset[0],
+                            dynamic_data: results[0][0],
+                            bitasset_data: results[1] ? results[1][0] : null
                         });
-                } else {
-                    this.dispatch({
-                        asset: asset[0]
+                        delete inProgress[id];
                     });
-                    delete inProgress[id];
-                }
 
             }).catch((error) => {
                 console.log("Error in AssetStore.updateAsset: ", error);

@@ -5,7 +5,8 @@ var MarketsActions = require("../actions/MarketsActions");
 
 import {
     LimitOrder,
-    ShortOrder
+    ShortOrder,
+    CallOrder
 }
 from "./tcomb_structs";
 
@@ -15,6 +16,8 @@ class MarketsStore {
         this.asset_symbol_to_id = {};
         this.activeMarketShorts = Immutable.Map();
         this.activeMarketLimits = Immutable.Map();
+        this.activeMarketCalls = Immutable.Map();
+        this.activeMarketSettles = Immutable.Map();
         this.pendingCreateLimitOrders = {};
         this.pendingCancelLimitOrders = {};
         this.activeMarket = null;
@@ -35,10 +38,9 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
-        console.log("onSubscribeMarket:", result);
 
         if (result.market && (result.market !== this.activeMarket)) {
-            console.log("switch active market:", this.activeMarket, "to", result.market);
+            console.log("switch active market from", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
             this.activeMarketLimits = this.activeMarketLimits.clear();
             this.activeMarketShorts = this.activeMarketShorts.clear();
@@ -61,6 +63,26 @@ class MarketsStore {
                 this.activeMarketShorts = this.activeMarketShorts.set(
                     short.id,
                     ShortOrder(short)
+                );
+            });
+        }
+
+        if (result.calls) {
+            result.calls.forEach(call => {
+                call.expiration = new Date(call.expiration);
+                this.activeMarketShorts = this.activeMarketShorts.set(
+                    call.id,
+                    CallOrder(call)
+                );
+            });
+        }
+
+        if (result.settles) {
+            result.settles.forEach(settle => {
+                settle.expiration = new Date(settle.expiration);
+                this.activeMarketShorts = this.activeMarketShorts.set(
+                    settle.id,
+                    ShortOrder(settle)
                 );
             });
         }

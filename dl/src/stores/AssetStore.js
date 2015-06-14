@@ -12,7 +12,6 @@ class AssetStore extends BaseStore {
         super();
         this.assets = Immutable.Map();
         this.asset_symbol_to_id = {};
-        this.bitasset_data = Immutable.Map();
 
         this.bindListeners({
             onGetAssetList: AssetActions.getAssetList,

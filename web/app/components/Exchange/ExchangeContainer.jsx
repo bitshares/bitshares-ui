@@ -4,24 +4,14 @@ import AssetStore from "stores/AssetStore";
 import AccountStore from "stores/AccountStore";
 import AltContainer from "alt/AltContainer";
 import Exchange from "./Exchange";
-import utils from "common/utils";
 
 class ExchangeContainer extends React.Component {
 
     render() {
-        let assets = AssetStore.getState().assets;
-
         let symbols = this.context.router.getCurrentParams().marketID.split("_");
-        let quote = { symbol: symbols[0] };
-        quote.id = AssetStore.getState().asset_symbol_to_id[quote.symbol];
-        quote.precision = utils.get_asset_precision(assets.get(quote.id).precision);
-
-        let base = { symbol: symbols[1] };
-        base.id = AssetStore.getState().asset_symbol_to_id[base.symbol];
-        base.precision = utils.get_asset_precision(assets.get(base.id).precision);
 
         return (
-              <AltContainer 
+                <AltContainer 
                   stores={[MarketsStore, AccountStore, AssetStore]}
                   inject={{
                     limit_orders: () => {
@@ -30,16 +20,25 @@ class ExchangeContainer extends React.Component {
                     short_orders: () => {
                         return MarketsStore.getState().activeMarketShorts;
                     },
+                    call_orders: () => {
+                        return MarketsStore.getState().activeMarketCalls;
+                    },
+                    settle_orders: () => {
+                        return MarketsStore.getState().activeMarketSettles;
+                    },
                     assets: () => {
-                        return assets;
+                        return AssetStore.getState().assets;
+                    },
+                    asset_symbol_to_id: () => {
+                        return AssetStore.getState().asset_symbol_to_id;
                     },
                     account: () => {
                         return AccountStore.getState().currentAccount;
                     }
                   }} 
                   >
-                <Exchange quote={quote} base={base}/>
-              </AltContainer>
+                <Exchange quote={symbols[0]} base={symbols[1]}/>
+                </AltContainer>
         );
     }
 }

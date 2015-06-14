@@ -3,21 +3,24 @@ import Icon from "../Icon/Icon";
 import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
+import utils from "common/utils";
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
-            nextProps.account.id !== this.props.account.id ||
-            !Immutable.is(nextProps.orders, this.props.orders)
+                nextProps.account.id !== this.props.account.id ||
+                !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
 
     render() {
-        let {orders, account, base, quote} = this.props;
-        console.log("orders:", orders.toJS());
+        let {orders, account, base, quote, quoteSymbol, baseSymbol} = this.props;
         let orderRows = null;
 
-        if(orders.size > 0) {
+        if(orders.size > 0 && base && quote) {
+            let quotePrecision = utils.get_asset_precision(quote.precision);
+            let basePrecision = utils.get_asset_precision(base.precision);
+            
             orderRows = orders.filter(a => {
                 return a.seller === account; 
             }).sort((a, b) => {
@@ -27,7 +30,7 @@ class MyOpenOrders extends React.Component {
             }).map(order => {
                 let isAskOrder = market_utils.isAsk(order, base);
                 let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
-                let price = (sell.amount / base.precision) / (buy.amount / quote.precision);
+                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
 
                 let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
 
@@ -38,7 +41,7 @@ class MyOpenOrders extends React.Component {
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
                         </td>
-                        <td className={tdClass}>{buy.amount / quote.precision}</td>
+                        <td className={tdClass}>{buy.amount / quotePrecision}</td>
                         <td>{price}</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
@@ -50,8 +53,8 @@ class MyOpenOrders extends React.Component {
                 <thead>
                 <tr>
                     <th>{/* "Cancel button" column */}</th>
-                    <th>Quantity ({quote.symbol})</th>
-                    <th>Price ({base.symbol})</th>
+                    <th>Quantity ({quoteSymbol})</th>
+                    <th>Price ({baseSymbol})</th>
                     <th>{/* "Buy/Sell" column */}</th>
                 </tr>
                 </thead>

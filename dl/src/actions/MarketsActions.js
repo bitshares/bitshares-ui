@@ -11,27 +11,44 @@ class MarketsActions {
         this.dispatch(market);
     }
 
-    subscribeMarket(idA, idB, mia) {
-        let subID = idA + "_" + idB;
+    subscribeMarket(base, quote) {
+        let subID = quote.id + "_" + base.id;
+        console.log("sub to market:", subID);
+
+        let shorts_available = quote.market_asset && quote.bitasset_data.options.short_backing_asset;
 
         let subscription = (subResult) => {
             console.log("markets subscription result:", subResult);
-            let shortPromise = mia ?
-                Apis.instance().db_api().exec("get_short_orders", [
-                    idB, 100
-                ]) :
-                null;
+            let shortPromise = null,
+                callPromise = null,
+                settlePromise = null;
+
+            if (shorts_available) {
+                shortPromise = Apis.instance().db_api().exec("get_short_orders", [
+                    quote.id, 100
+                ]);
+                callPromise = Apis.instance().db_api().exec("get_call_orders", [
+                    quote.id, 100
+                ]);
+                settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
+                    quote.id, 100
+                ]);
+            }
 
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
-                        idA, idB, 100
+                        base.id, quote.id, 100
                     ]),
-                    shortPromise
+                    shortPromise,
+                    callPromise,
+                    settlePromise
                 ])
-                .then((result) => {
+                .then(results => {
                     this.dispatch({
-                        limits: result[0],
-                        shorts: result[1],
+                        limits: results[0],
+                        shorts: results[1],
+                        calls: results[2],
+                        settles: results[3],
                         market: subID
                     });
                 }).catch((error) => {
@@ -40,29 +57,46 @@ class MarketsActions {
         };
 
         if (!subs[subID]) {
-            let shortPromise = mia ?
-                Apis.instance().db_api().exec("get_short_orders", [
-                    idB, 100
-                ]) :
-                null;
+
+            let shortPromise = null,
+                callPromise = null,
+                settlePromise = null;
+
+            if (shorts_available) {
+                shortPromise = Apis.instance().db_api().exec("get_short_orders", [
+                    quote.id, 100
+                ]);
+                callPromise = Apis.instance().db_api().exec("get_call_orders", [
+                    quote.id, 100
+                ]);
+                settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
+                    quote.id, 100
+                ]);
+            }
 
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
-                        subscription, idA, idB
+                        subscription, base.id, quote.id
                     ]),
                     Apis.instance().db_api().exec("get_limit_orders", [
-                        idA, idB, 100
+                        base.id, quote.id, 100
                     ]),
-                    shortPromise
+                    shortPromise,
+                    callPromise,
+                    settlePromise
                 ])
-                .then((result) => {
-                    console.log("market subscription success:", result[0]);
+                .then((results) => {
+                    console.log("market subscription success:", results[0]);
                     subs[subID] = true;
+
                     this.dispatch({
-                        limits: result[1],
-                        shorts: result[2],
+                        limits: results[1],
+                        shorts: results[2],
+                        calls: results[3],
+                        settles: results[4],
                         market: subID
                     });
+
                 }).catch((error) => {
                     console.log("Error in MarketsActions.subscribeMarket: ", error);
                 });
@@ -70,12 +104,12 @@ class MarketsActions {
         return Promise.resolve(true);
     }
 
-    unSubscribeMarket(idA, idB) {
-        let subID = idA + "_" + idB;
-
+    unSubscribeMarket(quote, base) {
+        let subID = quote + "_" + base;
+        console.log("unSubscribeMarket:", subID);
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
-                    idA, idB
+                    quote, base
                 ])
                 .then((unSubResult) => {
                     console.log(subID, "market unsubscription success:", unSubResult);
