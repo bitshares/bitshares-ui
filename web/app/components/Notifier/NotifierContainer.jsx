@@ -4,6 +4,7 @@ import AssetStore from "stores/AssetStore";
 import AltContainer from "alt/AltContainer";
 import Notifier from "./Notifier";
 import WitnessStore from "stores/WitnessStore";
+import SettingsStore from "stores/SettingsStore";
 
 class NotifierContainer extends React.Component {
 
@@ -30,6 +31,9 @@ class NotifierContainer extends React.Component {
                     },
                     witness_id_to_name: () => {
                         return WitnessStore.getState().witness_id_to_name;
+                    },
+                    settings: () => {
+                        return SettingsStore.getState().settings;
                     }
                   }} 
                   >

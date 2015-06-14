@@ -63,6 +63,7 @@ class Account extends Component {
             !Immutable.is(nextProps.balances, this.props.balances) ||
             !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
             !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
+            !Immutable.is(nextProps.settings, this.props.settings) ||
             nextProps.accountName !== this.props.accountName
           );
     }
@@ -170,7 +171,9 @@ class Account extends Component {
                                 assets={assets}
                                 current={accountName}
                                 witnesses={witnesses}
-                                witness_id_to_name={witness_id_to_name}/>
+                                witness_id_to_name={witness_id_to_name}
+                                inverted={this.props.settings.get("inverseMarket")}
+                                />
                             );
                         }
                     });

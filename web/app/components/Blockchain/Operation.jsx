@@ -9,6 +9,8 @@ import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
 import WitnessActions from "actions/WitnessActions";
 import {operations} from "chain/chain_types";
+import market_utils from "common/market_utils";
+
 require("./operations.scss");
 
 let ops = Object.keys(operations);
@@ -125,7 +127,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, accounts, assets, current, block, witnesses, witness_id_to_name} = this.props;
+        let {op, accounts, assets, current, block, witnesses, witness_id_to_name, inverted} = this.props;
 
         let line = null, column = null, color;
 
@@ -160,9 +162,14 @@ class Operation extends React.Component {
 
             case "limit_order_create": 
                 color = "warning";
+                let isAsk = market_utils.isAskOp(op[1]);
+                if (!inverted) {
+                    isAsk = !isAsk;
+                }
                 let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
                 column = (
-                        <td className="right-td">
+                        isAsk ?
+                            <td className="right-td">
                             <Translate component="span" content="transaction.limit_order" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}
                             &nbsp;<Translate component="span" content="transaction.at" />
@@ -173,6 +180,19 @@ class Operation extends React.Component {
                                                     baseamount={op[1].amount_to_sell.amount}
                                                     base={assets.get(op[1].amount_to_sell.asset_id)} /> : null}
                         </td>
+                        :
+                        <td className="right-td">
+                            <Translate component="span" content="transaction.limit_order_buy" />
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}
+                            &nbsp;<Translate component="span" content="transaction.at" />
+                            &nbsp;{!missingAssets[1] ? <FormattedAsset 
+                                                    style={{fontWeight: "bold"}}
+                                                    amount={op[1].amount_to_sell.amount}
+                                                    asset={assets.get(op[1].amount_to_sell.asset_id)}
+                                                    baseamount={op[1].min_to_receive.amount}
+                                                    base={assets.get(op[1].min_to_receive.asset_id)} /> : null}
+                        </td>
+
                 );
                 break;
 

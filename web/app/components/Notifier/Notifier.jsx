@@ -2,6 +2,7 @@ import React from "react";
 import Notification from "react-foundation-apps/lib/notification";
 import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
 import Operation from "../Blockchain/Operation";
+import Immutable from "immutable";
 
 class Notifier extends React.Component {
 
@@ -19,9 +20,10 @@ class Notifier extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-                nextProps.accountHistories !== this.props.accountHistories ||
-                nextProps.currentAccount !== this.props.currentAccount ||
-                nextProps.assets !== this.props.assets
+                !Immutable.is(nextProps.accountHistories, this.props.accountHistories) ||
+                nextProps.currentAccount.id !== this.props.currentAccount.id ||
+                !Immutable.is(nextProps.assets, this.props.assets) ||
+                !Immutable.is(nextProps.settings, this.props.settings)
             );
     }
 
@@ -44,7 +46,8 @@ class Notifier extends React.Component {
                             assets={assets}
                             current={currentAccount.name}
                             witnesses={witnesses}
-                            witness_id_to_name={witness_id_to_name}/>;
+                            witness_id_to_name={witness_id_to_name}
+                            inverted={this.props.settings.get("inverseMarket")}/>;
             }
         }
 

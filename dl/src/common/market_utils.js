@@ -83,6 +83,10 @@ class MarketUtils {
         return order.sell_price.quote.asset_id === base.id;
     }
 
+    static isAskOp(op) {
+        return op.amount_to_sell.asset_id !== op.fee.asset_id;
+    }
+
     static parseOrder(order, ask) {
         let buy = ask ? order.sell_price.base : order.sell_price.quote;
         let sell = ask ? order.sell_price.quote : order.sell_price.base;

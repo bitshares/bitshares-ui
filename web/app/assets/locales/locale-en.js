@@ -73,6 +73,7 @@ module.exports = {
         was_reg_account: "registered by",
         create_asset: "Created the asset",
         limit_order: "Placed limit order to sell",
+        limit_order_buy: "Placed limit order to buy",
         limit_order_cancel: "Cancelled limit order with id",
         short_order: "Placed short order to sell",
         short_order_cancel: "Cancelled short with id",

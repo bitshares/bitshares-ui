@@ -73,6 +73,7 @@ module.exports = {
         was_reg_account: " a été créé par",
         create_asset: "A créé l'actif",
         limit_order: "A placé un ordre à limite pour vendre",
+        limit_order_buy: "A placé un ordre à limite pour acheter",
         limit_order_cancel: "Annulation de l'ordre à limite avec id",
         short_order: "A placé un ordre à découvert pour vendre",
         at: "à",
