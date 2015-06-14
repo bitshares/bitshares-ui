@@ -96,6 +96,8 @@ class MarketsActions {
             seller: account
         };
 
+        console.log("sellamount " + sellAmount + ". sellID " + sellAssetID + ". buyAmount " + buyAmount + ". buyID " + buyAssetID);
+
         // TODO: enable the optimistic dispatch. It causes the order to appear twice, due to the subscription to market
         // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();

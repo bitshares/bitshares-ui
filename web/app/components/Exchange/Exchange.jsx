@@ -44,14 +44,14 @@ class Exchange extends React.Component {
         };
     }
 
-    _createLimitOrder(buyAsset, sellAsset, amount, price) {
+    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
         console.log("sell id:", sellAsset.id);
 
         MarketsActions.createLimitOrder(
             this.props.account.id,
-            amount * sellAsset.precision,
+            sellAssetAmount * sellAsset.precision,
             sellAsset.id,
-            amount * buyAsset.precision * price,
+            buyAssetAmount * buyAsset.precision,
             buyAsset.id,
             "2020-01-01T00:00:00", // expiration. TODO: set to a value chosen by the user
             false // fill or kill
@@ -160,7 +160,7 @@ class Exchange extends React.Component {
                         <p>TRADE</p>
                         <div className="grid-block medium-6 main-content">
                             <div className="grid-content">
-                                <form onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyPrice)}>
+                                <form onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
                                     <label>
                                         Quantity ({quote.symbol}):
                                         <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
@@ -176,7 +176,7 @@ class Exchange extends React.Component {
                         </div>
                         <div className="grid-block medium-6 main-content">
                             <div className="grid-content">
-                                <form onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount, this.state.sellPrice)}>
+                                <form onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
                                     <label>
                                         Quantity ({quote.symbol}):
                                         <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />

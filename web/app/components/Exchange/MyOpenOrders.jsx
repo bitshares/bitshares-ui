@@ -20,6 +20,12 @@ class MyOpenOrders extends React.Component {
                 // console.log(account, a);
                 return a.seller === account; 
             }).map(order => {
+                let isAskOrder = order.sell_price.base.asset_id === this.props.base.id;
+                let buy = isAskOrder ? order.sell_price.quote : order.sell_price.base;
+                let sell = isAskOrder ? order.sell_price.base : order.sell_price.quote;
+                let buyPrecision = isAskOrder ? this.props.base.precision : this.props.quote.precision;
+                let sellPrecision = isAskOrder ? this.props.quote.precision : this.props.base.precision;
+
                 return (
                      <tr key={order.id}>
                         <td>
@@ -27,8 +33,8 @@ class MyOpenOrders extends React.Component {
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
                         </td>
-                        <td>{((order.for_sale * order.sell_price.quote.amount) / order.sell_price.base.amount) / this.props.quote.precision}</td>
-                        <td>{order.sell_price.base.amount / order.sell_price.quote.amount }</td>
+                        <td>{buy.amount / this.props.quote.precision}</td>
+                        <td>{(sell.amount / this.props.base.precision) / (buy.amount / this.props.quote.precision)}</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
