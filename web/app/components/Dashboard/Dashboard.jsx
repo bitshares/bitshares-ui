@@ -8,7 +8,8 @@ class Dashboard extends Component {
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.accounts, this.props.accounts) ||
-            !Immutable.is(nextProps.balances, this.props.balances)
+            !Immutable.is(nextProps.balances, this.props.balances) ||
+            !Immutable.is(nextProps.assets, this.props.assets)
         );
     }
 

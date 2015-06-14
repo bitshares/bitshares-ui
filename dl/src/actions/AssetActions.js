@@ -11,19 +11,44 @@ class AssetActions {
     }
 
     getAssetList(start, count) {
-        console.log("get assetlist:", start, count);
+        // console.log("get assetlist:", start, count);
         let id = start + "_" + count;
         if (!inProgress[id]) {
             Apis.instance().db_api().exec("list_assets", [
-                start, count
-            ]).then(result => {
-                this.dispatch(result);
-                delete inProgress[id];
-            })
-            .catch(error => {
-                console.log("Error in AssetStore.getAssetList: ", error);
-                delete inProgress[id];
-            });
+                    start, count
+                ]).then(assets => {
+                    let bitAssetIDS = [];
+                    let bitasset_to_asset = {};
+                    assets.forEach(asset => {
+                        if (asset.bitasset_data_id) {
+                            bitAssetIDS.push(asset.bitasset_data_id);
+                            bitasset_to_asset[asset.bitasset_data_id] = asset.id;
+                        }
+                    });
+
+                    let bitAssetPromise = bitAssetIDS.length > 0 ? Apis.instance().db_api().exec("get_objects", [
+                        bitAssetIDS
+                    ]) : null;
+
+                    if (!bitAssetPromise) {
+                        this.dispatch({
+                            assets: assets
+                        });
+                    } else {
+                        bitAssetPromise.then(bitasset_data => {
+                            this.dispatch({
+                                assets: assets,
+                                bitasset_data: bitasset_data,
+                                bitasset_to_asset: bitasset_to_asset
+                            });
+                        });
+                    }
+                    delete inProgress[id];
+                })
+                .catch(error => {
+                    console.log("Error in AssetStore.getAssetList: ", error);
+                    delete inProgress[id];
+                });
         }
     }
 
@@ -41,9 +66,24 @@ class AssetActions {
                 ]);
             }
 
-            return assetPromise.then((result) => {
-                this.dispatch(result[0]);
-                delete inProgress[id];
+            return assetPromise.then((asset) => {
+                if (asset[0].bitasset_data_id) {
+                    Apis.instance().db_api().exec("get_objects", [
+                        [asset[0].bitasset_data_id]
+                    ]).then(bitasset_data => {
+                        this.dispatch({
+                            asset: asset[0],
+                            bitasset_data: bitasset_data[0]
+                        });
+                        delete inProgress[id];
+                    });
+                } else {
+                    this.dispatch({
+                        asset: asset[0]
+                    });
+                    delete inProgress[id];
+                }
+
             }).catch((error) => {
                 console.log("Error in AssetStore.updateAsset: ", error);
                 delete inProgress[id];
