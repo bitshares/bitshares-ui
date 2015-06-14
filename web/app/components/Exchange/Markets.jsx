@@ -2,38 +2,45 @@ import React from "react";
 import {PropTypes, Component} from "react";
 import MarketCard from "./MarketCard";
 import Immutable from "immutable";
+import SettingsActions from "actions/SettingsActions";
 
 class Markets extends Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            !Immutable.is(nextProps.assets, this.props.assets)
+            !Immutable.is(nextProps.assets, this.props.assets) ||
+            !Immutable.is(nextProps.settings, this.props.settings)
         );
+    }
+
+    _switchMarkets() {
+        console.log("switch markets");
+
+        SettingsActions.changeSetting({
+            setting: "inverseMarket",
+            value: !this.props.settings.get("inverseMarket")
+        });
+
     }
 
     render() {
         console.log("[Markets.jsx:24] ----- render ----->", this.props);
-        let {assets, balances, markets} = this.props;
+        let {assets, settings, markets} = this.props;
         markets = [{quoteSymbol: "SHILL", baseSymbol: "CORE"}];
         let baseMarket = assets.get("1.4.0").symbol;
         let marketCards = assets
-            // .sort((a, b) => { // By BTS balance first then by name
-            //     // if (b.balances[0].amount - a.balances[0].amount === 0) {
-            //     if (b.name > a.name) {
-            //         return -1;
-            //     } else if (b.name < a.name) {
-            //         return 1;
-            //     }
-            //     return 0;
-            //     // }
-            //     // return b.balances[0].amount - a.balances[0].amount;
-            // })
             .map((a, index) => {
                 if (a.symbol !== baseMarket) {
+                    let market;
+                    if (settings.get("inverseMarket")) {
+                        market = {quoteSymbol: a.symbol, baseSymbol: baseMarket};
+                    } else {
+                        market = {quoteSymbol: baseMarket, baseSymbol: a.symbol};
+                    }
                     return (
                         <MarketCard
                             key={index}
-                            market={{quoteSymbol: a.symbol, baseSymbol: baseMarket}}
+                            market={market}
                             />
                     );
                 }
@@ -43,6 +50,22 @@ class Markets extends Component {
 
         return (
             <div className="grid-block vertical">
+                <div className="grid-block shrink page-layout">
+                    <div className="grid-container">
+                        <section className="block-list">
+                            <header>Switch market orientation</header>
+                            <ul>
+                            <li>
+                            <span style={{visibility: "hidden"}}>A</span>
+                            <div className="switch">
+                            <input type="checkbox" checked={settings.get("inverseMarket")}/>
+                            <label onClick={this._switchMarkets.bind(this)}></label>
+                            </div>
+                            </li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
                 <div className="grid-block page-layout">
                     <div className="grid-block medium-12" style={{alignItems: "flex-start"}}>
                         <div className="grid-block small-up-3">
@@ -57,13 +80,15 @@ class Markets extends Component {
 
 
 Markets.defaultProps = {
-    accounts: {},
-    assets: {}
+    settings: {},
+    assets: {},
+    markets: {}
 };
 
 Markets.propTypes = {
-    accounts: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired
+    settings: PropTypes.object.isRequired,
+    assets: PropTypes.object.isRequired,
+    markets: PropTypes.object
 };
 
 export default Markets;
