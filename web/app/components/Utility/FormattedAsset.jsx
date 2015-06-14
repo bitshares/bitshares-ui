@@ -14,7 +14,7 @@ class FormattedAsset extends Component {
     }
 
     render() {
-        let {amount, asset, base} = this.props;
+        let {amount, asset, base, baseamount} = this.props;
 
         if (!asset) {
             return <span></span>;
@@ -24,11 +24,13 @@ class FormattedAsset extends Component {
         let decimals = Math.max(2, asset.precision - 2); 
 
         // The number of digits to display probably needs some more thought, and should probably be in a util function
-        if (base) {
+        if (base && baseamount) {
+            decimals++;
+            let baseprecision = utils.get_asset_precision(base.precision);
             return (
                     <span>
                         <FormattedNumber 
-                            value={amount}
+                            value={amount / precision / (baseamount / baseprecision)}
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
                         /> {asset.symbol + "/" + base.symbol}

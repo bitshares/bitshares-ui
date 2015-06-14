@@ -161,7 +161,6 @@ class Operation extends React.Component {
             case "limit_order_create": 
                 color = "warning";
                 let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
-
                 column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.limit_order" />
@@ -169,8 +168,9 @@ class Operation extends React.Component {
                             &nbsp;<Translate component="span" content="transaction.at" />
                             &nbsp;{!missingAssets[1] ? <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
-                                                    amount={op[1].min_to_receive.amount / op[1].amount_to_sell.amount}
+                                                    amount={op[1].min_to_receive.amount}
                                                     asset={assets.get(op[1].min_to_receive.asset_id)}
+                                                    baseamount={op[1].amount_to_sell.amount}
                                                     base={assets.get(op[1].amount_to_sell.asset_id)} /> : null}
                         </td>
                 );
