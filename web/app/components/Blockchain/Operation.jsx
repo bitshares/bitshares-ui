@@ -327,7 +327,13 @@ class Operation extends React.Component {
                 break;
 
             case "asset_create":
-                color = "warning";          
+                color = "warning"; 
+                let exists = assets.find(v => {
+                    return v.symbol === op[1].symbol;
+                });
+                if (!exists) {
+                    AssetActions.getAsset(op[1].symbol);      
+                }
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.create_asset" />
