@@ -624,8 +624,9 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.call_limit" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset
-                                                        amount={feed.call_limit.quote.amount / feed.call_limit.base.amount}
+                                                        amount={feed.call_limit.quote.amount}
                                                         asset={assets.get(feed.call_limit.quote.asset_id)}
+                                                        baseamount={feed.call_limit.base.amount}
                                                         base={assets.get(feed.call_limit.base.asset_id)}/> : null}</td>
                         </tr>
                     );
@@ -634,8 +635,9 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.short_limit" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset
-                                                        amount={feed.short_limit.quote.amount / feed.short_limit.base.amount}
+                                                        amount={feed.short_limit.quote.amount}
                                                         asset={assets.get(feed.short_limit.quote.asset_id)}
+                                                        baseamount={feed.short_limit.base.amount}
                                                         base={assets.get(feed.short_limit.base.asset_id)}/> : null}</td>
                         </tr>
                     );
@@ -644,8 +646,9 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.settlement_price" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset
-                                                        amount={feed.settlement_price.quote.amount / feed.settlement_price.base.amount}
+                                                        amount={feed.settlement_price.quote.amount}
                                                         asset={assets.get(feed.settlement_price.quote.asset_id)}
+                                                        baseamount={feed.settlement_price.base.amount}
                                                         base={assets.get(feed.settlement_price.base.asset_id)}/> : null}</td>
                         </tr>
                     );
