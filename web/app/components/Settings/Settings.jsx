@@ -42,6 +42,7 @@ class Settings extends React.Component {
     }
 
     render() {
+        let {settings} = this.props;
         let {currencies, locales, orientation} = this.props.defaults;
         let myLocale = counterpart.getLocale();
 
@@ -69,6 +70,8 @@ class Settings extends React.Component {
             return <option key={index}>{unit}</option>;
         });
 
+        let selectedOrientation = settings.get("inverseMarket") ? 0 : 1;
+
         return (
             <div className="grid-block">
                 <div className="grid-block small-offset-3 small-6">
@@ -88,7 +91,7 @@ class Settings extends React.Component {
                             <header><Translate component="span" content="settings.inversed" />:</header>
                                 <ul>
                                     <li className="with-dropdown">
-                                    <select style={{lineHeight: "1.2em"}} onChange={this._onChangeSetting.bind(this, "inverseMarket")}>
+                                    <select style={{lineHeight: "1.2em"}} value={orientation[selectedOrientation]} onChange={this._onChangeSetting.bind(this, "inverseMarket")}>
                                         <option>{orientation[0]}</option>
                                         <option>{orientation[1]}</option>
                                     </select>
@@ -99,7 +102,7 @@ class Settings extends React.Component {
                             <header><Translate component="span" content="settings.unit" />:</header>
                                 <ul>
                                     <li className="with-dropdown">
-                                    <select style={{lineHeight: "1.2em"}} onChange={this._onChangeSetting.bind(this, "unit")}>
+                                    <select style={{lineHeight: "1.2em"}} value={currencies[settings.get("unit")]} onChange={this._onChangeSetting.bind(this, "unit")}>
                                         {unitOptions}
                                     </select>
                                     </li>
