@@ -1,6 +1,8 @@
 import React from "react";
 import Icon from "../Icon/Icon";
 import Immutable from "immutable";
+import classNames from "classnames";
+import market_utils from "common/market_utils";
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -11,20 +13,23 @@ class MyOpenOrders extends React.Component {
     }
 
     render() {
-        let {orders, account} = this.props;
+        let {orders, account, base, quote} = this.props;
         console.log("orders:", orders.toJS());
         let orderRows = null;
 
         if(orders.size > 0) {
             orderRows = orders.filter(a => {
-                // console.log(account, a);
                 return a.seller === account; 
+            }).sort((a, b) => {
+                let a_id = parseInt(a.id.split(".")[2], 10);
+                let b_id = parseInt(b.id.split(".")[2], 10);
+                return b_id > a_id;
             }).map(order => {
-                let isAskOrder = order.sell_price.base.asset_id === this.props.base.id;
-                let buy = isAskOrder ? order.sell_price.quote : order.sell_price.base;
-                let sell = isAskOrder ? order.sell_price.base : order.sell_price.quote;
-                let buyPrecision = isAskOrder ? this.props.base.precision : this.props.quote.precision;
-                let sellPrecision = isAskOrder ? this.props.quote.precision : this.props.base.precision;
+                let isAskOrder = market_utils.isAsk(order, base);
+                let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
+                let price = (sell.amount / base.precision) / (buy.amount / quote.precision);
+
+                let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
 
                 return (
                      <tr key={order.id}>
@@ -33,8 +38,8 @@ class MyOpenOrders extends React.Component {
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
                         </td>
-                        <td>{buy.amount / this.props.quote.precision}</td>
-                        <td>{(sell.amount / this.props.base.precision) / (buy.amount / this.props.quote.precision)}</td>
+                        <td className={tdClass}>{buy.amount / quote.precision}</td>
+                        <td>{price}</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
@@ -45,8 +50,8 @@ class MyOpenOrders extends React.Component {
                 <thead>
                 <tr>
                     <th>{/* "Cancel button" column */}</th>
-                    <th>Quantity ({this.props.quote.symbol})</th>
-                    <th>Price ({this.props.base.symbol})</th>
+                    <th>Quantity ({quote.symbol})</th>
+                    <th>Price ({base.symbol})</th>
                     <th>{/* "Buy/Sell" column */}</th>
                 </tr>
                 </thead>

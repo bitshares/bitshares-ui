@@ -79,6 +79,19 @@ class MarketUtils {
         return opTypes[type];
     }
 
+    static isAsk(order, base) {
+        return order.sell_price.quote.asset_id === base.id;
+    }
+
+    static parseOrder(order, ask) {
+        let buy = ask ? order.sell_price.base : order.sell_price.quote;
+        let sell = ask ? order.sell_price.quote : order.sell_price.base;
+        return {
+            buy: buy,
+            sell: sell
+        };
+    }
+
 }
 
 export default MarketUtils;

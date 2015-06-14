@@ -1,6 +1,7 @@
 import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
+import OpenOrders from "./OpenOrders.jsx";
 
 require("./exchange.scss");
 
@@ -44,7 +45,8 @@ class Exchange extends React.Component {
         };
     }
 
-    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
+    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, e) {
+        e.preventDefault();
         console.log("sell id:", sellAsset.id);
 
         MarketsActions.createLimitOrder(
@@ -58,7 +60,8 @@ class Exchange extends React.Component {
         );
     }
 
-    _cancelLimitOrder(orderID) {
+    _cancelLimitOrder(orderID, e) {
+        e.preventDefault();
         console.log("cancelling limit order:", orderID);
         let {account} = this.props;
         MarketsActions.cancelLimitOrder(
@@ -112,16 +115,6 @@ class Exchange extends React.Component {
             );
         }
 
-        limit_orders.map(order => {
-            // console.log("real limit order:", order);
-        });
-
-        if (isMarketAsset) {
-            short_orders.map(order => {
-                // console.log("real short order:", order);
-            });
-        }
-
         return (
             <div className="grid-block vertical">
                 <div classname="grid-block">
@@ -136,24 +129,12 @@ class Exchange extends React.Component {
                                 base={base}
                                 quote={quote}
                                 onCancel={this._cancelLimitOrder.bind(this)} />
-                            <p>OPEN ORDERS</p>
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th>Quantity ({quote.symbol})</th>
-                                    <th>Price ({base.symbol})</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        this.state.orderBook.bids.map(orderBookEntry)
-                                    }
-                                    <tr><td colSpan="2" className="text-center">Spread: {spread} {base.symbol}</td></tr>
-                                    {
-                                        this.state.orderBook.asks.map(orderBookEntry)
-                                    }
-                                </tbody>
-                            </table>
+                            
+                            <OpenOrders
+                                orders={limit_orders}
+                                base={base}
+                                quote={quote}
+                                />
                         </div>
                     </div>
                     <div className="grid-block medium-6 main-content">
