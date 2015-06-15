@@ -71,7 +71,9 @@ class Account extends Component {
     upgradeAccountClickHandler(e){
         e.preventDefault();
         let account_id = this.props.account_name_to_id[this.props.accountName];
-        AccountActions.upgradeAccount(account_id);
+        AccountActions.upgradeAccount(account_id).then( () => {
+            AccountActions.getAccount(account_id);
+        });
         ZfApi.publish("confirm_upgrade_modal", "close");
         return false;
     }
