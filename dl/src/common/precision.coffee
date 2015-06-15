@@ -11,20 +11,27 @@ module.exports = _my =
     to_long64: (number_or_string, precision, error_info = "")->
         v.required number_or_string, "number_or_string " + error_info
         v.required precision, "precision " + error_info
-        v.to_long _my.decimal_precision_string number_or_string, precision, error_info
+        v.to_long _private.decimal_precision_string(
+            number_or_string
+            precision
+            error_info
+        )
     
     # 101 string or long with a precision of 2 returns "1.01" 
     to_string64: (number_or_string, precision, error_info = "")->
         v.required number_or_string, error_info
         v.number precision, error_info
         number_long = v.to_long number_or_string, error_info
-        string64 = _my.decimal_precision_string(
+        string64 = _private.decimal_precision_string(
             number_long
             precision
             error_info
         )
         v.no_overflow64 string64, error_info
         string64
+    
+# _private is exported for unit tests
+module.exports._private = _private =
     
     decimal_precision_string: (number, precision, error_info = "")->
         v.required number, "number " + error_info
