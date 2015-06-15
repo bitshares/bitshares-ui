@@ -1,5 +1,6 @@
 ChainTypes = require './chain_types.coffee'
 Long = require('../common/bytebuffer').Long
+BigInteger = require('bigi')
 
 MAX_SAFE_INT = 9007199254740991
 MIN_SAFE_INT =-9007199254740991
@@ -65,6 +66,7 @@ module.exports = _my =
     to_long:(value, field_name="")->
         return value if is_empty value
         return value if Long.isLong value
+        
         _my.no_overflow64 value, field_name
         if typeof value is "number"
             value = ""+value
@@ -169,6 +171,12 @@ module.exports = _my =
     no_overflow64: (value, field_name="")->
         # https://github.com/dcodeIO/Long.js/issues/20
         return if Long.isLong value
+        
+        # BigInteger#isBigInteger https://github.com/cryptocoinjs/bigi/issues/20
+        if value.t isnt undefined and value.s isnt undefined
+            _my.no_overflow64 value.toString(), field_name
+            return
+        
         if typeof value is "string"
             # remove leading zeros, will cause a false positive
             value = value.replace /^0+/,''
@@ -187,4 +195,5 @@ module.exports = _my =
             if value > MAX_SAFE_INT or value < MIN_SAFE_INT
                 throw new Error "overflow #{field_name}: #{value}"
             return
+            
         throw "unsupported type #{field_name}: (#{typeof value}) #{value}"

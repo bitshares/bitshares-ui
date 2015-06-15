@@ -8,14 +8,10 @@ module.exports = _my =
     # decimal place.
     
     # "1.01" with a precision of 2 returns long 101
-    to_long64: (number_or_string, precision, error_info = "")->
-        v.required number_or_string, "number_or_string " + error_info
-        v.required precision, "precision " + error_info
-        v.to_long _private.decimal_precision_string(
-            number_or_string
-            precision
-            error_info
-        )
+    # See http://cryptocoinjs.com/modules/misc/bigi/#example
+    to_bigint64:(number_or_string, precision, error_info = "")->
+        long = _private.to_long64 number_or_string, precision, error_info
+        BigInteger(long.toString())
     
     # 101 string or long with a precision of 2 returns "1.01" 
     to_string64: (number_or_string, precision, error_info = "")->
@@ -30,8 +26,18 @@ module.exports = _my =
         v.no_overflow64 string64, error_info
         string64
     
-# _private is exported for unit tests
+# _private is exported for unit tests and low-level transaction code
 module.exports._private = _private =
+    
+    # "1.01" with a precision of 2 returns long 101
+    to_long64: (number_or_string, precision, error_info = "")->
+        v.required number_or_string, "number_or_string " + error_info
+        v.required precision, "precision " + error_info
+        v.to_long _private.decimal_precision_string(
+            number_or_string
+            precision
+            error_info
+        )
     
     decimal_precision_string: (number, precision, error_info = "")->
         v.required number, "number " + error_info

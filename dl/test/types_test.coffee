@@ -69,15 +69,15 @@ describe "types", ->
     it "precision number long", ->
         assert.equal(
             Long.MAX_VALUE.toString()
-            p.to_long64(
+            p.to_bigint64(
                 Long.MAX_VALUE.toString(), _precision = 0
             ).toString()
-            "decimal_string_to_long MAX_VALUE mismatch"
+            "to_bigint64 MAX_VALUE mismatch"
         )
             
         # Long.MAX_VALUE.toString() == 9223372036854775807
         # Long.MAX_VALUE.toString() +1 9223372036854775808
-        overflow ()-> p.to_long64(
+        overflow ()-> p.to_bigint64(
             '9223372036854775808', _precision = 0
         )
         
