@@ -38,6 +38,7 @@
     "node-libs-browser": "^0.5.0",
     "node-sass": "^3.0.0",
     "react": "~0.13.2",
+    "react-d3-components": "^0.4.8",
     "react-foundation-apps": "git+http://github.com/valzav/react-foundation-apps.git",
     "react-hot-loader": "~1.2.7",
     "react-input-autosize": "^0.4.3",
