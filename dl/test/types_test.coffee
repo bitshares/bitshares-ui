@@ -1,28 +1,9 @@
-assert = require 'assert'
-ByteBuffer = require '../src/common/bytebuffer'
-ChainTypes = require '../src/chain/chain_types'
-Serializer = require '../src/chain/serializer'
 Convert = require '../src/chain/serializer_convert'
-op_type = require '../src/chain/serializer_types'
-#uint8 = op_type.uint8
-#uint16 = op_type.uint16
-#uint32 = op_type.uint32
-#varint32 = op_type.varint32
-#int64 = op_type.int64
-#uint64 = op_type.uint64
-#string = op_type.string
-#bytes = op_type.bytes
-bool = op_type.bool
-#array = op_type.array
-#fixed_array = op_type.fixed_array
-#id_type = op_type.id_type
-#protocol_id_type = op_type.protocol_id_type
-#object_id_type = op_type.object_id_type
-vote_id = op_type.vote_id
-#optional = op_type.optional
-static_variant = op_type.static_variant
-#map = op_type.map
-set = op_type.set
+
+assert = require 'assert'
+type = require '../src/chain/serializer_types'
+p = require '../src/common/precision'
+Long = require '../src/common/long'
 
 #so_type = require '../src/chain/serializer_operation_types'
 
@@ -30,8 +11,8 @@ describe "types", ->
     
     it "vote_id",->
         toHex=(id)->
-            vote = vote_id.fromObject id
-            Convert(vote_id).toHex vote
+            vote = type.vote_id.fromObject id
+            Convert(type.vote_id).toHex vote
         assert.equal "ff000000", toHex "255:0"
         assert.equal "00ffffff", toHex "0:"+0xffffff
         out_of_range=(id)->
@@ -42,7 +23,79 @@ describe "types", ->
                 assert e.message.indexOf('out of range') isnt -1
         out_of_range "0:"+(0xffffff+1)
         out_of_range "256:0"
-        
+        return
+    
     it "set", ->
-        bool_set = set bool
+        bool_set = type.set type.bool
         assert.equal "03010001", Convert(bool_set).toHex [1,0,1]
+        return
+    
+    it "precision number strings", ->
+        check=(input_string, precision, output_string)->
+            assert.equal(
+                output_string
+                p._private.decimal_precision_string(
+                    input_string
+                    precision
+                )
+            )
+        
+        check(
+            "12345678901234567890123456789012345678901234567890.12345",5
+            "1234567890123456789012345678901234567890123456789012345"
+        )
+        check "",     0,      "0"
+        check "0",    0,      "0"
+        check "-0",   0,      "0"
+        check "-00",  0,      "0"
+        check "-0.0", 0,      "0"
+        check "-",    0,      "0"
+        check "1",    0,      "1"
+        check "11",   0,      "11"
+        
+        overflow ()-> check ".1", 0, ""
+        overflow ()-> check "-.1", 0, ""
+        overflow ()-> check "0.1", 0, ""
+        overflow ()-> check "1.1", 0, ""
+        overflow ()-> check "1.11", 1, ""
+        
+        check "",     1,      "00"
+        check "1",    1,      "10"
+        check "1.1",  1,      "11"
+        check "-1",   1,      "-10"
+        check "-1.1", 1,      "-11"
+        return
+    
+    it "precision number long", ->
+        assert.equal(
+            Long.MAX_VALUE.toString()
+            p.to_long64(
+                Long.MAX_VALUE.toString(), _precision = 0
+            ).toString()
+            "decimal_string_to_long MAX_VALUE mismatch"
+        )
+            
+        # Long.MAX_VALUE.toString() == 9223372036854775807
+        # Long.MAX_VALUE.toString() +1 9223372036854775808
+        overflow ()-> p.to_long64(
+            '9223372036854775808', _precision = 0
+        )
+        
+        assert.equal "0", p.to_string64(Long.ZERO, 0)
+        assert.equal "00", p.to_string64(Long.ZERO, 1)
+        
+        overflow ()-> assert.equal(
+            "92233720368547758070"
+            p.to_string64(Long.MAX_VALUE, 1)
+        )
+        return
+    
+overflow = (f)->
+    try
+        f()
+        assert false, "expecting overflow"
+    catch e
+        assert(
+            e.toString().indexOf("overflow") isnt -1
+            "expecting overflow"
+        )
