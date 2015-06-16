@@ -11,7 +11,7 @@ class DebugApi {
     type(operation_name) {
         v.required(operation_name, "operation_name")
         var operation_type = type[operation_name]
-        v.required(operation_type, "unknown operation name ${operation_name}")
+        v.required(operation_type, "unknown operation name " + operation_name)
         return operation_type
     }
     

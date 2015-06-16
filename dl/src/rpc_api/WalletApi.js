@@ -41,8 +41,22 @@ class WalletApi {
     }
     
     /** Console print any transaction object with zero default values. */
-    template(transaction_object_name, indent) {
-        tr_helper.template(transaction_object_name, indent)
+    template(transaction_object_name) {
+        var object = tr_helper.template(
+            transaction_object_name, 
+            {use_default: true, annotate: true}
+        )
+        // visual
+        console.error(JSON.stringify(object,null,4))
+        
+        // usable
+        object = tr_helper.template(
+            transaction_object_name, 
+            {use_default: true, annotate: false}
+        )
+        // visual
+        console.error(JSON.stringify(object))
+        return object
     }
 
     create_account_with_brain_key(
