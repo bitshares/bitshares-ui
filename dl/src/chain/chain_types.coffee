@@ -62,12 +62,7 @@ ChainTypes.operations=
     withdraw_permission_delete: 31
     fill_order: 32
     global_parameters_update: 33
-    file_write: 34
-    vesting_balance_create: 35
-    vesting_balance_withdraw: 36
-    bond_create_offer: 37
-    bond_cancel_offer: 38
-    bond_accept_offer: 39
-    bond_claim_collateral: 40
-    worker_create: 41
-    custom: 42
+    vesting_balance_create: 34
+    vesting_balance_withdraw: 35
+    worker_create: 36
+    custom: 37

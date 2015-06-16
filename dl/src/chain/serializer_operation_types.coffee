@@ -95,6 +95,7 @@ processed_transaction = new Serializer(
     relative_expiration: uint16
     operations: array operation
     signatures: map (protocol_id_type "key"), (bytes 65)
+    extra_signatures: map (address), (bytes 65)
     operation_results: array operation_result
 )
 
@@ -521,11 +522,6 @@ fee_schedule = new Serializer(
     membership_annual_fee: uint32
     membership_lifetime_fee: uint32
     withdraw_permission_update_fee: uint32
-    create_bond_offer_fee: uint32
-    cancel_bond_offer_fee: uint32
-    accept_bond_offer_fee: uint32
-    claim_bond_collateral_fee: uint32
-    file_storage_fee_per_day: uint32
     vesting_balance_create_fee: uint32
     vesting_balance_withdraw_fee: uint32
     global_settle_fee: uint32
@@ -566,21 +562,6 @@ global_parameters_update = new Serializer(
     new_parameters: chain_parameters
 )
 
-file_write = new Serializer( 
-    "file_write"
-    fee: asset
-    payer: protocol_id_type "account"
-    file_id: protocol_id_type "file"
-    owner: protocol_id_type "account"
-    group: protocol_id_type "account"
-    flags: uint8
-    offset: uint16
-    data: bytes()
-    lease_seconds: uint32
-    file_size: uint16
-    precondition_checksum: optional bytes 20
-)
-
 vesting_balance_create = new Serializer( 
     "vesting_balance_create"
     fee: asset
@@ -596,48 +577,6 @@ vesting_balance_withdraw = new Serializer(
     vesting_balance: protocol_id_type "vesting_balance"
     owner: protocol_id_type "account"
     amount: asset
-)
-
-bond_create_offer = new Serializer( 
-    "bond_create_offer"
-    fee: asset
-    creator: protocol_id_type "account"
-    offer_to_borrow: bool
-    amount: asset
-    min_match: int64
-    collateral_rate: price
-    min_loan_period_sec: uint32
-    loan_period_sec: uint32
-    interest_apr: uint16
-)
-
-bond_cancel_offer = new Serializer( 
-    "bond_cancel_offer"
-    fee: asset
-    creator: protocol_id_type "account"
-    offer_id: protocol_id_type "bond_offer"
-    refund: asset
-)
-
-bond_accept_offer = new Serializer( 
-    "bond_accept_offer"
-    fee: asset
-    claimer: protocol_id_type "account"
-    lender: protocol_id_type "account"
-    borrower: protocol_id_type "account"
-    offer_id: protocol_id_type "bond_offer"
-    amount_borrowed: asset
-    amount_collateral: asset
-)
-
-bond_claim_collateral = new Serializer( 
-    "bond_claim_collateral"
-    fee: asset
-    claimer: protocol_id_type "account"
-    lender: protocol_id_type "account"
-    bond_id: protocol_id_type "bond"
-    payoff_amount: asset
-    collateral_claimed: asset
 )
 
 refund_worker_type_initializer = new Serializer( 
@@ -708,13 +647,8 @@ operation.st_operations = [
     withdraw_permission_delete    
     fill_order    
     global_parameters_update    
-    file_write    
     vesting_balance_create    
     vesting_balance_withdraw    
-    bond_create_offer    
-    bond_cancel_offer    
-    bond_accept_offer    
-    bond_claim_collateral    
     worker_create    
     custom
 ]
@@ -734,6 +668,7 @@ signed_transaction = new Serializer(
     relative_expiration: uint16
     operations: array operation
     signatures: map (protocol_id_type "key"), (bytes 65)
+    extra_signatures: map (address), (bytes 65)
 )
 
 ## -------------------------------
