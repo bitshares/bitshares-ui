@@ -23,6 +23,7 @@ _my.signed_transaction = ->
     relative_expiration: 0
     operations: []
     signatures: []
+    extra_signatures: []
     
     add_operation: (operation) ->
         required operation, "operation"
