@@ -58,7 +58,7 @@ class Serializer
                 result[field] = object
                 if(debug.hex_dump)
                     b = new ByteBuffer ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN
-                    type.appendByteBuffer(b, object)
+                    type.appendByteBuffer(b, serialized_object?[field])
                     b = b.copy 0, b.offset
                     console.error(
                         @operation_name+'.'+field
