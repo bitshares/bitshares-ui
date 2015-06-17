@@ -2,11 +2,16 @@
 //var ops = require('../chain/transaction_operations')
 var type = require('../chain/serializer_operation_types')
 var v = require('../chain/serializer_validation')
-
+var Serializer = require('../chain/serializer')
+var config = require('../chain/serializer_config')
 var PrivateKey = require('../ecc/key_private')
 var ApplicationApi = require('./ApplicationApi')
 
 class DebugApi {
+    
+    set_hex_dump(flag = !config.hex_dump) {
+        config.hex_dump = flag
+    }
     
     type(operation_name) {
         v.required(operation_name, "operation_name")

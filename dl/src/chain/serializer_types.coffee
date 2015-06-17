@@ -4,6 +4,7 @@ v = require './serializer_validation'
 ObjectId = require './object_id'
 Serializer = require './serializer'
 ChainTypes = require './chain_types'
+config = require './serializer_config'
 
 fp = require '../common/fast_parser'
 Address = require '../ecc/address'
@@ -168,7 +169,10 @@ Types.bool =
 
 Types.array = (st_operation)->
     fromByteBuffer:(b)->
-        for i in [0...b.readVarint32()] by 1
+        size = b.readVarint32()
+        if config.hex_dump
+            console.log "varint32 size = " + size.toString(16)
+        for i in [0...size] by 1
             st_operation.fromByteBuffer b
     appendByteBuffer:(b, object)->
         b.writeVarint32 object.length
@@ -330,6 +334,8 @@ Types.static_variant = (_st_operations)->
     fromByteBuffer:(b)->
         type_id = b.readVarint32()
         st_operation = @st_operations[type_id]
+        if config.hex_dump
+            console.error("static_variant id 0x#{type_id.toString(16)} (#{type_id})")
         v.required st_operation, "operation #{type_id}"
         [
             type_id

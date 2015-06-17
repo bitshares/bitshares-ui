@@ -1,5 +1,6 @@
 ByteBuffer = require '../common/bytebuffer'
 EC = require '../common/error_with_cause'
+config = require './serializer_config'
 
 class Serializer
     
@@ -11,7 +12,23 @@ class Serializer
         try
             for field in Object.keys @types
                 type = @types[field]
-                object[field] = type.fromByteBuffer b
+                try
+                    if config.hex_dump
+                        o1 = b.offset
+                        type.fromByteBuffer b
+                        o2 = b.offset
+                        b.offset = o1
+                        #b.reset()
+                        _b = b.copy o1, o2
+                        console.error(
+                            "#{@operation_name}.#{field}\t" 
+                            _b.toHex()
+                        )
+                    object[field] = type.fromByteBuffer b
+                catch e
+                    console.error("Error reading #{@operation_name}.#{field} in data:")
+                    b.printDebug()
+                    throw e
         
         catch error
             EC.throw @operation_name+'.'+field, error
@@ -72,9 +89,9 @@ class Serializer
     
     # <helper_functions>
     
-    fromHex: (hex) ->
+    fromHex: (hex, hex_dump = no) ->
         b = ByteBuffer.fromHex hex, ByteBuffer.LITTLE_ENDIAN
-        @fromByteBuffer b
+        @fromByteBuffer b, hex_dump
     
     toHex: (object) ->
         b=@toByteBuffer object
@@ -90,6 +107,5 @@ class Serializer
     
     # </helper_functions>
 
-        
 module.exports = Serializer
 
