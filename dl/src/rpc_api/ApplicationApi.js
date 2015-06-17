@@ -1,23 +1,14 @@
 var Aes = require('../ecc/aes');
 var PrivateKey = require('../ecc/key_private');
 var PublicKey = require('../ecc/key_public');
-var ChainTypes = require('../chain/chain_types');
-var chain_config = require('../chain/config');
 var Long = require('../common/bytebuffer').Long;
 
-var helper = require('../chain/transaction_helper'),
-    get_owner_private = helper.get_owner_private,
-    get_active_private = helper.get_active_private;
-
-var tr_op = require('../chain/transaction_operations');
-
-var so_type = require('../chain/serializer_operation_types'),
-    signed_transaction_type = so_type.signed_transaction,
-    transfer_type = so_type.transfer;
-
-var is_empty_user_input = require('../common/validation').
-    is_empty_user_input;
-    
+var chain_types = require('../chain/chain_types');
+var chain_config = require('../chain/config');
+var helper = require('../chain/transaction_helper')
+var ops = require('../chain/transaction_operations');
+var type = require('../chain/serializer_operation_types')
+var validation = require('../common/validation')
 var api = require('./ApiInstances').instance();
 
 class ApplicationApi {
@@ -33,18 +24,18 @@ class ApplicationApi {
         signer_private_key,
         broadcast
     ) {
-        var owner_privkey = get_owner_private(brain_key);
-        var active_privkey = get_active_private(owner_privkey);
+        var owner_privkey = helper.get_owner_private(brain_key);
+        var active_privkey = helper.get_active_private(owner_privkey);
         
         var owner_pubkey = owner_privkey.toPublicKey();
         var active_pubkey = active_privkey.toPublicKey();
         
-        var tr = new tr_op.signed_transaction();
+        var tr = new ops.signed_transaction();
         tr.set_expire_minutes(expire_minutes);
         {
-            var cop = new tr_op.account_create(
-                tr_op.key_create.fromPublicKey(owner_pubkey),
-                tr_op.key_create.fromPublicKey(active_pubkey)
+            var cop = new ops.account_create(
+                ops.key_create.fromPublicKey(owner_pubkey),
+                ops.key_create.fromPublicKey(active_pubkey)
             );
             cop.name = new_account_name;
             cop.registrar = registrar_id;
@@ -78,7 +69,7 @@ class ApplicationApi {
         broadcast = false
     ) {
         var memo = {};
-        if( ! is_empty_user_input(memo_message)) {
+        if( ! validation.is_empty_user_input(memo_message)) {
             memo.from = from_account_id;
             memo.from_privkey = signer_private_key;
             memo.to = to_account_id
@@ -116,10 +107,10 @@ class ApplicationApi {
         signer_private_key,
         broadcast = false
     ) {
-        var tr = new tr_op.signed_transaction();
+        var tr = new ops.signed_transaction();
         tr.set_expire_minutes(expire_minutes);
         {
-            var top = new tr_op.transfer( memo_from_privkey );
+            var top = new ops.transfer( memo_from_privkey );
             top.from = from_account_id;
             top.to = to_account_id;
             top.amount.amount = amount;

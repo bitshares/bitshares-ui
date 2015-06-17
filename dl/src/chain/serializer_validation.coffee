@@ -1,6 +1,7 @@
-ChainTypes = require './chain_types.coffee'
 Long = require('../common/bytebuffer').Long
 BigInteger = require('bigi')
+
+chain_types = require './chain_types.coffee'
 
 MAX_SAFE_INT = 9007199254740991
 MIN_SAFE_INT =-9007199254740991
@@ -108,7 +109,7 @@ module.exports = _my =
         field_name=""
     )->
         return value if is_empty value
-        object_type = ChainTypes.object_type[type]
+        object_type = chain_types.object_type[type]
         unless object_type
             throw new Error "Unknown object type #{type} #{field_name}: #{value}"
         re = new RegExp "#{reserved_spaces}\.#{object_type}\.[0-9]+$"

@@ -2,20 +2,17 @@
 module.exports = helper = {}
 
 api = require('../rpc_api/ApiInstances').instance()
-
 secureRandom = require 'secure-random'
-
 hash = require '../common/hash'
+type = require './serializer_operation_types'
+
 Promise = require '../common/Promise'
 ByteBuffer = require('../common/bytebuffer')
 Long = ByteBuffer.Long
-
 PrivateKey = require '../ecc/key_private'
 Signature = require '../ecc/signature'
 Aes = require '../ecc/aes'
 
-ChainTypes = require './chain_types'
-so_type = require './serializer_operation_types'
 
 helper.get_owner_private=get_owner_private=(brain_key)->
     normalize_brain_key=(brain_key)->
@@ -52,7 +49,7 @@ helper.unique_nonce_uint64=->
 ### Todo, set fees ###
 helper.to_json=( tr, broadcast = false ) ->
     ((tr, broadcast)->
-        tr_object = so_type.signed_transaction.toObject tr
+        tr_object = type.signed_transaction.toObject tr
         if broadcast
             net = api.network_api()
             console.log '... tr_object', JSON.stringify tr_object
@@ -62,8 +59,8 @@ helper.to_json=( tr, broadcast = false ) ->
     )(tr, broadcast)
 
 helper.signed_tr_json=(tr, key_ids, private_keys)->
-    tr_buffer = so_type.transaction.toBuffer tr
-    tr = so_type.transaction.toObject tr
+    tr_buffer = type.transaction.toBuffer tr
+    tr = type.transaction.toObject tr
     tr.signatures = for i in [0...private_keys.length] by 1
         key_id = key_ids[i]
         private_key = private_keys[i]
@@ -84,13 +81,13 @@ helper.seconds_from_now=(timeout_sec)->
     serializer_operation_types.coffee
 ###
 helper.template=(serializer_operation_type_name, debug = {use_default: yes, annotate: yes})->
-    so = so_type[serializer_operation_type_name]
+    so = type[serializer_operation_type_name]
     unless so
         throw new Error "unknown serializer_operation_type #{serializer_operation_type_name}"
     so.toObject undefined, debug
 
 helper.new_operation=(serializer_operation_type_name)->
-    so = so_type[serializer_operation_type_name]
+    so = type[serializer_operation_type_name]
     unless so
         throw new Error "unknown serializer_operation_type #{serializer_operation_type_name}"
     object = so.toObject undefined, {use_default: yes, annotate: yes}

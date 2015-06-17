@@ -1,17 +1,7 @@
-var tr_helper = require('../chain/transaction_helper'),
-    get_owner_private = tr_helper.get_owner_private,
-    get_active_private = tr_helper.get_active_private
-
-var tr_op = require('../chain/transaction_operations'),
-    signed_transaction = tr_op.signed_transaction,
-    key_create = tr_op.key_create,
-    account_create = tr_op.account_create
-
-var so_type = require('../chain/serializer_operation_types'),
-    signed_transaction_type = so_type.signed_transaction
-
-var vt = require('../chain/serializer_validation'),
-    get_protocol_instance = vt.get_protocol_instance
+var helper = require('../chain/transaction_helper')
+var ops = require('../chain/transaction_operations')
+var type = require('../chain/serializer_operation_types')
+var v = require('../chain/serializer_validation')
 
 var PrivateKey = require('../ecc/key_private')
 var ApplicationApi = require('./ApplicationApi')
@@ -19,18 +9,20 @@ var ApplicationApi = require('./ApplicationApi')
 class WalletApi {
 
     constructor() {
+        /** @parm1 string wallet_name can have dashes, numbers, or letters */
+        //v.require_test /^[-A-Za-z0-9]+$/, wallet_name, "wallet_name"
         this.application_api = new ApplicationApi()
     }
     
     new_transaction(expire_minutes = 10) {
         //var expire_minutes = 10
-        var tr = new tr_op.signed_transaction()
+        var tr = new ops.signed_transaction()
         tr.set_expire_minutes(expire_minutes)
         return tr
     }
     
     sign_and_broadcast( tr, broadcast = true ) {
-        vt.required(tr, "transaction")
+        v.required(tr, "transaction")
         var signer_private_key_id = 1
         var signer_private_key = PrivateKey.fromSeed("nathan")
         return tr.finalize(
@@ -42,7 +34,7 @@ class WalletApi {
     
     /** Console print any transaction object with zero default values. */
     template(transaction_object_name) {
-        var object = tr_helper.template(
+        var object = helper.template(
             transaction_object_name, 
             {use_default: true, annotate: true}
         )
@@ -50,7 +42,7 @@ class WalletApi {
         console.error(JSON.stringify(object,null,4))
         
         // usable
-        object = tr_helper.template(
+        object = helper.template(
             transaction_object_name, 
             {use_default: true, annotate: false}
         )

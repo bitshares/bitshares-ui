@@ -1,8 +1,7 @@
 Long = (require '../common/bytebuffer').Long
-ChainTypes = require './chain_types'
-vt = require './serializer_validation'
-required = vt.required
-require_match = vt.require_match
+
+chain_types = require './chain_types'
+v = require './serializer_validation'
 
 class ObjectId
 
@@ -11,7 +10,7 @@ class ObjectId
     constructor:(@space,@type,@instance)->
         instance_string = @instance.toString()
         object_id = "#{@space}.#{@type}.#{instance_string}"
-        unless vt.is_digits instance_string
+        unless v.is_digits instance_string
             throw new "Invalid object id #{object_id}"
     
     ObjectId.fromString=(value)->
@@ -21,9 +20,9 @@ class ObjectId
             value.instance isnt undefined
         )
             return value
-        params = require_match(
+        params = v.require_match(
             /^([0-9]+)\.([0-9]+)\.([0-9]+)$/
-            required value, "object_id"
+            v.required value, "object_id"
             "object_id"
         )
         new ObjectId(

@@ -1,14 +1,9 @@
 Promise = require '../common/Promise'
-chain_config = require '../chain/config'
-ChainTypes = require '../chain/chain_types'
 PublicKey = require '../ecc/key_public'
 
-#storage = require '../common/storage'
-vt = require '../chain/serializer_validation'
-is_empty = vt.is_empty
-is_digits = vt.is_digits
-get_protocol_instance = vt.get_protocol_instance
-
+v = require '../chain/serializer_validation'
+chain_config = require '../chain/config'
+chain_types = require '../chain/chain_types'
 api = require('../rpc_api/ApiInstances').instance()
 
 ### Makes account, key, assset instance ID lookups very easy. All functions
@@ -25,7 +20,7 @@ class Lookup
     Resolve an account id from an account name.  An account id resolves unchanged. 
     ###
     account_id:(name_or_id)->
-        return resolve: name_or_id if is_empty name_or_id
+        return resolve: name_or_id if v.is_empty name_or_id
         # account instance or account id
         i = @_private.try_simple_resolve "account", name_or_id
         return i unless i is undefined
@@ -36,7 +31,7 @@ class Lookup
     Resolve an asset id from an asset name.  An asset id resolves unchanged. 
     ###
     asset_id:(name_or_id)->
-        return resolve: name_or_id if is_empty name_or_id
+        return resolve: name_or_id if v.is_empty name_or_id
         i = @_private.try_simple_resolve "asset", name_or_id
         return i unless i is undefined
         asset_name = name_or_id
@@ -51,7 +46,7 @@ class Lookup
     resolves unchanged.
     ###
     memo_key_id:(name_or_id)->
-        return resolve: name_or_id if is_empty name_or_id
+        return resolve: name_or_id if v.is_empty name_or_id
         # key instance or key id
         i = @_private.try_simple_resolve "key", name_or_id
         return i unless i is undefined
@@ -69,7 +64,7 @@ class Lookup
     ###
     memo_public_key:(name_key_or_id)->
         
-        return resolve: name_key_or_id if is_empty name_key_or_id
+        return resolve: name_key_or_id if v.is_empty name_key_or_id
         return resolve: name_key_or_id if name_key_or_id.Q # typeof is PublicKey
         if name_key_or_id.indexOf(chain_config.address_prefix) is 0
             return resolve: PublicKey.fromBtsPublic name_key_or_id
@@ -115,9 +110,9 @@ class Private
         @lookup_map = {}
     
     try_simple_resolve:(type, name_or_id)->
-        # is_digits is true when name_or_id is what we needed
-        return resolve: name_or_id if is_empty(name_or_id) or is_digits(name_or_id)
-        type_id = ChainTypes.object_type[type]
+        # v.is_digits is true when name_or_id is what we needed
+        return resolve: name_or_id if v.is_empty(name_or_id) or v.is_digits(name_or_id)
+        type_id = chain_types.object_type[type]
         if name_or_id.indexOf("1.#{type_id}.") is 0
             return resolve: name_or_id
         return undefined

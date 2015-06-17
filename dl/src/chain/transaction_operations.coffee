@@ -1,15 +1,14 @@
-ChainTypes = require './chain_types'
 ObjectId = require './object_id'
 Signature = require '../ecc/signature'
 ByteBuffer = require('../common/bytebuffer')
-hash = require('../common/hash')
 Long = ByteBuffer.Long
 Aes = require '../ecc/aes'
 
-so_type = require './serializer_operation_types'
-is_empty_user_input = require('../common/validation').is_empty_user_input
-vt = require './serializer_validation'
-required = vt.required
+v = require './serializer_validation'
+chain_types = require './chain_types'
+hash = require('../common/hash')
+type = require './serializer_operation_types'
+validation = require('../common/validation')
 lookup = new (require './lookup')()
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
@@ -26,8 +25,8 @@ _my.signed_transaction = ->
     extra_signatures: []
     
     add_operation: (operation) ->
-        required operation, "operation"
-        required operation.get_operations, "operation.get_operations()"
+        v.required operation, "operation"
+        v.required operation.get_operations, "operation.get_operations()"
         results = operation.get_operations()
         for result in results
             unless Array.isArray result
@@ -36,18 +35,18 @@ _my.signed_transaction = ->
         return
     
     add_type_operation: (name, operation) ->
-        required name, "name"
-        required operation, "operation"
-        type = so_type[name]
-        required type, "Unknown operation #{name}"
-        operation_id = ChainTypes.operations[type.operation_name]
+        v.required name, "name"
+        v.required operation, "operation"
+        _type = type[name]
+        v.required _type, "Unknown operation #{name}"
+        operation_id = chain_types.operations[_type.operation_name]
         if operation_id is undefined
-            throw new Error "unknown operation: #{type.operation_name}"
+            throw new Error "unknown operation: #{_type.operation_name}"
         unless operation.fee
             operation.fee =
                 amount: "0"
                 asset_id: "1.4.0"
-        operation_instance = type.fromObject operation
+        operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]
         return
     
@@ -64,7 +63,7 @@ _my.signed_transaction = ->
                         if op[1]["finalize"]
                             op[1].finalize()
                     
-                    tr_buffer = so_type.transaction.toBuffer tr
+                    tr_buffer = type.transaction.toBuffer tr
                     # Debug
                     # ByteBuffer.fromBinary(tr_buffer.toString('binary')).printDebug()
                     key_ids = [ key_ids ] unless Array.isArray key_ids
@@ -75,7 +74,7 @@ _my.signed_transaction = ->
                         sig = Signature.signBuffer tr_buffer, private_key
                         tr.signatures.push [ key_id, sig.toBuffer() ]
                     
-                    tr_object = so_type.signed_transaction.toObject(tr)
+                    tr_object = type.signed_transaction.toObject(tr)
                     
                     unless broadcast
                         resolve tr_object
@@ -116,14 +115,14 @@ _my.key_create = ->
     key_data: [ 1, "GPHXyx...public_key" ]
 
 _my.key_create.fromPublicKey = (public_key)->
-    required public_key.Q, "PublicKey"
+    v.required public_key.Q, "PublicKey"
     kc = _my.key_create()
     kc.key_data[0] = 1
     kc.key_data[1] = public_key
     kc
 
 _my.key_create.fromAddress = (address)->
-    required address.addy, "Address"
+    v.required address.addy, "Address"
     kc = _my.key_create()
     kc.key_data[0] = 0
     kc.key_data[1] = address
@@ -154,7 +153,7 @@ class _my.account_create
     constructor:(@owner_key_create, @active_key_create)->
         for key in Object.keys _tmp = _template()
             @[key] = _tmp[key]
-        required @owner_key_create
+        v.required @owner_key_create
         unless @active_key_create
             @active_key_create = @owner_key_create
     
@@ -168,9 +167,9 @@ class _my.account_create
         if @active_key_create.fee_paying_account is null
             @active_key_create.fee_paying_account = @registrar
         [
-            [ ChainTypes.operations.key_create, @owner_key_create ]
-            [ ChainTypes.operations.key_create, @active_key_create ]
-            [ ChainTypes.operations.account_create, @ ]
+            [ chain_types.operations.key_create, @owner_key_create ]
+            [ chain_types.operations.key_create, @active_key_create ]
+            [ chain_types.operations.account_create, @ ]
         ]
 
 class _my.transfer
@@ -198,7 +197,7 @@ class _my.transfer
         @from = lookup.account_id(@from)
         @to = lookup.account_id(@to)
         @amount.asset_id = lookup.asset_id(@amount.asset_id)
-        if is_empty_user_input @memo.message
+        if validation.is_empty_user_input @memo.message
             @memo = undefined
         else
             to = @memo.to
@@ -211,7 +210,7 @@ class _my.transfer
                 empty_checksum = "\x00\x00\x00\x00"
                 @memo.message = new Buffer(empty_checksum + @memo.message)
             
-        [[ ChainTypes.operations.transfer, @]]
+        [[ chain_types.operations.transfer, @]]
 
     finalize:->
         if @memo_from_privkey

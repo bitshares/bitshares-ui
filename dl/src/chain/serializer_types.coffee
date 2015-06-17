@@ -1,14 +1,13 @@
 ByteBuffer = require '../common/bytebuffer'
-
-v = require './serializer_validation'
 ObjectId = require './object_id'
 Serializer = require './serializer'
-ChainTypes = require './chain_types'
-config = require './serializer_config'
-
-fp = require '../common/fast_parser'
 Address = require '../ecc/address'
 PublicKey = require '../ecc/key_public'
+
+v = require './serializer_validation'
+chain_types = require './chain_types'
+config = require './serializer_config'
+fp = require '../common/fast_parser'
 
 module.exports = Types = {}
 
@@ -244,7 +243,7 @@ id_type = (reserved_spaces, object_type)->
             return v.to_number object
         v.get_instance reserved_spaces, object_type, object
     toObject:(object, debug = {})->
-        object_type_id = ChainTypes.object_type[object_type]
+        object_type_id = chain_types.object_type[object_type]
         if debug.use_default and object is undefined
             return "#{reserved_spaces}.#{object_type_id}.0"
         object = object.resolve if object.resolve isnt undefined
@@ -254,7 +253,7 @@ id_type = (reserved_spaces, object_type)->
         "#{reserved_spaces}.#{object_type_id}."+object
 
 Types.protocol_id_type = (name)->
-    id_type ChainTypes.reserved_spaces.protocol_ids, name
+    id_type chain_types.reserved_spaces.protocol_ids, name
 
 Types.object_id_type = 
     fromByteBuffer:(b)->
