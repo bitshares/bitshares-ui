@@ -83,13 +83,11 @@ helper.seconds_from_now=(timeout_sec)->
     Print to the console a JSON representation of any object in 
     serializer_operation_types.coffee
 ###
-helper.template=(serializer_operation_type_name, indent = 0)->
+helper.template=(serializer_operation_type_name, debug = {use_default: yes, annotate: yes})->
     so = so_type[serializer_operation_type_name]
     unless so
         throw new Error "unknown serializer_operation_type #{serializer_operation_type_name}"
-    object = so.toObject undefined, {use_default: yes, annotate: yes}
-    console.log JSON.stringify object,null,indent
-    return
+    so.toObject undefined, debug
 
 helper.new_operation=(serializer_operation_type_name)->
     so = so_type[serializer_operation_type_name]

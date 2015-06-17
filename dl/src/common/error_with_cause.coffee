@@ -5,7 +5,7 @@ class ErrorWithCause
         if cause?.message
             @message = "cause\t#{cause.message}\t" + @message
         
-        stack = (new Error).stack
+        stack = ""#(new Error).stack
         if cause?.stack
             stack = "caused by\n\t#{cause.stack}\t" + stack
         
