@@ -214,6 +214,15 @@ authority = new Serializer(
     auths: map (object_id_type), (uint16)
 )
 
+account_object_options = new Serializer( 
+    "account_object_options"
+    memo_key: object_id_type
+    voting_account: protocol_id_type "account"
+    num_witness: uint16
+    num_committee: uint16
+    votes: set vote_id
+)
+
 account_create = new Serializer( 
     "account_create"
     fee: asset
@@ -223,11 +232,7 @@ account_create = new Serializer(
     name: string
     owner: authority
     active: authority
-    voting_account: protocol_id_type "account"
-    memo_key: object_id_type
-    num_witness: uint16
-    num_committee: uint16
-    vote: set vote_id
+    options: account_object_options
 )
 
 account_update = new Serializer( 
@@ -236,11 +241,7 @@ account_update = new Serializer(
     account: protocol_id_type "account"
     owner: optional authority
     active: optional authority
-    voting_account: optional protocol_id_type "account"
-    memo_key: optional object_id_type
-    num_witness: uint16
-    num_committee: uint16
-    vote: optional set vote_id
+    new_options: optional account_object_options
 )
 
 account_whitelist = new Serializer( 
@@ -675,3 +676,5 @@ signed_transaction = new Serializer(
 ##  Generated code end
 # programs/js_operation_serializer
 ## -------------------------------
+
+

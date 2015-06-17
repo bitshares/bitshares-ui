@@ -1,10 +1,12 @@
 module.exports = ChainTypes = {}
 
+# types.hpp enum reserved_spaces
 ChainTypes.reserved_spaces=
     relative_protocol_ids: 0
     protocol_ids: 1
     implementation_ids: 2
 
+# types.hpp enum object_type
 ChainTypes.object_type=
     null: 0
     base: 1
@@ -21,12 +23,11 @@ ChainTypes.object_type=
     proposal: 12
     operation_history: 13
     withdraw_permission: 14
-    bond_offer: 15
-    bond: 16
-    file: 17
-    vesting_balance_object_type:18
-    worker_object_type: 19 
+    vesting_balance_object_type:15
+    worker_object_type: 16
 
+    
+# ./programs/js_operation_serializer
 ChainTypes.operations=
     transfer: 0
     limit_order_create: 1

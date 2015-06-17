@@ -14,16 +14,19 @@ class Serializer
                 type = @types[field]
                 try
                     if config.hex_dump
-                        o1 = b.offset
-                        type.fromByteBuffer b
-                        o2 = b.offset
-                        b.offset = o1
-                        #b.reset()
-                        _b = b.copy o1, o2
-                        console.error(
-                            "#{@operation_name}.#{field}\t" 
-                            _b.toHex()
-                        )
+                        if type.operation_name
+                            console.error type.operation_name
+                        else
+                            o1 = b.offset
+                            type.fromByteBuffer b
+                            o2 = b.offset
+                            b.offset = o1
+                            #b.reset()
+                            _b = b.copy o1, o2
+                            console.error(
+                                "#{@operation_name}.#{field}\t" 
+                                _b.toHex()
+                            )
                     object[field] = type.fromByteBuffer b
                 catch e
                     console.error("Error reading #{@operation_name}.#{field} in data:")

@@ -144,11 +144,12 @@ class _my.account_create
         active:
             weight_threshold: 1
             auths: [ [  ObjectId.fromString("0.2.1"),  1 ] ]
-        voting_account: 0 # 1.3.0
-        memo_key: ObjectId.fromString("0.2.1")
-        num_witness: 0
-        num_committee: 0
-        vote: [  ] # 0:0
+        options:
+            memo_key: ObjectId.fromString("0.2.1")
+            voting_account: 0 # 1.3.0
+            num_witness: 0
+            num_committee: 0
+            votes: [  ] # 0:0
 
     constructor:(@owner_key_create, @active_key_create)->
         for key in Object.keys _tmp = _template()
