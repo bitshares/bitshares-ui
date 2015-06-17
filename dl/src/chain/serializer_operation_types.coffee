@@ -219,7 +219,7 @@ account_create = new Serializer(
     fee: asset
     registrar: protocol_id_type "account"
     referrer: protocol_id_type "account"
-    referrer_percent: uint8
+    referrer_percent: uint16
     name: string
     owner: authority
     active: authority
