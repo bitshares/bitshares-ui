@@ -8,6 +8,7 @@
 @import "./header";
 @import "./footer";
 @import "./transfer";
+@import "./dark-theme";
 
 .error {
   color: #ff0000;
@@ -21,6 +22,28 @@
 .no-overflow {
   overflow: hidden;
 }
+
+label, label > span {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.json-inspector__key {
+  font-family: "Lucida Console", Monaco, monospace !important;
+  text-transform: none;
+}
+
+.json-inspector__value {
+  font-family: "Lucida Console", Monaco, monospace !important;
+  text-transform: none;
+}
+
+button {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  text-transform: uppercase;
+}
+
+// cards
 
 .account-card {
     max-width: 30rem;

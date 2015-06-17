@@ -188,7 +188,7 @@ class Transfer extends BaseComponent {
             }
         }
 
-        let submitButtonClass = classNames("button", {success: this.state.isValid}, {disabled: !this.state.isValid});
+        let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
 
         if (this.state.confirmation && currentAccount) {
             return (

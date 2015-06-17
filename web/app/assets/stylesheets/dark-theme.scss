@@ -1,0 +1,98 @@
+$light-text-color: #fff;
+$primary-text-color: #efefef;
+$secondary-text-color: darken($primary-text-color, 20%);
+$link-text-color: #aeabff;
+$link-text-hover-color: #a39fff;
+
+$bg-color: #2a2a2a;
+$panel-bg-color: #3f3f3f;
+$light-panel-bg-color: #6a6a6a;
+$button-bg-color: #8c88ff;
+
+@mixin color($font-color, $bg-color, $is_imp: false) {
+  @if $is_imp == false {
+    color: $font-color;
+    background-color: $bg-color;
+  } @else {
+    color: $font-color !important;
+    background-color: $bg-color !important;
+  }
+}
+
+body {
+  @include color($primary-text-color, $bg-color);
+}
+
+a {
+  color: $link-text-color;
+  &:hover, &:focus, &:active {
+    color: $link-text-hover-color;
+  }
+}
+
+label, label > span {
+  color: $secondary-text-color;
+}
+
+.json-inspector__key {
+  color: $secondary-text-color !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $secondary-text-color;
+}
+
+.modal {
+  @include color($light-text-color, $light-panel-bg-color);
+}
+
+.footer {
+  @include color($secondary-text-color, $panel-bg-color);
+}
+
+.page-layout {
+  background-color: $bg-color;
+
+  .left-column {
+    background-color: $bg-color;
+  }
+
+  .main-content {
+    background-color: $bg-color;
+  }
+
+  .right-column {
+    background-color: $bg-color;
+  }
+
+}
+
+.transfer-top {
+  background-color: $light-panel-bg-color;
+  label, label > span {
+    color: $light-text-color;
+  }
+}
+
+.button {
+  background-color: $button-bg-color;
+  &:hover, &:focus, &:active {
+    background-color: darken($button-bg-color, 4%) !important;
+  }
+}
+
+.button.secondary {
+  @include color($secondary-text-color, $panel-bg-color);
+  &:hover, &:focus, &:active {
+    @include color(darken($secondary-text-color, 4%), darken($panel-bg-color, 4%), true);
+  }
+}
+
+.header .button {
+  background-color: $panel-bg-color;
+}
+
+.grp-menu-item .button:hover {
+  background: #4c4c4c !important;
+}
+
