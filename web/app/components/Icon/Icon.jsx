@@ -16,9 +16,9 @@ class Icon extends React.Component {
         if(this.props.size) {
             classes += " icon-" + this.props.size;
         }
-        if(this.props.fillClass) {
-            classes += " " + this.props.fillClass;
-        }
+        //if(this.props.fillClass) {
+        //    classes += " " + this.props.fillClass;
+        //}
         return <span style={style} className={classes} dangerouslySetInnerHTML={{__html: icons_map[this.props.name]}}/>;
     }
 }
@@ -27,7 +27,7 @@ Icon.propTypes = {
     name: React.PropTypes.string.isRequired,
     size: React.PropTypes.oneOf(["2x", "3x", "4x", "5x", "10x"]),
     inverse: React.PropTypes.bool,
-    fillClass: React.PropTypes.string
+    //fillClass: React.PropTypes.string
 };
 
 export default Icon;

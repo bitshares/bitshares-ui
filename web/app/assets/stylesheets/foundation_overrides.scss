@@ -20,6 +20,8 @@
 
   .no-first-element-top-border > :first-child > a {
     border-top: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
   }
 }
 
@@ -40,20 +42,6 @@ div.has-error > input:focus {
 .menu-bar.secondary > li > a.active {
   background: #ededed;
   color: #000;
-}
-
-.table > thead >tr>th{
-    border-bottom: 2px solid #ddd;
-    padding: 5px;
-}
-
-.table > tbody >tr>td{
-    border-top: 1px solid #ddd;
-    padding: 5px;
-}
-
-.table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th {
-  background-color: #f5f5f5;
 }
 
 .inline {

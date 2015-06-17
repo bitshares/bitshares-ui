@@ -48,6 +48,7 @@ class AccountStore extends BaseStore {
     }
 
     onGetAccount(result) {
+        console.log("[AccountStore.js:51] ----- onGetAccount ----->", result);
         if (result.sub) {
             this.accountHistories = this.accountHistories.set(
                 result.account,

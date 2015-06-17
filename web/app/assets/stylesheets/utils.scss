@@ -1,0 +1,9 @@
+@mixin color($font-color, $bg-color, $is_imp: false) {
+  @if $is_imp == false {
+    color: $font-color;
+    background-color: $bg-color;
+  } @else {
+    color: $font-color !important;
+    background-color: $bg-color !important;
+  }
+}

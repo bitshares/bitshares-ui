@@ -1,0 +1,26 @@
+.card {
+  border-radius: 0;
+  border: none;
+}
+
+.card-section .text-group {
+ text-align: left;
+}
+
+.account-card {
+  max-width: 30rem;
+  padding: 0 1rem 0 0 !important;
+}
+
+.card:hover {
+  border: none;
+}
+
+//.card div:first-child {
+//  text-align: center;
+//}
+
+.card a>div:first-child {
+  text-align: center;
+  padding: 5px;
+}

@@ -70,7 +70,7 @@ class AccountCard extends React.Component {
 
         let accountBalances = balances.map((balance) => {
             return (
-                <div style={{textAlign: "left", padding: "5px"}} key={balance.asset_id} className="text-group">
+                <div key={balance.asset_id} className="text-group">
                     <span>
                         <FormattedAsset amount={parseFloat(balance.amount)} asset={assets.get(balance.asset_id)}/>
                     </span>
@@ -84,10 +84,10 @@ class AccountCard extends React.Component {
                         <div>
                             <AccountImage account={account.name} size={{height: 150, width: 150}}/>
                         </div>
-                        <div style={{color: "black"}} className="card-divider">
+                        <div className="card-divider">
                             {account.name}
                         </div>
-                        <div style={{color: "black"}} className="card-section">
+                        <div className="card-section">
                             {accountBalances}
                         </div>
                     </Link>

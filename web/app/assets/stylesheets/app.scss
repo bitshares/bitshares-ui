@@ -8,6 +8,8 @@
 @import "./header";
 @import "./footer";
 @import "./transfer";
+@import "./tables";
+@import "./cards";
 @import "./dark-theme";
 
 .error {
@@ -41,23 +43,4 @@ label, label > span {
 button {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   text-transform: uppercase;
-}
-
-// cards
-
-.account-card {
-    max-width: 30rem;
-}
-
-.card:hover {
-    border: 1px solid #4D2828;
-}
-
-.card div:first-child {
-    padding: 5px;
-    text-align: center;
-}
-
-.card:hover a>div:first-child {
-    background-color: rgb(202, 202, 202);
 }

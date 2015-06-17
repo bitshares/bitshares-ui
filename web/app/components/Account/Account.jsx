@@ -220,7 +220,7 @@ class Account extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {balances}  
+                      {balances}
                     </tbody>
                   </table>
 
