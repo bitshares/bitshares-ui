@@ -82,7 +82,7 @@ class Account extends Component {
         return (
             <div>
                 <Trigger open="confirm_upgrade_modal">
-                    <a className="button">Upgrade</a>
+                    <button className="button">Upgrade</button>
                 </Trigger>
                 <Modal id="confirm_upgrade_modal" overlay={true}>
                     <Trigger close="">
@@ -95,7 +95,7 @@ class Account extends Component {
                         <div className="grid-content button-group">
                             <a className="button" href onClick={this.upgradeAccountClickHandler.bind(this)}>Confirm</a>
                             <Trigger close="confirm_upgrade_modal">
-                                <a href className="button">Cancel</a>
+                                <a href className="secondary button">Cancel</a>
                             </Trigger>
                         </div>
                     </div>
@@ -220,7 +220,7 @@ class Account extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {balances}  
+                      {balances}
                     </tbody>
                   </table>
 

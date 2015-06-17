@@ -8,6 +8,9 @@
 @import "./header";
 @import "./footer";
 @import "./transfer";
+@import "./tables";
+@import "./cards";
+@import "./dark-theme";
 
 .error {
   color: #ff0000;
@@ -22,19 +25,22 @@
   overflow: hidden;
 }
 
-.account-card {
-    max-width: 30rem;
+label, label > span {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  text-transform: uppercase;
 }
 
-.card:hover {
-    border: 1px solid #4D2828;
+.json-inspector__key {
+  font-family: "Lucida Console", Monaco, monospace !important;
+  text-transform: none;
 }
 
-.card div:first-child {
-    padding: 5px;
-    text-align: center;
+.json-inspector__value {
+  font-family: "Lucida Console", Monaco, monospace !important;
+  text-transform: none;
 }
 
-.card:hover a>div:first-child {
-    background-color: rgb(202, 202, 202);
+button {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  text-transform: uppercase;
 }

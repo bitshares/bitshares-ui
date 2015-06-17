@@ -1,0 +1,169 @@
+@import "./utils";
+
+// variables
+
+$light-text-color: #fff;
+$dark-text-color: #444;
+$primary-text-color: #e0e0e0;
+$secondary-text-color: darken($primary-text-color, 20%);
+$link-text-color: #aeabff;
+
+$bg-color: #2a2a2a;
+$panel-bg-color: #3f3f3f;
+$light-panel-bg-color: #6a6a6a;
+$super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$button-bg-color: #8c88ff;
+$secondary-button-bg-color: #999999;
+
+// general
+
+body {
+  @include color($primary-text-color, $bg-color);
+}
+
+a {
+  color: $link-text-color;
+  &:hover, &:focus, &:active {
+    color: lighten($link-text-color, 4%);
+  }
+}
+
+label, label > span {
+  color: $secondary-text-color;
+}
+
+.action-sheet {
+  @include color($light-text-color, $super-light-panel-bg-color);
+  &::after {
+    border-bottom-color: $super-light-panel-bg-color;
+  }
+  > ul > li > a {
+    color: $light-text-color;
+    border-top-color: $panel-bg-color;
+    &:hover {
+      @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+    }
+  }
+}
+
+.reactTooltip.type-dark {
+  @include color($light-text-color, $super-light-panel-bg-color);
+  &.place-bottom:after {
+    border-bottom-color: $super-light-panel-bg-color;
+  }
+}
+
+.json-inspector__key {
+  color: $secondary-text-color !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $secondary-text-color;
+}
+
+.modal {
+  @include color($light-text-color, $light-panel-bg-color);
+}
+
+.footer {
+  @include color($secondary-text-color, $panel-bg-color);
+}
+
+.page-layout {
+  background-color: $bg-color;
+
+  .left-column {
+    background-color: $bg-color;
+  }
+
+  .main-content {
+    background-color: $bg-color;
+  }
+
+  .right-column {
+    background-color: $bg-color;
+  }
+
+}
+
+.transfer-top {
+  background-color: $light-panel-bg-color;
+  label, label > span {
+    color: $light-text-color;
+  }
+}
+
+// buttons
+
+.button {
+  background-color: $button-bg-color;
+  &:hover, &:focus, &:active {
+    background-color: lighten($button-bg-color, 4%) !important;
+  }
+}
+
+.button.secondary {
+  @include color($dark-text-color, $secondary-button-bg-color);
+  &:hover, &:focus, &:active {
+    @include color(lighten($dark-text-color, 4%), lighten($secondary-button-bg-color, 4%), true);
+  }
+}
+
+.header .button {
+  background-color: $panel-bg-color;
+}
+
+.grp-menu-item button {
+  &:hover, &:focus, &:active {
+    background-color: #4c4c4c !important;
+  }
+}
+
+// cards
+
+.card {
+  @include color($primary-text-color, $panel-bg-color);
+  background-color: $panel-bg-color;
+  &:hover {
+    background-color: lighten($panel-bg-color, 4%);
+  }
+  a {
+    color: $primary-text-color;
+  }
+  .card-divider {
+    @include color($primary-text-color, $light-panel-bg-color);
+  }
+}
+
+// tables
+.table {
+  > thead > tr > th {
+    border-bottom: 2px solid $dark-text-color;
+    color: $secondary-text-color;
+  }
+  > tbody > tr > td {
+    border-bottom: 1px solid $dark-text-color;
+  }
+  &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: lighten($bg-color, 4%);
+  }
+}
+
+// block-list
+
+.block-list {
+  color: $primary-text-color;
+  li {
+    border-bottom: 1px solid $dark-text-color;
+  }
+  li > a:hover, li > label:hover, li select:hover {
+    background-color: lighten($bg-color, 4%);
+  }
+  li:first-child {
+    border-top: 1px solid $dark-text-color;
+  }
+  header {
+    color: $secondary-text-color;
+  }
+}
+

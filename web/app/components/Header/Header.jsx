@@ -124,7 +124,7 @@ class Header extends BaseComponent {
                             {plusDropDown}
                         </div>
                         <div className="grp-menu-item" >
-                            <Link to="settings" data-tip={settings}><Icon name="cog"/></Link>
+                            <Link to="settings" className="button" data-tip={settings}><Icon name="cog"/></Link>
                         </div>
                         <div className="grp-menu-item">
                             <a href="/"><Translate component="span" content="header.logout" /></a>

@@ -30,7 +30,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="layers" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.blocks.title" />
                                     </div>
                                 </Link> 
@@ -40,7 +40,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="database" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.assets.title" />
                                     </div>
                                 </Link> 
@@ -50,7 +50,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="users" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.accounts.title" />
                                     </div>
                                 </Link> 
@@ -60,7 +60,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="search" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.witnesses.title" />
                                     </div>
                                 </Link> 
@@ -70,7 +70,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="users" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.delegates.title" />
                                     </div>
                                 </Link> 
@@ -80,7 +80,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="users" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.workers.title" />
                                     </div>
                                 </Link> 
@@ -90,7 +90,7 @@ class Explorer extends React.Component {
                                     <div>
                                         <Icon name="wand" size="10x" fillClass="fill-black"/>
                                     </div>
-                                    <div style={{color: "black"}} className="card-divider">
+                                    <div className="card-divider">
                                         <Translate component="span" content="explorer.proposals.title" />
                                     </div>
                                 </Link> 
