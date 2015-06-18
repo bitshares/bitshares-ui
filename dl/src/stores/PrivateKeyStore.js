@@ -10,29 +10,29 @@ import hash from "common/hash"
 
 class PrivateKeyStore extends BaseStore {
     
-    constructor(name = "default") {
+    constructor() {
         super();
-        this.name = name;
         this.keys = Immutable.Map();
         this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });
-        this._export("loadData");
+        this._export("loadDbData");
     }
 
-    loadData() {
-        iDB.load_data(this.name + "_encrypted_private_keys").then( data => {
-            for(let key of data) {
-                this.keys.set(key.id,Key(key));
-            }
+    loadDbData() {
+        iDB.load_data("private_keys").then( data => {
+            this.keys = this.keys.withMutations(map => {
+                for(let key of data) {
+                    map.set(key.id,Key(key));
+                }
+            });
         });
     }
 
     onAddKey(key) {
-        
-        iDB.add_to_store(this.name + "_encrypted_private_keys", key).then( () => {
+        iDB.add_to_store("private_keys", key).then( () => {
             console.log("[PrivateKeyStore.js:20] ----- PrivateKeyActions: key added ----->", key);
-            this.keys.set(key.id,Key(key));
+            this.keys = this.keys.set(key.id,Key(key));
         });
     }
 

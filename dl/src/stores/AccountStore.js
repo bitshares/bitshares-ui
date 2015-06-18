@@ -3,14 +3,7 @@ import Immutable from "immutable";
 import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
 import {Account} from "./tcomb_structs";
-
-function json_to_account(json) {
-    return Account({
-        id: json.id,
-        name: json.name,
-        balances: []
-    });
-}
+import iDB from "../idb-instance";
 
 class AccountStore extends BaseStore {
     constructor() {
@@ -22,6 +15,7 @@ class AccountStore extends BaseStore {
         this.accountHistories = Immutable.Map();
         this.account_name_to_id = {};
         this.account_id_to_name = {};
+        this.my_accounts = Immutable.Set();
         this.bindListeners({
             onGetAllAccounts: AccountActions.getAllAccounts,
             onGetAccount: AccountActions.getAccount,
@@ -30,8 +24,17 @@ class AccountStore extends BaseStore {
             onCreateAccount: AccountActions.createAccount,
             onUpgradeAccount: AccountActions.upgradeAccount
         });
+        this._export("loadDbData");
+    }
 
-        // this._export("getAccount", "getCurrent");
+    loadDbData() {
+        iDB.load_data("my_accounts").then( data => {
+            this.my_accounts = this.my_accounts.withMutations(set => {
+                for(let a of data) {
+                    set.add(a.name);
+                }
+            });
+        });
     }
 
     onGetAllAccounts(accounts) {
@@ -100,8 +103,6 @@ class AccountStore extends BaseStore {
     }
 
     onSetCurrentAccount(name) {
-        // let account_id = json.id;
-        // this.accounts = this.accounts.set(account_id, json_to_account(json));
         this.currentAccount = {
             name: name,
             id: this.account_name_to_id[name]
@@ -109,15 +110,18 @@ class AccountStore extends BaseStore {
     }
 
     onTransfer(result) {
-        console.log("[AccountStore.js:111] ----- onTransfer ----->", result);
+        console.log("[AccountStore.js] ----- onTransfer ----->", result);
     }
 
     onCreateAccount(name) {
-        console.log("[AccountStore.js:115] ----- onCreateAccount ----->", name);
+        iDB.add_to_store("my_accounts", {name}).then( () => {
+            console.log("[AccountStore.js] ----- Added account to store: ----->", name);
+            this.my_accounts = this.my_accounts.add(name);
+        });
     }
 
     onUpgradeAccount(account_id) {
-        console.log("[AccountStore.js:119] ----- onUpgradeAccount ----->", account_id);
+        console.log("[AccountStore.js] ----- onUpgradeAccount ----->", account_id);
     }
 
 }

@@ -52,9 +52,9 @@ class CreateAccount extends BaseComponent {
     render() {
         let AccountForm = forms.Form.extend({
             errorCssClass: "has-error",
-            name: forms.CharField({ initial: "" })
+            name: forms.CharField({ initial: "", placeholder: "Account Name" })
         });
-        let buttonClass = classNames("button", {success: this.state.validAccountName}, {disabled: !this.state.validAccountName});
+        let buttonClass = classNames("button", {disabled: !this.state.validAccountName});
         return <div className="grid-block vertical">
             <div className="grid-block page-layout">
                 <div className="grid-block medium-4">

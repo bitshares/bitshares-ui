@@ -7,6 +7,7 @@ $dark-text-color: #444;
 $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #aeabff;
+$error-text-color: #ff9793;
 
 $bg-color: #2a2a2a;
 $panel-bg-color: #3f3f3f;
@@ -167,3 +168,23 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+// forms
+
+.has-error, div.has-error > label, div.has-error > label > span, div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
+  border-color: $error-text-color;
+  color: $error-text-color;
+}
+
+.has-error input, .has-error select, .has-error textarea {
+  border-color: $error-text-color;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
+  background-color: #e0e0e0;
+  &:hover, &:focus, &:active {
+    background-color: #e0e0e0;
+  }
+  &:focus {
+    border-color: $light-text-color;
+  }
+}

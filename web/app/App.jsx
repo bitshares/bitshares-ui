@@ -31,6 +31,7 @@ import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/CreateAccount";
 import BaseComponent from "./components/BaseComponent";
 import SessionStore from "stores/SessionStore";
+import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import AssetActions from "actions/AssetActions";
 import BlockchainActions from "actions/BlockchainActions";
@@ -60,7 +61,8 @@ class App extends BaseComponent {
         Apis.instance().init_promise.then(() => {
             let idb_instance = iDB.init_instance(indexedDB);
             idb_instance.init_promise.then( db => {
-                PrivateKeyStore.loadData();
+                PrivateKeyStore.loadDbData();
+                AccountStore.loadDbData();
             });
             AccountActions.getAllAccounts().then(current_account_id => {
                 return current_account_id;

@@ -1,3 +1,5 @@
+const DB_VERSION = 1;
+
 var iDB = (function () {
 
     var _instance;
@@ -6,13 +8,12 @@ var iDB = (function () {
     function openIndexedDB(indexedDBimpl) {
 
         return new Promise((resolve, reject) => {
-            var openRequest = indexedDBimpl.open("graphene_db", 1);
+            var openRequest = indexedDBimpl.open("graphene_db", DB_VERSION);
 
             openRequest.onupgradeneeded = function (e) {
                 let db = e.target.result;
-                if (db.objectStoreNames.length === 0) {
-                    db.createObjectStore("private_keys", { keyPath: "id" });
-                }
+                if (!db.objectStoreNames.contains("private_keys")) { db.createObjectStore("private_keys", { keyPath: "id" }); }
+                if (!db.objectStoreNames.contains("my_accounts")) { db.createObjectStore("my_accounts", { keyPath: "name" }); }
             };
 
             openRequest.onsuccess = function (e) {
