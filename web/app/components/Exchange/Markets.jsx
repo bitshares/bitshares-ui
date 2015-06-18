@@ -26,7 +26,8 @@ class Markets extends Component {
     }
 
     _onChangeBase(e) {
-        MarketsActions.changeBase(e.target.value);
+        let base = this.props.assets.get(e.target[e.target.selectedIndex].id);
+        MarketsActions.changeBase({id: base.id, symbol: base.symbol});
     }
 
     render() {
@@ -35,12 +36,12 @@ class Markets extends Component {
 
         let marketCards = assets
             .map((a, index) => {
-                if (a.symbol !== baseMarket) {
+                if (a.symbol !== baseMarket.symbol) {
                     let market;
                     if (settings.get("inverseMarket")) {
-                        market = {quoteSymbol: a.symbol, baseSymbol: baseMarket};
+                        market = {quoteSymbol: a.symbol, baseSymbol: baseMarket.symbol};
                     } else {
-                        market = {quoteSymbol: baseMarket, baseSymbol: a.symbol};
+                        market = {quoteSymbol: baseMarket.symbol, baseSymbol: a.symbol};
                     }
                     return (
                         <MarketCard
@@ -54,7 +55,7 @@ class Markets extends Component {
             }).toArray();
 
         let baseOptions = assets.map(a => {
-            return <option key={a.id}>{a.symbol}</option>;
+            return <option key={a.id} id={a.id}>{a.symbol}</option>;
         });
 
         return (
@@ -77,7 +78,7 @@ class Markets extends Component {
                             <header>Select base asset:</header>
                                 <ul>
                                     <li className="with-dropdown">
-                                    <select style={{lineHeight: "1.2em"}} value={baseMarket} onChange={this._onChangeBase.bind(this)}>
+                                    <select style={{lineHeight: "1.2em"}} value={baseMarket.symbol} onChange={this._onChangeBase.bind(this)}>
                                         {baseOptions}
                                     </select>
                                     </li>
