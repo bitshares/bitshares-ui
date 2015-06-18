@@ -5,26 +5,25 @@ Aes = require '../ecc/aes'
 hash = require './hash'
 dictionary = require './dictionary_en'
 secureRandom = require './secureRandom'
-v = require '../common/validation'
 
 module.exports = key =
     
-    ###* Uses 1 second of hashing power to create a password checksum.  An
+    ###* Uses 1 second of hashing power to create a key/password checksum.  An
     implementation can re-call this method with the same password to re-match
-    the strength of there CPU (either after moving from a desktop to a mobile,
+    the strength of the CPU (either after moving from a desktop to a mobile,
     mobile to desktop, or N years from now when CPUs are presumably stronger).
     
     A salt is used for all the normal reasons...
     
     @return string  "{hash_iteration_count},{salt},{checksum}"
     ###
-    password_hash:(password)->
+    key_checksum:(password)->
         throw new "password string required" unless typeof password is "string"
         salt = secureRandom.randomBuffer(8).toString('hex')
-        start_t = Date.now()
         iterations = 0
         secret = salt + password
         # hash for 1 second
+        start_t = Date.now()
         while Date.now() - start_t < 1000
             secret = hash.sha256 secret
             iterations += 1
@@ -36,13 +35,13 @@ module.exports = key =
             checksum.slice(0, 8).toString('hex')
         ].join ','
     
-    ###* Provide a matching password and password_hash.  A "wrong password"
+    ###* Provide a matching password and key_checksum.  A "wrong password"
     error is thrown if the password does not match.  If this method takes
     much more or less than 1 second to return, one should consider updating
-    all encyrpted fields using a new key.password_hash.
+    all encyrpted fields using a new key.key_checksum.
     ###
-    aes:(password, password_hash)->
-        [iterations, salt, checksum] = password_hash.split ','
+    aes:(password, key_checksum)->
+        [iterations, salt, checksum] = key_checksum.split ','
         secret = salt + password
         for i in [0...iterations] by 1
             secret = hash.sha256 secret
@@ -53,17 +52,29 @@ module.exports = key =
     
     ###* @param1 string entropy of at least 32 bytes ###
     suggest_brain_key:(entropy) ->
-        unless typeof brain_key is 'string'
+        unless typeof entropy is 'string'
             throw new Error "string required for entropy"
         
         if entropy.length < 32
             throw new Error "expecting at least 32 bytes of entropy"
         
+        iterations = 0
+        start_t = Date.now()
+        # hash for 1 second
+        while Date.now() - start_t < 1000
+            entropy = hash.sha256 entropy
+            iterations += 1
+        
         hash_array = []
         
-        ###  Secure Random ###
-        hash_array.push secureRandom.randomBuffer(32)
+        # Take CPU speed into consideration (add iterations)
+        hash_array.push new Buffer ""+iterations
         hash_array.push hash.sha256 entropy
+        
+        ### Secure Random ###
+        # Note, this is after hashing for 1 second. Helps to ensure the computer
+        # is not low on entropy.
+        hash_array.push secureRandom.randomBuffer(32)
         
         # randomBuffer will be 32 bytes
         randomBuffer = hash.sha256 Buffer.concat(hash_array)
