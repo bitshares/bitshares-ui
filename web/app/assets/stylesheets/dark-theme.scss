@@ -8,17 +8,30 @@ $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #aeabff;
 
-$bg-color: #2a2a2a;
+$bg-color: #17252E;
 $panel-bg-color: #3f3f3f;
 $light-panel-bg-color: #6a6a6a;
 $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
-$button-bg-color: #8c88ff;
+$button-bg-color: #8C88FF;
 $secondary-button-bg-color: #999999;
+$sidebar-bg-color: #27343D;
+
+$primary-color: #2A2A34;
+$secondary-color: #f1f1f1;
+$alert-color: #E3745B;
+$info-color: #A0D3E8;
+$success-color: #50D2C2;
+$warning-color: #FCAB53;
+$dark-color: #232323;
+$gray: #dfdfdf;
+
+
 
 // general
 
 body {
   @include color($primary-text-color, $bg-color);
+  font-size: 14px;
 }
 
 a {
@@ -30,7 +43,34 @@ a {
 
 label, label > span {
   color: $secondary-text-color;
+  text-shadow: -1px 1px 2px rgba(0,0,0,0.5);
+  border-radius: 2px;
 }
+
+
+.label, .label.warning, .label.alert, .label.success, .label.info, .label.warning, .label.cancel {
+  text-shadow: -1px 1px 2px rgba(0,0,0,0.5);
+  color: #FFF;
+  border-radius: 0px;
+}
+
+.label.success {
+  background: $success-color;
+}
+
+.label.info {
+  background: $info-color;
+}
+
+.label.warning {
+  background: $warning-color;
+}
+
+.label.cancel, .label.alert {
+  background: $alert-color;
+}
+
+
 
 .action-sheet {
   @include color($light-text-color, $super-light-panel-bg-color);
@@ -69,11 +109,17 @@ h1, h2, h3, h4, h5, h6 {
   @include color($secondary-text-color, $panel-bg-color);
 }
 
+
+.tabs {
+@include color($secondary-text-color, $bg-color);
+}
+
+
 .page-layout {
   background-color: $bg-color;
 
   .left-column {
-    background-color: $bg-color;
+    background-color: $sidebar-bg-color;
   }
 
   .main-content {
@@ -81,7 +127,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .right-column {
-    background-color: $bg-color;
+    background-color: $sidebar-bg-color;
   }
 
 }
@@ -97,6 +143,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .button {
   background-color: $button-bg-color;
+  text-shadow: -1px 1px 2px rgba(0,0,0,0.5);
   &:hover, &:focus, &:active {
     background-color: lighten($button-bg-color, 4%) !important;
   }
@@ -135,6 +182,10 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+
+
+
+
 // tables
 .table {
   > thead > tr > th {
@@ -148,6 +199,18 @@ h1, h2, h3, h4, h5, h6 {
     background-color: lighten($bg-color, 4%);
   }
 }
+
+
+// Tabs
+
+
+  .order-form {
+    margin-top: 42px;
+  }
+
+
+
+
 
 // block-list
 
@@ -166,4 +229,41 @@ h1, h2, h3, h4, h5, h6 {
     color: $secondary-text-color;
   }
 }
+
+
+// Exchange
+
+
+.depthchart {
+  background-color: $bg-color;
+  &:hover {
+  background-color: $bg-color;
+  }
+  &.area {
+    color: #FFF;
+  }
+}
+
+.openorders .table {
+  width: 100%;
+}
+
+.buysell {
+  vertical-align: top;
+}
+
+
+td.orderHistoryAsk {
+ color: $alert-color;
+ font-weight: bold;
+}
+
+
+
+td.orderHistoryBid {
+  color: $success-color;
+  font-weight: bold;
+}
+
+
 

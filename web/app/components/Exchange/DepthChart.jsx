@@ -143,7 +143,7 @@ class DepthChart extends React.Component {
 
         return (
             <div className="grid-content">
-                <div className="card">
+                <div className="card depthchart">
                     <h5>Depth Chart</h5>
                     {bids.length > 1 && asks.length > 1 ? <AreaChart
                         ref="chart"
