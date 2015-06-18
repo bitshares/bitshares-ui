@@ -10,7 +10,7 @@ module.exports = _my =
     # "1.01" with a precision of 2 returns long 101
     # See http://cryptocoinjs.com/modules/misc/bigi/#example
     to_bigint64:(number_or_string, precision, error_info = "")->
-        long = _private.to_long64 number_or_string, precision, error_info
+        long = _internal.to_long64 number_or_string, precision, error_info
         BigInteger(long.toString())
     
     # 101 string or long with a precision of 2 returns "1.01" 
@@ -18,7 +18,7 @@ module.exports = _my =
         v.required number_or_string, error_info
         v.number precision, error_info
         number_long = v.to_long number_or_string, error_info
-        string64 = _private.decimal_precision_string(
+        string64 = _internal.decimal_precision_string(
             number_long
             precision
             error_info
@@ -26,14 +26,14 @@ module.exports = _my =
         v.no_overflow64 string64, error_info
         string64
     
-# _private is exported for unit tests and low-level transaction code
-module.exports._private = _private =
+# _internal is for low-level transaction code
+module.exports._internal = _internal =
     
-    # "1.01" with a precision of 2 returns long 101
+    # Warning: Long operations may over-flow without detection
     to_long64: (number_or_string, precision, error_info = "")->
         v.required number_or_string, "number_or_string " + error_info
         v.required precision, "precision " + error_info
-        v.to_long _private.decimal_precision_string(
+        v.to_long _internal.decimal_precision_string(
             number_or_string
             precision
             error_info

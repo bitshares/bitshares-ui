@@ -34,7 +34,7 @@ describe "types", ->
         check=(input_string, precision, output_string)->
             assert.equal(
                 output_string
-                p._private.decimal_precision_string(
+                p._internal.decimal_precision_string(
                     input_string
                     precision
                 )
