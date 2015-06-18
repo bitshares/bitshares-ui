@@ -9,8 +9,6 @@ var ApplicationApi = require('./ApplicationApi')
 class WalletApi {
 
     constructor() {
-        /** @parm1 string wallet_name can have dashes, numbers, or letters */
-        //v.require_test /^[-A-Za-z0-9]+$/, wallet_name, "wallet_name"
         this.application_api = new ApplicationApi()
     }
     
