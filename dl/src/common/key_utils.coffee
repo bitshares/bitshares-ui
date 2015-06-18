@@ -9,6 +9,15 @@ v = require '../common/validation'
 
 module.exports = key =
     
+    ###* Uses 1 second of hashing power to create a password checksum.  An
+    implementation can re-call this method with the same password to re-match
+    the strength of there CPU (either after moving from a desktop to a mobile,
+    mobile to desktop, or N years from now when CPUs are presumably stronger).
+    
+    A salt is used for all the normal reasons...
+    
+    @return string  "{hash_iteration_count},{salt},{checksum}"
+    ###
     password_hash:(password)->
         throw new "password string required" unless typeof password is "string"
         salt = secureRandom.randomBuffer(8).toString('hex')
@@ -27,6 +36,11 @@ module.exports = key =
             checksum.slice(0, 8).toString('hex')
         ].join ','
     
+    ###* Provide a matching password and password_hash.  A "wrong password"
+    error is thrown if the password does not match.  If this method takes
+    much more or less than 1 second to return, one should consider updating
+    all encyrpted fields using a new key.password_hash.
+    ###
     aes:(password, password_hash)->
         [iterations, salt, checksum] = password_hash.split ','
         secret = salt + password
