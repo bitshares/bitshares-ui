@@ -54,21 +54,21 @@ describe "crypto", ->
         
     # time-based, probably want to keep these last
     
-    it "password create_checksum", ->
+    it "password_hash", ->
         @timeout(1100)
-        # DEBUG checksum = key.create_checksum "password"
-        # DEBUG console.log('... checksum1',checksum)
+        password_hash = key.password_hash "password"
+        # DEBUG console.log('... password_hash',password_hash)
     
     it "wrong password", ->
         @timeout(2200)
-        checksum = key.create_checksum "password"
-        # DEBUG console.log('... checksum1',checksum)
+        password_hash = key.password_hash "password"
+        # DEBUG console.log('... password_hash',password_hash)
         th.exception "wrong password", ()->
-            key.aes "incorrect password", checksum
+            key.aes "bad password", password_hash
     
     it "password aes", ->
         @timeout(2200)
-        checksum = key.create_checksum "password"
-        password_aes = key.aes "password", checksum
+        password_hash = key.password_hash "password"
+        password_aes = key.aes "password", password_hash
         # DEBUG console.log('... password_aes',password_aes)
         assert password_aes isnt null

@@ -9,7 +9,7 @@ v = require '../common/validation'
 
 module.exports = key =
     
-    create_checksum:(password)->
+    password_hash:(password)->
         throw new "password string required" unless typeof password is "string"
         salt = secureRandom.randomBuffer(8).toString('hex')
         start_t = Date.now()
@@ -28,8 +28,8 @@ module.exports = key =
             checksum.slice(0, 8).toString('hex')
         ].join ','
     
-    aes:(password, salted_checksum)->
-        [iterations, salt, checksum] = salted_checksum.split ','
+    aes:(password, password_hash)->
+        [iterations, salt, checksum] = password_hash.split ','
         secret = salt + password
         for i in [0...iterations] by 1
             secret = hash.sha256 secret
