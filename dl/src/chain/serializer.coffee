@@ -76,7 +76,7 @@ class Serializer
                 type = @types[field]
                 object = type.toObject serialized_object?[field], debug
                 result[field] = object
-                if(debug.hex_dump)
+                if(config.hex_dump)
                     b = new ByteBuffer ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN
                     type.appendByteBuffer(b, serialized_object?[field])
                     b = b.copy 0, b.offset
@@ -92,9 +92,9 @@ class Serializer
     
     # <helper_functions>
     
-    fromHex: (hex, hex_dump = no) ->
+    fromHex: (hex) ->
         b = ByteBuffer.fromHex hex, ByteBuffer.LITTLE_ENDIAN
-        @fromByteBuffer b, hex_dump
+        @fromByteBuffer b
     
     toHex: (object) ->
         b=@toByteBuffer object

@@ -10,7 +10,7 @@ var ApplicationApi = require('./ApplicationApi')
 class DebugApi {
     
     set_hex_dump(flag = !config.hex_dump) {
-        config.hex_dump = flag
+        return config.hex_dump = flag
     }
     
     type(operation_name) {
@@ -29,7 +29,13 @@ class DebugApi {
         var operation_type = this.type(operation_name)
         v.required(object, "transaction json object")
         var operation = operation_type.fromObject(object)
-        return operation_type.toObject(operation, {hex_dump: true})
+        var hex_dump = config.hex_dump
+        try {
+            config.hex_dump = true
+            return operation_type.toObject(operation)
+        } finally {
+            config.hex_dump = hex_dump
+        }
     }
     
 }
