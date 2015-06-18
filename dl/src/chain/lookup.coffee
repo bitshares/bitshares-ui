@@ -53,10 +53,10 @@ class Lookup
         
         if name_or_id.indexOf("1.3.") is 0
             account_id = name_or_id
-            return @_private.deferred_property "object", "memo_key", account_id
+            return @_private.deferred_property "object", "options.memo_key", account_id
         
         account_name = name_or_id
-        return @_private.deferred_property "accountname", "memo_key", account_name
+        return @_private.deferred_property "accountname", "options.memo_key", account_name
     
     ###* 
     Resolves a memo public key from an account name or account id.  A key id or 
@@ -132,7 +132,11 @@ class Private
         ret = resolve: undefined
         ((ret, result_property_name)=>
             @deferred_lookup index_name, lookup_value, (result)->
-                ret.resolve = result[result_property_name]
+                properties = result_property_name.split '.'
+                _result = result
+                for property in properties
+                    _result = _result[property]
+                ret.resolve = _result
         )(ret, result_property_name)
         ret
     
@@ -163,8 +167,8 @@ class Private
             paramMap = lookup_map[index_name]
             if paramMap
                 params = Object.keys paramMap
-                #console.log('... api_call',api_call)
-                #console.log '... params', JSON.stringify params
+                # DEBUG console.log('... api_call',api_call)
+                # DEBUG console.log '... params', JSON.stringify params
                 promise_call = db.exec( api_call, [params] )
                 ((params,index_name,unique_key)->
                     promises.push promise_call.then (results)->
@@ -198,5 +202,5 @@ class Private
                     _resolve()
                 else
                     @lookup_map = {}
-                    Promise.resolve()
+                    return
         _resolve()

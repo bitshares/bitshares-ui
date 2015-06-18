@@ -3,7 +3,6 @@ PublicKey = require '../src/ecc/key_public'
 Signature = require '../src/ecc/signature'
 WebSocketRpc = require '../src/rpc_api/WebSocketRpc'
 GrapheneApi = require '../src/rpc_api/GrapheneApi'
-NetworkApi = require '../src/rpc_api/NetworkApi'
 
 Promise = require '../src/common/Promise'
 ByteBuffer = require '../src/common/bytebuffer'
