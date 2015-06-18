@@ -83,7 +83,7 @@ class Lookup
         
         promise_memo_key = new Promise (resolve)->
             _private.deferred_lookup index_name, name_key_or_id, (account)->
-                resolve(account.memo_key)
+                resolve(account.options.memo_key)
         
         ret = resolve: undefined
         ((ret)->
