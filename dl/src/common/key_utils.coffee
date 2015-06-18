@@ -1,5 +1,6 @@
 
 PrivateKey = require '../ecc/key_private'
+Aes = require '../ecc/aes'
 
 hash = require './hash'
 dictionary = require './dictionary_en'
@@ -7,6 +8,35 @@ secureRandom = require './secureRandom'
 v = require '../common/validation'
 
 module.exports = key =
+    
+    create_checksum:(password)->
+        throw new "password string required" unless typeof password is "string"
+        salt = secureRandom.randomBuffer(8).toString('hex')
+        start_t = Date.now()
+        iterations = 0
+        secret = salt + password
+        # hash for 1 second
+        while true
+            secret = hash.sha256 secret
+            iterations += 1
+            if Date.now() - start_t >= 1000
+                break
+        checksum = hash.sha256 secret
+        [
+            iterations
+            salt.toString('hex')
+            checksum.slice(0, 8).toString('hex')
+        ].join ','
+    
+    aes:(password, salted_checksum)->
+        [iterations, salt, checksum] = salted_checksum.split ','
+        secret = salt + password
+        for i in [0...iterations] by 1
+            secret = hash.sha256 secret
+        new_checksum = hash.sha256 secret
+        unless new_checksum.slice(0, 8).toString('hex') is checksum
+            throw new Error "wrong password"
+        Aes.fromSeed secret
     
     ###* @param1 string entropy of at least 32 bytes ###
     suggest_brain_key:(entropy) ->

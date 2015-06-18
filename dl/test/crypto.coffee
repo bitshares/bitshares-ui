@@ -1,10 +1,13 @@
-assert = require 'assert'
-Long = require('../src/common/bytebuffer').Long
 
 Aes = require '../src/ecc/aes'
 PrivateKey = require '../src/ecc/key_private'
 PublicKey = require '../src/ecc/key_public'
+Long = require('../src/common/bytebuffer').Long
+
+assert = require 'assert'
 hash = require '../src/common/hash'
+key = require '../src/common/key_utils'
+th = require './test_helper'
 
 describe "crypto", ->
     
@@ -47,3 +50,25 @@ describe "crypto", ->
             new Buffer cipherhex,'hex'
         )
         assert.equal "Hello, world!", plaintext.toString()
+        
+        
+    # time-based, probably want to keep these last
+    
+    it "password create_checksum", ->
+        @timeout(1100)
+        # DEBUG checksum = key.create_checksum "password"
+        # DEBUG console.log('... checksum1',checksum)
+    
+    it "wrong password", ->
+        @timeout(2200)
+        checksum = key.create_checksum "password"
+        # DEBUG console.log('... checksum1',checksum)
+        th.exception "wrong password", ()->
+            key.aes "incorrect password", checksum
+    
+    it "password aes", ->
+        @timeout(2200)
+        checksum = key.create_checksum "password"
+        password_aes = key.aes "password", checksum
+        # DEBUG console.log('... password_aes',password_aes)
+        assert password_aes isnt null
