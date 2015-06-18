@@ -16,11 +16,10 @@ module.exports = key =
         iterations = 0
         secret = salt + password
         # hash for 1 second
-        while true
+        while Date.now() - start_t < 1000
             secret = hash.sha256 secret
             iterations += 1
-            if Date.now() - start_t >= 1000
-                break
+        
         checksum = hash.sha256 secret
         [
             iterations
