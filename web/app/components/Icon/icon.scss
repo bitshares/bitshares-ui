@@ -3,9 +3,16 @@
   height: 1rem;
 }
 
+.icon-5x > svg, span.icon-5x {
+  width: 5rem;
+  height: 5rem;
+  margin: 24px 0 24px 0;
+}
+
 .icon-10x > svg, span.icon-10x {
   width: 10rem;
   height: 10rem;
+  margin: 24px 0 24px 0;
 }
 
 .icon.fill-black > svg > path {
