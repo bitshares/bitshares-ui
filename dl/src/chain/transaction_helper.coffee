@@ -5,6 +5,7 @@ api = require('../rpc_api/ApiInstances').instance()
 secureRandom = require 'secure-random'
 hash = require '../common/hash'
 type = require './serializer_operation_types'
+key = require '../common/key_utils'
 
 Promise = require '../common/Promise'
 ByteBuffer = require('../common/bytebuffer')
@@ -13,22 +14,6 @@ PrivateKey = require '../ecc/key_private'
 Signature = require '../ecc/signature'
 Aes = require '../ecc/aes'
 
-
-helper.get_owner_private=get_owner_private=(brain_key)->
-    normalize_brain_key=(brain_key)->
-        brain_key = brain_key.trim()
-        brain_key = brain_key.toUpperCase()
-        brain_key.split(/[\t\n\v\f\r ]+/).join ' '
-    
-    brain_key = normalize_brain_key brain_key
-    PrivateKey.fromBuffer(
-        hash.sha256 hash.sha512 brain_key + " 0"
-    )
-
-helper.get_active_private=get_active_private=(owner_private)->
-    PrivateKey.fromBuffer(
-        hash.sha256 hash.sha512 owner_private.toWif() + " 0"
-    )
 
 helper.unique_nonce_entropy = null
 helper.unique_nonce_uint64=->

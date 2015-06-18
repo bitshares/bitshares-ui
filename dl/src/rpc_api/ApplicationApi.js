@@ -10,6 +10,7 @@ var ops = require('../chain/transaction_operations');
 var type = require('../chain/serializer_operation_types')
 var validation = require('../common/validation')
 var api = require('./ApiInstances').instance();
+var key = require('../common/key_utils');
 
 class ApplicationApi {
     
@@ -24,8 +25,8 @@ class ApplicationApi {
         signer_private_key,
         broadcast
     ) {
-        var owner_privkey = helper.get_owner_private(brain_key);
-        var active_privkey = helper.get_active_private(owner_privkey);
+        var owner_privkey = key.get_owner_private(brain_key);
+        var active_privkey = key.get_active_private(owner_privkey);
         
         var owner_pubkey = owner_privkey.toPublicKey();
         var active_pubkey = active_privkey.toPublicKey();
