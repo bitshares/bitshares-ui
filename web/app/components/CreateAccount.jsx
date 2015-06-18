@@ -31,15 +31,17 @@ class CreateAccount extends BaseComponent {
                     let account = account_store_state.browseAccounts.get(account_store_state.account_name_to_id[name]);
                     let owner_key = {
                         id: "owner:" + name,
-                        object_id: account.owner.auths[0][0],
+                        key_id: account.owner.auths[0][0],
                         privkey: keys_data.owner_privkey.toWif(),
-                        pubkey: keys_data.owner_pubkey.toBtsPublic()
+                        pubkey: keys_data.owner_pubkey.toBtsPublic(),
+                        password_checksum: ""
                     };
                     let active_key = {
                         id: "active:" + name,
-                        object_id: account.active.auths[0][0],
+                        key_id: account.active.auths[0][0],
                         privkey: keys_data.active_privkey.toWif(),
-                        pubkey: keys_data.active_pubkey.toBtsPublic()
+                        pubkey: keys_data.active_pubkey.toBtsPublic(),
+                        password_checksum: ""
                     };
                     PrivateKeyActions.addKey(owner_key);
                     PrivateKeyActions.addKey(active_key);
