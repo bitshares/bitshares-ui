@@ -2,8 +2,9 @@ import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
 import OpenOrders from "./OpenOrders.jsx";
-import utils from "common/utils";
+import Utils from "common/utils";
 import DepthChart from "./DepthChart";
+import Tabs from "react-foundation-apps/lib/tabs";
 
 require("./exchange.scss");
 
@@ -135,30 +136,53 @@ class Exchange extends React.Component {
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
-                    <div className="grid-block medium-3 left-column">
-                        <div className="grid-content">
-                            <p>MY OPEN ORDERS</p>
-                            <MyOpenOrders
-                                orders={limit_orders}
-                                account={account.id}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                onCancel={this._cancelLimitOrder.bind(this)} />
-                            
-                            <OpenOrders
-                                orders={limit_orders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                />
-                        </div>
-                    </div>
-                    <div className="grid-block medium-6 main-content vertical">
+                    <div className="grid-block medium-3 large-2 left-column">
+                            <div className="grid-content">
 
-                        <div className="grid-block">
+<Tabs>
+  <Tabs.Tab title='Buy'>
+    <form className="order-form" onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
+                                            <label>
+                                                Quantity ({quoteSymbol}):
+                                                <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
+                                            </label>
+                                            <label>
+                                                Price: ({baseSymbol} per {quoteSymbol}):
+                                                <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
+                                            </label>
+                                            <p>Total ({baseSymbol}): { buyTotal }</p>
+                                            <input type="submit" className="button" value={"Buy " + quoteSymbol} />
+                                        </form>
+  </Tabs.Tab>
+  <Tabs.Tab title='Sell'>
+    <form className="order-form" onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
+                                            <label>
+                                                Quantity ({quoteSymbol}):
+                                                <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
+                                            </label>
+                                            <label>
+                                                Price: ({baseSymbol} per {quoteSymbol}):
+                                                <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
+                                            </label>
+                                            <p>Total ({baseSymbol}): { sellTotal }</p>
+                                            <input type="submit" className="button" value={"Sell " + quoteSymbol} />
+                                        </form>
+  </Tabs.Tab>
+
+</Tabs>
+
+
+
+
+
+                                        
+                            </div>
+                       
+                                      
+                    </div>
+                    <div className="grid-block medium-6 large-8 main-content vertical">
+
+                        <div className="grid-block depthchart">
                             <DepthChart
                                 orders={limit_orders}
                                 base={base}
@@ -167,45 +191,43 @@ class Exchange extends React.Component {
                                 quoteSymbol={quoteSymbol}
                             />
                         </div>
-                        <div className="grid-block">   
-                            <div className="grid-block medium-6 main-content">
-                                <div className="grid-content">
-                                    <form onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
-                                        <label>
-                                            Quantity ({quoteSymbol}):
-                                            <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
-                                        </label>
-                                        <label>
-                                            Price: ({baseSymbol} per {quoteSymbol}):
-                                            <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
-                                        </label>
-                                        <p>Total ({baseSymbol}): { buyTotal }</p>
-                                        <input type="submit" className="button" value={"Buy " + quoteSymbol} />
-                                    </form>
-                                </div>
+                        <div className="grid-block buysell">   
+                            <div className="grid-block medium-12 main-content">
+                                 <div className="grid-content openorders">
+
+
+
+                                <p>MY OPEN ORDERS</p>
+                                <MyOpenOrders
+                                    orders={limit_orders}
+                                    account={account.id}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    onCancel={this._cancelLimitOrder.bind(this)} />
+
+                                <OpenOrders
+                                    orders={limit_orders}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    />
+                        </div>
+
+
+                             
                             </div>
                             <div className="grid-block medium-6 main-content">
-                                <div className="grid-content">
-                                    <form onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
-                                        <label>
-                                            Quantity ({quoteSymbol}):
-                                            <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
-                                        </label>
-                                        <label>
-                                            Price: ({baseSymbol} per {quoteSymbol}):
-                                            <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
-                                        </label>
-                                        <p>Total ({baseSymbol}): { sellTotal }</p>
-                                        <input type="submit" className="button" value={"Sell " + quoteSymbol} />
-                                    </form>
-                                </div>
+                              
                             </div>
                         </div>
                     </div>
-                    <div className="grid-block medium-3 right-column">
+                    <div className="grid-block medium-3 large-2 right-column">
                         <div className="grid-content">
                             <p>ORDER HISTORY</p>
-                            <table className="table">
+                            <table style={{width: "100%"}} className="table expand">
                                 <thead>
                                 <tr>
                                     <th>Quantity</th>
