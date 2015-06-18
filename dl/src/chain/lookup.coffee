@@ -132,11 +132,15 @@ class Private
         ret = resolve: undefined
         ((ret, result_property_name)=>
             @deferred_lookup index_name, lookup_value, (result)->
+                if result is null
+                    ret.resolve = null
+                    return
                 properties = result_property_name.split '.'
                 _result = result
                 for property in properties
                     _result = _result[property]
                 ret.resolve = _result
+                return
         )(ret, result_property_name)
         ret
     
