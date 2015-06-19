@@ -3,7 +3,6 @@ let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 var Utils = {
     get_object_id: (obj_id) => {
         let id_regex_res = id_regex.exec(obj_id);
-        console.log("[utils.js:6] ----- get_object_id ----->", obj_id, id_regex_res);
         return id_regex_res ? Number.parseInt(id_regex_res[1]) : 0;
     },
 

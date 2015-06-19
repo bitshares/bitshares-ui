@@ -13,7 +13,13 @@ import Witnesses from "./components/Explorer/WitnessesContainer";
 import Delegates from "./components/Explorer/DelegatesContainer";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
-import AccountContainer from "./components/Account/AccountContainer";
+import AccountPage from "./components/Account/AccountPage";
+import AccountOverview from "./components/Account/AccountOverview";
+import AccountMemberStats from "./components/Account/AccountMemberStats";
+import AccountHistory from "./components/Account/AccountHistory";
+import AccountPermissions from "./components/Account/AccountPermissions";
+import AccountVoting from "./components/Account/AccountVoting";
+import AccountOrders from "./components/Account/AccountOrders";
 // import Wallet from "./components/Wallet/Wallet";
 // import Accounts from "./components/Wallet/Accounts";
 // import Receive from "./components/Wallet/Receive";
@@ -72,6 +78,7 @@ class App extends BaseComponent {
                     AccountActions.getAccount(current_account_id, true),
                     AssetActions.getAssetList("A", 100),
                     BlockchainActions.subscribeGlobals(),
+                    AssetActions.getAsset("1.4.0"),
                     localePromise
                 ]);
             }).then(() => {
@@ -121,11 +128,19 @@ let routes = (
         <Route name="settings" path="settings" handler={Settings}/>
         <Route name="logout" path="logout" handler={Logout}/>
         <Route name="login" path="login" handler={Login}/>
-        <Route name="account" path="account/:name" handler={AccountContainer}/>
         <Route name="block" path="block/:height" handler={BlockContainer}/>
         <Route name="asset" path="asset/:symbol" handler={Asset}/>
         <Route name="tx" path="tx" handler={Transaction}/>
         <Route name="create-account" path="create-account" handler={CreateAccount}/>
+        <Route name="account" path="/account/:name" handler={AccountPage}>
+            <Route name="account-overview" path="overview" handler={AccountOverview}/>
+            <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
+            <Route name="account-history" path="history" handler={AccountHistory}/>
+            <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>
+            <Route name="account-voting" path="voting" handler={AccountVoting}/>
+            <Route name="account-orders" path="orders" handler={AccountOrders}/>
+            <DefaultRoute handler={AccountOverview}/>
+        </Route>
         <DefaultRoute handler={DashboardContainer}/>
     </Route>
 );

@@ -28,7 +28,7 @@ class Header extends BaseComponent {
     accountClickHandler(account_name) {
         this.closeDropDowns();
         AccountActions.setCurrentAccount(account_name);
-        this.context.router.transitionTo("account", {name: account_name});
+        this.context.router.transitionTo("account-overview", {name: account_name});
         return false;
     }
 
@@ -114,7 +114,7 @@ class Header extends BaseComponent {
                 <div className="show-for-medium large-4 medium-6">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
-                            {currentAccount ? <Link to="account" data-tip={current} params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
+                            {currentAccount ? <Link to="account-overview" data-tip={current} params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
                         </div>
                         <div className="grp-menu-item">
                             {accountsDropDown}

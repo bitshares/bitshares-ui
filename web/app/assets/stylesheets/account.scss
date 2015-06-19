@@ -8,9 +8,9 @@
     > a {
       padding-left: 1.75rem !important;
       border-left: 1px solid transparent;
-    }
-    &.active > a {
-      border-left: 1px solid #f00;
+      &.active {
+        border-left: 1px solid #f00;
+      }
     }
   }
 }

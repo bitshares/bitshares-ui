@@ -251,17 +251,15 @@ td.orderHistoryBid {
 // Account page
 
 .account-left-menu {
-  > li.active > a {
-    border-left: 1px solid $button-bg-color;
-  }
   > li > a:hover, > li > label:hover, > li select:hover {
     //color: $light-text-color;
     //background-color: $panel-bg-color;
     color: $light-text-color;
     background-color: lighten($panel-bg-color, 4%);
   }
-  > li.active > a {
+  > li > a.active {
     color: $light-text-color;
     background-color: lighten($panel-bg-color, 4%);
+    border-left: 1px solid $button-bg-color;
   }
 }
