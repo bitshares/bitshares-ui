@@ -3,6 +3,21 @@
   height: 1rem;
 }
 
+.icon-2x > svg, span.icon-2x {
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon-3x > svg, span.icon-3x {
+  width: 3rem;
+  height: 3rem;
+}
+
+.icon-4x > svg, span.icon-4x {
+  width: 4rem;
+  height: 4rem;
+}
+
 .icon-5x > svg, span.icon-5x {
   width: 5rem;
   height: 5rem;

@@ -3,6 +3,7 @@ let Perf = React.addons.Perf;
 import BaseComponent from "../BaseComponent";
 import BlockchainStore from "stores/BlockchainStore";
 import {Link} from "react-router";
+import Icon from "../Icon/Icon";
 
 class Footer extends BaseComponent {
     constructor(props) {
@@ -30,7 +31,11 @@ class Footer extends BaseComponent {
         return (
             <div className="grid-block shrink footer">
                 <div className="align-justify grid-block">
-                    <div onClick={this._triggerPerf.bind(this)} className="grid-block">_</div>
+                    <div onClick={this._triggerPerf.bind(this)} className="grid-block">
+                        <div className="logo">
+                            <Icon name="b-logo" size="2x"/>BitShares 2.0
+                        </div>
+                    </div>
                     { block_height ? <div className="grid-block shrink">
                         Head block &nbsp;
                         <pre>#<Link to="block" params={{ height: block_height }}>{block_height}</Link></pre>

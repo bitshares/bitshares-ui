@@ -97,13 +97,7 @@ class Header extends BaseComponent {
                     </ul>
                 </div>
 
-                <div className="large-3 show-for-large">
-                    <ul className="primary menu-bar title">
-                        <li className="logo"><Link to="dashboard"><Translate component="span" content="header.title" /></Link></li>
-                    </ul>
-                </div>
-
-                <div className="show-for-medium large-5 medium-6">
+                <div className="show-for-medium medium-8">
                     <ul className="menu-bar">
                         <li><Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link></li>
                         <li><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
@@ -111,7 +105,7 @@ class Header extends BaseComponent {
                         <li><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                     </ul>
                 </div>
-                <div className="show-for-medium large-4 medium-6">
+                <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
                             {currentAccount ? <Link to="account-overview" data-tip={current} params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}

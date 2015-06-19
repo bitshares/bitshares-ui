@@ -26,17 +26,6 @@
   }
 }
 
-.header .logo > a {
-  padding-left: 1.75rem;
-  padding-right: 1.75rem;
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
-  font-size: 1.1rem;
-  color: #ccc !important;
-  &.active, &:hover {
-    background-color: transparent !important;
-  }
-}
-
 .grp-menu-items-group {
   flex-flow: row nowrap;
   display: flex;
