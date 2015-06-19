@@ -1,22 +1,32 @@
-.page-layout > .grid-block {
-  padding: 1rem 1.75rem 1rem 1.75rem;
-}
+.page-layout {
 
-.page-layout .grid-content {
-  padding: 0;
-}
+  > .grid-block {
+    padding: 1rem 1.75rem 1rem 1.75rem;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+  }
 
-.left-column {
-  background-color: #fafafa;
-}
+  .grid-content {
+    padding: 0;
+  }
 
-.main-content {
-  background-color: #f3f3f3;
-}
+  .left-column {
+    background-color: #fafafa;
+  }
 
-.right-column {
-  background-color: #eaeaea;
-  padding-left: 1.75em;
+  .main-content {
+    background-color: #f3f3f3;
+  }
+
+  .right-column {
+    background-color: #eaeaea;
+    padding-left: 1.75em;
+  }
+
+  .regular-padding {
+    padding: 1rem 1.75rem 1rem 1.75rem;
+  }
+
 }
 
 #mobile-menu {

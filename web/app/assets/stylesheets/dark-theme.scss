@@ -102,7 +102,9 @@ h1, h2, h3, h4, h5, h6 {
   background-color: $bg-color;
 
   .left-column {
-    background-color: $bg-color;
+    border-top-color: $bg-color;
+    border-bottom-color: $bg-color;
+    background-color: $panel-bg-color; //lighten($bg-color, 4%);
   }
 
   .main-content {
@@ -185,7 +187,11 @@ h1, h2, h3, h4, h5, h6 {
   li {
     border-bottom: 1px solid $dark-text-color;
   }
-  li > a:hover, li > label:hover, li select:hover {
+  li > a {
+    color: $primary-text-color;
+  }
+  li > a:hover, li > label:hover, li select:hover, li.active > a {
+    color: $primary-text-color;
     background-color: lighten($bg-color, 4%);
   }
   li:first-child {
@@ -239,4 +245,23 @@ td.orderHistoryAsk {
 td.orderHistoryBid {
   color: $success-color;
   font-weight: bold;
+}
+
+
+// Account page
+
+.account-left-menu {
+  > li.active > a {
+    border-left: 1px solid $button-bg-color;
+  }
+  > li > a:hover, > li > label:hover, > li select:hover {
+    //color: $light-text-color;
+    //background-color: $panel-bg-color;
+    color: $light-text-color;
+    background-color: lighten($panel-bg-color, 4%);
+  }
+  > li.active > a {
+    color: $light-text-color;
+    background-color: lighten($panel-bg-color, 4%);
+  }
 }

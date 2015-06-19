@@ -117,24 +117,7 @@ class Account extends Component {
           connections = null,
           history = null;
 
-        // if (browseAccounts.size === 0 || assets.size === 0) {
-        //     return null;
-        // }
-
         let ba = account_name_to_id[accountName] ? browseAccounts.get(account_name_to_id[accountName]) : null;
-
-        // isMember = browseAccount.isMember;
-
-        // Get real name
-        // if (browseAccount.realName) {
-        //     names = (
-        //         <div>
-        //           <h4>{browseAccount.realName}</h4>
-        //           <h5 className="subheader">{currentAccountName}</h5>
-        //           <h6 className="subheader">#{browseAccount.id}</h6>
-        //         </div>
-        //     );
-        // }
 
         // Get current balances
         if (ba) {
@@ -188,28 +171,45 @@ class Account extends Component {
               );
         }
 
+        //{followButton}
+        //{isMember && ba ?
+        //    <MemberStats
+        //        isUnlocked={isUnlocked}
+        //        rewards={ba.rewards}
+        //        referals={ba.referals}
+        //        registrar={ba.registrar}
+        //        referrer={ba.referrer}
+        //        names={account_id_to_name}
+        //        /> : this.renderUpgradeButtonAndConfirmModal() }
+        //{connections}
+
+        let leftMenu = (
+            <section className="block-list">
+                <ul className="account-left-menu">
+                    <li className="active"><a href>Overview</a></li>
+                    <li><a href>Make Payment</a></li>
+                    <li><a href>Member Stats</a></li>
+                    <li><a href>History</a></li>
+                    <li><a href>Permissions</a></li>
+                    <li><a href>Voting</a></li>
+                    <li><a href>Orders</a></li>
+                </ul>
+            </section>
+        );
 
         return (
             <div className="grid-block page-layout">
-              
-              <div className="grid-block medium-3 left-column">
-                <div className="grid-content">
-                    <AccountInfo account_name={ba.name} account_id={ba.id} image_size={{height: 120, width: 120}}/>
-                    {followButton}
-                  {isMember && ba ? 
-                    <MemberStats
-                      isUnlocked={isUnlocked} 
-                      rewards={ba.rewards} 
-                      referals={ba.referals} 
-                      registrar={ba.registrar}
-                      referrer={ba.referrer}
-                      names={account_id_to_name}
-                    /> : this.renderUpgradeButtonAndConfirmModal() }
-                    {connections}
+
+              <div className="grid-block medium-2 left-column no-padding">
+                <div className="grid-content no-overflow">
+                    <div className="regular-padding">
+                        <AccountInfo account_name={ba.name} account_id={ba.id} image_size={{height: 120, width: 120}}/>
+                    </div>
+                    {leftMenu}
                 </div>
               </div>
 
-              <div className="grid-block medium-9 main-content">
+              <div className="grid-block medium-10 main-content">
                 <div className="grid-content">
                   <table style={{width: "100%"}} className="table text-center table-hover">
                     <thead>
@@ -226,11 +226,11 @@ class Account extends Component {
 
                   <br/>
 
-                  {history ? 
+                  {history ?
                   <table style={{width: "100%"}} className="table text-center table-hover">
                     <caption><h5><Translate component="span" content="account.recent" /></h5></caption>
                     <tbody>
-                      {history}  
+                      {history}
                     </tbody>
                   </table>
                   : null}

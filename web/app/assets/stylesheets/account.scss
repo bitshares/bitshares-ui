@@ -1,0 +1,16 @@
+.account-info {
+  text-align: center;
+}
+
+.account-left-menu {
+  margin-left: 1.1rem !important;
+  > li {
+    > a {
+      padding-left: 1.75rem !important;
+      border-left: 1px solid transparent;
+    }
+    &.active > a {
+      border-left: 1px solid #f00;
+    }
+  }
+}

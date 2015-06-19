@@ -8,8 +8,7 @@ import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-
-var ReactTooltip = require("react-tooltip");
+import ReactTooltip from "react-tooltip";
 
 class Header extends BaseComponent {
     constructor(props) {

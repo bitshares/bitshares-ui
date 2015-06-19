@@ -10,6 +10,7 @@
 @import "./transfer";
 @import "./tables";
 @import "./cards";
+@import "./account";
 @import "./dark-theme";
 
 .error {
@@ -23,6 +24,10 @@
 
 .no-overflow {
   overflow: hidden;
+}
+
+.no-padding {
+  padding: 0 !important;
 }
 
 label, label > span {
