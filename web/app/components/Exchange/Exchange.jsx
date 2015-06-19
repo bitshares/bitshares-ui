@@ -2,26 +2,11 @@ import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
 import OpenOrders from "./OpenOrders.jsx";
-import Tabs from "react-foundation-apps/lib/tabs";
 import utils from "common/utils";
 import DepthHighChart from "./DepthHighChart";
+import classNames from "classnames";
 
 require("./exchange.scss");
-
-let orderBook = {
-    bids: [
-        {expiration: 0, amount: 5, price: 120},
-        {expiration: 0, amount: 800, price: 130},
-        {expiration: 0, amount: 12, price: 140},
-        {expiration: 0, amount: 10, price: 154}
-    ],
-    asks: [
-        {expiration: 0, amount: 10, price: 160},
-        {expiration: 0, amount: 32, price: 170},
-        {expiration: 0, amount: 400, price: 180},
-        {expiration: 0, amount: 4, price: 190}
-    ]
-};
 
 let history = {
     orders: [
@@ -44,7 +29,8 @@ class Exchange extends React.Component {
             buyPrice: 160,
             sellAmount: 5,
             sellPrice: 170,
-            sub: false
+            sub: false,
+            activeTab: "buy"
         };
     }
 
@@ -109,10 +95,15 @@ class Exchange extends React.Component {
     _sellAmountChanged(e) { this.setState({sellAmount: e.target.value }); }
     _sellPriceChanged(e) { this.setState({sellPrice: e.target.value }); }
 
+    _changeTab(value) {
+        this.setState({activeTab: value});
+    }
+
     render() {
         let {asset_symbol_to_id, assets, account, limit_orders, short_orders, base: baseSymbol, quote: quoteSymbol} = this.props;
         let base = null, quote = null;
 
+        console.log("exchange rerender", this.state);
         if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
             let quote_id = asset_symbol_to_id[quoteSymbol];
             let base_id = asset_symbol_to_id[baseSymbol];
@@ -133,51 +124,58 @@ class Exchange extends React.Component {
             );
         }
 
+        let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
+        let sellTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "sell"});
+
+        let buyForm = (
+            <form className="order-form"
+                onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
+                <label>
+                    Quantity ({quoteSymbol}):
+                    <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
+                </label>
+                <label>
+                    Price: ({baseSymbol} per {quoteSymbol}):
+                    <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
+                </label>
+                <p>Total ({baseSymbol}): { buyTotal }</p>
+                <input type="submit" className="button" value={"Buy " + quoteSymbol} />
+            </form>
+        );
+
+        let sellForm = (
+            <form className="order-form"
+                onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
+                <label>
+                    Quantity ({quoteSymbol}):
+                    <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
+                </label>
+                <label>
+                    Price: ({baseSymbol} per {quoteSymbol}):
+                    <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
+                </label>
+                <p>Total ({baseSymbol}): { sellTotal }</p>
+                <input type="submit" className="button" value={"Sell " + quoteSymbol} />
+            </form>
+        );
+
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
                     <div className="grid-block medium-3 large-2 left-column">
                             <div className="grid-content">
-
-<Tabs>
-  <Tabs.Tab title='Buy'>
-    <form className="order-form" onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
-                                            <label>
-                                                Quantity ({quoteSymbol}):
-                                                <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)} />
-                                            </label>
-                                            <label>
-                                                Price: ({baseSymbol} per {quoteSymbol}):
-                                                <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)} />
-                                            </label>
-                                            <p>Total ({baseSymbol}): { buyTotal }</p>
-                                            <input type="submit" className="button" value={"Buy " + quoteSymbol} />
-                                        </form>
-  </Tabs.Tab>
-  <Tabs.Tab title='Sell'>
-    <form className="order-form" onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
-                                            <label>
-                                                Quantity ({quoteSymbol}):
-                                                <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)} />
-                                            </label>
-                                            <label>
-                                                Price: ({baseSymbol} per {quoteSymbol}):
-                                                <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)} />
-                                            </label>
-                                            <p>Total ({baseSymbol}): { sellTotal }</p>
-                                            <input type="submit" className="button" value={"Sell " + quoteSymbol} />
-                                        </form>
-  </Tabs.Tab>
-
-</Tabs>
-
-
-
-
-
-                                        
+                                <div className="tabs">
+                                    <div className={buyTabClass} onClick={this._changeTab.bind(this, "buy")}>
+                                        BUY
+                                    </div>
+                                    <div className={sellTabClass} onClick={this._changeTab.bind(this, "sell")}>
+                                        SELL
+                                    </div>
+                                </div>
+                                <div style={{paddingTop: "1em"}}>
+                                    {this.state.activeTab === "buy" ? buyForm : sellForm}
+                                </div>
                             </div>
-                       
                                       
                     </div>
                     <div className="grid-block medium-6 large-8 main-content vertical">
