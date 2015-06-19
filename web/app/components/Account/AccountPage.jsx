@@ -11,6 +11,10 @@ class AccountPage extends React.Component {
         super(props);
     }
 
+    componentWillMount() {
+        AccountActions.getAccount(this.props.params.name, true);
+    }
+
     componentWillReceiveProps(nextProps) {
         if(nextProps.params.name !== this.props.params.name) {
             AccountActions.getAccount(nextProps.params.name, true);

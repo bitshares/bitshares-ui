@@ -13,6 +13,10 @@
 @import "./account";
 @import "./dark-theme";
 
+a {
+  transition: all 0.3s ease 0s;
+}
+
 .error {
   color: #ff0000;
   padding: 16px;
@@ -28,6 +32,10 @@
 
 .no-padding {
   padding: 0 !important;
+}
+
+.no-margin {
+  margin: 0 !important;
 }
 
 label, label > span {
@@ -48,4 +56,15 @@ label, label > span {
 button {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   text-transform: uppercase;
+  transition: all 0.3s ease 0s !important;
+  &.outline {
+    &:hover, &:focus, &:active {
+      background: none !important;
+    }
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background: none;
+    border: 1px solid #555;
+    border-radius: 4px;
+  }
 }

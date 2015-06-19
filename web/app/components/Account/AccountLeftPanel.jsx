@@ -11,14 +11,17 @@ class AccountLeftPanel extends React.Component {
         let account_name = this.props.account_name;
         let account_id = AccountStore.getState().account_name_to_id[account_name];
         return (
-            <div className="grid-content no-overflow">
+            <div className="grid-content no-overflow account-left-panel">
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
+                    <div className="grid-block no-margin align-center account-buttons-row">
+                        <div className="grid-block no-margin"><button className="button outline">Follow</button></div>
+                        <div className="grid-block no-margin"><button className="button outline">Pay</button></div>
+                    </div>
                 </div>
                 <section className="block-list">
                     <ul className="account-left-menu">
                         <li><Link to="account-overview" params={{name: account_name}}>Overview</Link></li>
-                        <li><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                         <li><Link to="account-member-stats" params={{name: account_name}}>Member Stats</Link></li>
                         <li><Link to="account-history" params={{name: account_name}}>History</Link></li>
                         <li><Link to="account-permissions" params={{name: account_name}}>Permissions</Link></li>

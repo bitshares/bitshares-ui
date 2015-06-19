@@ -131,6 +131,14 @@ h1, h2, h3, h4, h5, h6 {
   &:hover, &:focus, &:active {
     background-color: lighten($button-bg-color, 4%) !important;
   }
+  &.outline {
+    color: $secondary-text-color;
+    border-color: $secondary-text-color;
+    &:hover {
+      color: $light-text-color;
+      border-color: $light-text-color;
+    }
+  }
 }
 
 .button.secondary {
@@ -188,10 +196,10 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid $dark-text-color;
   }
   li > a {
-    color: $primary-text-color;
+    color: $secondary-text-color;
   }
   li > a:hover, li > label:hover, li select:hover, li.active > a {
-    color: $primary-text-color;
+    color: $light-text-color;
     background-color: lighten($bg-color, 4%);
   }
   li:first-child {
@@ -249,13 +257,19 @@ td.orderHistoryBid {
 
 
 // Account page
+.account-left-panel {
+  h5 {
+    color: $primary-text-color;
+  }
+  h6 {
+    color: $secondary-text-color;
+  }
+}
 
 .account-left-menu {
   > li > a:hover, > li > label:hover, > li select:hover {
-    //color: $light-text-color;
-    //background-color: $panel-bg-color;
     color: $light-text-color;
-    background-color: lighten($panel-bg-color, 4%);
+    background-color: $panel-bg-color;
   }
   > li > a.active {
     color: $light-text-color;
