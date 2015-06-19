@@ -55,11 +55,30 @@ describe "crypto", ->
         
         
     # time-based, probably want to keep these last
-    
-    it "key_checksum", ->
+    it "key_checksum", ()->
         @timeout(1500)
-        key_checksum = about_one_second ()->
-            key.key_checksum "password"
+        about_one_second ()->
+            key_checksum = key.key_checksum "password"
+            assert.equal(
+                true
+                key_checksum.length > 4+4+2
+                "key_checksum too short"
+            )
+            assert.equal 3, key_checksum.split(',').length
+    
+    it "key_checksum with aes_private", (done)->
+        @timeout(1500)
+        about_one_second ()->
+            key_checksum = key.key_checksum "password", (aes_private)->
+                assert aes_private isnt null
+                assert typeof aes_private["decrypt"] is 'function'
+                done()
+            assert.equal(
+                true
+                key_checksum.length > 4+4+2
+                "key_checksum too short"
+            )
+            assert.equal 3, key_checksum.split(',').length
         # DEBUG console.log('... key_checksum',key_checksum)
     
     it "wrong password", ->
@@ -69,15 +88,15 @@ describe "crypto", ->
         # DEBUG console.log('... key_checksum',key_checksum)
         th.exception "wrong password", ()->
             about_one_second ()->
-                key.aes "bad password", key_checksum
+                key.aes_private "bad password", key_checksum
     
-    it "password aes", ->
+    it "password aes_private", ->
         @timeout(2500)
         key_checksum = about_one_second ()->
             key.key_checksum "password"
         
         password_aes = about_one_second ()->
-            key.aes "password", key_checksum
+            key.aes_private "password", key_checksum
         
         # DEBUG console.log('... password_aes',password_aes)
         assert password_aes isnt null

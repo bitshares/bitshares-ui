@@ -12,8 +12,8 @@ var iDB = (function () {
 
             openRequest.onupgradeneeded = function (e) {
                 let db = e.target.result;
-                if (!db.objectStoreNames.contains("private_keys")) { db.createObjectStore("private_keys", { keyPath: "id" }); }
-                if (!db.objectStoreNames.contains("my_accounts")) { db.createObjectStore("my_accounts", { keyPath: "name" }); }
+                //if (!db.objectStoreNames.contains("private_keys")) { db.createObjectStore("private_keys", { keyPath: "id" }); }
+                //if (!db.objectStoreNames.contains("my_accounts")) { db.createObjectStore("my_accounts", { keyPath: "name" }); }
             };
 
             openRequest.onsuccess = function (e) {

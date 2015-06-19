@@ -17,9 +17,9 @@ module.exports = key =
     
     @return string  "{hash_iteration_count},{salt},{checksum}"
     ###
-    key_checksum:(password)->
+    key_checksum:(password, aes_private_callback)->
         throw new "password string required" unless typeof password is "string"
-        salt = secureRandom.randomBuffer(8).toString('hex')
+        salt = secureRandom.randomBuffer(4).toString('hex')
         iterations = 0
         secret = salt + password
         # hash for 1 second
@@ -28,11 +28,14 @@ module.exports = key =
             secret = hash.sha256 secret
             iterations += 1
         
+        if aes_private_callback and typeof aes_private_callback is 'function'
+            aes_private_callback Aes.fromSeed secret
+        
         checksum = hash.sha256 secret
         [
             iterations
             salt.toString('hex')
-            checksum.slice(0, 8).toString('hex')
+            checksum.slice(0, 4).toString('hex')
         ].join ','
     
     ###* Provide a matching password and key_checksum.  A "wrong password"
@@ -40,13 +43,13 @@ module.exports = key =
     much more or less than 1 second to return, one should consider updating
     all encyrpted fields using a new key.key_checksum.
     ###
-    aes:(password, key_checksum)->
+    aes_private:(password, key_checksum)->
         [iterations, salt, checksum] = key_checksum.split ','
         secret = salt + password
         for i in [0...iterations] by 1
             secret = hash.sha256 secret
         new_checksum = hash.sha256 secret
-        unless new_checksum.slice(0, 8).toString('hex') is checksum
+        unless new_checksum.slice(0, 4).toString('hex') is checksum
             throw new Error "wrong password"
         Aes.fromSeed secret
     
