@@ -38,10 +38,10 @@ class AccountStore extends BaseStore {
     }
 
     onGetAllAccounts(accounts) {
-        accounts.forEach((account, index) => {
+        accounts.forEach(account => {
             this.account_id_to_name[account[1]] = account[0];
             this.account_name_to_id[account[0]] = account[1];
-            if (index === 0) {
+            if (account[1] === "1.3.11") {
                 this.currentAccount = {
                     name: account[0],
                     id: account[1]
