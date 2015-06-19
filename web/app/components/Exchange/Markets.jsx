@@ -11,7 +11,7 @@ class Markets extends Component {
         return (
             !Immutable.is(nextProps.assets, this.props.assets) ||
             !Immutable.is(nextProps.settings, this.props.settings) ||
-            nextProps.baseMarket !== this.props.baseMarket
+            nextProps.baseAsset !== this.props.baseAsset
         );
     }
 
@@ -27,21 +27,21 @@ class Markets extends Component {
 
     _onChangeBase(e) {
         let base = this.props.assets.get(e.target[e.target.selectedIndex].id);
-        MarketsActions.changeBase({id: base.id, symbol: base.symbol});
+        MarketsActions.changeBase({id: base.id, symbol: base.symbol, precision: base.precision});
     }
 
     render() {
         console.log("[Markets.jsx:24] ----- render ----->", this.props);
-        let {assets, settings, markets, baseMarket} = this.props;
+        let {assets, settings, markets, baseAsset} = this.props;
 
         let marketCards = assets
             .map((a, index) => {
-                if (a.symbol !== baseMarket.symbol) {
+                if (a.symbol !== baseAsset.symbol) {
                     let market;
                     if (settings.get("inverseMarket")) {
-                        market = {quoteSymbol: a.symbol, baseSymbol: baseMarket.symbol};
+                        market = {quoteSymbol: a.symbol, baseSymbol: baseAsset.symbol};
                     } else {
-                        market = {quoteSymbol: baseMarket.symbol, baseSymbol: a.symbol};
+                        market = {quoteSymbol: baseAsset.symbol, baseSymbol: a.symbol};
                     }
                     return (
                         <MarketCard
@@ -78,7 +78,7 @@ class Markets extends Component {
                             <header>Select base asset:</header>
                                 <ul>
                                     <li className="with-dropdown">
-                                    <select style={{lineHeight: "1.2em"}} value={baseMarket.symbol} onChange={this._onChangeBase.bind(this)}>
+                                    <select style={{lineHeight: "1.2em"}} value={baseAsset.symbol} onChange={this._onChangeBase.bind(this)}>
                                         {baseOptions}
                                     </select>
                                     </li>

@@ -66,77 +66,79 @@ class DepthChart extends React.Component {
         // ];
 
         if(orders.size > 0 && base && quote) {
-            let quotePrecision = utils.get_asset_precision(quote.precision);
-            let basePrecision = utils.get_asset_precision(base.precision);
+            // let quotePrecision = utils.get_asset_precision(quote.precision);
+            // let basePrecision = utils.get_asset_precision(base.precision);
             
-            bids = orders.filter(a => {
-                return a.sell_price.base.asset_id === base.id;
-            }).sort((a, b) => {
-                let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, false);
-                let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, false);
+            // bids = orders.filter(a => {
+            //     return a.sell_price.base.asset_id === base.id;
+            // }).sort((a, b) => {
+            //     let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, false);
+            //     let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, false);
 
-                let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
-                let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return a_price > b_price;
-            }).map(order => {
-                let isAskOrder = market_utils.isAsk(order, base);
-                let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
-                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
-                asks.push({x: price, y: 0});
-                return {x: price, y: buy.amount / quotePrecision};
-            }).toArray();
+            //     let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
+            //     let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
+            //     return a_price > b_price;
+            // }).map(order => {
+            //     let isAskOrder = market_utils.isAsk(order, base);
+            //     let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
+            //     let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+            //     asks.push({x: price, y: 0});
+            //     return {x: price, y: buy.amount / quotePrecision};
+            // }).toArray();
 
-            if (bids.length === 0) {
-                bids.push({x: 0, y: 0});
-            } else {
-                bids.push({x: bids[bids.length - 1].x + 0.001, y: 0});
-            }
-            for (var i = bids.length - 2; i >= 0; i--) {
-                bids[i].y += bids[i + 1].y;
-            }
+            // if (bids.length === 0) {
+            //     bids.push({x: 0, y: 0});
+            // } else {
+            //     bids.push({x: bids[bids.length - 1].x + 0.001, y: 0});
+            // }
+            // for (var i = bids.length - 2; i >= 0; i--) {
+            //     bids[i].y += bids[i + 1].y;
+            // }
 
-            asks.push({x: bids[bids.length - 1].x + 0.001, y: 0});
+            // asks.push({x: bids[bids.length - 1].x + 0.001, y: 0});
 
-            let asksIndex = 0;
-            let askLength;
-            orders.filter(a => {
-                return a.sell_price.quote.asset_id === base.id;
-            }).sort((a, b) => {
-                let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, true);
-                let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, true);
+            // let asksIndex = 0;
+            // let askLength;
+            // orders.filter(a => {
+            //     return a.sell_price.quote.asset_id === base.id;
+            // }).sort((a, b) => {
+            //     let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, true);
+            //     let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, true);
 
-                let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
-                let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return a_price > b_price;
-            }).map((order) => {
-                let isAskOrder = market_utils.isAsk(order, base);
-                let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
-                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
-                if (asksIndex === 0) {
-                    asks.push({x: price - 0.001, y: 0});
-                    bids.push({x: price - 0.001, y: 0});
-                    askLength = asks.length - 1;
-                }
-                bids.push({x: price, y: 0});
-                asks.push({x: price, y: asks[askLength + asksIndex].y + buy.amount / quotePrecision});
-                asksIndex++;
-                return true;
+            //     let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
+            //     let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
+            //     return a_price > b_price;
+            // }).map((order) => {
+            //     let isAskOrder = market_utils.isAsk(order, base);
+            //     let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
+            //     let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+            //     if (asksIndex === 0) {
+            //         asks.push({x: price - 0.001, y: 0});
+            //         bids.push({x: price - 0.001, y: 0});
+            //         askLength = asks.length - 1;
+            //     }
+            //     bids.push({x: price, y: 0});
+            //     asks.push({x: price, y: asks[askLength + asksIndex].y + buy.amount / quotePrecision});
+            //     asksIndex++;
+            //     return true;
 
-            }).toArray();
+            // }).toArray();
 
-            if (asks.length === 1) {
-                asks.push({x: asks[0].x * 2, y: asks[0].y});
-            }
+            // if (asks.length === 1) {
+            //     asks.push({x: asks[0].x * 2, y: asks[0].y});
+            // }
 
             data = [
             {
                 label: "Bids",
-                values: bids
+                values: this.props.flat_bids
             },
             {
                 label: "Asks",
-                values: asks
+                values: this.props.flat_asks
             }];
+
+            console.log("depth data:", data);
 
         }
 
@@ -145,7 +147,7 @@ class DepthChart extends React.Component {
             <div className="grid-content">
                 <div className="card depthchart">
                     <h5>Depth Chart</h5>
-                    {bids.length > 1 && asks.length > 1 ? <AreaChart
+                    {this.props.flat_bids.length > 1 && this.props.flat_asks.length > 1 ? <AreaChart
                         ref="chart"
                         data={data}
                         width={width}

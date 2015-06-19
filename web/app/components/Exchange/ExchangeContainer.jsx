@@ -26,6 +26,12 @@ class ExchangeContainer extends React.Component {
                     settle_orders: () => {
                         return MarketsStore.getState().activeMarketSettles;
                     },
+                    flat_bids: () => {
+                        return MarketsStore.getState().flat_bids;
+                    },
+                    flat_asks: () => {
+                        return MarketsStore.getState().flat_asks;
+                    },
                     assets: () => {
                         return AssetStore.getState().assets;
                     },

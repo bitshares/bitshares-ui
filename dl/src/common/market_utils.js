@@ -96,6 +96,107 @@ class MarketUtils {
         };
     }
 
+    static flatten_orderbookchart(array, sumBoolean, inverse, precision) {
+        inverse = inverse === undefined ? false : inverse;
+        let orderBookArray = [];
+        let maxStep, arrayLength = array.length;
+
+        // Sum orders at same price
+        if (arrayLength > 1) {
+            for (var i = arrayLength - 2; i >= 0; i--) {
+                if (array[i].x === array[i + 1].x) {
+                    array[i].y += array[i + 1].y;
+                    array.splice(i + 1, 1);
+                }
+            }
+        }
+        console.log("original length:", arrayLength);
+        arrayLength = array.length;
+
+        console.log("new length:", arrayLength);
+        if (inverse) {
+
+            if (array && arrayLength) {
+                arrayLength = arrayLength - 1;
+                orderBookArray.unshift({x: array[arrayLength].x, y: array[arrayLength].y});
+                if (array.length > 1) {
+                    for (let i = array.length - 2; i >= 0; i--) {
+                        maxStep = Math.min((array[i + 1].x - array[i].x) / 2, 0.1 / precision);
+                        orderBookArray.unshift({x: array[i].x + maxStep, y: array[i + 1].y});
+                        if (sumBoolean) {
+                            array[i].y += array[i + 1].y;
+                        }
+                        orderBookArray.unshift({x: array[i].x, y: array[i].y});
+                    }
+                } else {
+                    orderBookArray.unshift({x: 0, y: array[arrayLength].y});
+                }
+            }
+        } else {
+            if (array && arrayLength) {
+                orderBookArray.push({x: array[0].x, y: array[0].y});
+                if (array.length > 1) {
+                    for (let i = 1; i < array.length; i++) {
+                        maxStep = Math.min((array[i].x - array[i - 1].x) / 2, 0.1 / precision);
+                        orderBookArray.push({x: array[i].x - maxStep, y: array[i - 1].y});
+                        if (sumBoolean) {
+                            array[i].y += array[i - 1].y;
+                        }
+                        orderBookArray.push({x: array[i].x, y: array[i].y});
+                    }
+                } else {
+                    orderBookArray.push({x: array[0].x * 1.5, y: array[0].y});
+                }
+            }
+        }
+        return orderBookArray;
+    }
+
+    static flatten_orderbookchart_highcharts(array, sumBoolean, inverse, precision) {
+        inverse = inverse === undefined ? false : inverse;
+        let orderBookArray = [];
+        let maxStep, arrayLength;
+
+        if (inverse) {
+
+            if (array && array.length) {
+                arrayLength = array.length - 1;
+                orderBookArray.unshift([array[arrayLength][0], array[arrayLength][1]]);
+                if (array.length > 1) {
+                    for (let i = array.length - 2; i >= 0; i--) {
+                        console.log("array i:", array[i]);
+                        maxStep = Math.min((array[i + 1][0] - array[i][0]) / 2, 0.1 / precision);
+                        orderBookArray.unshift([array[i][0] + maxStep, array[i + 1][1]]);
+                        if (sumBoolean) {
+                            array[i][1] += array[i + 1][1];
+                        }
+                        orderBookArray.unshift([array[i][0], array[i][1]]);
+                    }
+                } else {
+                    orderBookArray.unshift([0, array[arrayLength][1]]);
+                }
+            }
+        } else {
+            if (array && array.length) {
+                orderBookArray.push([array[0][0], array[0][1]]);
+                if (array.length > 1) {
+                    for (var i = 1; i < array.length; i++) {
+                        console.log("array i:", array[i]);
+                        maxStep = Math.min((array[i][0] - array[i - 1][0]) / 2, 0.1 / precision);
+                        orderBookArray.push([array[i][0] - maxStep, array[i - 1][1]]);
+                        if (sumBoolean) {
+                            array[i][1] += array[i - 1][1];
+                        }
+                        orderBookArray.push([array[i][0], array[i][1]]);
+                    }
+                } else {
+                    orderBookArray.push([array[0][0] * 1.5, array[0][1]]);
+                }
+            }
+        }
+        return orderBookArray;
+    }
+
 }
 
 export default MarketUtils;

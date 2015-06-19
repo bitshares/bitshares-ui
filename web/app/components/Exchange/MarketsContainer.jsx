@@ -21,8 +21,8 @@ class MarketsContainer extends React.Component {
                     markets: () => {
                         return MarketsStore.getState().markets;
                     },
-                    baseMarket: () => {
-                        return MarketsStore.getState().baseMarket;
+                    baseAsset: () => {
+                        return MarketsStore.getState().baseAsset;
                     },
                     assets: () => {
                         return AssetStore.getState().assets;

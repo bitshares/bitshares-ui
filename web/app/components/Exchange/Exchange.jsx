@@ -2,9 +2,9 @@ import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
 import OpenOrders from "./OpenOrders.jsx";
-import Utils from "common/utils";
-import DepthChart from "./DepthChart";
 import Tabs from "react-foundation-apps/lib/tabs";
+import utils from "common/utils";
+import DepthHighChart from "./DepthHighChart";
 
 require("./exchange.scss");
 
@@ -182,9 +182,11 @@ class Exchange extends React.Component {
                     </div>
                     <div className="grid-block medium-6 large-8 main-content vertical">
 
-                        <div className="grid-block depthchart">
-                            <DepthChart
+                        <div className="grid-block">
+                            <DepthHighChart
                                 orders={limit_orders}
+                                flat_asks={this.props.flat_asks}
+                                flat_bids={this.props.flat_bids}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}

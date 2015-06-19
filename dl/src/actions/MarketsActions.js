@@ -49,7 +49,9 @@ class MarketsActions {
                         shorts: results[1],
                         calls: results[2],
                         settles: results[3],
-                        market: subID
+                        market: subID,
+                        base: base,
+                        quote: quote
                     });
                 }).catch((error) => {
                     console.log("Error in MarketsActions.subscribeMarket: ", error);
@@ -94,7 +96,9 @@ class MarketsActions {
                         shorts: results[2],
                         calls: results[3],
                         settles: results[4],
-                        market: subID
+                        market: subID,
+                        base: base,
+                        quote: quote
                     });
 
                 }).catch((error) => {
