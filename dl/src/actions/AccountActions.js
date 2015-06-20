@@ -12,7 +12,11 @@ class AccountActions {
         return api.lookupAccounts("", 100)
             .then(result => {
                 this.dispatch(result);
-                return result[0][1];
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i][0] === "nathan") {
+                        return result[i][1];
+                    }
+                };
             }).catch(error => {
                 console.log("Error in AccountActions.getAllAccounts: ", error);
             });

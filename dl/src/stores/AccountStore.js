@@ -41,7 +41,7 @@ class AccountStore extends BaseStore {
         accounts.forEach(account => {
             this.account_id_to_name[account[1]] = account[0];
             this.account_name_to_id[account[0]] = account[1];
-            if (account[1] === "1.3.11") {
+            if (account[0] === "nathan") {
                 this.currentAccount = {
                     name: account[0],
                     id: account[1]
