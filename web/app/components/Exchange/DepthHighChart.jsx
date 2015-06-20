@@ -28,8 +28,13 @@ class DepthHighChart extends React.Component {
 
     render() {
         let {flat_bids, flat_asks, quoteSymbol, baseSymbol} = this.props;
-        
-        let priceSymbol = `${quoteSymbol}/${baseSymbol}`;
+        if (flat_bids.length === 0) {
+            console.log("flat_bids:", flat_bids);
+        }
+        if (flat_asks.length === 0) {
+            console.log("flat_asks:", flat_asks);
+        }
+        let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
         let config = {
             chart: {
@@ -56,12 +61,12 @@ class DepthHighChart extends React.Component {
                 {
                     name: `Buy ${quoteSymbol}`,
                     data: flat_bids,
-                    color: "#28a92e"
+                    color: "#50D2C2"
                 },
                 {
                     name: `Sell ${quoteSymbol}`,
                     data: flat_asks,
-                    color: "#c90808"
+                    color: "#E3745B"
                 }
             ],
             yAxis: {
