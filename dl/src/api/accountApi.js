@@ -1,5 +1,8 @@
 import Apis from "rpc_api/ApiInstances";
+import {object_type} from "chain/chain_types";
 var PrivateKey = require("../ecc/key_private");
+
+let op_history = parseInt(object_type.operation_history, 10);
 
 class Api {
 
@@ -21,7 +24,7 @@ class Api {
     }
 
     getHistory(id, count) {
-        return Apis.instance().history_api().exec("get_account_history", [id, "1.13.0", count, "1.13.9999"]);
+        return Apis.instance().history_api().exec("get_account_history", [id, "1." + op_history +".0", count, "1." + op_history + ".9999"]);
     }
 
     subscribeAccount(subscription, statID) {

@@ -17,14 +17,13 @@ ChainTypes.object_type=
     delegate: 6
     witness: 7
     limit_order: 8
-    short_order: 9
-    call_order: 10
-    custom: 11
-    proposal: 12
-    operation_history: 13
-    withdraw_permission: 14
-    vesting_balance_object_type:15
-    worker_object_type: 16
+    call_order: 9
+    custom: 10
+    proposal: 11
+    operation_history: 12
+    withdraw_permission: 13
+    vesting_balance_object_type:14
+    worker_object_type: 15
 
     
 # ./programs/js_operation_serializer
