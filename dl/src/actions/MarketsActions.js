@@ -24,9 +24,9 @@ class MarketsActions {
                 settlePromise = null;
 
             if (shorts_available) {
-                shortPromise = Apis.instance().db_api().exec("get_short_orders", [
-                    quote.id, 100
-                ]);
+                // shortPromise = Apis.instance().db_api().exec("get_short_orders", [
+                //     quote.id, 100
+                // ]);
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
                     quote.id, 100
                 ]);
@@ -65,9 +65,9 @@ class MarketsActions {
                 settlePromise = null;
 
             if (shorts_available) {
-                shortPromise = Apis.instance().db_api().exec("get_short_orders", [
-                    quote.id, 100
-                ]);
+                // shortPromise = Apis.instance().db_api().exec("get_short_orders", [
+                //     quote.id, 100
+                // ]);
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
                     quote.id, 100
                 ]);
