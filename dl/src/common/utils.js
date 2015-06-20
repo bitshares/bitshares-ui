@@ -13,6 +13,10 @@ var Utils = {
 
     get_asset_precision: (precision) => {
         return Math.pow(10, precision);
+    },
+
+    get_asset_amount: (amount, asset) => {
+        return amount / Math.pow(10, asset.precision);
     }
 };
 
