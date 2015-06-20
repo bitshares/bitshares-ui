@@ -3,6 +3,7 @@ import { RouteHandler, Link } from "react-router";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
+import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt/AltContainer";
 import AccountLeftPanel from "./AccountLeftPanel";
 
@@ -35,7 +36,7 @@ class AccountPage extends React.Component {
                 <div className="grid-block medium-10 main-content">
                     <div className="grid-content">
                         <AltContainer
-                            stores={[AccountStore, AssetStore]}
+                            stores={[AccountStore, AssetStore, SettingsStore]}
                             inject={{
                                 browseAccounts: () => {
                                     return AccountStore.getState().browseAccounts;
@@ -54,6 +55,9 @@ class AccountPage extends React.Component {
                                 },
                                 assets: () => {
                                     return AssetStore.getState().assets;
+                                },
+                                settings: () => {
+                                    return SettingsStore.getState().settings;
                                 }
                               }}
                             >

@@ -24,7 +24,7 @@ class AccountHistory extends React.Component {
                         current={account_name}
                         witnesses={witness_store_state.witnesses}
                         witness_id_to_name={witness_store_state.witness_id_to_name}
-                        inverted={false}
+                        inverted={this.props.settings.get("inverseMarket")}
                         />
                 );
             }
