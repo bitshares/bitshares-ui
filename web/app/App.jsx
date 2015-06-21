@@ -49,6 +49,8 @@ import cookies from "cookies-js";
 import iDB from "idb-instance";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 
+require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
+
 require("./assets/loader");
 
 class App extends BaseComponent {
