@@ -321,7 +321,7 @@ Types.vote_id =
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "0:0"
-        object.id + ":" + object.type
+        object.type + ":" + object.id
 
 Types.optional = (st_operation)->
     v.required st_operation, "st_operation"

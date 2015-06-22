@@ -25,7 +25,11 @@ ChainTypes.object_type=
     vesting_balance_object_type:14
     worker_object_type: 15
 
-    
+ChainTypes.vote_type=
+    committee:0
+    witness:1
+    worker:2
+
 # ./programs/js_operation_serializer
 ChainTypes.operations=
     transfer: 0
