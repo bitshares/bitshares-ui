@@ -81,7 +81,7 @@ describe "types", ->
             ).toString()
             "to_bigint64 MAX_VALUE mismatch"
         )
-            
+        
         # Long.MAX_VALUE.toString() == 9223372036854775807
         # Long.MAX_VALUE.toString() +1 9223372036854775808
         overflow ()-> p.to_bigint64(
@@ -91,9 +91,8 @@ describe "types", ->
         assert.equal "0", p.to_string64(Long.ZERO, 0)
         assert.equal "00", p.to_string64(Long.ZERO, 1)
         
-        th.error "overflow", ()-> assert.equal(
-            "92233720368547758070"
-            p.to_string64(Long.MAX_VALUE, 1)
+        overflow ()-> p.to_bigint64(
+            '92233720368547758075', _precision = 1
         )
         return
 
