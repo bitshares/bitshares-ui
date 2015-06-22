@@ -12,6 +12,7 @@ class DelegateStore {
         this.delegates = Immutable.Map();
         this.delegateAccounts = Immutable.Map();
         this.delegate_id_to_name = Immutable.Map();
+        this.delegate_name_to_id = Immutable.Map();
         this.account_id_to_delegate_id = {};
 
         this.bindListeners({
@@ -32,14 +33,20 @@ class DelegateStore {
 
     onGetDelegateAccounts(accounts) {
         accounts.forEach(account => {
+            let delegateID = this.account_id_to_delegate_id[account.id];
             this.delegate_id_to_name = this.delegate_id_to_name.set(
-                this.account_id_to_delegate_id[account.id],
+                delegateID,
                 account.name
+            );
+
+            this.delegate_name_to_id = this.delegate_name_to_id.set(
+                account.name,
+                delegateID
             );
 
             account.balances = [];
             this.delegateAccounts = this.delegateAccounts.set(
-                account.id,
+                delegateID,
                 Account(account)
             );
         });

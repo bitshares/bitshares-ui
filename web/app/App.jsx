@@ -10,7 +10,9 @@ import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
 import Assets from "./components/Explorer/AssetsContainer";
 import Witnesses from "./components/Explorer/WitnessesContainer";
-import Delegates from "./components/Explorer/DelegatesContainer";
+import DelegatesContainer from "./components/Explorer/DelegatesContainer";
+import Delegates from "./components/Explorer/Delegates";
+import Delegate from "./components/Explorer/Delegate";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import AccountPage from "./components/Account/AccountPage";
@@ -124,7 +126,10 @@ let routes = (
         <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
         <Route name="assets" path="/explorer/assets" handler={Assets}/>
         <Route name="witnesses" path="/explorer/witnesses" handler={Witnesses}/>
-        <Route name="delegates" path="/explorer/delegates" handler={Delegates}/>
+        <Route name="delegates" path="/explorer/delegates" handler={DelegatesContainer}>
+            <DefaultRoute handler={Delegates}/>
+            <Route name="delegate" path=":name" handler={Delegate} />
+        </Route>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="shorts" path="/exchange/shorts" handler={Shorts}/>

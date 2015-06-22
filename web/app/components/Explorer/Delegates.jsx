@@ -3,6 +3,7 @@ import {PropTypes, Component} from "react";
 import Immutable from "immutable";
 import DelegateActions from "actions/DelegateActions";
 import AccountImage from "../Account/AccountImage";
+import { Link } from "react-router";
 
 class DelegateCard extends React.Component {
 
@@ -14,6 +15,7 @@ class DelegateCard extends React.Component {
         return (
             <div style={{padding: "0.5em 0.5em", minHeight: "15em"}} className="grid-content account-card">
                 <div className="card">
+                    <Link to="delegate" params={{name: this.props.name}}>
                         <div>
                             <AccountImage account={this.props.name} size={{height: 150, width: 150}}/>
                         </div>
@@ -21,6 +23,7 @@ class DelegateCard extends React.Component {
                             {this.props.name}
                         </div>
                     {this.props.children}
+                    </Link>
                 </div>
             </div>
         );
