@@ -161,17 +161,6 @@ limit_order_create = new Serializer(
     fill_or_kill: bool
 )
 
-short_order_create = new Serializer( 
-    "short_order_create"
-    fee: asset
-    seller: protocol_id_type "account"
-    amount_to_sell: asset
-    collateral: asset
-    initial_collateral_ratio: uint16
-    maintenance_collateral_ratio: uint16
-    expiration: time_point_sec
-)
-
 limit_order_cancel = new Serializer( 
     "limit_order_cancel"
     fee: asset
@@ -179,20 +168,12 @@ limit_order_cancel = new Serializer(
     order: protocol_id_type "limit_order"
 )
 
-short_order_cancel = new Serializer( 
-    "short_order_cancel"
-    fee: asset
-    fee_paying_account: protocol_id_type "account"
-    order: protocol_id_type "short_order"
-)
-
 call_order_update = new Serializer( 
     "call_order_update"
     fee: asset
     funding_account: protocol_id_type "account"
-    collateral_to_add: asset
-    amount_to_cover: asset
-    maintenance_collateral_ratio: uint16
+    delta_collateral: asset
+    delta_debt: asset
 )
 
 key_data = static_variant [
@@ -284,6 +265,7 @@ asset_object_asset_options = new Serializer(
     blacklist_authorities: set protocol_id_type "account"
     whitelist_markets: set protocol_id_type "asset"
     blacklist_markets: set protocol_id_type "asset"
+    description: string
 )
 
 asset_object_bitasset_options = new Serializer( 
@@ -372,12 +354,9 @@ asset_global_settle = new Serializer(
 
 price_feed = new Serializer( 
     "price_feed"
-    call_limit: price
-    short_limit: price
     settlement_price: price
-    max_margin_period_sec: uint32
-    required_initial_collateral: uint16
-    required_maintenance_collateral: uint16
+    maintenance_collateral_ratio: uint16
+    maximum_short_squeeze_ratio: uint16
 )
 
 asset_publish_feed = new Serializer( 
@@ -507,7 +486,7 @@ fee_schedule = new Serializer(
     witness_withdraw_pay_fee: uint32
     transfer_fee: uint32
     limit_order_fee: uint32
-    short_order_fee: uint32
+    call_order_fee: uint32
     publish_feed_fee: uint32
     asset_create_fee: uint32
     asset_update_fee: uint32
@@ -612,12 +591,10 @@ custom = new Serializer(
     data: bytes()
 )
 
-operation.st_operations = [
+operation = static_variant [
     transfer    
     limit_order_create    
-    short_order_create    
     limit_order_cancel    
-    short_order_cancel    
     call_order_update    
     key_create    
     account_create    
@@ -671,8 +648,8 @@ signed_transaction = new Serializer(
     extra_signatures: map (address), (bytes 65)
 )
 
+
 ## -------------------------------
 ##  Generated code end
 # programs/js_operation_serializer
 ## -------------------------------
-
