@@ -10,10 +10,7 @@ import AccountActions from "actions/AccountActions";
 import AccountInfo from "../Account/AccountInfo";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-
-//import Select from "react-select";
-
-require("./transfer.scss");
+import Typeahead from "../Forms/Typeahead";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -244,12 +241,10 @@ class Transfer extends BaseComponent {
                         </div>
                     </div>
                     <div className="grid-block medium-3">
-                        <div className="grid-content">
-                            <div className={classNames("grid-content", "no-overflow", {"has-error": errors.to})}>
-                                <Translate component="label" content="transfer.to" />
-                                {this.renderSelect("to", [["", ""]].concat(account_choices))}
-                                <div>{errors.to}</div>
-                            </div>
+                        <div className={classNames({"has-error": errors.to})}>
+                            <Translate component="label" content="transfer.to" />
+                            <Typeahead id="to-field" options={account_choices} />
+                            <div>{errors.to}</div>
                         </div>
                     </div>
                     <div className="grid-block medium-3">
