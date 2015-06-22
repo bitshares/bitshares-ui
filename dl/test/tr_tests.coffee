@@ -28,8 +28,8 @@ wallet = new WalletApi()
 app = new ApplicationApi()
 
 ###
-import_key "1.3.11" "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-create_account_with_brain_key "brainkey" "newaccountname" "1.3.11" "1.3.0" 0 true
+import_key "1.3.15" "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+create_account_with_brain_key "brainkey" "newaccountname" "1.3.15" "1.3.0" 0 true
 ###
 describe "tr_tests", ->
 
@@ -54,7 +54,7 @@ describe "tr_tests", ->
         tr = wallet.create_account_with_brain_key(
             "brainkey"
             account_name
-            registrar = 11
+            registrar = 15
             referrer = 0
             referrer_percent = 0
             broadcast
@@ -68,7 +68,7 @@ describe "tr_tests", ->
     #it "update account transaction", ->
     it "wallet.transfer nomemo", (done)->
         wallet.transfer(
-            "1.3.11", "1.3.0", 1, "1.4.0", memo = null
+            "1.3.15", "1.3.0", 1, "1.4.0", memo = null
             broadcast
         ).then (result)->
             th.print_result result
@@ -79,7 +79,7 @@ describe "tr_tests", ->
     
     it "wallet.transfer encmemo", (done)->
         wallet.transfer(
-            "1.3.11", "1.3.0", 1, "1.4.0", memo = "memo"
+            "1.3.15", "1.3.0", 1, "1.4.0", memo = "memo"
             broadcast
         ).then (result)->
             th.print_result result
@@ -90,10 +90,10 @@ describe "tr_tests", ->
     
     it "app.transfer_extended textmemo", (done)->
         tr = app.transfer_extended(
-            "1.3.11", "1.3.0", 1, "1.4.0", "memo"
-            "1.2.1", null #genesis_private
+            "1.3.15", "1.3.0", 1, "1.4.0", "memo"
+            "1.2.11", null #genesis_private
             "1.2.0"
-            10, 1, PrivateKey.fromSeed("nathan")
+            10, 11, PrivateKey.fromSeed("nathan")
             broadcast
         ).then (result)->
             th.print_result result
@@ -104,16 +104,16 @@ describe "tr_tests", ->
     
     it "app.transfer_extended encmemo", (done)->
         app.transfer_extended(
-            from = "1.3.11"
+            from = "1.3.15"
             to = "1.3.0"
             amount = 1
             asset = "1.4.0"
             memo = "memo"
-            memo_from = "1.2.1"
+            memo_from = "1.2.11"
             memo_from_private = genesis_private
             memo_to = "1.2.0"
             expire = 10
-            signer_private_id = 1
+            signer_private_id = 11
             signer_private_key = PrivateKey.fromSeed("nathan")
             broadcast
         ).then (result)->
