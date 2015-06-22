@@ -21,7 +21,7 @@ class WalletApi {
     
     sign_and_broadcast( tr, broadcast = true ) {
         v.required(tr, "transaction")
-        var signer_private_key_id = 1
+        var signer_private_key_id = 11
         var signer_private_key = PrivateKey.fromSeed("nathan")
         return tr.finalize(
             signer_private_key_id,
@@ -58,7 +58,7 @@ class WalletApi {
         broadcast = true
     ) {
         var expire_minutes = 10
-        var signer_private_key_id = 1
+        var signer_private_key_id = 11
         var signer_private_key = PrivateKey.fromSeed("nathan")
         return this.application_api.create_account_with_brain_key(
             brain_key,
@@ -82,7 +82,7 @@ class WalletApi {
         broadcast = true
     ) {
         var expire_minutes = 10
-        var signer_private_key_id = 1
+        var signer_private_key_id = 11
         var signer_private_key = PrivateKey.fromSeed("nathan")
         return this.application_api.transfer(
             from_account_id,

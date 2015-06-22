@@ -41,7 +41,7 @@ class Api {
 
     createAccount(name) {
         var expire_minutes = 10;
-        var signer_private_key_id = 1;
+        var signer_private_key_id = 11;
         var signer_private_key = PrivateKey.fromSeed("nathan");
         return Apis.instance().app_api().create_account_with_brain_key("brainkey", name, 11, 0, 0, expire_minutes, signer_private_key_id, signer_private_key, true);
     }
