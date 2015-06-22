@@ -63,7 +63,6 @@ Serializer=(operation_name, serilization_types_object)->
 # programs/js_operation_serializer
 # / +$//g
 ## -------------------------------
-
 void_header = new Serializer( 
     "void_header"
 )
@@ -162,6 +161,17 @@ limit_order_create = new Serializer(
     fill_or_kill: bool
 )
 
+short_order_create = new Serializer( 
+    "short_order_create"
+    fee: asset
+    seller: protocol_id_type "account"
+    amount_to_sell: asset
+    collateral: asset
+    initial_collateral_ratio: uint16
+    maintenance_collateral_ratio: uint16
+    expiration: time_point_sec
+)
+
 limit_order_cancel = new Serializer( 
     "limit_order_cancel"
     fee: asset
@@ -169,29 +179,20 @@ limit_order_cancel = new Serializer(
     order: protocol_id_type "limit_order"
 )
 
-price = new Serializer( 
-    "price"
-    base: asset
-    quote: asset
+short_order_cancel = new Serializer( 
+    "short_order_cancel"
+    fee: asset
+    fee_paying_account: protocol_id_type "account"
+    order: protocol_id_type "short_order"
 )
 
 call_order_update = new Serializer( 
     "call_order_update"
     fee: asset
     funding_account: protocol_id_type "account"
-    delta_collateral: asset
-    delta_debt: asset
-    call_price: price
-)
-
-address = new Serializer( 
-    "address"
-    addr: bytes 20
-)
-
-public_key = new Serializer( 
-    "public_key"
-    key_data: bytes 33
+    collateral_to_add: asset
+    amount_to_cover: asset
+    maintenance_collateral_ratio: uint16
 )
 
 key_data = static_variant [
@@ -264,6 +265,12 @@ account_transfer = new Serializer(
     new_owner: protocol_id_type "account"
 )
 
+price = new Serializer( 
+    "price"
+    base: asset
+    quote: asset
+)
+
 asset_object_asset_options = new Serializer( 
     "asset_object_asset_options"
     max_supply: int64
@@ -277,7 +284,6 @@ asset_object_asset_options = new Serializer(
     blacklist_authorities: set protocol_id_type "account"
     whitelist_markets: set protocol_id_type "asset"
     blacklist_markets: set protocol_id_type "asset"
-    description: string
 )
 
 asset_object_bitasset_options = new Serializer( 
@@ -366,9 +372,12 @@ asset_global_settle = new Serializer(
 
 price_feed = new Serializer( 
     "price_feed"
+    call_limit: price
+    short_limit: price
     settlement_price: price
-    maintenance_collateral_ratio: uint16
-    maximum_short_squeeze_ratio: uint16
+    max_margin_period_sec: uint32
+    required_initial_collateral: uint16
+    required_maintenance_collateral: uint16
 )
 
 asset_publish_feed = new Serializer( 
@@ -399,11 +408,6 @@ witness_withdraw_pay = new Serializer(
     from_witness: protocol_id_type "witness"
     to_account: protocol_id_type "account"
     amount: int64
-)
-
-operation  = new Serializer( 
-    "operation "
-    op: operation
 )
 
 proposal_create = new Serializer( 
@@ -503,7 +507,7 @@ fee_schedule = new Serializer(
     witness_withdraw_pay_fee: uint32
     transfer_fee: uint32
     limit_order_fee: uint32
-    call_order_fee: uint32
+    short_order_fee: uint32
     publish_feed_fee: uint32
     asset_create_fee: uint32
     asset_update_fee: uint32
@@ -608,10 +612,12 @@ custom = new Serializer(
     data: bytes()
 )
 
-operation = static_variant [
+operation.st_operations = [
     transfer    
     limit_order_create    
+    short_order_create    
     limit_order_cancel    
+    short_order_cancel    
     call_order_update    
     key_create    
     account_create    
@@ -669,5 +675,4 @@ signed_transaction = new Serializer(
 ##  Generated code end
 # programs/js_operation_serializer
 ## -------------------------------
-
 
