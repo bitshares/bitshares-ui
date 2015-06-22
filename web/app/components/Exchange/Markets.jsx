@@ -4,6 +4,7 @@ import MarketCard from "./MarketCard";
 import Immutable from "immutable";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
+import {Link} from "react-router";
 
 class Markets extends Component {
 
@@ -83,6 +84,9 @@ class Markets extends Component {
                                     </select>
                                     </li>
                                 </ul>
+                        </section>
+                        <section>
+                            <Link to="shorts">Short Positions</Link>
                         </section>
                     </div>
                 </div>

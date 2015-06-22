@@ -163,23 +163,21 @@ class Exchange extends React.Component {
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
                     <div className="grid-block medium-3 large-2 left-column">
-                            <div className="grid-content">
-                                <div className="tabs">
-                                    <div className={buyTabClass} onClick={this._changeTab.bind(this, "buy")}>
-                                        BUY
-                                    </div>
-                                    <div className={sellTabClass} onClick={this._changeTab.bind(this, "sell")}>
-                                        SELL
-                                    </div>
+                        <div className="grid-content">
+                            <div className="tabs">
+                                <div className={buyTabClass} onClick={this._changeTab.bind(this, "buy")}>
+                                    BUY
                                 </div>
-                                <div style={{paddingTop: "1em"}}>
-                                    {this.state.activeTab === "buy" ? buyForm : sellForm}
+                                <div className={sellTabClass} onClick={this._changeTab.bind(this, "sell")}>
+                                    SELL
                                 </div>
                             </div>
-                                      
+                            <div style={{paddingTop: "1em"}}>
+                                {this.state.activeTab === "buy" ? buyForm : sellForm}
+                            </div>
+                        </div>
                     </div>
                     <div className="grid-block medium-6 large-8 main-content vertical">
-
                         <div className="grid-block">
                             <DepthHighChart
                                 orders={limit_orders}
@@ -214,13 +212,10 @@ class Exchange extends React.Component {
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     />
-                        </div>
-
-
-                             
+                                </div>
                             </div>
                             <div className="grid-block medium-6 main-content">
-                              
+                              Main Content
                             </div>
                         </div>
                     </div>
