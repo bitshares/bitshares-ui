@@ -1,25 +1,26 @@
 var t = require("tcomb");
 
 let Account = t.struct({
-    id: t.Str,
-    annotations: t.Arr,
-    registrar: t.Str,
-    referrer: t.Str,
-    lifetime_referrer: t.Str,
-    network_fee_percentage: t.Num,
-    lifetime_referrer_fee_percentage: t.Num,
-    referrer_rewards_percentage: t.Num,
-    name: t.Str,
-    owner: t.Obj,
     active: t.Obj,
-    //memo_key: t.Str,
+    annotations: t.Arr,
+    id: t.Str,
+    blacklisting_accounts: t.Arr,
+    lifetime_referrer: t.Str,
+    lifetime_referrer_fee_percentage: t.Num,
+    membership_expiration_date: t.Str,
+    name: t.Str,
+    network_fee_percentage: t.Num,
+    options: t.Obj,
+    owner: t.Obj,
     //voting_account: t.Str,
     //num_witness: t.Num,
     //num_committee: t.Num,
     //votes: t.Arr,
+    referrer: t.Str,
+    referrer_rewards_percentage: t.Num,
+    registrar: t.Str,
     statistics: t.Str,
-    whitelisting_accounts: t.Arr,
-    blacklisting_accounts: t.Arr
+    whitelisting_accounts: t.Arr
 }, "Account");
 
 let Asset = t.struct({
