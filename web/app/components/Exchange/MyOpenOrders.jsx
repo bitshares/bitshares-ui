@@ -4,6 +4,8 @@ import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
+import {FormattedDate} from "react-intl";
+import intlData from "../Utility/intlData";
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -33,7 +35,7 @@ class MyOpenOrders extends React.Component {
                 let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
 
                 let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
-
+                console.log(order);
                 return (
                      <tr key={order.id}>
                         <td>
@@ -43,19 +45,25 @@ class MyOpenOrders extends React.Component {
                         </td>
                         <td className={tdClass}>{buy.amount / quotePrecision}</td>
                         <td>{price}</td>
-                        {/*TODO: add expiration data <td>{order.expiration}</td> */}
+                        <td><FormattedDate
+                            value={order.expiration}
+                            formats={intlData.formats}
+                            format="short"
+                            />
+                        </td>
+                        {/*TODO: add expiration data  */}
                     </tr>
                     );
             }).toArray();
         }
         return (
-            <table className="table">
+            <table className="table order-table">
                 <thead>
                 <tr>
                     <th>{/* "Cancel button" column */}</th>
                     <th>Quantity ({quoteSymbol})</th>
                     <th>Price ({baseSymbol})</th>
-                    <th>{/* "Buy/Sell" column */}</th>
+                    <th>Expiration</th>
                 </tr>
                 </thead>
                 <tbody>

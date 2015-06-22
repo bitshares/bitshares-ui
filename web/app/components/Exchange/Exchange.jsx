@@ -160,9 +160,12 @@ class Exchange extends React.Component {
         );
 
         return (
-            <div className="grid-block vertical">
-                <div className="grid-block page-layout">
-                    <div className="grid-block medium-3 large-2 left-column">
+            <div className="grid-block">
+
+                <div className="grid-block page-layout small-vertical medium-horizontal" style={{flexWrap: "nowrap"}}>
+
+                    {/* Left Column */}
+                    <div className="grid-block shrink left-column">
                         <div className="grid-content">
                             <div className="tabs">
                                 <div className={buyTabClass} onClick={this._changeTab.bind(this, "buy")}>
@@ -177,8 +180,22 @@ class Exchange extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="grid-block medium-6 large-8 main-content vertical">
-                        <div className="grid-block">
+
+                    {/* Open Orders */}
+                    <div className="grid-block shrink">
+                        <div className="grid-content">
+                            <OpenOrders
+                                orders={limit_orders}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                            />
+                            </div>
+                    </div>
+                    {/* Depth Chart and My Orders */}
+                    <div className="grid-block main-content vertical">
+                        <div className="grid-block show-for-large shrink">
                             <DepthHighChart
                                 orders={limit_orders}
                                 flat_asks={this.props.flat_asks}
@@ -189,12 +206,8 @@ class Exchange extends React.Component {
                                 quoteSymbol={quoteSymbol}
                             />
                         </div>
-                        <div className="grid-block buysell">   
-                            <div className="grid-block medium-12 main-content">
-                                 <div className="grid-content openorders">
-
-
-
+                        <div className="grid-block">
+                            <div className="grid-content">
                                 <p>MY OPEN ORDERS</p>
                                 <MyOpenOrders
                                     orders={limit_orders}
@@ -204,25 +217,16 @@ class Exchange extends React.Component {
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     onCancel={this._cancelLimitOrder.bind(this)} />
-
-                                <OpenOrders
-                                    orders={limit_orders}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid-block medium-6 main-content">
-                              Main Content
                             </div>
                         </div>
                     </div>
-                    <div className="grid-block medium-3 large-2 right-column">
+
+
+                    {/* Order History */}
+                    <div className="grid-block shrink right-column">
                         <div className="grid-content">
                             <p>ORDER HISTORY</p>
-                            <table style={{width: "100%"}} className="table expand">
+                            <table style={{width: "100%"}} className="table expand order-table">
                                 <thead>
                                 <tr>
                                     <th>Quantity</th>
@@ -238,6 +242,7 @@ class Exchange extends React.Component {
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         );

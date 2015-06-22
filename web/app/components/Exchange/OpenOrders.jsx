@@ -74,7 +74,7 @@ class OpenOrders extends React.Component {
         }
 
         return (
-                <table className="table">
+                <table className="table order-table">
                     <caption>OPEN ORDERS</caption>
                     <thead>
                     <tr>

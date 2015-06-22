@@ -5,3 +5,13 @@ td.orderHistoryBid {
 td.orderHistoryAsk {
   color: red;
 }
+
+.order-table {
+    > thead > tr > th {
+        font-size: 0.9rem;
+    }
+
+    > tbody > tr > td {
+        font-size: 0.75rem;
+    }
+}
