@@ -201,8 +201,33 @@ Types.time_point_sec =
         v.require_range 0,0xFFFFFFFF,int, "uint32 #{object}"
         (new Date(int*1000)).toISOString().split('.')[0]
 
-# todo, set is sorted and unique
-Types.set = Types.array
+Types.set = (st_operation)->
+    validate: (array)->
+        dup_map = {}
+        for o in array
+            if dup_map[o] isnt undefined
+                throw new Error "duplicate"
+            dup_map[o] = on
+        array.sort()
+    fromByteBuffer:(b)->
+        size = b.readVarint32()
+        if config.hex_dump
+            console.log "varint32 size = " + size.toString(16)
+        @validate (for i in [0...size] by 1
+            st_operation.fromByteBuffer b)
+    appendByteBuffer:(b, object)->
+        b.writeVarint32 object.length
+        for o in @validate object
+            st_operation.appendByteBuffer b, o
+        return
+    fromObject:(object)->
+        @validate (for o in object
+            st_operation.fromObject o)
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
+            return [ st_operation.toObject(object, debug) ]
+        @validate (for o in object
+            st_operation.toObject o, debug)
 
 # global_parameters_update_operation current_fees
 Types.fixed_array = (count, st_operation)->
@@ -366,26 +391,39 @@ Types.static_variant = (_st_operations)->
             st_operation.toObject object[1], debug
         ]
 
-# todo, map has unique keys
 Types.map = (key_st_operation, value_st_operation)->
+    validate:(array)->
+        unless Array.isArray array
+            throw new Error "expecting array"
+        dup_map = {}
+        for o in array
+            unless o.length is 2
+                throw new Error "expecting two elements"
+            if dup_map[o[0]] isnt undefined
+                throw new Error "duplicate"
+            dup_map[o[0]] = on
+        array
+    
     fromByteBuffer:(b)->
-        for i in [0...b.readVarint32()] by 1
+        @validate (for i in [0...b.readVarint32()] by 1
             [
                 key_st_operation.fromByteBuffer b
                 value_st_operation.fromByteBuffer b
-            ]
+            ])
+        
     appendByteBuffer:(b, object)->
+        @validate object
         b.writeVarint32 object.length
         for o in object
             key_st_operation.appendByteBuffer b, o[0]
             value_st_operation.appendByteBuffer b, o[1]
         return
     fromObject:(object)->
-        for o in object
+        @validate (for o in object
             [
                 key_st_operation.fromObject o[0]
                 value_st_operation.fromObject o[1]
-            ]
+            ])
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return [
@@ -394,11 +432,11 @@ Types.map = (key_st_operation, value_st_operation)->
                     value_st_operation.toObject(undefined, debug)
                 ]
             ]
-        for o in object
+        @validate (for o in object
             [
                 key_st_operation.toObject o[0], debug
                 value_st_operation.toObject o[1], debug
-            ]
+            ])
 
 Types.public_key =
     fromByteBuffer:(b)->
@@ -423,4 +461,3 @@ Types.address =
         if debug.use_default and object is undefined
             return "GPHXyz...address"
         new Address(object.public_key).toString()
-

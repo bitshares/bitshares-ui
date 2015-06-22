@@ -25,12 +25,13 @@ module.exports =
     log_error: (error)->
         console.log 'log_error',error,error.stack
     
-    exception: (message_substring, f)->
+    error: (message_substring, f)->
+        fail = no
         try
             f()
-            assert false, "expecting " + message_substring
+            fail = yes
         catch e
-            assert(
-                e.toString().indexOf(message_substring) isnt -1
-                "expecting " + message_substring
-            )
+            if e.toString().indexOf(message_substring) is -1
+                throw new Error "expecting " + message_substring
+        if fail
+            throw new Error "expecting " + message_substring

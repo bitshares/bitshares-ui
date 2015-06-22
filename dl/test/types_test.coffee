@@ -1,11 +1,10 @@
 Convert = require '../src/chain/serializer_convert'
+Long = require '../src/common/long'
 
 assert = require 'assert'
 type = require '../src/chain/serializer_types'
 p = require '../src/common/precision'
-Long = require '../src/common/long'
-
-#so_type = require '../src/chain/serializer_operation_types'
+th = require './test_helper'
 
 describe "types", ->
     
@@ -27,7 +26,15 @@ describe "types", ->
     
     it "set", ->
         bool_set = type.set type.bool
-        assert.equal "03010001", Convert(bool_set).toHex [1,0,1]
+        # Note, 1,0 sorts to 0,1
+        assert.equal "020001", Convert(bool_set).toHex [1,0]
+        th.error "duplicate", -> Convert(bool_set).toHex [1,1]
+        return
+    
+    it "map", ->
+        bool_map = type.map type.bool, type.bool
+        assert.equal "0201010000", Convert(bool_map).toHex [[1,1],[0,0]]
+        th.error "duplicate", -> Convert(bool_map).toHex [[1,1],[1,1]]
         return
     
     it "precision number strings", ->
@@ -84,18 +91,10 @@ describe "types", ->
         assert.equal "0", p.to_string64(Long.ZERO, 0)
         assert.equal "00", p.to_string64(Long.ZERO, 1)
         
-        overflow ()-> assert.equal(
+        th.error "overflow", ()-> assert.equal(
             "92233720368547758070"
             p.to_string64(Long.MAX_VALUE, 1)
         )
         return
-    
-overflow = (f)->
-    try
-        f()
-        assert false, "expecting overflow"
-    catch e
-        assert(
-            e.toString().indexOf("overflow") isnt -1
-            "expecting overflow"
-        )
+
+overflow = (f)-> th.error "overflow", f

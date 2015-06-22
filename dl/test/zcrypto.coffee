@@ -86,7 +86,7 @@ describe "crypto", ->
         key_checksum = about_one_second ()->
             key.key_checksum "password"
         # DEBUG console.log('... key_checksum',key_checksum)
-        th.exception "wrong password", ()->
+        th.error "wrong password", ()->
             about_one_second ()->
                 key.aes_private "bad password", key_checksum
     
