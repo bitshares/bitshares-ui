@@ -215,7 +215,7 @@ class Exchange extends React.Component {
                                 {buyForm}
                             </div>
                             <div className="grid-content small-4">
-                                {buyForm}
+                                {sellForm}
                             </div>
                         </div>
                     </div>
