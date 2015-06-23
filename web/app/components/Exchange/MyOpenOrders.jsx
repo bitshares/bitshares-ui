@@ -19,25 +19,39 @@ class MyOpenOrders extends React.Component {
         let {orders, account, base, quote, quoteSymbol, baseSymbol} = this.props;
         let orderRows = null;
 
-        if(orders.size > 0 && base && quote) {
-            let quotePrecision = utils.get_asset_precision(quote.precision);
-            let basePrecision = utils.get_asset_precision(base.precision);
+        let quotePrecision = utils.get_asset_precision(quote.precision);
+        let basePrecision = utils.get_asset_precision(base.precision);
+
+        let getOrderData = function(order) {
+                let isAsk = market_utils.isAsk(order, base);
+                let {buy, sell} = market_utils.parseOrder(order, isAsk);
+                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
             
+            return {
+                isAsk: isAsk,
+                buy: buy,
+                sell: sell,
+                price: price
+            };
+        }
+
+        if(orders.size > 0 && base && quote) {            
             orderRows = orders.filter(a => {
                 return a.seller === account; 
             }).sort((a, b) => {
-                if (b.expiration > a.expiration) {
-                    return 1;
-                } else if (b.expiration < a.expiration) {
+                let dataA = getOrderData(a);
+                let dataB = getOrderData(b);
+
+                if (dataB.price > dataA.price) {
                     return -1;
+                } else if (dataA.price > dataB.price) {
+                    return 1;
                 }
                 return 0;
             }).map(order => {
-                let isAskOrder = market_utils.isAsk(order, base);
-                let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
-                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+                let data = getOrderData(order);
 
-                let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
+                let tdClass = classNames({orderHistoryBid: !data.isAsk, orderHistoryAsk: data.isAsk});
                 return (
                      <tr key={order.id}>
                         <td>
@@ -45,8 +59,8 @@ class MyOpenOrders extends React.Component {
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
                         </td>
-                        <td className={tdClass}>{buy.amount / quotePrecision}</td>
-                        <td>{price}</td>
+                        <td className={tdClass}>{data.buy.amount / quotePrecision}</td>
+                        <td>{data.price}</td>
                         <td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}
