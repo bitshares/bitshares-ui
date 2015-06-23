@@ -85,9 +85,6 @@ class Markets extends Component {
                                     </li>
                                 </ul>
                         </section>
-                        <section>
-                            <Link to="shorts">Short Positions</Link>
-                        </section>
                     </div>
                 </div>
                 <div className="grid-block page-layout">

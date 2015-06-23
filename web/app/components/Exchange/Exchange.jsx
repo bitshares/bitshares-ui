@@ -2,6 +2,7 @@ import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
 import OpenOrders from "./OpenOrders.jsx";
+import Margin from "./Margin.jsx";
 import utils from "common/utils";
 import DepthHighChart from "./DepthHighChart";
 import classNames from "classnames";
@@ -126,6 +127,7 @@ class Exchange extends React.Component {
 
         let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
         let sellTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "sell"});
+        let marginTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "margin"});
 
         let buyForm = (
             <form className="order-form"
@@ -159,6 +161,18 @@ class Exchange extends React.Component {
             </form>
         );
 
+    // TODO: get and pass short data from API call
+        let marginForm = (
+            <Margin 
+                base={base}         
+                quote={quote}
+                baseSymbol={baseSymbol}
+                quoteSymbol={quoteSymbol}
+                amount="50" 
+                collateral="20000" 
+                priceFeed="80" />
+        );
+
         return (
             <div className="grid-block">
 
@@ -174,9 +188,12 @@ class Exchange extends React.Component {
                                 <div className={sellTabClass} onClick={this._changeTab.bind(this, "sell")}>
                                     SELL
                                 </div>
+                                <div className={marginTabClass} onClick={this._changeTab.bind(this, "margin")}>
+                                    MARGIN
+                                </div>
                             </div>
                             <div style={{paddingTop: "1em"}}>
-                                {this.state.activeTab === "buy" ? buyForm : sellForm}
+                                {this.state.activeTab === "buy" ? buyForm : (this.state.activeTab === "sell" ? sellForm : marginForm)}
                             </div>
                         </div>
                     </div>

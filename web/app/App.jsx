@@ -27,7 +27,6 @@ import AccountOrders from "./components/Account/AccountOrders";
 // import Receive from "./components/Wallet/Receive";
 // import Assets from "./components/Wallet/Assets";
 // import History from "./components/Wallet/History";
-import Shorts from "components/Exchange/Shorts";
 import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
 import TransferPage from "./components/Transfer/TransferPage";
@@ -132,7 +131,6 @@ let routes = (
         </Route>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
         <Route name="markets" path="markets" handler={Markets}/>
-        <Route name="shorts" path="/exchange/shorts" handler={Shorts}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
         <Route name="logout" path="logout" handler={Logout}/>
