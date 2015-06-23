@@ -55,6 +55,25 @@ label, label > span {
   background: $alert-color;
 }
 
+.notification.success {
+  background: $success-color;
+  a {
+     color: $dark-text-color;
+  }
+}
+
+.notification.info {
+  background: $info-color;
+}
+
+.notification.warning {
+  background: $warning-color;
+}
+
+.notification.cancel, .notification.alert {
+  background: $alert-color;
+}
+
 .action-sheet {
   @include color($light-text-color, $super-light-panel-bg-color);
   &::after {

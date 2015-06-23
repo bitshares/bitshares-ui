@@ -15,3 +15,12 @@ td.orderHistoryAsk {
         font-size: 0.75rem;
     }
 }
+
+.notification,
+.notification.success,
+.notification.info,
+.notification.warning,
+.notification.alert,
+.notification.cancel {
+	font-size: 0.75rem;
+}
