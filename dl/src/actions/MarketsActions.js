@@ -4,6 +4,31 @@ import WalletApi from "rpc_api/WalletApi";
 
 let subs = {};
 let wallet_api = new WalletApi();
+let orderCounter = -1;
+let lastExpiration;
+
+let addSeconds = (expiration) => {
+    let newExpiration;
+
+    if (lastExpiration !== null && lastExpiration !== expiration) { // Orders were not placed in the same minute, reset the counter
+        orderCounter = -1;
+        newExpiration = `${expiration}00`;
+    }
+    else { // Orders placed in the same minute, use counter to create 'unique' seconds
+        orderCounter++;
+        if (orderCounter === 59) { // Reset if the user places 60 orders in one minute, the first order should've failed by then anyway
+            orderCounter = 0;
+        }
+        if (orderCounter < 10) {
+            newExpiration = `${expiration}0${orderCounter}`;
+        } else {
+            newExpiration = `${expiration}${orderCounter}`;
+        }
+    }
+
+    lastExpiration = expiration;
+    return newExpiration; 
+};
 
 class MarketsActions {
 
@@ -137,9 +162,13 @@ class MarketsActions {
 
     // TODO: What prevents a caller from entering someone else's sellAccount in the "seller" field?
     createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
-        var epochTime = new Date().getTime();
+
+
+        let uniqueExpiration = addSeconds(expiration);
+        console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
+
         var order = {
-            expiration: expiration,
+            expiration: uniqueExpiration,
             for_sale: sellAmount,
             id: "unknown", // order ID unknown until server reply. TODO: populate ASAP, for cancels. Is never populated
             sell_price: {
@@ -155,7 +184,9 @@ class MarketsActions {
             seller: account
         };
 
-        console.log("sellamount " + sellAmount + ". sellID " + sellAssetID + ". buyAmount " + buyAmount + ". buyID " + buyAssetID);
+        // console.log("sellamount " + sellAmount + ". sellID " + sellAssetID + ". buyAmount " + buyAmount + ". buyID " + buyAssetID);
+
+        this.dispatch({newOrder: order});
 
         // TODO: enable the optimistic dispatch. It causes the order to appear twice, due to the subscription to market
         // this.dispatch({newOrderID: epochTime, order: order});
@@ -171,17 +202,18 @@ class MarketsActions {
                 "amount": buyAmount,
                 "asset_id": buyAssetID
             },
-            "expiration": expiration,
+            "expiration": uniqueExpiration,
             "fill_or_kill": isFillOrKill
         });
         wallet_api.sign_and_broadcast(tr).then(result => {
-                console.log("order result:", result);
+            console.log("order result:", result);
                 // TODO: update order ID from the server's response, if possible
-            })
+        })
             .catch(error => {
                 console.log("order error:", error);
+
                 this.dispatch({
-                    failedOrderID: epochTime
+                    failedOrder: {expiration: uniqueExpiration}
                 });
             });
     }

@@ -39,13 +39,16 @@ class Exchange extends React.Component {
         e.preventDefault();
         console.log("sell id:", sellAsset);
 
+        let expiration = new Date();
+        expiration.setYear(expiration.getFullYear() + 5);
+
         MarketsActions.createLimitOrder(
             this.props.account.id,
             sellAssetAmount * utils.get_asset_precision(sellAsset.precision),
             sellAsset.id,
             buyAssetAmount * utils.get_asset_precision(buyAsset.precision),
             buyAsset.id,
-            "2020-01-01T00:00:00", // expiration. TODO: set to a value chosen by the user
+            expiration.toISOString().slice(0, -7), // the seconds will be added in the actionCreator to set a unique identifer for this user and order
             false // fill or kill
         );
     }
@@ -104,7 +107,7 @@ class Exchange extends React.Component {
         let {asset_symbol_to_id, assets, account, limit_orders, short_orders, base: baseSymbol, quote: quoteSymbol} = this.props;
         let base = null, quote = null;
 
-        console.log("exchange rerender", this.state);
+        // console.log("exchange rerender", this.state);
         if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
             let quote_id = asset_symbol_to_id[quoteSymbol];
             let base_id = asset_symbol_to_id[baseSymbol];

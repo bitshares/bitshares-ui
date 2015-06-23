@@ -26,16 +26,18 @@ class MyOpenOrders extends React.Component {
             orderRows = orders.filter(a => {
                 return a.seller === account; 
             }).sort((a, b) => {
-                let a_id = parseInt(a.id.split(".")[2], 10);
-                let b_id = parseInt(b.id.split(".")[2], 10);
-                return b_id > a_id;
+                if (b.expiration > a.expiration) {
+                    return 1;
+                } else if (b.expiration < a.expiration) {
+                    return -1;
+                }
+                return 0;
             }).map(order => {
                 let isAskOrder = market_utils.isAsk(order, base);
                 let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
                 let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
 
                 let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
-                console.log(order);
                 return (
                      <tr key={order.id}>
                         <td>

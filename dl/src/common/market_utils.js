@@ -110,10 +110,8 @@ class MarketUtils {
                 }
             }
         }
-        console.log("original length:", arrayLength);
         arrayLength = array.length;
 
-        console.log("new length:", arrayLength);
         if (inverse) {
 
             if (array && arrayLength) {
@@ -164,7 +162,6 @@ class MarketUtils {
                 orderBookArray.unshift([array[arrayLength][0], array[arrayLength][1]]);
                 if (array.length > 1) {
                     for (let i = array.length - 2; i >= 0; i--) {
-                        console.log("array i:", array[i]);
                         maxStep = Math.min((array[i + 1][0] - array[i][0]) / 2, 0.1 / precision);
                         orderBookArray.unshift([array[i][0] + maxStep, array[i + 1][1]]);
                         if (sumBoolean) {
@@ -181,7 +178,6 @@ class MarketUtils {
                 orderBookArray.push([array[0][0], array[0][1]]);
                 if (array.length > 1) {
                     for (var i = 1; i < array.length; i++) {
-                        console.log("array i:", array[i]);
                         maxStep = Math.min((array[i][0] - array[i - 1][0]) / 2, 0.1 / precision);
                         orderBookArray.push([array[i][0] - maxStep, array[i - 1][1]]);
                         if (sumBoolean) {

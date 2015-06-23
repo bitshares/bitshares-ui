@@ -16,17 +16,18 @@ class MarketsStore {
     constructor() {
         this.markets = Immutable.Map();
         this.asset_symbol_to_id = {};
-        this.activeMarketShorts = Immutable.Map();
+        this.pendingOrders = Immutable.Map();
         this.activeMarketLimits = Immutable.Map();
         this.activeMarketCalls = Immutable.Map();
         this.activeMarketSettles = Immutable.Map();
         this.flat_bids = [];
         this.flat_asks = [];
-        this.pendingCreateLimitOrders = {};
+        this.pendingCreateLimitOrders = [];
         this.pendingCancelLimitOrders = {};
         this.activeMarket = null;
         this.inverseMarket = true;
         this.quoteAsset = null;
+        this.pendingCounter = 0;
 
         this.baseAsset = {
             id: "1.4.0",
@@ -55,7 +56,6 @@ class MarketsStore {
     }
 
     onChangeBase(market) {
-        console.log("change base:", market);
         this.baseAsset = market;
     }
 
@@ -73,30 +73,32 @@ class MarketsStore {
                 symbol: result.base.symbol,
                 precision: result.base.precision
             };
-            console.log("quote:", this.quoteAsset, "base", this.baseAsset);
             this.activeMarketLimits = this.activeMarketLimits.clear();
-            this.activeMarketShorts = this.activeMarketShorts.clear();
             this.activeMarketCalls = this.activeMarketCalls.clear();
             this.activeMarketSettles = this.activeMarketSettles.clear();
         }
 
         if (result.limits) {
             result.limits.forEach(order => {
+                
+                // Loop over pending orders to remove temp order from orders map and remove from pending
+                for (var i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
+                    let myOrder = this.pendingCreateLimitOrders[i];
+                    if (myOrder.seller === order.seller && myOrder.expiration === order.expiration) {
+                        this.activeMarketLimits = this.activeMarketLimits.delete(myOrder.id);
+                        this.pendingCreateLimitOrders.splice(i, 1);
+                    }
+                }
+
+                if (this.pendingCreateLimitOrders.length === 0) {
+                    this.pendingCounter = 0;
+                }
+
                 order.for_sale = parseInt(order.for_sale, 10);
                 order.expiration = new Date(order.expiration);
                 this.activeMarketLimits = this.activeMarketLimits.set(
                     order.id,
                     LimitOrder(order)
-                );
-            });
-        }
-
-        if (result.shorts) {
-            result.shorts.forEach(short => {
-                short.expiration = new Date(short.expiration);
-                this.activeMarketShorts = this.activeMarketShorts.set(
-                    short.id,
-                    ShortOrder(short)
                 );
             });
         }
@@ -121,7 +123,7 @@ class MarketsStore {
             });
         }
 
-        this._depthChart(result);
+        this._depthChart();
 
 
         // if (result.sub) {
@@ -153,20 +155,36 @@ class MarketsStore {
     }
 
     onCreateLimitOrder(e) {
-        if (e.newOrderID) { // Optimistic update
-            this.pendingCreateLimitOrders[e.newOrderID] = e.order;
+        this.pendingCounter++;
+        if (e.newOrder) { // Optimistic update
+            e.newOrder.id = `${e.newOrder.seller}_${this.pendingCounter}`;
+            this.pendingCreateLimitOrders.push({id: e.newOrder.id, seller: e.newOrder.seller, expiration: e.newOrder.expiration});
+            e.newOrder.for_sale = parseInt(e.newOrder.for_sale, 10);
+            e.newOrder.expiration = new Date(e.newOrder.expiration);
             this.activeMarketLimits = this.activeMarketLimits.set(
-                e.newOrderID,
-                e.order
+                e.newOrder.id,
+                LimitOrder(e.newOrder)
             );
-
         }
 
-        if (e.failedOrderID) { // Undo order if failed
-            this.activeMarketLimits = this.activeMarketLimits.delete(e.failedOrderID);
+        if (e.failedOrder) { // Undo order if failed
+            let uid;
+            for (var i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
+                if (this.pendingCreateLimitOrders[i].expiration === e.failedOrder.expiration) {
+                    console.log("found failed order to remove", this.pendingCreateLimitOrders[i]);
+                    uid = this.pendingCreateLimitOrders[i].id;
+                    this.pendingCreateLimitOrders.splice(i, 1);
+                    this.activeMarketLimits = this.activeMarketLimits.delete(uid);
+                    break;
+                }
+            }
 
-            delete this.pendingCancelLimitOrders[e.failedOrderID];
+            if (this.pendingCreateLimitOrders.length === 0) {
+                this.pendingCounter = 0;
+            }
         }
+
+        this._depthChart();
     }
 
     onCancelLimitOrder(e) {
@@ -199,8 +217,6 @@ class MarketsStore {
     _depthChart() {
         let quotePrecision = utils.get_asset_precision(this.quoteAsset.precision);
         let basePrecision = utils.get_asset_precision(this.baseAsset.precision);
-
-        console.log("_depthChart orders:", this.activeMarketLimits);
 
         let bids = [], asks = [];
         if (this.activeMarketLimits) {
