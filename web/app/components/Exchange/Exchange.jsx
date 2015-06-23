@@ -1,7 +1,7 @@
 import React from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders.jsx";
-import OpenOrders from "./OpenOrders.jsx";
+import OrderBook from "./OrderBook.jsx";
 import Margin from "./Margin.jsx";
 import utils from "common/utils";
 import DepthHighChart from "./DepthHighChart";
@@ -164,19 +164,6 @@ class Exchange extends React.Component {
             </form>
         );
 
-    // TODO: get and pass short data from API call
-        let marginForm = (
-            <Margin 
-                base={base}         
-                quote={quote}
-                baseSymbol={baseSymbol}
-                quoteSymbol={quoteSymbol}
-                amount="0" 
-                collateral="0" 
-                priceFeed="80"
-                marginCallFeed="150" />
-        );
-
         return (
             <div className="grid-block">
 
@@ -185,69 +172,92 @@ class Exchange extends React.Component {
                     {/* Left Column */}
                     <div className="grid-block shrink left-column">
                         <div className="grid-content">
-                            <div className="tabs">
-                                <div className={buyTabClass} onClick={this._changeTab.bind(this, "buy")}>
-                                    BUY
-                                </div>
-                                <div className={sellTabClass} onClick={this._changeTab.bind(this, "sell")}>
-                                    SELL
-                                </div>
-                                <div className={marginTabClass} onClick={this._changeTab.bind(this, "margin")}>
-                                    MARGIN
-                                </div>
-                            </div>
-                            <div style={{paddingTop: "1em"}}>
-                                {this.state.activeTab === "buy" ? buyForm : (this.state.activeTab === "sell" ? sellForm : marginForm)}
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Open Orders */}
-                    <div className="grid-block shrink left-column-2">
-                        <div className="grid-content">
-                            <OpenOrders
-                                orders={limit_orders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />
-                            </div>
-                    </div>
-                    {/* Depth Chart and My Orders */}
-                    <div className="grid-block main-content vertical ">
-                        <div className="grid-block show-for-large shrink">
-                            <DepthHighChart
-                                orders={limit_orders}
-                                flat_asks={this.props.flat_asks}
-                                flat_bids={this.props.flat_bids}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />
-                        </div>
-                        <div className="grid-block">
-                            <div className="grid-content order-table">
-                                <p>MY OPEN ORDERS</p>
-                                <MyOpenOrders
+                        {/* Order Book */}
+                        <div className="grid-block shrink left-column-2">
+                            <div className="grid-content">
+                                <OrderBook
                                     orders={limit_orders}
-                                    account={account.id}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    onCancel={this._cancelLimitOrder.bind(this)} />
+                                />
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    {/* Center Column */}
+                    <div className="grid-block main-content vertical ">
+                        <div className="grid-content">
+                            {/* Header */}
+                            <div className="grid-block">
+                                <div className="grid-content">
+                                    <h2>{baseSymbol} / {quoteSymbol}</h2>
+                                </div>
+                            </div>
 
-                    {/* Order History */}
+                            {/* Depth Chart */}
+                            <div className="grid-block show-for-large shrink">
+                                <DepthHighChart
+                                    orders={limit_orders}
+                                    flat_asks={this.props.flat_asks}
+                                    flat_bids={this.props.flat_bids}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                />
+                            </div>
+
+                            
+                            <div className="grid-block">
+                                
+                                <div className="grid-block align-spaced">
+                                    <div className="grid-content small-4">
+                                        {buyForm}
+                                    </div>
+                                    <div className="grid-content small-4">
+                                        {buyForm}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid-block">
+                                {/* My Open Orders */}
+                                <div className="grid-block small-6">
+                                    <div className="grid-content order-table">
+                                        <p>OPEN ORDERS</p>
+                                        <MyOpenOrders
+                                            orders={limit_orders}
+                                            account={account.id}
+                                            base={base}
+                                            quote={quote}
+                                            baseSymbol={baseSymbol}
+                                            quoteSymbol={quoteSymbol}
+                                            onCancel={this._cancelLimitOrder.bind(this)} />
+                                    </div>
+                                </div>
+
+                                {/* My Recent Trades */}
+                                <div className="grid-block small-6">
+                                    <div className="grid-content order-table">
+                                        <p>RECENT TRADES</p>
+                                        <p>TODO: put the user&apos;s most recently completed trades in this panel.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+                    {/* Market History */}
                     <div className="grid-block shrink right-column">
                         <div className="grid-content">
                             <table style={{width: "100%"}} className="table expand order-table">
-                              <p>ORDER HISTORY</p>
+                              <p>MARKET HISTORY</p>
                                 <thead>
                                 <tr>
                                     <th>Quantity</th>

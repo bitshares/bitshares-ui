@@ -4,7 +4,7 @@ import classNames from "classnames";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
 
-class OpenOrders extends React.Component {
+class OrderBook extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.orders, this.props.orders)
@@ -75,7 +75,7 @@ class OpenOrders extends React.Component {
 
         return (
                 <table className="table order-table">
-                    <p>OPEN ORDERS</p>
+                    <h3>Order Book</h3>
                     <thead>
                     <tr>
                         <th>Quantity ({quoteSymbol})</th>
@@ -92,4 +92,4 @@ class OpenOrders extends React.Component {
     }
 }
 
-export default OpenOrders;
+export default OrderBook;
