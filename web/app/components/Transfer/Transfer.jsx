@@ -10,7 +10,7 @@ import AccountActions from "actions/AccountActions";
 import AccountInfo from "../Account/AccountInfo";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import Typeahead from "../Forms/Typeahead";
+import AutocompleteInput from "../Forms/AutocompleteInput";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -241,9 +241,9 @@ class Transfer extends BaseComponent {
                         </div>
                     </div>
                     <div className="grid-block medium-3">
-                        <div className={classNames({"has-error": errors.to})}>
+                        <div className={classNames("medium-12", {"has-error": errors.to})}>
                             <Translate component="label" content="transfer.to" />
-                            <Typeahead id="to-field" options={account_choices} />
+                            <AutocompleteInput id="to" options={account_choices} onChange={this.formChange.bind(this)} />
                             <div>{errors.to}</div>
                         </div>
                     </div>
@@ -278,7 +278,7 @@ class Transfer extends BaseComponent {
                     </div>
                     <div className="grid-block medium-3 medium-order-3 small-order-4">
                         <div className="grid-content">
-                            { transfer.to ? <AccountInfo account_name={transfer.to[1]} account_id={transfer.to[0]} image_size={{height: 120, width: 120}}/> : null }
+                            { transfer.to ? <AccountInfo account_name={transfer.to} image_size={{height: 120, width: 120}}/> : null }
                         </div>
                     </div>
                     <div className="grid-block medium-3 medium-order-4 small-order-2">

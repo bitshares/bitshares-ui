@@ -15,3 +15,10 @@
 .has-error input, .has-error select, .has-error textarea {
   border-color: #a94442;
 }
+
+.autocomplete > .action-sheet-container {
+  display: flex;
+  > .action-sheet {
+    left: 6em;
+  }
+}
