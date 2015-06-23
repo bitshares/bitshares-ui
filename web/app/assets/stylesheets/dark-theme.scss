@@ -124,6 +124,13 @@ h1, h2, h3, h4, h5, h6 {
     border-top-color: $bg-color;
     border-bottom-color: $bg-color;
     background-color: $panel-bg-color; //lighten($bg-color, 4%);
+
+  }
+
+  .left-column-2 {
+    border-top-color: $bg-color;
+    border-bottom-color: $bg-color;
+    background-color: darken($bg-color, 4%);
   }
 
   .main-content {
@@ -131,7 +138,9 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .right-column {
-    background-color: $bg-color;
+    border-top-color: $bg-color;
+    border-bottom-color: $bg-color;
+    background-color: darken($bg-color, 4%);
   }
 
 }

@@ -1,11 +1,13 @@
 .table > thead > tr > th {
   border-bottom: 2px solid #ddd;
-  padding-bottom: 6px;
+  padding: 12px 0px;
+  padding-right: 8px;
   text-transform: uppercase;
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   font-weight: normal;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   color: #777;
+  text-align: left;
 }
 
 .table > tbody > tr > td {

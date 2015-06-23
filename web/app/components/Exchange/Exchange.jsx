@@ -199,7 +199,7 @@ class Exchange extends React.Component {
                     </div>
 
                     {/* Open Orders */}
-                    <div className="grid-block shrink">
+                    <div className="grid-block shrink left-column-2">
                         <div className="grid-content">
                             <OpenOrders
                                 orders={limit_orders}
@@ -211,7 +211,7 @@ class Exchange extends React.Component {
                             </div>
                     </div>
                     {/* Depth Chart and My Orders */}
-                    <div className="grid-block main-content vertical">
+                    <div className="grid-block main-content vertical ">
                         <div className="grid-block show-for-large shrink">
                             <DepthHighChart
                                 orders={limit_orders}
@@ -224,7 +224,7 @@ class Exchange extends React.Component {
                             />
                         </div>
                         <div className="grid-block">
-                            <div className="grid-content">
+                            <div className="grid-content order-table">
                                 <p>MY OPEN ORDERS</p>
                                 <MyOpenOrders
                                     orders={limit_orders}
@@ -242,8 +242,8 @@ class Exchange extends React.Component {
                     {/* Order History */}
                     <div className="grid-block shrink right-column">
                         <div className="grid-content">
-                            <p>ORDER HISTORY</p>
                             <table style={{width: "100%"}} className="table expand order-table">
+                              <p>ORDER HISTORY</p>
                                 <thead>
                                 <tr>
                                     <th>Quantity</th>
