@@ -171,9 +171,10 @@ class Exchange extends React.Component {
                 quote={quote}
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
-                amount="50" 
-                collateral="20000" 
-                priceFeed="80" />
+                amount="0" 
+                collateral="0" 
+                priceFeed="80"
+                marginCallFeed="150" />
         );
 
         return (

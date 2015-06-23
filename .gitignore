@@ -6,3 +6,5 @@ cli/bundle.js*
 *.map
 *.log
 cli/examples.txt
+
+web/app/components/Exchange/exchange.css
