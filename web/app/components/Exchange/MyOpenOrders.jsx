@@ -67,7 +67,6 @@ class MyOpenOrders extends React.Component {
                             format="short"
                             />
                         </td>
-                        {/*TODO: add expiration data  */}
                     </tr>
                     );
             }).toArray();
