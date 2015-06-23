@@ -75,7 +75,7 @@ class OpenOrders extends React.Component {
 
         return (
                 <table className="table order-table">
-                    <caption>OPEN ORDERS</caption>
+                    <p>OPEN ORDERS</p>
                     <thead>
                     <tr>
                         <th>Quantity ({quoteSymbol})</th>

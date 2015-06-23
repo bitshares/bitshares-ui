@@ -7,14 +7,25 @@ td.orderHistoryAsk {
 }
 
 .order-table {
+	width: 100%;
+	> caption {
+		padding-bottom: 1.25rem;
+		text-align: left;
+	}
     > thead > tr > th {
         font-size: 0.9rem;
+        text-align: left;
     }
 
     > tbody > tr > td {
         font-size: 0.75rem;
     }
 }
+
+p.order-table-title {
+	display: none;
+}
+
 
 .notification,
 .notification.success,
