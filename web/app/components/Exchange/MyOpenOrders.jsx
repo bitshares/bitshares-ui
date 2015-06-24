@@ -35,7 +35,7 @@ class MyOpenOrders extends React.Component {
         if(orders.size > 0 && base && quote) {    
             quotePrecision = utils.get_asset_precision(quote.precision);
             basePrecision = utils.get_asset_precision(base.precision);
-                    
+
             orderRows = orders.filter(a => {
                 return a.seller === account; 
             }).sort((a, b) => {
@@ -54,31 +54,31 @@ class MyOpenOrders extends React.Component {
                 let tdClass = classNames({orderHistoryBid: !data.isAsk, orderHistoryAsk: data.isAsk});
                 return (
                      <tr key={order.id}>
+                        <td className={tdClass}>{(data.buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td>{data.price.toFixed(3)}</td>
                         <td>
                             <a onClick={this.props.onCancel.bind(this, order.id)}>
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
-                        </td>
-                        <td className={tdClass}>{data.buy.amount / quotePrecision}</td>
-                        <td>{data.price}</td>
-                        <td><FormattedDate
+                        </td>                        
+                        {/*<td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}
                             format="short"
                             />
-                        </td>
+                        </td>*/}
                     </tr>
                     );
             }).toArray();
         }
         return (
-            <table className="table order-table">
+            <table className="table order-table my-orders">
                 <thead>
                 <tr>
+                    <th>Amount</th>
+                    <th>Price</th>
                     <th>{/* "Cancel button" column */}</th>
-                    <th>Quantity ({quoteSymbol})</th>
-                    <th>Price ({baseSymbol})</th>
-                    <th>Expiration</th>
+                    {/*<th>Expiration</th>*/}
                 </tr>
                 </thead>
                 <tbody>

@@ -76,7 +76,7 @@ class OrderBook extends React.Component {
         }
 
         return (
-                <div className="clearfix">
+                <div className="clearfix grid-content">
                     <table className="table order-table float-left text-right">
                         <thead>
                         <tr>

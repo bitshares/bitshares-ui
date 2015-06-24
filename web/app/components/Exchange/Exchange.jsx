@@ -22,7 +22,8 @@ class Exchange extends React.Component {
             sellAmount: 5,
             sellPrice: 170,
             sub: false,
-            activeTab: "buy"
+            activeTab: "buy",
+            showBuySell: true
         };
     }
 
@@ -103,6 +104,10 @@ class Exchange extends React.Component {
 
     _changeTab(value) {
         this.setState({activeTab: value});
+    }
+
+    _toggleBuySell() {
+        this.setState({showBuySell: !this.state.showBuySell});
     }
 
     render() {
@@ -240,14 +245,14 @@ class Exchange extends React.Component {
                             </div>
 
                             {/* Order Book */}
-                            <div className="grid-block vertical market-content">
-                                <OrderBook
-                                    orders={limit_orders}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    />
+                            <div className="grid-block small-6 vertical market-content">
+                                    <OrderBook
+                                        orders={limit_orders}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        />
                             </div>
                         </div>
 
@@ -286,15 +291,30 @@ class Exchange extends React.Component {
                     {/* Buy/Sell */}
                     <div className="grid-block shrink right-column" style={{alignItems: "flex-start"}}>
                         <div className="grid-block vertical market-content">
+                            {!this.state.showBuySell ? <div className="grid-content">
+                                <div onClick={this._toggleBuySell.bind(this)} className="button">Place new order</div>
+                            </div> : 
                             <div className="grid-content">
+                                <div onClick={this._toggleBuySell.bind(this)} className="button">My Orders</div>
+                            </div>}
+                            {this.state.showBuySell ? (<div style={{paddingTop: "1rem"}}className="grid-content">
                                 {buyForm}
-                            </div>
-                            <div className="grid-content" style={{paddingTop: "2rem"}}>
+                            </div>) : null}
+                            {this.state.showBuySell ? (<div className="grid-content" style={{paddingTop: "2rem"}}>
                                 {sellForm}
-                            </div>
-                            <div className="grid-content" style={{paddingTop: "5rem"}}>
-                                <div className="button">My Orders Switch here</div>
-                            </div>
+                            </div>) : null}
+
+                            {!this.state.showBuySell ? (
+                                <div className="grid-content">
+                                <MyOpenOrders
+                                        orders={limit_orders}
+                                        account={account.id}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        onCancel={this._cancelLimitOrder.bind(this)}/>
+                            </div>) : null}
                         </div>
                     </div>
                     
