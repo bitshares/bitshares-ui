@@ -163,9 +163,8 @@ class Exchange extends React.Component {
                     Price: ({baseSymbol} per {quoteSymbol}):
                     <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)}/>
                 </label>
-
                 <p>Total ({baseSymbol}): { sellTotal }</p>
-                <input type="submit" className="button" value={"Sell " + quoteSymbol}/>
+               <input type="submit" className="button" value={"Sell " + quoteSymbol}/>
             </form>
         );
 
@@ -194,18 +193,31 @@ class Exchange extends React.Component {
                     </div>
 
                     {/* Depth Chart */}
-                    <div className="grid-block">
-                        <div className="show-for-large">
-                            <DepthHighChart
-                                orders={limit_orders}
-                                flat_asks={this.props.flat_asks}
-                                flat_bids={this.props.flat_bids}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                />
-                        </div>
+                    <div className="grid-block show-for-large">
+                            <div className="grid-block large-6">
+                                <DepthHighChart
+                                    orders={limit_orders}
+                                    flat_asks={this.props.flat_asks}
+                                    flat_bids={this.props.flat_bids}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    />
+                            </div>
+
+                            {/* TODO: placeholder for price history chart */}
+                            <div className="grid-block large-6">    
+                                <DepthHighChart
+                                    orders={limit_orders}
+                                    flat_asks={this.props.flat_asks}
+                                    flat_bids={this.props.flat_bids}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    />
+                            </div>
                     </div>
 
                     <div className="grid-block">
