@@ -181,7 +181,7 @@ class Exchange extends React.Component {
 
 
                     {/* Left Column */}
-                    <div className="grid-block left-column-2" style={{alignItems: "flex-start", overflowY: "auto"}}>
+                    <div className="grid-block left-column-2 shrink" style={{alignItems: "flex-start", overflowY: "auto"}}>
                         {/* Buy/Sell */}
                         <div className="grid-block vertical market-content">
                             {!this.state.showBuySell ? <div className="grid-content">
