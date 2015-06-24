@@ -20,15 +20,16 @@
   "dependencies": {
     "alt": "~0.15.3",
     "bigi": "1.1.0",
-    "bs58": "~2.0.0",
+    "bs58": "2.0.0",
     "crypto-js": "3.1.2-3",
     "ecurve": "1.0.0",
     "immutable": "~3.7.1",
     "numeral": "^1.5.3",
     "rx": "^2.5.2",
-    "secure-random": "~1.1.1",
     "tcomb": "~1.0.1",
-    "websocket": "^1.0.18"
+    "websocket": "^1.0.18",
+    "secure-random": "1.1.1",
+    "qr-image": "3.1.0"
   },
   "devDependencies": {
     "coffee-script": "~1.8.0",

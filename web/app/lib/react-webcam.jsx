@@ -16,6 +16,10 @@ module.exports = React.createClass({
       on: false
     };
   },
+  
+  statics: {
+      hasGetUserMedia: hasGetUserMedia
+  },
 
   render: function () {
     return (
@@ -27,25 +31,29 @@ module.exports = React.createClass({
     self = this;
     var video = this.refs.video.getDOMNode();
 
-    if (!hasGetUserMedia()) return;
+    if (!hasGetUserMedia()) {
+        console.error("react-webcam: browser does not support User Media");
+        return;
+    }
 
     navigator.getUserMedia = navigator.getUserMedia ||
                           navigator.webkitGetUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia;
 
+    var self = this;
     if (this.props.audioSource && this.props.videoSource) {
       sourceSelected(this.props.audioSource, this.props.videoSource);
     } else {
       MediaStreamTrack.getSources(function(sourceInfos) {
         var audioSource = null;
         var videoSource = null;
-
         sourceInfos.forEach(function(sourceInfo) {
           if (sourceInfo.kind === 'audio') {
-            console.log(sourceInfo.id, sourceInfo.label || 'microphone');
-
-            audioSource = sourceInfo.id;
+            if( ! self.props.noAudio) {
+              console.log(sourceInfo.id, sourceInfo.label || 'microphone');
+              audioSource = sourceInfo.id;
+            }
           } else if (sourceInfo.kind === 'video') {
             console.log(sourceInfo.id, sourceInfo.label || 'camera');
 
@@ -54,14 +62,13 @@ module.exports = React.createClass({
             console.log('Some other kind of source: ', sourceInfo);
           }
         });
-
         sourceSelected(audioSource, videoSource);
       });
     }
 
     function sourceSelected(audioSource, videoSource) {
       var constraints = {
-        audio: {
+        audio: self.props.noAudio ? false : {
           optional: [{sourceId: audioSource}]
         },
         video: {
@@ -74,14 +81,24 @@ module.exports = React.createClass({
 
     function successCallback(stream) {
       self.setState({on:true});
+      //? var video = this.refs.video.getDOMNode();
       video.src = window.URL.createObjectURL(stream);
     };
 
     function errorCallback(e) {
+      // ? var video = this.refs.video.getDOMNode();
       video.src = self.props.fallbackURL;
     };
   },
 
+  componentWillUnmount() {
+      var video = this.refs.video.getDOMNode();
+      //https://gist.github.com/danro/5725870
+      console.log('... video shutdown')
+      video.pause()
+      video.src = ''
+  },
+  
   getScreenshot: function() {
     if (!this.state.on) return;
 

@@ -116,14 +116,25 @@ module.exports = key =
         brain_key = brain_key.toUpperCase()
         brain_key.split(/[\t\n\v\f\r ]+/).join ' '
     
-    get_owner_private: (brain_key)->
+    get_owner_private: (brain_key, sequence = 0)->
+        unless sequence >= 0
+            throw new Error "invalid sequence"
+        
         brain_key = key.normalize_brain_key brain_key
+        
         PrivateKey.fromBuffer(
-            hash.sha256 hash.sha512 brain_key + " 0"
+            hash.sha256(hash.sha512(
+                brain_key + " " + sequence
+            ))
         )
     
-    get_active_private: (owner_private)->
+    get_active_private: (owner_private, sequence = 0)->
+        unless sequence >= 0
+            throw new Error "invalid sequence"
+        
         PrivateKey.fromBuffer(
-            hash.sha256 hash.sha512 owner_private.toWif() + " 0"
+            hash.sha256(hash.sha512(
+                owner_private.toWif() + " " + sequence
+            ))
         )
 
