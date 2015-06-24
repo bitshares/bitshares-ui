@@ -60,9 +60,9 @@ class Markets extends Component {
         });
 
         return (
-            <div className="grid-block small-horizontal">
-                <div className="grid-block page-layout">
-                    <div className="grid-container">
+            <div className="grid-block small-horizontal" style={{flexWrap: "nowrap"}}>
+                <div className="grid-block page-layout" style={{minWidth: "15rem"}}>
+                    <div className="grid-content left-column-2" style={{padding: "0.5rem"}}>
                         <section className="block-list">
                             <header>Switch market orientation</header>
                             <ul>
