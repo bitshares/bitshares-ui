@@ -78,6 +78,7 @@ let PrivateKey = t.struct({
     id: t.maybe(t.Num),
     wallet_id: t.Num,
     public_id: t.Num,
+    brainkey_owner_private_id: t.maybe(t.Num),
     brainkey_sequence: t.maybe(t.Num),
     encrypted_key: t.Str,
     created: t.Dat
