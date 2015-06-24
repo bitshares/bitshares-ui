@@ -61,7 +61,7 @@ class Header extends BaseComponent {
             accountsDropDown = (
                 <ActionSheet id="account_drop_down">
                     <ActionSheet.Button title="">
-                        <a className='button'>
+                        <a className="button">
                             &nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
                         </a>
                     </ActionSheet.Button>
