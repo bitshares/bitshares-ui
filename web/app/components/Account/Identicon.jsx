@@ -12,25 +12,25 @@ class Identicon extends Component {
       let {account} = this.props;
       let {height, width} = this.props.size;
       let hash = account ? sha256(account) : null;
-      
+      this.canvas_id = "identicon_" + account + Math.random() * 1000;
       return (
         <div>
           {hash ?
-            <canvas id={"identicon_" + account} style={{height: height, width: width}} width={width * 2} height={height * 2} data-jdenticon-hash={hash} /> :
+            <canvas id={this.canvas_id} style={{height: height, width: width}} width={width * 2} height={height * 2} data-jdenticon-hash={hash} /> :
             <div style={{height: height, width: width}} width={width * 2} height={height * 2}/>}
         </div>
       );
   }
 
   componentDidMount() {
-      if (this.props.account) {
-          jdenticon.updateById("identicon_" + this.props.account);
+      if (this.canvas_id) {
+          jdenticon.updateById(this.canvas_id);
       }
   }
 
   componentDidUpdate() {
-      if (this.props.account) {
-          jdenticon.updateById("identicon_" + this.props.account);
+      if (this.canvas_id) {
+          jdenticon.updateById(this.canvas_id);
       }
   }
 }

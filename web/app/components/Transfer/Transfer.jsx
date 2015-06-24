@@ -19,9 +19,11 @@ class Transfer extends BaseComponent {
         this.state = {
             transfer: {
                 from: null,
+                from_id: null,
                 amount: null,
                 asset: "1.4.0",
                 to: null,
+                to_id: null,
                 memo: null
             },
             isValid: false,
@@ -42,7 +44,7 @@ class Transfer extends BaseComponent {
     componentWillReceiveProps(nextProps) {
         if (this.props.accounts === nextProps.accounts && this.state.transfer.from) { return; }
         let {accounts, currentAccount} = this.props;
-        let account_id = this.state.transfer.from ? this.state.transfer.from[0] : currentAccount.id;
+        let account_id = this.state.transfer.from_id ? this.state.transfer.from_id : currentAccount.id;
         let account = accounts.get(account_id);
         if (!account) { AccountActions.getAccount(account_id); }
     }
@@ -53,20 +55,22 @@ class Transfer extends BaseComponent {
         let req = counterpart.translate("transfer.errors.req");
         let pos = counterpart.translate("transfer.errors.pos");
         let valid = counterpart.translate("transfer.errors.valid");
-        this.state.errors.amount = null;
-        if (!transfer.amount) {
-            errors.amount = req;
-        } else if ((Number(transfer.amount) === 0)) {
-            errors.amount = pos;
-        } else if (!(Number(transfer.amount) > 0.0)) {
-            errors.amount = valid;
+        errors.amount = null;
+        if(transfer.amount !== null) {
+            if (!transfer.amount) {
+                errors.amount = req;
+            } else if ((Number(transfer.amount) === 0)) {
+                errors.amount = pos;
+            } else if (!(Number(transfer.amount) > 0.0)) {
+                errors.amount = valid;
+            }
         }
-
         errors.to = null;
-        if (!transfer.to) {
-            errors.to = req;
+        if(transfer.to !== null) {
+            if (!transfer.to) {
+                errors.to = req;
+            }
         }
-
         this.state.isValid = !(errors.from || errors.amount || errors.to || errors.memo);
     }
 
@@ -74,9 +78,15 @@ class Transfer extends BaseComponent {
         this.state.error = null;
         let key = event.target.id;
         let value = event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
-        this.state.transfer[key] = value;
-        if (key === "from" && value) {
+        if (key === "from") {
+            this.state.transfer.from = value[1];
+            this.state.transfer.from_id = value[0];
             if (!this.props.accounts.get(value[0])) { AccountActions.getAccount(value[0]); }
+        } else if (key === "to") {
+            this.state.transfer.to = value;
+            this.state.transfer.to_id = this.props.accounts_list[value];
+        } else {
+            this.state.transfer[key] = value;
         }
         this.validateTransferFields();
         this.setState(this.state);
@@ -114,12 +124,10 @@ class Transfer extends BaseComponent {
         // Launch api action here
         let t = this.state.transfer;
         let precision = utils.get_asset_precision(this.props.assets.get(this.state.transfer.asset).precision);
-        if (!t.from) {
-            t.from = this.props.currentAccount.id;
-        } else if (Array.isArray(t.from)) {
-            t.from = t.from[0];
+        if (!t.from_id) {
+            t.from_id = this.props.currentAccount.id;
         }
-        AccountActions.transfer(t.from, t.to[0], t.amount * precision, t.asset, t.memo).then(() => {
+        AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
             this.setState({confirmation: false, done: true, error: null});
         }).catch(error => {
             this.setState({confirmation: false, done: false, error: error});
@@ -136,12 +144,12 @@ class Transfer extends BaseComponent {
     }
 
 
-    renderSelect(ref, values) {
+    renderSelect(ref, values, value) {
         var options = values.map(function(value) {
             return <option value={value[0]}>{value[1]}</option>;
         });
         return (
-            <select className="form-control" id={ref} ref={ref}>
+            <select defaultValue={value} className="form-control" id={ref} ref={ref}>
                 {options}
             </select>
         );
@@ -150,10 +158,11 @@ class Transfer extends BaseComponent {
     render() {
         let {transfer, errors} = this.state;
         let {accounts, currentAccount, assets, accountBalances} = this.props;
-        //let to = this.props.location.query.to;
-        //let symbols = this.context.router.getCurrentParams().marketID.split("_");
         let query_params = this.context.router.getCurrentQuery();
-        if(query_params.to && !transfer.to) transfer.to = query_params.to;
+        if(query_params.to && !transfer.to) {
+            transfer.to = query_params.to;
+            transfer.to_id = this.props.accounts_list[query_params.to];
+        }
         let al = this.props.accounts_list;
         let account_choices = Object.keys(al).map(k => [`["${al[k]}","${k}"]`, k]);
         if (!account_choices[0]) {
@@ -166,10 +175,14 @@ class Transfer extends BaseComponent {
         }
         let account = null;
         let balancesComp = null, finalBalances = null;
-        let from = transfer.from ? transfer.from : JSON.parse(account_choices[0][0]);
+
+        if(!transfer.from) {
+            transfer.from = currentAccount.name;
+            transfer.from_id = currentAccount.id;
+        }
 
         if (accounts.size > 0 && assets.size > 0) {
-            account = accounts.get(this.state.transfer.from ? this.state.transfer.from[0] : currentAccount.id);
+            account = accounts.get(this.state.transfer.from_id ? this.state.transfer.from_id : currentAccount.id);
             let balances = account ? accountBalances.get(account.id) : null;
             if (account && balances) {
                 balancesComp = balances.map((balance) => {
@@ -225,13 +238,15 @@ class Transfer extends BaseComponent {
         return (
             <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
                 <div className="grid-block page-layout transfer-top shrink small-horizontal">
+                    {/*  F R O M  */}
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.from})}>
                             <Translate component="label" content="transfer.from" />
-                            {this.renderSelect("from", account_choices)}
+                            {this.renderSelect("from", account_choices, `["${transfer.from_id}","${transfer.from}"]`)}
                             <div>{errors.from}</div>
                         </div>
                     </div>
+                    {/*  A M O U N T  */}
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.amount})}>
                             <label>
@@ -244,6 +259,7 @@ class Transfer extends BaseComponent {
                             <div>{errors.amount}</div>
                         </div>
                     </div>
+                    {/*  T O  */}
                     <div className="grid-block medium-3">
                         <div className={classNames("medium-12", {"has-error": errors.to})}>
                             <Translate component="label" content="transfer.to" />
@@ -251,6 +267,7 @@ class Transfer extends BaseComponent {
                             <div>{errors.to}</div>
                         </div>
                     </div>
+                    {/*  S E N D  B U T T O N  */}
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
                             <label>&nbsp;</label>
@@ -261,9 +278,10 @@ class Transfer extends BaseComponent {
                 </div>
 
                 <div className="grid-block page-layout transfer-bottom small-horizontal">
+                    {/*  F R O M  A C C O U N T  */}
                     <div className="grid-block medium-3 medium-order-1 small-order-3">
                         <div className="grid-content">
-                            <AccountInfo account_name={from[1]} account_id={from[0]} image_size={{height: 120, width: 120}}/>
+                            <AccountInfo account_name={transfer.from} account_id={transfer.from_id} image_size={{height: 120, width: 120}}/>
                             <hr/>
                             <h5><Translate component="span" content="transfer.balances" />:</h5>
                             <ul style={{listStyle: "none"}}>
@@ -271,6 +289,7 @@ class Transfer extends BaseComponent {
                             </ul>
                         </div>
                     </div>
+                    {/*  M E M O  */}
                     <div className="grid-block medium-3 medium-order-2 small-order-1">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
                             <label>
@@ -280,11 +299,13 @@ class Transfer extends BaseComponent {
                             <div>{errors.memo}</div>
                         </div>
                     </div>
+                    {/*  T O  A C C O U N T */}
                     <div className="grid-block medium-3 medium-order-3 small-order-4">
                         <div className="grid-content">
-                            { transfer.to ? <AccountInfo account_name={transfer.to} image_size={{height: 120, width: 120}}/> : null }
+                            { transfer.to_id ? <AccountInfo account_name={transfer.to} account_id={transfer.to_id} image_size={{height: 120, width: 120}}/> : null }
                         </div>
                     </div>
+                    {/* F I N A L  B A L A N C E  A N D  F E E  */}
                     <div className="grid-block medium-3 medium-order-4 small-order-2">
                         <div className="grid-content">
                             {finalBalances}
