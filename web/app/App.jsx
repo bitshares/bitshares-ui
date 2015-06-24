@@ -19,6 +19,7 @@ import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountMemberStats from "./components/Account/AccountMemberStats";
 import AccountHistory from "./components/Account/AccountHistory";
+import AccountPayees from "./components/Account/AccountPayees";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
@@ -143,6 +144,7 @@ let routes = (
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
             <Route name="account-history" path="history" handler={AccountHistory}/>
+            <Route name="account-payees" path="payees" handler={AccountPayees}/>
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>

@@ -14,9 +14,9 @@ class AccountLeftPanel extends React.Component {
             <div className="grid-content no-overflow account-left-panel">
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
-                    <div className="grid-block no-margin align-center account-buttons-row">
-                        <div className="grid-block no-margin"><button className="button outline">Follow</button></div>
-                        <div className="grid-block no-margin"><button className="button outline">Pay</button></div>
+                    <div className="grid-block no-margin account-buttons-row">
+                        <div className="grid-block no-margin center-content"><button className="button outline">Link</button></div>
+                        <div className="grid-block no-margin center-content"><button className="button outline">Pay</button></div>
                     </div>
                 </div>
                 <section className="block-list">
@@ -24,6 +24,7 @@ class AccountLeftPanel extends React.Component {
                         <li><Link to="account-overview" params={{name: account_name}}>Overview</Link></li>
                         <li><Link to="account-member-stats" params={{name: account_name}}>Member Stats</Link></li>
                         <li><Link to="account-history" params={{name: account_name}}>History</Link></li>
+                        <li><Link to="account-payees" params={{name: account_name}}>Payees</Link></li>
                         <li><Link to="account-permissions" params={{name: account_name}}>Permissions</Link></li>
                         <li><Link to="account-voting" params={{name: account_name}}>Voting</Link></li>
                         <li><Link to="account-orders" params={{name: account_name}}>Orders</Link></li>

@@ -38,6 +38,14 @@ a {
   margin: 0 !important;
 }
 
+.center-content {
+  text-align: center;
+  > * {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 label, label > span {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   text-transform: uppercase;
