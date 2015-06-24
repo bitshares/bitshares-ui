@@ -28,7 +28,7 @@ class OrderBook extends React.Component {
 
                 let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
                 let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return a_price > b_price;
+                return b_price > a_price;
             }).map(order => {
                 let isAskOrder = market_utils.isAsk(order, base);
                 let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
