@@ -38,3 +38,17 @@
     right: 0.5em;
     width: 30em;
 }
+
+.market-layout {
+  .grid-block {
+    padding-top: 1px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+}
+
+.market-content {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}

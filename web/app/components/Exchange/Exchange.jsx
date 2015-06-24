@@ -139,7 +139,7 @@ class Exchange extends React.Component {
                 </label>
 
                 <p>Total ({baseSymbol}): { buyTotal }</p>
-                <input type="submit" className="button" value={"Buy " + quoteSymbol}/>
+                <input style={{backgroundColor: "#50D2C2"}} type="submit" className="button" value={`Buy ${this.state.buyAmount} ${quoteSymbol}`}/>
             </form>
         );
 
@@ -155,37 +155,69 @@ class Exchange extends React.Component {
                     <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)}/>
                 </label>
                 <p>Total ({baseSymbol}): { sellTotal }</p>
-               <input type="submit" className="button" value={"Sell " + quoteSymbol}/>
+               <input style={{backgroundColor: "#E3745B"}} type="submit" className="button" value={`Sell ${this.state.sellAmount} ${quoteSymbol}`}/>
             </form>
         );
 
         return (
-            <div className="grid-block page-layout small-vertical medium-horizontal" style={{flexWrap: "nowrap"}}>
-
-                {/* Left Column */}
-                <div className="grid-block left-column-2">
-                    <div className="grid-content">
-                        {/* Order Book */}
-                        <OrderBook
-                            orders={limit_orders}
-                            base={base}
-                            quote={quote}
-                            baseSymbol={baseSymbol}
-                            quoteSymbol={quoteSymbol}
-                            />
-                    </div>
+            <div className="grid-block vertical">
+                <div className="grid-block shrink">
+                    <p>{baseSymbol} / {quoteSymbol} Put all kinds of info related to the market here (current price, spread, etc)</p>
                 </div>
+                <div className="grid-block page-layout market-layout small-vertical medium-horizontal" style={{flexWrap: "nowrap"}}>
 
-                {/* Center Column */}
-                <div className="grid-block main-content vertical">
-                    {/* Header */}
-                    <div className="grid-block">
-                        <h2>{baseSymbol} / {quoteSymbol}</h2>
+
+                    {/* Left Column */}
+                    <div className="grid-block left-column-2 show-for-large">
+                        {/* Market History */}
+                        <div className="grid-content market-content">
+                            <table style={{width: "100%"}} className="table expand order-table">
+                                <p>MARKET HISTORY</p>
+                                <thead>
+                                <tr>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Time</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    this.state.history.map(orderHistoryEntry)
+                                }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    {/* Depth Chart */}
-                    <div className="grid-block show-for-large">
-                            <div className="grid-block large-6">
+                    {/* Center Column */}
+                    <div className="grid-block main-content vertical">
+                        {/* Header 
+                        <div className="grid-block">
+                            
+                        </div>
+                        */}
+
+                        
+                        {/* TODO: placeholder for price history chart */}
+                        <div className="grid-block small-12">
+                                
+                                <div className="grid-block ">
+                                    <DepthHighChart
+                                        orders={limit_orders}
+                                        flat_asks={this.props.flat_asks}
+                                        flat_bids={this.props.flat_bids}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        height={450}
+                                        />
+                                </div>
+                        </div>
+
+                        <div className="grid-block">
+                            {/* Depth Chart */}
+                            <div className="grid-block small-6">    
                                 <DepthHighChart
                                     orders={limit_orders}
                                     flat_asks={this.props.flat_asks}
@@ -197,82 +229,66 @@ class Exchange extends React.Component {
                                     />
                             </div>
 
-                            {/* TODO: placeholder for price history chart */}
-                            <div className="grid-block large-6">    
-                                <DepthHighChart
+                            {/* Order Book */}
+                            <div className="grid-block vertical market-content">
+                                <OrderBook
                                     orders={limit_orders}
-                                    flat_asks={this.props.flat_asks}
-                                    flat_bids={this.props.flat_bids}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     />
                             </div>
+                        </div>
+
+
+                        {/* My Open Orders 
+                        <div className="grid-block">
+                            
+                            <div className="grid-block small-6">
+                                <div className="grid-content order-table">
+                                    <p>OPEN ORDERS</p>
+                                    <MyOpenOrders
+                                        orders={limit_orders}
+                                        account={account.id}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        onCancel={this._cancelLimitOrder.bind(this)}/>
+                                </div>
+                            </div>
+
+                            {/* My Recent Trades 
+                            <div className="grid-block shrink">
+                                <div className="grid-content order-table">
+                                    <p>RECENT TRADES</p>
+
+                                    <p>TODO: put the user&apos;s most recently completed trades in this panel.</p>
+                                </div>
+                            </div>
+                            
+                        </div> */}
+
                     </div>
 
-                    <div className="grid-block">
 
-                        <div className="grid-block align-spaced">
-                            <div className="grid-content small-4">
+                    {/* Buy/Sell */}
+                    <div className="grid-block shrink right-column" style={{alignItems: "flex-start"}}>
+                        <div className="grid-block vertical market-content">
+                            <div className="grid-content">
                                 {buyForm}
                             </div>
-                            <div className="grid-content small-4">
+                            <div className="grid-content" style={{paddingTop: "2rem"}}>
                                 {sellForm}
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="grid-block">
-                        {/* My Open Orders */}
-                        <div className="grid-block small-6">
-                            <div className="grid-content order-table">
-                                <p>OPEN ORDERS</p>
-                                <MyOpenOrders
-                                    orders={limit_orders}
-                                    account={account.id}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    onCancel={this._cancelLimitOrder.bind(this)}/>
-                            </div>
-                        </div>
-
-                        {/* My Recent Trades */}
-                        <div className="grid-block small-6">
-                            <div className="grid-content order-table">
-                                <p>RECENT TRADES</p>
-
-                                <p>TODO: put the user&apos;s most recently completed trades in this panel.</p>
+                            <div className="grid-content" style={{paddingTop: "5rem"}}>
+                                <div className="button">My Orders Switch here</div>
                             </div>
                         </div>
                     </div>
-
+                    
                 </div>
-
-
-                {/* Market History */}
-                <div className="grid-block shrink right-column">
-                    <div className="grid-content">
-                        <table style={{width: "100%"}} className="table expand order-table">
-                            <p>MARKET HISTORY</p>
-                            <thead>
-                            <tr>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Time</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                this.state.history.map(orderHistoryEntry)
-                            }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         );
     }

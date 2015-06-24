@@ -37,8 +37,9 @@ class OrderBook extends React.Component {
                 high = price;
                 return (
                      <tr key={order.id}>
-                        <td className={tdClass}>{buy.amount / quotePrecision}</td>
-                        <td>{price}</td>
+                        <td>{(price * buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td>{(buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td className={tdClass}>{price.toFixed(3)}</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
@@ -65,8 +66,9 @@ class OrderBook extends React.Component {
                 askIndex++;
                 return (
                      <tr key={order.id}>
-                        <td className={tdClass}>{buy.amount / quotePrecision}</td>
-                        <td>{price}</td>
+                        <td className={tdClass}>{price.toFixed(3)}</td>
+                        <td >{(buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td >{(price * buy.amount / quotePrecision).toFixed(3)}</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
@@ -74,20 +76,32 @@ class OrderBook extends React.Component {
         }
 
         return (
-                <table className="table order-table">
-                    <h3>Order Book</h3>
-                    <thead>
-                    <tr>
-                        <th>Quantity ({quoteSymbol})</th>
-                        <th>Price ({baseSymbol})</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                            {bids}
-                            <tr><td colSpan="2" className="text-center">Spread: {high > 0 && low > 0 ? low - high : 0} {baseSymbol}</td></tr>
-                            {asks}
-                    </tbody>
-                </table>
+                <div className="clearfix">
+                    <table className="table order-table float-left text-right">
+                        <thead>
+                        <tr>
+                            <th style={{textAlign: "right"}}>Value</th>
+                            <th style={{textAlign: "right"}}>Amount</th>
+                            <th style={{textAlign: "right"}}>Bid</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                                {bids}
+                        </tbody>
+                    </table>
+                    <table className="table order-table float-right">
+                        <thead>
+                        <tr>
+                            <th>Ask</th>
+                            <th>Amount</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                                {asks}
+                        </tbody>
+                    </table>
+                </div>
         );
     }
 }
