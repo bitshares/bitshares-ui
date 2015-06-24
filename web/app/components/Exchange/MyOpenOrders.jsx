@@ -17,15 +17,12 @@ class MyOpenOrders extends React.Component {
 
     render() {
         let {orders, account, base, quote, quoteSymbol, baseSymbol} = this.props;
-        let orderRows = null;
-
-        let quotePrecision = utils.get_asset_precision(quote.precision);
-        let basePrecision = utils.get_asset_precision(base.precision);
+        let orderRows = null, quotePrecision, basePrecision;
 
         let getOrderData = function(order) {
-                let isAsk = market_utils.isAsk(order, base);
-                let {buy, sell} = market_utils.parseOrder(order, isAsk);
-                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+            let isAsk = market_utils.isAsk(order, base);
+            let {buy, sell} = market_utils.parseOrder(order, isAsk);
+            let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
             
             return {
                 isAsk: isAsk,
@@ -33,9 +30,12 @@ class MyOpenOrders extends React.Component {
                 sell: sell,
                 price: price
             };
-        }
+        };
 
-        if(orders.size > 0 && base && quote) {            
+        if(orders.size > 0 && base && quote) {    
+            quotePrecision = utils.get_asset_precision(quote.precision);
+            basePrecision = utils.get_asset_precision(base.precision);
+                    
             orderRows = orders.filter(a => {
                 return a.seller === account; 
             }).sort((a, b) => {
