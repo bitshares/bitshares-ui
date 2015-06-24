@@ -76,24 +76,13 @@ class MarketsStore {
             this.activeMarketLimits = this.activeMarketLimits.clear();
             this.activeMarketCalls = this.activeMarketCalls.clear();
             this.activeMarketSettles = this.activeMarketSettles.clear();
+            this.pendingCreateLimitOrders = [];
         }
 
         if (result.limits) {
+            // Keep an eye on this as the number of orders increases, it might not scale well
+            this.activeMarketLimits = this.activeMarketLimits.clear();
             result.limits.forEach(order => {
-                
-                // Loop over pending orders to remove temp order from orders map and remove from pending
-                for (var i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
-                    let myOrder = this.pendingCreateLimitOrders[i];
-                    if (myOrder.seller === order.seller && myOrder.expiration === order.expiration) {
-                        this.activeMarketLimits = this.activeMarketLimits.delete(myOrder.id);
-                        this.pendingCreateLimitOrders.splice(i, 1);
-                    }
-                }
-
-                if (this.pendingCreateLimitOrders.length === 0) {
-                    this.pendingCounter = 0;
-                }
-
                 order.for_sale = parseInt(order.for_sale, 10);
                 order.expiration = new Date(order.expiration);
                 this.activeMarketLimits = this.activeMarketLimits.set(
@@ -101,6 +90,23 @@ class MarketsStore {
                     LimitOrder(order)
                 );
             });
+
+            // Loop over pending orders to remove temp order from orders map and remove from pending
+            for (let i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
+                let myOrder = this.pendingCreateLimitOrders[i];
+                let order = this.activeMarketLimits.find((order, key) => {
+                    return myOrder.seller === order.seller && myOrder.expiration === order.expiration;
+                });
+
+                // If the order was found it has been confirmed, delete it from pending
+                if (order) {
+                    this.pendingCreateLimitOrders.splice(i, 1);
+                }
+            }
+
+            if (this.pendingCreateLimitOrders.length === 0) {
+                this.pendingCounter = 0;
+            }
         }
 
         if (result.calls) {
@@ -243,7 +249,7 @@ class MarketsStore {
                 // });
 
                 // highcharts format
-                bids.push([price, buy.amount / quotePrecision]);
+                bids.push([price, (buy.amount / sell.amount) * order.for_sale / quotePrecision]);
             });
 
             this.activeMarketLimits
@@ -267,9 +273,9 @@ class MarketsStore {
                 //     x: price,
                 //     y: buy.amount / quotePrecision
                 // });
-
                 // highcharts format
-                asks.push([price, buy.amount / quotePrecision]);
+
+                asks.push([price, order.for_sale / quotePrecision]);
 
             });
 

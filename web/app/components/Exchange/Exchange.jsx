@@ -181,36 +181,40 @@ class Exchange extends React.Component {
 
 
                     {/* Left Column */}
-                    <div className="grid-block left-column-2 show-for-large">
-                        {/* Market History */}
-                        <div className="grid-content market-content">
-                            <table style={{width: "100%"}} className="table expand order-table">
-                                <p>MARKET HISTORY</p>
-                                <thead>
-                                <tr>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Time</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    this.state.history.map(orderHistoryEntry)
-                                }
-                                </tbody>
-                            </table>
+                    <div className="grid-block left-column-2 shrink" style={{alignItems: "flex-start", overflowY: "auto"}}>
+                        {/* Buy/Sell */}
+                        <div className="grid-block vertical market-content">
+                            {!this.state.showBuySell ? <div className="grid-content">
+                                <div onClick={this._toggleBuySell.bind(this)} className="button">Place new order</div>
+                            </div> : 
+                            <div className="grid-content">
+                                <div onClick={this._toggleBuySell.bind(this)} className="button">My Orders</div>
+                            </div>}
+                            {this.state.showBuySell ? (<div style={{paddingTop: "1rem"}}className="grid-content">
+                                {buyForm}
+                            </div>) : null}
+                            {this.state.showBuySell ? (<div className="grid-content" style={{paddingTop: "2rem"}}>
+                                {sellForm}
+                            </div>) : null}
+
+                            {!this.state.showBuySell ? (
+                                <div className="grid-content">
+                                <MyOpenOrders
+                                        orders={limit_orders}
+                                        account={account.id}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        onCancel={this._cancelLimitOrder.bind(this)}/>
+                            </div>) : null}
                         </div>
+
                     </div>
 
                     {/* Center Column */}
                     <div className="grid-block main-content vertical">
-                        {/* Header 
-                        <div className="grid-block">
                             
-                        </div>
-                        */}
-
-                        
                         {/* TODO: placeholder for price history chart */}
                         <div className="grid-block small-12">
                                 
@@ -288,33 +292,25 @@ class Exchange extends React.Component {
                     </div>
 
 
-                    {/* Buy/Sell */}
-                    <div className="grid-block shrink right-column" style={{alignItems: "flex-start"}}>
-                        <div className="grid-block vertical market-content">
-                            {!this.state.showBuySell ? <div className="grid-content">
-                                <div onClick={this._toggleBuySell.bind(this)} className="button">Place new order</div>
-                            </div> : 
-                            <div className="grid-content">
-                                <div onClick={this._toggleBuySell.bind(this)} className="button">My Orders</div>
-                            </div>}
-                            {this.state.showBuySell ? (<div style={{paddingTop: "1rem"}}className="grid-content">
-                                {buyForm}
-                            </div>) : null}
-                            {this.state.showBuySell ? (<div className="grid-content" style={{paddingTop: "2rem"}}>
-                                {sellForm}
-                            </div>) : null}
-
-                            {!this.state.showBuySell ? (
-                                <div className="grid-content">
-                                <MyOpenOrders
-                                        orders={limit_orders}
-                                        account={account.id}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        onCancel={this._cancelLimitOrder.bind(this)}/>
-                            </div>) : null}
+                    <div className="grid-block shrink right-column show-for-large">
+                        
+                        {/* Market History */}
+                        <div className="grid-content market-content">
+                            <table style={{width: "100%"}} className="table expand order-table">
+                                <p>MARKET HISTORY</p>
+                                <thead>
+                                <tr>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Time</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    this.state.history.map(orderHistoryEntry)
+                                }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     

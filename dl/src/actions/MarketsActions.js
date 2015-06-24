@@ -1,6 +1,8 @@
 var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
 import WalletApi from "rpc_api/WalletApi";
+import {operations} from "chain/chain_types";
+let ops = Object.keys(operations);
 
 let subs = {};
 let wallet_api = new WalletApi();
@@ -41,7 +43,7 @@ class MarketsActions {
         console.log("sub to market:", subID);
 
         let isMarketAsset = quote.market_asset && quote.bitasset_data.options.short_backing_asset === base.id;
-        console.log(isMarketAsset);
+
         let subscription = (subResult) => {
             console.log("markets subscription result:", subResult);
             let callPromise = null,
