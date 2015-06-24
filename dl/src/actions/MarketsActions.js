@@ -58,12 +58,19 @@ class MarketsActions {
                 ]);
             }
 
+            let startDate = new Date();
+            let endDate = new Date();
+            startDate.setDate(startDate.getDate() - 10);
+
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.id, quote.id, 100
                     ]),
                     callPromise,
-                    settlePromise
+                    settlePromise,
+                    Apis.instance().history_api().exec("get_market_history", [
+                        quote.id, base.id, 10, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                    ])
                 ])
                 .then(results => {
                     this.dispatch({
@@ -93,6 +100,9 @@ class MarketsActions {
                 ]);
             }
 
+            let startDate = new Date();
+            let endDate = new Date();
+            startDate.setDate(startDate.getDate() - 10);
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, base.id, quote.id
@@ -101,10 +111,13 @@ class MarketsActions {
                         base.id, quote.id, 100
                     ]),
                     callPromise,
-                    settlePromise
+                    settlePromise,
+                    Apis.instance().history_api().exec("get_market_history", [
+                        base.id, quote.id, 10, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                    ])
                 ])
                 .then((results) => {
-                    console.log("market subscription success:", results[0]);
+                    console.log("market subscription success:", results[0], results);
                     subs[subID] = true;
 
                     this.dispatch({
