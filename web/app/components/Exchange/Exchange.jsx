@@ -9,23 +9,14 @@ import classNames from "classnames";
 
 require("./exchange.scss");
 
-let history = {
-    orders: [
-        {timestamp: new Date(15, 6, 1, 11, 38, 0, 0), type: 0, amount: 5, price: 150},
-        {timestamp: new Date(15, 6, 1, 11, 37, 0, 0), type: 0, amount: 10, price: 152},
-        {timestamp: new Date(15, 6, 1, 11, 36, 0, 0), type: 1, amount: 1, price: 155},
-        {timestamp: new Date(15, 6, 1, 11, 35, 0, 0), type: 1, amount: 80, price: 154},
-        {timestamp: new Date(15, 6, 1, 11, 34, 0, 0), type: 1, amount: 1, price: 148},
-        {timestamp: new Date(15, 6, 1, 11, 33, 0, 0), type: 0, amount: 1, price: 145}
-    ]
-};
+//        {timestamp: new Date(15, 6, 1, 11, 33, 0, 0), type: 0, amount: 1, price: 145}
 
 class Exchange extends React.Component {
     constructor() {
         super();
 
         this.state = {
-            history: history,
+            history: [],
             buyAmount: 5,
             buyPrice: 160,
             sellAmount: 5,
@@ -275,7 +266,7 @@ class Exchange extends React.Component {
                             </thead>
                             <tbody>
                             {
-                                this.state.history.orders.map(orderHistoryEntry)
+                                this.state.history.map(orderHistoryEntry)
                             }
                             </tbody>
                         </table>
