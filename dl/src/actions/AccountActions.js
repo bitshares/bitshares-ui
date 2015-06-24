@@ -43,7 +43,7 @@ class AccountActions {
             }
             if (accountId) {
                 Promise.all([
-                    api.getHistory(accountId, 10),
+                    api.getHistory(accountId, 100),
                     api.getBalances(accountId)
                     ])
                 .then(results => {
@@ -86,7 +86,7 @@ class AccountActions {
                     return Promise.all([
                         api.getAccountsByID(id),
                         api.getBalances(id),
-                        api.getHistory(id, 10)
+                        api.getHistory(id, 100)
                     ]).then((results) => {
                         if (!accountSubs[name_or_id] && sub) {
                             let statObject = results[0][0].statistics;

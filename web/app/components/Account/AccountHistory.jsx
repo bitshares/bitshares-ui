@@ -13,21 +13,19 @@ class AccountHistory extends React.Component {
         if(!account) return <div>Account {account_name} couldn't be displayed</div>;
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = accountHistories.get(account.id).map((trx, index) => {
-            if (index < 10) {
-                return (
-                    <Operation
-                        key={index}
-                        op={trx.op}
-                        block={trx.block_num}
-                        accounts={account_id_to_name}
-                        assets={assets}
-                        current={account_name}
-                        witnesses={witness_store_state.witnesses}
-                        witness_id_to_name={witness_store_state.witness_id_to_name}
-                        inverted={this.props.settings.get("inverseMarket")}
-                        />
-                );
-            }
+            return (
+                <Operation
+                    key={index}
+                    op={trx.op}
+                    block={trx.block_num}
+                    accounts={account_id_to_name}
+                    assets={assets}
+                    current={account_name}
+                    witnesses={witness_store_state.witnesses}
+                    witness_id_to_name={witness_store_state.witness_id_to_name}
+                    inverted={this.props.settings.get("inverseMarket")}
+                    />
+            );
         });
         return (
             <div className="grid-content no-overflow">
