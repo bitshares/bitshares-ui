@@ -61,7 +61,11 @@ label, label > span {
   text-transform: none;
 }
 
-button {
+.block-button {
+  display: block;
+}
+
+button, .button {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   text-transform: uppercase;
   transition: all 0.3s ease 0s !important;

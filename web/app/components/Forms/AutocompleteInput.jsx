@@ -27,7 +27,7 @@ class AutocompleteInput extends Component {
             ZfApi.publish(action_sheet_id, "close");
         }
         if (this.props.onChange) {
-            this.props.onChange(event, value);
+            this.props.onChange(event);
         }
     }
 
@@ -53,7 +53,7 @@ class AutocompleteInput extends Component {
         return (
             <div className="autocomplete">
                 <ActionSheet className="autocomplete" ref="action_sheet" id={action_sheet_id}>
-                    <input name="value" id={this.props.id} type="text" placeholder={this.props.placeholder} onChange={this.handleChange}/>
+                    <input name="value" id={this.props.id} type="text" placeholder={this.props.placeholder} onChange={this.handleChange} defaultValue={this.props.initial_value}/>
                     <ActionSheet.Content >
                         <ul className="no-first-element-top-border">
                             {items}
@@ -68,6 +68,7 @@ class AutocompleteInput extends Component {
 AutocompleteInput.propTypes = {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
+    initial_value: PropTypes.string,
     options: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired
 };

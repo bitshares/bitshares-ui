@@ -15,8 +15,12 @@ class AccountLeftPanel extends React.Component {
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
                     <div className="grid-block no-margin account-buttons-row">
-                        <div className="grid-block no-margin center-content"><button className="button outline">Link</button></div>
-                        <div className="grid-block no-margin center-content"><button className="button outline">Pay</button></div>
+                        <div className="grid-block no-margin center-content">
+                            <a href className="button outline block-button">Link</a>
+                        </div>
+                        <div className="grid-block no-margin center-content">
+                            <Link className="button outline block-button" to="transfer" query={{to: account_name}}>Pay</Link>
+                        </div>
                     </div>
                 </div>
                 <section className="block-list">

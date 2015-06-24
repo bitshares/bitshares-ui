@@ -150,6 +150,10 @@ class Transfer extends BaseComponent {
     render() {
         let {transfer, errors} = this.state;
         let {accounts, currentAccount, assets, accountBalances} = this.props;
+        //let to = this.props.location.query.to;
+        //let symbols = this.context.router.getCurrentParams().marketID.split("_");
+        let query_params = this.context.router.getCurrentQuery();
+        if(query_params.to && !transfer.to) transfer.to = query_params.to;
         let al = this.props.accounts_list;
         let account_choices = Object.keys(al).map(k => [`["${al[k]}","${k}"]`, k]);
         if (!account_choices[0]) {
@@ -243,7 +247,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("medium-12", {"has-error": errors.to})}>
                             <Translate component="label" content="transfer.to" />
-                            <AutocompleteInput id="to" options={account_choices} onChange={this.formChange.bind(this)} />
+                            <AutocompleteInput id="to" options={account_choices} initial_value={transfer.to} onChange={this.formChange.bind(this)} />
                             <div>{errors.to}</div>
                         </div>
                     </div>
@@ -303,5 +307,7 @@ Transfer.propTypes = {
     assets: PropTypes.object.isRequired,
     currentAccount: PropTypes.object.isRequired
 };
+
+Transfer.contextTypes = { router: React.PropTypes.func.isRequired };
 
 export default Transfer;
