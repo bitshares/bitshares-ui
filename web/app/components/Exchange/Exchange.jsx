@@ -68,6 +68,14 @@ class Exchange extends React.Component {
         }
     }
 
+    _depthChartClick(e) {
+        e.preventDefault();
+        this.setState({
+            buyPrice: Math.round(100 * e.xAxis[0].value) / 100,
+            sellPrice: Math.round(100 * e.xAxis[0].value) / 100
+        });
+    }
+
     componentDidMount() {
         this._subToMarket(this.props);
     }
@@ -138,7 +146,7 @@ class Exchange extends React.Component {
                     <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)}/>
                 </label>
 
-                <p>Total ({baseSymbol}): { buyTotal }</p>
+                <p>Total ({baseSymbol}): { buyTotal.toFixed(3) }</p>
                 <input style={{backgroundColor: "#50D2C2"}} type="submit" className="button" value={`Buy ${this.state.buyAmount} ${quoteSymbol}`}/>
             </form>
         );
@@ -154,7 +162,7 @@ class Exchange extends React.Component {
                     Price: ({baseSymbol} per {quoteSymbol}):
                     <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)}/>
                 </label>
-                <p>Total ({baseSymbol}): { sellTotal }</p>
+                <p>Total ({baseSymbol}): { sellTotal.toFixed(3) }</p>
                <input style={{backgroundColor: "#E3745B"}} type="submit" className="button" value={`Sell ${this.state.sellAmount} ${quoteSymbol}`}/>
             </form>
         );
@@ -226,6 +234,8 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
+                                    plotLine={this.state.buyPrice}
+                                    onClick={this._depthChartClick.bind(this)}
                                     />
                             </div>
 

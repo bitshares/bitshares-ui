@@ -6,7 +6,10 @@ import Highcharts from "react-highcharts";
 class DepthHighChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
-        return !Immutable.is(nextProps.orders, this.props.orders);
+        return (
+            !Immutable.is(nextProps.orders, this.props.orders) ||
+            nextProps.plotLine !== this.props.plotLine
+            );
     }
 
     constructor() {
@@ -17,8 +20,8 @@ class DepthHighChart extends React.Component {
     componentWillReceiveProps() {
         let height = React.findDOMNode(this).offsetHeight;
         let clientHeight = React.findDOMNode(this).clientHeight;
-        console.log("componentWillReceiveProps DepthHighChart offsetHeight:", height);
-        console.log("componentWillReceiveProps DepthHighChart clientHeight:", clientHeight);
+        // console.log("componentWillReceiveProps DepthHighChart offsetHeight:", height);
+        // console.log("componentWillReceiveProps DepthHighChart clientHeight:", clientHeight);
         this.setState({offsetHeight: height - 10});
     }
 
@@ -85,7 +88,8 @@ class DepthHighChart extends React.Component {
                     style: {
                         color: "#FFFFFF"
                     }
-                }
+                },
+                plotLines: []
             },
             plotOptions: {
                 area: {
@@ -94,16 +98,34 @@ class DepthHighChart extends React.Component {
                         enabled: false
                     },
                     series: {
-                        fillOpacity: 0.25
+                        fillOpacity: 0.25,
+                        enableMouseTracking: false
                     }
                 }
             }
         };
 
+        if (this.props.plotLine) {
+            config.xAxis.plotLines.push({
+                color: "red",
+                id: "plot_line",
+                dashStyle: "longdashdot",
+                value: this.props.plotLine,
+                width: 1,
+                zIndex: 5
+            });
+        }
+
         if (this.props.height) {
             config.chart.height = this.props.height;
         } else if (this.state.offsetHeight) {
             config.chart.height = this.state.offsetHeight;
+        }
+
+        if (this.props.onClick) {
+            config.chart.events = {
+                click: this.props.onClick
+            };
         }
 
         return (
