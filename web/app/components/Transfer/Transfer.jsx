@@ -11,6 +11,9 @@ import AccountInfo from "../Account/AccountInfo";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AutocompleteInput from "../Forms/AutocompleteInput";
+import Trigger from "react-foundation-apps/lib/trigger";
+import Modal from "react-foundation-apps/lib/modal";
+import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -38,7 +41,7 @@ class Transfer extends BaseComponent {
             }
         };
 
-        this._bind("formChange", "onSubmit", "_onConfCancel", "_onConfirm", "_newTransfer");
+        this._bind("formChange", "onSubmit", "onConfirm", "newTransfer");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -102,25 +105,7 @@ class Transfer extends BaseComponent {
         }
     }
 
-    //testValidation(amount) {
-    //    let {accountBalances, currentAccount, assets} = this.props;
-    //    let finalBalance = 0, balances = accountBalances.get(currentAccount.id);
-    //    balances.forEach((balance) => {
-    //        if (this.state.transfer.asset === balance.asset_id) {
-    //            let precision = utils.get_asset_precision(assets.get(balance.asset_id).precision);
-    //            finalBalance = balance.amount - amount * precision;
-    //        }
-    //        if (finalBalance < 0) {
-    //            throw forms.ValidationError([forms.ValidationError("Insufficient funds", {code: "error1"})]);
-    //        }
-    //    });
-    //}
-
-    _onConfCancel() {
-        this.setState({confirmation: false, done: false});
-    }
-
-    _onConfirm() {
+    onConfirm() {
         // Launch api action here
         let t = this.state.transfer;
         let precision = utils.get_asset_precision(this.props.assets.get(this.state.transfer.asset).precision);
@@ -128,13 +113,15 @@ class Transfer extends BaseComponent {
             t.from_id = this.props.currentAccount.id;
         }
         AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
+            ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: true, error: null});
         }).catch(error => {
+            ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: false, error: error});
         });
     }
 
-    _newTransfer() {
+    newTransfer() {
         let transfer = this.state.transfer;
         transfer.amount = 0;
         transfer.memo = "";
@@ -154,6 +141,7 @@ class Transfer extends BaseComponent {
             </select>
         );
     }
+
 
     render() {
         let {transfer, errors} = this.state;
@@ -204,28 +192,11 @@ class Transfer extends BaseComponent {
 
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
 
-        if (this.state.confirmation && currentAccount) {
-            return (
-                <div className="grid-block">
-                    <div className="grid-block page-layout transfer-top">
-                        <ConfirmationScreen
-                            onCancel={this._onConfCancel}
-                            onConfirm={this._onConfirm}
-                            key="cs"
-                            transfer={this.state.transfer}
-                            from={currentAccount.name}
-                            assets={assets}
-                            />
-                    </div>
-                </div>
-            );
-        }
-
         if (this.state.done && currentAccount) {
             return (
                 <div className="grid-block">
                     <DoneScreen
-                        onCancel={this._newTransfer}
+                        onCancel={this.newTransfer}
                         key="ds"
                         transfer={this.state.transfer}
                         from={currentAccount.name}
@@ -233,7 +204,6 @@ class Transfer extends BaseComponent {
                 </div>
             );
         }
-
 
         return (
             <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
@@ -271,7 +241,9 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
                             <label>&nbsp;</label>
-                            <button className={submitButtonClass} type="submit" value="Submit"><Translate component="span" content="transfer.send" /></button>
+                            <Trigger open="confirm_transaction">
+                                <button className={submitButtonClass} type="submit" value="Submit"><Translate component="span" content="transfer.send" /></button>
+                            </Trigger>
                             { this.state.error ? <div>{this.state.error}</div> : <div>&nbsp;<br/></div> }
                         </div>
                     </div>
@@ -299,19 +271,36 @@ class Transfer extends BaseComponent {
                             <div>{errors.memo}</div>
                         </div>
                     </div>
-                    {/*  T O  A C C O U N T */}
+                    {/*  T O  A C C O U N T  */}
                     <div className="grid-block medium-3 medium-order-3 small-order-4">
                         <div className="grid-content">
                             { transfer.to_id ? <AccountInfo account_name={transfer.to} account_id={transfer.to_id} image_size={{height: 120, width: 120}}/> : null }
                         </div>
                     </div>
-                    {/* F I N A L  B A L A N C E  A N D  F E E  */}
+                    {/*  F I N A L  B A L A N C E  A N D  F E E  */}
                     <div className="grid-block medium-3 medium-order-4 small-order-2">
                         <div className="grid-content">
                             {finalBalances}
                         </div>
                     </div>
                 </div>
+                {/* TODO: below should be a standard transaction confirmation component that lists operations and asks to confirm transaction */}
+                <Modal id="confirm_transaction" overlay={true}>
+                    <Trigger close="">
+                        <a href="#" className="close-button">&times;</a>
+                    </Trigger>
+                    <div className="grid-block vertical">
+                        <div className="shrink grid-content">
+                            <p>Please confirm transaction</p>
+                        </div>
+                        <div className="grid-content button-group">
+                            <a className="button" href onClick={this.onConfirm}>Confirm</a>
+                            <Trigger close="confirm_transaction">
+                                <a href className="secondary button">Cancel</a>
+                            </Trigger>
+                        </div>
+                    </div>
+                </Modal>
             </form>
         );
     }
