@@ -273,6 +273,14 @@ class MarketsStore {
 
             });
 
+            // Make sure the arrays are sorted properly
+            asks.sort((a, b) => {
+                return a[0] - b[0];
+            })
+
+            bids.sort((a, b) => {
+                return a[0] - b[0];
+            })
 
 
             let flat_bids = market_utils.flatten_orderbookchart_highcharts(bids, true, true, 1000);
@@ -299,6 +307,8 @@ class MarketsStore {
             // for (let i = bidsLength; i >= 0; i--) {
             //     flat_asks.unshift({x: flat_bids[i].x, y: 0});
             // }
+
+            console.log(flat_bids);
 
             this.flat_asks = flat_asks;
             this.flat_bids = flat_bids;
