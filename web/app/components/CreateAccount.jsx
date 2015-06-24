@@ -33,15 +33,13 @@ class CreateAccount extends BaseComponent {
                         id: "owner:" + name,
                         key_id: account.owner.auths[0][0],
                         privkey: keys_data.owner_privkey.toWif(),
-                        pubkey: keys_data.owner_pubkey.toBtsPublic(),
-                        password_checksum: ""
+                        pubkey: keys_data.owner_pubkey.toBtsPublic()
                     };
                     let active_key = {
                         id: "active:" + name,
                         key_id: account.active.auths[0][0],
                         privkey: keys_data.active_privkey.toWif(),
-                        pubkey: keys_data.active_pubkey.toBtsPublic(),
-                        password_checksum: ""
+                        pubkey: keys_data.active_pubkey.toBtsPublic()
                     };
                     PrivateKeyActions.addKey(owner_key);
                     PrivateKeyActions.addKey(active_key);

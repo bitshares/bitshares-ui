@@ -1,4 +1,6 @@
-const DB_VERSION = 1;
+import idb_helper from "./idb-helper"
+
+const DB_VERSION = 2;
 
 var iDB = (function () {
 
@@ -12,8 +14,15 @@ var iDB = (function () {
 
             openRequest.onupgradeneeded = function (e) {
                 let db = e.target.result;
-                //if (!db.objectStoreNames.contains("private_keys")) { db.createObjectStore("private_keys", { keyPath: "id" }); }
-                //if (!db.objectStoreNames.contains("my_accounts")) { db.createObjectStore("my_accounts", { keyPath: "name" }); }
+                if (!db.objectStoreNames.contains("my_accounts")) {
+                    db.createObjectStore("my_accounts", { keyPath: "name" });
+                }
+                idb_helper.set_graphene_db(db)
+                if (event.oldVersion < 2) {
+                    idb_helper.autoIncrement_unique(db, "wallets", "public_name")
+                    idb_helper.autoIncrement_unique(db, "private_keys", "encrypted_key")
+                    idb_helper.autoIncrement_unique(db, "public_keys", "pubkey")
+                }
             };
 
             openRequest.onsuccess = function (e) {
@@ -30,7 +39,10 @@ var iDB = (function () {
     function init(indexedDBimpl) {
         let instance;
         let promise = openIndexedDB(indexedDBimpl);
-        promise.then(db => { idb = db; });
+        promise.then(db => {
+            idb = db;
+            idb_helper.set_graphene_db(db);
+        });
         return {
             init_promise: promise,
             db: () => idb

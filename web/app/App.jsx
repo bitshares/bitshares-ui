@@ -50,7 +50,7 @@ import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
 import Notifier from "./components/Notifier/NotifierContainer";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletStore from "stores/WalletStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
@@ -72,8 +72,8 @@ class App extends BaseComponent {
         Apis.instance().init_promise.then(() => {
             let idb_instance = iDB.init_instance(indexedDB);
             idb_instance.init_promise.then( db => {
-                PrivateKeyStore.loadDbData();
                 AccountStore.loadDbData();
+                WalletStore.loadDbData();
             });
             AccountActions.getAllAccounts().then(current_account_id => {
                 return current_account_id;

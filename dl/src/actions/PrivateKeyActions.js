@@ -2,8 +2,8 @@ var alt = require("../alt-instance");
 
 class PrivateKeyActions {
 
-    addKey(key) {
-        this.dispatch(key);
+    addKey(private_key) {
+        this.dispatch(private_key);
     }
 
 }

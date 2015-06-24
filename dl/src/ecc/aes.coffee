@@ -88,19 +88,34 @@ class Aes
         CryptoJS.enc.Base64.parse cipher.toString()
 
     decrypt: (cipher_buffer) ->
+        if typeof cipher_buffer is "string"
+            cipher_buffer = new Buffer(cipher_buffer, 'binary')
+        unless Buffer.isBuffer cipher_buffer
+            throw new Error "buffer required"
         assert cipher_buffer, "Missing cipher text"
         # hex is the only common format
         hex = @decryptHex(cipher_buffer.toString('hex'))
         new Buffer(hex, 'hex')
         
-    encrypt: (plaintext_buffer) ->
-        #assert plaintext_buffer, "Missing plain text"
+    encrypt: (plaintext) ->
+        if typeof plaintext is "string"
+            plaintext = new Buffer(plaintext, 'binary')
+        unless Buffer.isBuffer plaintext
+            throw new Error "buffer required"
+        #assert plaintext, "Missing plain text"
         # hex is the only common format
-        hex = @encryptHex(plaintext_buffer.toString('hex'))
+        hex = @encryptHex(plaintext.toString('hex'))
         new Buffer(hex, 'hex')
 
-    ### <helper_functions> ###
-    
+    encryptToHex: (plaintext) ->
+        if typeof plaintext is "string"
+            plaintext = new Buffer(plaintext, 'binary')
+        unless Buffer.isBuffer plaintext
+            throw new Error "buffer required"
+        #assert plaintext, "Missing plain text"
+        # hex is the only common format
+        @encryptHex(plaintext.toString('hex'))
+        
     decryptHex: (cipher) ->
         assert cipher, "Missing cipher text"
         # Convert data into word arrays (used by Crypto)
@@ -113,8 +128,6 @@ class Aes
         plain_array = CryptoJS.enc.Hex.parse plainhex
         cipher_array = @_encrypt_word_array plain_array
         CryptoJS.enc.Hex.stringify cipher_array
-        
-    ### </helper_functions> ###
 
 module.exports = Aes
 

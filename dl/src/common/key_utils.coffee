@@ -6,6 +6,9 @@ hash = require './hash'
 dictionary = require './dictionary_en'
 secureRandom = require './secureRandom'
 
+# hash for .25 second
+HASH_POWER_MILLS = 250
+
 module.exports = key =
     
     ###* Uses 1 second of hashing power to create a key/password checksum.  An
@@ -15,28 +18,31 @@ module.exports = key =
     
     A salt is used for all the normal reasons...
     
-    @return string  "{hash_iteration_count},{salt},{checksum}"
+    @return object {
+        aes_private: Aes, 
+        checksum: "{hash_iteration_count},{salt},{checksum}"
+    }
     ###
-    key_checksum:(password, aes_private_callback)->
+    aes_checksum:(password)->
         throw new "password string required" unless typeof password is "string"
         salt = secureRandom.randomBuffer(4).toString('hex')
         iterations = 0
         secret = salt + password
-        # hash for 1 second
+        # hash for .1 second
         start_t = Date.now()
-        while Date.now() - start_t < 1000
+        while Date.now() - start_t < HASH_POWER_MILLS
             secret = hash.sha256 secret
             iterations += 1
         
-        if aes_private_callback and typeof aes_private_callback is 'function'
-            aes_private_callback Aes.fromSeed secret
-        
         checksum = hash.sha256 secret
-        [
+        checksum_string = [
             iterations
             salt.toString('hex')
             checksum.slice(0, 4).toString('hex')
         ].join ','
+        
+        aes_private: Aes.fromSeed(secret)
+        checksum: checksum_string
     
     ###* Provide a matching password and key_checksum.  A "wrong password"
     error is thrown if the password does not match.  If this method takes
@@ -63,8 +69,8 @@ module.exports = key =
         
         iterations = 0
         start_t = Date.now()
-        # hash for 1 second
-        while Date.now() - start_t < 1000
+        
+        while Date.now() - start_t < HASH_POWER_MILLS
             entropy = hash.sha256 entropy
             iterations += 1
         
