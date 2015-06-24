@@ -40,18 +40,14 @@ class MarketsActions {
         let subID = quote.id + "_" + base.id;
         console.log("sub to market:", subID);
 
-        let shorts_available = quote.market_asset && quote.bitasset_data.options.short_backing_asset;
-
+        let isMarketAsset = quote.market_asset && quote.bitasset_data.options.short_backing_asset === base.id;
+        console.log(isMarketAsset);
         let subscription = (subResult) => {
             console.log("markets subscription result:", subResult);
-            let shortPromise = null,
-                callPromise = null,
+            let callPromise = null,
                 settlePromise = null;
 
-            if (shorts_available) {
-                // shortPromise = Apis.instance().db_api().exec("get_short_orders", [
-                //     quote.id, 100
-                // ]);
+            if (isMarketAsset) {
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
                     quote.id, 100
                 ]);
@@ -64,16 +60,14 @@ class MarketsActions {
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.id, quote.id, 100
                     ]),
-                    shortPromise,
                     callPromise,
                     settlePromise
                 ])
                 .then(results => {
                     this.dispatch({
                         limits: results[0],
-                        shorts: results[1],
-                        calls: results[2],
-                        settles: results[3],
+                        calls: results[1],
+                        settles: results[2],
                         market: subID,
                         base: base,
                         quote: quote
@@ -85,14 +79,10 @@ class MarketsActions {
 
         if (!subs[subID]) {
 
-            let shortPromise = null,
-                callPromise = null,
+            let callPromise = null,
                 settlePromise = null;
 
-            if (shorts_available) {
-                // shortPromise = Apis.instance().db_api().exec("get_short_orders", [
-                //     quote.id, 100
-                // ]);
+            if (isMarketAsset) {
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
                     quote.id, 100
                 ]);
@@ -108,7 +98,6 @@ class MarketsActions {
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.id, quote.id, 100
                     ]),
-                    shortPromise,
                     callPromise,
                     settlePromise
                 ])
@@ -118,9 +107,8 @@ class MarketsActions {
 
                     this.dispatch({
                         limits: results[1],
-                        shorts: results[2],
-                        calls: results[3],
-                        settles: results[4],
+                        calls: results[2],
+                        settles: results[3],
                         market: subID,
                         base: base,
                         quote: quote
