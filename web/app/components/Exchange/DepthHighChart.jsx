@@ -19,7 +19,6 @@ class DepthHighChart extends React.Component {
 
     componentWillReceiveProps() {
         let height = React.findDOMNode(this).offsetHeight;
-        let clientHeight = React.findDOMNode(this).clientHeight;
         // console.log("componentWillReceiveProps DepthHighChart offsetHeight:", height);
         // console.log("componentWillReceiveProps DepthHighChart clientHeight:", clientHeight);
         this.setState({offsetHeight: height - 10});
@@ -43,6 +42,7 @@ class DepthHighChart extends React.Component {
                 enabled: false
             },
             legend: {
+                enabled: false,
                 itemStyle: {
                     color: "#FFFFFF"
                 }
@@ -105,6 +105,14 @@ class DepthHighChart extends React.Component {
             }
         };
 
+        // Center the charts between bids and asks
+        if (flat_bids.length > 0 && flat_asks.length > 0) {
+            let middleValue = (flat_asks[0][0] + flat_bids[flat_bids.length - 1][0]) / 2;
+            config.xAxis.min = middleValue * 0.25;
+            config.xAxis.max = middleValue * 1.75;
+        }
+
+        // Add plotline if defined
         if (this.props.plotLine) {
             config.xAxis.plotLines.push({
                 color: "red",
@@ -116,12 +124,14 @@ class DepthHighChart extends React.Component {
             });
         }
 
+        // Fix the height if defined, if not use offsetHeight
         if (this.props.height) {
             config.chart.height = this.props.height;
         } else if (this.state.offsetHeight) {
             config.chart.height = this.state.offsetHeight;
         }
 
+        // Add onClick eventlistener if defined
         if (this.props.onClick) {
             config.chart.events = {
                 click: this.props.onClick
