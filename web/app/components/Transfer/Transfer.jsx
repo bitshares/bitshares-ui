@@ -200,6 +200,7 @@ class Transfer extends BaseComponent {
                         key="ds"
                         transfer={this.state.transfer}
                         from={currentAccount.name}
+                        assets={assets}
                         />
                 </div>
             );

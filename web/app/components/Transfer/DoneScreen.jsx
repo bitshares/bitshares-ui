@@ -1,5 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
+import {Link} from "react-router";
 
 require("./transfer.scss");
 
@@ -20,7 +21,7 @@ class DoneScreen extends React.Component {
                             <br/>
                             <div className="button-group">
                               <button className="button info" onClick={this.props.onCancel}><Translate component="span" content="transfer.again" /></button>
-                              <button className="button success" onClick={this._onConfirm}><Translate component="span" content="transfer.see" /></button>
+                              <Link to="account-history" params={{name: this.props.from}} className="button success"><Translate component="span" content="transfer.see" /></Link>
                             </div>
                         </div>
                     </div>
