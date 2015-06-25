@@ -3,14 +3,12 @@ import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
+import BuySell from "./BuySell";
 import Margin from "./Margin";
 import utils from "common/utils";
 import DepthHighChart from "./DepthHighChart";
-import classNames from "classnames";
 
 require("./exchange.scss");
-
-//        {timestamp: new Date(15, 6, 1, 11, 33, 0, 0), type: 0, amount: 1, price: 145}
 
 class Exchange extends React.Component {
     constructor() {
@@ -113,56 +111,19 @@ class Exchange extends React.Component {
 
     render() {
         let {asset_symbol_to_id, assets, account, limit_orders, short_orders, base: baseSymbol, quote: quoteSymbol} = this.props;
+        let {buyAmount, buyPrice, sellAmount, sellPrice} = this.state;
         let base = null, quote = null;
 
-        // console.log("exchange rerender", this.state);
         if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
             let quote_id = asset_symbol_to_id[quoteSymbol];
             let base_id = asset_symbol_to_id[baseSymbol];
             base = assets.get(base_id);
             quote = assets.get(quote_id);
         }
-        var buyTotal = this.state.buyAmount * this.state.buyPrice;
-        var sellTotal = this.state.sellAmount * this.state.sellPrice;
 
-
-
-        let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
-        let sellTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "sell"});
-        let marginTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "margin"});
-
-        let buyForm = (
-            <form className="order-form"
-                  onSubmit={this._createLimitOrder.bind(this, quote, base, this.state.buyAmount, this.state.buyAmount * this.state.buyPrice)}>
-                <label>
-                    Quantity ({quoteSymbol}):
-                    <input type="text" id="buyAmount" value={this.state.buyAmount} onChange={this._buyAmountChanged.bind(this)}/>
-                </label>
-                <label>
-                    Price: ({baseSymbol} per {quoteSymbol}):
-                    <input type="text" id="buyPrice" value={this.state.buyPrice} onChange={this._buyPriceChanged.bind(this)}/>
-                </label>
-
-                <p>Total ({baseSymbol}): { buyTotal.toFixed(3) }</p>
-                <input style={{backgroundColor: "#50D2C2"}} type="submit" className="button" value={`Buy ${this.state.buyAmount} ${quoteSymbol}`}/>
-            </form>
-        );
-
-        let sellForm = (
-            <form className="order-form"
-                  onSubmit={this._createLimitOrder.bind(this, base, quote, this.state.sellAmount * this.state.sellPrice, this.state.sellAmount)}>
-                <label>
-                    Quantity ({quoteSymbol}):
-                    <input type="text" id="sellAmount" value={this.state.sellAmount} onChange={this._sellAmountChanged.bind(this)}/>
-                </label>
-                <label>
-                    Price: ({baseSymbol} per {quoteSymbol}):
-                    <input type="text" id="sellPrice" value={this.state.sellPrice} onChange={this._sellPriceChanged.bind(this)}/>
-                </label>
-                <p>Total ({baseSymbol}): { sellTotal.toFixed(3) }</p>
-               <input style={{backgroundColor: "#E3745B"}} type="submit" className="button" value={`Sell ${this.state.sellAmount} ${quoteSymbol}`}/>
-            </form>
-        );
+        // let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
+        // let sellTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "sell"});
+        // let marginTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "margin"});
 
         return (
             <div className="grid-block vertical">
@@ -176,18 +137,40 @@ class Exchange extends React.Component {
                     <div className="grid-block left-column-2 shrink" style={{alignItems: "flex-start", overflowY: "auto"}}>
                         {/* Buy/Sell */}
                         <div className="grid-block vertical market-content">
-                            {!this.state.showBuySell ? <div className="grid-content">
-                                <div onClick={this._toggleBuySell.bind(this)} className="button">Place new order</div>
-                            </div> : 
-                            <div className="grid-content">
-                                <div onClick={this._toggleBuySell.bind(this)} className="button">My Orders</div>
-                            </div>}
-                            {this.state.showBuySell ? (<div style={{paddingTop: "1rem"}}className="grid-content">
-                                {buyForm}
-                            </div>) : null}
-                            {this.state.showBuySell ? (<div className="grid-content" style={{paddingTop: "2rem"}}>
-                                {sellForm}
-                            </div>) : null}
+                            {!this.state.showBuySell ?
+                                (<div className="grid-content">
+                                    <div onClick={this._toggleBuySell.bind(this)} className="button">Place new order</div>
+                                </div>) :
+                                (<div className="grid-content">
+                                    <div onClick={this._toggleBuySell.bind(this)} className="button">My Orders</div>
+                                </div>)
+                            }
+
+                            {this.state.showBuySell ? (
+                                <BuySell 
+                                    type="buy"
+                                    amount={buyAmount}
+                                    price={buyPrice}
+                                    quoteSymbol={quoteSymbol}
+                                    baseSymbol={baseSymbol}
+                                    amountChange={this._buyAmountChanged.bind(this)}
+                                    priceChange={this._buyPriceChanged.bind(this)}
+                                    onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice)}
+                                />
+                            ) : null}
+                            
+                            {this.state.showBuySell ? (
+                                <BuySell 
+                                    type="sell"
+                                    amount={sellAmount}
+                                    price={sellPrice}
+                                    quoteSymbol={quoteSymbol}
+                                    baseSymbol={baseSymbol}
+                                    amountChange={this._sellAmountChanged.bind(this)}
+                                    priceChange={this._sellPriceChanged.bind(this)}
+                                    onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount)}
+                                />
+                            ) : null}
 
                             {!this.state.showBuySell ? (
                                 <div className="grid-content">
@@ -251,15 +234,12 @@ class Exchange extends React.Component {
                                         />
                             </div>
                         </div>
-
                     </div>
 
 
                     <div className="grid-block shrink right-column show-for-large">
-                        
                         {/* Market History */}
                         <MarketHistory history={this.props.history} />
-
                     </div>
                     
                 </div>
