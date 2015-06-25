@@ -20,7 +20,6 @@
 
   .right-column {
     background-color: #eaeaea;
-    padding-left: 1.75em;
   }
 
   .regular-padding {
@@ -41,22 +40,31 @@
 
 .market-layout {
   .grid-block {
-    padding-top: 1px;
+    padding-top: 0;
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
   }
 
-  .left-column-2 {
-    width: 15rem;
+/*  .left-column-2 {
+    min-width: 15rem;
   }
 
   .right-column {
-    width: 15rem;
-  }
+    min-width: 15rem;
+  }*/
 }
 
 .market-content {
   padding-left: 5px !important;
   padding-right: 5px !important;
+}
+
+[class*="block-grid-"] > li {
+
+    
+
+    height: auto;
+
+    padding: 0 0.625em 1.25em;
 }

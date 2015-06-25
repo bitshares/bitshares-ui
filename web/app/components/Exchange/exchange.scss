@@ -7,7 +7,7 @@ td.orderHistoryAsk {
 }
 
 .order-table {
-	width: 50%;
+	width: 48%;
 	> caption {
 		padding-bottom: 1.25rem;
 	}
@@ -17,6 +17,7 @@ td.orderHistoryAsk {
 
     > tbody > tr > td {
         font-size: 0.75rem;
+        border: none;
     }
 }
 
@@ -46,5 +47,6 @@ p.order-table-title {
 }
 
 .sell-form {
-  padding-top: 2rem !important;
+  padding-top: 1rem !important;
 }
+

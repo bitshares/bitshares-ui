@@ -67,8 +67,9 @@ class OrderBook extends React.Component {
                 return (
                      <tr key={order.id}>
                         <td className={tdClass}>{price.toFixed(3)}</td>
-                        <td >{(buy.amount / quotePrecision).toFixed(3)}</td>
                         <td >{(price * buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td >{(buy.amount / quotePrecision).toFixed(3)}</td>
+
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
@@ -76,25 +77,27 @@ class OrderBook extends React.Component {
         }
 
         return (
-                <div className="clearfix grid-content">
-                    <table className="table order-table float-left text-right">
+                <div className="clearfix grid-content" style={{height: "20vh"}}>
+                    <table className="table order-table float-left">
                         <thead>
                         <tr>
-                            <th style={{textAlign: "right"}}>Value</th>
-                            <th style={{textAlign: "right"}}>Amount</th>
-                            <th style={{textAlign: "right"}}>Bid</th>
+                            <th style={{textAlign: "left"}}>Value</th>
+                            <th style={{textAlign: "left"}}>Amount</th>
+                            <th style={{textAlign: "left"}}>Bid</th>
                         </tr>
                         </thead>
                         <tbody>
                                 {bids}
                         </tbody>
                     </table>
-                    <table className="table order-table float-right">
+                    <table className="table order-table float-left">
                         <thead>
                         <tr>
                             <th>Ask</th>
                             <th>Amount</th>
                             <th>Value</th>
+
+                            
                         </tr>
                         </thead>
                         <tbody>
