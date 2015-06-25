@@ -14,7 +14,6 @@
     "url": "git://github.com/cryptonomex/graphene_ui"
   },
   "scripts": {
-    "postinstall": "bower install",
     "test": "jest",
     "start": "webpack-dev-server --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
     "build": "webpack --progress --colors"
