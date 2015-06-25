@@ -12,6 +12,19 @@ class AutocompleteInput extends Component {
         this.state = { items: [] }
     }
 
+    getInput() {
+        let action_sheet = React.findDOMNode(this.refs.action_sheet);
+        return action_sheet.querySelector('[name="value"]');
+    }
+
+    value() {
+        return this.getInput().value;
+    }
+
+    clear() {
+        this.getInput().value = "";
+    }
+
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -35,8 +48,7 @@ class AutocompleteInput extends Component {
         e.preventDefault();
         let raw_value = e.target.dataset.value;
         let value = raw_value[0] === "[" ? JSON.parse(raw_value) : raw_value;
-        let action_sheet = React.findDOMNode(this.refs.action_sheet);
-        let input = action_sheet.querySelector('[name="value"]');
+        let input = this.getInput();
         input.value = value[1];
         ZfApi.publish(this.props.id + "-container", "close");
         if (this.props.onChange) {

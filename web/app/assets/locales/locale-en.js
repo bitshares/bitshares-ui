@@ -15,9 +15,9 @@ module.exports = {
         current: "Current Account"
     },
     account: {
-        assets: "Assets",
-        value: "Value",
-        hour_24: "24hr",
+        asset: "Asset",
+        market_value: "Market Value",
+        hour_24: "24hr Change",
         recent: "Recent activity",
         name: "Account name",
         member: {

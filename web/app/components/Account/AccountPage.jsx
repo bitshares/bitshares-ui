@@ -34,36 +34,37 @@ class AccountPage extends React.Component {
                     <AccountLeftPanel account_name={account_name} account_id={"1.3.1333"} active_menu_entry="overview" />
                 </div>
                 <div className="grid-block medium-10 main-content">
-                    <div className="grid-content">
-                        <AltContainer
-                            stores={[AccountStore, AssetStore, SettingsStore]}
-                            inject={{
-                                browseAccounts: () => {
-                                    return AccountStore.getState().browseAccounts;
-                                },
-                                accountBalances: () => {
-                                    return AccountStore.getState().balances;
-                                },
-                                accountHistories: () => {
-                                    return AccountStore.getState().accountHistories;
-                                },
-                                account_name_to_id: () => {
-                                    return AccountStore.getState().account_name_to_id;
-                                },
-                                account_id_to_name: () => {
-                                    return AccountStore.getState().account_id_to_name;
-                                },
-                                assets: () => {
-                                    return AssetStore.getState().assets;
-                                },
-                                settings: () => {
-                                    return SettingsStore.getState().settings;
-                                }
-                              }}
-                            >
-                            <RouteHandler account_name={account_name} />
-                        </AltContainer>
-                    </div>
+                    <AltContainer
+                        stores={[AccountStore, AssetStore, SettingsStore]}
+                        inject={{
+                            all_delegates: () => {
+                                return AccountStore.getState().account_name_to_id;
+                            },
+                            browseAccounts: () => {
+                                return AccountStore.getState().browseAccounts;
+                            },
+                            accountBalances: () => {
+                                return AccountStore.getState().balances;
+                            },
+                            accountHistories: () => {
+                                return AccountStore.getState().accountHistories;
+                            },
+                            account_name_to_id: () => {
+                                return AccountStore.getState().account_name_to_id;
+                            },
+                            account_id_to_name: () => {
+                                return AccountStore.getState().account_id_to_name;
+                            },
+                            assets: () => {
+                                return AssetStore.getState().assets;
+                            },
+                            settings: () => {
+                                return SettingsStore.getState().settings;
+                            }
+                          }}
+                        >
+                        <RouteHandler account_name={account_name} />
+                    </AltContainer>
                 </div>
             </div>
         );
