@@ -126,54 +126,21 @@ class Exchange extends React.Component {
         // let marginTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "margin"});
 
         return (
-            <div className="grid-block vertical">
-                <div className="grid-block shrink">
+
+            <div className="grid-block  vertical">
+                <div className="grid-block ">
                     <p>{baseSymbol} / {quoteSymbol} Put all kinds of info related to the market here (current price, spread, etc)</p>
                 </div>
-                <div className="grid-block page-layout market-layout small-vertical medium-horizontal" style={{flexWrap: "nowrap"}}>
+                <div className="grid-block page-layout">
 
 
                     {/* Left Column */}
-                    <div className="grid-block left-column-2 shrink" style={{alignItems: "flex-start", overflowY: "auto"}}>
-                        {/* Buy/Sell */}
-                        <div className="grid-block vertical market-content">
-                            {!this.state.showBuySell ?
-                                (<div className="grid-content">
-                                    <div onClick={this._toggleBuySell.bind(this)} className="button">Place new order</div>
-                                </div>) :
-                                (<div className="grid-content">
-                                    <div onClick={this._toggleBuySell.bind(this)} className="button">My Orders</div>
-                                </div>)
-                            }
+                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green" , overflowY: "auto"}}>
+                      
 
-                            {this.state.showBuySell ? (
-                                <BuySell 
-                                    type="buy"
-                                    amount={buyAmount}
-                                    price={buyPrice}
-                                    quoteSymbol={quoteSymbol}
-                                    baseSymbol={baseSymbol}
-                                    amountChange={this._buyAmountChanged.bind(this)}
-                                    priceChange={this._buyPriceChanged.bind(this)}
-                                    onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice)}
-                                />
-                            ) : null}
-                            
-                            {this.state.showBuySell ? (
-                                <BuySell 
-                                    type="sell"
-                                    amount={sellAmount}
-                                    price={sellPrice}
-                                    quoteSymbol={quoteSymbol}
-                                    baseSymbol={baseSymbol}
-                                    amountChange={this._sellAmountChanged.bind(this)}
-                                    priceChange={this._sellPriceChanged.bind(this)}
-                                    onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount)}
-                                />
-                            ) : null}
 
-                            {!this.state.showBuySell ? (
-                                <div className="grid-content">
+                              
+                                <div className="grid-block">
                                 <MyOpenOrders
                                         orders={limit_orders}
                                         account={account.id}
@@ -182,68 +149,93 @@ class Exchange extends React.Component {
                                         baseSymbol={baseSymbol}
                                         quoteSymbol={quoteSymbol}
                                         onCancel={this._cancelLimitOrder.bind(this)}/>
-                            </div>) : null}
-                        </div>
-
+                            </div>
                     </div>
 
                     {/* Center Column */}
-                    <div className="grid-block main-content vertical">
-                            
-                        {/* TODO: placeholder for price history chart */}
-                        <div className="grid-block small-12">
-                                
-                                <div className="grid-block ">
-                                    <DepthHighChart
-                                        orders={limit_orders}
-                                        flat_asks={this.props.flat_asks}
-                                        flat_bids={this.props.flat_bids}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        height={450}
-                                        />
-                                </div>
-                        </div>
+                    <div className="block grid-block main-content vertical small-9 medium-10 large-8" style={{border: "1px solid yellow" , }}>
 
-                        <div className="grid-block">
-                            {/* Depth Chart */}
-                            <div className="grid-block small-6">    
-                                <DepthHighChart
-                                    orders={limit_orders}
-                                    flat_asks={this.props.flat_asks}
-                                    flat_bids={this.props.flat_bids}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    plotLine={this.state.buyPrice}
-                                    onClick={this._depthChartClick.bind(this)}
-                                    />
+                                {/* TODO: placeholder for price history chart */}
+                                        <div className="grid-block" style={{display: "inline-block", flexGrow: "0" }} >
+                                                
+                                                    <DepthHighChart
+                                                        orders={limit_orders}
+                                                        flat_asks={this.props.flat_asks}
+                                                        flat_bids={this.props.flat_bids}
+                                                        base={base}
+                                                        quote={quote}
+                                                        baseSymbol={baseSymbol}
+                                                        quoteSymbol={quoteSymbol}
+                                                        height={300}
+                                                        />
+
+                                        </div>
+
+                           
+                                        {/* Depth Chart */}
+
+                                        <div className="grid-block" style={{ flexGrow: "0" , }} >
+                                                    <DepthHighChart
+                                                        orders={limit_orders}
+                                                        flat_asks={this.props.flat_asks}
+                                                        flat_bids={this.props.flat_bids}
+                                                        base={base}
+                                                        quote={quote}
+                                                        baseSymbol={baseSymbol}
+                                                        quoteSymbol={quoteSymbol}
+                                                        height={100}
+                                                        />
+                                        
+                                        </div>
+
+                                    <div className="grid-block" style={{ flexGrow: "0" , }} >
+                                        <div className="grid-content small-6">
+                                                <BuySell 
+                                                    type="buy"
+                                                    amount={buyAmount}
+                                                    price={buyPrice}
+                                                    quoteSymbol={quoteSymbol}
+                                                    baseSymbol={baseSymbol}
+                                                    amountChange={this._buyAmountChanged.bind(this)}
+                                                    priceChange={this._buyPriceChanged.bind(this)}
+                                                    onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice)}
+                                                />
+                                        </div>
+                                        <div className="grid-content small-6">
+                                            <BuySell 
+                                                type="sell"
+                                                amount={sellAmount}
+                                                price={sellPrice}
+                                                quoteSymbol={quoteSymbol}
+                                                baseSymbol={baseSymbol}
+                                                amountChange={this._sellAmountChanged.bind(this)}
+                                                priceChange={this._sellPriceChanged.bind(this)}
+                                                onSubmit={this._createLimitOrder.bind(this, quote,  base, sellAmount, sellAmount * sellPrice)}
+                                            />
+                                        </div>
+                                    </div>
+                             
+                            <div className="grid-block">
+                                {/* Depth Chart */}
+                                            <OrderBook
+                                                orders={limit_orders}
+                                                base={base}
+                                                quote={quote}
+                                                baseSymbol={baseSymbol}
+                                                quoteSymbol={quoteSymbol}
+                                                />
                             </div>
-
-                            {/* Order Book */}
-                            <div className="grid-block small-6 vertical market-content">
-                                    <OrderBook
-                                        orders={limit_orders}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        />
-                            </div>
                         </div>
-                    </div>
+                   
 
-
-                    <div className="grid-block shrink right-column show-for-large">
+                    <div className="grid-block right-column  show-for-large large-2" style={{border: "1px solid purple" , overflowY: "auto"}}>
                         {/* Market History */}
                         <MarketHistory history={this.props.history} />
                     </div>
                     
                 </div>
-            </div>
+       
+        </div>
         );
     }
 }
