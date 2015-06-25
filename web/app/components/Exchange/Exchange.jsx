@@ -1,8 +1,9 @@
 import React from "react";
 import MarketsActions from "actions/MarketsActions";
-import MyOpenOrders from "./MyOpenOrders.jsx";
-import OrderBook from "./OrderBook.jsx";
-import Margin from "./Margin.jsx";
+import MyOpenOrders from "./MyOpenOrders";
+import OrderBook from "./OrderBook";
+import MarketHistory from "./MarketHistory";
+import Margin from "./Margin";
 import utils from "common/utils";
 import DepthHighChart from "./DepthHighChart";
 import classNames from "classnames";
@@ -124,16 +125,7 @@ class Exchange extends React.Component {
         var buyTotal = this.state.buyAmount * this.state.buyPrice;
         var sellTotal = this.state.sellAmount * this.state.sellPrice;
 
-        function orderHistoryEntry(order) {
-            let priceTrendCssClass = order.type === 1 ? "orderHistoryBid" : "orderHistoryAsk";
-            return (
-                <tr>
-                    <td>{order.amount}</td>
-                    <td className={priceTrendCssClass}>{order.price}</td>
-                    <td>{order.timestamp.getHours()}:{order.timestamp.getMinutes()}</td>
-                </tr>
-            );
-        }
+
 
         let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
         let sellTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "sell"});
@@ -260,58 +252,14 @@ class Exchange extends React.Component {
                             </div>
                         </div>
 
-
-                        {/* My Open Orders 
-                        <div className="grid-block">
-                            
-                            <div className="grid-block small-6">
-                                <div className="grid-content order-table">
-                                    <p>OPEN ORDERS</p>
-                                    <MyOpenOrders
-                                        orders={limit_orders}
-                                        account={account.id}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        onCancel={this._cancelLimitOrder.bind(this)}/>
-                                </div>
-                            </div>
-
-                            {/* My Recent Trades 
-                            <div className="grid-block shrink">
-                                <div className="grid-content order-table">
-                                    <p>RECENT TRADES</p>
-
-                                    <p>TODO: put the user&apos;s most recently completed trades in this panel.</p>
-                                </div>
-                            </div>
-                            
-                        </div> */}
-
                     </div>
 
 
                     <div className="grid-block shrink right-column show-for-large">
                         
                         {/* Market History */}
-                        <div className="grid-content market-content">
-                            <table style={{width: "100%"}} className="table expand order-table">
-                                <p>MARKET HISTORY</p>
-                                <thead>
-                                <tr>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Time</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    this.state.history.map(orderHistoryEntry)
-                                }
-                                </tbody>
-                            </table>
-                        </div>
+                        <MarketHistory history={this.props.history} />
+
                     </div>
                     
                 </div>
