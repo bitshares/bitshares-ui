@@ -21,6 +21,7 @@ class SettingsStore {
             ],
             locales: [
                 "en",
+                "cn",
                 "fr"
             ],
             orientation: [

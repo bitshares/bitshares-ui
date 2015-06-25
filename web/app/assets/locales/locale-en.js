@@ -1,6 +1,7 @@
 module.exports = {
     languages: {
         en: "English",
+        cn: "简体中文",
         fr: "French",
         switch: "Switch language"
     },
