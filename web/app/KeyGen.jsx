@@ -3,7 +3,7 @@ import Router from "react-router";
 
 const { Route, RouteHandler, DefaultRoute } = Router;
 
-import KeyGenComponent from "./components/BrainKey/KeyGenComponent";
+import KeyGenComponent from "./components/Wallet/KeyGenComponent";
 
 require("./assets/loader");
 

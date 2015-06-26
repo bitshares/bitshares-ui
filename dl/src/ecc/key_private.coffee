@@ -21,6 +21,8 @@ class PrivateKey
         new PrivateKey BigInteger.fromBuffer(buf)
     
     PrivateKey.fromSeed = (seed) -> # generate_private_key
+        unless typeof seed is 'string'
+            throw new Error 'seed must be of type string'
         PrivateKey.fromBuffer hash.sha256 seed
     
     PrivateKey.fromWif = (private_wif) ->

@@ -108,6 +108,37 @@ module.exports = key =
         
         brainkey.join ' '
     
+    browserEntropy: ->
+        req = (variable, name)-> unless variable
+            throw new Error "missing "+ name
+        req window, "window"
+        req navigator, "navigator"
+        req window.screen, "window.screen"
+        req window.location, "window.location"
+        req window.history, "window.history"
+        req navigator.language, "navigator.language"
+        req navigator.mimeTypes, "navigator.mimeTypes"
+        
+        entropyStr = (new Date()).toString() + " " +
+            + window.screen.height + " " + window.screen.width + " " 
+            + window.screen.colorDepth + " " + " " + window.screen.availHeight 
+            + " " + window.screen.availWidth + " " + window.screen.pixelDepth
+            + navigator.language + " " +
+            + window.location + " " +
+            + window.history.length
+        
+        for mimeType in navigator.mimeTypes
+            entropyStr += 
+                mimeType.description + " " + 
+                mimeType.type + " " + 
+                mimeType.suffixes + " "
+        
+        b = new Buffer(entropyStr)
+        entropyStr += b.toString('binary') + " " +
+            (new Date()).toString()
+        # DEBUG console.log('... entropyStr',entropyStr)
+        entropyStr
+    
     normalize_brain_key: (brain_key)->
         unless typeof brain_key is 'string'
             throw new Error "string required for brain_key"

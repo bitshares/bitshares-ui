@@ -31,6 +31,13 @@ class PrivateKeyStore extends BaseStore {
         });
     }
     
+    onAddKey(key) {
+        iDB.add_to_store("private_keys", key).then( () => {
+            console.log("[PrivateKeyStore.js:20] ----- PrivateKeyActions: key added ----->", key);
+            this.keys = this.keys.set(key.id, PrivateKey(key));
+        });
+    }
+    
     onDeleteByWalletId(wallet_id, transaction, cascade = true) {
         var store = transaction.objectStore("private_keys")
         var delete_ids = [], promises = []
@@ -65,12 +72,7 @@ class PrivateKeyStore extends BaseStore {
         return Promise.all(promises)
     }
 
-    onAddKey(key) {
-        iDB.add_to_store("private_keys", key).then( () => {
-            console.log("[PrivateKeyStore.js:20] ----- PrivateKeyActions: key added ----->", key);
-            this.keys = this.keys.set(key.id, PrivateKey(key));
-        });
-    }
+
 
 }
 

@@ -23,11 +23,7 @@ import AccountPayees from "./components/Account/AccountPayees";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
-// import Wallet from "./components/Wallet/Wallet";
-// import Accounts from "./components/Wallet/Accounts";
-// import Receive from "./components/Wallet/Receive";
-// import Assets from "./components/Wallet/Assets";
-// import History from "./components/Wallet/History";
+import Shorts from "components/Exchange/Shorts";
 import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
 import TransferPage from "./components/Transfer/TransferPage";
@@ -50,6 +46,8 @@ import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
 import Notifier from "./components/Notifier/NotifierContainer";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
+
+import Wallet from "./components/Wallet/Wallet";
 import WalletStore from "stores/WalletStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -130,6 +128,7 @@ let routes = (
             <DefaultRoute handler={Delegates}/>
             <Route name="delegate" path=":name" handler={Delegate} />
         </Route>
+        <Route name="wallet" path="/wallet" handler={Wallet}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
