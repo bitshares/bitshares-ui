@@ -48,6 +48,8 @@ import cookies from "cookies-js";
 import iDB from "idb-instance";
 
 import Wallet from "./components/Wallet/Wallet";
+import WalletCreate from "./components/Wallet/WalletCreate";
+import WalletImport from "./components/Wallet/WalletImport";
 import WalletStore from "stores/WalletStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -69,22 +71,29 @@ class App extends BaseComponent {
 
         Apis.instance().init_promise.then(() => {
             let idb_instance = iDB.init_instance(indexedDB);
-            idb_instance.init_promise.then( db => {
-                AccountStore.loadDbData();
-                WalletStore.loadDbData();
-            });
-            AccountActions.getAllAccounts().then(current_account_id => {
-                return current_account_id;
-            }).then(current_account_id => {
-                let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
-                return Promise.all([
-                    AccountActions.getAccount(current_account_id, true),
-                    AssetActions.getAssetList("A", 100),
-                    BlockchainActions.subscribeGlobals(),
-                    AssetActions.getAsset("1.4.0"),
-                    localePromise
-                ]);
-            }).then(() => {
+            Promise.all([
+                    
+                idb_instance.init_promise.then( db => {
+                    let idb_promises = [];
+                    AccountStore.loadDbData(); // TODO child_promises
+                    idb_promises.push(WalletStore.loadDbData());
+                    return Promise.all(idb_promises);
+                }),
+                
+                AccountActions.getAllAccounts().then(current_account_id => {
+                    return current_account_id;
+                }).then(current_account_id => {
+                    let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
+                    return Promise.all([
+                        AccountActions.getAccount(current_account_id, true),
+                        AssetActions.getAssetList("A", 100),
+                        BlockchainActions.subscribeGlobals(),
+                        AssetActions.getAsset("1.4.0"),
+                        localePromise
+                    ]);
+                })
+                
+            ]).then(() => {
                 this.setState({loading: false});
             });
         }).catch(error => {
@@ -128,7 +137,12 @@ let routes = (
             <DefaultRoute handler={Delegates}/>
             <Route name="delegate" path=":name" handler={Delegate} />
         </Route>
+        <Route name="wallet-create" path="wallet-create" handler={WalletCreate}/>
         <Route name="wallet" path="/wallet" handler={Wallet}/>
+        <Route name="wallet-named" path="/wallet/:wallet_public_name" handler={Wallet}>
+            <Route name="wallet-import" path="import" handler={WalletImport}/>
+            <DefaultRoute handler={Wallet}/>
+        </Route>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>

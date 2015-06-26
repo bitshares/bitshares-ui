@@ -65,7 +65,7 @@ let Wallet = t.struct({
     encrypted_brainkey: t.maybe(t.Str),
     brainkey_checksum: t.Str,
     brainkey_sequence: t.maybe(t.Num),
-    last_backup: t.maybe(t.Dat)
+    backed_up: t.maybe(t.Bool)
 }, "Wallet");
 
 let PublicKey = t.struct({
@@ -80,8 +80,7 @@ let PrivateKey = t.struct({
     public_id: t.Num,
     brainkey_owner_private_id: t.maybe(t.Num),
     brainkey_sequence: t.maybe(t.Num),
-    encrypted_key: t.Str,
-    created: t.Dat
+    encrypted_key: t.Str
 }, "PrivateKey");
 
 let Witness = t.struct({

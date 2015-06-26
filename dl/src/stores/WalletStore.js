@@ -34,7 +34,7 @@ class WalletStore extends BaseStore {
     
     loadDbData() {
         var map = this.wallets.asMutable()
-        idb_helper.cursor("wallets", cursor => {
+        return idb_helper.cursor("wallets", cursor => {
             if( ! cursor) {
                 this.wallets = map.asImmutable()
                 return

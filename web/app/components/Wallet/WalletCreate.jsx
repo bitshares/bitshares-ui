@@ -4,7 +4,7 @@ import WalletStore from "stores/WalletStore";
 import WalletActions from "actions/WalletActions"
 import key from "common/key_utils"
 
-class WalletNew extends Component {
+class WalletCreate extends Component {
     
     constructor() {
         super()
@@ -16,6 +16,9 @@ class WalletNew extends Component {
         //this._bind("handleSubmit")
     }
     
+    //life cycle...
+    //    React.findDOMNode(this.refs.nameInput).focus();
+    
     render() {
         return <div className="grid-block vertical">
             <form className="name-form"
@@ -23,7 +26,7 @@ class WalletNew extends Component {
             >
                 <label>
                     Name:
-                    <input type="text" id="name" autofocus
+                    <input type="text" id="name" ref="nameInput"
                         value={this.state.wallet_public_name}
                         onChange={this._nameChanged.bind(this)} />
                 </label>
@@ -56,4 +59,4 @@ class WalletNew extends Component {
 }
 
 
-export default WalletNew;
+export default WalletCreate;

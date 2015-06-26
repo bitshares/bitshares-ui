@@ -1,18 +1,46 @@
-import React, {Component} from "react";
+import React, {Component, RouteHandler} from "react"
+import {Link} from "react-router"
 
 //import WalletActions from "actions/WalletActions"
 import WalletStore from "stores/WalletStore"
-import WalletNew from './WalletNew'
-import Import from './Import'
+import WalletCreate from './WalletCreate'
+import WalletImport from './WalletImport'
 
-//import key from "common/key_utils"
-
-class Wallet extends Component {
+export default class Wallet extends Component {
 
     render() {
-        return <Import/>
+        var wallet_public_name = this.props.params.wallet_public_name
+        var wallets = WalletStore.getState().wallets
+        
+        if( ! wallet_public_name)
+        return <div>
+            <label>WALLETS ({wallets.count()})</label>
+            { wallets.map( (wallet, public_name) => {
+                return <div>
+                    <pre>
+                        <Link to="wallet-named" params={{ 
+                            wallet_public_name: public_name 
+                        }}>
+                            {public_name}
+                        </Link>
+                    </pre>
+                </div>
+            }).toArray()}
+            (<Link to="wallet-create">create</Link>)
+        </div>
+        
+        return <div>
+            <label>{wallet_public_name}</label>
+            //<RouteHandler wallet_public_name={wallet_public_name} />
+        </div>
     }
     
 }
 
-export default Wallet
+class WalletList extends Component {
+
+    render() {
+        var wallets = WalletStore.getState().wallets
+        
+    }
+}

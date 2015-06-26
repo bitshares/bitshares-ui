@@ -7,26 +7,34 @@ module.exports = {
     },
     
     cursor: (store_name, callback, transaction) => {
-        return new Promise((resolve)=>{
-        if( ! transaction) {
-            transaction = db.transaction(
-                [store_name], "readonly"
-            )
-            transaction.onerror = error =>
-                console.error( "----- transaction error -----", error )
-        }
-        let store = transaction.objectStore(store_name);
-        let request = store.openCursor();
-        request.onsuccess = e => {
-            let cursor = e.target.result;
-            callback(cursor, e)
-            if(!cursor)resolve()
-        };
-        request.onerror = (e) => {
-            console.log("ERROR!!! open_store - can't get '`${store_name}`' cursor. ", e.target.error.message);
-            throw new Error(e.target.error.message);
-        };
-        });
+        return new Promise((resolve, reject)=>{
+            if( ! transaction) {
+                transaction = db.transaction(
+                    [store_name], "readonly"
+                )
+                transaction.onerror = error => {
+                    console.error( "----- transaction error -----", error )
+                    reject(error)
+                }
+            }
+            
+            let store = transaction.objectStore(store_name);
+            let request = store.openCursor();
+            request.onsuccess = e => {
+                let cursor = e.target.result;
+                callback(cursor, e)
+                if(!cursor)
+                    resolve()
+            };
+            request.onerror = (e) => {
+                console.log("ERROR!!! open_store - can't get '`${store_name}`' cursor. ", e.target.error.message);
+                reject({
+                    message: e.target.error.message,
+                    indexeddb_event: e
+                });
+            };
+            
+        }).then()
     },
     
     autoIncrement_unique: (db, table_name, unique_index) => {
