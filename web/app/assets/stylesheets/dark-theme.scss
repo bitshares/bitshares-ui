@@ -265,6 +265,24 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 }
 
 
+// Tabs
+
+.tabs {
+  border-bottom-color: $dark-text-color;
+  > .tab-item {
+    color: $secondary-text-color;
+    &.is-active {
+      color: $primary-text-color;
+      border-bottom-color: $button-bg-color;
+    }
+    &:hover, &:focus, &:active {
+      color: $primary-text-color;
+    }
+  }
+}
+
+
+
 // Exchange
 
 .depthchart {
@@ -306,6 +324,6 @@ td.orderHistoryBid {
   > li > a.active {
     color: $light-text-color;
     background-color: lighten($panel-bg-color, 4%);
-    border-left: 1px solid $button-bg-color;
+    border-left-color: $button-bg-color;
   }
 }

@@ -56,7 +56,6 @@ class AccountVoting extends React.Component {
                             <div className="float-right"><a href="#" className="button" onClick={this.handleAddMyDelegate.bind(this)}>Add</a></div>
                             <AutocompleteInput id="select_delegate" options={all_delegates} ref="select_delegate"/>
                         </div>
-
                     </div>
                 </div>
             </div>

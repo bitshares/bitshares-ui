@@ -13,9 +13,9 @@
   > li {
     > a {
       padding-left: 1.75rem !important;
-      border-left: 1px solid transparent;
+      border-left: 2px solid transparent;
       &.active {
-        border-left: 1px solid #f00;
+        border-left-color: #f00;
       }
     }
   }

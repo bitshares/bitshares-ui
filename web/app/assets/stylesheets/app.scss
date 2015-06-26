@@ -82,13 +82,14 @@ button, .button {
 }
 
 .notification, .notification.success {
-  border-radius: 0px;
+  border-radius: 0;
 }
 
 
 .content-block {
   margin-bottom: 2rem;
   > h3 {
+    font-family: 'Roboto-Light', arial, sans-serif;
     font-size: 2rem;
     border-bottom: 1px solid #444;
     margin-top: 0;
@@ -98,5 +99,4 @@ button, .button {
   > .actions {
     padding: 1rem 0 1rem 0;
   }
-
 }

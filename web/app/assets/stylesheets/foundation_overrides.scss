@@ -56,3 +56,26 @@ a {
   cursor: pointer;
   color: #008CBA;
 }
+
+
+.tabs {
+  border-bottom: 1px solid #444;
+  margin-bottom: 1rem;
+  > .tab-item {
+    background: none;
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    text-transform: uppercase;
+    transition: all 0.3s ease 0s;
+    border-bottom: 2px solid transparent;
+    &.is-active {
+      background: none;
+      border-bottom: 2px solid #f00;
+      &:hover, &:focus, &:active {
+        background: none;
+      }
+    }
+    &:hover, &:focus, &:active {
+      background: none;
+    }
+  }
+}
