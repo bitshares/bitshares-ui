@@ -324,6 +324,6 @@ td.orderHistoryBid {
   > li > a.active {
     color: $light-text-color;
     background-color: lighten($panel-bg-color, 4%);
-    border-left-color: $button-bg-color;
+    border-left-color: darken($button-bg-color, 4%);
   }
 }

@@ -1,6 +1,6 @@
 import React from "react";
-import Notification from "react-foundation-apps/lib/notification";
-import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
+import Notification from "react-foundation-apps/src/notification";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Operation from "../Blockchain/Operation";
 import Immutable from "immutable";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes, Component} from "react";
-import ActionSheet from "react-foundation-apps/lib/action-sheet";
-import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
+import ActionSheet from "react-foundation-apps/src/action-sheet";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
 class AutocompleteInput extends Component {
 

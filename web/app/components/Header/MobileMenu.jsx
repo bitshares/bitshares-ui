@@ -1,8 +1,8 @@
 import React from "react";
-import Panel from "react-foundation-apps/lib/panel";
-import Trigger from "react-foundation-apps/lib/trigger";
+import Panel from "react-foundation-apps/src/panel";
+import Trigger from "react-foundation-apps/src/trigger";
 import {Link} from "react-router";
-import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 
 class MobileMenu extends React.Component {

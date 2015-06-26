@@ -11,9 +11,9 @@ import AccountInfo from "../Account/AccountInfo";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import Trigger from "react-foundation-apps/lib/trigger";
-import Modal from "react-foundation-apps/lib/modal";
-import ZfApi from "react-foundation-apps/lib/utils/foundation-api";
+import Trigger from "react-foundation-apps/src/trigger";
+import Modal from "react-foundation-apps/src/modal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
 class Transfer extends BaseComponent {
     constructor(props) {
