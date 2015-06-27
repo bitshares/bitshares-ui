@@ -60,7 +60,7 @@ class MyOpenOrders extends React.Component {
                             format="short"
                             />
                         </td> 
-                        <td>{(data.buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td>{((data.buy.amount / data.sell.amount) * order.for_sale / quotePrecision).toFixed(3)}</td>
                         <td className={tdClass}>{data.price.toFixed(3)}</td>
                       
 
@@ -82,7 +82,7 @@ class MyOpenOrders extends React.Component {
                 return (
                      <tr key={order.id}>
                         <td className={tdClass}>{data.price.toFixed(3)}</td>
-                        <td>{(data.buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td>{(order.for_sale / quotePrecision).toFixed(3)}</td>
                         <td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}

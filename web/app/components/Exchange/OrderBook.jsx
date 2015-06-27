@@ -38,7 +38,7 @@ class OrderBook extends React.Component {
                 return (
                      <tr key={order.id}>
                         <td>{(price * buy.amount / quotePrecision).toFixed(3)}</td>
-                        <td>{(buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td>{((buy.amount / sell.amount) * order.for_sale / quotePrecision).toFixed(3)}</td>
                         <td className={tdClass}>{price.toFixed(3)}</td>
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
@@ -66,7 +66,7 @@ class OrderBook extends React.Component {
                 return (
                      <tr key={order.id}>
                         <td >{(price * buy.amount / quotePrecision).toFixed(3)}</td>
-                        <td >{(buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td >{(order.for_sale / quotePrecision).toFixed(3)}</td>
                         <td className={tdClass}>{price.toFixed(3)}</td>
 
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
