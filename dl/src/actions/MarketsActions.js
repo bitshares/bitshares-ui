@@ -69,7 +69,7 @@ class MarketsActions {
                     callPromise,
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
-                        quote.id, base.id, 10, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        base.id, quote.id, 60, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then(results => {
@@ -113,7 +113,7 @@ class MarketsActions {
                     callPromise,
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
-                        base.id, quote.id, 10, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        base.id, quote.id, 60, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then((results) => {
