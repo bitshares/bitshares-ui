@@ -49,6 +49,7 @@ class WalletStore extends BaseStore {
         wallet_public_name, 
         password_plaintext,
         brainkey_plaintext,
+        private_wifs,
         unlock = false
     ]) {
         if(this.wallets.get(wallet_public_name)) {

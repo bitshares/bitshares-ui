@@ -21,7 +21,9 @@ export default class WalletImport extends Component {
     }
     
     render() {
-        var keys = { valid: [], invalid: [] }
+        var private_wifs = this.props.private_wifs
+        private_wifs.length = 0
+        var keys = { valid: private_wifs, invalid: [] }
         if(this.state.wif_private_keys) {
             for(let key of this.state.wif_private_keys) {
                 try {
@@ -72,7 +74,16 @@ export default class WalletImport extends Component {
     
 }
 
+// https://github.com/cryptonomex/graphene-ui/issues/19
+// WalletImport.private_wifs = React.PropTypes.array.isRequired
+
+
 class KeyPreview extends Component {
+    
+    constructor() {
+        super()
+        this.state = { max_rows: 3 }
+    }
 
     render() {
         return <Row>
@@ -83,13 +94,14 @@ class KeyPreview extends Component {
     
     renderByType(type) {
         var keys = this.props.keys
-        var max_rows = 3
+        var max_rows = this.state.max_rows
         return <div>
             <label>{type} Keys ({keys[type].length})</label>
     
             { keys[type].map( key => {
                 max_rows--
-                if(max_rows == 0) return <div> <pre>&hellip;</pre> </div>
+                if(max_rows == 0)
+                    return <div onClick={this.expand.bind(this)}>&hellip;</div>
                 if(max_rows < 0) return null
                 if(key.length > 7)
                     // show just enough for debugging
@@ -100,6 +112,9 @@ class KeyPreview extends Component {
         </div>
     }
     
+    expand() {
+        this.setState({max_rows: 10*1000})
+    }
 }
 
 class Importer extends Component {

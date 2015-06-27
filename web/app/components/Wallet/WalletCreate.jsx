@@ -13,7 +13,8 @@ class WalletCreate extends Component {
             wallet_public_name: "default",
             brainkey: key.suggest_brain_key(key.browserEntropy()),
             password: "",
-            password_confirm: ""
+            password_confirm: "",
+            private_wifs: []
         };
         //this._bind("handleSubmit")
     }
@@ -44,11 +45,11 @@ class WalletCreate extends Component {
                 </label>
                 <label>
                     BRAIN-KEY
-                    <input type="text" value={this.state.brainkey}
+                    <textarea type="text" value={this.state.brainkey}
                         onChange={this._brainkeyChanged.bind(this)} />
                 </label>
                 <label>IMPORT PRIVATE KEYS (optional)</label>
-                <WalletImport />
+                <WalletImport private_wifs={this.state.private_wifs}/>
                 <br/>
                 <input type="submit" className="button" value={"Save"} />
             </form>
@@ -67,7 +68,8 @@ class WalletCreate extends Component {
             WalletActions.create(
                 this.state.wallet_public_name,
                 this.state.password,
-                this.state.brainkey
+                this.state.brainkey,
+                this.state.private_wifs
             )
         }
     }
