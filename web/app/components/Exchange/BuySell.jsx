@@ -18,21 +18,26 @@ class BuySell extends React.Component {
         let divClass = classNames(this.props.className, `${type}-form`);
 
         return (
-            <div className={divClass}>
                 <form className="order-form" onSubmit={onSubmit}>
-                    <label>
-                        Quantity ({quoteSymbol}):
-                        <input type="text" id="buyAmount" value={amount} onChange={amountChange}/>
-                    </label>
-                    <label>
-                        Price: ({baseSymbol} per {quoteSymbol}):
-                        <input type="text" id="buyPrice" value={price} onChange={priceChange}/>
-                    </label>
-
+                    <div className="grid-block">
+                        <div className="grid-content">
+                            <label style={{"margin-right": "10px"}}> {/* TODO: move the margin style into a CSS class */}
+                                Quantity ({quoteSymbol}):
+                                <input type="text" id="buyAmount" value={amount} onChange={amountChange}/>
+                            </label>
+                        </div>
+                        <div className="grid-content">
+                            <label style={{"margin-right": "10px"}}>
+                                Price: ({baseSymbol} per {quoteSymbol}):
+                                <input type="text" id="buyPrice" value={price} onChange={priceChange}/>
+                            </label>
+                        </div>
+                    </div>
+  
+                    <input class={type} type="submit" className="button buySellButton" value={buttonText}/>
                     <p>Total ({baseSymbol}): { total.toFixed(3) }</p>
-                    <input class={type} type="submit" className="button" value={buttonText}/>
                 </form>
-            </div>);
+        );
     }
 }
 
