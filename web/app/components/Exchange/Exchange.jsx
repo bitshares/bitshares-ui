@@ -128,14 +128,8 @@ class Exchange extends React.Component {
 
         return (
 
-            <div className="grid-block  vertical">
-
-                {/* Top bar with info */}
-                <div className="grid-block shrink">
-                    <p>{baseSymbol} / {quoteSymbol} Put all kinds of info related to the market here (current price, spread, etc)</p>
-                </div>
-                
-                {/* Second vertical block with rest of content */}
+            <div className="grid-block vertical">
+                {/* Main vertical block with content */}
                 <div className="grid-block page-layout market-layout">
 
                     {/* Left Column - Open Orders */}
@@ -154,8 +148,12 @@ class Exchange extends React.Component {
                     {/* Center Column */}
                     <div className="block grid-block main-content vertical small-9 medium-10 large-8" style={{border: "1px solid yellow"}}>
 
+                        {/* Top bar with info */}
+                        <div className="grid-block shrink">
+                            <p>{baseSymbol} / {quoteSymbol} Put all kinds of info related to the market here (current price, spread, etc)</p>
+                        </div>
+                
                         {/* Price history chart and depth chart inside tabs */}
-
                         <div className="grid-block" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
                             <Tabs>
                                 <Tabs.Tab title="Price history">
