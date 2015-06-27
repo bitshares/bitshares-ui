@@ -12,10 +12,10 @@ class BuySell extends React.Component {
 
     render() {
         let {type, quoteSymbol, baseSymbol, amount, price, amountChange, priceChange, onSubmit} = this.props;
-
+        console.log("this.props", this.props);
         let total = amount * price;
         let buttonText = `${type === "buy" ? "Buy" : "Sell"} ${amount} ${quoteSymbol}`;
-        let divClass = classNames("grid-content", `${type}-form`);
+        let divClass = classNames(this.props.className, `${type}-form`);
 
         return (
             <div className={divClass}>

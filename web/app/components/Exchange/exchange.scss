@@ -1,3 +1,29 @@
+.market-layout {
+  > .grid-block {
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
+  }
+
+/*  .left-column-2 {
+    min-width: 15rem;
+  }
+
+  .right-column {
+    min-width: 15rem;
+  }*/
+}
+
+.market-content {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+[class*="block-grid-"] > li {
+
+    height: auto;
+
+    padding: 0 0.625em 1.25em;
+}
+
 td.orderHistoryBid {
   color: green;
 }
@@ -7,7 +33,7 @@ td.orderHistoryAsk {
 }
 
 .order-table {
-	width: 48%;
+	width: 100%;
 	> caption {
 		padding-bottom: 1.25rem;
 	}
@@ -22,7 +48,8 @@ td.orderHistoryAsk {
 }
 
 .my-orders {
-  width: 100%
+  width: 48% !important;
+  display: inline-table;
 }
 
 p.order-table-title {
@@ -43,10 +70,38 @@ p.order-table-title {
 .backingError { color: red; }
 
 .buy-form {
-  padding-top: 1rem !important;
+  padding-top: 0.25rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 .sell-form {
-  padding-top: 1rem !important;
+  padding-top: 0.25rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
+#market-charts {
+  > div > div.tabs {
+    margin-bottom: 0.25rem;
+
+    .tab-item {
+      padding-top: 0.1rem;
+    }
+  }
+
+}
+
+.fixed-height {
+  .orderbook {
+    display:block;
+    height:42vh;
+    overflow:auto;
+  }
+
+  thead, tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;/* even columns width , fix width of table too*/
+  }
+}

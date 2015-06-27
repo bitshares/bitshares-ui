@@ -28,7 +28,7 @@ class OrderBook extends React.Component {
 
                 let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
                 let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return b_price > a_price;
+                return a_price - b_price;
             }).map(order => {
                 let isAskOrder = market_utils.isAsk(order, base);
                 let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
@@ -51,10 +51,9 @@ class OrderBook extends React.Component {
             }).sort((a, b) => {
                 let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, true);
                 let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, true);
-
                 let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
                 let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return a_price > b_price;
+                return a_price - b_price;
             }).map(order => {
                 let isAskOrder = market_utils.isAsk(order, base);
                 let {buy, sell} = market_utils.parseOrder(order, isAskOrder);
@@ -66,9 +65,9 @@ class OrderBook extends React.Component {
                 askIndex++;
                 return (
                      <tr key={order.id}>
-                        <td className={tdClass}>{price.toFixed(3)}</td>
                         <td >{(price * buy.amount / quotePrecision).toFixed(3)}</td>
                         <td >{(buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td className={tdClass}>{price.toFixed(3)}</td>
 
                         {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
@@ -77,32 +76,22 @@ class OrderBook extends React.Component {
         }
 
         return (
-                <div className="clearfix grid-content" style={{height: "20vh"}}>
-                    <table className="table order-table float-left">
+                <div className="grid-content" style={{overflowY: "hidden"}}>
+                    <table className="table order-table fixed-height">
                         <thead>
                         <tr>
-                            <th style={{textAlign: "left"}}>Value</th>
-                            <th style={{textAlign: "left"}}>Amount</th>
-                            <th style={{textAlign: "left"}}>Bid</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                                {bids}
-                        </tbody>
-                    </table>
-                    <table className="table order-table float-left">
-                        <thead>
-                        <tr>
-                            <th>Ask</th>
-                            <th>Amount</th>
                             <th>Value</th>
-
-                            
+                            <th>Amount</th>
+                            <th>Price</th>
                         </tr>
                         </thead>
-                        <tbody>
-                                {asks}
-                        </tbody>
+                                <tbody className="orderbook">
+                                    {bids}
+                                </tbody>
+                                <tr><td colSpan="3" className="text-center">Spread: {high > 0 && low > 0 ? low - high : 0} {baseSymbol}</td></tr>
+                                <tbody className="orderbook">
+                                    {asks}
+                                </tbody>
                     </table>
                 </div>
         );

@@ -17,7 +17,7 @@ class MyOpenOrders extends React.Component {
 
     render() {
         let {orders, account, base, quote, quoteSymbol, baseSymbol} = this.props;
-        let orderRows = null, quotePrecision, basePrecision;
+        let bids = null, asks = null, quotePrecision, basePrecision;
 
         let getOrderData = function(order) {
             let isAsk = market_utils.isAsk(order, base);
@@ -36,55 +36,99 @@ class MyOpenOrders extends React.Component {
             quotePrecision = utils.get_asset_precision(quote.precision);
             basePrecision = utils.get_asset_precision(base.precision);
 
-            orderRows = orders.filter(a => {
-                return a.seller === account; 
+            bids = orders.filter(a => {
+                return (a.seller === account && a.sell_price.quote.asset_id !== base.id); 
             }).sort((a, b) => {
                 let dataA = getOrderData(a);
                 let dataB = getOrderData(b);
 
-                if (dataB.price > dataA.price) {
-                    return -1;
-                } else if (dataA.price > dataB.price) {
-                    return 1;
-                }
-                return 0;
+                return dataB.price - dataA.price;
             }).map(order => {
                 let data = getOrderData(order);
 
                 let tdClass = classNames({orderHistoryBid: !data.isAsk, orderHistoryAsk: data.isAsk});
                 return (
                      <tr key={order.id}>
-                        <td className={tdClass}>{(data.buy.amount / quotePrecision).toFixed(3)}</td>
-                        <td>{data.price.toFixed(3)}</td>
-                        <td>
+                         <td>
                             <a onClick={this.props.onCancel.bind(this, order.id)}>
                                 <Icon name="cross-circle" fillClass="fill-black" />
                             </a>
-                        </td>                        
-                        {/*<td><FormattedDate
+                        </td> 
+                        <td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}
                             format="short"
                             />
-                        </td>*/}
+                        </td> 
+                        <td>{(data.buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td className={tdClass}>{data.price.toFixed(3)}</td>
+                      
+
+                    </tr>
+                    );
+            }).toArray();
+
+            asks = orders.filter(a => {
+                return (a.seller === account && a.sell_price.quote.asset_id === base.id); 
+            }).sort((a, b) => {
+                let dataA = getOrderData(a);
+                let dataB = getOrderData(b);
+
+                return dataA.price - dataB.price;
+            }).map(order => {
+                let data = getOrderData(order);
+
+                let tdClass = classNames({orderHistoryBid: !data.isAsk, orderHistoryAsk: data.isAsk});
+                return (
+                     <tr key={order.id}>
+                        <td className={tdClass}>{data.price.toFixed(3)}</td>
+                        <td>{(data.buy.amount / quotePrecision).toFixed(3)}</td>
+                        <td><FormattedDate
+                            value={order.expiration}
+                            formats={intlData.formats}
+                            format="short"
+                            />
+                        </td>
+                        <td>
+                            <a onClick={this.props.onCancel.bind(this, order.id)}>
+                                <Icon name="cross-circle" fillClass="fill-black" />
+                            </a>
+                        </td>  
+
                     </tr>
                     );
             }).toArray();
         }
         return (
-            <table className="table order-table my-orders">
-                <thead>
-                <tr>
-                    <th>Amount</th>
-                    <th>Price</th>
-                    <th>{/* "Cancel button" column */}</th>
-                    {/*<th>Expiration</th>*/}
-                </tr>
-                </thead>
-                <tbody>
-                    {orderRows}
-                </tbody>
-            </table>
+            <div className="grid-content text-center">
+                <table className="table order-table my-orders text-right">
+                    <thead>
+                    <tr>
+                        <th style={{textAlign: "right"}}>{/* "Cancel button" column */}</th>
+                        <th style={{textAlign: "right"}}>Expiration</th>
+                        <th style={{textAlign: "right"}}>Amount</th>
+                        <th style={{textAlign: "right"}}>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {bids}
+                    </tbody>
+                </table>
+
+                <table className="table order-table my-orders">
+                    <thead>
+                    <tr>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Expiration</th>
+                        <th>{/* "Cancel button" column */}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {asks}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
