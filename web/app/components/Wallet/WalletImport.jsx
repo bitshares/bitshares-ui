@@ -83,10 +83,14 @@ class KeyPreview extends Component {
     
     renderByType(type) {
         var keys = this.props.keys
+        var max_rows = 3
         return <div>
             <label>{type} Keys ({keys[type].length})</label>
     
             { keys[type].map( key => {
+                max_rows--
+                if(max_rows == 0) return <div> <pre>&hellip;</pre> </div>
+                if(max_rows < 0) return null
                 if(key.length > 7)
                     // show just enough for debugging
                     key = key.substring(0, 7)
