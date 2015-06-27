@@ -28,10 +28,11 @@ export default class Wallet extends Component {
             }).toArray()}
             (<Link to="wallet-create">create</Link>)
         </div>
-        
+        //<RouteHandler wallet_public_name={wallet_public_name} />
+        console.log('... wallet_public_name',wallet_public_name)
         return <div>
-            <label>{wallet_public_name}</label>
-            //<RouteHandler wallet_public_name={wallet_public_name} />
+        <label>{wallet_public_name}</label>
+            
         </div>
     }
     

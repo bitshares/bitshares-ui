@@ -11,7 +11,8 @@ class WalletCreate extends Component {
         this.state = { 
             wallet_public_name: "default",
             brainkey: key.suggest_brain_key(key.browserEntropy()),
-            password: ""
+            password: "",
+            password_confirm: ""
         };
         //this._bind("handleSubmit")
     }
@@ -36,6 +37,11 @@ class WalletCreate extends Component {
                         onChange={this._passwordChanged.bind(this)} />
                 </label>
                 <label>
+                    Password (confirm):
+                    <input type="password" value={this.state.password_confirm}
+                        onChange={this._passwordConfirmChanged.bind(this)} />
+                </label>
+                <label>
                     BrainKey:
                     <input type="text" value={this.state.brainkey}
                         onChange={this._brainkeyChanged.bind(this)} />
@@ -47,14 +53,19 @@ class WalletCreate extends Component {
     
     _nameChanged(e) { this.setState({wallet_public_name: e.target.value }) }
     _passwordChanged(e) { this.setState({password: e.target.value }) }
+    _passwordConfirmChanged(e) { this.setState({password_confirm: e.target.value }) }
     _brainkeyChanged(e) { this.setState({brainkey: e.target.value }) }
     
-    create() {
-        WalletStore.create(
-            this.state.wallet_public_name,
-            this.state.password,
-            this.state.brainkey
-        )
+    create(e) {
+        e.preventDefault()
+        if(this.state.password === this.state.password_confirm) {
+            console.log('... WalletActions',WalletActions)
+            WalletActions.create(
+                this.state.wallet_public_name,
+                this.state.password,
+                this.state.brainkey
+            )
+        }
     }
 }
 
