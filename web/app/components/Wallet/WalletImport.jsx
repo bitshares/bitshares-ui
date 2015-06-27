@@ -12,8 +12,7 @@ export default class WalletImport extends Component {
     
     getInitialState() {
         return {
-            wif_private_keys: [],
-            import_confirmed: false
+            wif_private_keys: null
         }
     }
     
@@ -22,51 +21,28 @@ export default class WalletImport extends Component {
     }
     
     render() {
-        return <div>
-            <label>
-                IMPORT PRIVATE KEYS ({wallet_public_name})
-                {this.renderBody()}
-            </label>
-        </div>
-    }
-    
-    renderBody() {
         var keys = { valid: [], invalid: [] }
-        for(let key of this.state.wif_private_keys) {
-            try {
-                PrivateKey.fromWif(key)
-                keys.valid.push(key)
-            } catch (e) {
-                keys.invalid.push(key)
+        if(this.state.wif_private_keys) {
+            for(let key of this.state.wif_private_keys) {
+                try {
+                    PrivateKey.fromWif(key)
+                    keys.valid.push(key)
+                } catch (e) {
+                    keys.invalid.push(key)
+                }
             }
         }
         
-        if(keys.valid.length == 0)
-        return <div>
-            <input
-                type="file" id="file_input"
-                onChange={this.upload.bind(this)}
-            />
-            <KeyPreview keys={keys}/>
-        </div>
-        
-        if( ! this.state.import_confirmed)
-        return <div>
-            { keys.valid.length == 0 ? null :
-                <button className="button"
-                    onClick={this.confirm_import.bind(this)} 
-                    enabled={this.state.wif_private_keys.length > 0}
-                >
-                    IMPORT
-                </button>
-            }
-            <button className="button" onClick={this.discard.bind(this)}>
-                DISCARD
-            </button>
-            <KeyPreview keys={keys}/>
-        </div>
+        if( ! this.state.wif_private_keys)
+            return <div>
+                <input
+                    type="file" id="file_input"
+                    onChange={this.upload.bind(this)}
+                />
+            </div>
         
         return <div>
+            (<a onClick={this.discard.bind(this)}> clear </a>)
             <KeyPreview keys={keys}/>
         </div>
     }
@@ -85,13 +61,13 @@ export default class WalletImport extends Component {
         reader.readAsText(file)
     }
     
-    confirm_import() {
+    /*confirm_import() {
         console.log("TODO: Add 1 entry for Back button support")
         this.setState({import_confirmed:true})
-    }
+    }*/
     
     discard() {
-        this.setState({wif_private_keys:[]})
+        this.setState({wif_private_keys: null})
     }
     
 }

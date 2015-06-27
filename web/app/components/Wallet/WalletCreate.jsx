@@ -1,7 +1,8 @@
 import React, {Component} from "react";
-import BaseComponent from "../BaseComponent";
 import WalletStore from "stores/WalletStore";
 import WalletActions from "actions/WalletActions"
+import WalletImport from "./WalletImport"
+
 import key from "common/key_utils"
 
 class WalletCreate extends Component {
@@ -26,26 +27,29 @@ class WalletCreate extends Component {
                 onSubmit={this.create.bind(this)}
             >
                 <label>
-                    Name:
+                    NAME
                     <input type="text" id="name" ref="nameInput"
                         value={this.state.wallet_public_name}
                         onChange={this._nameChanged.bind(this)} />
                 </label>
                 <label>
-                    Password:
+                    PASSWORD
                     <input type="password" value={this.state.password}
                         onChange={this._passwordChanged.bind(this)} />
                 </label>
                 <label>
-                    Password (confirm):
+                    PASSWORD (confirm):
                     <input type="password" value={this.state.password_confirm}
                         onChange={this._passwordConfirmChanged.bind(this)} />
                 </label>
                 <label>
-                    BrainKey:
+                    BRAIN-KEY
                     <input type="text" value={this.state.brainkey}
                         onChange={this._brainkeyChanged.bind(this)} />
                 </label>
+                <label>IMPORT PRIVATE KEYS (optional)</label>
+                <WalletImport />
+                <br/>
                 <input type="submit" className="button" value={"Save"} />
             </form>
         </div>
