@@ -189,7 +189,8 @@ class Exchange extends React.Component {
                         <div className="grid-block shrink" style={{ flexGrow: "0" }} >
                         <div className="grid-block" style={{ margin: "10px" }}>
                                 
-                                <BuySell 
+                                {quote && base ?
+                                <BuySell
                                     className="small-6"
                                     type="buy"
                                     amount={buyAmount}
@@ -199,10 +200,11 @@ class Exchange extends React.Component {
                                     amountChange={this._buyAmountChanged.bind(this)}
                                     priceChange={this._buyPriceChanged.bind(this)}
                                     onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice)}
-                                />
+                                /> : null}
 </div>
                         <div className="grid-block" style={{ flexGrow: "0" }} >
-                                <BuySell 
+                                {quote && base ?
+                                <BuySell
                                     className="small-6"
                                     type="sell"
                                     amount={sellAmount}
@@ -212,7 +214,7 @@ class Exchange extends React.Component {
                                     amountChange={this._sellAmountChanged.bind(this)}
                                     priceChange={this._sellPriceChanged.bind(this)}
                                     onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount)}
-                                />
+                                /> : null}
                         </div>
                         </div>
                              
