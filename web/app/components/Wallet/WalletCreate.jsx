@@ -5,7 +5,7 @@ import WalletImport from "./WalletImport"
 
 import key from "common/key_utils"
 
-class WalletCreate extends Component {
+export default class WalletCreate extends Component {
     
     constructor() {
         super()
@@ -74,6 +74,3 @@ class WalletCreate extends Component {
         }
     }
 }
-
-
-export default WalletCreate;

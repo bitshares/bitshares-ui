@@ -1,10 +1,12 @@
-import React from "react";
+import React, {Link} from "react";
 import BaseComponent from "./BaseComponent";
 import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
+import WalletStore from "stores/WalletStore"
 import PrivateKeyActions from "actions/PrivateKeyActions";
+import WalletSelect from "components/Wallet/WalletSelect";
 
 class CreateAccount extends BaseComponent {
     constructor() {
@@ -50,16 +52,38 @@ class CreateAccount extends BaseComponent {
     }
 
     render() {
+        
+        var wallets = WalletStore.getState().wallets
+        
+        //<Link to="wallet-create">Create Wallet</Link>
+        if( ! wallets.count())
+            return <div className="grid-block vertical">
+                <div className="grid-content">
+                    <label>Wallet Setup Required</label>
+                    <div>
+                        <a href="/#/wallet-create">Create Wallet</a>
+                    </div>
+                </div>
+            </div>
+        
         let AccountForm = forms.Form.extend({
             errorCssClass: "has-error",
-            name: forms.CharField({ initial: "", placeholder: "Account Name" })
+            name: forms.CharField({ initial: "", placeholder: "Account Name" }),
+            clean: ()=> {
+                var wallet_selector = this.refs.wallet_selector
+                if( ! wallet_selector.isSelecedAndUnlocked())
+                    throw forms.ValidationError("Unlock Wallet")
+            }
         });
+        
         let buttonClass = classNames("button", {disabled: !this.state.validAccountName});
         return <div className="grid-block vertical">
             <div className="grid-block page-layout">
                 <div className="grid-block medium-4">
                     <div className="grid-content">
                         <h4>Create New Account</h4>
+                        <WalletSelect ref="wallet_selector" unlock="true"/>
+                        <br/>
                         <form onSubmit={this.onSubmit.bind(this)} onChange={this.onFormChange.bind(this)} noValidate>
                             <forms.RenderForm form={AccountForm} ref="accountForm"/>
                             <button className={buttonClass}>CREATE ACCOUNT</button>

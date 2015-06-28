@@ -14,15 +14,16 @@ var iDB = (function () {
 
             openRequest.onupgradeneeded = function (e) {
                 let db = e.target.result;
-                if (!db.objectStoreNames.contains("my_accounts")) {
+                if (e.oldVersion < 1) {
                     db.createObjectStore("my_accounts", { keyPath: "name" });
                 }
-                idb_helper.set_graphene_db(db)
-                if (event.oldVersion < 2) {
+                if (e.oldVersion < 2) {
                     idb_helper.autoIncrement_unique(db, "wallets", "public_name")
                     idb_helper.autoIncrement_unique(db, "private_keys", "encrypted_key")
                     idb_helper.autoIncrement_unique(db, "public_keys", "pubkey")
                 }
+                
+                idb_helper.set_graphene_db(db) //last
             };
 
             openRequest.onsuccess = function (e) {

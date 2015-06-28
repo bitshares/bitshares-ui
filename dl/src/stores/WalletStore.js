@@ -20,11 +20,20 @@ class WalletStore extends BaseStore {
         this.wallets = Immutable.Map();
         this.bindActions(WalletActions)
         this._export(
-            "loadDbData"//, "create"
+            "loadDbData", "isLocked", "getCurrentWallet",
+            "validatePassword", "onLock"
         )
     }
     
-    onLock({wallet_public_name}) {
+    getCurrentWallet() {
+        if( ! this.current_wallet) {
+            if(this.wallets.count())
+                this.current_wallet = this.wallets.first().public_name
+        }
+        return this.current_wallet
+    }
+    
+    onLock(wallet_public_name) {
         delete aes_private_map[wallet_public_name]
     }
     
@@ -32,17 +41,25 @@ class WalletStore extends BaseStore {
         return aes_private_map[wallet_public_name] ? false : true
     }
     
-    loadDbData() {
-        var map = this.wallets.asMutable()
-        return idb_helper.cursor("wallets", cursor => {
-            if( ! cursor) {
-                this.wallets = map.asImmutable()
-                return
-            }
-            var wallet = cursor.value
-            map.set(wallet.public_name, Wallet(wallet))
-            cursor.continue()
-        });
+    validatePassword(
+        wallet_public_name,
+        password,
+        unlock = false
+    ) {
+        var wallet = this.wallets.get(wallet_public_name)
+        if ( ! wallet)
+            return false
+        
+        try {
+            var aes_private = key.aes_private(
+                password + this.secret_server_token,
+                wallet.password_checksum
+            )
+            if(unlock)
+                aes_private_map[wallet_public_name] = aes_private
+        } catch(e) {
+            console.log('password error', e)
+        }
     }
     
     onCreate([
@@ -133,30 +150,9 @@ class WalletStore extends BaseStore {
         }).catch( error => {reject(error)})
         return false
     }
-    /*
-    validatePassword(
-        wallet,
-        password,
-        unlock = false
-    ) {
-        if(! password || typeof password != 'string')
-            throw new Error("required: password")
-        
-        if(! secret_server_token || typeof password != 'string')
-            throw new Error("required: secret_server_token")
-        
-        var wallet = this.keys.get(wallet_public_name)
-        if ( ! wallet)
-            throw new Error("wrong password")
-        
-        var aes_private = key.aes_private(
-            password + secret_server_token,
-            wallet.password_checksum
-        )
-        if(unlock)
-            aes_private_map[wallet_public_name] = aes_private
-    }
     
+
+    /*
     validateBrainkey(
         wallet,
         brain_key,
@@ -181,6 +177,20 @@ class WalletStore extends BaseStore {
     }
     */
     // delete_brainkey
+    
+    loadDbData() {
+        var map = this.wallets.asMutable()
+        return idb_helper.cursor("wallets", cursor => {
+            if( ! cursor) {
+                this.wallets = map.asImmutable()
+                return
+            }
+            var wallet = cursor.value
+            map.set(wallet.public_name, Wallet(wallet))
+            cursor.continue()
+        });
+    }
+    
 }
 
 var WrappedWalletStore = alt.createStore(WalletStore, "WalletStore");

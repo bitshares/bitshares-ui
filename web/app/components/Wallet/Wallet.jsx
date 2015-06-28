@@ -19,7 +19,7 @@ export default class Wallet extends Component {
             <RowTop>
                 <Column>
                     <label>WALLET</label>
-                    {wallet_public_name.toUpperCase()}
+                    {(""+wallet_public_name).toUpperCase()}
                 </Column>
                 <Column>
                 <ul className="menu-bar">
@@ -48,7 +48,7 @@ class WalletList extends Component {
                         <Link to="wallet-named" params={{ 
                             wallet_public_name: public_name 
                         }}>
-                            {public_name.toUpperCase()}
+                            {(""+public_name).toUpperCase()}
                         </Link>
                     </pre>
                 </div>
