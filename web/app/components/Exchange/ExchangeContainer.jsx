@@ -17,9 +17,6 @@ class ExchangeContainer extends React.Component {
                     limit_orders: () => {
                         return MarketsStore.getState().activeMarketLimits;
                     },
-                    short_orders: () => {
-                        return MarketsStore.getState().activeMarketShorts;
-                    },
                     call_orders: () => {
                         return MarketsStore.getState().activeMarketCalls;
                     },
@@ -40,6 +37,9 @@ class ExchangeContainer extends React.Component {
                     },
                     account: () => {
                         return AccountStore.getState().currentAccount;
+                    },
+                    balances: () => {
+                        return AccountStore.getState().balances;
                     }
                   }} 
                   >

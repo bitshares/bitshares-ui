@@ -1,6 +1,7 @@
 import React from "react";
 import {PropTypes} from "react/addons";
 import classNames from "classnames";
+import utils from "common/utils";
 
 class BuySell extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -11,10 +12,11 @@ class BuySell extends React.Component {
     }
 
     render() {
-        let {type, quoteSymbol, baseSymbol, amount, price, amountChange, priceChange, onSubmit} = this.props;
-        console.log("this.props", this.props);
+        let {type, quoteSymbol, baseSymbol, amount, price, amountChange, priceChange, onSubmit, balance} = this.props;
+        // console.log("this.props", this.props);
         let total = amount * price;
         let buttonText = `${type === "buy" ? "Buy" : "Sell"} ${amount} ${quoteSymbol}`;
+        let balanceSymbol = type === "buy" ? quoteSymbol : baseSymbol;
         let divClass = classNames(this.props.className, `${type}-form`);
 
         return (
@@ -36,7 +38,8 @@ class BuySell extends React.Component {
                     </div>
   
                     <input class={type} type="submit" className="button buySellButton" value={buttonText}/>
-                    <p>Total ({baseSymbol}): { total.toFixed(3) }</p>
+                    <p>Balance: {`${utils.format_number(balance, 3)} ${balanceSymbol}`}</p>
+                    <p>Total ({baseSymbol}): { utils.format_number(total, 3) }</p>
                 </form>
                 </div>
         );

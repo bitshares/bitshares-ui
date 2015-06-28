@@ -23,12 +23,17 @@ class Exchange extends React.Component {
             sellPrice: 170,
             sub: false,
             activeTab: "buy",
-            showBuySell: true
+            showBuySell: true,
+            noBalance: false
         };
     }
 
-    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, e) {
+    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
+        console.log(sellAssetAmount, balance);
+        if (sellAssetAmount > balance) {
+            return this.setState({noBalance: true});
+        }
         console.log("sell id:", sellAsset);
 
         let expiration = new Date();
@@ -43,6 +48,8 @@ class Exchange extends React.Component {
             expiration.toISOString().slice(0, -7), // the seconds will be added in the actionCreator to set a unique identifer for this user and order
             false // fill or kill
         );
+
+        this.setState({noBalance: false});
     }
 
     _cancelLimitOrder(orderID, e) {
@@ -111,15 +118,30 @@ class Exchange extends React.Component {
     }
 
     render() {
-        let {asset_symbol_to_id, assets, account, limit_orders, short_orders, base: baseSymbol, quote: quoteSymbol} = this.props;
+        let {asset_symbol_to_id, assets, account, limit_orders,
+            short_orders, base: baseSymbol, quote: quoteSymbol,
+            balances} = this.props;
         let {buyAmount, buyPrice, sellAmount, sellPrice} = this.state;
-        let base = null, quote = null;
+        let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0;
 
         if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
             let quote_id = asset_symbol_to_id[quoteSymbol];
             let base_id = asset_symbol_to_id[baseSymbol];
             base = assets.get(base_id);
             quote = assets.get(quote_id);
+
+            accountBalance = balances.get(account.id);
+
+            for (var i = 0; i < accountBalance.length; i++) {
+                if (accountBalance[i].asset_id === quote_id) {
+                    quoteBalance = parseInt(accountBalance[i].amount, 10);
+                }
+                if (accountBalance[i].asset_id === base_id) {
+                    baseBalance = parseInt(accountBalance[i].amount, 10);
+                }
+            }
+
+            console.log("exchange accountBalance:", accountBalance);
         }
 
         // let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
@@ -197,7 +219,8 @@ class Exchange extends React.Component {
                                         baseSymbol={baseSymbol}
                                         amountChange={this._buyAmountChanged.bind(this)}
                                         priceChange={this._buyPriceChanged.bind(this)}
-                                        onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice)}
+                                        balance={baseBalance / utils.get_asset_precision(base.precision)}
+                                        onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance)}
                                     /> : null}
                                     {quote && base ?
                                     <BuySell
@@ -209,8 +232,11 @@ class Exchange extends React.Component {
                                         baseSymbol={baseSymbol}
                                         amountChange={this._sellAmountChanged.bind(this)}
                                         priceChange={this._sellPriceChanged.bind(this)}
-                                        onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount)}
+                                        balance={quoteBalance / utils.get_asset_precision(quote.precision)}
+                                        onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance)}
                                     /> : null}
+
+                                    {this.state.noBalance ? <div>Insufficient balance</div> : null}
                         </div>
                              
                         <div className="grid-block" style={{minHeight: "20rem"}}>

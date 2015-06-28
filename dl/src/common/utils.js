@@ -1,3 +1,4 @@
+var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 var Utils = {
@@ -17,6 +18,14 @@ var Utils = {
 
     get_asset_amount: (amount, asset) => {
         return amount / Math.pow(10, asset.precision);
+    },
+
+    format_number: (number, decimals) => {
+        let zeros = ".";
+        for (var i = 0; i < decimals; i++) {
+            zeros += "0"     
+        };
+        return numeral(number).format("0,0" + zeros);
     }
 };
 
