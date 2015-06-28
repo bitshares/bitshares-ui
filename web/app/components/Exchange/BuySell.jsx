@@ -18,6 +18,7 @@ class BuySell extends React.Component {
         let divClass = classNames(this.props.className, `${type}-form`);
 
         return (
+            <div className={divClass}>
                 <form className="order-form" onSubmit={onSubmit}>
                     <div className="grid-block">
                         <div className="grid-content">
@@ -37,6 +38,7 @@ class BuySell extends React.Component {
                     <input class={type} type="submit" className="button buySellButton" value={buttonText}/>
                     <p>Total ({baseSymbol}): { total.toFixed(3) }</p>
                 </form>
+                </div>
         );
     }
 }
