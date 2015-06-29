@@ -7,8 +7,9 @@ import Immutable from "immutable";
 
 import BaseStore from "./BaseStore";
 import PrivateKeyStore from 'stores/PrivateKeyStore'
-import {Wallet, PublicKey, PrivateKey} from "./tcomb_structs";
+import {WalletTcomb, PublicKeyTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import WalletActions from "actions/WalletActions"
+import PrivateKey from "ecc/key_private"
 
 var aes_private_map = {}
 
@@ -20,8 +21,8 @@ class WalletStore extends BaseStore {
         this.wallets = Immutable.Map();
         this.bindActions(WalletActions)
         this._export(
-            "loadDbData", "isLocked", "getCurrentWallet",
-            "validatePassword", "onLock"
+            "getCurrentWallet", "onLock", "isLocked",
+            "validatePassword", "onCreate", "loadDbData"
         )
     }
     
@@ -62,63 +63,96 @@ class WalletStore extends BaseStore {
         }
     }
     
-    onCreate([
+    onCreate(
         wallet_public_name, 
         password_plaintext,
         brainkey_plaintext,
         private_wifs,
         unlock = false
-    ]) {
-        if(this.wallets.get(wallet_public_name)) {
-            reject("wallet exists")
-        }
-        let transaction = iDB.instance().db().transaction(
-            ["wallets"], "readwrite"
-        )
-        transaction.onerror = e => {
-            reject(e.target.error.message)
-        }
-            
-        var password = key.aes_checksum(
-            password_plaintext + this.secret_server_token
-        )
-        
-        // When deleting then re-adding a brainkey this checksum
-        // is used to ensure it is the correct brainkey.
-        var brainkey_checksum = key.aes_checksum(
-            brainkey_plaintext + this.secret_server_token
-        ).checksum
-        
-        var brainkey_cipherhex = password.aes_private.encryptToHex(
-            brainkey_plaintext
-        )
-        
-        let store = transaction.objectStore("wallets")
-        let wallet = {
-            public_name: wallet_public_name,
-            password_checksum: password.checksum,
-            encrypted_brainkey: brainkey_cipherhex,
-            brainkey_checksum
-        }
-        let request = store.add(wallet)
-        request.onsuccess = (e) => { 
-            console.log("[WalletStore.js] ----- key added -----");
-            wallet.id = e.target.result
-            this.wallets = this.wallets.set(
-                wallet_public_name,
-                Wallet(wallet)
-            )
-            if(unlock) {
-                aes_private_map[wallet_public_name] = password.aes_private
+    ) {
+        return new Promise( (resolve, reject) => {
+            if(this.wallets.get(wallet_public_name)) {
+                reject("wallet exists")
+                return
             }
-            //eventEmitter.emitChange()
-        }
-        request.onerror = (e) => {
-            reject(e.target.error.message);
-        }
-        return false
+            let transaction = iDB.instance().db().transaction(
+                ["wallets", "public_keys", "private_keys"], "readwrite"
+            )
+            transaction.onerror = e => {
+                reject(e.target.error.message)
+            }
+            transaction.oncomplete = e => {
+                resolve()
+            }
+            var password = key.aes_checksum(
+                password_plaintext + this.secret_server_token
+            )
+            
+            // When deleting then re-adding a brainkey this checksum
+            // is used to ensure it is the correct brainkey.
+            var brainkey_checksum = key.aes_checksum(
+                brainkey_plaintext + this.secret_server_token
+            ).checksum
+            
+            var brainkey_cipherhex = password.aes_private.encryptToHex(
+                brainkey_plaintext
+            )
+            
+            let wallet = {
+                public_name: wallet_public_name,
+                password_checksum: password.checksum,
+                encrypted_brainkey: brainkey_cipherhex,
+                brainkey_checksum
+            }
+            WalletTcomb(wallet) // validate early
+            return (wallet, unlock, password_aes_private, private_wifs) => {
+                return idb_helper.add(
+                    transaction.objectStore("wallets"), wallet, () => {
+                        
+                        var promises = []
+                        for(let wif of private_wifs) {
+                            var private_key = PrivateKey.fromWif(wif)
+                            var private_cipherhex =
+                                password_aes_private.encryptToHex(
+                                    private_key.toBuffer()
+                                )
+                            
+                            var public_key = private_key.toPublic()
+                            var promise = PublicKeyStore.onAddKey(
+                                {pubkey: public_key.toBtsPublic()},
+                                transaction, public_key_object => {
+                                    var private_key_object = {
+                                        wallet_id: wallet.id,
+                                        public_id: public_key_object.id,
+                                        brainkey_owner_private_id: null,
+                                        brainkey_sequence: null,
+                                        encrypted_key: private_cipherhex
+                                    }
+                                    return PrivateKeyStore.onAddKey(
+                                        private_key_object,
+                                        transaction
+                                    )
+                                }
+                            )
+                            promises.push(promise)
+                        }
+                        
+                        return Promise.all(promises).then( ()=> {
+                            this.wallets = this.wallets.set(
+                                wallet.public_name,
+                                WalletTcomb(wallet)
+                            )
+                            if(unlock)
+                                aes_private_map[wallet_public_name] =
+                                    password_aes_private
+                        })
+                    }
+                )
+            }(wallet, unlock, password.aes_private, private_wifs)
+        })
     }
     
+    /*
     onDeleteWallet(wallet_public_name = "default") {
         var wallet = this.wallets.get(wallet_public_name)
         if(!wallet) {
@@ -133,8 +167,8 @@ class WalletStore extends BaseStore {
             reject(e.target.error.message)
         }
         PrivateKeyStore.deleteByWalletId(wallet.id, transaction).then(()=>{
-            let store = transaction.objectStore("wallets");
-            let request = store.delete(wallet.id);
+            let wallet_store = transaction.objectStore("wallets");
+            let request = wallet_store.delete(wallet.id);
             request.onsuccess = () => {
                 delete aes_private_map[wallet_public_name]
                 this.wallets = this.wallets.delete(wallet_public_name)
@@ -149,7 +183,7 @@ class WalletStore extends BaseStore {
             }
         }).catch( error => {reject(error)})
         return false
-    }
+    }*/
     
 
     /*
@@ -186,7 +220,7 @@ class WalletStore extends BaseStore {
                 return
             }
             var wallet = cursor.value
-            map.set(wallet.public_name, Wallet(wallet))
+            map.set(wallet.public_name, WalletTcomb(wallet))
             cursor.continue()
         });
     }

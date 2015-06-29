@@ -58,7 +58,7 @@ let Block = t.struct({
     witness: t.Str
 }, "Block");
 
-let Wallet = t.struct({
+let WalletTcomb = t.struct({
     id: t.maybe(t.Num),
     public_name: t.Str,
     password_checksum: t.Str,
@@ -66,22 +66,22 @@ let Wallet = t.struct({
     brainkey_checksum: t.Str,
     brainkey_sequence: t.maybe(t.Num),
     backed_up: t.maybe(t.Bool)
-}, "Wallet");
+}, "WalletTcomb");
 
-let PublicKey = t.struct({
+let PublicKeyTcomb = t.struct({
     id: t.maybe(t.Num),
     pubkey: t.Str,
     key_id: t.maybe(t.Str)
-}, "PublicKey");
+}, "PublicKeyTcomb");
 
-let PrivateKey = t.struct({
+let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
     wallet_id: t.Num,
     public_id: t.Num,
     brainkey_owner_private_id: t.maybe(t.Num),
     brainkey_sequence: t.maybe(t.Num),
     encrypted_key: t.Str
-}, "PrivateKey");
+}, "PrivateKeyTcomb");
 
 let Witness = t.struct({
     id: t.Str,
@@ -167,9 +167,9 @@ module.exports = {
     Account: Account,
     Asset: Asset,
     Block: Block,
-    Wallet: Wallet,
-    PublicKey: PublicKey,
-    PrivateKey: PrivateKey,
+    WalletTcomb: WalletTcomb,
+    PublicKeyTcomb: PublicKeyTcomb,
+    PrivateKeyTcomb: PrivateKeyTcomb,
     Witness: Witness,
     Delegate: Delegate,
     GlobalObject: GlobalObject,

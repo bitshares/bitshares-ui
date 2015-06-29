@@ -55,13 +55,13 @@ class CreateAccount extends BaseComponent {
         
         var wallets = WalletStore.getState().wallets
         
-        //<Link to="wallet-create">Create Wallet</Link>
+        //<Link to="create-wallet">Create Wallet</Link>
         if( ! wallets.count())
             return <div className="grid-block vertical">
                 <div className="grid-content">
                     <label>Wallet Setup Required</label>
                     <div>
-                        <a href="/#/wallet-create">Create Wallet</a>
+                        <a href="/#/create-wallet">Create Wallet</a>
                     </div>
                 </div>
             </div>

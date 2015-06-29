@@ -17,13 +17,13 @@ export default class WalletSelect extends Component {
     render() {
         this.unlock = this.props.unlock
         
-        //<Link to="wallet-create">Create Wallet</Link>
+        //<Link to="create-wallet">Create Wallet</Link>
         if( ! this.wallets.count())
             return <div className="grid-block vertical">
                 <div className="grid-content">
                     <label>Wallet Setup Required</label>
                     <div>
-                        <a href="/#/wallet-create">Create Wallet</a>
+                        <a href="/#/create-wallet">Create Wallet</a>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@ export default class WalletSelect extends Component {
             </div>
             :
             <div>
-                <label>Unlock</label>
+                <label>Unlock Password</label>
                 <form onSubmit={this._passSubmit.bind(this)}>
                     <input type="password" onChange={this._passChange.bind(this)}/>
                     <button className="button" onClick={this._passSubmit.bind(this)}>

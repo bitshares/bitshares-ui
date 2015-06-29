@@ -6,7 +6,8 @@ var alt = require("../alt-instance")
 class WalletActions {
     
     constructor() {
-        this.generateActions('create', 'lock');
+        // https://github.com/cryptonomex/graphene-ui/issues/21
+        //this.generateActions('create', 'lock');
     }
 
 }

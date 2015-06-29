@@ -15,7 +15,7 @@ class PrivateKeyStore extends BaseStore {
         /*this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });*/
-        this._export("loadDbData","onDeleteByWalletId","onAddKey");
+        this._export("loadDbData","onAddKey", "onDeleteByWalletId","onAddKey");
     }
 
     loadDbData() {
@@ -31,11 +31,19 @@ class PrivateKeyStore extends BaseStore {
         });
     }
     
-    onAddKey(key) {
-        iDB.add_to_store("private_keys", key).then( () => {
-            console.log("[PrivateKeyStore.js:20] ----- PrivateKeyActions: key added ----->", key);
-            this.keys = this.keys.set(key.id, PrivateKey(key));
-        });
+    onAddKey(private_key_object, transaction, callback) {
+        return idb_helper.add(
+            transaction.objectStore("private_keys"),
+            private_key_object, private_key_object => {
+                this.keys = this.keys.set(
+                    private_key_object.id,
+                    PrivateKeyTcomb(private_key_object)
+                )
+                return callback ?
+                    callback(private_key_object) : 
+                    private_key_object
+            }
+        )
     }
     
     onDeleteByWalletId(wallet_id, transaction, cascade = true) {

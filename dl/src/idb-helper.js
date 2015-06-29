@@ -1,9 +1,44 @@
 var db;
+var idb_helper
 
-module.exports = {
+module.exports = idb_helper = {
 
     set_graphene_db: _db => {
         db = _db
+    },
+    
+    promise: (request, passthrough_object) => {
+        return new Promise((resolve, reject) => {
+            passthrough_object => {
+                request.onsuccess = (evt) => {
+                    if(passthrough_object == void 0)
+                        resolve(evt)
+                    else
+                        resolve([evt, passthrough_object])
+                }
+            }(passthrough_object)
+            request.onerror = (evt) => {
+                console.log("ERROR!!! - ", e.target.error.message);
+                reject({
+                    error:evt.target.error.message,
+                    data: evt
+                })
+            }
+        })
+    },
+    
+    add: (store, data_object, callback) => {
+        return idb_helper.promise(
+            store.add(data_object),
+            data_object
+        ).then( result => {
+            console.log('... result',result)
+            var [ evt, data_object ] = result
+            console.log('... data_object',data_object)
+            if ( ! evt.target.result == void 0)
+                data_object.id = evt.target.result
+            return callback ? callback(data_object) : data_object
+        })
     },
     
     cursor: (store_name, callback, transaction) => {

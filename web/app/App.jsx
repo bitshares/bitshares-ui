@@ -138,7 +138,7 @@ let routes = (
             <Route name="delegate" path=":name" handler={Delegate} />
         </Route>
         <Route name="wallet" path="wallet" handler={Wallet}/>
-        <Route name="wallet-create" path="wallet-create" handler={WalletCreate}/>
+        <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>

@@ -3,7 +3,7 @@ import alt from "../alt-instance";
 import BaseStore from "./BaseStore";
 import PrivateKeyActions from "../actions/PublicKeyActions";
 import Utils from "../common/utils";
-import {PublicKey} from "./tcomb_structs";
+import {PublicKeyTcomb} from "./tcomb_structs";
 import iDB from "../idb-instance";
 
 import hash from "common/hash"
@@ -16,7 +16,7 @@ class PublicKeyStore extends BaseStore {
         this.bindListeners({
             onAddKey: PublicKeyActions.addKey
         });
-        this._export("loadDbData","onDeleteByPublicId");
+        this._export("loadDbData","onAddKey", "onDeleteByPublicId");
     }
 
     loadDbData() {
@@ -26,15 +26,30 @@ class PublicKeyStore extends BaseStore {
                 this.keys = map.asImmutable()
                 return
             }
-            var public_key = PublicKey(cursor.value)
+            var public_key = PublicKeyTcomb(cursor.value)
             map.set(public_key.id, public_key)
             cursor.continue()
         });
     }
     
+    onAddKey(public_key_object, transaction, callback) {
+        return idb_helper.add(
+            transaction.objectStore("public_keys"),
+            public_key_object, public_key_object => {
+                this.keys = this.keys.set(
+                    public_key_object.id,
+                    PublicKeyTcomb(public_key_object)
+                )
+                return callback ?
+                    callback(public_key_object) : 
+                    public_key_object
+            }
+        )
+    }
+    
     onDeleteByPublicId(public_id, transaction) {
         return new Promise((resolve, reject) => {
-            var store = transaction.objectStore("private_keys")
+            var store = transaction.objectStore("public_keys")
             var request = store.delete(public_id)
             ((public_id, resolve) => {
                 request.onsuccess = () => {
@@ -46,14 +61,7 @@ class PublicKeyStore extends BaseStore {
                 console.log("ERROR!!! onDeleteByPublicId - ", e.target.error.message);
                 reject(e.target.error.message)
             }
-        });
-    }
-
-    onAddKey(key) {
-        iDB.add_to_store("public_keys", key).then( () => {
-            console.log("[PublicKeyStore.js] ----- PublicKeyActions: key added ----->", key);
-            this.keys = this.keys.set(key.id, PublicKey(key));
-        });
+        })
     }
 
 }

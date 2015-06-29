@@ -53,7 +53,7 @@ class WalletList extends Component {
                     </pre>
                 </div>
             }).toArray()}
-            (<Link to="wallet-create">create</Link>)
+            (<Link to="create-wallet">create</Link>)
         </div>
     }
 }

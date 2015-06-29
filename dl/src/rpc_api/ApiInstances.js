@@ -12,6 +12,8 @@ var Apis = (function () {
     
     function init() {
         //console.log("[ApiInstances.js] ----- init ----->");
+        //var WEBSOCKET_URL = process.env.WEBSOCKET_URL || "ws://localhost:8090"
+        //console.log('WEBSOCKET_URL\t',WEBSOCKET_URL)
         ws_rpc = new WebSocketRpc("ws://localhost:8090");
         var init_promise = ws_rpc.login("", "").then(() => {
             db_api = new GrapheneApi(ws_rpc, "database");
