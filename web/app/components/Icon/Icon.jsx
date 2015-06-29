@@ -3,7 +3,8 @@
 import React from "react";
 
 let icons = ["user", "trash", "chevron-down", "menu", "database", "search",
-    "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo", "accounts","witnesses", "assets", "proposals","blocks", "delegates", "workers"];
+    "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo",
+    "accounts", "witnesses", "assets", "proposals", "blocks", "delegates", "workers", "key"];
 let icons_map = {};
 for (let i of icons) icons_map[i] = require(`./${i}.svg`);
 
@@ -26,7 +27,7 @@ class Icon extends React.Component {
 Icon.propTypes = {
     name: React.PropTypes.string.isRequired,
     size: React.PropTypes.oneOf(["2x", "3x", "4x", "5x", "10x"]),
-    inverse: React.PropTypes.bool,
+    inverse: React.PropTypes.bool
     //fillClass: React.PropTypes.string
 };
 

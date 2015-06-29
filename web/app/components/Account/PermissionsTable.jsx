@@ -21,65 +21,66 @@ class PermissionsTable extends React.Component {
 
     saveButtonClicked(e) {
         e.preventDefault();
-        let value = this.refs.select_account.value();
-        if (!value) return;
-        this.props.onAddRow("account", value, 10);
+        let name = this.refs.select_account.value();
+        if (!name) return;
+        console.log("[PermissionsTable.jsx:26] ----- saveButtonClicked ----->", React.findDOMNode(this.refs.weight).value);
+        let weight = React.findDOMNode(this.refs.weight).value;
+        if (!weight) return;
+        this.props.onAddRow(name, weight);
         this.setState({add_mode: false});
     }
 
-    removeButtonClicked(key, e) {
+    removeButtonClicked(name, e) {
         e.preventDefault();
-        this.props.onRemoveRow(key);
+        this.props.onRemoveRow(name);
     }
 
     render() {
         let rows = this.props.permissions.map(p => {
             return (
-                <tr key={p}>
-                    <td><Icon name="user"/></td>
-                    <td>{p}</td>
-                    <td>10</td>
-                    <td><a href onClick={this.removeButtonClicked.bind(this, p)}><Icon name="cross-circle"/></a></td>
+                <tr key={p.name}>
+                    <td>{p.type === "account" ? <Icon name="user"/> : <Icon name="key"/>}</td>
+                    <td>{p.name}</td>
+                    <td>{p.weight}</td>
+                    <td><a href onClick={this.removeButtonClicked.bind(this, p.name)}><Icon name="cross-circle"/></a></td>
                 </tr>
             );
         });
         let control_row = this.state.add_mode ? (
             <tr>
-                <td><Icon name="user"/></td>
+                <td></td>
                 <td><AutocompleteInput id="select_account" options={this.props.accounts} ref="select_account"/></td>
-                <td>weight</td>
+                <td><input type="number" ref="weight"/></td>
                 <td>
-                    <button className="button" onClick={this.saveButtonClicked.bind(this)}>Save</button>
+                    <button className="button outline" onClick={this.saveButtonClicked.bind(this)}>Save</button>
                     <button className="button outline" onClick={this.cancelButtonClicked.bind(this)}>Cancel</button>
                 </td>
             </tr>
-        ) : (
-            <tr>
-                <td>
-                    <button className="button" onClick={this.addButtonClicked.bind(this)}><Icon name="plus-circle"/></button>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        );
+        ) : null;
 
 
         return (
-            <table className="table">
-                <thead>
-                <tr>
-                    <th>Key</th>
-                    <th>Address/Name</th>
-                    <th>Weight</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {rows}
-                {control_row}
-                </tbody>
-            </table>
+            <div>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Key/Name</th>
+                        <th>Weight</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {rows}
+                    {control_row}
+                    </tbody>
+                </table>
+                {   this.state.add_mode ? null : (
+                    <div className="actions">
+                        <a href className="button outline" onClick={this.addButtonClicked.bind(this)}>Add Permission</a>
+                    </div>)
+                }
+            </div>
         );
     }
 }

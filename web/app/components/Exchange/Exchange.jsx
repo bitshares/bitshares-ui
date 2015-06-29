@@ -244,7 +244,7 @@ class Exchange extends React.Component {
                                 orders={limit_orders}
                                 account={account.id}
                                 base={base}
-                                quote={quote}blocks
+                                quote={quote}
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                                 onCancel={this._cancelLimitOrder.bind(this)}
