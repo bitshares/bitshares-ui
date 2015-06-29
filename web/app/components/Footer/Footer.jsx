@@ -33,7 +33,7 @@ class Footer extends BaseComponent {
                 <div className="align-justify grid-block">
                     <div onClick={this._triggerPerf.bind(this)} className="grid-block">
                         <div className="logo">
-                            <Icon name="b-logo" size="2x"/>BitShares 2.0
+                            Graphene
                         </div>
                     </div>
                     { block_height ? <div className="grid-block shrink">

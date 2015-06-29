@@ -22,3 +22,7 @@
     left: 6em;
   }
 }
+
+td > input, td > .autocomplete input {
+  margin: 0 !important;
+}

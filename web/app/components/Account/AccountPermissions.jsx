@@ -11,40 +11,46 @@ class AccountPermissions extends React.Component {
 
     constructor() {
         super();
+        this.ACTIVE = Symbol("active");
+        this.OWNER = Symbol("owner");
         this.state = {
-            active_permissions: Immutable.List.of("Alice", "Bob"),
-            owner_permissions: Immutable.List.of("Alice", "Bob")
+            active_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
+            active_threshold: 100,
+            owner_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
+            owner_threshold: 100
         }
     }
 
-    //handleAddActiveAccount(e) {
-    //    e.preventDefault();
-    //    let value = this.refs.select_active_account.value();
-    //    if (!value) return;
-    //    this.state.active_permissions = this.state.active_permissions.push(value);
-    //    this.setState({active_permissions: this.state.active_permissions});
-    //    this.refs.select_active_account.clear();
-    //}
-    //
-    //handleAddOwnerAccount(e) {
-    //    e.preventDefault();
-    //    let value = this.refs.select_owner_account.value();
-    //    if (!value) return;
-    //    this.state.owner_permissions = this.state.owner_permissions.push(value);
-    //    this.setState({owner_permissions: this.state.owner_permissions});
-    //    this.refs.select_owner_account.clear();
-    //}
-
     onAddRow(type, name, weight) {
         console.log("[AccountPermissions.jsx:39] ----- onAddRow ----->", type, name, weight);
+        if(type === this.ACTIVE){
+            this.state.active_permissions = this.state.active_permissions.push({type: "account", name: name, weight: weight});
+            this.setState({active_permissions: this.state.active_permissions});
+        } else {
+            this.state.owner_permissions = this.state.owner_permissions.push({type: "account", name: name, weight: weight});
+            this.setState({owner_permissions: this.state.owner_permissions});
+        }
     }
 
-    onRemoveRow(name) {
-        console.log("[AccountPermissions.jsx:39] ----- onRemoveRow ----->", name);
+    onRemoveRow(type, name) {
+        console.log("[AccountPermissions.jsx:39] ----- onRemoveRow ----->", type, name);
+        if(type === this.ACTIVE) {
+            let index = this.state.active_permissions.findIndex(i => i.name === name);
+            if (index >= 0) {
+                this.state.active_permissions = this.state.active_permissions.delete(index);
+                this.setState({active_permissions: this.state.active_permissions});
+            }
+        } else {
+            let index = this.state.owner_permissions.findIndex(i => i.name === name);
+            if (index >= 0) {
+                this.state.owner_permissions = this.state.owner_permissions.delete(index);
+                this.setState({owner_permissions: this.state.owner_permissions});
+            }
+        }
     }
 
     render() {
-        console.log("[AccountPermissions.jsx:38] ----- render ----->", this.state);
+        //console.log("[AccountPermissions.jsx:38] ----- render ----->", Symbol("active"));
         let ad = this.props.all_delegates;
         let all_accounts = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
 
@@ -58,16 +64,16 @@ class AccountPermissions extends React.Component {
                             <PermissionsTable
                                 permissions={this.state.active_permissions}
                                 accounts={all_accounts}
-                                onAddRow={this.onAddRow.bind(this)}
-                                onRemoveRow={this.onRemoveRow.bind(this)}/>
+                                onAddRow={this.onAddRow.bind(this, this.ACTIVE)}
+                                onRemoveRow={this.onRemoveRow.bind(this, this.ACTIVE)}/>
                         </Tabs.Tab>
 
                         <Tabs.Tab title="Owner">
                             <PermissionsTable
                                 permissions={this.state.owner_permissions}
                                 accounts={all_accounts}
-                                onAddRow={this.onAddRow.bind(this)}
-                                onRemoveRow={this.onRemoveRow.bind(this)}/>
+                                onAddRow={this.onAddRow.bind(this, this.OWNER)}
+                                onRemoveRow={this.onRemoveRow.bind(this, this.OWNER)}/>
                         </Tabs.Tab>
 
                     </Tabs>
