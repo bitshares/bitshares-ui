@@ -77,6 +77,7 @@ class MarketsActions {
                         limits: results[0],
                         calls: results[1],
                         settles: results[2],
+                        price: results[3],
                         market: subID,
                         base: base,
                         quote: quote
@@ -124,6 +125,7 @@ class MarketsActions {
                         limits: results[1],
                         calls: results[2],
                         settles: results[3],
+                        price: results[4],
                         market: subID,
                         base: base,
                         quote: quote

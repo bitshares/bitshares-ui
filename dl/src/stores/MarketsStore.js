@@ -22,6 +22,8 @@ class MarketsStore {
         this.activeMarketSettles = Immutable.Map();
         this.flat_bids = [];
         this.flat_asks = [];
+        this.priceData = [];
+        this.volumeData = [];
         this.pendingCreateLimitOrders = [];
         this.pendingCancelLimitOrders = {};
         this.activeMarket = null;
@@ -77,6 +79,9 @@ class MarketsStore {
             this.activeMarketCalls = this.activeMarketCalls.clear();
             this.activeMarketSettles = this.activeMarketSettles.clear();
             this.pendingCreateLimitOrders = [];
+            this.priceHistory = [];
+            this.flat_bids = [];
+            this.flat_asks = [];
         }
 
         if (result.limits) {
@@ -129,8 +134,11 @@ class MarketsStore {
             });
         }
 
+        // Update depth chart data
         this._depthChart();
 
+        // Update pricechart data
+        this._priceChart(result.price);
 
         // if (result.sub) {
         //     result.sub.forEach(newOrder => {
@@ -158,6 +166,7 @@ class MarketsStore {
         //     });
 
         // }
+
     }
 
     onCreateLimitOrder(e) {
@@ -191,6 +200,7 @@ class MarketsStore {
         }
 
         this._depthChart();
+
     }
 
     onCancelLimitOrder(e) {
@@ -210,6 +220,7 @@ class MarketsStore {
 
         // Update depth chart
         this._depthChart();
+
     }
 
     onGetMarkets(markets) {
@@ -219,6 +230,34 @@ class MarketsStore {
                 market);
         });
     }
+
+    _priceChart(priceData) {
+        let volume = [];
+        let price = [];
+
+        // Fake data
+        priceData = [
+            {time: new Date(2015, 5, 26, 14, 30).getTime(), open: 1, close: 1.5, high: 1.7, low: 1, volume: 10000},
+            {time: new Date(2015, 5, 26, 15, 0).getTime(), open: 1.5, close: 1.6, high: 1.6, low: 1.4, volume: 15000},
+            {time: new Date(2015, 5, 26, 15, 30).getTime(), open: 1.6, close: 1.4, high: 1.7, low: 1.4, volume: 8000},
+            {time: new Date(2015, 5, 26, 16, 0).getTime(), open: 1.4, close: 1.4, high: 1.4, low: 1.1, volume: 20000},
+            {time: new Date(2015, 5, 26, 16, 30).getTime(), open: 1.4, close: 1.5, high: 1.7, low: 1.3, volume: 17000},
+            {time: new Date(2015, 5, 26, 17, 0).getTime(), open: 1.5, close: 1.35, high: 1.5, low: 1.3, volume: 25000},
+            {time: new Date(2015, 5, 26, 17, 30).getTime(), open: 1.35, close: 1.5, high: 1.55, low: 1.33, volume: 32000},
+            {time: new Date(2015, 5, 26, 18, 0).getTime(), open: 1.5, close: 1.8, high: 1.84, low: 1.5, volume: 37000},
+            {time: new Date(2015, 5, 26, 18, 30).getTime(), open: 1.8, close: 1.99, high: 1.99, low: 1.76, volume: 54000}
+        ]
+
+        for (var i = 0; i < priceData.length; i++) {
+            price.push([priceData[i].time, priceData[i].open, priceData[i].high, priceData[i].low, priceData[i].close]);
+            volume.push([priceData[i].time, priceData[i].volume]);
+        };
+
+        this.priceData = price;
+        this.volumeData = volume;
+
+    }
+
 
     _depthChart() {
         let quotePrecision = utils.get_asset_precision(this.quoteAsset.precision);
