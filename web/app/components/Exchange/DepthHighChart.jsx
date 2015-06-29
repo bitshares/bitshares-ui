@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highcharts from "react-highcharts";
+import Highcharts from "react-highcharts/stocks";
 
 class DepthHighChart extends React.Component {
 
