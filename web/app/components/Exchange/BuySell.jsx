@@ -16,7 +16,8 @@ class BuySell extends React.Component {
         // console.log("this.props", this.props);
         let total = amount * price;
         let buttonText = `${type === "buy" ? "Buy" : "Sell"} ${amount} ${quoteSymbol}`;
-        let balanceSymbol = type === "buy" ? quoteSymbol : baseSymbol;
+        let buttonClass = classNames("button buySellButton", type);
+        let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
         let divClass = classNames(this.props.className, `${type}-form`);
 
         return (
@@ -37,7 +38,7 @@ class BuySell extends React.Component {
                         </div>
                     </div>
   
-                    <input class={type} type="submit" className="button buySellButton" value={buttonText}/>
+                    <input className={buttonClass} type="submit" value={buttonText}/>
                     <p>Balance: {`${utils.format_number(balance, 3)} ${balanceSymbol}`}</p>
                     <p>Total ({baseSymbol}): { utils.format_number(total, 3) }</p>
                 </form>
@@ -52,8 +53,6 @@ BuySell.defaultProps = {
 
 BuySell.propTypes = {
     type: PropTypes.string,
-    base: PropTypes.object.isRequired,
-    quote: PropTypes.object.isRequired,
     amountChange: PropTypes.func.isRequired,
     priceChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired

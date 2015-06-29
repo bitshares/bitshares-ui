@@ -85,6 +85,14 @@ p.order-table-title {
   float: right;
 }
 
+.buy {
+  background-color: #50D2C2 !important;
+}
+
+.sell {
+  background-color: #E3745B !important;
+}
+
 #market-charts {
   > div > div.tabs {
     margin-bottom: 0.25rem;
