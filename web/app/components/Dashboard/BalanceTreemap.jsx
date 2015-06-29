@@ -1,6 +1,6 @@
 import React from "react";
 import Immutable from "immutable";
-import Highcharts from "react-highcharts";
+import Highcharts from "react-highcharts/stocks";
 import {PropTypes} from "react";
 import utils from "common/utils";
 
