@@ -28,9 +28,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="blocks">
                                     <div>
-                                        <Icon name="layers" size="5x" fillClass="fill-black"/>
+                                        <Icon name="blocks" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.blocks.title" />
                                     </div>
                                 </Link> 
@@ -38,9 +38,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="assets">
                                     <div>
-                                        <Icon name="database" size="5x" fillClass="fill-black"/>
+                                        <Icon name="assets" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.assets.title" />
                                     </div>
                                 </Link> 
@@ -48,9 +48,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="blocks">
                                     <div>
-                                        <Icon name="users" size="5x" fillClass="fill-black"/>
+                                        <Icon name="accounts" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.accounts.title" />
                                     </div>
                                 </Link> 
@@ -58,9 +58,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="witnesses">
                                     <div>
-                                        <Icon name="search" size="5x" fillClass="fill-black"/>
+                                        <Icon name="witnesses" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.witnesses.title" />
                                     </div>
                                 </Link> 
@@ -68,9 +68,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="delegates">
                                     <div>
-                                        <Icon name="users" size="5x" fillClass="fill-black"/>
+                                        <Icon name="delegates" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.delegates.title" />
                                     </div>
                                 </Link> 
@@ -78,9 +78,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="blocks">
                                     <div>
-                                        <Icon name="users" size="5x" fillClass="fill-black"/>
+                                        <Icon name="workers" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.workers.title" />
                                     </div>
                                 </Link> 
@@ -88,9 +88,9 @@ class Explorer extends React.Component {
                             <ExplorerCard>
                                 <Link to="blocks">
                                     <div>
-                                        <Icon name="wand" size="5x" fillClass="fill-black"/>
+                                        <Icon name="proposals" size="5x" fillClass="fill-black"/>
                                     </div>
-                                    <div className="card-divider">
+                                    <div className="card-divider text-center">
                                         <Translate component="span" content="explorer.proposals.title" />
                                     </div>
                                 </Link> 

@@ -3,7 +3,7 @@
 import React from "react";
 
 let icons = ["user", "trash", "chevron-down", "menu", "database", "search",
-    "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo"];
+    "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo", "accounts","witnesses", "assets", "proposals","blocks", "delegates", "workers"];
 let icons_map = {};
 for (let i of icons) icons_map[i] = require(`./${i}.svg`);
 
