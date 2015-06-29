@@ -6,6 +6,7 @@ import MarketHistory from "./MarketHistory";
 import BuySell from "./BuySell";
 import Margin from "./Margin";
 import utils from "common/utils";
+import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
 
@@ -140,8 +141,6 @@ class Exchange extends React.Component {
                     baseBalance = parseInt(accountBalance[i].amount, 10);
                 }
             }
-
-            console.log("exchange accountBalance:", accountBalance);
         }
 
         // let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
@@ -155,7 +154,7 @@ class Exchange extends React.Component {
                 <div className="grid-block page-layout market-layout">
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-3 medium-2" style={{overflowY: "auto"}}>
+                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green", overflowY: "auto"}}>
                         <div className="grid-block">
                             <OrderBook
                                 orders={limit_orders}
@@ -179,10 +178,9 @@ class Exchange extends React.Component {
                         <div className="grid-block" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
                             <Tabs>
                                 <Tabs.Tab title="Price history">
-                                    <DepthHighChart
-                                        orders={limit_orders}
-                                        flat_asks={this.props.flat_asks}
-                                        flat_bids={this.props.flat_bids}
+                                    <PriceChart
+                                        priceData={this.props.priceData}
+                                        volumeData={this.props.volumeData}
                                         base={base}
                                         quote={quote}
                                         baseSymbol={baseSymbol}
