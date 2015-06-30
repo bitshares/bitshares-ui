@@ -167,7 +167,7 @@ class Exchange extends React.Component {
                     </div>
 
                     {/* Center Column */}
-                    <div className="block grid-block main-content vertical small-9 medium-10 large-8" style={{border: "1px solid yellow"}}>
+                    <div className="block grid-block main-content vertical small-9 medium-10 large-8">
 
                         {/* Top bar with info */}
                         <div className="grid-block shrink">
@@ -254,7 +254,7 @@ class Exchange extends React.Component {
                    
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block right-column  show-for-large large-2" style={{border: "1px solid purple", overflowY: "auto"}}>
+                    <div className="grid-block right-column  show-for-large large-2" style={{overflowY: "auto"}}>
                         {/* Market History */}
                         <MarketHistory history={this.props.history} />
                     </div>

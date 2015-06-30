@@ -115,13 +115,13 @@ class MyOpenOrders extends React.Component {
                     </tbody>
                 </table>
 
-                <table className="table order-table my-orders">
+                <table className="table order-table my-orders text-left">
                     <thead>
                     <tr>
-                        <th>Price</th>
-                        <th>Amount</th>
-                        <th>Expiration</th>
-                        <th>{/* "Cancel button" column */}</th>
+                        <th  style={{textAlign: "left"}}>Price</th>
+                        <th  style={{textAlign: "left"}}>Amount</th>
+                        <th  style={{textAlign: "left"}}>Expiration</th>
+                        <th  style={{textAlign: "left"}}>{/* "Cancel button" column */}</th>
                     </tr>
                     </thead>
                     <tbody>
