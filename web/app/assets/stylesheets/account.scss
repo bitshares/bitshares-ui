@@ -1,7 +1,7 @@
 .account-left-panel {
- .account-buttons-row .button {
-   min-width: 4.5rem;
- }
+  .account-buttons-row .button {
+    min-width: 4.5rem;
+  }
 }
 
 .account-info {
@@ -18,5 +18,15 @@
         border-left-color: #f00;
       }
     }
+  }
+}
+
+table > tbody > tr.control-row > td {
+  padding-top: 1rem;
+  border-bottom: none;
+  vertical-align: middle;
+  input {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }

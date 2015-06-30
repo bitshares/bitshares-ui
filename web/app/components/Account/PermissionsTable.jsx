@@ -23,7 +23,6 @@ class PermissionsTable extends React.Component {
         e.preventDefault();
         let name = this.refs.select_account.value();
         if (!name) return;
-        console.log("[PermissionsTable.jsx:26] ----- saveButtonClicked ----->", React.findDOMNode(this.refs.weight).value);
         let weight = React.findDOMNode(this.refs.weight).value;
         if (!weight) return;
         this.props.onAddRow(name, weight);
@@ -35,29 +34,41 @@ class PermissionsTable extends React.Component {
         this.props.onRemoveRow(name);
     }
 
+    thresholdChanged(e) {
+        let threshold = React.findDOMNode(this.refs.threshold).value;
+        this.props.onThresholdChanged(threshold);
+    }
+
     render() {
+        let cw = ["16%", "50%", "17%%", "17%"];
         let rows = this.props.permissions.map(p => {
             return (
                 <tr key={p.name}>
-                    <td>{p.type === "account" ? <Icon name="user"/> : <Icon name="key"/>}</td>
-                    <td>{p.name}</td>
-                    <td>{p.weight}</td>
-                    <td><a href onClick={this.removeButtonClicked.bind(this, p.name)}><Icon name="cross-circle"/></a></td>
+                    <td style={{width: cw[0]}}>{p.type === "account" ? <Icon name="user"/> : <Icon name="key"/>}</td>
+                    <td style={{width: cw[1]}}>{p.name}</td>
+                    <td style={{width: cw[2]}}>{p.weight}</td>
+                    <td style={{width: cw[3]}}><a href onClick={this.removeButtonClicked.bind(this, p.name)}><Icon name="cross-circle"/></a></td>
                 </tr>
             );
         });
         let control_row = this.state.add_mode ? (
-            <tr>
-                <td></td>
-                <td><AutocompleteInput id="select_account" options={this.props.accounts} ref="select_account"/></td>
-                <td><input type="number" ref="weight"/></td>
-                <td>
-                    <button className="button outline" onClick={this.saveButtonClicked.bind(this)}>Save</button>
-                    <button className="button outline" onClick={this.cancelButtonClicked.bind(this)}>Cancel</button>
+            <tr className="control-row">
+                <td style={{width: cw[0]}}></td>
+                <td style={{width: cw[1]}}><AutocompleteInput style={{width: "15rem"}} id="select_account" options={this.props.accounts} ref="select_account"/></td>
+                <td style={{width: cw[2]}}><input type="number" style={{width: "4rem"}} ref="weight"/></td>
+                <td style={{width: cw[3]}}>
+                    <button className="button" onClick={this.saveButtonClicked.bind(this)}>Add</button>
+                    <button className="button secondary" onClick={this.cancelButtonClicked.bind(this)}>Cancel</button>
                 </td>
             </tr>
-        ) : null;
-
+        ) : (
+            <tr className="control-row">
+                <td style={{width: cw[0]}}><a href className="button outline" onClick={this.addButtonClicked.bind(this)}>Add Permission</a></td>
+                <td style={{width: cw[1]}} className="text-right"><label>Threshold</label></td>
+                <td style={{width: cw[2]}}><input value={this.props.threshold} style={{width: "4rem"}} type="number" size="4" maxlength="4" ref="threshold" onChange={this.thresholdChanged.bind(this)} /></td>
+                <td style={{width: cw[3]}}></td>
+            </tr>
+        );
 
         return (
             <div>
@@ -75,11 +86,6 @@ class PermissionsTable extends React.Component {
                     {control_row}
                     </tbody>
                 </table>
-                {   this.state.add_mode ? null : (
-                    <div className="actions">
-                        <a href className="button outline" onClick={this.addButtonClicked.bind(this)}>Add Permission</a>
-                    </div>)
-                }
             </div>
         );
     }
