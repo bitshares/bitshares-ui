@@ -1,3 +1,6 @@
+$bid-color: #50D2C2;
+$ask-color: #E3745B;
+
 .market-layout {
   > .grid-block {
     padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
@@ -86,11 +89,11 @@ p.order-table-title {
 }
 
 .buy {
-  background-color: #50D2C2 !important;
+  background-color: $bid-color !important;
 }
 
 .sell {
-  background-color: #E3745B !important;
+  background-color: $ask-color !important;
 }
 
 #market-charts {
@@ -120,4 +123,20 @@ p.order-table-title {
 
 .ps-container {
   position: relative !important;
+}
+
+.bid-total {
+  font-size: 90%;
+  position: absolute;
+  top: 40px;
+  left: 25px;
+  color: $bid-color;
+}
+
+.ask-total {
+  font-size: 90%;
+  position: absolute;
+  top: 40px;
+  right: 25px;
+  color: $ask-color;
 }

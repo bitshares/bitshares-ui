@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes} from "react";
 import Immutable from "immutable";
 import Highcharts from "react-highcharts/stocks";
+import utils from "common/utils";
 
 class DepthHighChart extends React.Component {
 
@@ -30,10 +31,19 @@ class DepthHighChart extends React.Component {
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
+        let totalBids = 0;
+        let totalAsks = flat_asks[flat_asks.length - 1][1];
+
+        for (var i = 0; i < flat_bids.length; i++) {
+            totalBids += flat_bids[i][0] * flat_bids[i][1];
+        }
+
         let config = {
             chart: {
                 type: "area",
-                backgroundColor: "rgba(255, 0, 0, 0)"
+                backgroundColor: "rgba(255, 0, 0, 0)",
+                spacing: [10, 0, 5, 0]
+
             },
             title: {
                 text: null
@@ -48,30 +58,38 @@ class DepthHighChart extends React.Component {
                 }
             },
             tooltip: {
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
-                    return `<b>${this.series.name}</b><br/>Price: ${this.x} ${priceSymbol}<br/>Amount: ${this.y} ${quoteSymbol}`;
+                    let name = this.series.name.split(" ")[0];
+                    return `<span style="font-size: 90%;">${Highcharts.Highcharts.numberFormat(this.x, 2)} ${priceSymbol}</span><br/>
+                        <span style="color:${this.series.color}">\u25CF</span>
+                        ${name}: <b>${Highcharts.Highcharts.numberFormat(this.y, 2)} ${quoteSymbol}</b>`;
+                },
+                style: {
+                    color: "#FFFFFF"
                 }
             },
             series: [
                 {
-                    name: `Buy ${quoteSymbol}`,
+                    name: `Bid ${quoteSymbol}`,
                     data: flat_bids,
                     color: "#50D2C2"
                 },
                 {
-                    name: `Sell ${quoteSymbol}`,
+                    name: `Ask ${quoteSymbol}`,
                     data: flat_asks,
                     color: "#E3745B"
                 }
             ],
             yAxis: {
                 labels: {
+                    enabled: false,
                     style: {
                         color: "#FFFFFF"
                     }
                 },
                 title: {
-                    text: `Amount (${quoteSymbol})`,
+                    text: null,
                     style: {
                         color: "#FFFFFF"
                     }
@@ -141,6 +159,8 @@ class DepthHighChart extends React.Component {
 
         return (
             <div className="grid-content">
+                <p className="bid-total">{utils.format_number(totalBids, 2)} {baseSymbol}</p>
+                <p className="ask-total">{utils.format_number(totalAsks, 2)} {quoteSymbol}</p>
                 {flat_bids && flat_asks ? <Highcharts config={config}/> : null}
             </div>
         );
