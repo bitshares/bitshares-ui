@@ -122,6 +122,14 @@ class Aes
         cipher_array = CryptoJS.enc.Hex.parse cipher
         plainwords = @_decrypt_word_array cipher_array
         CryptoJS.enc.Hex.stringify plainwords
+    
+    decryptHexToText: (cipherhex) ->
+        assert cipher, "Missing cipher text"
+        # Convert data into word arrays (used by Crypto)
+        cipher_array = CryptoJS.enc.Hex.parse cipher
+        plainwords = @_decrypt_word_array cipher_array
+        plainhex = CryptoJS.enc.Hex.stringify plainwords
+        new Buffer(plainhex, 'hex').toString()
         
     encryptHex: (plainhex) ->
         #assert plainhex, "Missing plain text"

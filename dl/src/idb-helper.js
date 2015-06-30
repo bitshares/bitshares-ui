@@ -18,11 +18,12 @@ module.exports = idb_helper = {
                 }
             }(passthrough_object)
             request.onerror = (evt) => {
-                console.log("ERROR!!! - ", e.target.error.message);
-                reject({
+                var error = {
                     error:evt.target.error.message,
                     data: evt
-                })
+                }
+                console.log("ERROR idb-helper.promise request", error)
+                reject(error)
             }
         })
     },
@@ -32,9 +33,7 @@ module.exports = idb_helper = {
             store.add(data_object),
             data_object
         ).then( result => {
-            console.log('... result',result)
             var [ evt, data_object ] = result
-            console.log('... data_object',data_object)
             if ( ! evt.target.result == void 0)
                 data_object.id = evt.target.result
             return callback ? callback(data_object) : data_object
@@ -48,7 +47,7 @@ module.exports = idb_helper = {
                     [store_name], "readonly"
                 )
                 transaction.onerror = error => {
-                    console.error( "----- transaction error -----", error )
+                    console.error("ERROR idb-helper.cursor transaction", error)
                     reject(error)
                 }
             }
@@ -62,11 +61,12 @@ module.exports = idb_helper = {
                     resolve()
             };
             request.onerror = (e) => {
-                console.log("ERROR!!! open_store - can't get '`${store_name}`' cursor. ", e.target.error.message);
-                reject({
-                    message: e.target.error.message,
-                    indexeddb_event: e
-                });
+                var error = {
+                    error: e.target.error.message,
+                    data: e
+                }
+                console.log("ERROR idb-helper.cursor request", error)
+                reject(error);
             };
             
         }).then()

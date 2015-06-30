@@ -71,6 +71,7 @@ let WalletTcomb = t.struct({
 let PublicKeyTcomb = t.struct({
     id: t.maybe(t.Num),
     pubkey: t.Str,
+    addy: t.Str,
     key_id: t.maybe(t.Str)
 }, "PublicKeyTcomb");
 

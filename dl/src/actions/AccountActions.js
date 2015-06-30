@@ -3,6 +3,7 @@ import utils from "common/utils";
 import api from "../api/accountApi";
 import WalletApi from "rpc_api/WalletApi";
 
+
 let accountSubs = {};
 let wallet_api = new WalletApi();
 
@@ -135,12 +136,15 @@ class AccountActions {
         return promise;
     }
 
-    createAccount(name) {
-        let result = wallet_api.create_account_with_brain_key("brainkey", name, 11, 0, 0);
-        return result.trx_promise.then( () => {
-            this.dispatch(name);
-            return result;
-        });
+    createAccount(account_name, wallet_public_name) {
+        return new Promise((resolve, reject) => {
+            WalletActions.createBrainKeyAccount(
+                account_name,
+                wallet_public_name
+            ).then( ()=> {
+                this.dispatch(name)
+            })
+        })
     }
 
     upgradeAccount(account_id) {
