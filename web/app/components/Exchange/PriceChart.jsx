@@ -35,8 +35,16 @@ class PriceChart extends React.Component {
         let {priceData, volumeData, quoteSymbol, baseSymbol} = this.props;
 
         let maxVolume = 0;
+        let volumeColors = [], colorByPoint = false;
+
+        if (volumeData.length === priceData.length) {
+            colorByPoint = true;
+        }
         for (var i = 0; i < volumeData.length; i++) {
             maxVolume = Math.max(maxVolume, volumeData[i][1]);
+            if (colorByPoint) {
+                volumeColors.push(priceData[i][1] <= priceData[i][4] ? "#0ab92b" : "#f01717");
+            }
         }
 
         let config = {
@@ -45,7 +53,8 @@ class PriceChart extends React.Component {
                 dataGrouping: {
                     enabled: false
                 },
-                pinchType: "x"
+                pinchType: "x",
+                spacing: [10, 5, 5, 0]
             },
             title: {
                 text: null
@@ -66,10 +75,13 @@ class PriceChart extends React.Component {
                 candlestick: {
                     animation: false,
                     color: "#f01717",
-                    upColor: "#0ab92b"
+                    upColor: "#0ab92b",
+                    lineColor: "#000000",
+                    lineWidth: 2
                 },
                 column: {
-                    animation: false
+                    animation: false,
+                    borderColor: "#000000"
                 },
                 series: {
                     marker: {
@@ -142,12 +154,14 @@ class PriceChart extends React.Component {
                     },
                     opposite: true,
                     title: {
-                        text: "OHLC",
+                        text: null,
                         style: {
                             color: "#FFFFFF"
                         }
                     },
+                    top: "0%",
                     height: "70%",
+                    offset: 8,
                     gridLineWidth: 0
                 },
                 {
@@ -161,10 +175,10 @@ class PriceChart extends React.Component {
                     opposite: true,
                     top: "77%",
                     height: "20%",
-                    offset: 0,
+                    offset: 8,
                     gridLineWidth: 0,
                     title: {
-                        text: "Volume",
+                        text: null,
                         style: {
                             color: "#FFFFFF"
                         }
@@ -175,7 +189,7 @@ class PriceChart extends React.Component {
             }],
             xAxis: {
                 type: "datetime",
-                lineWidth: 0,
+                lineWidth: 1,
                 labels: {
                     style: {
                         color: "#FFFFFF"
@@ -188,8 +202,15 @@ class PriceChart extends React.Component {
                     }
                 },
                 plotLines: []
+
             }
         };
+
+        // Set up/down colors on volume series
+        if (colorByPoint) {
+            config.plotOptions.column.colorByPoint = true;
+            config.plotOptions.column.colors = volumeColors;
+        }
 
         // Add plotline if defined
         if (this.props.plotLine) {
@@ -219,9 +240,7 @@ class PriceChart extends React.Component {
 
         return (
             <div className="grid-content">
-                <div className="card">
-                    {priceData && volumeData ? <Highcharts config={config}/> : null}
-                    </div>
+                {priceData && volumeData ? <Highcharts config={config}/> : null}
             </div>
         );
     }

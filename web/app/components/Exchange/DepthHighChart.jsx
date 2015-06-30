@@ -75,7 +75,8 @@ class DepthHighChart extends React.Component {
                     style: {
                         color: "#FFFFFF"
                     }
-                }
+                },
+                gridLineWidth: 0
             },
             xAxis: {
                 labels: {
@@ -84,7 +85,7 @@ class DepthHighChart extends React.Component {
                     }
                 },
                 title: {
-                    text: `Price (${priceSymbol})`,
+                    text: null,
                     style: {
                         color: "#FFFFFF"
                     }
@@ -140,9 +141,7 @@ class DepthHighChart extends React.Component {
 
         return (
             <div className="grid-content">
-                <div className="card">
-                    {flat_bids && flat_asks ? <Highcharts config={config}/> : null}
-                    </div>
+                {flat_bids && flat_asks ? <Highcharts config={config}/> : null}
             </div>
         );
     }
