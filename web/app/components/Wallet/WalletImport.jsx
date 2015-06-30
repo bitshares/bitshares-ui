@@ -36,8 +36,6 @@ export default class WalletImport extends Component {
                     PrivateKey.fromWif(key)
                     keys.valid.push(key)
                 } catch (e) {
-                    console.log(e)
-                    console.log('... key',key)
                     keys.invalid.push(key)
                 }
             }
@@ -85,7 +83,9 @@ export default class WalletImport extends Component {
         var reader = new FileReader()
         reader.onload = evt => {
             var contents = evt.target.result
-            this.addByPattern(contents)
+            if(this.addByPattern(contents))
+                return
+            
             var master_key, wallet_json
             try {
                 wallet_json = JSON.parse(contents)
@@ -165,16 +165,15 @@ export default class WalletImport extends Component {
         if( ! this.state.wif_private_keys)
             this.state.wif_private_keys = {}
         
-        for(let wif of contents.match(wif_regex) || [] )
+        var added = false
+        for(let wif of contents.match(wif_regex) || [] ) {
             this.state.wif_private_keys[wif] = true
+            added = true
+        }
         
         this.setState({wif_private_keys: this.state.wif_private_keys})
+        return added
     }
-    
-    /*confirm_import() {
-        console.log("TODO: Add 1 entry for Back button support")
-        this.setState({import_confirmed:true})
-    }*/
     
     discard() {
         this.setState({
