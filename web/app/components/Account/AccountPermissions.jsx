@@ -41,11 +41,11 @@ class AccountPermissions extends React.Component {
     onAddRow(type, name, weight) {
         console.log("[AccountPermissions.jsx:39] ----- onAddRow ----->", type, name, weight);
         if(type === this.ACTIVE){
-            this.state.active_permissions = this.state.active_permissions.push({type: "account", name: name, weight: weight});
-            this.setState({active_permissions: this.state.active_permissions});
+            let active_permissions = this.state.active_permissions.push({type: "account", name: name, weight: weight});
+            this.setState({active_permissions: active_permissions});
         } else {
-            this.state.owner_permissions = this.state.owner_permissions.push({type: "account", name: name, weight: weight});
-            this.setState({owner_permissions: this.state.owner_permissions});
+            let owner_permissions = this.state.owner_permissions.push({type: "account", name: name, weight: weight});
+            this.setState({owner_permissions: owner_permissions});
         }
     }
 
@@ -54,14 +54,14 @@ class AccountPermissions extends React.Component {
         if(type === this.ACTIVE) {
             let index = this.state.active_permissions.findIndex(i => i.name === name);
             if (index >= 0) {
-                this.state.active_permissions = this.state.active_permissions.delete(index);
-                this.setState({active_permissions: this.state.active_permissions});
+                let active_permissions = this.state.active_permissions.delete(index);
+                this.setState({active_permissions: active_permissions});
             }
         } else {
             let index = this.state.owner_permissions.findIndex(i => i.name === name);
             if (index >= 0) {
-                this.state.owner_permissions = this.state.owner_permissions.delete(index);
-                this.setState({owner_permissions: this.state.owner_permissions});
+                let owner_permissions = this.state.owner_permissions.delete(index);
+                this.setState({owner_permissions: owner_permissions});
             }
         }
     }
