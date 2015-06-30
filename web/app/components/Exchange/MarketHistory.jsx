@@ -2,12 +2,18 @@ import React from "react";
 import {PropTypes} from "react/addons";
 import Immutable from "immutable";
 import classNames from "classnames";
+import Ps from "perfect-scrollbar";
 
 class MarketHistory extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.history, this.props.history)
             );
+    }
+
+    componentDidMount() {
+        let historyContainer = React.findDOMNode(this.refs.history);
+        Ps.initialize(historyContainer);
     }
 
     render() {
@@ -25,7 +31,7 @@ class MarketHistory extends React.Component {
         }
 
         return (
-            <div className="grid-content market-content ">
+            <div className="grid-content market-content ps-container" ref="history">
                 <table className="table expand order-table my-orders">
                     <p>MARKET HISTORY</p>
                     <thead>

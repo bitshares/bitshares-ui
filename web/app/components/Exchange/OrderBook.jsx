@@ -3,12 +3,21 @@ import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
+import Ps from "perfect-scrollbar";
 
 class OrderBook extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.orders, this.props.orders)
             );
+    }
+
+    componentDidMount() {
+        let bidContainer = React.findDOMNode(this.refs.bidsTbody);
+        let askContainer = React.findDOMNode(this.refs.asksTbody);
+        bidContainer.scrollTop = bidContainer.scrollHeight;
+        Ps.initialize(bidContainer);
+        Ps.initialize(askContainer);
     }
 
     render() {
@@ -85,11 +94,11 @@ class OrderBook extends React.Component {
                             <th>Price</th>
                         </tr>
                         </thead>
-                                <tbody className="orderbook">
+                                <tbody id="test" ref="bidsTbody" className="orderbook ps-container">
                                     {bids}
                                 </tbody>
                                 <tr><td colSpan="3" className="text-center">Spread: {high > 0 && low > 0 ? low - high : 0} {baseSymbol}</td></tr>
-                                <tbody className="orderbook">
+                                <tbody ref="asksTbody" className="orderbook ps-container">
                                     {asks}
                                 </tbody>
                     </table>

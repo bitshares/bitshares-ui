@@ -6,6 +6,7 @@ import market_utils from "common/market_utils";
 import utils from "common/utils";
 import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
+import Ps from "perfect-scrollbar";
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -13,6 +14,11 @@ class MyOpenOrders extends React.Component {
                 nextProps.account.id !== this.props.account.id ||
                 !Immutable.is(nextProps.orders, this.props.orders)
             );
+    }
+
+    componentDidMount() {
+        let orderContainer = React.findDOMNode(this.refs.orders);
+        Ps.initialize(orderContainer);
     }
 
     render() {
@@ -100,7 +106,7 @@ class MyOpenOrders extends React.Component {
             }).toArray();
         }
         return (
-            <div className="grid-content text-center">
+            <div className="grid-content text-center ps-container" ref="orders">
                 <table className="table order-table my-orders text-right">
                     <thead>
                     <tr>
