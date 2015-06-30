@@ -68,7 +68,6 @@ export default class WalletCreate extends Component {
                 </div>
                 
                 <div className="grid-content">
-                    <label>Import Private Keys (optional)</label>
                     <WalletImport className={cname({'disabled': disabled})}
                         private_wifs={this.state.private_wifs}/>
                     <br/>

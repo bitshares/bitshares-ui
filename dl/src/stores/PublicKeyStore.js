@@ -1,7 +1,6 @@
 import Immutable from "immutable";
 import alt from "../alt-instance";
 import BaseStore from "./BaseStore";
-import PrivateKeyActions from "../actions/PublicKeyActions";
 import Utils from "../common/utils";
 import {PublicKeyTcomb} from "./tcomb_structs";
 import iDB from "../idb-instance";
@@ -14,7 +13,7 @@ class PublicKeyStore extends BaseStore {
         super();
         this.keys = Immutable.Map();
         this.bindListeners({
-            onAddKey: PublicKeyActions.addKey
+            //onAddKey: PublicKeyActions.addKey
         });
         this._export("loadDbData","onAddKey", "onDeleteByPublicId");
     }

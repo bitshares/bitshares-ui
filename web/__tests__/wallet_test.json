@@ -1,0 +1,112 @@
+[
+{
+  "type": "master_key_record_type",
+  "data": {
+    "index": -1,
+    "encrypted_key": "f09a519c22d6b77b4accf5b287c83c8934734afc45923f918737f9d8bbc2bf0b74e3d871f5403880698d0e81b709c5f18260fc4f5b9004cac55d2609c84edbb39bb765906d8b417d9f535bd9d479e318",
+    "checksum": "e90d1ce72fb4ea0f12d8b0ecfce428c943562e43dab37aa8e4d525737c69761589805fdce21a89a3439d44819bc1cc45e4c20dd8d3adf64ef56472cb89502589"
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 1,
+    "key": "next_record_number",
+    "value": 11
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 2,
+    "key": "version",
+    "value": 113
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 3,
+    "key": "automatic_backups",
+    "value": true
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 4,
+    "key": "transaction_scanning",
+    "value": true
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 5,
+    "key": "last_unlocked_scanned_block_number",
+    "value": 2939522
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 6,
+    "key": "default_transaction_priority_fee",
+    "value": {
+      "amount": 50000,
+      "asset_id": 0
+    }
+  }
+},
+{
+  "type": "property_record_type",
+  "data": {
+    "index": 7,
+    "key": "transaction_expiration_sec",
+    "value": 3600
+  }
+},
+{
+  "type": "key_record_type",
+  "data": {
+    "index": 8,
+    "account_address": "BTSFAbAx7yuxt725qSZvfwWqkdCwp9ZnUama",
+    "child_key_index": 0,
+    "public_key": "BTS6wbbtKCKAc15oHmZzBsx7aY81YhABwybk36hf3FaKVD2rEzTMf",
+    "encrypted_private_key": "d11ac878fd27e021f79deae2084c2deaa0aa33a34c7e43c0f2320a994756278dcbf642d02f1f0094690405e3ff963211",
+    "valid_from_signature": false
+  }
+},
+{
+  "type": "key_record_type",
+  "data": {
+    "index": 9,
+    "account_address": "BTSFAbAx7yuxt725qSZvfwWqkdCwp9ZnUama",
+    "child_key_index": 0,
+    "public_key": "BTS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+    "encrypted_private_key": "7def350888fd6846122c0a5937f73f1e6d72e46cbb36c891c60324346b7bb4b2bbbcc95002e68874ee9b300292015cf9",
+    "valid_from_signature": false
+  }
+},
+{
+  "type": "account_record_type",
+  "data": {
+    "index": 10,
+    "id": 0,
+    "name": "nathan",
+    "public_data": null,
+    "owner_key": "BTS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+    "active_key_history": [[
+        "2015-06-30T17:42:19",
+        "BTS6wbbtKCKAc15oHmZzBsx7aY81YhABwybk36hf3FaKVD2rEzTMf"
+      ]
+    ],
+    "registration_date": "1970-01-01T00:00:00",
+    "last_update": "2015-06-30T17:42:19",
+    "last_child_key_index": 0,
+    "block_production_enabled": false,
+    "custom_data": {},
+    "approved": 0
+  }
+}
+]
