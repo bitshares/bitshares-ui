@@ -149,7 +149,7 @@ class WalletStore extends BaseStore {
             })
             return new_wallet => {
                 return idb_helper.promise(
-                    transaction.objectStore("wallets").put(new_wallet)
+                    transaction.objectStore("wallets").set(new_wallet)
                 ).then( () => {
                     // Update RAM
                     this.wallets.set(

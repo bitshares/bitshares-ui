@@ -23,7 +23,6 @@ import AccountPayees from "./components/Account/AccountPayees";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
-import Shorts from "components/Exchange/Shorts";
 import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
 import TransferPage from "./components/Transfer/TransferPage";
