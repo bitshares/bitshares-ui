@@ -21,6 +21,7 @@ class MarketsStore {
         this.activeMarketCalls = Immutable.Map();
         this.activeMarketSettles = Immutable.Map();
         this.flat_bids = [];
+        this.totalBids = 0;
         this.flat_asks = [];
         this.priceData = [];
         this.volumeData = [];
@@ -263,7 +264,7 @@ class MarketsStore {
         let quotePrecision = utils.get_asset_precision(this.quoteAsset.precision);
         let basePrecision = utils.get_asset_precision(this.baseAsset.precision);
 
-        let bids = [], asks = [];
+        let bids = [], asks = [], totalBids = 0;
         if (this.activeMarketLimits) {
             this.activeMarketLimits
             .filter(a => {
@@ -288,7 +289,10 @@ class MarketsStore {
                 // });
 
                 // highcharts format
-                bids.push([price, (buy.amount / sell.amount) * order.for_sale / quotePrecision]);
+                let amount = (buy.amount / sell.amount) * order.for_sale / quotePrecision;
+                bids.push([price, amount]);
+
+                totalBids += price * amount;
             });
 
             this.activeMarketLimits
@@ -355,6 +359,7 @@ class MarketsStore {
 
             this.flat_asks = flat_asks;
             this.flat_bids = flat_bids;
+            this.totalBids = totalBids;
         }
 
 

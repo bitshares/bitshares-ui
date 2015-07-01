@@ -20,30 +20,22 @@ class DepthHighChart extends React.Component {
 
     componentWillReceiveProps() {
         let height = React.findDOMNode(this).offsetHeight;
-        // console.log("componentWillReceiveProps DepthHighChart offsetHeight:", height);
-        // console.log("componentWillReceiveProps DepthHighChart clientHeight:", clientHeight);
         this.setState({offsetHeight: height - 10});
     }
 
 
     render() {
-        let {flat_bids, flat_asks, quoteSymbol, baseSymbol} = this.props;
+        let {flat_bids, flat_asks, quoteSymbol, baseSymbol, totalBids} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
-        let totalBids = 0;
         let totalAsks = flat_asks[flat_asks.length - 1][1];
-
-        for (var i = 0; i < flat_bids.length; i++) {
-            totalBids += flat_bids[i][0] * flat_bids[i][1];
-        }
 
         let config = {
             chart: {
                 type: "area",
                 backgroundColor: "rgba(255, 0, 0, 0)",
                 spacing: [10, 0, 5, 0]
-
             },
             title: {
                 text: null
@@ -52,10 +44,7 @@ class DepthHighChart extends React.Component {
                 enabled: false
             },
             legend: {
-                enabled: false,
-                itemStyle: {
-                    color: "#FFFFFF"
-                }
+                enabled: false
             },
             tooltip: {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -102,11 +91,9 @@ class DepthHighChart extends React.Component {
                         color: "#FFFFFF"
                     }
                 },
+                lineColor: "#000000",
                 title: {
-                    text: null,
-                    style: {
-                        color: "#FFFFFF"
-                    }
+                    text: null
                 },
                 plotLines: []
             },

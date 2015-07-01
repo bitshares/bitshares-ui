@@ -26,6 +26,9 @@ class ExchangeContainer extends React.Component {
                     flat_bids: () => {
                         return MarketsStore.getState().flat_bids;
                     },
+                    totalBids: () => {
+                        return MarketsStore.getState().totalBids;
+                    },
                     flat_asks: () => {
                         return MarketsStore.getState().flat_asks;
                     },

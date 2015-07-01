@@ -121,7 +121,7 @@ class Exchange extends React.Component {
     render() {
         let {asset_symbol_to_id, assets, account, limit_orders,
             short_orders, base: baseSymbol, quote: quoteSymbol,
-            balances} = this.props;
+            balances, totalBids, flat_asks, flat_bids} = this.props;
         let {buyAmount, buyPrice, sellAmount, sellPrice} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0;
 
@@ -191,8 +191,9 @@ class Exchange extends React.Component {
                                 <Tabs.Tab title="Order depth">
                                     <DepthHighChart
                                         orders={limit_orders}
-                                        flat_asks={this.props.flat_asks}
-                                        flat_bids={this.props.flat_bids}
+                                        flat_asks={flat_asks}
+                                        flat_bids={flat_bids}
+                                        totalBids={totalBids}
                                         base={base}
                                         quote={quote}
                                         baseSymbol={baseSymbol}
