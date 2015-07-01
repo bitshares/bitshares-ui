@@ -93,8 +93,7 @@ processed_transaction = new Serializer(
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: map (protocol_id_type "key"), (bytes 65)
-    extra_signatures: map (address), (bytes 65)
+    signatures: array bytes 65
     operation_results: array operation_result
 )
 
@@ -257,7 +256,6 @@ asset_object_asset_options = new Serializer(
     max_supply: int64
     market_fee_percent: uint16
     max_market_fee: int64
-    min_market_fee: int64
     issuer_permissions: uint16
     flags: uint16
     core_exchange_rate: price
@@ -271,6 +269,7 @@ asset_object_asset_options = new Serializer(
 asset_object_bitasset_options = new Serializer( 
     "asset_object_bitasset_options"
     feed_lifetime_sec: uint32
+    minimum_feeds: uint8
     force_settlement_delay_sec: uint32
     force_settlement_offset_percent: uint16
     maximum_force_settlement_volume: uint16
@@ -357,6 +356,7 @@ price_feed = new Serializer(
     settlement_price: price
     maintenance_collateral_ratio: uint16
     maximum_short_squeeze_ratio: uint16
+    core_exchange_rate: price
 )
 
 asset_publish_feed = new Serializer( 
@@ -371,13 +371,15 @@ delegate_create = new Serializer(
     "delegate_create"
     fee: asset
     delegate_account: protocol_id_type "account"
+    url: string
 )
 
 witness_create = new Serializer( 
     "witness_create"
     fee: asset
     witness_account: protocol_id_type "account"
-    block_signing_key: protocol_id_type "key"
+    url: string
+    block_signing_key: object_id_type
     initial_secret: bytes 28
 )
 
@@ -471,41 +473,53 @@ fill_order = new Serializer(
 
 fee_schedule = new Serializer( 
     "fee_schedule"
-    key_create_fee: uint32
-    account_create_fee: uint32
-    account_len8_fee: uint32
-    account_len7_fee: uint32
-    account_len6_fee: uint32
-    account_len5_fee: uint32
-    account_len4_fee: uint32
-    account_len3_fee: uint32
-    account_len2_fee: uint32
-    account_premium_fee: uint32
-    account_whitelist_fee: uint32
-    delegate_create_fee: uint32
-    witness_withdraw_pay_fee: uint32
-    transfer_fee: uint32
-    limit_order_fee: uint32
-    call_order_fee: uint32
-    publish_feed_fee: uint32
-    asset_create_fee: uint32
-    asset_update_fee: uint32
-    asset_issue_fee: uint32
-    asset_fund_fee_pool_fee: uint32
-    asset_settle_fee: uint32
-    market_fee: uint32
-    transaction_fee: uint32
-    data_fee: uint32
-    signature_fee: uint32
-    global_parameters_update_fee: uint32
-    membership_annual_fee: uint32
-    membership_lifetime_fee: uint32
-    withdraw_permission_update_fee: uint32
-    vesting_balance_create_fee: uint32
-    vesting_balance_withdraw_fee: uint32
-    global_settle_fee: uint32
-    worker_create_fee: uint32
-    worker_delete_fee: uint32
+    key_create_fee: uint64
+    account_create_fee: uint64
+    account_update_fee: uint64
+    account_transfer_fee: uint64
+    account_len8up_fee: uint64
+    account_len7_fee: uint64
+    account_len6_fee: uint64
+    account_len5_fee: uint64
+    account_len4_fee: uint64
+    account_len3_fee: uint64
+    account_len2_fee: uint64
+    asset_len3_fee: uint64
+    asset_len4_fee: uint64
+    asset_len5_fee: uint64
+    asset_len6_fee: uint64
+    asset_len7up_fee: uint64
+    account_whitelist_fee: uint64
+    delegate_create_fee: uint64
+    witness_create_fee: uint64
+    witness_withdraw_pay_fee: uint64
+    transfer_fee: uint64
+    limit_order_create_fee: uint64
+    limit_order_cancel_fee: uint64
+    call_order_fee: uint64
+    publish_feed_fee: uint64
+    asset_create_fee: uint64
+    asset_update_fee: uint64
+    asset_issue_fee: uint64
+    asset_burn_fee: uint64
+    asset_fund_fee_pool_fee: uint64
+    asset_settle_fee: uint64
+    data_fee: uint64
+    global_parameters_update_fee: uint64
+    membership_annual_fee: uint64
+    membership_lifetime_fee: uint64
+    withdraw_permission_create_fee: uint64
+    withdraw_permission_update_fee: uint64
+    withdraw_permission_claim_fee: uint64
+    withdraw_permission_delete_fee: uint64
+    vesting_balance_create_fee: uint64
+    vesting_balance_withdraw_fee: uint64
+    asset_global_settle_fee: uint64
+    worker_create_fee: uint64
+    assert_op_fee: uint64
+    proposal_create_fee: uint64
+    proposal_update_fee: uint64
+    proposal_delete_fee: uint64
 )
 
 chain_parameters = new Serializer( 
@@ -533,6 +547,10 @@ chain_parameters = new Serializer(
     allow_non_member_whitelists: bool
     witness_pay_per_block: int64
     worker_budget_per_day: int64
+    max_predicate_opcode: uint16
+    fee_liquidation_threshold: int64
+    accounts_per_fee_scale: uint16
+    account_fee_scale_bitshifts: uint8
 )
 
 global_parameters_update = new Serializer( 
@@ -541,13 +559,37 @@ global_parameters_update = new Serializer(
     new_parameters: chain_parameters
 )
 
+linear_vesting_policy_initializer = new Serializer( 
+    "linear_vesting_policy_initializer"
+    start_claim: time_point_sec
+    begin_date: time_point_sec
+    vesting_seconds: uint32
+)
+
+cdd_vesting_policy_initializer = new Serializer( 
+    "cdd_vesting_policy_initializer"
+    start_claim: time_point_sec
+    vesting_seconds: uint32
+)
+
+static_variant [
+    linear_vesting_policy_initializer    
+    cdd_vesting_policy_initializer
+] = static_variant [
+    linear_vesting_policy_initializer    
+    cdd_vesting_policy_initializer
+]
+
 vesting_balance_create = new Serializer( 
     "vesting_balance_create"
     fee: asset
     creator: protocol_id_type "account"
     owner: protocol_id_type "account"
     amount: asset
-    vesting_seconds: uint32
+    policy: static_variant [
+        linear_vesting_policy_initializer    
+        cdd_vesting_policy_initializer
+    ]
 )
 
 vesting_balance_withdraw = new Serializer( 
@@ -567,9 +609,18 @@ vesting_balance_worker_type_initializer = new Serializer(
     pay_vesting_period_days: uint16
 )
 
-initializer_type = static_variant [
+burn_worker_type_initializer = new Serializer( 
+    "burn_worker_type_initializer"
+)
+
+static_variant [
     refund_worker_type_initializer    
-    vesting_balance_worker_type_initializer
+    vesting_balance_worker_type_initializer    
+    burn_worker_type_initializer
+] = static_variant [
+    refund_worker_type_initializer    
+    vesting_balance_worker_type_initializer    
+    burn_worker_type_initializer
 ]
 
 worker_create = new Serializer( 
@@ -579,7 +630,13 @@ worker_create = new Serializer(
     work_begin_date: time_point_sec
     work_end_date: time_point_sec
     daily_pay: int64
-    initializer: initializer_type
+    name: string
+    url: string
+    initializer: static_variant [
+        refund_worker_type_initializer    
+        vesting_balance_worker_type_initializer    
+        burn_worker_type_initializer
+    ]
 )
 
 custom = new Serializer( 
@@ -591,7 +648,24 @@ custom = new Serializer(
     data: bytes()
 )
 
-operation = static_variant [
+assert = new Serializer( 
+    "assert"
+    fee: asset
+    fee_paying_account: protocol_id_type "account"
+    predicates: array bytes()
+    required_auths: set protocol_id_type "account"
+)
+
+balance_claim = new Serializer( 
+    "balance_claim"
+    fee: asset
+    deposit_to_account: protocol_id_type "account"
+    balance_to_claim: protocol_id_type "balance"
+    balance_owner_key: public_key
+    total_claimed: asset
+)
+
+operation.st_operations = [
     transfer    
     limit_order_create    
     limit_order_cancel    
@@ -627,7 +701,9 @@ operation = static_variant [
     vesting_balance_create    
     vesting_balance_withdraw    
     worker_create    
-    custom
+    custom    
+    assert    
+    balance_claim
 ]
 
 transaction = new Serializer( 
@@ -644,8 +720,7 @@ signed_transaction = new Serializer(
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: map (protocol_id_type "key"), (bytes 65)
-    extra_signatures: map (address), (bytes 65)
+    signatures: array bytes 65
 )
 
 
