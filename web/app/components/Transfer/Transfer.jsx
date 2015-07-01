@@ -163,6 +163,7 @@ class Transfer extends BaseComponent {
         }
         let account = null;
         let balancesComp = null, finalBalances = null;
+        let myAssets = [];
 
         if(!transfer.from) {
             transfer.from = currentAccount.name;
@@ -178,7 +179,7 @@ class Transfer extends BaseComponent {
                 });
 
                 finalBalances = balances.map((balance) => {
-
+                    myAssets.push([balance.asset_id, assets.get(balance.asset_id).symbol]);
                     if (balance.asset_id === transfer.asset && transfer.amount >= 0) {
                         let precision = utils.get_asset_precision(assets.get(balance.asset_id).precision);
                         return <span key={balance.asset_id}>
@@ -224,7 +225,7 @@ class Transfer extends BaseComponent {
                                 <Translate component="span" content="transfer.amount" />
                                 <span className="inline-label">
                                     <input id="amount" type="text" placeholder="0.0" ref="amount"/>
-                                    <span className="form-label select">{this.renderSelect("asset", [["1.4.0", "CORE"]])}</span>
+                                    <span className="form-label select">{this.renderSelect("asset", myAssets)}</span>
                                 </span>
                             </label>
                             <div>{errors.amount}</div>
