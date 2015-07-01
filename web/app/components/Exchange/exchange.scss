@@ -140,3 +140,12 @@ p.order-table-title {
   right: 25px;
   color: $ask-color;
 }
+
+.chart-label {
+  z-index: 5;
+  position: absolute;
+  right: 0;
+  font-size: 15px;
+  border: 1px black solid;
+  vertical-align: middle;
+}

@@ -2,25 +2,39 @@ import React from "react";
 import {PropTypes} from "react";
 import Highcharts from "react-highcharts/stocks";
 
+class Chart {
+    shouldComponentUpdate(nextProps) {
+        if (this.props.config.series[0].data.length === 0) {
+            return nextProps.config.series[0].data.length > 0;
+        } else {
+            return (
+                nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
+                nextProps.config.series[0].data.length !== this.props.config.series[0].data.length
+            );
+        }
+    }
+
+    render() {
+        return <Highcharts config={this.props.config}/>;
+    }
+}
+
 class PriceChart extends React.Component {
 
-    shouldComponentUpdate(nextProps) {
-
+    shouldComponentUpdate(nextProps, nextState) {
         if (this.props.priceData.length === 0) {
             return nextProps.priceData.length > 0;
         } else {
-            return (
-                nextProps.priceData[nextProps.priceData.length - 1][0] !== this.props.priceData[this.props.priceData.length - 1][0] ||
-                nextProps.priceData.length !== this.props.priceData.length
-            );
+            return nextState.lastPointY !== this.state.lastPointY;
         }
-
-
     }
 
     constructor() {
         super();
-        this.state = {offsetHeight: null};
+        this.state = {offsetHeight: null,
+                      lastPointY: -100,
+                      close: 0,
+                      open: 0};
     }
 
     componentWillReceiveProps() {
@@ -33,6 +47,7 @@ class PriceChart extends React.Component {
 
     render() {
         let {priceData, volumeData, quoteSymbol, baseSymbol} = this.props;
+        let {open, close, lastPointY} = this.state;
 
         let maxVolume = 0;
         let volumeColors = [], colorByPoint = false;
@@ -43,7 +58,7 @@ class PriceChart extends React.Component {
         for (var i = 0; i < volumeData.length; i++) {
             maxVolume = Math.max(maxVolume, volumeData[i][1]);
             if (colorByPoint) {
-                volumeColors.push(priceData[i][1] <= priceData[i][4] ? "#0ab92b" : "#f01717");
+                volumeColors.push(priceData[i][1] <= priceData[i][4] ? "#50D2C2" : "#E3745B");
             }
         }
 
@@ -54,7 +69,27 @@ class PriceChart extends React.Component {
                     enabled: false
                 },
                 pinchType: "x",
-                spacing: [10, 5, 5, 0]
+                spacing: [10, 0, 5, 0],
+                events: {
+                    redraw: (e) => {
+                        if (e.target.series[0].points.length > 0) {
+                            let point = e.target.series[0].points[e.target.series[0].points.length - 1];
+                            this.setState({lastPointY: e.target.plotTop + e.target.yAxis[0].toPixels(point.close, true),
+                                        close: point.close,
+                                        open: point.open
+                                    });
+                        }
+                    },
+                    load: (e) => {
+                        if (e.target.series[0].points.length > 0) {
+                            let point = e.target.series[0].points[e.target.series[0].points.length - 1];
+                            this.setState({lastPointY: e.target.plotTop + e.target.yAxis[0].toPixels(point.close, true),
+                                        close: point.close,
+                                        open: point.open
+                                    });
+                        }
+                    }
+                }
             },
             title: {
                 text: null
@@ -74,8 +109,8 @@ class PriceChart extends React.Component {
             plotOptions: {
                 candlestick: {
                     animation: false,
-                    color: "#f01717",
-                    upColor: "#0ab92b",
+                    color: "#E3745B",
+                    upColor: "#50D2C2",
                     lineColor: "#000000",
                     lineWidth: 2
                 },
@@ -162,7 +197,8 @@ class PriceChart extends React.Component {
                     top: "0%",
                     height: "70%",
                     offset: 8,
-                    gridLineWidth: 0
+                    gridLineWidth: 0,
+                    plotLines: []
                 },
                 {
                     labels: {
@@ -170,11 +206,24 @@ class PriceChart extends React.Component {
                             color: "#FFFFFF"
                         },
                         align: "right",
-                        x: -3
+                        x: -3,
+                        formatter: function() {
+                            if (this.value !== 0) {
+                                if ( this.value > 1000000 ) {
+                                    return Highcharts.Highcharts.numberFormat( this.value / 1000, 2) + "M";
+                                } else if ( this.value > 1000 ) {
+                                    return Highcharts.Highcharts.numberFormat( this.value / 1000, 1) + "k";
+                                } else {
+                                    return this.value;
+                                }
+                            } else {
+                                return null;
+                            }
+                        }
                     },
                     opposite: true,
                     top: "77%",
-                    height: "20%",
+                    height: "23%",
                     offset: 8,
                     gridLineWidth: 0,
                     title: {
@@ -184,22 +233,20 @@ class PriceChart extends React.Component {
                         }
                     },
                     tickInterval: Math.floor(maxVolume / 2.5),
+                    min: 0,
                     max: maxVolume
-
             }],
             xAxis: {
                 type: "datetime",
                 lineWidth: 1,
+                lineColor: "#000000",
                 labels: {
                     style: {
                         color: "#FFFFFF"
                     }
                 },
                 title: {
-                    text: null,
-                    style: {
-                        color: "#FFFFFF"
-                    }
+                    text: null
                 },
                 plotLines: []
 
@@ -238,9 +285,20 @@ class PriceChart extends React.Component {
             };
         }
 
+        let boxHeight = 20;
+        let currentValue = open < close ? <div className="chart-label" style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", top: lastPointY - 2 - boxHeight / 2}}>{close}</div> :
+            <div className="chart-label" style={{height: boxHeight, backgroundColor: "#E3745B", top: lastPointY - 2 - boxHeight / 2}}>{close}</div>;
+
+        // let addLine = function(yPos, color) {
+        //     return <span style={{position: "absolute", top: yPos, border: "solid 1px " + color, width: "500px", borderBottom: "0"}}></span>;
+        // };
+
         return (
             <div className="grid-content">
-                {priceData && volumeData ? <Highcharts config={config}/> : null}
+                <div style={{position: "relative"}}>
+                    {currentValue}
+                </div>
+                {priceData && volumeData ? <Chart config={config} /> : null}
             </div>
         );
     }
