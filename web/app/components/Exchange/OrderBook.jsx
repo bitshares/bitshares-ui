@@ -6,6 +6,14 @@ import utils from "common/utils";
 import Ps from "perfect-scrollbar";
 
 class OrderBook extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            shouldScrollBottom: false,
+            didScrollOnMount: true
+        };
+    }
+
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.orders, this.props.orders)
@@ -18,6 +26,29 @@ class OrderBook extends React.Component {
         bidContainer.scrollTop = bidContainer.scrollHeight;
         Ps.initialize(bidContainer);
         Ps.initialize(askContainer);
+
+        console.log(bidContainer.scrollTop, bidContainer.scrollHeight);
+        if (bidContainer.scrollTop !== bidContainer.scrollHeight) {
+            this.setState({didScrollOnMount: false});
+        }
+    }
+
+    componentWillReceiveProps() {
+        let bidContainer = React.findDOMNode(this.refs.bidsTbody);
+        console.log(bidContainer.scrollTop, bidContainer.offsetHeight, bidContainer.scrollTop + bidContainer.offsetHeight, bidContainer.scrollHeight);
+        this.setState({shouldScrollBottom: bidContainer.scrollTop + bidContainer.offsetHeight === bidContainer.scrollHeight});
+    }
+
+    componentDidUpdate() {
+        let askContainer = React.findDOMNode(this.refs.asksTbody);
+        let bidContainer = React.findDOMNode(this.refs.bidsTbody);
+        if (this.state.shouldScrollBottom !== !this.state.didScrollOnMount) {
+            bidContainer.scrollTop = bidContainer.scrollHeight;
+            this.setState({didScrollOnMount: true});
+        }
+
+        Ps.update(bidContainer);
+        Ps.update(askContainer);
     }
 
     render() {
