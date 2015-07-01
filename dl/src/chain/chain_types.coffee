@@ -68,5 +68,3 @@ ChainTypes.operations=
     vesting_balance_withdraw: 33
     worker_create: 34
     custom: 35
-    assert: 36
-    balance_claim: 37

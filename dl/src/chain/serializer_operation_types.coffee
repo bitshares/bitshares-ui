@@ -32,15 +32,15 @@ Replace:  operation = static_variant [
 with:     operation.st_operations = [
 
 Delete:
-operation  = new Serializer(
+operation  = new Serializer( 
     "operation "
     op: operation
 )
-address = new Serializer(
+address = new Serializer( 
     "address"
     addr: bytes 20
 )
-public_key = new Serializer(
+public_key = new Serializer( 
     "public_key"
     key_data: bytes 33
 )
@@ -63,7 +63,7 @@ Serializer=(operation_name, serilization_types_object)->
 # programs/js_operation_serializer
 # / +$//g
 ## -------------------------------
-void_header = new Serializer(
+void_header = new Serializer( 
     "void_header"
 )
 
@@ -71,33 +71,34 @@ header_extension = static_variant [
     void_header
 ]
 
-void_result = new Serializer(
+void_result = new Serializer( 
     "void_result"
 )
 
-asset = new Serializer(
+asset = new Serializer( 
     "asset"
     amount: int64
     asset_id: protocol_id_type "asset"
 )
 
 operation_result = static_variant [
-    void_result
-    object_id_type
+    void_result    
+    object_id_type    
     asset
 ]
 
-processed_transaction = new Serializer(
+processed_transaction = new Serializer( 
     "processed_transaction"
     ref_block_num: uint16
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: array bytes 65
+    signatures: map (protocol_id_type "key"), (bytes 65)
+    extra_signatures: map (address), (bytes 65)
     operation_results: array operation_result
 )
 
-signed_block = new Serializer(
+signed_block = new Serializer( 
     "signed_block"
     previous: bytes 20
     timestamp: time_point_sec
@@ -110,7 +111,7 @@ signed_block = new Serializer(
     transactions: array processed_transaction
 )
 
-block_header = new Serializer(
+block_header = new Serializer( 
     "block_header"
     previous: bytes 20
     timestamp: time_point_sec
@@ -121,7 +122,7 @@ block_header = new Serializer(
     extensions: array header_extension
 )
 
-signed_block_header = new Serializer(
+signed_block_header = new Serializer( 
     "signed_block_header"
     previous: bytes 20
     timestamp: time_point_sec
@@ -133,7 +134,7 @@ signed_block_header = new Serializer(
     delegate_signature: bytes 65
 )
 
-memo_data = new Serializer(
+memo_data = new Serializer( 
     "memo_data"
     from: protocol_id_type "key"
     to: protocol_id_type "key"
@@ -141,7 +142,7 @@ memo_data = new Serializer(
     message: bytes()
 )
 
-transfer = new Serializer(
+transfer = new Serializer( 
     "transfer"
     fee: asset
     from: protocol_id_type "account"
@@ -150,7 +151,7 @@ transfer = new Serializer(
     memo: optional memo_data
 )
 
-limit_order_create = new Serializer(
+limit_order_create = new Serializer( 
     "limit_order_create"
     fee: asset
     seller: protocol_id_type "account"
@@ -160,14 +161,14 @@ limit_order_create = new Serializer(
     fill_or_kill: bool
 )
 
-limit_order_cancel = new Serializer(
+limit_order_cancel = new Serializer( 
     "limit_order_cancel"
     fee: asset
     fee_paying_account: protocol_id_type "account"
     order: protocol_id_type "limit_order"
 )
 
-call_order_update = new Serializer(
+call_order_update = new Serializer( 
     "call_order_update"
     fee: asset
     funding_account: protocol_id_type "account"
@@ -175,35 +176,25 @@ call_order_update = new Serializer(
     delta_debt: asset
 )
 
-address = new Serializer(
-    "address"
-    addr: bytes 20
-)
-
-public_key = new Serializer(
-    "public_key"
-    key_data: bytes 33
-)
-
 key_data = static_variant [
-    address
+    address    
     public_key
 ]
 
-key_create = new Serializer(
+key_create = new Serializer( 
     "key_create"
     fee: asset
     fee_paying_account: protocol_id_type "account"
     key_data: key_data
 )
 
-authority = new Serializer(
+authority = new Serializer( 
     "authority"
     weight_threshold: uint32
     auths: map (object_id_type), (uint16)
 )
 
-account_object_options = new Serializer(
+account_object_options = new Serializer( 
     "account_object_options"
     memo_key: object_id_type
     voting_account: protocol_id_type "account"
@@ -212,7 +203,7 @@ account_object_options = new Serializer(
     votes: set vote_id
 )
 
-account_create = new Serializer(
+account_create = new Serializer( 
     "account_create"
     fee: asset
     registrar: protocol_id_type "account"
@@ -224,7 +215,7 @@ account_create = new Serializer(
     options: account_object_options
 )
 
-account_update = new Serializer(
+account_update = new Serializer( 
     "account_update"
     fee: asset
     account: protocol_id_type "account"
@@ -233,7 +224,7 @@ account_update = new Serializer(
     new_options: optional account_object_options
 )
 
-account_whitelist = new Serializer(
+account_whitelist = new Serializer( 
     "account_whitelist"
     fee: asset
     authorizing_account: protocol_id_type "account"
@@ -241,31 +232,32 @@ account_whitelist = new Serializer(
     new_listing: uint8
 )
 
-account_upgrade = new Serializer(
+account_upgrade = new Serializer( 
     "account_upgrade"
     fee: asset
     account_to_upgrade: protocol_id_type "account"
     upgrade_to_lifetime_member: bool
 )
 
-account_transfer = new Serializer(
+account_transfer = new Serializer( 
     "account_transfer"
     fee: asset
     account_id: protocol_id_type "account"
     new_owner: protocol_id_type "account"
 )
 
-price = new Serializer(
+price = new Serializer( 
     "price"
     base: asset
     quote: asset
 )
 
-asset_object_asset_options = new Serializer(
+asset_object_asset_options = new Serializer( 
     "asset_object_asset_options"
     max_supply: int64
     market_fee_percent: uint16
     max_market_fee: int64
+    min_market_fee: int64
     issuer_permissions: uint16
     flags: uint16
     core_exchange_rate: price
@@ -276,17 +268,16 @@ asset_object_asset_options = new Serializer(
     description: string
 )
 
-asset_object_bitasset_options = new Serializer(
+asset_object_bitasset_options = new Serializer( 
     "asset_object_bitasset_options"
     feed_lifetime_sec: uint32
-    minimum_feeds: uint8
     force_settlement_delay_sec: uint32
     force_settlement_offset_percent: uint16
     maximum_force_settlement_volume: uint16
     short_backing_asset: protocol_id_type "asset"
 )
 
-asset_create = new Serializer(
+asset_create = new Serializer( 
     "asset_create"
     fee: asset
     issuer: protocol_id_type "account"
@@ -297,7 +288,7 @@ asset_create = new Serializer(
     is_prediction_market: bool
 )
 
-asset_update = new Serializer(
+asset_update = new Serializer( 
     "asset_update"
     fee: asset
     issuer: protocol_id_type "account"
@@ -306,7 +297,7 @@ asset_update = new Serializer(
     new_options: asset_object_asset_options
 )
 
-asset_update_bitasset = new Serializer(
+asset_update_bitasset = new Serializer( 
     "asset_update_bitasset"
     fee: asset
     issuer: protocol_id_type "account"
@@ -314,7 +305,7 @@ asset_update_bitasset = new Serializer(
     new_options: asset_object_bitasset_options
 )
 
-asset_update_feed_producers = new Serializer(
+asset_update_feed_producers = new Serializer( 
     "asset_update_feed_producers"
     fee: asset
     issuer: protocol_id_type "account"
@@ -322,7 +313,7 @@ asset_update_feed_producers = new Serializer(
     new_feed_producers: set protocol_id_type "account"
 )
 
-asset_issue = new Serializer(
+asset_issue = new Serializer( 
     "asset_issue"
     fee: asset
     issuer: protocol_id_type "account"
@@ -331,14 +322,14 @@ asset_issue = new Serializer(
     memo: optional memo_data
 )
 
-asset_burn = new Serializer(
+asset_burn = new Serializer( 
     "asset_burn"
     fee: asset
     payer: protocol_id_type "account"
     amount_to_burn: asset
 )
 
-asset_fund_fee_pool = new Serializer(
+asset_fund_fee_pool = new Serializer( 
     "asset_fund_fee_pool"
     fee: asset
     from_account: protocol_id_type "account"
@@ -346,14 +337,14 @@ asset_fund_fee_pool = new Serializer(
     amount: int64
 )
 
-asset_settle = new Serializer(
+asset_settle = new Serializer( 
     "asset_settle"
     fee: asset
     account: protocol_id_type "account"
     amount: asset
 )
 
-asset_global_settle = new Serializer(
+asset_global_settle = new Serializer( 
     "asset_global_settle"
     fee: asset
     issuer: protocol_id_type "account"
@@ -361,15 +352,14 @@ asset_global_settle = new Serializer(
     settle_price: price
 )
 
-price_feed = new Serializer(
+price_feed = new Serializer( 
     "price_feed"
     settlement_price: price
     maintenance_collateral_ratio: uint16
     maximum_short_squeeze_ratio: uint16
-    core_exchange_rate: price
 )
 
-asset_publish_feed = new Serializer(
+asset_publish_feed = new Serializer( 
     "asset_publish_feed"
     fee: asset
     publisher: protocol_id_type "account"
@@ -377,23 +367,21 @@ asset_publish_feed = new Serializer(
     feed: price_feed
 )
 
-delegate_create = new Serializer(
+delegate_create = new Serializer( 
     "delegate_create"
     fee: asset
     delegate_account: protocol_id_type "account"
-    url: string
 )
 
-witness_create = new Serializer(
+witness_create = new Serializer( 
     "witness_create"
     fee: asset
     witness_account: protocol_id_type "account"
-    url: string
-    block_signing_key: object_id_type
+    block_signing_key: protocol_id_type "key"
     initial_secret: bytes 28
 )
 
-witness_withdraw_pay = new Serializer(
+witness_withdraw_pay = new Serializer( 
     "witness_withdraw_pay"
     fee: asset
     from_witness: protocol_id_type "witness"
@@ -401,21 +389,16 @@ witness_withdraw_pay = new Serializer(
     amount: int64
 )
 
-operation  = new Serializer(
-    "operation "
-    op: operation
-)
-
-proposal_create = new Serializer(
+proposal_create = new Serializer( 
     "proposal_create"
     fee: asset
     fee_paying_account: protocol_id_type "account"
     expiration_time: time_point_sec
-    proposed_ops: array operation
+    proposed_ops: array operation 
     review_period_seconds: optional uint32
 )
 
-proposal_update = new Serializer(
+proposal_update = new Serializer( 
     "proposal_update"
     fee: asset
     fee_paying_account: protocol_id_type "account"
@@ -428,7 +411,7 @@ proposal_update = new Serializer(
     key_approvals_to_remove: set protocol_id_type "key"
 )
 
-proposal_delete = new Serializer(
+proposal_delete = new Serializer( 
     "proposal_delete"
     fee: asset
     fee_paying_account: protocol_id_type "account"
@@ -436,7 +419,7 @@ proposal_delete = new Serializer(
     proposal: protocol_id_type "proposal"
 )
 
-withdraw_permission_create = new Serializer(
+withdraw_permission_create = new Serializer( 
     "withdraw_permission_create"
     fee: asset
     withdraw_from_account: protocol_id_type "account"
@@ -447,7 +430,7 @@ withdraw_permission_create = new Serializer(
     period_start_time: time_point_sec
 )
 
-withdraw_permission_update = new Serializer(
+withdraw_permission_update = new Serializer( 
     "withdraw_permission_update"
     fee: asset
     withdraw_from_account: protocol_id_type "account"
@@ -459,7 +442,7 @@ withdraw_permission_update = new Serializer(
     periods_until_expiration: uint32
 )
 
-withdraw_permission_claim = new Serializer(
+withdraw_permission_claim = new Serializer( 
     "withdraw_permission_claim"
     fee: asset
     withdraw_permission: protocol_id_type "withdraw_permission"
@@ -469,7 +452,7 @@ withdraw_permission_claim = new Serializer(
     memo: optional memo_data
 )
 
-withdraw_permission_delete = new Serializer(
+withdraw_permission_delete = new Serializer( 
     "withdraw_permission_delete"
     fee: asset
     withdraw_from_account: protocol_id_type "account"
@@ -477,7 +460,7 @@ withdraw_permission_delete = new Serializer(
     withdrawal_permission: protocol_id_type "withdraw_permission"
 )
 
-fill_order = new Serializer(
+fill_order = new Serializer( 
     "fill_order"
     fee: asset
     order_id: object_id_type
@@ -486,58 +469,46 @@ fill_order = new Serializer(
     receives: asset
 )
 
-fee_schedule = new Serializer(
+fee_schedule = new Serializer( 
     "fee_schedule"
-    key_create_fee: uint64
-    account_create_fee: uint64
-    account_update_fee: uint64
-    account_transfer_fee: uint64
-    account_len8up_fee: uint64
-    account_len7_fee: uint64
-    account_len6_fee: uint64
-    account_len5_fee: uint64
-    account_len4_fee: uint64
-    account_len3_fee: uint64
-    account_len2_fee: uint64
-    asset_len3_fee: uint64
-    asset_len4_fee: uint64
-    asset_len5_fee: uint64
-    asset_len6_fee: uint64
-    asset_len7up_fee: uint64
-    account_whitelist_fee: uint64
-    delegate_create_fee: uint64
-    witness_create_fee: uint64
-    witness_withdraw_pay_fee: uint64
-    transfer_fee: uint64
-    limit_order_create_fee: uint64
-    limit_order_cancel_fee: uint64
-    call_order_fee: uint64
-    publish_feed_fee: uint64
-    asset_create_fee: uint64
-    asset_update_fee: uint64
-    asset_issue_fee: uint64
-    asset_burn_fee: uint64
-    asset_fund_fee_pool_fee: uint64
-    asset_settle_fee: uint64
-    data_fee: uint64
-    global_parameters_update_fee: uint64
-    membership_annual_fee: uint64
-    membership_lifetime_fee: uint64
-    withdraw_permission_create_fee: uint64
-    withdraw_permission_update_fee: uint64
-    withdraw_permission_claim_fee: uint64
-    withdraw_permission_delete_fee: uint64
-    vesting_balance_create_fee: uint64
-    vesting_balance_withdraw_fee: uint64
-    asset_global_settle_fee: uint64
-    worker_create_fee: uint64
-    assert_op_fee: uint64
-    proposal_create_fee: uint64
-    proposal_update_fee: uint64
-    proposal_delete_fee: uint64
+    key_create_fee: uint32
+    account_create_fee: uint32
+    account_len8_fee: uint32
+    account_len7_fee: uint32
+    account_len6_fee: uint32
+    account_len5_fee: uint32
+    account_len4_fee: uint32
+    account_len3_fee: uint32
+    account_len2_fee: uint32
+    account_premium_fee: uint32
+    account_whitelist_fee: uint32
+    delegate_create_fee: uint32
+    witness_withdraw_pay_fee: uint32
+    transfer_fee: uint32
+    limit_order_fee: uint32
+    call_order_fee: uint32
+    publish_feed_fee: uint32
+    asset_create_fee: uint32
+    asset_update_fee: uint32
+    asset_issue_fee: uint32
+    asset_fund_fee_pool_fee: uint32
+    asset_settle_fee: uint32
+    market_fee: uint32
+    transaction_fee: uint32
+    data_fee: uint32
+    signature_fee: uint32
+    global_parameters_update_fee: uint32
+    membership_annual_fee: uint32
+    membership_lifetime_fee: uint32
+    withdraw_permission_update_fee: uint32
+    vesting_balance_create_fee: uint32
+    vesting_balance_withdraw_fee: uint32
+    global_settle_fee: uint32
+    worker_create_fee: uint32
+    worker_delete_fee: uint32
 )
 
-chain_parameters = new Serializer(
+chain_parameters = new Serializer( 
     "chain_parameters"
     current_fees: fee_schedule
     block_interval: uint8
@@ -562,52 +533,24 @@ chain_parameters = new Serializer(
     allow_non_member_whitelists: bool
     witness_pay_per_block: int64
     worker_budget_per_day: int64
-    max_predicate_opcode: uint16
-    fee_liquidation_threshold: int64
-    accounts_per_fee_scale: uint16
-    account_fee_scale_bitshifts: uint8
 )
 
-global_parameters_update = new Serializer(
+global_parameters_update = new Serializer( 
     "global_parameters_update"
     fee: asset
     new_parameters: chain_parameters
 )
 
-linear_vesting_policy_initializer = new Serializer(
-    "linear_vesting_policy_initializer"
-    start_claim: time_point_sec
-    begin_date: time_point_sec
-    vesting_seconds: uint32
-)
-
-cdd_vesting_policy_initializer = new Serializer(
-    "cdd_vesting_policy_initializer"
-    start_claim: time_point_sec
-    vesting_seconds: uint32
-)
-
-static_variant [
-    linear_vesting_policy_initializer
-    cdd_vesting_policy_initializer
-] = static_variant [
-    linear_vesting_policy_initializer
-    cdd_vesting_policy_initializer
-]
-
-vesting_balance_create = new Serializer(
+vesting_balance_create = new Serializer( 
     "vesting_balance_create"
     fee: asset
     creator: protocol_id_type "account"
     owner: protocol_id_type "account"
     amount: asset
-    policy: static_variant [
-    linear_vesting_policy_initializer
-    cdd_vesting_policy_initializer
-]
+    vesting_seconds: uint32
 )
 
-vesting_balance_withdraw = new Serializer(
+vesting_balance_withdraw = new Serializer( 
     "vesting_balance_withdraw"
     fee: asset
     vesting_balance: protocol_id_type "vesting_balance"
@@ -615,46 +558,31 @@ vesting_balance_withdraw = new Serializer(
     amount: asset
 )
 
-refund_worker_type_initializer = new Serializer(
+refund_worker_type_initializer = new Serializer( 
     "refund_worker_type_initializer"
 )
 
-vesting_balance_worker_type_initializer = new Serializer(
+vesting_balance_worker_type_initializer = new Serializer( 
     "vesting_balance_worker_type_initializer"
     pay_vesting_period_days: uint16
 )
 
-burn_worker_type_initializer = new Serializer(
-    "burn_worker_type_initializer"
-)
-
-static_variant [
-    refund_worker_type_initializer
+initializer_type = static_variant [
+    refund_worker_type_initializer    
     vesting_balance_worker_type_initializer
-    burn_worker_type_initializer
-] = static_variant [
-    refund_worker_type_initializer
-    vesting_balance_worker_type_initializer
-    burn_worker_type_initializer
 ]
 
-worker_create = new Serializer(
+worker_create = new Serializer( 
     "worker_create"
     fee: asset
     owner: protocol_id_type "account"
     work_begin_date: time_point_sec
     work_end_date: time_point_sec
     daily_pay: int64
-    name: string
-    url: string
-    initializer: static_variant [
-    refund_worker_type_initializer
-    vesting_balance_worker_type_initializer
-    burn_worker_type_initializer
-]
+    initializer: initializer_type
 )
 
-custom = new Serializer(
+custom = new Serializer( 
     "custom"
     fee: asset
     payer: protocol_id_type "account"
@@ -663,64 +591,46 @@ custom = new Serializer(
     data: bytes()
 )
 
-assert = new Serializer(
-    "assert"
-    fee: asset
-    fee_paying_account: protocol_id_type "account"
-    predicates: array bytes()
-    required_auths: set protocol_id_type "account"
-)
-
-balance_claim = new Serializer(
-    "balance_claim"
-    fee: asset
-    deposit_to_account: protocol_id_type "account"
-    balance_to_claim: protocol_id_type "balance"
-    total_claimed: asset
-)
-
 operation = static_variant [
-    transfer
-    limit_order_create
-    limit_order_cancel
-    call_order_update
-    key_create
-    account_create
-    account_update
-    account_whitelist
-    account_upgrade
-    account_transfer
-    asset_create
-    asset_update
-    asset_update_bitasset
-    asset_update_feed_producers
-    asset_issue
-    asset_burn
-    asset_fund_fee_pool
-    asset_settle
-    asset_global_settle
-    asset_publish_feed
-    delegate_create
-    witness_create
-    witness_withdraw_pay
-    proposal_create
-    proposal_update
-    proposal_delete
-    withdraw_permission_create
-    withdraw_permission_update
-    withdraw_permission_claim
-    withdraw_permission_delete
-    fill_order
-    global_parameters_update
-    vesting_balance_create
-    vesting_balance_withdraw
-    worker_create
+    transfer    
+    limit_order_create    
+    limit_order_cancel    
+    call_order_update    
+    key_create    
+    account_create    
+    account_update    
+    account_whitelist    
+    account_upgrade    
+    account_transfer    
+    asset_create    
+    asset_update    
+    asset_update_bitasset    
+    asset_update_feed_producers    
+    asset_issue    
+    asset_burn    
+    asset_fund_fee_pool    
+    asset_settle    
+    asset_global_settle    
+    asset_publish_feed    
+    delegate_create    
+    witness_create    
+    witness_withdraw_pay    
+    proposal_create    
+    proposal_update    
+    proposal_delete    
+    withdraw_permission_create    
+    withdraw_permission_update    
+    withdraw_permission_claim    
+    withdraw_permission_delete    
+    fill_order    
+    global_parameters_update    
+    vesting_balance_create    
+    vesting_balance_withdraw    
+    worker_create    
     custom
-    assert
-    balance_claim
 ]
 
-transaction = new Serializer(
+transaction = new Serializer( 
     "transaction"
     ref_block_num: uint16
     ref_block_prefix: uint32
@@ -728,13 +638,14 @@ transaction = new Serializer(
     operations: array operation
 )
 
-signed_transaction = new Serializer(
+signed_transaction = new Serializer( 
     "signed_transaction"
     ref_block_num: uint16
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: array bytes 65
+    signatures: map (protocol_id_type "key"), (bytes 65)
+    extra_signatures: map (address), (bytes 65)
 )
 
 
