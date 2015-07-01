@@ -110,16 +110,13 @@ class WalletStore extends BaseStore {
     }
     
     saveKey(
+        password_aes_private,
         wallet_public_name,
+        wallet_id,
         private_key,
         brainkey_pos,
         transaction
     ) {
-        
-        var wallet_id = this.wallets.get(wallet_public_name).id
-        var password_aes_private =
-            aes_private_map[wallet_public_name]
-        
         var private_cipherhex =
             password_aes_private.encryptToHex(
                 private_key.toBuffer()
@@ -127,7 +124,7 @@ class WalletStore extends BaseStore {
         
         var public_key = private_key.toPublicKey()
         var private_key_object = {
-            wallet_id: wallet_id,
+            wallet_id,
             brainkey_pos,
             encrypted_key: private_cipherhex,
             pubkey: public_key.toBtsPublic()
@@ -207,27 +204,33 @@ class WalletStore extends BaseStore {
             return (wallet, unlock, password_aes_private, private_wifs) => {
                 return idb_helper.add(
                     transaction.objectStore("wallets"), wallet, () => {
-                        var promises = []
-                        for(let wif of private_wifs) {
-                            var private_key = PrivateKey.fromWif(wif)
-                            var promise = saveKey(
-                                wallet.public_name,
-                                private_key,
-                                null, //brainkey_pos
-                                transaction
-                            )
-                            promises.push(promise)
+                        try {
+                            var promises = []
+                            for(let wif of private_wifs) {
+                                var private_key = PrivateKey.fromWif(wif)
+                                var promise = this.saveKey(
+                                    password_aes_private,
+                                    wallet.public_name,
+                                    wallet.id,
+                                    private_key,
+                                    null, //brainkey_pos
+                                    transaction
+                                )
+                                promises.push(promise)
+                            }
+                            
+                            return Promise.all(promises).then( ()=> {
+                                this.wallets = this.wallets.set(
+                                    wallet.public_name,
+                                    WalletTcomb(wallet)
+                                )
+                                if(unlock)
+                                    aes_private_map[wallet_public_name] =
+                                        password_aes_private
+                            })
+                        }catch(e) {
+                            return Promise.reject(e)
                         }
-                        
-                        return Promise.all(promises).then( ()=> {
-                            this.wallets = this.wallets.set(
-                                wallet.public_name,
-                                WalletTcomb(wallet)
-                            )
-                            if(unlock)
-                                aes_private_map[wallet_public_name] =
-                                    password_aes_private
-                        })
                     }
                 )
             }(wallet, unlock, password.aes_private, private_wifs)
