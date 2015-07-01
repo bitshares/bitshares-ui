@@ -110,13 +110,15 @@ class WalletStore extends BaseStore {
     }
     
     saveKey(
-        wallet,
+        wallet_public_name,
         private_key,
+        brainkey_pos,
         transaction
     ) {
-        var wallet_id = wallet.id
+        
+        var wallet_id = this.wallets.get(wallet_public_name).id
         var password_aes_private =
-            aes_private_map[wallet.public_name]
+            aes_private_map[wallet_public_name]
         
         var private_cipherhex =
             password_aes_private.encryptToHex(
@@ -126,6 +128,7 @@ class WalletStore extends BaseStore {
         var public_key = private_key.toPublicKey()
         var private_key_object = {
             wallet_id: wallet_id,
+            brainkey_pos,
             encrypted_key: private_cipherhex,
             pubkey: public_key.toBtsPublic()
         }
@@ -208,8 +211,9 @@ class WalletStore extends BaseStore {
                         for(let wif of private_wifs) {
                             var private_key = PrivateKey.fromWif(wif)
                             var promise = saveKey(
-                                wallet,
+                                wallet.public_name,
                                 private_key,
+                                null, //brainkey_pos
                                 transaction
                             )
                             promises.push(promise)

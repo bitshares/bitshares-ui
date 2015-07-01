@@ -46,10 +46,16 @@ class WalletActions {
                                 params.resolve,
                                 params.reject
                             )
-                            // Saving only the active key (not the owner)
-                            var save_promise = WalletStore.saveKey(
-                                params.wallet,
+                            var save_owner_promise = WalletStore.saveKey(
+                                params.wallet.public_name,
+                                result.owner_privkey,
+                                params.wallet.brainkey_sequence + "",
+                                transaction
+                            )
+                            var save_active_promise = WalletStore.saveKey(
+                                params.wallet.public_name,
                                 result.active_privkey,
+                                params.wallet.brainkey_sequence + ".0",
                                 transaction
                             )
                             var incr_promise =
@@ -59,7 +65,8 @@ class WalletActions {
                                 )
                             params => {
                                 return Promise.all([
-                                    save_promise,
+                                    save_owner_promise,
+                                    save_active_promise,
                                     incr_promise
                                 ]).then( ()=> {
                                     this.dispatch(params)

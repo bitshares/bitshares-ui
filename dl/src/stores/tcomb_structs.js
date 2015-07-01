@@ -78,6 +78,8 @@ let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
     key_id: t.maybe(t.Str),
     wallet_id: t.Num,
+    // brainkey_pos: "0" = 1st owner key, "0.0" = 1st active for owner "0"
+    brainkey_pos: t.maybe(t.Str),
     encrypted_key: t.Str,
     pubkey: t.Str
 }, "PrivateKeyTcomb");
