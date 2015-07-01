@@ -1,27 +1,56 @@
 import React from "react";
 import {PropTypes} from "react";
-import WitnessActions from "actions/WitnessActions";
+import AccountActions from "actions/AccountActions";
 import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
-import {FormattedDate} from "react-intl";
 
 class Assets extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-                !Immutable.is(nextProps.assets, this.props.assets)
+                !Immutable.is(nextProps.assets, this.props.assets) ||
+                !Immutable.is(nextProps.accounts, this.props.accounts)
             );
     }
 
-    render() {
+    _getAccount(id) {
 
-        let assets = this.props.assets.map((asset) => {
+        if (this.props.accounts.get(id)) {
+            return this.props.accounts.get(id);
+        } else {
+            AccountActions.getAccount(id);
+            return false;
+        }
+    }
+
+    render() {
+        let {assets, accounts} = this.props;
+
+        let uia = assets.filter(a => {
+            return !a.market_asset;
+        }).map((asset) => {
+            let account = this._getAccount(asset.issuer);
+
             return (
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{asset.id}</td>
-                    <td>{asset.issuer}</td>
+                    <td>{account ? <Link to="account" params={{name: account.name}}>{account.name} </Link> : asset.issuer}</td>
+                </tr>
+            );
+        }).toArray();
+
+        let mia = assets.filter(a => {
+            return a.market_asset;
+        }).map((asset) => {
+            let account = this._getAccount(asset.issuer);
+
+            return (
+                <tr key={asset.symbol}>
+                    <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
+                    <td>{asset.id}</td>
+                    <td>{account ? <Link to="account" params={{name: account.name}}>{account.name} </Link> : asset.issuer}</td>
                 </tr>
             );
         }).toArray();
@@ -41,7 +70,7 @@ class Assets extends React.Component {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {assets}
+                                    {mia}
                                 </tbody>
                             </table>
                         </div>
@@ -58,7 +87,7 @@ class Assets extends React.Component {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {assets}
+                                    {uia}
                                 </tbody>
                             </table>
                         </div>
@@ -70,19 +99,13 @@ class Assets extends React.Component {
 }
 
 Assets.defaultProps = {
-    latestBlocks: {},
     assets: {},
-    accounts: {},
-    height: 1
+    accounts: {}
 };
 
 Assets.propTypes = {
-    latestBlocks: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired,
-    accounts: PropTypes.object.isRequired,
-    height: PropTypes.number.isRequired
+    accounts: PropTypes.object.isRequired
 };
-
-Assets.contextTypes = { router: React.PropTypes.func.isRequired };
 
 export default Assets;
