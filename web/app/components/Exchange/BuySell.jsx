@@ -25,13 +25,13 @@ class BuySell extends React.Component {
                 <form className="order-form" onSubmit={onSubmit}>
                     <div className="grid-block">
                         <div className="grid-content">
-                            <label style={{"margin-right": "10px"}}> {/* TODO: move the margin style into a CSS class */}
+                            <label> {/* TODO: move the margin style into a CSS class */}
                                 Quantity ({quoteSymbol}):
                                 <input type="text" id="buyAmount" value={amount} onChange={amountChange}/>
                             </label>
                         </div>
                         <div className="grid-content">
-                            <label style={{"margin-right": "10px"}}>
+                            <label>
                                 Price: ({baseSymbol} per {quoteSymbol}):
                                 <input type="text" id="buyPrice" value={price} onChange={priceChange}/>
                             </label>
@@ -39,8 +39,8 @@ class BuySell extends React.Component {
                     </div>
   
                     <input className={buttonClass} type="submit" value={buttonText}/>
-                    <p>Balance: {`${utils.format_number(balance, 3)} ${balanceSymbol}`}</p>
-                    <p>Total ({baseSymbol}): { utils.format_number(total, 3) }</p>
+                    <p className="buy-sell-info">Balance: {`${utils.format_number(balance, 3)} ${balanceSymbol}`}</p>
+                    <p className="buy-sell-info">Total ({baseSymbol}): { utils.format_number(total, 3) }</p>
                 </form>
                 </div>
         );
