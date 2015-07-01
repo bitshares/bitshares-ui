@@ -27,7 +27,6 @@ class OrderBook extends React.Component {
         Ps.initialize(bidContainer);
         Ps.initialize(askContainer);
 
-        console.log(bidContainer.scrollTop, bidContainer.scrollHeight);
         if (bidContainer.scrollTop !== bidContainer.scrollHeight) {
             this.setState({didScrollOnMount: false});
         }
@@ -35,7 +34,6 @@ class OrderBook extends React.Component {
 
     componentWillReceiveProps() {
         let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        console.log(bidContainer.scrollTop, bidContainer.offsetHeight, bidContainer.scrollTop + bidContainer.offsetHeight, bidContainer.scrollHeight);
         this.setState({shouldScrollBottom: bidContainer.scrollTop + bidContainer.offsetHeight === bidContainer.scrollHeight});
     }
 

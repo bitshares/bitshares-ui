@@ -6,7 +6,7 @@ module.exports = {
         switch: "Switch language"
     },
     header: {
-        title: "BitShares 2.0",
+        title: "Graphene UI",
         dashboard: "Dashboard",
         explorer: "Explorer",
         exchange: "Exchange",
