@@ -23,9 +23,10 @@ class ApplicationApi {
         expire_minutes,
         signer_private_key_id,
         signer_private_key,
-        broadcast
+        broadcast,
+        owner_brainkey_sequence
     ) {
-        var owner_privkey = key.get_owner_private(brain_key);
+        var owner_privkey = key.get_owner_private(brain_key, owner_brainkey_sequence);
         var active_privkey = key.get_active_private(owner_privkey);
         
         var owner_pubkey = owner_privkey.toPublicKey();

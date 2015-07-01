@@ -113,7 +113,7 @@ class AccountStore extends BaseStore {
     }
 
     onCreateAccount(name) {
-        iDB.add_to_store("my_accounts", {name}).then( () => {
+        iDB.add_to_store("my_accounts", {name}).then( (name) => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", name);
             this.my_accounts = this.my_accounts.add(name);
         });

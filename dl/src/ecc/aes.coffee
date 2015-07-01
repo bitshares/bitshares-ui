@@ -123,7 +123,7 @@ class Aes
         plainwords = @_decrypt_word_array cipher_array
         CryptoJS.enc.Hex.stringify plainwords
     
-    decryptHexToText: (cipherhex) ->
+    decryptHexToText: (cipher) ->
         assert cipher, "Missing cipher text"
         # Convert data into word arrays (used by Crypto)
         cipher_array = CryptoJS.enc.Hex.parse cipher

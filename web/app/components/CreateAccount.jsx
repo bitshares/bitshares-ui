@@ -27,7 +27,7 @@ class CreateAccount extends BaseComponent {
         var wallet_selector = this.refs.wallet_selector
         if( ! wallet_selector.isSelecedAndUnlocked())
             return null
-        return wallet_selector.getState().current_wallet
+        return wallet_selector.state.current_wallet
     }
 
     onSubmit(e) {
@@ -38,25 +38,26 @@ class CreateAccount extends BaseComponent {
         var wallet_public_name = this.getCurrentWalletName()
         
         if(isValid && wallet_public_name) {
-            AccountActions.createAccount(name, wallet_public_name).then( (keys_data) => {
-                return AccountActions.getAccount(name).then( () => {
-                    let account_store_state = AccountStore.getState();
-                    let account = account_store_state.browseAccounts.get(account_store_state.account_name_to_id[name]);
-                    //privkey: keys_data.owner_privkey.toWif(),
-                    //pubkey: keys_data.owner_pubkey.toBtsPublic()
-                    let owner_key = {
-                        id: "owner:" + name,
-                        key_id: account.owner.auths[0][0],
-                        private_id: owner_private_object.id
-                    };
-                    let active_key = {
-                        id: "active:" + name,
-                        key_id: account.active.auths[0][0],
-                        private_id: active_private_object.id
-                    };
-                    //PrivateKeyActions.addKey(owner_key)
-                    this.context.router.transitionTo("account", {name: name});
-                });
+            AccountActions.createAccount(name, wallet_public_name).then( () => {
+                this.context.router.transitionTo("account", {name: name})
+                //return AccountActions.getAccount(name).then( () => {
+                //    let account_store_state = AccountStore.getState();
+                //    let account = account_store_state.browseAccounts.get(account_store_state.account_name_to_id[name]);
+                //    privkey: keys_data.owner_privkey.toWif(),
+                //    pubkey: keys_data.owner_pubkey.toBtsPublic()
+                //    let owner_key = {
+                //        id: "owner:" + name,
+                //        key_id: account.owner.auths[0][0],
+                //        private_id: owner_private_object.id
+                //    };
+                //    let active_key = {
+                //        id: "active:" + name,
+                //        key_id: account.active.auths[0][0],
+                //        private_id: active_private_object.id
+                //    };
+                //    PrivateKeyActions.addKey(owner_key)
+                //    this.context.router.transitionTo("account", {name: name});
+                //});
             });
         }
     }

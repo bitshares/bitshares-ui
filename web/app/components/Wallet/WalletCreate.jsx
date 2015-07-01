@@ -27,7 +27,11 @@ export default class WalletCreate extends Component {
         var state = this.state
         var errors = state.errors
         var submitDisabled = this.state.isValid ? "" : "disabled"
-        var disabled = this.state.notice ? true : false
+        
+        if(state.wallet_saved)
+            return <div className="grid-content">
+                <h3>Wallet Saved: {this.state.wallet_public_name.toUpperCase()}</h3>
+            </div>
         
         return <div className="grid-block vertical">
             <form className="name-form"
@@ -37,7 +41,6 @@ export default class WalletCreate extends Component {
                 <div className={cname("grid-content", {"has-error": errors.from})}>
                     <label>Name</label>
                     <input type="text" id="wallet_public_name"
-                        className={cname({'disabled': disabled})}
                         value={this.state.wallet_public_name} />
                     <div>{errors.wallet_public_name}</div>
                     <br/>
@@ -48,12 +51,10 @@ export default class WalletCreate extends Component {
                 })}>
                     <label>Password</label>
                     <input type="password" id="password"
-                        className={cname({'disabled': disabled})}
                         value={this.state.password} />
                     
                     <label>Password (confirm)</label>
                         <input type="password" id="password_confirm"
-                            className={cname({'disabled': disabled})}
                             value={this.state.password_confirm}/>
                     <div>{errors.password_match}</div>
                     <br/>
@@ -62,36 +63,23 @@ export default class WalletCreate extends Component {
                 <div className="grid-content">
                     <label>Brain-Key</label>
                     <textarea type="text" id="brainkey"
-                        className={cname({'disabled': disabled})}
                         value={this.state.brainkey} />
                     <br/>
                 </div>
                 
                 <div className="grid-content">
-                    <WalletImport className={cname({'disabled': disabled})}
-                        private_wifs={this.state.private_wifs}/>
+                    <WalletImport private_wifs={this.state.private_wifs}/>
                     <br/>
                 </div>
                 
-                { state.notice ?
-                <div className="grid-content">
-                    <div>{state.notice}</div>
-                    <br/>
-                </div>
-                :
                 <div className="grid-content">
                     <input type="submit" value={"Save"}
                         className={cname("button",{disabled:submitDisabled})}/>
                     <br/>
                 </div>
-                }
                 
             </form>
         </div>
-    }
-    
-    noticeConfirm() {
-        this.setState({notice: null})
     }
     
     validate() {
@@ -118,9 +106,18 @@ export default class WalletCreate extends Component {
     }
     
     formChange(event) {
-        let key = event.target.id
+        let key_id = event.target.id
         let value = event.target.value
-        this.state[key] = value
+        if(key_id === "wallet_public_name")
+            //case in-sensitive
+            value = value.toLowerCase()
+        
+        if(key_id === "brainkey") {
+            value = value.toUpperCase()
+            value = value.split(/[\t\n\v\f\r ]+/).join(' ')
+        }
+        
+        this.state[key_id] = value
         this.validate()
         this.setState(this.state)
     }
@@ -133,7 +130,7 @@ export default class WalletCreate extends Component {
             this.state.brainkey,
             this.state.private_wifs
         ).then( ()=> {
-            this.setState({notice: 'Wallet Saved'})
+            this.setState({wallet_saved: true})
         })
     }
 }

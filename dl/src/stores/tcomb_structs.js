@@ -1,17 +1,12 @@
 var t = require("tcomb");
 
 let Account = t.struct({
+    id: t.Str,
+    name: t.Str,
+    owner: t.Obj,
     active: t.Obj,
     annotations: t.Arr,
-    id: t.Str,
-    blacklisting_accounts: t.Arr,
-    lifetime_referrer: t.Str,
-    lifetime_referrer_fee_percentage: t.Num,
-    membership_expiration_date: t.Str,
-    name: t.Str,
-    network_fee_percentage: t.Num,
     options: t.Obj,
-    owner: t.Obj,
     //voting_account: t.Str,
     //num_witness: t.Num,
     //num_committee: t.Num,
@@ -19,7 +14,12 @@ let Account = t.struct({
     referrer: t.Str,
     referrer_rewards_percentage: t.Num,
     registrar: t.Str,
+    lifetime_referrer: t.Str,
+    lifetime_referrer_fee_percentage: t.Num,
+    membership_expiration_date: t.Str,
+    network_fee_percentage: t.Num,
     statistics: t.Str,
+    blacklisting_accounts: t.Arr,
     whitelisting_accounts: t.Arr
 }, "Account");
 
@@ -64,24 +64,22 @@ let WalletTcomb = t.struct({
     password_checksum: t.Str,
     encrypted_brainkey: t.maybe(t.Str),
     brainkey_checksum: t.Str,
-    brainkey_sequence: t.maybe(t.Num),
+    brainkey_sequence: t.Num,
     backed_up: t.maybe(t.Bool)
 }, "WalletTcomb");
 
 let PublicKeyTcomb = t.struct({
     id: t.maybe(t.Num),
     pubkey: t.Str,
-    addy: t.Str,
     key_id: t.maybe(t.Str)
 }, "PublicKeyTcomb");
 
 let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
+    key_id: t.maybe(t.Str),
     wallet_id: t.Num,
-    public_id: t.Num,
-    brainkey_owner_private_id: t.maybe(t.Num),
-    brainkey_sequence: t.maybe(t.Num),
-    encrypted_key: t.Str
+    encrypted_key: t.Str,
+    pubkey: t.Str
 }, "PrivateKeyTcomb");
 
 let Witness = t.struct({

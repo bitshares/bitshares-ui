@@ -1,5 +1,6 @@
 import WalletStore from "stores/WalletStore"
 import ApplicationApi from "rpc_api/ApplicationApi"
+import PrivateKey from "ecc/key_private"
 
 import key from "common/key_utils"
 import v from "common/validation"
@@ -10,8 +11,6 @@ var application_api = new ApplicationApi()
 class WalletActions {
     
     constructor() {
-        // https://github.com/cryptonomex/graphene-ui/issues/21
-        //this.generateActions('create', 'lock');
     }
 
     createBrainKeyAccount(account_name, wallet_public_name){
@@ -20,20 +19,57 @@ class WalletActions {
                 reject("locked wallet " + wallet_public_name)
                 return
             }
-            reject("not implemented")
-            /*
-            WalletStore.getState().wallets.get(wallet_public_name)
-            application_api.create_account_with_brain_key(
-                brain_key,
-                new_account_name,
-                registrar_id,
-                referrer_id,
-                referrer_percent,
-                expire_minutes,
-                signer_private_key_id,
-                signer_private_key,
-                true //broadcast
-            )*/
+            var wallet = WalletStore.getWallet(wallet_public_name)
+            
+            var params = {
+                account_name: account_name,
+                wallet: wallet,
+                resolve, reject
+            }
+            return (params) => {
+                var result = application_api.create_account_with_brain_key(
+                    WalletStore.getBrainKey(params.wallet.public_name),
+                    account_name,
+                    15, //registrar_id,
+                    0, //referrer_id,
+                    100, //referrer_percent,
+                    10, //expire_minutes,
+                    11, //signer_private_key_id,
+                    PrivateKey.fromSeed("nathan"), //signer_private_key,
+                    true, //broadcast
+                    params.wallet.brainkey_sequence
+                )
+                return (params, result) => {
+                    return result.trx_promise.then(() => {
+                        return (params, result) => {
+                            var transaction = WalletStore.transaction(
+                                params.resolve,
+                                params.reject
+                            )
+                            // Saving only the active key (not the owner)
+                            var save_promise = WalletStore.saveKey(
+                                params.wallet,
+                                result.active_privkey,
+                                transaction
+                            )
+                            var incr_promise =
+                                WalletStore.incrementBrainKeySequence(
+                                    params.wallet.public_name,
+                                    transaction
+                                )
+                            params => {
+                                return Promise.all([
+                                    save_promise,
+                                    incr_promise
+                                ]).then( ()=> {
+                                    this.dispatch(params)
+                                    return params
+                                })
+                            }(params)
+                        }(params, result)
+                    })
+                }(params, result)
+            }(params)
         })
     }
 }

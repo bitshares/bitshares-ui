@@ -2,8 +2,9 @@ import Immutable from "immutable";
 import alt from "../alt-instance";
 import BaseStore from "./BaseStore";
 import iDB from "../idb-instance";
+import idb_helper from "../idb-helper";
 
-import {PrivateKey} from "./tcomb_structs";
+import {PrivateKeyTcomb} from "./tcomb_structs";
 
 import hash from "common/hash"
 
@@ -25,7 +26,7 @@ class PrivateKeyStore extends BaseStore {
                 this.keys = map.asImmutable()
                 return
             }
-            var private_key = PrivateKey(cursor.value)
+            var private_key = PrivateKeyTcomb(cursor.value)
             map.set(private_key.id, private_key)
             cursor.continue()
         });

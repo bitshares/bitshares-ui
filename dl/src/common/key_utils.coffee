@@ -106,7 +106,7 @@ module.exports = key =
             # DEBUG console.log '... i,num,rndMultiplier,wordIndex',i,num,rndMultiplier,wordIndex
             dictionary_lines[wordIndex]
         
-        brainkey.join ' '
+        key.normalize_brain_key brainkey.join ' '
     
     browserEntropy: ->
         req = (variable, name)-> unless variable

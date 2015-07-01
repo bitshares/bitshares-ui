@@ -68,7 +68,7 @@ var iDB = (function () {
                 let transaction = this.instance().db().transaction([store_name], "readwrite");
                 let store = transaction.objectStore(store_name);
                 let request = store.add(value);
-                request.onsuccess = () => { resolve(true); };
+                request.onsuccess = () => { resolve(value); };
                 request.onerror = (e) => {
                     console.log("ERROR!!! add_to_store - can't store value in db. ", e.target.error.message, value);
                     reject(e.target.error.message);

@@ -1,8 +1,9 @@
 import alt from "../alt-instance";
 import utils from "common/utils";
 import api from "../api/accountApi";
-import WalletApi from "rpc_api/WalletApi";
 
+import WalletApi from "rpc_api/WalletApi";
+import WalletActions from "actions/WalletActions";
 
 let accountSubs = {};
 let wallet_api = new WalletApi();
@@ -137,14 +138,15 @@ class AccountActions {
     }
 
     createAccount(account_name, wallet_public_name) {
-        return new Promise((resolve, reject) => {
-            WalletActions.createBrainKeyAccount(
+        return account_name => {
+            return WalletActions.createBrainKeyAccount(
                 account_name,
                 wallet_public_name
-            ).then( ()=> {
-                this.dispatch(name)
+            ).then( result => {
+                this.dispatch(account_name)
+                return account_name
             })
-        })
+        }(account_name)
     }
 
     upgradeAccount(account_id) {
