@@ -29,7 +29,7 @@ class DepthHighChart extends React.Component {
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
-        let totalAsks = flat_asks[flat_asks.length - 1][1];
+        let totalAsks = 0;
 
         let config = {
             chart: {
@@ -110,6 +110,11 @@ class DepthHighChart extends React.Component {
                 }
             }
         };
+
+        // Total asks value
+        if (flat_asks.length > 0) {
+            totalAsks = flat_asks[flat_asks.length - 1][1];
+        }
 
         // Center the charts between bids and asks
         if (flat_bids.length > 0 && flat_asks.length > 0) {
