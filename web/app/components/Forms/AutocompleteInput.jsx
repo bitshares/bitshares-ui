@@ -44,9 +44,7 @@ class AutocompleteInput extends Component {
         } else {
             ZfApi.publish(action_sheet_id, "close");
         }
-        if (this.props.onChange) {
-            this.props.onChange(event);
-        }
+        if (this.props.onChange) this.props.onChange(event);
     }
 
     handleItemClick(e) {
@@ -93,7 +91,7 @@ AutocompleteInput.propTypes = {
     placeholder: PropTypes.string,
     initial_value: PropTypes.string,
     options: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func
 };
 
 export default AutocompleteInput;

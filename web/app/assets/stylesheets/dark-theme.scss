@@ -93,6 +93,15 @@ label, label > span {
   &.place-bottom:after {
     border-bottom-color: $super-light-panel-bg-color;
   }
+  &.place-top:after {
+    border-top-color: $super-light-panel-bg-color;
+  }
+  &.place-right:after {
+    border-right-color: $super-light-panel-bg-color;
+  }
+  &.place-left:after {
+    border-left-color: $super-light-panel-bg-color;
+  }
 }
 
 .json-inspector__key {

@@ -55,7 +55,11 @@ class PermissionsTable extends React.Component {
                     <td style={{width: cw[0]}}>{p.type === "account" ? <Icon name="user"/> : <Icon name="key"/>}</td>
                     <td style={{width: cw[1]}}>{p.name}</td>
                     <td style={{width: cw[2]}}>{p.weight}</td>
-                    <td style={{width: cw[3]}}><a href onClick={this.onRemove.bind(this, p.name)}><Icon name="cross-circle"/></a></td>
+                    <td style={{width: cw[3]}}>
+                        <a href onClick={this.onRemove.bind(this, p.name)} data-tip="Delete" data-place="right" data-position="{'top': -10, 'left': -20}">
+                            <Icon name="cross-circle"/>
+                        </a>
+                    </td>
                 </tr>
             );
         });

@@ -50,6 +50,7 @@ import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import WalletImport from "./components/Wallet/WalletImport";
 import WalletStore from "stores/WalletStore";
+import ReactTooltip from "react-tooltip";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
@@ -119,6 +120,7 @@ class App extends BaseComponent {
                     <Notifier class="overlay-notification"/>
                     <RouteHandler/>
                     <Footer/>
+                    <ReactTooltip type="dark" effect="solid" />
                 </div>
             );
         }

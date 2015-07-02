@@ -1,6 +1,7 @@
 import React from "react";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import Icon from "../Icon/Icon";
+import ReactTooltip from "react-tooltip";
 
 class VotesTable extends React.Component {
 
@@ -47,7 +48,11 @@ class VotesTable extends React.Component {
                     <td style={{width: cw[0]}}>{e.name}</td>
                     <td style={{width: cw[1]}}>{e.info}</td>
                     <td style={{width: cw[2]}}>{e.support}</td>
-                    <td style={{width: cw[3]}}><a href onClick={this.onRemove.bind(this, e.name)}><Icon name="cross-circle"/></a></td>
+                    <td style={{width: cw[3]}}>
+                        <a href onClick={this.onRemove.bind(this, e.name)} data-tip="Delete" data-place="right" data-position="{'top': -10, 'left': -20}">
+                            <Icon name="cross-circle"/>
+                        </a>
+                    </td>
                 </tr>
             );
         });

@@ -8,7 +8,6 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import ReactTooltip from "react-tooltip";
 
 class Header extends BaseComponent {
     constructor(props) {
@@ -76,7 +75,7 @@ class Header extends BaseComponent {
                 <ActionSheet id="plus_drop_down">
                     <ActionSheet.Button title="">
                         <a className="button">
-                            <Icon size="1x" name="plus-circle"/>
+                            <Icon name="plus-circle"/>
                         </a>
                     </ActionSheet.Button>
                     <ActionSheet.Content >
@@ -108,7 +107,7 @@ class Header extends BaseComponent {
                 <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
-                            {currentAccount ? <Link to="account-overview" data-tip={current} params={{name: currentAccount.name}}><Icon size="1x" name="user"/></Link> : null}
+                            {currentAccount ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
                         </div>
                         <div className="grp-menu-item">
                             {accountsDropDown}
@@ -117,14 +116,13 @@ class Header extends BaseComponent {
                             {plusDropDown}
                         </div>
                         <div className="grp-menu-item" >
-                            <Link to="settings" className="button" data-tip={settings}><Icon name="cog"/></Link>
+                            <Link to="settings" className="button" data-tip={settings}  data-place="bottom"><Icon name="cog"/></Link>
                         </div>
                         <div className="grp-menu-item">
                             <a href="/"><Translate component="span" content="header.logout" /></a>
                         </div>
                     </div>
                 </div>
-                <ReactTooltip place='bottom' type='dark' effect='solid' />
             </div>
         );
     }
