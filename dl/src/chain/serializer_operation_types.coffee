@@ -31,28 +31,17 @@ When updating generated code
 Replace:  operation = static_variant [
 with:     operation.st_operations = [
 
-Remove invalid structs containing with this line:
-] = static_variant [
-
 Delete:
 operation  = new Serializer( 
     "operation "
     op: operation
-)
-address = new Serializer( 
-    "address"
-    addr: bytes 20
 )
 public_key = new Serializer( 
     "public_key"
     key_data: bytes 33
 )
 
-Indent array blocks after lines:
-: static_variant [
-
 ###
-
 # Place-holder, their are dependencies on "operation" .. The final list of
 # operations is not avialble until the very end of the generated code.
 # See: operation.st_operations = ...
@@ -100,8 +89,7 @@ processed_transaction = new Serializer(
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: map (protocol_id_type "key"), (bytes 65)
-    extra_signatures: map (address), (bytes 65)
+    signatures: array bytes 65
     operation_results: array operation_result
 )
 
@@ -143,8 +131,8 @@ signed_block_header = new Serializer(
 
 memo_data = new Serializer( 
     "memo_data"
-    from: protocol_id_type "key"
-    to: protocol_id_type "key"
+    from: public_key
+    to: public_key
     nonce: uint64
     message: bytes()
 )
@@ -183,27 +171,17 @@ call_order_update = new Serializer(
     delta_debt: asset
 )
 
-key_data = static_variant [
-    address    
-    public_key
-]
-
-key_create = new Serializer( 
-    "key_create"
-    fee: asset
-    fee_paying_account: protocol_id_type "account"
-    key_data: key_data
-)
-
 authority = new Serializer( 
     "authority"
     weight_threshold: uint32
-    auths: map (object_id_type), (uint16)
+    account_auths: map (protocol_id_type "account"), (uint16)
+    key_auths: map (public_key), (uint16)
+    address_auths: map (address), (uint16)
 )
 
 account_object_options = new Serializer( 
     "account_object_options"
-    memo_key: object_id_type
+    memo_key: public_key
     voting_account: protocol_id_type "account"
     num_witness: uint16
     num_committee: uint16
@@ -277,6 +255,7 @@ asset_object_asset_options = new Serializer(
 asset_object_bitasset_options = new Serializer( 
     "asset_object_bitasset_options"
     feed_lifetime_sec: uint32
+    minimum_feeds: uint8
     force_settlement_delay_sec: uint32
     force_settlement_offset_percent: uint16
     maximum_force_settlement_volume: uint16
@@ -328,11 +307,11 @@ asset_issue = new Serializer(
     memo: optional memo_data
 )
 
-asset_burn = new Serializer( 
-    "asset_burn"
+asset_reserve = new Serializer( 
+    "asset_reserve"
     fee: asset
     payer: protocol_id_type "account"
-    amount_to_burn: asset
+    amount_to_reserve: asset
 )
 
 asset_fund_fee_pool = new Serializer( 
@@ -386,7 +365,7 @@ witness_create = new Serializer(
     fee: asset
     witness_account: protocol_id_type "account"
     url: string
-    block_signing_key: protocol_id_type "key"
+    block_signing_key: public_key
     initial_secret: bytes 28
 )
 
@@ -416,8 +395,8 @@ proposal_update = new Serializer(
     active_approvals_to_remove: set protocol_id_type "account"
     owner_approvals_to_add: set protocol_id_type "account"
     owner_approvals_to_remove: set protocol_id_type "account"
-    key_approvals_to_add: set protocol_id_type "key"
-    key_approvals_to_remove: set protocol_id_type "key"
+    key_approvals_to_add: set public_key
+    key_approvals_to_remove: set public_key
 )
 
 proposal_delete = new Serializer( 
@@ -508,7 +487,7 @@ fee_schedule = new Serializer(
     asset_create_fee: uint64
     asset_update_fee: uint64
     asset_issue_fee: uint64
-    asset_burn_fee: uint64
+    asset_reserve_fee: uint64
     asset_fund_fee_pool_fee: uint64
     asset_settle_fee: uint64
     data_fee: uint64
@@ -542,7 +521,7 @@ chain_parameters = new Serializer(
     maximum_asset_whitelist_authorities: uint8
     maximum_asset_feed_publishers: uint8
     maximum_authority_membership: uint16
-    burn_percent_of_fee: uint16
+    reserve_percent_of_fee: uint16
     network_percent_of_fee: uint16
     lifetime_referrer_percent_of_fee: uint16
     max_bulk_discount_percent_of_fee: uint16
@@ -568,9 +547,9 @@ global_parameters_update = new Serializer(
 
 linear_vesting_policy_initializer = new Serializer( 
     "linear_vesting_policy_initializer"
-    start_claim: time_point_sec
-    begin_date: time_point_sec
-    vesting_seconds: uint32
+    begin_timestamp: time_point_sec
+    vesting_cliff_seconds: uint32
+    vesting_duration_seconds: uint32
 )
 
 cdd_vesting_policy_initializer = new Serializer( 
@@ -579,16 +558,18 @@ cdd_vesting_policy_initializer = new Serializer(
     vesting_seconds: uint32
 )
 
+vesting_policy_initializer = static_variant [
+    linear_vesting_policy_initializer    
+    cdd_vesting_policy_initializer
+]
+
 vesting_balance_create = new Serializer( 
     "vesting_balance_create"
     fee: asset
     creator: protocol_id_type "account"
     owner: protocol_id_type "account"
     amount: asset
-    policy: static_variant [
-        linear_vesting_policy_initializer    
-        cdd_vesting_policy_initializer
-    ]
+    policy: vesting_policy_initializer
 )
 
 vesting_balance_withdraw = new Serializer( 
@@ -612,6 +593,12 @@ burn_worker_type_initializer = new Serializer(
     "burn_worker_type_initializer"
 )
 
+worker_initializer = static_variant [
+    refund_worker_type_initializer    
+    vesting_balance_worker_type_initializer    
+    burn_worker_type_initializer
+]
+
 worker_create = new Serializer( 
     "worker_create"
     fee: asset
@@ -621,11 +608,7 @@ worker_create = new Serializer(
     daily_pay: int64
     name: string
     url: string
-    initializer: static_variant [
-        refund_worker_type_initializer    
-        vesting_balance_worker_type_initializer    
-        burn_worker_type_initializer
-    ]
+    initializer: worker_initializer
 )
 
 custom = new Serializer( 
@@ -649,8 +632,19 @@ balance_claim = new Serializer(
     "balance_claim"
     fee: asset
     deposit_to_account: protocol_id_type "account"
-    owners: set address
+    balance_to_claim: protocol_id_type "balance"
+    balance_owner_key: public_key
     total_claimed: asset
+)
+
+override_transfer = new Serializer( 
+    "override_transfer"
+    fee: asset
+    issuer: protocol_id_type "account"
+    from: protocol_id_type "account"
+    to: protocol_id_type "account"
+    amount: asset
+    memo: optional memo_data
 )
 
 operation.st_operations = [
@@ -658,7 +652,6 @@ operation.st_operations = [
     limit_order_create    
     limit_order_cancel    
     call_order_update    
-    key_create    
     account_create    
     account_update    
     account_whitelist    
@@ -669,7 +662,7 @@ operation.st_operations = [
     asset_update_bitasset    
     asset_update_feed_producers    
     asset_issue    
-    asset_burn    
+    asset_reserve    
     asset_fund_fee_pool    
     asset_settle    
     asset_global_settle    
@@ -691,7 +684,8 @@ operation.st_operations = [
     worker_create    
     custom    
     assert    
-    balance_claim
+    balance_claim    
+    override_transfer
 ]
 
 transaction = new Serializer( 
@@ -708,13 +702,10 @@ signed_transaction = new Serializer(
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: map (protocol_id_type "key"), (bytes 65)
-    extra_signatures: map (address), (bytes 65)
+    signatures: array bytes 65
 )
 
 ## -------------------------------
 ##  Generated code end
 # programs/js_operation_serializer
 ## -------------------------------
-
-

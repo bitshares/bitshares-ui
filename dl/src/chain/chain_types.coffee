@@ -10,20 +10,20 @@ ChainTypes.reserved_spaces=
 ChainTypes.object_type=
     null: 0
     base: 1
-    key: 2
-    account: 3
-    asset: 4
-    force_settlement: 5
-    delegate: 6
-    witness: 7
-    limit_order: 8
-    call_order: 9
-    custom: 10
-    proposal: 11
-    operation_history: 12
-    withdraw_permission: 13
-    vesting_balance_object_type:14
-    worker_object_type: 15
+    account: 2
+    asset: 3
+    force_settlement: 4
+    delegate: 5
+    witness: 6
+    limit_order: 7
+    call_order: 8
+    custom: 9
+    proposal: 10
+    operation_history: 11
+    withdraw_permission: 12
+    vesting_balance: 13
+    worker: 14
+    balance: 15
 
 ChainTypes.vote_type=
     committee:0
@@ -36,38 +36,39 @@ ChainTypes.operations=
     limit_order_create: 1
     limit_order_cancel: 2
     call_order_update: 3
-    key_create: 4
-    account_create: 5
-    account_update: 6
-    account_whitelist: 7
-    account_upgrade: 8
-    account_transfer: 9
-    asset_create: 10
-    asset_update: 11
-    asset_update_bitasset: 12
-    asset_update_feed_producers: 13
-    asset_issue: 14
-    asset_burn: 15
-    asset_fund_fee_pool: 16
-    asset_settle: 17
-    asset_global_settle: 18
-    asset_publish_feed: 19
-    delegate_create: 20
-    witness_create: 21
-    witness_withdraw_pay: 22
-    proposal_create: 23
-    proposal_update: 24
-    proposal_delete: 25
-    withdraw_permission_create: 26
-    withdraw_permission_update: 27
-    withdraw_permission_claim: 28
-    withdraw_permission_delete: 29
-    fill_order: 30
-    global_parameters_update: 31
-    vesting_balance_create: 32
-    vesting_balance_withdraw: 33
-    worker_create: 34
-    custom: 35
-    assert: 36
-    balance_claim: 37
+    account_create: 4
+    account_update: 5
+    account_whitelist: 6
+    account_upgrade: 7
+    account_transfer: 8
+    asset_create: 9
+    asset_update: 10
+    asset_update_bitasset: 11
+    asset_update_feed_producers: 12
+    asset_issue: 13
+    asset_reserve: 14
+    asset_fund_fee_pool: 15
+    asset_settle: 16
+    asset_global_settle: 17
+    asset_publish_feed: 18
+    delegate_create: 19
+    witness_create: 20
+    witness_withdraw_pay: 21
+    proposal_create: 22
+    proposal_update: 23
+    proposal_delete: 24
+    withdraw_permission_create: 25
+    withdraw_permission_update: 26
+    withdraw_permission_claim: 27
+    withdraw_permission_delete: 28
+    fill_order: 29
+    global_parameters_update: 30
+    vesting_balance_create: 31
+    vesting_balance_withdraw: 32
+    worker_create: 33
+    custom: 34
+    assert: 35
+    balance_claim: 36
+    override_transfer: 37
+
 
