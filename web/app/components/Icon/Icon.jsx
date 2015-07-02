@@ -26,7 +26,7 @@ class Icon extends React.Component {
 
 Icon.propTypes = {
     name: React.PropTypes.string.isRequired,
-    size: React.PropTypes.oneOf(["2x", "3x", "4x", "5x", "10x"]),
+    size: React.PropTypes.oneOf(["1x", "2x", "3x", "4x", "5x", "10x"]),
     inverse: React.PropTypes.bool
     //fillClass: React.PropTypes.string
 };
