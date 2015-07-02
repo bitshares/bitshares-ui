@@ -51,7 +51,7 @@ class Lookup
         i = @_private.try_simple_resolve "key", name_or_id
         return i unless i is undefined
         
-        if name_or_id.indexOf("1.3.") is 0
+        if name_or_id.indexOf("1.2.") is 0
             account_id = name_or_id
             return @_private.deferred_property "object", "options.memo_key", account_id
         
@@ -76,7 +76,7 @@ class Lookup
         if key_id isnt undefined
             return _private.public_key key_id.resolve
         
-        index_name = if name_key_or_id.indexOf("1.3.") is 0
+        index_name = if name_key_or_id.indexOf("1.2.") is 0
             "object"
         else
             "accountname"

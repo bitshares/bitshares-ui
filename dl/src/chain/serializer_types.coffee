@@ -248,7 +248,7 @@ Types.fixed_array = (count, st_operation)->
         for i in [0...count] by 1
             st_operation.toObject object[i], debug
 
-### Supports instance numbers (11) or object types (1.3.11).  Object type
+### Supports instance numbers (11) or object types (1.2.11).  Object type
 validation is enforced when an object type is used. ###
 id_type = (reserved_spaces, object_type)->
     v.required reserved_spaces, "reserved_spaces"
@@ -257,7 +257,7 @@ id_type = (reserved_spaces, object_type)->
         b.readVarint32()
     appendByteBuffer:(b, object)->
         object = object.resolve if object.resolve isnt undefined
-        # convert 1.3.n into just n
+        # convert 1.2.n into just n
         if /^[0-9]+\.[0-9]+\.[0-9]+$/.test object
             object = v.get_instance reserved_spaces, object_type, object
         b.writeVarint32 object

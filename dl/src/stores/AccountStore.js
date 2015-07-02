@@ -81,7 +81,7 @@ class AccountStore extends BaseStore {
             if (account.id) {
                 let balances = result[1].length > 0 ? result[1] : [{
                     amount: 0,
-                    asset_id: "1.4.0"
+                    asset_id: "1.3.0"
                 }];
 
                 this.balances = this.balances.set(

@@ -31,7 +31,7 @@ class AccountPage extends React.Component {
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">
-                    <AccountLeftPanel account_name={account_name} account_id={"1.3.1333"} active_menu_entry="overview" />
+                    <AccountLeftPanel account_name={account_name} account_id={"1.2.1333"} active_menu_entry="overview" />
                 </div>
                 <div className="grid-block medium-10 main-content">
                     <AltContainer

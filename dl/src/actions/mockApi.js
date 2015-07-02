@@ -101,10 +101,10 @@ let blockExample = {
       "relative_expiration": 1,
       "operations": [[
           6,{
-            "fee_paying_account": "1.3.11",
+            "fee_paying_account": "1.2.15",
             "fee": {
               "amount": 0,
-              "asset_id": "1.4.0"
+              "asset_id": "1.3.0"
             },
             "key_data": [
               1,
@@ -113,10 +113,10 @@ let blockExample = {
           }
         ],[
           6,{
-            "fee_paying_account": "1.3.11",
+            "fee_paying_account": "1.2.15",
             "fee": {
               "amount": 0,
-              "asset_id": "1.4.0"
+              "asset_id": "1.3.0"
             },
             "key_data": [
               1,
@@ -125,12 +125,12 @@ let blockExample = {
           }
         ],[
           7,{
-            "registrar": "1.3.11",
+            "registrar": "1.2.15",
             "fee": {
               "amount": 0,
-              "asset_id": "1.4.0"
+              "asset_id": "1.3.0"
             },
-            "referrer": "1.3.0",
+            "referrer": "1.2.0",
             "referrer_percent": 100,
             "name": "slave",
             "owner": {
@@ -149,7 +149,7 @@ let blockExample = {
                 ]
               ]
             },
-            "voting_account": "1.3.0",
+            "voting_account": "1.2.0",
             "memo_key": "0.2.1",
             "num_witness": 101,
             "num_committee": 11,
@@ -168,7 +168,7 @@ let blockExample = {
           "1.2.5"
         ],[
           0,
-          "1.3.13"
+          "1.2.13"
         ]
       ]
     }

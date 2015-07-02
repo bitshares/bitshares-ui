@@ -33,7 +33,7 @@ class MarketsStore {
         this.pendingCounter = 0;
 
         this.baseAsset = {
-            id: "1.4.0",
+            id: "1.3.0",
             symbol: "CORE",
             precision: 5
         };

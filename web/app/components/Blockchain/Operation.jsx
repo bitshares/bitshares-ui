@@ -494,14 +494,14 @@ class Operation extends React.Component {
 
             case "witness_withdraw_pay":
                 let missingAccounts = this.getAccounts(op[1].to_account);
-                let missingAssets = this.getAssets("1.4.0");
+                let missingAssets = this.getAssets("1.3.0");
                 let missingWitnesses = this.fetchWitnesses(op[1].witness_account, witnesses, witness_id_to_name);
                 
                 if (current === accounts[op[1].witness_account]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.witness_pay" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.4.0")} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.3.0")} /> : null}
                             <Translate component="span" content="transaction.to" /> 
                             &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].witness_account]) : null}
                         </td>
@@ -510,7 +510,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.received" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.4.0")} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.3.0")} /> : null}
                             <Translate component="span" content="transaction.from" /> 
                             &nbsp;{!missingWitnesses[0] ? this.linkToAccount(witness_id_to_name[op[1].witness_account]) : null}
                         </td>
@@ -734,12 +734,12 @@ class Operation extends React.Component {
                 break; 
 
             case "worker_create":
-                let missingAssets = this.getAssets("1.4.0");
+                let missingAssets = this.getAssets("1.3.0");
 
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.create_worker" /> 
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={assets.get("1.4.0")} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={assets.get("1.3.0")} /> : null}
                     </td>
                 );
                 

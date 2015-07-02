@@ -45,7 +45,7 @@ _my.signed_transaction = ->
         unless operation.fee
             operation.fee =
                 amount: "0"
-                asset_id: "1.4.0"
+                asset_id: "1.3.0"
         operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]
         return
@@ -146,7 +146,7 @@ class _my.account_create
             auths: [ [  ObjectId.fromString("0.2.1"),  1 ] ]
         options:
             memo_key: ObjectId.fromString("0.2.1")
-            voting_account: 0 # 1.3.0
+            voting_account: 0 # 1.2.0
             num_witness: 0
             num_committee: 0
             votes: [  ] # 0:0
@@ -177,12 +177,12 @@ class _my.transfer
     _template = ->
         fee : 
             amount : "0"
-            asset_id : 0# 1.4.0
-        from: null      # 1.3.0
-        to: null        # 1.3.0
+            asset_id : 0# 1.3.0
+        from: null      # 1.2.0
+        to: null        # 1.2.0
         amount:
             amount: "0"
-            asset_id: 0 # 1.4.0
+            asset_id: 0 # 1.3.0
         memo:
             from: null  # 1.2.0
             to: null    # 1.2.0

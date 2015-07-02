@@ -24,7 +24,7 @@ class Transfer extends BaseComponent {
                 from: null,
                 from_id: null,
                 amount: null,
-                asset: "1.4.0",
+                asset: "1.3.0",
                 to: null,
                 to_id: null,
                 memo: null
