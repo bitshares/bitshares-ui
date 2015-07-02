@@ -41,8 +41,8 @@ class VotesTable extends React.Component {
             return (
                 <tr key={e.name}>
                     <td style={{width: cw[0]}}>{e.name}</td>
-                    <td style={{width: cw[1]}}>-</td>
-                    <td style={{width: cw[2]}}>-</td>
+                    <td style={{width: cw[1]}}>{e.info}</td>
+                    <td style={{width: cw[2]}}>{e.support}</td>
                     <td style={{width: cw[3]}}><a href onClick={this.onRemove.bind(this, e.name)}><Icon name="cross-circle"/></a></td>
                 </tr>
             );
@@ -59,7 +59,7 @@ class VotesTable extends React.Component {
             </tr>
         ) : (
             <tr className="control-row">
-                <td style={{width: cw[0]}}><a href className="button outline" onClick={this.onAdd}>Add</a></td>
+                <td style={{width: cw[0], paddingLeft: 0}}><a href className="button outline" onClick={this.onAdd}>Add</a></td>
                 <td style={{width: cw[1]}}></td>
                 <td style={{width: cw[2]}}></td>
                 <td style={{width: cw[3]}}></td>

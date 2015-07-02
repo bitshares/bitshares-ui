@@ -11,8 +11,6 @@ class AccountPermissions extends React.Component {
 
     constructor() {
         super();
-        this.ACTIVE = Symbol("active");
-        this.OWNER = Symbol("owner");
         this.initial_data = {
             active_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
             active_threshold: 90,
@@ -28,51 +26,34 @@ class AccountPermissions extends React.Component {
             active_threshold: this.initial_data.active_threshold,
             owner_permissions: this.initial_data.owner_permissions,
             owner_threshold: this.initial_data.owner_threshold
-        }
+        };
     }
 
     isStateChanged() {
         return  this.state.active_permissions !== this.initial_data.active_permissions ||
-            this.state.active_threshold !== this.initial_data.active_threshold ||
-            this.state.owner_permissions !== this.initial_data.owner_permissions ||
-            this.state.owner_threshold !== this.initial_data.owner_threshold
+                this.state.active_threshold !== this.initial_data.active_threshold ||
+                this.state.owner_permissions !== this.initial_data.owner_permissions ||
+                this.state.owner_threshold !== this.initial_data.owner_threshold;
     }
 
-    onAddRow(type, name, weight) {
-        console.log("[AccountPermissions.jsx:39] ----- onAddRow ----->", type, name, weight);
-        if(type === this.ACTIVE){
-            let active_permissions = this.state.active_permissions.push({type: "account", name: name, weight: weight});
-            this.setState({active_permissions: active_permissions});
-        } else {
-            let owner_permissions = this.state.owner_permissions.push({type: "account", name: name, weight: weight});
-            this.setState({owner_permissions: owner_permissions});
+    onAddRow(state_key, name, weight) {
+        let permissions = this.state[state_key].push({type: "account", name: name, weight: weight});
+        let data = {}; data[state_key] = permissions;
+        this.setState(data);
+    }
+
+    onRemoveRow(state_key, name) {
+        let index = this.state[state_key].findIndex(i => i.name === name);
+        if (index >= 0) {
+            let permissions = this.state[state_key].delete(index);
+            let data = {}; data[state_key] = permissions;
+            this.setState(data);
         }
     }
 
-    onRemoveRow(type, name) {
-        console.log("[AccountPermissions.jsx:39] ----- onRemoveRow ----->", type, name);
-        if(type === this.ACTIVE) {
-            let index = this.state.active_permissions.findIndex(i => i.name === name);
-            if (index >= 0) {
-                let active_permissions = this.state.active_permissions.delete(index);
-                this.setState({active_permissions: active_permissions});
-            }
-        } else {
-            let index = this.state.owner_permissions.findIndex(i => i.name === name);
-            if (index >= 0) {
-                let owner_permissions = this.state.owner_permissions.delete(index);
-                this.setState({owner_permissions: owner_permissions});
-            }
-        }
-    }
-
-    onThresholdChanged(type, value) {
-        console.log("[AccountPermissions.jsx:53] ----- onThresholdChanged ----->", type, value);
-        if(type === this.ACTIVE) {
-            this.setState({active_threshold: value});
-        } else {
-            this.setState({owner_threshold: value});
-        }
+    onThresholdChanged(state_key, value) {
+        let data = {}; data[state_key] = value;
+        this.setState(data);
     }
 
     onPublish() {
@@ -98,23 +79,25 @@ class AccountPermissions extends React.Component {
                         permissions={this.state.active_permissions}
                         threshold={this.state.active_threshold}
                         accounts={all_accounts}
-                        onAddRow={this.onAddRow.bind(this, this.ACTIVE)}
-                        onRemoveRow={this.onRemoveRow.bind(this, this.ACTIVE)}
-                        onThresholdChanged={this.onThresholdChanged.bind(this, this.ACTIVE)} />
-                    <br/>
+                        onAddRow={this.onAddRow.bind(this, "active_permissions")}
+                        onRemoveRow={this.onRemoveRow.bind(this, "active_permissions")}
+                        onThresholdChanged={this.onThresholdChanged.bind(this, "active_threshold")} />
+                    </div>
+                <div className="content-block">
                     <h3>Owner Permissions</h3>
                     <PermissionsTable
                         permissions={this.state.owner_permissions}
                         threshold={this.state.owner_threshold}
                         accounts={all_accounts}
-                        onAddRow={this.onAddRow.bind(this, this.OWNER)}
-                        onRemoveRow={this.onRemoveRow.bind(this, this.OWNER)}
-                        onThresholdChanged={this.onThresholdChanged.bind(this, this.OWNER)} />
+                        onAddRow={this.onAddRow.bind(this, "owner_permissions")}
+                        onRemoveRow={this.onRemoveRow.bind(this, "active_permissions")}
+                        onThresholdChanged={this.onThresholdChanged.bind(this, "owner_threshold")} />
+                </div>
+                <div className="content-block">
                     <div className="actions clearfix">
                         <button className={action_buttons_class} onClick={this.onPublish.bind(this)}>Publish Changes</button>
                         <a href="#" className={action_buttons_class + " secondary"} onClick={this.onResetChanges.bind(this)}>Reset Changes</a>
                     </div>
-
                 </div>
             </div>
         );

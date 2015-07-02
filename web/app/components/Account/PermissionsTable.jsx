@@ -67,7 +67,7 @@ class PermissionsTable extends React.Component {
             </tr>
         ) : (
             <tr className="control-row">
-                <td style={{width: cw[0]}}><a href className="button outline" onClick={this.onAdd}>Add Permission</a></td>
+                <td style={{width: cw[0], paddingLeft: 0}}><a href className="button outline" onClick={this.onAdd}>Add Permission</a></td>
                 <td style={{width: cw[1]}} className="text-right"><label>Threshold</label></td>
                 <td style={{width: cw[2]}}><input value={this.props.threshold} style={{width: "4rem"}} type="number" size="4" maxlength="4" ref="threshold" onChange={this.onThresholdChanged} /></td>
                 <td style={{width: cw[3]}}></td>
