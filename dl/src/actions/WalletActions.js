@@ -9,7 +9,7 @@ var alt = require("../alt-instance")
 var application_api = new ApplicationApi()
 
 class WalletActions {
-    
+
     constructor() {
     }
 
@@ -20,7 +20,7 @@ class WalletActions {
                 return
             }
             var wallet = WalletStore.getWallet(wallet_public_name)
-            
+
             var params = {
                 account_name: account_name,
                 wallet: wallet,
@@ -70,7 +70,7 @@ class WalletActions {
                                     params.wallet.public_name,
                                     transaction
                                 )
-                            params => {
+                            (params => {
                                 return Promise.all([
                                     save_owner_promise,
                                     save_active_promise,
@@ -79,7 +79,7 @@ class WalletActions {
                                     this.dispatch(params)
                                     return params
                                 })
-                            }(params)
+                            })(params)
                         }(params, result)
                     })
                 }(params, result)
