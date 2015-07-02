@@ -439,25 +439,36 @@ Types.map = (key_st_operation, value_st_operation)->
             ])
 
 Types.public_key =
+    _to_public:(object)->
+        object = object.resolve if object.resolve isnt undefined
+        return object if object.Q
+        console.log('... object',object)
+        PublicKey.fromBtsPublic object
     fromByteBuffer:(b)->
         fp.public_key b
     appendByteBuffer:(b, object)->
-        fp.public_key b, object
+        fp.public_key b, Types.public_key._to_public object
+        return
     fromObject:(object)->
+        return object if object.Q
         PublicKey.fromBtsPublic object
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "GPHXyz...public_key"
-        object.toBtsPublic()
+        Types.public_key._to_public(object).toBtsPublic()
 
 Types.address =
+    _to_address:(object)->
+        return object if object.addy
+        Address.fromString(object)
     fromByteBuffer:(b)->
-        fp.ripemd160 b
+        new Address(fp.ripemd160 b)
     appendByteBuffer:(b, object)->
-        fp.ripemd160 b, object
+        fp.ripemd160 b, Types.address._to_address(object).toBuffer()
+        return
     fromObject:(object)->
-         Address.fromString object
+        Types.address._to_address(object)
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "GPHXyz...address"
-        new Address(object.public_key).toString()
+        Types.address._to_address(object).toString()

@@ -57,8 +57,8 @@ describe "crypto", ->
     # time-based, probably want to keep these last
     it "key_checksum", ()->
         @timeout(1500)
-        about_one_second ()->
-            key_checksum = key.checksum "password"
+        min_time_elapsed ()->
+            key_checksum = key.aes_checksum("password").checksum
             assert.equal(
                 true
                 key_checksum.length > 4+4+2
@@ -68,34 +68,36 @@ describe "crypto", ->
     
     it "key_checksum with aes_private", (done)->
         @timeout(1500)
-        about_one_second ()->
-            key_checksum = key.checksum "password", (aes_private)->
-                assert aes_private isnt null
-                assert typeof aes_private["decrypt"] is 'function'
-                done()
+        min_time_elapsed ()->
+            aes_checksum = key.aes_checksum("password")
+            aes_private = aes_checksum.aes_private
+            key_checksum = aes_checksum.checksum
+            assert aes_private isnt null
+            assert typeof aes_private["decrypt"] is 'function'
             assert.equal(
                 true
                 key_checksum.length > 4+4+2
                 "key_checksum too short"
             )
             assert.equal 3, key_checksum.split(',').length
+            done()
         # DEBUG console.log('... key_checksum',key_checksum)
     
     it "wrong password", ->
         @timeout(2500)
-        key_checksum = about_one_second ()->
-            key.checksum "password"
+        key_checksum = min_time_elapsed ()->
+            key.aes_checksum("password").checksum
         # DEBUG console.log('... key_checksum',key_checksum)
         th.error "wrong password", ()->
-            about_one_second ()->
+            min_time_elapsed ()->
                 key.aes_private "bad password", key_checksum
     
     it "password aes_private", ->
         @timeout(2500)
-        key_checksum = about_one_second ()->
-            key.checksum "password"
+        key_checksum = min_time_elapsed ()->
+            key.aes_checksum("password").checksum
         
-        password_aes = about_one_second ()->
+        password_aes = min_time_elapsed ()->
             key.aes_private "password", key_checksum
         
         # DEBUG console.log('... password_aes',password_aes)
@@ -104,17 +106,17 @@ describe "crypto", ->
     it "suggest_brain_key", ->
         @timeout(1500)
         entropy = secureRandom.randomBuffer 32
-        brainkey = about_one_second ()->
+        brainkey = min_time_elapsed ()->
             key.suggest_brain_key entropy.toString('binary')
         assert.equal 16, brainkey.split(' ').length
 
-about_one_second = (f)->
+min_time_elapsed = (f)->
     start_t = Date.now()
     ret = f()
     elapsed = Date.now() - start_t
     assert.equal(
         # repeat operations may take less time
-        elapsed >= 1000 * .9, true
+        elapsed >= 250 * .8, true
         "one second is needed, instead only #{elapsed/1000.0} elapsed" 
     )
     ret

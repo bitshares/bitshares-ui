@@ -55,8 +55,8 @@ _my.signed_transaction = ->
     
     ###* Always returns a promise.  If broadcast is true it returns the result
     from the server, if not it returns the json transaction object.  ###
-    finalize:(key_ids, private_keys, broadcast = no)->
-        ((tr, key_ids, private_keys, broadcast)->
+    finalize:(private_keys, broadcast = no)->
+        ((tr, private_keys, broadcast)->
             new Promise (resolve, reject)->
                 lookup.resolve().then ()->
                     for op in tr.operations
@@ -66,10 +66,8 @@ _my.signed_transaction = ->
                     tr_buffer = type.transaction.toBuffer tr
                     # Debug
                     # ByteBuffer.fromBinary(tr_buffer.toString('binary')).printDebug()
-                    key_ids = [ key_ids ] unless Array.isArray key_ids
                     private_keys = [ private_keys ] unless Array.isArray private_keys
                     for i in [0...private_keys.length] by 1
-                        key_id = key_ids[i]
                         private_key = private_keys[i]
                         sig = Signature.signBuffer tr_buffer, private_key
                         tr.signatures.push sig.toBuffer()
@@ -105,73 +103,8 @@ _my.signed_transaction = ->
                     reject(error)
                     #console.error 'finalize error', error, error.stack
                     return
-        )(@, key_ids, private_keys, broadcast)
-    
-_my.key_create = ->
-    fee:
-        amount: Long.ZERO
-        asset_id: 0
-    fee_paying_account: null
-    key_data: [ 1, "GPHXyx...public_key" ]
+        )(@, private_keys, broadcast)
 
-_my.key_create.fromPublicKey = (public_key)->
-    v.required public_key.Q, "PublicKey"
-    kc = _my.key_create()
-    kc.key_data[0] = 1
-    kc.key_data[1] = public_key
-    kc
-
-_my.key_create.fromAddress = (address)->
-    v.required address.addy, "Address"
-    kc = _my.key_create()
-    kc.key_data[0] = 0
-    kc.key_data[1] = address
-    kc
-
-    
-class _my.account_create
-    _template = ->
-        fee:
-            amount: Long.ZERO
-            asset_id: 0
-        registrar: 0
-        referrer: 0
-        referrer_percent: 100
-        name: ""
-        owner:
-            weight_threshold: 1
-            auths: [ [ ObjectId.fromString("0.2.0"),  1 ] ]
-        active:
-            weight_threshold: 1
-            auths: [ [  ObjectId.fromString("0.2.1"),  1 ] ]
-        options:
-            memo_key: ObjectId.fromString("0.2.1")
-            voting_account: 0 # 1.2.0
-            num_witness: 0
-            num_committee: 0
-            votes: [  ] # 0:0
-
-    constructor:(@owner_key_create, @active_key_create)->
-        for key in Object.keys _tmp = _template()
-            @[key] = _tmp[key]
-        v.required @owner_key_create
-        unless @active_key_create
-            @active_key_create = @owner_key_create
-    
-    get_operations:->
-        @fee.asset_id = lookup.asset_id(@fee.asset_id)
-        @registrar = lookup.account_id(@registrar)
-        @referrer = lookup.account_id(@referrer)
-        @voting_account = lookup.account_id(@voting_account)
-        if @owner_key_create.fee_paying_account is null
-            @owner_key_create.fee_paying_account = @registrar
-        if @active_key_create.fee_paying_account is null
-            @active_key_create.fee_paying_account = @registrar
-        [
-            [ chain_types.operations.key_create, @owner_key_create ]
-            [ chain_types.operations.key_create, @active_key_create ]
-            [ chain_types.operations.account_create, @ ]
-        ]
 
 class _my.transfer
     _template = ->
@@ -184,8 +117,8 @@ class _my.transfer
             amount: "0"
             asset_id: 0 # 1.3.0
         memo:
-            from: null  # 1.2.0
-            to: null    # 1.2.0
+            from: null  # GPHXyz...public_key
+            to: null    # GPHXyz...public_key
             nonce: "0" # "0"
             message: null
     
@@ -202,13 +135,14 @@ class _my.transfer
             @memo = undefined
         else
             to = @memo.to
-            @memo.from = lookup.memo_key_id(@memo.from)
-            @memo.to = lookup.memo_key_id(@memo.to)
+            @memo.from = lookup.memo_public_key(@memo.from)
+            @memo.to = lookup.memo_public_key(@memo.to)
             if @memo_from_privkey
                 @memo.nonce = helper.unique_nonce_uint64()
                 @memo_to_public = lookup.memo_public_key(to)
             else
                 empty_checksum = "\x00\x00\x00\x00"
+                # assert (new Buffer("\x00\x00\x00\x00")).toString() == "\x00\x00\x00\x00"
                 @memo.message = new Buffer(empty_checksum + @memo.message)
             
         [[ chain_types.operations.transfer, @]]

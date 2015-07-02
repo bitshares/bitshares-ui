@@ -34,7 +34,6 @@ class WalletActions {
                     0, //referrer_id,
                     100, //referrer_percent,
                     10, //expire_minutes,
-                    11, //signer_private_key_id,
                     PrivateKey.fromSeed("nathan"), //signer_private_key,
                     true, //broadcast
                     params.wallet.brainkey_sequence

@@ -29,7 +29,7 @@ app = new ApplicationApi()
 
 ###
 import_key "1.2.15" "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-create_account_with_brain_key "brainkey" "newaccountname" "1.2.15" "1.2.0" 0 true
+create_account_with_brain_key "brainkey" "newaccountname" "1.2.15" "1.2.14" 0 true
 ###
 describe "tr_tests", ->
 
@@ -68,7 +68,7 @@ describe "tr_tests", ->
     #it "update account transaction", ->
     it "wallet.transfer nomemo", (done)->
         wallet.transfer(
-            "1.2.15", "1.2.0", 1, "1.3.0", memo = null
+            "1.2.15", "1.2.14", 1, "1.3.0", memo = null
             broadcast
         ).then (result)->
             th.print_result result
@@ -79,7 +79,7 @@ describe "tr_tests", ->
     
     it "wallet.transfer encmemo", (done)->
         wallet.transfer(
-            "1.2.15", "1.2.0", 1, "1.3.0", memo = "memo"
+            "1.2.15", "1.2.14", 1, "1.3.0", memo = "memo"
             broadcast
         ).then (result)->
             th.print_result result
@@ -90,10 +90,10 @@ describe "tr_tests", ->
     
     it "app.transfer_extended textmemo", (done)->
         tr = app.transfer_extended(
-            "1.2.15", "1.2.0", 1, "1.3.0", "memo"
+            "1.2.15", "1.2.14", 1, "1.3.0", "memo"
             "1.2.11", null #genesis_private
-            "1.2.0"
-            10, 11, PrivateKey.fromSeed("nathan")
+            "1.2.14"
+            10, PrivateKey.fromSeed("nathan")
             broadcast
         ).then (result)->
             th.print_result result
@@ -105,15 +105,14 @@ describe "tr_tests", ->
     it "app.transfer_extended encmemo", (done)->
         app.transfer_extended(
             from = "1.2.15"
-            to = "1.2.0"
+            to = "1.2.14"
             amount = 1
             asset = "1.3.0"
             memo = "memo"
             memo_from = "1.2.11"
             memo_from_private = genesis_private
-            memo_to = "1.2.0"
+            memo_to = "1.2.14"
             expire = 10
-            signer_private_id = 11
             signer_private_key = PrivateKey.fromSeed("nathan")
             broadcast
         ).then (result)->

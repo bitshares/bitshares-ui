@@ -43,16 +43,12 @@ helper.to_json=( tr, broadcast = false ) ->
             tr_object
     )(tr, broadcast)
 
-helper.signed_tr_json=(tr, key_ids, private_keys)->
+helper.signed_tr_json=(tr, private_keys)->
     tr_buffer = type.transaction.toBuffer tr
     tr = type.transaction.toObject tr
     tr.signatures = for i in [0...private_keys.length] by 1
-        key_id = key_ids[i]
         private_key = private_keys[i]
-        [ 
-            key_id
-            Signature.signBuffer( tr_buffer, private_key ).toHex() 
-        ]
+        Signature.signBuffer( tr_buffer, private_key ).toHex() 
     tr
 
 helper.expire_in_min=(min)->

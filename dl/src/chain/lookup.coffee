@@ -42,55 +42,26 @@ class Lookup
         @_private.deferred_property "assetname", "id", asset_name
     
     ###* 
-    Resolve a memo key id from an account name or account id.  A key id
-    resolves unchanged.
-    ###
-    memo_key_id:(name_or_id)->
-        return resolve: name_or_id if v.is_empty name_or_id
-        # key instance or key id
-        i = @_private.try_simple_resolve "key", name_or_id
-        return i unless i is undefined
-        
-        if name_or_id.indexOf("1.2.") is 0
-            account_id = name_or_id
-            return @_private.deferred_property "object", "options.memo_key", account_id
-        
-        account_name = name_or_id
-        return @_private.deferred_property "accountname", "options.memo_key", account_name
-    
-    ###* 
-    Resolves a memo public key from an account name or account id.  A key id or 
-    public key resolves as expected.
+    Resolves a memo public key from an account name or account id.  A public key
+    resolves as-is.
     ###
     memo_public_key:(name_key_or_id)->
-        
         return resolve: name_key_or_id if v.is_empty name_key_or_id
         return resolve: name_key_or_id if name_key_or_id.Q # typeof is PublicKey
         if name_key_or_id.indexOf(chain_config.address_prefix) is 0
             return resolve: PublicKey.fromBtsPublic name_key_or_id
         
         _private = @_private
-        
-        # key instance or key id
-        key_id = _private.try_simple_resolve "key", name_key_or_id
-        if key_id isnt undefined
-            return _private.public_key key_id.resolve
-        
-        index_name = if name_key_or_id.indexOf("1.2.") is 0
+        index_name = if name_key_or_id.indexOf("1." + chain_types.object_type.account + ".") is 0
             "object"
         else
             "accountname"
         
-        promise_memo_key = new Promise (resolve)->
-            _private.deferred_lookup index_name, name_key_or_id, (account)->
-                resolve(account.options.memo_key)
-        
         ret = resolve: undefined
         ((ret)->
-            promise_memo_key.then (memo_key)->
-                _private.public_key memo_key, ret
-                return
-            , (e)-> throw e
+            _private.deferred_lookup index_name, name_key_or_id, (account)->
+                # DEBUG console.log('... account.options.memo_key',index_name,name_key_or_id,account.options)    
+                ret.resolve = PublicKey.fromBtsPublic account.options.memo_key
         )(ret)
         ret
     
@@ -142,14 +113,6 @@ class Private
                 ret.resolve = _result
                 return
         )(ret, result_property_name)
-        ret
-    
-    public_key: (key_id, ret = resolve: undefined)->
-        @deferred_lookup "object", key_id, (key)->
-            unless key.key_data[0] is 1
-                throw new Error "missing public_key type 1: #{key.key_data}"
-            ret.resolve = PublicKey.fromBtsPublic key.key_data[1]
-            return
         ret
     
     deferred_lookup:(index_name, lookup_value, lookup_callback)->

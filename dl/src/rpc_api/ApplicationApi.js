@@ -21,10 +21,9 @@ class ApplicationApi {
         referrer_id,
         referrer_percent,
         expire_minutes,
-        signer_private_key_id,
         signer_private_key,
-        broadcast,
-        owner_brainkey_sequence
+        broadcast = false,
+        owner_brainkey_sequence = 0
     ) {
         var owner_privkey = key.get_owner_private(brain_key, owner_brainkey_sequence);
         var active_privkey = key.get_active_private(owner_privkey);
@@ -34,19 +33,32 @@ class ApplicationApi {
         
         var tr = new ops.signed_transaction();
         tr.set_expire_minutes(expire_minutes);
-        {
-            var cop = new ops.account_create(
-                ops.key_create.fromPublicKey(owner_pubkey),
-                ops.key_create.fromPublicKey(active_pubkey)
-            );
-            cop.name = new_account_name;
-            cop.registrar = registrar_id;
-            cop.referrer = referrer_id;
-            cop.referrer_percent = referrer_percent;
-            tr.add_operation(cop);
-        }
+        tr.add_type_operation("account_create", {
+            "registrar": registrar_id,
+            "referrer": referrer_id,
+            "referrer_percent": referrer_percent,
+            "name": new_account_name,
+            "owner": {
+                "weight_threshold": 1,
+                "account_auths": [],
+                "key_auths": [[ owner_pubkey.toBtsPublic(), 1 ]],
+                "address_auths": []
+            },
+            "active": {
+                "weight_threshold": 1,
+                "account_auths": [ ],
+                "key_auths": [[ active_pubkey.toBtsPublic(), 1 ]],
+                "address_auths": []
+            },
+            "options": {
+                "memo_key": active_pubkey.toBtsPublic(),
+                "voting_account": "1.2.0",
+                "num_witness": 0,
+                "num_committee": 0,
+                "votes": [ ]
+            }
+        });
         let trx_promise = tr.finalize(
-            signer_private_key_id,
             signer_private_key,
             broadcast
         );
@@ -66,7 +78,6 @@ class ApplicationApi {
         asset_id, 
         memo_message,
         expire_minutes,
-        signer_private_key_id,
         signer_private_key,
         broadcast = false
     ) {
@@ -86,7 +97,6 @@ class ApplicationApi {
             memo.from_privkey,
             memo.to,
             expire_minutes,
-            signer_private_key_id,
             signer_private_key,
             broadcast
         );
@@ -105,7 +115,6 @@ class ApplicationApi {
         memo_from_privkey,
         memo_to,
         expire_minutes,
-        signer_private_key_id,
         signer_private_key,
         broadcast = false
     ) {
@@ -123,7 +132,6 @@ class ApplicationApi {
             tr.add_operation(top)
         }
         return tr.finalize(
-            signer_private_key_id,
             signer_private_key,
             broadcast
         )
