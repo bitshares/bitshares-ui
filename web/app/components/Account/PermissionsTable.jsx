@@ -13,6 +13,10 @@ class PermissionsTable extends React.Component {
         this.onThresholdChanged = this.onThresholdChanged.bind(this);
     }
 
+    componentDidUpdate() {
+        if(this.refs.select_account) this.refs.select_account.focus();
+    }
+
     onAdd(e) {
         e.preventDefault();
         this.setState({add_mode: true});
@@ -59,8 +63,8 @@ class PermissionsTable extends React.Component {
             <tr className="control-row">
                 <td style={{width: cw[0]}}></td>
                 <td style={{width: cw[1]}}><AutocompleteInput id="select_account" options={this.props.accounts} ref="select_account"/></td>
-                <td style={{width: cw[2]}}><input type="number" style={{width: "4rem"}} ref="weight"/></td>
-                <td style={{width: cw[3]}}>
+                <td colSpan="2">
+                    <input type="number" style={{width: "4rem"}} ref="weight"/>
                     <button className="button" onClick={this.onSave}>Add</button>
                     <button className="button secondary" onClick={this.onCancel}>Cancel</button>
                 </td>

@@ -9,6 +9,7 @@ class AutocompleteInput extends Component {
         super();
         this.handleChange = this.handleChange.bind(this);
         this.handleItemClick = this.handleItemClick.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
         this.state = { items: [] }
     }
 
@@ -23,6 +24,10 @@ class AutocompleteInput extends Component {
 
     clear() {
         this.getInput().value = "";
+    }
+
+    focus() {
+        this.getInput().focus();
     }
 
     handleChange(e) {
@@ -52,9 +57,13 @@ class AutocompleteInput extends Component {
         input.value = value[1];
         ZfApi.publish(this.props.id + "-container", "close");
         if (this.props.onChange) {
-            let event = { target: { id: input.id, value: value[1]} };
+            let event = { target: { value: value[1]} };
             this.props.onChange(event);
         }
+    }
+
+    onKeyDown(e) {
+        if(this.props.onEnter && event.keyCode === 13) this.props.onEnter(e);
     }
 
     render() {
@@ -65,7 +74,9 @@ class AutocompleteInput extends Component {
         return (
             <div className="autocomplete">
                 <ActionSheet className="autocomplete" ref="action_sheet" id={action_sheet_id}>
-                    <input name="value" id={this.props.id} type="text" placeholder={this.props.placeholder} onChange={this.handleChange} defaultValue={this.props.initial_value}/>
+                    <input name="value" type="text"
+                           placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
+                           onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
                     <ActionSheet.Content >
                         <ul className="no-first-element-top-border">
                             {items}

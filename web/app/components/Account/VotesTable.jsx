@@ -12,6 +12,10 @@ class VotesTable extends React.Component {
         this.onCancel = this.onCancel.bind(this);
     }
 
+    componentDidUpdate() {
+        if(this.refs.select_entity) this.refs.select_entity.focus();
+    }
+
     onAdd(e) {
         e.preventDefault();
         this.setState({add_mode: true});
@@ -49,7 +53,7 @@ class VotesTable extends React.Component {
         });
         let control_row = this.state.add_mode ? (
             <tr className="control-row">
-                <td style={{width: cw[0]}}><AutocompleteInput id="select_entity" options={this.props.allEntities} ref="select_entity"/></td>
+                <td style={{width: cw[0]}}><AutocompleteInput id="select_entity" options={this.props.allEntities} ref="select_entity" onEnter={this.onSave}/></td>
                 <td style={{width: cw[1]}}>
                     <button className="button" onClick={this.onSave}>Add</button>
                     <button className="button secondary" onClick={this.onCancel}>Cancel</button>

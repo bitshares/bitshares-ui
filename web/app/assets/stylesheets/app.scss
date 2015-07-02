@@ -100,3 +100,22 @@ button, .button {
     padding: 1rem 0 1rem 0;
   }
 }
+
+table > tbody > tr.control-row > td {
+  padding-top: 1rem;
+  border-bottom: none;
+  vertical-align: middle;
+  input {
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 8px !important;
+  }
+  > label {
+    margin: 0;
+  }
+  > input {
+    margin-right: 2rem !important;
+  }
+}
+

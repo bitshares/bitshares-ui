@@ -20,16 +20,3 @@
     }
   }
 }
-
-table > tbody > tr.control-row > td {
-  padding-top: 1rem;
-  border-bottom: none;
-  vertical-align: middle;
-  input {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  > label {
-    margin: 0;
-  }
-}
