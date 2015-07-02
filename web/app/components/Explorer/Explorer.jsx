@@ -75,7 +75,7 @@ class Explorer extends React.Component {
                                     </div>
                                 </Link> 
                             </ExplorerCard> 
-                            <ExplorerCard>
+                            {/*<ExplorerCard>
                                 <Link to="blocks">
                                     <div>
                                         <Icon name="workers" size="5x" fillClass="fill-black"/>
@@ -94,7 +94,7 @@ class Explorer extends React.Component {
                                         <Translate component="span" content="explorer.proposals.title" />
                                     </div>
                                 </Link> 
-                            </ExplorerCard>
+                            </ExplorerCard>*/}
                         </div>
                        
                 </div>
