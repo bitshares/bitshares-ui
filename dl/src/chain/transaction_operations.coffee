@@ -72,7 +72,7 @@ _my.signed_transaction = ->
                         key_id = key_ids[i]
                         private_key = private_keys[i]
                         sig = Signature.signBuffer tr_buffer, private_key
-                        tr.signatures.push [ key_id, sig.toBuffer() ]
+                        tr.signatures.push sig.toBuffer()
                     
                     tr_object = type.signed_transaction.toObject(tr)
                     
