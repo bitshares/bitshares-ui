@@ -6,7 +6,7 @@ let op_history = parseInt(object_type.operation_history, 10);
 
 class Api {
 
-    getAccountsByID(ids) {
+    getObjects(ids) {
         if (!Array.isArray(ids)) {
             ids = [ids];
         }

@@ -62,7 +62,7 @@ class AccountActions {
 
         if (utils.is_object_id(name_or_id)) {
             return Promise.all([
-                    api.getAccountsByID(name_or_id),
+                    api.getObjects(name_or_id),
                     api.getBalances(name_or_id),
                     api.getHistory(name_or_id, 10)
                 ])
@@ -86,7 +86,7 @@ class AccountActions {
                 .then((account) => {
                     let id = account[0][1];
                     return Promise.all([
-                        api.getAccountsByID(id),
+                        api.getObjects(id),
                         api.getBalances(id),
                         api.getHistory(id, 100)
                     ]).then((results) => {
