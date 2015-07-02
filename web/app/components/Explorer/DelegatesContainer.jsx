@@ -2,7 +2,6 @@ import React from "react";
 import DelegateStore from "stores/DelegateStore";
 import BlockchainStore from "stores/BlockchainStore";
 import AltContainer from "alt/AltContainer";
-import Delegates from "./Delegates";
 import { RouteHandler } from "react-router";
 
 class DelegatesContainer extends React.Component {

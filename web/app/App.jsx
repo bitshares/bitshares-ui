@@ -9,7 +9,9 @@ import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
 import Assets from "./components/Explorer/AssetsContainer";
-import Witnesses from "./components/Explorer/WitnessesContainer";
+import WitnessesContainer from "./components/Explorer/WitnessesContainer";
+import Witnesses from "./components/Explorer/Witnesses";
+import Witness from "./components/Explorer/Witness";
 import DelegatesContainer from "./components/Explorer/DelegatesContainer";
 import Delegates from "./components/Explorer/Delegates";
 import Delegate from "./components/Explorer/Delegate";
@@ -133,7 +135,10 @@ let routes = (
         <Route name="explorer" path="/explorer" handler={Explorer}/>
         <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
         <Route name="assets" path="/explorer/assets" handler={Assets}/>
-        <Route name="witnesses" path="/explorer/witnesses" handler={Witnesses}/>
+        <Route name="witnesses" path="/explorer/witnesses" handler={WitnessesContainer}>
+            <DefaultRoute handler={Witnesses}/>
+            <Route name="witness" path=":name" handler={Witness} />
+        </Route>
         <Route name="delegates" path="/explorer/delegates" handler={DelegatesContainer}>
             <DefaultRoute handler={Delegates}/>
             <Route name="delegate" path=":name" handler={Delegate} />

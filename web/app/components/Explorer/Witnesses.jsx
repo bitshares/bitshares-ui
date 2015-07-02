@@ -3,6 +3,7 @@ import {PropTypes, Component} from "react";
 import Immutable from "immutable";
 import WitnessActions from "actions/WitnessActions";
 import AccountImage from "../Account/AccountImage";
+import { Link } from "react-router";
 
 class WitnessCard extends React.Component {
 
@@ -14,13 +15,15 @@ class WitnessCard extends React.Component {
         return (
             <div style={{padding: "0.5em 0.5em", minHeight: "15em"}} className="grid-content account-card">
                 <div className="card">
+                    <Link to="witness" params={{name: this.props.name}}>
                         <div>
                             <AccountImage account={this.props.name} size={{height: 150, width: 150}}/>
                         </div>
                         <div className="card-divider">
                             {this.props.name}
                         </div>
-                    {this.props.children}
+                        {this.props.children}
+                    </Link>
                 </div>
             </div>
         );

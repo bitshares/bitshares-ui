@@ -12,11 +12,13 @@ class WitnessStore {
         this.witnesses = Immutable.Map();
         this.witnessAccounts = Immutable.Map();
         this.witness_id_to_name = Immutable.Map();
+        this.witness_name_to_id = Immutable.Map();
         this.account_id_to_witness_id = {};
 
         this.bindListeners({
             onGetWitnesses: WitnessActions.getWitnesses,
-            onGetWitnessAccounts: WitnessActions.getWitnessAccounts
+            onGetWitnessAccounts: WitnessActions.getWitnessAccounts,
+            onGetWitness: WitnessActions.getWitness
         });
     }
 
@@ -43,6 +45,32 @@ class WitnessStore {
                 Account(account)
             );
         });
+    }
+
+    onGetWitness(payload) {
+        this.account_id_to_witness_id[payload.witness.witness_account] = payload.witness.id;
+
+        this.witness_name_to_id = this.witness_name_to_id.set(
+            payload.account.name,
+            payload.witness.id
+        );
+
+        this.witnesses = this.witnesses.set(
+                payload.witness.id,
+                Witness(payload.witness)
+        );
+
+        this.witness_id_to_name = this.witness_id_to_name.set(
+            this.account_id_to_witness_id[payload.account.id],
+            payload.account.name
+        );
+
+        payload.account.balances = [];
+        
+        this.witnessAccounts = this.witnessAccounts.set(
+            payload.account.id,
+            Account(payload.account)
+        );
     }
 
 }
