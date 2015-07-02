@@ -22,7 +22,8 @@ class AccountStore extends BaseStore {
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onTransfer: AccountActions.transfer,
             onCreateAccount: AccountActions.createAccount,
-            onUpgradeAccount: AccountActions.upgradeAccount
+            onUpgradeAccount: AccountActions.upgradeAccount,
+            onGetAccounts: AccountActions.getAccounts
         });
         this._export("loadDbData");
     }
@@ -34,6 +35,19 @@ class AccountStore extends BaseStore {
                     set.add(a.name);
                 }
             });
+        });
+    }
+
+    onGetAccounts(accounts) {
+        accounts.forEach(account => {
+            this.account_id_to_name[account[1]] = account[0];
+            this.account_name_to_id[account[0]] = account[1];
+            if (account[0] === "nathan") {
+                this.currentAccount = {
+                    name: account[0],
+                    id: account[1]
+                };
+            }
         });
     }
 

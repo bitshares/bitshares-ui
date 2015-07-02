@@ -6,12 +6,26 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletActions from "actions/WalletActions";
 
 let accountSubs = {};
+let accountLookup = {};
 let wallet_api = new WalletApi();
 
 class AccountActions {
+    getAccounts(start_symbol, limit) {
+    
+        let uid = `${start_symbol}_${limit}`;
+        if (!accountLookup[uid]) {
+            accountLookup[uid] = true;
+            return api.lookupAccounts(start_symbol, limit)
+                .then(result => {
+                    accountLookup[uid] = false;
+                    this.dispatch(result);
+                });
+        }
+    }
+
 
     getAllAccounts() {
-        return api.lookupAccounts("", 100)
+        return api.lookupAccounts("", 1000)
             .then(result => {
                 this.dispatch(result);
                 for (var i = 0; i < result.length; i++) {
