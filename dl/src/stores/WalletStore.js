@@ -110,13 +110,18 @@ class WalletStore extends BaseStore {
     }
     
     saveKey(
-        password_aes_private,
+        password_aes_private = null,
         wallet_public_name,
         wallet_id,
         private_key,
         brainkey_pos,
         transaction
     ) {
+        if(password_aes_private == void 0)
+            password_aes_private = aes_private_map[
+                wallet_public_name
+            ]
+        
         var private_cipherhex =
             password_aes_private.encryptToHex(
                 private_key.toBuffer()

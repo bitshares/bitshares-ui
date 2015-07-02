@@ -45,11 +45,8 @@ class WalletActions {
                                 params.resolve,
                                 params.reject
                             )
-                            var aes_private = aes_private_map[
-                                params.wallet.public_name
-                            ]
                             var save_owner_promise = WalletStore.saveKey(
-                                aes_private,
+                                null, //aes_private,
                                 params.wallet.public_name,
                                 params.wallet.id,
                                 result.owner_privkey,
@@ -57,7 +54,7 @@ class WalletActions {
                                 transaction
                             )
                             var save_active_promise = WalletStore.saveKey(
-                                aes_private,
+                                null, //aes_private,
                                 params.wallet.public_name,
                                 params.wallet.id,
                                 result.active_privkey,
