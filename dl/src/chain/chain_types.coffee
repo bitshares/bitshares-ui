@@ -70,3 +70,4 @@ ChainTypes.operations=
     custom: 35
     assert: 36
     balance_claim: 37
+

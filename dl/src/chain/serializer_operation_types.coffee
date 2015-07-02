@@ -31,6 +31,9 @@ When updating generated code
 Replace:  operation = static_variant [
 with:     operation.st_operations = [
 
+Remove invalid structs containing with this line:
+] = static_variant [
+
 Delete:
 operation  = new Serializer( 
     "operation "
@@ -44,6 +47,9 @@ public_key = new Serializer(
     "public_key"
     key_data: bytes 33
 )
+
+Indent array blocks after lines:
+: static_variant [
 
 ###
 
@@ -63,6 +69,7 @@ Serializer=(operation_name, serilization_types_object)->
 # programs/js_operation_serializer
 # / +$//g
 ## -------------------------------
+
 void_header = new Serializer( 
     "void_header"
 )
@@ -93,7 +100,8 @@ processed_transaction = new Serializer(
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: array bytes 65
+    signatures: map (protocol_id_type "key"), (bytes 65)
+    extra_signatures: map (address), (bytes 65)
     operation_results: array operation_result
 )
 
@@ -269,7 +277,6 @@ asset_object_asset_options = new Serializer(
 asset_object_bitasset_options = new Serializer( 
     "asset_object_bitasset_options"
     feed_lifetime_sec: uint32
-    minimum_feeds: uint8
     force_settlement_delay_sec: uint32
     force_settlement_offset_percent: uint16
     maximum_force_settlement_volume: uint16
@@ -379,7 +386,7 @@ witness_create = new Serializer(
     fee: asset
     witness_account: protocol_id_type "account"
     url: string
-    block_signing_key: object_id_type
+    block_signing_key: protocol_id_type "key"
     initial_secret: bytes 28
 )
 
@@ -572,14 +579,6 @@ cdd_vesting_policy_initializer = new Serializer(
     vesting_seconds: uint32
 )
 
-static_variant [
-    linear_vesting_policy_initializer    
-    cdd_vesting_policy_initializer
-] = static_variant [
-    linear_vesting_policy_initializer    
-    cdd_vesting_policy_initializer
-]
-
 vesting_balance_create = new Serializer( 
     "vesting_balance_create"
     fee: asset
@@ -612,16 +611,6 @@ vesting_balance_worker_type_initializer = new Serializer(
 burn_worker_type_initializer = new Serializer( 
     "burn_worker_type_initializer"
 )
-
-static_variant [
-    refund_worker_type_initializer    
-    vesting_balance_worker_type_initializer    
-    burn_worker_type_initializer
-] = static_variant [
-    refund_worker_type_initializer    
-    vesting_balance_worker_type_initializer    
-    burn_worker_type_initializer
-]
 
 worker_create = new Serializer( 
     "worker_create"
@@ -660,8 +649,7 @@ balance_claim = new Serializer(
     "balance_claim"
     fee: asset
     deposit_to_account: protocol_id_type "account"
-    balance_to_claim: protocol_id_type "balance"
-    balance_owner_key: public_key
+    owners: set address
     total_claimed: asset
 )
 
@@ -720,11 +708,13 @@ signed_transaction = new Serializer(
     ref_block_prefix: uint32
     relative_expiration: uint16
     operations: array operation
-    signatures: array bytes 65
+    signatures: map (protocol_id_type "key"), (bytes 65)
+    extra_signatures: map (address), (bytes 65)
 )
-
 
 ## -------------------------------
 ##  Generated code end
 # programs/js_operation_serializer
 ## -------------------------------
+
+
