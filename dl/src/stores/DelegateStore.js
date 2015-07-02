@@ -17,7 +17,8 @@ class DelegateStore {
 
         this.bindListeners({
             onGetDelegates: DelegateActions.getDelegates,
-            onGetDelegateAccounts: DelegateActions.getDelegateAccounts
+            onGetDelegateAccounts: DelegateActions.getDelegateAccounts,
+            onGetDelegate: DelegateActions.getDelegate
         });
     }
 
@@ -50,6 +51,32 @@ class DelegateStore {
                 Account(account)
             );
         });
+    }
+
+    onGetDelegate(payload) {
+        this.account_id_to_delegate_id[payload.delegate.delegate_account] = payload.delegate.id;
+
+        this.delegate_name_to_id = this.delegate_name_to_id.set(
+            payload.account.name,
+            payload.delegate.id
+        );
+
+        this.delegates = this.delegates.set(
+                payload.delegate.id,
+                Witness(payload.delegate)
+        );
+
+        this.delegate_id_to_name = this.delegate_id_to_name.set(
+            this.account_id_to_delegate_id[payload.account.id],
+            payload.account.name
+        );
+
+        payload.account.balances = [];
+        
+        this.delegateAccounts = this.delegateAccounts.set(
+            payload.delegate.id,
+            Account(payload.account)
+        );
     }
 
 }

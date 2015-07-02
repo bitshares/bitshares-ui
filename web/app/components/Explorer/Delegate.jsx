@@ -15,34 +15,13 @@ class Delegate extends React.Component {
             );
     }
 
-    componentWillReceiveProps(nextProps) {
-        let name = this.context.router.getCurrentParams().name;
-        let id = nextProps.delegate_name_to_id.get(name);
-        this._getDelegate(id);
-    }
-
-    componentWillUnmount() {
-        let name = this.props.params.name;
-        let id = this.props.delegate_name_to_id.get(name);
-        DelegateActions.unSubscribe(id);
-    }
-
     _getDelegate(id) {
         if (id) {
-            let {delegates, delegateAccounts, globalObject } = this.props;
-            
-            if (!delegates.get(id)) {
-                DelegateActions.getDelegates(id);
-            } else {
-                let accountID = delegates.get(id).delegate_account;
-                if (!delegateAccounts.get(id)) {
-                    DelegateActions.getDelegateAccounts(accountID);
-                } else {
-                    DelegateActions.subscribe(id, delegateAccounts.get(id).statistics);
-                }
-            }
-        } else if (this.props.delegates.size === 0) {
-            DelegateActions.getDelegates(this.props.globalObject.active_delegates);
+            if (!this.props.delegates.get(id)) {
+                DelegateActions.getDelegate(id);
+            } 
+        } else {
+            DelegateActions.getDelegate(this.props.params.name);
         }
     }
 

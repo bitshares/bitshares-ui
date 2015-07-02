@@ -1,6 +1,8 @@
 var alt = require("../alt-instance");
 import api from "../api/accountApi";
 import Apis from "rpc_api/ApiInstances";
+import witnessApi from "api/witnessApi";
+import utils from "common/utils";
 
 let delegate_in_prog = {};
 let account_in_prog = {};
@@ -8,6 +10,39 @@ let account_in_prog = {};
 let subs = {};
 
 class DelegateActions {
+
+    getDelegate(id_or_name) {
+        let id;
+        let idPromise = !utils.is_object_id(id_or_name) ? witnessApi.lookupDelegates(id_or_name, 1) : null;
+        if (!delegate_in_prog[id_or_name]) {
+            delegate_in_prog[id_or_name] = true;
+            Promise.all([
+                idPromise
+            ]).then(result => { 
+                if (result.length === 1) {
+                    id = result[0][0][1];
+                } else {
+                    id = id_or_name;
+                }
+
+                witnessApi.getDelegates(id).then(delegate => {
+
+                    api.getObjects(delegate[0].delegate_account).then(account => {
+                        delegate_in_prog[id_or_name] = false;
+                        this.dispatch({
+                            delegate: delegate[0],
+                            account: account[0]
+                        })
+                    }).catch(err => {
+                        delegate_in_prog[id_or_name] = false;
+                    })
+                }).catch(err => {
+                        delegate_in_prog[id_or_name] = false;
+                })
+            }) 
+        }
+    }
+
     getDelegates(ids) {
         let uid = ids.toString();
         if (!delegate_in_prog[uid]) {
