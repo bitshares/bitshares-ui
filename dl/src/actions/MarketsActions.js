@@ -165,10 +165,7 @@ class MarketsActions {
         // });
     }
 
-    // TODO: What prevents a caller from entering someone else's sellAccount in the "seller" field?
     createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
-
-
         let uniqueExpiration = addSeconds(expiration);
         console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
 
@@ -223,7 +220,6 @@ class MarketsActions {
             });
     }
 
-    // TODO: What prevents a caller from entering someone else's order number in the "order" field?
     cancelLimitOrder(accountID, orderID) {
         console.log("cancel action:", accountID, orderID);
         this.dispatch({
