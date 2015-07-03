@@ -272,15 +272,13 @@ class MarketsStore {
                 return !isAskOrder;
             })
             .sort((a, b) => {
-                let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, false);
-                let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, false);
+                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
+                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
 
-                let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
-                let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return a_price > b_price;
+                return a_price.full > b_price.full;
             }).map(order => {
-                let {buy, sell} = market_utils.parseOrder(order, false);
-                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
+                // let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
 
                 // d3 format
                 // bids.push({
@@ -289,10 +287,9 @@ class MarketsStore {
                 // });
 
                 // highcharts format
-                let amount = (buy.amount / sell.amount) * order.for_sale / quotePrecision;
-                bids.push([price, amount]);
-
-                totalBids += price * amount;
+                // let amount = (buy.amount / sell.amount) * order.for_sale / quotePrecision;
+                bids.push([price.full, amount]);
+                totalBids += value;
             });
 
             this.activeMarketLimits
@@ -301,15 +298,13 @@ class MarketsStore {
                 return isAskOrder;
             })
             .sort((a, b) => {
-                let {buy: a_buy, sell: a_sell} = market_utils.parseOrder(a, true);
-                let {buy: b_buy, sell: b_sell} = market_utils.parseOrder(b, true);
+                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
+                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
 
-                let a_price = (a_sell.amount / basePrecision) / (a_buy.amount / quotePrecision);
-                let b_price = (b_sell.amount / basePrecision) / (b_buy.amount / quotePrecision);
-                return a_price > b_price;
+                return a_price.full > b_price.full;
             }).map(order => {
-                let {buy, sell} = market_utils.parseOrder(order, true);
-                let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
+                // let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
 
                 // d3 format
                 // asks.push({
@@ -318,7 +313,7 @@ class MarketsStore {
                 // });
                 // highcharts format
 
-                asks.push([price, order.for_sale / quotePrecision]);
+                asks.push([price.full, amount]);
 
             });
 

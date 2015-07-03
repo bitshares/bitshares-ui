@@ -28,11 +28,27 @@ $ask-color: #E3745B;
 }
 
 td.orderHistoryBid {
-  color: green;
+  > span.price-integer {
+    font-weight: bold;
+    color: $bid-color;
+  }
+
+  > span.price-decimal {
+    color: #e0e0e0;
+    font-size: 90%;
+  }
 }
 
 td.orderHistoryAsk {
-  color: red;
+  > span.price-integer {
+    font-weight: bold;
+    color: $ask-color;
+  }
+
+  > span.price-decimal {
+    color: #e0e0e0;
+    font-size: 90%;
+  }
 }
 
 .order-table {

@@ -1,3 +1,4 @@
+import utils from "./utils";
 import {
     object_type
 }
@@ -87,12 +88,33 @@ class MarketUtils {
         return op.amount_to_sell.asset_id !== op.fee.asset_id;
     }
 
-    static parseOrder(order, ask) {
+    static parseOrder(order, base, quote) {
+        let ask = this.isAsk(order, base);
+        let quotePrecision = utils.get_asset_precision(quote.precision);
+        let basePrecision = utils.get_asset_precision(base.precision);
         let buy = ask ? order.sell_price.base : order.sell_price.quote;
         let sell = ask ? order.sell_price.quote : order.sell_price.base;
+
+
+        let price = {full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)};
+        let value = price.full * buy.amount / quotePrecision;
+        let amount;
+
+        // We need to figure out a better way to set the number of decimals
+        let price_split = price.full.toFixed(4).split(".");
+        price.int = price_split[0];
+        price.dec = price_split[1];
+
+        if (!ask) {
+            amount = (buy.amount / sell.amount) * order.for_sale / quotePrecision;
+        } else {
+            amount = order.for_sale / quotePrecision;
+        }
+
         return {
-            buy: buy,
-            sell: sell
+            value: value,
+            price: price,
+            amount: amount
         };
     }
 
