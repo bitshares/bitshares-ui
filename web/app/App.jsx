@@ -53,6 +53,7 @@ import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import WalletImport from "./components/Wallet/WalletImport";
 import WalletStore from "stores/WalletStore";
+import Console from "./components/Console/Console"
 import ReactTooltip from "react-tooltip";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -121,7 +122,9 @@ class App extends BaseComponent {
                     <Header isUnlocked={this.state.isUnlocked}/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                     <Notifier class="overlay-notification"/>
-                    <RouteHandler/>
+                    <div className="grid-block vertical">
+                        <RouteHandler/>
+                    </div>
                     <Footer/>
                     <ReactTooltip type="dark" effect="solid" />
                 </div>
@@ -147,6 +150,7 @@ let routes = (
         </Route>
         <Route name="wallet" path="wallet" handler={Wallet}/>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
+        <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
