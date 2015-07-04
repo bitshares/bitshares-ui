@@ -29,7 +29,7 @@ export default class Console extends Component {
     }
     
     render() {
-        return <div className="grid-content">
+        return <div className="grid-content" ref="console_div">
             <form onSubmit={this.on_cmd_submit.bind(this)} >
                 <label>Console</label>
                 <div>{this.state.cmd_console}</div>
@@ -38,10 +38,18 @@ export default class Console extends Component {
                     value={this.state.cmd} placeholder="Command"
                 />
                 <p>
-                    <code onClick={this.clear.bind(this)}>clear</code>
+                    { ! this.state.cmd_console.length ? "" :
+                        <code onClick={this.clear.bind(this)}>clear</code>
+                    }
                 </p>
             </form>
         </div>
+    }
+    
+    componentDidUpdate() {
+        console.log('... getDOMNode')
+        var node = React.findDOMNode(this.refs.console_div)
+        node.scrollTop = node.scrollHeight
     }
     
     clear() {
