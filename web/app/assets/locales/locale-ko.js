@@ -18,7 +18,7 @@ module.exports = {
     },
     account: {
         asset: "자산",
-        market_value: "시가총액",
+        market_value: "시장가치",
         hour_24: "24시간 변동액",
         recent: "최근 활동",
         name: "계정명",
@@ -233,7 +233,7 @@ module.exports = {
         }
     },
     settings: {
-        inversed: "선호하는 거래단위",
-        unit: "선호하는 단위"
+        inversed: "선호 거래단위",
+        unit: "선호 화폐단위"
     }
 };
