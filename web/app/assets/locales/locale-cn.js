@@ -3,6 +3,7 @@ module.exports = {
         en: "English",
         cn: "简体中文",
         fr: "French",
+        ko: "한국어",
         switch: "语言选择"
     },
     header: {
