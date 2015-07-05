@@ -24,8 +24,7 @@ class Exchange extends React.Component {
             sellPrice: 170,
             sub: false,
             activeTab: "buy",
-            showBuySell: true,
-            noBalance: false
+            showBuySell: true
         };
 
         this._createLimitOrder = this._createLimitOrder.bind(this);
@@ -33,9 +32,11 @@ class Exchange extends React.Component {
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
-        console.log(sellAssetAmount, balance);
         if (sellAssetAmount > balance) {
-            return this.setState({noBalance: true});
+            this.props.addNotification({
+                message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
+                level: "error"
+            });
         }
 
         let expiration = new Date();
@@ -51,13 +52,11 @@ class Exchange extends React.Component {
         ).then(result => {
             if (!result) {
                 this.props.addNotification({
-                    message: "Failed to place limit order",
+                    message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
                     level: "error"
                 });
             }
         });
-
-        this.setState({noBalance: false});
     }
 
     _cancelLimitOrder(orderID, e) {
@@ -233,7 +232,7 @@ class Exchange extends React.Component {
                                         amountChange={this._buyAmountChanged.bind(this)}
                                         priceChange={this._buyPriceChanged.bind(this)}
                                         balance={baseBalance / utils.get_asset_precision(base.precision)}
-                                        onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance)}
+                                        onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
                                     /> : null}
                                     {quote && base ?
                                     <BuySell
@@ -246,10 +245,8 @@ class Exchange extends React.Component {
                                         amountChange={this._sellAmountChanged.bind(this)}
                                         priceChange={this._sellPriceChanged.bind(this)}
                                         balance={quoteBalance / utils.get_asset_precision(quote.precision)}
-                                        onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance)}
+                                        onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
                                     /> : null}
-
-                                    {this.state.noBalance ? <div>Insufficient balance</div> : null}
                         </div>
                              
                         <div className="grid-block" style={{minHeight: "20rem"}}>
