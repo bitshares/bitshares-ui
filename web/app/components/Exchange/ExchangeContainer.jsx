@@ -52,7 +52,7 @@ class ExchangeContainer extends React.Component {
                     }
                   }} 
                   >
-                <Exchange quote={symbols[0]} base={symbols[1]}/>
+                <Exchange quote={symbols[0]} base={symbols[1]} addNotification={this.props.addNotification}/>
                 </AltContainer>
         );
     }

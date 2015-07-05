@@ -207,8 +207,9 @@ class MarketsActions {
             "expiration": uniqueExpiration,
             "fill_or_kill": isFillOrKill
         });
-        wallet_api.sign_and_broadcast(tr).then(result => {
+        return wallet_api.sign_and_broadcast(tr).then(result => {
             console.log("order result:", result);
+            return true;
                 // TODO: update order ID from the server's response, if possible
         })
             .catch(error => {
@@ -217,6 +218,8 @@ class MarketsActions {
                 this.dispatch({
                     failedOrder: {expiration: uniqueExpiration}
                 });
+
+                return false;
             });
     }
 
@@ -230,14 +233,16 @@ class MarketsActions {
             "fee_paying_account": accountID,
             "order": orderID
         });
-        wallet_api.sign_and_broadcast(tr).then(result => {
+        return wallet_api.sign_and_broadcast(tr).then(result => {
                 console.log("cancel result:", result);
+                return true;
             })
             .catch(error => {
                 console.log("cancel error:", error);
                 this.dispatch({
                     failedOrderID: orderID
                 });
+                return false;
             });
     }
 }

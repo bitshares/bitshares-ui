@@ -45,7 +45,8 @@ import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
-import Notifier from "./components/Notifier/NotifierContainer";
+import AccountNotifications from "./components/Notifier/NotifierContainer";
+import NotificationSystem from "react-notification-system";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
 
@@ -53,7 +54,7 @@ import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import WalletImport from "./components/Wallet/WalletImport";
 import WalletStore from "stores/WalletStore";
-import Console from "./components/Console/Console"
+import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -106,11 +107,9 @@ class App extends BaseComponent {
         });
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        // Fire any actions that are needed on a successful unlock here
-        //if (nextState.isUnlocked === true && this.state.isUnlocked === false) {
-            // console.log("just unlocked, firing actions");
-        //}
+    _addNotification(params) {
+        console.log("add notification:", this.refs, params);
+        this.refs.notificationSystem.addNotification(params);
     }
 
     render() {
@@ -121,9 +120,10 @@ class App extends BaseComponent {
                 <div className="grid-frame vertical">
                     <Header isUnlocked={this.state.isUnlocked}/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                    <Notifier class="overlay-notification"/>
+                    <NotificationSystem ref="notificationSystem" />
+                    <AccountNotifications/>
                     <div className="grid-block vertical">
-                        <RouteHandler/>
+                        <RouteHandler addNotification={this._addNotification.bind(this)}/>
                     </div>
                     <Footer/>
                     <ReactTooltip type="dark" effect="solid" />

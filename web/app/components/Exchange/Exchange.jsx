@@ -27,6 +27,8 @@ class Exchange extends React.Component {
             showBuySell: true,
             noBalance: false
         };
+
+        this._createLimitOrder = this._createLimitOrder.bind(this);
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
@@ -35,11 +37,9 @@ class Exchange extends React.Component {
         if (sellAssetAmount > balance) {
             return this.setState({noBalance: true});
         }
-        console.log("sell id:", sellAsset);
 
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
-
         MarketsActions.createLimitOrder(
             this.props.account.id,
             sellAssetAmount * utils.get_asset_precision(sellAsset.precision),
@@ -48,7 +48,14 @@ class Exchange extends React.Component {
             buyAsset.id,
             expiration.toISOString().slice(0, -7), // the seconds will be added in the actionCreator to set a unique identifer for this user and order
             false // fill or kill
-        );
+        ).then(result => {
+            if (!result) {
+                this.props.addNotification({
+                    message: "Failed to place limit order",
+                    level: "error"
+                });
+            }
+        });
 
         this.setState({noBalance: false});
     }
@@ -60,7 +67,14 @@ class Exchange extends React.Component {
         MarketsActions.cancelLimitOrder(
             account.id,
             orderID // order id to cancel
-        );
+        ).then(result => {
+            if (!result) {
+                this.props.addNotification({
+                        message: `Failed to cancel limit order ${orderID}`,
+                        level: "error"
+                    });
+            }
+        });
     }
 
     _subToMarket(props) {
