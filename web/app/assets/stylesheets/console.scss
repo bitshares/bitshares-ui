@@ -1,9 +1,16 @@
-input#console-input {
+textarea#console_input {
     width: 100%;
+    color: white;
     background-color: black;
     border-color: black;
+    min-height: 35px;
+    height: 35px
 }
 
-.console-result.monospace {
+.console_result.monospace {
     font-family: "Courier New", Courier, monospace
+}
+
+.console_div, code {
+    margin-right: 10px;
 }
