@@ -319,7 +319,6 @@ class WalletStore extends BaseStore {
 var WrappedWalletStore = alt.createStore(WalletStore, "WalletStore");
 module.exports = WrappedWalletStore
 var eventEmitter = WrappedWalletStore.getEventEmitter()
-console.log('... eventEmitter',eventEmitter)
 
 function reject(error) {
     console.error( "----- WalletStore reject error -----", error)
