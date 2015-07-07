@@ -97,7 +97,7 @@ class MarketUtils {
 
 
         let price = {full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)};
-        let value = price.full * buy.amount / quotePrecision;
+        
         let amount;
 
         // We need to figure out a better way to set the number of decimals
@@ -110,6 +110,8 @@ class MarketUtils {
         } else {
             amount = order.for_sale / quotePrecision;
         }
+
+        let value = price.full * amount;
 
         return {
             value: value,
