@@ -3,7 +3,8 @@ assert = require 'assert'
 module.exports =
 
     print_result: (tr_object)->
-        console.log 'print_result', JSON.stringify tr_object
+        if tr_object
+            console.log 'print_result', JSON.stringify tr_object
         try
             tr = signed_transaction_type.fromObject tr_object
             tr_hex = signed_transaction_type.toHex(tr)

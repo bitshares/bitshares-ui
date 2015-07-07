@@ -50,7 +50,7 @@ describe "tr_tests", ->
     it "wallet.account_create", (done)->
         suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         account_name = "account-z"+suffix
-        console.log '... account_name',account_name
+        # DEBUG console.log '... account_name',account_name
         tr = wallet.create_account_with_brain_key(
             "brainkey"
             account_name
