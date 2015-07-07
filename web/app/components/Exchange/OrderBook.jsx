@@ -33,13 +33,13 @@ class OrderBook extends React.Component {
 
     componentWillReceiveProps() {
         let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        this.setState({shouldScrollBottom: bidContainer.scrollTop + bidContainer.offsetHeight === bidContainer.scrollHeight});
+        this.setState({shouldScrollBottom: Math.round(bidContainer.scrollTop + bidContainer.offsetHeight) === bidContainer.scrollHeight});
     }
 
     componentDidUpdate() {
         let askContainer = React.findDOMNode(this.refs.asksTbody);
         let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        if (this.state.shouldScrollBottom !== !this.state.didScrollOnMount) {
+        if (this.state.shouldScrollBottom || !this.state.didScrollOnMount) {
             bidContainer.scrollTop = bidContainer.scrollHeight;
             this.setState({didScrollOnMount: true});
         }
