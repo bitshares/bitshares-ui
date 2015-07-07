@@ -6,7 +6,7 @@ import idb_helper from "../idb-helper";
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
 
-import hash from "common/hash"
+import hash from "../common/hash"
 
 class PrivateKeyStore extends BaseStore {
     

@@ -1,9 +1,9 @@
-import WalletStore from "stores/WalletStore"
-import ApplicationApi from "rpc_api/ApplicationApi"
-import PrivateKey from "ecc/key_private"
+import WalletStore from "../stores/WalletStore"
+import ApplicationApi from "../rpc_api/ApplicationApi"
+import PrivateKey from "../ecc/key_private"
 
-import key from "common/key_utils"
-import v from "common/validation"
+import key from "../common/key_utils"
+import v from "../common/validation"
 
 var alt = require("../alt-instance")
 var application_api = new ApplicationApi()

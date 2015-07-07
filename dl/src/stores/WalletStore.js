@@ -1,16 +1,16 @@
 import alt from "../alt-instance";
 import iDB from "../idb-instance";
-import key from "common/key_utils"
+import key from "../common/key_utils"
 import idb_helper from "../idb-helper"
 
 import Immutable from "immutable";
 
 import BaseStore from "./BaseStore"
-import PrivateKeyStore from 'stores/PrivateKeyStore'
+import PrivateKeyStore from "./PrivateKeyStore"
 
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
-import WalletActions from "actions/WalletActions"
-import PrivateKey from "ecc/key_private"
+import WalletActions from "../actions/WalletActions"
+import PrivateKey from "../ecc/key_private"
 
 var aes_private_map = {}
 
