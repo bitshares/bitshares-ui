@@ -110,7 +110,7 @@ class WalletStore extends BaseStore {
     }
     
     saveKey(
-        password_aes_private = null,
+        password_aes_private,
         wallet_public_name,
         wallet_id,
         private_key,
