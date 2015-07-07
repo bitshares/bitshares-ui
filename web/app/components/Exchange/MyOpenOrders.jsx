@@ -68,7 +68,7 @@ class MyOpenOrders extends React.Component {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
 
-                return b_price.full - a_price.full;
+                return a_price.full - b_price.full;
             }).map(order => {
                 let {value, price, amount} = market_utils.parseOrder(order, base, quote);
                 let isAskOrder = market_utils.isAsk(order, base);
