@@ -20,6 +20,7 @@ class MarketsStore {
         this.activeMarketLimits = Immutable.Map();
         this.activeMarketCalls = Immutable.Map();
         this.activeMarketSettles = Immutable.Map();
+        this.activeMarketHistory = Immutable.Map();
         this.flat_bids = [];
         this.totalBids = 0;
         this.flat_asks = [];
@@ -133,6 +134,16 @@ class MarketsStore {
                     ShortOrder(settle)
                 );
             });
+        }
+
+        if (result.fillOrders) {
+            result.fillOrders.forEach(fill => {
+                console.log("fill:", fill);
+                this.activeMarketHistory = this.activeMarketHistory.set(
+                    fill[0][1].order_id,
+                    fill[0][1]
+                );
+            })
         }
 
         // Update depth chart data

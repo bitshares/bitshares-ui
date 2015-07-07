@@ -58,6 +58,17 @@ class MarketsActions {
                 ]);
             }
 
+            let foundFill = false, fillOrders = [];
+            for (var i = 0; i < subResult[0].length; i++) {
+                if (ops[subResult[0][i][0][0]] === "fill_order") {
+                    foundFill = true;
+                    fillOrders.push(subResult[0][i]);
+                }
+            };
+            if (foundFill) {
+                this.dispatch({fillOrders: fillOrders});
+            }
+
             let startDate = new Date();
             let endDate = new Date();
             startDate.setDate(startDate.getDate() - 10);

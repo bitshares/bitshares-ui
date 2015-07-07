@@ -30,6 +30,23 @@ class Exchange extends React.Component {
         this._createLimitOrder = this._createLimitOrder.bind(this);
     }
 
+    componentDidMount() {
+        this._subToMarket(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.state.sub && nextProps.assets.size > 0) {
+            this._subToMarket(nextProps);
+        }
+    }
+
+    componentWillUnmount() {
+        let {quote, base, asset_symbol_to_id} = this.props;
+        let quote_id = asset_symbol_to_id[quote];
+        let base_id = asset_symbol_to_id[base];
+        MarketsActions.unSubscribeMarket(quote_id, base_id);
+    }
+
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
         if (sellAssetAmount > balance) {
@@ -96,23 +113,6 @@ class Exchange extends React.Component {
             buyPrice: Math.round(100 * e.xAxis[0].value) / 100,
             sellPrice: Math.round(100 * e.xAxis[0].value) / 100
         });
-    }
-
-    componentDidMount() {
-        this._subToMarket(this.props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (!this.state.sub && nextProps.assets.size > 0) {
-            this._subToMarket(nextProps);
-        }
-    }
-
-    componentWillUnmount() {
-        let {quote, base, asset_symbol_to_id} = this.props;
-        let quote_id = asset_symbol_to_id[quote];
-        let base_id = asset_symbol_to_id[base];
-        MarketsActions.unSubscribeMarket(quote_id, base_id);
     }
 
     _buyAmountChanged(e) { this.setState({buyAmount: e.target.value}); }
@@ -268,7 +268,12 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block right-column  show-for-large large-2" style={{overflowY: "auto"}}>
                         {/* Market History */}
-                        <MarketHistory history={this.props.history} />
+                        <MarketHistory
+                            history={this.props.activeMarketHistory}
+                            assets={assets}
+                            base={base}
+                            baseSymbol={baseSymbol}
+                            quoteSymbol={quoteSymbol}/>
                     </div>
                     
                 {/* End of Second Vertical Block */}
