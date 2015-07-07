@@ -4,7 +4,7 @@ import IntlActions from "actions/IntlActions";
 import Translate from "react-translate-component";
 import cookies from "cookies-js";
 import SettingsActions from "actions/SettingsActions";
-
+import {Link} from "react-router";
 
 class Settings extends React.Component {
 
@@ -73,10 +73,13 @@ class Settings extends React.Component {
         let selectedOrientation = settings.get("inverseMarket") ? 0 : 1;
 
         return (
-            <div className="grid-block">
-                <div className="grid-block small-offset-3 small-6">
+            <div className="grid-block page-layout">
+                <div className="grid-block medium-3 left-column">
                     <div className="grid-content">
-                        <div className="grid-block"></div>
+                    </div>
+                </div>
+                <div className="grid-block medium-6 main-content">
+                    <div className="grid-content no-overflow">
                         <section className="block-list">
                             <header><Translate component="span" content="languages.switch" />:</header>
                                 <ul>
@@ -108,6 +111,11 @@ class Settings extends React.Component {
                                     </li>
                                 </ul>
                         </section>
+                    </div>
+                </div>
+                <div className="grid-block medium-3 right-column">
+                    <div className="grid-content">
+                        <Link to="console">Open js console</Link>
                     </div>
                 </div>
             </div>
