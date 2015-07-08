@@ -10,67 +10,67 @@ class MarketUtils {
         this.order_type = this.order_type.bind(this);
     }
 
-    static parse_order(newOrder) {
-        let o = newOrder[0][1];
-        let orderType = this.order_type(newOrder[1][1]);
-        let order = {};
-        switch (orderType) {
+    // static parse_order(newOrder) {
+    //     let o = newOrder[0][1];
+    //     let orderType = this.order_type(newOrder[1][1]);
+    //     let order = {};
+    //     switch (orderType) {
 
-            case "limit_order":
-                o.expiration = new Date(o.expiration);
-                console.log("new limit order:", orderType, newOrder);
+    //         case "limit_order":
+    //             o.expiration = new Date(o.expiration);
+    //             console.log("new limit order:", orderType, newOrder);
 
-                order = {
-                    expiration: o.expiration,
-                    for_sale: o.amount_to_sell.amount,
-                    id: newOrder[1][1],
-                    sell_price: {
-                        base: {
-                            amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount),
-                            asset_id: o.min_to_receive.asset_id
-                        },
-                        quote: {
-                            amount: 1,
-                            asset_id: parseInt(o.amount_to_sell.asset_id, 10)
+    //             order = {
+    //                 expiration: o.expiration,
+    //                 for_sale: o.amount_to_sell.amount,
+    //                 id: newOrder[1][1],
+    //                 sell_price: {
+    //                     base: {
+    //                         amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount),
+    //                         asset_id: o.min_to_receive.asset_id
+    //                     },
+    //                     quote: {
+    //                         amount: 1,
+    //                         asset_id: parseInt(o.amount_to_sell.asset_id, 10)
 
-                        }
-                    },
-                    seller: o.seller
-                };
+    //                     }
+    //                 },
+    //                 seller: o.seller
+    //             };
 
-                break;
+    //             break;
 
-            case "short_order":
-                o.expiration = new Date(o.expiration);
-                console.log("new short order:", orderType, newOrder);
+    //         case "short_order":
+    //             o.expiration = new Date(o.expiration);
+    //             console.log("new short order:", orderType, newOrder);
 
-                order = {
-                    expiration: o.expiration,
-                    for_sale: o.amount_to_sell.amount,
-                    id: newOrder[1][1],
-                    sell_price: {
-                        base: {
-                            amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount, 10),
-                            asset_id: o.min_to_receive.asset_id
-                        },
-                        quote: {
-                            amount: 1,
-                            asset_id: o.amount_to_sell.asset_id
-                        }
-                    },
-                    seller: o.seller
-                };
-                break;
+    //             order = {
+    //                 expiration: o.expiration,
+    //                 for_sale: o.amount_to_sell.amount,
+    //                 id: newOrder[1][1],
+    //                 sell_price: {
+    //                     base: {
+    //                         amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount, 10),
+    //                         asset_id: o.min_to_receive.asset_id
+    //                     },
+    //                     quote: {
+    //                         amount: 1,
+    //                         asset_id: o.amount_to_sell.asset_id
+    //                     }
+    //                 },
+    //                 seller: o.seller
+    //             };
+    //             break;
 
-            default:
-                break;
-        }
+    //         default:
+    //             break;
+    //     }
 
-        return {
-            order: order,
-            orderType: orderType
-        };
-    }
+    //     return {
+    //         order: order,
+    //         orderType: orderType
+    //     };
+    // }
 
     static order_type(id) {
         if (typeof id !== "string") {
@@ -95,9 +95,7 @@ class MarketUtils {
         let buy = ask ? order.sell_price.base : order.sell_price.quote;
         let sell = ask ? order.sell_price.quote : order.sell_price.base;
 
-
         let price = {full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)};
-        
         let amount;
 
         // We need to figure out a better way to set the number of decimals
@@ -126,15 +124,16 @@ class MarketUtils {
         let maxStep, arrayLength = array.length;
 
         // Sum orders at same price
-        if (arrayLength > 1) {
-            for (var i = arrayLength - 2; i >= 0; i--) {
-                if (array[i].x === array[i + 1].x) {
-                    array[i].y += array[i + 1].y;
-                    array.splice(i + 1, 1);
-                }
-            }
-        }
-        arrayLength = array.length;
+        // if (arrayLength > 1) {
+        //     for (var i = arrayLength - 2; i >= 0; i--) {
+        //         if (array[i].x === array[i + 1].x) {
+        //             console.log("found order to sum");
+        //             array[i].y += array[i + 1].y;
+        //             array.splice(i + 1, 1);
+        //         }
+        //     }
+        // }
+        // arrayLength = array.length;
 
         if (inverse) {
 

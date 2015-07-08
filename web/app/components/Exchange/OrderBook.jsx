@@ -1,7 +1,6 @@
 import React from "react";
+import {PropTypes} from "react/addons";
 import Immutable from "immutable";
-import classNames from "classnames";
-import market_utils from "common/market_utils";
 import Ps from "perfect-scrollbar";
 
 class OrderBook extends React.Component {
@@ -15,7 +14,7 @@ class OrderBook extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            !Immutable.is(nextProps.orders, this.props.orders)
+                !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
 
@@ -49,69 +48,51 @@ class OrderBook extends React.Component {
     }
 
     render() {
-        let {orders, account, quote, base, quoteSymbol, baseSymbol} = this.props;
-        let bids = null, asks = null;
+        let {bids, asks, account, quote, base, quoteSymbol, baseSymbol} = this.props;
+        let bidRows = null, askRows = null;
         let high = 0, low = 0;
         
-        if(orders.size > 0 && base && quote) {
-            // let quotePrecision = utils.get_asset_precision(quote.precision);
-            // let basePrecision = utils.get_asset_precision(base.precision);
+        if(base && quote) {
+            // let start = new Date();
 
-            bids = orders.filter(a => {
-                return a.sell_price.base.asset_id === base.id;
-            }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, base, quote);
-                let {price: b_price} = market_utils.parseOrder(b, base, quote);
+            high = bids.length > 0 ? bids[bids.length - 1].price_full : 0;
 
-                return a_price.full - b_price.full;
-            }).map(order => {
-                let isAskOrder = market_utils.isAsk(order, base);
-                let {value, price, amount} = market_utils.parseOrder(order, base, quote);
-                let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
-                high = price.full;
+            bidRows = bids.map(order => {
                 return (
-                     <tr key={order.id}>
-                        <td className="show-for-medium">{(value).toFixed(3)}</td>
-                        <td>{(amount).toFixed(3)}</td>
-                        <td className={tdClass}>
-                            <span className="price-integer">{price.int}</span>
+                     <tr key={order.price_full}>
+                        <td className="show-for-medium">{(order.value).toFixed(3)}</td>
+                        <td>{order.amount.toFixed(3)}</td>
+                        <td className="orderHistoryBid">
+                            <span className="price-integer">{order.price_int}</span>
                             .
-                            <span className="price-decimal">{price.dec}</span>
+                            <span className="price-decimal">{order.price_dec}</span>
                         </td>
-                        {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
-            }).toArray();
+            });
 
-            let askIndex = 0;
-            asks = orders.filter(a => {
-                return a.sell_price.quote.asset_id === base.id;
-            }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, base, quote);
-                let {price: b_price} = market_utils.parseOrder(b, base, quote);
-                return a_price.full - b_price.full;
-            }).map(order => {
-                let isAskOrder = market_utils.isAsk(order, base);
-                let {value, price, amount} = market_utils.parseOrder(order, base, quote);
-                let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
-                if (askIndex === 0) {
-                    low = price.full;
-                }
-                askIndex++;
+            // console.log("time to process bids in orderbook:", new Date() - start, "ms");
+
+            // start = new Date();
+
+            low = asks.length > 0 ? asks[0].price_full : 0;
+
+            askRows = asks.map(order => {
                 return (
-                     <tr key={order.id}>
-                        <td className="show-for-medium">{(value).toFixed(3)}</td>
-                        <td >{(amount).toFixed(3)}</td>
-                        <td className={tdClass}>
-                            <span className="price-integer">{price.int}</span>
+                     <tr key={order.price_full}>
+                        <td className="show-for-medium">{order.value.toFixed(3)}</td>
+                        <td >{order.amount.toFixed(3)}</td>
+                        <td className="orderHistoryAsk">
+                            <span className="price-integer">{order.price_int}</span>
                             .
-                            <span className="price-decimal">{price.dec}</span>
+                            <span className="price-decimal">{order.price_dec}</span>
                         </td>
 
-                        {/*TODO: add expiration data <td>{order.expiration}</td> */}
                     </tr>
                     );
-            }).toArray();
+            });
+
+            // console.log("time to process asks in orderbook:", new Date() - start, "ms");
         }
 
         return (
@@ -125,16 +106,30 @@ class OrderBook extends React.Component {
                         </tr>
                         </thead>
                                 <tbody id="test" ref="bidsTbody" className="orderbook ps-container">
-                                    {bids}
+                                    {bidRows}
                                 </tbody>
-                                <tr><td colSpan="3" className="text-center">Spread: {high > 0 && low > 0 ? low - high : 0} {baseSymbol}</td></tr>
+                                <tr>
+                                    <td colSpan="3" className="text-center">Spread: {high > 0 && low > 0 ? low - high : 0} {baseSymbol}</td>
+                                </tr>
                                 <tbody ref="asksTbody" className="orderbook ps-container">
-                                    {asks}
+                                    {askRows}
                                 </tbody>
                     </table>
                 </div>
         );
     }
 }
+
+OrderBook.defaultProps = {
+    bids: [],
+    asks: [],
+    orders: {}
+};
+
+OrderBook.propTypes = {
+    bids: PropTypes.array.isRequired,
+    asks: PropTypes.array.isRequired,
+    orders: PropTypes.object.isRequired
+};
 
 export default OrderBook;

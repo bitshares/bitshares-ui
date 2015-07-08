@@ -21,6 +21,8 @@ class MarketsStore {
         this.activeMarketCalls = Immutable.Map();
         this.activeMarketSettles = Immutable.Map();
         this.activeMarketHistory = Immutable.Map();
+        this.bids = [];
+        this.asks = [];
         this.flat_bids = [];
         this.totalBids = 0;
         this.flat_asks = [];
@@ -53,7 +55,7 @@ class MarketsStore {
         if (payload.setting === "inverseMarket") {
             this.inverseMarket = payload.value;
 
-            // Handle market inversion
+            // TODO: Handle market inversion
         } else {
             return false;
         }
@@ -80,6 +82,9 @@ class MarketsStore {
             this.activeMarketLimits = this.activeMarketLimits.clear();
             this.activeMarketCalls = this.activeMarketCalls.clear();
             this.activeMarketSettles = this.activeMarketSettles.clear();
+            this.activeMarketHistory = this.activeMarketHistory.clear();
+            this.bids = [];
+            this.asks = [];
             this.pendingCreateLimitOrders = [];
             this.priceHistory = [];
             this.flat_bids = [];
@@ -88,6 +93,7 @@ class MarketsStore {
 
         if (result.limits) {
             // Keep an eye on this as the number of orders increases, it might not scale well
+            let limitStart = new Date();
             this.activeMarketLimits = this.activeMarketLimits.clear();
             result.limits.forEach(order => {
                 order.for_sale = parseInt(order.for_sale, 10);
@@ -114,6 +120,8 @@ class MarketsStore {
             if (this.pendingCreateLimitOrders.length === 0) {
                 this.pendingCounter = 0;
             }
+
+            console.log("time to process limit orders:", new Date() - limitStart, "ms");
         }
 
         if (result.calls) {
@@ -145,6 +153,9 @@ class MarketsStore {
                 );
             })
         }
+
+        // Update orderbook
+        this._orderBook();
 
         // Update depth chart data
         this._depthChart();
@@ -211,6 +222,10 @@ class MarketsStore {
             }
         }
 
+        // Update orderbook
+        this._orderBook();
+
+        // Update depth chart data
         this._depthChart();
 
     }
@@ -230,7 +245,10 @@ class MarketsStore {
             delete this.pendingCancelLimitOrders[e.failedOrderID];
         }
 
-        // Update depth chart
+        // Update orderbook
+        this._orderBook();
+
+        // Update depth chart data
         this._depthChart();
 
     }
@@ -270,63 +288,118 @@ class MarketsStore {
 
     }
 
+    _orderBook() {
+
+        // var bidStart = new Date();
+        let asks = [], bids = [];
+
+        // Loop over limit orders and return array containing bids with formatted values
+        this.activeMarketLimits.filter(a => {
+                return a.sell_price.base.asset_id === this.baseAsset.id;
+            }).sort((a, b) => {
+                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
+                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
+
+                return a_price.full - b_price.full;
+            }).map(order => {
+                let isAskOrder = market_utils.isAsk(order, this.baseAsset);
+                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
+                bids.push({
+                    value: value,
+                    price_full: price.full,
+                    price_dec: price.dec,
+                    price_int: price.int,
+                    amount: amount
+                });
+            })
+
+        // Sum bids at same price
+        for (var i = bids.length - 2; i >= 0; i--) {
+            if (bids[i].price_full === bids[i + 1].price_full) {
+                bids[i].amount += bids[i + 1].amount;
+                bids[i].value += bids[i + 1].value;
+                bids.splice(i + 1, 1);
+            }
+        };
+
+
+        // console.log("store bids time taken:", new Date() - bidStart, "ms");
+
+        // let askStart = new Date();
+
+        // Loop over limit orders and return array containing asks with formatted values
+        this.activeMarketLimits.filter(a => {
+                return a.sell_price.base.asset_id !== this.baseAsset.id;
+            }).sort((a, b) => {
+                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
+                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
+
+                return a_price.full - b_price.full;
+            }).map(order => {
+                let isAskOrder = market_utils.isAsk(order, this.baseAsset);
+                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
+                asks.push({
+                    value: value,
+                    price_full: price.full,
+                    price_dec: price.dec,
+                    price_int: price.int,
+                    amount: amount
+                });
+            })
+
+        // Sum asks at same price
+        for (var i = asks.length - 2; i >= 0; i--) {
+            if (asks[i].price_full === asks[i + 1].price_full) {
+                asks[i].amount += asks[i + 1].amount;
+                asks[i].value += asks[i + 1].value;
+                asks.splice(i + 1, 1);
+            }
+        };
+
+        // Assign to store variables
+        this.bids = bids;
+        this.asks = asks;
+
+        // console.log("store asks time taken:", new Date() - askStart, "ms");
+    }
 
     _depthChart() {
-        let quotePrecision = utils.get_asset_precision(this.quoteAsset.precision);
-        let basePrecision = utils.get_asset_precision(this.baseAsset.precision);
+        // let depthStart = new Date();
 
         let bids = [], asks = [], totalBids = 0;
         if (this.activeMarketLimits) {
-            this.activeMarketLimits
-            .filter(a => {
-                let isAskOrder = market_utils.isAsk(a, this.baseAsset);
-                return !isAskOrder;
-            })
-            .sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
-                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
 
-                return a_price.full > b_price.full;
-            }).map(order => {
-                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
-                // let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+            this.bids.map(order => {
 
                 // d3 format
                 // bids.push({
-                //     x: price,
-                //     y: buy.amount / quotePrecision
+                //     x: order.,
+                //     y: order.amount
                 // });
 
                 // highcharts format
-                // let amount = (buy.amount / sell.amount) * order.for_sale / quotePrecision;
-                bids.push([price.full, amount]);
-                totalBids += value;
+                bids.push([order.price_full, order.amount]);
+                totalBids += order.value;
             });
 
-            this.activeMarketLimits
-            .filter(a => {
-                let isAskOrder = market_utils.isAsk(a, this.baseAsset);
-                return isAskOrder;
-            })
-            .sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
-                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
+            // console.log("store depth bids time taken:", new Date() - depthStart, "ms");
 
-                return a_price.full > b_price.full;
-            }).map(order => {
-                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
-                // let price = (sell.amount / basePrecision) / (buy.amount / quotePrecision);
+            let askStart = new Date();
+
+            this.asks.map(order => {
 
                 // d3 format
                 // asks.push({
-                //     x: price,
-                //     y: buy.amount / quotePrecision
+                //     x: order.,
+                //     y: order.amount
                 // });
                 // highcharts format
 
-                asks.push([price.full, amount]);
+                asks.push([order.price_full, order.amount]);
 
             });
+
+            // console.log("store depth asks time taken:", new Date() - askStart, "ms");
 
             // Make sure the arrays are sorted properly
             asks.sort((a, b) => {
@@ -338,6 +411,7 @@ class MarketsStore {
             });
 
 
+            // Flatten the arrays to get the step plot look
             let flat_bids = market_utils.flatten_orderbookchart_highcharts(bids, true, true, 1000);
             if (flat_bids.length > 0) {
                 flat_bids.unshift([0, flat_bids[0][1]]);
@@ -363,22 +437,14 @@ class MarketsStore {
             //     flat_asks.unshift({x: flat_bids[i].x, y: 0});
             // }
 
+            // Assign to store variables
             this.flat_asks = flat_asks;
             this.flat_bids = flat_bids;
             this.totalBids = totalBids;
+
+            // console.log("store depth chart time taken:", new Date() - askStart, "ms");
+
         }
-
-
-
-        // this.orderBook = this.orderBook.set(
-        //     "bids",
-        //     bids
-        // );
-
-        // this.orderBook = this.orderBook.set(
-        //     "asks",
-        //     asks
-        // );
     }
 }
 

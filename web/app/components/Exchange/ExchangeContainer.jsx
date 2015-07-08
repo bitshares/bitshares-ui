@@ -17,6 +17,12 @@ class ExchangeContainer extends React.Component {
                     limit_orders: () => {
                         return MarketsStore.getState().activeMarketLimits;
                     },
+                    bids: () => {
+                        return MarketsStore.getState().bids;
+                    },
+                    asks: () => {
+                        return MarketsStore.getState().asks;
+                    },
                     call_orders: () => {
                         return MarketsStore.getState().activeMarketCalls;
                     },
