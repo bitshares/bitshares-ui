@@ -4,8 +4,25 @@ import {Link} from "react-router";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
 import AccountStore from "stores/AccountStore";
+import AccountActions from "actions/AccountActions";
+import BaseComponent from "../BaseComponent";
 
-class AccountLeftPanel extends React.Component {
+class AccountLeftPanel extends BaseComponent {
+
+    constructor(props) {
+        super(props, AccountStore);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log("[AccountLeftPanel.jsx:17] ----- shouldComponentUpdate ----->", this.state.linkedAccounts !== nextState.linkedAccounts);
+        return this.props.account_name !== nextProps.account_name ||
+               this.state.linkedAccounts !== nextState.linkedAccounts;
+    }
+
+    onLinkAccount(e) {
+        e.preventDefault();
+        AccountActions.linkAccount(this.props.account_name);
+    }
 
     render() {
         let account_name = this.props.account_name;
@@ -15,9 +32,9 @@ class AccountLeftPanel extends React.Component {
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
                     <div className="grid-block no-margin account-buttons-row">
-                        <div className="grid-block no-margin center-content">
-                            <a href className="button outline block-button">Link</a>
-                        </div>
+                        {this.state.linkedAccounts.has(account_name) ? null : <div className="grid-block no-margin center-content">
+                            <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}>Link</a>
+                        </div>}
                         <div className="grid-block no-margin center-content">
                             <Link className="button outline block-button" to="transfer" query={{to: account_name}}>Pay</Link>
                         </div>

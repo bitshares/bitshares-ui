@@ -21,7 +21,7 @@ class Notifier extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.accountHistories, this.props.accountHistories) ||
-                nextProps.currentAccount.id !== this.props.currentAccount.id ||
+                (this.props.currentAccount && nextProps.currentAccount.id !== this.props.currentAccount.id) ||
                 !Immutable.is(nextProps.assets, this.props.assets) ||
                 !Immutable.is(nextProps.settings, this.props.settings)
             );

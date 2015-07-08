@@ -43,7 +43,7 @@ class Header extends BaseComponent {
     }
 
     render() {
-        let currentAccount = this.state.currentAccount, itemRows = [], accountsDropDown = null, plusDropDown = null, accountLink = null;
+        let currentAccount = this.state.currentAccount, accountsDropDown = null, plusDropDown = null, accountLink = null;
 
         let isUnlocked = this.props.isUnlocked;
 
@@ -51,9 +51,9 @@ class Header extends BaseComponent {
         let current = counterpart.translate("header.current");
 
         if (currentAccount) {
-            for (let name in this.state.account_name_to_id) {
-                itemRows.push(<li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>);
-            }
+            let accountsList = this.state.linkedAccounts.map( name => {
+                return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
+            });
 
             let account_display_name = currentAccount.name.length > 20 ? `${currentAccount.name.slice(0, 20)}..` : currentAccount.name;
 
@@ -66,27 +66,28 @@ class Header extends BaseComponent {
                     </ActionSheet.Button>
                     <ActionSheet.Content >
                         <ul className="no-first-element-top-border">
-                            {itemRows}
+                            {accountsList}
                         </ul>
                     </ActionSheet.Content>
                 </ActionSheet>);
-
-            plusDropDown = (
-                <ActionSheet id="plus_drop_down">
-                    <ActionSheet.Button title="">
-                        <a className="button">
-                            <Icon name="plus-circle"/>
-                        </a>
-                    </ActionSheet.Button>
-                    <ActionSheet.Content >
-                        <ul className="no-first-element-top-border">
-                            <li><a href onClick={this.createAccountHandler.bind(this)}>Create Account</a></li>
-                            <li><a href>Create Asset</a></li>
-                        </ul>
-                    </ActionSheet.Content>
-                </ActionSheet>
-            );
         }
+
+
+        plusDropDown = (
+            <ActionSheet id="plus_drop_down">
+                <ActionSheet.Button title="">
+                    <a className="button">
+                        <Icon name="plus-circle"/>
+                    </a>
+                </ActionSheet.Button>
+                <ActionSheet.Content >
+                    <ul className="no-first-element-top-border">
+                        <li><a href onClick={this.createAccountHandler.bind(this)}>Create Account</a></li>
+                        <li><a href>Create Asset</a></li>
+                    </ul>
+                </ActionSheet.Content>
+            </ActionSheet>
+        );
 
         return (
             <div className="header menu-group primary">

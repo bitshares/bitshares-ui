@@ -38,14 +38,11 @@ class BaseComponent extends React.Component {
     }
 
     componentWillMount() {
-        //console.log("[BaseComponent] ----- componentWillMount ----->", this.store);
         if (this.stores) {
             for (let storeName in this.stores) {
                 this.stores[storeName].listen(this.onChange.bind(this));
             }
         }
-
-
     }
 
     componentWillUnmount() {

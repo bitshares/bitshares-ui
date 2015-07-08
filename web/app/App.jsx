@@ -77,15 +77,15 @@ class App extends BaseComponent {
         Apis.instance().init_promise.then(() => {
             let idb_instance = iDB.init_instance(indexedDB);
             Promise.all([
-                    
-                idb_instance.init_promise.then( db => {
-                    let idb_promises = [];
-                    AccountStore.loadDbData(); // TODO child_promises
-                    idb_promises.push(WalletStore.loadDbData());
-                    return Promise.all(idb_promises);
-                }),
-                
                 AccountActions.getAllAccounts().then(current_account_id => {
+                    idb_instance.init_promise.then( db => {
+                        let idb_promises = [];
+                        AccountStore.loadDbData().then( () => {
+                            AccountStore.tryToSetCurrentAccount();
+                        });
+                        idb_promises.push(WalletStore.loadDbData());
+                        return Promise.all(idb_promises);
+                    });
                     return current_account_id;
                 }).then(current_account_id => {
                     let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;

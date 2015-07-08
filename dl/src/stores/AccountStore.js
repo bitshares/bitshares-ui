@@ -10,12 +10,12 @@ class AccountStore extends BaseStore {
         super();
         this.currentAccount = null;
         this.cachedAccounts = Immutable.Map();
-        this.accounts = Immutable.Map();
+        this.linkedAccounts = Immutable.Set();
+        this.payeeAccounts = Immutable.Set();
         this.balances = Immutable.Map();
         this.accountHistories = Immutable.Map();
         this.account_name_to_id = {};
         this.account_id_to_name = {};
-        this.my_accounts = Immutable.Set();
         this.bindListeners({
             onGetAllAccounts: AccountActions.getAllAccounts,
             onGetAccount: AccountActions.getAccount,
@@ -23,14 +23,15 @@ class AccountStore extends BaseStore {
             onTransfer: AccountActions.transfer,
             onCreateAccount: AccountActions.createAccount,
             onUpgradeAccount: AccountActions.upgradeAccount,
-            onGetAccounts: AccountActions.getAccounts
+            onGetAccounts: AccountActions.getAccounts,
+            onLinkAccount: AccountActions.linkAccount
         });
-        this._export("loadDbData");
+        this._export("loadDbData", "tryToSetCurrentAccount");
     }
 
     loadDbData() {
-        iDB.load_data("my_accounts").then( data => {
-            this.my_accounts = this.my_accounts.withMutations(set => {
+        return iDB.load_data("linked_accounts").then( data => {
+            this.linkedAccounts = this.linkedAccounts.withMutations(set => {
                 for(let a of data) {
                     set.add(a.name);
                 }
@@ -42,12 +43,6 @@ class AccountStore extends BaseStore {
         accounts.forEach(account => {
             this.account_id_to_name[account[1]] = account[0];
             this.account_name_to_id[account[0]] = account[1];
-            if (account[0] === "nathan") {
-                this.currentAccount = {
-                    name: account[0],
-                    id: account[1]
-                };
-            }
         });
     }
 
@@ -55,12 +50,6 @@ class AccountStore extends BaseStore {
         accounts.forEach(account => {
             this.account_id_to_name[account[1]] = account[0];
             this.account_name_to_id[account[0]] = account[1];
-            if (account[0] === "nathan") {
-                this.currentAccount = {
-                    name: account[0],
-                    id: account[1]
-                };
-            }
         });
     }
 
@@ -98,11 +87,6 @@ class AccountStore extends BaseStore {
                     newAccount
                 );
 
-                this.accounts = this.accounts.set(
-                    account.id,
-                    newAccount
-                );
-
                 this.accountHistories = this.accountHistories.set(
                     account.id,
                     result[2]
@@ -111,15 +95,20 @@ class AccountStore extends BaseStore {
         }
     }
 
-    getCurrent() {
-        this.getAccount(this.currentAccount.name);
+    tryToSetCurrentAccount() {
+        console.log("[AccountStore.js:99] ----- tryToSetCurrentAccount ----->", this.linkedAccounts.first());
+        if(this.linkedAccounts.size > 0) this.setCurrentAccount(this.linkedAccounts.first());
     }
 
-    onSetCurrentAccount(name) {
+    setCurrentAccount(name) {
         this.currentAccount = {
             name: name,
             id: this.account_name_to_id[name]
         };
+    }
+
+    onSetCurrentAccount(name) {
+        this.setCurrentAccount(name);
     }
 
     onTransfer(result) {
@@ -127,14 +116,21 @@ class AccountStore extends BaseStore {
     }
 
     onCreateAccount(name) {
-        iDB.add_to_store("my_accounts", {name}).then( (name) => {
+        iDB.add_to_store("linked_accounts", {name}).then( (name) => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", name);
-            this.my_accounts = this.my_accounts.add(name);
+            this.linkedAccounts = this.linkedAccounts.add(name);
+            if(this.linkedAccounts.size === 1) this.setCurrentAccount(name);
         });
     }
 
     onUpgradeAccount(account_id) {
         console.log("[AccountStore.js] ----- onUpgradeAccount ----->", account_id);
+    }
+
+    onLinkAccount(name) {
+        iDB.add_to_store("linked_accounts", {name});
+        this.linkedAccounts = this.linkedAccounts.add(name);
+        if(this.linkedAccounts.size === 1) this.setCurrentAccount(name);
     }
 
 }

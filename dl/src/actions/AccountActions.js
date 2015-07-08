@@ -173,6 +173,10 @@ class AccountActions {
         });
     }
 
+    linkAccount(name) {
+        this.dispatch(name);
+    }
+
 }
 
 module.exports = alt.createActions(AccountActions);

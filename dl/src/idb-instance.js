@@ -1,6 +1,6 @@
 import idb_helper from "./idb-helper"
 
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 var iDB = (function () {
 
@@ -14,13 +14,14 @@ var iDB = (function () {
 
             openRequest.onupgradeneeded = function (e) {
                 let db = e.target.result;
-                if (e.oldVersion < 1) {
-                    db.createObjectStore("my_accounts", { keyPath: "name" });
-                }
                 if (e.oldVersion < 2) {
                     idb_helper.autoIncrement_unique(db, "wallets", "public_name")
                     idb_helper.autoIncrement_unique(db, "private_keys", "encrypted_key")
                     idb_helper.autoIncrement_unique(db, "public_keys", "pubkey")
+                }
+                if (e.oldVersion < 3) {
+                    db.createObjectStore("linked_accounts", { keyPath: "name" });
+                    db.createObjectStore("payee_accounts", { keyPath: "name" });
                 }
                 
                 idb_helper.set_graphene_db(db) //last
