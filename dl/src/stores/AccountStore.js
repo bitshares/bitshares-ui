@@ -9,7 +9,7 @@ class AccountStore extends BaseStore {
     constructor() {
         super();
         this.currentAccount = null;
-        this.browseAccounts = Immutable.Map();
+        this.cachedAccounts = Immutable.Map();
         this.accounts = Immutable.Map();
         this.balances = Immutable.Map();
         this.accountHistories = Immutable.Map();
@@ -93,7 +93,7 @@ class AccountStore extends BaseStore {
 
                 let newAccount = Account(account);
 
-                this.browseAccounts = this.browseAccounts.set(
+                this.cachedAccounts = this.cachedAccounts.set(
                     account.id,
                     newAccount
                 );

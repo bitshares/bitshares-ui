@@ -10,16 +10,16 @@ class AccountOverview extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.account_name !== this.props.account_name ||
-            nextProps.browseAccounts !== this.props.browseAccounts ||
+            nextProps.cachedAccounts !== this.props.cachedAccounts ||
             nextProps.assets !== this.props.assets ||
             nextProps.accountBalances !== this.props.accountBalances
         );
     }
 
     render() {
-        let {account_name, browseAccounts, account_name_to_id, assets, accountBalances} = this.props;
+        let {account_name, cachedAccounts, account_name_to_id, assets, accountBalances} = this.props;
         let account_id = account_name_to_id[account_name]
-        let account = account_id ? browseAccounts.get(account_id) : null;
+        let account = account_id ? cachedAccounts.get(account_id) : null;
         if(!account) return <div>Account {account_name} couldn't be displayed</div>;
         let balances = accountBalances.get(account.id).map( balance => {
             balance.amount = parseFloat(balance.amount);

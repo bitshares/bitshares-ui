@@ -8,8 +8,8 @@ import WitnessStore from "stores/WitnessStore";
 class AccountHistory extends React.Component {
 
     render() {
-        let {account_name, browseAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
-        let account = account_name_to_id[account_name] ? browseAccounts.get(account_name_to_id[account_name]) : null;
+        let {account_name, cachedAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
+        let account = account_name_to_id[account_name] ? cachedAccounts.get(account_name_to_id[account_name]) : null;
         if(!account) return <div>Account {account_name} couldn't be displayed</div>;
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = accountHistories.get(account.id).map((trx, index) => {
