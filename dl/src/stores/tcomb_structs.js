@@ -85,13 +85,14 @@ let PrivateKeyTcomb = t.struct({
 }, "PrivateKeyTcomb");
 
 let Witness = t.struct({
-    id: t.Str,
-    witness_account: t.Str,
-    signing_key: t.Str,
-    next_secret: t.Str,
-    last_secret: t.Str,
     accumulated_income: t.Num,
-    vote_id: t.Str
+    id: t.Str,
+    next_secret_hash: t.Str,
+    previous_secret: t.Str,
+    signing_key: t.Str,
+    url: t.Str,
+    vote_id: t.Str,
+    witness_account: t.Str
 }, "Witness");
 
 let Delegate = t.struct({
