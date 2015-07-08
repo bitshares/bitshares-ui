@@ -109,19 +109,24 @@ class Exchange extends React.Component {
 
     _depthChartClick(e) {
         e.preventDefault();
+        let base_id = this.props.asset_symbol_to_id[this.props.base];
+        let base = this.props.assets.get(base_id);
+        let precision = utils.get_asset_precision(base.precision);
+        let value = Math.round(precision * e.xAxis[0].value) / precision;
         this.setState({
-            buyPrice: Math.round(100 * e.xAxis[0].value) / 100,
-            sellPrice: Math.round(100 * e.xAxis[0].value) / 100
+            buyPrice: value,
+            sellPrice: value,
+            depthLine: value
         });
     }
 
     _buyAmountChanged(e) { this.setState({buyAmount: e.target.value}); }
 
-    _buyPriceChanged(e) { this.setState({buyPrice: e.target.value}); }
+    _buyPriceChanged(e) { this.setState({buyPrice: e.target.value, depthLine: e.target.value}); }
 
     _sellAmountChanged(e) { this.setState({sellAmount: e.target.value}); }
 
-    _sellPriceChanged(e) { this.setState({sellPrice: e.target.value}); }
+    _sellPriceChanged(e) { this.setState({sellPrice: e.target.value, depthLine: e.target.value}); }
 
     _changeTab(value) {
         this.setState({activeTab: value});
@@ -214,6 +219,8 @@ class Exchange extends React.Component {
                                         baseSymbol={baseSymbol}
                                         quoteSymbol={quoteSymbol}
                                         height={300}
+                                        onClick={this._depthChartClick.bind(this)}
+                                        plotLine={this.state.depthLine}
                                     />
                                 </Tabs.Tab>
                             </Tabs>
