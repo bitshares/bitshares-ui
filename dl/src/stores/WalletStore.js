@@ -175,7 +175,6 @@ class WalletStore extends BaseStore {
         private_wifs  = [],
         unlock = false
     ) {
-        var self = this
         return new Promise( (resolve, reject) => {
             if(this.wallets.get(wallet_public_name)) {
                 reject("wallet exists")

@@ -15,8 +15,7 @@
   },
   "scripts": {
     "postinstall": "",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:mocha-babel --require coffee-script/register",
-    "test:webpack": "webpack 'mocha!./test-webpack/wallet_action_test.js'"
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:mocha-babel --require coffee-script/register"
   },
   "dependencies": {
     "alt": "~0.15.3",
