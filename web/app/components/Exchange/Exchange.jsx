@@ -9,6 +9,7 @@ import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
+import AccountActions from "actions/AccountActions";
 
 require("./exchange.scss");
 
@@ -50,7 +51,7 @@ class Exchange extends React.Component {
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
         if (sellAssetAmount > balance) {
-            this.props.addNotification({
+            return this.props.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
                 level: "error"
             });
@@ -59,7 +60,7 @@ class Exchange extends React.Component {
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
-            this.props.account.id,
+            this.props.currentAccount.id,
             sellAssetAmount * utils.get_asset_precision(sellAsset.precision),
             sellAsset.id,
             buyAssetAmount * utils.get_asset_precision(buyAsset.precision),
@@ -79,9 +80,9 @@ class Exchange extends React.Component {
     _cancelLimitOrder(orderID, e) {
         e.preventDefault();
         console.log("cancelling limit order:", orderID);
-        let {account} = this.props;
+        let {currentAccount} = this.props;
         MarketsActions.cancelLimitOrder(
-            account.id,
+            currentAccount.id,
             orderID // order id to cancel
         ).then(result => {
             if (!result) {
@@ -145,7 +146,7 @@ class Exchange extends React.Component {
     }
 
     render() {
-        let {asset_symbol_to_id, assets, account, limit_orders,
+        let {asset_symbol_to_id, assets, currentAccount, limit_orders,
             short_orders, base: baseSymbol, quote: quoteSymbol,
             balances, totalBids, flat_asks, flat_bids, bids, asks} = this.props;
         let {buyAmount, buyPrice, sellAmount, sellPrice} = this.state;
@@ -157,21 +158,21 @@ class Exchange extends React.Component {
             base = assets.get(base_id);
             quote = assets.get(quote_id);
 
-            accountBalance = balances.get(account.id);
+            accountBalance = balances.get(currentAccount.id);
 
-            for (var i = 0; i < accountBalance.length; i++) {
-                if (accountBalance[i].asset_id === quote_id) {
-                    quoteBalance = parseInt(accountBalance[i].amount, 10);
+            if (accountBalance) {
+                for (var i = 0; i < accountBalance.length; i++) {
+                    if (accountBalance[i].asset_id === quote_id) {
+                        quoteBalance = parseInt(accountBalance[i].amount, 10);
+                    }
+                    if (accountBalance[i].asset_id === base_id) {
+                        baseBalance = parseInt(accountBalance[i].amount, 10);
+                    }
                 }
-                if (accountBalance[i].asset_id === base_id) {
-                    baseBalance = parseInt(accountBalance[i].amount, 10);
-                }
+            } else {
+                AccountActions.getAccount(currentAccount.id);
             }
         }
-
-        // let buyTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "buy"});
-        // let sellTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "sell"});
-        // let marginTabClass = classNames("tab-item", {"is-active": this.state.activeTab === "margin"});
 
         return (
 
@@ -270,7 +271,7 @@ class Exchange extends React.Component {
                         <div className="grid-block" style={{minHeight: "20rem"}}>
                             <MyOpenOrders
                                 orders={limit_orders}
-                                account={account.id}
+                                currentAccount={currentAccount.id}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}

@@ -53,7 +53,7 @@ class ExchangeContainer extends React.Component {
                     asset_symbol_to_id: () => {
                         return AssetStore.getState().asset_symbol_to_id;
                     },
-                    account: () => {
+                    currentAccount: () => {
                         return AccountStore.getState().currentAccount;
                     },
                     balances: () => {

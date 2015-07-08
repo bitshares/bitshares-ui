@@ -7,7 +7,8 @@ class BuySell extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 nextProps.amount !== this.props.amount ||
-                nextProps.price !== this.props.price
+                nextProps.price !== this.props.price ||
+                nextProps.balance !== this.props.balance
             );
     }
 

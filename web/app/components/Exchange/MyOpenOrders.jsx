@@ -10,7 +10,7 @@ import Ps from "perfect-scrollbar";
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
-                nextProps.account.id !== this.props.account.id ||
+                nextProps.currentAccount.id !== this.props.currentAccount.id ||
                 !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
@@ -21,13 +21,13 @@ class MyOpenOrders extends React.Component {
     }
 
     render() {
-        let {orders, account, base, quote, quoteSymbol, baseSymbol} = this.props;
+        let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
         let bids = null, asks = null;
 
         if(orders.size > 0 && base && quote) {    
 
             bids = orders.filter(a => {
-                return (a.seller === account && a.sell_price.quote.asset_id !== base.id); 
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id); 
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
@@ -63,7 +63,7 @@ class MyOpenOrders extends React.Component {
             }).toArray();
 
             asks = orders.filter(a => {
-                return (a.seller === account && a.sell_price.quote.asset_id === base.id); 
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.id); 
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
