@@ -102,7 +102,7 @@ class Transaction extends React.Component {
 
         ids.forEach((id, index) => {
             if (id && !this.props.accounts[id]) {
-                AccountActions.getAccount(id);
+                AccountActions.getAccounts(id, 1);
                 missing[index] = true;
             }
         });

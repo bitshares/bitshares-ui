@@ -9,7 +9,6 @@ class Accounts extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            !Immutable.is(nextProps.accounts, this.props.accounts) ||
             Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
         );
     }

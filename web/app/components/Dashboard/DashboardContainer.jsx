@@ -10,8 +10,8 @@ class DashboardContainer extends React.Component {
             <AltContainer
                 stores={[AccountStore, AssetStore]}
                 inject={{
-                accounts: () => {
-                    return AccountStore.getState().accounts;
+                linkedAccounts: () => {
+                    return AccountStore.getState().linkedAccounts;
                 },
                 balances: () => {
                     return AccountStore.getState().balances;

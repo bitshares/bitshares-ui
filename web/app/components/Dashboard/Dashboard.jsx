@@ -7,7 +7,7 @@ class Dashboard extends Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            !Immutable.is(nextProps.accounts, this.props.accounts) ||
+            !Immutable.is(nextProps.linkedAccounts, this.props.linkedAccounts) ||
             !Immutable.is(nextProps.balances, this.props.balances) ||
             !Immutable.is(nextProps.assets, this.props.assets)
         );
@@ -15,14 +15,14 @@ class Dashboard extends Component {
 
     render() {
         console.log("[Dashboard.jsx:24] ----- render ----->", this.props);
-        let {assets, balances, accounts} = this.props;
+        let {assets, balances, linkedAccounts} = this.props;
 
-        let itemRows = accounts
+        let itemRows = linkedAccounts
             .sort((a, b) => { // By BTS balance first then by name
                 // if (b.balances[0].amount - a.balances[0].amount === 0) {
-                if (b.name > a.name) {
+                if (b > a) {
                     return -1;
-                } else if (b.name < a.name) {
+                } else if (b < a) {
                     return 1;
                 }
                 return 0;
@@ -32,7 +32,7 @@ class Dashboard extends Component {
             .map((a) => {
                 return (
                     <AccountCard
-                        key={a.name}
+                        key={a}
                         assets={assets}
                         account={a}
                         balances={balances.get(a.id)}
@@ -56,12 +56,12 @@ class Dashboard extends Component {
 
 
 Dashboard.defaultProps = {
-    accounts: {},
+    linkedAccounts: {},
     assets: {}
 };
 
 Dashboard.propTypes = {
-    accounts: PropTypes.object.isRequired,
+    linkedAccounts: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired
 };
 

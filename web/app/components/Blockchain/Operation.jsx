@@ -79,8 +79,8 @@ class Operation extends React.Component {
         let missing = new Array(ids.length);
 
         ids.forEach((id, index) => {
-            if (id && !this.props.accounts[id]) {
-                AccountActions.getAccount(id);
+            if (id && !this.props.account_id_to_name[id]) {
+                AccountActions.getAccounts(id, 1);
                 missing[index] = true;
             }
         });
@@ -127,7 +127,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, accounts, assets, current, block, witnesses, witness_id_to_name, inverted} = this.props;
+        let {op, account_id_to_name, assets, current, block, witnesses, witness_id_to_name, inverted} = this.props;
 
         let line = null, column = null, color;
 
@@ -140,20 +140,20 @@ class Operation extends React.Component {
                 let missingAssets = this.getAssets([op[1].amount.asset_id]);
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
 
-                if (current === accounts[op[1].from]) {
+                if (current === account_id_to_name[op[1].from]) {
 
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
-                            &nbsp;<Translate component="span" content="transaction.to" /> {accounts[op[1].to] ? this.linkToAccount(accounts[op[1].to]) : op[1].to}
+                            &nbsp;<Translate component="span" content="transaction.to" /> {account_id_to_name[op[1].to] ? this.linkToAccount(account_id_to_name[op[1].to]) : op[1].to}
                         </td>
                     );
-                } else if(current === accounts[op[1].to]){
+                } else if(current === account_id_to_name[op[1].to]){
                     column = (
                         <td className="right-td"><Translate component="span" content="transaction.received" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
-                            &nbsp;<Translate component="span" content="transaction.from" /> {accounts[op[1].from] ? this.linkToAccount(accounts[op[1].from]) : op[1].from}
+                            &nbsp;<Translate component="span" content="transaction.from" /> {account_id_to_name[op[1].from] ? this.linkToAccount(account_id_to_name[op[1].from]) : op[1].from}
                         </td>
                     );
                 }
@@ -250,7 +250,7 @@ class Operation extends React.Component {
             case "account_create":
                 let missingAccounts = this.getAccounts(op[1].registrar);
 
-                if (current === accounts[op[1].registrar]) {
+                if (current === account_id_to_name[op[1].registrar]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.reg_account" />
@@ -262,7 +262,7 @@ class Operation extends React.Component {
                         <td className="right-td">
                             {this.linkToAccount(op[1].name)}
                             &nbsp;<Translate component="span" content="transaction.was_reg_account" /> 
-                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].registrar]) : op[1].registrar}
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].registrar]) : op[1].registrar}
                         </td>
                     );    
                 }
@@ -274,7 +274,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.update_account" /> 
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].account]) : null}
                     </td>
                 );
 
@@ -283,18 +283,18 @@ class Operation extends React.Component {
             case "account_whitelist":
                 let missingAccounts = this.getAccounts([op[1].authorizing_account, op[1].account_to_list]);
 
-                if (current === accounts[op[1].authorizing_account]) {
+                if (current === account_id_to_name[op[1].authorizing_account]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.whitelist_account" />
-                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].account_to_list]) : null}
+                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].account_to_list]) : null}
                         </td>
                     );
                 } else {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.whitelisted_by" />
-                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].authorizing_account]) : null}
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].authorizing_account]) : null}
                         </td>
                     );
                 }
@@ -318,9 +318,9 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.transfer_account" />
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].account_id]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].account_id]) : null}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].new_owner]) : null}
+                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].new_owner]) : null}
                     </td>
                 );
 
@@ -358,7 +358,7 @@ class Operation extends React.Component {
                 color = "warning";
                 let missingAssets = this.getAssets(op[1].asset_to_update);
 
-                if (current === accounts[op[1].issuer]) {
+                if (current === account_id_to_name[op[1].issuer]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.update_feed_producers" />
@@ -380,13 +380,13 @@ class Operation extends React.Component {
                 let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
                 let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
 
-                if (current === accounts[op[1].issuer]) {
+                if (current === account_id_to_name[op[1].issuer]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.asset_issue" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={assets.get(op[1].asset_to_issue.asset_id)} /> : null}
                             &nbsp;<Translate component="span" content="transaction.to" />
-                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].issue_to_account]) : null}
+                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].issue_to_account]) : null}
                         </td>
                     );
                 } else {
@@ -395,7 +395,7 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.was_issued" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={assets.get(op[1].asset_to_issue.asset_id)} /> : null}
                             &nbsp;<Translate component="span" content="transaction.by" />
-                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].issuer]) : null}
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].issuer]) : null}
                         </td>
                     );
                 }
@@ -474,7 +474,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.delegate_create" /> 
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].delegate_account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].delegate_account]) : null}
                     </td>
                 );
                 
@@ -486,7 +486,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.witness_create" /> 
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].witness_account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].witness_account]) : null}
                     </td>
                 );
 
@@ -497,13 +497,13 @@ class Operation extends React.Component {
                 let missingAssets = this.getAssets("1.3.0");
                 let missingWitnesses = this.fetchWitnesses(op[1].witness_account, witnesses, witness_id_to_name);
                 
-                if (current === accounts[op[1].witness_account]) {
+                if (current === account_id_to_name[op[1].witness_account]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.witness_pay" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.3.0")} /> : null}
                             <Translate component="span" content="transaction.to" /> 
-                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].witness_account]) : null}
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].witness_account]) : null}
                         </td>
                     );
                 } else {
@@ -549,9 +549,9 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.withdraw_permission_create" />
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].withdraw_from_account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].withdraw_from_account]) : null}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].authorized_account]) : null}
+                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].authorized_account]) : null}
                     </td>
                 );
 
@@ -563,9 +563,9 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.withdraw_permission_update" />
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].withdraw_from_account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].withdraw_from_account]) : null}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].authorized_account]) : null}
+                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].authorized_account]) : null}
                     </td>
                 );
 
@@ -577,9 +577,9 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.withdraw_permission_claim" />
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].withdraw_from_account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].withdraw_from_account]) : null}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].withdraw_to_account]) : null}
+                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].withdraw_to_account]) : null}
                     </td>
                 );
 
@@ -591,9 +591,9 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.withdraw_permission_delete" />
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].withdraw_from_account]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].withdraw_from_account]) : null}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].authorized_account]) : null}
+                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].authorized_account]) : null}
                     </td>
                 );
 
@@ -638,10 +638,10 @@ class Operation extends React.Component {
                 
                 column = (
                     <td className="right-td">
-                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].creator]) : null}
+                        &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].creator]) : null}
                         <Translate component="span" content="transaction.vesting_balance_create" />
                         &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
-                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].owner]) : null}
+                        &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].owner]) : null}
                     </td>
                 );
 
@@ -685,22 +685,22 @@ class Operation extends React.Component {
                 let missingAssets = this.getAssets([op[1].amount_borrowed.asset_id]);
                 let missingAccounts = this.getAccounts([op[1].lender, op[1].borrower]);
 
-                if (current === accounts[op[1].lender]) {
+                if (current === account_id_to_name[op[1].lender]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_accept_offer" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={assets.get(op[1].amount_borrowed.asset_id)} /> : null}
                             <Translate component="span" content="transaction.to" />
-                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].borrower]) : null}
+                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].borrower]) : null}
                         </td>
                     );
-                } else if (current === accounts[op[1].borrower]) {
+                } else if (current === account_id_to_name[op[1].borrower]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_accept_offer" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={assets.get(op[1].amount_borrowed.asset_id)} /> : null}
                             <Translate component="span" content="transaction.from" />
-                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].lender]) : null}
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].lender]) : null}
                         </td>
                     );
                 }
@@ -711,22 +711,22 @@ class Operation extends React.Component {
                 let missingAssets = this.getAssets([op[1].collateral_claimed.asset_id]);
                 let missingAccounts = this.getAccounts([op[1].lender, op[1].claimer]);
 
-                if (current === accounts[op[1].lender]) {
+                if (current === account_id_to_name[op[1].lender]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_pay_collateral" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={assets.get(op[1].collateral_claimed.asset_id)} /> : null}
                             <Translate component="span" content="transaction.to" />
-                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(accounts[op[1].claimer]) : null}
+                            &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].claimer]) : null}
                         </td>
                     );
-                } else if (current === accounts[op[1].claimer]) {
+                } else if (current === account_id_to_name[op[1].claimer]) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_claim_collateral" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={assets.get(op[1].collateral_claimed.asset_id)} /> : null}
                             <Translate component="span" content="transaction.from" />
-                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(accounts[op[1].lender]) : null}
+                            &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].lender]) : null}
                         </td>
                     );
                 }
@@ -780,7 +780,7 @@ class Operation extends React.Component {
 Operation.defaultProps = {
     op: [],
     current: "",
-    accounts: {},
+    account_id_to_name: {},
     assets: {},
     block: false,
     witnesses: {},
@@ -790,7 +790,7 @@ Operation.defaultProps = {
 Operation.propTypes = {
     op: PropTypes.array.isRequired,
     current: PropTypes.string.isRequired,
-    accounts: PropTypes.object.isRequired,
+    account_id_to_name: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired,
     block: PropTypes.number,
     witnesses: PropTypes.object,

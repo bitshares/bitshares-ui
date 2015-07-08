@@ -15,8 +15,8 @@ class AssetsContainer extends React.Component {
                     assets: () => {
                         return AssetStore.getState().assets;
                     },
-                    accounts: () => {
-                        return AccountStore.getState().accounts;
+                    account_id_to_name: () => {
+                        return AccountStore.getState().account_id_to_name;
                     }
                   }} 
                   >

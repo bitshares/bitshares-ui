@@ -18,7 +18,7 @@ class AccountHistory extends React.Component {
                     key={index}
                     op={trx.op}
                     block={trx.block_num}
-                    accounts={account_id_to_name}
+                    account_id_to_name={account_id_to_name}
                     assets={assets}
                     current={account_name}
                     witnesses={witness_store_state.witnesses}

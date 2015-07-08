@@ -71,15 +71,17 @@ class AccountCard extends React.Component {
 
         let {account, assets, balances} = this.props;
 
+        console.log("accountcard props:", this.props);
+
         return (
             <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
                 <div className="card">
-                    <Link to="account" params={{name: account.name}}>
+                    <Link to="account" params={{name: account}}>
                         <div>
-                            <AccountImage account={account.name} size={{height: 150, width: 150}}/>
+                            <AccountImage account={account} size={{height: 150, width: 150}}/>
                         </div>
                         <div className="card-divider">
-                            {account.name}
+                            {account}
                         </div>
                         <div className="card-section" style={{padding: 0}}>
                             <BalanceTreemap assets={assets} balances={balances}/>

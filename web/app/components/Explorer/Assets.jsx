@@ -10,22 +10,22 @@ class Assets extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.assets, this.props.assets) ||
-                !Immutable.is(nextProps.accounts, this.props.accounts)
+                Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
             );
     }
 
     _getAccount(id) {
 
-        if (this.props.accounts.get(id)) {
-            return this.props.accounts.get(id);
+        if (this.props.account_id_to_name[id]) {
+            return this.props.account_id_to_name[id];
         } else {
-            AccountActions.getAccount(id);
+            AccountActions.getAccounts(id, 1);
             return false;
         }
     }
 
     render() {
-        let {assets, accounts} = this.props;
+        let {assets, account_id_to_name} = this.props;
 
         let uia = assets.filter(a => {
             return !a.market_asset;
@@ -36,7 +36,7 @@ class Assets extends React.Component {
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{asset.id}</td>
-                    <td>{account ? <Link to="account" params={{name: account.name}}>{account.name} </Link> : asset.issuer}</td>
+                    <td>{account ? <Link to="account" params={{name: account}}>{account} </Link> : asset.issuer}</td>
                 </tr>
             );
         }).toArray();
@@ -50,7 +50,7 @@ class Assets extends React.Component {
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{asset.id}</td>
-                    <td>{account ? <Link to="account" params={{name: account.name}}>{account.name} </Link> : asset.issuer}</td>
+                    <td>{account ? <Link to="account" params={{name: account}}>{account} </Link> : asset.issuer}</td>
                 </tr>
             );
         }).toArray();
@@ -100,12 +100,12 @@ class Assets extends React.Component {
 
 Assets.defaultProps = {
     assets: {},
-    accounts: {}
+    account_id_to_name: {}
 };
 
 Assets.propTypes = {
     assets: PropTypes.object.isRequired,
-    accounts: PropTypes.object.isRequired
+    account_id_to_name: PropTypes.object.isRequired
 };
 
 export default Assets;
