@@ -136,6 +136,14 @@ class Exchange extends React.Component {
         this.setState({showBuySell: !this.state.showBuySell});
     }
 
+    _orderbookClick(price, type) {
+        if (type === "bid") {
+            this.setState({sellPrice: price});
+        } else if (type === "ask") {
+            this.setState({buyPrice: price});
+        }
+    }
+
     render() {
         let {asset_symbol_to_id, assets, account, limit_orders,
             short_orders, base: baseSymbol, quote: quoteSymbol,
@@ -182,6 +190,7 @@ class Exchange extends React.Component {
                                 quote={quote}
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
+                                onClick={this._orderbookClick.bind(this)}
                             />                            
                         </div>
                     </div>

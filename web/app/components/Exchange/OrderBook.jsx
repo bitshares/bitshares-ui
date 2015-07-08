@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes} from "react/addons";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
+import utils from "common/utils";
 
 class OrderBook extends React.Component {
     constructor() {
@@ -59,7 +60,7 @@ class OrderBook extends React.Component {
 
             bidRows = bids.map(order => {
                 return (
-                     <tr key={order.price_full}>
+                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, "bid")}>
                         <td className="show-for-medium">{(order.value).toFixed(3)}</td>
                         <td>{order.amount.toFixed(3)}</td>
                         <td className="orderHistoryBid">
@@ -79,7 +80,7 @@ class OrderBook extends React.Component {
 
             askRows = asks.map(order => {
                 return (
-                     <tr key={order.price_full}>
+                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, "ask")}>
                         <td className="show-for-medium">{order.value.toFixed(3)}</td>
                         <td >{order.amount.toFixed(3)}</td>
                         <td className="orderHistoryAsk">
@@ -95,6 +96,8 @@ class OrderBook extends React.Component {
             // console.log("time to process asks in orderbook:", new Date() - start, "ms");
         }
 
+        let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
+
         return (
                 <div className="grid-content" style={{overflowY: "hidden"}}>
                     <table className="table order-table fixed-height">
@@ -109,7 +112,7 @@ class OrderBook extends React.Component {
                                     {bidRows}
                                 </tbody>
                                 <tr>
-                                    <td colSpan="3" className="text-center">Spread: {high > 0 && low > 0 ? low - high : 0} {baseSymbol}</td>
+                                    <td colSpan="3" className="text-center">Spread: {spread} {baseSymbol}</td>
                                 </tr>
                                 <tbody ref="asksTbody" className="orderbook ps-container">
                                     {askRows}
