@@ -68,11 +68,11 @@ let WalletTcomb = t.struct({
     backed_up: t.maybe(t.Bool)
 }, "WalletTcomb");
 
-let PublicKeyTcomb = t.struct({
-    id: t.maybe(t.Num),
-    pubkey: t.Str,
-    key_id: t.maybe(t.Str)
-}, "PublicKeyTcomb");
+//let PublicKeyTcomb = t.struct({
+//    id: t.maybe(t.Num),
+//    pubkey: t.Str,
+//    key_id: t.maybe(t.Str)
+//}, "PublicKeyTcomb");
 
 let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
@@ -170,7 +170,7 @@ module.exports = {
     Asset: Asset,
     Block: Block,
     WalletTcomb: WalletTcomb,
-    PublicKeyTcomb: PublicKeyTcomb,
+    //PublicKeyTcomb: PublicKeyTcomb,
     PrivateKeyTcomb: PrivateKeyTcomb,
     Witness: Witness,
     Delegate: Delegate,

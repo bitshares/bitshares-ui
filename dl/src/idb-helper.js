@@ -22,7 +22,7 @@ module.exports = idb_helper = {
                     error:evt.target.error.message,
                     data: evt
                 }
-                console.log("ERROR idb-helper.promise request", error)
+                console.log("ERROR idb_helper.promise request", error)
                 reject(error)
             }
         })
@@ -34,8 +34,9 @@ module.exports = idb_helper = {
             data_object
         ).then( result => {
             var [ evt, data_object ] = result
-            if ( ! evt.target.result == void 0)
+            if ( evt.target.result != void 0)
                 data_object.id = evt.target.result
+            
             return callback ? callback(data_object) : data_object
         })
     },
@@ -47,7 +48,7 @@ module.exports = idb_helper = {
                     [store_name], "readonly"
                 )
                 transaction.onerror = error => {
-                    console.error("ERROR idb-helper.cursor transaction", error)
+                    console.error("ERROR idb_helper.cursor transaction", error)
                     reject(error)
                 }
             }
@@ -65,7 +66,7 @@ module.exports = idb_helper = {
                     error: e.target.error.message,
                     data: e
                 }
-                console.log("ERROR idb-helper.cursor request", error)
+                console.log("ERROR idb_helper.cursor request", error)
                 reject(error);
             };
             

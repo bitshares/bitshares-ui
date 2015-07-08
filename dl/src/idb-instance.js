@@ -16,8 +16,7 @@ var iDB = (function () {
                 let db = e.target.result;
                 if (e.oldVersion < 2) {
                     idb_helper.autoIncrement_unique(db, "wallets", "public_name")
-                    idb_helper.autoIncrement_unique(db, "private_keys", "encrypted_key")
-                    idb_helper.autoIncrement_unique(db, "public_keys", "pubkey")
+                    idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
                 }
                 if (e.oldVersion < 3) {
                     db.createObjectStore("linked_accounts", { keyPath: "name" });

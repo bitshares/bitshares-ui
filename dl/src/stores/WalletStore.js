@@ -89,8 +89,10 @@ class WalletStore extends BaseStore {
                 password + this.secret_server_token,
                 wallet.password_checksum
             )
-            if(unlock)
+            if(unlock) {
                 aes_private_map[wallet_public_name] = aes_private
+                this.current_wallet = wallet_public_name
+            }
         } catch(e) {
             console.log('password error', e)
         }
@@ -146,30 +148,34 @@ class WalletStore extends BaseStore {
                 reject("missing wallet " + wallet_public_name)
                 return
             }
-            var new_wallet = WalletTcomb.update(wallet, {
-                brainkey_sequence: {'$set': wallet.brainkey_sequence + 1}
+            // https://github.com/gcanti/tcomb/issues/110
+            //var new_wallet = WalletTcomb.update(wallet, {
+            //    brainkey_sequence: {'$set': wallet.brainkey_sequence + 1}
+            //})
+            var new_wallet = wallet
+            wallet.brainkey_sequence = wallet.brainkey_sequence + 1
+            var wallet_store = transaction.objectStore("wallets")
+            return idb_helper.promise(
+                wallet_store.put(new_wallet)
+            ).then( () => {
+                // Update RAM
+                this.wallets.set(
+                    new_wallet.public_name,
+                    new_wallet
+                )
+                resolve()
             })
-            return new_wallet => {
-                return idb_helper.promise(
-                    transaction.objectStore("wallets").set(new_wallet)
-                ).then( () => {
-                    // Update RAM
-                    this.wallets.set(
-                        new_wallet.public_name,
-                        new_wallet
-                    )
-                })
-            }(new_wallet)
         })
     }
     
     onCreate(
-        wallet_public_name, 
+        wallet_public_name = "default", 
         password_plaintext,
         brainkey_plaintext,
-        private_wifs,
+        private_wifs  = [],
         unlock = false
     ) {
+        var self = this
         return new Promise( (resolve, reject) => {
             if(this.wallets.get(wallet_public_name)) {
                 reject("wallet exists")
@@ -206,39 +212,45 @@ class WalletStore extends BaseStore {
                 brainkey_sequence: 0
             }
             
-            return (wallet, unlock, password_aes_private, private_wifs) => {
-                return idb_helper.add(
-                    transaction.objectStore("wallets"), wallet, () => {
-                        try {
-                            var promises = []
-                            for(let wif of private_wifs) {
-                                var private_key = PrivateKey.fromWif(wif)
-                                var promise = this.saveKey(
-                                    password_aes_private,
-                                    wallet.public_name,
-                                    wallet.id,
-                                    private_key,
-                                    null, //brainkey_pos
-                                    transaction
-                                )
-                                promises.push(promise)
-                            }
-                            
-                            return Promise.all(promises).then( ()=> {
-                                this.wallets = this.wallets.set(
-                                    wallet.public_name,
-                                    WalletTcomb(wallet)
-                                )
-                                if(unlock)
-                                    aes_private_map[wallet_public_name] =
-                                        password_aes_private
-                            })
-                        }catch(e) {
-                            return Promise.reject(e)
+            return idb_helper.add(
+                transaction.objectStore("wallets"), wallet, () => {
+                    try {
+                        var promises = []
+                        for(let wif of private_wifs) {
+                            var private_key = PrivateKey.fromWif(wif)
+                            var promise = this.saveKey(
+                                password.aes_private,
+                                wallet.public_name,
+                                wallet.id,
+                                private_key,
+                                null, //brainkey_pos
+                                transaction
+                            )
+                            promises.push(promise)
                         }
+                        
+                        return Promise.all(promises).then( ()=> {
+                            this.wallets = this.wallets.set(
+                                wallet.public_name,
+                                wallet//WalletTcomb(wallet)
+                            )
+                            if(unlock) {
+                                aes_private_map[wallet_public_name] =
+                                    password.aes_private
+                            
+                                this.current_wallet = wallet.public_name
+                            }
+                            resolve()
+                        }).catch( error => {
+                            reject(error)
+                            return Promise.reject(e)
+                        })
+                    }catch(e) {
+                        reject(e)
+                        return Promise.reject(e)
                     }
-                )
-            }(wallet, unlock, password.aes_private, private_wifs)
+                }
+            )
         })
     }
     
@@ -308,7 +320,7 @@ class WalletStore extends BaseStore {
                 this.wallets = map.asImmutable()
                 return
             }
-            var wallet = WalletTcomb(cursor.value)
+            var wallet = cursor.value//WalletTcomb(cursor.value)
             map.set(wallet.public_name, wallet)
             cursor.continue()
         });
@@ -316,12 +328,10 @@ class WalletStore extends BaseStore {
     
 }
 
-var WrappedWalletStore = alt.createStore(WalletStore, "WalletStore");
-module.exports = WrappedWalletStore
-var eventEmitter = WrappedWalletStore.getEventEmitter()
+module.exports = alt.createStore(WalletStore, "WalletStore")
 
 function reject(error) {
     console.error( "----- WalletStore reject error -----", error)
-    eventEmitter.emit({action:'reject', data: error});
+    throw new Error(error)
 }   
 

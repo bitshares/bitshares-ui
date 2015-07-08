@@ -53,14 +53,6 @@ class PrivateKeyStore extends BaseStore {
         for(let key of this.keys) {
             var private_key = key[1]
             if(private_key.wallet_id === wallet_id) {
-                if(cascade){
-                    promises.push(
-                        PublicKeyStore.onDeleteByPublicId(
-                            private_key.public_id,
-                            transaction
-                        )
-                    )
-                }
                 promises.push(
                     new Promise((resolve, reject)=>{
                         let request = store.delete(private_key.id)

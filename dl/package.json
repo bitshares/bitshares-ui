@@ -15,7 +15,7 @@
   },
   "scripts": {
     "postinstall": "",
-    "test": "./node_modules/.bin/mocha --compilers js:mocha-babel,coffee:coffee-script --require coffee-script/register",
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:mocha-babel --require coffee-script/register",
     "test:webpack": "webpack 'mocha!./test-webpack/wallet_action_test.js'"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "coffee-loader": "~0.7.2",
     "coffee-script": "~1.8.0",
     "coffeeify": "~0.7.0",
+    "fake-indexeddb": "^1.0.3",
     "mocha": "~2.2.5",
     "mocha-babel": "^3.0.0",
     "mocha-traceur": "~2.1.0",

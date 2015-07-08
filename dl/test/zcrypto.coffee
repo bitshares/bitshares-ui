@@ -117,7 +117,7 @@ min_time_elapsed = (f)->
     assert.equal(
         # repeat operations may take less time
         elapsed >= 250 * .8, true
-        "one second is needed, instead only #{elapsed/1000.0} elapsed" 
+        "minimum time requirement was not met, instead only #{elapsed/1000.0} elapsed" 
     )
     ret
 

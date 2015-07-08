@@ -159,6 +159,9 @@ class AccountActions {
             ).then( result => {
                 this.dispatch(account_name)
                 return account_name
+            }).catch( error => {
+                //TODO notify GUI
+                console.log("ERROR AccountActions.createAccount",error)
             })
         }(account_name)
     }
