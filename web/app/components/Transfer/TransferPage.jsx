@@ -3,7 +3,6 @@ import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import AltContainer from "alt/AltContainer";
 import Transfer from "./Transfer";
-import AccountActions from "actions/AccountActions";
 
 class TransferPage extends React.Component {
     constructor(props) {
@@ -15,8 +14,8 @@ class TransferPage extends React.Component {
             <AltContainer
                 stores={[AccountStore, AssetStore]}
                 inject={{
-                accounts: () => {
-                    return AccountStore.getState().accounts;
+                cachedAccounts: () => {
+                    return AccountStore.getState().cachedAccounts;
                 },
                 accounts_list: () => {
                     return AccountStore.getState().account_name_to_id;
@@ -31,7 +30,7 @@ class TransferPage extends React.Component {
                     return AssetStore.getState().assets;
                 }
               }}>
-                <Transfer/>
+                <Transfer addNotification={this.props.addNotification}/>
             </AltContainer>
         );
     }

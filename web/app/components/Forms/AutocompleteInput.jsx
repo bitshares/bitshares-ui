@@ -10,7 +10,7 @@ class AutocompleteInput extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleItemClick = this.handleItemClick.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
-        this.state = { items: [] }
+        this.state = { items: [] };
     }
 
     getInput() {
@@ -44,7 +44,10 @@ class AutocompleteInput extends Component {
         } else {
             ZfApi.publish(action_sheet_id, "close");
         }
-        if (this.props.onChange) this.props.onChange(event);
+        if (this.props.onChange) {
+            console.log("calling prop onChange", e);
+            this.props.onChange(e);
+        }
     }
 
     handleItemClick(e) {
@@ -55,7 +58,7 @@ class AutocompleteInput extends Component {
         input.value = value[1];
         ZfApi.publish(this.props.id + "-container", "close");
         if (this.props.onChange) {
-            let event = { target: { value: value[1]} };
+            let event = { target: { value: value[1], id: this.props.id}};
             this.props.onChange(event);
         }
     }
@@ -72,7 +75,7 @@ class AutocompleteInput extends Component {
         return (
             <div className="autocomplete">
                 <ActionSheet className="autocomplete" ref="action_sheet" id={action_sheet_id}>
-                    <input name="value" type="text"
+                    <input name="value" type="text" id={this.props.id}
                            placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                            onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
                     <ActionSheet.Content >

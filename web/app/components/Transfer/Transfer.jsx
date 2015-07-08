@@ -44,12 +44,23 @@ class Transfer extends BaseComponent {
         this._bind("formChange", "onSubmit", "onConfirm", "newTransfer");
     }
 
+    componentDidMount() {
+        let {cachedAccounts, currentAccount} = this.props;
+        let account_id = currentAccount ? currentAccount.id : null;
+        if (account_id) {
+            let account = cachedAccounts.get(account_id);
+            if (!account) { AccountActions.getAccount(account_id); }
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
-        if (this.props.accounts === nextProps.accounts && this.state.transfer.from) { return; }
-        let {accounts, currentAccount} = this.props;
-        let account_id = this.state.transfer.from_id ? this.state.transfer.from_id : currentAccount.id;
-        let account = accounts.get(account_id);
-        if (!account) { AccountActions.getAccount(account_id); }
+        if (this.props.cachedAccounts === nextProps.cachedAccounts && this.state.transfer.from) { return; }
+        let {cachedAccounts, currentAccount} = this.props;
+        let account_id = this.state.transfer.from_id ? this.state.transfer.from_id : currentAccount ? currentAccount.id : null;
+        if (account_id) {
+            let account = cachedAccounts.get(account_id);
+            if (!account) { AccountActions.getAccount(account_id); }
+        }
     }
 
     validateTransferFields() {
@@ -78,21 +89,22 @@ class Transfer extends BaseComponent {
     }
 
     formChange(event) {
-        this.state.error = null;
+        let {error, transfer} = this.state;
+        error = null;
         let key = event.target.id;
-        let value = event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
+        let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
         if (key === "from") {
-            this.state.transfer.from = value[1];
-            this.state.transfer.from_id = value[0];
-            if (!this.props.accounts.get(value[0])) { AccountActions.getAccount(value[0]); }
+            transfer.from = value[1];
+            transfer.from_id = value[0];
+            if (!this.props.cachedAccounts.get(value[0])) { AccountActions.getAccount(value[0]); }
         } else if (key === "to") {
-            this.state.transfer.to = value;
-            this.state.transfer.to_id = this.props.accounts_list[value];
+            transfer.to = value;
+            transfer.to_id = this.props.accounts_list[value];
         } else {
-            this.state.transfer[key] = value;
+            transfer[key] = value;
         }
         this.validateTransferFields();
-        this.setState(this.state);
+        this.setState({error: error, transfer: transfer});
     }
 
     onSubmit(e) {
@@ -117,7 +129,12 @@ class Transfer extends BaseComponent {
             this.setState({confirmation: false, done: true, error: null});
         }).catch(error => {
             ZfApi.publish("confirm_transaction", "close");
-            this.setState({confirmation: false, done: false, error: error});
+            this.setState({confirmation: false, done: false});
+            this.props.addNotification({
+                message: "Transfer failed",
+                level: "error",
+                autoDismiss: 10
+            });
         });
     }
 
@@ -142,10 +159,9 @@ class Transfer extends BaseComponent {
         );
     }
 
-
     render() {
         let {transfer, errors} = this.state;
-        let {accounts, currentAccount, assets, accountBalances} = this.props;
+        let {cachedAccounts, currentAccount, assets, accountBalances} = this.props;
         let query_params = this.context.router.getCurrentQuery();
         if(query_params.to && !transfer.to) {
             transfer.to = query_params.to;
@@ -165,13 +181,13 @@ class Transfer extends BaseComponent {
         let balancesComp = null, finalBalances = null;
         let myAssets = [];
 
-        if(!transfer.from) {
+        if(!transfer.from && currentAccount) {
             transfer.from = currentAccount.name;
             transfer.from_id = currentAccount.id;
         }
 
-        if (accounts.size > 0 && assets.size > 0) {
-            account = accounts.get(this.state.transfer.from_id ? this.state.transfer.from_id : currentAccount.id);
+        if (cachedAccounts.size > 0 && assets.size > 0 && accountBalances.size > 0) {
+            account = cachedAccounts.get(this.state.transfer.from_id ? this.state.transfer.from_id : null);
             let balances = account ? accountBalances.get(account.id) : null;
             if (account && balances) {
                 balancesComp = balances.map((balance) => {
@@ -214,7 +230,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.from})}>
                             <Translate component="label" content="transfer.from" />
-                            {this.renderSelect("from", account_choices, `["${transfer.from_id}","${transfer.from}"]`)}
+                            {transfer.from ? this.renderSelect("from", account_choices, `["${transfer.from_id}","${transfer.from}"]`) : null}
                             <div>{errors.from}</div>
                         </div>
                     </div>
@@ -235,7 +251,12 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("medium-12", {"has-error": errors.to})}>
                             <Translate component="label" content="transfer.to" />
-                            <AutocompleteInput id="to" options={account_choices} initial_value={transfer.to} onChange={this.formChange.bind(this)} />
+                            <AutocompleteInput
+                                id="to"
+                                options={account_choices}
+                                initial_value={transfer.to}
+                                onChange={this.formChange}
+                                test={this.testFunction} />
                             <div>{errors.to}</div>
                         </div>
                     </div>
@@ -255,7 +276,7 @@ class Transfer extends BaseComponent {
                     {/*  F R O M  A C C O U N T  */}
                     <div className="grid-block medium-3 medium-order-1 small-order-3">
                         <div className="grid-content">
-                            <AccountInfo account_name={transfer.from} account_id={transfer.from_id} image_size={{height: 120, width: 120}}/>
+                            {transfer.from ? <AccountInfo account_name={transfer.from} account_id={transfer.from_id} image_size={{height: 120, width: 120}}/> : null}
                             <hr/>
                             <h5><Translate component="span" content="transfer.balances" />:</h5>
                             <ul style={{listStyle: "none"}}>
@@ -309,13 +330,13 @@ class Transfer extends BaseComponent {
 }
 
 Transfer.defaultProps = {
-    accounts: {},
+    cachedAccounts: {},
     assets: {},
     currentAccount: {}
 };
 
 Transfer.propTypes = {
-    accounts: PropTypes.object.isRequired,
+    cachedAccounts: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired,
     currentAccount: PropTypes.object.isRequired
 };
