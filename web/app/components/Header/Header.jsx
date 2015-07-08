@@ -51,25 +51,33 @@ class Header extends BaseComponent {
         let current = counterpart.translate("header.current");
 
         if (currentAccount) {
-            let accountsList = this.state.linkedAccounts.map( name => {
-                return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
-            });
 
             let account_display_name = currentAccount.name.length > 20 ? `${currentAccount.name.slice(0, 20)}..` : currentAccount.name;
 
-            accountsDropDown = (
-                <ActionSheet id="account_drop_down">
-                    <ActionSheet.Button title="">
-                        <a className="button">
-                            &nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
-                        </a>
-                    </ActionSheet.Button>
-                    <ActionSheet.Content >
-                        <ul className="no-first-element-top-border">
-                            {accountsList}
-                        </ul>
-                    </ActionSheet.Content>
-                </ActionSheet>);
+            if(this.state.linkedAccounts.size > 1) {
+                let accountsList = this.state.linkedAccounts.map(name => {
+                    return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
+                });
+
+                accountsDropDown = (
+                    <ActionSheet id="account_drop_down">
+                        <ActionSheet.Button title="">
+                            <a className="button">
+                                &nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
+                            </a>
+                        </ActionSheet.Button>
+                        <ActionSheet.Content >
+                            <ul className="no-first-element-top-border">
+                                {accountsList}
+                            </ul>
+                        </ActionSheet.Content>
+                    </ActionSheet>);
+            }
+            else {
+                accountsDropDown = (
+                    <Link to="account-overview" params={{name: currentAccount.name}}><Icon name="user"/> {account_display_name}</Link>
+                );
+            }
         }
 
 
@@ -108,7 +116,7 @@ class Header extends BaseComponent {
                 <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
-                            {currentAccount ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
+                            {currentAccount && this.state.linkedAccounts.size > 1 ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
                         </div>
                         <div className="grp-menu-item">
                             {accountsDropDown}
