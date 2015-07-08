@@ -71,14 +71,14 @@ class App extends BaseComponent {
         let locale;
         if (cookies) {
             locale = cookies.get("graphene_locale");
-            console.log("cookie locale:", locale);
+            // console.log("cookie locale:", locale);
         }
 
         Apis.instance().init_promise.then(() => {
             let idb_instance = iDB.init_instance(indexedDB);
             Promise.all([
                 AccountActions.getAllAccounts().then(current_account_id => {
-                    idb_instance.init_promise.then( db => {
+                    idb_instance.init_promise.then(db => {
                         let idb_promises = [];
                         AccountStore.loadDbData().then( () => {
                             AccountStore.tryToSetCurrentAccount();
@@ -91,9 +91,9 @@ class App extends BaseComponent {
                     let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
                     return Promise.all([
                         AccountActions.getAccount(current_account_id, true),
+                        AssetActions.getAsset("1.3.0"),
                         AssetActions.getAssetList("A", 100),
                         BlockchainActions.subscribeGlobals(),
-                        AssetActions.getAsset("1.4.0"),
                         localePromise
                     ]);
                 })

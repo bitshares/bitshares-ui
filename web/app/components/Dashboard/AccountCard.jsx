@@ -71,8 +71,6 @@ class AccountCard extends React.Component {
 
         let {account, assets, balances} = this.props;
 
-        console.log("accountcard props:", this.props);
-
         return (
             <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
                 <div className="card">
