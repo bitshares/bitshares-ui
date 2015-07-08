@@ -44,7 +44,7 @@ _my.signed_transaction = ->
             throw new Error "unknown operation: #{_type.operation_name}"
         unless operation.fee
             operation.fee =
-                amount: "0"
+                amount: "100000"
                 asset_id: "1.3.0"
         operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]
@@ -109,7 +109,7 @@ _my.signed_transaction = ->
 class _my.transfer
     _template = ->
         fee : 
-            amount : "0"
+            amount : "100000"
             asset_id : 0# 1.3.0
         from: null      # 1.2.0
         to: null        # 1.2.0

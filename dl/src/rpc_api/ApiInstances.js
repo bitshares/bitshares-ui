@@ -17,7 +17,7 @@ var Apis = (function () {
         ws_rpc = new WebSocketRpc("ws://localhost:8090");
         var init_promise = ws_rpc.login("", "").then(() => {
             db_api = new GrapheneApi(ws_rpc, "database");
-            network_api = new GrapheneApi(ws_rpc, "network");
+            network_api = new GrapheneApi(ws_rpc, "network_broadcast");
             history_api = new GrapheneApi(ws_rpc, "history");
             return Promise.all([db_api.init(), network_api.init(), history_api.init()]);
         });
