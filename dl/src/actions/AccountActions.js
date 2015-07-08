@@ -10,8 +10,8 @@ let accountLookup = {};
 let wallet_api = new WalletApi();
 
 class AccountActions {
+
     getAccounts(start_symbol, limit) {
-    
         let uid = `${start_symbol}_${limit}`;
         if (!accountLookup[uid]) {
             accountLookup[uid] = true;
@@ -23,19 +23,12 @@ class AccountActions {
         }
     }
 
-
     getAllAccounts() {
-        return api.lookupAccounts("", 1000)
-            .then(result => {
-                this.dispatch(result);
-                for (var i = 0; i < result.length; i++) {
-                    if (result[i][0] === "nathan") {
-                        return result[i][1];
-                    }
-                };
-            }).catch(error => {
-                console.log("Error in AccountActions.getAllAccounts: ", error);
-            });
+        return api.lookupAccounts("", 1000).then(result => {
+            this.dispatch(result);
+        }).catch(error => {
+            console.log("Error in AccountActions.getAllAccounts: ", error);
+        });
     }
 
     unSubscribe(id) {
@@ -177,6 +170,10 @@ class AccountActions {
     }
 
     linkAccount(name) {
+        this.dispatch(name);
+    }
+
+    unlinkAccount(name) {
         this.dispatch(name);
     }
 

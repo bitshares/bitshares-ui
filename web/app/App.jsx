@@ -75,32 +75,24 @@ class App extends BaseComponent {
         }
 
         Apis.instance().init_promise.then(() => {
-            let idb_instance = iDB.init_instance(indexedDB);
-            Promise.all([
-                AccountActions.getAllAccounts().then(current_account_id => {
-                    idb_instance.init_promise.then(db => {
-                        let idb_promises = [];
-                        AccountStore.loadDbData().then( () => {
-                            AccountStore.tryToSetCurrentAccount();
-                        });
-                        idb_promises.push(WalletStore.loadDbData());
-                        return Promise.all(idb_promises);
-                    });
-                    return current_account_id;
-                }).then(current_account_id => {
-                    let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
-                    return Promise.all([
-                        AccountActions.getAccount(current_account_id, true),
-                        AssetActions.getAsset("1.3.0"),
-                        AssetActions.getAssetList("A", 100),
-                        BlockchainActions.subscribeGlobals(),
-                        localePromise
-                    ]);
-                })
-                
-            ]).then(() => {
-                this.setState({loading: false});
-            });
+            let idb_promise = iDB.init_instance(indexedDB).init_promise;
+            let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
+            return Promise.all([
+                AccountActions.getAllAccounts(),
+                AssetActions.getAsset("1.3.0"),
+                AssetActions.getAssetList("A", 100),
+                BlockchainActions.subscribeGlobals(),
+                localePromise,
+                idb_promise
+            ]);
+        }).then( () => {
+            return Promise.all([
+                AccountStore.loadDbData(),
+                WalletStore.loadDbData()
+            ]);
+        }).then(() => {
+            AccountStore.tryToSetCurrentAccount();
+            this.setState({loading: false});
         }).catch(error => {
             console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
             this.setState({loading: false});

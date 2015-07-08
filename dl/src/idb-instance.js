@@ -75,6 +75,18 @@ var iDB = (function () {
                 };
             });
         },
+        remove_from_store: function (store_name, value) {
+            return new Promise((resolve, reject) => {
+                let transaction = this.instance().db().transaction([store_name], "readwrite");
+                let store = transaction.objectStore(store_name);
+                let request = store.delete(value);
+                request.onsuccess = () => { resolve(); };
+                request.onerror = (e) => {
+                    console.log("ERROR!!! remove_from_store - can't remove value from db. ", e.target.error.message, value);
+                    reject(e.target.error.message);
+                };
+            });
+        },
         load_data: function (store_name) {
             return new Promise((resolve, reject) => {
                 let data = [];

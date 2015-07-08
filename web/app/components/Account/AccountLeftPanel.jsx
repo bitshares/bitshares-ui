@@ -14,7 +14,6 @@ class AccountLeftPanel extends BaseComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        console.log("[AccountLeftPanel.jsx:17] ----- shouldComponentUpdate ----->", this.state.linkedAccounts !== nextState.linkedAccounts);
         return this.props.account_name !== nextProps.account_name ||
                this.state.linkedAccounts !== nextState.linkedAccounts;
     }
@@ -22,6 +21,11 @@ class AccountLeftPanel extends BaseComponent {
     onLinkAccount(e) {
         e.preventDefault();
         AccountActions.linkAccount(this.props.account_name);
+    }
+
+    onUnlinkAccount(e) {
+        e.preventDefault();
+        AccountActions.unlinkAccount(this.props.account_name);
     }
 
     render() {
@@ -32,9 +36,12 @@ class AccountLeftPanel extends BaseComponent {
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
                     <div className="grid-block no-margin account-buttons-row">
-                        {this.state.linkedAccounts.has(account_name) ? null : <div className="grid-block no-margin center-content">
+                        <div className="grid-block no-margin center-content">
+                        {this.state.linkedAccounts.has(account_name) ?
+                            <a href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}>Unlink</a> :
                             <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}>Link</a>
-                        </div>}
+                        }
+                        </div>
                         <div className="grid-block no-margin center-content">
                             <Link className="button outline block-button" to="transfer" query={{to: account_name}}>Pay</Link>
                         </div>

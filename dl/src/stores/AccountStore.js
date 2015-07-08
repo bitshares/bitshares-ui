@@ -24,7 +24,8 @@ class AccountStore extends BaseStore {
             onCreateAccount: AccountActions.createAccount,
             onUpgradeAccount: AccountActions.upgradeAccount,
             onGetAccounts: AccountActions.getAccounts,
-            onLinkAccount: AccountActions.linkAccount
+            onLinkAccount: AccountActions.linkAccount,
+            onUnlinkAccount: AccountActions.unlinkAccount
         });
         this._export("loadDbData", "tryToSetCurrentAccount");
     }
@@ -96,15 +97,18 @@ class AccountStore extends BaseStore {
     }
 
     tryToSetCurrentAccount() {
-        console.log("[AccountStore.js:99] ----- tryToSetCurrentAccount ----->", this.linkedAccounts.first());
         if(this.linkedAccounts.size > 0) this.setCurrentAccount(this.linkedAccounts.first());
     }
 
     setCurrentAccount(name) {
-        this.currentAccount = {
-            name: name,
-            id: this.account_name_to_id[name]
-        };
+        if(!name) {
+            this.currentAccount = null;
+        } else {
+            this.currentAccount = {
+                name: name,
+                id: this.account_name_to_id[name]
+            };
+        }
     }
 
     onSetCurrentAccount(name) {
@@ -131,6 +135,12 @@ class AccountStore extends BaseStore {
         iDB.add_to_store("linked_accounts", {name});
         this.linkedAccounts = this.linkedAccounts.add(name);
         if(this.linkedAccounts.size === 1) this.setCurrentAccount(name);
+    }
+
+    onUnlinkAccount(name) {
+        iDB.remove_from_store("linked_accounts", name);
+        this.linkedAccounts = this.linkedAccounts.remove(name);
+        if(this.linkedAccounts.size === 0) this.setCurrentAccount(null);
     }
 
 }
