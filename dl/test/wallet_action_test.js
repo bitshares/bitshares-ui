@@ -1,8 +1,8 @@
 import iDB from "../src/idb-instance"
 import fakeIndexedDB from "fake-indexeddb"
 
-import WalletStore from "../src/stores/WalletStore"
 import WalletActions from "../src/actions/WalletActions"
+import WalletDb from "../src/stores/WalletDb"
 
 import ApiInstances from "../src/rpc_api/ApiInstances"
 import WalletApi from "../src/rpc_api/WalletApi"
@@ -43,36 +43,62 @@ describe( "wallet_actions", ()=> {
     it( "wallet_create", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         var public_name = "default_"+ suffix
-        WalletStore.onCreate( public_name, "password","brainkey" ).then(()=>{
-            assert( WalletStore.getWallet(public_name) != null )
-            assert( WalletStore.getWallet(public_name).id != null )
-            assert( WalletStore.getCurrentWallet() == public_name )
-            WalletStore.validatePassword( public_name, "password", true )
-            assert( WalletStore.getBrainKey(public_name) == "brainkey" )
-            WalletStore.onLock(public_name)
-            assert ( WalletStore.isLocked(public_name) )
-            new Promise( (resolve, reject) => {
-                var trx = WalletStore.transaction(resolve, reject)
-                WalletStore.incrementBrainKeySequence(public_name, trx).then( ()=> {
-                    done()
-                
-                }).catch(_catch)
-            }).then().catch(_catch)
+        new Promise((resolve, reject) => {
+            var transaction = WalletDb.transaction(resolve, reject)
+            resolve(
+                WalletDb.onCreateWallet({ 
+                    wallet_public_name: public_name,
+                    password_plaintext: "password",
+                    brainkey_plaintext: "brainkey" + suffix,
+                    transaction
+                }).then(()=>{
+                    assert( WalletDb.getWallet(public_name) != null )
+                    assert( WalletDb.getWallet(public_name).id != null )
+                    assert( WalletDb.getCurrentWallet() == public_name )
+                    WalletDb.validatePassword( public_name, "password", true )
+                    assert( WalletDb.getBrainKey(public_name) == "brainkey"  + suffix )
+                    WalletDb.onLock(public_name)
+                    assert ( WalletDb.isLocked(public_name) )
+                    return new Promise( (resolve, reject) => {
+                        var transaction = WalletDb.transaction(resolve, reject)
+                        resolve( WalletDb.incrementBrainKeySequence({
+                            wallet_public_name:public_name,
+                            transaction
+                        }).then( ()=> {
+                            done()
+                        }) )
+                    })
+                })
+            )
         }).catch(_catch)
     })
     
     it( "create_account_with_brain_key", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         var public_name = "default_"+ suffix
-        WalletStore.onCreate( public_name, "password","brainkey" ).then(()=>{
-            WalletStore.validatePassword( public_name, "password", true )
-            WalletActions.createBrainKeyAccount(
-                "account", public_name
-            ).then( ()=> {
-                done()
-            }).catch(_catch)
-            
+        new Promise((resolve, reject) => {
+            var transaction = WalletDb.transaction(resolve, reject)
+            resolve( WalletDb.onCreateWallet({
+                wallet_public_name: public_name,
+                password_plaintext: "password",
+                brainkey_plaintext: "brainkey" + suffix,
+                transaction
+            }).then(()=>{
+                WalletDb.validatePassword( public_name, "password", true )
+                return WalletActions.createBrainKeyAccount({
+                    account_name:"account-" + suffix,
+                    wallet_public_name: public_name,
+                    transaction
+                }).then( ()=> {
+                    done()
+                })
+            }) )
         }).catch(_catch)
     })
+    
+    it( "import_balance", done =>
+        done()
+    )
 
 })
+

@@ -4,7 +4,7 @@ import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import WalletStore from "stores/WalletStore"
+import WalletDb from "stores/WalletDb"
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import WalletSelect from "components/Wallet/WalletSelect";
 
@@ -40,31 +40,16 @@ class CreateAccount extends BaseComponent {
         if(isValid && wallet_public_name) {
             AccountActions.createAccount(name, wallet_public_name).then( () => {
                 this.context.router.transitionTo("account", {name: name})
-                //return AccountActions.getAccount(name).then( () => {
-                //    let account_store_state = AccountStore.getState();
-                //    let account = account_store_state.browseAccounts.get(account_store_state.account_name_to_id[name]);
-                //    privkey: keys_data.owner_privkey.toWif(),
-                //    pubkey: keys_data.owner_pubkey.toBtsPublic()
-                //    let owner_key = {
-                //        id: "owner:" + name,
-                //        key_id: account.owner.auths[0][0],
-                //        private_id: owner_private_object.id
-                //    };
-                //    let active_key = {
-                //        id: "active:" + name,
-                //        key_id: account.active.auths[0][0],
-                //        private_id: active_private_object.id
-                //    };
-                //    PrivateKeyActions.addKey(owner_key)
-                //    this.context.router.transitionTo("account", {name: name});
-                //});
-            });
+            }).catch( error => {
+                // Show in GUI
+                console.log("ERROR AccountActions.createAccount",error)
+            })
         }
     }
 
     render() {
         
-        var wallets = WalletStore.getState().wallets
+        var wallets = WalletDb.wallets
         
         //<Link to="create-wallet">Create Wallet</Link>
         if( ! wallets.count())

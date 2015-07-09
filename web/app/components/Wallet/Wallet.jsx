@@ -2,7 +2,7 @@ import React, {Component, RouteHandler} from "react"
 import {Link} from "react-router"
 
 //import WalletActions from "actions/WalletActions"
-import WalletStore from "stores/WalletStore"
+import WalletDb from "stores/WalletDb"
 import WalletCreate from './WalletCreate'
 import WalletImport from './WalletImport'
 
@@ -10,7 +10,7 @@ export default class Wallet extends Component {
 
     render() {
         var wallet_public_name = this.props.params.wallet_public_name
-        var wallets = WalletStore.getState().wallets
+        var wallets = WalletDb.wallets
         
         if( ! wallet_public_name)
         return <WalletList/>
@@ -39,7 +39,7 @@ export default class Wallet extends Component {
 class WalletList extends Component {
 
     render() {
-        var wallets = WalletStore.getState().wallets
+        var wallets = WalletDb.wallets
         return <div>
             <label>WALLETS ({wallets.count()})</label>
             { wallets.map( (wallet, public_name) => {

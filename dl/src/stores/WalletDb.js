@@ -1,4 +1,3 @@
-import alt from "../alt-instance";
 import iDB from "../idb-instance";
 import key from "../common/key_utils"
 import idb_helper from "../idb-helper"
@@ -9,24 +8,17 @@ import BaseStore from "./BaseStore"
 import PrivateKeyStore from "./PrivateKeyStore"
 
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
-import WalletActions from "../actions/WalletActions"
 import PrivateKey from "../ecc/key_private"
+import ApplicationApi from "../rpc_api/ApplicationApi"
 
 var aes_private_map = {}
+var application_api = new ApplicationApi()
 
-class WalletStore extends BaseStore {
+class WalletDb {
     
     constructor() {
-        super();
         this.secret_server_token = "secret_server_token";
         this.wallets = Immutable.Map();
-        this.bindActions(WalletActions)
-        this._export(
-            "getWallet","getCurrentWallet", "getBrainKey",
-            "onLock", "isLocked", "validatePassword", 
-            "transaction", "saveKey", "incrementBrainKeySequence",
-            "onCreate", "loadDbData"
-        )
     }
     
     getWallet(wallet_public_name) {
@@ -111,14 +103,14 @@ class WalletStore extends BaseStore {
         return transaction
     }
     
-    saveKey(
+    saveKey({
         password_aes_private,
         wallet_public_name,
         wallet_id,
         private_key,
         brainkey_pos,
         transaction
-    ) {
+    }) {
         if(password_aes_private == void 0)
             password_aes_private = aes_private_map[
                 wallet_public_name
@@ -141,7 +133,10 @@ class WalletStore extends BaseStore {
         )
     }
     
-    incrementBrainKeySequence(wallet_public_name, transaction) {
+    incrementBrainKeySequence({
+        wallet_public_name,
+        transaction
+    }) {
         return new Promise((resolve, reject) => {
             var wallet = this.wallets.get(wallet_public_name)
             if ( ! wallet) {
@@ -164,30 +159,22 @@ class WalletStore extends BaseStore {
                     new_wallet
                 )
                 resolve()
-            })
+            }).catch( error => { reject(error) })
         })
     }
     
-    onCreate(
+    onCreateWallet({
         wallet_public_name = "default", 
         password_plaintext,
         brainkey_plaintext,
         private_wifs  = [],
-        unlock = false
-    ) {
+        unlock = false,
+        transaction
+    }) {
         return new Promise( (resolve, reject) => {
             if(this.wallets.get(wallet_public_name)) {
                 reject("wallet exists")
                 return
-            }
-            let transaction = iDB.instance().db().transaction(
-                ["wallets", "private_keys"], "readwrite"
-            )
-            transaction.onerror = e => {
-                reject(e.target.error.message)
-            }
-            transaction.oncomplete = e => {
-                resolve()
             }
             var password = key.aes_checksum(
                 password_plaintext + this.secret_server_token
@@ -242,14 +229,36 @@ class WalletStore extends BaseStore {
                             resolve()
                         }).catch( error => {
                             reject(error)
-                            return Promise.reject(e)
                         })
-                    }catch(e) {
+                    } catch(e) {
                         reject(e)
-                        return Promise.reject(e)
                     }
                 }
             )
+        })
+    }
+    
+    saveKeys(params){
+        return new Promise((resolve, reject) => {
+            var {wallet, private_keys, transaction} = params
+            var private_key_promises = []
+            for(let private_key_record of private_keys) {
+                private_key_promises.push(
+                    this.saveKey({
+                        password_aes_private: null,
+                        wallet_public_name: wallet.public_name,
+                        wallet_id: wallet.id,
+                        private_key: private_key_record.privkey,
+                        brainkey_pos: private_key_record.sequence,
+                        transaction
+                    })
+                )
+            }
+            Promise.all(private_key_promises).then( ()=> {
+                resolve()
+            }).catch( error => {
+                reject(error)
+            })
         })
     }
     
@@ -327,10 +336,10 @@ class WalletStore extends BaseStore {
     
 }
 
-module.exports = alt.createStore(WalletStore, "WalletStore")
+module.exports = new WalletDb()
 
 function reject(error) {
-    console.error( "----- WalletStore reject error -----", error)
+    console.error( "----- WalletDb reject error -----", error)
     throw new Error(error)
 }   
 

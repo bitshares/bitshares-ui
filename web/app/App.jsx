@@ -53,7 +53,7 @@ import iDB from "idb-instance";
 import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import WalletImport from "./components/Wallet/WalletImport";
-import WalletStore from "stores/WalletStore";
+import WalletDb from "stores/WalletDb";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 
@@ -88,7 +88,7 @@ class App extends BaseComponent {
         }).then( () => {
             return Promise.all([
                 AccountStore.loadDbData(),
-                WalletStore.loadDbData()
+                WalletDb.loadDbData()
             ]);
         }).then(() => {
             AccountStore.tryToSetCurrentAccount();

@@ -24,7 +24,10 @@ module.exports =
             console.log "print_hex: unparsed or non-transactoin object",e,e.stack
             
     log_error: (error)->
-        console.log 'log_error',error,error.stack
+        if error.stack
+            console.log 'ERROR',error.stack
+        else
+            console.log 'ERROR',error
     
     error: (message_substring, f)->
         fail = no

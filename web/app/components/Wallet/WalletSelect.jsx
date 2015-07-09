@@ -1,16 +1,16 @@
 import React, {Component, Link} from 'react'
 
 import WalletCreate from "components/Wallet/WalletCreate"
-import WalletStore from "stores/WalletStore"
+import WalletDb from "stores/WalletDb"
 import Icon from "components/Icon/Icon"
 
 export default class WalletSelect extends Component {
 
     constructor() {
         super()
-        this.wallets = WalletStore.getState().wallets
+        this.wallets = WalletDb.wallets
         this.state = {
-            current_wallet: WalletStore.getCurrentWallet()
+            current_wallet: WalletDb.getCurrentWallet()
         }
     }
     
@@ -45,7 +45,7 @@ export default class WalletSelect extends Component {
                     </option>
                 }).toArray()}
             </select>
-            { ! WalletStore.isLocked(this.state.current_wallet) ?
+            { ! WalletDb.isLocked(this.state.current_wallet) ?
             <div>
                 <button className="button" onClick={this._lock.bind(this)}>
                     Lock {this.state.current_wallet}
@@ -67,11 +67,11 @@ export default class WalletSelect extends Component {
     }
     
     isSelecedAndUnlocked() {
-        return ! WalletStore.isLocked(this.state.current_wallet)
+        return ! WalletDb.isLocked(this.state.current_wallet)
     }
     
     _lock() {
-        WalletStore.onLock(this.state.current_wallet)
+        WalletDb.onLock(this.state.current_wallet)
         this.forceUpdate()
     }
     
@@ -87,7 +87,7 @@ export default class WalletSelect extends Component {
     _passSubmit(e) {
         e.preventDefault()
         var wallet = this.wallets[this.state.current_wallet]
-        WalletStore.validatePassword(
+        WalletDb.validatePassword(
             this.state.current_wallet, //wallet_public_name
             this.password_ui || "",//password
             true //unlock

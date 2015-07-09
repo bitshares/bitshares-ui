@@ -2,17 +2,17 @@ import React from "react";
 import AltContainer from "alt/AltContainer";
 
 import Wallet from "./Wallet";
-import WalletStore from "stores/WalletStore";
+import WalletDb from "stores/WalletDb";
 
 class WalletsContainer extends React.Component {
 
     render() {
         return (
             <AltContainer 
-                stores={[WalletStore]}
+                stores={[WalletDb]}
                 inject={{
                     wallets: () => {
-                        return WalletStore.getState().wallets;
+                        return WalletDb.wallets;
                     }
                 }}
             >

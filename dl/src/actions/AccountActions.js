@@ -3,7 +3,8 @@ import utils from "common/utils";
 import api from "../api/accountApi";
 
 import WalletApi from "rpc_api/WalletApi";
-import WalletActions from "actions/WalletActions";
+import WalletDb from "stores/WalletDb";
+import WalletActions from "actions/WalletActions"
 
 let accountSubs = {};
 let accountLookup = {};
@@ -145,18 +146,17 @@ class AccountActions {
     }
 
     createAccount(account_name, wallet_public_name) {
-        return account_name => {
-            return WalletActions.createBrainKeyAccount(
+        return new Promise((resolve, reject) => {
+            var transaction = WalletDb.transaction(resolve, reject)
+            resolve( WalletActions.createBrainKeyAccount({
                 account_name,
-                wallet_public_name
-            ).then( result => {
+                wallet_public_name,
+                transaction
+            }).then( result => {
                 this.dispatch(account_name)
                 return account_name
-            }).catch( error => {
-                //TODO notify GUI
-                console.log("ERROR AccountActions.createAccount",error)
-            })
-        }(account_name)
+            }) )
+        })
     }
 
     upgradeAccount(account_id) {

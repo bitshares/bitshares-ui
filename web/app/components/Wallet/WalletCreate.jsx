@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-import WalletStore from "stores/WalletStore"
+import WalletDb from "stores/WalletDb"
 import WalletImport from "./WalletImport"
 
 import key from "common/key_utils"
@@ -85,7 +85,7 @@ export default class WalletCreate extends Component {
     validate() {
         var state = this.state
         var errors = state.errors
-        var wallets = WalletStore.getState().wallets
+        var wallets = WalletDb.wallets
         
         errors.wallet_public_name = 
             ! wallets.get(state.wallet_public_name) ? 
@@ -124,12 +124,17 @@ export default class WalletCreate extends Component {
     
     onSubmit(e) {
         e.preventDefault()
-        WalletStore.onCreate(
-            this.state.wallet_public_name,
-            this.state.password,
-            this.state.brainkey,
-            this.state.private_wifs
-        ).then( ()=> {
+        new Promise((resolve, reject) => {
+            var transaction = WalletDb.transaction(resolve, reject)
+            WalletDb.onCreateWallet({
+                wallet_public_name: this.state.wallet_public_name,
+                password_plaintext: this.state.password,
+                brainkey_plaintext: this.state.brainkey,
+                private_wifs: this.state.private_wifs,
+                unlock: false,
+                transaction
+            })
+        }).then( ()=> {
             this.setState({wallet_saved: true})
         })
     }
