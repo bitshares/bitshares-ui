@@ -99,8 +99,16 @@ class OrderBook extends React.Component {
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
 
         return (
-                <div className="test123" style={{overflowY: "hidden"}}>
-                    <table className="table order-table" >
+
+                <div className="valign" style={{overflowY: "hidden"}}>
+                    <table className="table order-table fixed-height">
+                      <thead>
+                      <tr>
+                          <th>Value <small>({baseSymbol})</small></th>
+                          <th>Amount <small>({quoteSymbol})</small></th>
+                          <th>Price <small>({baseSymbol}/{quoteSymbol})</small></th>
+                      </tr>
+                      </thead>
                                 <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                                     {bidRows}
                                 </tbody>
