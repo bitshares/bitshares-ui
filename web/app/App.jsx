@@ -79,6 +79,7 @@ class App extends BaseComponent {
             let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
             return Promise.all([
                 AccountActions.getAllAccounts(),
+                AccountActions.getAccount("nathan"),
                 AssetActions.getAsset("1.3.0"),
                 AssetActions.getAssetList("A", 100),
                 BlockchainActions.subscribeGlobals(),

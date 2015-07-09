@@ -98,6 +98,12 @@ class AccountStore extends BaseStore {
 
     tryToSetCurrentAccount() {
         if(this.linkedAccounts.size > 0) this.setCurrentAccount(this.linkedAccounts.first());
+        else {
+            let nathan_account = this.cachedAccounts.first();
+            if(nathan_account.name === "nathan" && nathan_account.owner.key_auths[0][0] === "GPH6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV") {
+                this.setCurrentAccount("nathan");
+            }
+        }
     }
 
     setCurrentAccount(name) {
