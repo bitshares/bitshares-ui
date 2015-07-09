@@ -14,7 +14,13 @@ class AccountLeftPanel extends BaseComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return true;
+        if(this.context.router) {
+            const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
+            this.pureComponentLastPath = this.context.router.getCurrentPath();
+            if(changed) return true;
+        }
+        return this.props.account_name !== nextProps.account_name ||
+               this.state.linkedAccounts !== nextState.linkedAccounts;
     }
 
     onLinkAccount(e) {
@@ -64,6 +70,10 @@ class AccountLeftPanel extends BaseComponent {
 
 AccountLeftPanel.propTypes = {
     account_name: PropTypes.string.isRequired
+};
+
+AccountLeftPanel.contextTypes = {
+    router: React.PropTypes.func
 };
 
 export default AccountLeftPanel;
