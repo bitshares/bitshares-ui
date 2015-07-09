@@ -16,7 +16,7 @@ class WalletActions {
 
     createBrainKeyAccount({
         account_name,
-        wallet_public_name = "default",
+        wallet_public_name,
         transaction
     }) {
         if( WalletDb.isLocked(wallet_public_name)) {

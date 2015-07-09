@@ -164,11 +164,11 @@ class WalletDb {
     }
     
     onCreateWallet({
-        wallet_public_name = "default", 
+        wallet_public_name,
         password_plaintext,
         brainkey_plaintext,
-        private_wifs  = [],
-        unlock = false,
+        private_wifs,
+        unlock,
         transaction
     }) {
         return new Promise( (resolve, reject) => {
