@@ -123,12 +123,28 @@ p.order-table-title {
 
 }
 
+
+
+.test123 {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
 .fixed-height {
-  .orderbook {
-    display:block;
-    height:42vh;
-    overflow:auto;
+  .orderbook-top {
+    display: inline-block;
+    height: 22hv;
+    overflow-y: auto;
   }
+
+  .orderbook-bottom {
+    display: inline-block;
+    height: 22hv;
+    overflow-y: auto;
+  }
+
 
   thead, tbody tr {
       display:table;

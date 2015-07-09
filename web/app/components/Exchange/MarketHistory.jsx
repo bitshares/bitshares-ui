@@ -50,7 +50,7 @@ class MarketHistory extends React.Component {
                     <tr>
                         <th>Value ({baseSymbol})</th>
                         <th>Amount ({quoteSymbol})</th>
-                        <th>Price ({baseSymbol}/{quoteSymbol}</th>
+                        <th>Price ({baseSymbol}/{quoteSymbol})</th>
                     </tr>
                     </thead>
                     <tbody>

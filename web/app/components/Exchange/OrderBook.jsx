@@ -52,7 +52,7 @@ class OrderBook extends React.Component {
         let {bids, asks, account, quote, base, quoteSymbol, baseSymbol} = this.props;
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
-        
+
         if(base && quote) {
             // let start = new Date();
 
@@ -99,22 +99,17 @@ class OrderBook extends React.Component {
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
 
         return (
-                <div className="grid-content" style={{overflowY: "hidden"}}>
-                    <table className="table order-table fixed-height">
-                        <thead>
-                        <tr>
-                            <th className="show-for-medium">Value</th>
-                            <th>Amount</th>
-                            <th>Price</th>
-                        </tr>
-                        </thead>
-                                <tbody id="test" ref="bidsTbody" className="orderbook ps-container">
+                <div className="test123" style={{overflowY: "hidden"}}>
+                    <table className="table order-table" >
+                                <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                                     {bidRows}
                                 </tbody>
-                                <tr>
-                                    <td colSpan="3" className="text-center">Spread: {spread} {baseSymbol}</td>
-                                </tr>
-                                <tbody ref="asksTbody" className="orderbook ps-container">
+                              </table>
+
+                            <div className="text-center" style={{borderTop: "1px solid gray" , borderBottom: "1px solid gray" , padding: "24px 12px "}}>Spread: {spread} {baseSymbol}</div>
+
+                                <table className="table order-table fixed-height">
+                                <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
                                     {askRows}
                                 </tbody>
                     </table>
