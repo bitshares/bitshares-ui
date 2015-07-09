@@ -125,24 +125,31 @@ p.order-table-title {
 
 
 
-.test123 {
+.valign {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  position: relative;
 }
 
 
 .fixed-height {
   .orderbook-top {
     display: inline-block;
-    height: 22hv;
+    max-height: 44vh;
     overflow-y: auto;
+    border: 1px solid purple;
+    bottom: 0;
+    position: relative;
   }
 
   .orderbook-bottom {
     display: inline-block;
-    height: 22hv;
+    max-height: 44vh;
     overflow-y: auto;
+    border: 0px solid yellow;
+    top: 0;
+    position: relative;
   }
 
 
@@ -151,10 +158,6 @@ p.order-table-title {
       width:100%;
       table-layout:fixed;/* even columns width , fix width of table too*/
   }
-}
-
-.ps-container {
-  position: relative !important;
 }
 
 .bid-total {
