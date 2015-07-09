@@ -4,8 +4,9 @@ import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import VotesTable from "./VotesTable"
-import VoteActions from "actions/VoteActions"
+import VotesTable from "./VotesTable";
+import VoteActions from "actions/VoteActions";
+import VoteStore from "stores/VoteStore";
 
 class AccountVoting extends React.Component {
 
@@ -14,7 +15,8 @@ class AccountVoting extends React.Component {
         this.initial_data = {
             my_delegates: Immutable.List.of({name: "Alice", info: "Some delegate description", support: "12%"}, {name: "Bob", info: "Some another delegate description", support: "10%"}),
             my_witnesses: Immutable.List.of({name: "Node 1", info: "Some witness description", support: "12%"}, {name: "Node 2", info: "Some another witness description", support: "10%"}),
-            my_budget_items: Immutable.List.of({name: "budget1", info: "Some budget item description", support: "12%"}, {name: "Node 2", info: "Some another budget description", support: "10%"})
+            my_budget_items: Immutable.List.of({name: "budget1", info: "Some budget item description", support: "12%"}, {name: "Node 2", info: "Some another budget description", support: "10%"}),
+            proxy_account: null
         };
         this.state = this.getDefaultState();
     }
@@ -23,14 +25,23 @@ class AccountVoting extends React.Component {
         return {
             my_delegates: this.initial_data.my_delegates,
             my_witnesses: this.initial_data.my_witnesses,
-            my_budget_items: this.initial_data.my_witnesses
+            my_budget_items: this.initial_data.my_budget_items,
+            proxy_account: this.initial_data.proxy_account
         };
     }
 
     isStateChanged() {
         return  this.state.my_delegates !== this.initial_data.my_delegates ||
                 this.state.my_witnesses !== this.initial_data.my_witnesses ||
-                this.state.my_budget_items !== this.initial_data.my_budget_items;
+                this.state.my_budget_items !== this.initial_data.my_budget_items ||
+                this.state.proxy_account !== this.initial_data.proxy_account;
+    }
+
+    switchProxy() {
+        console.log("[AccountVoting.jsx:37] ----- switchProxy ----->");
+        let proxy_account = this.state.proxy_account === null ? "" : null;
+        VoteActions.setProxyAccount(this.props.account_name, proxy_account);
+        this.setState({proxy_account});
     }
 
     onAddRow(state_key, name) {
@@ -44,6 +55,11 @@ class AccountVoting extends React.Component {
             let data = {}; data[state_key] = this.state[state_key].delete(index);
             this.setState(data);
         }
+    }
+
+    onProxyChanged(e) {
+        VoteActions.setProxyAccount(this.props.account_name, this.refs.proxy_account.value());
+        this.setState({proxy_account: this.refs.proxy_account.value()});
     }
 
     onPublish() {
@@ -65,33 +81,53 @@ class AccountVoting extends React.Component {
         return (
             <div className="grid-content">
                 <div className="content-block">
-                    <h3>Voting Proxy Account</h3>
-
+                    <h3>
+                        <div className="switch float-right">
+                            <input type="checkbox" checked={this.state.proxy_account}/>
+                            <label onClick={this.switchProxy.bind(this)}></label>
+                        </div>
+                        Proxy Voting Account
+                    </h3>
+                    {this.state.proxy_account !== null ? (
+                        <div className="medium-4">
+                            <br/>
+                            <label>Account Name</label>
+                            <AutocompleteInput
+                                id="proxy_account" ref="proxy_account"
+                                options={all_delegates}
+                                onChange={this.onProxyChanged.bind(this)}/>
+                        </div>
+                        ) : null
+                    }
                 </div>
-                <div className="content-block">
-                    <h3>Delegates</h3>
-                    <VotesTable
-                        selectedEntities={this.state.my_delegates}
-                        allEntities={all_delegates}
-                        onAddRow={this.onAddRow.bind(this, "my_delegates")}
-                        onRemoveRow={this.onRemoveRow.bind(this, "my_delegates")} />
-                </div>
-                <div className="content-block">
-                    <h3>Witnesses</h3>
-                    <VotesTable
-                        selectedEntities={this.state.my_witnesses}
-                        allEntities={all_witnesses}
-                        onAddRow={this.onAddRow.bind(this, "my_witnesses")}
-                        onRemoveRow={this.onRemoveRow.bind(this, "my_witnesses")} />
-                </div>
-                <div className="content-block">
-                    <h3>Budget Items</h3>
-                    <VotesTable
-                        selectedEntities={this.state.my_budget_items}
-                        allEntities={all_budget_items}
-                        onAddRow={this.onAddRow.bind(this, "my_budget_items")}
-                        onRemoveRow={this.onRemoveRow.bind(this, "my_budget_items")} />
-                </div>
+                {this.state.proxy_account === null ?
+                    (<div>
+                    <div className="content-block">
+                        <h3>Delegates</h3>
+                        <VotesTable
+                            selectedEntities={this.state.my_delegates}
+                            allEntities={all_delegates}
+                            onAddRow={this.onAddRow.bind(this, "my_delegates")}
+                            onRemoveRow={this.onRemoveRow.bind(this, "my_delegates")} />
+                    </div>
+                    <div className="content-block">
+                        <h3>Witnesses</h3>
+                        <VotesTable
+                            selectedEntities={this.state.my_witnesses}
+                            allEntities={all_witnesses}
+                            onAddRow={this.onAddRow.bind(this, "my_witnesses")}
+                            onRemoveRow={this.onRemoveRow.bind(this, "my_witnesses")} />
+                    </div>
+                    <div className="content-block">
+                        <h3>Budget Items</h3>
+                        <VotesTable
+                            selectedEntities={this.state.my_budget_items}
+                            allEntities={all_budget_items}
+                            onAddRow={this.onAddRow.bind(this, "my_budget_items")}
+                            onRemoveRow={this.onRemoveRow.bind(this, "my_budget_items")} />
+                    </div>
+                    </div>) : null
+                }
                 <div className="content-block">
                     <div className="actions clearfix">
                         <button className={action_buttons_class} onClick={this.onPublish.bind(this)}>Publish Changes</button>

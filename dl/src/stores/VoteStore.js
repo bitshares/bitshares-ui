@@ -10,20 +10,20 @@ class VoteStore extends BaseStore {
         this.bindActions(VoteActions);
     }
 
-    onAddDelegate(account_name, delegate) {
+    onAddDelegate(data) {
         console.log("[VoteStore.js:14] ----- onAddDelegate ----->");
     }
 
-    onAddWitness(account_name, witness) {
+    onAddWitness(data) {
         console.log("[VoteStore.js:18] ----- onAddWitness ----->");
     }
 
-    onAddBudgetItem(account_name, budget_item) {
+    onAddBudgetItem(data) {
         console.log("[VoteStore.js:22] ----- onAddBudgetItem ----->");
     }
 
-    onSetProxyAccount(account_name) {
-        console.log("[VoteStore.js:26] ----- onSetProxyAccount ----->");
+    onSetProxyAccount(data) {
+        console.log("[VoteStore.js:26] ----- onSetProxyAccount ----->", data);
     }
 
     onPublishChanges(account_name) {

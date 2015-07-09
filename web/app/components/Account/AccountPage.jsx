@@ -37,6 +37,9 @@ class AccountPage extends React.Component {
                     <AltContainer
                         stores={[AccountStore, AssetStore, SettingsStore]}
                         inject={{
+                            account_name: () => {
+                                return account_name;
+                            },
                             all_delegates: () => {
                                 return AccountStore.getState().account_name_to_id;
                             },
