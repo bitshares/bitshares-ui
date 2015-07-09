@@ -123,22 +123,41 @@ p.order-table-title {
 
 }
 
+
+
+.valign {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+
 .fixed-height {
-  .orderbook {
-    display:block;
-    height:42vh;
-    overflow:auto;
+  .orderbook-top {
+    display: inline-block;
+    max-height: 44vh;
+    overflow-y: auto;
+    border: 1px solid purple;
+    bottom: 0;
+    position: relative;
   }
+
+  .orderbook-bottom {
+    display: inline-block;
+    max-height: 44vh;
+    overflow-y: auto;
+    border: 0px solid yellow;
+    top: 0;
+    position: relative;
+  }
+
 
   thead, tbody tr {
       display:table;
       width:100%;
       table-layout:fixed;/* even columns width , fix width of table too*/
   }
-}
-
-.ps-container {
-  position: relative !important;
 }
 
 .bid-total {

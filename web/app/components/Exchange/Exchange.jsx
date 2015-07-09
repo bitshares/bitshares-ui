@@ -181,7 +181,7 @@ class Exchange extends React.Component {
                 <div className="grid-block page-layout market-layout">
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green", overflowY: "auto"}}>
+                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green", overflowY: "auto" ,   justifyContent: "center"}}>
                         <div className="grid-block">
                             <OrderBook
                                 orders={limit_orders}
@@ -192,7 +192,7 @@ class Exchange extends React.Component {
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                                 onClick={this._orderbookClick.bind(this)}
-                            />                            
+                            />
                         </div>
                     </div>
 
@@ -203,7 +203,7 @@ class Exchange extends React.Component {
                         <div className="grid-block shrink">
                             <p>{baseSymbol} / {quoteSymbol} Put all kinds of info related to the market here (current price, spread, etc)</p>
                         </div>
-                
+
                         {/* Price history chart and depth chart inside tabs */}
                         <div className="grid-block" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
                             <Tabs>
@@ -234,10 +234,10 @@ class Exchange extends React.Component {
                                     />
                                 </Tabs.Tab>
                             </Tabs>
-                                    
+
                         </div>
 
-                           
+
                         {/* Buy/Sell forms */}
                         <div className="grid-block shrink" style={{ flexGrow: "0" }} >
                                     {quote && base ?
@@ -267,7 +267,7 @@ class Exchange extends React.Component {
                                         onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
                                     /> : null}
                         </div>
-                             
+
                         <div className="grid-block" style={{minHeight: "20rem"}}>
                             <MyOpenOrders
                                 orders={limit_orders}
@@ -279,10 +279,10 @@ class Exchange extends React.Component {
                                 onCancel={this._cancelLimitOrder.bind(this)}
                             />
                         </div>
-                    
+
                     {/* End of Main Content Column */}
                     </div>
-                   
+
 
                     {/* Right Column - Market History */}
                     <div className="grid-block right-column  show-for-large large-2" style={{overflowY: "auto"}}>
@@ -294,7 +294,7 @@ class Exchange extends React.Component {
                             baseSymbol={baseSymbol}
                             quoteSymbol={quoteSymbol}/>
                     </div>
-                    
+
                 {/* End of Second Vertical Block */}
                 </div>
             </div>
