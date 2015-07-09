@@ -14,8 +14,7 @@ class AccountLeftPanel extends BaseComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return this.props.account_name !== nextProps.account_name ||
-               this.state.linkedAccounts !== nextState.linkedAccounts;
+        return true;
     }
 
     onLinkAccount(e) {

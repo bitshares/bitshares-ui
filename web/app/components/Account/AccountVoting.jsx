@@ -5,6 +5,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import VotesTable from "./VotesTable"
+import VoteActions from "actions/VoteActions"
 
 class AccountVoting extends React.Component {
 
@@ -15,10 +16,10 @@ class AccountVoting extends React.Component {
             my_witnesses: Immutable.List.of({name: "Node 1", info: "Some witness description", support: "12%"}, {name: "Node 2", info: "Some another witness description", support: "10%"}),
             my_budget_items: Immutable.List.of({name: "budget1", info: "Some budget item description", support: "12%"}, {name: "Node 2", info: "Some another budget description", support: "10%"})
         };
-        this.state = this.getInitialState();
+        this.state = this.getDefaultState();
     }
 
-    getInitialState() {
+    getDefaultState() {
         return {
             my_delegates: this.initial_data.my_delegates,
             my_witnesses: this.initial_data.my_witnesses,
@@ -51,7 +52,7 @@ class AccountVoting extends React.Component {
 
     onResetChanges(e) {
         e.preventDefault();
-        this.setState(this.getInitialState());
+        this.setState(this.getDefaultState());
     }
 
     render() {
@@ -63,6 +64,10 @@ class AccountVoting extends React.Component {
 
         return (
             <div className="grid-content">
+                <div className="content-block">
+                    <h3>Voting Proxy Account</h3>
+
+                </div>
                 <div className="content-block">
                     <h3>Delegates</h3>
                     <VotesTable

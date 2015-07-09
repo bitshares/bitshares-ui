@@ -17,10 +17,10 @@ class AccountPermissions extends React.Component {
             owner_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
             owner_threshold: 90
         };
-        this.state = this.getInitialState();
+        this.state = this.getDefaultState();
     }
 
-    getInitialState() {
+    getDefaultState() {
         return {
             active_permissions: this.initial_data.active_permissions,
             active_threshold: this.initial_data.active_threshold,
@@ -62,7 +62,7 @@ class AccountPermissions extends React.Component {
 
     onResetChanges(e) {
         e.preventDefault();
-        this.setState(this.getInitialState());
+        this.setState(this.getDefaultState());
     }
 
     render() {
