@@ -2,16 +2,12 @@ var alt = require("../alt-instance");
 
 class VoteActions {
 
-    addDelegate(account_name, delegate) {
-        this.dispatch(account_name, delegate);
+    addItem(container_name, account_name, item) {
+        this.dispatch({container_name, account_name, item});
     }
 
-    addWitness(account_name, witness) {
-        this.dispatch(account_name, witness);
-    }
-
-    addBudgetItem(account_name, budget_item) {
-        this.dispatch(account_name, budget_item);
+    removeItem(container_name, account_name, item) {
+        this.dispatch({container_name, account_name, item});
     }
 
     setProxyAccount(account_name, proxy_account) {
