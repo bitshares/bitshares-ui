@@ -22,6 +22,10 @@ class VoteActions {
         this.dispatch(account_name);
     }
 
+    transactChanges(account_name) {
+        this.dispatch(account_name);
+    }
+
     cancelChanges(account_name) {
         this.dispatch(account_name);
     }

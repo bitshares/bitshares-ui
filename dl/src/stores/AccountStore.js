@@ -25,7 +25,8 @@ class AccountStore extends BaseStore {
             onUpgradeAccount: AccountActions.upgradeAccount,
             onGetAccounts: AccountActions.getAccounts,
             onLinkAccount: AccountActions.linkAccount,
-            onUnlinkAccount: AccountActions.unlinkAccount
+            onUnlinkAccount: AccountActions.unlinkAccount,
+            onTransactUpdateAccount: AccountActions.transactUpdateAccount
         });
         this._export("loadDbData", "tryToSetCurrentAccount");
     }
@@ -147,6 +148,10 @@ class AccountStore extends BaseStore {
         iDB.remove_from_store("linked_accounts", name);
         this.linkedAccounts = this.linkedAccounts.remove(name);
         if(this.linkedAccounts.size === 0) this.setCurrentAccount(null);
+    }
+
+    onTransactUpdateAccount(account) {
+        console.log("[AccountStore.js:154] ----- onTransactUpdateAccount ----->", account);
     }
 
 }

@@ -66,6 +66,7 @@ class AccountVoting extends BaseComponent {
 
     onPublish() {
         console.log("[AccountVoting.jsx:49] ----- onPublish ----->");
+        VoteActions.publishChanges(this.props.account_name);
     }
 
     onCancelChanges(e) {
@@ -79,7 +80,7 @@ class AccountVoting extends BaseComponent {
         let my_witnesses = this.state.c_witnesses[account_name];
         let my_budget_items = this.state.c_budget_items[account_name];
         let my_proxy_account = this.state.c_proxies[account_name];
-        console.log("[AccountVoting.jsx:83] ----- render ----->", my_proxy_account, my_delegates, my_witnesses, my_budget_items);
+        //console.log("[AccountVoting.jsx:83] ----- render ----->", my_proxy_account, my_delegates, my_witnesses, my_budget_items);
         let ad = this.props.all_delegates;
         let all_delegates = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
         let all_witnesses = all_delegates;
