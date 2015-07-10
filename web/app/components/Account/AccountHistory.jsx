@@ -11,7 +11,6 @@ class AccountHistory extends React.Component {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
         let account = account_name_to_id[account_name] ? cachedAccounts.get(account_name_to_id[account_name]) : null;
         if(!account) return <div>Account {account_name} couldn't be displayed</div>;
-        let witness_store_state = WitnessStore.getState().witnesses;
         let history = accountHistories.get(account.id).map((trx, index) => {
             return (
                 <Operation
@@ -21,14 +20,18 @@ class AccountHistory extends React.Component {
                     account_id_to_name={account_id_to_name}
                     assets={assets}
                     current={account_name}
-                    witnesses={witness_store_state.witnesses}
-                    witness_id_to_name={witness_store_state.witness_id_to_name}
+                    witnesses={WitnessStore.getState().witnesses}
+                    witness_id_to_name={WitnessStore.getState().witness_id_to_name}
                     inverted={this.props.settings.get("inverseMarket")}
                     />
             );
         });
         return (
-            <div className="grid-content no-overflow">
+            <div className="grid-content">
+                <div>
+
+                </div>
+
                 <table style={{width: "100%"}} className="table text-center">
                     <tbody>
                     {history}
