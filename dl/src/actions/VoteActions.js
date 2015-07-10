@@ -1,4 +1,7 @@
-var alt = require("../alt-instance");
+import alt from "../alt-instance";
+import WalletApi from "rpc_api/WalletApi";
+
+let wallet_api = new WalletApi();
 
 class VoteActions {
 
@@ -18,12 +21,14 @@ class VoteActions {
         });
     }
 
-    publishChanges(account_name) {
-        this.dispatch(account_name);
-    }
-
-    transactChanges(account_name) {
-        this.dispatch(account_name);
+    publishChanges(account_name, account_json) {
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("account_update", account_json);
+        return wallet_api.sign_and_broadcast(tr).then( result => {
+            this.dispatch(account_name);
+        }).catch(error => {
+            console.log("[VoteActions.js] ----- publishChanges error ----->", error);
+        });
     }
 
     cancelChanges(account_name) {

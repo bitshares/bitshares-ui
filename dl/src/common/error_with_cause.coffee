@@ -12,6 +12,9 @@ class ErrorWithCause
         @stack = @message + "\n" + stack
 
     ErrorWithCause.throw = (message, cause)->
-        throw new ErrorWithCause message, cause
+        msg = message
+        msg += "\t cause: #{cause.message} " if cause?.message
+        msg += "\n stack: #{cause.stack} " if cause?.stack
+        throw new Error(msg)
     
 module.exports = ErrorWithCause

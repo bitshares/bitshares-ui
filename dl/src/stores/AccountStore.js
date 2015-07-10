@@ -25,8 +25,7 @@ class AccountStore extends BaseStore {
             onUpgradeAccount: AccountActions.upgradeAccount,
             onGetAccounts: AccountActions.getAccounts,
             onLinkAccount: AccountActions.linkAccount,
-            onUnlinkAccount: AccountActions.unlinkAccount,
-            onTransactUpdateAccount: AccountActions.transactUpdateAccount
+            onUnlinkAccount: AccountActions.unlinkAccount
         });
         this._export("loadDbData", "tryToSetCurrentAccount");
     }

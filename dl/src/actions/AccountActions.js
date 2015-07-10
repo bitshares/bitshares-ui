@@ -169,16 +169,6 @@ class AccountActions {
         });
     }
 
-    transactUpdateAccount(account) {
-        var tr = wallet_api.new_transaction();
-        tr.add_type_operation("account_update", account);
-        return wallet_api.sign_and_broadcast(tr).then( result => {
-            this.dispatch(account);
-        }).catch(error => {
-            console.log("[AccountActions.js:178] ----- transactUpdateAccount error ----->", error);
-        });
-    }
-
     linkAccount(name) {
         this.dispatch(name);
     }

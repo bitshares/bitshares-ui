@@ -110,9 +110,9 @@ class _my.transfer
     _template = ->
         fee : 
             amount : "100000"
-            asset_id : 0# 1.3.0
-        from: null      # 1.2.0
-        to: null        # 1.2.0
+            asset_id : 0 # 1.3.0
+        from: null       # 1.2.0
+        to: null         # 1.2.0
         amount:
             amount: "0"
             asset_id: 0 # 1.3.0

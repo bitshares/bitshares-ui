@@ -16,32 +16,8 @@ class AccountVoting extends BaseComponent {
         super(props, VoteStore);
     }
 
-    isStateChanged() {
-        let account_name = this.props.account_name;
-        let my_delegates = this.state.c_delegates[account_name];
-        let my_witnesses = this.state.c_witnesses[account_name];
-        let my_budget_items = this.state.c_budget_items[account_name];
-        let my_proxy_account = this.state.c_proxies[account_name];
-
-        return my_delegates !== this.state.i_delegates[account_name] ||
-               my_witnesses !== this.state.i_witnesses[account_name] ||
-               my_budget_items !== this.state.i_budget_items[account_name] ||
-               my_proxy_account !== this.state.i_proxies[account_name];
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
-        return true;
-        // DODO: use this.state.containers = {delegates.. } to cache local data and compare it to nextState
-        //let account_name = this.props.account_name;
-        //let my_delegates = this.state.c_delegates[account_name];
-        //let my_witnesses = this.state.c_witnesses[account_name];
-        //let my_budget_items = this.state.c_budget_items[account_name];
-        //let my_proxy_account = this.state.c_proxies[account_name];
-        //
-        //return my_delegates !== nextState.c_delegates[account_name] ||
-        //    my_witnesses !== nextState.c_witnesses[account_name] ||
-        //    my_budget_items !== nextState.c_budget_items[account_name] ||
-        //    my_proxy_account !== nextState.c_proxies[account_name];
+        return VoteStore.hasChanges(this.props.account_name);
     }
 
     switchProxy() {
@@ -66,7 +42,11 @@ class AccountVoting extends BaseComponent {
 
     onPublish() {
         console.log("[AccountVoting.jsx:49] ----- onPublish ----->");
-        VoteActions.publishChanges(this.props.account_name);
+        let account_name = this.props.account_name;
+        if (VoteStore.hasChanges(account_name)) {
+            let account_json = VoteStore.getAccountJsonWithChanges(account_name);
+            VoteActions.publishChanges(account_name, account_json);
+        }
     }
 
     onCancelChanges(e) {
@@ -85,7 +65,7 @@ class AccountVoting extends BaseComponent {
         let all_delegates = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
         let all_witnesses = all_delegates;
         let all_budget_items = all_delegates;
-        let action_buttons_class = "button" + (this.isStateChanged() ? "" : " disabled");
+        let action_buttons_class = "button" + (VoteStore.hasChanges(account_name) ? "" : " disabled");
 
         return (
             <div className="grid-content">
