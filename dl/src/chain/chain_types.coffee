@@ -36,22 +36,22 @@ ChainTypes.operations=
     limit_order_create: 1
     limit_order_cancel: 2
     call_order_update: 3
-    account_create: 4
-    account_update: 5
-    account_whitelist: 6
-    account_upgrade: 7
-    account_transfer: 8
-    asset_create: 9
-    asset_update: 10
-    asset_update_bitasset: 11
-    asset_update_feed_producers: 12
-    asset_issue: 13
-    asset_reserve: 14
-    asset_fund_fee_pool: 15
-    asset_settle: 16
-    asset_global_settle: 17
-    asset_publish_feed: 18
-    delegate_create: 19
+    fill_order: 4
+    account_create: 5
+    account_update: 6
+    account_whitelist: 7
+    account_upgrade: 8
+    account_transfer: 9
+    asset_create: 10
+    asset_update: 11
+    asset_update_bitasset: 12
+    asset_update_feed_producers: 13
+    asset_issue: 14
+    asset_reserve: 15
+    asset_fund_fee_pool: 16
+    asset_settle: 17
+    asset_global_settle: 18
+    asset_publish_feed: 19
     witness_create: 20
     witness_withdraw_pay: 21
     proposal_create: 22
@@ -61,8 +61,8 @@ ChainTypes.operations=
     withdraw_permission_update: 26
     withdraw_permission_claim: 27
     withdraw_permission_delete: 28
-    fill_order: 29
-    global_parameters_update: 30
+    delegate_create: 29
+    delegate_update_global_parameters: 30
     vesting_balance_create: 31
     vesting_balance_withdraw: 32
     worker_create: 33
@@ -70,5 +70,3 @@ ChainTypes.operations=
     assert: 35
     balance_claim: 36
     override_transfer: 37
-
-
