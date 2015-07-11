@@ -24,7 +24,8 @@ class AccountHistory extends React.Component {
                 !Immutable.is(nextProps.accountHistories, this.props.accountHistories) ||
                 nextProps.account_name !== this.props.account_name ||
                 nextState.currentPage !== this.state.currentPage ||
-                nextState.setPage !== this.state.setPage
+                nextState.setPage !== this.state.setPage ||
+                nextState.pages !== this.state.pages
             );
     }
 
