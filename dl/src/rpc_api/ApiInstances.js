@@ -14,7 +14,11 @@ var Apis = (function () {
         //console.log("[ApiInstances.js] ----- init ----->");
         //var WEBSOCKET_URL = process.env.WEBSOCKET_URL || "ws://localhost:8090"
         //console.log('WEBSOCKET_URL\t',WEBSOCKET_URL)
+        
+        // uncomment the following line to use the internal testnet instead of a localhost witness node
+        //  ws_rpc = new WebSocketRpc("ws://104.200.28.117:8090");
         ws_rpc = new WebSocketRpc("ws://localhost:8090");
+        
         var init_promise = ws_rpc.login("", "").then(() => {
             db_api = new GrapheneApi(ws_rpc, "database");
             network_api = new GrapheneApi(ws_rpc, "network_broadcast");
