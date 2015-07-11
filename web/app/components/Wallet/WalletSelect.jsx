@@ -10,7 +10,7 @@ export default class WalletSelect extends Component {
         super()
         this.wallets = WalletDb.wallets
         this.state = {
-            current_wallet: WalletDb.getCurrentWallet()
+            current_wallet: WalletDb.getCurrentWalletName()
         }
     }
     
@@ -88,8 +88,7 @@ export default class WalletSelect extends Component {
         e.preventDefault()
         var wallet = this.wallets[this.state.current_wallet]
         WalletDb.validatePassword(
-            this.state.current_wallet, //wallet_public_name
-            this.password_ui || "",//password
+            this.password_ui || "",
             true //unlock
         )
         this.forceUpdate()

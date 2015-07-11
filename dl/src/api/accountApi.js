@@ -1,5 +1,5 @@
-import Apis from "rpc_api/ApiInstances";
-import {object_type} from "chain/chain_types";
+import Apis from "../rpc_api/ApiInstances";
+import {object_type} from "../chain/chain_types";
 var PrivateKey = require("../ecc/key_private");
 
 let op_history = parseInt(object_type.operation_history, 10);
@@ -40,9 +40,11 @@ class Api {
     }
 
     createAccount(name) {
-        var expire_minutes = 10;
-        var signer_private_key = PrivateKey.fromSeed("nathan");
-        return Apis.instance().app_api().create_account_with_brain_key("brainkey", name, 11, 0, 0, expire_minutes, signer_private_key, true);
+        return Apis.instance().app_api().create_account_with_brain_key(
+            PrivateKey.fromSeed("owner").toPublicKey().toBtsPublic(),
+            PrivateKey.fromSeed("active").toPublicKey().toBtsPublic(), 
+            name, 11, 0, 0, PrivateKey.fromSeed("nathan"), true
+        );
     }
 }
 

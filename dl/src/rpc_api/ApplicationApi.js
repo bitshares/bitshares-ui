@@ -15,24 +15,16 @@ var key = require('../common/key_utils');
 class ApplicationApi {
     
     create_account_with_brain_key(
-        brain_key,
+        owner_pubkey,
+        active_pubkey,
         new_account_name,
         registrar_id,
         referrer_id,
         referrer_percent,
-        expire_minutes,
         signer_private_key,
-        broadcast = false,
-        owner_brainkey_sequence = 0
+        broadcast = false
     ) {
-        var owner_privkey = key.get_owner_private(brain_key, owner_brainkey_sequence);
-        var active_privkey = key.get_active_private(owner_privkey);
-        
-        var owner_pubkey = owner_privkey.toPublicKey();
-        var active_pubkey = active_privkey.toPublicKey();
-        
         var tr = new ops.signed_transaction();
-        tr.set_expire_minutes(expire_minutes);
         tr.add_type_operation("account_create", {
             "registrar": registrar_id,
             "referrer": referrer_id,
@@ -41,34 +33,27 @@ class ApplicationApi {
             "owner": {
                 "weight_threshold": 1,
                 "account_auths": [],
-                "key_auths": [[ owner_pubkey.toBtsPublic(), 1 ]],
+                "key_auths": [[ owner_pubkey, 1 ]],
                 "address_auths": []
             },
             "active": {
                 "weight_threshold": 1,
                 "account_auths": [ ],
-                "key_auths": [[ active_pubkey.toBtsPublic(), 1 ]],
+                "key_auths": [[ active_pubkey, 1 ]],
                 "address_auths": []
             },
             "options": {
-                "memo_key": active_pubkey.toBtsPublic(),
+                "memo_key": active_pubkey,
                 "voting_account": "1.2.0",
                 "num_witness": 0,
                 "num_committee": 0,
                 "votes": [ ]
             }
-        });
-        let trx_promise = tr.finalize(
+        })
+        return tr.finalize(
             signer_private_key,
             broadcast
-        );
-        return {
-            trx_promise: trx_promise,
-            owner_privkey: owner_privkey,
-            active_privkey: active_privkey,
-            owner_pubkey: owner_pubkey,
-            active_pubkey: active_pubkey
-        };
+        )
     }
     
     transfer(

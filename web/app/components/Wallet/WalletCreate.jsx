@@ -16,7 +16,6 @@ class WalletCreate extends Component {
             brainkey: key.suggest_brain_key(key.browserEntropy()),
             password: "",
             password_confirm: "",
-            private_wifs: [],
             errors: {},
             isValid: false
         };
@@ -62,11 +61,6 @@ class WalletCreate extends Component {
                             <label>Brain-Key</label>
                             <textarea type="text" id="brainkey"
                                 value={this.state.brainkey} />
-                            <br/>
-                        </div>
-                        
-                        <div className="grid-content">
-                            <WalletImport private_wifs={this.state.private_wifs}/>
                             <br/>
                         </div>
                         
@@ -122,18 +116,12 @@ class WalletCreate extends Component {
     }
     
     onSubmit(e) {
-        e.preventDefault();
-        new Promise((resolve, reject) => {
-            let transaction = WalletDb.transaction(resolve, reject);
-            WalletDb.onCreateWallet({
-                wallet_public_name: this.state.wallet_public_name,
-                password_plaintext: this.state.password,
-                brainkey_plaintext: this.state.brainkey,
-                private_wifs: this.state.private_wifs,
-                unlock: false,
-                transaction
-            });
-        }).then( ()=> {
+        e.preventDefault()
+        WalletDb.onCreateWallet(
+            this.state.password,
+            this.state.brainkey,
+            false //unlock
+        ).then( ()=> {
             // this.setState({wallet_saved: true});
             this.props.addNotification({
                 message: `Successfully saved wallet: ${this.state.wallet_public_name}`,
@@ -142,7 +130,6 @@ class WalletCreate extends Component {
             });
 
             this.context.router.transitionTo("create-account");
-
         }).catch(err => {
             console.log("CreateWallet failed:", err);
             this.props.addNotification({
@@ -152,6 +139,7 @@ class WalletCreate extends Component {
                 });
         });
     }
+    
 }
 
 WalletCreate.contextTypes = {router: React.PropTypes.func.isRequired};

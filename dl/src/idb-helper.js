@@ -1,44 +1,37 @@
-var db;
+var db
 var idb_helper
 
 module.exports = idb_helper = {
 
-    set_graphene_db: _db => {
-        db = _db
+    set_graphene_db: database => {
+        db = database
     },
-    
-    promise: (request, passthrough_object) => {
+
+    on_request_end: (request) => {
         return new Promise((resolve, reject) => {
-            passthrough_object => {
-                request.onsuccess = (evt) => {
-                    if(passthrough_object == void 0)
-                        resolve(evt)
-                    else
-                        resolve([evt, passthrough_object])
-                }
-            }(passthrough_object)
-            request.onerror = (evt) => {
-                var error = {
-                    error:evt.target.error.message,
-                    data: evt
-                }
-                console.log("ERROR idb_helper.promise request", error)
-                reject(error)
-            }
+            request.onsuccess = chain_event(request.onsuccess, resolve)
+            request.onerror = chain_event(request.onerror, reject)
         })
     },
     
-    add: (store, data_object, callback) => {
-        return idb_helper.promise(
-            store.add(data_object),
-            data_object
-        ).then( result => {
-            var [ evt, data_object ] = result
-            if ( evt.target.result != void 0)
-                data_object.id = evt.target.result
-            
-            return callback ? callback(data_object) : data_object
+    on_transaction_end: (transaction) => {
+        return new Promise((resolve, reject) => {
+            transaction.oncomplete = chain_event(transaction.oncomplete, resolve)
+            transaction.onerror = chain_event(transaction.onerror, reject)
+            transaction.onabort = chain_event(transaction.onabort, reject)
         })
+    },
+    
+    add: (store, object) => {
+        (object) => {
+            idb_helper.on_request_end(store.add(object)).then( event => {
+                if ( event.target.result != void 0)
+                    //todo does event provide the keyPath name? (instead of id)
+                    object.id = event.target.result
+                
+                return [ object, event ]
+            })
+        }(object)
     },
     
     cursor: (store_name, callback, transaction) => {
@@ -54,7 +47,7 @@ module.exports = idb_helper = {
             }
             
             let store = transaction.objectStore(store_name);
-            let request = store.openCursor();
+            let request = store.openCursor()
             request.onsuccess = e => {
                 let cursor = e.target.result;
                 callback(cursor, e)
@@ -81,4 +74,14 @@ module.exports = idb_helper = {
         )
     }
 
+}
+
+var chain_event = (on_event, callback) => {
+   var existing_on_event = on_event
+   var new_on_event = (event)=> {
+       callback(event)
+       if(existing_on_event)
+           existing_on_event(event)
+   }
+   return new_on_event
 }

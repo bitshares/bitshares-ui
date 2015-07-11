@@ -1,10 +1,10 @@
 import alt from "../alt-instance";
-import utils from "common/utils";
+import utils from "../common/utils";
 import api from "../api/accountApi";
 
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb";
-import WalletActions from "actions/WalletActions"
+import WalletApi from "../rpc_api/WalletApi";
+import WalletDb from "../stores/WalletDb";
+import WalletActions from "../actions/WalletActions"
 
 let accountSubs = {};
 let accountLookup = {};
@@ -145,17 +145,12 @@ class AccountActions {
         return promise;
     }
 
-    createAccount(account_name, wallet_public_name) {
-        return new Promise((resolve, reject) => {
-            var transaction = WalletDb.transaction(resolve, reject)
-            resolve( WalletActions.createBrainKeyAccount({
-                account_name,
-                wallet_public_name,
-                transaction
-            }).then( result => {
-                this.dispatch(account_name)
-                return account_name
-            }) )
+    createAccount( account_name ) {
+        return WalletActions.createBrainKeyAccount(
+            account_name
+        ).then( () => {
+            this.dispatch(account_name)
+            return account_name
         })
     }
 
@@ -178,5 +173,6 @@ class AccountActions {
     }
 
 }
+var _console_log = (result)=>{console.log(result)}
 
 module.exports = alt.createActions(AccountActions);

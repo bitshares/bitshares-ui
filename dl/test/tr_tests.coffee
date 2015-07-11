@@ -58,8 +58,8 @@ describe "tr_tests", ->
             referrer = 0
             referrer_percent = 0
             broadcast
-        ).trx_promise.then (result)->
-            th.print_result result
+        ).then (result)->
+            #th.print_result result
             #th.print_hex ""
             done()
         .catch th.log_error
@@ -71,7 +71,7 @@ describe "tr_tests", ->
             "1.2.15", "1.2.14", 1, "1.3.0", memo = null
             broadcast
         ).then (result)->
-            th.print_result result
+            #th.print_result result
             #th.print_hex ""
             done()
         .catch th.log_error
@@ -82,7 +82,7 @@ describe "tr_tests", ->
             "1.2.15", "1.2.14", 1, "1.3.0", memo = "memo"
             broadcast
         ).then (result)->
-            th.print_result result
+            #th.print_result result
             #th.print_hex ""
             done()
         .catch th.log_error
@@ -96,7 +96,7 @@ describe "tr_tests", ->
             10, PrivateKey.fromSeed("nathan")
             broadcast
         ).then (result)->
-            th.print_result result
+            #th.print_result result
             #th.print_hex ""
             done()
         .catch th.log_error
@@ -116,7 +116,7 @@ describe "tr_tests", ->
             signer_private_key = PrivateKey.fromSeed("nathan")
             broadcast
         ).then (result)->
-            th.print_result result
+            #th.print_result result
             #th.print_hex ""
             done()
         , (e)-> th.log_error(e)

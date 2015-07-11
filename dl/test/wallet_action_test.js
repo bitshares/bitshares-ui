@@ -1,12 +1,14 @@
 import iDB from "../src/idb-instance"
 import fakeIndexedDB from "fake-indexeddb"
 
+import AccountActions from "../src/actions/AccountActions"
 import WalletActions from "../src/actions/WalletActions"
 import WalletDb from "../src/stores/WalletDb"
 
 import ApiInstances from "../src/rpc_api/ApiInstances"
 import WalletApi from "../src/rpc_api/WalletApi"
 import ApplicationApi from "../src/rpc_api/ApplicationApi"
+import PrivateKey from "../src/ecc/key_private"
 
 import th from "./test_helper"
 import secureRandom from "secure-random"
@@ -42,63 +44,59 @@ describe( "wallet_actions", ()=> {
     
     it( "wallet_create", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
-        var public_name = "default_"+ suffix
-        new Promise((resolve, reject) => {
-            var transaction = WalletDb.transaction(resolve, reject)
-            resolve(
-                WalletDb.onCreateWallet({ 
-                    wallet_public_name: public_name,
-                    password_plaintext: "password",
-                    brainkey_plaintext: "brainkey" + suffix,
-                    transaction
-                }).then(()=>{
-                    assert( WalletDb.getWallet(public_name) != null )
-                    assert( WalletDb.getWallet(public_name).id != null )
-                    assert( WalletDb.getCurrentWallet() == public_name )
-                    WalletDb.validatePassword( public_name, "password", true )
-                    assert( WalletDb.getBrainKey(public_name) == "brainkey"  + suffix )
-                    WalletDb.onLock(public_name)
-                    assert ( WalletDb.isLocked(public_name) )
-                    return new Promise( (resolve, reject) => {
-                        var transaction = WalletDb.transaction(resolve, reject)
-                        resolve( WalletDb.incrementBrainKeySequence({
-                            wallet_public_name:public_name,
-                            transaction
-                        }).then( ()=> {
-                            done()
-                        }) )
-                    })
-                })
-            )
+        var public_name = "default_" + suffix
+        test_wallet( suffix ).then(()=>{
+            WalletDb.onLock()
+            assert( WalletDb.isLocked() )
+            assert( WalletDb.getWallet() != null )
+            assert( WalletDb.getWallet().id != null )
+            assert( WalletDb.getCurrentWalletName() == public_name )
+            WalletDb.validatePassword( "password", true )
+            assert( ! WalletDb.isLocked() )
+            assert( WalletDb.getBrainKey() == "brainkey" + suffix )
+            WalletDb.onLock()
+            done()
         }).catch(_catch)
     })
     
     it( "create_account_with_brain_key", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
-        var public_name = "default_"+ suffix
-        new Promise((resolve, reject) => {
-            var transaction = WalletDb.transaction(resolve, reject)
-            resolve( WalletDb.onCreateWallet({
-                wallet_public_name: public_name,
-                password_plaintext: "password",
-                brainkey_plaintext: "brainkey" + suffix,
-                transaction
-            }).then(()=>{
-                WalletDb.validatePassword( public_name, "password", true )
-                return WalletActions.createBrainKeyAccount({
-                    account_name:"account-" + suffix,
-                    wallet_public_name: public_name,
-                    transaction
-                }).then( ()=> {
-                    done()
-                })
-            }) )
+        test_wallet( suffix ).then(()=>{
+            return WalletActions.createBrainKeyAccount(
+                "brainaccount-"+ suffix 
+            ).then(()=> {
+                done()
+            })
         }).catch(_catch)
     })
     
-    it( "import_balance", done =>
-        done()
-    )
+    it( "import_balance", done => {
+        var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
+        var wif_keys = [ PrivateKey.fromSeed("nathan").toWif() ]
+        test_wallet(suffix).then( ()=> {
+            return test_account( suffix ).then( account_name => {
+                return WalletActions.importBalance(
+                    account_name,
+                    wif_keys,
+                    true //broadcast
+                )
+            })
+        }).then(()=>done()).catch(_catch)
+    })
 
 })
 
+var test_wallet = (suffix) => {
+    WalletDb.setCurrentWalletName("default_" + suffix)
+    return WalletDb.onCreateWallet(
+        "password",
+        "brainkey" + suffix, 
+        true // unlock  
+    )
+}
+
+var test_account = ( suffix )=> {
+    return AccountActions.createAccount(
+        "account-"+ suffix
+    )
+}

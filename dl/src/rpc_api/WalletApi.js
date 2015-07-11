@@ -2,9 +2,11 @@ var helper = require('../chain/transaction_helper')
 var ops = require('../chain/transaction_operations')
 var type = require('../chain/serializer_operation_types')
 var v = require('../chain/serializer_validation')
+import key from "../common/key_utils"
 
 var PrivateKey = require('../ecc/key_private')
 var ApplicationApi = require('./ApplicationApi')
+var WalletDb = require('../stores/WalletDb')
 
 class WalletApi {
 
@@ -48,23 +50,23 @@ class WalletApi {
     }
 
     create_account_with_brain_key(
-        brain_key,
+        brainkey,
         new_account_name,
         registrar_id,
         referrer_id = 0,
         referrer_percent = 100,
         broadcast = true
     ) {
-        var expire_minutes = 10
-        var signer_private_key = PrivateKey.fromSeed("nathan")
+        var owner_privkey = key.get_owner_private( brainkey, "0" )
+        var active_privkey = key.get_active_private( owner_privkey )
         return this.application_api.create_account_with_brain_key(
-            brain_key,
+            owner_privkey.toPublicKey().toBtsPublic(),
+            active_privkey.toPublicKey().toBtsPublic(),
             new_account_name,
             registrar_id,
             referrer_id,
             referrer_percent,
-            expire_minutes,
-            signer_private_key,
+            PrivateKey.fromSeed("nathan"),
             broadcast
         )
     }

@@ -16,7 +16,7 @@ class PrivateKeyStore extends BaseStore {
         /*this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });*/
-        this._export("loadDbData","onAddKey", "onDeleteByWalletId","onAddKey");
+        this._export("loadDbData","onAddKey","onAddKey");
     }
 
     loadDbData() {
@@ -32,46 +32,47 @@ class PrivateKeyStore extends BaseStore {
         });
     }
     
-    onAddKey(private_key_object, transaction, callback) {
-        return idb_helper.add(
+    onAddKey(private_key_object, transaction) {
+        PrivateKeyTcomb(private_key_object)
+        idb_helper.add(
             transaction.objectStore("private_keys"),
-            private_key_object, private_key_object => {
+            private_key_object
+        )
+        private_key_object => {
+            idb_helper.on_transaction_end(transaction).then(() => {
                 this.keys = this.keys.set(
                     private_key_object.id,
                     PrivateKeyTcomb(private_key_object)
                 )
-                return callback ?
-                    callback(private_key_object) : 
-                    private_key_object
-            }
-        )
+            })
+        }(private_key_object)
     }
     
-    onDeleteByWalletId(wallet_id, transaction, cascade = true) {
-        var store = transaction.objectStore("private_keys")
-        var delete_ids = [], promises = []
-        for(let key of this.keys) {
-            var private_key = key[1]
-            if(private_key.wallet_id === wallet_id) {
-                promises.push(
-                    new Promise((resolve, reject)=>{
-                        let request = store.delete(private_key.id)
-                        ((private_id, resolve)=>{
-                            request.onsuccess = () => {
-                                this.keys = this.keys.delete(private_id)
-                                resolve()
-                            }
-                        })(private_key.id, resolve)
-                        request.onerror = (e) => {
-                            console.log("ERROR!!! onDeleteByWalletId - ", e.target.error.message, value);
-                            reject(e.target.error.message)
-                        }
-                    })
-                )
-            }
-        }
-        return Promise.all(promises)
-    }
+    //onDeleteByWalletId(wallet_id, transaction, cascade = true) {
+    //    var store = transaction.objectStore("private_keys")
+    //    var delete_ids = [], promises = []
+    //    for(let key of this.keys) {
+    //        var private_key = key[1]
+    //        if(private_key.wallet_id === wallet_id) {
+    //            promises.push(
+    //                new Promise((resolve, reject)=>{
+    //                    let request = store.delete(private_key.id)
+    //                    ((private_id, resolve)=>{
+    //                        request.onsuccess = () => {
+    //                            this.keys = this.keys.delete(private_id)
+    //                            resolve()
+    //                        }
+    //                    })(private_key.id, resolve)
+    //                    request.onerror = (e) => {
+    //                        console.log("ERROR!!! onDeleteByWalletId - ", e.target.error.message, value);
+    //                        reject(e.target.error.message)
+    //                    }
+    //                })
+    //            )
+    //        }
+    //    }
+    //    return Promise.all(promises)
+    //}
 
 
 

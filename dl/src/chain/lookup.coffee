@@ -68,8 +68,6 @@ class Lookup
     resolve:->
         @_private.resolve()
 
-module.exports = Lookup
-
 class Private
     
     ###
@@ -171,3 +169,5 @@ class Private
                     @lookup_map = {}
                     return
         _resolve()
+
+module.exports = new Lookup()
