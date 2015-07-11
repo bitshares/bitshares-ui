@@ -15,7 +15,7 @@
   },
   "scripts": {
     "postinstall": "",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:mocha-babel --require coffee-script/register"
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:babel/register --require coffee-script/register"
   },
   "dependencies": {
     "alt": "~0.15.3",
@@ -41,7 +41,6 @@
     "coffeeify": "~0.7.0",
     "fake-indexeddb": "^1.0.3",
     "mocha": "~2.2.5",
-    "mocha-babel": "^3.0.0",
     "mocha-traceur": "~2.1.0",
     "node-libs-browser": "~0.5.2",
     "node-localstorage": "~0.3.4",

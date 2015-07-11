@@ -17,6 +17,11 @@ Go to cli or web dir and run:
 ```
 npm start
 ```
+## Environment
+```
+export GRAPHENE_UI_HOME=$HOME/bitshares/graphene-ui
+export NODE_PATH="$NODE_PATH:$GRAPHENE_UI_HOME/dl/src:$GRAPHENE_UI_HOME/web/app"
+```
 
 ## Testing
 Jest currently doesn't work with node (see https://github.com/facebook/jest/issues/243), so in order to run the tests you need to install iojs. Under Ubuntu instructions can be found here:
