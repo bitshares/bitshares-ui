@@ -96,7 +96,7 @@ class WalletActions {
                         ////claiming the vesting balance on vesting terms.
                         
                         balance_claims.push({
-                            fee: { amount: "100000", asset_id: 0},
+                            //fee: { amount: "100000", asset_id: 0},
                             deposit_to_account: account.id,
                             balance_to_claim: b.id, //"1.15.0"
                             balance_owner_key: address_publickey_map[b.owner],

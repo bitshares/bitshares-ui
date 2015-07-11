@@ -47,8 +47,10 @@ class ApplicationApi {
                 "voting_account": "1.2.0",
                 "num_witness": 0,
                 "num_committee": 0,
-                "votes": [ ]
-            }
+                "votes": [ ],
+                "extensions": [ ]
+            },
+            "extensions": [ ]
         })
         return tr.finalize(
             signer_private_key,

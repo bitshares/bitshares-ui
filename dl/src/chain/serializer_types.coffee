@@ -166,6 +166,18 @@ Types.bool =
         return no if debug.use_default and object is undefined
         if object then yes else no
 
+Types.void =
+    fromByteBuffer:(b)->
+        throw new Error "(void) undefined type"
+    appendByteBuffer:(b, object)->
+        throw new Error "(void) undefined type"
+    fromObject:(object)->
+        throw new Error "(void) undefined type"
+    toObject:(object, debug = {})->
+        if debug.use_default and object is undefined
+            return undefined
+        throw new Error "(void) undefined type"
+
 Types.array = (st_operation)->
     fromByteBuffer:(b)->
         size = b.readVarint32()

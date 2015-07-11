@@ -18,6 +18,7 @@ fixed_array = sr_type.fixed_array
 protocol_id_type = sr_type.protocol_id_type
 object_id_type = sr_type.object_id_type
 vote_id = sr_type.vote_id
+future_extensions = sr_type.future_extensions
 optional = sr_type.optional
 static_variant = sr_type.static_variant
 map = sr_type.map
@@ -25,6 +26,8 @@ set = sr_type.set
 public_key = sr_type.public_key
 address = sr_type.address
 time_point_sec = sr_type.time_point_sec
+
+future_extensions = sr_type.void
 
 ###
 When updating generated code
@@ -371,11 +374,6 @@ signed_block_header = new Serializer(
     witness_signature: bytes 65
 )
 
-public_key = new Serializer( 
-    "public_key"
-    key_data: bytes 33
-)
-
 memo_data = new Serializer( 
     "memo_data"
     from: public_key
@@ -648,11 +646,6 @@ witness_withdraw_pay = new Serializer(
     amount: int64
 )
 
-operation  = new Serializer( 
-    "operation "
-    op: operation
-)
-
 proposal_create = new Serializer( 
     "proposal_create"
     fee: asset
@@ -896,7 +889,7 @@ override_transfer = new Serializer(
     extensions: set future_extensions
 )
 
-operation = static_variant [
+operation.st_operations = [
     transfer    
     limit_order_create    
     limit_order_cancel    
