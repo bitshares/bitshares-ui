@@ -36,10 +36,6 @@ class VoteStore extends BaseStore {
         c_container[account_name] = items;
     }
 
-    resetContainer(i_container, c_container, account_name) {
-        c_container[account_name] = i_container[account_name];
-    }
-
     storeItem(i_container, c_container, account_name, account_obj) {
         let items = c_container[account_name];
         items = items.push(account_obj);
@@ -47,13 +43,12 @@ class VoteStore extends BaseStore {
         c_container[account_name] = items;
     }
 
-    listToVoteOptions(vt, list) {
-        let account_name_to_id = AccountStore.getState().account_name_to_id;
+    listToVoteOptions(vt, list, account_name_to_id) {
         let res = [];
         for (let v of list) {
             let account_id = account_name_to_id[v.name];
             if (account_id) {
-                res.push([`${vt}:${Utils.get_object_id(account_id)}`]);
+                res.push(`${vt}:${Utils.get_object_id(account_id)}`);
             }
         }
         return res;
@@ -67,15 +62,20 @@ class VoteStore extends BaseStore {
     }
 
     getAccountJsonWithChanges(account_name) {
-        let vote_options = []
-            .concat(this.listToVoteOptions(DELEGATE, this.c_delegates[account_name]))
-            .concat(this.listToVoteOptions(WITNESS, this.c_witnesses[account_name]))
-            .concat(this.listToVoteOptions(BUDGET_ITEM, this.c_budget_items[account_name]));
+        let account_name_to_id = AccountStore.getState().account_name_to_id;
+        let votes = []
+            .concat(this.listToVoteOptions(DELEGATE, this.c_delegates[account_name], account_name_to_id))
+            .concat(this.listToVoteOptions(WITNESS, this.c_witnesses[account_name], account_name_to_id))
+            .concat(this.listToVoteOptions(BUDGET_ITEM, this.c_budget_items[account_name], account_name_to_id));
         //let account_store_data = AccountStore.getState();
         //let account =  account_store_data.cachedAccounts.get(account_store_data.account_name_to_id[account_name]).toJSON();
         let account = this.cachedAccountsJson[account_name];
         account.new_options = account.options;
-        account.new_options.votes = vote_options;
+        account.new_options.votes = votes;
+        if(this.c_proxies[account_name]) {
+            let account_id = account_name_to_id[this.c_proxies[account_name]];
+            account.new_options.voting_account = account_id;
+        }
         //AccountActions.transactUpdateAccount(account);
         return account;
     }
@@ -96,14 +96,15 @@ class VoteStore extends BaseStore {
     }
 
     onSetProxyAccount(data) {
-        console.log("[VoteStore.js:26] ----- onSetProxyAccount ----->", data);
+        this.c_proxies[data.account_name] = data.proxy_account_name;
     }
 
     onCancelChanges(account_name) {
         console.log("[VoteStore.js:34] ----- onCancelChanges ----->");
-        this.resetContainer(this.i_delegates, this.c_delegates, account_name);
-        this.resetContainer(this.i_witnesses, this.c_witnesses, account_name);
-        this.resetContainer(this.i_budget_items, this.c_budget_items, account_name);
+        this.c_delegates[account_name] = this.i_delegates[account_name];
+        this.c_witnesses[account_name] = this.i_witnesses[account_name];
+        this.c_budget_items[account_name] = this.i_budget_items[account_name];
+        this.c_proxies[account_name] = this.i_proxies[account_name];
     }
 
     onGetAccount(result) {
@@ -130,16 +131,16 @@ class VoteStore extends BaseStore {
             this.i_proxies[account.name] = account_obj;
             this.c_proxies[account.name] = account_obj;
         } else {
-            this.i_proxies[account.name] = null;
-            this.c_proxies[account.name] = null;
+            this.c_proxies[account.name] = this.i_proxies[account.name] = "";
         }
     }
 
-    publishChanges(account_name) {
+    onPublishChanges(account_name) {
         console.log("[VoteStore.js] ----- onTransactUpdateAccount ----->", account_name);
-        this.resetContainer(this.i_delegates, this.c_delegates, account_name);
-        this.resetContainer(this.i_witnesses, this.c_witnesses, account_name);
-        this.resetContainer(this.i_budget_items, this.c_budget_items, account_name);
+        this.i_delegates[account_name] = this.c_delegates[account_name];
+        this.i_witnesses[account_name] = this.c_witnesses[account_name];
+        this.i_budget_items[account_name] = this.c_budget_items[account_name];
+        this.i_proxies[account_name] = this.c_proxies[account_name];
     }
 
 }

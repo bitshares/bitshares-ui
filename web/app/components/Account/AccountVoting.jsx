@@ -8,6 +8,7 @@ import VotesTable from "./VotesTable";
 import VoteActions from "actions/VoteActions";
 import VoteStore from "stores/VoteStore";
 import BaseComponent from "../BaseComponent";
+import Tabs from "react-foundation-apps/src/tabs";
 
 class AccountVoting extends BaseComponent {
 
@@ -17,7 +18,8 @@ class AccountVoting extends BaseComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return VoteStore.hasChanges(this.props.account_name);
+        //return VoteStore.hasChanges(this.props.account_name);
+        return true;
     }
 
     switchProxy() {
@@ -36,8 +38,8 @@ class AccountVoting extends BaseComponent {
     }
 
     onProxyChanged(e) {
-        VoteActions.setProxyAccount(this.props.account_name, this.refs.proxy_account.value());
-        //this.setState({proxy_account: this.refs.proxy_account.value()});
+        // TODO: get proxy_account's id before submitting it setProxyAccount
+        VoteActions.setProxyAccount(this.props.account_name, 0, this.refs.proxy_account.value());
     }
 
     onPublish() {
@@ -52,6 +54,7 @@ class AccountVoting extends BaseComponent {
     onCancelChanges(e) {
         e.preventDefault();
         VoteActions.cancelChanges(this.props.account_name);
+        this.refs.proxy_account.setValue(this.state.c_proxies[this.props.account_name]);
     }
 
     render() {
@@ -70,52 +73,43 @@ class AccountVoting extends BaseComponent {
         return (
             <div className="grid-content">
                 <div className="content-block">
-                    <h3>
-                        <div className="switch float-right">
-                            <input type="checkbox" checked={this.state.proxy_account}/>
-                            <label onClick={this.switchProxy.bind(this)}></label>
-                        </div>
-                        Proxy Voting Account
-                    </h3>
-                    {my_proxy_account !== null ? (
-                        <div className="medium-4">
-                            <br/>
-                            <label>Account Name</label>
-                            <AutocompleteInput
-                                id="proxy_account" ref="proxy_account"
-                                options={all_delegates}
-                                onChange={this.onProxyChanged.bind(this)}/>
-                        </div>
-                        ) : null
-                    }
+                    <div className="medium-4">
+                        <label>Proxy Voting Account</label>
+                        <AutocompleteInput
+                            id="proxy_account" ref="proxy_account"
+                            options={all_delegates}
+                            onChange={this.onProxyChanged.bind(this)}
+                            initial_value={my_proxy_account}/>
+                    </div>
                 </div>
-                {my_proxy_account === null ?
-                    (<div>
+                {my_proxy_account === "" ?
+                    (
                     <div className="content-block">
-                        <h3>Delegates</h3>
-                        <VotesTable
-                            selectedEntities={my_delegates}
-                            allEntities={all_delegates}
-                            onAddRow={this.onAddRow.bind(this, "delegates")}
-                            onRemoveRow={this.onRemoveRow.bind(this, "delegates")} />
+                        <Tabs>
+                            <Tabs.Tab title="Delegates">
+                                <VotesTable
+                                    selectedEntities={my_delegates}
+                                    allEntities={all_delegates}
+                                    onAddRow={this.onAddRow.bind(this, "delegates")}
+                                    onRemoveRow={this.onRemoveRow.bind(this, "delegates")} />
+                            </Tabs.Tab>
+                            <Tabs.Tab title="Witnesses">
+                                <VotesTable
+                                    selectedEntities={my_witnesses}
+                                    allEntities={all_witnesses}
+                                    onAddRow={this.onAddRow.bind(this, "witnesses")}
+                                    onRemoveRow={this.onRemoveRow.bind(this, "witnesses")} />
+                            </Tabs.Tab>
+                            <Tabs.Tab title="Budget Items">
+                                <VotesTable
+                                    selectedEntities={my_budget_items}
+                                    allEntities={all_budget_items}
+                                    onAddRow={this.onAddRow.bind(this, "budget_items")}
+                                    onRemoveRow={this.onRemoveRow.bind(this, "budget_items")} />
+                            </Tabs.Tab>
+                          </Tabs>
                     </div>
-                    <div className="content-block">
-                        <h3>Witnesses</h3>
-                        <VotesTable
-                            selectedEntities={my_witnesses}
-                            allEntities={all_witnesses}
-                            onAddRow={this.onAddRow.bind(this, "witnesses")}
-                            onRemoveRow={this.onRemoveRow.bind(this, "witnesses")} />
-                    </div>
-                    <div className="content-block">
-                        <h3>Budget Items</h3>
-                        <VotesTable
-                            selectedEntities={my_budget_items}
-                            allEntities={all_budget_items}
-                            onAddRow={this.onAddRow.bind(this, "budget_items")}
-                            onRemoveRow={this.onRemoveRow.bind(this, "budget_items")} />
-                    </div>
-                    </div>) : null
+                    ) : null
                 }
                 <div className="content-block">
                     <div className="actions clearfix">

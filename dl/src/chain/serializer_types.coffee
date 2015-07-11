@@ -205,9 +205,10 @@ Types.set = (st_operation)->
     validate: (array)->
         dup_map = {}
         for o in array
-            if dup_map[o] isnt undefined
+            o_str = JSON.stringify(o)
+            if dup_map[o_str] isnt undefined
                 throw new Error "duplicate"
-            dup_map[o] = on
+            dup_map[o_str] = on
         array.sort()
     fromByteBuffer:(b)->
         size = b.readVarint32()

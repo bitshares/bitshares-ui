@@ -22,6 +22,10 @@ class AutocompleteInput extends Component {
         return this.getInput().value;
     }
 
+    setValue(value) {
+        return this.getInput().value = value;
+    }
+
     clear() {
         this.getInput().value = "";
     }
@@ -44,10 +48,7 @@ class AutocompleteInput extends Component {
         } else {
             ZfApi.publish(action_sheet_id, "close");
         }
-        if (this.props.onChange) {
-            console.log("calling prop onChange", e);
-            this.props.onChange(e);
-        }
+        if (this.props.onChange) this.props.onChange(e);
     }
 
     handleItemClick(e) {
