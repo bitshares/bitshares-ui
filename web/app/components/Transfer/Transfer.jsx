@@ -2,7 +2,6 @@ import React from "react";
 import {PropTypes} from "react";
 import BaseComponent from "../BaseComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
-import ConfirmationScreen from "./ConfirmationScreen";
 import DoneScreen from "./DoneScreen";
 import classNames from "classnames";
 import utils from "common/utils";
@@ -188,7 +187,7 @@ class Transfer extends BaseComponent {
 
         if (cachedAccounts.size > 0 && assets.size > 0 && accountBalances.size > 0) {
             account = cachedAccounts.get(this.state.transfer.from_id ? this.state.transfer.from_id : null);
-            let balances = account ? accountBalances.get(account.id) : null;
+            let balances = account ? accountBalances.get(account.name) : null;
             if (account && balances) {
                 balancesComp = balances.map((balance) => {
                     return <li key={balance.asset_id}><FormattedAsset amount={parseInt(balance.amount, 10)} asset={assets.get(balance.asset_id)}/></li>;

@@ -23,7 +23,7 @@ class AccountOverview extends React.Component {
         let account_id = account_name_to_id[account_name]
         let account = account_id ? cachedAccounts.get(account_id) : null;
         if(!account) return <div>Account {account_name} couldn't be displayed</div>;
-        let balances = accountBalances.get(account.id).map( balance => {
+        let balances = accountBalances.get(account.name).map( balance => {
             balance.amount = parseFloat(balance.amount);
             return (
                 <tr key={balance.asset_id}>

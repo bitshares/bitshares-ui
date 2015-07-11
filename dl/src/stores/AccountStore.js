@@ -60,9 +60,9 @@ class AccountStore extends BaseStore {
                 result.account,
                 result.history
             );
-
+            let name = this.account_id_to_name[result.account];
             this.balances = this.balances.set(
-                result.account,
+                name,
                 result.balances
             );
         } else {
@@ -75,7 +75,7 @@ class AccountStore extends BaseStore {
                 }];
 
                 this.balances = this.balances.set(
-                    account.id,
+                    account.name,
                     balances
                 );
 

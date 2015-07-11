@@ -158,7 +158,7 @@ class Exchange extends React.Component {
             base = assets.get(base_id);
             quote = assets.get(quote_id);
 
-            accountBalance = balances.get(currentAccount.id);
+            accountBalance = balances.get(currentAccount.name);
 
             if (accountBalance) {
                 for (var i = 0; i < accountBalance.length; i++) {

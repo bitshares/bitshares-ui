@@ -35,7 +35,7 @@ class Dashboard extends Component {
                         key={a}
                         assets={assets}
                         account={a}
-                        balances={balances.get(a.id)}
+                        balances={balances.get(a)}
                         />
                 );
             }).toArray();
