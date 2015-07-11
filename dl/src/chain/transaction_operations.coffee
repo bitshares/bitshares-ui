@@ -6,10 +6,11 @@ Aes = require '../ecc/aes'
 
 v = require './serializer_validation'
 chain_types = require './chain_types'
+chain_config = require './config'
 hash = require('../common/hash')
 type = require './serializer_operation_types'
 validation = require('../common/validation')
-lookup = new (require './lookup')()
+lookup = require './lookup'
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
 
@@ -57,6 +58,10 @@ _my.signed_transaction = ->
     from the server, if not it returns the json transaction object.  ###
     finalize:(private_keys, broadcast = no)->
         ((tr, private_keys, broadcast)->
+            if(tr.ref_block_prefix == 0)
+                tr.ref_block_prefix = 
+                    Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
+            
             new Promise (resolve, reject)->
                 lookup.resolve().then ()->
                     for op in tr.operations
@@ -79,8 +84,8 @@ _my.signed_transaction = ->
                         return
                     
                     ((private_key, tr_buffer, tr_object)->
-                        api.network_api().exec("broadcast_transaction", [tr_object]).then (result)->
-                            resolve result
+                        api.network_api().exec("broadcast_transaction", [tr_object]).then ()->
+                            resolve tr_object
                             return
                         .catch (error)->
                             signer_public = private_key.toPublicKey()
