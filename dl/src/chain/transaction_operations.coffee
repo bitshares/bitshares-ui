@@ -14,6 +14,8 @@ lookup = require './lookup'
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
 
+fee = "2111100000"
+
 module.exports = _my = {}
 
 _my.signed_transaction = ->
@@ -23,8 +25,6 @@ _my.signed_transaction = ->
     relative_expiration: 0
     operations: []
     signatures: []
-    extra_signatures: []
-    extensions: []
     
     add_operation: (operation) ->
         v.required operation, "operation"
@@ -46,7 +46,7 @@ _my.signed_transaction = ->
             throw new Error "unknown operation: #{_type.operation_name}"
         unless operation.fee
             operation.fee =
-                amount: "2000000"
+                amount: fee
                 asset_id: "1.3.0"
         operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]
@@ -115,7 +115,7 @@ _my.signed_transaction = ->
 class _my.transfer
     _template = ->
         fee : 
-            amount : "2000000"
+            amount : fee
             asset_id : 0 # 1.3.0
         from: null       # 1.2.0
         to: null         # 1.2.0
@@ -127,7 +127,6 @@ class _my.transfer
             to: null    # GPHXyz...public_key
             nonce: "0" # "0"
             message: null
-        extensions: [ ]
     
     constructor:( @memo_from_privkey )->
         for key in Object.keys _tmp = _template()

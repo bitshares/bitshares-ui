@@ -229,16 +229,19 @@ Types.set = (st_operation)->
         @validate (for i in [0...size] by 1
             st_operation.fromByteBuffer b)
     appendByteBuffer:(b, object)->
+        object = [] unless object
         b.writeVarint32 object.length
         for o in @validate object
             st_operation.appendByteBuffer b, o
         return
     fromObject:(object)->
+        object = [] unless object
         @validate (for o in object
             st_operation.fromObject o)
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return [ st_operation.toObject(object, debug) ]
+        object = [] unless object
         @validate (for o in object
             st_operation.toObject o, debug)
 
