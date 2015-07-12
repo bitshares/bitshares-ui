@@ -65,7 +65,7 @@ class BlockchainActions {
                     result.id = height; // The returned object for some reason does not include the block height..
                     this.dispatch(result);
                 }).catch((error) => {
-                    console.log("Error in BlockchainActions.getBlock: ", error);
+                    console.log("Error in BlockchainActions.getLatest: ", error);
                 });
         }
     }
