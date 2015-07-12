@@ -12,6 +12,7 @@ class AccountStore extends BaseStore {
         this.cachedAccounts = Immutable.Map();
         this.linkedAccounts = Immutable.Set();
         this.payeeAccounts = Immutable.Set();
+        this.searchAccounts = Immutable.Map();
         this.balances = Immutable.Map();
         this.accountHistories = Immutable.Map();
         this.account_name_to_id = {};
@@ -25,7 +26,8 @@ class AccountStore extends BaseStore {
             onUpgradeAccount: AccountActions.upgradeAccount,
             onGetAccounts: AccountActions.getAccounts,
             onLinkAccount: AccountActions.linkAccount,
-            onUnlinkAccount: AccountActions.unlinkAccount
+            onUnlinkAccount: AccountActions.unlinkAccount,
+            onAccountSearch: AccountActions.accountSearch
         });
         this._export("loadDbData", "tryToSetCurrentAccount");
     }
@@ -44,6 +46,16 @@ class AccountStore extends BaseStore {
         accounts.forEach(account => {
             this.account_id_to_name[account[1]] = account[0];
             this.account_name_to_id[account[0]] = account[1];
+        });
+    }
+
+    onAccountSearch(accounts) {
+        this.searchAccounts = this.searchAccounts.clear();
+        accounts.forEach(account => {
+            this.searchAccounts = this.searchAccounts.set(
+                account[1],
+                account[0]
+            );
         });
     }
 
@@ -67,7 +79,6 @@ class AccountStore extends BaseStore {
             );
         } else {
             let account = result[0][0];
-
             if (account.id) {
                 let balances = result[1].length > 0 ? result[1] : [{
                     amount: 0,

@@ -8,14 +8,34 @@ import WalletActions from "../actions/WalletActions"
 
 let accountSubs = {};
 let accountLookup = {};
+let accountSearch = {};
 let wallet_api = new WalletApi();
 
 class AccountActions {
+
+    accountSearch(start_symbol) {
+        let uid = `${start_symbol}_50`;
+            if (!accountSearch[uid]) {
+                accountSearch[uid] = true;
+            return api.lookupAccounts(start_symbol, 50)
+                .then(result => {
+                    accountSearch[uid] = false;
+                    this.dispatch(result);
+            });
+        }
+    }
 
     getAccounts(start_symbol, limit) {
         let uid = `${start_symbol}_${limit}`;
         if (!accountLookup[uid]) {
             accountLookup[uid] = true;
+
+            if (utils.is_object_id(start_symbol) && limit===1) {
+                return api.getObjects(start_symbol).then(result => {
+                    this.dispatch([[result[0].name, result[0].id]]);
+                })
+            }
+
             return api.lookupAccounts(start_symbol, limit)
                 .then(result => {
                     accountLookup[uid] = false;

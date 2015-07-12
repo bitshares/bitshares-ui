@@ -10,8 +10,8 @@ class AccountsContainer extends React.Component {
               <AltContainer 
                   stores={[AccountStore]}
                   inject={{
-                    account_id_to_name: () => {
-                        return AccountStore.getState().account_id_to_name;
+                    searchAccounts: () => {
+                        return AccountStore.getState().searchAccounts;
                     }
                   }} 
                   >

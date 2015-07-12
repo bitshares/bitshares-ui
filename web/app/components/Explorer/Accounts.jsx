@@ -7,56 +7,69 @@ import AccountActions from "actions/AccountActions";
 
 class Accounts extends React.Component {
 
-    shouldComponentUpdate(nextProps) {
-        return (
-            Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
-        );
+    constructor() {
+        super();
+        this.state = {
+            searchTerm: ""
+        };
     }
 
-    componentDidMount() {
-        AccountActions.getAccounts("A", 1000);
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+                !Immutable.is(nextProps.searchAccounts, this.props.searchAccounts) ||
+                nextState.searchTerm !== this.state.searchTerm
+            );
+    }
+
+    _searchAccounts(e) {
+        AccountActions.accountSearch(e.target.value);
+        this.setState({searchTerm: e.target.value});
     }
 
     render() {
+        let {searchAccounts} = this.props;
+        let accountRows = null;
 
-        let {account_id_to_name} = this.props;
-
-        let accountRows = [];
-
-        for (let id in account_id_to_name) {
-            if (account_id_to_name.hasOwnProperty(id)) {
-                accountRows.push(
-                    <tr key={id}>
+        if (searchAccounts.size > 0) {
+            accountRows = searchAccounts.sort((a, b) => {
+                if (a > b) {
+                    return 1;
+                } else if (a < b) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            })
+            .map((account, id) => {
+                return (
+                    <tr key={account}>
                         <td>{id}</td>
-                        <td><Link to="account" params={{name: account_id_to_name[id]}}>{account_id_to_name[id]}</Link></td>
+                        <td><Link to="account" params={{name: account}}>{account}</Link></td>
                     </tr>
-                    );
-            }
+                );
+            }).toArray();
         }
 
-        accountRows.sort((a, b) => {
-            return parseInt(a.key.split(".")[2], 10) - parseInt(b.key.split(".")[2], 10);
-        });
-
         return (
-            <div className="grid-block vertical">
-                <div className="grid-block page-layout">
-                    <div className="grid-container">
-                        <div className="grid-content">
-                            <h3>Accounts</h3>
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th><Translate component="span" content="explorer.assets.id" /></th>
-                                        <th><Translate component="span" content="account.name" /></th>
-                                    </tr>
-                                </thead>
+            <div className="grid-block page-layout">
+                <div className="grid-block vertical medium-6 medium-offset-3">
+                    <div className="grid-content shrink">
+                        <h3>Accounts</h3>
+                        <input type="text" value={this.state.searchTerm} onChange={this._searchAccounts.bind(this)}/>
+                    </div>
+                    <div className="grid-content">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th><Translate component="span" content="explorer.assets.id" /></th>
+                                    <th><Translate component="span" content="account.name" /></th>
+                                </tr>
+                            </thead>
 
-                                <tbody>
-                                    {accountRows}
-                                </tbody>
-                            </table>
-                        </div>
+                            <tbody>
+                                {accountRows}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -65,11 +78,11 @@ class Accounts extends React.Component {
 }
 
 Accounts.defaultProps = {
-    account_id_to_name: {}
+    searchAccounts: []
 };
 
 Accounts.propTypes = {
-    account_id_to_name: PropTypes.object.isRequired
+    searchAccounts: PropTypes.object.isRequired
 };
 
 export default Accounts;
