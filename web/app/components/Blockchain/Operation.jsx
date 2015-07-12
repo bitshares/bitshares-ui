@@ -28,7 +28,7 @@ class TransactionLabel extends React.Component {
         let labelClass = classNames("label", this.props.color);
         return (
             <span className={labelClass}>
-                {trxTypes[this.props.type]}    
+                {trxTypes[ops[this.props.type]]}    
             </span>
         );
     }

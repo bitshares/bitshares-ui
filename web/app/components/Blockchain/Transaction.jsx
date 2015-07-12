@@ -35,7 +35,7 @@ class OpType extends React.Component {
                 </td>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[this.props.type]}
+                        {trxTypes[ops[this.props.type]]}
                     </span>
                 </td>
             </tr>
