@@ -61,9 +61,9 @@ class Exchange extends React.Component {
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
             this.props.currentAccount.id,
-            sellAssetAmount * utils.get_asset_precision(sellAsset.precision),
+            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.precision), 10),
             sellAsset.id,
-            buyAssetAmount * utils.get_asset_precision(buyAsset.precision),
+            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
             buyAsset.id,
             expiration.toISOString().slice(0, -7), // the seconds will be added in the actionCreator to set a unique identifer for this user and order
             false // fill or kill
