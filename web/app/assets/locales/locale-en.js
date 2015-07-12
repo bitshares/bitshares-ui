@@ -2,7 +2,7 @@ module.exports = {
     languages: {
         en: "English",
         cn: "简体中文",
-        fr: "French",
+        fr: "Français",
         ko: "한국어",
         switch: "Switch language"
     },
@@ -160,7 +160,7 @@ module.exports = {
             vesting_balance_withdraw: "Withdraw vesting balance",
             worker_create: "Create worker",
             custom: "Custom",
-            assert: "Asset",
+            assert: "Assert operation",
             balance_claim: "Claim balance",
             override_transfer: "Override transfer"
         }
