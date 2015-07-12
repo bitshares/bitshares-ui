@@ -20,7 +20,8 @@ let Account = t.struct({
     network_fee_percentage: t.Num,
     statistics: t.Str,
     blacklisting_accounts: t.Arr,
-    whitelisting_accounts: t.Arr
+    whitelisting_accounts: t.Arr,
+    cashback_vb: t.maybe(t.Str)
 }, "Account");
 
 let Asset = t.struct({
