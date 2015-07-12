@@ -58,6 +58,9 @@ _my.signed_transaction = ->
     ###* Always returns a promise.  If broadcast is true it returns the result
     from the server, if not it returns the json transaction object.  ###
     finalize:(private_keys, broadcast = no)->
+        if broadcast and not @operations.length
+            return Promise.reject("no operations")
+        
         ((tr, private_keys, broadcast)->
             if(tr.ref_block_prefix == 0)
                 tr.ref_block_prefix = 
