@@ -2,22 +2,35 @@
     display: inline-block;
     padding-left: 0;
     margin: 20px 0;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
+
+
+
 .pagination > li {
+
+    padding: 0 1rem;
     display: inline;
-    border: 1px solid #ddd;
-    padding: 1rem;
+    border: 0px solid #ddd;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    &:first-child {
+      margin-left: 0.5rem;
+    }
+    &:nth-child(2) {
+      margin-right: 0;
+    }
+    &:last-child {
+      margin-right: 0.5rem;
+    }
     > input {
         display: inline;
         width: 5rem;
+        margin-top: 0.99rem;
+        border: none;
     }
 }
