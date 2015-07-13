@@ -31,7 +31,10 @@ class Accounts extends React.Component {
         let accountRows = null;
 
         if (searchAccounts.size > 0) {
-            accountRows = searchAccounts.sort((a, b) => {
+            accountRows = searchAccounts.filter(a => {
+                return a.indexOf(this.state.searchTerm) !== -1;
+            })
+            .sort((a, b) => {
                 if (a > b) {
                     return 1;
                 } else if (a < b) {
