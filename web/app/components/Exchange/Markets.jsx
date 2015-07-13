@@ -37,7 +37,6 @@ class Markets extends Component {
 
         let marketCards = assets
             .map((a, index) => {
-                console.log("market:", a);
                 if (a.symbol !== baseAsset.symbol) {
                     let market;
                     if (settings.get("inverseMarket")) {
