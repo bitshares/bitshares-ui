@@ -10,6 +10,8 @@ import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
 import AccountActions from "actions/AccountActions";
+import debounce from "lodash.debounce";
+
 
 require("./exchange.scss");
 
@@ -29,6 +31,7 @@ class Exchange extends React.Component {
         };
 
         this._createLimitOrder = this._createLimitOrder.bind(this);
+        this._setDepthLine = debounce(this._setDepthLine.bind(this), 500);
     }
 
     componentDidMount() {
@@ -121,13 +124,15 @@ class Exchange extends React.Component {
         });
     }
 
+    _setDepthLine(value) { this.setState({depthLine: value}); }
+
     _buyAmountChanged(e) { this.setState({buyAmount: e.target.value}); }
 
-    _buyPriceChanged(e) { this.setState({buyPrice: e.target.value, depthLine: e.target.value}); }
+    _buyPriceChanged(e) { this.setState({buyPrice: e.target.value}); this._setDepthLine(e.target.value); }
 
     _sellAmountChanged(e) { this.setState({sellAmount: e.target.value}); }
 
-    _sellPriceChanged(e) { this.setState({sellPrice: e.target.value, depthLine: e.target.value}); }
+    _sellPriceChanged(e) { this.setState({sellPrice: e.target.value}); this._setDepthLine(e.target.value); }
 
     _changeTab(value) {
         this.setState({activeTab: value});
