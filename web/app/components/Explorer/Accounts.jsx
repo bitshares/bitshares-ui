@@ -4,6 +4,7 @@ import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
+import debounce from "lodash.debounce";
 
 class Accounts extends React.Component {
 
@@ -12,6 +13,8 @@ class Accounts extends React.Component {
         this.state = {
             searchTerm: ""
         };
+
+        this._searchAccounts = debounce(this._searchAccounts, 200);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -21,9 +24,13 @@ class Accounts extends React.Component {
             );
     }
 
-    _searchAccounts(e) {
-        AccountActions.accountSearch(e.target.value);
+    _onSearchChange(e) {
         this.setState({searchTerm: e.target.value});
+        this._searchAccounts(e.target.value);
+    }
+
+    _searchAccounts(searchTerm) {
+        AccountActions.accountSearch(searchTerm);
     }
 
     render() {
@@ -58,7 +65,7 @@ class Accounts extends React.Component {
                 <div className="grid-block vertical medium-6 medium-offset-3">
                     <div className="grid-content shrink">
                         <h3>Accounts</h3>
-                        <input type="text" value={this.state.searchTerm} onChange={this._searchAccounts.bind(this)}/>
+                        <input type="text" value={this.state.searchTerm} onChange={this._onSearchChange.bind(this)}/>
                     </div>
                     <div className="grid-content">
                         <table className="table">
