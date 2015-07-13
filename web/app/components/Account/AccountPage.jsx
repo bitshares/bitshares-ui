@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteHandler, Link } from "react-router";
+import { RouteHandler } from "react-router";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
@@ -8,9 +8,6 @@ import AltContainer from "alt/AltContainer";
 import AccountLeftPanel from "./AccountLeftPanel";
 
 class AccountPage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     componentWillMount() {
         AccountActions.getAccount(this.props.params.name, true);
@@ -22,16 +19,26 @@ class AccountPage extends React.Component {
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        return true;
-    }
-
     render() {
         let account_name = this.props.params.name;
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">
-                    <AccountLeftPanel account_name={account_name}/>
+                    <AltContainer 
+                        stores={[AccountStore]}
+                        inject={{
+                            account_name: () => {
+                                return account_name;
+                            },
+                            account_name_to_id: () => {
+                                return AccountStore.getState().account_name_to_id;
+                            },
+                            linkedAccounts: () => {
+                                return AccountStore.getState().linkedAccounts;
+                            }
+                        }}>
+                    <AccountLeftPanel/>
+                    </AltContainer>
                 </div>
                 <div className="grid-block medium-10 main-content">
                     <AltContainer

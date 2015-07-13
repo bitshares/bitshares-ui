@@ -3,24 +3,22 @@ import {PropTypes} from "react";
 import {Link} from "react-router";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
-import AccountStore from "stores/AccountStore";
+// import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
-import BaseComponent from "../BaseComponent";
+// import BaseComponent from "../BaseComponent";
 
-class AccountLeftPanel extends BaseComponent {
+class AccountLeftPanel extends React.Component {
 
-    constructor(props) {
-        super(props, AccountStore);
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         if(this.context.router) {
             const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
             this.pureComponentLastPath = this.context.router.getCurrentPath();
-            if(changed) return true;
+            if(changed) {
+                return true;
+            }
         }
         return this.props.account_name !== nextProps.account_name ||
-               this.state.linkedAccounts !== nextState.linkedAccounts;
+               this.props.linkedAccounts !== nextProps.linkedAccounts;
     }
 
     onLinkAccount(e) {
@@ -34,15 +32,15 @@ class AccountLeftPanel extends BaseComponent {
     }
 
     render() {
-        let account_name = this.props.account_name;
-        let account_id = AccountStore.getState().account_name_to_id[account_name];
+        let {account_name, account_name_to_id, linkedAccounts} = this.props;
+        let account_id = account_name_to_id[account_name];
         return (
             <div className="grid-content no-overflow account-left-panel">
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
                     <div className="grid-block no-margin account-buttons-row">
                         <div className="grid-block no-margin center-content">
-                        {this.state.linkedAccounts.has(account_name) ?
+                        {linkedAccounts.has(account_name) ?
                             <a href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}>Unlink</a> :
                             <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}>Link</a>
                         }
