@@ -1,0 +1,240 @@
+module.exports = {
+    languages: {
+        en: "Englisch",
+        cn: "Chinesisch",
+        fr: "Französich",
+        ko: "Koreanisch",
+        de: "Deutsch",
+        switch: "Sprache wechseln"
+    },
+    header: {
+        title: "Graphene UI",
+        dashboard: "Hauptseite",
+        explorer: "Explorer",
+        exchange: "Börse",
+        payments: "Transaktionen",
+        logout: "Abmeldung",
+        settings: "Einstellungen",
+        current: "Aktives Konto"
+    },
+    account: {
+        asset: "Asset",
+        market_value: "Marktwert",
+        hour_24: "24hr Wechsel",
+        recent: "Letzte Aktivität",
+        name: "Konto Name",
+        member: {
+            stats: "Mitgliederstatistiken",
+            join: "Beitritt am",
+            reg: "Registriert von",
+            ref: "Empfohlen von",
+            referrals: "Empfehlungen",
+            rewards: "Belohnungen",
+            cashback: "Skonto",
+            vested: "Zugesichert"
+        },
+        connections: {
+            known: "Bekannt von",
+            "black": "Schwarzgelistet von"
+        }
+    },
+    transfer: {
+        from: "Von",
+        amount: "Betrag",
+        to: "An",
+        memo: "Notiz",
+        fee: "Gebühr",
+        send: "Senden",
+        final: "Endguthaben",
+        balances: "Guthaben",
+        errors: {
+            req: "Plfichtfeld",
+            pos: "Betrag darf nicht negativ sein",
+            valid: "Bitte geben Sie einen positiven Betrag ein"
+        },
+        back: "ZURÜCK",
+        confirm: "BESTÄTIGEN",
+        broadcast: "Deine Überweisung wurde gesendet",
+        again: "WEITERE ÜBERWEISUNG",
+        see: "ÜBERWEISUNGSÜBERSICHT"
+    },
+    transaction: {
+        sent: "Gesendet",
+        to: "an",
+        received: "Empfangen",
+        from: "von",
+        amount_sell: "Betrag",
+        expiration: "Frist",
+        fill_or: "sofortige Ausführung oder Annullierung",
+        min_receive: "Mindestbetrag",
+        seller: "Verkäufer",
+        collateral: "Sicherheit/Pfand",
+        coll_ratio: "Anfängliche Sicherheit (Verhältnis)",
+        coll_maint: "Unterhalt der Sicherheit (Verhältnis)",
+        "create_key": "Ein öffentlicher Schlüssel wurde erzeugt",
+        reg_account: "Ein Konto wurde angelegt",
+        was_reg_account: "registriert von",
+        create_asset: "Neuen Asset erstellen",
+        limit_order: "Limit-Order für den Verkauf platziert",
+        limit_order_buy: "Limit-Order für den Ankauf platziert",
+        limit_order_cancel: "Limit-Order abgebrochen. ID:",
+        short_order: "Short-Order für Verkauf platziert",
+        short_order_cancel: "Short-Order abgebrochen. ID:",
+        at: "für",
+        coll_of: "mit einer Sicherheit bestehend aus",
+        call_order_update: "Call-Order aktualisiert",
+        upgrade_account: "Kontostatus auf Lifetime Member aktualisiert.",
+        update_account: "Konto aktualisiert",
+        whitelist_account: "Konto zur Positivliste hinzugefügt",
+        whitelisted_by: "Wurde zur Postitivliste hinzugefügt von Konto",
+        transfer_account: "Das Konto wurde übertragen",
+        update_asset: "Das Asset wurde aktualisiert",
+        update_feed_producers: "Die Liste der Feed-Erzeuger wurde aktualisiert",
+        feed_producer: "Werde Feed-Erzeuger für ein Asset",
+        asset_issue: "Emittiert",
+        was_issued: "Wurde emittiert",
+        by: "von",
+        burn_asset: "Vernichtet",
+        fund_pool: "Asset-Gebührenpool finanziert mit",
+        asset_settle: "Settlement erbeten für",
+        asset_global_settle: "Globales Settlement erbeten für",
+        publish_feed: "Neuer Feed wurde publiziert für Asset",
+        delegate_create: "Neuer Delegate wurde angelegt",
+        witness_create: "Neuer Witness wurde angelegt",
+        witness_pay: "Witnesslohn ausgezahlt an Konto",
+        witness_receive: "Received witness from witness",
+        proposal_create: "Ein Vorschlag wurde erzeugt",
+        proposal_update: "Ein Vorschlag wurde aktualisiert",
+        proposal_delete: "Ein Vorschlag wurde gelöscht",
+        withdraw_permission_create: "Einzugsermächtigung wurde verliegen an Konto",
+        withdraw_permission_update: "Einzugsermächtigung wurde aktualisiert für Konto",
+        withdraw_permission_claim: "Einzugsermächtigung wurde eingefordert für Konto",
+        withdraw_permission_delete: "Einzugsermächtigung wurde aufgehoben für Konto",
+        paid: "Bezahlt",
+        obtain: "zu erhalten",
+        global_parameters_update: "Globale Parameter aktualisiert",
+        file_write: "Eine Datei wurde geschrieben",
+        vesting_balance_create: "Ein Sperrfristguthaben wurde erzeugt",
+        for: "für",
+        vesting_balance_withdraw: "Sperrfristguthaben wurde abgehoben",
+        bond_create_offer: "Ein Bondangebot wurde erstellt",
+        bond_cancel_offer: "Ein Bondangebot wurde abgebrochen",
+        bond_accept_offer: "Ein Bondangebot wurde akzeptiert",
+        bond_claim_collateral: "Eine Sicherheit wurde eingefordert",
+        bond_pay_collateral: "Eine Sicherheit wurde bezahlt",
+        create_worker: "Ein Arbeiter wurde erzeugt. Bezahlung",
+        custom: "Eine benutzerdefinierte Operation wurde definiert",
+        order_id: "Order ID",
+        trxTypes: {
+            0: "Überweisung",
+            1: "Limit-Order",
+            2: "Limit-Order abbrechen",
+            3: "Call-Order aktualisieren",
+            4: "Konto erstellen",
+            5: "Kontoaktualisierung",
+            6: "Konto Positivliste",
+            7: "Konto Upgrade",
+            8: "Konto Überweisung",
+            9: "Asset erstellen",
+            10: "Asset aktualisieren",
+            11: "SmartCoin aktualisieren",
+            12: "Esset Feederzeuger aktualisieren",
+            13: "Asset emittieren",
+            14: "Assetanteile vernichten",
+            15: "Asset Gebührenpool finanzieren",
+            16: "Asset Settlement",
+            17: "Globales Asset Settlement",
+            18: "Asset Feed publiszieren",
+            19: "Delegate erstellen",
+            20: "Witness erstellen",
+            21: "Witnesslohn ausbezahlen",
+            22: "Proposal erstellen",
+            23: "Proposal aktualisieren",
+            24: "Proposal löschen",
+            25: "Einzugsermächtigung erstellen",
+            26: "Einzugsermächtigung aktualisiert",
+            27: "Einzugsermächtigung eingefordert",
+            28: "Einzugsermächtigung aufgehoben",
+            29: "Order ausgeführt",
+            30: "Globale Parameters aktualisiert",
+            31: "Sperrfristguthaben erstellt",
+            32: "Sperrfristguthaben eingefordert",
+            33: "Arbeiter erstellt",
+            34: "benutzerdefiniert"
+        }
+    },
+    explorer: {
+        accounts: {
+            title: "Konten"
+        },
+        blocks: {
+            title: "Blockchain",
+            globals: "Globale Einstellungen",
+            recent: "Letzte Blöcke"
+        },
+        block: {
+            title: "Block",
+            id: "Block ID",
+            witness: "Witness",
+            count: "Transaktionszähler",
+            date: "Datum",
+            previous: "Vorherige",
+            previous_secret: "Vorheriges Geheimnis",
+            next_secret: "Hash des nächsten Geheimnisses",
+            op: "Aktion",
+            trx: "Transaktion",
+            op_type: "Aktionstyp",
+            fee_payer: "Gebührenkonto",
+            key: "Öffentlicher Schlüssel",
+            transactions: "Anzahl der Transaktionen",
+            account_upgrade: "Kontoerweiterung",
+            lifetime: "Lebenslanges Mitglied werden",
+            authorizing_account: "Kontovollmacht",
+            listed_account: "Kontenübersicht",
+            new_listing: "Neuer Eintrag",
+            asset_update: "zu aktualisierender Asset",
+            common_options: "Common Optionen",
+            new_options: "New Option",
+            new_producers: "Neue Feederzeuger",
+            asset_issue: "Zu emittierender Betrag",
+            max_margin_period_sec: "Max Margin Periode (s)",
+            call_limit: "Call-Limit",
+            short_limit: "Short-Limit",
+            settlement_price: "Settlement-Preis"
+        },
+        assets: {
+            title: "Assets",
+            market: "SmartCoins",
+            user: "User Issued Assets",
+            symbol: "Symbol",
+            id: "ID",
+            issuer: "Herausgeber",
+            precision: "Genauigkeit"
+        },
+        asset: {
+            title: "Asset"
+        },
+        witnesses: {
+            title: "Witnesses"
+        },
+        delegates: {
+            title: "Delegates"
+        },
+        delegate: {
+            title: "Delegate"
+        },
+        workers: {
+            title: "Arbeiter"
+        },
+        proposals: {
+            title: "Vorschlag"
+        },
+        account: {
+            title: "Konto"
+        }
+    },
+    settings: {
+        inversed: "Bevorzugte Marktorientierung",
+        unit: "Bevorzugte Rechnungseinheit"
+    }
+};
