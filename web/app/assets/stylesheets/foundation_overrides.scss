@@ -80,3 +80,9 @@ a {
     }
   }
 }
+
+.label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
+  background-color: transparent;
+  border: 1px solid #444;
+  border-radius: 1rem;
+}

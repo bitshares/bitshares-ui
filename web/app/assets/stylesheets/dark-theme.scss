@@ -38,40 +38,43 @@ label, label > span {
   color: $secondary-text-color;
 }
 
-
 .label.success {
-  background: $success-color;
+  color: $success-color;
+  border-color: $success-color;
 }
 
 .label.info {
-  background: $info-color;
+  color: $info-color;
+  border-color: $info-color;
 }
 
 .label.warning {
-  background: $warning-color;
+  color: $warning-color;
+  border-color: $warning-color;
 }
 
 .label.cancel, .label.alert {
-  background: $alert-color;
+  color: $alert-color;
+  border-color: $alert-color;
 }
 
 .notification.success {
-  background: $success-color;
+  background-color: $success-color;
   a {
      color: $dark-text-color;
   }
 }
 
 .notification.info {
-  background: $info-color;
+  background-color: $info-color;
 }
 
 .notification.warning {
-  background: $warning-color;
+  background-color: $warning-color;
 }
 
 .notification.cancel, .notification.alert {
-  background: $alert-color;
+  background-color: $alert-color;
 }
 
 .action-sheet {

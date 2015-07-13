@@ -129,7 +129,7 @@ class Operation extends React.Component {
     render() {
         let {op, account_id_to_name, assets, current, block, witnesses, witness_id_to_name, inverted} = this.props;
 
-        let line = null, column = null, color;
+        let line = null, column = null, color = "info";
 
         let missingFee = this.getAssets(op[1].fee.asset_id)[0];
 
