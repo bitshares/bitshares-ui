@@ -120,16 +120,16 @@ class AccountHistory extends React.Component {
                         inverted={this.props.settings.get("inverseMarket")}
                     />
                 );
-            };  
+            };
         }
 
         return (
             <div className="grid-content">
                 <ul className="pagination">
                     <li onClick={this._changePage.bind(this, "first")}>1</li>
-                    <li onClick={this._changePage.bind(this, "up")}>Newer</li>
-                    <li><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
-                    <li onClick={this._changePage.bind(this, "down")}>Older</li>
+                    <li className="button outline block-button" onClick={this._changePage.bind(this, "up")}>Newer</li>
+                    <li style={{padding: "0" , margin: "0"}}><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
+                    <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}>Older</li>
                     <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
                 </ul>
                 <table style={{width: "100%"}} className="table text-center">
