@@ -1,5 +1,6 @@
 import alt from "../alt-instance";
 import WalletApi from "rpc_api/WalletApi";
+import cloneDeep from "lodash.clonedeep"
 
 let wallet_api = new WalletApi();
 
@@ -18,8 +19,8 @@ class VoteActions {
     }
 
     publishChanges(account_name, account_json) {
-        let _account_json = {account: account_json.id};
-        Object.assign(_account_json, account_json);
+        let _account_json = cloneDeep(account_json);
+        _account_json.account = account_json.id;
         delete _account_json.id;
         delete _account_json.options;
         console.log("[VoteActions.js:28] ----- publishChanges ----->", _account_json);

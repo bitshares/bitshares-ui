@@ -34,6 +34,7 @@
     "js-sha256": "^0.2.3",
     "json-loader": "^0.5.1",
     "keyboardjs": "^0.4.2",
+    "lodash.clonedeep": "^3.0.1",
     "newforms": "^0.12.1",
     "node-libs-browser": "^0.5.0",
     "node-sass": "^3.0.0",

@@ -127,7 +127,7 @@ class VoteStore extends BaseStore {
         let proxy_id = account.options.voting_account;
         if (proxy_id && proxy_id !== "1.2.0") {
             let proxy_name = account_id_to_name[proxy_id];
-            let account_obj = {id: proxy_id, name: proxy_name};
+            let account_obj = proxy_name; //{id: proxy_id, name: proxy_name};
             this.i_proxies[account.name] = account_obj;
             this.c_proxies[account.name] = account_obj;
         } else {
