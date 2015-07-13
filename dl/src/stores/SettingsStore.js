@@ -23,7 +23,8 @@ class SettingsStore {
                 "en",
                 "cn",
                 "fr",
-                "ko"
+                "ko",
+                "de"
             ],
             orientation: [
                 "USD/CORE",
