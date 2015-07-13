@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
+import FormattedAsset from "../Utility/FormattedAsset";
 
 class MarketCard extends React.Component {
     constructor(props) {
@@ -9,7 +10,7 @@ class MarketCard extends React.Component {
 
     render() {
 
-        let {market} = this.props;
+        let {market, options, data, assets} = this.props;
         let marketID = market.quoteSymbol + "_" + market.baseSymbol;
         let marketName = market.quoteSymbol + " vs " + market.baseSymbol;
 
@@ -22,8 +23,22 @@ class MarketCard extends React.Component {
                         <div style={{color: "black"}} className="card-divider">
                             {marketName}
                         </div>
-                        <div style={{color: "black"}} className="card-section">
-                            Some info
+                        <div style={{color: "black", paddingLeft: "0.5rem"}} className="card-section">
+                            <ul style={{color: "white", listStyle: "none", fontSize: "85%", marginLeft: 0}}>
+                                <li>Core rate: <FormattedAsset 
+                                                    style={{fontWeight: "bold"}}
+                                                    amount={options.core_exchange_rate.quote.amount}
+                                                    asset={assets.get(options.core_exchange_rate.quote.asset_id)}
+                                                    baseamount={options.core_exchange_rate.base.amount}
+                                                    base={assets.get(options.core_exchange_rate.base.asset_id)} /> 
+                                </li>
+                                <li>Supply: <FormattedAsset 
+                                                    style={{fontWeight: "bold"}}
+                                                    amount={data.current_supply}
+                                                    asset={assets.get(options.core_exchange_rate.quote.asset_id)}
+                                                    />
+                                </li>
+                            </ul>
                         </div>
                     </Link>
                 </div>

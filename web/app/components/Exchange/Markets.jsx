@@ -37,6 +37,7 @@ class Markets extends Component {
 
         let marketCards = assets
             .map((a, index) => {
+                console.log("market:", a);
                 if (a.symbol !== baseAsset.symbol) {
                     let market;
                     if (settings.get("inverseMarket")) {
@@ -48,6 +49,9 @@ class Markets extends Component {
                         <MarketCard
                             key={index}
                             market={market}
+                            options={a.options}
+                            data={a.dynamic_data}
+                            assets={assets}
                             />
                     );
                 }
@@ -87,12 +91,10 @@ class Markets extends Component {
                         </section>
                     </div>
                 </div>
-                <div className="grid-block page-layout">
-                    <div className="grid-block medium-12" style={{alignItems: "flex-start"}}>
-                        <div className="grid-block small-up-3">
+                    <div className="grid-block page-layout" style={{overflowY: "auto", zIndex: 1}}>
+                        <div className="grid-block small-up-1 medium-up-2 large-up-3">
                             {marketCards}
                         </div>
-                    </div>
                 </div>
             </div>
         );
