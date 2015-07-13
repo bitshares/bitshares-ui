@@ -37,10 +37,9 @@ class CreateAccount extends React.Component {
         let form = this.refs.accountForm.getForm();
         let isValid = form.validate();
         let name = form.cleanedData.name;
-        let wallet_public_name = this.getCurrentWalletName();
         
-        if(isValid && wallet_public_name) {
-            AccountActions.createAccount(name, wallet_public_name).then( () => {
+        if(isValid) {
+            AccountActions.createAccount(name).then( () => {
                 this.props.addNotification({
                     message: `Successfully created account: ${name}`,
                     level: "success",

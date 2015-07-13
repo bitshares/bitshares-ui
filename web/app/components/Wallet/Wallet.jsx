@@ -4,7 +4,6 @@ import {Link} from "react-router"
 //import WalletActions from "actions/WalletActions"
 import WalletDb from "stores/WalletDb"
 import WalletCreate from './WalletCreate'
-import WalletImport from './WalletImport'
 
 export default class Wallet extends Component {
 

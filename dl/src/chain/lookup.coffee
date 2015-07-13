@@ -5,6 +5,7 @@ v = require '../chain/serializer_validation'
 chain_config = require '../chain/config'
 chain_types = require '../chain/chain_types'
 api = require('../rpc_api/ApiInstances').instance()
+type = require './serializer_operation_types'
 
 ### Makes account, key, assset instance ID lookups very easy. All functions
     return an object with an attribute 'resolved' ( ex: {resolve: 1} ).  The

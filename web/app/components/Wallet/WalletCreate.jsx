@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 
 import WalletDb from "stores/WalletDb";
-import WalletImport from "./WalletImport";
 
 import key from "common/key_utils";
 // import forms from "newforms";

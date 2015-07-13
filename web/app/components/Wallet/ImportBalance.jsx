@@ -1,13 +1,14 @@
 import React, {Component, Children} from "react"
 import PrivateKey from "ecc/key_private"
 import Aes from "ecc/aes"
-
+import WalletActions from "actions/WalletActions"
+import AccountSelect from "components/Wallet/AccountSelect"
 import hash from "common/hash"
 
-
 var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
+var private_wifs = []
 
-export default class WalletImport extends Component {
+export default class ImportBalance extends Component {
     
     constructor() {
         super()
@@ -17,17 +18,23 @@ export default class WalletImport extends Component {
     getInitialState() {
         return {
             wif_private_keys: null,
-            wif_textarea: "",
-            reset_file_name: null
+            file_name: null,
+            reset_file_name: Date.now(),
+            master_key: null,
+            wallet_json_password_message: null,
+            wallet_json_imported: null
         }
     }
     
-    shouldComponentUpdate() {
-        return true
+    discard() {
+        this.setState(this.getInitialState())
     }
     
+    /*shouldComponentUpdate() {
+        return true
+    }*/
+    
     render() {
-        var private_wifs = this.props.private_wifs
         private_wifs.length = 0
         var keys = { valid: private_wifs, invalid: [] }
         if(this.state.wif_private_keys) {
@@ -40,42 +47,61 @@ export default class WalletImport extends Component {
                 }
             }
         }
+        keys.balances = this.balances(0, keys.valid)
         
-        return <div>
-            <label>Import Private Keys (optional)</label>
-            <KeyPreview keys={keys}/>
-            
-            { this.state.wallet_json_imported ? "" : <div>
-                <input
-                    type="file" id="file_input"
-                    key={this.state.reset_file_name}
-                    onChange={this.upload.bind(this)}
-                />
-                <span>Upload BitShares Wallet (wallet.json)</span>
-                { ! this.state.master_key ? "" : <div>
-                    <input 
-                        type="password"
-                        placeholder="Enter wallet password"
-                        onChange={this._walletJsonPassword.bind(this)}
+        return <div className="grid-block page-layout">
+            <div className="grid-block vertical medium-8 medium-offset-2">
+                <label>Import Balance</label>
+                <AccountSelect ref="account_selector"/>
+                <KeyPreview keys={keys}/>
+                
+                { this.state.wallet_json_imported ? "" : <div>
+                    <input
+                        type="file" id="file_input"
+                        key={this.state.reset_file_name}
+                        onChange={this.upload.bind(this)}
                     />
+                    <span>Upload BitShares Wallet (wallet.json)</span>
+                    { ! this.state.master_key ? "" : <div>
+                        <input 
+                            type="password"
+                            placeholder="Enter wallet password"
+                            onChange={this._walletJsonPassword.bind(this)}
+                        />
+                    </div>}
+                    <div>{this.state.wallet_json_password_message}</div>
                 </div>}
-                <div>{this.state.wallet_json_password_message}</div>
-            </div>}
-            <br/>
-            
-            <textarea
-                placeholder="Paste WIF private keys (optional)..."
-                onChange={this._onWifTextChange.bind(this)}
-                value={this.state.wif_textarea}
-            />
-            { this.state.wif_textarea == "" ? "" :  // Add Button...
-                <button className="button"
-                    onClick={this._addWifText.bind(this)}>Add</button>
-            }
-            { ! this.state.wif_private_keys ? "" :
-                <a onClick={this.discard.bind(this)}>RESET (import private keys)</a>
-            }
+                <br/>
+                
+                <textarea
+                    placeholder="Paste WIF private keys (optional)..."
+                    onChange={this._onWifTextChange.bind(this)}
+                    value={this.state.wif_textarea}
+                />
+                { this.state.wif_textarea == "" ? "" :  // Add Button...
+                    <button className="button"
+                        onClick={this._addWifText.bind(this)}>Add</button>
+                }
+                { ! this.state.wif_private_keys ? "" :
+                    <a onClick={this.discard.bind(this)}>RESET (import private keys)</a>
+                }
+            </div>
         </div>
+    }
+    
+    balances(account, valid_keys) {
+        //this.state.wif_private_keys
+        if(valid_keys.length == 0)
+            return
+        
+        WalletActions.importBalance(
+            account, 
+            valid_keys, 
+            false/*broadcast*/
+        ).then((transaction)=> {
+            console.log('... balance_claim_transaction',transaction)
+            //preview transaction
+        })
     }
     
     upload(evt) {
@@ -175,21 +201,12 @@ export default class WalletImport extends Component {
         return added
     }
     
-    discard() {
-        this.setState({
-            wif_private_keys: null,
-            file_name: null,
-            reset_file_name: Date.now(),
-            master_key: null,
-            wallet_json_password_message: null,
-            wallet_json_imported: null
-        })
-    }
+    
     
 }
 
 // https://github.com/cryptonomex/graphene-ui/issues/19
-// WalletImport.private_wifs = React.PropTypes.array.isRequired
+// ImportBalance.private_wifs = React.PropTypes.array.isRequired
 
 
 class KeyPreview extends Component {
@@ -223,7 +240,7 @@ class KeyPreview extends Component {
                     // show just enough for debugging
                     key = key.substring(0, 7)
                 
-                return <div> <pre>{key}&hellip;</pre> </div>
+                return <div className="monospace">{key}&hellip;</div>
             })}
         </div>
     }
@@ -245,7 +262,7 @@ class KeyPreview extends Component {
 // move to new file
 class Row extends Component {
     render() {
-        return <div className="grid-block page-layout transfer-bottom small-horizontal">
+        return <div className="grid-block page-layout small-horizontal">
             {this.props.children}
         </div>
     }

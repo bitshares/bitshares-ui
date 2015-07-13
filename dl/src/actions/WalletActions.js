@@ -59,16 +59,15 @@ class WalletActions {
         return new Promise((resolve, reject) => {
             
             var db = api.db_api()
-            var address_privatekey_map = new Map()
+            var address_privatekey_map = {}
             var address_publickey_map = {}
             
             var account_lookup = lookup.account_id(account_name_or_id)
             var p = lookup.resolve().then( ()=> {
                 var account = account_lookup.resolve
-                //DEBUG 
-                console.log('... account',account)
-                if( ! account)
-                    throw new Error("unknown account " + account_name_or_id)
+                //DEBUG  console.log('... account',account)
+                if(account == void 0)
+                    return Promise.reject("unknown account " + account_name_or_id)
                 
                 var address_params = []
                 for(let wif of wif_keys) {
@@ -78,8 +77,9 @@ class WalletActions {
                     address_privatekey_map[address_str] = private_key
                     address_publickey_map[address_str] = public_key
                     address_params.push( [address_str] )
-                    //DEBUG console.log('... address_str', address_str)
                 }
+                //DEBUG 
+                console.log('... get_balance_objects', address_params)
                 
                 return db.exec("get_balance_objects", address_params).then( result => {
                     //DEBUG 
@@ -101,7 +101,7 @@ class WalletActions {
                             balance_to_claim: b.id, //"1.15.0"
                             balance_owner_key: address_publickey_map[b.owner],
                             total_claimed: {
-                                amount: total_claimed,
+                                amount: b.balance,
                                 asset_id: b.balance.asset_id
                             }
                         })
@@ -112,7 +112,10 @@ class WalletActions {
                     for(let balance_claim of balance_claims) {
                         tr.add_type_operation("balance_claim", balance_claim)
                     }
-                    var signer_privates = Array.from(address_privatekey_map.values())
+                    var keys = Object.keys(address_privatekey_map)
+                    var signer_privates = keys.map(function(v) {
+                        return address_privatekey_map[v]
+                    })
                     //signer_privates.push(PrivateKey.fromSeed("nathan"))
                     return tr.finalize( signer_privates, broadcast )
                 })

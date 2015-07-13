@@ -55,8 +55,6 @@ _my.signed_transaction = ->
     set_expire_minutes:(min)->
         @ref_block_prefix = Math.round(Date.now()/1000) + (min*60)
     
-    ###* Always returns a promise.  If broadcast is true it returns the result
-    from the server, if not it returns the json transaction object.  ###
     finalize:(private_keys, broadcast = no)->
         if broadcast and not @operations.length
             return Promise.reject("no operations")

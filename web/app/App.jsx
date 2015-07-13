@@ -52,7 +52,7 @@ import iDB from "idb-instance";
 
 import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
-import WalletImport from "./components/Wallet/WalletImport";
+import ImportBalance from "./components/Wallet/ImportBalance";
 import WalletDb from "stores/WalletDb";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
@@ -154,6 +154,7 @@ let routes = (
         <Route name="asset" path="asset/:symbol" handler={Asset}/>
         <Route name="tx" path="tx" handler={Transaction}/>
         <Route name="create-account" path="create-account" handler={CreateAccount}/>
+        <Route name="import-balance" path="import-balance" handler={ImportBalance}/>
         <Route name="account" path="/account/:name" handler={AccountPage}>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
