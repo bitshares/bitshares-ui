@@ -125,8 +125,8 @@ class Witnesses extends Component {
                             <br/>
                         </div>
                     </div>
-                    <div className="grid-block" style={{alignItems: "flex-start"}}>
-                        <WitnessList witnesses={witnesses} witness_id_to_name={witness_id_to_name}/>
+                    <div className="grid-block" style={{overflowY: "auto", zIndex: 1}}>
+                            <WitnessList witnesses={witnesses} witness_id_to_name={witness_id_to_name}/>
                     </div>
                 </div>
             </div>

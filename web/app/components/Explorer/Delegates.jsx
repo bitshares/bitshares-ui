@@ -123,7 +123,7 @@ class Delegates extends Component {
                             <br/>
                         </div>
                     </div>
-                    <div className="grid-block" style={{alignItems: "flex-start"}}>
+                    <div className="grid-block" style={{overflowY: "auto", zIndex: 1}}>
                         <DelegateList delegates={delegates} delegate_id_to_name={delegate_id_to_name}/>
                     </div>
                 </div>
