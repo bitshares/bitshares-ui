@@ -1,15 +1,13 @@
 .pagination {
     display: inline-block;
-    padding-left: 0;
+    padding: 1rem;
     margin: 20px 0;
+
 }
 
 
-
-
 .pagination > li {
-
-    padding: 0 1rem;
+    padding: 1rem;
     display: inline;
     border: 0px solid #ddd;
     -webkit-touch-callout: none;
@@ -19,20 +17,22 @@
     -ms-user-select: none;
     user-select: none;
     &:first-child {
-      margin-left: 0.5rem;
-      cursor:pointer;
+      margin-left: 0.2rem;
+      cursor: pointer;
     }
     &:nth-child(2) {
       margin-right: 0;
     }
     &:last-child {
-      margin-right: 0.5rem;
-      cursor:pointer;
+      margin-right: 0.2rem;
+      margin-left: 0;
+      padding-left: 0;
+      cursor: pointer;
     }
     > input {
         display: inline;
-        width: 5rem;
-        margin-top: 0.99rem;
+        width: 4rem;
+        margin: 0 0rem 0 0rem;
         border: none;
     }
 }
