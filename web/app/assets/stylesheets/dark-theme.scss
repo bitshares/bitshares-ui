@@ -64,7 +64,8 @@ label, label > span {
 
 .notification.success {
   background-color: $success-color;
-  background-color: $super-light-panel-bg-color;
+  background-color: $panel-bg-color;
+  border-radius: 2px;
   a {
      color: $light-text-color;
   }
