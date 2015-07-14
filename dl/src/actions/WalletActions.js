@@ -27,32 +27,54 @@ class WalletActions {
             this.actions.brainKeyAccountCreateError( error )
             return Promise.reject( error )
         }
-        var [owner_private, active_private] = WalletDb.generateKeys()
-        return application_api.create_account_with_brain_key(
-            owner_private.private_key.toPublicKey().toBtsPublic(),
-            active_private.private_key.toPublicKey().toBtsPublic(),
-            account_name,
-            15, //registrar_id,
-            0, //referrer_id,
-            100, //referrer_percent,
-            PrivateKey.fromSeed("nathan"), //signer_private_key,
-            true //broadcast
-        ).then(() => {
-            var transaction = WalletDb.transaction_update_keys()
-            WalletDb.saveKeys(
-                [ owner_private, active_private ],
-                transaction
-            )
-            WalletDb.incrementBrainKeySequence(transaction)
-            
-        }).then( ()=> {
-            //DEBUG console.log('... brainKeyAccountCreated')
-            this.actions.brainKeyAccountCreated()
-        }).catch(  error => {
-            //DEBUG console.log('WalletActions.createBrainKeyAccount',error)    
-            this.actions.brainKeyAccountCreateError(error)
-            throw error
-        })
+        var [owner_private, active_private] = WalletDb.generateKeys();
+
+        let create_account_promise = fetch("http://localhost:3000/api/v1/accounts", {
+            method: 'post',
+            mode: 'cors',
+            headers: {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({"account": {
+                "name": account_name,
+                "owner_key": owner_private.private_key.toPublicKey().toBtsPublic(),
+                "active_key": active_private.private_key.toPublicKey().toBtsPublic()
+            }})
+        }).then(r => r.json());
+
+        return create_account_promise.then(() => {
+                var transaction = WalletDb.transaction_update_keys()
+                WalletDb.saveKeys(
+                    [ owner_private, active_private ],
+                    transaction
+                );
+                WalletDb.incrementBrainKeySequence(transaction)
+            }).then( ()=> {
+                //DEBUG console.log('... brainKeyAccountCreated')
+                this.actions.brainKeyAccountCreated()
+            }).catch(  error => {
+                if(error instanceof TypeError) {
+                    console.log("Warning! faucet registration failed, falling back to direct application_api.create_account_with_brain_key..");
+                    return application_api.create_account_with_brain_key(
+                        owner_private.private_key.toPublicKey().toBtsPublic(),
+                        active_private.private_key.toPublicKey().toBtsPublic(),
+                        account_name,
+                        15, //registrar_id,
+                        0, //referrer_id,
+                        100, //referrer_percent,
+                        PrivateKey.fromSeed("nathan"), //signer_private_key,
+                        true //broadcast
+                    ).then( () => {
+                            this.actions.brainKeyAccountCreated();
+                    }).catch(  error => {
+                            this.actions.brainKeyAccountCreateError(error)
+                            throw error
+                    });
+                }
+                this.actions.brainKeyAccountCreateError(error)
+                throw error
+            })
     }
     
     importBalance( account_name_or_id, wif_keys, broadcast ) {
