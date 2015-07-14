@@ -3,7 +3,6 @@ import React, {Component, Link} from 'react'
 import AccountImage from "../Account/AccountImage"
 import AccountStore from "stores/AccountStore"
 import WalletDb from "stores/WalletDb"
-import Icon from "components/Icon/Icon"
 
 export default class AccountSelect extends Component {
 
@@ -39,24 +38,7 @@ export default class AccountSelect extends Component {
                     return <option value={account}> {account} </option>
                 }).toArray()}
             </select>
-            { ! WalletDb.isLocked() ?
-            <div>
-                <button className="button" onClick={this._lock.bind(this)}>
-                    Lock Wallet
-                </button>
-            </div>
-            :
-            <div>
-                <label>Wallet</label>
-                <form onSubmit={this._passSubmit.bind(this)}>
-                    <input type="password" placeholder="password"
-                        onChange={this._passChange.bind(this)}/>
-                    <button className="button" onClick={this._passSubmit.bind(this)}>
-                        Unlock
-                    </button>
-                </form>
-            </div>
-            }
+            <WalletUnlock ref="wallet-unlock"/>
             
             <AccountImage id="abc" accounmt="abc" size={
                 {height: 150, width: 150}}/>
@@ -65,32 +47,11 @@ export default class AccountSelect extends Component {
 
     }
     
-    isSelecedAndUnlocked() {
-        return ! WalletDb.isLocked()
-    }
-    
-    _lock() {
-        WalletDb.onLock(this.state.current_account)
-        this.forceUpdate()
-    }
-    
     _onAccountChange(e) {
         e.preventDefault()
         this.setState({current_account: e.target.value})
     }
     
-    _passChange(e) {
-        this.password_ui = e.target.value
-    }
     
-    _passSubmit(e) {
-        e.preventDefault()
-        var account = this.accounts[this.state.current_account]
-        WalletDb.validatePassword(
-            this.password_ui || "",
-            true //unlock
-        )
-        this.forceUpdate()
-    }
 }
 

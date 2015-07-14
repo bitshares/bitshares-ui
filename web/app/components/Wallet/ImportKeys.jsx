@@ -2,37 +2,38 @@ import React, {Component, Children} from "react"
 import PrivateKey from "ecc/key_private"
 import Aes from "ecc/aes"
 import WalletActions from "actions/WalletActions"
-import AccountSelect from "components/Wallet/AccountSelect"
+import WalletUnlock from "components/Wallet/WalletUnlock"
+import WalletDb from "stores/WalletDb"
+import NotificationSystem from 'react-notification-system'
+
 import hash from "common/hash"
+import cname from "classnames"
 
 var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
 var private_wifs = []
 
-export default class ImportBalance extends Component {
+export default class ImportKeys extends Component {
     
     constructor() {
         super()
-        this.state = this.getInitialState()
+        this.state = this._getInitialState()
     }
     
-    getInitialState() {
+    addNotification(params) {
+        this.refs.notificationSystem.addNotification(params);
+    }
+    
+    _getInitialState() {
         return {
             wif_private_keys: null,
             file_name: null,
             reset_file_name: Date.now(),
             master_key: null,
             wallet_json_password_message: null,
-            wallet_json_imported: null
+            wallet_json_imported: null,
+            wif_textarea: ""
         }
     }
-    
-    discard() {
-        this.setState(this.getInitialState())
-    }
-    
-    /*shouldComponentUpdate() {
-        return true
-    }*/
     
     render() {
         private_wifs.length = 0
@@ -47,61 +48,90 @@ export default class ImportBalance extends Component {
                 }
             }
         }
-        keys.balances = this.balances(0, keys.valid)
+        var add_disabled = WalletDb.isLocked() || keys.valid.length == 0
         
-        return <div className="grid-block page-layout">
-            <div className="grid-block vertical medium-8 medium-offset-2">
-                <label>Import Balance</label>
-                <AccountSelect ref="account_selector"/>
-                <KeyPreview keys={keys}/>
-                
-                { this.state.wallet_json_imported ? "" : <div>
-                    <input
-                        type="file" id="file_input"
-                        key={this.state.reset_file_name}
-                        onChange={this.upload.bind(this)}
-                    />
-                    <span>Upload BitShares Wallet (wallet.json)</span>
-                    { ! this.state.master_key ? "" : <div>
-                        <input 
-                            type="password"
-                            placeholder="Enter wallet password"
-                            onChange={this._walletJsonPassword.bind(this)}
+        return <div> <NotificationSystem ref="notificationSystem" />
+            <div className="grid-block page-layout">
+                <div className="grid-block vertical medium-8 medium-offset-2">
+                    <label>Import Keys</label>
+                    
+                    <WalletUnlock>
+                    
+                        <KeyPreview keys={keys}/>
+                        <br/>
+                        
+                        { this.state.wallet_json_imported ? "" : <div>
+                            <input
+                                type="file" id="file_input"
+                                key={this.state.reset_file_name}
+                                onChange={this.upload.bind(this)}
+                            />
+                            <span>Upload BitShares Wallet (wallet.json)</span>
+                            { ! this.state.master_key ? "" : <div>
+                                <input 
+                                    type="password"
+                                    placeholder="Enter wallet password"
+                                    onChange={this._walletJsonPassword.bind(this)}
+                                />
+                            </div>}
+                            <div>{this.state.wallet_json_password_message}</div>
+                        </div>}
+                        <br/>
+                        
+                        <textarea
+                            placeholder="Paste WIF private keys (optional)..."
+                            onChange={this._onWifTextChange.bind(this)}
+                            value={this.state.wif_textarea}
                         />
-                    </div>}
-                    <div>{this.state.wallet_json_password_message}</div>
-                </div>}
-                <br/>
-                
-                <textarea
-                    placeholder="Paste WIF private keys (optional)..."
-                    onChange={this._onWifTextChange.bind(this)}
-                    value={this.state.wif_textarea}
-                />
-                { this.state.wif_textarea == "" ? "" :  // Add Button...
-                    <button className="button"
-                        onClick={this._addWifText.bind(this)}>Add</button>
-                }
-                { ! this.state.wif_private_keys ? "" :
-                    <a onClick={this.discard.bind(this)}>RESET (import private keys)</a>
-                }
+                        <div>
+                            <button
+                                className={ cname("button",{disabled:add_disabled}) }
+                                onClick={this.importKeys.bind(this, keys.valid)}
+                            >
+                                Import
+                            </button>
+                        </div>
+                        <br/>
+                        
+                        { ! this.state.wif_private_keys ? "" : <div>
+                            <div>
+                                <code onClick={this.reset.bind(this)}>RESET</code>
+                            </div>
+                            <br/>
+                        </div>}
+                        
+                    </WalletUnlock>
+                </div>
             </div>
         </div>
     }
     
-    balances(account, valid_keys) {
-        //this.state.wif_private_keys
-        if(valid_keys.length == 0)
-            return
-        
-        WalletActions.importBalance(
-            account, 
-            valid_keys, 
-            false/*broadcast*/
-        ).then((transaction)=> {
-            console.log('... balance_claim_transaction',transaction)
-            //preview transaction
+    importKeys(valid_keys) {
+        WalletDb.importKeys( valid_keys ).then( result => {
+            var {import_count, duplicate_count} = result
+            var message = ""
+            if (import_count)
+                message = `Successfully imported ${import_count} keys.`
+            if (duplicate_count)
+                message += `  ${duplicate_count} duplicates were not imported.`
+            
+            this.addNotification({
+                message: message,
+                level: "success",
+                autoDismiss: 10
+            })
+            this.reset()
+        }).catch( error => {
+            this.addNotification({
+                message: `There was an error: ${error}`,
+                level: "error",
+                autoDismiss: 10
+            })
         })
+    }
+    
+    reset() {
+        this.setState(this._getInitialState())
     }
     
     upload(evt) {
@@ -179,15 +209,14 @@ export default class ImportBalance extends Component {
     }
     
     _onWifTextChange(evt) {
+        this.addByPattern(this.state.wif_textarea)
         this.setState({wif_textarea: evt.target.value})
     }
     
-    _addWifText() {
-        this.addByPattern(this.state.wif_textarea)
-        this.setState({wif_textarea: ""})
-    }
-    
     addByPattern(contents) {
+        if( ! contents)
+            return false
+        
         if( ! this.state.wif_private_keys)
             this.state.wif_private_keys = {}
         
@@ -201,12 +230,7 @@ export default class ImportBalance extends Component {
         return added
     }
     
-    
-    
 }
-
-// https://github.com/cryptonomex/graphene-ui/issues/19
-// ImportBalance.private_wifs = React.PropTypes.array.isRequired
 
 
 class KeyPreview extends Component {
@@ -220,10 +244,20 @@ class KeyPreview extends Component {
         if( ! (this.props.keys.valid.length || this.props.keys.invalid.length))
             return <div/>
         
-        return <Row>
-            <Column>{this.renderByType('valid')}</Column>
-            <Column>{this.renderByType('invalid')}</Column>
-        </Row>
+        
+        if( ! this.props.keys.invalid.length)
+            return <div>Found {this.props.keys.valid.length} valid keys.</div>
+        
+        return <div>
+            <span>Found {this.props.keys.valid.length} valid and {this.props.keys.invalid.length} invalid keys.</span>
+        </div>
+        
+        //<div>
+        //    <Row>
+        //        <Column>{this.renderByType('valid')}</Column>
+        //        <Column>{this.renderByType('invalid')}</Column>
+        //    </Row>
+        //</div>
     }
     
     renderByType(type) {
@@ -271,7 +305,7 @@ class Row extends Component {
 // move to new file
 class Column extends Component {
     render() {
-        return <div className="grid-block medium-3">
+        return <div className="grid-block medium-4">
             <div className="grid-content">
                 {this.props.children}    
             </div>

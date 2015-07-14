@@ -89,9 +89,6 @@ class WalletDb {
         var transaction = iDB.instance().db().transaction(
             ["wallets"], "readwrite"
         )
-        transaction.onerror = error =>
-            console.log(error, new Error().stack)
-        
         return transaction
     }
     
@@ -99,9 +96,6 @@ class WalletDb {
         var transaction = iDB.instance().db().transaction(
             ["wallets", "private_keys"], "readwrite"
         )
-        transaction.onerror = error =>
-            console.log(error, new Error().stack)
-        
         return transaction
     }
     
@@ -128,13 +122,13 @@ class WalletDb {
             var brainkey_cipherhex = password.aes_private.encryptToHex(
                 brainkey_plaintext
             )
-            
             let wallet = {
                 public_name: wallet_public_name,
                 password_checksum: password.checksum,
                 encrypted_brainkey: brainkey_cipherhex,
                 brainkey_checksum,
-                brainkey_sequence: 0
+                brainkey_sequence: 0,
+                last_modified: new Date()
             }
             WalletTcomb(wallet)
             var transaction = this.transaction_update()
@@ -168,7 +162,7 @@ class WalletDb {
         var owner_privkey = key.get_owner_private(
             brainkey, wallet.brainkey_sequence
         )
-        var active_privkey = key.get_active_private(owner_privkey);
+        var active_privkey = key.get_active_private(owner_privkey)
 
         return [
             {
@@ -181,15 +175,54 @@ class WalletDb {
         ]
     }
     
+    /** @return resolve(insert_count) */
+    importKeys(wif_keys) {
+        var transaction = this.transaction_update_keys()
+        return new Promise((resolve, reject) => {
+            if(this.isLocked()) {
+                reject("wallet locked")
+                return
+            }
+            var promises = []
+            promises.push(this.setWalletModified(transaction))
+            var import_count = 0, duplicate_count = 0
+            for(let wif of wif_keys) {
+                var private_key = PrivateKey.fromWif(wif)
+                promises.push(
+                    this.saveKey(private_key, null, transaction).then(
+                        result => {
+                            if(result == "duplicate")
+                                duplicate_count++
+                            else if(result == "added")
+                                import_count++
+                        }
+                    )
+                )
+            }
+            var p = Promise.all(promises).catch( error => {
+                console.log('importKeys transaction.abort', error)    
+                transaction.abort()
+                var message = error
+                try { message = error.target.error.message } catch(e) { }
+                return Promise.reject( message )
+            }).then( ()=> {
+                return {import_count, duplicate_count}
+            })
+            resolve(p)
+        })
+    }
+
     saveKeys(private_keys, transaction) {
         //private_keys = [{private_key, sequence}]
+        var promises = []
         for(let private_key_record of private_keys) {
-            this.saveKey(
+            promises.push( this.saveKey(
                 private_key_record.private_key,
                 private_key_record.sequence,
                 transaction
-            )
+            ))
         }
+        return Promise.all(promises)
     }
     
     saveKey(
@@ -213,36 +246,48 @@ class WalletDb {
             pubkey: public_key.toBtsPublic()
         }
         PrivateKeyTcomb(private_key_object)
-        PrivateKeyStore.onAddKey(
+        return PrivateKeyStore.onAddKey(
             private_key_object, transaction
         )
     }
         
     incrementBrainKeySequence(transaction) {
+        return this._updateWallet( transaction, wallet => {
+            wallet.brainkey_sequence = wallet.brainkey_sequence + 1
+        })
+    }
+    
+    setWalletModified(transaction) {
+        return this._updateWallet( transaction )
+    }
+    
+    _updateWallet(transaction, update_callback) {
         return new Promise((resolve, reject) => {
             var wallet = this.wallets.get(wallet_public_name)
             if ( ! wallet) {
                 reject("missing wallet " + wallet_public_name)
                 return
             }
-            // https://github.com/gcanti/tcomb/issues/110
-            //var new_wallet = WalletTcomb.update(wallet, {
-            //    brainkey_sequence: {'$set': wallet.brainkey_sequence + 1}
-            //})
-            var new_wallet = wallet
-            wallet.brainkey_sequence = wallet.brainkey_sequence + 1
+            //DEBUG console.log('... wallet',wallet)
+            var wallet_clone = JSON.parse(JSON.stringify( wallet ))
+            wallet_clone.last_modified = new Date()
+            if(update_callback)
+                update_callback(wallet_clone)
+            
+            WalletTcomb(wallet_clone)
+            //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
+            
             var wallet_store = transaction.objectStore("wallets")
-            wallet_store.put(new_wallet)
-            var promise = idb_helper.on_transaction_end(
-                transaction 
-            ).then( () => {
-                // Update RAM
-                this.wallets.set(
-                    new_wallet.public_name,
-                    new_wallet
-                )
-            })
-            resolve(promise)
+            var p = idb_helper.on_request_end(
+                wallet_store.put(wallet_clone)
+            )
+            var p2 = idb_helper.on_transaction_end( transaction  ).then(
+                () => {
+                    // Update RAM
+                    this.wallets.set( wallet_clone.public_name, wallet_clone )
+                }
+            )
+            resolve(Promise.all([p,p2]))
         })
     }
     

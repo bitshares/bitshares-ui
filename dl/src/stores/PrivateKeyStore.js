@@ -32,20 +32,41 @@ class PrivateKeyStore extends BaseStore {
         });
     }
     
+    /** @return resolve 0 for duplicate or 1 if inserted */ 
     onAddKey(private_key_object, transaction) {
-        PrivateKeyTcomb(private_key_object)
-        idb_helper.add(
-            transaction.objectStore("private_keys"),
-            private_key_object
-        )
-        private_key_object => {
-            idb_helper.on_transaction_end(transaction).then(() => {
-                this.keys = this.keys.set(
-                    private_key_object.id,
-                    PrivateKeyTcomb(private_key_object)
+        return new Promise((resolve, reject) => {
+            var _private_key_object = private_key_object
+            PrivateKeyTcomb(_private_key_object)
+            var duplicate = false
+            var p = idb_helper.add(
+                transaction.objectStore("private_keys"),
+                _private_key_object
+            ).catch( event => {
+                // ignore_duplicates
+                var error = event.target.error
+                if( error.name != 'ConstraintError' ||
+                    error.message.indexOf('by_pubkey') == -1
+                ) { throw event  }
+                duplicate = true
+                event.preventDefault()
+            }).then( ()=> {
+                //DEBUG console.log('... idb_helper.add duplicate',duplicate)
+                if(duplicate)
+                    return "duplicate"
+                
+                idb_helper.on_transaction_end(transaction).then(
+                    () => {
+                        //DEBUG console.log('... this.keys.set',_private_key_object.id)
+                        this.keys = this.keys.set(
+                            _private_key_object.id,
+                            PrivateKeyTcomb(_private_key_object)
+                        )
+                    }
                 )
+                return "added"
             })
-        }(private_key_object)
+            resolve(p)
+        })
     }
     
     //onDeleteByWalletId(wallet_id, transaction, cascade = true) {

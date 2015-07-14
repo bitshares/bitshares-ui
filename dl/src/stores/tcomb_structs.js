@@ -68,24 +68,24 @@ let WalletTcomb = t.struct({
     encrypted_brainkey: t.maybe(t.Str),
     brainkey_checksum: t.Str,
     brainkey_sequence: t.Num,
-    backed_up: t.maybe(t.Bool)
+    last_modified: t.Dat,
+    last_backup: t.maybe(t.Dat)
 }, "WalletTcomb");
-
-//let PublicKeyTcomb = t.struct({
-//    id: t.maybe(t.Num),
-//    pubkey: t.Str,
-//    key_id: t.maybe(t.Str)
-//}, "PublicKeyTcomb");
 
 let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
-    key_id: t.maybe(t.Str),
     wallet_id: t.Num,
     // brainkey_pos: "0" = 1st owner key, "0.0" = 1st active for owner "0"
     brainkey_pos: t.maybe(t.Str),
     encrypted_key: t.Str,
     pubkey: t.Str
 }, "PrivateKeyTcomb");
+
+//let PublicKeyTcomb = t.struct({
+//    id: t.maybe(t.Num),
+//    pubkey: t.Str,
+//    key_id: t.maybe(t.Str)
+//}, "PublicKeyTcomb");
 
 let Witness = t.struct({
     accumulated_income: t.Num,

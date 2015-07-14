@@ -1,15 +1,22 @@
 import React, {Component} from "react";
 
 import WalletDb from "stores/WalletDb";
+import NotificationSystem from 'react-notification-system'
 
 import key from "common/key_utils";
 // import forms from "newforms";
-import cname from "classnames";
+import cname from "classnames"
 
 class WalletCreate extends Component {
     
     constructor() {
         super();
+        //window.gra.addNotification({
+        //    message: `Successfull test`,
+        //    level: "success",
+        //    autoDismiss: 10
+        //})
+        
         this.state = { 
             wallet_public_name: "default",
             brainkey: key.suggest_brain_key(key.browserEntropy()),
@@ -21,27 +28,24 @@ class WalletCreate extends Component {
         this.validate();
     }
     
+    addNotification(params) {
+        this.refs.notificationSystem.addNotification(params);
+    }
+    
     render() {
         let state = this.state;
         let errors = state.errors;
         let submitDisabled = this.state.isValid ? "" : "disabled";
-        
-        return (
+
+        return <div> <NotificationSystem ref="notificationSystem" />
             <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-8 medium-offset-2">
+                    <h4>Please create a Wallet</h4>
                     <form 
                         className="name-form"
                         onSubmit={this.onSubmit.bind(this)}
                         onChange={this.formChange.bind(this)} noValidate
                     >
-                        <div className={cname("grid-content", {"has-error": errors.from})}>
-                            <label>Name</label>
-                            <input type="text" id="wallet_public_name"
-                                value={this.state.wallet_public_name} />
-                            <div>{errors.wallet_public_name}</div>
-                            <br/>
-                        </div>
-                        
                         <div className={cname("grid-content", "no-overflow", {
                             "has-error": errors.password_match 
                         })}>
@@ -71,9 +75,20 @@ class WalletCreate extends Component {
                     </form>
                 </div>
             </div>
-        );
+        </div>
     }
     
+// Multiple wallet support:
+//                <div className={cname("grid-content", {"has-error": errors.from})}>
+//                    <label>Name</label>
+//                    <input type="text" id="wallet_public_name"
+//                        value={this.state.wallet_public_name}
+//                        disabled
+//                    />
+//                    <div>{errors.wallet_public_name}</div>
+//                    <br/>
+//                </div>
+
     validate() {
         let state = this.state;
         let errors = state.errors;
@@ -119,23 +134,21 @@ class WalletCreate extends Component {
         WalletDb.onCreateWallet(
             this.state.password,
             this.state.brainkey,
-            false //unlock
+            true //unlock
         ).then( ()=> {
             // this.setState({wallet_saved: true});
-            this.props.addNotification({
+            this.addNotification({
                 message: `Successfully saved wallet: ${this.state.wallet_public_name}`,
                 level: "success",
                 autoDismiss: 10
             });
-
-            this.context.router.transitionTo("create-account");
         }).catch(err => {
             console.log("CreateWallet failed:", err);
-            this.props.addNotification({
-                    message: `Failed to create wallet: ${this.state.wallet_public_name}`,
-                    level: "error",
-                    autoDismiss: 10
-                });
+            this.addNotification({
+                message: `Failed to create wallet: ${this.state.wallet_public_name}`,
+                level: "error",
+                autoDismiss: 10
+            });
         });
     }
     
