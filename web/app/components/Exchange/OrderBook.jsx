@@ -101,7 +101,7 @@ class OrderBook extends React.Component {
         return (
 
                 <div className="valign" style={{overflowY: "hidden"}}>
-                    <table className="table order-table fixed-height">
+                    <table className="table order-table fixed-height table-hover">
                       <thead>
                       <tr>
                           <th>Value <small>({baseSymbol})</small></th>
