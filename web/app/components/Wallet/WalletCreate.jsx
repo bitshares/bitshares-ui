@@ -135,8 +135,6 @@ class WalletCreate extends Component {
             this.state.brainkey,
             true //unlock
         ).then( ()=> {
-            // this.setState({wallet_saved: true});
-            //NotificationActions.success({message:'kick yea'})
             NotificationActions.addNotification({
                 message: `Successfully saved wallet: ${this.state.wallet_public_name}`,
                 level: "success",
@@ -146,7 +144,7 @@ class WalletCreate extends Component {
         }).catch(err => {
             console.log("CreateWallet failed:", err);
             NotificationActions.addNotification({
-                message: `Failed to create wallet: ${this.state.wallet_public_name}`,
+                message: `Failed to create wallet: ${err}`,
                 level: "error",
                 autoDismiss: 10
             });
