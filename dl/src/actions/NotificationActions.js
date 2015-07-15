@@ -9,24 +9,34 @@ class NotificationActions {
     // Creating aliases: success, error, warning and info
     
     success(notification) {
+        notification = normalize(notification)
         notification.level = 'success'
-        this.addNotification(notification)
+        this.dispatch(notification)
     }
     
     error(notification) {
+        notification = normalize(notification)
         notification.level = 'error'
-        this.addNotification(notification)
+        this.dispatch(notification)
     }
     
     warning(notification) {
+        notification = normalize(notification)
         notification.level = 'warning'
-        this.addNotification(notification)
+        this.dispatch(notification)
     }
     
     info(notification) {
+        notification = normalize(notification)
         notification.level = 'info'
-        this.addNotification(notification)
+        this.dispatch(notification)
     }
 }
 
 export default alt.createActions(NotificationActions)
+
+var normalize = notification => {
+    if(typeof notification == 'string')
+        notification = {message: notification}
+    return notification
+}

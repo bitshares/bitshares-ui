@@ -5,7 +5,13 @@ class NotificationStore {
     
     constructor() {
         this.bindListeners({
-            addNotification: NotificationActions.addNotification
+            addNotification: [
+                NotificationActions.addNotification,
+                NotificationActions.success,
+                NotificationActions.warning,
+                NotificationActions.error,
+                NotificationActions.info
+            ]
         })
         
         this.state = {

@@ -5,8 +5,7 @@ import Aes from "ecc/aes"
 import Wallet from "components/Wallet/Wallet"
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
-
-import NotificationSystem from 'react-notification-system'
+import NotificationActions from 'actions/NotificationActions'
 
 import hash from "common/hash"
 import cname from "classnames"
@@ -19,10 +18,6 @@ export default class ImportKeys extends Component {
     constructor() {
         super()
         this.state = this._getInitialState()
-    }
-    
-    addNotification(params) {
-        this.refs.notificationSystem.addNotification(params);
     }
     
     _getInitialState() {
@@ -52,7 +47,7 @@ export default class ImportKeys extends Component {
         }
         var add_disabled = WalletDb.isLocked() || keys.valid.length == 0
         
-        return <div> <NotificationSystem ref="notificationSystem" />
+        return (
             <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-8 medium-offset-2">
                     <label>Import Keys</label>
@@ -105,7 +100,7 @@ export default class ImportKeys extends Component {
                     </Wallet>
                 </div>
             </div>
-        </div>
+        )
     }
     
     importKeys(valid_keys) {
@@ -115,20 +110,15 @@ export default class ImportKeys extends Component {
             if (import_count)
                 message = `Successfully imported ${import_count} keys.`
             if (duplicate_count)
-                message += `  ${duplicate_count} duplicates were not imported.`
+                message += `  ${duplicate_count} duplicates (Not Imported).`
             
-            this.addNotification({
-                message: message,
-                level: "success",
-                autoDismiss: 10
-            })
+            if(duplicate_count)
+                NotificationActions.warning(message)
+            else
+                NotificationActions.success(message)
             this.reset()
         }).catch( error => {
-            this.addNotification({
-                message: `There was an error: ${error}`,
-                level: "error",
-                autoDismiss: 10
-            })
+            NotificationActions.error(`There was an error: ${error}`)
         })
     }
     
