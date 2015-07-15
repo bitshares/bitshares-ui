@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import WalletDb from "stores/WalletDb";
 import NotificationSystem from 'react-notification-system'
 import NotificationActions from 'actions/NotificationActions'
+import ImportKeys from "components/Wallet/ImportKeys"
 
 import key from "common/key_utils";
 // import forms from "newforms";
@@ -33,13 +34,13 @@ class WalletCreate extends Component {
         let submitDisabled = this.state.isValid ? "" : "disabled";
         //<NotificationSystem ref="notificationSystem" />
         //DEBUG 
-        if(WalletDb.getWallet())
+        if(WalletDb.getWallet() && this.props.children)
             return <div>{this.props.children}</div>
         
-        return <div> 
+        return (
             <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-8 medium-offset-2">
-                    <h4>Please create a Wallet</h4>
+                    <h4>Create a Wallet</h4>
                     <form 
                         className="name-form"
                         onSubmit={this.onSubmit.bind(this)}
@@ -60,11 +61,13 @@ class WalletCreate extends Component {
                         </div>
                         
                         <div className="grid-content">
-                            <label>Brain-Key</label>
+                            <label>Brain-Key (update to provide your own)</label>
                             <textarea type="text" id="brainkey"
                                 value={this.state.brainkey} />
                             <br/>
                         </div>
+                        
+                        <ImportKeys/>
                         
                         <div className="grid-content">
                             <input type="submit" value={"Save"}
@@ -74,7 +77,7 @@ class WalletCreate extends Component {
                     </form>
                 </div>
             </div>
-        </div>
+        )
     }
     
 // Multiple wallets:
