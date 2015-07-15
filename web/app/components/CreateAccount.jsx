@@ -4,7 +4,7 @@ import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import WalletDb from "stores/WalletDb";
-import WalletUnlock from "components/Wallet/WalletUnlock";
+import Wallet from "components/Wallet/Wallet";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -64,12 +64,12 @@ class CreateAccount extends React.Component {
                     <div className="grid-block medium-4 medium-offset-4">
                         <div className="grid-content">
                             <h4>Create New Account</h4>
-                            <WalletUnlock>
+                            <Wallet>
                                 <form onSubmit={this.onSubmit.bind(this)} onChange={this.onFormChange.bind(this)} noValidate>
                                     <forms.RenderForm form={AccountForm} ref="accountForm"/>
                                     <button className={buttonClass}>CREATE ACCOUNT</button>
                                 </form>
-                            </WalletUnlock>
+                            </Wallet>
                         </div>
                     </div>
                 </div>

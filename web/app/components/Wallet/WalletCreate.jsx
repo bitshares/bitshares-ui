@@ -2,6 +2,7 @@ import React, {Component} from "react";
 
 import WalletDb from "stores/WalletDb";
 import NotificationSystem from 'react-notification-system'
+import NotificationActions from 'actions/NotificationActions'
 
 import key from "common/key_utils";
 // import forms from "newforms";
@@ -11,12 +12,6 @@ class WalletCreate extends Component {
     
     constructor() {
         super();
-        //window.gra.addNotification({
-        //    message: `Successfull test`,
-        //    level: "success",
-        //    autoDismiss: 10
-        //})
-        
         this.state = { 
             wallet_public_name: "default",
             brainkey: key.suggest_brain_key(key.browserEntropy()),
@@ -28,16 +23,20 @@ class WalletCreate extends Component {
         this.validate();
     }
     
-    addNotification(params) {
-        this.refs.notificationSystem.addNotification(params);
-    }
+    //addNotification(params) {
+    //    this.refs.notificationSystem.addNotification(params);
+    //}
     
     render() {
         let state = this.state;
         let errors = state.errors;
         let submitDisabled = this.state.isValid ? "" : "disabled";
-
-        return <div> <NotificationSystem ref="notificationSystem" />
+        //<NotificationSystem ref="notificationSystem" />
+        //DEBUG 
+        if(WalletDb.getWallet())
+            return <div>{this.props.children}</div>
+        
+        return <div> 
             <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-8 medium-offset-2">
                     <h4>Please create a Wallet</h4>
@@ -137,19 +136,27 @@ class WalletCreate extends Component {
             true //unlock
         ).then( ()=> {
             // this.setState({wallet_saved: true});
-            this.addNotification({
+            //NotificationActions.success({message:'kick yea'})
+            NotificationActions.addNotification({
                 message: `Successfully saved wallet: ${this.state.wallet_public_name}`,
                 level: "success",
                 autoDismiss: 10
             });
+            this.forceUpdate()
         }).catch(err => {
             console.log("CreateWallet failed:", err);
-            this.addNotification({
+            NotificationActions.addNotification({
                 message: `Failed to create wallet: ${this.state.wallet_public_name}`,
                 level: "error",
                 autoDismiss: 10
             });
         });
+    }
+    
+    _onCreate() {
+        console.log('... this.props.onCreate',this.props.onCreate)
+        //if(this.props.onCreate)
+        //    this.props.onCreate.bind(this)
     }
     
 }

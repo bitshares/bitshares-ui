@@ -38,7 +38,6 @@ export default class AccountSelect extends Component {
                     return <option value={account}> {account} </option>
                 }).toArray()}
             </select>
-            <WalletUnlock ref="wallet-unlock"/>
             
             <AccountImage id="abc" accounmt="abc" size={
                 {height: 150, width: 150}}/>

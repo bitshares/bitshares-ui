@@ -1,9 +1,11 @@
 import React, {Component, Children} from "react"
 import PrivateKey from "ecc/key_private"
 import Aes from "ecc/aes"
-import WalletActions from "actions/WalletActions"
-import WalletUnlock from "components/Wallet/WalletUnlock"
+
+import Wallet from "components/Wallet/Wallet"
 import WalletDb from "stores/WalletDb"
+import WalletActions from "actions/WalletActions"
+
 import NotificationSystem from 'react-notification-system'
 
 import hash from "common/hash"
@@ -55,7 +57,7 @@ export default class ImportKeys extends Component {
                 <div className="grid-block vertical medium-8 medium-offset-2">
                     <label>Import Keys</label>
                     
-                    <WalletUnlock>
+                    <Wallet>
                     
                         <KeyPreview keys={keys}/>
                         <br/>
@@ -100,7 +102,7 @@ export default class ImportKeys extends Component {
                             <br/>
                         </div>}
                         
-                    </WalletUnlock>
+                    </Wallet>
                 </div>
             </div>
         </div>
