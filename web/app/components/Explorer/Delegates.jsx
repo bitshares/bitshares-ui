@@ -90,7 +90,7 @@ class Delegates extends Component {
                 missing.push(id);
             // Check for missing witness account data
             } else if (!delegate_id_to_name.get(id)) {
-                missingAccounts.push(delegates.get(id).delegate_account);
+                missingAccounts.push(delegates.get(id).committee_member_account);
             }
         });
 
@@ -106,9 +106,9 @@ class Delegates extends Component {
     render() {
         let {delegate_id_to_name, delegates, dynGlobalObject, globalObject} = this.props;
         let activeDelegates = [];
-        for (let key in globalObject.active_delegates) {
-            if (globalObject.active_delegates.hasOwnProperty(key)) {
-                activeDelegates.push(globalObject.active_delegates[key]);
+        for (let key in globalObject.active_committee_members) {
+            if (globalObject.active_committee_members.hasOwnProperty(key)) {
+                activeDelegates.push(globalObject.active_committee_members[key]);
             }
         }
 
@@ -119,7 +119,7 @@ class Delegates extends Component {
                 <div className="grid-block page-layout">
                     <div className="grid-block shrink">
                         <div className="grid-content">
-                            <h5>Total number of delegates active: {Object.keys(globalObject.active_delegates).length}</h5>
+                            <h5>Total number of delegates active: {Object.keys(globalObject.active_committee_members).length}</h5>
                             <br/>
                         </div>
                     </div>

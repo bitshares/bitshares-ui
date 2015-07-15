@@ -24,7 +24,7 @@ class DelegateStore {
 
     onGetDelegates(delegates) {
         delegates.forEach(delegate => {
-            this.account_id_to_delegate_id[delegate.delegate_account] = delegate.id;
+            this.account_id_to_delegate_id[delegate.committee_member_account] = delegate.id;
             this.delegates = this.delegates.set(
                 delegate.id,
                 Delegate(delegate)
@@ -54,7 +54,7 @@ class DelegateStore {
     }
 
     onGetDelegate(payload) {
-        this.account_id_to_delegate_id[payload.delegate.delegate_account] = payload.delegate.id;
+        this.account_id_to_delegate_id[payload.delegate.committee_member_account] = payload.delegate.id;
 
         this.delegate_name_to_id = this.delegate_name_to_id.set(
             payload.account.name,
