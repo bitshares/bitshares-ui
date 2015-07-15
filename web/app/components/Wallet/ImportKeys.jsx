@@ -140,8 +140,6 @@ export default class ImportKeys extends Component {
                     throw file.name + " is missing master_key_record_type"
                 if( ! master_key.data)
                     throw file.name + " invalid master_key_record_type record"
-                if( ! master_key.data.encrypted_key)
-                    throw file.name + " is missing master_key_record_type.encrypted_key"
                 if( ! master_key.data.checksum)
                     throw file.name + " is missing master_key_record_type.checksum"
                 master_key = master_key.data
