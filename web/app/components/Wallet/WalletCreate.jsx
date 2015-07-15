@@ -77,7 +77,7 @@ class WalletCreate extends Component {
         </div>
     }
     
-// Multiple wallet support:
+// Multiple wallets:
 //                <div className={cname("grid-content", {"has-error": errors.from})}>
 //                    <label>Name</label>
 //                    <input type="text" id="wallet_public_name"
@@ -136,7 +136,7 @@ class WalletCreate extends Component {
             true //unlock
         ).then( ()=> {
             NotificationActions.addNotification({
-                message: `Successfully saved wallet: ${this.state.wallet_public_name}`,
+                message: `Successfully saved wallet`,//: ${this.state.wallet_public_name}
                 level: "success",
                 autoDismiss: 10
             });
@@ -149,12 +149,6 @@ class WalletCreate extends Component {
                 autoDismiss: 10
             });
         });
-    }
-    
-    _onCreate() {
-        console.log('... this.props.onCreate',this.props.onCreate)
-        //if(this.props.onCreate)
-        //    this.props.onCreate.bind(this)
     }
     
 }

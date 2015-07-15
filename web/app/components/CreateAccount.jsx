@@ -1,9 +1,7 @@
 import React from "react";
-import {Link} from "react-router";
 import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
-import WalletDb from "stores/WalletDb";
 import Wallet from "components/Wallet/Wallet";
 
 class CreateAccount extends React.Component {
@@ -48,12 +46,7 @@ class CreateAccount extends React.Component {
     render() {
         let AccountForm = forms.Form.extend({
             errorCssClass: "has-error",
-            name: forms.CharField({ initial: "", placeholder: "Account Name" }),
-            clean: ()=> {
-                if(WalletDb.isLocked()) {
-                    throw forms.ValidationError("Unlock Wallet");
-                }
-            }
+            name: forms.CharField({ initial: "", placeholder: "Account Name" })
         });
         
         let buttonClass = classNames("button", {disabled: !this.state.validAccountName});
