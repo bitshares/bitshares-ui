@@ -54,7 +54,11 @@ class WalletActions {
             return Promise.all([p,p2]).catch( error => transaction.abort() )
         }
         
-        return create_account_promise.then(() => {
+        return create_account_promise.then( result => {
+            if(result.error) {
+                this.actions.brainKeyAccountCreateError(result.error);
+                throw result.error;
+            }
             return updateWallet().then(()=> 
                 this.actions.brainKeyAccountCreated())
             

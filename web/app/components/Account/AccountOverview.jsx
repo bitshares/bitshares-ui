@@ -29,7 +29,7 @@ class AccountOverview extends React.Component {
                 <tr key={balance.asset_id}>
                     <td><FormattedAsset amount={balance.amount} asset={assets.get(balance.asset_id)}/></td>
                     <td><FormattedAsset amount={balance.amount} asset={assets.get(balance.asset_id)}/></td>
-                    <td><FormattedNumber style="percent" value={0.1 * Math.random()}/></td>
+                    <td>{/*<FormattedNumber style="percent" value={0.1 * Math.random()}/>*/}-</td>
                 </tr>
             );
         });
@@ -68,6 +68,7 @@ class AccountOverview extends React.Component {
                         </tbody>
                     </table>
                 </div>
+                {/*
                 <div className="content-block">
                     <h3>Proposed Transactions</h3>
                     <table className="table">
@@ -98,6 +99,7 @@ class AccountOverview extends React.Component {
                         </div>
                     </div>
                 </div>
+                 */}
                 <div className="content-block">
                 <h3>Recent Transactions <Link to="account-history" params={{name: account_name}}><small> (see more) </small></Link></h3>
                     <table className="table">
