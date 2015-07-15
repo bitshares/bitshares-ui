@@ -47,6 +47,7 @@ import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
 import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
+import NotificationStore from 'stores/NotificationStore';
 import cookies from "cookies-js";
 import iDB from "idb-instance";
 
@@ -58,16 +59,25 @@ import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
-
 require("./assets/loader");
 
+var notificationSystem
+
 class App extends BaseComponent {
+    
     constructor(props) {
         super(props, SessionStore);
         this.state.loading = true;
     }
-
+    
+    componentWillUnmount() {
+        NotificationStore.unlisten(this._onNotificationChange)
+    }
+    
     componentDidMount() {
+        NotificationStore.listen(this._onNotificationChange)
+        notificationSystem = this.refs.notificationSystem
+        
         let locale;
         if (cookies) {
             locale = cookies.get("graphene_locale");
@@ -99,30 +109,45 @@ class App extends BaseComponent {
             this.setState({loading: false});
         });
     }
+    
+    /** Usage: NotificationActions.[success,error,warning,info] */
+    _onNotificationChange() {
+        let notification = NotificationStore.getState().notification
+        if(notification.autoDismiss == void 0)
+            notification.autoDismiss = 10
+        
+        notificationSystem.addNotification(notification)
+    }
 
+    /** Non-static, used by passing notificationSystem via react Component refs */
     _addNotification(params) {
         console.log("add notification:", this.refs, params);
         this.refs.notificationSystem.addNotification(params);
     }
-
+    
     render() {
-        if (this.state.loading) {
-            return <LoadingIndicator />;
-        } else {
-            return (
-                <div className="grid-frame vertical">
-                    <Header isUnlocked={this.state.isUnlocked}/>
-                    <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                    <NotificationSystem ref="notificationSystem" />
-                    <AccountNotifications/>
-                    <div className="grid-block vertical">
-                        <RouteHandler addNotification={this._addNotification.bind(this)}/>
-                    </div>
-                    <Footer/>
-                    <ReactTooltip type="dark" effect="solid" />
+        let content = (
+            <div className="grid-frame vertical">
+                <Header isUnlocked={this.state.isUnlocked}/>
+                <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
+                <AccountNotifications/>
+                <div className="grid-block vertical">
+                    <RouteHandler addNotification={this._addNotification.bind(this)}/>
                 </div>
-            );
-        }
+                <Footer/>
+                <ReactTooltip type="dark" effect="solid" />
+            </div>
+        );
+        if (this.state.loading) {
+            content = <LoadingIndicator />;
+        } 
+        return (
+            <div>
+                {content}
+                <NotificationSystem ref="notificationSystem" />
+            </div>
+        );
+        
     }
 }
 
