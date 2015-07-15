@@ -105,7 +105,7 @@ let Delegate = t.struct({
 }, "Delegate");
 
 let GlobalObject = t.struct({
-    active_delegates: t.Arr,
+    active_committee_members: t.Arr,
     active_witnesses: t.Arr,
     chain_id: t.Str,
     id: t.Str,
@@ -114,7 +114,9 @@ let GlobalObject = t.struct({
 }, "GlobalObject");
 
 let DynGlobalObject = t.struct({
+    accounts_registered_this_interval: t.Num,
     current_witness: t.Str,
+    first_maintenance_block_with_current_interval: t.Num,
     head_block_id: t.Str,
     head_block_number: t.Num,
     id: t.Str,
