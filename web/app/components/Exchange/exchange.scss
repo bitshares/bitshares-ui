@@ -36,6 +36,8 @@ td.orderHistoryBid {
   > span.price-decimal {
     color: #e0e0e0;
     font-size: 90%;
+    opacity: 0.6;
+
   }
 }
 
@@ -48,6 +50,7 @@ td.orderHistoryAsk {
   > span.price-decimal {
     color: #e0e0e0;
     font-size: 90%;
+    opacity: 0.6;
   }
 }
 
@@ -138,7 +141,7 @@ p.order-table-title {
     display: inline-block;
     max-height: 44vh;
     overflow-y: auto;
-    border: 1px solid purple;
+    border: 0px solid purple;
     bottom: 0;
     position: relative;
   }
@@ -188,4 +191,14 @@ p.order-table-title {
 .buy-sell-info {
   font-size: 90%;
   margin-bottom: 5px;
+}
+
+
+
+a.order-cancel {
+  font-size: 80%;
+  letter-spacing: 2px;
+  padding-top: 0.01rem;
+  padding-bottom: 0.01rem;
+  margin: 0;
 }

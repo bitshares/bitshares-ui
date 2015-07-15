@@ -116,7 +116,7 @@ class OrderBook extends React.Component {
 
                             <div className="text-center" style={{borderTop: "1px solid gray" , borderBottom: "1px solid gray" , padding: "24px 12px "}}>Spread: {spread} {baseSymbol}</div>
 
-                                <table className="table order-table fixed-height">
+                                <table className="table order-table fixed-height table-hover">
                                 <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
                                     {askRows}
                                 </tbody>

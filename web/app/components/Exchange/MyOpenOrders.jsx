@@ -24,10 +24,10 @@ class MyOpenOrders extends React.Component {
         let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
         let bids = null, asks = null;
 
-        if(orders.size > 0 && base && quote) {    
+        if(orders.size > 0 && base && quote) {
 
             bids = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id); 
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id);
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
@@ -39,31 +39,31 @@ class MyOpenOrders extends React.Component {
                 let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
                 return (
                      <tr key={order.id}>
-                         <td>
-                            <a onClick={this.props.onCancel.bind(this, order.id)}>
-                                <Icon name="cross-circle" fillClass="fill-black" />
+                         <td className="text-left">
+                            <a style={{marginLeft: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
+                              CANCEL
                             </a>
-                        </td> 
+                        </td>
                         <td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}
                             format="short"
                             />
-                        </td> 
+                        </td>
                         <td>{(amount).toFixed(3)}</td>
                         <td className={tdClass}>
                             <span className="price-integer">{price.int}</span>
                             .
                             <span className="price-decimal">{price.dec}</span>
                         </td>
-                      
+
 
                     </tr>
                     );
             }).toArray();
 
             asks = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.id); 
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.id);
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
@@ -87,11 +87,11 @@ class MyOpenOrders extends React.Component {
                             format="short"
                             />
                         </td>
-                        <td>
-                            <a onClick={this.props.onCancel.bind(this, order.id)}>
-                                <Icon name="cross-circle" fillClass="fill-black" />
+                        <td className="text-right">
+                            <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
+                            CANCEL
                             </a>
-                        </td>  
+                        </td>
 
                     </tr>
                     );
@@ -99,10 +99,10 @@ class MyOpenOrders extends React.Component {
         }
         return (
             <div className="grid-content text-center ps-container" ref="orders">
-                <table className="table order-table my-orders text-right">
+                <table className="table order-table my-orders text-right table-hover">
                     <thead>
                     <tr>
-                        <th style={{textAlign: "right"}}>{/* "Cancel button" column */}</th>
+                        <th style={{textAlign: "left"}}></th>
                         <th style={{textAlign: "right"}}>Expiration</th>
                         <th style={{textAlign: "right"}}>Amount</th>
                         <th style={{textAlign: "right"}}>Price</th>
@@ -113,13 +113,13 @@ class MyOpenOrders extends React.Component {
                     </tbody>
                 </table>
 
-                <table className="table order-table my-orders text-left">
+                <table className="table order-table my-orders text-left table-hover">
                     <thead>
                     <tr>
                         <th style={{textAlign: "left"}}>Price</th>
                         <th style={{textAlign: "left"}}>Amount</th>
                         <th style={{textAlign: "left"}}>Expiration</th>
-                        <th style={{textAlign: "left"}}>{/* "Cancel button" column */}</th>
+                        <th style={{textAlign: "right"}}></th>
                     </tr>
                     </thead>
                     <tbody>
