@@ -75,14 +75,16 @@ export default class WalletUnlock extends Component {
             true //unlock
         )
         if (WalletDb.isLocked())
-            this.setState({password_error: "Wrong password"})
+            this.setState({password_error: "Incorrect"})
         else {
             this.setState({password_error: null})
+            console.log('... unlock_wallet_modal')
             ZfApi.publish("unlock_wallet_modal", "close");
         }
     }
 
     _lock() {
+        console.log('... onLock')
         WalletDb.onLock()
         this.forceUpdate()
     }

@@ -52,7 +52,7 @@ class PrivateKeyStore extends BaseStore {
             }).then( ()=> {
                 //DEBUG console.log('... idb_helper.add duplicate',duplicate)
                 if(duplicate)
-                    return "duplicate"
+                    return {result:"duplicate",id:null}
                 
                 idb_helper.on_transaction_end(transaction).then(
                     () => {
@@ -63,7 +63,10 @@ class PrivateKeyStore extends BaseStore {
                         )
                     }
                 )
-                return "added"
+                return {
+                    result:"added", 
+                    id:_private_key_object.id
+                }
             })
             resolve(p)
         })

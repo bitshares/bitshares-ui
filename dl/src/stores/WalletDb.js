@@ -81,7 +81,8 @@ class WalletDb {
                 aes_private_map[wallet_public_name] = aes_private
             }
         } catch(e) {
-            console.log('password error', e)
+            if(! e.message == 'wrong password')
+                console.log(e)
         }
     }
     
@@ -113,15 +114,9 @@ class WalletDb {
                 password_plaintext + this.secret_server_token
             )
             
-            // When deleting then re-adding a brainkey this checksum
-            // is used to ensure it is the correct brainkey.
-            var brainkey_checksum = key.aes_checksum(
-                brainkey_plaintext + this.secret_server_token
-            ).checksum
+            var {brainkey_checksum, brainkey_cipherhex} =
+                this.encrypteBrainKey(brainkey_plaintext)
             
-            var brainkey_cipherhex = password.aes_private.encryptToHex(
-                brainkey_plaintext
-            )
             let wallet = {
                 public_name: wallet_public_name,
                 password_checksum: password.checksum,
@@ -148,6 +143,23 @@ class WalletDb {
             })
             resolve( Promise.all([ add, end ]) )
         })
+    }
+    
+    /** @return {brainkey_checksum, brainkey_cipherhex}
+    brainkey_checksum used when deleting then re-adding a brainkey
+    */
+    encrypteBrainKey(brainkey_plaintext){
+        var brainkey_checksum=null, brainkey_cipherhex=null
+        if(brainkey_plaintext) {
+            brainkey_checksum = key.aes_checksum(
+                brainkey_plaintext + this.secret_server_token
+            ).checksum
+        
+            brainkey_cipherhex = password.aes_private.encryptToHex(
+                brainkey_plaintext
+            )
+        }
+        return {brainkey_checksum, brainkey_cipherhex}
     }
     
     generateKeys() {
@@ -190,24 +202,34 @@ class WalletDb {
                 var private_key = PrivateKey.fromWif(wif)
                 promises.push(
                     this.saveKey(private_key, null, transaction).then(
-                        result => {
-                            if(result == "duplicate")
+                        ret => {
+                            if(ret.result == "duplicate")
                                 duplicate_count++
-                            else if(result == "added")
+                            else if(ret.result == "added") {
                                 import_count++
+                            }
+                            console.log('... ret.id',ret.id)
+                            return ret.id
                         }
                     )
                 )
             }
+            
+            //var p = this.setWalletModified(transaction)
+            //p.then(()=> {
             var p = Promise.all(promises).catch( error => {
                 console.log('importKeys transaction.abort', error)    
                 transaction.abort()
                 var message = error
                 try { message = error.target.error.message } catch(e) { }
                 return Promise.reject( message )
-            }).then( ()=> {
-                return {import_count, duplicate_count}
+            }).then( private_key_ids => {
+                //remove 1st promise setWalletModified
+                private_key_ids = private_key_ids.slice(1)
+                console.log('... private_key_ids1',private_key_ids)    
+                return {import_count, duplicate_count, private_key_ids}
             })
+            //})
             resolve(p)
         })
     }
@@ -249,6 +271,7 @@ class WalletDb {
         return PrivateKeyStore.onAddKey(
             private_key_object, transaction
         )
+        
     }
         
     incrementBrainKeySequence(transaction) {

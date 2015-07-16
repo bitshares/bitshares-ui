@@ -1,45 +1,37 @@
-import React, {Component} from "react";
+import React, {Component} from "react"
 
-import WalletDb from "stores/WalletDb";
+import WalletDb from "stores/WalletDb"
 import NotificationSystem from 'react-notification-system'
-import NotificationActions from 'actions/NotificationActions'
-import ImportKeys from "components/Wallet/ImportKeys"
+import notify from 'actions/NotificationActions'
 
-import key from "common/key_utils";
-// import forms from "newforms";
+import key from "common/key_utils"
 import cname from "classnames"
 
 class WalletCreate extends Component {
     
     constructor() {
-        super();
+        super()
         this.state = { 
             wallet_public_name: "default",
-            brainkey: key.suggest_brain_key(key.browserEntropy()),
             password: "",
             password_confirm: "",
             errors: {},
             isValid: false
-        };
-        this.validate();
+        }
+        this.validate()
     }
     
-    //addNotification(params) {
-    //    this.refs.notificationSystem.addNotification(params);
-    //}
-    
     render() {
-        let state = this.state;
-        let errors = state.errors;
-        let submitDisabled = this.state.isValid ? "" : "disabled";
-        //<NotificationSystem ref="notificationSystem" />
-        //DEBUG 
+        let state = this.state
+        let errors = state.errors
+        let submitDisabled = this.state.isValid ? "" : "disabled"
+        
         if(WalletDb.getWallet() && this.props.children)
             return <div>{this.props.children}</div>
         
         return (
             <div className="content-block">
-                <h3>Create a Wallet</h3>
+                <h3>Create Wallet</h3>
                 <form
                     className="name-form"
                     onSubmit={this.onSubmit.bind(this)}
@@ -60,16 +52,7 @@ class WalletCreate extends Component {
                     </div>
 
                     <div className="grid-content">
-                        <label>Brain-Key (update to provide your own)</label>
-                        <textarea type="text" id="brainkey"
-                            value={this.state.brainkey} />
-                        <br/>
-                    </div>
-
-                    <ImportKeys/>
-
-                    <div className="grid-content">
-                        <input type="submit" value={"Save"}
+                        <input type="submit" value="Create"
                             className={cname("button",{disabled:submitDisabled})}/>
                         <br/>
                     </div>
@@ -77,7 +60,6 @@ class WalletCreate extends Component {
             </div>
         )
     }
-    
 // Multiple wallets:
 //                <div className={cname("grid-content", {"has-error": errors.from})}>
 //                    <label>Name</label>
@@ -90,9 +72,9 @@ class WalletCreate extends Component {
 //                </div>
 
     validate() {
-        let state = this.state;
-        let errors = state.errors;
-        let wallets = WalletDb.wallets;
+        let state = this.state
+        let errors = state.errors
+        let wallets = WalletDb.wallets
         
         errors.wallet_public_name = 
             !wallets.get(state.wallet_public_name) ? 
@@ -104,56 +86,56 @@ class WalletCreate extends Component {
             //don't report it until the confirm is populated
             (state.password === "" || state.password_confirm === "")
         ? null :
-            "Passwords do not match";
+            "Passwords do not match"
         
         let password_unmatch =
-            state.password !== state.password_confirm;
+            state.password !== state.password_confirm
         
-        state.isValid = !(errors.wallet_public_name || password_unmatch);
+        state.isValid = !(errors.wallet_public_name || password_unmatch)
     }
     
     formChange(event) {
-        let key_id = event.target.id;
-        let value = event.target.value;
+        let key_id = event.target.id
+        let value = event.target.value
         if(key_id === "wallet_public_name") {
             //case in-sensitive
-            value = value.toLowerCase();
+            value = value.toLowerCase()
         }
-        if(key_id === "brainkey") {
-            value = value.toUpperCase();
-            value = value.split(/[\t\n\v\f\r ]+/).join(" ");
-        }
+        //TODO BrainKeyCreate.jsx
+        //key.suggest_brain_key(key.browserEntropy() + secret_server_token)
+        //if(key_id === "brainkey") {
+        //    value = value.toUpperCase()
+        //    value = value.split(/[\t\n\v\f\r ]+/).join(" ")
+        //}
         
-        this.state[key_id] = value;
-        this.validate();
-        this.setState(this.state);
+        this.state[key_id] = value
+        this.validate()
+        this.setState(this.state)
     }
     
     onSubmit(e) {
         e.preventDefault()
         WalletDb.onCreateWallet(
             this.state.password,
-            this.state.brainkey,
+            null, //this.state.brainkey,
             true //unlock
         ).then( ()=> {
-            NotificationActions.addNotification({
-                message: `Successfully saved wallet`,//: ${this.state.wallet_public_name}
+            notify.addNotification({
+                message: `Wallet Created`,//: ${this.state.wallet_public_name}
                 level: "success",
                 autoDismiss: 10
-            });
+            })
             this.forceUpdate()
         }).catch(err => {
-            console.log("CreateWallet failed:", err);
-            NotificationActions.addNotification({
+            console.log("CreateWallet failed:", err)
+            notify.addNotification({
                 message: `Failed to create wallet: ${err}`,
                 level: "error",
                 autoDismiss: 10
-            });
-        });
+            })
+        })
     }
     
 }
 
-WalletCreate.contextTypes = {router: React.PropTypes.func.isRequired};
-
-export default WalletCreate;
+export default WalletCreate

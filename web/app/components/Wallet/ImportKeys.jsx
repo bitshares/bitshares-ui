@@ -10,7 +10,6 @@ import notify from 'actions/NotificationActions'
 import hash from "common/hash"
 import cname from "classnames"
 
-
 var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
 
 export default class ImportKeys extends Component {
@@ -22,15 +21,14 @@ export default class ImportKeys extends Component {
     
     _getInitialState() {
         return {
-            wifs: {},
-            wif_accounts: {},
+            wif_private_keys: {},
             wif_count: 0,
             reset_file_name: Date.now(),
             reset_password: Date.now(),
             password_checksum: null,
             password_message: null,
-            wif_textarea_message: null,
-            wif_textarea: ""
+            wif_textarea_private_keys_message: null,
+            wif_textarea_private_keys: ""
         }
     }
     
@@ -74,9 +72,9 @@ export default class ImportKeys extends Component {
                     <textarea
                         placeholder="Paste WIF private keys (optional)..."
                         onChange={this._onWifTextChange.bind(this)}
-                        value={this.state.wif_textarea}
+                        value={this.state.wif_textarea_private_keys}
                     />
-                    <div>{this.state.wif_textarea_message}</div>
+                    <div>{this.state.wif_textarea_private_keys_message}</div>
                 </div>
                 <br/>
             </div>
@@ -85,51 +83,26 @@ export default class ImportKeys extends Component {
     
     reset() {
         this.setState(this._getInitialState())
-        this.props.setWifCount(0)
+        this.props.setWifPrivateKeys(this.state.wif_private_keys)
     }
     
-    updateWifCount() {
-        var wif_count = Object.keys(this.state.wifs).length
+    wifPrivateKeysUpdate() {
+        var wif_count = Object.keys(this.state.wif_private_keys).length
         this.setState({wif_count})
-        this.props.setWifCount(wif_count)
-    }
-    
-    importKeys() {
-        if( ! WalletDb.isLocked()) {
-            notify.error("wallet is locked")
-            return
-        }
-        WalletDb.importKeys(
-            Object.keys(this.state.wifs),
-            this.state.wif_accounts
-        ).then( result => {
-            var {import_count, duplicate_count} = result
-            var message = ""
-            if (import_count)
-                message = `Successfully imported ${import_count} keys.`
-            if (duplicate_count)
-                message += `  ${duplicate_count} duplicates (Not Imported).`
-            
-            if(duplicate_count)
-                notify.warning(message)
-            else
-                notify.success(message)
-            this.reset()
-        }).catch( error => {
-            notify.error(`There was an error: ${error}`)
-        })
+        this.props.setWifPrivateKeys(this.state.wif_private_keys)
     }
     
     upload(evt) {
         var file = evt.target.files[0]
         var reader = new FileReader()
+        this.setState({password_message: null})
         reader.onload = evt => {
             var contents = evt.target.result
             if(this.addByPattern(contents))
                 return
             
             try {
-                this._parseImportKeys(contents) 
+                this._parseImportKeyUpload(contents, file) 
                 // this._parseWalletJson(conents)
                 
                 // try empty password, also display "Enter wallet password"
@@ -142,16 +115,16 @@ export default class ImportKeys extends Component {
         reader.readAsText(file)
     }
     
-    _parseImportKeys(contents){
+    _parseImportKeyUpload(contents, file) {
         var password_checksum, account_keys
         try {
             var import_keys = JSON.parse(contents)
             password_checksum = import_keys.password_checksum
             if( ! password_checksum)
-                throw file.name + " is missing password_checksum"
+                throw file.name + " is an unrecognized format"
             
             if( ! Array.isArray(import_keys.account_keys))
-                throw file.name + " is missing account_keys"
+                throw file.name + " is an unrecognized format"
             
             account_keys = import_keys.account_keys
 
@@ -237,16 +210,16 @@ export default class ImportKeys extends Component {
                         new Buffer(private_plainhex, 'hex'))
                     
                     var wif_private_key = private_key.toWif()
-                    var account_names = this.state.wifs[wif_private_key] || []
+                    var account_names = this.state.wif_private_keys[wif_private_key] || []
                     account_names.push(account_name)
-                    this.state.wifs[wif_private_key] = account_names
+                    this.state.wif_private_keys[wif_private_key] = account_names
                 } catch(e) {
                     var message = e.message || e
                     notify.error(`Account ${acccount_name} had a private key import error: `+message)
                 }
             }
         }
-        this.updateWifCount()
+        this.wifPrivateKeysUpdate()
         this.setState({
             password_message: null,
             password_checksum: null
@@ -255,7 +228,7 @@ export default class ImportKeys extends Component {
     
     _onWifTextChange(evt) {
         this.addByPattern(evt.target.value)
-        this.setState({wif_textarea: evt.target.value})
+        this.setState({wif_textarea_private_keys: evt.target.value})
     }
     
     addByPattern(contents) {
@@ -266,13 +239,13 @@ export default class ImportKeys extends Component {
         for(let wif of contents.match(wif_regex) || [] ) {
             try { 
                 PrivateKey.fromWif(wif) //throws 
-                this.state.wifs[wif] = true
+                this.state.wif_private_keys[wif] = true
                 count++
             } catch(e) { invalid_count++ }
         }
-        this.updateWifCount()
+        this.wifPrivateKeysUpdate()
         this.setState({
-            wif_textarea_message: 
+            wif_textarea_private_keys_message: 
                 (!count ? "" : count + " keys found from text.") +
                 (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
         })
@@ -282,7 +255,7 @@ export default class ImportKeys extends Component {
 }
 
 ImportKeys.propTypes = {
-    setWifCount: React.PropTypes.object.isRequired
+    setWifPrivateKeys: React.PropTypes.func.isRequired
 }
 
 class KeyCount extends Component {
