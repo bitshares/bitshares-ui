@@ -22,8 +22,9 @@ export default class ImportKeys extends Component {
     _getInitialState() {
         return {
             wifs: {},
-            file_name: null,
+            wif_count: 0,
             reset_file_name: Date.now(),
+            reset_password: Date.now(),
             master_key: null,
             password_message: null,
             wif_textarea_message: null,
@@ -32,64 +33,63 @@ export default class ImportKeys extends Component {
     }
     
     render() {
-        let wif_count = Object.keys(this.state.wifs).length
         return <div>
-            <h4>Gather Private Keys</h4>
             <div>
-                <KeyCount wif_count={wif_count}/>
-                <br/>
+                <KeyCount wif_count={this.state.wif_count}/>
+                {!this.state.wif_count ? 
+                    <div>Upload a wallet backup or key export file</div> :
+                    <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
+                }
             </div>
+            <br/>
             <div>
                 <div>
                     <div>
-                        <input
-                            type="file" id="file_input"
-                            key={this.state.reset_file_name}
-                            onChange={this.upload.bind(this)}
-                        />
+                        <div>
+                            <input
+                                type="file" id="file_input"
+                                key={this.state.reset_file_name}
+                                onChange={this.upload.bind(this)}
+                            />
+                        </div>
+                        
                     </div>
-                    <div>BitShares Wallet (wallet.json)</div>
+                    <br/>
+                    <div>
+                        <input 
+                            type="password"
+                            key={this.state.reset_password}
+                            placeholder="Enter wallet password"
+                            onChange={this._checkJsonPassword.bind(this)}
+                        />
+                        <div>{this.state.password_message}</div>
+                    </div>
+                </div>
+                
+                <br/>
+                
+                <div>
+                    <textarea
+                        placeholder="Paste WIF private keys (optional)..."
+                        onChange={this._onWifTextChange.bind(this)}
+                        value={this.state.wif_textarea}
+                    />
+                    <div>{this.state.wif_textarea_message}</div>
                 </div>
                 <br/>
-                <div>
-                    <input 
-                        type="password"
-                        placeholder="Enter wallet password"
-                        onChange={this._checkJsonPassword.bind(this)}
-                    />
-                    <div>{this.state.password_message}</div>
-                </div>
             </div>
-            
-            <br/>
-            
-            <div>
-                <textarea
-                    placeholder="Paste WIF private keys (optional)..."
-                    onChange={this._onWifTextChange.bind(this)}
-                    value={this.state.wif_textarea}
-                />
-                <div>{this.state.wif_textarea_message}</div>
-            </div>
-            
-            <br/>
-            
-            <div>
-                <a className={ cname("button",{ disabled: !wif_count } )}
-                    onClick={this.lookupAccounts.bind(this)} >
-                    Lookup Accounts
-                </a>
-                <a className={ cname("button",{ disabled: !wif_count } )}
-                    onClick={this.reset.bind(this)} >
-                    Reset
-                </a>
-            </div>
-            
         </div>
     }
-
-    lookupAccounts() {
-        
+    
+    reset() {
+        this.setState(this._getInitialState())
+        this.props.setWifCount(0)
+    }
+    
+    updateWifCount() {
+        var wif_count = Object.keys(this.state.wifs).length
+        this.setState({wif_count})
+        this.props.setWifCount(wif_count)
     }
     
     importKeys() {
@@ -115,10 +115,6 @@ export default class ImportKeys extends Component {
         })
     }
     
-    reset() {
-        this.setState(this._getInitialState())
-    }
-    
     upload(evt) {
         var file = evt.target.files[0]
         var reader = new FileReader()
@@ -140,8 +136,6 @@ export default class ImportKeys extends Component {
                     throw file.name + " is missing master_key_record_type"
                 if( ! master_key.data)
                     throw file.name + " invalid master_key_record_type record"
-                if( ! master_key.data.encrypted_key)
-                    throw file.name + " is missing master_key_record_type.encrypted_key"
                 if( ! master_key.data.checksum)
                     throw file.name + " is missing master_key_record_type.checksum"
                 master_key = master_key.data
@@ -169,6 +163,7 @@ export default class ImportKeys extends Component {
             this.setState({password_message: "Enter wallet password"})
             return
         }
+        this.setState({reset_password: Date.now()})
         var password_aes = Aes.fromSeed(password)
         var wallet_json = this.state.wallet_json
         
@@ -186,6 +181,7 @@ export default class ImportKeys extends Component {
                 this.setState({password_message: message})
             }
         }
+        this.updateWifCount()
         this.setState({
             password_message: null,
             master_key: null
@@ -209,6 +205,7 @@ export default class ImportKeys extends Component {
                 count++
             } catch(e) { invalid_count++ }
         }
+        this.updateWifCount()
         this.setState({
             wif_textarea_message: 
                 (!count ? "" : count + " keys found from text.") +
@@ -219,10 +216,9 @@ export default class ImportKeys extends Component {
     
 }
 
-
 class KeyCount extends Component {
     render() {
         if( !this.props.wif_count) return <div/>
-        return <div>Found {this.props.wif_count} private keys</div>
+        return <span>Found {this.props.wif_count} private keys</span>
     }
 }
