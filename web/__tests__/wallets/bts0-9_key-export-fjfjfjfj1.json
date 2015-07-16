@@ -1,0 +1,16 @@
+{
+  "password_checksum": "bae28fc07bbcbc3f629de4879cd1f75fbfc660efb68ded09c191d9d85fe2890eb8905ec11090d5f8e6992fd6b5ec6c695e05a7c76780dd8478072c6831347679",
+  "account_keys": [{
+      "account_name": "",
+      "encrypted_private_keys": [
+        "1107133cab12c1a0cdee2e3b5154b57b9d3c8538f67d6678a0fc3b8c8163fe61074281dbcf5b79cb9af2840d14e32ef1"
+      ]
+    },{
+      "account_name": "test12345",
+      "encrypted_private_keys": [
+        "2a334a2034c6b50df743767a1ce5e3361246f1f5edd743f6b4f66af1e18e49643a25c3e042d58654101d56a25fcd1ab6",
+        "b7fab8babebf3c18027fa498460c7a64b3d3abe211b1f6440b8b5483a6c0271b08f78ff652bb6cec512b096454de97d2"
+      ]
+    }
+  ]
+}

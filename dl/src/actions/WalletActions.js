@@ -19,8 +19,6 @@ class WalletActions {
         )
     }
 
-    //re-factor WalletDb.onCreateWallet and this.createWallet 
-    
     createBrainKeyAccount( account_name ) {
         if( WalletDb.isLocked()) {
             var error = "wallet locked"
@@ -85,6 +83,19 @@ class WalletActions {
             this.actions.brainKeyAccountCreateError(error)
             throw error
         })
+    }
+    
+    findAccountsByBrainKey(brainkey) {
+        var privates = []
+        for(let sequence = 0; sequence < 10; sequence++) {
+            var owner_privkey = key.get_owner_private(
+                this.state.brainkey, sequence
+            )
+            //var active_privkey = key.get_active_private(owner_privkey)
+            privates.push([owner_privkey, sequence])
+        }
+        //var db = api.db_api()
+        //return db.exec("get_key_references", public_keyaddress_params).then( result => {
     }
     
     importBalance( account_name_or_id, wif_keys, broadcast ) {

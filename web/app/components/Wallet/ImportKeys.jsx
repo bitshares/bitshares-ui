@@ -10,6 +10,7 @@ import notify from 'actions/NotificationActions'
 import hash from "common/hash"
 import cname from "classnames"
 
+
 var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
 
 export default class ImportKeys extends Component {
@@ -22,10 +23,11 @@ export default class ImportKeys extends Component {
     _getInitialState() {
         return {
             wifs: {},
+            wif_accounts: {},
             wif_count: 0,
             reset_file_name: Date.now(),
             reset_password: Date.now(),
-            master_key: null,
+            password_checksum: null,
             password_message: null,
             wif_textarea_message: null,
             wif_textarea: ""
@@ -37,7 +39,7 @@ export default class ImportKeys extends Component {
             <div>
                 <KeyCount wif_count={this.state.wif_count}/>
                 {!this.state.wif_count ? 
-                    <div>Upload a wallet backup or key export file</div> :
+                    <div>Upload BitShares keys file...</div> :
                     <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
                 }
             </div>
@@ -60,7 +62,7 @@ export default class ImportKeys extends Component {
                             type="password"
                             key={this.state.reset_password}
                             placeholder="Enter wallet password"
-                            onChange={this._checkJsonPassword.bind(this)}
+                            onChange={this._decryptPrivateKeys.bind(this)}
                         />
                         <div>{this.state.password_message}</div>
                     </div>
@@ -97,7 +99,10 @@ export default class ImportKeys extends Component {
             notify.error("wallet is locked")
             return
         }
-        WalletDb.importKeys( Object.keys(this.state.wifs) ).then( result => {
+        WalletDb.importKeys(
+            Object.keys(this.state.wifs),
+            this.state.wif_accounts
+        ).then( result => {
             var {import_count, duplicate_count} = result
             var message = ""
             if (import_count)
@@ -123,41 +128,94 @@ export default class ImportKeys extends Component {
             if(this.addByPattern(contents))
                 return
             
-            var master_key, wallet_json
             try {
-                wallet_json = JSON.parse(contents)
-                for(let element of wallet_json) {
-                    if( ! "master_key_record_type" == element.type)
-                        continue
-                    master_key = element
-                    break
-                }
-                if( ! master_key)
-                    throw file.name + " is missing master_key_record_type"
-                if( ! master_key.data)
-                    throw file.name + " invalid master_key_record_type record"
-                if( ! master_key.data.checksum)
-                    throw file.name + " is missing master_key_record_type.checksum"
-                master_key = master_key.data
-            } catch(e) {
-                var message = e.message || e
+                this._parseImportKeys(contents) 
+                // this._parseWalletJson(conents)
+                
+                // try empty password, also display "Enter wallet password"
+                this._decryptPrivateKeys()
+                
+            } catch(message) {
                 this.setState({password_message: message})
-                return
             }
-            this.setState({
-                master_key,
-                wallet_json,
-                password_message: null
-            })
-            //check empty password, also display "Enter wallet password"
-            this._checkJsonPassword()
         }
         reader.readAsText(file)
     }
     
-    _checkJsonPassword(evt) {
+    _parseImportKeys(contents){
+        var password_checksum, account_keys
+        try {
+            var import_keys = JSON.parse(contents)
+            password_checksum = import_keys.password_checksum
+            if( ! password_checksum)
+                throw file.name + " is missing password_checksum"
+            
+            if( ! Array.isArray(import_keys.account_keys))
+                throw file.name + " is missing account_keys"
+            
+            account_keys = import_keys.account_keys
+
+        } catch(e) { throw e.message || e }
+        
+        this.setState({
+            password_checksum,
+            account_keys
+        })
+    }
+    
+    /** testnet only .. todo, replace withimport_keys 
+    _parseWalletJson(content) {
+        var password_checksum, encrypted_keys = [], encrypted_brainkey
+        try {
+            var wallet_json = JSON.parse(contents)
+            for(let element of wallet_json) {
+                
+                //
+                if( "master_key_record_type" == element.type) {
+                    
+                    if( ! element.data)
+                        throw file.name + " invalid master_key_record record"
+                    
+                    if( ! element.data.checksum)
+                        throw file.name + " is missing master_key_record checksum"
+                    
+                    password_checksum = element.data.checksum
+                }
+                
+                if ( "property_record_type" == element.type &&
+                    "encrypted_brainkey" == element.data.key
+                ) {
+                    // The BTS 0.9 hosted wallet has 100% brain-key
+                    // derivied keys.. 
+                    encrypted_brainkey = element.data.value
+                }
+                
+                if( "key_record_type" == element.type) {
+                    encrypted_keys.push(element.data.encrypted_private_key)
+                }
+                
+            }
+            if( ! password_checksum)
+                throw file.name + " is missing password_checksum"
+            
+            if( ! encrypted_keys.length)
+                throw file.name + " does not contain any private keys"
+            
+        } catch(e) {
+            var message = e.message || e
+            throw message
+        }
+        this.setState({
+            password_checksum,
+            encrypted_keys,
+            encrypted_brainkey,
+            password_message: null
+        })
+    }*/
+    
+    _decryptPrivateKeys(evt) {
         var password = evt ? evt.target.value : ""
-        var checksum = this.state.master_key.checksum
+        var checksum = this.state.password_checksum
         var new_checksum = hash.sha512(hash.sha512(password)).toString('hex')
         if(checksum != new_checksum) {
             this.setState({password_message: "Enter wallet password"})
@@ -165,26 +223,33 @@ export default class ImportKeys extends Component {
         }
         this.setState({reset_password: Date.now()})
         var password_aes = Aes.fromSeed(password)
-        var wallet_json = this.state.wallet_json
         
-        for(let element of wallet_json) {
-            try {
-                if( ! "key_record_type" == element.type)
-                    continue
-                var encrypted_private = element.data.encrypted_private_key
-                var private_plainhex = password_aes.decryptHex(encrypted_private)
-                var private_key = PrivateKey.fromBuffer(
-                    new Buffer(private_plainhex, 'hex'))
-                this.state.wifs[private_key.toWif()] = true
-            } catch(e) {
-                var message = e.message || e
-                this.setState({password_message: message})
+        for(let account of this.state.account_keys) {
+            if(! account.encrypted_private_keys) {
+                notify.error(`Account ${account.acccount_name} missing encrypted_private_keys`)
+                continue
+            }
+            var account_name = account.account_name.trim()
+            for(let encrypted_private of account.encrypted_private_keys) {
+                try {
+                    var private_plainhex = password_aes.decryptHex(encrypted_private)
+                    var private_key = PrivateKey.fromBuffer(
+                        new Buffer(private_plainhex, 'hex'))
+                    
+                    var wif_private_key = private_key.toWif()
+                    var account_names = this.state.wifs[wif_private_key] || []
+                    account_names.push(account_name)
+                    this.state.wifs[wif_private_key] = account_names
+                } catch(e) {
+                    var message = e.message || e
+                    notify.error(`Account ${acccount_name} had a private key import error: `+message)
+                }
             }
         }
         this.updateWifCount()
         this.setState({
             password_message: null,
-            master_key: null
+            password_checksum: null
         })
     }
     
@@ -216,9 +281,29 @@ export default class ImportKeys extends Component {
     
 }
 
+ImportKeys.propTypes = {
+    setWifCount: React.PropTypes.object.isRequired
+}
+
 class KeyCount extends Component {
     render() {
         if( !this.props.wif_count) return <div/>
         return <span>Found {this.props.wif_count} private keys</span>
     }
 }
+/*
+import tcomb from "tcomb"
+var AccountEncyptedPrivateKeysTcomb = tcomb.struct({
+    account_name: t.Str,
+    encrypted_private_keys: t.Arr
+})
+
+var AccountPrivateKeysTcomb = tcomb.struct({
+    account_name: t.Str,
+    private_keys: t.Arr
+})
+
+var key_export_file = tcomb.struct({
+    password_checksum: t.Str,
+    account_keys: ?[]
+*/

@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 
+import key from "common/key_utils"
+
 export default class ImportBrainKey extends Component {
 
     constructor() {
@@ -7,28 +9,34 @@ export default class ImportBrainKey extends Component {
         this.state = { 
             brainkey: "",
         }
-        //this.validate()
     }
     
     render() {
         return <div>
             <label>Brain-Key</label>
-            <textarea type="text" ref="brainkey"/>
+            <textarea type="text" 
+                onChange={this.brainkey.bind(this)}
+                value={this.state.brainkey} />
+            
             <div className="button"
-                onClick={this._findBrainKeyAccounts.bind(this)}>
+                onClick={this._findBrainKeyAccounts.bind(this)} >
                 Search for Accounts
             </div>
             <br/>
         </div>
     }
     
+    brainkey() {
+        this.setState({brainkey})
+    }
     
     _findBrainKeyAccounts() {
-       //<a className="button"
-       //        onClick={this._brainKeyButton.bind(this)}
-        this.setState({has_brainkey:yes})
+        WalletActions.findAccountsByBrainKey(this.state.brainkey).then(
+            accounts => {})
+        this.setState({})
     }
 }
-//this.context.router.transitionTo(
-//    this.state.has_brainkey ? "create-account")
-//   
+
+ImportBrainKey.propTypes = {
+    hasAccount: React.PropTypes.object.isRequired
+}

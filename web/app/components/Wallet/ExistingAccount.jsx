@@ -47,7 +47,6 @@ class ExistingAccount extends Component {
     }
     
     setWifCount(wif_count) {
-        console.log('... wif_count',wif_count)
         this.setState({wif_count})
     }
     
