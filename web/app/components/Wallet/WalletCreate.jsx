@@ -38,44 +38,42 @@ class WalletCreate extends Component {
             return <div>{this.props.children}</div>
         
         return (
-            <div className="grid-block page-layout">
-                <div className="grid-block vertical medium-8 medium-offset-2">
-                    <h4>Create a Wallet</h4>
-                    <form 
-                        className="name-form"
-                        onSubmit={this.onSubmit.bind(this)}
-                        onChange={this.formChange.bind(this)} noValidate
-                    >
-                        <div className={cname("grid-content", "no-overflow", {
-                            "has-error": errors.password_match 
-                        })}>
-                            <label>Password</label>
-                            <input type="password" id="password"
-                                value={this.state.password} />
-                            
-                            <label>Password (confirm)</label>
-                                <input type="password" id="password_confirm"
-                                    value={this.state.password_confirm}/>
-                            <div>{errors.password_match}</div>
-                            <br/>
-                        </div>
-                        
-                        <div className="grid-content">
-                            <label>Brain-Key (update to provide your own)</label>
-                            <textarea type="text" id="brainkey"
-                                value={this.state.brainkey} />
-                            <br/>
-                        </div>
-                        
-                        <ImportKeys/>
-                        
-                        <div className="grid-content">
-                            <input type="submit" value={"Save"}
-                                className={cname("button",{disabled:submitDisabled})}/>
-                            <br/>
-                        </div>                        
-                    </form>
-                </div>
+            <div className="content-block">
+                <h3>Create a Wallet</h3>
+                <form
+                    className="name-form"
+                    onSubmit={this.onSubmit.bind(this)}
+                    onChange={this.formChange.bind(this)} noValidate
+                >
+                    <div className={cname("grid-content", "no-overflow", {
+                        "has-error": errors.password_match
+                    })}>
+                        <label>Password</label>
+                        <input type="password" id="password"
+                            value={this.state.password} />
+
+                        <label>Password (confirm)</label>
+                            <input type="password" id="password_confirm"
+                                value={this.state.password_confirm}/>
+                        <div>{errors.password_match}</div>
+                        <br/>
+                    </div>
+
+                    <div className="grid-content">
+                        <label>Brain-Key (update to provide your own)</label>
+                        <textarea type="text" id="brainkey"
+                            value={this.state.brainkey} />
+                        <br/>
+                    </div>
+
+                    <ImportKeys/>
+
+                    <div className="grid-content">
+                        <input type="submit" value={"Save"}
+                            className={cname("button",{disabled:submitDisabled})}/>
+                        <br/>
+                    </div>
+                </form>
             </div>
         )
     }

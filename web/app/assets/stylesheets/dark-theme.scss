@@ -263,9 +263,12 @@ h1, h2, h3, h4, h5, h6 {
 
 // forms
 
-.has-error, div.has-error > label, div.has-error > label > span, div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
-  border-color: $error-text-color;
+.has-error, div.has-error > label, div.has-error > label > span {
   color: $error-text-color;
+}
+
+div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
+  border-color: $error-text-color;
 }
 
 .has-error input, .has-error select, .has-error textarea {

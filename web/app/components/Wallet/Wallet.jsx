@@ -1,8 +1,8 @@
 import React, {Component} from "react"
 
 import WalletDb from "stores/WalletDb"
-import WalletCreate from "components/Wallet/WalletCreate"
-import WalletUnlock from "components/Wallet/WalletUnlock"
+import WalletCreate from "./WalletCreate"
+import WalletUnlock from "./WalletUnlock"
 
 export default class Wallet extends Component {
 

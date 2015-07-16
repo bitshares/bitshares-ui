@@ -95,7 +95,8 @@ AutocompleteInput.propTypes = {
     placeholder: PropTypes.string,
     initial_value: PropTypes.string,
     options: PropTypes.array.isRequired,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onEnter: PropTypes.func
 };
 
 export default AutocompleteInput;
