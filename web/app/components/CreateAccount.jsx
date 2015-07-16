@@ -4,6 +4,7 @@ import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import Wallet from "./Wallet/Wallet";
 import AccountNameInput from "./Forms/AccountNameInput"
+import PasswordInput from "./Forms/PasswordInput"
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -49,7 +50,7 @@ class CreateAccount extends React.Component {
 
         return (
             <div className="grid-block vertical page-layout">
-                <div className="grid-block medium-4">
+                <div className="grid-block medium-6">
                     <div className="content-block">
                         <h3>Create New Account</h3>
                         <br/>
@@ -59,7 +60,8 @@ class CreateAccount extends React.Component {
                                               onChange={this.onAccountNameChange.bind(this)}
                                               accountShouldNotExist={true}
                                 />
-                            <button className={buttonClass}>CREATE ACCOUNT</button>
+                            {/*<PasswordInput confirmation={true} />*/}
+                            <button className={buttonClass}>Create Account</button>
                         </form>
                         </Wallet>
                     </div>

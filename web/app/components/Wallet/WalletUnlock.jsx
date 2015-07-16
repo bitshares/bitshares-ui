@@ -6,6 +6,7 @@ import cname from "classnames"
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import PasswordInput from "../Forms/PasswordInput"
 
 export default class WalletUnlock extends Component {
 
@@ -17,7 +18,13 @@ export default class WalletUnlock extends Component {
     }
 
     componentDidMount() {
-        if (WalletDb.isLocked()) ZfApi.publish("unlock_wallet_modal", "open");
+        if (WalletDb.isLocked()) {
+            ZfApi.publish("unlock_wallet_modal", "open");
+            let modal = React.findDOMNode(this.refs.modal);
+            ZfApi.subscribe( "unlock_wallet_modal", e => {
+                modal.querySelector('[name="password"]').focus();
+            });
+        }
     }
 
 
@@ -25,7 +32,7 @@ export default class WalletUnlock extends Component {
         let modal = null;
         if (WalletDb.isLocked()) {
             modal = (
-                <Modal id="unlock_wallet_modal" overlay={true}>
+                <Modal id="unlock_wallet_modal" ref="modal" overlay={true}>
                     <Trigger close="">
                         <a href="#" className="close-button">&times;</a>
                     </Trigger>
@@ -33,11 +40,7 @@ export default class WalletUnlock extends Component {
                         <br/>
                         <form onSubmit={this._passSubmit.bind(this)}>
                             <div className="grid-content no-overflow">
-                                <div className={cname("form-group", {"has-error": this.state.password_error})}>
-                                    <label>Wallet Password</label>
-                                    <input type="password" onChange={this._passChange.bind(this)}/>
-                                    <div>{this.state.password_error}</div>
-                                </div>
+                                <PasswordInput onChange={this._passChange.bind(this)} wrongPassword={this.state.password_error}/>
                             </div>
                             <div className="grid-content button-group no-overflow">
                                 <a className="button" href onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
@@ -69,16 +72,15 @@ export default class WalletUnlock extends Component {
     }
 
     _passSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
         WalletDb.validatePassword(
             this.password_ui || "",
             true //unlock
-        )
+        );
         if (WalletDb.isLocked())
-            this.setState({password_error: "Incorrect"})
+            this.setState({password_error: true});
         else {
-            this.setState({password_error: null})
-            console.log('... unlock_wallet_modal')
+            this.setState({password_error: false});
             ZfApi.publish("unlock_wallet_modal", "close");
         }
     }
