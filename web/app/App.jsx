@@ -51,6 +51,7 @@ import NotificationStore from 'stores/NotificationStore';
 import cookies from "cookies-js";
 import iDB from "idb-instance";
 
+import ExistingAccount from "./components/Wallet/ExistingAccount";
 import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
@@ -179,6 +180,7 @@ let routes = (
         <Route name="asset" path="asset/:symbol" handler={Asset}/>
         <Route name="tx" path="tx" handler={Transaction}/>
         <Route name="create-account" path="create-account" handler={CreateAccount}/>
+        <Route name="existing-account" path="existing-account" handler={ExistingAccount}/>
         <Route name="import-keys" path="import-keys" handler={ImportKeys}/>
         <Route name="account" path="/account/:name" handler={AccountPage}>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>

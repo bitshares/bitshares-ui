@@ -7,11 +7,13 @@ import WalletUnlock from "components/Wallet/WalletUnlock"
 export default class Wallet extends Component {
 
     render() {
-        return <WalletCreate>
-            <WalletUnlock relock_button={this.props.relock_button}>
-                <div> {this.props.children} </div>
-            </WalletUnlock>
-        </WalletCreate>
+        if( !WalletDb.getWallet()){
+            this.context.router.transitionTo("create-wallet")
+            return
+        }
+        return <WalletUnlock relock_button={this.props.relock_button}>
+            <div> {this.props.children} </div>
+        </WalletUnlock>
     }
 }
 

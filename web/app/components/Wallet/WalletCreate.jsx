@@ -39,7 +39,7 @@ class WalletCreate extends Component {
         
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block vertical medium-8 medium-offset-2">
+                <div className="grid-block vertical medium-9 medium-offset-2">
                     <h4>Create a Wallet</h4>
                     <form 
                         className="name-form"
