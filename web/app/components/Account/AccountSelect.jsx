@@ -5,8 +5,9 @@ import AccountStore from "stores/AccountStore"
 import WalletDb from "stores/WalletDb"
 
 import alt from "alt-instance"
+import connectToStores from 'alt/utils/connectToStores'
 
-export default class AccountSelect extends Component {
+class AccountSelect extends Component {
 
     static getStores() {
         return [accountSelectStore]
@@ -19,23 +20,24 @@ export default class AccountSelect extends Component {
     render() {
         var account_names = this.props.account_names
         var current_account = this.props.current_account
+        
         return <div>
             <select id='account-selector' ref='account-selector'
                 size={this.props.list_size || 1}
                 style={this.props.selectStyle}
                 className="form-control"
-                placeholder="Select Account"
                 value={current_account}
                 onChange={this._onAccountChange.bind(this)}
             >
-                <option value="" disabled>Select Account</option>
+                <option value="" disabled>{
+                    this.props.placeholder || "Select Account"
+                }</option>
                 {account_names.map((account_name) => {
                     if(!account_name || account_name == "")
                         return
                     return <option value={account_name}>{account_name}</option>
                 })}
             </select>
-            
         </div>
 
     }
@@ -49,6 +51,9 @@ export default class AccountSelect extends Component {
     }
     
 }
+AccountSelect = connectToStores(AccountSelect)
+export default AccountSelect
+
 AccountSelect.propTypes = {
     account_names: React.PropTypes.array,
     list_size: React.PropTypes.number

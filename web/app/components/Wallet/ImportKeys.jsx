@@ -36,6 +36,7 @@ class ImportKeys extends Component {
         return {
             wif_account_names: {},
             wif_count: 0,
+            account_keys: [],
             reset_file_name: Date.now(),
             reset_password: Date.now(),
             password_checksum: null,
@@ -50,7 +51,7 @@ class ImportKeys extends Component {
         var account_selected =
             this.props.current_account &&
             this.props.current_account != ""
-        
+
         var importable = has_keys && account_selected
         
         return <div>
@@ -88,17 +89,9 @@ class ImportKeys extends Component {
                 
                 <br/>
                 
-                <div>
-                    <textarea
-                        placeholder="Paste WIF private keys (optional)..."
-                        onChange={this._onWifTextChange.bind(this)}
-                        value={this.state.wif_textarea_private_keys}
-                    />
-                    <div>{this.state.wif_textarea_private_keys_message}</div>
-                </div>
-                <br/>
                 <AccountSelect
                     account_names={this.getAccountNames()}
+                    placeholder="Select Primary Account"
                     selectStyle={{height: '100px'}}
                     list_size="5"
                 />
@@ -112,6 +105,17 @@ class ImportKeys extends Component {
             </div>
         </div>
     }
+    
+//                <div>
+//                    <textarea
+//                        placeholder="Paste WIF private keys (optional)..."
+//                        onChange={this._onWifTextChange.bind(this)}
+//                        value={this.state.wif_textarea_private_keys}
+//                    />
+//                    <div>{this.state.wif_textarea_private_keys_message}</div>
+//                </div>
+//                <br/>
+
 //                <hr/>
 //                <h3>Load Brain Key</h3>
 //                <ImportBrainKey/>
@@ -197,14 +201,20 @@ class ImportKeys extends Component {
     }
    
     _decryptPrivateKeys(evt) {
+        if( ! this.state.account_keys.length)
+            return
+        
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum
+        this.setState({password_message: "Enter wallet password"})
         var new_checksum = hash.sha512(hash.sha512(password)).toString('hex')
         if(checksum != new_checksum) {
-            this.setState({password_message: "Enter wallet password"})
+            if(password != "")
+                this.setState({password_message: "Enter wallet password (keep going)"})
             return
         }
         this.setState({reset_password: Date.now()})
+        
         var password_aes = Aes.fromSeed(password)
         
         for(let account of this.state.account_keys) {
