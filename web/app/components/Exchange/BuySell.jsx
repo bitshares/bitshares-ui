@@ -39,7 +39,7 @@ class BuySell extends React.Component {
                         </div>
                     </div>
   
-                    <input className={buttonClass} type="submit" value={buttonText}/>
+                    <input className={buttonClass} type="submit" value={buttonText} />
                     <p className="buy-sell-info">Balance: {`${utils.format_number(balance, 3)} ${balanceSymbol}`}</p>
                     <p className="buy-sell-info">Total ({baseSymbol}): { utils.format_number(total, 3) }</p>
                 </form>
