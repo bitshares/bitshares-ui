@@ -3,6 +3,8 @@ import {PropTypes, Component} from "react";
 import sha256 from "js-sha256";
 import jdenticon from "jdenticon";
 
+var canvas_id_count = 0
+
 class Identicon extends Component {
   shouldComponentUpdate(nextProps) {
       return nextProps.size.height !== this.props.size.height || nextProps.size.width !== this.props.size.width || nextProps.account !== this.props.account;
@@ -12,7 +14,8 @@ class Identicon extends Component {
       let {account} = this.props;
       let {height, width} = this.props.size;
       let hash = account ? sha256(account) : null;
-      this.canvas_id = "identicon_" + account + Math.random() * 1000;
+      this.canvas_id = "identicon_" + (account||"") + (++canvas_id_count);
+      //DEBUG console.log('... canvas_id', this.canvas_id);
       return (
         <div>
           {hash ?
@@ -23,6 +26,7 @@ class Identicon extends Component {
   }
 
   componentDidMount() {
+      //DEBUG console.log('... this.canvas_id',this.canvas_id)
       if (this.canvas_id) {
           jdenticon.updateById(this.canvas_id);
       }

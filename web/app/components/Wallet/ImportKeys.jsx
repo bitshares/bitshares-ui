@@ -2,26 +2,39 @@ import React, {Component, Children} from "react"
 import PrivateKey from "ecc/key_private"
 import Aes from "ecc/aes"
 
-import Wallet from "components/Wallet/Wallet"
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
-import notify from 'actions/NotificationActions'
+import AccountSelect,{
+    accountSelectStore,
+    accountSelectActions
+} from "components/Account/AccountSelect"
 
+import connectToStores from 'alt/utils/connectToStores'
+import notify from 'actions/NotificationActions'
 import hash from "common/hash"
 import cname from "classnames"
 
 var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
+var accountSelectState = accountSelectStore.getState()
 
-export default class ImportKeys extends Component {
+class ImportKeys extends Component {
     
     constructor() {
         super()
         this.state = this._getInitialState()
     }
     
+    static getStores() {
+        return [accountSelectStore]
+    }
+    
+    static getPropsFromStores() {
+        return accountSelectStore.getState()
+    }
+    
     _getInitialState() {
         return {
-            wif_private_keys: {},
+            wif_account_names: {},
             wif_count: 0,
             reset_file_name: Date.now(),
             reset_password: Date.now(),
@@ -33,6 +46,13 @@ export default class ImportKeys extends Component {
     }
     
     render() {
+        var has_keys = this.state.wif_count != 0
+        var account_selected =
+            this.props.current_account &&
+            this.props.current_account != ""
+        
+        var importable = has_keys && account_selected
+        
         return <div>
             <div>
                 <KeyCount wif_count={this.state.wif_count}/>
@@ -77,19 +97,59 @@ export default class ImportKeys extends Component {
                     <div>{this.state.wif_textarea_private_keys_message}</div>
                 </div>
                 <br/>
+                <AccountSelect
+                    account_names={this.getAccountNames()}
+                    selectStyle={{height: '100px'}}
+                    list_size="5"
+                />
+                <div>
+                    <a className={
+                        cname("button", {disabled:!importable})}
+                        onClick={this.importKeys.bind(this)} >
+                        Import
+                    </a>
+                </div>
             </div>
         </div>
+    }
+//                <hr/>
+//                <h3>Load Brain Key</h3>
+//                <ImportBrainKey/>
+
+    importKeys() {
+        if( WalletDb.isLocked()) {
+            notify.error("Wallet is locked")
+            return
+        }
+        var wifs = Object.keys(this.state.wif_account_names)
+        WalletDb.importKeys( wifs ).then( result => {
+            var {import_count, duplicate_count, private_key_ids} = result
+            var message = ""
+            if (import_count)
+                message = `Successfully imported ${import_count} keys.`
+            if (duplicate_count)
+                message += `  ${duplicate_count} duplicates (Not Imported).`
+            
+            if(duplicate_count)
+                notify.warning(message)
+            else
+                notify.success(message)
+            
+            this.reset()
+            
+        }).catch( error => {
+            notify.error(`There was an error: ${error}`)
+        })
     }
     
     reset() {
         this.setState(this._getInitialState())
-        this.props.setWifPrivateKeys(this.state.wif_private_keys)
+        accountSelectActions.reset()
     }
     
     wifPrivateKeysUpdate() {
-        var wif_count = Object.keys(this.state.wif_private_keys).length
+        var wif_count = Object.keys(this.state.wif_account_names).length
         this.setState({wif_count})
-        this.props.setWifPrivateKeys(this.state.wif_private_keys)
     }
     
     upload(evt) {
@@ -135,57 +195,7 @@ export default class ImportKeys extends Component {
             account_keys
         })
     }
-    
-    /** testnet only .. todo, replace withimport_keys 
-    _parseWalletJson(content) {
-        var password_checksum, encrypted_keys = [], encrypted_brainkey
-        try {
-            var wallet_json = JSON.parse(contents)
-            for(let element of wallet_json) {
-                
-                //
-                if( "master_key_record_type" == element.type) {
-                    
-                    if( ! element.data)
-                        throw file.name + " invalid master_key_record record"
-                    
-                    if( ! element.data.checksum)
-                        throw file.name + " is missing master_key_record checksum"
-                    
-                    password_checksum = element.data.checksum
-                }
-                
-                if ( "property_record_type" == element.type &&
-                    "encrypted_brainkey" == element.data.key
-                ) {
-                    // The BTS 0.9 hosted wallet has 100% brain-key
-                    // derivied keys.. 
-                    encrypted_brainkey = element.data.value
-                }
-                
-                if( "key_record_type" == element.type) {
-                    encrypted_keys.push(element.data.encrypted_private_key)
-                }
-                
-            }
-            if( ! password_checksum)
-                throw file.name + " is missing password_checksum"
-            
-            if( ! encrypted_keys.length)
-                throw file.name + " does not contain any private keys"
-            
-        } catch(e) {
-            var message = e.message || e
-            throw message
-        }
-        this.setState({
-            password_checksum,
-            encrypted_keys,
-            encrypted_brainkey,
-            password_message: null
-        })
-    }*/
-    
+   
     _decryptPrivateKeys(evt) {
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum
@@ -209,10 +219,10 @@ export default class ImportKeys extends Component {
                     var private_key = PrivateKey.fromBuffer(
                         new Buffer(private_plainhex, 'hex'))
                     
-                    var wif_private_key = private_key.toWif()
-                    var account_names = this.state.wif_private_keys[wif_private_key] || []
+                    var private_key_wif = private_key.toWif()
+                    var account_names = this.state.wif_account_names[private_key_wif] || []
                     account_names.push(account_name)
-                    this.state.wif_private_keys[wif_private_key] = account_names
+                    this.state.wif_account_names[private_key_wif] = account_names
                 } catch(e) {
                     var message = e.message || e
                     notify.error(`Account ${acccount_name} had a private key import error: `+message)
@@ -224,6 +234,16 @@ export default class ImportKeys extends Component {
             password_message: null,
             password_checksum: null
         })
+    }
+    
+    getAccountNames() {
+        var account_names = {}
+        var wif_account_names = this.state.wif_account_names
+        for(let wif in wif_account_names)
+            for(let account_name of wif_account_names[wif])
+                account_names[account_name] = true
+        
+        return Object.keys(account_names)
     }
     
     _onWifTextChange(evt) {
@@ -239,7 +259,7 @@ export default class ImportKeys extends Component {
         for(let wif of contents.match(wif_regex) || [] ) {
             try { 
                 PrivateKey.fromWif(wif) //throws 
-                this.state.wif_private_keys[wif] = true
+                this.state.wif_account_names[wif] = []
                 count++
             } catch(e) { invalid_count++ }
         }
@@ -253,10 +273,8 @@ export default class ImportKeys extends Component {
     }
     
 }
-
-ImportKeys.propTypes = {
-    setWifPrivateKeys: React.PropTypes.func.isRequired
-}
+ImportKeys = connectToStores(ImportKeys)
+export default ImportKeys
 
 class KeyCount extends Component {
     render() {

@@ -59,7 +59,7 @@ var iDB = (function () {
         },
         instance: function () {
             if (!_instance) {
-                throw "Instance is not initialized";
+                throw new Error("Internal Database instance is not initialized");
             }
             return _instance;
         },

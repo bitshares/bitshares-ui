@@ -86,7 +86,6 @@ export default class WalletUnlock extends Component {
     }
 
     _lock() {
-        console.log('... onLock')
         WalletDb.onLock()
         this.forceUpdate()
     }

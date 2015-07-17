@@ -127,9 +127,10 @@ class WalletCreate extends Component {
             })
             this.forceUpdate()
         }).catch(err => {
-            console.log("CreateWallet failed:", err)
+            var error = err.target.error
+            console.log("CreateWallet failed:", error.name, error.message, err)
             notify.addNotification({
-                message: `Failed to create wallet: ${err}`,
+                message: `Failed to create wallet: ${error.message}`,
                 level: "error",
                 autoDismiss: 10
             })

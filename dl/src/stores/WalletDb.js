@@ -199,6 +199,7 @@ class WalletDb {
             promises.push(this.setWalletModified(transaction))
             var import_count = 0, duplicate_count = 0
             for(let wif of wif_keys) {
+                if( ! wif) continue
                 var private_key = PrivateKey.fromWif(wif)
                 promises.push(
                     this.saveKey(private_key, null, transaction).then(
@@ -208,7 +209,6 @@ class WalletDb {
                             else if(ret.result == "added") {
                                 import_count++
                             }
-                            console.log('... ret.id',ret.id)
                             return ret.id
                         }
                     )
