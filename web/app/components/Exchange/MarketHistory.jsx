@@ -44,13 +44,13 @@ class MarketHistory extends React.Component {
 
         return (
             <div className="grid-content market-content ps-container" ref="history">
-                <table className="table expand order-table">
+                <table className="table expand order-table table-hover text-right">
                     <p>MARKET HISTORY</p>
                     <thead>
                     <tr>
-                        <th>Value <small>({baseSymbol})</small></th>
-                        <th>Amount <small>({quoteSymbol})</small></th>
-                        <th>Price <small>({baseSymbol}/{quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}>Value <br/><small>({baseSymbol})</small></th>
+                        <th style={{textAlign: "right"}}>Amount <br/><small>({quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}>Price <br/><small>({baseSymbol}/{quoteSymbol})</small></th>
                     </tr>
                     </thead>
                     <tbody>

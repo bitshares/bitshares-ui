@@ -6,6 +6,7 @@ import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import Ps from "perfect-scrollbar";
+import utils from "common/utils";
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -50,7 +51,8 @@ class MyOpenOrders extends React.Component {
                             format="short"
                             />
                         </td>
-                        <td>{(amount).toFixed(3)}</td>
+                        <td>{utils.format_number(value, 3)}</td>
+                        <td>{utils.format_number(amount, 3)}</td>
                         <td className={tdClass}>
                             <span className="price-integer">{price.int}</span>
                             .
@@ -80,7 +82,8 @@ class MyOpenOrders extends React.Component {
                             .
                             <span className="price-decimal">{price.dec}</span>
                         </td>
-                        <td>{(amount).toFixed(3)}</td>
+                        <td>{utils.format_number(amount, 3)}</td>
+                        <td>{utils.format_number(value, 3)}</td>
                         <td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}
@@ -104,6 +107,7 @@ class MyOpenOrders extends React.Component {
                     <tr>
                         <th style={{textAlign: "left"}}></th>
                         <th style={{textAlign: "right"}}>Expiration</th>
+                        <th style={{textAlign: "right"}}>Value</th>
                         <th style={{textAlign: "right"}}>Amount</th>
                         <th style={{textAlign: "right"}}>Price</th>
                     </tr>
@@ -113,12 +117,13 @@ class MyOpenOrders extends React.Component {
                     </tbody>
                 </table>
 
-                <table className="table order-table my-orders text-left table-hover">
+                <table className="table order-table my-orders text-right table-hover">
                     <thead>
                     <tr>
-                        <th style={{textAlign: "left"}}>Price</th>
-                        <th style={{textAlign: "left"}}>Amount</th>
-                        <th style={{textAlign: "left"}}>Expiration</th>
+                        <th style={{textAlign: "right"}}>Price</th>
+                        <th style={{textAlign: "right"}}>Amount</th>
+                        <th style={{textAlign: "right"}}>Value</th>
+                        <th style={{textAlign: "right"}}>Expiration</th>
                         <th style={{textAlign: "right"}}></th>
                     </tr>
                     </thead>

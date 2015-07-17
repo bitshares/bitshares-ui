@@ -61,8 +61,8 @@ class OrderBook extends React.Component {
             bidRows = bids.map(order => {
                 return (
                      <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, "bid")}>
-                        <td className="show-for-medium">{(order.value).toFixed(3)}</td>
-                        <td>{order.amount.toFixed(3)}</td>
+                        <td className="show-for-medium">{utils.format_number(order.value, 3)}</td>
+                        <td>{utils.format_number(order.amount, 3)}</td>
                         <td className="orderHistoryBid">
                             <span className="price-integer">{order.price_int}</span>
                             .
@@ -81,8 +81,8 @@ class OrderBook extends React.Component {
             askRows = asks.map(order => {
                 return (
                      <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, "ask")}>
-                        <td className="show-for-medium">{order.value.toFixed(3)}</td>
-                        <td >{order.amount.toFixed(3)}</td>
+                        <td className="show-for-medium">{utils.format_number(order.value, 3)}</td>
+                        <td >{utils.format_number(order.amount, 3)}</td>
                         <td className="orderHistoryAsk">
                             <span className="price-integer">{order.price_int}</span>
                             .
@@ -101,25 +101,23 @@ class OrderBook extends React.Component {
         return (
 
                 <div className="valign" style={{overflowY: "hidden"}}>
-                    <table className="table order-table fixed-height table-hover">
-                      <thead>
-                      <tr>
-                          <th>Value <small>({baseSymbol})</small></th>
-                          <th>Amount <small>({quoteSymbol})</small></th>
-                          <th>Price <small>({baseSymbol}/{quoteSymbol})</small></th>
-                      </tr>
-                      </thead>
-                                <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
-                                    {bidRows}
-                                </tbody>
-                              </table>
-
-                            <div className="text-center" style={{borderTop: "1px solid gray" , borderBottom: "1px solid gray" , padding: "24px 12px "}}>Spread: {spread} {baseSymbol}</div>
-
-                                <table className="table order-table fixed-height table-hover">
-                                <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
-                                    {askRows}
-                                </tbody>
+                    <table className="table order-table fixed-height table-hover text-right">
+                        <thead>
+                            <tr>
+                                <th style={{textAlign: "right"}}>Value <br/><small>({baseSymbol})</small></th>
+                                <th style={{textAlign: "right"}}>Amount <br/><small>({quoteSymbol})</small></th>
+                                <th style={{textAlign: "right"}}>Price <br/><small>({baseSymbol}/{quoteSymbol})</small></th>
+                            </tr>
+                        </thead>
+                        <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
+                            {bidRows}
+                        </tbody>
+                    </table>
+                    <div className="text-center" style={{borderTop: "1px solid gray", borderBottom: "1px solid gray", padding: "24px 12px "}}>Spread: {spread} {baseSymbol}</div>
+                    <table className="table order-table fixed-height table-hover text-right">
+                        <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
+                            {askRows}
+                        </tbody>
                     </table>
                 </div>
         );

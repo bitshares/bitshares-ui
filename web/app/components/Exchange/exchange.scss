@@ -202,3 +202,56 @@ a.order-cancel {
   padding-bottom: 0.01rem;
   margin: 0;
 }
+
+.stats {
+  overflow: visible;
+}
+
+.market-stats > li {
+  display: inline-block;
+  padding-right: 0.5rem;
+}
+
+.market-stats .stat {
+  text-align: left;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 5px 0px;
+}
+
+.market-stats .stat .value {
+  font-size: 12px;
+  color: #000;
+  letter-spacing: normal;
+}
+
+.stats {
+  list-style: none;
+  overflow: hidden;
+  text-align: right;
+  margin: 0px;
+  padding: 0px;
+  min-height: 63px;
+}
+.stats .stat {
+  padding: 10px 10px;
+  height: 100%;
+}
+.stats .stat:first-child {
+  border-left: none;
+}
+.stats .stat .value {
+  font-size: 120%;
+  color: #FFFFFF;
+  letter-spacing: 1px;
+}
+.stats .stat em {
+  color: #888888;
+  display: block;
+}
+
+.market-symbol {
+    font-weight: bold;
+    font-size: 110%;
+    padding-right: 1rem;
+}

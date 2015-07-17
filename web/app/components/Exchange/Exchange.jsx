@@ -186,7 +186,7 @@ class Exchange extends React.Component {
                 <div className="grid-block page-layout market-layout">
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green", overflowY: "auto" ,   justifyContent: "center"}}>
+                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green", overflowY: "auto", justifyContent: "center"}}>
                         <div className="grid-block">
                             <OrderBook
                                 orders={limit_orders}
@@ -206,7 +206,32 @@ class Exchange extends React.Component {
 
                         {/* Top bar with info */}
                         <div className="grid-block shrink">
-                            <p>{baseSymbol} / {quoteSymbol} Put all kinds of info related to the market here (current price, spread, etc)</p>
+                            <div style={{display: "inline-block"}}>
+                                    <span style={{display: "inline-block", verticalAlign: "middle"}} className="market-symbol">{`${baseSymbol} / ${quoteSymbol}`}</span>
+                            </div>
+                            <ul className="market-stats stats">
+                                <li className="stat">
+                                    <span>
+                                        <span>Latest Price</span><br/>
+                                        <b className="value stat-primary">{utils.format_number(290, 3)}</b><br/>
+                                        <em>{quoteSymbol}/{baseSymbol}</em>
+                                    </span>
+                                </li>
+                                <li className="stat">
+                                    <span>
+                                        <span>Call Price</span><br/>
+                                        <b className="value stat-primary">{utils.format_number(312, 3)}</b><br/>
+                                        <em>{quoteSymbol}/{baseSymbol}</em>
+                                    </span>
+                                </li>
+                                <li className="stat">
+                                    <span>
+                                        <span>Volume</span><br/>
+                                        <b className="value stat-primary">{utils.format_number(23122, 3)}</b><br/>
+                                        <em>{quoteSymbol}</em>
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
 
                         {/* Price history chart and depth chart inside tabs */}
