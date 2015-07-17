@@ -11,7 +11,7 @@ import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
 import AccountActions from "actions/AccountActions";
 import debounce from "lodash.debounce";
-
+import ConfirmModal from "components/Modal/ConfirmModal";
 
 require("./exchange.scss");
 
@@ -30,7 +30,7 @@ class Exchange extends React.Component {
             showBuySell: true
         };
 
-        this._createLimitOrder = this._createLimitOrder.bind(this);
+        this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
         this._setDepthLine = debounce(this._setDepthLine.bind(this), 500);
     }
 
@@ -51,15 +51,7 @@ class Exchange extends React.Component {
         MarketsActions.unSubscribeMarket(quote_id, base_id);
     }
 
-    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
-        e.preventDefault();
-        if (sellAssetAmount > balance) {
-            return this.props.addNotification({
-                message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
-                level: "error"
-            });
-        }
-
+    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
@@ -79,10 +71,41 @@ class Exchange extends React.Component {
             }
         });
     }
+    
+    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
+        e.preventDefault();
+
+        if (sellAssetAmount > balance) {
+            return this.props.addNotification({
+                message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
+                level: "error"
+            });
+        }
+
+        var callback = function() { this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount); }.bind(this);
+
+        if(true) // TODO: only show this confirmation modal if the user has not disabled it
+        {
+            var content = (this.props.quote == buyAsset.symbol) ? 
+                "Confirm order: " + 
+                "Buy " + buyAssetAmount + " " + buyAsset.symbol + " at a price of " +
+                (sellAssetAmount / buyAssetAmount) + " " + sellAsset.symbol + " per " + buyAsset.symbol + "."
+                :
+                "Confirm order: " + 
+                "Sell " + sellAssetAmount + " " + sellAsset.symbol + " at a price of " +
+                (buyAssetAmount / sellAssetAmount) + " " + buyAsset.symbol + " per " + sellAsset.symbol + ".";
+
+            this.refs.confirmModal.show(content, "Confirm Order", callback);
+        }
+        else
+        {
+            callback();
+        }
+    }
 
     _cancelLimitOrder(orderID, e) {
         e.preventDefault();
-        console.log("cancelling limit order:", orderID);
+        console.log("canceling limit order:", orderID);
         let {currentAccount} = this.props;
         MarketsActions.cancelLimitOrder(
             currentAccount.id,
@@ -270,6 +293,8 @@ class Exchange extends React.Component {
 
                         {/* Buy/Sell forms */}
                         <div className="grid-block shrink" style={{ flexGrow: "0" }} >
+                                    <ConfirmModal modalId="confirm_modal"  ref="confirmModal" />
+
                                     {quote && base ?
                                     <BuySell
                                         className="small-6"
@@ -281,7 +306,7 @@ class Exchange extends React.Component {
                                         amountChange={this._buyAmountChanged.bind(this)}
                                         priceChange={this._buyPriceChanged.bind(this)}
                                         balance={baseBalance / utils.get_asset_precision(base.precision)}
-                                        onSubmit={this._createLimitOrder.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
+                                        onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
                                     /> : null}
                                     {quote && base ?
                                     <BuySell
@@ -294,7 +319,7 @@ class Exchange extends React.Component {
                                         amountChange={this._sellAmountChanged.bind(this)}
                                         priceChange={this._sellPriceChanged.bind(this)}
                                         balance={quoteBalance / utils.get_asset_precision(quote.precision)}
-                                        onSubmit={this._createLimitOrder.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
+                                        onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
                                     /> : null}
                         </div>
 
