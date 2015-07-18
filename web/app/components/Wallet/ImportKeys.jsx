@@ -4,7 +4,7 @@ import Aes from "ecc/aes"
 
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
-import AccountSelect from "components/Account/AccountSelect"
+import AccountSelect from "../Forms/AccountSelect"
 
 import connectToStores from 'alt/utils/connectToStores'
 import notify from 'actions/NotificationActions'

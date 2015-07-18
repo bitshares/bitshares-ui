@@ -5,7 +5,7 @@ import AccountActions from "actions/AccountActions";
 import AssetStore from "stores/AssetStore";
 import AccountStore from "stores/AccountStore";
 import ConfirmModal from "../Modal/ConfirmModal";
-import AccountSelect from "../Account/AccountSelect"
+import AccountSelect from "../Forms/AccountSelect"
 
 let invoice = {
     "to" : "merchant_account_name",
