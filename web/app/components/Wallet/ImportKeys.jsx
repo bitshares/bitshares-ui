@@ -4,10 +4,7 @@ import Aes from "ecc/aes"
 
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
-import AccountSelect,{
-    accountSelectStore,
-    accountSelectActions
-} from "components/Account/AccountSelect"
+import AccountSelect from "components/Account/AccountSelect"
 
 import connectToStores from 'alt/utils/connectToStores'
 import notify from 'actions/NotificationActions'
@@ -15,7 +12,6 @@ import hash from "common/hash"
 import cname from "classnames"
 
 var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
-var accountSelectState = accountSelectStore.getState()
 
 class ImportKeys extends Component {
     
@@ -23,15 +19,7 @@ class ImportKeys extends Component {
         super()
         this.state = this._getInitialState()
     }
-    
-    static getStores() {
-        return [accountSelectStore]
-    }
-    
-    static getPropsFromStores() {
-        return accountSelectStore.getState()
-    }
-    
+
     _getInitialState() {
         return {
             wif_account_names: {},
@@ -54,7 +42,8 @@ class ImportKeys extends Component {
 
         var importable = has_keys && account_selected
         
-        return <div>
+        return <div className="grid-content medium-4">
+            <br/>
             <div>
                 <KeyCount wif_count={this.state.wif_count}/>
                 {!this.state.wif_count ? 
@@ -89,10 +78,9 @@ class ImportKeys extends Component {
                 
                 <br/>
                 
-                <AccountSelect
+                <AccountSelect ref="account_selector"
                     account_names={this.getAccountNames()}
                     placeholder="Select Primary Account"
-                    selectStyle={{height: '100px'}}
                     list_size="5"
                 />
                 <div>
@@ -283,7 +271,6 @@ class ImportKeys extends Component {
     }
     
 }
-ImportKeys = connectToStores(ImportKeys)
 export default ImportKeys
 
 class KeyCount extends Component {
