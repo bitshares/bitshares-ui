@@ -20,6 +20,7 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
+import AccountUserIssuedAssets from "./components/Account/AccountUserIssuedAssets";
 import AccountMemberStats from "./components/Account/AccountMemberStats";
 import AccountHistory from "./components/Account/AccountHistory";
 import AccountPayees from "./components/Account/AccountPayees";
@@ -186,6 +187,7 @@ let routes = (
         <Route name="import-keys" path="import-keys" handler={ImportKeys}/>
         <Route name="account" path="/account/:name" handler={AccountPage}>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
+            <Route name="account-assets" path="user-issued-assets" handler={AccountUserIssuedAssets}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
             <Route name="account-history" path="history" handler={AccountHistory}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>

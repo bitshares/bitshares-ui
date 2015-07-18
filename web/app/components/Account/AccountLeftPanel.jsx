@@ -53,6 +53,7 @@ class AccountLeftPanel extends React.Component {
                 <section className="block-list">
                     <ul className="account-left-menu">
                         <li><Link to="account-overview" params={{name: account_name}}>Overview</Link></li>
+                        <li><Link to="account-assets" params={{name: account_name}}>Assets</Link></li>
                         <li><Link to="account-member-stats" params={{name: account_name}}>Member Stats</Link></li>
                         <li><Link to="account-history" params={{name: account_name}}>History</Link></li>
                         <li><Link to="account-payees" params={{name: account_name}}>Payees</Link></li>
