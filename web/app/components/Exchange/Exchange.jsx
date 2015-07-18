@@ -11,7 +11,7 @@ import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
 import AccountActions from "actions/AccountActions";
 import debounce from "lodash.debounce";
-import ConfirmModal from "components/Modal/ConfirmModal";
+import ConfirmModal from "../Modal/ConfirmModal";
 
 require("./exchange.scss");
 

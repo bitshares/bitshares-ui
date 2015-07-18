@@ -40,7 +40,7 @@ class FormattedAsset extends Component {
             return (
                     <span>
                         <FormattedNumber 
-                            value={amount / precision}
+                            value={this.props.exact_amount ? amount : amount / precision}
                             minimumFractionDigits={decimals}
                             maximumFractionDigits={decimals}
                         /> {asset.symbol}
@@ -53,13 +53,15 @@ class FormattedAsset extends Component {
 FormattedAsset.defaultProps = {
     amount: 0,
     base: undefined,
-    asset: undefined
+    asset: undefined,
+    exact_amount: false
 };
 
 FormattedAsset.propTypes = {
     amount: PropTypes.number.isRequired,
     base: PropTypes.object,
-    asset: PropTypes.object.isRequired
+    asset: PropTypes.object.isRequired,
+    exact_amount: PropTypes.bool
 };
 
 export default FormattedAsset;

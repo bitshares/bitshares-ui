@@ -9,12 +9,21 @@ import connectToStores from 'alt/utils/connectToStores'
 
 class AccountSelect extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {selected: this.props.account_names.first()};
+    }
+
     static getStores() {
         return [accountSelectStore]
     }
     
     static getPropsFromStores() {
         return accountSelectStore.getState()
+    }
+
+    value() {
+        return this.state.selected;
     }
     
     render() {
@@ -47,11 +56,12 @@ class AccountSelect extends Component {
     //        }/>
     _onAccountChange(e) {
         e.preventDefault()
+        this.state.selected = e.target.value;
         accountSelectActions.selected(e.target.value)
     }
     
 }
-AccountSelect = connectToStores(AccountSelect)
+//AccountSelect = connectToStores(AccountSelect)
 export default AccountSelect
 
 AccountSelect.propTypes = {

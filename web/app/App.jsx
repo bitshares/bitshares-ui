@@ -58,6 +58,7 @@ import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
+import Invoice from "./components/Transfer/Invoice"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/loader");
@@ -171,6 +172,7 @@ let routes = (
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
+        <Route name="invoice" path="invoice" handler={Invoice}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
