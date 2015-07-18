@@ -1,11 +1,10 @@
-var BaseStore = require("./BaseStore");
-var Immutable = require("immutable");
-var alt = require("../alt-instance");
-var AssetActions = require("../actions/AssetActions");
-import {
-    Asset
-}
-from "./tcomb_structs";
+import BaseStore from "./BaseStore";
+import Immutable from "immutable";
+import alt from "../alt-instance";
+import AssetActions from "../actions/AssetActions";
+import {Asset} from "./tcomb_structs";
+import utils from "../common/utils";
+
 
 class AssetStore extends BaseStore {
     constructor() {
@@ -17,6 +16,12 @@ class AssetStore extends BaseStore {
             onGetAssetList: AssetActions.getAssetList,
             onGetAsset: AssetActions.getAsset
         });
+        this._export("getAsset");
+    }
+
+    getAsset(id_or_symbol) {
+        let id = utils.is_object_id(id_or_symbol) ? id_or_symbol : this.asset_symbol_to_id[id_or_symbol];
+        return this.assets.get(id);
     }
 
     onGetAssetList(payload) {
