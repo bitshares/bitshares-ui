@@ -44,14 +44,17 @@ class AccountSelect extends Component {
     //        }/>
     _onAccountChange(e) {
         e.preventDefault();
-        this.state.selected = e.target.value;
+        let value = e.target.value;
+        this.state.selected = value
+        if(this.props.onChange) this.props.onChange(value);
     }
     
 }
 
 AccountSelect.propTypes = {
     account_names: React.PropTypes.array,
-    list_size: React.PropTypes.number
+    list_size: React.PropTypes.number,
+    onChange: React.PropTypes.func
     //defaultAccount: React.PropTypes.string
 };
 
