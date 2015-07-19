@@ -15,7 +15,7 @@ class WitnessCard extends React.Component {
         return (
             <div style={{padding: "0.5em 0.5em", minHeight: "15em"}} className="grid-content account-card">
                 <div className="card">
-                    <Link to="witness" params={{name: this.props.name}}>
+                    {this.props.name ? (<Link to="witness" params={{name: this.props.name}}>
                         <div>
                             <AccountImage account={this.props.name} size={{height: 150, width: 150}}/>
                         </div>
@@ -23,7 +23,7 @@ class WitnessCard extends React.Component {
                             {this.props.name}
                         </div>
                         {this.props.children}
-                    </Link>
+                    </Link>) : null}
                 </div>
             </div>
         );
@@ -31,7 +31,7 @@ class WitnessCard extends React.Component {
 }
 
 WitnessCard.defaultProps = {
-    name: ""
+    name: null
 };
 
 class WitnessList extends React.Component {

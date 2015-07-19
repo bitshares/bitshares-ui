@@ -90,7 +90,6 @@ let PrivateKeyTcomb = t.struct({
 //}, "PublicKeyTcomb");
 
 let Witness = t.struct({
-    accumulated_income: t.Num,
     id: t.Str,
     next_secret_hash: t.Str,
     previous_secret: t.Str,
