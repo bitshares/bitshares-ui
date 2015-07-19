@@ -61,6 +61,7 @@ Serializer=(operation_name, serilization_types_object)->
 # programs/js_operation_serializer
 ## -------------------------------
 
+
 transfer_operation_fee_parameters = new Serializer( 
     "transfer_operation_fee_parameters"
     fee: uint64
@@ -175,11 +176,6 @@ witness_create_operation_fee_parameters = new Serializer(
     fee: uint64
 )
 
-witness_withdraw_pay_operation_fee_parameters = new Serializer( 
-    "witness_withdraw_pay_operation_fee_parameters"
-    fee: uint64
-)
-
 proposal_create_operation_fee_parameters = new Serializer( 
     "proposal_create_operation_fee_parameters"
     fee: uint64
@@ -218,13 +214,13 @@ withdraw_permission_delete_operation_fee_parameters = new Serializer(
     fee: uint64
 )
 
-delegate_create_operation_fee_parameters = new Serializer( 
-    "delegate_create_operation_fee_parameters"
+committee_member_create_operation_fee_parameters = new Serializer( 
+    "committee_member_create_operation_fee_parameters"
     fee: uint64
 )
 
-delegate_update_global_parameters_operation_fee_parameters = new Serializer( 
-    "delegate_update_global_parameters_operation_fee_parameters"
+committee_member_update_global_parameters_operation_fee_parameters = new Serializer( 
+    "committee_member_update_global_parameters_operation_fee_parameters"
     fee: uint64
 )
 
@@ -286,7 +282,6 @@ fee_parameters = static_variant [
     asset_global_settle_operation_fee_parameters    
     asset_publish_feed_operation_fee_parameters    
     witness_create_operation_fee_parameters    
-    witness_withdraw_pay_operation_fee_parameters    
     proposal_create_operation_fee_parameters    
     proposal_update_operation_fee_parameters    
     proposal_delete_operation_fee_parameters    
@@ -294,8 +289,8 @@ fee_parameters = static_variant [
     withdraw_permission_update_operation_fee_parameters    
     withdraw_permission_claim_operation_fee_parameters    
     withdraw_permission_delete_operation_fee_parameters    
-    delegate_create_operation_fee_parameters    
-    delegate_update_global_parameters_operation_fee_parameters    
+    committee_member_create_operation_fee_parameters    
+    committee_member_update_global_parameters_operation_fee_parameters    
     vesting_balance_create_operation_fee_parameters    
     vesting_balance_withdraw_operation_fee_parameters    
     worker_create_operation_fee_parameters    
@@ -331,7 +326,7 @@ processed_transaction = new Serializer(
     "processed_transaction"
     ref_block_num: uint16
     ref_block_prefix: uint32
-    relative_expiration: uint16
+    expiration: time_point_sec
     operations: array operation
     extensions: set future_extensions
     signatures: array bytes 65
@@ -638,14 +633,6 @@ witness_create = new Serializer(
     initial_secret: bytes 20
 )
 
-witness_withdraw_pay = new Serializer( 
-    "witness_withdraw_pay"
-    fee: asset
-    from_witness: protocol_id_type "witness"
-    to_account: protocol_id_type "account"
-    amount: int64
-)
-
 proposal_create = new Serializer( 
     "proposal_create"
     fee: asset
@@ -720,10 +707,10 @@ withdraw_permission_delete = new Serializer(
     withdrawal_permission: protocol_id_type "withdraw_permission"
 )
 
-delegate_create = new Serializer( 
-    "delegate_create"
+committee_member_create = new Serializer( 
+    "committee_member_create"
     fee: asset
-    delegate_account: protocol_id_type "account"
+    committee_member_account: protocol_id_type "account"
     url: string
 )
 
@@ -735,7 +722,7 @@ chain_parameters = new Serializer(
     committee_proposal_review_period: uint32
     maximum_transaction_size: uint32
     maximum_block_size: uint32
-    maximum_undo_history: uint32
+    maximum_expiration: uint32
     maximum_time_until_expiration: uint32
     maximum_proposal_lifetime: uint32
     maximum_asset_whitelist_authorities: uint8
@@ -746,11 +733,8 @@ chain_parameters = new Serializer(
     reserve_percent_of_fee: uint16
     network_percent_of_fee: uint16
     lifetime_referrer_percent_of_fee: uint16
-    max_bulk_discount_percent_of_fee: uint16
     cashback_vesting_period_seconds: uint32
     cashback_vesting_threshold: int64
-    bulk_discount_threshold_min: int64
-    bulk_discount_threshold_max: int64
     count_non_member_votes: bool
     allow_non_member_whitelists: bool
     witness_pay_per_block: int64
@@ -759,11 +743,12 @@ chain_parameters = new Serializer(
     fee_liquidation_threshold: int64
     accounts_per_fee_scale: uint16
     account_fee_scale_bitshifts: uint8
+    max_authority_depth: uint8
     extensions: set future_extensions
 )
 
-delegate_update_global_parameters = new Serializer( 
-    "delegate_update_global_parameters"
+committee_member_update_global_parameters = new Serializer( 
+    "committee_member_update_global_parameters"
     fee: asset
     new_parameters: chain_parameters
 )
@@ -855,9 +840,15 @@ asset_symbol_eq_lit_predicate = new Serializer(
     symbol: string
 )
 
+block_id_predicate = new Serializer( 
+    "block_id_predicate"
+    id: bytes 20
+)
+
 predicate = static_variant [
     account_name_eq_lit_predicate    
-    asset_symbol_eq_lit_predicate
+    asset_symbol_eq_lit_predicate    
+    block_id_predicate
 ]
 
 assert = new Serializer( 
@@ -911,7 +902,6 @@ operation.st_operations = [
     asset_global_settle    
     asset_publish_feed    
     witness_create    
-    witness_withdraw_pay    
     proposal_create    
     proposal_update    
     proposal_delete    
@@ -919,8 +909,8 @@ operation.st_operations = [
     withdraw_permission_update    
     withdraw_permission_claim    
     withdraw_permission_delete    
-    delegate_create    
-    delegate_update_global_parameters    
+    committee_member_create    
+    committee_member_update_global_parameters    
     vesting_balance_create    
     vesting_balance_withdraw    
     worker_create    
@@ -934,7 +924,7 @@ transaction = new Serializer(
     "transaction"
     ref_block_num: uint16
     ref_block_prefix: uint32
-    relative_expiration: uint16
+    expiration: time_point_sec
     operations: array operation
     extensions: set future_extensions
 )
@@ -943,13 +933,8 @@ signed_transaction = new Serializer(
     "signed_transaction"
     ref_block_num: uint16
     ref_block_prefix: uint32
-    relative_expiration: uint16
+    expiration: time_point_sec
     operations: array operation
     extensions: set future_extensions
     signatures: array bytes 65
 )
-
-## -------------------------------
-##  Generated code end
-# programs/js_operation_serializer
-## -------------------------------

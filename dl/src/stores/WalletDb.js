@@ -116,7 +116,7 @@ class WalletDb {
             )
             
             var {brainkey_checksum, brainkey_cipherhex} =
-                this.encrypteBrainKey(brainkey_plaintext)
+                this.encrypteBrainKey(password, brainkey_plaintext)
             
             let wallet = {
                 public_name: wallet_public_name,
@@ -151,7 +151,7 @@ class WalletDb {
     /** @return {brainkey_checksum, brainkey_cipherhex}
     brainkey_checksum used when deleting then re-adding a brainkey
     */
-    encrypteBrainKey(brainkey_plaintext){
+    encrypteBrainKey(password, brainkey_plaintext){
         var brainkey_checksum=null, brainkey_cipherhex=null
         if(brainkey_plaintext) {
             brainkey_checksum = key.aes_checksum(

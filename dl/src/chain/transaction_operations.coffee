@@ -22,7 +22,7 @@ _my.signed_transaction = ->
     
     ref_block_num: 0
     ref_block_prefix: 0
-    relative_expiration: 0
+    expiration: 0
     operations: []
     signatures: []
     
@@ -53,15 +53,15 @@ _my.signed_transaction = ->
         return
     
     set_expire_minutes:(min)->
-        @ref_block_prefix = Math.round(Date.now()/1000) + (min*60)
+        @expiration = Math.round(Date.now()/1000) + (min*60)
     
     finalize:(private_keys, broadcast = no)->
         if broadcast and not @operations.length
             return Promise.reject("no operations")
         
         ((tr, private_keys, broadcast)->
-            if(tr.ref_block_prefix == 0)
-                tr.ref_block_prefix = 
+            if(tr.expiration == 0)
+                tr.expiration = 
                     Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
             
             new Promise (resolve, reject)->

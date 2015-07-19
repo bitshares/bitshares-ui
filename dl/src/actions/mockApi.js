@@ -98,7 +98,7 @@ let blockExample = {
   "transactions": [{
       "ref_block_num": 0,
       "ref_block_prefix": 0,
-      "relative_expiration": 1,
+      "expiration": Math.round(Date.now()/1000) + 10*60,
       "operations": [[
           6,{
             "fee_paying_account": "1.2.15",
