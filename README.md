@@ -30,7 +30,7 @@ bucket-size = 1800
 ```
 
 ## Install
-Before launching the GUY you will need to install the npm packages for each subdirectory:
+Before launching the GUI you will need to install the npm packages for each subdirectory:
 ```
 cd cli; npm install
 cd ../dl; npm install
@@ -45,6 +45,8 @@ Once all the packages have been installed you can launch the web gui by going to
 ```
 npm start
 ```
+
+Once the compilation is done the GUI will be available in your browser at: localhost:8080
 
 A javascript CLI environment is also available in the ./cli folder. Some example commands:
 
