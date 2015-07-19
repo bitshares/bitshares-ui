@@ -7,6 +7,10 @@ import AccountStore from "stores/AccountStore";
 import ConfirmModal from "../Modal/ConfirmModal";
 import AccountSelect from "../Forms/AccountSelect"
 
+// TEMP:
+import lzma from "lzma";
+import bs58 from "common/base58";
+
 let invoice = {
     "to" : "merchant_account_name",
     "to_label" : "Merchant Name",
@@ -24,6 +28,21 @@ class Invoice extends React.Component {
     constructor() {
         super();
         this.state = {invoice: invoice};
+
+        lzma.compress(JSON.stringify(invoice), 1, function on_compress_complete(compressed_data) {
+            console.log("Compressed: ", compressed_data);
+            let buf = new Buffer(compressed_data);
+            console.log("[Invoice.jsx:35] ----- on_compress_complete ----->", buf.toString('hex'));
+            let bs58_compressed_data = bs58.encode(buf);
+            console.log("Compressed bs58: ", bs58_compressed_data);
+
+            let compressed_data1 = bs58.decode(bs58_compressed_data);
+            console.log("Compressed1: ", new Buffer(compressed_data1).toString('hex'));
+
+            lzma.decompress(compressed_data1, function on_decompress_complete(result) {
+                console.log("Decompressed: ", JSON.parse(result));
+            });
+        });
     }
 
     parsePrice(price) {
@@ -66,6 +85,10 @@ class Invoice extends React.Component {
         //        autoDismiss: 10
         //    });
         //});
+    }
+
+    onAccountChange(account_name) {
+        console.log("[Invoice.jsx:91] ----- onAccountChange ----->", account_name);
     }
 
     render() {
@@ -116,7 +139,7 @@ class Invoice extends React.Component {
                             </table>
                             <br/>
                             Pay from account
-                            <div className="medium-2"><AccountSelect ref="pay_from" account_names={accounts}/></div>
+                            <div className="medium-2"><AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/></div>
                             <br/>
                             <a href className="button" onClick={this.onPayClick.bind(this)}>
                                 Pay <FormattedAsset amount={total_amount} asset={asset} exact_amount={true} /> to {invoice.to}

@@ -36,6 +36,7 @@
     "keyboardjs": "^0.4.2",
     "lodash.clonedeep": "^3.0.1",
     "lodash.debounce": "^3.0.1",
+    "lzma": "^2.1.6",
     "newforms": "^0.12.1",
     "node-fetch": "^1.3.1",
     "node-libs-browser": "^0.5.0",
