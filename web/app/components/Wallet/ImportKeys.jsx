@@ -4,7 +4,10 @@ import Aes from "ecc/aes"
 
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
-import AccountSelect from "../Forms/AccountSelect"
+import ImportAccountSelect,{
+    accountSelectStore,
+    accountSelectActions
+} from "components/Wallet/ImportAccountSelect"
 
 import connectToStores from 'alt/utils/connectToStores'
 import notify from 'actions/NotificationActions'
@@ -28,10 +31,18 @@ class ImportKeys extends Component {
             reset_file_name: Date.now(),
             reset_password: Date.now(),
             password_checksum: null,
-            password_message: null,
+            import_password_message: null,
             wif_textarea_private_keys_message: null,
             wif_textarea_private_keys: ""
         }
+    }
+    
+    static getStores() {
+        return [accountSelectStore]
+    }
+    
+    static getPropsFromStores() {
+        return accountSelectStore.getState()
     }
     
     render() {
@@ -42,7 +53,7 @@ class ImportKeys extends Component {
 
         var importable = has_keys && account_selected
         
-        return <div className="grid-content medium-4">
+        return <div>
             <br/>
             <div>
                 <KeyCount wif_count={this.state.wif_count}/>
@@ -72,22 +83,24 @@ class ImportKeys extends Component {
                             placeholder="Enter wallet password"
                             onChange={this._decryptPrivateKeys.bind(this)}
                         />
-                        <div>{this.state.password_message}</div>
+                        <div>{this.state.import_password_message}</div>
                     </div>
                 </div>
                 
                 <br/>
                 
-                <AccountSelect ref="account_selector"
+                <ImportAccountSelect
                     account_names={this.getAccountNames()}
                     placeholder="Select Primary Account"
+                    selectStyle={{height: '100px'}}
                     list_size="5"
                 />
+
                 <div>
                     <a className={
                         cname("button", {disabled:!importable})}
                         onClick={this.importKeys.bind(this)} >
-                        Import
+                        Create Wallet
                     </a>
                 </div>
             </div>
@@ -107,7 +120,25 @@ class ImportKeys extends Component {
 //                <hr/>
 //                <h3>Load Brain Key</h3>
 //                <ImportBrainKey/>
-
+//                <div>
+//                    <div>
+//                        <div>
+//                            <label>Password</label>
+//                            <input type="password" id="password"
+//                                value={this.state.password} />
+//                        </div>
+//                    </div>
+//                    <br/>
+//                    <div>
+//                        <div>
+//                            <label>Password (confirm)</label>
+//                                <input type="password" id="password_confirm"
+//                                    value={this.state.password_confirm}/>
+//                            <div>{this.state.confirm_password_message}</div>
+//                        </div>
+//                    </div>
+//                </div>
+//                <br/>
     importKeys() {
         if( WalletDb.isLocked()) {
             notify.error("Wallet is locked")
@@ -116,18 +147,29 @@ class ImportKeys extends Component {
         var wifs = Object.keys(this.state.wif_account_names)
         WalletDb.importKeys( wifs ).then( result => {
             var {import_count, duplicate_count, private_key_ids} = result
-            var message = ""
-            if (import_count)
-                message = `Successfully imported ${import_count} keys.`
-            if (duplicate_count)
-                message += `  ${duplicate_count} duplicates (Not Imported).`
+            try {
+                if( ! import_count && ! duplicate_count) {
+                    notify.warning(`There where no keys to import`)
+                    return
+                }
+                if( ! import_count && duplicate_count) {
+                    notify.warning(`${duplicate_count} duplicates (Not Imported)`)
+                    return
+                }
+                //this.createAccounts().then(()=>{
+                var message = ""
+                if (import_count)
+                    message = `Successfully imported ${import_count} keys.`
+                if (duplicate_count)
+                    message += `  ${duplicate_count} duplicates (Not Imported)`
+                
+                if(duplicate_count)
+                    notify.warning(message)
+                else
+                    notify.success(message)
+                //})
             
-            if(duplicate_count)
-                notify.warning(message)
-            else
-                notify.success(message)
-            
-            this.reset()
+            }finally{this.reset()}
             
         }).catch( error => {
             notify.error(`There was an error: ${error}`)
@@ -139,6 +181,30 @@ class ImportKeys extends Component {
         accountSelectActions.reset()
     }
     
+    //untested
+    //createAccounts() {
+    //    var ps=[]
+    //    var wif_account_names = Object.keys(this.state.wif_account_names)
+    //    for(let wif in wif_account_names)
+    //    for(let account_name of wif_account_names[wif]) {
+    //        if(account_name == "")
+    //            //titan keys
+    //            continue
+    //        //PrivateKeyStore
+    //        var account = {
+    //            account_name
+    //        }
+    //        ps.push(AccountStore.onCreateAccount(account))
+    //    }
+    //    ps.push(WalletDb.onCreateWallet(
+    //        this.props.current_account,
+    //        this.state.password,
+    //        null, //brainkey
+    //        true //unlock
+    //    ))
+    //    return Promise.all(ps)
+    //}
+    
     wifPrivateKeysUpdate() {
         var wif_count = Object.keys(this.state.wif_account_names).length
         this.setState({wif_count})
@@ -147,7 +213,7 @@ class ImportKeys extends Component {
     upload(evt) {
         var file = evt.target.files[0]
         var reader = new FileReader()
-        this.setState({password_message: null})
+        this.setState({import_password_message: null})
         reader.onload = evt => {
             var contents = evt.target.result
             if(this.addByPattern(contents))
@@ -161,7 +227,7 @@ class ImportKeys extends Component {
                 this._decryptPrivateKeys()
                 
             } catch(message) {
-                this.setState({password_message: message})
+                this.setState({import_password_message: message})
             }
         }
         reader.readAsText(file)
@@ -194,11 +260,11 @@ class ImportKeys extends Component {
         
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum
-        this.setState({password_message: "Enter wallet password"})
+        this.setState({import_password_message: "Enter wallet password"})
         var new_checksum = hash.sha512(hash.sha512(password)).toString('hex')
         if(checksum != new_checksum) {
             if(password != "")
-                this.setState({password_message: "Enter wallet password (keep going)"})
+                this.setState({import_password_message: "Enter wallet password (keep going)"})
             return
         }
         this.setState({reset_password: Date.now()})
@@ -229,7 +295,7 @@ class ImportKeys extends Component {
         }
         this.wifPrivateKeysUpdate()
         this.setState({
-            password_message: null,
+            import_password_message: null,
             password_checksum: null
         })
     }
@@ -241,7 +307,7 @@ class ImportKeys extends Component {
             for(let account_name of wif_account_names[wif])
                 account_names[account_name] = true
         
-        return Object.keys(account_names)
+        return Object.keys(account_names).sort()
     }
     
     _onWifTextChange(evt) {
@@ -271,6 +337,7 @@ class ImportKeys extends Component {
     }
     
 }
+ImportKeys = connectToStores(ImportKeys)
 export default ImportKeys
 
 class KeyCount extends Component {

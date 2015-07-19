@@ -138,8 +138,12 @@ class AccountStore extends BaseStore {
         console.log("[AccountStore.js] ----- onTransfer ----->", result);
     }
 
-    onCreateAccount(name) {
-        iDB.add_to_store("linked_accounts", {name}).then( () => {
+    onCreateAccount(name_or_account) {
+        var account = name_or_account
+        if(typeof account == "string")
+            account = {account}
+        
+        iDB.add_to_store("linked_accounts", account).then( () => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", name);
             this.linkedAccounts = this.linkedAccounts.add(name);
             if(this.linkedAccounts.size === 1) this.setCurrentAccount(name);

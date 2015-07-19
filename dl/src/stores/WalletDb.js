@@ -101,6 +101,7 @@ class WalletDb {
     }
     
     onCreateWallet(
+        login_account_name,
         password_plaintext,
         brainkey_plaintext,
         unlock = false
@@ -119,10 +120,12 @@ class WalletDb {
             
             let wallet = {
                 public_name: wallet_public_name,
+                login_account_name,
                 password_checksum: password.checksum,
                 encrypted_brainkey: brainkey_cipherhex,
                 brainkey_checksum,
                 brainkey_sequence: 0,
+                created: new Date(),
                 last_modified: new Date()
             }
             WalletTcomb(wallet)
@@ -226,7 +229,6 @@ class WalletDb {
             }).then( private_key_ids => {
                 //remove 1st promise setWalletModified
                 private_key_ids = private_key_ids.slice(1)
-                console.log('... private_key_ids1',private_key_ids)    
                 return {import_count, duplicate_count, private_key_ids}
             })
             //})
