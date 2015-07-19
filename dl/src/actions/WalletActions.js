@@ -9,6 +9,7 @@ import lookup from "chain/lookup"
 var alt = require("../alt-instance")
 var application_api = new ApplicationApi()
 var api = Apis.instance()
+var fetch = require('node-fetch')
 
 class WalletActions {
 
@@ -61,7 +62,10 @@ class WalletActions {
                 this.actions.brainKeyAccountCreated())
             
         }).catch(  error => {
-            if(error instanceof TypeError) {
+            if(
+                error instanceof TypeError || 
+                error.toString().indexOf('ECONNREFUSED') != -1
+            ) {
                 console.log("Warning! faucet registration failed, falling back to direct application_api.create_account_with_brain_key..");
                 return application_api.create_account_with_brain_key(
                     owner_private.private_key.toPublicKey().toBtsPublic(),
