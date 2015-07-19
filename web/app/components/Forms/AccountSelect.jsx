@@ -20,13 +20,11 @@ class AccountSelect extends Component {
         var account_names = this.props.account_names;
         var selected_account = this.props.selected;
         
-        return <div>
+        return (
             <select id='account-selector' ref='account-selector'
-                size={this.props.list_size || 1}
                 className="form-control"
                 value={selected_account}
-                onChange={this._onAccountChange.bind(this)}
-            >
+                onChange={this._onAccountChange.bind(this)}>
                 <option value="" disabled>{
                     this.props.placeholder || "Select Account"
                 }</option>
@@ -35,8 +33,7 @@ class AccountSelect extends Component {
                     return <option value={account_name}>{account_name}</option>
                 })}
             </select>
-        </div>;
-
+        );
     }
     //Cannot read property 'getAttribute' of null
     //<Identicon account={current_account} size={
