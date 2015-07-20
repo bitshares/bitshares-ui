@@ -14,22 +14,22 @@ class FormattedAsset extends Component {
     }
 
     render() {
-        let {amount, asset, base, baseamount} = this.props;
+        let {amount, asset, base, baseamount, decimalOffset} = this.props;
 
         if (!asset) {
             return <span></span>;
         }
 
         let precision = utils.get_asset_precision(asset.precision);
-        let decimals = Math.max(2, asset.precision - 2); 
 
-        // The number of digits to display probably needs some more thought, and should probably be in a util function
+        let decimals = Math.max(0, asset.precision - decimalOffset); 
+
         if (base && baseamount) {
             decimals++;
             let baseprecision = utils.get_asset_precision(base.precision);
             return (
                     <span>
-                        <FormattedNumber 
+                        <FormattedNumber
                             value={amount / precision / (baseamount / baseprecision)}
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
@@ -54,14 +54,16 @@ FormattedAsset.defaultProps = {
     amount: 0,
     base: undefined,
     asset: undefined,
-    exact_amount: false
+    exact_amount: false,
+    decimalOffset: 0
 };
 
 FormattedAsset.propTypes = {
     amount: PropTypes.number.isRequired,
     base: PropTypes.object,
     asset: PropTypes.object.isRequired,
-    exact_amount: PropTypes.bool
+    exact_amount: PropTypes.bool,
+    decimalOffset: PropTypes.number
 };
 
 export default FormattedAsset;
