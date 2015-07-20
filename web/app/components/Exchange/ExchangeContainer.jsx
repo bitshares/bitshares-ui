@@ -2,6 +2,7 @@ import React from "react";
 import MarketsStore from "stores/MarketsStore";
 import AssetStore from "stores/AssetStore";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt/AltContainer";
 import Exchange from "./Exchange";
 
@@ -12,7 +13,7 @@ class ExchangeContainer extends React.Component {
 
         return (
                 <AltContainer 
-                  stores={[MarketsStore, AccountStore, AssetStore]}
+                  stores={[MarketsStore, AccountStore, AssetStore, SettingsStore]}
                   inject={{
                     limit_orders: () => {
                         return MarketsStore.getState().activeMarketLimits;
@@ -58,6 +59,9 @@ class ExchangeContainer extends React.Component {
                     },
                     balances: () => {
                         return AccountStore.getState().balances;
+                    },
+                    settings: () => {
+                        return SettingsStore.getState().settings;
                     }
                   }} 
                   >

@@ -241,6 +241,7 @@ module.exports = {
         confirmMarketOrder: "Ask for confirmation of market orders",
         locale: "Switch language",
         confirm_yes: "Always",
-        confirm_no: "Never"
+        confirm_no: "Never",
+        always_confirm: "Always ask for confirmation"
     }
 };

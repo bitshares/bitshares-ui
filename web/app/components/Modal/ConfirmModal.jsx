@@ -1,13 +1,14 @@
 import React from "react";
-import Notification from "react-foundation-apps/src/notification";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
+import SettingsActions from "actions/SettingsActions";
+import Translate from "react-translate-component";
 
 class ConfirmModal extends React.Component {
     constructor() {
         super();
-        this.state = {};
+        this.state = {show: true};
     }
 
     show(content, confirmText, callback) {
@@ -26,6 +27,13 @@ class ConfirmModal extends React.Component {
         this.state.callback();   
     }
 
+    _onCheck(e) {
+        e.preventDefault();
+        this.setState({show: !this.state.show});
+        SettingsActions.changeSetting({setting: this.props.setting, value: !this.props.value});
+        this.forceUpdate();
+    }
+
     render() {
         return (
             <Modal id={this.props.modalId} overlay={true}>
@@ -35,6 +43,14 @@ class ConfirmModal extends React.Component {
                 <div className="grid-block vertical">
                     <div className="shrink grid-content">
                         <p>{this.state.content}</p>
+                        {this.props.setting ? 
+                            (<div style={{marginBottom: "1rem"}}>
+                                <Translate component="label" content="settings.always_confirm" />
+                                {/* This won't work using a single <input> with checked={this.state.show}, not sure why */
+                                    this.state.show ? <input key="true_checked" type="checkbox" checked={true} onChange={this._onCheck.bind(this)}/> : 
+                                    <input key="false_checked" type="checkbox" checked={false} onChange={this._onCheck.bind(this)}/>}
+                            </div>)
+                            : null}
                     </div>
                     <div className="grid-content button-group">
                         <a className="button" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>

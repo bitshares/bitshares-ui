@@ -83,13 +83,16 @@ class Exchange extends React.Component {
         }
 
         var callback = function() { this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount); }.bind(this);
-
-        if(true) // TODO: only show this confirmation modal if the user has not disabled it
+        if(this.props.settings.get("confirmMarketOrder")) // TODO: only show this confirmation modal if the user has not disabled it
         {
-            var content = (this.props.quote == buyAsset.symbol) ? 
-                "Confirm order: " + 
-                "Buy " + buyAssetAmount + " " + buyAsset.symbol + " at a price of " +
-                (sellAssetAmount / buyAssetAmount) + " " + sellAsset.symbol + " per " + buyAsset.symbol + "."
+            var content = (this.props.quote === buyAsset.symbol) ?
+                <div>
+                    <span>{
+                    "Confirm order: " + 
+                    "Buy " + buyAssetAmount + " " + buyAsset.symbol + " at a price of " +
+                    (sellAssetAmount / buyAssetAmount) + " " + sellAsset.symbol + " per " + buyAsset.symbol + "."}
+                    </span>
+                </div>
                 :
                 "Confirm order: " + 
                 "Sell " + sellAssetAmount + " " + sellAsset.symbol + " at a price of " +
@@ -293,7 +296,12 @@ class Exchange extends React.Component {
 
                         {/* Buy/Sell forms */}
                         <div className="grid-block shrink" style={{ flexGrow: "0" }} >
-                                    <ConfirmModal modalId="confirm_modal"  ref="confirmModal" />
+                                    <ConfirmModal
+                                        modalId="confirm_modal"
+                                        ref="confirmModal"
+                                        setting="confirmMarketOrder"
+                                        value={this.props.settings.get("confirmMarketOrder")}
+                                    />
 
                                     {quote && base ?
                                     <BuySell
