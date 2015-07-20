@@ -102,7 +102,7 @@ class OrderBook extends React.Component {
 
                 <div className="valign" style={{overflowY: "hidden"}}>
                     <table className="table order-table fixed-height table-hover text-right">
-                        <thead>
+                        <thead className="headers">
                             <tr>
                                 <th style={{textAlign: "right"}}>Value <br/><small>({baseSymbol})</small></th>
                                 <th style={{textAlign: "right"}}>Amount <br/><small>({quoteSymbol})</small></th>
@@ -113,7 +113,7 @@ class OrderBook extends React.Component {
                             {bidRows}
                         </tbody>
                     </table>
-                    <div className="text-center" style={{borderTop: "1px solid gray", borderBottom: "1px solid gray", padding: "24px 12px "}}>Spread: {spread} {baseSymbol}</div>
+                    <div className="text-center spread" style={{borderTop: "1px solid gray", borderBottom: "1px solid gray", padding: "0.5rem 0.25rem"}}>Spread: {spread} {baseSymbol}</div>
                     <table className="table order-table fixed-height table-hover text-right">
                         <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
                             {askRows}

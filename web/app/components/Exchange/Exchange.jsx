@@ -212,7 +212,7 @@ class Exchange extends React.Component {
                 <div className="grid-block page-layout market-layout">
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-3 medium-2" style={{border: "1px solid green", overflowY: "auto", justifyContent: "center"}}>
+                    <div className="grid-block left-column small-3 medium-2" style={{overflowY: "auto", justifyContent: "center"}}>
                         <div className="grid-block">
                             <OrderBook
                                 orders={limit_orders}
