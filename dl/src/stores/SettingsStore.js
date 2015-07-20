@@ -7,11 +7,14 @@ class SettingsStore {
         this.settings = Immutable.Map({
             inverseMarket: true,
             unit: 0,
-            locale: "en"
+            locale: "en",
+            confirmMarketOrder: true
         });
 
+        // If you want a default value to be translated, add the translation to settings in locale-xx.js
+        // and use an object {translate: key} in the defaults array
         this.defaults = {
-            currencies: [
+            unit: [
                 "$",
                 "¥",
                 "€",
@@ -19,16 +22,20 @@ class SettingsStore {
                 "\u0243",
                 "BTS"
             ],
-            locales: [
+            locale: [
                 "en",
                 "cn",
                 "fr",
                 "ko",
                 "de"
             ],
-            orientation: [
-                "USD/CORE",
-                "CORE/USD"
+            inverseMarket: [
+                "CORE/USD",
+                "USD/CORE"
+            ],
+            confirmMarketOrder: [
+                {translate: "confirm_yes"},
+                {translate: "confirm_no"}
             ]
         };
 

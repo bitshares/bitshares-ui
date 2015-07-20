@@ -4,8 +4,7 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        de: "Deutsch",
-        switch: "Sprache wechseln"
+        de: "Deutsch"        
     },
     header: {
         title: "Graphene UI",
@@ -237,7 +236,12 @@ module.exports = {
         }
     },
     settings: {
-        inversed: "Bevorzugte Marktorientierung",
-        unit: "Bevorzugte Rechnungseinheit"
+        inverseMarket: "Bevorzugte Marktorientierung",
+        unit: "Bevorzugte Rechnungseinheit",
+        confirmMarketOrder: "Ask for confirmation of market orders",
+        locale: "Sprache wechseln",
+        confirm_yes: "Always",
+        confirm_no: "Never",
+        always_confirm: "Always ask for confirmation"
     }
 };

@@ -6,32 +6,116 @@ import cookies from "cookies-js";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router";
 
-class Settings extends React.Component {
+class SettingsEntry extends React.Component {
 
-    _onChangeLanguage(e) {
-        e.preventDefault();
+    render() {
+        let {defaults, setting, settings} = this.props;
+        let options, value = null;
+
         let myLocale = counterpart.getLocale();
-        if (e.target.value !== myLocale) {
-            IntlActions.switchLocale(e.target.value);
-            cookies.set("graphene_locale", e.target.value, { expires: Infinity });
-            SettingsActions.changeSetting({setting: "locale", value: e.target.value });
+
+        switch (setting) {
+            case "locale":
+                
+                options = defaults.map(function(entry) {
+                    var translationKey = "languages." + entry;
+                    return <Translate key={entry} value={entry} component="option" content={translationKey} />;
+                }).sort((a, b) => {
+                    if (a.key === myLocale) {
+                        return -1;
+                    }
+                    if (b.key === myLocale) {
+                        return 1;
+                    }
+                    if (b.key < a.key) {
+                        return 1;
+                    } else if (b.key > a.key) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                });
+                break;
+
+            default: 
+                let selected = settings.get(setting);
+                if (typeof selected === "number") {
+                    value = defaults[selected];
+                }
+                else if(typeof selected === "boolean") {
+                    if (selected) {
+                        value = defaults[0];
+                    } else {
+                        value = defaults[1];
+                    }
+                }
+
+                options = defaults.map(entry => {
+                    let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
+                    let key = entry.translate ? entry.translate : entry;
+                    return <option key={key}>{option}</option>;
+                });
+                break;
+
         }
+
+
+        if (value && value.translate) {
+            value = counterpart.translate(`settings.${value.translate}`);
+        }
+
+        return (
+            <section className="block-list">
+                <header><Translate component="span" content={`settings.${setting}`} /><span>:</span></header>
+                <ul>
+                    <li className="with-dropdown">
+                    <select value={value} onChange={this.props.onChange.bind(this, setting)}>
+                        {options}
+                    </select>
+                    </li>
+                </ul>
+            </section>
+        );
     }
+}
+
+
+class Settings extends React.Component {
 
     _onChangeSetting(setting, e) {
         e.preventDefault();
-        let {currencies, orientation} = this.props.defaults;
+        let {defaults} = this.props;
         let value = null;
+
+        function findEntry(targetValue, targetDefaults) {
+            if (targetDefaults[0].translate) {
+                for (var i = 0; i < targetDefaults.length; i++) {
+                    if (counterpart.translate(`settings.${targetDefaults[i].translate}`) === targetValue) {
+                        return i;
+                    }
+                }
+            } else {
+                return targetDefaults.indexOf(targetValue);
+            }
+        }
+
         switch (setting) {
-            case "inverseMarket":
-                value = orientation.indexOf(e.target.value) === 0; // USD/CORE is true, CORE/USD is false
+            case "locale":
+                let myLocale = counterpart.getLocale();
+                if (e.target.value !== myLocale) {
+                    IntlActions.switchLocale(e.target.value);
+                    cookies.set("graphene_locale", e.target.value, { expires: Infinity });
+                    SettingsActions.changeSetting({setting: "locale", value: e.target.value });
+                }
                 break;
 
-            case "unit":
-                value = currencies.indexOf(e.target.value);
+            case "inverseMarket":
+            case "confirmMarketOrder":
+                value = findEntry(e.target.value, defaults) === 0; // USD/CORE is true, CORE/USD is false
                 break;
 
             default:
+                value = findEntry(e.target.value, defaults);
                 break;
         }
 
@@ -42,36 +126,7 @@ class Settings extends React.Component {
     }
 
     render() {
-        let {settings} = this.props;
-        let {currencies, locales, orientation} = this.props.defaults;
-        let myLocale = counterpart.getLocale();
-
-        var options = locales.map(function(locale) {
-            var translationKey = "languages." + locale;
-            return <Translate key={locale} value={locale} component="option" content={translationKey} />;
-        }).sort((a, b) => {
-            if (a.key === myLocale) {
-                return -1;
-            }
-            if (b.key === myLocale) {
-                return 1;
-            }
-            if (b.key < a.key) {
-                return 1;
-            } else if (b.key > a.key) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
-
-
-        let unitOptions = currencies.map((unit, index) => {
-            return <option key={index}>{unit}</option>;
-        });
-
-        let selectedOrientation = settings.get("inverseMarket") ? 0 : 1;
-
+        let {settings, defaults} = this.props;
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block medium-3 left-column">
@@ -80,37 +135,17 @@ class Settings extends React.Component {
                 </div>
                 <div className="grid-block medium-6 main-content">
                     <div className="grid-content no-overflow">
-                        <section className="block-list">
-                            <header><Translate component="span" content="languages.switch" />:</header>
-                                <ul>
-                                    <li className="with-dropdown">
-                                    <select onChange={this._onChangeLanguage}>
-                                        {options}
-                                    </select>
-                                    </li>
-                                </ul>
-                        </section>
-                        <section className="block-list">
-                            <header><Translate component="span" content="settings.inversed" />:</header>
-                                <ul>
-                                    <li className="with-dropdown">
-                                    <select value={orientation[selectedOrientation]} onChange={this._onChangeSetting.bind(this, "inverseMarket")}>
-                                        <option>{orientation[0]}</option>
-                                        <option>{orientation[1]}</option>
-                                    </select>
-                                    </li>
-                                </ul>
-                        </section>
-                        <section className="block-list">
-                            <header><Translate component="span" content="settings.unit" />:</header>
-                                <ul>
-                                    <li className="with-dropdown">
-                                    <select value={currencies[settings.get("unit")]} onChange={this._onChangeSetting.bind(this, "unit")}>
-                                        {unitOptions}
-                                    </select>
-                                    </li>
-                                </ul>
-                        </section>
+                        {settings.map((value, setting) => {
+                            return (
+                                <SettingsEntry 
+                                    key={setting}
+                                    setting={setting}
+                                    settings={settings}
+                                    defaults={defaults[setting]}
+                                    onChange={this._onChangeSetting}
+                                    locales={this.props.localesObject}
+                                />);                   
+                        }).toArray()}
                     </div>
                 </div>
                 <div className="grid-block medium-3 right-column">
@@ -124,3 +159,4 @@ class Settings extends React.Component {
 }
 
 export default Settings;
+

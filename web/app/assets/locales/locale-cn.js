@@ -4,7 +4,7 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        switch: "语言选择"
+        de: "Deutsch"
     },
     header: {
         title: "比特股 2.0",
@@ -236,7 +236,12 @@ module.exports = {
         }
     },
     settings: {
-        inversed: "市场交易对视角",
-        unit: "显示记账单位"
+        inverseMarket: "市场交易对视角",
+        unit: "显示记账单位",
+        confirmMarketOrder: "Ask for confirmation of market orders",
+        locale: "语言选择",
+        confirm_yes: "Always",
+        confirm_no: "Never",
+        always_confirm: "Always ask for confirmation"
     }
 };

@@ -4,7 +4,7 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        switch: "언어 전환"
+        de: "Deutsch"
     },
     header: {
         title: "그래핀 UI",
@@ -236,7 +236,12 @@ module.exports = {
         }
     },
     settings: {
-        inversed: "선호 거래단위",
-        unit: "선호 화폐단위"
+        inverseMarket: "선호 거래단위",
+        unit: "선호 화폐단위",        
+        confirmMarketOrder: "Ask for confirmation of market orders",
+        locale: "언어 전환",
+        confirm_yes: "Always",
+        confirm_no: "Never",
+        always_confirm: "Always ask for confirmation"
     }
 };

@@ -1,10 +1,10 @@
 module.exports = {
     languages: {
-        en: "Anglais",
+        en: "English",
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        switch: "Changer de langue"
+        de: "Deutsch"
     },
     header: {
         title: "Graphene",
@@ -234,7 +234,12 @@ module.exports = {
         }
     },
     settings: {
-        inversed: "Orientation préféré pour les marchés",
-        unit: "Unité de valeur préféré"
+        inverseMarket: "Orientation préféré pour les marchés",
+        unit: "Unité de valeur préféré",
+        confirmMarketOrder: "Demander une confirmation pour des ordres du marché",
+        locale: "Changer de langue",
+        confirm_yes: "Toujours",
+        confirm_no: "Jamais",
+        always_confirm: "Toujours demander une confirmation"
     }
 };

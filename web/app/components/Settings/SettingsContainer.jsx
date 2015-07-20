@@ -1,5 +1,6 @@
 import React from "react";
 import SettingsStore from "stores/SettingsStore";
+import IntlStore from "stores/IntlStore";
 import AltContainer from "alt/AltContainer";
 import Settings from "./Settings";
 
@@ -16,6 +17,9 @@ class SettingsContainer extends React.Component {
                     },
                     defaults: () => {
                         return SettingsStore.getState().defaults;
+                    },
+                    localesObject: () => {
+                        return IntlStore.getState().localesObject;
                     }
                   }} 
                   >
