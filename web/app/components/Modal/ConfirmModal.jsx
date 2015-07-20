@@ -7,9 +7,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 class ConfirmModal extends React.Component {
     constructor() {
         super();
-
-        this.state = {
-        };
+        this.state = {};
     }
 
     show(content, confirmText, callback) {
@@ -22,7 +20,8 @@ class ConfirmModal extends React.Component {
         ZfApi.publish(this.props.modalId, "open");
     }
 
-    confirmClicked() {
+    confirmClicked(e) {
+        e.preventDefault();
         ZfApi.publish(this.props.modalId, "close");       
         this.state.callback();   
     }

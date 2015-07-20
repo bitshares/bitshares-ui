@@ -6,97 +6,93 @@ import AssetStore from "stores/AssetStore";
 import AccountStore from "stores/AccountStore";
 import ConfirmModal from "../Modal/ConfirmModal";
 import AccountSelect from "../Forms/AccountSelect"
-
-// TEMP:
 import lzma from "lzma";
 import bs58 from "common/base58";
 
-let invoice = {
-    "to" : "merchant_account_name",
-    "to_label" : "Merchant Name",
-    "memo" : "Invoice #1234",
-    "line_items" : [
-        { "label" : "Something to Buy", "quantity": 1, "price" : "1000.00 TEST" },
-        { "label" : "10 things to Buy", "quantity": 10, "price" : "1000.00 TEST" }
-    ],
-    "note" : "Something the merchant wants to say to the user",
-    "callback" : "https://merchant.org/complete"
-};
-
+// invoice example:
+//{
+//    "to" : "merchant_account_name",
+//    "to_label" : "Merchant Name",
+//    "currency": "TEST",
+//    "memo" : "Invoice #1234",
+//    "line_items" : [
+//        { "label" : "Something to Buy", "quantity": 1, "price" : "1000.00" },
+//        { "label" : "10 things to Buy", "quantity": 10, "price" : "1000.00" }
+//    ],
+//    "note" : "Something the merchant wants to say to the user",
+//    "callback" : "https://merchant.org/complete"
+//}
+// http://localhost:8080/#/invoice/8Cv8ZjMa8XCazX37XgNhj4jNc4Z5WgZFM5jueMEs2eEvL3pEmELjAVCWZEJhj9tEG5RuinPCjY1Fi34ozb8Cg3H5YBemy9JoTRt89X1QaE76xnxWPZzLcUjvUd4QZPjCyqZNxvrpCN2mm1xVRY8FNSVsoxsrZwREMyygahYz8S23ErWPRVsfZXTwJNCCbqjWDTReL5yytTKzxyKhg4YrnntYG3jdyrBimDGBRLU7yRS9pQQLcAH4T7j8LXkTocS7w1Zj4amckBmpg5EJCMATTRhtH8RSycfiXWZConzqqzxitWCxZK846YHNh
 
 class Invoice extends React.Component {
     constructor() {
         super();
-        this.state = {invoice: invoice};
+        this.state = {invoice: null, pay_from_account: null};
+    }
 
-        lzma.compress(JSON.stringify(invoice), 1, function on_compress_complete(compressed_data) {
-            console.log("Compressed: ", compressed_data);
-            let buf = new Buffer(compressed_data);
-            console.log("[Invoice.jsx:35] ----- on_compress_complete ----->", buf.toString('hex'));
-            let bs58_compressed_data = bs58.encode(buf);
-            console.log("Compressed bs58: ", bs58_compressed_data);
-
-            let compressed_data1 = bs58.decode(bs58_compressed_data);
-            console.log("Compressed1: ", new Buffer(compressed_data1).toString('hex'));
-
-            lzma.decompress(compressed_data1, function on_decompress_complete(result) {
-                console.log("Decompressed: ", JSON.parse(result));
-            });
+    componentDidMount() {
+        let compressed_data = bs58.decode(this.props.params.data);
+        lzma.decompress(compressed_data, result => {
+            let invoice = JSON.parse(result);
+            console.log("[Invoice.jsx:53] ----- invoice ----->", invoice);
+            this.setState({invoice: invoice});
         });
     }
 
     parsePrice(price) {
-        let m = price.match(/([\d\,\.\s]+)\s?(\w+)/);
-        if(!m || m.length < 3) return [0, null];
-        return [parseFloat(m[1].replace(/[\,\s]/g,"")), m[2]];
+        let m = price.match(/([\d\,\.\s]+)/);
+        if(!m || m.length < 2) 0.0;
+        return parseFloat(m[1].replace(/[\,\s]/g,""));
     }
 
     getTotal(items) {
         if(!items || items.length === 0) return 0.0;
-        let [_, price_symbol] = this.parsePrice(items[0].price);
         let total_amount = items.reduce( (total, item) => {
-            let [price, symbol] = this.parsePrice(item.price);
-            console.log("[Invoice.jsx:34] ----- price, symbol ----->", price, symbol);
-            if(!symbol || !price || symbol !== price_symbol) return total;
+            let price = this.parsePrice(item.price);
+            if(!price) return total;
             return total + item.quantity * price;
         }, 0.0);
-        return [total_amount, price_symbol];
+        return total_amount;
     }
 
     onPayClick(e) {
         e.preventDefault();
-        let [total_amount, total_symbol] = this.getTotal(this.state.invoice.line_items);
-        let content = `Pay ${total_amount} ${total_symbol} to ${this.state.invoice.to} from account ${this.refs.pay_from.value()}`;
-        this.refs.confirm_modal.show(content, "Confirm Payment", this.onConfirmPayment);
+        let total_amount = this.getTotal(this.state.invoice.line_items);
+        let content = `Pay ${total_amount} ${this.state.invoice.currency} to ${this.state.invoice.to} from account ${this.refs.pay_from.value()}`;
+        this.refs.confirm_modal.show(content, "Confirm Payment", this.onConfirmPayment.bind(this));
     }
 
     onConfirmPayment() {
-        let [total_amount, total_symbol] = this.getTotal(this.state.invoice.line_items);
+        let total_amount = this.getTotal(this.state.invoice.line_items);
+        let asset = AssetStore.getAsset(this.state.invoice.currency);
+        let precision = utils.get_asset_precision(asset.precision);
         // TODO: finish transfer and redirect to transfer confirmation page
-        //AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
-        //    ZfApi.publish("confirm_transaction", "close");
-        //    this.setState({confirmation: false, done: true, error: null});
-        //}).catch(error => {
-        //    ZfApi.publish("confirm_transaction", "close");
-        //    this.setState({confirmation: false, done: false});
-        //    this.props.addNotification({
-        //        message: "Transfer failed",
-        //        level: "error",
-        //        autoDismiss: 10
-        //    });
-        //});
+        let account_store_state = AccountStore.getState();
+        let from_id = account_store_state.account_name_to_id[this.state.pay_from_account];
+        let to_id = account_store_state.account_name_to_id['init0'];
+        let memo = this.state.invoice.memo;
+        console.log("[Invoice.jsx:89] ----- onConfirmPayment ----->", from_id, to_id, total_amount * precision, asset.id, memo);
+        AccountActions.transfer(from_id, to_id, total_amount * asset.preciosion, asset.id, memo).then(() => {
+            console.log("[Invoice.jsx:91] ----- success ----->");
+            //ZfApi.publish("confirm_transaction", "close");
+            //this.setState({confirmation: false, done: true, error: null});
+        }).catch(error => {
+            console.log("[Invoice.jsx:94] ----- error ----->");
+        });
     }
 
     onAccountChange(account_name) {
-        console.log("[Invoice.jsx:91] ----- onAccountChange ----->", account_name);
+        this.setState({pay_from_account: account_name});
     }
 
     render() {
+        if(!this.state.invoice) return (<div>Reading invoice data...</div>);
+
         let invoice = this.state.invoice;
-        let [total_amount, total_symbol] = this.getTotal(invoice.line_items);
-        let asset = AssetStore.getAsset(total_symbol);
+        let total_amount = this.getTotal(invoice.line_items);
+        let asset = AssetStore.getAsset(this.state.invoice.currency);
         let items = invoice.line_items.map( i => {
-            let [price, symbol] = this.parsePrice(i.price);
+            let price = this.parsePrice(i.price);
             let amount = i.quantity * price;
             return (
                 <tr>
@@ -107,8 +103,11 @@ class Invoice extends React.Component {
                 </tr>
             );
         });
-        let accounts = AccountStore.getState().linkedAccounts.map(name => name);
-        console.log("[Invoice.jsx:75] ----- render ----->", accounts);
+        let account_store_state = AccountStore.getState();
+        //let balance = this.state.pay_from_account ? account_store_state.balances.get([this.state.pay_from_account]) : 0.0;
+        //console.log("[Invoice.jsx:123] ----- render ----->", account_store_state.balances, balance);
+        let accounts = account_store_state.linkedAccounts.map(name => name);
+        let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account});
         return (
             <div className="grid-block vertical">
                 <div className="grid-content">
@@ -138,12 +137,13 @@ class Invoice extends React.Component {
                                 </tbody>
                             </table>
                             <br/>
-                            Pay from account
-                            <div className="medium-2"><AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/></div>
-                            <br/>
-                            <a href className="button" onClick={this.onPayClick.bind(this)}>
-                                Pay <FormattedAsset amount={total_amount} asset={asset} exact_amount={true} /> to {invoice.to}
-                            </a>
+                            <form>
+                                <label>Pay from account</label>
+                                <AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/>
+                                <a href className={payButtonClass} onClick={this.onPayClick.bind(this)}>
+                                    Pay <FormattedAsset amount={total_amount} asset={asset} exact_amount={true} /> to {invoice.to}
+                                </a>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -173,7 +173,7 @@ let routes = (
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
-        <Route name="invoice" path="invoice" handler={Invoice}/>
+        <Route name="invoice" path="invoice/:data" handler={Invoice}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>

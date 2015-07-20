@@ -41,25 +41,21 @@ label, label > span {
 .label.success {
   color: $success-color;
   border-color: $success-color;
-  background-color: darken($bg-color, 4%);
 }
 
 .label.info {
   color: $info-color;
   border-color: $info-color;
-  background-color: darken($bg-color, 4%);
 }
 
 .label.warning {
   color: $warning-color;
   border-color: $warning-color;
-  background-color: darken($bg-color, 4%);
 }
 
 .label.cancel, .label.alert {
   color: $alert-color;
   border-color: $alert-color;
-  background-color: darken($bg-color, 4%);
 }
 
 .notification.success {

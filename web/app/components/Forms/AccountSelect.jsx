@@ -22,10 +22,10 @@ class AccountSelect extends Component {
         
         return (
             <select id='account-selector' ref='account-selector'
-                className="form-control"
+                className="form-control account-select"
                 value={selected_account}
                 onChange={this._onAccountChange.bind(this)}>
-                <option value="" disabled>{
+                <option value="">{
                     this.props.placeholder || "Select Account"
                 }</option>
                 {account_names.map((account_name) => {
