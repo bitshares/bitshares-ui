@@ -5,9 +5,10 @@ import ImportKeys from "components/Wallet/ImportKeys"
 import FormattedAsset from "components/Utility/FormattedAsset"
 import Apis from "rpc_api/ApiInstances"
 
-//import ImportAccountSelect,{ accountSelectStore, accountSelectActions }
-//  from "components/Wallet/ImportAccountSelect"
+import AccountSelect from "components/Forms/AccountSelect"
+import WalletActions from "actions/WalletActions"
 
+import notice from "actions/NotificationActions"
 import cname from "classnames"
 import lookup from "chain/lookup"
 import v from "chain/serializer_validation"
@@ -24,14 +25,27 @@ class ExistingAccount extends Component {
     _getInitialState() {
         return {
             keys:{
-                wif_count:0
+                wif_count:0,
+                wifs_to_account: null
             },
-            balance_by_asset:null
+            balance_by_asset:null,
+            claim_account_name:null,
+            wifs_to_balances:null
         }
+    }
+    
+    reset() {
+        this.setState(this._getInitialState())
     }
     
     render() {
         var has_keys = this.state.keys.wif_count ? true : false
+        var has_account = this.state.claim_account_name ? true : false
+        var import_ready = has_account && has_keys
+        
+        var claim_balance_label = "Claim Balance..."
+        if(has_account)
+            claim_balance_label = `Claim Balance to ${this.state.claim_account_name}...`
         
         var balance_rows = null
         if(this.state.balance_by_asset) {
@@ -45,15 +59,16 @@ class ExistingAccount extends Component {
                 )
             }
         }
-        return <div className="grid-block page-layout">
+        return <div id="existing-account" className="grid-block page-layout">
             <div className="grid-block vertical medium-9 medium-offset-2">
                 <h4>Existing Accounts</h4>
                 
                 <hr/>
+                <h3>Import Keys</h3>
                 <ImportKeys onChange={this._importKeysChange.bind(this)}/>
                 
                 <hr/>
-                <h4>Balances</h4>
+                <h3>Balances</h3>
                 {balance_rows ? <div>
                     <div>
                         <label>Asset</label>
@@ -62,11 +77,18 @@ class ExistingAccount extends Component {
                 </div>:""}
                 
                 <hr/>
+                <h3>Balance Claim Account</h3>
+                <AccountSelect
+                    account_names={this.getAccountNames()}
+                    onChange={this._claimAccountSelect.bind(this)}
+                    list_size="5"
+                />
+                <hr/>
                 <div>
                     <a className={
-                        cname("button", {disabled:!has_keys})}
-                        onClick={this._lookupBalances.bind(this)} >
-                        Say Something...
+                        cname("button", {disabled:!import_ready})}
+                        onClick={this._importBalances.bind(this)} >
+                        {claim_balance_label}
                     </a>
                 </div>
 
@@ -76,7 +98,12 @@ class ExistingAccount extends Component {
     
     _importKeysChange(keys) {
         this.setState({keys})
-        this._lookupBalances(Object.keys(keys.wifs_to_account)).then( 
+        var wifs = Object.keys(keys.wifs_to_account)
+        if( ! wifs.length) {
+            this.reset()
+            return
+        }
+        this.lookupBalances(wifs).then( 
         wifs_to_balances => {
             var assetid_balance = this.balanceByAsset(wifs_to_balances)
             var asset_ids = Object.keys(assetid_balance)
@@ -100,7 +127,7 @@ class ExistingAccount extends Component {
         })
     }
     
-    _lookupBalances(wif_keys) {
+    lookupBalances(wif_keys) {
         return new Promise((resolve, reject)=> {
             var address_params = []
             for(let wif of wif_keys) {
@@ -121,6 +148,7 @@ class ExistingAccount extends Component {
                     balances.push(balance)
                     wifs_to_balances[wif] = balances
                 }
+                this.setState({wifs_to_balances})
                 return wifs_to_balances
                 //    if(b.vesting_policy)
                 //        continue //todo
@@ -158,13 +186,38 @@ class ExistingAccount extends Component {
         return asset_balance
     }
     
-
-//                <ImportAccountSelect
-//                    account_names={this.getAccountNames()}
-//                    placeholder="Select Primary Account"
-//                    selectStyle={{height: '100px'}}
-//                    list_size="5"
-//                />    
+    getAccountNames() {
+        //DEBUG return ["nathan"]
+        var account_names = {}
+        var wifs_to_account = this.state.wifs_to_account
+        for(let wif in wifs_to_account)
+        for(let account_name of wifs_to_account[wif])
+            account_names[account_name] = true
+        
+        return Object.keys(account_names).sort()
+    }
+    
+    _claimAccountSelect(claim_account_name) {
+        this.setState({claim_account_name})
+    }
+    
+    _importBalances() {
+        //return
+        WalletActions.importBalance(
+            this.state.claim_account_name,
+            this.state.wifs_to_balances,
+            true //broadcast
+        ).then((result)=> {
+            notice.success("Balance claimed to account: " + this.state.claim_account_name)
+            this.reset()
+            if(result)
+                console.log("ExistingAccount._importBalances",result)
+        }).catch((error)=> {
+            console.log(error)
+            notice.error("Error claiming balance.\n" + error)
+            throw error
+        })
+    }
 
 }
 

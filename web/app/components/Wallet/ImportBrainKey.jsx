@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 
+import WalletActions from "actions/WalletActions"
+
 import key from "common/key_utils"
 
 export default class ImportBrainKey extends Component {

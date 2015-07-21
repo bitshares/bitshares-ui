@@ -102,7 +102,7 @@ class WalletActions {
         //return db.exec("get_key_references", public_keyaddress_params).then( result => {
     }
     
-    importBalance( account_name_or_id, wif_keys, broadcast ) {
+    importBalance( account_name_or_id, wifs_to_balances, broadcast ) {
         return new Promise((resolve, reject) => {
             
             var db = api.db_api()
@@ -112,27 +112,19 @@ class WalletActions {
             var account_lookup = lookup.account_id(account_name_or_id)
             var p = lookup.resolve().then( ()=> {
                 var account = account_lookup.resolve
-                //DEBUG  console.log('... account',account)
+                //DEBUG console.log('... account',account)
                 if(account == void 0)
-                    return Promise.reject("unknown account " + account_name_or_id)
+                    return Promise.reject("Unknown account " + account_name_or_id)
                 
-                var address_params = []
-                for(let wif of wif_keys) {
+                for(let wif in wifs_to_balances) {
                     var private_key = PrivateKey.fromWif(wif)
                     var public_key = private_key.toPublicKey()
                     var address_str = public_key.toBtsAddy()
                     address_privatekey_map[address_str] = private_key
                     address_publickey_map[address_str] = public_key
-                    address_params.push( [address_str] )
-                }
-                //DEBUG 
-                console.log('... get_balance_objects', address_params)
-                
-                return db.exec("get_balance_objects", address_params).then( result => {
-                    //DEBUG 
-                    console.log('... result',result)
+                    
                     var balance_claims = []
-                    for(let b of result) {
+                    for(let b of wifs_to_balances[wif]) {
                         
                         if(b.vesting_policy)
                             continue //todo
@@ -141,32 +133,31 @@ class WalletActions {
                         //    total_claimed = b.balance
                         ////'else' Zero total_claimed is understood to mean that your
                         ////claiming the vesting balance on vesting terms.
-                        
                         balance_claims.push({
                             //fee: { amount: "100000", asset_id: 0},
-                            deposit_to_account: account.id,
+                            deposit_to_account: account,
                             balance_to_claim: b.id, //"1.15.0"
                             balance_owner_key: address_publickey_map[b.owner],
                             total_claimed: {
-                                amount: b.balance,
+                                amount: b.balance.amount,
                                 asset_id: b.balance.asset_id
                             }
                         })
                     }
-                    //DEBUG 
-                    console.log('... balance_claims',balance_claims)
-                    var tr = new ops.signed_transaction()
-                    for(let balance_claim of balance_claims) {
-                        tr.add_type_operation("balance_claim", balance_claim)
-                    }
-                    var keys = Object.keys(address_privatekey_map)
-                    var signer_privates = keys.map(function(v) {
-                        return address_privatekey_map[v]
-                    })
-                    //signer_privates.push(PrivateKey.fromSeed("nathan"))
-                    return tr.finalize( signer_privates, broadcast )
+                }
+                //DEBUG 
+                console.log('... balance_claims',balance_claims)
+                var tr = new ops.signed_transaction()
+                
+                for(let balance_claim of balance_claims) {
+                    tr.add_type_operation("balance_claim", balance_claim)
+                }
+                var keys = Object.keys(address_privatekey_map)
+                var signer_privates = keys.map(function(v) {
+                    return address_privatekey_map[v]
                 })
-                    
+                //signer_privates.push(PrivateKey.fromSeed("nathan"))
+                return tr.finalize( signer_privates, broadcast )
             })
             resolve(p)
         })

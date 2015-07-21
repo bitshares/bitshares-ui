@@ -14,7 +14,7 @@ lookup = require './lookup'
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
 
-fee = "2111100000"
+fee = "2111100"
 
 module.exports = _my = {}
 

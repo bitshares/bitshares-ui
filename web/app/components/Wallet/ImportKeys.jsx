@@ -221,15 +221,7 @@ class KeyCount extends Component {
         return <span>Found {this.props.wif_count} private keys</span>
     }
 }
-//    getAccountNames() {
-//        var account_names = {}
-//        var wifs_to_account = this.state.wifs_to_account
-//        for(let wif in wifs_to_account)
-//            for(let account_name of wifs_to_account[wif])
-//                account_names[account_name] = true
-//        
-//        return Object.keys(account_names).sort()
-//    }
+
 /*
     static getStores() {
         return [importKeysStore]
