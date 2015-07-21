@@ -16,9 +16,6 @@ class DashboardContainer extends React.Component {
                 balances: () => {
                     return AccountStore.getState().balances;
                 },
-                currentAccount: () => {
-                    return AccountStore.getState().currentAccount;
-                },
                 assets: () => {
                     return AssetStore.getState().assets;
                 }

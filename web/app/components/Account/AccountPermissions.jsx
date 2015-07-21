@@ -67,14 +67,14 @@ class AccountPermissions extends React.Component {
 
     render() {
         console.log("[AccountPermissions.jsx:38] ----- render ----->", this.isStateChanged());
-        let ad = this.props.all_delegates;
+        let ad = this.props.account_name_to_id;
         let all_accounts = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
         let action_buttons_class = "button" + (this.isStateChanged() ? "" : " disabled");
 
         return (
             <div className="grid-content">
                 <div className="content-block">
-                    <h3>Active Permissions</h3>
+                    <Translate component="h3" content="account.perm.active" />
                     <PermissionsTable
                         permissions={this.state.active_permissions}
                         threshold={this.state.active_threshold}
@@ -84,7 +84,7 @@ class AccountPermissions extends React.Component {
                         onThresholdChanged={this.onThresholdChanged.bind(this, "active_threshold")} />
                     </div>
                 <div className="content-block">
-                    <h3>Owner Permissions</h3>
+                    <Translate component="h3" content="account.perm.owner" />
                     <PermissionsTable
                         permissions={this.state.owner_permissions}
                         threshold={this.state.owner_threshold}
@@ -95,13 +95,22 @@ class AccountPermissions extends React.Component {
                 </div>
                 <div className="content-block">
                     <div className="actions clearfix">
-                        <button className={action_buttons_class} onClick={this.onPublish.bind(this)}>Publish Changes</button>
-                        <a href="#" className={action_buttons_class + " secondary"} onClick={this.onResetChanges.bind(this)}>Reset Changes</a>
+                        <button className={action_buttons_class} onClick={this.onPublish.bind(this)}><Translate content="account.perm.publish" /></button>
+                        <a href="#" className={action_buttons_class + " secondary"} onClick={this.onResetChanges.bind(this)}><Translate content="account.perm.reset" /></a>
                     </div>
                 </div>
             </div>
         );
     }
 }
+
+AccountPermissions.defaultProps = {
+    account_name_to_id: {}
+};
+
+AccountPermissions.propTypes = {
+    account_name_to_id: PropTypes.object.isRequired
+};
+
 
 export default AccountPermissions;

@@ -17,11 +17,12 @@ module.exports = {
         current: "Mon Compte"
     },
     account: {
-        assets: "Actifs",
-        value: "Valeur",
+        asset: "Actif",
+        market_value: "Valeur",
         hour_24: "24hrs",
         recent: "Activité recent",
         name: "Nom du compte",
+        more: "voir plus",
         member: {
             stats: "Stats membre",
             join: "Inscription",
@@ -35,7 +36,37 @@ module.exports = {
         connections: {
             known: "Connu par",
             "black": "Blacklisté par"
-        }
+        },
+        perm: {
+            active: "Permissions actifs",
+            owner: "Permissions de proprietaire",
+            publish: "Publier les changements",
+            reset: "Annuler les changements",
+            add: "Rajouter une permission",
+            type: "Type",
+            key: "Cléf/Nom",
+            weight: "Poids",
+            threshold: "Limite",
+            confirm_add: "Rajouter",
+            cancel: "Annuler"
+        },
+        votes: {
+            proxy: "Proxy Voting Account",
+            name: "Nom",
+            info: "Info",
+            support: "Support",
+            workers: "Ouvriers"
+        },
+        upgrade: "Mettre à niveau",
+        unlink: "Délier",
+        link: "Lier",
+        pay: "Payer",
+        overview: "Sommaire",
+        history: "Historique",
+        payees: "Payees",
+        permissions: "Permissions",
+        voting: "Votes",
+        orders: "Ordres"
     },
     transfer: {
         from: "De",
@@ -241,5 +272,33 @@ module.exports = {
         confirm_yes: "Toujours",
         confirm_no: "Jamais",
         always_confirm: "Toujours demander une confirmation"
+    },
+    footer: {
+        title: "Graphene",
+        block: "Bloc courant"
+    },
+    exchange: {
+        price_history: "Historique du prix",
+        order_depth: "Carnet d'ordres",
+        market_history: "Historique du marché",
+        balance: "Solde",
+        total: "Total",
+        value: "Valeur",
+        price: "Prix",
+        latest: "Dernier Prix",
+        call: "Prix de flux",
+        volume: "Volume",
+        spread: "Spread",
+        quantity: "Quantité",
+        buy: "Acheter",
+        sell: "Vendre",
+        confirm_buy: "Confirmation d'ordre: Acheter %(buy_amount)s %(buy_symbol)s au prix de %(price_amount)s %(price_symbol)s",
+        confirm_sell: "Confirmation d'ordre: Vendre %(sell_amount)s %(sell_symbol)s au prix de %(price_amount)s %(price_symbol)s"
+    },
+    markets: {
+        choose_base: "Selectionner l'actif de base",
+        filter: "Filtrer",
+        core_rate: "Taux de base:",
+        supply: "Réserve"
     }
 };

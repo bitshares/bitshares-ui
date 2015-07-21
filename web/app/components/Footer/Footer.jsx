@@ -3,7 +3,7 @@ let Perf = React.addons.Perf;
 import BaseComponent from "../BaseComponent";
 import BlockchainStore from "stores/BlockchainStore";
 import {Link} from "react-router";
-import Icon from "../Icon/Icon";
+import Translate from "react-translate-component";
 
 class Footer extends BaseComponent {
     constructor(props) {
@@ -33,13 +33,15 @@ class Footer extends BaseComponent {
                 <div className="align-justify grid-block">
                     <div onClick={this._triggerPerf.bind(this)} className="grid-block">
                         <div className="logo">
-                            Graphene
+                            <Translate content="footer.title" />
                         </div>
                     </div>
-                    { block_height ? <div className="grid-block shrink">
-                        Head block &nbsp;
-                        <pre>#<Link to="block" params={{ height: block_height }}>{block_height}</Link></pre>
-                    </div> : <div className="grid-block shrink">Loading..</div>}
+                    { block_height ?
+                        (<div className="grid-block shrink">
+                            <Translate content="footer.block" /> &nbsp;
+                            <pre>#<Link to="block" params={{ height: block_height }}>{block_height}</Link></pre>
+                        </div>) :
+                        <div className="grid-block shrink">Loading..</div>}
                 </div>
             </div>
         );

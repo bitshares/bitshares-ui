@@ -1,9 +1,11 @@
 import React from "react";
+import {PropTypes} from "react";
 import AccountImage from "../Account/AccountImage";
 import AccountActions from "actions/AccountActions";
 import validation from "common/validation.coffee";
 import {Link} from "react-router";
 import BalanceTreemap from "./BalanceTreemap";
+
 
 require("../../assets/heatmap");
 require("../../assets/treemap");
@@ -90,5 +92,19 @@ class AccountCard extends React.Component {
         );
     }
 }
+
+AccountCard.defaultProps = {
+    account: "",
+    assets: {},
+    balances: [],
+    onRemoveRow: function() {}
+};
+
+AccountCard.propTypes = {
+    account: PropTypes.string.isRequired,
+    assets: PropTypes.object.isRequired,
+    balances: PropTypes.array.isRequired,
+    new: PropTypes.bool
+};
 
 export default AccountCard;

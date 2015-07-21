@@ -38,6 +38,7 @@ class Row extends React.Component {
     render() {
 
         let {block, fee, color, type, missing, assets} = this.props;
+        fee.amount = parseInt(fee.amount, 10);
 
         return (
                 <tr>
@@ -167,13 +168,14 @@ class Operation extends React.Component {
                     isAsk = !isAsk;
                 }
                 let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                
                 column = (
                         isAsk ?
                             <td className="right-td">
                             <Translate component="span" content="transaction.limit_order" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}
                             &nbsp;<Translate component="span" content="transaction.at" />
-                            &nbsp;{!missingAssets[1] ? <FormattedAsset 
+                            &nbsp;{!missingAssets[0] && !missingAssets[1] ? <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
                                                     amount={op[1].min_to_receive.amount}
                                                     asset={assets.get(op[1].min_to_receive.asset_id)}
@@ -183,9 +185,9 @@ class Operation extends React.Component {
                         :
                         <td className="right-td">
                             <Translate component="span" content="transaction.limit_order_buy" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[1] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}
                             &nbsp;<Translate component="span" content="transaction.at" />
-                            &nbsp;{!missingAssets[1] ? <FormattedAsset 
+                            &nbsp;{!missingAssets[0] && !missingAssets[1] ? <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
                                                     amount={op[1].amount_to_sell.amount}
                                                     asset={assets.get(op[1].amount_to_sell.asset_id)}
@@ -379,6 +381,8 @@ class Operation extends React.Component {
                 color = "warning";
                 let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
                 let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
+
+                op[1].asset_to_issue.amount = parseInt(op[1].asset_to_issue.amount, 10);
 
                 if (current === account_id_to_name[op[1].issuer]) {
                     column = (
@@ -781,7 +785,7 @@ Operation.defaultProps = {
     op: [],
     current: "",
     account_id_to_name: {},
-    assets: {},
+    assets: null,
     block: false,
     witnesses: {},
     witness_id_to_name: {}

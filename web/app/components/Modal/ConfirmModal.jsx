@@ -1,4 +1,5 @@
 import React from "react";
+import {PropTypes} from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -55,7 +56,7 @@ class ConfirmModal extends React.Component {
                     <div className="grid-content button-group">
                         <a className="button" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
                         <Trigger close={this.props.modalId}>
-                            <a href className="secondary button">Cancel</a>
+                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
                     </div>
                 </div>
@@ -63,5 +64,16 @@ class ConfirmModal extends React.Component {
         );
     }
 }
+
+ConfirmModal.defaultProps = {
+    modalId: "confirm_modal",
+    setting: null
+};
+
+ConfirmModal.propTypes = {
+    modalId: PropTypes.string.isRequired,
+    setting: PropTypes.string,
+    value: PropTypes.bool
+};
 
 export default ConfirmModal;

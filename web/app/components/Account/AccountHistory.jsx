@@ -1,6 +1,5 @@
 import React from "react";
 import {PropTypes} from "react";
-import {Link} from "react-router";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import Operation from "../Blockchain/Operation";
@@ -120,16 +119,16 @@ class AccountHistory extends React.Component {
                         inverted={this.props.settings.get("inverseMarket")}
                     />
                 );
-            };
+            }
         }
 
         return (
             <div className="grid-content">
                 <ul className="pagination">
                     <li onClick={this._changePage.bind(this, "first")}>1</li>
-                    <li className="button outline block-button" onClick={this._changePage.bind(this, "up")}>Newer</li>
-                    <li style={{padding: "0" , margin: "0"}}><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
-                    <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}>Older</li>
+                    <li className="button outline block-button" onClick={this._changePage.bind(this, "up")}><Translate content="pagination.newer" /></li>
+                    <li style={{padding: "0", margin: "0"}}><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
+                    <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}><Translate content="pagination.older" /></li>
                     <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
                 </ul>
                 <table style={{width: "100%"}} className="table text-center">
@@ -141,5 +140,23 @@ class AccountHistory extends React.Component {
         );
     }
 }
+
+AccountHistory.defaultProps = {
+    account_name: "",
+    cachedAccounts: {},
+    accountHistories: {},
+    account_name_to_id: {},
+    assets: {},
+    account_id_to_name: {}
+};
+
+AccountHistory.propTypes = {
+    account_name: PropTypes.string.isRequired,
+    cachedAccounts: PropTypes.object.isRequired,
+    accountHistories: PropTypes.object.isRequired,
+    account_name_to_id: PropTypes.object.isRequired,
+    assets: PropTypes.object.isRequired,
+    account_id_to_name: PropTypes.object.isRequired
+};
 
 export default AccountHistory;

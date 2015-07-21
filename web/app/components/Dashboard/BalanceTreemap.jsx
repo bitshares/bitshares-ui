@@ -21,11 +21,13 @@ class BalanceTreemap extends React.Component {
         if (balances && balances.length > 0 && assets.size > 0) {
             accountBalances = balances.map((balance, index) => {
                 let asset = assets.get(balance.asset_id);
-                return {
-                        name: asset.symbol,
-                        value: utils.get_asset_amount(balance.amount, asset),
-                        colorValue: index
-                    };
+                if (asset) {
+                    return {
+                            name: asset.symbol,
+                            value: utils.get_asset_amount(balance.amount, asset),
+                            colorValue: index
+                        };
+                }
 
             });
         }
@@ -90,12 +92,12 @@ class BalanceTreemap extends React.Component {
 
 BalanceTreemap.defaultProps = {
     assets: {},
-    balances: {}
+    balances: []
 };
 
 BalanceTreemap.propTypes = {
     assets: PropTypes.object.isRequired,
-    balances: PropTypes.object.isRequired
+    balances: PropTypes.array.isRequired
 };
 
 export default BalanceTreemap;

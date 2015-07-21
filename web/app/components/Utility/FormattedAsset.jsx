@@ -15,7 +15,7 @@ class FormattedAsset extends Component {
 
     render() {
         let {amount, asset, base, baseamount, decimalOffset} = this.props;
-
+        
         if (!asset) {
             return <span></span>;
         }

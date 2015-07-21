@@ -18,6 +18,12 @@ class AccountImage extends Component {
     }
 }
 
+AccountImage.defaultProps = {
+    src: "",
+    account: "",
+    size: {height: 120, width: 120}
+};
+
 AccountImage.propTypes = {
     src: PropTypes.string,
     account: PropTypes.string.isRequired,

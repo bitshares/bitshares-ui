@@ -17,6 +17,12 @@ class AccountInfo extends Component {
     }
 }
 
+AccountInfo.defaultProps = {
+    account_name: "",
+    account_id: "",
+    image_size: {height: 120, width: 120}
+};
+
 AccountInfo.propTypes = {
     account_name: PropTypes.string.isRequired,
     account_id: PropTypes.string.isRequired,

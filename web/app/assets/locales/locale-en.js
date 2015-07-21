@@ -22,6 +22,7 @@ module.exports = {
         hour_24: "24hr Change",
         recent: "Recent activity",
         name: "Account name",
+        more: "see more",
         member: {
             stats: "Member stats",
             join: "Joined on",
@@ -35,7 +36,41 @@ module.exports = {
         connections: {
             known: "Known by",
             "black": "Blacklisted by"
-        }
+        },
+        perm: {
+            active: "Active Permissions",
+            owner: "Owner Permissions",
+            publish: "Publish changes",
+            reset: "Reset changes",
+            add: "Add permission",
+            type: "Type",
+            key: "Key/Name",
+            weight: "Weight",
+            threshold: "Threshold",
+            confirm_add: "Add",
+            cancel: "Cancel"
+        },
+        votes: {
+            proxy: "Proxy Voting Account",
+            name: "Name",
+            info: "Info",
+            support: "Support",
+            workers: "Budget Items"
+        },
+        upgrade: "Upgrade account",
+        unlink: "Unlink",
+        link: "Link",
+        pay: "Pay",
+        overview: "Overview",
+        history: "History",
+        payees: "Payees",
+        permissions: "Permissions",
+        voting: "Voting",
+        orders: "Orders"
+    },
+    pagination: {
+        newer: "Newer",
+        older: "Older"
     },
     transfer: {
         from: "From",
@@ -243,5 +278,33 @@ module.exports = {
         confirm_yes: "Always",
         confirm_no: "Never",
         always_confirm: "Always ask for confirmation"
+    },
+    footer: {
+        title: "Graphene",
+        block: "Head block"
+    },
+    exchange: {
+        price_history: "Price History",
+        order_depth: "Order Depth",
+        market_history: "Market History",
+        balance: "Balance",
+        total: "Total",
+        value: "Value",
+        price: "Price",
+        latest: "Latest Price",
+        call: "Call Price",
+        volume: "Volume",
+        spread: "Spread",
+        quantity: "Quantity",
+        buy: "Buy",
+        sell: "Sell",
+        confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
+        confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
+    },
+    markets: {
+        choose_base: "Choose base asset",
+        filter: "Filter",
+        core_rate: "Core rate:",
+        supply: "Supply"
     }
 };

@@ -50,9 +50,6 @@ class AccountPage extends React.Component {
                             account_name: () => {
                                 return account_name;
                             },
-                            all_delegates: () => {
-                                return AccountStore.getState().account_name_to_id;
-                            },
                             cachedAccounts: () => {
                                 return AccountStore.getState().cachedAccounts;
                             },

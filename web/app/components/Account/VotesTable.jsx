@@ -1,7 +1,9 @@
 import React from "react";
+import {PropTypes} from "react";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import Icon from "../Icon/Icon";
-import ReactTooltip from "react-tooltip";
+// import ReactTooltip from "react-tooltip";
+import Translate from "react-translate-component";
 
 class VotesTable extends React.Component {
 
@@ -60,8 +62,8 @@ class VotesTable extends React.Component {
             <tr className="control-row">
                 <td style={{width: cw[0]}}><AutocompleteInput id="select_entity" options={this.props.allEntities} ref="select_entity" onEnter={this.onSave}/></td>
                 <td style={{width: cw[1]}}>
-                    <button className="button" onClick={this.onSave}>Add</button>
-                    <button className="button secondary" onClick={this.onCancel}>Cancel</button>
+                    <button className="button" onClick={this.onSave}><Translate content="account.perm.confirm_add" /></button>
+                    <button className="button secondary" onClick={this.onCancel}><Translate content="account.perm.cancel" /></button>
                 </td>
                 <td style={{width: cw[2]}}></td>
                 <td style={{width: cw[3]}}></td>
@@ -80,9 +82,9 @@ class VotesTable extends React.Component {
                 <table className="table">
                     <thead>
                     <tr>
-                        <th style={{width: cw[0]}}>Name</th>
-                        <th style={{width: cw[1]}}>Info</th>
-                        <th style={{width: cw[2]}}>Support</th>
+                        <th style={{width: cw[0]}}><Translate content="account.votes.name" /></th>
+                        <th style={{width: cw[1]}}><Translate content="account.votes.info" /></th>
+                        <th style={{width: cw[2]}}><Translate content="account.votes.support" /></th>
                         <th style={{width: cw[3]}}></th>
                     </tr>
                     </thead>
@@ -95,5 +97,19 @@ class VotesTable extends React.Component {
         );
     }
 }
+
+VotesTable.defaultProps = {
+    selectedEntities: [],
+    allEntities: [],
+    onAddRow: function() {},
+    onRemoveRow: function() {}
+};
+
+VotesTable.propTypes = {
+    selectedEntities: PropTypes.object.isRequired,
+    allEntities: PropTypes.array.isRequired,
+    onAddRow: PropTypes.func.isRequired,
+    onRemoveRow: PropTypes.func.isRequired
+};
 
 export default VotesTable;

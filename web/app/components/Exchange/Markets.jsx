@@ -4,6 +4,7 @@ import MarketCard from "./MarketCard";
 import Immutable from "immutable";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
+import Translate from "react-translate-component";
 
 class Markets extends Component {
 
@@ -74,7 +75,7 @@ class Markets extends Component {
 
         let baseOptions = assets.map(a => {
             return <option key={a.id} id={a.id}>{a.symbol}</option>;
-        });
+        }).toArray();
 
         return (
             <div className="grid-block vertical" style={{flexWrap: "nowrap"}}>
@@ -82,7 +83,7 @@ class Markets extends Component {
                     <div className="grid-block small-5 small-offset-1" style={{padding: "0.5rem"}}>
                         <div className="grid-container">
                         <section className="block-list">
-                            <header>Select base asset:</header>
+                            <header><Translate content="markets.choose_base" />:</header>
                                 <ul>
                                     <li className="with-dropdown">
                                     <select style={{lineHeight: "1.2em"}} value={baseAsset.symbol} onChange={this._onChangeBase.bind(this)}>
@@ -94,7 +95,7 @@ class Markets extends Component {
                         </div>
                     </div>
                     <div className="grid-block vertical small-5">
-                        <h5>Filter:</h5>
+                        <h5><Translate content="markets.filter" />:</h5>
                         <input type="text" value={this.state.filterMarket} onChange={this._onFilterInput.bind(this)}></input>
                     </div>
                 </div>

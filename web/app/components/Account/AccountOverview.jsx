@@ -20,19 +20,26 @@ class AccountOverview extends React.Component {
 
     render() {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountBalances, accountHistories, account_id_to_name} = this.props;
-        let account_id = account_name_to_id[account_name]
+        let account_id = account_name_to_id[account_name];
         let account = account_id ? cachedAccounts.get(account_id) : null;
         if(!account) return <div>Account {account_name} couldn't be displayed</div>;
-        let balances = accountBalances.get(account.name).map( balance => {
-            balance.amount = parseFloat(balance.amount);
-            return (
-                <tr key={balance.asset_id}>
-                    <td><FormattedAsset amount={balance.amount} asset={assets.get(balance.asset_id)}/></td>
-                    <td><FormattedAsset amount={balance.amount} asset={assets.get(balance.asset_id)}/></td>
-                    <td>{/*<FormattedNumber style="percent" value={0.1 * Math.random()}/>*/}-</td>
-                </tr>
-            );
-        });
+
+        let balances = null;
+        if (accountBalances && assets) {
+            balances = accountBalances.get(account.name).map( balance => {
+                balance.amount = parseFloat(balance.amount);
+                let asset = assets.get(balance.asset_id);
+                if (asset) {
+                    return (
+                        <tr key={balance.asset_id}>
+                            <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
+                            <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
+                            <td>{/*<FormattedNumber style="percent" value={0.1 * Math.random()}/>*/}-</td>
+                        </tr>
+                    );
+                }
+            });
+        }
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = accountHistories.get(account.id).map((trx, index) => {
             if (index < 10) {
@@ -54,7 +61,7 @@ class AccountOverview extends React.Component {
         return (
             <div className="grid-content">
                 <div className="content-block">
-                    <h3>Assets</h3>
+                    <h3><Translate content="explorer.assets.title" /></h3>
                     <table className="table">
                         <thead>
                             <tr>
@@ -101,7 +108,7 @@ class AccountOverview extends React.Component {
                 </div>
                  */}
                 <div className="content-block">
-                <h3>Recent Transactions <Link to="account-history" params={{name: account_name}}><small> (see more) </small></Link></h3>
+                <h3><Translate content="account.recent" /> <Link to="account-history" params={{name: account_name}}><small> (<Translate content="account.more" />) </small></Link></h3>
                     <table className="table">
                         <tbody>
                         {history}
@@ -113,5 +120,25 @@ class AccountOverview extends React.Component {
         );
     }
 }
+
+AccountOverview.defaultProps = {
+    account_name: "",
+    cachedAccounts: {},
+    accountHistories: {},
+    accountBalances: {},
+    account_name_to_id: {},
+    assets: null,
+    account_id_to_name: {}
+};
+
+AccountOverview.propTypes = {
+    account_name: PropTypes.string.isRequired,
+    cachedAccounts: PropTypes.object.isRequired,
+    accountHistories: PropTypes.object.isRequired,
+    accountBalances: PropTypes.object.isRequired,
+    account_name_to_id: PropTypes.object.isRequired,
+    assets: PropTypes.object.isRequired,
+    account_id_to_name: PropTypes.object.isRequired
+};
 
 export default AccountOverview;

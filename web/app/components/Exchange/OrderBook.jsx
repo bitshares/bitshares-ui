@@ -3,6 +3,7 @@ import {PropTypes} from "react/addons";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
+import Translate from "react-translate-component";
 
 class OrderBook extends React.Component {
     constructor() {
@@ -104,16 +105,16 @@ class OrderBook extends React.Component {
                     <table className="table order-table fixed-height table-hover text-right">
                         <thead className="headers">
                             <tr>
-                                <th style={{textAlign: "right"}}>Value <br/><small>({baseSymbol})</small></th>
-                                <th style={{textAlign: "right"}}>Amount <br/><small>({quoteSymbol})</small></th>
-                                <th style={{textAlign: "right"}}>Price <br/><small>({baseSymbol}/{quoteSymbol})</small></th>
+                                <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
+                                <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
+                                <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
                             </tr>
                         </thead>
                         <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                             {bidRows}
                         </tbody>
                     </table>
-                    <div className="text-center spread" style={{borderTop: "1px solid gray", borderBottom: "1px solid gray", padding: "0.5rem 0.25rem"}}>Spread: {spread} {baseSymbol}</div>
+                    <div className="text-center spread" style={{borderTop: "1px solid gray", borderBottom: "1px solid gray", padding: "0.5rem 0.25rem"}}><Translate content="exchange.spread" />: {spread} {baseSymbol}</div>
                     <table className="table order-table fixed-height table-hover text-right">
                         <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
                             {askRows}

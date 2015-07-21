@@ -64,7 +64,7 @@ class Accounts extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-6 medium-offset-3">
                     <div className="grid-content shrink">
-                        <h3>Accounts</h3>
+                        <Translate component="h3" content="explorer.accounts.title" />
                         <input type="text" value={this.state.searchTerm} onChange={this._onSearchChange.bind(this)}/>
                     </div>
                     <div className="grid-content">

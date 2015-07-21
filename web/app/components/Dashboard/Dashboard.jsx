@@ -57,12 +57,14 @@ class Dashboard extends Component {
 
 Dashboard.defaultProps = {
     linkedAccounts: {},
-    assets: {}
+    assets: {},
+    balances: {}
 };
 
 Dashboard.propTypes = {
     linkedAccounts: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired
+    assets: PropTypes.object.isRequired,
+    balances: PropTypes.object.isRequired
 };
 
 export default Dashboard;

@@ -1,6 +1,8 @@
 import React from "react";
+import {PropTypes} from "react";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import Icon from "../Icon/Icon";
+import Translate from "react-translate-component";
 
 class PermissionsTable extends React.Component {
 
@@ -69,14 +71,14 @@ class PermissionsTable extends React.Component {
                 <td style={{width: cw[1]}}><AutocompleteInput id="select_account" options={this.props.accounts} ref="select_account"/></td>
                 <td colSpan="2">
                     <input type="number" style={{width: "4rem"}} ref="weight"/>
-                    <button className="button" onClick={this.onSave}>Add</button>
-                    <button className="button secondary" onClick={this.onCancel}>Cancel</button>
+                    <button className="button" onClick={this.onSave}><Translate content="account.perm.confirm_add" /></button>
+                    <button className="button secondary" onClick={this.onCancel}><Translate content="account.perm.cancel" /></button>
                 </td>
             </tr>
         ) : (
             <tr className="control-row">
-                <td style={{width: cw[0], paddingLeft: 0}}><a href className="button outline" onClick={this.onAdd}>Add Permission</a></td>
-                <td style={{width: cw[1]}} className="text-right"><label>Threshold</label></td>
+                <td style={{width: cw[0], paddingLeft: 0}}><a href className="button outline" onClick={this.onAdd}><Translate content="account.perm.add" /></a></td>
+                <td style={{width: cw[1]}} className="text-right"><label><Translate content="account.perm.threshold" /></label></td>
                 <td style={{width: cw[2]}}><input value={this.props.threshold} style={{width: "4rem"}} type="number" size="4" maxLength="4" ref="threshold" onChange={this.onThresholdChanged} /></td>
                 <td style={{width: cw[3]}}></td>
             </tr>
@@ -87,9 +89,9 @@ class PermissionsTable extends React.Component {
                 <table className="table">
                     <thead>
                     <tr>
-                        <th style={{width: cw[0]}}>Type</th>
-                        <th style={{width: cw[1]}}>Key/Name</th>
-                        <th style={{width: cw[2]}}>Weight</th>
+                        <th style={{width: cw[0]}}><Translate content="account.perm.type" /></th>
+                        <th style={{width: cw[1]}}><Translate content="account.perm.key" /></th>
+                        <th style={{width: cw[2]}}><Translate content="account.perm.weight" /></th>
                         <th style={{width: cw[3]}}></th>
                     </tr>
                     </thead>
@@ -102,5 +104,23 @@ class PermissionsTable extends React.Component {
         );
     }
 }
+
+PermissionsTable.defaultProps = {
+    permissions: [],
+    accounts: [],
+    threshold: 90,
+    onAddRow: function() {},
+    onRemoveRow: function() {},
+    onThresholdChanged: function() {}
+};
+
+PermissionsTable.propTypes = {
+    permissions: PropTypes.object.isRequired,
+    accounts: PropTypes.array.isRequired,
+    threshold: PropTypes.number.isRequired,
+    onAddRow: PropTypes.func.isRequired,
+    onRemoveRow: PropTypes.func.isRequired,
+    onThresholdChanged: PropTypes.func.isRequired
+};
 
 export default PermissionsTable;

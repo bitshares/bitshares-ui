@@ -1,7 +1,5 @@
 import React from "react";
 import {PropTypes} from "react";
-import {Link} from "react-router";
-import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import VotesTable from "./VotesTable";
@@ -9,17 +7,13 @@ import VoteActions from "actions/VoteActions";
 import VoteStore from "stores/VoteStore";
 import BaseComponent from "../BaseComponent";
 import Tabs from "react-foundation-apps/src/tabs";
+import counterpart from "counterpart";
 
 class AccountVoting extends BaseComponent {
 
     constructor(props) {
         super(props);
         super(props, VoteStore);
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        //return VoteStore.hasChanges(this.props.account_name);
-        return true;
     }
 
     switchProxy() {
@@ -64,17 +58,23 @@ class AccountVoting extends BaseComponent {
         let my_budget_items = this.state.c_budget_items[account_name];
         let my_proxy_account = this.state.c_proxies[account_name];
         //console.log("[AccountVoting.jsx:83] ----- render ----->", my_proxy_account, my_delegates, my_witnesses, my_budget_items);
-        let ad = this.props.all_delegates;
+        let ad = this.props.account_name_to_id;
         let all_delegates = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
         let all_witnesses = all_delegates;
         let all_budget_items = all_delegates;
         let action_buttons_class = "button" + (VoteStore.hasChanges(account_name) ? "" : " disabled");
 
+        let tabTitles = {
+            delegates: counterpart.translate("explorer.delegates.title"),
+            witnesses: counterpart.translate("explorer.witnesses.title"),
+            workers: counterpart.translate("account.votes.workers")
+        };
+
         return (
             <div className="grid-content">
                 <div className="content-block">
                     <div className="medium-4">
-                        <label>Proxy Voting Account</label>
+                        <label><Translate content="account.votes.proxy" /></label>
                         <AutocompleteInput
                             id="proxy_account" ref="proxy_account"
                             options={all_delegates}
@@ -86,21 +86,21 @@ class AccountVoting extends BaseComponent {
                     (
                     <div className="content-block">
                         <Tabs>
-                            <Tabs.Tab title="Delegates">
+                            <Tabs.Tab title={tabTitles.delegates}>
                                 <VotesTable
                                     selectedEntities={my_delegates}
                                     allEntities={all_delegates}
                                     onAddRow={this.onAddRow.bind(this, "delegates")}
                                     onRemoveRow={this.onRemoveRow.bind(this, "delegates")} />
                             </Tabs.Tab>
-                            <Tabs.Tab title="Witnesses">
+                            <Tabs.Tab title={tabTitles.witnesses}>
                                 <VotesTable
                                     selectedEntities={my_witnesses}
                                     allEntities={all_witnesses}
                                     onAddRow={this.onAddRow.bind(this, "witnesses")}
                                     onRemoveRow={this.onRemoveRow.bind(this, "witnesses")} />
                             </Tabs.Tab>
-                            <Tabs.Tab title="Budget Items">
+                            <Tabs.Tab title={tabTitles.workers}>
                                 <VotesTable
                                     selectedEntities={my_budget_items}
                                     allEntities={all_budget_items}
@@ -113,13 +113,24 @@ class AccountVoting extends BaseComponent {
                 }
                 <div className="content-block">
                     <div className="actions clearfix">
-                        <button className={action_buttons_class} onClick={this.onPublish.bind(this)}>Publish Changes</button>
-                        <a href="#" className={action_buttons_class + " secondary"} onClick={this.onCancelChanges.bind(this)}>Reset Changes</a>
+                        <button className={action_buttons_class} onClick={this.onPublish.bind(this)}><Translate content="account.perm.publish" /></button>
+                        <a href="#" className={action_buttons_class + " secondary"} onClick={this.onCancelChanges.bind(this)}><Translate content="account.perm.reset" /></a>
                     </div>
                 </div>
             </div>
         );
     }
 }
+
+
+AccountVoting.defaultProps = {
+    account_name: "",
+    account_name_to_id: {}
+};
+
+AccountVoting.propTypes = {
+    account_name: PropTypes.string.isRequired,
+    account_name_to_id: PropTypes.object.isRequired
+};
 
 export default AccountVoting;

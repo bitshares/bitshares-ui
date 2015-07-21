@@ -3,6 +3,7 @@ import {PropTypes} from "react/addons";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
+import Translate from "react-translate-component";
 
 class MarketHistory extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -45,12 +46,12 @@ class MarketHistory extends React.Component {
         return (
             <div className="grid-content market-content ps-container" ref="history">
                 <table className="table expand order-table table-hover text-right">
-                    <p>MARKET HISTORY</p>
+                    <p style={{textTransform: "uppercase"}}><Translate content="exchange.market_history" /></p>
                     <thead>
                     <tr>
-                        <th style={{textAlign: "right"}}>Value <br/><small>({baseSymbol})</small></th>
-                        <th style={{textAlign: "right"}}>Amount <br/><small>({quoteSymbol})</small></th>
-                        <th style={{textAlign: "right"}}>Price <br/><small>({baseSymbol}/{quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
                     </tr>
                     </thead>
                     <tbody>

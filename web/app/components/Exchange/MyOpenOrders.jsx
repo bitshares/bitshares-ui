@@ -1,5 +1,4 @@
 import React from "react";
-import Icon from "../Icon/Icon";
 import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
@@ -7,6 +6,7 @@ import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
+import Translate from "react-translate-component";
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -42,7 +42,7 @@ class MyOpenOrders extends React.Component {
                      <tr key={order.id}>
                          <td className="text-left">
                             <a style={{marginLeft: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
-                              CANCEL
+                                <Translate content="account.perm.cancel" />
                             </a>
                         </td>
                         <td><FormattedDate
@@ -92,7 +92,7 @@ class MyOpenOrders extends React.Component {
                         </td>
                         <td className="text-right">
                             <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
-                            CANCEL
+                            <Translate content="account.perm.cancel" />
                             </a>
                         </td>
 
@@ -106,10 +106,10 @@ class MyOpenOrders extends React.Component {
                     <thead>
                     <tr>
                         <th style={{textAlign: "left"}}></th>
-                        <th style={{textAlign: "right"}}>Expiration</th>
-                        <th style={{textAlign: "right"}}>Value</th>
-                        <th style={{textAlign: "right"}}>Amount</th>
-                        <th style={{textAlign: "right"}}>Price</th>
+                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -120,10 +120,10 @@ class MyOpenOrders extends React.Component {
                 <table className="table order-table my-orders text-right table-hover">
                     <thead>
                     <tr>
-                        <th style={{textAlign: "right"}}>Price</th>
-                        <th style={{textAlign: "right"}}>Amount</th>
-                        <th style={{textAlign: "right"}}>Value</th>
-                        <th style={{textAlign: "right"}}>Expiration</th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
                         <th style={{textAlign: "right"}}></th>
                     </tr>
                     </thead>

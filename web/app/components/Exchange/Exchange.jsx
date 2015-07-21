@@ -1,10 +1,11 @@
 import React from "react";
+import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
 import MyOpenOrders from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import BuySell from "./BuySell";
-import Margin from "./Margin";
+// import Margin from "./Margin";
 import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
@@ -12,6 +13,8 @@ import Tabs from "react-foundation-apps/src/tabs";
 import AccountActions from "actions/AccountActions";
 import debounce from "lodash.debounce";
 import ConfirmModal from "../Modal/ConfirmModal";
+import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 require("./exchange.scss");
 
@@ -86,17 +89,23 @@ class Exchange extends React.Component {
         if(this.props.settings.get("confirmMarketOrder")) // TODO: only show this confirmation modal if the user has not disabled it
         {
             var content = (this.props.quote === buyAsset.symbol) ?
-                <div>
-                    <span>{
-                    "Confirm order: " + 
-                    "Buy " + buyAssetAmount + " " + buyAsset.symbol + " at a price of " +
-                    (sellAssetAmount / buyAssetAmount) + " " + sellAsset.symbol + " per " + buyAsset.symbol + "."}
-                    </span>
-                </div>
+                <Translate 
+                        component="span"
+                        content="exchange.confirm_buy"
+                        buy_amount={buyAssetAmount}
+                        buy_symbol={buyAsset.symbol}
+                        price_amount={sellAssetAmount / buyAssetAmount}
+                        price_symbol={sellAsset.symbol + "/" + buyAsset.symbol}
+                />                
                 :
-                "Confirm order: " + 
-                "Sell " + sellAssetAmount + " " + sellAsset.symbol + " at a price of " +
-                (buyAssetAmount / sellAssetAmount) + " " + buyAsset.symbol + " per " + sellAsset.symbol + ".";
+                <Translate 
+                        component="span"
+                        content="exchange.confirm_sell"
+                        sell_amount={sellAssetAmount}
+                        sell_symbol={sellAsset.symbol}
+                        price_amount={buyAssetAmount / sellAssetAmount}
+                        price_symbol={buyAsset.symbol + "/" + sellAsset.symbol}
+                />;
 
             this.refs.confirmModal.show(content, "Confirm Order", callback);
         }
@@ -178,7 +187,7 @@ class Exchange extends React.Component {
 
     render() {
         let {asset_symbol_to_id, assets, currentAccount, limit_orders,
-            short_orders, base: baseSymbol, quote: quoteSymbol,
+            base: baseSymbol, quote: quoteSymbol,
             balances, totalBids, flat_asks, flat_bids, bids, asks} = this.props;
         let {buyAmount, buyPrice, sellAmount, sellPrice} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0;
@@ -204,6 +213,11 @@ class Exchange extends React.Component {
                 AccountActions.getAccount(currentAccount.id);
             }
         }
+
+        let tabTitles = {
+            ph: counterpart.translate("exchange.price_history"),
+            od: counterpart.translate("exchange.order_depth")
+        };
 
         return (
 
@@ -238,21 +252,21 @@ class Exchange extends React.Component {
                             <ul className="market-stats stats">
                                 <li className="stat">
                                     <span>
-                                        <span>Latest Price</span><br/>
+                                        <Translate component="span" content="exchange.latest" /><br/>
                                         <b className="value stat-primary">{utils.format_number(290, 3)}</b><br/>
                                         <em>{quoteSymbol}/{baseSymbol}</em>
                                     </span>
                                 </li>
                                 <li className="stat">
                                     <span>
-                                        <span>Call Price</span><br/>
+                                        <Translate component="span" content="exchange.call" /><br/>
                                         <b className="value stat-primary">{utils.format_number(312, 3)}</b><br/>
                                         <em>{quoteSymbol}/{baseSymbol}</em>
                                     </span>
                                 </li>
                                 <li className="stat">
                                     <span>
-                                        <span>Volume</span><br/>
+                                        <Translate component="span" content="exchange.volume" /><br/>
                                         <b className="value stat-primary">{utils.format_number(23122, 3)}</b><br/>
                                         <em>{quoteSymbol}</em>
                                     </span>
@@ -263,7 +277,7 @@ class Exchange extends React.Component {
                         {/* Price history chart and depth chart inside tabs */}
                         <div className="grid-block" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
                             <Tabs>
-                                <Tabs.Tab title="Price history">
+                                <Tabs.Tab title={tabTitles.ph}>
                                     <PriceChart
                                         priceData={this.props.priceData}
                                         volumeData={this.props.volumeData}
@@ -274,7 +288,7 @@ class Exchange extends React.Component {
                                         height={300}
                                     />
                                 </Tabs.Tab>
-                                <Tabs.Tab title="Order depth">
+                                <Tabs.Tab title={tabTitles.od}>
                                     <DepthHighChart
                                         orders={limit_orders}
                                         flat_asks={flat_asks}
@@ -364,5 +378,42 @@ class Exchange extends React.Component {
         );
     }
 }
+
+Exchange.defaultProps = {
+    quote: null, 
+    base: null, 
+    limit_orders: [],
+    balances: [], 
+    totalBids: 0, 
+    flat_asks: [], 
+    flat_bids: [], 
+    bids: [], 
+    asks: [],
+    asset_symbol_to_id: {}, 
+    assets: {},
+    setting: null,
+    activeMarketHistory: {},
+    settings: {},
+    priceData: [],
+    volumeData: []
+};
+
+Exchange.propTypes = {
+    quote: PropTypes.string.isRequired, 
+    base: PropTypes.string.isRequired, 
+    limit_orders: PropTypes.array.isRequired, 
+    balances: PropTypes.array.isRequired, 
+    totalBids: PropTypes.number.isRequired, 
+    flat_asks: PropTypes.array.isRequired,
+    flat_bids: PropTypes.array.isRequired,
+    bids: PropTypes.array.isRequired,
+    asks: PropTypes.array.isRequired,
+    asset_symbol_to_id: PropTypes.object.isRequired, 
+    assets: PropTypes.object.isRequired,
+    activeMarketHistory: PropTypes.object.isRequired,
+    settings: PropTypes.object.isRequired,
+    priceData: PropTypes.array.isRequired,
+    volumeData: PropTypes.array.isRequired
+};
 
 export default Exchange;
