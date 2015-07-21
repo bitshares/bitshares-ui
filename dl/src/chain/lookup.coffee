@@ -42,6 +42,15 @@ class Lookup
         )
         @_private.deferred_property "assetname", "id", asset_name
     
+    asset_symbol_precision:(id)->
+        ret = resolve: undefined
+        _private = @_private
+        ((ret)->
+            _private.deferred_lookup "object", id, (asset)->
+                ret.resolve = [asset.symbol, asset.precision]
+        )(ret)
+        ret
+    
     ###* 
     Resolves a memo public key from an account name or account id.  A public key
     resolves as-is.
@@ -72,7 +81,7 @@ class Lookup
 class Private
     
     ###
-    WARNING: Lookup map is erased (re-pointed to an empty map) before callback 
+    Lookup map is erased (re-pointed to an empty map) before callback 
     function are called.  This allows the resolve to find additional 
     dependencies (they will appear in the new lookup_map).
     ###

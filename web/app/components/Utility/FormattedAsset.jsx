@@ -6,7 +6,8 @@ import utils from "common/utils";
 
 class FormattedAsset extends Component {
     shouldComponentUpdate(nextProps) {
-        let symbol = (this.props.asset && nextProps.asset) ? nextProps.asset.symbol !== this.props.asset.symbol : true;
+        let symbol = (this.props.asset && nextProps.asset) ?
+            nextProps.asset.symbol !== this.props.asset.symbol : true;
         return (
             nextProps.amount !== this.props.amount || 
             symbol
