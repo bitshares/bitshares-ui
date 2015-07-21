@@ -16,16 +16,29 @@ var Utils = {
         return Math.pow(10, precision);
     },
 
-    get_asset_amount: (amount, asset) => {
-        return amount / Math.pow(10, asset.precision);
+    get_asset_amount: function(amount, asset) {
+        return amount / this.get_asset_precision(asset.precision);
     },
 
     format_number: (number, decimals) => {
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
-            zeros += "0"     
-        };
+            zeros += "0";     
+        }
         return numeral(number).format("0,0" + zeros);
+    },
+
+    format_asset: function(amount, asset) {
+        let precision = this.get_asset_precision(asset.precision);
+
+        return `${this.format_number(amount / precision, asset.precision)} ${asset.symbol}`;
+    },
+
+    format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset) {
+        let precision = this.get_asset_precision(quoteAsset.precision);
+        let basePrecision = this.get_asset_precision(baseAsset.precision);
+
+        return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), quoteAsset.precision)} ${quoteAsset.symbol}/${baseAsset.symbol}`;
     }
 };
 
