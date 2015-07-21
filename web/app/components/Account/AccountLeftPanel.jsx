@@ -3,9 +3,8 @@ import {PropTypes} from "react";
 import {Link} from "react-router";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
-// import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
-// import BaseComponent from "../BaseComponent";
+import ConfirmModal from "../Modal/ConfirmModal";
 
 class AccountLeftPanel extends React.Component {
 
@@ -31,13 +30,44 @@ class AccountLeftPanel extends React.Component {
         AccountActions.unlinkAccount(this.props.account_name);
     }
 
+    onUpgradeAccount(id, e) {
+        e.preventDefault();
+        let callback = () => {
+            AccountActions.upgradeAccount(id); 
+        };
+
+        let content = (
+            <div>
+                <span>Upgrade account <strong>{this.props.account_name}</strong> to lifetime member?</span>
+            </div>
+        );
+
+        this.refs.confirmModal.show(content, "Confirm Upgrade", callback);
+        
+    }
+
     render() {
         let {account_name, account_name_to_id, linkedAccounts} = this.props;
         let account_id = account_name_to_id[account_name];
+
+        console.log(this.props);
+
+        let account = this.props.cachedAccounts.get(account_id);
+        console.log("account:", account);
         return (
             <div className="grid-content no-overflow account-left-panel">
+                <ConfirmModal
+                    modalId="confirm_modal"
+                    ref="confirmModal"
+                />
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
+                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account_id ? 
+                    (<div className="grid-block" style={{marginBottom: "1rem"}}>
+                        <div className="grid-block center-content">
+                            <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account_id)}>Upgrade account</a>
+                        </div>
+                    </div>) : null}
                     <div className="grid-block no-margin account-buttons-row">
                         <div className="grid-block no-margin center-content">
                         {linkedAccounts.has(account_name) ?

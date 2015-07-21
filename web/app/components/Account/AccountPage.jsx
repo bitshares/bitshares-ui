@@ -35,6 +35,9 @@ class AccountPage extends React.Component {
                             },
                             linkedAccounts: () => {
                                 return AccountStore.getState().linkedAccounts;
+                            },
+                            cachedAccounts: () => {
+                                return AccountStore.getState().cachedAccounts;
                             }
                         }}>
                     <AccountLeftPanel/>
