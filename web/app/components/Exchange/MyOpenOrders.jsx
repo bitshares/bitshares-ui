@@ -7,6 +7,41 @@ import intlData from "../Utility/intlData";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
+
+class TableHeader extends React.Component {
+    shouldComponentUpdate() {
+        return false;
+    }
+
+    render() {
+        if (this.props.type === "buy") {
+            return (
+                <thead>
+                    <tr>
+                        <th style={{textAlign: "left"}}></th>
+                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
+                    </tr>
+                </thead>
+            );
+        } else {
+            return (
+                <thead>
+                    <tr>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
+                        <th style={{textAlign: "right"}}></th>
+                    </tr>
+                </thead>
+            );
+        }
+    }
+}
 
 class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -22,10 +57,12 @@ class MyOpenOrders extends React.Component {
     }
 
     render() {
+
         let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
         let bids = null, asks = null;
 
         if(orders.size > 0 && base && quote) {
+            let cancel = counterpart.translate("account.perm.cancel");
 
             bids = orders.filter(a => {
                 return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id);
@@ -42,7 +79,7 @@ class MyOpenOrders extends React.Component {
                      <tr key={order.id}>
                          <td className="text-left">
                             <a style={{marginLeft: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
-                                <Translate content="account.perm.cancel" />
+                                <span>{cancel}</span>
                             </a>
                         </td>
                         <td><FormattedDate
@@ -92,41 +129,32 @@ class MyOpenOrders extends React.Component {
                         </td>
                         <td className="text-right">
                             <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
-                            <Translate content="account.perm.cancel" />
+                            <span>{cancel}</span>
                             </a>
                         </td>
 
                     </tr>
                     );
             }).toArray();
+
+        } else {
+            return (
+                <div className="grid-content text-center ps-container" ref="orders">
+                </div>
+            );
         }
+
         return (
             <div className="grid-content text-center ps-container" ref="orders">
                 <table className="table order-table my-orders text-right table-hover">
-                    <thead>
-                    <tr>
-                        <th style={{textAlign: "left"}}></th>
-                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
-                    </tr>
-                    </thead>
+                    <TableHeader type="buy" />
                     <tbody>
                         {bids}
                     </tbody>
                 </table>
 
                 <table className="table order-table my-orders text-right table-hover">
-                    <thead>
-                    <tr>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
-                        <th style={{textAlign: "right"}}></th>
-                    </tr>
-                    </thead>
+                    <TableHeader type="sell" />
                     <tbody>
                         {asks}
                     </tbody>
