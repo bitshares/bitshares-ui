@@ -13,6 +13,7 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import notify from "actions/NotificationActions";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -129,7 +130,7 @@ class Transfer extends BaseComponent {
         }).catch(error => {
             ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: false});
-            this.props.addNotification({
+            notify.addNotification({
                 message: "Transfer failed",
                 level: "error",
                 autoDismiss: 10

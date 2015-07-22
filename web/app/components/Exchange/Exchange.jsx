@@ -15,6 +15,7 @@ import debounce from "lodash.debounce";
 import ConfirmModal from "../Modal/ConfirmModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import notify from "actions/NotificationActions";
 
 require("./exchange.scss");
 
@@ -67,7 +68,7 @@ class Exchange extends React.Component {
             false // fill or kill
         ).then(result => {
             if (!result) {
-                this.props.addNotification({
+                notify.addNotification({
                     message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
                     level: "error"
                 });
@@ -79,7 +80,7 @@ class Exchange extends React.Component {
         e.preventDefault();
 
         if (sellAssetAmount > balance) {
-            return this.props.addNotification({
+            return notify.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
                 level: "error"
             });
@@ -124,7 +125,7 @@ class Exchange extends React.Component {
             orderID // order id to cancel
         ).then(result => {
             if (!result) {
-                this.props.addNotification({
+                notify.addNotification({
                         message: `Failed to cancel limit order ${orderID}`,
                         level: "error"
                     });

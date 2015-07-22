@@ -48,7 +48,7 @@ import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
 import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
-import NotificationStore from 'stores/NotificationStore';
+import NotificationStore from "stores/NotificationStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
 
@@ -59,12 +59,11 @@ import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
-import Invoice from "./components/Transfer/Invoice"
+import Invoice from "./components/Transfer/Invoice";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/loader");
 
-var notificationSystem
 
 class App extends BaseComponent {
     
@@ -74,12 +73,11 @@ class App extends BaseComponent {
     }
     
     componentWillUnmount() {
-        NotificationStore.unlisten(this._onNotificationChange)
+        NotificationStore.unlisten(this._onNotificationChange);
     }
     
     componentDidMount() {
-        NotificationStore.listen(this._onNotificationChange)
-        notificationSystem = this.refs.notificationSystem
+        NotificationStore.listen(this._onNotificationChange.bind(this));
         
         let locale;
         if (cookies) {
@@ -115,18 +113,19 @@ class App extends BaseComponent {
     
     /** Usage: NotificationActions.[success,error,warning,info] */
     _onNotificationChange() {
-        let notification = NotificationStore.getState().notification
-        if(notification.autoDismiss == void 0)
-            notification.autoDismiss = 10
+        let notification = NotificationStore.getState().notification;
+        if (notification.autoDismiss === void 0) {
+            notification.autoDismiss = 10;
+        }
         
-        notificationSystem.addNotification(notification)
+        this.refs.notificationSystem.addNotification(notification);
     }
 
-    /** Non-static, used by passing notificationSystem via react Component refs */
-    _addNotification(params) {
-        console.log("add notification:", this.refs, params);
-        this.refs.notificationSystem.addNotification(params);
-    }
+    // /** Non-static, used by passing notificationSystem via react Component refs */
+    // _addNotification(params) {
+    //     console.log("add notification:", this.refs, params);
+    //     this.refs.notificationSystem.addNotification(params);
+    // }
     
     render() {
         let content = (
@@ -135,7 +134,7 @@ class App extends BaseComponent {
                 <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                 <AccountNotifications/>
                 <div className="grid-block vertical">
-                    <RouteHandler addNotification={this._addNotification.bind(this)}/>
+                    <RouteHandler />
                 </div>
                 <Footer/>
                 <ReactTooltip type="dark" effect="solid" />
@@ -147,7 +146,7 @@ class App extends BaseComponent {
         return (
             <div>
                 {content}
-                <NotificationSystem ref="notificationSystem" />
+                <NotificationSystem ref="notificationSystem" allowHtml={true}/>
             </div>
         );
         

@@ -4,7 +4,7 @@ import AccountActions from "actions/AccountActions";
 import AccountNameInput from "./Forms/AccountNameInput";
 import PasswordInput from "./Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
-import notify from 'actions/NotificationActions';
+import notify from "actions/NotificationActions";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -12,13 +12,13 @@ class CreateAccount extends React.Component {
         this.state = {validAccountName: false};
     }
 
-    onAccountNameChange(e) {
+    onAccountNameChange() {
         this.setState({validAccountName: this.refs.account_name.valid()});
     }
 
     createAccount(name) {
         return AccountActions.createAccount(name).then(() => {
-            this.props.addNotification({
+            notify.addNotification({
                 message: `Successfully created account: ${name}`,
                 level: "success",
                 autoDismiss: 10
@@ -27,7 +27,7 @@ class CreateAccount extends React.Component {
         }).catch(error => {
             // Show in GUI
             console.log("ERROR AccountActions.createAccount", error);
-            this.props.addNotification({
+            notify.addNotification({
                 message: `Failed to create account: ${name}`,
                 level: "error",
                 autoDismiss: 10
@@ -35,7 +35,7 @@ class CreateAccount extends React.Component {
         });
     }
 
-    createWallet(password) {
+    createWallet() {
         return WalletDb.onCreateWallet(
             this.state.password,
             null, //this.state.brainkey,
@@ -48,12 +48,11 @@ class CreateAccount extends React.Component {
             });
             this.forceUpdate();
         }).catch(err => {
-            console.log("CreateWallet failed:", err);
             notify.addNotification({
                 message: `Failed to create wallet: ${err}`,
                 level: "error",
                 autoDismiss: 10
-            })
+            });
         });
     }
 

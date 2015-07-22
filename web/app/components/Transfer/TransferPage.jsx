@@ -30,7 +30,7 @@ class TransferPage extends React.Component {
                     return AssetStore.getState().assets;
                 }
               }}>
-                <Transfer addNotification={this.props.addNotification}/>
+                <Transfer />
             </AltContainer>
         );
     }
