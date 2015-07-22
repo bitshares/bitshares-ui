@@ -11,7 +11,7 @@ import notify from 'actions/NotificationActions'
 import hash from "common/hash"
 import cname from "classnames"
 
-var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
+//var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
 
 class ImportKeys extends Component {
     
@@ -52,6 +52,9 @@ class ImportKeys extends Component {
     
     render() {
         var has_keys = this.state.wif_count != 0
+        var password_placeholder = "Enter import file password"
+        if(this.state.wif_count)
+            password_placeholder = ""
         return <div>
             <br/>
             <div>
@@ -63,7 +66,7 @@ class ImportKeys extends Component {
             </div>
             <br/>
             <div>
-                <div>
+                {this.state.wif_count ? "" : <div>
                     <div>
                         <div>
                             <input
@@ -79,13 +82,14 @@ class ImportKeys extends Component {
                         <input 
                             type="password" ref="password"
                             key={this.state.reset_password}
-                            placeholder="Enter wallet password"
+                            placeholder={password_placeholder}
                             onChange={this._decryptPrivateKeys.bind(this)}
                         />
                         <div>{this.state.import_password_message}</div>
                         <div>{this.state.wif_text_message}</div>
                     </div>
-                </div>
+                </div>}
+                
             </div>
         </div>
     }
@@ -97,13 +101,12 @@ class ImportKeys extends Component {
         reader.onload = evt => {
             var contents = evt.target.result
             try {
-                if(this.addByPattern(contents))
-                    return
+                //if(this.addByPattern(contents)) return
                 
                 this._parseImportKeyUpload(contents, file) 
                 // this._parseWalletJson(conents)
                 
-                // try empty password, also display "Enter wallet password"
+                // try empty password, also display "Enter import file password"
                 this._decryptPrivateKeys()
                 
             } catch(message) {
@@ -141,11 +144,11 @@ class ImportKeys extends Component {
         
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum
-        this.setState({import_password_message: "Enter wallet password"})
+        this.setState({import_password_message: "Enter import file password"})
         var new_checksum = hash.sha512(hash.sha512(password)).toString('hex')
         if(checksum != new_checksum) {
             if(password != "")
-                this.setState({import_password_message: "Enter wallet password (keep going)"})
+                this.setState({import_password_message: "Enter import file password (keep going)"})
             return
         }
         this.setState({
@@ -185,29 +188,28 @@ class ImportKeys extends Component {
         })
         
     }
-    
-    addByPattern(contents) {
-        if( ! contents)
-            return false
-        
-        var count = 0, invalid_count = 0
-        for(let wif of contents.match(wif_regex) || [] ) {
-            try { 
-                PrivateKey.fromWif(wif) //throws 
-                this.state.wifs_to_account[wif] = []
-                count++
-            } catch(e) { invalid_count++ }
-        }
-        this.updateOnChange()
-        this.setState({
-            wif_text_message: 
-                (!count ? "" : count + " keys found from text.") +
-                (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
-        })
-        return count
-    }
 
-    
+//    addByPattern(contents) {
+//        if( ! contents)
+//            return false
+//        
+//        var count = 0, invalid_count = 0
+//        for(let wif of contents.match(wif_regex) || [] ) {
+//            try { 
+//                PrivateKey.fromWif(wif) //throws 
+//                this.state.wifs_to_account[wif] = []
+//                count++
+//            } catch(e) { invalid_count++ }
+//        }
+//        this.updateOnChange()
+//        this.setState({
+//            wif_text_message: 
+//                (!count ? "" : count + " keys found from text.") +
+//                (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
+//        })
+//        return count
+//    }
+
 }
 
 export default ImportKeys
@@ -222,42 +224,4 @@ class KeyCount extends Component {
         return <span>Found {this.props.wif_count} private keys</span>
     }
 }
-
-/*
-    importKeys(wifs_to_account) {
-        if( WalletDb.isLocked()) {
-            notify.error("Wallet is locked")
-            return
-        }
-        var wifs = Object.keys(wifs_to_account)
-        WalletDb.importKeys( wifs ).then( result => {
-            var {import_count, duplicate_count, private_key_ids} = result
-            try {
-                if( ! import_count && ! duplicate_count) {
-                    notify.warning(`There where no keys to import`)
-                    return
-                }
-                if( ! import_count && duplicate_count) {
-                    notify.warning(`${duplicate_count} duplicates (Not Imported)`)
-                    return
-                }
-                var message = ""
-                if (import_count)
-                    message = `Successfully imported ${import_count} keys.`
-                if (duplicate_count)
-                    message += `  ${duplicate_count} duplicates (Not Imported)`
-                
-                if(duplicate_count)
-                    notify.warning(message)
-                else
-                    notify.success(message)
-            
-            }finally{this.reset()}
-            
-        }).catch( error => {
-            notify.error(`There was an error: ${error}`)
-        })
-    }
-    
-*/
 

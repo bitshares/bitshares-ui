@@ -1,6 +1,7 @@
 import iDB from "../idb-instance";
 import key from "../common/key_utils"
 import idb_helper from "../idb-helper"
+import cloneDeep from "lodash.clonedeep"
 
 import Immutable from "immutable";
 
@@ -199,9 +200,9 @@ class WalletDb {
     }
     
     /** @return resolve(insert_count) */
-    importKeys(wif_keys) {
-        var transaction = this.transaction_update_keys()
+    importKeys(private_key_objs) {
         return new Promise((resolve, reject) => {
+            var transaction = this.transaction_update_keys()
             if(this.isLocked()) {
                 reject("wallet locked")
                 return
@@ -209,11 +210,18 @@ class WalletDb {
             var promises = []
             promises.push(this.setWalletModified(transaction))
             var import_count = 0, duplicate_count = 0
-            for(let wif of wif_keys) {
+            for(let private_key_obj of private_key_objs) {
+                var wif = private_key_obj.wif
                 if( ! wif) continue
                 var private_key = PrivateKey.fromWif(wif)
                 promises.push(
-                    this.saveKey(private_key, null, transaction).then(
+                    this.saveKey(
+                        private_key,
+                        private_key_obj.import_account_names,
+                        private_key_obj.import_balances,
+                        null,//brainkey_pos
+                        transaction
+                    ).then(
                         ret => {
                             if(ret.result == "duplicate")
                                 duplicate_count++
@@ -250,6 +258,8 @@ class WalletDb {
         for(let private_key_record of private_keys) {
             promises.push( this.saveKey(
                 private_key_record.private_key,
+                null, //import_account_names
+                null, //import_balances
                 private_key_record.sequence,
                 transaction
             ))
@@ -259,6 +269,8 @@ class WalletDb {
     
     saveKey(
         private_key,
+        import_account_names,
+        import_balances,
         brainkey_pos,
         transaction
     ) {
@@ -273,6 +285,8 @@ class WalletDb {
         var public_key = private_key.toPublicKey()
         var private_key_object = {
             wallet_id: wallet.id,
+            import_account_names,
+            import_balances,
             encrypted_key: private_cipherhex,
             brainkey_pos: brainkey_pos,
             pubkey: public_key.toBtsPublic()
@@ -302,7 +316,7 @@ class WalletDb {
                 return
             }
             //DEBUG console.log('... wallet',wallet)
-            var wallet_clone = JSON.parse(JSON.stringify( wallet ))
+            var wallet_clone = cloneDeep( wallet )
             wallet_clone.last_modified = new Date()
             if(update_callback)
                 update_callback(wallet_clone)

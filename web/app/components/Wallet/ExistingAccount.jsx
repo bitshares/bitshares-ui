@@ -1,14 +1,16 @@
 import React,{Component} from "react"
 
 import PrivateKey from "ecc/key_private"
+import Wallet from "components/Wallet/Wallet"
 import ImportKeys from "components/Wallet/ImportKeys"
 import FormattedAsset from "components/Utility/FormattedAsset"
 import Apis from "rpc_api/ApiInstances"
 
 import AccountSelect from "components/Forms/AccountSelect"
 import WalletActions from "actions/WalletActions"
+import WalletDb from "stores/WalletDb"
 
-import notice from "actions/NotificationActions"
+import notify from 'actions/NotificationActions'
 import cname from "classnames"
 import lookup from "chain/lookup"
 import v from "chain/serializer_validation"
@@ -40,8 +42,10 @@ class ExistingAccount extends Component {
     
     render() {
         var has_keys = this.state.keys.wif_count ? true : false
+        var has_balance_results = this.state.balance_by_asset ? true : false
         var has_account = this.state.claim_account_name ? true : false
-        var import_ready = has_account && has_keys
+        
+        var import_ready = has_balance_results && has_keys
         
         var claim_balance_label = "Claim Balance..."
         if(has_account)
@@ -64,38 +68,54 @@ class ExistingAccount extends Component {
                 <h4>Existing Accounts</h4>
                 
                 <hr/>
-                <h3>Import Keys</h3>
-                <ImportKeys onChange={this._importKeysChange.bind(this)}/>
-                
-                <hr/>
-                <h3>Balances</h3>
-                {balance_rows ? <div>
+                <Wallet>
+                    <h3>Import Keys</h3>
+                    <ImportKeys onChange={this._importKeysChange.bind(this)}/>
+                    
+                    {this.state.keys.wif_count ? <div>
+                    <br/>
+                    <h3>Available Balances</h3>
+                    {balance_rows ? <div>
+                        <div>
+                            <label>Asset</label>
+                            {balance_rows.length ? balance_rows : "No Balances"}
+                        </div>
+                    </div>:""}
+                    
+                    <br/>
                     <div>
-                        <label>Asset</label>
-                        {balance_rows.length ? balance_rows : "No Balances"}
+                        <a className={
+                            cname("button", {disabled:!import_ready})}
+                            onClick={this._saveImport.bind(this)} >
+                            Save
+                        </a>
                     </div>
-                </div>:""}
-                
-                <hr/>
-                <h3>Balance Claim Account</h3>
-                <AccountSelect
-                    account_names={this.getAccountNames()}
-                    onChange={this._claimAccountSelect.bind(this)}
-                    list_size="5"
-                />
-                <hr/>
-                <div>
-                    <a className={
-                        cname("button", {disabled:!import_ready})}
-                        onClick={this._importBalances.bind(this)} >
-                        {claim_balance_label}
-                    </a>
-                </div>
+                    
+                    </div>:<div>
+                    
+                    <hr/>
+                    <h3>Unclaimed Balances</h3>
+                    
+                    </div>}
 
+                </Wallet>
             </div>
         </div>
     }
-    
+//                    <h3>Balance Claim Account</h3>
+//                    <AccountSelect
+//                        account_names={this.getAccountNames()}
+//                        onChange={this._claimAccountSelect.bind(this)}
+//                        list_size="5"
+//                    />
+//                    <hr/>
+//                    <div>
+//                        <a className={
+//                            cname("button", {disabled:!import_ready})}
+//                            onClick={this._importBalances.bind(this)} >
+//                            {claim_balance_label}
+//                        </a>
+//                    </div>    
     _importKeysChange(keys) {
         this.setState({keys})
         var wifs = Object.keys(keys.wifs_to_account)
@@ -105,8 +125,6 @@ class ExistingAccount extends Component {
         }
         this.lookupBalances(wifs).then( 
         wifs_to_balances => {
-            if(wifs_to_balances == undefined)
-                return
             var assetid_balance = this.balanceByAsset(wifs_to_balances)
             var asset_ids = Object.keys(assetid_balance)
             var asset_symbol_precisions = []
@@ -124,10 +142,62 @@ class ExistingAccount extends Component {
                     var balance = assetid_balance[asset_id]
                     balance_by_asset.push({symbol, balance, precision})
                 }
-                this.setState({balance_by_asset})
+                this.state.keys.wifs_to_balances = wifs_to_balances
+                this.setState({balance_by_asset, keys})
             })
         })
     }
+    
+        
+    _saveImport() {
+        if( WalletDb.isLocked()) {
+            notify.error("Wallet is locked")
+            return
+        }
+        
+        var wifs_to_account = this.state.keys.wifs_to_account
+        var wifs_to_balances = this.state.wifs_to_balances
+        var private_key_objs = []
+        for(let wif of Object.keys(wifs_to_account)) {
+            var import_account_names = wifs_to_account[wif]
+            var import_balances = wifs_to_balances[wif]
+            private_key_objs.push({
+                wif,
+                import_account_names,
+                import_balances
+            })
+        }
+        
+        WalletDb.importKeys( private_key_objs ).then( result => {
+            var {import_count, duplicate_count, private_key_ids} = result
+            try {
+                if( ! import_count && ! duplicate_count) {
+                    notify.warning(`There where no keys to import`)
+                    return
+                }
+                if( ! import_count && duplicate_count) {
+                    notify.warning(`${duplicate_count} duplicates (Not Imported)`)
+                    return
+                }
+                var message = ""
+                if (import_count)
+                    message = `Successfully imported ${import_count} keys.`
+                if (duplicate_count)
+                    message += `  ${duplicate_count} duplicates (Not Imported)`
+                
+                if(duplicate_count)
+                    notify.warning(message)
+                else
+                    notify.success(message)
+            
+            }finally{this.reset()}
+            
+        }).catch( error => {
+            console.log(error)
+            notify.error(`There was an error: ${error}`)
+        })
+    }
+
     
     lookupBalances(wif_keys) {
         return new Promise((resolve, reject)=> {
@@ -142,7 +212,7 @@ class ExistingAccount extends Component {
             //DEBUG  console.log('... get_balance_objects', address_params)
             var db = api.db_api()
             if(db == null) {
-                notice.error("No witness node connection.")
+                notify.error("No witness node connection.")
                 resolve(undefined)
                 return
             }
@@ -186,6 +256,8 @@ class ExistingAccount extends Component {
     
     balanceByAsset(wifs_to_balances) {
         var asset_balance = {}
+        if( ! wifs_to_balances)
+            return asset_balance
         for(let wif of Object.keys(wifs_to_balances))
         for(let b of wifs_to_balances[wif]) {
             var total = asset_balance[b.balance.asset_id] || 0
@@ -218,14 +290,14 @@ class ExistingAccount extends Component {
             this.state.wifs_to_balances,
             true //broadcast
         ).then((result)=> {
-            notice.success("Balance claimed to account: " + this.state.claim_account_name)
+            notify.success("Balance claimed to account: " + this.state.claim_account_name)
             this.reset()
             if(result)
                 console.log("ExistingAccount._importBalances",
                     result, JSON.stringify(result))
         }).catch((error)=> {
             console.log(error)
-            notice.error("Error claiming balance.\n" + error)
+            notify.error("Error claiming balance.\n" + error)
             throw error
         })
     }
