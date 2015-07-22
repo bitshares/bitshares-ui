@@ -29,7 +29,7 @@ class AccountStore extends BaseStore {
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch
         });
-        this._export("loadDbData", "tryToSetCurrentAccount");
+        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount");
     }
 
     loadDbData() {
@@ -141,7 +141,7 @@ class AccountStore extends BaseStore {
     onCreateAccount(name_or_account) {
         var account = name_or_account
         if(typeof account == "string")
-            account = {account}
+            account = {name: account}
         
         iDB.add_to_store("linked_accounts", account).then( () => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", name);

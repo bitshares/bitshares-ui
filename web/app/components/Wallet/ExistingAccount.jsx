@@ -8,6 +8,7 @@ import Apis from "rpc_api/ApiInstances"
 
 import AccountSelect from "components/Forms/AccountSelect"
 import WalletActions from "actions/WalletActions"
+import AccountStore from "stores/AccountStore"
 import WalletDb from "stores/WalletDb"
 
 import notify from 'actions/NotificationActions'
@@ -34,6 +35,7 @@ class ExistingAccount extends Component {
             claim_account_name:null,
             wif_to_balances: null,
             wif_to_accounts: null,
+            blockchain_accounts: null,
             balances_known: false,
             accounts_known: false
         }
@@ -70,14 +72,11 @@ class ExistingAccount extends Component {
         }
         
         var account_rows = null
-        if(this.state.wif_to_accounts) {
+        if(this.state.blockchain_accounts) {
             account_rows = []
-            var wif_to_accounts = this.state.wif_to_accounts
-            console.log('... wif_to_accounts',wif_to_accounts)
-            for(let wif of Object.keys(wif_to_accounts))
-            for(let account of wif_to_accounts[wif]) {
+            for(let account of this.state.blockchain_accounts) {
                 account_rows.push(
-                    <div>{account.resolve.name}</div>
+                    <div>{account.name}</div>
                 )
             }
         }
@@ -145,8 +144,8 @@ class ExistingAccount extends Component {
             this.reset()
             return
         }
-        this.lookupAccounts(wifs).then( wif_to_accounts => {
-            this.setState({wif_to_accounts, accounts_known:true})
+        this.lookupAccounts(wifs).then( blockchain_accounts => {
+            this.setState({blockchain_accounts, accounts_known:true})
         })
                 
         this.lookupBalances(wifs).then( wif_to_balances => {
@@ -175,14 +174,14 @@ class ExistingAccount extends Component {
 
     }
     
-
-        
     _saveImport() {
         if( WalletDb.isLocked()) {
             notify.error("Wallet is locked")
             return
         }
-        
+        for(let account in this.state.blockchain_accounts) {
+            AccountStore.onCreateAccount(account)
+        }
         var wifs_to_account = this.state.keys.wifs_to_account
         var wif_to_balances = this.state.wif_to_balances
         var private_key_objs = []
@@ -195,6 +194,7 @@ class ExistingAccount extends Component {
                 import_balances
             })
         }
+        console.log('... private_key_objs',private_key_objs)
         
         WalletDb.importKeys( private_key_objs ).then( result => {
             var {import_count, duplicate_count, private_key_ids} = result
@@ -242,17 +242,18 @@ class ExistingAccount extends Component {
             }
             var p = db.exec("get_key_references", [public_key_parms]).then( result => {
                 //DEBUG console.log('... get_key_references',result)
-                var wif_to_accounts = {}
+                var blockchain_accounts = []
                 for(let i = 0; i < result.length; i++) {
-                    var account_lookups = []
                     for(let account_id of result[i]) {
-                        account_lookups.push(lookup.object(account_id))
+                        blockchain_accounts.push(lookup.object(account_id))
                     }
-                    wif_to_accounts[ wifs[i] ] = account_lookups
                 }
                 return lookup.resolve().then(()=> {
-                    //DEBUG console.log('... wif_to_accounts',wif_to_accounts)
-                    return wif_to_accounts
+                    //DEBUG console.log('... blockchain_accounts',blockchain_accounts)
+                    for(let i in blockchain_accounts) {
+                        blockchain_accounts[i] = blockchain_accounts[i].resolve
+                    }
+                    return blockchain_accounts
                 })
             })
             resolve(p)
