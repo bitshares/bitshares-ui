@@ -20,6 +20,13 @@ var Utils = {
         return amount / this.get_asset_precision(asset.precision);
     },
 
+    get_asset_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset) {
+        // let precision = this.get_asset_precision(quoteAsset.precision);
+        // console.log("quote amount:", quoteAmount, quoteAsset, this.get_asset_amount(quoteAmount, quoteAsset));
+        // console.log("base amount:", baseAmount, baseAsset, this.get_asset_amount(baseAmount, baseAsset));
+        return this.get_asset_amount(quoteAmount, quoteAsset) / this.get_asset_amount(baseAmount, baseAsset);
+    },
+
     format_number: (number, decimals) => {
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {

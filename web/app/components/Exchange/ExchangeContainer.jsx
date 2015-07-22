@@ -48,6 +48,9 @@ class ExchangeContainer extends React.Component {
                     activeMarketHistory: () => {
                         return MarketsStore.getState().activeMarketHistory;
                     },
+                    bucketSize: () => {
+                        return MarketsStore.getState().bucketSize;
+                    },
                     assets: () => {
                         return AssetStore.getState().assets;
                     },

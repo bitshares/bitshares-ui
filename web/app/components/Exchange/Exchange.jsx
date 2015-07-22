@@ -55,8 +55,6 @@ class Exchange extends React.Component {
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
             return this._subToMarket(nextProps);
         }
-
-
     }
 
     componentWillUnmount() {
@@ -151,16 +149,28 @@ class Exchange extends React.Component {
         });
     }
 
-    _subToMarket(props) {
-        let {quote, base, asset_symbol_to_id, assets} = props;
-        
+    _changeBucketSize(size, e) {
+        e.preventDefault();
+        if (size !== this.props.bucketSize) { 
+            MarketsActions.changeBucketSize(size);
+            let currentSub = this.state.sub.split("_");
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
+            this._subToMarket(this.props, size);
+        }
+    }
+
+    _subToMarket(props, newBucketSize) {
+        let {quote, base, asset_symbol_to_id, assets, bucketSize} = props;
+        if (newBucketSize) {
+            bucketSize = newBucketSize;
+        }
         if (asset_symbol_to_id[quote] && asset_symbol_to_id[base]) {
             let quote_id = asset_symbol_to_id[quote];
             let base_id = asset_symbol_to_id[base];
             let baseAsset = assets.get(base_id);
             let quoteAsset = assets.get(quote_id);
             if (quoteAsset && baseAsset) {
-                MarketsActions.subscribeMarket(baseAsset, quoteAsset);
+                MarketsActions.subscribeMarket(baseAsset, quoteAsset, bucketSize);
                 this.setState({sub: `${quote_id}_${base_id}`});
             }
         }
@@ -197,11 +207,11 @@ class Exchange extends React.Component {
         this.setState({showBuySell: !this.state.showBuySell});
     }
 
-    _orderbookClick(price, type) {
+    _orderbookClick(price, amount, type) {
         if (type === "bid") {
-            this.setState({sellPrice: price});
+            this.setState({sellPrice: price, sellAmount: amount});
         } else if (type === "ask") {
-            this.setState({buyPrice: price});
+            this.setState({buyPrice: price, buyAmount: amount});
         }
     }
 
@@ -294,8 +304,13 @@ class Exchange extends React.Component {
 
                         {/* Price history chart and depth chart inside tabs */}
                         <div className="grid-block" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
+
                             <Tabs>
                                 <Tabs.Tab title={tabTitles.ph}>
+                                    <div style={{position: "absolute", top: "-10px", right: "20px"}}>
+                                        <div className="button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
+                                        <div className="button" onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
+                                    </div>
                                     <PriceChart
                                         priceData={this.props.priceData}
                                         volumeData={this.props.volumeData}

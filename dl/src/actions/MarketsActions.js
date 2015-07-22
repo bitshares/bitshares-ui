@@ -38,7 +38,11 @@ class MarketsActions {
         this.dispatch(market);
     }
 
-    subscribeMarket(base, quote) {
+    changeBucketSize(size) {
+        this.dispatch(size);
+    }
+
+    subscribeMarket(base, quote, bucketSize) {
         let subID = quote.id + "_" + base.id;
         console.log("sub to market:", subID);
 
@@ -64,7 +68,7 @@ class MarketsActions {
                     foundFill = true;
                     fillOrders.push(subResult[0][i]);
                 }
-            };
+            }
             if (foundFill) {
                 this.dispatch({fillOrders: fillOrders});
             }
@@ -80,7 +84,7 @@ class MarketsActions {
                     callPromise,
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
-                        base.id, quote.id, 60, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        base.id, quote.id, bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then(results => {
@@ -125,7 +129,7 @@ class MarketsActions {
                     callPromise,
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
-                        base.id, quote.id, 60, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        base.id, quote.id, bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then((results) => {
@@ -152,14 +156,18 @@ class MarketsActions {
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
         console.log("unSubscribeMarket:", subID);
+        delete subs[subID];
+        this.dispatch({unSub: true});
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
                     quote, base
                 ])
                 .then((unSubResult) => {
                     console.log(subID, "market unsubscription success:", unSubResult);
-                    delete subs[subID];
+                    
                 }).catch((error) => {
+                    subs[subID] = true;
+                    this.dispatch({unSub: false, market: subID});
                     console.log("Error in MarketsActions.unSubscribeMarket: ", error);
                 });
         }
@@ -245,16 +253,16 @@ class MarketsActions {
             "order": orderID
         });
         return wallet_api.sign_and_broadcast(tr).then(result => {
-                console.log("cancel result:", result);
-                return true;
-            })
-            .catch(error => {
-                console.log("cancel error:", error);
-                this.dispatch({
-                    failedOrderID: orderID
-                });
-                return false;
+            console.log("cancel result:", result);
+            return true;
+        })
+        .catch(error => {
+            console.log("cancel error:", error);
+            this.dispatch({
+                failedOrderID: orderID
             });
+            return false;
+        });
     }
 }
 

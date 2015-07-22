@@ -1,6 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import Highcharts from "react-highcharts/stocks";
+import utils from "common/utils";
 
 class Chart {
     shouldComponentUpdate(nextProps) {
@@ -9,7 +10,8 @@ class Chart {
         } else {
             return (
                 nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
-                nextProps.config.series[0].data.length !== this.props.config.series[0].data.length
+                nextProps.config.series[0].data[0][1] !== this.props.config.series[0].data[0][1] || 
+                nextProps.quoteSymbol !== this.props.quoteSymbol
             );
         }
     }
@@ -22,10 +24,14 @@ class Chart {
 class PriceChart extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.priceData.length === 0) {
+        if (this.props.priceData.length === 0 || nextProps.priceData.length === 0) {
             return nextProps.priceData.length > 0;
         } else {
-            return nextState.lastPointY !== this.state.lastPointY;
+            return (
+                nextState.lastPointY !== this.state.lastPointY ||
+                nextProps.baseSymbol !== this.props.baseSymbol ||
+                nextProps.priceData[0][1] !== this.props.priceData[0][1]
+            );
         }
     }
 
@@ -149,7 +155,7 @@ class PriceChart extends React.Component {
                             "&nbsp;&nbsp;L:" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
                             "&nbsp;&nbsp;C:" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
                             "&nbsp;&nbsp;V:" + Highcharts.Highcharts.numberFormat(this.points[1].point.y, vol_dec, ".", ",") + " " +
-                            baseSymbol + TA + "</span>");
+                            quoteSymbol + TA + "</span>");
                     // }
                     // else if this.points.length == 1 && this.points[0] && this.points[0].point.open
                     //     return time + "O:" + Highcharts.numberFormat(this.points[0].point.open, price_dec,".",",") + "  H:" + Highcharts.numberFormat(this.points[0].point.high, price_dec,".",",")+ "  L:" + Highcharts.numberFormat(this.points[0].point.low, price_dec,".",",") + "  C:" + Highcharts.numberFormat(this.points[0].point.close, price_dec,".",",")+TA
@@ -196,7 +202,7 @@ class PriceChart extends React.Component {
                     },
                     top: "0%",
                     height: "70%",
-                    offset: 8,
+                    offset: 23,
                     gridLineWidth: 0,
                     plotLines: []
                 },
@@ -224,7 +230,7 @@ class PriceChart extends React.Component {
                     opposite: true,
                     top: "77%",
                     height: "23%",
-                    offset: 8,
+                    offset: 23,
                     gridLineWidth: 0,
                     title: {
                         text: null,
@@ -286,8 +292,20 @@ class PriceChart extends React.Component {
         }
 
         let boxHeight = 20;
-        let currentValue = open < close ? <div className="chart-label" style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", top: lastPointY - 2 - boxHeight / 2}}>{close}</div> :
-            <div className="chart-label" style={{height: boxHeight, backgroundColor: "#E3745B", top: lastPointY - 2 - boxHeight / 2}}>{close}</div>;
+        
+        let currentValue = open <= close ?
+            (<div
+                className="chart-label"
+                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", top: lastPointY - 2 - boxHeight / 2}}
+            >
+                {utils.format_number(close, 4)}
+            </div>) :
+            (<div
+                className="chart-label"
+                style={{height: boxHeight, backgroundColor: "#E3745B", top: lastPointY - 2 - boxHeight / 2}}
+            >
+                {utils.format_number(close, 4)}
+            </div>);
 
         // let addLine = function(yPos, color) {
         //     return <span style={{position: "absolute", top: yPos, border: "solid 1px " + color, width: "500px", borderBottom: "0"}}></span>;
@@ -298,7 +316,7 @@ class PriceChart extends React.Component {
                 <div style={{position: "relative"}}>
                     {currentValue}
                 </div>
-                {priceData && volumeData ? <Chart config={config} /> : null}
+                {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} /> : null}
             </div>
         );
     }
