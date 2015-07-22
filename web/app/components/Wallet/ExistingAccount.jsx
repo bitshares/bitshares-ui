@@ -32,7 +32,10 @@ class ExistingAccount extends Component {
             },
             balance_by_asset:null,
             claim_account_name:null,
-            wifs_to_balances: null
+            wif_to_balances: null,
+            wif_to_accounts: null,
+            balances_known: false,
+            accounts_known: false
         }
     }
     
@@ -42,10 +45,12 @@ class ExistingAccount extends Component {
     
     render() {
         var has_keys = this.state.keys.wif_count ? true : false
-        var has_balance_results = this.state.balance_by_asset ? true : false
-        var has_account = this.state.claim_account_name ? true : false
+        var import_ready = has_keys &&
+            this.state.balances_known &&
+            this.state.accounts_known
         
-        var import_ready = has_balance_results && has_keys
+        //var has_balance_results = this.state.balance_by_asset ? true : false
+        var has_account = this.state.claim_account_name ? true : false
         
         var claim_balance_label = "Claim Balance..."
         if(has_account)
@@ -63,6 +68,20 @@ class ExistingAccount extends Component {
                 )
             }
         }
+        
+        var account_rows = null
+        if(this.state.wif_to_accounts) {
+            account_rows = []
+            var wif_to_accounts = this.state.wif_to_accounts
+            console.log('... wif_to_accounts',wif_to_accounts)
+            for(let wif of Object.keys(wif_to_accounts))
+            for(let account of wif_to_accounts[wif]) {
+                account_rows.push(
+                    <div>{account.resolve.name}</div>
+                )
+            }
+        }
+        
         return <div id="existing-account" className="grid-block page-layout">
             <div className="grid-block vertical medium-9 medium-offset-2">
                 <h4>Existing Accounts</h4>
@@ -73,11 +92,20 @@ class ExistingAccount extends Component {
                     <ImportKeys onChange={this._importKeysChange.bind(this)}/>
                     
                     {this.state.keys.wif_count ? <div>
+                    
+                    <h3>Genesis Accounts</h3>
+                    {account_rows ? <div>
+                        <div>
+                            <label>Accounts</label>
+                            {account_rows.length ? account_rows : "No Accounts"}
+                        </div>
+                    </div>:""}
+                    
                     <br/>
                     <h3>Available Balances</h3>
                     {balance_rows ? <div>
                         <div>
-                            <label>Asset</label>
+                            <label>Assets</label>
                             {balance_rows.length ? balance_rows : "No Balances"}
                         </div>
                     </div>:""}
@@ -90,11 +118,6 @@ class ExistingAccount extends Component {
                             Save
                         </a>
                     </div>
-                    
-                    </div>:<div>
-                    
-                    <hr/>
-                    <h3>Unclaimed Balances</h3>
                     
                     </div>}
 
@@ -123,9 +146,13 @@ class ExistingAccount extends Component {
             this.reset()
             return
         }
-        this.lookupBalances(wifs).then( 
-        wifs_to_balances => {
-            var assetid_balance = this.balanceByAsset(wifs_to_balances)
+        this.lookupAccounts(wifs).then( wif_to_accounts => {
+            this.setState({wif_to_accounts, accounts_known:true})
+        })
+                
+        this.lookupBalances(wifs).then( wif_to_balances => {
+            this.setState({wif_to_balances})
+            var assetid_balance = this.balanceByAsset(wif_to_balances)
             var asset_ids = Object.keys(assetid_balance)
             var asset_symbol_precisions = []
             for(let asset_id of asset_ids) {
@@ -142,12 +169,14 @@ class ExistingAccount extends Component {
                     var balance = assetid_balance[asset_id]
                     balance_by_asset.push({symbol, balance, precision})
                 }
-                this.state.keys.wifs_to_balances = wifs_to_balances
-                this.setState({balance_by_asset, keys})
+                this.state.keys.wif_to_balances = wif_to_balances
+                this.setState({balance_by_asset, keys, balances_known: true})
             })
         })
+
     }
     
+
         
     _saveImport() {
         if( WalletDb.isLocked()) {
@@ -156,11 +185,11 @@ class ExistingAccount extends Component {
         }
         
         var wifs_to_account = this.state.keys.wifs_to_account
-        var wifs_to_balances = this.state.wifs_to_balances
+        var wif_to_balances = this.state.wif_to_balances
         var private_key_objs = []
         for(let wif of Object.keys(wifs_to_account)) {
             var import_account_names = wifs_to_account[wif]
-            var import_balances = wifs_to_balances[wif]
+            var import_balances = wif_to_balances[wif]
             private_key_objs.push({
                 wif,
                 import_account_names,
@@ -198,6 +227,38 @@ class ExistingAccount extends Component {
         })
     }
 
+    lookupAccounts(wifs){ 
+        return new Promise((resolve, reject)=> {
+            var public_key_parms = []
+            for(let wif of wifs){
+                var private_key = PrivateKey.fromWif(wif)
+                var public_key = private_key.toPublicKey()
+                public_key_parms.push(public_key.toBtsPublic())
+            }
+            var db = api.db_api()
+            if(db == null) {
+                notify.error("No witness node connection.")
+                resolve(undefined)
+                return
+            }
+            var p = db.exec("get_key_references", [public_key_parms]).then( result => {
+                //DEBUG console.log('... get_key_references',result)
+                var wif_to_accounts = {}
+                for(let i = 0; i < result.length; i++) {
+                    var account_lookups = []
+                    for(let account_id of result[i]) {
+                        account_lookups.push(lookup.object(account_id))
+                    }
+                    wif_to_accounts[ wifs[i] ] = account_lookups
+                }
+                return lookup.resolve().then(()=> {
+                    //DEBUG console.log('... wif_to_accounts',wif_to_accounts)
+                    return wif_to_accounts
+                })
+            })
+            resolve(p)
+        })
+    }
     
     lookupBalances(wif_keys) {
         return new Promise((resolve, reject)=> {
@@ -218,49 +279,38 @@ class ExistingAccount extends Component {
             }
             var p = db.exec("get_balance_objects", [address_params]).then( result => {
                 //DEBUG  console.log('... get_balance_objects',result)
-                var wifs_to_balances = {}
+                var wif_to_balances = {}
                 for(let i = 0; i < result.length; i++) {
                     var balance = result[i]
                     var wif = wif_owner[balance.owner]
-                    var balances = wifs_to_balances[wif] || []
+                    var balances = wif_to_balances[wif] || []
                     balances.push(balance)
-                    wifs_to_balances[wif] = balances
+                    wif_to_balances[wif] = balances
                 }
-                //DEBUG console.log('... wifs_to_balances',wifs_to_balances)
-                this.setState({wifs_to_balances})
-                return wifs_to_balances
-                //    if(b.vesting_policy)
-                //        continue //todo
-                //    //var total_claimed = "0"
-                //    //if( ! b.vesting_policy)
-                //    //    total_claimed = b.balance
-                //    ////'else' Zero total_claimed is understood to mean that your
-                //    ////claiming the vesting balance on vesting terms.
-                //    
-                //    balance_claims.push({
-                //        //fee: { amount: "100000", asset_id: 0},
-                //        deposit_to_account: account.id,
-                //        balance_to_claim: b.id, //"1.15.0"
-                //        balance_owner_key: address_publickey_map[b.owner],
-                //        total_claimed: {
-                //            amount: b.balance,
-                //            asset_id: b.balance.asset_id
-                //        }
-                //    })
-                //}
-                //DEBUG 
+                //DEBUG console.log('... wif_to_balances',wif_to_balances)
+                this.setState({wif_to_balances})
+                return wif_to_balances
+
             })
             resolve(p)
         })
     }
     
-    balanceByAsset(wifs_to_balances) {
+    balanceByAsset(wif_to_balances) {
         var asset_balance = {}
-        if( ! wifs_to_balances)
+        if( ! wif_to_balances)
             return asset_balance
-        for(let wif of Object.keys(wifs_to_balances))
-        for(let b of wifs_to_balances[wif]) {
+        for(let wif of Object.keys(wif_to_balances))
+        for(let b of wif_to_balances[wif]) {
             var total = asset_balance[b.balance.asset_id] || 0
+            //    if(b.vesting_policy)
+            //        continue //todo
+            //    //var total_claimed = "0"
+            //    //if( ! b.vesting_policy)
+            //    //    total_claimed = b.balance
+            //    ////'else' Zero total_claimed is understood to mean that your
+            //    ////claiming the vesting balance on vesting terms.
+            //DEBUG 
             total += v.to_number(b.balance.amount)
             asset_balance[b.balance.asset_id] = total 
         }
@@ -287,7 +337,7 @@ class ExistingAccount extends Component {
         //return
         WalletActions.importBalance(
             this.state.claim_account_name,
-            this.state.wifs_to_balances,
+            this.state.wif_to_balances,
             true //broadcast
         ).then((result)=> {
             notify.success("Balance claimed to account: " + this.state.claim_account_name)

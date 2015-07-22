@@ -17,6 +17,15 @@ class Lookup
     constructor:->
         @_private = new Private()
     
+    object:(id)->
+        ret = resolve: undefined
+        _private = @_private
+        ((ret)->
+            _private.deferred_lookup "object", id, (object)->
+                ret.resolve = object
+        )(ret)
+        ret
+    
     ###*
     Resolve an account id from an account name.  An account id resolves unchanged. 
     ###
