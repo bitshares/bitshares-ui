@@ -23,37 +23,10 @@ class BrainKeyUi {
     
     create(entropy_string = "add mouse entropy...") {
         return key.suggest_brain_key(
-            this.browserEntropy() +
+            key.browserEntropy() +
             entropy_string
         )
     }
-    
-    browserEntropy() {
-        var entropyStr = (new Date()).toString() + " " +
-            + window.screen.height + " " + window.screen.width + " " 
-            + window.screen.colorDepth + " " + " " + window.screen.availHeight 
-            + " " + window.screen.availWidth + " " + window.screen.pixelDepth
-            + navigator.language + " " +
-            + window.location + " " +
-            + window.history.length
-        
-        for (var i = 0; i < navigator.mimeTypes.length; i++)
-            entropyStr += 
-                navigator.mimeTypes[i].description + " " + 
-                navigator.mimeTypes[i].type + " " + 
-                navigator.mimeTypes[i].suffixes + " "
-        
-        // take processing speed into consideration
-        var b = new Buffer(entropyStr)
-        for (var i = 0; i < 10 * 1000; i++)
-            b = hash.ripemd160(b)
-        
-        entropyStr += b.toString('binary') + " " +
-            (new Date()).toString()
-        
-        return entropyStr
-    }
-
 }
 
 class QrScan extends React.Component {

@@ -35,9 +35,10 @@ class CreateAccount extends React.Component {
         });
     }
 
-    createWallet() {
+    createWallet(name, password) {
         return WalletDb.onCreateWallet(
-            this.state.password,
+            name,//login_account_name
+            password,
             null, //this.state.brainkey,
             true //unlock
         ).then( ()=> {
@@ -64,7 +65,7 @@ class CreateAccount extends React.Component {
             this.createAccount(name);
         } else {
             let password = this.refs.password.value();
-            this.createWallet(password).then(() => this.createAccount(name));
+            this.createWallet(name, password).then(() => this.createAccount(name));
         }
     }
 

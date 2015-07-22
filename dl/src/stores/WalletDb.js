@@ -111,9 +111,17 @@ class WalletDb {
                 reject("wallet exists")
                 return
             }
+            
             var password = key.aes_checksum(
                 password_plaintext + this.secret_server_token
             )
+            
+            if( ! brainkey_plaintext) {
+                brainkey_plaintext = key.suggest_brain_key(
+                    key.browserEntropy() +
+                    this.secret_server_token
+                )
+            }
             
             var {brainkey_checksum, brainkey_cipherhex} =
                 this.encrypteBrainKey(password, brainkey_plaintext)

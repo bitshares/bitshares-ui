@@ -116,6 +116,7 @@ class WalletCreate extends Component {
     onSubmit(e) {
         e.preventDefault()
         WalletDb.onCreateWallet(
+            null,//login_account_name
             this.state.password,
             null, //this.state.brainkey,
             true //unlock
@@ -127,7 +128,8 @@ class WalletCreate extends Component {
             })
             this.forceUpdate()
         }).catch(err => {
-            var error = err.target.error
+            var error = err
+            try { err = err.target.error } catch(e) {}
             console.log("CreateWallet failed:", error.name, error.message, err)
             notify.addNotification({
                 message: `Failed to create wallet: ${error.message}`,

@@ -3,8 +3,9 @@ var t = require("tcomb");
 let Account = t.struct({
     id: t.Str,
     name: t.Str,
-    owner: t.Obj,
-    active: t.Obj,
+    owner: t.Arr,
+    active: t.Arr,
+    imported_pubkey: t.Arr,
     annotations: t.Arr,
     options: t.Obj,
     //voting_account: t.Str,
@@ -64,7 +65,7 @@ let Block = t.struct({
 let WalletTcomb = t.struct({
     id: t.maybe(t.Num),
     public_name: t.Str,
-    login_account_name: t.Str,
+    login_account_name: t.maybe(t.Str),
     password_checksum: t.Str,
     encrypted_brainkey: t.maybe(t.Str),
     brainkey_checksum: t.maybe(t.Str),
@@ -77,6 +78,7 @@ let WalletTcomb = t.struct({
 let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
     wallet_id: t.Num,
+    label: t.Str,
     // brainkey_pos: "0" = 1st owner key, "0.0" = 1st active for owner "0"
     brainkey_pos: t.maybe(t.Str),
     encrypted_key: t.Str,
