@@ -179,8 +179,10 @@ class AccountActions {
         tr.add_type_operation("account_upgrade", { "account_to_upgrade": account_id, "upgrade_to_lifetime_member": true });
         return wallet_api.sign_and_broadcast(tr).then( result => {
             this.dispatch(account_id);
+            return true;
         }).catch(error => {
             console.log("[AccountActions.js:150] ----- upgradeAccount error ----->", error);
+            return false;
         });
     }
 

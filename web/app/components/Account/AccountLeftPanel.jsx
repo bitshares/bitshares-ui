@@ -5,6 +5,7 @@ import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import ConfirmModal from "../Modal/ConfirmModal";
+import notify from 'actions/NotificationActions'
 
 class AccountLeftPanel extends React.Component {
 
@@ -33,7 +34,21 @@ class AccountLeftPanel extends React.Component {
     onUpgradeAccount(id, e) {
         e.preventDefault();
         let callback = () => {
-            AccountActions.upgradeAccount(id); 
+            AccountActions.upgradeAccount(id).then(result => {
+                if (result) {
+                    notify.addNotification({
+                        message: `Successfully upgraded the account`,//: ${this.state.wallet_public_name}
+                        level: "success",
+                        autoDismiss: 10
+                    });
+                } else {
+                    notify.addNotification({
+                        message: `Failed to broadcast upgrade transaction`,//: ${this.state.wallet_public_name}
+                        level: "error",
+                        autoDismiss: 10
+                    });
+                }
+            })
         };
 
         let content = (
