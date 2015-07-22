@@ -92,7 +92,6 @@ class ExistingAccount extends Component {
                     <ImportKeys onChange={this._importKeysChange.bind(this)}/>
                     
                     {this.state.keys.wif_count ? <div>
-                    
                     <h3>Genesis Accounts</h3>
                     {account_rows ? <div>
                         <div>
@@ -119,7 +118,7 @@ class ExistingAccount extends Component {
                         </a>
                     </div>
                     
-                    </div>}
+                    </div>:""}
 
                 </Wallet>
             </div>
