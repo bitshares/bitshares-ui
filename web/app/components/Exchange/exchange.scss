@@ -240,7 +240,7 @@ a.order-cancel {
   min-height: 63px;
 }
 .stats .stat {
-  padding: 10px 10px;
+  padding: 0 10px;
   height: 100%;
 }
 .stats .stat:first-child {
@@ -259,5 +259,7 @@ a.order-cancel {
 .market-symbol {
     font-weight: bold;
     font-size: 110%;
+    padding-left: 1rem;
     padding-right: 1rem;
+    padding-top: 1.3rem;
 }

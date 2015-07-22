@@ -16,6 +16,7 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
+import {Link} from "react-router";
 
 require("./exchange.scss");
 
@@ -25,11 +26,11 @@ class Exchange extends React.Component {
 
         this.state = {
             history: [],
-            buyAmount: 5,
-            buyPrice: 160,
-            sellAmount: 5,
-            sellPrice: 170,
-            sub: false,
+            buyAmount: 0,
+            buyPrice: 0,
+            sellAmount: 0,
+            sellPrice: 0,
+            sub: null,
             activeTab: "buy",
             showBuySell: true
         };
@@ -43,9 +44,19 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        
         if (!this.state.sub && nextProps.assets.size > 0) {
-            this._subToMarket(nextProps);
+            return this._subToMarket(nextProps);
         }
+
+        if (nextProps.quote !== this.props.quote) {
+            
+            let currentSub = this.state.sub.split("_");
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
+            return this._subToMarket(nextProps);
+        }
+
+
     }
 
     componentWillUnmount() {
@@ -82,6 +93,13 @@ class Exchange extends React.Component {
         if (sellAssetAmount > balance) {
             return notify.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
+                level: "error"
+            });
+        }
+
+        if (!(sellAssetAmount > 0 && buyAssetAmount > 0)) {
+            return notify.addNotification({
+                message: "Please enter a valid amount and price",
                 level: "error"
             });
         }
@@ -135,14 +153,15 @@ class Exchange extends React.Component {
 
     _subToMarket(props) {
         let {quote, base, asset_symbol_to_id, assets} = props;
+        
         if (asset_symbol_to_id[quote] && asset_symbol_to_id[base]) {
             let quote_id = asset_symbol_to_id[quote];
             let base_id = asset_symbol_to_id[base];
             let baseAsset = assets.get(base_id);
             let quoteAsset = assets.get(quote_id);
-            if (quoteAsset && baseAsset && !this.state.sub) {
+            if (quoteAsset && baseAsset) {
                 MarketsActions.subscribeMarket(baseAsset, quoteAsset);
-                this.setState({sub: true});
+                this.setState({sub: `${quote_id}_${base_id}`});
             }
         }
     }
@@ -247,9 +266,7 @@ class Exchange extends React.Component {
 
                         {/* Top bar with info */}
                         <div className="grid-block shrink">
-                            <div style={{display: "inline-block"}}>
-                                    <span style={{display: "inline-block", verticalAlign: "middle"}} className="market-symbol">{`${baseSymbol} / ${quoteSymbol}`}</span>
-                            </div>
+                            <span className="market-symbol">{`${baseSymbol} / ${quoteSymbol}`} <Link to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}>Flip</Link></span>
                             <ul className="market-stats stats">
                                 <li className="stat">
                                     <span>
