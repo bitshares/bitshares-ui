@@ -21,7 +21,7 @@ class Aes
         new Aes(iv, key)
     
     Aes.fromSeed = (seed) ->
-        assert seed, "seed is required"
+        throw new Error("seed is required") if seed is undefined
         _hash = hash.sha512 seed
         _hash = _hash.toString('hex')
         Aes.fromSha512(_hash)

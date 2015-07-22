@@ -29,6 +29,7 @@ class ImportKeys extends Component {
             reset_password: Date.now(),
             password_checksum: null,
             import_password_message: null,
+            wif_text_message: null,
             wif_textarea_private_keys_message: null,
             wif_textarea_private_keys: ""
         }
@@ -37,14 +38,14 @@ class ImportKeys extends Component {
     reset() {
         var state = this._getInitialState()
         this.setState(state)
-        this.updateOnChange()
+        this.updateOnChange({})
     }
     
-    updateOnChange() {
-        var wif_count = Object.keys(this.state.wifs_to_account).length
+    updateOnChange(wifs_to_account = this.state.wifs_to_account) {
+        var wif_count = Object.keys(wifs_to_account).length
         this.setState({wif_count})
         this.props.onChange({
-            wifs_to_account:this.state.wifs_to_account,
+            wifs_to_account: wifs_to_account,
             wif_count
         })
     }
@@ -223,34 +224,6 @@ class KeyCount extends Component {
 }
 
 /*
-    static getStores() {
-        return [importKeysStore]
-    }
-    
-    static getPropsFromStores() {
-        return importKeysStore.getState()
-    }
-class ImportKeysStore {
-    
-    constructor() {
-        this.bindActions(importKeysActions)
-    }
-    
-    onReset(){
-        this.setState({
-            wifs_to_account:{}
-        })
-    }
-    
-
-}
-
-class ImportKeysActions {
-
-    constructor() {
-        this.generateActions('reset')
-    }
-    
     importKeys(wifs_to_account) {
         if( WalletDb.isLocked()) {
             notify.error("Wallet is locked")
@@ -286,7 +259,5 @@ class ImportKeysActions {
         })
     }
     
-}
-export default ImportKeys = connectToStores(ImportKeys)
 */
 

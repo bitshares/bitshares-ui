@@ -125,7 +125,7 @@ class WalletActions {
                     
                     var balance_claims = []
                     for(let b of wifs_to_balances[wif]) {
-                        
+                        //DEBUG console.log('... balance',b)
                         if(b.vesting_policy)
                             continue //todo
                         //var total_claimed = "0"

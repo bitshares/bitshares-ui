@@ -30,7 +30,7 @@ class ExistingAccount extends Component {
             },
             balance_by_asset:null,
             claim_account_name:null,
-            wifs_to_balances:null
+            wifs_to_balances: null
         }
     }
     
@@ -105,6 +105,8 @@ class ExistingAccount extends Component {
         }
         this.lookupBalances(wifs).then( 
         wifs_to_balances => {
+            if(wifs_to_balances == undefined)
+                return
             var assetid_balance = this.balanceByAsset(wifs_to_balances)
             var asset_ids = Object.keys(assetid_balance)
             var asset_symbol_precisions = []
@@ -129,25 +131,32 @@ class ExistingAccount extends Component {
     
     lookupBalances(wif_keys) {
         return new Promise((resolve, reject)=> {
-            var address_params = []
+            var address_params = [], wif_owner = {}
             for(let wif of wif_keys) {
                 var private_key = PrivateKey.fromWif(wif)
                 var public_key = private_key.toPublicKey()
                 var address_str = public_key.toBtsAddy()
-                address_params.push( [address_str] )
+                address_params.push( address_str )
+                wif_owner[address_str] = wif
             }
             //DEBUG  console.log('... get_balance_objects', address_params)
             var db = api.db_api()
-            var p = db.exec("get_balance_objects", address_params).then( result => {
-                //DEBUG  console.log('... result',result)
+            if(db == null) {
+                notice.error("No witness node connection.")
+                resolve(undefined)
+                return
+            }
+            var p = db.exec("get_balance_objects", [address_params]).then( result => {
+                //DEBUG  console.log('... get_balance_objects',result)
                 var wifs_to_balances = {}
                 for(let i = 0; i < result.length; i++) {
                     var balance = result[i]
-                    var wif = wif_keys[i]
+                    var wif = wif_owner[balance.owner]
                     var balances = wifs_to_balances[wif] || []
                     balances.push(balance)
                     wifs_to_balances[wif] = balances
                 }
+                //DEBUG console.log('... wifs_to_balances',wifs_to_balances)
                 this.setState({wifs_to_balances})
                 return wifs_to_balances
                 //    if(b.vesting_policy)
@@ -189,8 +198,9 @@ class ExistingAccount extends Component {
     getAccountNames() {
         //DEBUG return ["nathan"]
         var account_names = {}
-        var wifs_to_account = this.state.wifs_to_account
-        for(let wif in wifs_to_account)
+        var wifs_to_account = this.state.keys.wifs_to_account
+        if(!wifs_to_account) return []
+        for(let wif of Object.keys(wifs_to_account))
         for(let account_name of wifs_to_account[wif])
             account_names[account_name] = true
         
@@ -211,7 +221,8 @@ class ExistingAccount extends Component {
             notice.success("Balance claimed to account: " + this.state.claim_account_name)
             this.reset()
             if(result)
-                console.log("ExistingAccount._importBalances",result)
+                console.log("ExistingAccount._importBalances",
+                    result, JSON.stringify(result))
         }).catch((error)=> {
             console.log(error)
             notice.error("Error claiming balance.\n" + error)
