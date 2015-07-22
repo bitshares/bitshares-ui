@@ -139,11 +139,8 @@ class Transfer extends BaseComponent {
     }
 
     newTransfer() {
-        let transfer = this.state.transfer;
-        transfer.amount = 0;
-        transfer.memo = "";
         this.setState({
-            confirmation: false, done: false, transfer: transfer
+            confirmation: false, done: false
         });
     }
 
@@ -195,13 +192,16 @@ class Transfer extends BaseComponent {
                 });
 
                 finalBalances = balances.map((balance) => {
-                    myAssets.push([balance.asset_id, assets.get(balance.asset_id).symbol]);
-                    if (balance.asset_id === transfer.asset && transfer.amount >= 0) {
-                        let precision = utils.get_asset_precision(assets.get(balance.asset_id).precision);
-                        return <span key={balance.asset_id}>
-                            <Translate component="label" content="transfer.final" />
-                            <FormattedAsset amount={balance.amount - transfer.amount * precision} asset={assets.get(balance.asset_id)}/>
-                        </span>;
+                    let asset = assets.get(balance.asset_id);
+                    if (asset) {
+                        myAssets.push([balance.asset_id, asset.symbol]);
+                        if (balance.asset_id === transfer.asset && transfer.amount >= 0) {
+                            let precision = utils.get_asset_precision(asset.precision);
+                            return <span key={balance.asset_id}>
+                                <Translate component="label" content="transfer.final" />
+                                <FormattedAsset amount={balance.amount - transfer.amount * precision} asset={asset}/>
+                            </span>;
+                        }
                     }
                 });
             }
@@ -240,7 +240,7 @@ class Transfer extends BaseComponent {
                             <label>
                                 <Translate component="span" content="transfer.amount" />
                                 <span className="inline-label">
-                                    <input id="amount" type="text" placeholder="0.0" ref="amount"/>
+                                    <input id="amount" type="text" placeholder="0.0" defaultValue={transfer.amount} ref="amount"/>
                                     <span className="form-label select">{this.renderSelect("asset", myAssets)}</span>
                                 </span>
                             </label>
@@ -289,7 +289,7 @@ class Transfer extends BaseComponent {
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
                             <label>
                                 <Translate component="span" content="transfer.memo" />
-                                <textarea id="memo" rows="5" ref="memo"/>
+                                <textarea id="memo" rows="5" ref="memo" value={transfer.memo}/>
                             </label>
                             <div>{errors.memo}</div>
                         </div>
