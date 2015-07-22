@@ -146,7 +146,7 @@ class App extends BaseComponent {
         return (
             <div>
                 {content}
-                <NotificationSystem ref="notificationSystem" allowHtml={true}/>
+                <NotificationSystem ref="notificationSystem" allowHTML={true}/>
             </div>
         );
         
