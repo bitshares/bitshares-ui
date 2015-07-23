@@ -20,7 +20,8 @@ export default class BalanceClaim extends Component {
     
     _getInitialState() {
         return {
-            claim_account_name: null
+            claim_account_name: null,
+            balances: []
         }
     }
     
@@ -34,24 +35,25 @@ export default class BalanceClaim extends Component {
     
     render() {
         var balance_rows = []
+        var has_unvested = false
         if(this.state.balance_by_asset) {
             for(let asset_balance of this.state.balance_by_asset) {
                 var {symbol, balance, precision} = asset_balance
-                balance_rows.push(
-                    <div>
-                        <FormattedAsset amount={balance} asset={{symbol, precision}}/>
-                    </div>
-                )
+                balance_rows.push(<tr>
+                    <td> <FormattedAsset amount={balance.unvested} asset={{symbol, precision}}/> </td>
+                    <td> <FormattedAsset amount={balance.vesting} asset={{symbol, precision}}/> </td>
+                </tr>)
+                if(balance.unvested) has_unvested = true
             }
         }
         
-        //var has_balance_results = this.state.balance_by_asset ? true : false
         var has_account = this.state.claim_account_name ? true : false
-        var claim_balance_label = "Claim Balance"
-        if(has_account)
-            claim_balance_label = `Claim Balance to ${this.state.claim_account_name}...`
+        var import_ready = has_account && has_unvested
         
-        var import_ready = has_account
+        var claim_balance_label =
+            import_ready ?
+                `Claim Balance to ${this.state.claim_account_name}...` :
+                "Claim Balance"
         
         return <div>
             {balance_rows ? <div>
@@ -60,7 +62,10 @@ export default class BalanceClaim extends Component {
                 
                 <div>
                     <label>Assets</label>
-                    {balance_rows.length ? balance_rows : "No Balances"}
+                    <table>
+                    <thead><th>Unvested</th><th>Vesting</th><thead>
+                    <tbody>{balance_rows.length ? balance_rows : "No Balances"}</tbody>
+                    </table>
                 </div>
                 <br/>
                 
@@ -139,18 +144,28 @@ export default class BalanceClaim extends Component {
     
     loadBalances() {
         PrivateKeyStore.getBalanceRecords().then( balances => {
+            this.setState({balances})
             this.balanceByAssetName(balances).then( balance_by_asset => {
                 this.setState({balance_by_asset})
             })
         })
     }
     
+    balanceByWif(balances) {
+    }
+    
     balanceByAssetName(balances) {
         return new Promise((resolve, reject)=> {
             var assetid_balance = {}
             for(let b of balances) {
-                var total = assetid_balance[b.balance.asset_id] || 0
-                total += v.to_number(b.balance.amount)
+                var total = assetid_balance[b.balance.asset_id] || {
+                    vesting:0, unvested:0
+                }
+                if(b.vesting)
+                    total.vesting += v.to_number(b.balance.amount)
+                else
+                    total.unvested += v.to_number(b.balance.amount)
+                
                 assetid_balance[b.balance.asset_id] = total
             }
             var asset_ids = Object.keys(assetid_balance)
