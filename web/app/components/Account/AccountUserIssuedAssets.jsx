@@ -54,9 +54,22 @@ class AccountUserIssuedAssets extends React.Component {
                     </Trigger>
                     <div className="grid-block vertical">
                         <form>
-                        	<div className="shrink grid-content"> 
-                            <p>TODO: add UIA form here</p>
-	                        </div>
+                        	<div className="shrink grid-content">
+                                <label><Translate content="account.user_issued_assets.symbol" />
+                                <input type="text" id="symbol" value="" onChange="" /></label>
+
+                                <label><Translate content="account.user_issued_assets.name" />
+                                <input type="text" id="name" value="" onChange="" /></label>
+                                
+                                <label><Translate content="account.user_issued_assets.description" />
+                                <input type="text" id="description" value="" onChange="" /></label>
+
+                                <label><Translate content="account.user_issued_assets.max_supply" />
+                                <input type="text" id="max_supply" value="" onChange="" /></label>
+
+                                <label><Translate content="account.user_issued_assets.precision" />
+                                <input type="text" id="precision" value="" onChange="" /></label>
+                            </div>
 	                        <div className="grid-content button-group">
 	                            <input type="submit" className="button" value="Create Asset" />
 	                            <Trigger close="issue_asset">

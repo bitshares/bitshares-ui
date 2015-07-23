@@ -33,6 +33,13 @@ module.exports = {
             cashback: "Cashback",
             vested: "Vested"
         },
+        user_issued_assets: {
+            symbol: "Symbol",
+            name: "Asset Name",
+            description: "Description",
+            max_supply: "Maximum supply",
+            precision: "Precision"
+        },
         connections: {
             known: "Known by",
             "black": "Blacklisted by"
