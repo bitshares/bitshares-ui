@@ -27,7 +27,7 @@ class Header extends BaseComponent {
     accountClickHandler(account_name) {
         this.closeDropDowns();
         AccountActions.setCurrentAccount(account_name);
-        this.context.router.transitionTo("account-overview", {name: account_name});
+        // this.context.router.transitionTo("account-overview", {name: account_name});
         return false;
     }
 
