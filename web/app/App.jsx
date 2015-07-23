@@ -119,7 +119,6 @@ class App extends BaseComponent {
         if (notification.autoDismiss === void 0) {
             notification.autoDismiss = 10;
         }
-        
         this.refs.notificationSystem.addNotification(notification);
     }
 

@@ -84,6 +84,7 @@ class ExistingAccount extends Component {
                     
                     {has_keys ? "" : <div>
                         <BalanceClaim ref="balance_claim"
+                            accountNames={this.getAccountNames()}
                             claimActive={this.state.balance_claim_active}
                             onActive={this._setClaimActive.bind(this)}
                         />
@@ -126,6 +127,12 @@ class ExistingAccount extends Component {
                 </Wallet>
             </div>
         </div>
+    }
+    
+    getAccountNames() {
+        //DEBUG return ["nathan"]
+        var accounts = AccountStore.getState().linkedAccounts.toArray()
+        return accounts.sort()
     }
     
     _setClaimActive(active) {
@@ -179,6 +186,7 @@ class ExistingAccount extends Component {
         for(let account of this.state.blockchain_accounts) {
             AccountStore.onCreateAccount(account)
         }
+        
         var wifs_to_account = this.state.keys.wifs_to_account
         var wif_to_balances = this.state.wif_to_balances
         var private_key_objs = []

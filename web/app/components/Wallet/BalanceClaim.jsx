@@ -85,9 +85,9 @@ export default class BalanceClaim extends Component {
                 
                 <h3>Balance Claim Account</h3>
                 <AccountSelect
-                    account_names={this.getAccountNames()}
+                    account_names={this.props.accountNames}
                     onChange={this._claimAccountSelect.bind(this)}
-                    list_size="5"
+                    list_size={5}
                 />
                 <br>
                 
@@ -178,12 +178,6 @@ export default class BalanceClaim extends Component {
         this.setState({claim_account_name})
     }
     
-    getAccountNames() {
-        //DEBUG return ["nathan"]
-        var accounts = AccountStore.getState().linkedAccounts.toArray()
-        return accounts.sort()
-    }
-    
     _importBalances() {
         var {unvested_balance_claims, wif_to_balances} =
             this.wif_to_balances_claimAllUnvested(this.state.balance_claims)
@@ -244,6 +238,8 @@ export default class BalanceClaim extends Component {
 }
 
 BalanceClaim.propTypes = {
-    onActive: PropTypes.func.isRequired
+    onActive: PropTypes.func.isRequired,
+    accountNames: PropTypes.array.isRequired,
+    claimActive: PropTypes.bool.isRequired
 }
 

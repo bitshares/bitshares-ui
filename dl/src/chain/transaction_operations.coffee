@@ -44,10 +44,9 @@ _my.signed_transaction = ->
         operation_id = chain_types.operations[_type.operation_name]
         if operation_id is undefined
             throw new Error "unknown operation: #{_type.operation_name}"
-        _fee = if name is "balance_claim" then 0 else fee
         unless operation.fee
             operation.fee =
-                amount: _fee
+                amount: fee
                 asset_id: "1.3.0"
         operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]

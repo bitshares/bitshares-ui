@@ -31,9 +31,11 @@ class AccountSelect extends Component {
             placeholder = <option value="">{placeholder}</option>
         
         return (
-            <select ref='account-selector'
-                className="form-control account-select"
+            <select
+                ref='account-selector'
+                key={selected_account}
                 value={selected_account}
+                className="form-control account-select"
                 size={this.props.list_size}
                 onChange={this._onAccountChange.bind(this)}
             >

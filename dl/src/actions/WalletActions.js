@@ -126,20 +126,18 @@ class WalletActions {
                     
                     for(let b of wifs_to_balances[wif]) {
                         //DEBUG console.log('... balance',b)
-                        if(b.vesting_policy)
-                            continue //todo
-                        //var total_claimed = "0"
-                        //if( ! b.vesting_policy)
-                        //    total_claimed = b.balance
-                        ////'else' Zero total_claimed is understood to mean that your
-                        ////claiming the vesting balance on vesting terms.
+                        var total_claimed = "0"
+                        if( ! b.vesting_policy)
+                            total_claimed = b.balance.amount
+                        //'else' Zero total_claimed is understood to mean that your
+                        //claiming the vesting balance on vesting terms.
                         balance_claims.push({
-                            //fee: { amount: "100000", asset_id: 0},
+                            fee: { amount: "0", asset_id: "1.3.0"},
                             deposit_to_account: account,
                             balance_to_claim: b.id, //"1.15.0"
                             balance_owner_key: address_publickey_map[b.owner],
                             total_claimed: {
-                                amount: b.balance.amount,
+                                amount: total_claimed,
                                 asset_id: b.balance.asset_id
                             }
                         })
