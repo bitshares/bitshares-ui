@@ -56,9 +56,9 @@ module.exports = idb_helper = {
             let request = store.openCursor()
             request.onsuccess = e => {
                 let cursor = e.target.result;
-                callback(cursor, e)
+                var ret = callback(cursor, e)
                 if(!cursor)
-                    resolve()
+                    resolve(ret)
             };
             request.onerror = (e) => {
                 var error = {

@@ -19,44 +19,49 @@ export default class WalletUnlock extends Component {
 
     componentDidMount() {
         if (WalletDb.isLocked()) {
-            ZfApi.publish("unlock_wallet_modal", "open");
-            let modal = React.findDOMNode(this.refs.modal);
-            ZfApi.subscribe( "unlock_wallet_modal", e => {
-                modal.querySelector('[name="password"]').focus();
-            });
+            this.open()
         }
     }
 
 
     render() {
-        let modal = null;
-        if (WalletDb.isLocked()) {
-            modal = (
-                <Modal id="unlock_wallet_modal" ref="modal" overlay={true}>
-                    <Trigger close="">
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
-                    <div className="grid-block vertical">
-                        <br/>
-                        <form onSubmit={this._passSubmit.bind(this)}>
-                            <div className="grid-content no-overflow">
-                                <PasswordInput onChange={this._passChange.bind(this)} wrongPassword={this.state.password_error}/>
-                            </div>
-                            <div className="grid-content button-group no-overflow">
-                                <a className="button" href onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
-                                <Trigger close="unlock_wallet_modal">
-                                    <a href className="secondary button">Cancel</a>
-                                </Trigger>
-                            </div>
-                        </form>
-                    </div>
-                </Modal>
-            );
-        }
+        let modal = (
+            <Modal id="unlock_wallet_modal" ref="modal" overlay={true}>
+                <Trigger close="">
+                    <a href="#" className="close-button">&times;</a>
+                </Trigger>
+                <div className="grid-block vertical">
+                    <br/>
+                    <form onSubmit={this._passSubmit.bind(this)}>
+                        <div className="grid-content no-overflow">
+                            <PasswordInput onChange={this._passChange.bind(this)} wrongPassword={this.state.password_error}/>
+                        </div>
+                        <div className="grid-content button-group no-overflow">
+                            <a className="button" href onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
+                            <Trigger close="unlock_wallet_modal">
+                                <a href className="secondary button">Cancel</a>
+                            </Trigger>
+                        </div>
+                    </form>
+                </div>
+            </Modal>
+        );
+        if (WalletDb.isLocked())
+            this.open()
+        
         return <div>
             {modal}
             {this.props.children}
         </div>
+    }
+    
+    open() {
+        ZfApi.publish("unlock_wallet_modal", "open");
+        let modal = React.findDOMNode(this.refs.modal);
+        if(!modal) return
+        ZfApi.subscribe( "unlock_wallet_modal", e => {
+            modal.querySelector('[name="password"]').focus();
+        });
     }
 
 //   { ! this.props.relock_button ? "" : <div>

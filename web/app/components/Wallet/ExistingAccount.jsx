@@ -1,12 +1,13 @@
 import React,{Component} from "react"
 
 import PrivateKey from "ecc/key_private"
+
 import Wallet from "components/Wallet/Wallet"
+import BalanceClaim from "components/Wallet/BalanceClaim"
 import ImportKeys from "components/Wallet/ImportKeys"
 import FormattedAsset from "components/Utility/FormattedAsset"
 import Apis from "rpc_api/ApiInstances"
 
-import AccountSelect from "components/Forms/AccountSelect"
 import WalletActions from "actions/WalletActions"
 import AccountStore from "stores/AccountStore"
 import WalletDb from "stores/WalletDb"
@@ -32,6 +33,7 @@ class ExistingAccount extends Component {
                 wifs_to_account: null
             },
             balance_by_asset:null,
+            balance_claim_active: false,
             claim_account_name:null,
             wif_to_balances: null,
             wif_to_accounts: null,
@@ -50,13 +52,6 @@ class ExistingAccount extends Component {
         var import_ready = has_keys &&
             this.state.balances_known &&
             this.state.accounts_known
-        
-        //var has_balance_results = this.state.balance_by_asset ? true : false
-        var has_account = this.state.claim_account_name ? true : false
-        
-        var claim_balance_label = "Claim Balance..."
-        if(has_account)
-            claim_balance_label = `Claim Balance to ${this.state.claim_account_name}...`
         
         var balance_rows = null
         if(this.state.balance_by_asset) {
@@ -85,58 +80,60 @@ class ExistingAccount extends Component {
             <div className="grid-block vertical medium-9 medium-offset-2">
                 <h4>Existing Accounts</h4>
                 
-                <hr/>
                 <Wallet>
-                    <h3>Import Keys</h3>
-                    <ImportKeys onChange={this._importKeysChange.bind(this)}/>
                     
-                    {this.state.keys.wif_count ? <div>
-                    <h3>Genesis Accounts</h3>
-                    {account_rows ? <div>
-                        <div>
-                            <label>Accounts</label>
-                            {account_rows.length ? account_rows : "No Accounts"}
-                        </div>
-                    </div>:""}
+                    {has_keys ? "" : <div>
+                        <BalanceClaim ref="balance_claim"
+                            claimActive={this.state.balance_claim_active}
+                            onActive={this._setClaimActive.bind(this)}
+                        />
+                    </div>}
                     
-                    <br/>
-                    <h3>Available Balances</h3>
-                    {balance_rows ? <div>
-                        <div>
-                            <label>Assets</label>
-                            {balance_rows.length ? balance_rows : "No Balances"}
-                        </div>
-                    </div>:""}
-                    
-                    <br/>
-                    <div>
-                        <a className={
-                            cname("button", {disabled:!import_ready})}
-                            onClick={this._saveImport.bind(this)} >
-                            Save
-                        </a>
-                    </div>
-                    
-                    </div>:""}
-
+                    { this.state.balance_claim_active ? "" : <div>
+                        <hr/>
+                        <h3>Import Keys</h3>
+                        
+                        <ImportKeys onChange={this._importKeysChange.bind(this)}/>
+                        
+                        {this.state.keys.wif_count ? <div>
+                            <h3>Genesis Accounts</h3>
+                            {account_rows ? <div>
+                                <div>
+                                    <label>Accounts</label>
+                                    {account_rows.length ? account_rows : "No Accounts"}
+                                </div>
+                            </div>:""}
+                            
+                            <br/>
+                            <h3>Available Balances</h3>
+                            {balance_rows ? <div>
+                                <div>
+                                    <label>Assets</label>
+                                    {balance_rows.length ? balance_rows : "No Balances"}
+                                </div>
+                            </div>:""}
+                            
+                            <br/>
+                            <div>
+                                <a className={
+                                    cname("button", {disabled:!import_ready})}
+                                    onClick={this._saveImport.bind(this)} >
+                                    Save
+                                </a>
+                            </div>
+                        </div>:""}
+                    </div>}
                 </Wallet>
             </div>
         </div>
     }
-//                    <h3>Balance Claim Account</h3>
-//                    <AccountSelect
-//                        account_names={this.getAccountNames()}
-//                        onChange={this._claimAccountSelect.bind(this)}
-//                        list_size="5"
-//                    />
-//                    <hr/>
-//                    <div>
-//                        <a className={
-//                            cname("button", {disabled:!import_ready})}
-//                            onClick={this._importBalances.bind(this)} >
-//                            {claim_balance_label}
-//                        </a>
-//                    </div>    
+    
+    _setClaimActive(active) {
+        this.setState({balance_claim_active: active})
+        if(! active)
+            this.refs.balance_claim.reset()
+    }
+    
     _importKeysChange(keys) {
         this.setState({keys})
         var wifs = Object.keys(keys.wifs_to_account)
@@ -168,7 +165,7 @@ class ExistingAccount extends Component {
                     balance_by_asset.push({symbol, balance, precision})
                 }
                 this.state.keys.wif_to_balances = wif_to_balances
-                this.setState({balance_by_asset, keys, balances_known: true})
+                this.setState({balance_by_asset, balances_known: true})
             })
         })
 
@@ -179,7 +176,7 @@ class ExistingAccount extends Component {
             notify.error("Wallet is locked")
             return
         }
-        for(let account in this.state.blockchain_accounts) {
+        for(let account of this.state.blockchain_accounts) {
             AccountStore.onCreateAccount(account)
         }
         var wifs_to_account = this.state.keys.wifs_to_account
@@ -194,8 +191,6 @@ class ExistingAccount extends Component {
                 import_balances
             })
         }
-        console.log('... private_key_objs',private_key_objs)
-        
         WalletDb.importKeys( private_key_objs ).then( result => {
             var {import_count, duplicate_count, private_key_ids} = result
             try {
@@ -217,6 +212,9 @@ class ExistingAccount extends Component {
                     notify.warning(message)
                 else
                     notify.success(message)
+                
+                //if (import_count)
+                //    this.refs.balance_claim.updateBalances()
             
             }finally{this.reset()}
             
@@ -316,41 +314,7 @@ class ExistingAccount extends Component {
         }
         return asset_balance
     }
-    
-    getAccountNames() {
-        //DEBUG return ["nathan"]
-        var account_names = {}
-        var wifs_to_account = this.state.keys.wifs_to_account
-        if(!wifs_to_account) return []
-        for(let wif of Object.keys(wifs_to_account))
-        for(let account_name of wifs_to_account[wif])
-            account_names[account_name] = true
-        
-        return Object.keys(account_names).sort()
-    }
-    
-    _claimAccountSelect(claim_account_name) {
-        this.setState({claim_account_name})
-    }
-    
-    _importBalances() {
-        //return
-        WalletActions.importBalance(
-            this.state.claim_account_name,
-            this.state.wif_to_balances,
-            true //broadcast
-        ).then((result)=> {
-            notify.success("Balance claimed to account: " + this.state.claim_account_name)
-            this.reset()
-            if(result)
-                console.log("ExistingAccount._importBalances",
-                    result, JSON.stringify(result))
-        }).catch((error)=> {
-            console.log(error)
-            notify.error("Error claiming balance.\n" + error)
-            throw error
-        })
-    }
+
 
 }
 

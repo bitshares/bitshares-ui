@@ -16,7 +16,7 @@ class PrivateKeyStore extends BaseStore {
         /*this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });*/
-        this._export("loadDbData","onAddKey","onAddKey");
+        this._export("loadDbData","onAddKey","getBalanceRecords");
     }
 
     loadDbData() {
@@ -26,10 +26,32 @@ class PrivateKeyStore extends BaseStore {
                 this.keys = map.asImmutable()
                 return
             }
-            var private_key = PrivateKeyTcomb(cursor.value)
-            map.set(private_key.id, private_key)
+            var private_key_tcomb = PrivateKeyTcomb(cursor.value)
+            map.set(private_key_tcomb.id, private_key_tcomb)
             cursor.continue()
         });
+    }
+    
+    getBalanceRecords() {
+        return new Promise((resolve, reject) => {
+            var balances = []
+            var p = idb_helper.cursor("private_keys", cursor => {
+                if( ! cursor) return balances
+                var private_key_object = cursor.value
+                var import_balances = private_key_object.import_balances
+                if(!import_balances) {
+                    cursor.continue()
+                    return
+                }
+                for(let balance of import_balances) {
+                    //var import_accounts =
+                    //    private_key_object.import_accounts
+                    balances.push(balance)
+                }
+                cursor.continue()
+            })
+            resolve(p)
+        })
     }
     
     /** @return resolve 0 for duplicate or 1 if inserted */ 
