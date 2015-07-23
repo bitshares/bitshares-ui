@@ -54,6 +54,7 @@ class OrderBook extends React.Component {
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
 
+
         if(base && quote) {
             // let start = new Date();
 
@@ -62,8 +63,8 @@ class OrderBook extends React.Component {
             bidRows = bids.map(order => {
                 return (
                      <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, order.amount, "bid")}>
-                        <td className="show-for-medium">{utils.format_number(order.value, 3)}</td>
-                        <td>{utils.format_number(order.amount, 3)}</td>
+                        <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
+                        <td>{utils.format_number(order.amount, quote.precision)}</td>
                         <td className="orderHistoryBid">
                             <span className="price-integer">{order.price_int}</span>
                             .
@@ -82,8 +83,8 @@ class OrderBook extends React.Component {
             askRows = asks.map(order => {
                 return (
                      <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, order.amount, "ask")}>
-                        <td className="show-for-medium">{utils.format_number(order.value, 3)}</td>
-                        <td >{utils.format_number(order.amount, 3)}</td>
+                        <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
+                        <td >{utils.format_number(order.amount, quote.precision)}</td>
                         <td className="orderHistoryAsk">
                             <span className="price-integer">{order.price_int}</span>
                             .

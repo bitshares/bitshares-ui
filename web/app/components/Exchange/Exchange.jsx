@@ -178,10 +178,10 @@ class Exchange extends React.Component {
 
     _depthChartClick(e) {
         e.preventDefault();
-        let base_id = this.props.asset_symbol_to_id[this.props.base];
-        let base = this.props.assets.get(base_id);
-        let precision = utils.get_asset_precision(base.precision);
-        let value = Math.round(precision * e.xAxis[0].value) / precision;
+        // let base_id = this.props.asset_symbol_to_id[this.props.base];
+        // let base = this.props.assets.get(base_id);
+        // let precision = utils.get_asset_precision(base.precision);
+        let value = e.xAxis[0].value;
         this.setState({
             buyPrice: value,
             sellPrice: value,
@@ -281,21 +281,21 @@ class Exchange extends React.Component {
                                 <li className="stat">
                                     <span>
                                         <Translate component="span" content="exchange.latest" /><br/>
-                                        <b className="value stat-primary">{utils.format_number(290, 3)}</b><br/>
-                                        <em>{quoteSymbol}/{baseSymbol}</em>
+                                        <b className="value stat-primary">{utils.format_number(290, Math.max(5, quote ? quote.precision : 0))}</b><br/>
+                                        <em>{baseSymbol}/{quoteSymbol}</em>
                                     </span>
                                 </li>
                                 <li className="stat">
                                     <span>
                                         <Translate component="span" content="exchange.call" /><br/>
-                                        <b className="value stat-primary">{utils.format_number(312, 3)}</b><br/>
-                                        <em>{quoteSymbol}/{baseSymbol}</em>
+                                        <b className="value stat-primary">{utils.format_number(312, Math.max(5, quote ? quote.precision : 0))}</b><br/>
+                                        <em>{baseSymbol}/{quoteSymbol}</em>
                                     </span>
                                 </li>
                                 <li className="stat">
                                     <span>
                                         <Translate component="span" content="exchange.volume" /><br/>
-                                        <b className="value stat-primary">{utils.format_number(23122, 3)}</b><br/>
+                                        <b className="value stat-primary">{utils.format_number(23122, quote ? quote.precision : 2)}</b><br/>
                                         <em>{quoteSymbol}</em>
                                     </span>
                                 </li>
@@ -362,6 +362,8 @@ class Exchange extends React.Component {
                                         priceChange={this._buyPriceChanged.bind(this)}
                                         balance={baseBalance / utils.get_asset_precision(base.precision)}
                                         onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
+                                        balancePrecision={base.precision}
+                                        totalPrecision={base.precision}
                                     /> : null}
                                     {quote && base ?
                                     <BuySell
@@ -375,6 +377,8 @@ class Exchange extends React.Component {
                                         priceChange={this._sellPriceChanged.bind(this)}
                                         balance={quoteBalance / utils.get_asset_precision(quote.precision)}
                                         onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
+                                        balancePrecision={quote.precision}
+                                        totalPrecision={base.precision}
                                     /> : null}
                         </div>
 

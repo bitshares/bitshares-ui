@@ -15,15 +15,16 @@ class TableHeader extends React.Component {
     }
 
     render() {
+        let {buy, baseSymbol, quoteSymbol} = this.props;
         if (this.props.type === "buy") {
             return (
                 <thead>
                     <tr>
                         <th style={{textAlign: "left"}}></th>
                         <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
                     </tr>
                 </thead>
             );
@@ -31,9 +32,9 @@ class TableHeader extends React.Component {
             return (
                 <thead>
                     <tr>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
                         <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
                         <th style={{textAlign: "right"}}></th>
                     </tr>
@@ -88,8 +89,8 @@ class MyOpenOrders extends React.Component {
                             format="short"
                             />
                         </td>
-                        <td>{utils.format_number(value, 3)}</td>
-                        <td>{utils.format_number(amount, 3)}</td>
+                        <td>{utils.format_number(value, quote.precision)}</td>
+                        <td>{utils.format_number(amount, base.precision)}</td>
                         <td className={tdClass}>
                             <span className="price-integer">{price.int}</span>
                             .
@@ -119,8 +120,8 @@ class MyOpenOrders extends React.Component {
                             .
                             <span className="price-decimal">{price.dec}</span>
                         </td>
-                        <td>{utils.format_number(amount, 3)}</td>
-                        <td>{utils.format_number(value, 3)}</td>
+                        <td>{utils.format_number(amount, base.precision)}</td>
+                        <td>{utils.format_number(value, quote.precision)}</td>
                         <td><FormattedDate
                             value={order.expiration}
                             formats={intlData.formats}
@@ -147,14 +148,14 @@ class MyOpenOrders extends React.Component {
         return (
             <div className="grid-content text-center ps-container" ref="orders">
                 <table className="table order-table my-orders text-right table-hover">
-                    <TableHeader type="buy" />
+                    <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     <tbody>
                         {bids}
                     </tbody>
                 </table>
 
                 <table className="table order-table my-orders text-right table-hover">
-                    <TableHeader type="sell" />
+                    <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     <tbody>
                         {asks}
                     </tbody>

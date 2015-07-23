@@ -15,7 +15,7 @@ class BuySell extends React.Component {
     }
 
     render() {
-        let {type, quoteSymbol, baseSymbol, amount, price, amountChange, priceChange, onSubmit, balance} = this.props;
+        let {type, quoteSymbol, baseSymbol, amount, price, amountChange, priceChange, onSubmit, balance, totalPrecision, balancePrecision} = this.props;
         // console.log("this.props", this.props);
         let total = amount * price;
         let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")} ${amount} ${quoteSymbol}`;
@@ -42,8 +42,8 @@ class BuySell extends React.Component {
                     </div>
   
                     <input className={buttonClass} type="submit" value={buttonText} />
-                    <p className="buy-sell-info"><Translate content="exchange.balance" />: {`${utils.format_number(balance, 3)} ${balanceSymbol}`}</p>
-                    <p className="buy-sell-info"><Translate content="exchange.total" /> ({baseSymbol}): { utils.format_number(total, 3) }</p>
+                    <p className="buy-sell-info"><Translate content="exchange.balance" />: {`${utils.format_number(balance, balancePrecision)} ${balanceSymbol}`}</p>
+                    <p className="buy-sell-info"><Translate content="exchange.total" /> ({baseSymbol}): { utils.format_number(total, totalPrecision) }</p>
                 </form>
                 </div>
         );

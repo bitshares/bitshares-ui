@@ -30,14 +30,14 @@ class MarketHistory extends React.Component {
                 return parseInt(b.order_id.split(".")[2], 10) - parseInt(a.order_id.split(".")[2], 10);
             })
             .map(order => {
-                let receives = utils.get_asset_amount(order.receives.amount, assets.get(order.receives.asset_id));
-                let pays = utils.get_asset_amount(order.pays.amount, assets.get(order.pays.asset_id));
-
+                let receives = utils.format_asset(order.receives.amount, assets.get(order.receives.asset_id), true);
+                let pays = utils.format_asset(order.pays.amount, assets.get(order.pays.asset_id), true);
+                let price = utils.format_price(order.receives.amount, assets.get(order.receives.asset_id), order.pays.amount, assets.get(order.pays.asset_id), true);
                 return (
                     <tr key={order.order_id}>
                         <td>{receives}</td>
                         <td>{pays}</td>
-                        <td>{receives / pays}</td>
+                        <td>{price}</td>
                     </tr>
                 );
             }).toArray();

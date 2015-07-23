@@ -99,7 +99,7 @@ class MarketUtils {
         let amount;
 
         // We need to figure out a better way to set the number of decimals
-        let price_split = utils.format_number(price.full, 4).split(".");
+        let price_split = utils.format_number(price.full, Math.max(5, quote.precision)).split(".");
         price.int = price_split[0];
         price.dec = price_split[1];
 
