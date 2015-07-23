@@ -1,6 +1,6 @@
 import idb_helper from "./idb-helper"
 
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 var iDB = (function () {
 
@@ -22,7 +22,10 @@ var iDB = (function () {
                     db.createObjectStore("linked_accounts", { keyPath: "name" });
                     db.createObjectStore("payee_accounts", { keyPath: "name" });
                 }
-                
+                if (e.oldVersion < 4) {
+                    db.createObjectStore("balance_claims", {
+                        keyPath: "chain_balance_record.id" })
+                }
                 idb_helper.set_graphene_db(db) //last
             };
 

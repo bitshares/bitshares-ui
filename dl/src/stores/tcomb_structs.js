@@ -76,7 +76,6 @@ let PrivateKeyTcomb = t.struct({
     wallet_id: t.Num,
     label: t.maybe(t.Str),
     import_account_names: t.maybe(t.Arr),
-    import_balances: t.maybe(t.Arr),
     // brainkey_pos: "0" = 1st owner key, "0.0" = 1st active for owner "0"
     brainkey_pos: t.maybe(t.Str),
     encrypted_key: t.Str,

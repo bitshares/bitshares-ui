@@ -6,6 +6,12 @@ module.exports = idb_helper = {
     set_graphene_db: database => {
         db = database
     },
+    
+    trx_readwrite: object_stores => {
+        return db.transaction(
+            [object_stores], "readwrite"
+        )
+    },
 
     on_request_end: (request) => {
         //return request => {
@@ -31,10 +37,11 @@ module.exports = idb_helper = {
         return object => {
             var request = store.add(object)
             return idb_helper.on_request_end(request).then( event => {
-                if ( event.target.result != void 0)
+                //DEBUG console.log('... object',object,'result',event.target.result,'event',event)
+                if ( event.target.result != void 0) {
                     //todo does event provide the keyPath name? (instead of id)
                     object.id = event.target.result
-                
+                }
                 return [ object, event ]
             })
         }(object)

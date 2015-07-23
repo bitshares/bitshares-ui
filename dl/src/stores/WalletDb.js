@@ -1,11 +1,12 @@
-import iDB from "../idb-instance";
-import key from "../common/key_utils"
-import idb_helper from "../idb-helper"
+import iDB from "idb-instance";
+import key from "common/key_utils"
+import idb_helper from "idb-helper"
 import cloneDeep from "lodash.clonedeep"
 
 import Immutable from "immutable";
 
-import PrivateKeyStore from "./PrivateKeyStore"
+import PrivateKeyStore from "stores/PrivateKeyStore"
+import BalanceClaimStore from "stores/BalanceClaimStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "../ecc/key_private"
 import ApplicationApi from "../rpc_api/ApplicationApi"
@@ -87,6 +88,15 @@ class WalletDb {
         }
     }
     
+    getPrivateKey(private_key_tcomb) {
+        if(private_key_tcomb.wallet_id != this.getWallet().id)
+            throw new Error("Incorrect wallet")
+        var aes_private = aes_private_map[ wallet_public_name ] 
+        var private_key_hex = aes_private.decryptHex(
+                private_key_tcomb.encrypted_key)
+        return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
+    }
+    
     transaction_update() {
         var transaction = iDB.instance().db().transaction(
             ["wallets"], "readwrite"
@@ -96,7 +106,7 @@ class WalletDb {
     
     transaction_update_keys() {
         var transaction = iDB.instance().db().transaction(
-            ["wallets", "private_keys"], "readwrite"
+            ["wallets", "private_keys", "balance_claims"], "readwrite"
         )
         return transaction
     }
@@ -286,18 +296,33 @@ class WalletDb {
         var private_key_object = {
             wallet_id: wallet.id,
             import_account_names,
-            import_balances,
             encrypted_key: private_cipherhex,
             brainkey_pos: brainkey_pos,
             pubkey: public_key.toBtsPublic()
         }
-        PrivateKeyTcomb(private_key_object)
-        return PrivateKeyStore.onAddKey(
-            private_key_object, transaction
-        )
-        
+        return import_balances => {
+            return PrivateKeyStore.onAddKey(
+                private_key_object, transaction
+            ).then((ret)=> {
+                if(ret.result != "added")
+                    return ret
+                if( ! import_balances)
+                    return ret
+                
+                var private_key_id = ret.id
+                var ps = []
+                for(let chain_balance_record of import_balances) {
+                    var p = BalanceClaimStore.add({
+                        chain_balance_record,
+                        private_key_id
+                    }, transaction)
+                    ps.push(p)
+                }
+                return Promise.all(ps)
+            })
+        }(import_balances)
     }
-        
+    
     incrementBrainKeySequence(transaction) {
         return this._updateWallet( transaction, wallet => {
             wallet.brainkey_sequence = wallet.brainkey_sequence + 1

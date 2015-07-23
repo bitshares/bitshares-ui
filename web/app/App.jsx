@@ -57,6 +57,7 @@ import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
+import PrivateKeyStore from "stores/PrivateKeyStore";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
@@ -100,7 +101,8 @@ class App extends BaseComponent {
         }).then( () => {
             return Promise.all([
                 AccountStore.loadDbData(),
-                WalletDb.loadDbData()
+                WalletDb.loadDbData(),
+                PrivateKeyStore.loadDbData()
             ]);
         }).then(() => {
             AccountStore.tryToSetCurrentAccount();

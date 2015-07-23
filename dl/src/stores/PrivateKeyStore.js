@@ -16,7 +16,7 @@ class PrivateKeyStore extends BaseStore {
         /*this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });*/
-        this._export("loadDbData","onAddKey","getBalanceRecords");
+        this._export("loadDbData","onAddKey");
     }
 
     loadDbData() {
@@ -32,37 +32,15 @@ class PrivateKeyStore extends BaseStore {
         });
     }
     
-    getBalanceRecords() {
-        return new Promise((resolve, reject) => {
-            var balances = []
-            var p = idb_helper.cursor("private_keys", cursor => {
-                if( ! cursor) return balances
-                var private_key_object = cursor.value
-                var import_balances = private_key_object.import_balances
-                if(!import_balances) {
-                    cursor.continue()
-                    return
-                }
-                for(let balance of import_balances) {
-                    //var import_accounts =
-                    //    private_key_object.import_accounts
-                    balances.push(balance)
-                }
-                cursor.continue()
-            })
-            resolve(p)
-        })
-    }
-    
     /** @return resolve 0 for duplicate or 1 if inserted */ 
-    onAddKey(private_key_object, transaction) {
+    onAddKey(_private_key_object, transaction) {
         return new Promise((resolve, reject) => {
-            var _private_key_object = private_key_object
             PrivateKeyTcomb(_private_key_object)
+            var private_key_object = _private_key_object
             var duplicate = false
             var p = idb_helper.add(
                 transaction.objectStore("private_keys"),
-                _private_key_object
+                private_key_object
             ).catch( event => {
                 // ignore_duplicates
                 var error = event.target.error
@@ -72,22 +50,21 @@ class PrivateKeyStore extends BaseStore {
                 duplicate = true
                 event.preventDefault()
             }).then( ()=> {
-                //DEBUG console.log('... idb_helper.add duplicate',duplicate)
                 if(duplicate)
                     return {result:"duplicate",id:null}
                 
                 idb_helper.on_transaction_end(transaction).then(
                     () => {
-                        //DEBUG console.log('... this.keys.set',_private_key_object.id)
+                        //DEBUG console.log('... this.keys.set',private_key_object.id)
                         this.keys = this.keys.set(
-                            _private_key_object.id,
-                            PrivateKeyTcomb(_private_key_object)
+                            private_key_object.id,
+                            PrivateKeyTcomb(private_key_object)
                         )
                     }
                 )
                 return {
-                    result:"added", 
-                    id:_private_key_object.id
+                    result: "added", 
+                    id: private_key_object.id
                 }
             })
             resolve(p)

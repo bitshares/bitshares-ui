@@ -116,14 +116,14 @@ class WalletActions {
                 if(account == void 0)
                     return Promise.reject("Unknown account " + account_name_or_id)
                 
-                for(let wif in wifs_to_balances) {
+                var balance_claims = []
+                for(let wif of Object.keys(wifs_to_balances)) {
                     var private_key = PrivateKey.fromWif(wif)
                     var public_key = private_key.toPublicKey()
                     var address_str = public_key.toBtsAddy()
                     address_privatekey_map[address_str] = private_key
                     address_publickey_map[address_str] = public_key
                     
-                    var balance_claims = []
                     for(let b of wifs_to_balances[wif]) {
                         //DEBUG console.log('... balance',b)
                         if(b.vesting_policy)
@@ -145,8 +145,11 @@ class WalletActions {
                         })
                     }
                 }
-                //DEBUG 
-                console.log('... balance_claims',balance_claims)
+                if( ! balance_claims.length) {
+                    throw new Error("No balances to claim")
+                }
+                
+                //DEBUG console.log('... balance_claims',balance_claims)
                 var tr = new ops.signed_transaction()
                 
                 for(let balance_claim of balance_claims) {

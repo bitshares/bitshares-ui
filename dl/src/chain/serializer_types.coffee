@@ -458,7 +458,6 @@ Types.public_key =
     _to_public:(object)->
         object = object.resolve if object.resolve isnt undefined
         return object if object.Q
-        console.log('... object',object)
         PublicKey.fromBtsPublic object
     fromByteBuffer:(b)->
         fp.public_key b
