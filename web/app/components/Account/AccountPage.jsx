@@ -24,7 +24,7 @@ class AccountPage extends React.Component {
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">
-                    <AltContainer 
+                    <AltContainer
                         stores={[AccountStore]}
                         inject={{
                             account_name: () => {

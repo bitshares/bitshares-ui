@@ -45,7 +45,7 @@ import AssetActions from "actions/AssetActions";
 import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
-import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
+import LoadingIndicator from "./components/LoadingIndicator";
 import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";

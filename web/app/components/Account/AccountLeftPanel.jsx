@@ -5,7 +5,8 @@ import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import ConfirmModal from "../Modal/ConfirmModal";
-import notify from 'actions/NotificationActions'
+import notify from 'actions/NotificationActions';
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountLeftPanel extends React.Component {
 
@@ -64,8 +65,9 @@ class AccountLeftPanel extends React.Component {
     render() {
         let {account_name, account_name_to_id, linkedAccounts} = this.props;
         let account_id = account_name_to_id[account_name];
-
         let account = this.props.cachedAccounts.get(account_id);
+        if(!account) return <LoadingIndicator type="circle"/>;
+
         return (
             <div className="grid-content no-overflow account-left-panel">
                 <ConfirmModal
@@ -74,7 +76,7 @@ class AccountLeftPanel extends React.Component {
                 />
                 <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
-                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account_id ? 
+                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account_id ?
                     (<div className="grid-block" style={{marginBottom: "1rem"}}>
                         <div className="grid-block center-content">
                             <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account_id)}><Translate content="account.upgrade" /></a>

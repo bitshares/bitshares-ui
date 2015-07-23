@@ -28,7 +28,9 @@ class WalletActions {
         }
         
         var [owner_private, active_private] = WalletDb.generateKeys();
-        let create_account_promise = fetch("http://localhost:3000/api/v1/accounts", {
+        let hostname = window && window.location ? window.location.hostname : "localhost";
+        let port = hostname === "localhost" ? ":3000" : "";
+        let create_account_promise = fetch("http://" + hostname + port + "/api/v1/accounts", {
             method: 'post',
             mode: 'cors',
             headers: {
