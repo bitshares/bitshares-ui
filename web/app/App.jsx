@@ -86,24 +86,29 @@ class App extends BaseComponent {
             // console.log("cookie locale:", locale);
         }
 
-        Apis.instance().init_promise.then(() => {
-            let idb_promise = iDB.init_instance(indexedDB).init_promise;
-            let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
+        let idb_promise = iDB.init_instance(indexedDB).init_promise;
+        let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
+        Promise.all([
+            // Non API but important shared services
+            localePromise,
+            idb_promise
+        ]).then( () => {
             return Promise.all([
-                AccountActions.getAllAccounts(),
-                AccountActions.getAccount("nathan"),
-                AssetActions.getAsset("1.3.0"),
-                AssetActions.getAssetList("A", 100),
-                BlockchainActions.subscribeGlobals(),
-                localePromise,
-                idb_promise
-            ]);
-        }).then( () => {
-            return Promise.all([
-                AccountStore.loadDbData(),
+                // Non API
                 WalletDb.loadDbData(),
-                PrivateKeyStore.loadDbData()
-            ]);
+                PrivateKeyStore.loadDbData(),
+                Apis.instance().init_promise.then(() => {
+                    return Promise.all([
+                        // API 
+                        AccountActions.getAllAccounts(),
+                        AccountActions.getAccount("nathan"),
+                        AssetActions.getAsset("1.3.0"),
+                        AssetActions.getAssetList("A", 100),
+                        BlockchainActions.subscribeGlobals(),
+                        AccountStore.loadDbData()
+                    ]);
+                })
+            ])
         }).then(() => {
             AccountStore.tryToSetCurrentAccount();
             this.setState({loading: false});
@@ -111,6 +116,8 @@ class App extends BaseComponent {
             console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
             this.setState({loading: false});
         });
+        
+            
     }
     
     /** Usage: NotificationActions.[success,error,warning,info] */
