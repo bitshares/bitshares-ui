@@ -10,17 +10,17 @@ import AccountLeftPanel from "./AccountLeftPanel";
 class AccountPage extends React.Component {
 
     componentWillMount() {
-        AccountActions.getAccount(this.props.params.name, true);
+        AccountActions.getAccount(this.props.params.account_name, true);
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.params.name !== this.props.params.name) {
-            AccountActions.getAccount(nextProps.params.name, true);
+        if(nextProps.params.account_name !== this.props.params.account_name) {
+            AccountActions.getAccount(nextProps.params.account_name, true);
         }
     }
 
     render() {
-        let account_name = this.props.params.name;
+        let account_name = this.props.params.account_name;
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">

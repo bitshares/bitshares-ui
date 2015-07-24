@@ -109,7 +109,7 @@ class AccountOverview extends React.Component {
                 </div>
                  */}
                 <div className="content-block">
-                <h3><Translate content="account.recent" /> <Link to="account-history" params={{name: account_name}}><small> (<Translate content="account.more" />) </small></Link></h3>
+                <h3><Translate content="account.recent" /> <Link to="account-history" params={{account_name: account_name}}><small> (<Translate content="account.more" />) </small></Link></h3>
                     <table className="table">
                         <tbody>
                         {history}

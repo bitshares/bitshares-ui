@@ -150,7 +150,7 @@ class Block extends BaseComponent {
                             />
                         </li>
                         <li><Translate component="span" content="explorer.block.witness" />: {witness_id_to_name.get(block.witness) ?
-                            <Link to="account" params={{name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> :
+                            <Link to="account" params={{account_name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> :
                             null}</li>
                         <li><Translate component="span" content="explorer.block.previous" />: {block.previous}</li>
                         <li><Translate component="span" content="explorer.block.previous_secret" />: {block.previous_secret}</li>

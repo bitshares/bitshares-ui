@@ -24,7 +24,7 @@ class CreateAccount extends React.Component {
                 level: "success",
                 autoDismiss: 10
             });
-            this.context.router.transitionTo("account", {name: name});
+            this.context.router.transitionTo("account", {account_name: name});
         }).catch(error => {
             // Show in GUI
             console.log("ERROR AccountActions.createAccount", error);

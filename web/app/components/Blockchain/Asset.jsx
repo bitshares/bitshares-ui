@@ -35,7 +35,7 @@ class Asset extends React.Component {
                     <ul>
                         <li><Translate component="span" content="explorer.assets.id" />: {asset.id}</li>
                         <li><Translate component="span" content="explorer.assets.issuer" />: {accounts[asset.issuer] ?
-                            <Link to="account" params={{name: accounts[asset.issuer]}}>{accounts[asset.issuer]}</Link> :
+                            <Link to="account" params={{account_name: accounts[asset.issuer]}}>{accounts[asset.issuer]}</Link> :
                             null}</li>
                         <li><Translate component="span" content="explorer.assets.precision" />: {asset.precision}</li>
                         <li><Translate component="span" content="explorer.block.common_options" />: <Inspector data={ asset.options } search={false}/></li>

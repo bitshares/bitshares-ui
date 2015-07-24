@@ -125,7 +125,7 @@ class Operation extends React.Component {
         if(!name) {
             return <span>-</span>;
         }
-        return <Link to="account" params={{name: name}}>{name}</Link>;
+        return <Link to="account" params={{account_name: name}}>{name}</Link>;
     }
 
     render() {

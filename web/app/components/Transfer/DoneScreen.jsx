@@ -21,7 +21,7 @@ class DoneScreen extends React.Component {
                             <br/>
                             <div className="button-group">
                               <button className="button info" onClick={this.props.onCancel}><Translate component="span" content="transfer.again" /></button>
-                              <Link to="account-history" params={{name: this.props.from}} className="button success"><Translate component="span" content="transfer.see" /></Link>
+                              <Link to="account-history" params={{account_name: this.props.from}} className="button success"><Translate component="span" content="transfer.see" /></Link>
                             </div>
                         </div>
                     </div>

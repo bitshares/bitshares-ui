@@ -32,8 +32,8 @@ class MemberStats extends React.Component {
               <ul style={styles.ulStyle}>
                 <li><Translate component="span" content="account.member.join" /> <FormattedDate value={reg_date}/></li>
                 <li>Exprires on <FormattedDate value={reg_date}/></li>
-                <li><Translate component="span" content="account.member.reg" />: <Link to="account" params={{name: names[registrar]}}>{names[registrar]}</Link></li>
-                <li><Translate component="span" content="account.member.ref" />: <Link to="account" params={{name: names[referrer]}}>{names[referrer]}</Link></li>
+                <li><Translate component="span" content="account.member.reg" />: <Link to="account" params={{account_name: names[registrar]}}>{names[registrar]}</Link></li>
+                <li><Translate component="span" content="account.member.ref" />: <Link to="account" params={{account_name: names[referrer]}}>{names[referrer]}</Link></li>
                 <li><Translate component="span" content="account.member.referrals" />: 
                   <ul style={styles.ulStyle}>
                     <li><FormattedNumber value={referals.members}/> members</li>

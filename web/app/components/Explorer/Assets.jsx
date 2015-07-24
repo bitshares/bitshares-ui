@@ -36,7 +36,7 @@ class Assets extends React.Component {
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{asset.id}</td>
-                    <td>{account ? <Link to="account" params={{name: account}}>{account} </Link> : asset.issuer}</td>
+                    <td>{account ? <Link to="account" params={{account_name: account}}>{account} </Link> : asset.issuer}</td>
                 </tr>
             );
         }).toArray();
@@ -50,7 +50,7 @@ class Assets extends React.Component {
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{asset.id}</td>
-                    <td>{account ? <Link to="account" params={{name: account}}>{account} </Link> : asset.issuer}</td>
+                    <td>{account ? <Link to="account" params={{account_name: account}}>{account} </Link> : asset.issuer}</td>
                 </tr>
             );
         }).toArray();

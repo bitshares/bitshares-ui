@@ -54,7 +54,7 @@ class Accounts extends React.Component {
                 return (
                     <tr key={account}>
                         <td>{id}</td>
-                        <td><Link to="account" params={{name: account}}>{account}</Link></td>
+                        <td><Link to="account" params={{account_name: account}}>{account}</Link></td>
                     </tr>
                 );
             }).toArray();

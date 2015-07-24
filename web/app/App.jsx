@@ -185,7 +185,7 @@ let routes = (
         <Route name="create-account" path="create-account" handler={CreateAccount}/>
         <Route name="existing-account" path="existing-account" handler={ExistingAccount}/>
         <Route name="import-keys" path="import-keys" handler={ImportKeys}/>
-        <Route name="account" path="/account/:name" handler={AccountPage}>
+        <Route name="account" path="/account/:account_name" handler={AccountPage}>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-assets" path="user-issued-assets" handler={AccountUserIssuedAssets}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>

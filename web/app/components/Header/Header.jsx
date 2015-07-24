@@ -24,11 +24,17 @@ class Header extends BaseComponent {
         ZfApi.publish("plus_drop_down", "close");
     }
 
-    accountClickHandler(account_name) {
+    accountClickHandler(account_name, e) {
+        e.preventDefault();
         this.closeDropDowns();
+        let router = this.context.router;
         AccountActions.setCurrentAccount(account_name);
-        // this.context.router.transitionTo("account-overview", {name: account_name});
-        return false;
+        console.log("[Header.jsx:30] ----- accountClickHandler ----->", router.getCurrentRoutes(), router.getCurrentParams());
+        let current_account_name = router.getCurrentParams()["account_name"];
+        if(current_account_name && current_account_name !== account_name) {
+            let routes = router.getCurrentRoutes();
+            this.context.router.transitionTo(routes[routes.length - 1].name, {account_name: account_name});
+        }
     }
 
     createAccountHandler() {
@@ -75,7 +81,7 @@ class Header extends BaseComponent {
             }
             else {
                 accountsDropDown = (
-                    <Link to="account-overview" params={{name: currentAccount.name}}><Icon name="user"/> {account_display_name}</Link>
+                    <Link to="account-overview" params={{account_name: currentAccount.name}}><Icon name="user"/> {account_display_name}</Link>
                 );
             }
         }
@@ -116,7 +122,7 @@ class Header extends BaseComponent {
                 <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
-                            {currentAccount && this.state.linkedAccounts.size > 1 ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{name: currentAccount.name}}><Icon name="user"/></Link> : null}
+                            {currentAccount && this.state.linkedAccounts.size > 1 ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{account_name: currentAccount.name}}><Icon name="user"/></Link> : null}
                         </div>
                         <div className="grp-menu-item">
                             {accountsDropDown}

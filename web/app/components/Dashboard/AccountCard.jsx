@@ -76,7 +76,7 @@ class AccountCard extends React.Component {
         return (
             <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
                 <div className="card">
-                    <Link to="account" params={{name: account}}>
+                    <Link to="account" params={{account_name: account}}>
                         <div>
                             <AccountImage account={account} size={{height: 150, width: 150}}/>
                         </div>
