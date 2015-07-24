@@ -218,7 +218,6 @@ class WalletDb {
                 return
             }
             var promises = []
-            promises.push(this.setWalletModified(transaction))
             var import_count = 0, duplicate_count = 0
             for(let private_key_obj of private_key_objs) {
                 var wif = private_key_obj.wif
@@ -233,32 +232,34 @@ class WalletDb {
                         transaction
                     ).then(
                         ret => {
-                            if(ret.result == "duplicate")
+                            if(ret.result == "duplicate") {
                                 duplicate_count++
-                            else if(ret.result == "added") {
+                            } else if(ret.result == "added") {
                                 import_count++
-                            }
+                            } else
+                                throw new Error('unknown return',ret)
                             return ret.id
                         }
                     )
                 )
             }
             
-            //var p = this.setWalletModified(transaction)
-            //p.then(()=> {
-            var p = Promise.all(promises).catch( error => {
-                console.log('importKeys transaction.abort', error)    
-                transaction.abort()
-                var message = error
-                try { message = error.target.error.message } catch(e) { }
-                return Promise.reject( message )
-            }).then( private_key_ids => {
-                //remove 1st promise setWalletModified
-                private_key_ids = private_key_ids.slice(1)
-                return {import_count, duplicate_count, private_key_ids}
+            this.setWalletModified(transaction).catch(
+                error => reject(error)
+            ).then( ()=> {
+                var p = Promise.all(promises).catch( error => {
+                    console.log('importKeys transaction.abort', error)    
+                    transaction.abort()
+                    var message = error
+                    try { message = error.target.error.message } catch(e) { }
+                    return message
+                }).then( private_key_ids => {
+                    //remove 1st promise setWalletModified
+                    private_key_ids = private_key_ids.slice(1)
+                    return {import_count, duplicate_count, private_key_ids}
+                })
+                resolve(p)
             })
-            //})
-            resolve(p)
         })
     }
 
@@ -318,7 +319,7 @@ class WalletDb {
                     }, transaction)
                     ps.push(p)
                 }
-                return Promise.all(ps)
+                return Promise.all(ps).then( ()=> { return ret })
             })
         }(import_balances)
     }

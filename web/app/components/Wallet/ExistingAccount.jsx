@@ -106,7 +106,7 @@ class ExistingAccount extends Component {
                             </div>:""}
                             
                             <br/>
-                            <h3>Available Balances</h3>
+                            <h3>Unclaimed Balances</h3>
                             {balance_rows ? <div>
                                 <div>
                                     <label>Assets</label>

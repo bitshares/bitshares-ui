@@ -125,7 +125,8 @@ class WalletActions {
                     var address_str = public_key.toBtsAddy()
                     address_privatekey_map[address_str] = private_key
                     address_publickey_map[address_str] = public_key
-                    
+                }
+                for(let wif of Object.keys(wifs_to_balances)) {
                     for(let b of wifs_to_balances[wif]) {
                         //DEBUG console.log('... balance',b)
                         var total_claimed = "0"

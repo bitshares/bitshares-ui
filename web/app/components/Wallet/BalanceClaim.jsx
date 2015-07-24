@@ -36,6 +36,7 @@ export default class BalanceClaim extends Component {
     
     reset() {
         this.setState(this._getInitialState())
+        this.loadBalances()
     }
     
     componentWillMount() {
@@ -47,18 +48,21 @@ export default class BalanceClaim extends Component {
             return <div/>
         
         var balance_rows = []
-        var has_unvested = false
+        var has_unclaimed = false
         for(let asset_balance of this.state.balance_by_asset) {
             var {symbol, balance, precision} = asset_balance
             balance_rows.push(<tr>
-                <td> <FormattedAsset amount={balance.unvested} asset={{symbol, precision}}/> </td>
-                <td> <FormattedAsset amount={balance.vesting} asset={{symbol, precision}}/> </td>
+                <td> <FormattedAsset amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
+                <td> <FormattedAsset amount={balance.unvested.claimed} asset={{symbol, precision}}/></td>
+                <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
+                <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
             </tr>)
-            if(balance.unvested) has_unvested = true
+            if(balance.unvested.unclaimed || balance.vesting.unclaimed)
+                has_unclaimed = true
         }
         
         var has_account = this.state.claim_account_name ? true : false
-        var import_ready = has_account && has_unvested
+        var import_ready = has_account && has_unclaimed
         
         var claim_balance_label =
             import_ready ?
@@ -71,13 +75,17 @@ export default class BalanceClaim extends Component {
             
             <div>
                 <label>Assets</label>
-                <table><thead>
-                    <th>Unvested</th><th>Vesting</th>
-                    
-                </thead><tbody>
-                    {balance_rows.length ? balance_rows : "No Balances"}
-                    
-                </tbody></table>
+                {balance_rows.length ? <div>
+                    <table className="table"><thead><tr>
+                        <th>Unclaimed</th>
+                        <th>Claimed</th>
+                        <th>Unclaimed (vesting)</th>
+                        <th>Claimed (vesting)</th>
+                    </tr></thead><tbody>
+                        {balance_rows}
+                    </tbody></table>
+                </div> : "No Balances"}
+                
             </div>
             <br/>
             
@@ -106,7 +114,7 @@ export default class BalanceClaim extends Component {
             { balance_rows.length ? <div>
                 
                 { this.state.balance_claim_active ? "":<div>
-                    <div className="button"
+                    <div className={ cname("button", {disabled:!has_unclaimed}) }
                         onClick={this._setClaimActive.bind(this, true)}
                         >Claim Balance
                     </div>
@@ -125,7 +133,7 @@ export default class BalanceClaim extends Component {
     }
     
     loadBalances() {
-        BalanceClaimStore.getBalanceClaims_Unclaimed().then( balance_claims => {
+        BalanceClaimStore.getBalanceClaims().then( balance_claims => {
                 this.balanceByAssetName(balance_claims).then( balance_by_asset => {
                 this.setState({balance_claims, balance_by_asset})
             })
@@ -139,13 +147,20 @@ export default class BalanceClaim extends Component {
             for(let balance_claim of balance_claims) {
                 var b = balance_claim.chain_balance_record
                 var total = assetid_balance[b.balance.asset_id] || {
-                    vesting:0, unvested:0
+                    vesting:{claimed:0, unclaimed:0},
+                    unvested:{claimed:0, unclaimed:0}
                 }
-                if(b.vesting)
-                    total.vesting += v.to_number(b.balance.amount)
-                else
-                    total.unvested += v.to_number(b.balance.amount)
-                
+                if(b.vesting) {
+                    if(balance_claim.is_claimed)
+                        total.vesting.claimed += v.to_number(b.balance.amount)
+                    else
+                        total.vesting.unclaimed += v.to_number(b.balance.amount)
+                } else {
+                    if(balance_claim.is_claimed)
+                        total.unvested.claimed += v.to_number(b.balance.amount)
+                    else
+                        total.unvested.unclaimed += v.to_number(b.balance.amount)
+                }
                 assetid_balance[b.balance.asset_id] = total
             }
             var asset_ids = Object.keys(assetid_balance)
@@ -181,7 +196,7 @@ export default class BalanceClaim extends Component {
     
     _importBalances() {
         var {unvested_balance_claims, wif_to_balances} =
-            this.wif_to_balances_claimAllUnvested(this.state.balance_claims)
+            this.wif_to_balances(this.state.balance_claims)
         
         //return
         WalletActions.importBalance(
@@ -213,10 +228,11 @@ export default class BalanceClaim extends Component {
         })
     }
     
-    wif_to_balances_claimAllUnvested(balance_claims) {
+    wif_to_balances(balance_claims) {
         var unvested_balance_claims = []
         var privateid_to_balances = {}
         for(let balance_claim of balance_claims) {
+            if(balance_claim.is_claimed) continue
             var chain_balance_record = balance_claim.chain_balance_record
             if(chain_balance_record.vesting)
                 continue

@@ -157,7 +157,6 @@ class ImportKeys extends Component {
         })
         
         var password_aes = Aes.fromSeed(password)
-        
         for(let account of this.state.account_keys) {
             if(! account.encrypted_private_keys) {
                 notify.error(`Account ${account.acccount_name} missing encrypted_private_keys`)
