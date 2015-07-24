@@ -5,6 +5,7 @@ import AccountNameInput from "./Forms/AccountNameInput";
 import PasswordInput from "./Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
+import Wallet from "components/Wallet/Wallet"
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -35,38 +36,10 @@ class CreateAccount extends React.Component {
         });
     }
 
-    createWallet(name, password) {
-        return WalletDb.onCreateWallet(
-            name,//login_account_name
-            password,
-            null, //this.state.brainkey,
-            true //unlock
-        ).then( ()=> {
-            notify.addNotification({
-                message: `Wallet Created`,
-                level: "success",
-                autoDismiss: 10
-            });
-            this.forceUpdate();
-        }).catch(err => {
-            notify.addNotification({
-                message: `Failed to create wallet: ${err}`,
-                level: "error",
-                autoDismiss: 10
-            });
-        });
-    }
-
     onSubmit(e) {
         e.preventDefault();
         let name = this.refs.account_name.value();
-
-        if (WalletDb.getWallet()) {
-            this.createAccount(name);
-        } else {
-            let password = this.refs.password.value();
-            this.createWallet(name, password).then(() => this.createAccount(name));
-        }
+        this.createAccount(name);
     }
 
     render() {
@@ -80,16 +53,15 @@ class CreateAccount extends React.Component {
 
                         <h3>Create New Account</h3>
                         <br/>
-
-                        <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
-                            <AccountNameInput ref="account_name"
-                                              onChange={this.onAccountNameChange.bind(this)}
-                                              accountShouldNotExist={true}/>
-                            {WalletDb.getWallet() ? null :
-                                <PasswordInput ref="password" confirmation={true}/>
-                            }
-                            <button className={buttonClass}>Create Account</button>
-                        </form>
+                        <Wallet>
+                            <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
+                                <AccountNameInput ref="account_name"
+                                                  onChange={this.onAccountNameChange.bind(this)}
+                                                  accountShouldNotExist={true}/>
+                                
+                                <button className={buttonClass}>Create Account</button>
+                            </form>
+                        </Wallet>
                     </div>
                 </div>
             </div>
