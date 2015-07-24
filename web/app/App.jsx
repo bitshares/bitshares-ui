@@ -110,6 +110,12 @@ class App extends BaseComponent {
                 })
             ])
         }).then(() => {
+            // let's retrieve linked accounts - this is needed to populate myAccounts
+            let promises = AccountStore.getState().linkedAccounts.map( a => {
+                return AccountActions.getAccount(a);
+            });
+            return Promise.all(promises);
+        }).then(() => {
             AccountStore.tryToSetCurrentAccount();
             this.setState({loading: false});
         }).catch(error => {

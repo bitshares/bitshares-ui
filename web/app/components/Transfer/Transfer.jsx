@@ -14,6 +14,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
+import AccountSelect from "../Forms/AccountSelect"
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -94,12 +95,12 @@ class Transfer extends BaseComponent {
         let key = event.target.id;
         let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
         if (key === "from") {
-            transfer.from = value[1];
-            transfer.from_id = value[0];
-            if (!this.props.cachedAccounts.get(value[0])) { AccountActions.getAccount(value[0]); }
+            transfer.from = value;
+            transfer.from_id = this.props.account_name_to_id[value];
+            if (!this.props.cachedAccounts.get(value)) { AccountActions.getAccount(value); }
         } else if (key === "to") {
             transfer.to = value;
-            transfer.to_id = this.props.accounts_list[value];
+            transfer.to_id = this.props.account_name_to_id[value];
         } else {
             transfer[key] = value;
         }
@@ -158,22 +159,13 @@ class Transfer extends BaseComponent {
 
     render() {
         let {transfer, errors} = this.state;
-        let {cachedAccounts, currentAccount, assets, accountBalances} = this.props;
+        let {cachedAccounts, currentAccount, assets, accountBalances, myAccounts, payeeAccounts} = this.props;
         let query_params = this.context.router.getCurrentQuery();
         if(query_params.to && !transfer.to) {
             transfer.to = query_params.to;
-            transfer.to_id = this.props.accounts_list[query_params.to];
+            transfer.to_id = this.props.account_name_to_id[query_params.to];
         }
-        let al = this.props.accounts_list;
-        let account_choices = Object.keys(al).map(k => [`["${al[k]}","${k}"]`, k]);
-        if (!account_choices[0]) {
-            return (
-                <div className="grid-block">
-                    <div className="grid-block page-layout transfer-top">
-                    </div>
-                </div>
-                );
-        }
+
         let account = null;
         let balancesComp = null, finalBalances = null;
         let myAssets = [];
@@ -230,7 +222,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.from})}>
                             <Translate component="label" content="transfer.from" />
-                            {transfer.from ? this.renderSelect("from", account_choices, `["${transfer.from_id}","${transfer.from}"]`) : null}
+                            {<AccountSelect account_names={myAccounts}/>}
                             <div>{errors.from}</div>
                         </div>
                     </div>
@@ -253,7 +245,7 @@ class Transfer extends BaseComponent {
                             <Translate component="label" content="transfer.to" />
                             <AutocompleteInput
                                 id="to"
-                                options={account_choices}
+                                options={payeeAccounts}
                                 initial_value={transfer.to}
                                 onChange={this.formChange}
                                 test={this.testFunction} />

@@ -17,8 +17,11 @@ class TransferPage extends React.Component {
                 cachedAccounts: () => {
                     return AccountStore.getState().cachedAccounts;
                 },
-                accounts_list: () => {
-                    return AccountStore.getState().account_name_to_id;
+                myAccounts: () => {
+                    return AccountStore.getState().myAccounts;
+                },
+                payeeAccounts: () => {
+                    return AccountStore.getState().linkedAccounts;
                 },
                 currentAccount: () => {
                     return AccountStore.getState().currentAccount;
@@ -28,6 +31,9 @@ class TransferPage extends React.Component {
                 },
                 assets: () => {
                     return AssetStore.getState().assets;
+                },
+                account_name_to_id: () => {
+                    return AccountStore.getState().account_name_to_id;
                 }
               }}>
                 <Transfer />

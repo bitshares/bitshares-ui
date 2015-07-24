@@ -36,7 +36,6 @@ class AccountSelect extends Component {
                 key={selected_account}
                 value={selected_account}
                 className="form-control account-select"
-                size={this.props.list_size}
                 onChange={this._onAccountChange.bind(this)}
             >
                 {placeholder}

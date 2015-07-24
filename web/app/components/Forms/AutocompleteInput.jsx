@@ -40,13 +40,23 @@ class AutocompleteInput extends Component {
         let action_sheet_id = this.props.id + "-container";
         let value = e.target.value;
         let items = value === "" ? [] : this.props.options.filter( i => {
-            return i[1].startsWith( value);
+            let v = typeof i === "string" ? i : i[1];
+            return v.startsWith(value);
         });
         this.setState({items});
-        if(items.length > 0 && !(items.length === 1 && items[0][1] === value)) {
-            ZfApi.publish(action_sheet_id, "open");
+
+        if(items.size) {
+            if(items.size > 0 && !(items.size === 1 && items.first() === value)) {
+                ZfApi.publish(action_sheet_id, "open");
+            } else {
+                ZfApi.publish(action_sheet_id, "close");
+            }
         } else {
-            ZfApi.publish(action_sheet_id, "close");
+            if(items.length > 0 && !(items.length === 1 && items[0][1] === value)) {
+                ZfApi.publish(action_sheet_id, "open");
+            } else {
+                ZfApi.publish(action_sheet_id, "close");
+            }
         }
         if (this.props.onChange) this.props.onChange(e);
     }
@@ -54,12 +64,12 @@ class AutocompleteInput extends Component {
     handleItemClick(e) {
         e.preventDefault();
         let raw_value = e.target.dataset.value;
-        let value = raw_value[0] === "[" ? JSON.parse(raw_value) : raw_value;
+        let value = raw_value[0] === "[" ? JSON.parse(raw_value)[1] : raw_value;
         let input = this.getInput();
-        input.value = value[1];
+        input.value = value;
         ZfApi.publish(this.props.id + "-container", "close");
         if (this.props.onChange) {
-            let event = { target: { value: value[1], id: this.props.id}};
+            let event = { target: { value: value, id: this.props.id}};
             this.props.onChange(event);
         }
     }
@@ -70,7 +80,8 @@ class AutocompleteInput extends Component {
 
     render() {
         var items = this.state.items.map( i => {
-            return (<li key={i[0]}><a href data-value={i[0]} onClick={this.handleItemClick}>{i[1]}</a></li>);
+            let j = typeof i === "string" ? [i,i] : i;
+            return (<li key={j[0]}><a href data-value={j[0]} onClick={this.handleItemClick}>{j[1]}</a></li>);
         });
         let action_sheet_id = this.props.id + "-container";
         return (

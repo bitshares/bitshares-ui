@@ -29,7 +29,6 @@ class Header extends BaseComponent {
         this.closeDropDowns();
         let router = this.context.router;
         AccountActions.setCurrentAccount(account_name);
-        console.log("[Header.jsx:30] ----- accountClickHandler ----->", router.getCurrentRoutes(), router.getCurrentParams());
         let current_account_name = router.getCurrentParams()["account_name"];
         if(current_account_name && current_account_name !== account_name) {
             let routes = router.getCurrentRoutes();
