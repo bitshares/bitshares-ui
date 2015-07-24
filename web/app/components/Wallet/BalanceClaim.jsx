@@ -135,6 +135,7 @@ export default class BalanceClaim extends Component {
     balanceByAssetName(balance_claims) {
         return new Promise((resolve, reject)=> {
             var assetid_balance = {}
+            //DEBUG console.log('... balance_claims',balance_claims)
             for(let balance_claim of balance_claims) {
                 var b = balance_claim.chain_balance_record
                 var total = assetid_balance[b.balance.asset_id] || {

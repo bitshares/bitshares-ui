@@ -256,7 +256,7 @@ class ExistingAccount extends Component {
                 }
                 return lookup.resolve().then(()=> {
                     //DEBUG console.log('... blockchain_accounts',blockchain_accounts)
-                    for(let i in blockchain_accounts) {
+                    for(let i = 0; i < blockchain_accounts.length; i++) {
                         blockchain_accounts[i] = blockchain_accounts[i].resolve
                     }
                     return blockchain_accounts
