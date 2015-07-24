@@ -102,7 +102,7 @@ AccountUserIssuedAssets.defaultProps = {
 };
 
 AccountUserIssuedAssets.propTypes = {
-    assets: PropTypes.object.isRequired
+    assets: PropTypes.object.isRequired,
     symbol: PropTypes.string.isRequired,
     onSymbolChanged: PropTypes.func.isRequired
 };
