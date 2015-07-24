@@ -16,7 +16,7 @@ class PrivateKeyStore extends BaseStore {
         /*this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });*/
-        this._export("loadDbData","onAddKey");
+        this._export("loadDbData","onAddKey", "hasKey");
     }
 
     loadDbData() {
@@ -69,6 +69,10 @@ class PrivateKeyStore extends BaseStore {
             })
             resolve(p)
         })
+    }
+
+    hasKey(pubkey) {
+        return this.keys.some(k => k.pubkey === pubkey);
     }
     
     //onDeleteByWalletId(wallet_id, transaction, cascade = true) {

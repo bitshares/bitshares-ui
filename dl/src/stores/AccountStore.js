@@ -4,6 +4,7 @@ import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
 import {Account} from "./tcomb_structs";
 import iDB from "../idb-instance";
+import PrivateKeyStore from "./PrivateKeyStore";
 
 class AccountStore extends BaseStore {
     constructor() {
@@ -11,6 +12,7 @@ class AccountStore extends BaseStore {
         this.currentAccount = null;
         this.cachedAccounts = Immutable.Map();
         this.linkedAccounts = Immutable.Set();
+        this.myAccounts = Immutable.Set();
         this.payeeAccounts = Immutable.Set();
         this.searchAccounts = Immutable.Map();
         this.balances = Immutable.Map();
@@ -103,6 +105,11 @@ class AccountStore extends BaseStore {
                     account.id,
                     result[2]
                 );
+
+                let my_account = false;
+                for(let k of newAccount.owner.key_auths) { if(PrivateKeyStore.hasKey(k[0])) { my_account = true; break;} }
+                for(let k of newAccount.active.key_auths) { if(PrivateKeyStore.hasKey(k[0])) { my_account = true; break;} }
+                if(my_account) this.myAccounts = this.myAccounts.add(newAccount.name);
             }
         }
     }
@@ -111,7 +118,7 @@ class AccountStore extends BaseStore {
         if(this.linkedAccounts.size > 0) this.setCurrentAccount(this.linkedAccounts.first());
         else {
             let nathan_account = this.cachedAccounts.first();
-            if(nathan_account && nathan_account.name === "nathan" && 
+            if(nathan_account && nathan_account.name === "nathan" &&
                 nathan_account.owner.key_auths[0][0] === "GPH6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
             ) {
                 this.setCurrentAccount("nathan");
@@ -142,7 +149,7 @@ class AccountStore extends BaseStore {
         var account = name_or_account
         if(typeof account == "string")
             account = {name: account}
-        
+
         iDB.add_to_store("linked_accounts", account).then( () => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", name);
             this.linkedAccounts = this.linkedAccounts.add(account.name);

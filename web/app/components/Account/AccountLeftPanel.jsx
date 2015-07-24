@@ -63,10 +63,23 @@ class AccountLeftPanel extends React.Component {
     }
 
     render() {
-        let {account_name, account_name_to_id, linkedAccounts} = this.props;
+        let {account_name, account_name_to_id, linkedAccounts, myAccounts} = this.props;
         let account_id = account_name_to_id[account_name];
         let account = this.props.cachedAccounts.get(account_id);
         if(!account) return <LoadingIndicator type="circle"/>;
+
+        let is_my_account = myAccounts.has(account_name);
+        let linkBtn = null;
+        if(!is_my_account) {
+            linkBtn = (
+                <div className="grid-block no-margin center-content">
+                    {linkedAccounts.has(account_name) ?
+                        <a href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate content="account.unlink"/></a> :
+                        <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate content="account.link"/></a>
+                    }
+                </div>
+            )
+        };
 
         return (
             <div className="grid-content no-overflow account-left-panel">
@@ -75,20 +88,17 @@ class AccountLeftPanel extends React.Component {
                     ref="confirmModal"
                 />
                 <div className="regular-padding">
-                    <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}}/>
+                    <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
                     {linkedAccounts.has(account_name) && account.lifetime_referrer !== account_id ?
-                    (<div className="grid-block" style={{marginBottom: "1rem"}}>
-                        <div className="grid-block center-content">
-                            <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account_id)}><Translate content="account.upgrade" /></a>
-                        </div>
-                    </div>) : null}
+                        (<div className="grid-block" style={{marginBottom: "1rem"}}>
+                            <div className="grid-block center-content">
+                                <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account_id)}><Translate content="account.upgrade" /></a>
+                            </div>
+                        </div>)
+                        : null
+                    }
                     <div className="grid-block no-margin account-buttons-row">
-                        <div className="grid-block no-margin center-content">
-                        {linkedAccounts.has(account_name) ?
-                            <a href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate content="account.unlink" /></a> :
-                            <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate content="account.link" /></a>
-                        }
-                        </div>
+                        { linkBtn }
                         <div className="grid-block no-margin center-content">
                             <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay" /></Link>
                         </div>
