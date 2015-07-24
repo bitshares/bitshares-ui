@@ -16,6 +16,12 @@ class AccountUserIssuedAssets extends React.Component {
         };
     }
 
+    onSymbolChanged(e) {
+        this.props.symbol = e.target.value;
+        console.log(e.target.value);
+        console.log(this.props.symbol);
+    }
+
     render() {
         return (
             <div className="grid-content">
@@ -56,7 +62,8 @@ class AccountUserIssuedAssets extends React.Component {
                         <form>
                         	<div className="shrink grid-content">
                                 <label><Translate content="account.user_issued_assets.symbol" />
-                                <input type="text" id="symbol" value="" onChange="" /></label>
+                                    <input value={this.props.symbol} type="text" ref="symbol" onChange={this.onSymbolChanged.bind(this)} />
+                                </label>
 
                                 <label><Translate content="account.user_issued_assets.name" />
                                 <input type="text" id="name" value="" onChange="" /></label>
@@ -83,5 +90,21 @@ class AccountUserIssuedAssets extends React.Component {
         );
     }
 }
+
+AccountUserIssuedAssets.defaultProps = {
+    assets: [],
+    symbol: "",
+    name: "",
+    description: "",
+    max_supply: 0,
+    precision: 0,
+    onSymbolChanged: function() {}
+};
+
+AccountUserIssuedAssets.propTypes = {
+    assets: PropTypes.object.isRequired
+    symbol: PropTypes.string.isRequired,
+    onSymbolChanged: PropTypes.func.isRequired
+};
 
 export default AccountUserIssuedAssets;
