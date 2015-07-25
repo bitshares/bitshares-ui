@@ -17,7 +17,8 @@ var Apis = (function () {
         
         // uncomment the following line to use the internal testnet instead of a localhost witness node
         //  ws_rpc = new WebSocketRpc("ws://104.200.28.117:8090");
-        let hostname = window && window.location ? window.location.hostname : "localhost";
+        let hostname = "localhost";
+        try { hostname = window.location.hostname } catch(e) {}
         ws_rpc = new WebSocketRpc("ws://" + hostname + ":8090");
         
         var init_promise = ws_rpc.login("", "").then(() => {
