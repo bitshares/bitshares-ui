@@ -15,13 +15,13 @@ class AccountActions {
 
     accountSearch(start_symbol) {
         let uid = `${start_symbol}_50`;
-            if (!accountSearch[uid]) {
-                accountSearch[uid] = true;
+        if (!accountSearch[uid]) {
+            accountSearch[uid] = true;
             return api.lookupAccounts(start_symbol, 50)
                 .then(result => {
                     accountSearch[uid] = false;
                     this.dispatch(result);
-            });
+                });
         }
     }
 
@@ -33,7 +33,7 @@ class AccountActions {
             if (utils.is_object_id(start_symbol) && limit===1) {
                 return api.getObjects(start_symbol).then(result => {
                     this.dispatch([[result[0].name, result[0].id]]);
-                })
+                });
             }
 
             return api.lookupAccounts(start_symbol, limit)
@@ -64,24 +64,26 @@ class AccountActions {
     getAccount(name_or_id, sub) {
         let subscription = (result) => {
             console.log("sub result:", result);
-            let accountId = null;
+            let accountID = null;
             for (let id in accountSubs) {
                 if (accountSubs[id] === result[0].id) {
-                    accountId = id;
+                    accountID = id;
                     break;
                 }
             }
-            if (accountId) {
+            if (accountID) {
                 Promise.all([
-                    api.getHistory(accountId, 100),
-                    api.getBalances(accountId)
+                    api.getObjects(accountID),
+                    api.getHistory(accountID, 100),
+                    api.getBalances(accountID)
                     ])
                 .then(results => {
                     this.dispatch({
                         sub: true,
-                        history: results[0],
-                        balances: results[1],
-                        account: accountId
+                        account: results[0],
+                        history: results[1],
+                        balances: results[2],
+                        accountID: accountID
                     });
                 });
             }

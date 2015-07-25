@@ -5,8 +5,9 @@ import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import ConfirmModal from "../Modal/ConfirmModal";
-import notify from 'actions/NotificationActions';
+import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
+import Immutable from "immutable";
 
 class AccountLeftPanel extends React.Component {
 
@@ -19,7 +20,8 @@ class AccountLeftPanel extends React.Component {
             }
         }
         return this.props.account_name !== nextProps.account_name ||
-               this.props.linkedAccounts !== nextProps.linkedAccounts;
+               this.props.linkedAccounts !== nextProps.linkedAccounts ||
+               !Immutable.is(this.props.cachedAccounts, nextProps.cachedAccounts);
     }
 
     onLinkAccount(e) {
@@ -49,7 +51,7 @@ class AccountLeftPanel extends React.Component {
                         autoDismiss: 10
                     });
                 }
-            })
+            });
         };
 
         let content = (
@@ -66,7 +68,9 @@ class AccountLeftPanel extends React.Component {
         let {account_name, account_name_to_id, linkedAccounts, myAccounts} = this.props;
         let account_id = account_name_to_id[account_name];
         let account = this.props.cachedAccounts.get(account_id);
-        if(!account) return <LoadingIndicator type="circle"/>;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        }
 
         let is_my_account = myAccounts.has(account_name);
         let linkBtn = null;
@@ -78,8 +82,8 @@ class AccountLeftPanel extends React.Component {
                         <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate content="account.link"/></a>
                     }
                 </div>
-            )
-        };
+            );
+        }
 
         return (
             <div className="grid-content no-overflow account-left-panel">
@@ -122,11 +126,17 @@ class AccountLeftPanel extends React.Component {
 }
 
 AccountLeftPanel.defaultProps = {
-    account_name: ""
+    account_name: "",
+    account_name_to_id: {},
+    linkedAccounts: {},
+    myAccounts: {}
 };
 
 AccountLeftPanel.propTypes = {
-    account_name: PropTypes.string.isRequired
+    account_name: PropTypes.string.isRequired,
+    account_name_to_id: PropTypes.object.isRequired,
+    linkedAccounts: PropTypes.object.isRequired,
+    cachedAccounts: PropTypes.object
 };
 
 AccountLeftPanel.contextTypes = {

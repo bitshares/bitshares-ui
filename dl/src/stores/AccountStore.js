@@ -70,15 +70,28 @@ class AccountStore extends BaseStore {
 
     onGetAccount(result) {
         if (result.sub) {
+            let accountUpdate = Account(result.account[0]);
+
+            this.cachedAccounts = this.cachedAccounts.set(
+                result.account[0].id,
+                accountUpdate
+            );
+
             this.accountHistories = this.accountHistories.set(
                 result.account,
                 result.history
             );
-            let name = this.account_id_to_name[result.account];
+
+            let name = this.account_id_to_name[result.account_id];
+
             this.balances = this.balances.set(
                 name,
                 result.balances
             );
+
+
+
+
         } else {
             let account = result[0][0];
             if (account.id) {
