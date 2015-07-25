@@ -12,6 +12,9 @@ var validation = require('../common/validation')
 var api = require('./ApiInstances').instance();
 var key = require('../common/key_utils');
 
+import WalletDb from "stores/WalletDb"
+import lookup from "chain/lookup"
+
 class ApplicationApi {
     
     create_account_with_brain_key(
@@ -21,39 +24,44 @@ class ApplicationApi {
         registrar_id,
         referrer_id,
         referrer_percent,
-        signer_private_key,
+        signer_private_keys,
         broadcast = false
     ) {
         var tr = new ops.signed_transaction();
-        tr.add_type_operation("account_create", {
-            "registrar": registrar_id,
-            "referrer": referrer_id,
-            "referrer_percent": referrer_percent,
-            "name": new_account_name,
-            "owner": {
-                "weight_threshold": 1,
-                "account_auths": [],
-                "key_auths": [[ owner_pubkey, 1 ]],
-                "address_auths": []
-            },
-            "active": {
-                "weight_threshold": 1,
-                "account_auths": [ ],
-                "key_auths": [[ active_pubkey, 1 ]],
-                "address_auths": []
-            },
-            "options": {
-                "memo_key": active_pubkey,
-                "voting_account": "1.2.0",
-                "num_witness": 0,
-                "num_committee": 0,
-                "votes": [ ]
-            }
+        var _registrar = lookup.account_id(registrar_id)
+        var _referrer = lookup.account_id(referrer_id)
+        return lookup.resolve().then(()=> {
+            tr.add_type_operation("account_create", {
+                "registrar": _registrar.resolve,
+                "referrer": _referrer.resolve,
+                "referrer_percent": referrer_percent,
+                "name": new_account_name,
+                "owner": {
+                    "weight_threshold": 1,
+                    "account_auths": [],
+                    "key_auths": [[ owner_pubkey, 1 ]],
+                    "address_auths": []
+                },
+                "active": {
+                    "weight_threshold": 1,
+                    "account_auths": [ ],
+                    "key_auths": [[ active_pubkey, 1 ]],
+                    "address_auths": []
+                },
+                "options": {
+                    "memo_key": active_pubkey,
+                    "voting_account": "1.2.0",
+                    "num_witness": 0,
+                    "num_committee": 0,
+                    "votes": [ ]
+                }
+            })
+            return WalletDb.process_transaction(
+                tr,
+                signer_private_keys,
+                broadcast
+            )
         })
-        return tr.finalize(
-            signer_private_key,
-            broadcast
-        )
     }
     
     transfer(
@@ -69,6 +77,8 @@ class ApplicationApi {
         var memo = {};
         if( ! validation.is_empty_user_input(memo_message)) {
             memo.from = from_account_id;
+            if(Array.isArray(signer_private_key))
+                throw new Error("unable to determine which memo from private key to use")
             memo.from_privkey = signer_private_key;
             memo.to = to_account_id
         }
@@ -100,7 +110,7 @@ class ApplicationApi {
         memo_from_privkey,
         memo_to,
         expire_minutes,
-        signer_private_key,
+        signer_private_keys,
         broadcast = false
     ) {
         var tr = new ops.signed_transaction();
@@ -116,8 +126,9 @@ class ApplicationApi {
             top.memo.message = memo_message;
             tr.add_operation(top)
         }
-        return tr.finalize(
-            signer_private_key,
+        return WalletDb.process_transaction(
+            tr,
+            signer_private_keys,
             broadcast
         )
     }

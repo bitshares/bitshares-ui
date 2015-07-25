@@ -1,4 +1,4 @@
-import WalletDb from "../stores/WalletDb"
+import WalletDb from "stores/WalletDb"
 import ApplicationApi from "../rpc_api/ApplicationApi"
 import PrivateKey from "../ecc/key_private"
 import Apis from "../rpc_api/ApiInstances"
@@ -20,7 +20,12 @@ class WalletActions {
         )
     }
 
-    createBrainKeyAccount( account_name ) {
+    createBrainKeyAccount(
+        account_name,
+        registrar,
+        referrer,
+        referrer_percent = 100
+    ) {
         if( WalletDb.isLocked()) {
             var error = "wallet locked"
             this.actions.brainKeyAccountCreateError( error )
@@ -74,10 +79,10 @@ class WalletActions {
                     owner_private.private_key.toPublicKey().toBtsPublic(),
                     active_private.private_key.toPublicKey().toBtsPublic(),
                     account_name,
-                    15, //registrar_id,
-                    0, //referrer_id,
-                    100, //referrer_percent,
-                    PrivateKey.fromSeed("nathan"), //signer_private_key,
+                    registrar, //registrar_id,
+                    referrer, //referrer_id,
+                    referrer_percent, //referrer_percent,
+                    null, //signer_private_key,
                     true //broadcast
                 ).then( () => {
                     return updateWallet().then(()=> 
@@ -161,8 +166,8 @@ class WalletActions {
                 var signer_privates = keys.map(function(v) {
                     return address_privatekey_map[v]
                 })
-                //signer_privates.push(PrivateKey.fromSeed("nathan"))
-                return tr.finalize( signer_privates, broadcast )
+                return WalletDb.process_transaction(
+                    tr, signer_privates, broadcast )
             })
             resolve(p)
         })

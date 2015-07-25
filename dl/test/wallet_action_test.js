@@ -63,7 +63,9 @@ describe( "wallet_actions", ()=> {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         test_wallet( suffix ).then(()=>{
             return WalletActions.createBrainKeyAccount(
-                "brainaccount-"+ suffix 
+                "brainaccount-"+ suffix,
+                "nathan", "nathan",
+                100
             ).then(()=> {
                 done()
             })
@@ -94,7 +96,11 @@ var test_wallet = (suffix) => {
         "password",
         "brainkey" + suffix, 
         true // unlock  
-    )
+    ).then(()=> {
+        return WalletDb.importKeys([
+            PrivateKey.fromSeed("nathan").toWif()
+        ]).catch((e)=> e.preventDefault()) //re-run unique constraint (dup)
+    })
 }
 
 var test_account = ( suffix )=> {

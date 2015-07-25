@@ -23,9 +23,9 @@ class WalletApi {
     
     sign_and_broadcast( tr, broadcast = true ) {
         v.required(tr, "transaction")
-        var signer_private_key = PrivateKey.fromSeed("nathan")
-        return tr.finalize(
-            signer_private_key,
+        return WalletDb.process_transaction(
+            tr,
+            null, //signer_private_key,
             broadcast
         )
     }

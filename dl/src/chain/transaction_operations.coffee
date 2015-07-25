@@ -27,6 +27,7 @@ _my.signed_transaction = ->
     signatures: []
     
     add_operation: (operation) ->
+        throw new Error "already finalized" if @tr_buffer
         v.required operation, "operation"
         v.required operation.get_operations, "operation.get_operations()"
         results = operation.get_operations()
@@ -37,6 +38,7 @@ _my.signed_transaction = ->
         return
     
     add_type_operation: (name, operation) ->
+        throw new Error "already finalized" if @tr_buffer
         v.required name, "name"
         v.required operation, "operation"
         _type = type[name]
@@ -53,65 +55,68 @@ _my.signed_transaction = ->
         return
     
     set_expire_minutes:(min)->
+        throw new Error "already finalized" if @tr_buffer
         @expiration = Math.round(Date.now()/1000) + (min*60)
     
-    finalize:(private_keys, broadcast = no)->
-        if broadcast and not @operations.length
-            return Promise.reject("no operations")
+    finalize:()->
+        new Promise (resolve, reject)=>
+            throw new Error "already finalized" if @tr_buffer
+            if(@expiration == 0)
+                @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
         
-        ((tr, private_keys, broadcast)->
-            if(tr.expiration == 0)
-                tr.expiration = 
-                    Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
-            
-            new Promise (resolve, reject)->
-                lookup.resolve().then ()->
-                    for op in tr.operations
-                        if op[1]["finalize"]
-                            op[1].finalize()
-                    
-                    tr_buffer = type.transaction.toBuffer tr
-                    # Debug
-                    # ByteBuffer.fromBinary(tr_buffer.toString('binary')).printDebug()
-                    private_keys = [ private_keys ] unless Array.isArray private_keys
-                    for i in [0...private_keys.length] by 1
-                        private_key = private_keys[i]
-                        sig = Signature.signBuffer tr_buffer, private_key
-                        tr.signatures.push sig.toBuffer()
-                    
-                    tr_object = type.signed_transaction.toObject(tr)
-                    
-                    unless broadcast
-                        resolve tr_object
-                        return
-                    
-                    ((private_key, tr_buffer, tr_object)->
-                        api.network_api().exec("broadcast_transaction", [tr_object]).then ()->
-                            resolve tr_object
-                            return
-                        .catch (error)->
-                            signer_public = private_key.toPublicKey()
-                            #console.log error # logged in GrapheneApi
-                            message = error.message
-                            message = "" unless message
-                            reject (
-                                message + "\n" +
-                                'graphene-ui signer ' +
-                                'address ' + signer_public.toBtsAddy() +
-                                ' digest ' + hash.sha256(tr_buffer).toString('hex') +
-                                ' public ' + signer_public.toBtsPublic() +
-                                ' transaction ' + tr_buffer.toString('hex') +
-                                ' ' + JSON.stringify(tr_object)
-                            )
-                            return
-                        return
-                    )(private_key, tr_buffer, tr_object)
-                .catch (error)->
-                    reject(error)
-                    #console.error 'finalize error', error, error.stack
-                    return
-        )(@, private_keys, broadcast)
-
+            resolve lookup.resolve().then ()=>
+                for op in @operations
+                    if op[1]["finalize"]
+                        op[1].finalize()
+                @tr_buffer = type.transaction.toBuffer @
+                return
+            return
+    
+    get_required_signatures:(available_keys)->
+        return Promise.resolve([]) unless available_keys.length
+        tr_object = type.signed_transaction.toObject @
+        api.db_api().exec(
+            "get_required_signatures",
+            [tr_object, available_keys]
+        ).then (required_public_keys)->
+            #DEBUG console.log('... required_public_keys',required_public_keys)
+            required_public_keys
+    
+    sign:(private_keys)->
+        throw new Error "not finalized" unless @tr_buffer
+        private_keys = [ private_keys ] unless Array.isArray private_keys
+        for i in [0...private_keys.length] by 1
+            private_key = private_keys[i]
+            sig = Signature.signBuffer @tr_buffer, private_key
+            @signatures.push sig.toBuffer()
+        return
+    
+    serialize:()->
+        type.signed_transaction.toObject @
+    
+    broadcast:()->
+        new Promise (resolve, reject)=>
+            throw new Error "not finalized" unless @tr_buffer
+            throw new Error "not signed" unless @signatures.length
+            throw new Error "no operations" unless @operations.length
+            tr_object = type.signed_transaction.toObject @
+            resolve api.network_api().exec(
+                "broadcast_transaction",
+                [tr_object]
+            ).then ()->
+                tr_object
+            .catch (error)->
+                #DEBUG console.log error # logged in GrapheneApi
+                message = error.message
+                message = "" unless message
+                throw new Error (
+                    message + "\n" +
+                    'graphene-ui ' +
+                    ' digest ' + hash.sha256(@tr_buffer).toString('hex') +
+                    ' transaction ' + @tr_buffer.toString('hex') +
+                    ' ' + JSON.stringify(tr_object)
+                )
+                return
 
 class _my.transfer
     _template = ->

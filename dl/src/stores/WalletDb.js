@@ -8,10 +8,8 @@ import Immutable from "immutable";
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimStore from "stores/BalanceClaimStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
-import PrivateKey from "../ecc/key_private"
-import ApplicationApi from "../rpc_api/ApplicationApi"
+import PrivateKey from "ecc/key_private"
 
-var application_api = new ApplicationApi()
 var wallet_public_name = "default"
 var aes_private_map = {}
 var transaction
@@ -88,13 +86,51 @@ class WalletDb {
         }
     }
     
-    getPrivateKey(private_key_tcomb) {
+    //rename to decryptTcomb_private_key
+    decryptTcomb_private_key(private_key_tcomb) {
         if(private_key_tcomb.wallet_id != this.getWallet().id)
             throw new Error("Incorrect wallet")
+        if( ! private_key_tcomb)
+            return null
         var aes_private = aes_private_map[ wallet_public_name ] 
         var private_key_hex = aes_private.decryptHex(
                 private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
+    }
+    
+    process_transaction(tr, signer_private_keys, broadcast) {
+        return new Promise((resolve, reject)=> {
+            var p = tr.finalize().then(()=> {
+                if(signer_private_keys) {
+                    if( ! Array.isArray(signer_private_keys))
+                        signer_private_keys = [ signer_private_keys ]
+                    for(let private_key of signer_private_keys) 
+                        tr.sign(private_key)
+                } else {
+                    var pubkeys = PrivateKeyStore.getPubkeys()
+                    //DEBUG console.log('... pubkeys',pubkeys)
+                    return tr.get_required_signatures(pubkeys).then(
+                        pubkey_strings => {
+                        //DEBUG console.log('... pubkey_strings',pubkey_strings)
+                        for(let pubkey_string of pubkey_strings) {
+                            var private_key_tcomb =
+                                PrivateKeyStore.getTcomb_byPubkey(pubkey_string)
+                            if( ! private_key_tcomb)
+                                throw new Error("missing private key for " + pubkey_string)
+                            var private_key = this.decryptTcomb_private_key(private_key_tcomb)
+                            tr.sign(private_key)
+                        }
+                            
+                    })
+                }
+            }).then(()=> {
+                if(broadcast)
+                    return tr.broadcast()
+                else
+                    return tr.serialize()
+            })
+            resolve(p)
+        })
     }
     
     transaction_update() {
@@ -209,7 +245,9 @@ class WalletDb {
         ]
     }
     
-    /** @return resolve(insert_count) */
+    /** WIF format
+        @return resolve(insert_count)
+    */
     importKeys(private_key_objs) {
         return new Promise((resolve, reject) => {
             var transaction = this.transaction_update_keys()
@@ -220,7 +258,7 @@ class WalletDb {
             var promises = []
             var import_count = 0, duplicate_count = 0
             for(let private_key_obj of private_key_objs) {
-                var wif = private_key_obj.wif
+                var wif = private_key_obj.wif || private_key_obj
                 if( ! wif) continue
                 var private_key = PrivateKey.fromWif(wif)
                 promises.push(

@@ -60,7 +60,10 @@ class Serializer
         try
             for field in Object.keys @types
                 type = @types[field]
-                object = type.fromObject serialized_object[field]
+                value = serialized_object[field]
+                #DEBUG value = value.resolve if value.resolve
+                #DEBUG console.log('... value',field,value)
+                object = type.fromObject value
                 result[field] = object
             
         catch error

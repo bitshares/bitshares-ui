@@ -167,9 +167,17 @@ class AccountActions {
         return promise;
     }
 
-    createAccount( account_name ) {
+    createAccount(
+        account_name,
+        registrar,
+        referrer,
+        referrer_percent = 100
+    ) {
         return WalletActions.createBrainKeyAccount(
-            account_name
+            account_name,
+            registrar,
+            referrer,
+            referrer_percent
         ).then( () => {
             this.dispatch(account_name)
             return account_name

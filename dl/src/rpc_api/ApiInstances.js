@@ -20,6 +20,7 @@ var Apis = (function () {
         let hostname = "localhost";
         try { hostname = window.location.hostname } catch(e) {}
         ws_rpc = new WebSocketRpc("ws://" + hostname + ":8090");
+        // ws_rpc = new WebSocketRpc("ws://graphene.cryptonomex.com:8090")
         
         var init_promise = ws_rpc.login("", "").then(() => {
             db_api = new GrapheneApi(ws_rpc, "database");
