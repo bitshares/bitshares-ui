@@ -118,7 +118,7 @@ class Blocks extends React.Component {
                                 formats={intlData.formats}
                                 format="short"
                             /></td>
-                            <td>{witness_id_to_name.get(block.witness) ? <Link to="account" params={{name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> : null}</td>
+                            <td>{witness_id_to_name.get(block.witness) ? <Link to="witness" params={{name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> : null}</td>
                             <td>{block.transactions.length}</td>
                         </tr>
                     );
