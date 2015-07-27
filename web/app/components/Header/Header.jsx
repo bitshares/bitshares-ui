@@ -1,18 +1,13 @@
 import React from "react";
 import {Link} from "react-router";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
-import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
-import BaseComponent from "../BaseComponent";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 
-class Header extends BaseComponent {
-    constructor(props) {
-        super(props, AccountStore);
-    }
+class Header extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         // return nextState.currentAccount !== this.state.currentAccount;
@@ -48,9 +43,7 @@ class Header extends BaseComponent {
     }
 
     render() {
-        let currentAccount = this.state.currentAccount, accountsDropDown = null, plusDropDown = null, accountLink = null;
-
-        let isUnlocked = this.props.isUnlocked;
+        let {currentAccount, linkedAccounts} = this.props, accountsDropDown = null, plusDropDown = null;
 
         let settings = counterpart.translate("header.settings");
         let current = counterpart.translate("header.current");
@@ -59,8 +52,8 @@ class Header extends BaseComponent {
 
             let account_display_name = currentAccount.name.length > 20 ? `${currentAccount.name.slice(0, 20)}..` : currentAccount.name;
 
-            if(this.state.linkedAccounts.size > 1) {
-                let accountsList = this.state.linkedAccounts
+            if(linkedAccounts.size > 1) {
+                let accountsList = linkedAccounts
                     .sort()
                     .map(name => {
                         return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
@@ -123,7 +116,7 @@ class Header extends BaseComponent {
                 <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group">
                         <div className="grp-menu-item user-icon">
-                            {currentAccount && this.state.linkedAccounts.size > 1 ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{account_name: currentAccount.name}}><Icon name="user"/></Link> : null}
+                            {currentAccount && linkedAccounts.size > 1 ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{account_name: currentAccount.name}}><Icon name="user"/></Link> : null}
                         </div>
                         <div className="grp-menu-item">
                             {accountsDropDown}
@@ -132,11 +125,9 @@ class Header extends BaseComponent {
                             {plusDropDown}
                         </div>
                         <div className="grp-menu-item" >
-                            <Link to="settings" className="button" data-tip={settings}  data-place="bottom"><Icon name="cog"/></Link>
+                            <Link to="settings" className="button" data-tip={settings} data-place="bottom"><Icon name="cog"/></Link>
                         </div>
-                        <div className="grp-menu-item">
-                            <a href="/"><Translate component="span" content="header.logout" /></a>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

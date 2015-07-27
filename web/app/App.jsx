@@ -16,8 +16,8 @@ import Witness from "./components/Explorer/Witness";
 import DelegatesContainer from "./components/Explorer/DelegatesContainer";
 import Delegates from "./components/Explorer/Delegates";
 import Delegate from "./components/Explorer/Delegate";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import HeaderContainer from "./components/Header/HeaderContainer";
+import FooterContainer from "./components/Footer/FooterContainer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountUserIssuedAssets from "./components/Account/AccountUserIssuedAssets";
@@ -37,8 +37,8 @@ import BlockContainer from "./components/Blockchain/BlockContainer";
 import Asset from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/CreateAccount";
-import BaseComponent from "./components/BaseComponent";
-import SessionStore from "stores/SessionStore";
+// import BaseComponent from "./components/BaseComponent";
+// import SessionStore from "stores/SessionStore";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import AssetActions from "actions/AssetActions";
@@ -66,11 +66,11 @@ require("./components/Utility/Prototypes"); // Adds a .equals method to Array fo
 require("./assets/loader");
 
 
-class App extends BaseComponent {
+class App extends React.Component {
     
-    constructor(props) {
-        super(props, SessionStore);
-        this.state.loading = true;
+    constructor() {
+        super();
+        this.state = {loading: true};
     }
     
     componentWillUnmount() {
@@ -143,13 +143,13 @@ class App extends BaseComponent {
     render() {
         let content = (
             <div className="grid-frame vertical">
-                <Header isUnlocked={this.state.isUnlocked}/>
+                <HeaderContainer isUnlocked={this.state.isUnlocked}/>
                 <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                 <AccountNotifications/>
                 <div className="grid-block vertical">
                     <RouteHandler />
                 </div>
-                <Footer/>
+                <FooterContainer/>
                 <ReactTooltip type="dark" effect="solid" />
             </div>
         );

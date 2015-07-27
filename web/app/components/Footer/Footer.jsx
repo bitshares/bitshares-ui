@@ -1,18 +1,16 @@
 import React from "react/addons";
 let Perf = React.addons.Perf;
-import BaseComponent from "../BaseComponent";
-import BlockchainStore from "stores/BlockchainStore";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
 
-class Footer extends BaseComponent {
-    constructor(props) {
-        super(props, BlockchainStore);
-        this.state.perf = false;    
+class Footer extends React.Component {
+    constructor() {
+        super();
+        this.state = {perf: false};    
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.dynGlobalObject !== this.state.dynGlobalObject;
+    shouldComponentUpdate(nextProps) {
+        return nextProps.dynGlobalObject !== this.props.dynGlobalObject;
     }
 
     _triggerPerf() {
@@ -32,7 +30,7 @@ class Footer extends BaseComponent {
     }
 
     render() {
-        let block_height = this.state.dynGlobalObject.head_block_number;
+        let block_height = this.props.dynGlobalObject.head_block_number;
         return (
             <div className="grid-block shrink footer">
                 <div className="align-justify grid-block">
