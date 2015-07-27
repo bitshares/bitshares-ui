@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
-import MyOpenOrders from "./MyOpenOrders";
+import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import BuySell from "./BuySell";
@@ -344,6 +344,7 @@ class Exchange extends React.Component {
                         {/* Buy/Sell forms */}
                         <div className="grid-block shrink" style={{ flexGrow: "0" }} >
                                     <ConfirmModal
+                                        key="confirm_modal"
                                         modalId="confirm_modal"
                                         ref="confirmModal"
                                         setting="confirmMarketOrder"
@@ -383,7 +384,8 @@ class Exchange extends React.Component {
                         </div>
 
                         <div className="grid-block" style={{minHeight: "20rem"}}>
-                            <MyOpenOrders
+                            {limit_orders.size > 0 && base && quote ? <MyOpenOrders
+                                key="open_orders"
                                 orders={limit_orders}
                                 currentAccount={currentAccount.id}
                                 base={base}
@@ -391,7 +393,7 @@ class Exchange extends React.Component {
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                                 onCancel={this._cancelLimitOrder.bind(this)}
-                            />
+                            /> : null}
                         </div>
 
                     {/* End of Main Content Column */}
