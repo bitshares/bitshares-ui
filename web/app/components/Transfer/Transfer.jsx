@@ -157,6 +157,13 @@ class Transfer extends BaseComponent {
         );
     }
 
+    _onAccountSelect(account_name) {
+        let {transfer} = this.state;
+        transfer.from = account_name;
+        transfer.from_id = this.props.account_name_to_id[account_name];
+        this.setState({transfer: transfer});
+    }
+
     render() {
         let {transfer, errors} = this.state;
         let {cachedAccounts, currentAccount, assets, accountBalances, myAccounts, payeeAccounts} = this.props;
@@ -176,7 +183,7 @@ class Transfer extends BaseComponent {
         }
 
         if (cachedAccounts.size > 0 && assets.size > 0 && accountBalances.size > 0) {
-            account = cachedAccounts.get(this.state.transfer.from_id ? this.state.transfer.from_id : null);
+            account = cachedAccounts.get(this.state.transfer.from) || null;
             let balances = account ? accountBalances.get(account.name) : null;
             if (account && balances) {
                 balancesComp = balances.map((balance) => {
@@ -222,7 +229,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.from})}>
                             <Translate component="label" content="transfer.from" />
-                            {<AccountSelect account_names={myAccounts}/>}
+                            {<AccountSelect account_names={myAccounts} onChange={this._onAccountSelect.bind(this)}/>}
                             <div>{errors.from}</div>
                         </div>
                     </div>
