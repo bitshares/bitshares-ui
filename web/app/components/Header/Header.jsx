@@ -60,9 +60,11 @@ class Header extends BaseComponent {
             let account_display_name = currentAccount.name.length > 20 ? `${currentAccount.name.slice(0, 20)}..` : currentAccount.name;
 
             if(this.state.linkedAccounts.size > 1) {
-                let accountsList = this.state.linkedAccounts.map(name => {
-                    return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
-                });
+                let accountsList = this.state.linkedAccounts
+                    .sort()
+                    .map(name => {
+                        return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
+                    });
 
                 accountsDropDown = (
                     <ActionSheet id="account_drop_down">

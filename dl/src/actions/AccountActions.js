@@ -68,7 +68,7 @@ class AccountActions {
     getAccount(name_or_id) {
 
         let subscription = (account, result) => {
-            console.log("sub result:", result, name_or_id);
+            // console.log("sub result:", result, name_or_id);
 
             api.getFullAccounts(null, name_or_id)
                 .then(fullAccount => {

@@ -39,7 +39,9 @@ class AccountSelect extends Component {
                 onChange={this._onAccountChange.bind(this)}
             >
                 {placeholder}
-                {account_names.map((account_name) => {
+                {account_names
+                    .sort()
+                    .map((account_name) => {
                     if(!account_name || account_name == "") return null;
                     return <option value={account_name}>{account_name}</option>
                 })}
