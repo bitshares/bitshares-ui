@@ -20,8 +20,13 @@ class Footer extends BaseComponent {
             Perf.start();
         } else {
             Perf.stop();
+            console.log("Inclusive prints the overall time taken. If no argument's passed, defaults to all the measurements from the last recording. This prints a nicely formatted table in the console, like so:");
             Perf.printInclusive();
+            console.log("Wasted time is spent on components that didn't actually render anything, e.g. the render stayed the same, so the DOM wasn't touched.");
             Perf.printWasted();
+            console.log("Exclusive times don't include the times taken to mount the components: processing props, getInitialState, call componentWillMount and componentDidMount, etc.");
+            Perf.printExclusive();
+            Perf.printDOM();
         }
         this.setState({perf: !this.state.perf});
     }
