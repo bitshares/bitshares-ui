@@ -47,16 +47,24 @@ export default class BalanceClaim extends Component {
         if( ! this.state.balance_claims.length)
             return <div/>
         
-        var balance_rows = []
+        var unclaimed_balance_rows = [], claimed_balance_rows = []
         var has_unclaimed = false
         for(let asset_balance of this.state.balance_by_asset) {
-            var {symbol, balance, precision} = asset_balance
-            balance_rows.push(<tr>
-                <td> <FormattedAsset amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
-                <td> <FormattedAsset amount={balance.unvested.claimed} asset={{symbol, precision}}/></td>
-                <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
-                <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
-            </tr>)
+            var {accounts, symbol, precision, balance} = asset_balance
+            if(balance.unvested.unclaimed || balance.vesting.unclaimed)
+                unclaimed_balance_rows.push(<tr>
+                    <td> <FormattedAsset amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
+                    <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
+                    <td> {accounts.join(', ')} </td>
+                </tr>)
+            
+            if(balance.unvested.claimed || balance.vesting.claimed)
+                claimed_balance_rows.push(<tr>
+                    <td> <FormattedAsset amount={balance.unvested.claimed} asset={{symbol, precision}}/></td>
+                    <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
+                    <td> {accounts.join(', ')} </td>
+                </tr>)
+            
             if(balance.unvested.unclaimed || balance.vesting.unclaimed)
                 has_unclaimed = true
         }
@@ -72,19 +80,31 @@ export default class BalanceClaim extends Component {
         return <div>
             <hr/>
             <h3>Unclaimed Balance</h3>
-            
             <div>
-                <label>Assets</label>
-                {balance_rows.length ? <div>
+                {unclaimed_balance_rows.length ? <div>
                     <table className="table"><thead><tr>
                         <th>Unclaimed</th>
-                        <th>Claimed</th>
                         <th>Unclaimed (vesting)</th>
-                        <th>Claimed (vesting)</th>
+                        <th>Account</th>
                     </tr></thead><tbody>
-                        {balance_rows}
+                        {unclaimed_balance_rows}
                     </tbody></table>
-                </div> : "No Balances"}
+                </div> : "No Unclaimed Balances"}
+                
+            </div>
+            <br/>
+            
+            <h3>Claimed Balance</h3>
+            <div>
+                {claimed_balance_rows.length ? <div>
+                    <table className="table"><thead><tr>
+                        <th>Claimed</th>
+                        <th>Claimed (vesting)</th>
+                        <th>Account</th>
+                    </tr></thead><tbody>
+                        {claimed_balance_rows}
+                    </tbody></table>
+                </div> : "No Claimed Balances"}
                 
             </div>
             <br/>
@@ -111,7 +131,7 @@ export default class BalanceClaim extends Component {
             </div>:""}
             
             <br/>
-            { balance_rows.length ? <div>
+            { unclaimed_balance_rows.length ? <div>
                 
                 { this.state.balance_claim_active ? "":<div>
                     <div className={ cname("button", {disabled:!has_unclaimed}) }
@@ -142,14 +162,32 @@ export default class BalanceClaim extends Component {
 
     balanceByAssetName(balance_claims) {
         return new Promise((resolve, reject)=> {
-            var assetid_balance = {}
+            var asset_totals = {}
             //DEBUG console.log('... balance_claims',balance_claims)
             for(let balance_claim of balance_claims) {
                 var b = balance_claim.chain_balance_record
-                var total = assetid_balance[b.balance.asset_id] || {
-                    vesting:{claimed:0, unclaimed:0},
-                    unvested:{claimed:0, unclaimed:0}
-                }
+                
+                var private_key_id = balance_claim.private_key_id
+                var private_key_tcomb =
+                    PrivateKeyStore.getState().keys.get(private_key_id)
+                var import_account_names =
+                    private_key_tcomb.import_account_names
+                
+                var group_by =
+                    import_account_names.join('\t') +
+                    b.balance.asset_id + "\t"
+                
+                var total =
+                    asset_totals[group_by] || (
+                    asset_totals[group_by] = 
+                {
+                    vesting: {claimed:0, unclaimed:0},
+                    unvested: {claimed:0, unclaimed:0},
+                    account_names: import_account_names,
+                    asset_id: b.balance.asset_id,
+                    asset_symbol_precisions:
+                        lookup.asset_symbol_precision(b.balance.asset_id)
+                })
                 if(b.vesting) {
                     if(balance_claim.is_claimed)
                         total.vesting.claimed += v.to_number(b.balance.amount)
@@ -161,23 +199,20 @@ export default class BalanceClaim extends Component {
                     else
                         total.unvested.unclaimed += v.to_number(b.balance.amount)
                 }
-                assetid_balance[b.balance.asset_id] = total
-            }
-            var asset_ids = Object.keys(assetid_balance)
-            var asset_symbol_precisions = []
-            for(let asset_id of asset_ids) {
-                asset_symbol_precisions.push(
-                    lookup.asset_symbol_precision(asset_id)
-                )
             }
             lookup.resolve().then(()=> {
                 var balance_by_asset = []
-                for(let i = 0; i < asset_ids.length; i++) {
-                    var symbol = asset_symbol_precisions[i].resolve[0]
-                    var precision = asset_symbol_precisions[i].resolve[1]
-                    var asset_id = asset_ids[i]
-                    var balance = assetid_balance[asset_id]
-                    balance_by_asset.push({symbol, balance, precision})
+                for(let key of Object.keys(asset_totals).sort()) {
+                    var total_record = asset_totals[key]
+                    var accounts = total_record.account_names
+                    var symbol = total_record.asset_symbol_precisions.resolve[0]
+                    var precision = total_record.asset_symbol_precisions.resolve[1]
+                    var balance = {
+                        vesting: total_record.vesting,
+                        unvested: total_record.unvested
+                    }
+                    balance_by_asset.push({
+                        accounts, symbol, precision, balance})
                 }
                 resolve(balance_by_asset)
             })

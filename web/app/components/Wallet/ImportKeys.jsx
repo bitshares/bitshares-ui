@@ -108,10 +108,10 @@ class ImportKeys extends Component {
                 //if(this.addByPattern(contents)) return
                 
                 try {
-                    this._parseImportKeyUpload(contents, file) 
-                } catch(e) {
-                    console.log('... _parseImportKeyUpload',e)
                     this._parseWalletJson(contents)
+                } catch(e) {
+                    console.log('... _parseWalletJson',e)
+                    this._parseImportKeyUpload(contents, file) 
                 }
                 // try empty password, also display "Enter import file password"
                 this._decryptPrivateKeys()
@@ -146,7 +146,8 @@ class ImportKeys extends Component {
         })
     }
     
-    _parseWalletJson(contents, file) {
+    _parseWalletJson(contents) {
+        debugger
         var password_checksum
         //var encrypted_brainkey
         var address_to_enckeys = {}
