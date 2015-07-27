@@ -4,7 +4,9 @@ import Aes from "ecc/aes"
 
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
+import PublicKey from "ecc/key_public"
 
+import config from "chain/config"
 import alt from "alt-instance"
 import connectToStores from 'alt/utils/connectToStores'
 import notify from 'actions/NotificationActions'
@@ -25,6 +27,8 @@ class ImportKeys extends Component {
             wif_count: 0,
             account_keys: [],
             wifs_to_account:{},
+            //brainkey: null,
+            //encrypted_brainkey: null,
             reset_file_name: Date.now(),
             reset_password: Date.now(),
             password_checksum: null,
@@ -103,13 +107,17 @@ class ImportKeys extends Component {
             try {
                 //if(this.addByPattern(contents)) return
                 
-                this._parseImportKeyUpload(contents, file) 
-                // this._parseWalletJson(conents)
-                
+                try {
+                    this._parseImportKeyUpload(contents, file) 
+                } catch(e) {
+                    console.log('... _parseImportKeyUpload',e)
+                    this._parseWalletJson(contents)
+                }
                 // try empty password, also display "Enter import file password"
                 this._decryptPrivateKeys()
                 
             } catch(message) {
+                console.log('... ImportKeys upload error',message)
                 this.setState({import_password_message: message})
             }
         }
@@ -135,6 +143,98 @@ class ImportKeys extends Component {
         this.setState({
             password_checksum,
             account_keys
+        })
+    }
+    
+    _parseWalletJson(contents, file) {
+        var password_checksum
+        //var encrypted_brainkey
+        var address_to_enckeys = {}
+        var account_addresses = {}
+        
+        var savePubkeyAccount = function (pubkey, account_name) {
+            //replace BTS with GPH
+            pubkey = config.address_prefix + pubkey.substring(3)
+            var address = PublicKey.fromBtsPublic(pubkey).toBtsAddy()
+            var addresses = account_addresses[account_name] || []
+            address = "BTS" + address.substring(3)
+            //DEBUG console.log('... address',address,account_name)
+            addresses.push(address)
+            account_addresses[account_name] = addresses
+        }
+        
+        try {
+            var wallet_json = JSON.parse(contents)
+            for(let element of wallet_json) {
+                
+                if( "key_record_type" == element.type &&
+                    element.data.account_address &&
+                    element.data.encrypted_private_key
+                ) {
+                    var address = element.data.account_address
+                    var enckeys = address_to_enckeys[address] || []
+                    enckeys.push(element.data.encrypted_private_key)
+                    //DEBUG console.log('... address',address,enckeys)
+                    address_to_enckeys[address] = enckeys
+                    continue
+                }
+                
+                if( "account_record_type" == element.type) {
+                    var account_name = element.data.name
+                    savePubkeyAccount(element.data.owner_key, account_name)
+                    for(let history of element.data.active_key_history) {
+                        savePubkeyAccount(history[1], account_name)
+                    }
+                    continue
+                }
+                
+                // At this point the wallet is already created .. so importing
+                // the brainkey does not help us...
+                
+                //if ( "property_record_type" == element.type &&
+                //    "encrypted_brainkey" == element.data.key
+                //) {
+                //    encrypted_brainkey = element.data.value
+                //    continue
+                //}
+                
+                if( "master_key_record_type" == element.type) {
+                    if( ! element.data)
+                        throw file.name + " invalid master_key_record record"
+                    
+                    if( ! element.data.checksum)
+                        throw file.name + " is missing master_key_record checksum"
+                    
+                    password_checksum = element.data.checksum
+                }
+                
+            }
+            if( ! password_checksum)
+                throw file.name + " is missing password_checksum"
+            
+            if( ! enckeys.length)
+                throw file.name + " does not contain any private keys"
+            
+        } catch(e) { throw e.message || e }
+        
+        var account_keys = []
+        for(let account_name in account_addresses) {
+            var encrypted_private_keys = []
+            for(let address of account_addresses[account_name]) {
+                var enckeys = address_to_enckeys[address]
+                if( ! enckeys) continue
+                for(let enckey of enckeys)
+                    encrypted_private_keys.push(enckey)
+            }
+            account_keys.push({
+                account_name,
+                encrypted_private_keys
+            })
+        }
+        this.setState({
+            password_checksum,
+            account_keys
+            //encrypted_brainkey
         })
     }
    
@@ -171,6 +271,11 @@ class ImportKeys extends Component {
                     
                     var private_key_wif = private_key.toWif()
                     var account_names = this.state.wifs_to_account[private_key_wif] || []
+                    var dup = false
+                    for(let _name of account_names)
+                        if(_name == account_name)
+                            dup = true
+                    if(dup) continue
                     account_names.push(account_name)
                     this.state.wifs_to_account[private_key_wif] = account_names
                 } catch(e) {
@@ -180,6 +285,12 @@ class ImportKeys extends Component {
                 }
             }
         }
+        //var enc_brainkey = this.state.encrypted_brainkey
+        //if(enc_brainkey){
+        //    this.setState({
+        //        brainkey: password_aes.decryptHexToText(enc_brainkey)
+        //    })
+        //}
         this.updateOnChange()
         this.setState({
             import_password_message: null,

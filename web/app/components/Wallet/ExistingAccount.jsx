@@ -30,14 +30,16 @@ class ExistingAccount extends Component {
         return {
             keys:{
                 wif_count:0,
-                wifs_to_account: null
+                wifs_to_account: null,
+                wif_to_balances: null
             },
             balance_by_asset:null,
             balance_claim_active: false,
+            account_keycount: null,
             claim_account_name:null,
             wif_to_balances: null,
             wif_to_accounts: null,
-            blockchain_accounts: null,
+            //blockchain_accounts: null,
             balances_known: false,
             accounts_known: false
         }
@@ -47,11 +49,51 @@ class ExistingAccount extends Component {
         this.setState(this._getInitialState())
     }
     
+    _importKeysChange(keys) {
+        var wifs = Object.keys(keys.wifs_to_account)
+        if( ! wifs.length) {
+            this.reset()
+            return
+        }
+        this.lookupBalances(wifs).then( wif_to_balances => {
+            //this.lookupAccounts(wifs).then( blockchain_accounts => {
+            //    this.setState({blockchain_accounts, accounts_known:true})
+            //})
+            
+            var assetid_balance = this.balanceByAsset(wif_to_balances)
+            var asset_ids = Object.keys(assetid_balance)
+            var asset_symbol_precisions = []
+            for(let asset_id of asset_ids) {
+                asset_symbol_precisions.push(
+                    lookup.asset_symbol_precision(asset_id)
+                )
+            }
+            lookup.resolve().then(()=> {
+                var balance_by_asset = []
+                for(let i = 0; i < asset_ids.length; i++) {
+                    var symbol = asset_symbol_precisions[i].resolve[0]
+                    var precision = asset_symbol_precisions[i].resolve[1]
+                    var asset_id = asset_ids[i]
+                    var balance = assetid_balance[asset_id]
+                    balance_by_asset.push({symbol, balance, precision})
+                }
+                this.state.keys.wif_to_balances = wif_to_balances
+                this.setState({
+                    keys,
+                    wif_to_balances,
+                    balance_by_asset,
+                    balances_known: true,
+                    account_keycount:
+                        this.getImportAccountKeyCount(keys.wifs_to_account)
+                })
+            })
+        })
+    }
+    
     render() {
         var has_keys = this.state.keys.wif_count ? true : false
         var import_ready = has_keys &&
-            this.state.balances_known &&
-            this.state.accounts_known
+            this.state.balances_known
         
         var balance_rows = null
         if(this.state.balance_by_asset) {
@@ -67,12 +109,14 @@ class ExistingAccount extends Component {
         }
         
         var account_rows = null
-        if(this.state.blockchain_accounts) {
+        if(this.state.account_keycount) {
             account_rows = []
-            for(let account of this.state.blockchain_accounts) {
-                account_rows.push(
-                    <div>{account.name}</div>
-                )
+            var account_keycount = this.state.account_keycount
+            for(let account_name in account_keycount) {
+                account_rows.push(<tr>
+                    <td>{account_name}</td>
+                    <td>{account_keycount[account_name]}</td>
+                </tr>)
             }
         }
         
@@ -97,11 +141,16 @@ class ExistingAccount extends Component {
                         <ImportKeys onChange={this._importKeysChange.bind(this)}/>
                         
                         {this.state.keys.wif_count ? <div>
-                            <h3>Genesis Accounts</h3>
                             {account_rows ? <div>
                                 <div>
-                                    <label>Accounts</label>
-                                    {account_rows.length ? account_rows : "No Accounts"}
+                                    {account_rows.length ? <div>
+                                        <table className="table"><thead><tr>
+                                            <th>Account</th>
+                                            <th>Keys</th>
+                                        </tr></thead><tbody>
+                                            {account_rows}
+                                        </tbody></table>
+                                    </div> : "No Accounts"}
                                 </div>
                             </div>:""}
                             
@@ -129,6 +178,16 @@ class ExistingAccount extends Component {
         </div>
     }
     
+    getImportAccountKeyCount(wifs_to_account) {
+        var account_keycount = {}
+        for(let wif in wifs_to_account)
+        for(let account_name of wifs_to_account[wif]) {
+            account_keycount[account_name] =
+                (account_keycount[account_name] || 0) + 1
+        }
+        return account_keycount
+    }
+    
     getAccountNames() {
         //DEBUG return ["nathan"]
         var accounts = AccountStore.getState().linkedAccounts.toArray()
@@ -141,50 +200,13 @@ class ExistingAccount extends Component {
             this.refs.balance_claim.reset()
     }
     
-    _importKeysChange(keys) {
-        this.setState({keys})
-        var wifs = Object.keys(keys.wifs_to_account)
-        if( ! wifs.length) {
-            this.reset()
-            return
-        }
-        this.lookupAccounts(wifs).then( blockchain_accounts => {
-            this.setState({blockchain_accounts, accounts_known:true})
-        })
-                
-        this.lookupBalances(wifs).then( wif_to_balances => {
-            this.setState({wif_to_balances})
-            var assetid_balance = this.balanceByAsset(wif_to_balances)
-            var asset_ids = Object.keys(assetid_balance)
-            var asset_symbol_precisions = []
-            for(let asset_id of asset_ids) {
-                asset_symbol_precisions.push(
-                    lookup.asset_symbol_precision(asset_id)
-                )
-            }
-            lookup.resolve().then(()=> {
-                var balance_by_asset = []
-                for(let i = 0; i < asset_ids.length; i++) {
-                    var symbol = asset_symbol_precisions[i].resolve[0]
-                    var precision = asset_symbol_precisions[i].resolve[1]
-                    var asset_id = asset_ids[i]
-                    var balance = assetid_balance[asset_id]
-                    balance_by_asset.push({symbol, balance, precision})
-                }
-                this.state.keys.wif_to_balances = wif_to_balances
-                this.setState({balance_by_asset, balances_known: true})
-            })
-        })
-
-    }
-    
     _saveImport() {
         if( WalletDb.isLocked()) {
             notify.error("Wallet is locked")
             return
         }
-        for(let account of this.state.blockchain_accounts) {
-            AccountStore.onCreateAccount(account)
+        for(let account_name in this.state.account_keycount) {
+            AccountStore.onCreateAccount(account_name)
         }
         
         var wifs_to_account = this.state.keys.wifs_to_account
@@ -232,39 +254,39 @@ class ExistingAccount extends Component {
         })
     }
 
-    lookupAccounts(wifs){ 
-        return new Promise((resolve, reject)=> {
-            var public_key_parms = []
-            for(let wif of wifs){
-                var private_key = PrivateKey.fromWif(wif)
-                var public_key = private_key.toPublicKey()
-                public_key_parms.push(public_key.toBtsPublic())
-            }
-            var db = api.db_api()
-            if(db == null) {
-                notify.error("No witness node connection.")
-                resolve(undefined)
-                return
-            }
-            var p = db.exec("get_key_references", [public_key_parms]).then( result => {
-                //DEBUG console.log('... get_key_references',result)
-                var blockchain_accounts = []
-                for(let i = 0; i < result.length; i++) {
-                    for(let account_id of result[i]) {
-                        blockchain_accounts.push(lookup.object(account_id))
-                    }
-                }
-                return lookup.resolve().then(()=> {
-                    //DEBUG console.log('... blockchain_accounts',blockchain_accounts)
-                    for(let i = 0; i < blockchain_accounts.length; i++) {
-                        blockchain_accounts[i] = blockchain_accounts[i].resolve
-                    }
-                    return blockchain_accounts
-                })
-            })
-            resolve(p)
-        })
-    }
+//    lookupAccounts(wifs){ 
+//        return new Promise((resolve, reject)=> {
+//            var public_key_parms = []
+//            for(let wif of wifs){
+//                var private_key = PrivateKey.fromWif(wif)
+//                var public_key = private_key.toPublicKey()
+//                public_key_parms.push(public_key.toBtsPublic())
+//            }
+//            var db = api.db_api()
+//            if(db == null) {
+//                notify.error("No witness node connection.")
+//                resolve(undefined)
+//                return
+//            }
+//            var p = db.exec("get_key_references", [public_key_parms]).then( result => {
+//                //DEBUG console.log('... get_key_references',result)
+//                var blockchain_accounts = []
+//                for(let i = 0; i < result.length; i++) {
+//                    for(let account_id of result[i]) {
+//                        blockchain_accounts.push(lookup.object(account_id))
+//                    }
+//                }
+//                return lookup.resolve().then(()=> {
+//                    //DEBUG console.log('... blockchain_accounts',blockchain_accounts)
+//                    for(let i = 0; i < blockchain_accounts.length; i++) {
+//                        blockchain_accounts[i] = blockchain_accounts[i].resolve
+//                    }
+//                    return blockchain_accounts
+//                })
+//            })
+//            resolve(p)
+//        })
+//    }
     
     lookupBalances(wif_keys) {
         return new Promise((resolve, reject)=> {
