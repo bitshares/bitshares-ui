@@ -71,7 +71,7 @@ class Transaction extends React.Component {
         return (
             nextProps.trx.operations.ref_block_prefix !== this.props.trx.operations.ref_block_prefix ||
             !Immutable.is(nextProps.assets, this.props.assets) ||
-            Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name)
+            Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
         );
     }
 

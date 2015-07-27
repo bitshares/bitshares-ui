@@ -13,8 +13,8 @@ class CreateAccount extends React.Component {
         this.state = {validAccountName: false};
     }
 
-    onAccountNameChange() {
-        this.setState({validAccountName: this.refs.account_name.valid()});
+    onAccountNameChange(params) {
+        this.setState({validAccountName: params.valid});
     }
 
     createAccount(name) {
@@ -58,7 +58,7 @@ class CreateAccount extends React.Component {
                                 <AccountNameInput ref="account_name"
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
-                                
+
                                 <button className={buttonClass}>Create Account</button>
                             </form>
                         </Wallet>

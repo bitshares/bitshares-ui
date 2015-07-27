@@ -12,7 +12,6 @@ import counterpart from "counterpart";
 class AccountVoting extends BaseComponent {
 
     constructor(props) {
-        super(props);
         super(props, VoteStore);
     }
 

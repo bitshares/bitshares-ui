@@ -57,10 +57,9 @@ class AccountStore extends BaseStore {
     onAccountSearch(accounts) {
         this.searchAccounts = this.searchAccounts.clear();
         accounts.forEach(account => {
-            this.searchAccounts = this.searchAccounts.set(
-                account[1],
-                account[0]
-            );
+            this.searchAccounts = this.searchAccounts.withMutations(map => {
+                map.set(account[1], account[0]);
+            });
         });
     }
 
