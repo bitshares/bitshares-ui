@@ -159,6 +159,11 @@ module.exports = {
         create_worker: "A créé un ouvrier avec un salaire de",
         custom: "A créé une operation spéciale",
         order_id: "ID de l'ordre",
+        balance_claim: "A recuperé un solde de %(balance_amount)s du solde ID #%(balance_id)s",
+        balance_owner: "Clèf du solde",
+        balance_id: "ID du solde",
+        deposit_to: "Versé sur le compte",
+        claimed: "Total recuperé",
         trxTypes: {
             transfer: "Transfert",
             limit_order_create: "Ordre à limite",

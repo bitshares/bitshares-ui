@@ -744,6 +744,27 @@ class Operation extends React.Component {
                 
                 break;
 
+
+            case "balance_claim":
+                color = "success";
+                let missingAssets = this.getAssets(op[1].total_claimed.asset_id);
+
+                op[1].total_claimed.amount = parseInt(op[1].total_claimed.amount, 10);
+
+                column = (
+                    <td className="right-td">
+                       {!missingAssets[0] ?
+                            <Translate
+                                component="span"
+                                content="transaction.balance_claim" 
+                                balance_amount={utils.format_asset(op[1].total_claimed.amount, assets.get(op[1].total_claimed.asset_id))}
+                                balance_id={op[1].balance_to_claim}
+                            /> : null}
+                    </td>
+                );
+
+                break;  
+
             case "custom":
                 column = (
                     <td className="right-td">

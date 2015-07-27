@@ -70,8 +70,9 @@ class Transaction extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.trx.operations.ref_block_prefix !== this.props.trx.operations.ref_block_prefix ||
-            !Immutable.is(nextProps.assets, this.props.assets)
-            );
+            !Immutable.is(nextProps.assets, this.props.assets) ||
+            Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name)
+        );
     }
 
     getAssets(ids) {
@@ -99,9 +100,8 @@ class Transaction extends React.Component {
         }
 
         let missing = new Array(ids.length);
-
         ids.forEach((id, index) => {
-            if (id && !this.props.accounts[id]) {
+            if (id && !this.props.account_id_to_name[id]) {
                 AccountActions.getAccounts(id, 1);
                 missing[index] = true;
             }
@@ -111,7 +111,7 @@ class Transaction extends React.Component {
     }
 
     render() {
-        let {trx, index, accounts, assets} = this.props;
+        let {trx, index, account_id_to_name, assets} = this.props;
         let info = null;
 
         info = [];
@@ -121,7 +121,6 @@ class Transaction extends React.Component {
         trx.operations.forEach((op, opIndex) => {
             let missingFee = this.getAssets([op[1].fee.asset_id])[0];
 
-            console.log("block op:", op);
             let rows = [];
             let color = "";
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -132,13 +131,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
-                            <td>{accounts[op[1].from] ? <Link to="account" params={{account_name: accounts[op[1].from]}}>{accounts[op[1].from]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].from] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}>{account_id_to_name[op[1].from]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.to" />:</td>
-                            <td>{accounts[op[1].to] ? <Link to="account" params={{account_name: accounts[op[1].to]}}>{accounts[op[1].to]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].to] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}>{account_id_to_name[op[1].to]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -168,7 +167,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.seller" />:</td>
-                            <td>{accounts[op[1].seller] ? <Link to="account" params={{account_name: accounts[op[1].seller]}}>{accounts[op[1].seller]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].seller] ? <Link to="account" params={{account_name: account_id_to_name[op[1].seller]}}>{account_id_to_name[op[1].seller]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -216,7 +215,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.seller" />:</td>
-                            <td>{accounts[op[1].seller] ? <Link to="account" params={{account_name: accounts[op[1].seller]}}>{accounts[op[1].seller]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].seller] ? <Link to="account" params={{account_name: account_id_to_name[op[1].seller]}}>{account_id_to_name[op[1].seller]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -245,7 +244,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{account_name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].fee_paying_account] ? <Link to="account" params={{account_name: account_id_to_name[op[1].fee_paying_account]}}>{account_id_to_name[op[1].fee_paying_account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -262,7 +261,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{account_name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].fee_paying_account] ? <Link to="account" params={{account_name: account_id_to_name[op[1].fee_paying_account]}}>{account_id_to_name[op[1].fee_paying_account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -278,7 +277,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{account_name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].fee_paying_account] ? <Link to="account" params={{account_name: account_id_to_name[op[1].fee_paying_account]}}>{account_id_to_name[op[1].fee_paying_account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -288,7 +287,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.fee_payer" />:</td>
-                            <td>{accounts[op[1].fee_paying_account] ? <Link to="account" params={{account_name: accounts[op[1].fee_paying_account]}}>{accounts[op[1].fee_paying_account]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].fee_paying_account] ? <Link to="account" params={{account_name: account_id_to_name[op[1].fee_paying_account]}}>{account_id_to_name[op[1].fee_paying_account]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -312,13 +311,13 @@ class Transaction extends React.Component {
                     rows.push(                            
                         <tr>
                             <td><Translate component="span" content="account.member.reg" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].registrar]}}>{accounts[op[1].registrar]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].registrar]}}>{account_id_to_name[op[1].registrar]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.member.ref" />:</td>
-                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: accounts[op[1].referrer]}}>{accounts[op[1].referrer]}</Link> : null}</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].referrer]}}>{account_id_to_name[op[1].referrer]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -335,13 +334,13 @@ class Transaction extends React.Component {
                     rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.member.reg" />:</td>
-                                    <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].registrar]}}>{accounts[op[1].registrar]}</Link> : null}</td>
+                                    <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].registrar]}}>{account_id_to_name[op[1].registrar]}</Link> : null}</td>
                                 </tr>
                     );
                     rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.member.ref" />:</td>
-                                    <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: accounts[op[1].referrer]}}>{accounts[op[1].referrer]}</Link> : null}</td>
+                                    <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].referrer]}}>{account_id_to_name[op[1].referrer]}</Link> : null}</td>
                                 </tr>
                     );
                     break;       
@@ -351,13 +350,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.authorizing_account" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].authorizing_account]}}>{accounts[op[1].authorizing_account]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].authorizing_account]}}>{account_id_to_name[op[1].authorizing_account]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.listed_account" />:</td>
-                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: accounts[op[1].account_to_list]}}>{accounts[op[1].account_to_list]}</Link> : null}</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].account_to_list]}}>{account_id_to_name[op[1].account_to_list]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(    
@@ -374,7 +373,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.account_upgrade" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].account_to_upgrade]}}>{accounts[op[1].account_to_upgrade]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].account_to_upgrade]}}>{account_id_to_name[op[1].account_to_upgrade]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -390,7 +389,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].account_id]}}>{accounts[op[1].account_id]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].account_id]}}>{account_id_to_name[op[1].account_id]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -408,7 +407,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].issuer]}}>{account_id_to_name[op[1].issuer]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -446,7 +445,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" />:</td>
-                            <td>{accounts[op[1].issuer] ? <Link to="account" params={{account_name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : null}</td>
+                            <td>{account_id_to_name[op[1].issuer] ? <Link to="account" params={{account_name: account_id_to_name[op[1].issuer]}}>{account_id_to_name[op[1].issuer]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -465,7 +464,7 @@ class Transaction extends React.Component {
                     let producers = [];
                     op[1].new_feed_producers.forEach(producer => {
                         let missingAsset = this.getAccounts([producer])[0];
-                        producers.push(!missingAsset ? <div><Link to="account" params={{account_name: accounts[producer]}}>{accounts[producer]}</Link><br/></div> : null);
+                        producers.push(!missingAsset ? <div><Link to="account" params={{account_name: account_id_to_name[producer]}}>{account_id_to_name[producer]}</Link><br/></div> : null);
                     });
 
                     rows.push(
@@ -491,7 +490,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].issuer]}}>{accounts[op[1].issuer]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].issuer]}}>{account_id_to_name[op[1].issuer]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -505,7 +504,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.to" />:</td>
-                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: accounts[op[1].issue_to_account]}}>{accounts[op[1].issue_to_account]}</Link> : null}</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].issue_to_account]}}>{account_id_to_name[op[1].issue_to_account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -519,7 +518,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.account.title" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].payer]}}>{accounts[op[1].payer]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].payer]}}>{account_id_to_name[op[1].payer]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -540,7 +539,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.account.title" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].from_account]}}>{accounts[op[1].from_account]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from_account]}}>{account_id_to_name[op[1].from_account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -568,7 +567,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.account.title" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].account]}}>{accounts[op[1].account]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].account]}}>{account_id_to_name[op[1].account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -661,7 +660,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.delegate.title" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].delegate_account]}}>{accounts[op[1].delegate_account]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].delegate_account]}}>{account_id_to_name[op[1].delegate_account]}</Link> : null}</td>
                         </tr>
                     );
 
@@ -673,11 +672,41 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.witness" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: accounts[op[1].witness_account]}}>{accounts[op[1].witness_account]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].witness_account]}}>{account_id_to_name[op[1].witness_account]}</Link> : null}</td>
                         </tr>
                     );
 
-                    break;                           
+                    break;
+
+                case "balance_claim":
+                    color = "success";
+                    let missingAssets = this.getAssets(op[1].total_claimed.asset_id);
+                    let missingAccounts = this.getAccounts(op[1].deposit_to_account);
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.balance_owner" />:</td>
+                            <td>{op[1].balance_owner_key}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.balance_id" />:</td>
+                            <td>#{op[1].balance_to_claim}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.deposit_to" />:</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].deposit_to_account]}}>{account_id_to_name[op[1].deposit_to_account]}</Link> : null}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.claimed" />:</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].total_claimed.amount} asset={assets.get(op[1].total_claimed.asset_id)} /> : null}</td>
+                        </tr>
+                    );
+                    break;
 
                 default: 
                     rows = null;
@@ -702,10 +731,14 @@ class Transaction extends React.Component {
     }
 }
 
+Transaction.defaultProps = {
+    account_id_to_name: {}
+};
+
 Transaction.propTypes = {
     trx: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    accounts: PropTypes.object.isRequired,
+    account_id_to_name: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired
 };
 

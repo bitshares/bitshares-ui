@@ -172,6 +172,11 @@ module.exports = {
         create_worker: "Created a worker with a pay of",
         custom: "Created a custom operation",
         order_id: "Order ID",
+        balance_claim: "Claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
+        balance_owner: "Balance owner key",
+        balance_id: "Balance ID",
+        deposit_to: "Deposited to account",
+        claimed: "Total claimed",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Limit order",

@@ -51,7 +51,7 @@ class TransactionList extends React.Component {
     }
 
     render() {
-        let {block, assets, accounts, witnesses, witness_id_to_name} = this.props;
+        let {block, assets, account_id_to_name, witnesses, witness_id_to_name} = this.props;
         let transactions = null;
         
         transactions = [];
@@ -64,7 +64,7 @@ class TransactionList extends React.Component {
             transactions = [];
 
             block.transactions.forEach((trx, index) => {
-                transactions.push(<Transaction key={index} trx={trx} assets={assets} accounts={accounts} index={index}/>);
+                transactions.push(<Transaction key={index} trx={trx} assets={assets} account_id_to_name={account_id_to_name} index={index}/>);
             });
         }
 
@@ -133,7 +133,7 @@ class Block extends BaseComponent {
 
     render() {
 
-        let {blocks, assets, accounts, witnesses, witness_id_to_name} = this.props;
+        let {blocks, assets, account_id_to_name, witnesses, witness_id_to_name} = this.props;
         let height = parseInt(this.props.height, 10);
         let block = blocks.get(height);
 
@@ -158,7 +158,7 @@ class Block extends BaseComponent {
                         <li><Translate component="span" content="explorer.block.transactions" />: {block.transactions.length}</li>
                     </ul>
                     ) : null}
-                    {block ? <TransactionList assets={assets} accounts={accounts} block={block} witnesses={witnesses} witness_id_to_name={witness_id_to_name}/> : null}
+                    {block ? <TransactionList assets={assets} account_id_to_name={account_id_to_name} block={block} witnesses={witnesses} witness_id_to_name={witness_id_to_name}/> : null}
                 </div>
             </div>
         );
@@ -168,14 +168,14 @@ class Block extends BaseComponent {
 Block.defaultProps = {
     block: {},
     assets: {},
-    accounts: {},
+    account_id_to_name: {},
     height: 1
 };
 
 Block.propTypes = {
     block: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired,
-    accounts: PropTypes.object.isRequired,
+    account_id_to_name: PropTypes.object.isRequired,
     height: PropTypes.number.isRequired
 };
 

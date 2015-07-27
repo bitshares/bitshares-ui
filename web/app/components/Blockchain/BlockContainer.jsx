@@ -24,7 +24,7 @@ class BlockContainer extends React.Component {
                     assets: () => {
                         return AssetStore.getState().assets;
                     },
-                    accounts: () => {
+                    account_id_to_name: () => {
                         return AccountStore.getState().account_id_to_name;
                     },
                     witnesses: () => {
