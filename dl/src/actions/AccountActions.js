@@ -10,6 +10,7 @@ let accountSubs = {};
 let accountLookup = {};
 let accountSearch = {};
 let wallet_api = new WalletApi();
+let inProgress = {};
 
 class AccountActions {
 
@@ -30,9 +31,11 @@ class AccountActions {
         if (!accountLookup[uid]) {
             accountLookup[uid] = true;
 
-            if (utils.is_object_id(start_symbol) && limit===1) {
+            if (utils.is_object_id(start_symbol) && limit === 1) {
                 return api.getObjects(start_symbol).then(result => {
-                    this.dispatch([[result[0].name, result[0].id]]);
+                    this.dispatch([
+                        [result[0].name, result[0].id]
+                    ]);
                 });
             }
 
@@ -53,90 +56,53 @@ class AccountActions {
     }
 
     unSubscribe(id) {
-        api.unSubscribeAccount(accountSubs[id]).then(unSubResult => {
-            if (unSubResult) {
-                console.log("unSubscribe from:", id);
-                delete accountSubs[id];
-            }
+        api.unSubscribeAccounts(id).then(unSubResult => {
+            console.log("unsub from", id, "result:", unSubResult);
+            delete accountSubs[id];
+        })
+        .catch(err => {
+            console.log("unsub error:", err);
         });
     }
 
-    getAccount(name_or_id, sub) {
-        let subscription = (result) => {
-            console.log("sub result:", result);
-            let accountID = null;
-            for (let id in accountSubs) {
-                if (accountSubs[id] === result[0].id) {
-                    accountID = id;
-                    break;
-                }
-            }
-            if (accountID) {
-                Promise.all([
-                    api.getObjects(accountID),
-                    api.getHistory(accountID, 100),
-                    api.getBalances(accountID)
-                    ])
-                .then(results => {
-                    this.dispatch({
-                        sub: true,
-                        account: results[0],
-                        history: results[1],
-                        balances: results[2],
-                        accountID: accountID
+    getAccount(name_or_id) {
+
+        let subscription = (account, result) => {
+            console.log("sub result:", result, name_or_id);
+
+            api.getFullAccounts(null, name_or_id)
+                .then(fullAccount => {
+                    api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
+
+                        this.dispatch({
+                            sub: true,
+                            fullAccount: fullAccount[0][1],
+                            history: history
+                        });
                     });
                 });
-            }
-
         };
 
-        if (utils.is_object_id(name_or_id)) {
-            return Promise.all([
-                    api.getObjects(name_or_id),
-                    api.getBalances(name_or_id),
-                    api.getHistory(name_or_id, 10)
-                ])
-                .then(result => {
-                    if (!accountSubs[name_or_id] && sub) {
-                        let statObject = result[0][0].statistics;
-                        api.subscribeAccount(subscription, statObject)
-                            .then(subResult => {
-                                if (subResult) {
-                                    accountSubs[name_or_id] = statObject;
-                                    console.log("subscribed to account", name_or_id, ":", subResult);
-                                }
-                            });
-                    }
-                    this.dispatch(result);
+        if (!inProgress[name_or_id]) {
+            inProgress[name_or_id] = true;
+
+            return api.getFullAccounts(subscription.bind(this, name_or_id), name_or_id)
+                .then(fullAccount => {
+
+                    api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
+
+                        this.dispatch({
+                            fullAccount: fullAccount[0][1],
+                            history: history
+                        });
+
+                        delete inProgress[name_or_id];
+                    });
                 }).catch((error) => {
                     console.log("Error in AccountActions.getAccount: ", error);
-                });
-        } else {
-            return api.lookupAccounts(name_or_id, 1)
-                .then((account) => {
-                    let id = account[0][1];
-                    return Promise.all([
-                        api.getObjects(id),
-                        api.getBalances(id),
-                        api.getHistory(id, 100)
-                    ]).then((results) => {
-                        if (!accountSubs[name_or_id] && sub) {
-                            let statObject = results[0][0].statistics;
-                            api.subscribeAccount(subscription, statObject)
-                                .then(subResult => {
-                                    if (subResult) {
-                                        accountSubs[id] = statObject;
-                                        console.log("subscribed to account", id, ":", subResult);
-                                    }
-                                });
-                        }
-                        this.dispatch(results);
-                    }).catch((error) => {
-                        console.log("Error in AccountActions.getAccount: ", error);
-                    });
+                    delete inProgress[name_or_id];
                 });
         }
-
     }
 
     setCurrentAccount(name) {
@@ -186,8 +152,11 @@ class AccountActions {
 
     upgradeAccount(account_id) {
         var tr = wallet_api.new_transaction();
-        tr.add_type_operation("account_upgrade", { "account_to_upgrade": account_id, "upgrade_to_lifetime_member": true });
-        return wallet_api.sign_and_broadcast(tr).then( result => {
+        tr.add_type_operation("account_upgrade", {
+            "account_to_upgrade": account_id,
+            "upgrade_to_lifetime_member": true
+        });
+        return wallet_api.sign_and_broadcast(tr).then(result => {
             this.dispatch(account_id);
             return true;
         }).catch(error => {
@@ -205,6 +174,5 @@ class AccountActions {
     }
 
 }
-var _console_log = (result)=>{console.log(result)}
 
 module.exports = alt.createActions(AccountActions);

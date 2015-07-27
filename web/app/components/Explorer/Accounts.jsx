@@ -88,7 +88,7 @@ class Accounts extends React.Component {
 }
 
 Accounts.defaultProps = {
-    searchAccounts: []
+    searchAccounts: {}
 };
 
 Accounts.propTypes = {

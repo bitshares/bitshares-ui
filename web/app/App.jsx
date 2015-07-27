@@ -80,14 +80,15 @@ class App extends BaseComponent {
     componentDidMount() {
         NotificationStore.listen(this._onNotificationChange.bind(this));
         
+        // Try to retrieve locale from cookies
         let locale;
         if (cookies) {
             locale = cookies.get("graphene_locale");
-            // console.log("cookie locale:", locale);
         }
+        // Switch locale if the user has already set a different locale than en
+        let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
 
         let idb_promise = iDB.init_instance(indexedDB).init_promise;
-        let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
         Promise.all([
             // Non API but important shared services
             localePromise,
@@ -101,14 +102,12 @@ class App extends BaseComponent {
                     return Promise.all([
                         // API 
                         AccountActions.getAllAccounts(),
-                        AccountActions.getAccount("nathan"),
-                        AssetActions.getAsset("1.3.0"),
                         AssetActions.getAssetList("A", 100),
                         BlockchainActions.subscribeGlobals(),
                         AccountStore.loadDbData()
                     ]);
                 })
-            ])
+            ]);
         }).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts
             let promises = AccountStore.getState().linkedAccounts.map( a => {

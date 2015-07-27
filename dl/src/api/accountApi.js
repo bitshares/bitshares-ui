@@ -33,9 +33,12 @@ class Api {
         ]);
     }
 
-    unSubscribeAccount(statID) {
-        return Apis.instance().db_api().exec("unsubscribe_from_objects", [
-            [statID]
+    unSubscribeAccounts(names_or_ids) {
+        if (!Array.isArray(names_or_ids)) {
+            names_or_ids = [names_or_ids];
+        }
+        return Apis.instance().db_api().exec("unsubscribe_from_accounts", [
+            names_or_ids
         ]);
     }
 
@@ -45,6 +48,15 @@ class Api {
             PrivateKey.fromSeed("active").toPublicKey().toBtsPublic(), 
             name, 11, 0, 0, PrivateKey.fromSeed("nathan"), true
         );
+    }
+
+    getFullAccounts(cb, names_or_ids) {
+        if (!Array.isArray(names_or_ids)) {
+            names_or_ids = [names_or_ids];
+        }
+        return Apis.instance().db_api().exec("get_full_accounts", [
+            cb, names_or_ids
+        ]);
     }
 }
 

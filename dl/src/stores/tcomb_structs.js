@@ -17,8 +17,16 @@ let Account = t.struct({
     imported_pubkey: t.maybe(t.Arr),
     registrar: t.Str,
     statistics: t.Str,
+    stat_object: t.maybe(t.Obj),
     whitelisting_accounts: t.Arr,
-    cashback_vb: t.maybe(t.Str)
+    cashback_vb: t.maybe(t.Str),
+    limit_order: t.maybe(t.Arr),
+    call_orders: t.maybe(t.Arr),
+    vesting_balances: t.maybe(t.Arr),
+    lifetime_referrer_name: t.maybe(t.Str),
+    referrer_name: t.maybe(t.Str),
+    registrar_name: t.maybe(t.Str),
+    my_account: t.maybe(t.Bool)
 }, "Account");
 
 let Asset = t.struct({
