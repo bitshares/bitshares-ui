@@ -66,9 +66,8 @@ class AccountHistory extends React.Component {
 
     _setCount(props) {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
-        let account = account_name_to_id[account_name] ? cachedAccounts.get(account_name_to_id[account_name]) : null;
         let {perPage} = this.state;
-        let count = props.accountHistories.get(account.id).length;
+        let count = props.accountHistories.get(account_name).length;
         let pages = (count % perPage === 0) ? (count / perPage) : 1 + Math.floor(count / perPage);
         this.setState({count: count, pages: pages});
     }
@@ -94,12 +93,12 @@ class AccountHistory extends React.Component {
             );
         }
 
-        let account = account_name_to_id[account_name] ? cachedAccounts.get(account_name_to_id[account_name]) : null;
+        let account = account_name ? cachedAccounts.get(account_name) : null;
         if(!account) {
             return <div className="grid-content">Account {account_name} couldn't be displayed</div>;
         }
 
-        let myHistory = accountHistories.get(account.id), history = null;
+        let myHistory = accountHistories.get(account_name), history = null;
 
         let start = (currentPage - 1) * perPage;
         if (myHistory.length > 0) {

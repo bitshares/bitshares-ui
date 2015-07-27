@@ -21,9 +21,8 @@ class AccountOverview extends React.Component {
 
     render() {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountBalances, accountHistories, account_id_to_name} = this.props;
-        let account_id = account_name_to_id[account_name];
-        let account = account_id ? cachedAccounts.get(account_id) : null;
-        if(!account) return <LoadingIndicator type="circle" />;
+        let account = account_name ? cachedAccounts.get(account_name) : null;
+        if (!account) {return <LoadingIndicator type="circle" />; }
 
         let balances = null;
         if (accountBalances && assets) {
@@ -42,7 +41,7 @@ class AccountOverview extends React.Component {
             });
         }
         let witness_store_state = WitnessStore.getState().witnesses;
-        let history = accountHistories.get(account.id).map((trx, index) => {
+        let history = accountHistories.get(account_name).map((trx, index) => {
             if (index < 10) {
                 return (
                     <Operation

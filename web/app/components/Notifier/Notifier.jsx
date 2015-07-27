@@ -7,9 +7,9 @@ import Immutable from "immutable";
 class Notifier extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        let id = nextProps.currentAccount ? nextProps.currentAccount.id : null;
-        let ch = this.props.accountHistories.get(id);
-        let nh = nextProps.accountHistories.get(id);
+        let {name} = nextProps.currentAccount ? nextProps.currentAccount : null;
+        let ch = this.props.accountHistories.get(name);
+        let nh = nextProps.accountHistories.get(name);
         if (nh && ch && nh[0]) {
             if ((!ch[0] && nh[0].id) || (nh[0].id !== ch[0].id)) {
                 ZfApi.publish("account-notify", "open");
@@ -33,18 +33,18 @@ class Notifier extends React.Component {
 
         if(!currentAccount) { return <div></div>; }
 
-        let id = currentAccount.id,
+        let {id, name} = currentAccount,
             trx, info;
 
-        if (this.props.accountHistories.get(id)) {
-            trx = this.props.accountHistories.get(id)[0];
+        if (this.props.accountHistories.get(name)) {
+            trx = this.props.accountHistories.get(name)[0];
             if (trx) {
                 info = <Operation
                             op={trx.op}
                             block={trx.block_num}
                             account_id_to_name={account_id_to_name}
                             assets={assets}
-                            current={currentAccount.name}
+                            current={name}
                             witnesses={witnesses}
                             witness_id_to_name={witness_id_to_name}
                             inverted={this.props.settings.get("inverseMarket")}/>;

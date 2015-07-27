@@ -66,8 +66,7 @@ class AccountLeftPanel extends React.Component {
 
     render() {
         let {account_name, account_name_to_id, linkedAccounts, myAccounts} = this.props;
-        let account_id = account_name_to_id[account_name];
-        let account = this.props.cachedAccounts.get(account_id);
+        let account = this.props.cachedAccounts.get(account_name);
         if (!account) {
             return <LoadingIndicator type="circle"/>;
         }
@@ -92,11 +91,11 @@ class AccountLeftPanel extends React.Component {
                     ref="confirmModal"
                 />
                 <div className="regular-padding">
-                    <AccountInfo account_name={account_name} account_id={account_id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
-                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account_id ?
+                    <AccountInfo account_name={account_name} account_id={account.id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
+                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
                         (<div className="grid-block" style={{marginBottom: "1rem"}}>
                             <div className="grid-block center-content">
-                                <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account_id)}><Translate content="account.upgrade" /></a>
+                                <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate content="account.upgrade" /></a>
                             </div>
                         </div>)
                         : null

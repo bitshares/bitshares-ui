@@ -132,12 +132,12 @@ class AccountStore extends BaseStore {
             this.account_name_to_id[account.name] = account.id;
 
             this.cachedAccounts = this.cachedAccounts.set(
-                account.id,
+                account.name,
                 AccountStruct
             );
 
             this.accountHistories = this.accountHistories.set(
-                account.id,
+                account.name,
                 payload.history
             );
 
