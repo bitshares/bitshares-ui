@@ -44,8 +44,7 @@ class AutocompleteInput extends Component {
             return v.startsWith(value);
         });
         this.setState({items});
-
-        if(items.size) {
+        if(items.size >= 0) {
             if(items.size > 0 && !(items.size === 1 && items.first() === value)) {
                 ZfApi.publish(action_sheet_id, "open");
             } else {
@@ -82,9 +81,9 @@ class AutocompleteInput extends Component {
         var items = this.state.items
             .sort()
             .map( i => {
-            let j = typeof i === "string" ? [i,i] : i;
-            return (<li key={j[0]}><a href data-value={j[0]} onClick={this.handleItemClick}>{j[1]}</a></li>);
-        });
+                let j = typeof i === "string" ? [i, i] : i;
+                return (<li key={j[0]}><a href data-value={j[0]} onClick={this.handleItemClick}>{j[1]}</a></li>);
+            });
         let action_sheet_id = this.props.id + "-container";
         return (
             <div className="autocomplete">

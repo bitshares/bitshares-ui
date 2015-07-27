@@ -14,7 +14,9 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
-import AccountSelect from "../Forms/AccountSelect"
+import AccountSelect from "../Forms/AccountSelect";
+import debounce from "lodash.debounce";
+import Immutable from "immutable";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -39,10 +41,12 @@ class Transfer extends BaseComponent {
                 amount: null,
                 to: null,
                 memo: null
-            }
+            },
+            searchTerm: ""
         };
 
         this._bind("formChange", "onSubmit", "onConfirm", "newTransfer");
+        this._searchAccounts = debounce(this._searchAccounts, 150);
     }
 
     componentDidMount() {
@@ -55,12 +59,23 @@ class Transfer extends BaseComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.cachedAccounts === nextProps.cachedAccounts && this.state.transfer.from) { return; }
+        let {transfer} = this.state;
+        if (!transfer.to_id && transfer.to && !Immutable.is(nextProps.searchAccounts, this.props.searchAccounts)) {
+            let to_account = nextProps.searchAccounts.findEntry(a => {
+                return a === transfer.to;
+            });
+            if (to_account) {
+                transfer.to_id = to_account[0];
+                this.setState({transfer: transfer});
+                this.validateTransferFields();
+            }
+        }
+        if (this.props.cachedAccounts === nextProps.cachedAccounts && transfer.from) { return; }
         let {cachedAccounts, currentAccount} = this.props;
-        let account_id = this.state.transfer.from_id ? this.state.transfer.from_id : currentAccount ? currentAccount.id : null;
-        if (account_id) {
-            let account = cachedAccounts.get(account_id);
-            if (!account) { AccountActions.getAccount(account_id); }
+        let accountName = transfer.from ? transfer.from : currentAccount ? currentAccount.name : null;
+        if (accountName) {
+            let account = cachedAccounts.get(accountName);
+            if (!account) { AccountActions.getAccount(accountName); }
         }
     }
 
@@ -82,7 +97,7 @@ class Transfer extends BaseComponent {
         }
         errors.to = null;
         if(transfer.to !== null) {
-            if (!transfer.to) {
+            if (!transfer.to || !transfer.to_id) {
                 errors.to = req;
             }
         }
@@ -99,13 +114,20 @@ class Transfer extends BaseComponent {
             transfer.from_id = this.props.account_name_to_id[value];
             if (!this.props.cachedAccounts.get(value)) { AccountActions.getAccount(value); }
         } else if (key === "to") {
+            this._searchAccounts(value);
             transfer.to = value;
-            transfer.to_id = this.props.account_name_to_id[value];
+            let account = this.props.searchAccounts.findEntry((name) => {
+                return name === value;
+            });
+
+            transfer.to_id = account ? account[0] : null;
+
         } else {
             transfer[key] = value;
         }
-        this.validateTransferFields();
         this.setState({error: error, transfer: transfer});
+        this.validateTransferFields();
+        
     }
 
     onSubmit(e) {
@@ -145,6 +167,15 @@ class Transfer extends BaseComponent {
         });
     }
 
+    _onSearchChange(e) {
+        this.setState({searchTerm: e.target.value});
+        this._searchAccounts(e.target.value);
+    }
+
+    _searchAccounts(searchTerm) {
+        AccountActions.accountSearch(searchTerm);
+    }
+
 
     renderSelect(ref, values, value) {
         var options = values.map(function(value) {
@@ -166,11 +197,11 @@ class Transfer extends BaseComponent {
 
     render() {
         let {transfer, errors} = this.state;
-        let {cachedAccounts, currentAccount, assets, accountBalances, myAccounts, payeeAccounts} = this.props;
+        let {cachedAccounts, currentAccount, assets, accountBalances, myAccounts, payeeAccounts, account_name_to_id, searchAccounts} = this.props;
         let query_params = this.context.router.getCurrentQuery();
         if(query_params.to && !transfer.to) {
             transfer.to = query_params.to;
-            transfer.to_id = this.props.account_name_to_id[query_params.to];
+            transfer.to_id = this.props.searchAccounts.get[query_params.to];
         }
 
         let account = null;
@@ -222,6 +253,10 @@ class Transfer extends BaseComponent {
             );
         }
 
+        let autoCompleteAccounts = searchAccounts.filter(a => {
+            return a.indexOf(this.state.searchTerm) !== -1; 
+        });
+
         return (
             <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
                 <div className="grid-block page-layout transfer-top shrink small-horizontal">
@@ -252,7 +287,7 @@ class Transfer extends BaseComponent {
                             <Translate component="label" content="transfer.to" />
                             <AutocompleteInput
                                 id="to"
-                                options={payeeAccounts}
+                                options={autoCompleteAccounts}
                                 initial_value={transfer.to}
                                 onChange={this.formChange}
                                 test={this.testFunction} />

@@ -34,6 +34,9 @@ class TransferPage extends React.Component {
                 },
                 account_name_to_id: () => {
                     return AccountStore.getState().account_name_to_id;
+                },
+                searchAccounts: () => {
+                    return AccountStore.getState().searchAccounts;
                 }
               }}>
                 <Transfer />
