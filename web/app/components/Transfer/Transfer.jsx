@@ -17,6 +17,7 @@ import notify from "actions/NotificationActions";
 import AccountSelect from "../Forms/AccountSelect";
 import debounce from "lodash.debounce";
 import Immutable from "immutable";
+import Wallet from "components/Wallet/Wallet";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -280,7 +281,7 @@ class Transfer extends BaseComponent {
             return a.indexOf(this.state.searchTerm) !== -1; 
         });
 
-        return (
+        return (<Wallet>
             <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
                 <div className="grid-block page-layout transfer-top shrink small-horizontal">
                     {/*  F R O M  */}
@@ -382,7 +383,7 @@ class Transfer extends BaseComponent {
                     </div>
                 </Modal>
             </form>
-        );
+        </Wallet>);
     }
 }
 
