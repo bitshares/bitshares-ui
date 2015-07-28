@@ -7,6 +7,15 @@
     <title>Graphene UI</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="app.css">
+    <script>
+        // Force SSL unless development
+        if(
+            window.location.protocol.indexOf("https") != 0 &&
+            window.location.host.indexOf("localhost") != 0 &&
+            window.location.host.indexOf("127.0.0.1") != 0
+        )
+            window.location.protocol = "https"
+    </script>
 </head>
 <body>
 <main id="content"></main>
