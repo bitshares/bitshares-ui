@@ -10,13 +10,13 @@ import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
-import AccountActions from "actions/AccountActions";
 import debounce from "lodash.debounce";
 import ConfirmModal from "../Modal/ConfirmModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
+import Wallet from "components/Wallet/Wallet";
 
 require("./exchange.scss");
 
@@ -250,6 +250,8 @@ class Exchange extends React.Component {
         return (
 
             <div className="grid-block vertical">
+                <Wallet>
+
                 {/* Main vertical block with content */}
                 <div className="grid-block page-layout market-layout">
 
@@ -411,6 +413,7 @@ class Exchange extends React.Component {
 
                 {/* End of Second Vertical Block */}
                 </div>
+                </Wallet>
             </div>
         );
     }

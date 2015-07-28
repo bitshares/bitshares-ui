@@ -6,6 +6,7 @@ import AssetActions from "actions/AssetActions";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import FormattedAsset from "../Utility/FormattedAsset";
+import Wallet from "components/Wallet/Wallet";
 
 class AccountUserIssuedAssets extends React.Component {
     constructor() {
@@ -97,69 +98,71 @@ class AccountUserIssuedAssets extends React.Component {
 
         return (
             <div className="grid-content">
-                <div className="content-block">
-                    <h3>Issued Assets</h3>
+                <Wallet>
+                    <div className="content-block">
+                        <h3>Issued Assets</h3>
+                        
+                        <div>
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Symbol</th>
+                                    <th>Description</th>
+                                    {/* <th>Public Data</th> FIXME: this column is hidden because its purpose overlaps with Description */}
+                                    <th>Max Supply</th>
+                                    <th>Precision</th>
+                                    <th>{/* Issue asset button */}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {myAssets}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     
-                    <div>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Symbol</th>
-                                <th>Description</th>
-                                {/* <th>Public Data</th> FIXME: this column is hidden because its purpose overlaps with Description */}
-                                <th>Max Supply</th>
-                                <th>Precision</th>
-                                <th>{/* Issue asset button */}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {myAssets}
-                            </tbody>
-                        </table>
+                    <div className="content-block">
+                        <div className="actions clearfix">
+                            <Trigger open="create_asset">
+                                <button className="button">Create New Asset</button>
+                            </Trigger>
+                        </div>
                     </div>
-                </div>
-                
-                <div className="content-block">
-                    <div className="actions clearfix">
-                        <Trigger open="create_asset">
-                            <button className="button">Create New Asset</button>
+
+                    <Modal id="create_asset" overlay={true}>
+                        <Trigger close="create_asset">
+                            <a href="#" className="close-button">&times;</a>
                         </Trigger>
-                    </div>
-                </div>
+                        <div className="grid-block vertical">
+                            <form onSubmit={this._createAsset.bind(this, account.id)} noValidate>
+                                <div className="shrink grid-content">
+                                    <label><Translate content="account.user_issued_assets.symbol" />
+                                        <input type="text" value={this.state.symbol} onChange={this._onFormInput.bind(this, "symbol")}/>
+                                    </label>
 
-				<Modal id="create_asset" overlay={true}>
-                    <Trigger close="create_asset">
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
-                    <div className="grid-block vertical">
-                        <form onSubmit={this._createAsset.bind(this, account.id)} noValidate>
-                            <div className="shrink grid-content">
-                                <label><Translate content="account.user_issued_assets.symbol" />
-                                    <input type="text" value={this.state.symbol} onChange={this._onFormInput.bind(this, "symbol")}/>
-                                </label>
+                                    <label><Translate content="account.user_issued_assets.name" />
+                                    <input type="text" value={this.state.name} onChange={this._onFormInput.bind(this, "name")} /></label>
+                                    
+                                    <label><Translate content="account.user_issued_assets.description" />
+                                    <input type="text" value={this.state.description} onChange={this._onFormInput.bind(this, "description")} /></label>
 
-                                <label><Translate content="account.user_issued_assets.name" />
-                                <input type="text" value={this.state.name} onChange={this._onFormInput.bind(this, "name")} /></label>
-                                
-                                <label><Translate content="account.user_issued_assets.description" />
-                                <input type="text" value={this.state.description} onChange={this._onFormInput.bind(this, "description")} /></label>
+                                    <label><Translate content="account.user_issued_assets.max_supply" />
+                                    <input type="number" value={this.state.max_supply} onChange={this._onFormInput.bind(this, "max_supply")} /></label>
 
-                                <label><Translate content="account.user_issued_assets.max_supply" />
-                                <input type="number" value={this.state.max_supply} onChange={this._onFormInput.bind(this, "max_supply")} /></label>
-
-                                <label><Translate content="account.user_issued_assets.precision" />
-                                <input type="number" value={this.state.precision} onChange={this._onFormInput.bind(this, "precision")} /></label>
-                            </div>
-                            <div className="grid-content button-group">
-                                <input type="submit" className="button" onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
-                                <Trigger close="create_asset">
-                                    <a href className="secondary button">Cancel</a>
-                                </Trigger>
-                            </div>
-                        </form>
-                    </div>
-                </Modal>
+                                    <label><Translate content="account.user_issued_assets.precision" />
+                                    <input type="number" value={this.state.precision} onChange={this._onFormInput.bind(this, "precision")} /></label>
+                                </div>
+                                <div className="grid-content button-group">
+                                    <input type="submit" className="button" onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
+                                    <Trigger close="create_asset">
+                                        <a href className="secondary button">Cancel</a>
+                                    </Trigger>
+                                </div>
+                            </form>
+                        </div>
+                    </Modal>
+                </Wallet>
             </div>
         );
     }
