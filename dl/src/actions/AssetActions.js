@@ -2,6 +2,7 @@ var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
 import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
+import WalletDb from "stores/WalletDb";
 let wallet_api = new WalletApi();
 
 let inProgress = {};
@@ -14,8 +15,8 @@ class AssetActions {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("asset_create", {
             "fee": {
-                amount: 30000000000,
-                asset_id: "1.3.0"
+                amount: 0,
+                asset_id: 0
             },
             "issuer": account_id,
             "symbol": createObject.symbol,
@@ -54,7 +55,7 @@ class AssetActions {
             "is_prediction_market": false,
             "extensions": null
         });
-        return wallet_api.sign_and_broadcast(tr).then(result => {
+        return WalletDb.process_transaction(tr, null, true).then(result => {
             console.log("asset create result:", result);
             // this.dispatch(account_id);
             return true;
@@ -68,6 +69,10 @@ class AssetActions {
         // Create asset action here...
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("asset_issue", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
             "issuer": account_id,
             "asset_to_issue": {
                 "amount": issueObject.amount,
@@ -79,7 +84,7 @@ class AssetActions {
                 
             ]
         });
-        return wallet_api.sign_and_broadcast(tr).then(result => {
+        return WalletDb.process_transaction(tr, null, true).then(result => {
             console.log("asset issue result:", result);
             // this.dispatch(account_id);
             return true;

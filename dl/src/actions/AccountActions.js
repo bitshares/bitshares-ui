@@ -4,7 +4,7 @@ import api from "../api/accountApi";
 
 import WalletApi from "../rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
-import WalletActions from "../actions/WalletActions"
+import WalletActions from "../actions/WalletActions";
 
 let accountSubs = {};
 let accountLookup = {};
@@ -153,14 +153,14 @@ class AccountActions {
     upgradeAccount(account_id) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_upgrade", {
-            fee: {
-                asset_id: "1.3.0",
-                amount: 1000000000
+            "fee": {
+                amount: 0,
+                asset_id: 0
             },
             "account_to_upgrade": account_id,
             "upgrade_to_lifetime_member": true
         });
-        return wallet_api.sign_and_broadcast(tr).then(result => {
+        return WalletDb.process_transaction(tr, null, true).then(result => {
             this.dispatch(account_id);
             return true;
         }).catch(error => {

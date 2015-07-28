@@ -1,6 +1,7 @@
 var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
 import WalletApi from "rpc_api/WalletApi";
+import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
 let ops = Object.keys(operations);
 
@@ -214,6 +215,10 @@ class MarketsActions {
         var tr = wallet_api.new_transaction();
 
         tr.add_type_operation("limit_order_create", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
             "seller": account,
             "amount_to_sell": {
                 "amount": sellAmount,
@@ -226,7 +231,7 @@ class MarketsActions {
             "expiration": uniqueExpiration,
             "fill_or_kill": isFillOrKill
         });
-        return wallet_api.sign_and_broadcast(tr).then(result => {
+        return WalletDb.process_transaction(tr, null, true).then(result => {
             console.log("order result:", result);
             return true;
                 // TODO: update order ID from the server's response, if possible
@@ -249,10 +254,14 @@ class MarketsActions {
         });
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
             "fee_paying_account": accountID,
             "order": orderID
         });
-        return wallet_api.sign_and_broadcast(tr).then(result => {
+        return WalletDb.process_transaction(tr, null, true).then(result => {
             console.log("cancel result:", result);
             return true;
         })
