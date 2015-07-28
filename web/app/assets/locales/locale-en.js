@@ -98,7 +98,8 @@ module.exports = {
         errors: {
             req: "Required field",
             pos: "Amount must be positive",
-            valid: "Please enter a valid, positive number"
+            valid: "Please enter a valid, positive number",
+            balance: "The final balance must be larger than 0"
         },
         back: "BACK",
         confirm: "CONFIRM",

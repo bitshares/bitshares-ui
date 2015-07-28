@@ -59,33 +59,50 @@ class Transfer extends BaseComponent {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        // Update searchAccounts if the id is missing from transfer.to_id
         let {transfer} = this.state;
         if (!transfer.to_id && transfer.to && !Immutable.is(nextProps.searchAccounts, this.props.searchAccounts)) {
             let to_account = nextProps.searchAccounts.findEntry(a => {
                 return a === transfer.to;
             });
             if (to_account) {
-                transfer.to_id = to_account[0];
+                transfer.to_id = to_account[0];         
                 this.setState({transfer: transfer});
-                this.validateTransferFields();
+                this.validateTransferFields();       
             }
         }
-        if (this.props.cachedAccounts === nextProps.cachedAccounts && transfer.from) { return; }
-        let {cachedAccounts, currentAccount} = this.props;
-        let accountName = transfer.from ? transfer.from : currentAccount ? currentAccount.name : null;
-        if (accountName) {
-            let account = cachedAccounts.get(accountName);
-            if (!account) { AccountActions.getAccount(accountName); }
+
+        // Make sure transfer.from_id is defined
+        if (transfer.from && !transfer.from_id) { 
+            let {account_name_to_id} = this.props;
+            if (account_name_to_id[transfer.from]) {
+                transfer.from_id = account_name_to_id[transfer.from];
+                this.setState({transfer: transfer});
+            }
         }
     }
 
     validateTransferFields() {
+        function checkBalance(account_balance, asset_id, amount) {
+            if (!account_balance || !asset_id || !amount) {
+                return -1;
+            }
+            for (var i = 0; i < account_balance.length; i++) {
+                if (account_balance[i].asset_id === asset_id) {
+                    return account_balance[i].amount - amount;
+                }
+            }
+        }
+
         let errors = this.state.errors;
         let transfer = this.state.transfer;
         let req = counterpart.translate("transfer.errors.req");
         let pos = counterpart.translate("transfer.errors.pos");
         let valid = counterpart.translate("transfer.errors.valid");
+        let balance = counterpart.translate("transfer.errors.balance");
         errors.amount = null;
+        let finalBalance = checkBalance(this.props.accountBalances.get(transfer.from), transfer.asset, transfer.amount );
         if(transfer.amount !== null) {
             if (!transfer.amount) {
                 errors.amount = req;
@@ -93,6 +110,8 @@ class Transfer extends BaseComponent {
                 errors.amount = pos;
             } else if (!(Number(transfer.amount) > 0.0)) {
                 errors.amount = valid;
+            } else if (finalBalance < 0) {
+                errors.amount = balance;
             }
         }
         errors.to = null;
@@ -102,6 +121,8 @@ class Transfer extends BaseComponent {
             }
         }
         this.state.isValid = !(errors.from || errors.amount || errors.to || errors.memo);
+
+
     }
 
     formChange(event) {
@@ -126,8 +147,7 @@ class Transfer extends BaseComponent {
             transfer[key] = value;
         }
         this.setState({error: error, transfer: transfer});
-        this.validateTransferFields();
-        
+        this.validateTransferFields();       
     }
 
     onSubmit(e) {
@@ -199,9 +219,11 @@ class Transfer extends BaseComponent {
         let {transfer, errors} = this.state;
         let {cachedAccounts, currentAccount, assets, accountBalances, myAccounts, payeeAccounts, account_name_to_id, searchAccounts} = this.props;
         let query_params = this.context.router.getCurrentQuery();
+
         if(query_params.to && !transfer.to) {
             transfer.to = query_params.to;
-            transfer.to_id = this.props.searchAccounts.get[query_params.to];
+            // Launch a search for the account, the to_id will be updated in componentWillReceiveProps
+            transfer.to_id = this._searchAccounts(query_params.to);
         }
 
         let account = null;
@@ -211,6 +233,8 @@ class Transfer extends BaseComponent {
         if(!transfer.from && currentAccount) {
             transfer.from = currentAccount.name;
             transfer.from_id = currentAccount.id;
+        } else if (transfer.from && !transfer.from_id) {
+            AccountActions.getAccount(transfer.from);
         }
 
         if (cachedAccounts.size > 0 && assets.size > 0 && accountBalances.size > 0) {
@@ -264,7 +288,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.from})}>
                             <Translate component="label" content="transfer.from" />
-                            {<AccountSelect account_names={myAccounts} onChange={this._onAccountSelect.bind(this)}/>}
+                            {transfer.from && myAccounts.size > 0 ? <AccountSelect selected={transfer.from} account_names={myAccounts} onChange={this._onAccountSelect.bind(this)}/> : null}
                             <div>{errors.from}</div>
                         </div>
                     </div>

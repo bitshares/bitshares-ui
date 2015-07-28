@@ -87,7 +87,8 @@ module.exports = {
         errors: {
             req: "Champ obligatoire",
             pos: "Le montant doit étre positif",
-            valid: "Veuillez rentrer un chiffre positif"
+            valid: "Veuillez rentrer un chiffre positif",
+            balance: "Le solde final doit être superieur à 0"
         },
         back: "REVENIR",
         confirm: "CONFIRMER",
