@@ -249,7 +249,7 @@ class Exchange extends React.Component {
 
         return (
 
-            <div className="grid-block vertical">
+            <div className="grid-block vertical no-overflow">
                 <Wallet>
 
                 {/* Main vertical block with content */}
