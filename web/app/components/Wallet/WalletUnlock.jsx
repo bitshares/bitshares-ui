@@ -23,6 +23,11 @@ export default class WalletUnlock extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (WalletDb.isLocked()) {
+            this.open()
+        }
+    }
 
     render() {
         let modal = (
@@ -46,8 +51,6 @@ export default class WalletUnlock extends Component {
                 </div>
             </Modal>
         );
-        if (WalletDb.isLocked())
-            this.open()
         
         return <div>
             {modal}
