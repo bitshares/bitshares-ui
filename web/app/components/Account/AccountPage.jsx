@@ -88,6 +88,9 @@ class AccountPage extends React.Component {
                             account_id_to_name: () => {
                                 return AccountStore.getState().account_id_to_name;
                             },
+                            searchAccounts: () => {
+                                return AccountStore.getState().searchAccounts;
+                            },
                             assets: () => {
                                 return AssetStore.getState().assets;
                             },

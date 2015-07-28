@@ -153,6 +153,10 @@ class AccountActions {
     upgradeAccount(account_id) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_upgrade", {
+            fee: {
+                asset_id: "1.3.0",
+                amount: 1000000000
+            },
             "account_to_upgrade": account_id,
             "upgrade_to_lifetime_member": true
         });

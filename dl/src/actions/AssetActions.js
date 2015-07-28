@@ -8,13 +8,79 @@ let inProgress = {};
 
 class AssetActions {
 
-    createAsset(assetObject) {
+    createAsset(account_id, createObject) {
         // Create asset action here...
-        console.log("create asset:", assetObject);
+        console.log("create asset:", createObject);
         var tr = wallet_api.new_transaction();
-        tr.add_type_operation("asset_create", assetObject);
+        tr.add_type_operation("asset_create", {
+            "fee": {
+                amount: 30000000000,
+                asset_id: "1.3.0"
+            },
+            "issuer": account_id,
+            "symbol": createObject.symbol,
+            "precision": parseInt(createObject.precision, 10),
+            "common_options": {
+                "max_supply": createObject.max_supply,
+                "market_fee_percent": 0,
+                "max_market_fee": "0",
+                "issuer_permissions": 1,
+                "flags": 0,
+                "core_exchange_rate": {
+                    "base": {
+                        "amount": "1",
+                        "asset_id": "1.3.0"
+                    },
+                    "quote": {
+                        "amount": "1",
+                        "asset_id": "1.3.1"
+                    }
+                },
+                "whitelist_authorities": [
+                    
+                ],
+                "blacklist_authorities": [
+                    
+                ],
+                "whitelist_markets": [
+                    
+                ],
+                "blacklist_markets": [
+                    
+                ],
+                "description": createObject.description,
+                "extensions": null
+            },
+            "is_prediction_market": false,
+            "extensions": null
+        });
         return wallet_api.sign_and_broadcast(tr).then(result => {
             console.log("asset create result:", result);
+            // this.dispatch(account_id);
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- createAsset error ----->", error);
+            return false;
+        });
+    }
+
+    issueAsset(account_id, issueObject) {
+        // Create asset action here...
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("asset_issue", {
+            "issuer": account_id,
+            "asset_to_issue": {
+                "amount": issueObject.amount,
+                "asset_id": issueObject.asset_id
+            },
+            "issue_to_account": issueObject.to_id,
+
+            "extensions": [
+                
+            ]
+        });
+        return wallet_api.sign_and_broadcast(tr).then(result => {
+            console.log("asset issue result:", result);
             // this.dispatch(account_id);
             return true;
         }).catch(error => {

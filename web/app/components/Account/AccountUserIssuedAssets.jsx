@@ -3,76 +3,138 @@ import {PropTypes} from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
 import AssetActions from "actions/AssetActions";
+import AccountActions from "actions/AccountActions";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Wallet from "components/Wallet/Wallet";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import notify from "actions/NotificationActions";
+import utils from "common/utils";
+import AutocompleteInput from "../Forms/AutocompleteInput";
+import debounce from "lodash.debounce";
+import AccountInfo from "../Account/AccountInfo";
 
 class AccountUserIssuedAssets extends React.Component {
     constructor() {
         super();
 
         this.state = {
-            symbol: "",
-            name: "",
-            description: "",
-            max_supply: 1000000000000000,
-            precision: 4
+            create: {
+                symbol: "",
+                name: "",
+                description: "",
+                max_supply: 1000000000000000,
+                precision: 4
+            },
+            issue: {
+                amount: 0,
+                to: "",
+                to_id: "",
+                asset_id: "",
+                symbol: ""
+            },
+            searchTerm: ""
         };
+
+        this._searchAccounts = debounce(this._searchAccounts, 150);
     }
 
-    _onFormInput(type, e) {
-        let state = this.state;
-        state[type] = e.target.value;
-        this.setState(state);
+    _onCreateInput(value, e) {
+        let {create} = this.state;
+        create[value] = e.target.value;
+        this.setState({create: create});
+    }
+
+    _onIssueInput(value, e) {
+        let key = e.target.id;
+        let {issue} = this.state;
+
+        if (key === "to") {
+            this._searchAccounts(value);
+            issue.to = e.target.value;
+            let account = this.props.searchAccounts.findEntry((name) => {
+                return name === e.target.value;
+            });
+
+            issue.to_id = account ? account[0] : null;
+        } else {
+            issue[value] = e.target.value;
+        }
+
+        this.setState({issue: issue});
     }
 
     _createAsset(account_id, e) {
         e.preventDefault();
-        console.log("_createAsset:", account_id);
-        AssetActions.createAsset({
-            "issuer": account_id,
-            "symbol": this.state.symbol,
-            "precision": parseInt(this.state.precision, 10),
-            "common_options": {
-                "max_supply": this.state.max_supply,
-                "market_fee_percent": 0,
-                "max_market_fee": "0",
-                "issuer_permissions": 1,
-                "flags": 0,
-                "core_exchange_rate": {
-                    "base": {
-                        "amount": "1",
-                        "asset_id": "1.3.0"
-                    },
-                    "quote": {
-                        "amount": "1",
-                        "asset_id": "1.3.1"
-                    }
-                },
-                "whitelist_authorities": [
-                    "1.2.0"
-                ],
-                "blacklist_authorities": [
-                    "1.2.0"
-                ],
-                "whitelist_markets": [
-                    "1.3.0"
-                ],
-                "blacklist_markets": [
-                    "1.3.0"
-                ],
-                "description": "",
-                "extensions": null
-            },
-            "is_prediction_market": false,
-            "extensions": null
+        ZfApi.publish("create_asset", "close");
+        let {create} = this.state;
+        AssetActions.createAsset(account_id, create).then(result => {
+            
+            if (result) {
+                notify.addNotification({
+                    message: `Successfully created the asset ${this.state.symbol}`,//: ${this.state.wallet_public_name}
+                    level: "success",
+                    autoDismiss: 10
+                });
+            } else {
+                notify.addNotification({
+                    message: `Failed to create the asset`,//: ${this.state.wallet_public_name}
+                    level: "error",
+                    autoDismiss: 10
+                });
+            }
         });
     }
 
+    _searchAccounts(searchTerm) {
+        AccountActions.accountSearch(searchTerm);
+    }
+
+    _issueAsset(account_id, e) {
+        e.preventDefault();
+        ZfApi.publish("issue_asset", "close");
+        let {issue} = this.state;
+        let asset = this.props.assets.get(issue.asset_id);
+        issue.amount *= utils.get_asset_precision(asset.precision);
+        AssetActions.issueAsset(account_id, issue).then(result => {
+            
+            if (result) {
+                notify.addNotification({
+                    message: `Successfully issued ${utils.format_asset(issue.amount, this.props.assets.get(issue.asset_id))}`,//: ${this.state.wallet_public_name}
+                    level: "success",
+                    autoDismiss: 10
+                });
+            } else {
+                notify.addNotification({
+                    message: `Failed to issue asset`,//: ${this.state.wallet_public_name}
+                    level: "error",
+                    autoDismiss: 10
+                });
+            }
+        });
+    }
+
+    _issueButtonClick(asset_id, symbol, e) {
+        e.preventDefault();
+        let {issue} = this.state;
+        issue.asset_id = asset_id;
+        issue.symbol = symbol;
+        this.setState({issue: issue});
+        ZfApi.publish("issue_asset", "open");
+    }
+
+    _onAccountSelect(account_name) {
+        let {issue} = this.state;
+        issue.to = account_name;
+        issue.to_id = this.props.account_name_to_id[account_name];
+        this.setState({issue: issue});
+    }
+
     render() {
-        let {account_name, cachedAccounts, assets} = this.props;
+        let {account_name, cachedAccounts, assets, searchAccounts} = this.props;
         let account = cachedAccounts.get(account_name);
+        let {issue} = this.state;
 
         if (!account) {
             return <div className="grid-content"></div>;
@@ -88,13 +150,15 @@ class AccountUserIssuedAssets extends React.Component {
                         <td><FormattedAsset amount={asset.options.max_supply} asset={asset} /></td>
                         <td>{asset.precision}</td>
                         <td>                        
-                            <Trigger open="issue_asset">
-                                <button className="button">Issue Asset</button>
-                            </Trigger>
+                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">Issue Asset</button>
                         </td>
                     </tr>
                 );
         }).toArray();
+
+        let autoCompleteAccounts = searchAccounts.filter(a => {
+            return a.indexOf(this.state.searchTerm) !== -1; 
+        });
 
         return (
             <div className="grid-content">
@@ -134,28 +198,69 @@ class AccountUserIssuedAssets extends React.Component {
                         <Trigger close="create_asset">
                             <a href="#" className="close-button">&times;</a>
                         </Trigger>
+                        <br/>
                         <div className="grid-block vertical">
                             <form onSubmit={this._createAsset.bind(this, account.id)} noValidate>
                                 <div className="shrink grid-content">
                                     <label><Translate content="account.user_issued_assets.symbol" />
-                                        <input type="text" value={this.state.symbol} onChange={this._onFormInput.bind(this, "symbol")}/>
+                                        <input type="text" value={this.state.create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
                                     </label>
 
                                     <label><Translate content="account.user_issued_assets.name" />
-                                    <input type="text" value={this.state.name} onChange={this._onFormInput.bind(this, "name")} /></label>
+                                    <input type="text" value={this.state.create.name} onChange={this._onCreateInput.bind(this, "name")} /></label>
                                     
                                     <label><Translate content="account.user_issued_assets.description" />
-                                    <input type="text" value={this.state.description} onChange={this._onFormInput.bind(this, "description")} /></label>
+                                    <input type="text" value={this.state.create.description} onChange={this._onCreateInput.bind(this, "description")} /></label>
 
                                     <label><Translate content="account.user_issued_assets.max_supply" />
-                                    <input type="number" value={this.state.max_supply} onChange={this._onFormInput.bind(this, "max_supply")} /></label>
+                                    <input type="number" value={this.state.create.max_supply} onChange={this._onCreateInput.bind(this, "max_supply")} /></label>
 
                                     <label><Translate content="account.user_issued_assets.precision" />
-                                    <input type="number" value={this.state.precision} onChange={this._onFormInput.bind(this, "precision")} /></label>
+                                    <input type="number" value={this.state.create.precision} onChange={this._onCreateInput.bind(this, "precision")} /></label>
                                 </div>
                                 <div className="grid-content button-group">
                                     <input type="submit" className="button" onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
                                     <Trigger close="create_asset">
+                                        <a href className="secondary button">Cancel</a>
+                                    </Trigger>
+                                </div>
+                            </form>
+                        </div>
+                    </Modal>
+
+                    <Modal id="issue_asset" overlay={true}>
+                        <Trigger close="issue_asset">
+                            <a href="#" className="close-button">&times;</a>
+                        </Trigger>
+                        <br/>
+                        <div className="grid-block vertical">
+                            <form onSubmit={this._issueAsset.bind(this, account.id)} noValidate>
+                                <div className="shrink grid-content">
+                                    <label><Translate content="explorer.block.asset_issue" /><span>&nbsp;({issue.symbol})</span>
+                                    <input type="number" value={issue.amount} onChange={this._onIssueInput.bind(this, "amount")} /></label>
+                                    <div>
+                                        <label>
+                                        <Translate component="span" content="account.user_issued_assets.to" />
+                                        </label>
+                                        <AutocompleteInput
+                                            id="to"
+                                            options={autoCompleteAccounts}
+                                            initial_value={issue.to}
+                                            onChange={this._onIssueInput.bind(this, "amount")}
+                                        />                                        
+                                    </div>  
+                                </div>
+                                { issue.to_id ?
+                                    <AccountInfo account_name={issue.to} account_id={issue.to_id} image_size={{height: 100, width: 100}}/> :
+                                    <span>
+                                        <div style={{height: 105, width: 100}} width={100 * 2} height={100 * 2}/>
+                                        <br/>
+                                        <br/>
+                                    </span>
+                                 }
+                                <div className="grid-content button-group">
+                                    <input type="submit" className="button" onClick={this._issueAsset.bind(this, account.id)} value="Issue Asset" />
+                                    <Trigger close="issue_asset">
                                         <a href className="secondary button">Cancel</a>
                                     </Trigger>
                                 </div>
