@@ -150,7 +150,8 @@ class Settings extends React.Component {
                 </div>
                 <div className="grid-block medium-3 right-column">
                     <div className="grid-content">
-                        <Link to="console">Open js console</Link>
+                        <div><Link to="console">Open js console</Link></div>
+                        <div><Link to="existing-account">Balance Import</Link></div>
                     </div>
                 </div>
             </div>
