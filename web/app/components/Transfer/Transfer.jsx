@@ -51,10 +51,9 @@ class Transfer extends BaseComponent {
 
     componentDidMount() {
         let {cachedAccounts, currentAccount} = this.props;
-        let account_id = currentAccount ? currentAccount.id : null;
-        if (account_id) {
-            let account = cachedAccounts.get(account_id);
-            if (!account) { AccountActions.getAccount(account_id); }
+        let account = cachedAccounts.get(currentAccount.name);
+        if (!account) {
+            AccountActions.getAccount(currentAccount.name);
         }
     }
 
@@ -75,7 +74,7 @@ class Transfer extends BaseComponent {
 
         // Make sure transfer.from_id is defined
         if (transfer.from && !transfer.from_id) { 
-            let {account_name_to_id} = this.props;
+            let {account_name_to_id} = nextProps;
             if (account_name_to_id[transfer.from]) {
                 transfer.from_id = account_name_to_id[transfer.from];
                 this.setState({transfer: transfer});

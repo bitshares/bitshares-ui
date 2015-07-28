@@ -22,7 +22,7 @@ class PrivateKeyStore extends BaseStore {
 
     loadDbData() {
         var map = this.keys.asMutable()
-        idb_helper.cursor("private_keys", cursor => {
+        return idb_helper.cursor("private_keys", cursor => {
             if( ! cursor) {
                 this.keys = map.asImmutable()
                 return

@@ -70,6 +70,25 @@ class AccountStore extends BaseStore {
         });
     }
 
+    _isMyAccount(account) {
+        let my_account = false;
+        if (account) {
+            for (let k of account.owner.key_auths) {
+                if (PrivateKeyStore.hasKey(k[0])) {
+                    my_account = true;
+                    break;
+                }
+            }
+            for (let k of account.active.key_auths) {
+                if (PrivateKeyStore.hasKey(k[0])) {
+                    my_account = true;
+                    break;
+                }
+            }
+        }
+        return my_account;
+    }
+
     onGetAccount(payload) {
 
         function parseBalances(balances) {
@@ -103,19 +122,7 @@ class AccountStore extends BaseStore {
             account.registrar_name = registrar_name;
             account.lifetime_referrer_name = lifetime_referrer_name;
 
-            let my_account = false;
-            for (let k of account.owner.key_auths) {
-                if (PrivateKeyStore.hasKey(k[0])) {
-                    my_account = true;
-                    break;
-                }
-            }
-            for (let k of account.active.key_auths) {
-                if (PrivateKeyStore.hasKey(k[0])) {
-                    my_account = true;
-                    break;
-                }
-            }
+            let my_account = this._isMyAccount(account);
 
             account.my_account = my_account;
 
