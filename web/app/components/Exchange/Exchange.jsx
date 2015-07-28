@@ -239,9 +239,7 @@ class Exchange extends React.Component {
                         baseBalance = parseInt(accountBalance[i].amount, 10);
                     }
                 }
-            } else {
-                AccountActions.getAccount(currentAccount.id);
-            }
+            } 
         }
 
         let tabTitles = {
