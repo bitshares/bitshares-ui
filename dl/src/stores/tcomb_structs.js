@@ -125,7 +125,7 @@ let GlobalObject = t.struct({
 let DynGlobalObject = t.struct({
     accounts_registered_this_interval: t.Num,
     current_witness: t.Str,
-    first_maintenance_block_with_current_interval: t.Num,
+    //first_maintenance_block_with_current_interval: t.Num,
     head_block_id: t.Str,
     head_block_number: t.Num,
     id: t.Str,
