@@ -20,6 +20,9 @@ class NotifierContainer extends React.Component {
                     account_id_to_name: () => {
                         return AccountStore.getState().account_id_to_name;
                     },
+                    account_name_to_id: () => {
+                        return AccountStore.getState().account_name_to_id;
+                    },
                     currentAccount: () => {
                         return AccountStore.getState().currentAccount;
                     },

@@ -37,10 +37,14 @@ class Notifier extends React.Component {
 
         let {id, name} = currentAccount,
             trx, info;
+            
+        if (!id) {
+            id = this.props.account_name_to_id[name];
+        }
 
         if (this.props.accountHistories.get(name)) {
             trx = this.props.accountHistories.get(name)[0];
-            if (trx) {
+            if (trx && id) {
                 info = <Operation
                             op={trx.op}
                             block={trx.block_num}
