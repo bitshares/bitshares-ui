@@ -147,7 +147,6 @@ class ImportKeys extends Component {
     }
     
     _parseWalletJson(contents) {
-        debugger
         var password_checksum
         //var encrypted_brainkey
         var address_to_enckeys = {}

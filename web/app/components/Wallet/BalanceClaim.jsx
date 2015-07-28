@@ -42,27 +42,28 @@ export default class BalanceClaim extends Component {
     componentWillMount() {
         this.loadBalances()
     }
-
-    componentDidMount() {
-        if (this.props.accountNames.length > 0 && !this.state.claim_account_name) {
-            this.setState({claim_account_name: this.props.accountNames[0]});
-        }
-    }
     
     render() {
         if( ! this.state.balance_claims.length)
             return <div/>
         
         var unclaimed_balance_rows = [], claimed_balance_rows = []
-        var has_unclaimed = false
+        var unclaimed_accounts = [], unclaimed_account_balances = {}
         for(let asset_balance of this.state.balance_by_asset) {
-            var {accounts, symbol, precision, balance} = asset_balance
-            if(balance.unvested.unclaimed || balance.vesting.unclaimed)
+            var {accounts, symbol, precision, balance, balance_claims} =
+                asset_balance
+            
+            if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
+                var account_names = accounts.join(', ')
                 unclaimed_balance_rows.push(<tr>
                     <td> <FormattedAsset amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
                     <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
-                    <td> {accounts.join(', ')} </td>
+                    <td> {account_names} </td>
                 </tr>)
+                
+                unclaimed_accounts.push(account_names)
+                unclaimed_account_balances[account_names] = balance_claims
+            }
             
             if(balance.unvested.claimed || balance.vesting.claimed)
                 claimed_balance_rows.push(<tr>
@@ -70,17 +71,13 @@ export default class BalanceClaim extends Component {
                     <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
                     <td> {accounts.join(', ')} </td>
                 </tr>)
-            
-            if(balance.unvested.unclaimed || balance.vesting.unclaimed)
-                has_unclaimed = true
         }
-        
-        var has_account = this.state.claim_account_name ? true : false
+        var claim_account_name = this.state.claim_account_name
+        var has_account = claim_account_name ? true : false
+        var has_unclaimed = unclaimed_balance_rows.length > 0
         var import_ready = has_account && has_unclaimed
-        
-        var claim_balance_label =
-            import_ready ?
-                `Claim Balance to ${this.state.claim_account_name}...` :
+        var claim_balance_label = import_ready ?
+                `Claim Balance for ${claim_account_name}...` :
                 "Claim Balance"
 
         return <div>
@@ -100,9 +97,10 @@ export default class BalanceClaim extends Component {
             </div>
             <br/>
             
-            <h3>Claimed Balance</h3>
-            <div>
-                {claimed_balance_rows.length ? <div>
+            {claimed_balance_rows.length ? <div>
+                <h3>Claimed Balance</h3>
+                <div>
+                
                     <table className="table"><thead><tr>
                         <th>Claimed</th>
                         <th>Claimed (vesting)</th>
@@ -110,16 +108,15 @@ export default class BalanceClaim extends Component {
                     </tr></thead><tbody>
                         {claimed_balance_rows}
                     </tbody></table>
-                </div> : "No Claimed Balances"}
-                
-            </div>
+                </div>
+            </div> : ""}
             <br/>
             
             { this.props.claimActive ? <div>
                 
                 <h3>Balance Claim Account</h3>
                 <ExistingAccountsAccountSelect
-                    account_names={this.props.accountNames}
+                    account_names={unclaimed_accounts}
                     onChange={this._claimAccountSelect.bind(this)}
                     list_size={5}
                 />
@@ -127,7 +124,10 @@ export default class BalanceClaim extends Component {
                 
                 <div>
                     <div className={ cname("button", {disabled:!import_ready}) }
-                        onClick={this._importBalances.bind(this)}
+                        onClick={this._importBalances.bind(this,
+                            claim_account_name,
+                            unclaimed_account_balances[claim_account_name]
+                        )}
                     >
                         {claim_balance_label}
                     </div>
@@ -164,7 +164,7 @@ export default class BalanceClaim extends Component {
                 this.setState({balance_claims, balance_by_asset})
             })
         }).catch( error => {
-            notify.error(error)
+            notify.error(error.message || error)
         })
     }
 
@@ -192,6 +192,7 @@ export default class BalanceClaim extends Component {
                     vesting: {claimed:0, unclaimed:0},
                     unvested: {claimed:0, unclaimed:0},
                     account_names: import_account_names,
+                    balance_claims: [],
                     asset_id: b.balance.asset_id,
                     asset_symbol_precisions:
                         lookup.asset_symbol_precision(b.balance.asset_id)
@@ -207,6 +208,7 @@ export default class BalanceClaim extends Component {
                     else
                         total.unvested.unclaimed += v.to_number(b.balance.amount)
                 }
+                total.balance_claims.push(balance_claim)
             }
             lookup.resolve().then(()=> {
                 var balance_by_asset = []
@@ -219,8 +221,9 @@ export default class BalanceClaim extends Component {
                         vesting: total_record.vesting,
                         unvested: total_record.unvested
                     }
+                    var balance_claims = total_record.balance_claims
                     balance_by_asset.push({
-                        accounts, symbol, precision, balance})
+                        accounts, symbol, precision, balance, balance_claims})
                 }
                 resolve(balance_by_asset)
             })
@@ -237,27 +240,17 @@ export default class BalanceClaim extends Component {
         this.setState({claim_account_name})
     }
     
-    _importBalances() {
+    _importBalances(claim_account_name, balance_claims) {
         var {unvested_balance_claims, wif_to_balances} =
-            this.wif_to_balances(this.state.balance_claims)
+            this.getWifToBalance(balance_claims)
         
         //return
         WalletActions.importBalance(
-            this.state.claim_account_name,
+            claim_account_name,
             wif_to_balances,
-            false //broadcast
-        ).then((tr_object)=> {
+            true //broadcast
+        ).then((result)=> {
             
-            // todo: transaction_helper.getDigest_from_trObject
-            var tr = type.signed_transaction.fromObject(tr_object)
-            var tr_buffer = type.transaction.toBuffer(tr)
-            var digest = hash.sha256(tr_buffer).toString('hex')
-            return api.network_api().exec("broadcast_transaction",
-                [tr_object]).then( ()=> {
-                return BalanceClaimStore.setDigest(unvested_balance_claims, digest)
-            })
-                
-        }).then((result)=> {
             notify.success("Balance claimed to account: " + this.state.claim_account_name)
             this.reset()
             if(result)
@@ -265,13 +258,15 @@ export default class BalanceClaim extends Component {
                     result, JSON.stringify(result))
                 
         }).catch((error)=> {
-            console.log(error)
-            notify.error("Error claiming balance.\n" + error)
+            console.log('_importBalances', error)
+            var message = error
+            try { message = error.data.message } catch(e) {}
+            notify.error("Error claiming balance: " + message)
             throw error
         })
     }
     
-    wif_to_balances(balance_claims) {
+    getWifToBalance(balance_claims) {
         var unvested_balance_claims = []
         var privateid_to_balances = {}
         for(let balance_claim of balance_claims) {
@@ -299,7 +294,6 @@ export default class BalanceClaim extends Component {
 
 BalanceClaim.propTypes = {
     onActive: PropTypes.func.isRequired,
-    accountNames: PropTypes.array.isRequired,
     claimActive: PropTypes.bool.isRequired
 }
 

@@ -9,8 +9,7 @@ var api = Apis.instance()
 export var BalanceClaimTcomb = t.struct({
     chain_balance_record: t.Obj,
     private_key_id: t.Num,
-    is_claimed: t.maybe(t.Bool),
-    digest: t.maybe(t.Str)
+    is_claimed: t.maybe(t.Bool)
 })
 
 class BalanceClaimStore {
@@ -28,22 +27,6 @@ class BalanceClaimStore {
             transaction.objectStore("balance_claims"),
             balance_claim
         )
-    }
-    
-    setDigest(balance_claims, digest) {
-        var transaction = this.transaction_update()
-        var store = transaction.objectStore("balance_claims")
-        var ps = []
-        for(let balance_claim of balance_claims) {
-            balance_claim = BalanceClaimTcomb.update(
-                BalanceClaimTcomb(balance_claim),
-                { digest: { '$set': digest } }
-            )
-            var request = store.put(balance_claim)
-            var p = idb_helper.on_request_end(request)
-            ps.push(p)
-        }
-        return Promise.all(ps)
     }
     
     saveBalanceClaims(balance_claims) {

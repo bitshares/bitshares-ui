@@ -41,7 +41,8 @@ class ExistingAccount extends Component {
             wif_to_accounts: null,
             //blockchain_accounts: null,
             balances_known: false,
-            accounts_known: false
+            accounts_known: false,
+            import_keys_ref: Date.now()
         }
     }
     
@@ -128,7 +129,6 @@ class ExistingAccount extends Component {
                     
                     {has_keys ? "" : <div>
                         <BalanceClaim ref="balance_claim"
-                            accountNames={this.getAccountNames()}
                             claimActive={this.state.balance_claim_active}
                             onActive={this._setClaimActive.bind(this)}
                         />
@@ -138,7 +138,9 @@ class ExistingAccount extends Component {
                         <hr/>
                         <h3>Import Keys</h3>
                         
-                        <ImportKeys onChange={this._importKeysChange.bind(this)}/>
+                        <ImportKeys
+                            key={this.state.import_keys_ref}
+                            onChange={this._importKeysChange.bind(this)}/>
                         
                         {this.state.keys.wif_count ? <div>
                             {account_rows ? <div>
@@ -171,6 +173,13 @@ class ExistingAccount extends Component {
                                     Save
                                 </a>
                             </div>
+                            <br/>
+                            <div>
+                                <a className={ cname("button")}
+                                    onClick={this.reset.bind(this)} >
+                                    Cancel
+                                </a>
+                            </div>
                         </div>:""}
                     </div>}
                 </Wallet>
@@ -186,12 +195,6 @@ class ExistingAccount extends Component {
                 (account_keycount[account_name] || 0) + 1
         }
         return account_keycount
-    }
-    
-    getAccountNames() {
-        //DEBUG return ["nathan"]
-        var accounts = AccountStore.getState().linkedAccounts.toArray()
-        return accounts.sort()
     }
     
     _setClaimActive(active) {
