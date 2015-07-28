@@ -42,6 +42,12 @@ export default class BalanceClaim extends Component {
     componentWillMount() {
         this.loadBalances()
     }
+
+    componentDidMount() {
+        if (this.props.accountNames.length > 0 && !this.state.claim_account_name) {
+            this.setState({claim_account_name: this.props.accountNames[0]});
+        }
+    }
     
     render() {
         if( ! this.state.balance_claims.length)
@@ -76,7 +82,7 @@ export default class BalanceClaim extends Component {
             import_ready ?
                 `Claim Balance to ${this.state.claim_account_name}...` :
                 "Claim Balance"
-        
+
         return <div>
             <hr/>
             <h3>Unclaimed Balance</h3>
@@ -113,6 +119,7 @@ export default class BalanceClaim extends Component {
                 
                 <h3>Balance Claim Account</h3>
                 <AccountSelect
+                    selected={this.props.accountNames[0]}
                     account_names={this.props.accountNames}
                     onChange={this._claimAccountSelect.bind(this)}
                     list_size={5}
