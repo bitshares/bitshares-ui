@@ -308,8 +308,11 @@ class Exchange extends React.Component {
                             <Tabs>
                                 <Tabs.Tab title={tabTitles.ph}>
                                     <div style={{position: "absolute", top: "-10px", right: "20px"}}>
-                                        <div className="button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
-                                        <div className="button" onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
+                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
+                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
+                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
+                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 3600)}>1hr</div>
+                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 86400)}>1d</div>
                                     </div>
                                     <PriceChart
                                         priceData={this.props.priceData}

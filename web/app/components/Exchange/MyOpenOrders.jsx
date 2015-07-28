@@ -62,7 +62,7 @@ class OrderRow extends React.Component {
     }
 
     render() {
-        let {base, quote, order, cancel_text, showSymbols} = this.props;
+        let {base, quote, order, cancel_text, showSymbols, invert} = this.props;
         let {value, price, amount} = market_utils.parseOrder(order, base, quote);
         let isAskOrder = market_utils.isAsk(order, base);
         let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
@@ -70,29 +70,29 @@ class OrderRow extends React.Component {
         let priceSymbol = showSymbols ? <span>{` ${base.symbol}/${quote.symbol}`}</span> : null;
         let valueSymbol = showSymbols ? " " + quote.symbol : null;
         let amountSymbol = showSymbols ? " " + base.symbol : null;
-
-        if (!isAskOrder) {
+        
+        if (!isAskOrder && !invert) {
 
             return (
                 <tr key={order.id}>
-                    <td className={tdClass}>
-                        <span className="price-integer">{price.int}</span>
-                        .
-                        <span className="price-decimal">{price.dec}</span>
-                        {priceSymbol}
+                    <td className="text-right">
+                        <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
+                        <span>{cancel_text}</span>
+                        </a>
                     </td>
-                    <td>{utils.format_number(amount, base.precision)} {amountSymbol}</td>
-                    <td>{utils.format_number(value, quote.precision)} {valueSymbol}</td>
                     <td><FormattedDate
                         value={order.expiration}
                         formats={intlData.formats}
                         format="short"
                         />
                     </td>
-                    <td className="text-right">
-                        <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
-                        <span>{cancel_text}</span>
-                        </a>
+                    <td>{utils.format_number(value, quote.precision)} {valueSymbol}</td>
+                    <td>{utils.format_number(amount, base.precision)} {amountSymbol}</td>
+                    <td className={tdClass}>
+                        <span className="price-integer">{price.int}</span>
+                        .
+                        <span className="price-decimal">{price.dec}</span>
+                        {priceSymbol}
                     </td>
                 </tr>
             );
@@ -125,7 +125,8 @@ class OrderRow extends React.Component {
 }
 
 OrderRow.defaultProps = {
-    showSymbols: false
+    showSymbols: false,
+    invert: false
 };
 
 

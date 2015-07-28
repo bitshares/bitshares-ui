@@ -55,6 +55,7 @@ class AccountOrders extends React.Component {
                         order={order} base={markets[marketID].base}
                         quote={markets[marketID].quote} cancel_text={cancel}
                         showSymbols={true}
+                        invert={true}
                         onCancel={this._cancelLimitOrder.bind(this, order.id)}/>;
         });
 
