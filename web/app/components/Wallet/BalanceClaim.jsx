@@ -5,7 +5,7 @@ import AccountStore from "stores/AccountStore"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimStore from "stores/BalanceClaimStore"
 import FormattedAsset from "components/Utility/FormattedAsset"
-import AccountSelect from "components/Forms/AccountSelect"
+import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect"
 import WalletActions from "actions/WalletActions"
 
 import Apis from "rpc_api/ApiInstances"
@@ -118,8 +118,7 @@ export default class BalanceClaim extends Component {
             { this.props.claimActive ? <div>
                 
                 <h3>Balance Claim Account</h3>
-                <AccountSelect
-                    selected={this.props.accountNames[0]}
+                <ExistingAccountsAccountSelect
                     account_names={this.props.accountNames}
                     onChange={this._claimAccountSelect.bind(this)}
                     list_size={5}
@@ -164,6 +163,8 @@ export default class BalanceClaim extends Component {
                 this.balanceByAssetName(balance_claims).then( balance_by_asset => {
                 this.setState({balance_claims, balance_by_asset})
             })
+        }).catch( error => {
+            notify.error(error)
         })
     }
 
