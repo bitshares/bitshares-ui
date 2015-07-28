@@ -1,6 +1,5 @@
 import React from "react";
 import {PropTypes} from "react";
-import {FormattedNumber} from "react-intl";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -15,7 +14,10 @@ class AccountOverview extends React.Component {
             nextProps.account_name !== this.props.account_name ||
             nextProps.cachedAccounts !== this.props.cachedAccounts ||
             nextProps.assets !== this.props.assets ||
-            nextProps.accountBalances !== this.props.accountBalances
+            nextProps.accountBalances !== this.props.accountBalances ||
+            // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
+            // returning true here until issue #93 has been resolved
+            true
         );
     }
 
@@ -50,7 +52,7 @@ class AccountOverview extends React.Component {
                         block={trx.block_num}
                         account_id_to_name={account_id_to_name}
                         assets={assets}
-                        current={account_name}
+                        current={account.id}
                         witnesses={witness_store_state.witnesses}
                         witness_id_to_name={witness_store_state.witness_id_to_name}
                         inverted={this.props.settings.get("inverseMarket")}

@@ -19,12 +19,17 @@ class AccountHistory extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        // console.log("nextProps:", nextProps.account_id_to_name);
+        // console.log("this.props:", this.props.account_id_to_name);
         return (
                 !Immutable.is(nextProps.accountHistories, this.props.accountHistories) ||
                 nextProps.account_name !== this.props.account_name ||
                 nextState.currentPage !== this.state.currentPage ||
                 nextState.setPage !== this.state.setPage ||
-                nextState.pages !== this.state.pages
+                nextState.pages !== this.state.pages ||
+                // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
+                // returning true here until issue #93 has been resolved
+                true
             );
     }
 
@@ -67,9 +72,11 @@ class AccountHistory extends React.Component {
     _setCount(props) {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
         let {perPage} = this.state;
-        let count = props.accountHistories.get(account_name).length;
-        let pages = (count % perPage === 0) ? (count / perPage) : 1 + Math.floor(count / perPage);
-        this.setState({count: count, pages: pages});
+        if (props.accountHistories.get(account_name)) {
+            let count = props.accountHistories.get(account_name).length;
+            let pages = (count % perPage === 0) ? (count / perPage) : 1 + Math.floor(count / perPage);
+            this.setState({count: count, pages: pages});
+        }
     }
 
     _setPage(e) {
@@ -112,7 +119,7 @@ class AccountHistory extends React.Component {
                         block={trx.block_num}
                         account_id_to_name={account_id_to_name}
                         assets={assets}
-                        current={account_name}
+                        current={account.id}
                         witnesses={WitnessStore.getState().witnesses}
                         witness_id_to_name={WitnessStore.getState().witness_id_to_name}
                         inverted={this.props.settings.get("inverseMarket")}
@@ -132,7 +139,7 @@ class AccountHistory extends React.Component {
                 </ul>
                 <table style={{width: "100%"}} className="table text-center">
                     <tbody>
-                    {history}
+                        {history}
                     </tbody>
                 </table>
             </div>

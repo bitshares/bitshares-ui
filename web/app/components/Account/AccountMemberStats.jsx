@@ -23,7 +23,7 @@ class AccountMemberStats extends React.Component {
                         <tr>
                             <td><Translate content="account.member.ref"/>:</td>
                             <td>{account.lifetime_referrer_name !== account_name ?
-                                <Link to="account" account_name={account.lifetime_referrer_name}> {account.lifetime_referrer_name} </Link> :
+                                <Link to="account" params={{account_name: account.lifetime_referrer_name}}> {account.lifetime_referrer_name} </Link> :
                                 account.lifetime_referrer_name}
                             </td>
                         </tr>

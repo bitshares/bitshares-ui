@@ -46,7 +46,7 @@ class Notifier extends React.Component {
                             block={trx.block_num}
                             account_id_to_name={account_id_to_name}
                             assets={assets}
-                            current={name}
+                            current={id}
                             witnesses={witnesses}
                             witness_id_to_name={witness_id_to_name}
                             inverted={this.props.settings.get("inverseMarket")}/>;

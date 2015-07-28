@@ -6,7 +6,6 @@ import WitnessActions from "actions/WitnessActions";
 import {Link} from "react-router";
 import intlData from "../Utility/intlData";
 import Immutable from "immutable";
-import AssetActions from "actions/AssetActions";
 import BlockchainActions from "actions/BlockchainActions";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
@@ -21,7 +20,10 @@ class TransactionList extends React.Component {
                 nextProps.block.id !== this.props.block.id ||
                 !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
                 !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
-                !Immutable.is(nextProps.assets, this.props.assets)
+                !Immutable.is(nextProps.assets, this.props.assets) ||
+                // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
+                // returning true here until issue #93 has been resolved
+                true
             );
     }
 

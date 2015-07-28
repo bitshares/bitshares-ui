@@ -10,7 +10,9 @@ class Assets extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.assets, this.props.assets) ||
-                Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
+                // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
+                // returning true here until issue #93 has been resolved
+                true
             );
     }
 

@@ -67,13 +67,14 @@ class OperationTable extends React.Component {
 }
 
 class Transaction extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.trx.operations.ref_block_prefix !== this.props.trx.operations.ref_block_prefix ||
-            !Immutable.is(nextProps.assets, this.props.assets) ||
-            Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
-        );
-    }
+    // shouldComponentUpdate(nextProps) {
+    //     console.log(nextProps.account_id_to_name, this.props.account_id_to_name, Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length);
+    //     return (
+    //         nextProps.trx.operations.ref_block_prefix !== this.props.trx.operations.ref_block_prefix ||
+    //         !Immutable.is(nextProps.assets, this.props.assets) ||
+    //         Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
+    //     );
+    // }
 
     getAssets(ids) {
 
@@ -126,18 +127,23 @@ class Transaction extends React.Component {
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
                 case "transfer":
+                    console.log("op:", op);
+
                     color = "success";
+                    let missingAccounts = this.getAccounts([op[1].from, op[1].to]);
                     let missingAssets = this.getAssets([op[1].amount.asset_id]);
+
+                    console.log("missingAccounts:", missingAccounts);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
-                            <td>{account_id_to_name[op[1].from] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}>{account_id_to_name[op[1].from]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}>{account_id_to_name[op[1].from]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.to" />:</td>
-                            <td>{account_id_to_name[op[1].to] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}>{account_id_to_name[op[1].to]}</Link> : null}</td>
+                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}>{account_id_to_name[op[1].to]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
