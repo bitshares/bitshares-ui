@@ -150,6 +150,10 @@ class AccountStore extends BaseStore {
             if (my_account) {
                 this.myAccounts = this.myAccounts.add(AccountStruct.name);
             }
+
+            if (account.name === this.currentAccount.name) {
+                this.currentAccount.id = account.id;
+            }
         }
     }
 
