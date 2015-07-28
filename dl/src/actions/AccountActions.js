@@ -14,11 +14,11 @@ let inProgress = {};
 
 class AccountActions {
 
-    accountSearch(start_symbol) {
-        let uid = `${start_symbol}_50`;
+    accountSearch(start_symbol, limit = 50) {
+        let uid = `${start_symbol}_${limit}}`;
         if (!accountSearch[uid]) {
             accountSearch[uid] = true;
-            return api.lookupAccounts(start_symbol, 50)
+            return api.lookupAccounts(start_symbol, limit)
                 .then(result => {
                     accountSearch[uid] = false;
                     this.dispatch(result);

@@ -305,7 +305,7 @@ class Transfer extends BaseComponent {
                         </div>
                     </div>
                     {/*  T O  */}
-                    <div className="grid-block medium-3">
+                    <div className="grid-block medium-3 no-overflow">
                         <div className={classNames("medium-12", {"has-error": errors.to})}>
                             <Translate component="label" content="transfer.to" />
                             <AutocompleteInput
