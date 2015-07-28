@@ -72,7 +72,8 @@ module.exports = {
         payees: "Payees",
         permissions: "Permissions",
         voting: "Votes",
-        orders: "Ordres"
+        orders: "Ordres",
+        select_placeholder: "Selectionnez un compte.."
     },
     transfer: {
         from: "De",

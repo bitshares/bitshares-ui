@@ -79,7 +79,8 @@ module.exports = {
         payees: "Payees",
         permissions: "Permissions",
         voting: "Voting",
-        orders: "Orders"
+        orders: "Orders",
+        select_placeholder: "Select Account..."
     },
     pagination: {
         newer: "Newer",

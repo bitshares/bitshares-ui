@@ -1,14 +1,21 @@
-import React, {Component, Link} from 'react';
-//import Identicon from "components/Account/Identicon"
+import React from "react";
+import counterpart from "counterpart";
 
-import cname from "classnames"
-
-class AccountSelect extends Component {
+class AccountSelect extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {selected: null};
-        this.default_placeholder = "Select Account..."
+        this.default_placeholder = counterpart.translate("account.select_placeholder");
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return (
+            nextProps.selected !== this.props.selected ||
+            nextProps.list_size !== this.props.list_size ||
+            nextProps.placeholder !== this.props.placeholder ||
+            nextProps.account_names !== this.props.account_names
+        );
     }
 
     value() {
@@ -22,19 +29,21 @@ class AccountSelect extends Component {
     render() {
         var account_names = this.props.account_names;
         var selected_account = this.props.selected;
-        var placeholder = this.props.placeholder || this.default_placeholder
-        if(this.props.list_size > 1)
-            placeholder = <option value="" disabled>{placeholder}</option>
-        else
+        var placeholder = this.props.placeholder || this.default_placeholder;
+        if (this.props.list_size > 1) {
+            placeholder = <option value="" disabled>{placeholder}</option>;
+        }
+        else {
             //When disabled and list_size was 1, chrome was skipping the 
             //placeholder and selecting the 1st item automatically (not shown)
-            placeholder = <option value="">{placeholder}</option>
-        
+            placeholder = <option value="">{placeholder}</option>;
+        }
+
         return (
             <select
                 ref='account-selector'
                 key={selected_account}
-                value={selected_account}
+                defaultValue={selected_account}
                 className="form-control account-select"
                 onChange={this._onAccountChange.bind(this)}
             >
@@ -42,9 +51,9 @@ class AccountSelect extends Component {
                 {account_names
                     .sort()
                     .map((account_name) => {
-                    if(!account_name || account_name == "") return null;
-                    return <option value={account_name}>{account_name}</option>
-                })}
+                        if (!account_name || account_name === "") {return null; }
+                        return <option value={account_name}>{account_name}</option>;
+                    })}
             </select>
         );
         //Cannot read property 'getAttribute' of null
@@ -57,12 +66,14 @@ class AccountSelect extends Component {
         //DEBUG console.log('... _onAccountChange',e.target.value)
         e.preventDefault();
         let value = e.target.value;
-        var placeholder = this.props.placeholder || this.default_placeholder
-        if(value == placeholder)
-            value = null
-        this.state.selected = value
-        if(this.props.onChange)
+        var placeholder = this.props.placeholder || this.default_placeholder;
+        if (value === placeholder) {
+            value = null;
+        }
+        this.state.selected = value;
+        if (this.props.onChange) {
             this.props.onChange(value);
+        }
     }
     
 }
