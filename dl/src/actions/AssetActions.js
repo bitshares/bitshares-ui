@@ -1,6 +1,8 @@
 var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
 import utils from "common/utils";
+import WalletApi from "../rpc_api/WalletApi";
+let wallet_api = new WalletApi();
 
 let inProgress = {};
 
@@ -8,6 +10,17 @@ class AssetActions {
 
     createAsset(assetObject) {
         // Create asset action here...
+        console.log("create asset:", assetObject);
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("asset_create", assetObject);
+        return wallet_api.sign_and_broadcast(tr).then(result => {
+            console.log("asset create result:", result);
+            // this.dispatch(account_id);
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- createAsset error ----->", error);
+            return false;
+        });
     }
 
     getAssetList(start, count) {
