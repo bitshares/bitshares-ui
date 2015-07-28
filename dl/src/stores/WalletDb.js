@@ -93,6 +93,8 @@ class WalletDb {
         if( ! private_key_tcomb)
             return null
         var aes_private = aes_private_map[ wallet_public_name ] 
+        if ( ! aes_private)
+            throw new Error("wallet locked " + wallet_public_name)
         var private_key_hex = aes_private.decryptHex(
                 private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
@@ -100,34 +102,38 @@ class WalletDb {
     
     process_transaction(tr, signer_private_keys, broadcast) {
         return new Promise((resolve, reject)=> {
-            var p = tr.finalize().then(()=> {
-                if(signer_private_keys) {
-                    if( ! Array.isArray(signer_private_keys))
-                        signer_private_keys = [ signer_private_keys ]
-                    for(let private_key of signer_private_keys) 
-                        tr.sign(private_key)
-                } else {
-                    var pubkeys = PrivateKeyStore.getPubkeys()
-                    //DEBUG console.log('... pubkeys',pubkeys)
-                    return tr.get_required_signatures(pubkeys).then(
-                        pubkey_strings => {
-                        //DEBUG console.log('... pubkey_strings',pubkey_strings)
-                        for(let pubkey_string of pubkey_strings) {
-                            var private_key_tcomb =
-                                PrivateKeyStore.getTcomb_byPubkey(pubkey_string)
-                            if( ! private_key_tcomb)
-                                throw new Error("missing private key for " + pubkey_string)
-                            var private_key = this.decryptTcomb_private_key(private_key_tcomb)
+            var p = tr.set_required_fees().then(()=> {
+                return tr.finalize().then(()=> {
+                    if(signer_private_keys) {
+                        if( ! Array.isArray(signer_private_keys))
+                            signer_private_keys = [ signer_private_keys ]
+                        for(let private_key of signer_private_keys) 
                             tr.sign(private_key)
-                        }
-                            
-                    })
-                }
-            }).then(()=> {
-                if(broadcast)
-                    return tr.broadcast()
-                else
-                    return tr.serialize()
+                    } else {
+                        var pubkeys = PrivateKeyStore.getPubkeys()
+                        //DEBUG console.log('... pubkeys',pubkeys)
+                        
+                        return tr.get_required_signatures(pubkeys).then(
+                            pubkey_strings => {
+                            //DEBUG console.log('... pubkey_strings',pubkey_strings)
+                            for(let pubkey_string of pubkey_strings) {
+                                var private_key_tcomb =
+                                    PrivateKeyStore.getTcomb_byPubkey(pubkey_string)
+                                if( ! private_key_tcomb)
+                                    throw new Error("missing private key for " + pubkey_string)
+                                var private_key = this.decryptTcomb_private_key(private_key_tcomb)
+                                tr.sign(private_key)
+                            }
+                                
+                        })
+                    }
+                }).then(()=> {
+                    if(broadcast)
+                        //todo transaction preview modal
+                        return tr.broadcast()
+                    else
+                        return tr.serialize()
+                })
             })
             resolve(p)
         })

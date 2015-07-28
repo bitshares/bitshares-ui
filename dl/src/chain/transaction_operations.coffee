@@ -14,8 +14,6 @@ lookup = require './lookup'
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
 
-fee = "2111100"
-
 module.exports = _my = {}
 
 _my.signed_transaction = ->
@@ -46,10 +44,6 @@ _my.signed_transaction = ->
         operation_id = chain_types.operations[_type.operation_name]
         if operation_id is undefined
             throw new Error "unknown operation: #{_type.operation_name}"
-        unless operation.fee
-            operation.fee =
-                amount: fee
-                asset_id: "1.3.0"
         operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]
         return
@@ -57,6 +51,19 @@ _my.signed_transaction = ->
     set_expire_minutes:(min)->
         throw new Error "already finalized" if @tr_buffer
         @expiration = Math.round(Date.now()/1000) + (min*60)
+    
+    set_required_fees:(asset_id = "1.3.0")->
+        throw new Error "already finalized" if @tr_buffer
+        operations = for op in @operations
+            type.operation.toObject op
+        api.db_api().exec( "get_required_fees",
+            [operations, asset_id]
+        ).then (assets)=>
+            #DEBUG
+            console.log('... get_required_fees',assets)
+            for i in [0...@operations.length] by 1
+                @operations[i][1].fee = assets[i]
+            return
     
     finalize:()->
         new Promise (resolve, reject)=>
@@ -121,7 +128,7 @@ _my.signed_transaction = ->
 class _my.transfer
     _template = ->
         fee : 
-            amount : fee
+            amount : 0
             asset_id : 0 # 1.3.0
         from: null       # 1.2.0
         to: null         # 1.2.0

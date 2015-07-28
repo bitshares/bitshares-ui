@@ -66,7 +66,7 @@ class WalletApi {
             registrar_id,
             referrer_id,
             referrer_percent,
-            PrivateKey.fromSeed("nathan"),
+            null, //signer_private_key
             broadcast
         )
     }
@@ -80,7 +80,6 @@ class WalletApi {
         broadcast = true
     ) {
         var expire_minutes = 10
-        var signer_private_key = PrivateKey.fromSeed("nathan")
         return this.application_api.transfer(
             from_account_id,
             to_account_id,
@@ -88,7 +87,7 @@ class WalletApi {
             asset_id,
             memo,
             expire_minutes,
-            signer_private_key,
+            null, //signer_private_key,
             broadcast
         )
     }
