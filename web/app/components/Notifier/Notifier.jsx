@@ -7,13 +7,15 @@ import Immutable from "immutable";
 class Notifier extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        let {name} = nextProps.currentAccount ? nextProps.currentAccount : null;
-        let ch = this.props.accountHistories.get(name);
-        let nh = nextProps.accountHistories.get(name);
-        if (nh && ch && nh[0]) {
-            if ((!ch[0] && nh[0].id) || (nh[0].id !== ch[0].id)) {
-                ZfApi.publish("account-notify", "open");
-                setTimeout(function() {ZfApi.publish("account-notify", "close"); }, 10000);
+        let name = nextProps.currentAccount ? nextProps.currentAccount.name : null;
+        if (name) {
+            let ch = this.props.accountHistories.get(name);
+            let nh = nextProps.accountHistories.get(name);
+            if (nh && ch && nh[0]) {
+                if ((!ch[0] && nh[0].id) || (nh[0].id !== ch[0].id)) {
+                    ZfApi.publish("account-notify", "open");
+                    setTimeout(function() {ZfApi.publish("account-notify", "close"); }, 10000);
+                }
             }
         }
     }
