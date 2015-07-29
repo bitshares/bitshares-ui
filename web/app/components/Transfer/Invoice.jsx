@@ -8,8 +8,10 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import AccountSelect from "../Forms/AccountSelect";
 import AccountInfo from "../Account/AccountInfo";
 import BaseComponent from "../BaseComponent";
+import Wallet from "..//Wallet/Wallet";
 import lzma from "lzma";
 import bs58 from "common/base58";
+import utils from "common/utils";
 
 // invoice example:
 //{
@@ -35,6 +37,7 @@ class Invoice extends BaseComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.searchAccounts !== this.state.searchAccounts
+               || nextState.pay_from_account !== this.state.pay_from_account
     }
 
     findAccountId(account_name) {
@@ -102,7 +105,15 @@ class Invoice extends BaseComponent {
         let total_amount = this.getTotal(invoice.line_items);
         let asset = AssetStore.getAsset(this.state.invoice.currency);
         let account_id = this.findAccountId(invoice.to);
-        console.log("[Invoice.jsx:93] ----- render ----->", total_amount, asset, account_id);
+        let balance = 0.0;
+        if(this.state.pay_from_account && asset) {
+            let balances = this.state.balances.get(this.state.pay_from_account);
+            console.log("[Invoice.jsx:109] ----- render ----->", balances);
+            balance = balances.reduce((bal, item) => {
+                return item.asset_id === asset.id ? bal + item.amount : bal;
+            }, 0.0);
+        }
+        console.log("[Invoice.jsx:93] ----- render ----->", total_amount, asset, account_id, this.state.pay_from_account);
         let items = invoice.line_items.map( i => {
             let price = this.parsePrice(i.price);
             let amount = i.quantity * price;
@@ -120,6 +131,7 @@ class Invoice extends BaseComponent {
         let accounts = account_store_state.myAccounts.map(name => name);
         let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account || !account_id});
         return (
+            <Wallet>
             <div className="grid-block vertical">
                 <div className="grid-content">
                     <div className="content-block invoice">
@@ -145,11 +157,22 @@ class Invoice extends BaseComponent {
                                 </tbody>
                             </table>
                             <br/>
+                            <br/>
+
                             <form>
-                                <label>Pay from account</label>
-                                <AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/>
+                                <div className="grid-block">
+                                    <div className="grid-content shrink">
+                                        <label>Pay from account</label>
+                                        <AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/>
+                                    </div>
+                                    <div className="grid-content">
+                                        <label>Balance</label>
+                                        <FormattedAsset amount={balance} asset={asset}/>
+                                    </div>
+                                </div>
+                                <br/>
                                 <a href className={payButtonClass} onClick={this.onPayClick.bind(this)}>
-                                    Pay <FormattedAsset amount={total_amount} asset={asset} exact_amount={true} /> to {invoice.to}
+                                    Pay <FormattedAsset amount={total_amount} asset={asset} exact_amount={true}/> to {invoice.to}
                                 </a>
                             </form>
                         </div>
@@ -157,6 +180,7 @@ class Invoice extends BaseComponent {
                 </div>
                 <ConfirmModal modalId="confirm_modal" ref="confirm_modal"/>
             </div>
+            </Wallet>
         );
     }
 }

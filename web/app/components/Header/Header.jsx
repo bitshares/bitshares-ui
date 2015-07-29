@@ -125,7 +125,7 @@ class Header extends React.Component {
                             {plusDropDown}
                         </div>
                         <div className="grp-menu-item" >
-                            <Link to="settings" className="button" data-tip={settings} data-place="bottom"><Icon name="cog"/></Link>
+                            <Link to="settings" data-place="bottom"><Icon name="cog"/> <Translate component="span" content="header.settings" /></Link>
                         </div>
                         
                     </div>

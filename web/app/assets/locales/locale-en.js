@@ -11,7 +11,7 @@ module.exports = {
         dashboard: "Dashboard",
         explorer: "Explorer",
         exchange: "Exchange",
-        payments: "Payments",
+        payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
         current: "Current Account"

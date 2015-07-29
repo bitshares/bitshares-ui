@@ -282,11 +282,11 @@ class Transfer extends BaseComponent {
         });
 
         return (<Wallet>
-            <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
-                <div className="grid-block page-layout transfer-top shrink small-horizontal">
+            <form className="grid-block vertical overflow-visible" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
+                <div className="grid-block page-layout transfer-top shrink small-horizontal overflow-visible">
                     {/*  F R O M  */}
                     <div className="grid-block medium-3">
-                        <div className={classNames("grid-content", "no-overflow", {"has-error": errors.from})}>
+                        <div className={classNames("grid-content", "full-width-content", "no-overflow", {"has-error": errors.from})}>
                             <Translate component="label" content="transfer.from" />
                             {transfer.from && myAccounts.size > 0 ? <AccountSelect selected={transfer.from} account_names={myAccounts} onChange={this._onAccountSelect.bind(this)}/> : null}
                             <div>{errors.from}</div>
@@ -306,7 +306,7 @@ class Transfer extends BaseComponent {
                         </div>
                     </div>
                     {/*  T O  */}
-                    <div className="grid-block medium-3 no-overflow">
+                    <div className="grid-block medium-3 overflow-visible">
                         <div className={classNames("medium-12", {"has-error": errors.to})}>
                             <Translate component="label" content="transfer.to" />
                             <AutocompleteInput
