@@ -1,11 +1,11 @@
 import React from "react";
+import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountNameInput from "./Forms/AccountNameInput";
 import PasswordInput from "./Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
-import notify from "actions/NotificationActions";
-import Wallet from "components/Wallet/Wallet"
+import notify from 'actions/NotificationActions';
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -13,8 +13,8 @@ class CreateAccount extends React.Component {
         this.state = {validAccountName: false};
     }
 
-    onAccountNameChange(params) {
-        this.setState({validAccountName: params.valid});
+    onAccountNameChange(e) {
+        this.setState({validAccountName: this.refs.account_name.valid()});
     }
 
     createAccount(name) {
@@ -24,7 +24,7 @@ class CreateAccount extends React.Component {
                 level: "success",
                 autoDismiss: 10
             });
-            this.context.router.transitionTo("account", {account_name: name});
+            this.context.router.transitionTo("account_name", {name: name});
         }).catch(error => {
             // Show in GUI
             console.log("ERROR AccountActions.createAccount", error);
@@ -36,10 +36,34 @@ class CreateAccount extends React.Component {
         });
     }
 
+    createWallet(account_name, password) {
+        return WalletDb.onCreateWallet(
+            account_name,
+            password,
+            null, //this.state.brainkey,
+            true //unlock
+        ).then(()=> {
+            console.log("Congratulations, your wallet was successfully created.");
+        }).catch(err => {
+            console.log("CreateWallet failed:", err);
+            notify.addNotification({
+                message: `Failed to create wallet: ${err}`,
+                level: "error",
+                autoDismiss: 10
+            })
+        });
+    }
+
     onSubmit(e) {
         e.preventDefault();
-        let name = this.refs.account_name.value();
-        this.createAccount(name);
+        let account_name = this.refs.account_name.value();
+
+        if (WalletDb.getWallet()) {
+            this.createAccount(account_name);
+        } else {
+            let password = this.refs.password.value();
+            this.createWallet(account_name, password).then(() => this.createAccount(account_name));
+        }
     }
 
     render() {
@@ -53,15 +77,16 @@ class CreateAccount extends React.Component {
 
                         <h3>Create New Account</h3>
                         <br/>
-                        <Wallet>
-                            <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
-                                <AccountNameInput ref="account_name"
-                                                  onChange={this.onAccountNameChange.bind(this)}
-                                                  accountShouldNotExist={true}/>
 
-                                <button className={buttonClass}>Create Account</button>
-                            </form>
-                        </Wallet>
+                        <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
+                            <AccountNameInput ref="account_name"
+                                              onChange={this.onAccountNameChange.bind(this)}
+                                              accountShouldNotExist={true}/>
+                            {WalletDb.getWallet() ? null :
+                                <PasswordInput ref="password" confirmation={true}/>
+                            }
+                            <button className={buttonClass}>Create Account</button>
+                        </form>
                     </div>
                 </div>
             </div>
