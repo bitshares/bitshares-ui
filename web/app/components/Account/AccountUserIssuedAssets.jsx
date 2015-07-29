@@ -105,6 +105,9 @@ class AccountUserIssuedAssets extends React.Component {
                     level: "success",
                     autoDismiss: 10
                 });
+
+                // Update the data for the asset
+                AssetActions.getAsset(issue.asset_id);
             } else {
                 notify.addNotification({
                     message: `Failed to issue asset`,//: ${this.state.wallet_public_name}
@@ -141,13 +144,19 @@ class AccountUserIssuedAssets extends React.Component {
         }
         let myAssets = assets.filter(asset => {
             return asset.issuer === account.id;
-        }).map(asset => {            
+        })
+        .sort((a, b) => {
+            return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
+        })
+        .map(asset => {
+            console.log("asset:", asset);
             return (
                     <tr>
                         <td>{asset.id}</td>
                         <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                         <td>{asset.options.description}</td>
-                        <td><FormattedAsset amount={asset.options.max_supply} asset={asset} /></td>
+                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset} /></td>
+                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset} /></td>
                         <td>{asset.precision}</td>
                         <td>                        
                             <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">Issue Asset</button>
@@ -174,6 +183,7 @@ class AccountUserIssuedAssets extends React.Component {
                                     <th>Symbol</th>
                                     <th>Description</th>
                                     {/* <th>Public Data</th> FIXME: this column is hidden because its purpose overlaps with Description */}
+                                    <Translate component="th" content="markets.supply" />
                                     <th>Max Supply</th>
                                     <th>Precision</th>
                                     <th>{/* Issue asset button */}</th>
@@ -206,9 +216,6 @@ class AccountUserIssuedAssets extends React.Component {
                                         <input type="text" value={this.state.create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
                                     </label>
 
-                                    <label><Translate content="account.user_issued_assets.name" />
-                                    <input type="text" value={this.state.create.name} onChange={this._onCreateInput.bind(this, "name")} /></label>
-                                    
                                     <label><Translate content="account.user_issued_assets.description" />
                                     <input type="text" value={this.state.create.description} onChange={this._onCreateInput.bind(this, "description")} /></label>
 
@@ -279,14 +286,12 @@ AccountUserIssuedAssets.defaultProps = {
     name: "",
     description: "",
     max_supply: 0,
-    precision: 0,
-    onSymbolChanged: function() {}
+    precision: 0
 };
 
 AccountUserIssuedAssets.propTypes = {
     assets: PropTypes.object.isRequired,
-    symbol: PropTypes.string.isRequired,
-    onSymbolChanged: PropTypes.func.isRequired
+    symbol: PropTypes.string.isRequired
 };
 
 export default AccountUserIssuedAssets;
