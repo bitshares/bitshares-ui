@@ -57,7 +57,7 @@ class OperationTable extends React.Component {
                         {this.props.children}
                         <tr>
                             <td><Translate component="span" content="transfer.fee" />:</td>
-                            <td>{!this.props.missingFee ? <FormattedAsset amount={this.props.fee.amount} asset={this.props.assets.get(this.props.fee.asset_id)} /> : null}</td>
+                            <td>{!this.props.missingFee ? <FormattedAsset color="fee" amount={this.props.fee.amount} asset={this.props.assets.get(this.props.fee.asset_id)} /> : null}</td>
                         </tr>
                     </tbody>
                 </table>

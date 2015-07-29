@@ -46,7 +46,7 @@ class Row extends React.Component {
                     {block ? <td><Link to="block" params={{height: block}}>#{block}</Link></td> : null}
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
                     {this.props.children}   
-                    <td>{!missing ? <FormattedAsset style={{fontWeight: "bold"}} amount={fee.amount} asset={assets.get(fee.asset_id)} /> : null}</td>
+                    <td>{!missing ? <FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={assets.get(fee.asset_id)} /> : null}</td>
                 </tr>
             );
     }

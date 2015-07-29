@@ -73,7 +73,7 @@ class AccountUserIssuedAssets extends React.Component {
             
             if (result) {
                 notify.addNotification({
-                    message: `Successfully created the asset ${this.state.symbol}`,//: ${this.state.wallet_public_name}
+                    message: `Successfully created the asset ${create.symbol}`,//: ${this.state.wallet_public_name}
                     level: "success",
                     autoDismiss: 10
                 });

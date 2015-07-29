@@ -20,6 +20,7 @@ $alert-color: #E3745B;
 $info-color: #A0D3E8;
 $success-color: #50D2C2;
 $warning-color: #FCAB53;
+$fee-color: #A57045;
 
 // general
 
@@ -367,3 +368,29 @@ td.orderHistoryBid {
     color: $secondary-text-color;
   }
 }
+
+// Formatted assets
+.facolor-success {
+  color: $success-color;
+}
+
+.facolor-alert {
+  color: $alert-color;
+}
+
+.facolor-warning {
+  color: $warning-color;
+}
+
+.facolor-info {
+  color: $info-color;
+}
+
+.facolor-error {
+  color: $error-text-color;
+}
+
+.facolor-fee {
+  color: $fee-color;
+}
+

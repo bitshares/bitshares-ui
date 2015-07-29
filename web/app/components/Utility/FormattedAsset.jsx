@@ -15,11 +15,13 @@ class FormattedAsset extends Component {
     }
 
     render() {
-        let {amount, asset, base, baseamount, decimalOffset} = this.props;
+        let {amount, asset, base, baseamount, decimalOffset, color} = this.props;
         
         if (!asset) {
             return <span></span>;
         }
+
+        let colorClass = color ? "facolor-" + color : "";
 
         let precision = utils.get_asset_precision(asset.precision);
 
@@ -29,7 +31,7 @@ class FormattedAsset extends Component {
             decimals++;
             let baseprecision = utils.get_asset_precision(base.precision);
             return (
-                    <span>
+                    <span className={colorClass}>
                         <FormattedNumber
                             value={amount / precision / (baseamount / baseprecision)}
                             minimumSignificantDigits={decimals}
@@ -39,7 +41,7 @@ class FormattedAsset extends Component {
             );
         } else {
             return (
-                    <span>
+                    <span className={colorClass}>
                         <FormattedNumber 
                             value={this.props.exact_amount ? amount : amount / precision}
                             minimumFractionDigits={decimals}
@@ -56,7 +58,8 @@ FormattedAsset.defaultProps = {
     base: undefined,
     asset: undefined,
     exact_amount: false,
-    decimalOffset: 0
+    decimalOffset: 0,
+    color: null
 };
 
 FormattedAsset.propTypes = {
@@ -64,7 +67,8 @@ FormattedAsset.propTypes = {
     base: PropTypes.object,
     asset: PropTypes.object.isRequired,
     exact_amount: PropTypes.bool,
-    decimalOffset: PropTypes.number
+    decimalOffset: PropTypes.number,
+    color: PropTypes.string
 };
 
 export default FormattedAsset;
