@@ -7,6 +7,9 @@ In order to use the GUI you will need to have a functioning witness node from th
 While waiting for the public testnet you may want to run a local chain, to do so add the following to your config.ini in ./witness_node_data_dir :
 
 ```
+# Endpoint for websocket RPC to listen on
+rpc-endpoint = 127.0.0.1:8090
+
 # Enable block production, even if the chain is stale.
 enable-stale-production = true
 
@@ -21,12 +24,6 @@ witness-id = "1.6.6"
 witness-id = "1.6.7"
 witness-id = "1.6.8"
 witness-id = "1.6.9"
-
-# Track market history by grouping orders into buckets of equal size measured in seconds, may specify more than one bucket size
-bucket-size = 10
-bucket-size = 60
-bucket-size = 300
-bucket-size = 1800
 ```
 
 ## Install
