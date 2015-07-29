@@ -24,6 +24,7 @@ class Aes
         throw new Error("seed is required") if seed is undefined
         _hash = hash.sha512 seed
         _hash = _hash.toString('hex')
+        # DEBUG console.log('... Aes.fromSeed _hash',_hash)
         Aes.fromSha512(_hash)
     
     Aes.decrypt_with_checksum = (private_key, public_key, nonce, message) ->
@@ -32,7 +33,7 @@ class Aes
         
         S = private_key.get_shared_secret public_key
         aes = Aes.fromSeed Buffer.concat [
-            new Buffer(nonce)
+            new Buffer(""+nonce)
             new Buffer(S.toString('hex'))
         ]
         planebuffer = aes.decrypt message
@@ -62,9 +63,11 @@ class Aes
         
         S = private_key.get_shared_secret public_key
         aes = Aes.fromSeed Buffer.concat [
-            new Buffer(nonce)
+            new Buffer(""+nonce)
             new Buffer(S.toString('hex'))
         ]
+        # DEBUG console.log('... S',S.toString('hex'))
+        
         # reverse() converts to big-endian (matches the c++ memo)
         checksum = hash.sha256(message).slice 0,4
         checksum = checksum.toString('binary').split("").reverse().join("")
