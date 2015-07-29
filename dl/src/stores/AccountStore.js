@@ -90,7 +90,6 @@ class AccountStore extends BaseStore {
     }
 
     onGetAccount(payload) {
-        console.log("payload:", payload);
         if (payload.fullAccount === null) {
             this.cachedAccounts = this.cachedAccounts.set(
                 payload.name,

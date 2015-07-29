@@ -156,6 +156,13 @@ class AssetActions {
             }
 
             return assetPromise.then((asset) => {
+
+                if (asset.length === 0 || !asset) {
+                    return this.dispatch({
+                        asset: null,
+                        id: id
+                    });
+                }
                 let bitAssetPromise = asset[0].bitasset_data_id ? Apis.instance().db_api().exec("get_objects", [
                     [asset[0].bitasset_data_id]
                 ]) : null;

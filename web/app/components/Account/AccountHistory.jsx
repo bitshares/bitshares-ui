@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import Immutable from "immutable";
 import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountHistory extends React.Component {
 

@@ -273,7 +273,8 @@ module.exports = {
             precision: "Precision"
         },
         asset: {
-            title: "Asset"
+            title: "Asset",
+            not_found: "The asset %(name)s does not exist"
         },
         witnesses: {
             title: "Witnesses"

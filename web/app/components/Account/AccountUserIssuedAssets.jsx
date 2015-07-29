@@ -14,6 +14,7 @@ import utils from "common/utils";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import debounce from "lodash.debounce";
 import AccountInfo from "../Account/AccountInfo";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountUserIssuedAssets extends React.Component {
     constructor() {

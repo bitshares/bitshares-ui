@@ -8,6 +8,7 @@ import VoteStore from "stores/VoteStore";
 import BaseComponent from "../BaseComponent";
 import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountVoting extends BaseComponent {
 

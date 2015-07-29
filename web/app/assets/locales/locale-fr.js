@@ -259,7 +259,8 @@ module.exports = {
             precision: "Précision"
         },
         asset: {
-            title: "Actif"
+            title: "Actif",
+            not_found: "L'actif %(name)s n'existe pas"
         },
         witnesses: {
             title: "Témoins"

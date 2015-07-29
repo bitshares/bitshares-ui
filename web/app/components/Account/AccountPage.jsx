@@ -6,6 +6,7 @@ import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt/AltContainer";
 import AccountLeftPanel from "./AccountLeftPanel";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountPage extends React.Component {
 

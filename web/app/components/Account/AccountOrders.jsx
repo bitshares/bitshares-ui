@@ -7,6 +7,7 @@ import market_utils from "common/market_utils";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import notify from "actions/NotificationActions";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountOrders extends React.Component {
 

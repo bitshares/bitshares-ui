@@ -6,6 +6,7 @@ import Translate from "react-translate-component";
 import Tabs from "react-foundation-apps/src/tabs";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import PermissionsTable from "./PermissionsTable";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountPermissions extends React.Component {
 
