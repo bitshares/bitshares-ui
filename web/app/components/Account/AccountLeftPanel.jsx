@@ -67,13 +67,17 @@ class AccountLeftPanel extends React.Component {
     render() {
         let {account_name, account_name_to_id, linkedAccounts, myAccounts} = this.props;
         let account = this.props.cachedAccounts.get(account_name);
+        let accountExists = true;
+        
         if (!account) {
             return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
         }
 
         let is_my_account = myAccounts.has(account_name);
         let linkBtn = null;
-        if(!is_my_account) {
+        if(!is_my_account && accountExists) {
             linkBtn = (
                 <div className="grid-block no-margin center-content">
                     {linkedAccounts.has(account_name) ?
@@ -90,7 +94,7 @@ class AccountLeftPanel extends React.Component {
                     modalId="confirm_modal"
                     ref="confirmModal"
                 />
-                <div className="regular-padding">
+                {accountExists ? <div className="regular-padding">
                     <AccountInfo account_name={account_name} account_id={account.id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
                     {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
                         (<div className="grid-block" style={{marginBottom: "1rem"}}>
@@ -106,7 +110,7 @@ class AccountLeftPanel extends React.Component {
                             <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay" /></Link>
                         </div>
                     </div>
-                </div>
+                </div> : null}
                 <section className="block-list">
                     <ul className="account-left-menu">
                         <li><Link to="account-overview" params={{account_name: account_name}}><Translate content="account.overview" /></Link></li>

@@ -67,6 +67,20 @@ class AccountPermissions extends React.Component {
 
     render() {
         console.log("[AccountPermissions.jsx:38] ----- render ----->", this.isStateChanged());
+
+        let {account_name, cachedAccounts} = this.props;
+        let account = account_name ? cachedAccounts.get(account_name) : null;
+
+        let accountExists = true;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+        }
+        
         let ad = this.props.account_name_to_id;
         let all_accounts = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
         let action_buttons_class = "button" + (this.isStateChanged() ? "" : " disabled");

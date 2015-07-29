@@ -93,16 +93,22 @@ class AccountHistory extends React.Component {
     render() {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
         let {perPage, count, pages, currentPage, setPage} = this.state;
+        let account = account_name ? cachedAccounts.get(account_name) : null;
+        let accountExists = true;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+        }
+
         if (!pages) {
             return (
                 <div className="grid-content">
                 </div>
             );
-        }
-
-        let account = account_name ? cachedAccounts.get(account_name) : null;
-        if(!account) {
-            return <div className="grid-content">Account {account_name} couldn't be displayed</div>;
         }
 
         let myHistory = accountHistories.get(account_name), history = null;

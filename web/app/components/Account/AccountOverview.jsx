@@ -24,7 +24,17 @@ class AccountOverview extends React.Component {
     render() {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountBalances, accountHistories, account_id_to_name} = this.props;
         let account = account_name ? cachedAccounts.get(account_name) : null;
-        if (!account) {return <LoadingIndicator type="circle" />; }
+
+        let accountExists = true;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+        }
 
         let balances = null;
         if (accountBalances && assets) {

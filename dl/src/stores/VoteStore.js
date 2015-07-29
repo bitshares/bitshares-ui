@@ -109,6 +109,7 @@ class VoteStore extends BaseStore {
 
     onGetAccount(result) {
         if (result.sub) return;
+        if (result.fullAccount === null) return;
         let account_id_to_name = AccountStore.getState().account_id_to_name;
         let account = result.fullAccount.account;
         this.cachedAccountsJson[account.name] = account;

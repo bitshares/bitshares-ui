@@ -66,7 +66,7 @@ class AccountActions {
     }
 
     getAccount(name_or_id) {
-
+        console.log("getAccount:", name_or_id);
         let subscription = (account, result) => {
             // console.log("sub result:", result, name_or_id);
 
@@ -88,7 +88,14 @@ class AccountActions {
 
             return api.getFullAccounts(subscription.bind(this, name_or_id), name_or_id)
                 .then(fullAccount => {
-
+                    console.log("fullAccount:", fullAccount);
+                    if (fullAccount.length === 0) {
+                        return this.dispatch({
+                            fullAccount: null,
+                            history: [],
+                            name: name_or_id
+                        });
+                    }
                     api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
 
                         this.dispatch({

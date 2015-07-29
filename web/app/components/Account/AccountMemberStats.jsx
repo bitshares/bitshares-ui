@@ -10,8 +10,14 @@ class AccountMemberStats extends React.Component {
         let {account_name, cachedAccounts, assets} = this.props;
         let account = cachedAccounts.get(account_name);
 
+        let accountExists = true;
         if (!account) {
-            return <div className="grid-block"></div>;
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
 
         let coreAsset = assets.get("1.3.0");

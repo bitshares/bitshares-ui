@@ -73,7 +73,10 @@ module.exports = {
         permissions: "Permissions",
         voting: "Votes",
         orders: "Ordres",
-        select_placeholder: "Selectionnez un compte.."
+        select_placeholder: "Selectionnez un compte..",
+        errors: {
+            not_found: "Le compte %(name)s n'existe pas, veuillez vérifier le nom"
+        }
     },
     transfer: {
         from: "De",
