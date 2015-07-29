@@ -7,6 +7,7 @@ import BalanceClaimStore from "stores/BalanceClaimStore"
 import FormattedAsset from "components/Utility/FormattedAsset"
 import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect"
 import WalletActions from "actions/WalletActions"
+import AccountActions from "actions/AccountActions";
 
 import Apis from "rpc_api/ApiInstances"
 
@@ -252,6 +253,7 @@ export default class BalanceClaim extends Component {
         ).then((result)=> {
             
             notify.success("Balance claimed to account: " + this.state.claim_account_name)
+            AccountActions.getAccount(this.state.claim_account_name);
             this.reset()
             if(result)
                 console.log("ExistingAccount._importBalances",
