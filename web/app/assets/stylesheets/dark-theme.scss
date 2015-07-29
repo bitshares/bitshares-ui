@@ -125,6 +125,15 @@ h1, h2, h3, h4, h5, h6 {
   @include color($secondary-text-color, $panel-bg-color);
 }
 
+.panel-left {
+  @include color($light-text-color, $light-panel-bg-color);
+  .block-list li > a {
+    color: $light-text-color;
+    &:hover {
+      background-color: darken($light-panel-bg-color, 4%);
+    }
+  }
+}
 
 .tabs {
 @include color($secondary-text-color, $bg-color);
@@ -351,4 +360,10 @@ td.orderHistoryBid {
 
 .pagination {
     background-color: $panel-bg-color;
+}
+
+.invoice {
+  .item-description {
+    color: $secondary-text-color;
+  }
 }
