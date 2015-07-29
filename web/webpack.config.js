@@ -38,9 +38,7 @@ var config = {
         ]
     },
     resolve: {
-        alias: 
-            {lzma: path.resolve(__dirname, "./node_modules/lzma/src/lzma.js")}
-        ,
+        //alias: {lzma: path.resolve(__dirname, "./node_modules/lzma/src/lzma.js")},
         root: [path.resolve(__dirname, "./app"), path.resolve(__dirname, "../dl/src")],
         extensions: ["", ".js", ".jsx", ".coffee", ".json"],
         modulesDirectories: ["node_modules", "bower_components"],
