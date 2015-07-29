@@ -105,15 +105,14 @@ class Invoice extends BaseComponent {
         let total_amount = this.getTotal(invoice.line_items);
         let asset = AssetStore.getAsset(this.state.invoice.currency);
         let account_id = this.findAccountId(invoice.to);
-        let balance = 0.0;
+        let final_balance = 0.0;
         if(this.state.pay_from_account && asset) {
             let balances = this.state.balances.get(this.state.pay_from_account);
-            console.log("[Invoice.jsx:109] ----- render ----->", balances);
-            balance = balances.reduce((bal, item) => {
+            let current_balance = balances.reduce((bal, item) => {
                 return item.asset_id === asset.id ? bal + item.amount : bal;
             }, 0.0);
+            final_balance = current_balance - total_amount * utils.get_asset_precision(asset.precision);
         }
-        console.log("[Invoice.jsx:93] ----- render ----->", total_amount, asset, account_id, this.state.pay_from_account);
         let items = invoice.line_items.map( i => {
             let price = this.parsePrice(i.price);
             let amount = i.quantity * price;
@@ -129,7 +128,8 @@ class Invoice extends BaseComponent {
         });
         let account_store_state = AccountStore.getState();
         let accounts = account_store_state.myAccounts.map(name => name);
-        let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account || !account_id});
+        let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account || !account_id || final_balance <= 0.0});
+        let finalBalanceClass = classNames("grid-content", {error: final_balance <= 0.0});
         return (
             <Wallet>
             <div className="grid-block vertical">
@@ -165,10 +165,12 @@ class Invoice extends BaseComponent {
                                         <label>Pay from account</label>
                                         <AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/>
                                     </div>
-                                    <div className="grid-content">
-                                        <label>Balance</label>
-                                        <FormattedAsset amount={balance} asset={asset}/>
-                                    </div>
+                                    {this.state.pay_from_account ?
+                                        <div className={finalBalanceClass}>
+                                            <label>Final Balance</label>
+                                            <FormattedAsset amount={final_balance} asset={asset}/>
+                                        </div> : null
+                                    }
                                 </div>
                                 <br/>
                                 <a href className={payButtonClass} onClick={this.onPayClick.bind(this)}>
