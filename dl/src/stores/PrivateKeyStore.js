@@ -17,7 +17,7 @@ class PrivateKeyStore extends BaseStore {
             onAddKey: PrivateKeyActions.addKey
         });*/
         this._export("loadDbData","onAddKey", "hasKey",
-            "getPubkeys", "getTcomb_byPubkey");
+            "getPubkeys", "getTcombs_byPubkey");
     }
 
     loadDbData() {
@@ -80,9 +80,15 @@ class PrivateKeyStore extends BaseStore {
         return this.keys.valueSeq().map( value => value.pubkey).toArray()
     }
     
-    getTcomb_byPubkey(public_key_string) {
-        return this.keys.find(
-            value => value.pubkey == public_key_string)
+    /** The same key may appear in multiple
+    wallets.  Use WalletDb.getPrivateKey instead. */
+    getTcombs_byPubkey(public_key) {
+        if(! public_key) return null
+        if(public_key.Q)
+            public_key = public_key.toBtsPublic()
+        return this.keys.filter(
+            value => value.pubkey == public_key
+        ).toArray()
     }
     
     //onDeleteByWalletId(wallet_id, transaction, cascade = true) {

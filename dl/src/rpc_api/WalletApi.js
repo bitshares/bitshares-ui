@@ -3,10 +3,15 @@ var ops = require('../chain/transaction_operations')
 var type = require('../chain/serializer_operation_types')
 var v = require('../chain/serializer_validation')
 import key from "../common/key_utils"
+import lookup from "chain/lookup"
+import chain_types from "chain/chain_types"
 
 var PrivateKey = require('../ecc/key_private')
 var ApplicationApi = require('./ApplicationApi')
 var WalletDb = require('../stores/WalletDb')
+
+import PrivateKeyStore from "stores/PrivateKeyStore"
+import Aes from "ecc/aes"
 
 class WalletApi {
 
@@ -75,20 +80,21 @@ class WalletApi {
         from_account_id,
         to_account_id,
         amount, 
-        asset_id, 
-        memo,
-        broadcast = true
+        asset, 
+        memo_message,
+        broadcast = true,
+        encrypt_memo = true,
+        optional_nonce = null
     ) {
-        var expire_minutes = 10
         return this.application_api.transfer(
             from_account_id,
             to_account_id,
-            amount,
-            asset_id,
-            memo,
-            expire_minutes,
-            null, //signer_private_key,
-            broadcast
+            amount, 
+            asset, 
+            memo_message,
+            broadcast,
+            encrypt_memo,
+            optional_nonce
         )
     }
 

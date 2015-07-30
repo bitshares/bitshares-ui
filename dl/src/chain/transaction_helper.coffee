@@ -6,6 +6,7 @@ secureRandom = require 'secure-random'
 hash = require '../common/hash'
 type = require './serializer_operation_types'
 key = require '../common/key_utils'
+chain_types = require './chain_types'
 
 Promise = require '../common/Promise'
 ByteBuffer = require('../common/bytebuffer')

@@ -1,4 +1,10 @@
 assert = require 'assert'
+secureRandom = require 'secure-random'
+
+WalletDb = require "stores/WalletDb"
+AccountActions = require "actions/AccountActions"
+PrivateKey = require "ecc/key_private"
+PrivateKeyStore = require "stores/PrivateKeyStore"
 
 module.exports =
 
@@ -39,3 +45,27 @@ module.exports =
                 throw new Error "expecting " + message_substring
         if fail
             throw new Error "expecting " + message_substring
+    
+    test_wallet: (
+        suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
+    ) =>
+        #DEBUG console.log('... test_wallet')
+        WalletDb.setCurrentWalletName("default_" + suffix)
+        WalletDb.onCreateWallet(
+            "my_account",
+            "password",
+            "brainkey" + suffix, 
+            true # unlock  
+        ).then(()=>
+            #DEBUG console.log('..."nathan"',PrivateKey.fromSeed("nathan").toPublicKey().toBtsPublic())
+            WalletDb.importKeys([
+                PrivateKey.fromSeed("nathan").toWif()
+            ])#.then( (result)=> console.log('test_wallet importKeys',result) )
+        ).catch( (e)=>
+            console.log('test_wallet',e)
+        ).then => suffix
+    
+    test_account: ( suffix )=>
+        AccountActions.createAccount(
+            "account-"+ suffix
+        )

@@ -86,8 +86,8 @@ class WalletDb {
         }
     }
     
-    //rename to decryptTcomb_private_key
-    decryptTcomb_private_key(private_key_tcomb) {
+    //rename to decryptTcomb_PrivateKey
+    decryptTcomb_PrivateKey(private_key_tcomb) {
         if(private_key_tcomb.wallet_id != this.getWallet().id)
             throw new Error("Incorrect wallet")
         if( ! private_key_tcomb)
@@ -98,6 +98,24 @@ class WalletDb {
         var private_key_hex = aes_private.decryptHex(
                 private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
+    }
+    
+    /** @return ecc/PrivateKey or null */
+    getPrivateKey(public_key) {
+        if(! public_key) return null
+        if(public_key.Q) public_key = public_key.toBtsPublic()
+        var private_key_tcombs =
+            PrivateKeyStore.getTcombs_byPubkey(public_key)
+        
+        if(! private_key_tcombs)
+            return null
+        
+        var wallet_id = this.getWallet().id
+        for(let private_key_tcomb of private_key_tcombs)
+            if(private_key_tcomb.wallet_id == wallet_id)
+                return this.decryptTcomb_PrivateKey(private_key_tcomb)
+        
+        return null
     }
     
     process_transaction(tr, signer_private_keys, broadcast) {
@@ -112,19 +130,17 @@ class WalletDb {
                     } else {
                         var pubkeys = PrivateKeyStore.getPubkeys()
                         //DEBUG console.log('... pubkeys',pubkeys)
-                        
+                        if( ! pubkeys.length)
+                            throw new Error("missing signing key")
                         return tr.get_required_signatures(pubkeys).then(
                             pubkey_strings => {
                             //DEBUG console.log('... pubkey_strings',pubkey_strings)
                             for(let pubkey_string of pubkey_strings) {
-                                var private_key_tcomb =
-                                    PrivateKeyStore.getTcomb_byPubkey(pubkey_string)
-                                if( ! private_key_tcomb)
-                                    throw new Error("missing private key for " + pubkey_string)
-                                var private_key = this.decryptTcomb_private_key(private_key_tcomb)
+                                var private_key = this.getPrivateKey(pubkey_string)
+                                if( ! private_key)
+                                    throw new Error("missing signing key for " + pubkey_string)
                                 tr.sign(private_key)
                             }
-                                
                         })
                     }
                 }).then(()=> {
@@ -292,14 +308,14 @@ class WalletDb {
                 error => reject(error)
             ).then( ()=> {
                 var p = Promise.all(promises).catch( error => {
+                    //DEBUG
                     console.log('importKeys transaction.abort', error)    
                     transaction.abort()
-                    var message = error
-                    try { message = error.target.error.message } catch(e) { }
-                    return message
+                    throw error
+                    //var message = error
+                    //try { message = error.target.error.message } catch(e) { }
+                    //return message
                 }).then( private_key_ids => {
-                    //remove 1st promise setWalletModified
-                    private_key_ids = private_key_ids.slice(1)
                     return {import_count, duplicate_count, private_key_ids}
                 })
                 resolve(p)

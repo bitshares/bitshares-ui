@@ -8,7 +8,6 @@ var chain_config = require('../chain/config');
 var helper = require('../chain/transaction_helper')
 var ops = require('../chain/transaction_operations');
 var type = require('../chain/serializer_operation_types')
-var validation = require('../common/validation')
 var api = require('./ApiInstances').instance();
 var key = require('../common/key_utils');
 
@@ -72,69 +71,68 @@ class ApplicationApi {
         from_account_id,
         to_account_id,
         amount, 
-        asset_id, 
-        memo_message,
-        expire_minutes,
-        signer_private_key,
-        broadcast = false
-    ) {
-        var memo = {};
-        if( ! validation.is_empty_user_input(memo_message)) {
-            memo.from = from_account_id;
-            if(Array.isArray(signer_private_key))
-                throw new Error("unable to determine which memo from private key to use")
-            memo.from_privkey = signer_private_key;
-            memo.to = to_account_id
-        }
-        return this.transfer_extended(
-            from_account_id,
-            to_account_id,
-            amount, 
-            asset_id,
-            memo_message,
-            memo.from,
-            memo.from_privkey,
-            memo.to,
-            expire_minutes,
-            signer_private_key,
-            broadcast
-        );
-    }
-    
-    /**
-        Plain-text memo is used unless memo_from_privkey is provided.
-    */
-    transfer_extended(
-        from_account_id,
-        to_account_id,
-        amount, 
         asset, 
         memo_message,
-        memo_from,
-        memo_from_privkey,
-        memo_to,
-        expire_minutes,
-        signer_private_keys,
-        broadcast = false
+        broadcast = true,
+        encrypt_memo = true,
+        optional_nonce = null
     ) {
-        var tr = new ops.signed_transaction();
-        tr.set_expire_minutes(expire_minutes);
-        {
-            var top = new ops.transfer( memo_from_privkey );
-            top.from = from_account_id;
-            top.to = to_account_id;
-            top.amount.amount = amount;
-            top.amount.asset_id = asset;
-            top.memo.from = memo_from;
-            top.memo.to = memo_to;
-            top.memo.message = memo_message;
-            tr.add_operation(top)
+        var memo_from_public, memo_to_public
+        if(encrypt_memo || memo_message) {
+            memo_from_public = lookup.memo_public_key(from_account_id)
+            memo_to_public = lookup.memo_public_key(to_account_id)
         }
-        return WalletDb.process_transaction(
-            tr,
-            signer_private_keys,
-            broadcast
-        )
+        var asset_id_lookup = lookup.asset_id(asset)
+        return lookup.resolve().then(()=> {
+            var asset_id = asset_id_lookup.resolve
+            
+            var memo_from_privkey
+            if(encrypt_memo) {
+                var from_public = memo_from_public.resolve
+                memo_from_privkey =
+                    WalletDb.getPrivateKey(from_public)
+                
+                if(! memo_from_privkey)
+                    throw new Error("Missing private memo key for sender: " +
+                        from_account_id)
+                
+            }
+            var memo
+            if(memo_message) {
+                var nonce = optional_nonce == null ?
+                    helper.unique_nonce_uint64() :
+                    optional_nonce
+                memo = {
+                    from: memo_from_public.resolve,
+                    to: memo_from_public.resolve,
+                    nonce,
+                    message: encrypt_memo ?
+                        Aes.encrypt_with_checksum(
+                            memo_from_privkey,
+                            memo_to_public.resolve,
+                            nonce,
+                            memo_message
+                        ) :
+                        memo_message
+                }
+            }
+            var tr = new ops.signed_transaction()
+            tr.add_type_operation("transfer", {
+                fee: {
+                    amount: 0,
+                    asset_id
+                },
+                from: lookup.account_id(from_account_id),
+                to: lookup.account_id(to_account_id),
+                amount: { amount, asset_id}, //lookup.asset_id(
+                memo
+            })
+            return WalletDb.process_transaction(
+                tr,
+                null, //signer_private_keys,
+                broadcast
+            )
+        })
     }
 
     //account_name_for_id(account_ids) {

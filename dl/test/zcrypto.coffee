@@ -38,21 +38,6 @@ describe "crypto", ->
         )
         #console.log '... plaintext',plaintext.toString()
         assert.equal "Hello, world!", plaintext.toString()
-    
-    it "decrypt a graphene memo", ->
-        sender = PrivateKey.fromSeed "1"
-        receiver = PrivateKey.fromSeed "2"
-        S = sender.get_shared_secret receiver.toPublicKey()
-        nonce = "2523449132308737096"
-        cipherhex = "62f00737f603b6d822a189187747184fc533ae356c20c87ae19e32f8c01cac19"
-        plaintext = Aes.decrypt_with_checksum(
-            receiver
-            sender.toPublicKey()
-            nonce
-            new Buffer cipherhex,'hex'
-        )
-        assert.equal "Hello, world!", plaintext.toString()
-        
         
     # time-based, probably want to keep these last
     it "key_checksum", ()->

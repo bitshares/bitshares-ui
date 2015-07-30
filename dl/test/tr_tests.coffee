@@ -56,6 +56,7 @@ describe "tr_tests", ->
     
     after (done)->
         iDB.instance().db().close()
+        # Does Not delete the database ???
         fakeIndexedDB.deleteDatabase("graphene_db")
         api.close()
         done()
@@ -64,18 +65,19 @@ describe "tr_tests", ->
         suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         account_name = "account-z"+suffix
         # DEBUG console.log '... account_name',account_name
-        tr = wallet.create_account_with_brain_key(
-            "brainkey"
-            account_name
-            registrar = 15
-            referrer = 0
-            referrer_percent = 0
-            broadcast
-        ).then (result)->
-            #th.print_result result
-            #th.print_hex ""
-            done()
-        .catch th.log_error
+        helper.test_wallet().then ()=>
+            tr = wallet.create_account_with_brain_key(
+                "brainkey"
+                account_name
+                registrar = 15
+                referrer = 0
+                referrer_percent = 0
+                broadcast
+            ).then (result)->
+                #th.print_result result
+                #th.print_hex ""
+                done()
+            .catch th.log_error
         return
     
     #it "update account transaction", ->

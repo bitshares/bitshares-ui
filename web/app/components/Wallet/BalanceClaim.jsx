@@ -278,7 +278,7 @@ export default class BalanceClaim extends Component {
         for(let private_key_id of Object.keys(privateid_to_balances)) {
             var balances = privateid_to_balances[private_key_id]
             var private_key_tcomb = keys.get(parseInt(private_key_id))
-            var private_key = WalletDb.decryptTcomb_private_key(private_key_tcomb)
+            var private_key = WalletDb.decryptTcomb_PrivateKey(private_key_tcomb)
             wif_to_balances[private_key.toWif()] = balances
         }
         return {unvested_balance_claims, wif_to_balances}

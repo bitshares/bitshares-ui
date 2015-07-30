@@ -13,41 +13,36 @@ import PrivateKey from "../src/ecc/key_private"
 import th from "./test_helper"
 import secureRandom from "secure-random"
 import assert from "assert"
+import helper from "./test_helper"
 
 var _catch = th.log_error
 
 describe( "wallet_actions", ()=> {
     
     var api
-    iDB.init_instance(fakeIndexedDB)
     
     before( done => {
-        //var request = fakeIndexedDB.deleteDatabase("graphene_db")
-        //request.onerror = e => {console.error(e)}
-        //request.onsuccess = ()=>{
-        //  not being called
-        //}
-        api = ApiInstances.instance()
-        api.init_promise.then( ()=>
-            done()
-        ).catch( _catch )
+        iDB.init_instance(fakeIndexedDB).init_promise.then( ()=>  {
+            api = ApiInstances.instance()
+            api.init_promise.then( ()=>
+                done()
+            ).catch( _catch )
+        })
     })
     
     after(()=>{
+        iDB.instance().db().close()
+        // Does Not delete the database ???
+        fakeIndexedDB.deleteDatabase("graphene_db")
         api.close()
-        //var request = fakeIndexedDB.deleteDatabase("graphene_db")
-        //request.onerror = e => {console.error(e)}
-        //request.onsuccess = ()=>{
-        //    done() // not being called
-        //}
     })
     
     it( "wallet_create", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         var public_name = "default_" + suffix
-        test_wallet( suffix ).then(()=>{
+        helper.test_wallet( suffix ).then(()=>{
             WalletDb.onLock()
-            assert( WalletDb.isLocked() )
+            assert( WalletDb.isLocked(), "isLocked" )
             assert( WalletDb.getWallet() != null )
             assert( WalletDb.getWallet().id != null )
             assert( WalletDb.getCurrentWalletName() == public_name )
@@ -61,7 +56,7 @@ describe( "wallet_actions", ()=> {
     
     it( "create_account_with_brain_key", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
-        test_wallet( suffix ).then(()=>{
+        helper.test_wallet( suffix ).then(()=>{
             return WalletActions.createBrainKeyAccount(
                 "brainaccount-"+ suffix,
                 "nathan", "nathan",
@@ -89,22 +84,3 @@ describe( "wallet_actions", ()=> {
 
 })
 
-var test_wallet = (suffix) => {
-    WalletDb.setCurrentWalletName("default_" + suffix)
-    return WalletDb.onCreateWallet(
-        "my_account",
-        "password",
-        "brainkey" + suffix, 
-        true // unlock  
-    ).then(()=> {
-        return WalletDb.importKeys([
-            PrivateKey.fromSeed("nathan").toWif()
-        ]).catch((e)=> e.preventDefault()) //re-run unique constraint (dup)
-    })
-}
-
-var test_account = ( suffix )=> {
-    return AccountActions.createAccount(
-        "account-"+ suffix
-    )
-}
