@@ -97,10 +97,10 @@ class AccountLeftPanel extends React.Component {
                     modalId="confirm_modal"
                     ref="confirmModal"
                 />
-                {accountExists ? 
+                {accountExists ?
                     <div className="regular-padding">
                         <AccountInfo account_name={account_name} account_id={account.id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
-                        
+
                         {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
                             (<div className="grid-container" style={{marginBottom: "1rem"}}>
                                 <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate content="account.upgrade" /></a>

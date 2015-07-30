@@ -78,24 +78,27 @@ class Header extends React.Component {
                     <Link to="account-overview" params={{account_name: currentAccount.name}}><Icon name="user"/> {account_display_name}</Link>
                 );
             }
+
+            plusDropDown = (
+                <ActionSheet id="plus_drop_down">
+                    <ActionSheet.Button title="">
+                        <a className="button">
+                            <Icon name="plus-circle"/>
+                        </a>
+                    </ActionSheet.Button>
+                    <ActionSheet.Content >
+                        <ul className="no-first-element-top-border">
+                            <li><Link to="create-account">Create Account</Link></li>
+                            <li><Link to="account-assets" query={{create_asset: true}} params={{account_name: currentAccount.name}}>Create Asset</Link></li>
+                        </ul>
+                    </ActionSheet.Content>
+                </ActionSheet>
+            );
+
         }
 
 
-        plusDropDown = (
-            <ActionSheet id="plus_drop_down">
-                <ActionSheet.Button title="">
-                    <a className="button">
-                        <Icon name="plus-circle"/>
-                    </a>
-                </ActionSheet.Button>
-                <ActionSheet.Content >
-                    <ul className="no-first-element-top-border">
-                        <li><a href onClick={this.createAccountHandler.bind(this)}>Create Account</a></li>
-                        <li><a href>Create Asset</a></li>
-                    </ul>
-                </ActionSheet.Content>
-            </ActionSheet>
-        );
+
 
         return (
             <div className="header menu-group primary">
