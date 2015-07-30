@@ -32,6 +32,10 @@ class ApplicationApi {
         var _referrer = lookup.account_id(referrer_id)
         return lookup.resolve().then(()=> {
             tr.add_type_operation("account_create", {
+                fee: {
+                    amount: 0,
+                    asset_id: 0
+                },
                 "registrar": _registrar.resolve,
                 "referrer": _referrer.resolve,
                 "referrer_percent": referrer_percent,
