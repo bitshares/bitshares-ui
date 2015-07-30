@@ -45,6 +45,7 @@ class WebSocketRpc {
             for (let key in self.subscriptions) {
                 if (self.subscriptions[key].account && self.subscriptions[key].account === account) {
                     exists = true;
+                    self.subscriptions[key].callback = params[2][0].bind(account);
                     // console.log("reusing subscription:", key, account);
                     params[2][0] = key;
                     break;

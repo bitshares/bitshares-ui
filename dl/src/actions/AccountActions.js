@@ -68,8 +68,9 @@ class AccountActions {
     getAccount(name_or_id) {
 
         let subscription = (account, result) => {
-            // console.log("sub result:", result, name_or_id);
+             console.log("account sub result:", result, name_or_id);
 
+             /*
             api.getFullAccounts(null, name_or_id)
                 .then(fullAccount => {
                     api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
@@ -81,12 +82,13 @@ class AccountActions {
                         });
                     });
                 });
+                */
         };
 
         if (!inProgress[name_or_id]) {
             inProgress[name_or_id] = true;
 
-            return api.getFullAccounts(subscription.bind(this, name_or_id), name_or_id)
+            return api.getFullAccounts(/*subscription.bind(this, name_or_id)*/null, name_or_id)
                 .then(fullAccount => {
 
                     api.getHistory(fullAccount[0][1].account.id, 100).then(history => {

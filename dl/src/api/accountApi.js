@@ -55,9 +55,11 @@ class Api {
         if (!Array.isArray(names_or_ids)) {
             names_or_ids = [names_or_ids];
         }
-        return Apis.instance().db_api().exec("get_full_accounts", [
-            cb, names_or_ids
-        ]);
+        let args = [
+            cb == null ? function(){} : cb, names_or_ids, cb != null
+        ];
+        console.log( "get_full_accounts: ", args );
+        return Apis.instance().db_api().exec("get_full_accounts", args);
     }
 }
 
