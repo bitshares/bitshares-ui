@@ -172,16 +172,15 @@ class ExistingAccount extends React.Component {
                                         </div>
                                     </div> : null}
                                     <br/>
-                                    {balance_rows.length ? 
-                                        (<div className="button-group">
-                                            <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
-                                                Import
-                                            </div>
-                                            &nbsp; &nbsp;
-                                            <div className="button secondary" onClick={this.reset.bind(this)}>
-                                                Cancel
-                                            </div>
-                                        </div>): null}
+                                    <div className="button-group">
+                                        <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
+                                            Import
+                                        </div>
+                                        &nbsp; &nbsp;
+                                        <div className="button secondary" onClick={this.reset.bind(this)}>
+                                            Cancel
+                                        </div>
+                                    </div>
                                 </div> : null}
                             </div>}
                         </Wallet>
