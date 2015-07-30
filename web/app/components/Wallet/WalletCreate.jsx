@@ -24,39 +24,44 @@ class WalletCreate extends Component {
     render() {
         let state = this.state
         let errors = state.errors
-        let submitDisabled = this.state.isValid ? "" : "disabled"
+        // let submitDisabled = this.state.isValid ? "" : "disabled"
         
         if(WalletDb.getWallet() && this.props.children)
             return <div>{this.props.children}</div>
         
         return (
-            <div className="content-block">
-                <h3>Create Wallet</h3>
-                <form
-                    className="name-form"
-                    onSubmit={this.onSubmit.bind(this)}
-                    onChange={this.formChange.bind(this)} noValidate
-                >
-                    <div className={cname("grid-content", "no-overflow", {
-                        "has-error": errors.password_match
-                    })}>
-                        <label>Password</label>
-                        <input type="password" id="password"
-                            value={this.state.password} />
+            <div className="grid-block vertical">
+                <div className="grid-container">
+                    <div className="content-block center-content">
+                        <div className="content-block">
+                                        <h1>Welcome to Graphene</h1>
+                                        <h3>Please create a new wallet first:</h3>
+                        </div>
+                        <div className="content-block">
+                            <form
+                                className="name-form"
+                                onSubmit={this.onSubmit.bind(this)}
+                                onChange={this.formChange.bind(this)} noValidate
+                            >
+                                <div className={cname("grid-content", "no-overflow", {"has-error": errors.password_match || errors.password_length})}>
+                                    <label>Password</label>
+                                    <input type="password" id="password" value={this.state.password} />
 
-                        <label>Password (confirm)</label>
-                            <input type="password" id="password_confirm"
-                                value={this.state.password_confirm}/>
-                        <div>{errors.password_match}</div>
-                        <br/>
-                    </div>
+                                    <label>Password (confirm)</label>
+                                        <input type="password" id="password_confirm" value={this.state.password_confirm}/>
+                                    <div>{errors.password_match || errors.password_length}</div>
+                                    <br/>
+                                </div>
 
-                    <div className="grid-content">
-                        <input type="submit" value="Create"
-                            className={cname("button",{disabled:submitDisabled})}/>
-                        <br/>
+                                <div className="grid-content">
+                                    <input type="submit" value="Create"
+                                        className={cname("button",{disabled: !this.state.isValid})}/>
+                                    <br/>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         )
     }
@@ -75,6 +80,7 @@ class WalletCreate extends Component {
         let state = this.state
         let errors = state.errors
         let wallets = WalletDb.wallets
+        errors.password_length = state.password.length === 0 || state.password.length > 7 ? null : "Password must be longer than 7 characters";
         
         errors.wallet_public_name = 
             !wallets.get(state.wallet_public_name) ? 
@@ -91,7 +97,7 @@ class WalletCreate extends Component {
         let password_unmatch =
             state.password !== state.password_confirm
         
-        state.isValid = !(errors.wallet_public_name || password_unmatch)
+        state.isValid = !(errors.wallet_public_name || password_unmatch || errors.password_length)
     }
     
     formChange(event) {

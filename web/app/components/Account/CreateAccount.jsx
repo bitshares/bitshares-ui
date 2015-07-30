@@ -96,7 +96,7 @@ class CreateAccount extends React.Component {
 
         return (
             <div className="grid-block vertical">
-                <div className="grid-content">
+                <div className="grid-container">
                     <div className="content-block center-content">
                         {
                             first_account ?
@@ -110,7 +110,7 @@ class CreateAccount extends React.Component {
                         }
                         <br/>
                         {WalletDb.getWallet() ? <WalletUnlock/> : null}
-                        <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
+                        <form onSubmit={this.onSubmit.bind(this)} noValidate>
                             <AccountNameInput ref="account_name"
                                               onChange={this.onAccountNameChange.bind(this)}
                                               accountShouldNotExist={true}/>

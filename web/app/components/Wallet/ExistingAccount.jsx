@@ -35,6 +35,7 @@ class ExistingAccount extends Component {
             },
             balance_by_asset:null,
             balance_claim_active: false,
+            import_active: true,
             account_keycount: null,
             claim_account_name:null,
             wif_to_balances: null,
@@ -103,7 +104,7 @@ class ExistingAccount extends Component {
                 var {symbol, balance, precision} =asset_balance
                 balance_rows.push(
                     <div>
-                        <FormattedAsset amount={balance} asset={{symbol, precision}}/>
+                        <FormattedAsset color="info" amount={balance} asset={{symbol, precision}}/>
                     </div>
                 )
             }
@@ -121,70 +122,73 @@ class ExistingAccount extends Component {
             }
         }
         
-        return <div id="existing-account" className="grid-block page-layout">
-            <div className="grid-block vertical medium-9 medium-offset-2">
-                <h4>Existing Accounts</h4>
-                
-                <Wallet>
-                    
-                    {has_keys ? "" : <div>
-                        <BalanceClaim ref="balance_claim"
-                            claimActive={this.state.balance_claim_active}
-                            onActive={this._setClaimActive.bind(this)}
-                        />
-                    </div>}
-                    
-                    { this.state.balance_claim_active ? "" : <div>
-                        <hr/>
-                        <h3>Import Keys</h3>
-                        
-                        <ImportKeys
-                            key={this.state.import_keys_ref}
-                            onChange={this._importKeysChange.bind(this)}/>
-                        
-                        {this.state.keys.wif_count ? <div>
-                            {account_rows ? <div>
-                                <div>
-                                    {account_rows.length ? <div>
-                                        <table className="table"><thead><tr>
-                                            <th>Account</th>
-                                            <th>Keys</th>
-                                        </tr></thead><tbody>
-                                            {account_rows}
-                                        </tbody></table>
-                                    </div> : "No Accounts"}
-                                </div>
-                            </div>:""}
+        return (
+            <div id="existing-account" className="grid-block vertical">
+                <div className="grid-container">
+                    <div className="content-block center-content">
+                        <Wallet>
+                            {has_keys && !this.state.import_active ?
+                                (<div>
+                                    <BalanceClaim ref="balance_claim"
+                                        claimActive={this.state.balance_claim_active}
+                                        onActive={this._setClaimActive.bind(this)}
+                                    />
+                                </div>) : null
+                            }
                             
-                            <br/>
-                            <h3>Unclaimed Balances</h3>
-                            {balance_rows ? <div>
-                                <div>
-                                    <label>Assets</label>
-                                    {balance_rows.length ? balance_rows : "No Balances"}
-                                </div>
-                            </div>:""}
-                            
-                            <br/>
+                            { this.state.balance_claim_active ? null :
                             <div>
-                                <a className={
-                                    cname("button", {disabled:!import_ready})}
-                                    onClick={this._saveImport.bind(this)} >
-                                    Save
-                                </a>
-                            </div>
-                            <br/>
-                            <div>
-                                <a className={ cname("button")}
-                                    onClick={this.reset.bind(this)} >
-                                    Cancel
-                                </a>
-                            </div>
-                        </div>:""}
-                    </div>}
-                </Wallet>
+                                {this.state.import_active ? (
+                                    <ImportKeys
+                                    key={this.state.import_keys_ref}
+                                    onChange={this._importKeysChange.bind(this)}
+                                />) : null}
+                                
+                                {this.state.keys.wif_count ? <div>
+                                    {account_rows ? <div>
+                                        <div>
+                                            {account_rows.length ? <div>
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style={{textAlign: "center"}}>Account</th>
+                                                            <th style={{textAlign: "center"}}># of keys</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {account_rows}
+                                                    </tbody>
+                                                </table>
+                                            </div> : "No Accounts"}
+                                        </div>
+                                    </div> : null}
+                                    
+                                    <br/>
+                                    <h3>Unclaimed balances belonging to these keys:</h3>
+                                    {balance_rows ? <div>
+                                        <div>
+                                            <label>Assets</label>
+                                            {balance_rows.length ? balance_rows : "No Balances"}
+                                        </div>
+                                    </div> : null}
+                                    <br/>
+                                    {balance_rows.length ? 
+                                        (<div className="button-group">
+                                            <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
+                                                Import
+                                            </div>
+                                            &nbsp; &nbsp;
+                                            <div className="button secondary" onClick={this.reset.bind(this)}>
+                                                Cancel
+                                            </div>
+                                        </div>): null}
+                                </div> : null}
+                            </div>}
+                        </Wallet>
+                    </div>
+                </div>
             </div>
-        </div>
+        );
     }
     
     getImportAccountKeyCount(wifs_to_account) {
@@ -249,7 +253,10 @@ class ExistingAccount extends Component {
                 //if (import_count)
                 //    this.refs.balance_claim.updateBalances()
             
-            }finally{this.reset()}
+            } finally {
+                // this.reset()
+                this.setState({import_active: false, balance_claim_active: true});
+            }
             
         }).catch( error => {
             console.log(error)

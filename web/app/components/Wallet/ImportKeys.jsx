@@ -59,43 +59,49 @@ class ImportKeys extends Component {
         var password_placeholder = "Enter import file password"
         if(this.state.wif_count)
             password_placeholder = ""
-        return <div>
-            <br/>
+        return (
             <div>
-                <KeyCount wif_count={this.state.wif_count}/>
-                {!this.state.wif_count ? 
-                    <div>Upload BitShares keys file...</div> :
-                    <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
-                }
-            </div>
-            <br/>
-            <div>
-                {this.state.wif_count ? "" : <div>
-                    <div>
+                <div className="content-block">
+                    <h1>Welcome to Graphene</h1>
+                    <h3>Import keys:</h3>
+                </div>
+                <br/>
+                <div>
+                    <KeyCount wif_count={this.state.wif_count}/>
+                    {!this.state.wif_count ? 
+                        <div>Upload BitShares keys file...</div> :
+                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
+                    }
+                </div>
+                <br/>
+                <div>
+                    {this.state.wif_count ? "" : <div>
                         <div>
-                            <input
-                                type="file" id="file_input"
-                                key={this.state.reset_file_name}
-                                onChange={this.upload.bind(this)}
-                            />
+                            <div>
+                                <input
+                                    type="file" id="file_input"
+                                    key={this.state.reset_file_name}
+                                    onChange={this.upload.bind(this)}
+                                />
+                            </div>
+                            
                         </div>
-                        
-                    </div>
-                    <br/>
-                    <div>
-                        <input 
-                            type="password" ref="password"
-                            key={this.state.reset_password}
-                            placeholder={password_placeholder}
-                            onChange={this._decryptPrivateKeys.bind(this)}
-                        />
-                        <div>{this.state.import_password_message}</div>
-                        <div>{this.state.wif_text_message}</div>
-                    </div>
-                </div>}
-                
+                        <br/>
+                        <div>
+                            <input 
+                                type="password" ref="password"
+                                key={this.state.reset_password}
+                                placeholder={password_placeholder}
+                                onChange={this._decryptPrivateKeys.bind(this)}
+                            />
+                            <div>{this.state.import_password_message}</div>
+                            <div>{this.state.wif_text_message}</div>
+                        </div>
+                    </div>}
+                    
+                </div>
             </div>
-        </div>
+        );
     }
     
     upload(evt) {
