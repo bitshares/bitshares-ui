@@ -5,6 +5,7 @@ import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
+import ChainStore from "stores/ChainStore";
 import LoadingIndicator from "../LoadingIndicator";
 
 class AccountOverview extends React.Component {
@@ -25,6 +26,7 @@ class AccountOverview extends React.Component {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountBalances, accountHistories, account_id_to_name} = this.props;
         let account = account_name ? cachedAccounts.get(account_name) : null;
         if (!account) {return <LoadingIndicator type="circle" />; }
+
 
         let balances = null;
         if (accountBalances && assets) {
@@ -60,6 +62,7 @@ class AccountOverview extends React.Component {
                 );
             }
         });
+        let acnt = ChainStore.getState().getAccountByName( account_name );
         return (
             <div className="grid-content">
                 <div className="content-block">
@@ -70,6 +73,7 @@ class AccountOverview extends React.Component {
                                 <th><Translate component="span" content="account.asset" /></th>
                                 <th><Translate component="span" content="account.market_value" /></th>
                                 <th><Translate component="span" content="account.hour_24" /></th>
+                                <th>Test {acnt.name}</th>
                             </tr>
                         </thead>
                         <tbody>

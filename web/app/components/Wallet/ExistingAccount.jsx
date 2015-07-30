@@ -1,4 +1,4 @@
-import React,{Component} from "react"
+import React from "react"
 
 import PrivateKey from "ecc/key_private"
 
@@ -19,7 +19,7 @@ import v from "chain/serializer_validation"
 
 var api = Apis.instance()
 
-class ExistingAccount extends Component {
+class ExistingAccount extends React.Component {
     
     constructor() {
         super()

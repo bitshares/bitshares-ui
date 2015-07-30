@@ -9,6 +9,7 @@ import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
 import Assets from "./components/Explorer/AssetsContainer";
+import Accounts2 from "./components/Explorer/Accounts2";
 import AccountsContainer from "./components/Explorer/AccountsContainer";
 import WitnessesContainer from "./components/Explorer/WitnessesContainer";
 import Witnesses from "./components/Explorer/Witnesses";
@@ -171,6 +172,7 @@ let routes = (
         <Route name="explorer" path="/explorer" handler={Explorer}/>
         <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
         <Route name="assets" path="/explorer/assets" handler={Assets}/>
+        <Route name="accounts2" path="/explorer/accounts2" handler={Accounts2}/>
         <Route name="accounts" path="/explorer/accounts" handler={AccountsContainer}/>
         <Route name="witnesses" path="/explorer/witnesses" handler={WitnessesContainer}>
             <DefaultRoute handler={Witnesses}/>
