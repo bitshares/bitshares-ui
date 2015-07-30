@@ -7,7 +7,6 @@ class PasswordInput extends Component {
     constructor() {
         super();
         this.handleChange = this.handleChange.bind(this);
-        this.handleConfirmChange = this.handleConfirmChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
         this.state = {error: null, wrong: false, doesnt_match: false};
     }
@@ -39,16 +38,15 @@ class PasswordInput extends Component {
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
-        //this.state.error = this.validateAndGetError(e.target.value);
-        //this.setState({error: this.state.error});
+        let confirmation = this.props.confirmation ? React.findDOMNode(this.refs.confirm_password).value : true;
+        let password = React.findDOMNode(this.refs.password).value;
         if(this.props.confirmation) this.checkPasswordConfirmation();
-        if (this.props.onChange) this.props.onChange(e);
-    }
-
-    handleConfirmChange(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if(this.props.confirmation) this.checkPasswordConfirmation();
+        if (this.props.onChange) this.props.onChange({
+            valid: !this.state.error && !this.state.wrong
+                   && !(this.props.confirmation && this.state.doesnt_match)
+                   && confirmation,
+            value: password
+        });
     }
 
     onKeyDown(e) {
@@ -74,7 +72,7 @@ class PasswordInput extends Component {
                 <div className={password_confirmation_class_name}>
                     <label>Confirm Password</label>
                     <input name="confirm_password" type="password" ref="confirm_password"
-                           onChange={this.handleConfirmChange}/>
+                           onChange={this.handleChange}/>
                     {confirmation_error}
                 </div> : null}
             </div>

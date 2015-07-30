@@ -16,19 +16,24 @@ import AccountSelect from "../Forms/AccountSelect";
 class CreateAccount extends React.Component {
     constructor() {
         super();
-        this.state = {validAccountName: false, accountName: ""};
+        this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null};
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.accountName !== this.state.accountName
-               || nextState.validAccountName !== this.state.validAccountName;
+               || nextState.validAccountName !== this.state.validAccountName
+               || nextState.validPassword !== this.state.validPassword
+               || nextState.registrar_account !== this.state.registrar_account;
     }
 
     onAccountNameChange(e) {
-        console.log("[CreateAccount.jsx:28] ----- onAccountNameChange ----->", e);
         let state = {validAccountName: e.valid};
         if(e.value || e.value === "") state.accountName = e.value;
         this.setState(state);
+    }
+
+    onPasswordChange(e) {
+        this.setState({validPassword: e.valid});
     }
 
     createAccount(name) {
@@ -90,10 +95,13 @@ class CreateAccount extends React.Component {
     }
 
     render() {
-        let buttonClass = classNames("button", {disabled: !this.state.validAccountName});
         let account_store_state = AccountStore.getState();
         let my_accounts = account_store_state.myAccounts.map(name => name);
         let first_account = my_accounts.size === 0;
+        let valid = this.state.validAccountName;
+        if (first_account) valid = valid && this.state.validPassword;
+        else valid = valid && this.state.registrar_account;
+        let buttonClass = classNames("button", {disabled: !valid});
         return (
             <div className="grid-block vertical">
                 <div className="grid-content">
@@ -124,7 +132,7 @@ class CreateAccount extends React.Component {
                             }
                             {WalletDb.getWallet() ?
                                 null :
-                                <PasswordInput ref="password" confirmation={true}/>
+                                <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
                             }
                             {
                                 first_account ? null : (

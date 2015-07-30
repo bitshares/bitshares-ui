@@ -78,7 +78,7 @@ export default class WalletUnlock extends Component {
 //           </div>}
 
     _passChange(e) {
-        this.password_ui = e.target.value
+        this.password_ui = e.value
         this.setState({password_error: null})
     }
 
