@@ -39,6 +39,7 @@ class ConfirmationScreen extends React.Component {
                             <div className="modal-footer" style={{paddingTop: "0.5rem"}}>
                                 <div className="button-group">
                                   <button className="button secondary" onClick={this.props.onCancel}><Translate component="span" content="transfer.back" /></button>
+                                    &nbsp; &nbsp;
                                   <button className="button success" onClick={this.props.onConfirm}><Translate component="span" content="transfer.confirm" /></button>
                                 </div>
                             </div>

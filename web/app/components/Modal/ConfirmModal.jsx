@@ -62,6 +62,7 @@ class ConfirmModal extends React.Component {
                     </div>
                     <div className="grid-content button-group">
                         <a className="button" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
+                        &nbsp; &nbsp;
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>

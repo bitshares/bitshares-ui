@@ -111,6 +111,7 @@ class AccountPermissions extends React.Component {
                 <div className="content-block">
                     <div className="actions clearfix">
                         <button className={action_buttons_class} onClick={this.onPublish.bind(this)}><Translate content="account.perm.publish" /></button>
+                        &nbsp; &nbsp;
                         <a href="#" className={action_buttons_class + " secondary"} onClick={this.onResetChanges.bind(this)}><Translate content="account.perm.reset" /></a>
                     </div>
                 </div>

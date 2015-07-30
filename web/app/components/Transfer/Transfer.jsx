@@ -376,6 +376,7 @@ class Transfer extends BaseComponent {
                         </div>
                         <div className="grid-content button-group">
                             <a className="button" href onClick={this.onConfirm}>Confirm</a>
+                            &nbsp; &nbsp;
                             <Trigger close="confirm_transaction">
                                 <a href className="secondary button">Cancel</a>
                             </Trigger>

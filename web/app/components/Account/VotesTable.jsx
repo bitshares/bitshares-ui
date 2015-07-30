@@ -63,6 +63,7 @@ class VotesTable extends React.Component {
                 <td style={{width: cw[0]}}><AutocompleteInput id="select_entity" options={this.props.allEntities} ref="select_entity" onEnter={this.onSave}/></td>
                 <td style={{width: cw[1]}}>
                     <button className="button" onClick={this.onSave}><Translate content="account.perm.confirm_add" /></button>
+                    &nbsp; &nbsp;
                     <button className="button secondary" onClick={this.onCancel}><Translate content="account.perm.cancel" /></button>
                 </td>
                 <td style={{width: cw[2]}}></td>
