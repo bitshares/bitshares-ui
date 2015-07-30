@@ -52,9 +52,11 @@ class Transfer extends BaseComponent {
 
     componentDidMount() {
         let {cachedAccounts, currentAccount} = this.props;
-        let account = cachedAccounts.get(currentAccount.name);
-        if (!account) {
-            AccountActions.getAccount(currentAccount.name);
+        if (currentAccount) {
+            let account = cachedAccounts.get(currentAccount.name);
+            if (!account) {
+                AccountActions.getAccount(currentAccount.name);
+            }
         }
     }
 
