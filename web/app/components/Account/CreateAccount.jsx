@@ -2,6 +2,7 @@ import React from "react";
 import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
+import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
@@ -9,6 +10,7 @@ import notify from 'actions/NotificationActions';
 import {Link} from "react-router";
 import AccountImage from "./AccountImage";
 import WalletUnlock from "../Wallet/WalletUnlock";
+import AccountSelect from "../Forms/AccountSelect";
 
 
 class CreateAccount extends React.Component {
@@ -29,7 +31,12 @@ class CreateAccount extends React.Component {
     }
 
     createAccount(name) {
-        return AccountActions.createAccount(name).then(() => {
+        let registrar_account_id = null;
+        if(this.state.registrar_account) {
+            let res = AccountStore.getState().cachedAccounts.findEntry(a => a.name === this.state.registrar_account);
+            if(res && res.length === 2) registrar_account_id = res[1].id;
+        }
+        return AccountActions.createAccount(name, registrar_account_id).then(() => {
             notify.addNotification({
                 message: `Successfully created account: ${name}`,
                 level: "success",
@@ -77,15 +84,30 @@ class CreateAccount extends React.Component {
         }
     }
 
+    onRegistrarAccountChange(registrar_account) {
+        this.setState({registrar_account});
+    }
+
     render() {
         let buttonClass = classNames("button", {disabled: !this.state.validAccountName});
+        let account_store_state = AccountStore.getState();
+        let my_accounts = account_store_state.myAccounts.map(name => name);
+        let first_account = my_accounts.size === 0;
 
         return (
             <div className="grid-block vertical">
                 <div className="grid-content">
                     <div className="content-block center-content">
-                        <h1>Welcome to Graphene</h1>
-                        <h3>Please create an account</h3>
+                        {
+                            first_account ?
+                                (<div className="content-block">
+                                    <h1>Welcome to Graphene</h1>
+                                    <h3>Please create an account</h3>
+                                </div>) :
+                                (
+                                    <div className="content-block"><br/><h1>Create account</h1><br/></div>
+                                )
+                        }
                         <br/>
                         {WalletDb.getWallet() ? <WalletUnlock/> : null}
                         <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
@@ -96,13 +118,21 @@ class CreateAccount extends React.Component {
                                 <div><AccountImage account={this.state.accountName}/><br/><br/></div>
                                 : null
                             }
-                            {WalletDb.getWallet() ? null :
+                            {WalletDb.getWallet() ?
+                                null :
                                 <PasswordInput ref="password" confirmation={true}/>
                             }
+                            {
+                                first_account ? null : (<div className="full-width-content">
+                                    <label>Pay from</label>
+                                    <AccountSelect ref="pay_from" account_names={my_accounts} onChange={this.onRegistrarAccountChange.bind(this)}/>
+                                </div>)
+                            }
+                            <br/>
                             <button className={buttonClass}>Create Account</button>
                             <br/>
                             <br/>
-                            <Link to="existing-account">Already have an account?</Link>
+                            <Link to="existing-account">Balance Import</Link>
                         </form>
                     </div>
                 </div>

@@ -33,23 +33,7 @@ class WalletActions {
         }
         
         var [owner_private, active_private] = WalletDb.generateKeys();
-        let hostname = "localhost";
-        try { hostname = window.location.hostname } catch(e) {};
-        let port = hostname === "localhost" ? ":3000" : "";
-        let create_account_promise = fetch("http://" + hostname + port + "/api/v1/accounts", {
-            method: 'post',
-            mode: 'cors',
-            headers: {
-                "Accept": "application/json",
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({"account": {
-                "name": account_name,
-                "owner_key": owner_private.private_key.toPublicKey().toBtsPublic(),
-                "active_key": active_private.private_key.toPublicKey().toBtsPublic()
-            }})
-        }).then(r => r.json());
-        
+
         var updateWallet = ()=> {
             //DEBUG console.log('... brainKeyAccountCreated')
             var transaction = WalletDb.transaction_update_keys()
@@ -59,42 +43,69 @@ class WalletActions {
             )
             var p2 = WalletDb.incrementBrainKeySequence(transaction)
             return Promise.all([p,p2]).catch( error => transaction.abort() )
-        }
-        
-        return create_account_promise.then( result => {
-            if(result.error) {
-                this.actions.brainKeyAccountCreateError(result.error);
-                throw result.error;
-            }
-            return updateWallet().then(()=> 
-                this.actions.brainKeyAccountCreated())
-            
-        }).catch(  error => {
-            if(
-                error instanceof TypeError || 
-                error.toString().indexOf('ECONNREFUSED') != -1
-            ) {
-                console.log("Warning! faucet registration failed, falling back to direct application_api.create_account_with_brain_key..");
-                return application_api.create_account_with_brain_key(
-                    owner_private.private_key.toPublicKey().toBtsPublic(),
-                    active_private.private_key.toPublicKey().toBtsPublic(),
-                    account_name,
-                    registrar, //registrar_id,
-                    referrer, //referrer_id,
-                    referrer_percent, //referrer_percent,
-                    null, //signer_private_key,
-                    true //broadcast
-                ).then( () => {
-                    return updateWallet().then(()=> 
+        };
+
+        let create_account_with_brain_key = () => {
+            return application_api.create_account_with_brain_key(
+                owner_private.private_key.toPublicKey().toBtsPublic(),
+                active_private.private_key.toPublicKey().toBtsPublic(),
+                account_name,
+                registrar, //registrar_id,
+                referrer, //referrer_id,
+                referrer_percent, //referrer_percent,
+                null, //signer_private_key,
+                true //broadcast
+            ).then( () => {
+                    return updateWallet().then(()=>
                         this.actions.brainKeyAccountCreated())
                 }).catch(  error => {
-                    this.actions.brainKeyAccountCreateError(error)
-                    throw error
+                    this.actions.brainKeyAccountCreateError(error);
+                    throw error;
                 });
-            }
-            this.actions.brainKeyAccountCreateError(error)
-            throw error
-        })
+        };
+
+        if(registrar) {
+            // using another user's account as registrar
+            return create_account_with_brain_key();
+        } else {
+            // using faucet
+            let hostname = "localhost";
+            try { hostname = window.location.hostname } catch (e) {}
+            let port = hostname === "localhost" ? ":3000" : "";
+            let create_account_promise = fetch("http://" + hostname + port + "/api/v1/accounts", {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    "account": {
+                        "name": account_name,
+                        "owner_key": owner_private.private_key.toPublicKey().toBtsPublic(),
+                        "active_key": active_private.private_key.toPublicKey().toBtsPublic()
+                    }
+                })
+            }).then(r => r.json());
+
+            return create_account_promise.then(result => {
+                if (result.error) {
+                    this.actions.brainKeyAccountCreateError(result.error);
+                    throw result.error;
+                }
+                return updateWallet().then(() => this.actions.brainKeyAccountCreated());
+            }).catch(error => {
+                if (
+                    error instanceof TypeError ||
+                    error.toString().indexOf('ECONNREFUSED') != -1
+                ) {
+                    console.log("Warning! faucet registration failed, falling back to direct application_api.create_account_with_brain_key..");
+                    return create_account_with_brain_key();
+                }
+                this.actions.brainKeyAccountCreateError(error);
+                throw error;
+            })
+        }
     }
     
     findAccountsByBrainKey(brainkey) {
