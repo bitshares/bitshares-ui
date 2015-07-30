@@ -22,7 +22,8 @@ class Accounts2 extends BaseComponent {
     onChange(newState) {
        console.log( "changed" );
         if (newState) {
-            this.setState(newState);
+            console.log( "newState" );
+            this.setState( { account : ChainStore.getAccountByName( "nathan" ) } );
         }
     }
 
@@ -33,7 +34,7 @@ class Accounts2 extends BaseComponent {
                 <div className="grid-block page-layout">
                     <div className="grid-block medium-6 main-content">
                         <div className="grid-content">
-                        { JSON.stringify( ChainStore.getAccountByName( "nathan" ), null, 2 ) }
+                        { JSON.stringify( state.account, null, 2 ) }
                         </div>
                     </div>
                 </div>
