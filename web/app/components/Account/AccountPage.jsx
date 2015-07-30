@@ -43,7 +43,7 @@ class AccountPage extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">
                     <AltContainer
-                        stores={[AccountStore]}
+                        stores={[AccountStore, AssetStore]}
                         inject={{
                             account_name: () => {
                                 return account_name;
@@ -59,6 +59,9 @@ class AccountPage extends React.Component {
                             },
                             cachedAccounts: () => {
                                 return AccountStore.getState().cachedAccounts;
+                            },
+                            assets: () => {
+                                return AssetStore.getState().assets;
                             }
                         }}>
                     <AccountLeftPanel/>

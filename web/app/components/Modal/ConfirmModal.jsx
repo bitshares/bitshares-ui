@@ -49,19 +49,18 @@ class ConfirmModal extends React.Component {
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <div className="grid-block vertical">
-                    <div className="shrink grid-content">
-                        <p>{this.state.content}</p>
+                        {this.state.content}
+
                         {this.props.setting ? 
-                            (<div style={{marginBottom: "1rem"}}>
+                            (<div style={{marginBottom: "1rem", marginTop: "1rem"}}>
                                 <Translate component="label" content="settings.always_confirm" />
                                 {/* This won't work using a single <input> with checked={this.state.show}, not sure why */
                                     this.state.show ? <input key="true_checked" type="checkbox" checked={true} onChange={this._onCheck.bind(this)}/> : 
                                     <input key="false_checked" type="checkbox" checked={false} onChange={this._onCheck.bind(this)}/>}
                             </div>)
                             : null}
-                    </div>
                     <div className="grid-content button-group">
-                        <a className="button" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
+                        <a className="button success" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
                         &nbsp; &nbsp;
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
