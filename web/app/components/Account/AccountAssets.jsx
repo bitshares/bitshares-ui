@@ -43,7 +43,6 @@ class AccountAssets extends React.Component {
 
     componentDidMount() {
         let query_params = this.context.router.getCurrentQuery();
-        console.log("query_params:", query_params);
         if(query_params.create_asset) {
             console.log("zf publish create asset");
             ZfApi.publish("create_asset", "open");

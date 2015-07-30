@@ -60,7 +60,7 @@ class AccountLeftPanel extends React.Component {
         let fee = BlockchainStore.getFee("account_upgrade", ["membership_lifetime_fee"]);
 
         let content = (
-            <div className="grid-block">
+            <div className="grid-content">
                 <p>Upgrade account <strong>{this.props.account_name}</strong> to lifetime member?</p>
                 <Translate content="transfer.fee" />: <FormattedAsset color="fee" amount={fee} asset={this.props.assets.get("1.3.0")} />
                 <br/>
