@@ -4,29 +4,32 @@ import api from "../api/accountApi";
 
 class ChainActions {
 
-    getAccount(name_or_id, subscription ) {
+    setBalance( balance ) {
+       console.log( "set balance", balance );
+       this.dispatch( balance );
+    }
 
-       /*
-        let subscription = (account, result) => {
-             console.log("sub result:", JSON.stringify(result, null, 2), name_or_id, JSON.stringify(account));
+    getAccount(name_or_id ) {
 
+        let subscription = (result) => {
+             console.log(this);
+             console.log("sub result:", JSON.stringify(result, null, 2) );
 
-            api.getFullAccounts(null, name_or_id)
-                .then(fullAccount => {
-                    api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
+              if( result[0][0].id.split('.')[1] == 5 )
+              {
+                 /*
+                 let acnt = this.getAccountByID( result[0][0].owner );
+                 acnt.balances[result[0][0].asset_type] = result[0][0].balance;
+                 console.log("acnt", JSON.stringify( acnt, null, 2 ) );
+                 dispatch( acnt );
+                 */
+                 this.actions.setBalance( result[0][0] );
+              }
 
-                        this.dispatch({
-                            sub: true,
-                            fullAccount: fullAccount[0][1],
-                            history: history
-                        });
-                    });
-                });
         };
-    */
         console.log( "ChainActions.getAccount()" );
 
-        return api.getFullAccounts( subscription /*subscription.bind(this, name_or_id)*/, name_or_id)
+        return api.getFullAccounts( subscription.bind(this) /*subscription.bind(this, name_or_id)*/, name_or_id)
             .then(fullAccount => {
                console.log("result:", fullAccount);
                 this.dispatch(fullAccount[0][1]);

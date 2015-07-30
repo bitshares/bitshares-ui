@@ -13,9 +13,16 @@ class ChainStore extends BaseStore
 
 
       this.bindListeners({
-         onGetAccount: ChainActions.getAccount
+         onGetAccount: ChainActions.getAccount,
+         onSetBalance: ChainActions.setBalance
       });
       this._export("getAccountByName","getAccountByID");
+   }
+
+   onSetBalance( balance_object )
+   {
+      console.log( "on set balance", balance_object );
+      this.getAccountByID( balance_object.owner ).balances[ balance_object.asset_type ] = balance_object;
    }
 
    onGetAccount( full_account )
@@ -47,19 +54,11 @@ class ChainStore extends BaseStore
          return this.accounts_by_name.get(name);
       var new_account = { name : name };
 
-      let subscription = (account, name, result) => {
+      let subscription = (account, name, dispatch, result) => {
            console.log("sub result:", JSON.stringify(result, null, 2), new_account, JSON.stringify(account));
 
-           if( result[0][0].id.split('.')[1] == 5 )
-           {
-              let acnt = this.getAccountByID( result[0][0].owner );
-              acnt.balances[result[0][0].asset_type] = result[0][0].balance;
-              console.log("acnt", JSON.stringify( acnt, null, 2 ) );
-
-           }
       };
-
-      ChainActions.getAccount(name, subscription.bind(this,new_account,name) );
+      ChainActions.getAccount(name);
       return new_account;
    }
 
