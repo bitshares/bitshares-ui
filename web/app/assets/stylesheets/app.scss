@@ -110,6 +110,22 @@ button, .button {
   }
 }
 
+.page-header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #444;
+  h3, h1 {
+    margin: 0;
+    padding: 1rem 0 1rem 0;
+  }
+  h3 {
+    font-family: 'Roboto-Light', arial, sans-serif;
+    font-size: 2rem;
+  }
+  h1 + h3 {
+    padding-top: 0;
+  }
+}
+
 table > tbody > tr.control-row > td {
   padding-top: 1rem;
   border-bottom: none;

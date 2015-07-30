@@ -25,6 +25,7 @@ class CreateAccount extends React.Component {
     }
 
     onAccountNameChange(e) {
+        console.log("[CreateAccount.jsx:28] ----- onAccountNameChange ----->", e);
         let state = {validAccountName: e.valid};
         if(e.value || e.value === "") state.accountName = e.value;
         this.setState(state);
@@ -93,49 +94,45 @@ class CreateAccount extends React.Component {
         let account_store_state = AccountStore.getState();
         let my_accounts = account_store_state.myAccounts.map(name => name);
         let first_account = my_accounts.size === 0;
-
         return (
             <div className="grid-block vertical">
-                <div className="grid-container">
+                <div className="grid-content">
                     <div className="content-block center-content">
+                        <div className="page-header">
                         {
                             first_account ?
-                                (<div className="content-block">
+                                (<div>
                                     <h1>Welcome to Graphene</h1>
                                     <h3>Please create an account</h3>
                                 </div>) :
                                 (
-                                    <div className="content-block"><br/><h1>Create account</h1><br/></div>
+                                    <h3>Create account</h3>
                                 )
                         }
-                        <br/>
+                        </div>
                         {WalletDb.getWallet() ? <WalletUnlock/> : null}
-
-                            <div>
-                                {this.state.accountName && this.state.validAccountName ?
-                                    <AccountImage account={this.state.accountName}/> :
-                                    <AccountImage account="default_image"/>
-                                }
-                                <br/><br/>
-                            </div>
-
-                        <form onSubmit={this.onSubmit.bind(this)} noValidate>
+                        <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
                             <AccountNameInput ref="account_name"
                                               onChange={this.onAccountNameChange.bind(this)}
                                               accountShouldNotExist={true}/>
-
+                            {this.state.accountName && this.state.validAccountName ?
+                                <div className="form-group">
+                                    <label>Identicon</label>
+                                    <AccountImage account={this.state.accountName}/>
+                                </div> :
+                                null
+                            }
                             {WalletDb.getWallet() ?
                                 null :
                                 <PasswordInput ref="password" confirmation={true}/>
                             }
                             {
                                 first_account ? null : (
-                                    <div className="full-width-content">
+                                    <div className="full-width-content form-group">
                                         <label>Pay from</label>
                                         <AccountSelect ref="pay_from" account_names={my_accounts} onChange={this.onRegistrarAccountChange.bind(this)}/>
                                     </div>)
                             }
-                            <br/>
                             <button className={buttonClass}>Create Account</button>
                             <br/>
                             <br/>

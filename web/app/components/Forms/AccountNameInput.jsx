@@ -67,9 +67,8 @@ class AccountNameInput extends BaseComponent {
     }
 
     validateAccountName(value) {
-        if(!value) return;
         this.state.error = null;
-        if (!(/^[a-z]+(?:[a-z0-9\-\.])*$/.test(value) && /[a-z0-9]$/.test(value))) {
+        if (value && !(/^[a-z]+(?:[a-z0-9\-\.])*$/.test(value) && /[a-z0-9]$/.test(value))) {
             this.state.error = "Account name can only contain lowercase alphanumeric characters, dots, and dashes.\nMust start with a letter and cannot end with a dash.";
         }
         this.setState({value: value, error: this.state.error});
