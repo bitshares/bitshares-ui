@@ -8,6 +8,7 @@ import VoteStore from "stores/VoteStore";
 import BaseComponent from "../BaseComponent";
 import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountVoting extends BaseComponent {
 
@@ -51,7 +52,19 @@ class AccountVoting extends BaseComponent {
     }
 
     render() {
-        let account_name = this.props.account_name;
+        let {account_name, cachedAccounts} = this.props;
+        let account = account_name ? cachedAccounts.get(account_name) : null;
+
+        let accountExists = true;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+        }
+        
         let my_delegates = this.state.c_delegates[account_name];
         let my_witnesses = this.state.c_witnesses[account_name];
         let my_budget_items = this.state.c_budget_items[account_name];
@@ -113,6 +126,7 @@ class AccountVoting extends BaseComponent {
                 <div className="content-block">
                     <div className="actions clearfix">
                         <button className={action_buttons_class} onClick={this.onPublish.bind(this)}><Translate content="account.perm.publish" /></button>
+                        &nbsp; &nbsp;
                         <a href="#" className={action_buttons_class + " secondary"} onClick={this.onCancelChanges.bind(this)}><Translate content="account.perm.reset" /></a>
                     </div>
                 </div>

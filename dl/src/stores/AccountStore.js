@@ -90,6 +90,13 @@ class AccountStore extends BaseStore {
     }
 
     onGetAccount(payload) {
+        if (payload.fullAccount === null) {
+            this.cachedAccounts = this.cachedAccounts.set(
+                payload.name,
+                {notFound: true}
+            );
+            return true;
+        }
 
         function parseBalances(balances) {
             let parsed = [];
@@ -108,6 +115,8 @@ class AccountStore extends BaseStore {
             }
             return parsed;
         }
+
+
 
         let {
             account, vesting_balances, statistics, call_orders, limit_orders, referrer_name, registrar_name, lifetime_referrer_name

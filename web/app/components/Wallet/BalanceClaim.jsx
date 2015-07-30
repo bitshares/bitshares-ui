@@ -31,7 +31,8 @@ export default class BalanceClaim extends Component {
         return {
             claim_account_name: null,
             balance_claims: [],
-            balance_by_asset: []
+            balance_by_asset: [],
+            balance_claim_active: false
         }
     }
     
@@ -57,7 +58,7 @@ export default class BalanceClaim extends Component {
             if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
                 var account_names = accounts.join(', ')
                 unclaimed_balance_rows.push(<tr>
-                    <td> <FormattedAsset amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
+                    <td> <FormattedAsset color="info" amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
                     <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
                     <td> {account_names} </td>
                 </tr>)
@@ -78,85 +79,76 @@ export default class BalanceClaim extends Component {
         var has_unclaimed = unclaimed_balance_rows.length > 0
         var import_ready = has_account && has_unclaimed
         var claim_balance_label = import_ready ?
-                `Claim Balance for ${claim_account_name}...` :
+                `Claim Balance to account: ${claim_account_name}` :
                 "Claim Balance"
 
-        return <div>
-            <hr/>
-            <h3>Unclaimed Balance</h3>
+        return (
             <div>
-                {unclaimed_balance_rows.length ? <div>
-                    <table className="table"><thead><tr>
-                        <th>Unclaimed</th>
-                        <th>Unclaimed (vesting)</th>
-                        <th>Account</th>
-                    </tr></thead><tbody>
-                        {unclaimed_balance_rows}
-                    </tbody></table>
-                </div> : "No Unclaimed Balances"}
+                <div className="content-block">
+                    <h1>Welcome to Graphene</h1>
+                    <h3>Claim balances:</h3>
+                </div>
+                <div>
+                    {unclaimed_balance_rows.length ? <div>
+                        <table className="table"><thead><tr>
+                            <th style={{textAlign: "center"}}>Unclaimed</th>
+                            <th style={{textAlign: "center"}}>Unclaimed (vesting)</th>
+                            <th style={{textAlign: "center"}}>Account</th>
+                        </tr></thead><tbody>
+                            {unclaimed_balance_rows}
+                        </tbody></table>
+                    </div> : "No Unclaimed Balances"}
+                    
+                </div>
+                <br/>
                 
+                {claimed_balance_rows.length ? (
+                    <div>
+                        <h3>Claimed Balance</h3>
+                        <div>
+                        
+                            <table className="table"><thead><tr>
+                                <th>Claimed</th>
+                                <th>Claimed (vesting)</th>
+                                <th>Account</th>
+                            </tr></thead><tbody>
+                                {claimed_balance_rows}
+                            </tbody></table>
+                        </div>
+                    </div>) : null}
+                <br/>
+                
+                { this.props.claimActive ? (
+                    <div>
+                        <h3>Claim balance to account:</h3>
+                        <ExistingAccountsAccountSelect
+                            account_names={unclaimed_accounts}
+                            onChange={this._claimAccountSelect.bind(this)}
+                            list_size={5}
+                        />
+                        <br>
+                        <div className="button-group">
+                            <div className={ cname("button success", {disabled:!import_ready}) }
+                                onClick={this._importBalances.bind(this,
+                                    claim_account_name,
+                                    unclaimed_account_balances[claim_account_name]
+                                )}
+                            >
+                                {claim_balance_label}
+                            </div>
+                            &nbsp;&nbsp;
+                            <div className="button secondary"
+                                    onClick={this._setClaimActive.bind(this, false)}
+                                    >Cancel
+                            </div>
+                        </div>
+                        </br>
+                
+                    </div>): null}
+            
+                <br/>
             </div>
-            <br/>
-            
-            {claimed_balance_rows.length ? <div>
-                <h3>Claimed Balance</h3>
-                <div>
-                
-                    <table className="table"><thead><tr>
-                        <th>Claimed</th>
-                        <th>Claimed (vesting)</th>
-                        <th>Account</th>
-                    </tr></thead><tbody>
-                        {claimed_balance_rows}
-                    </tbody></table>
-                </div>
-            </div> : ""}
-            <br/>
-            
-            { this.props.claimActive ? <div>
-                
-                <h3>Balance Claim Account</h3>
-                <ExistingAccountsAccountSelect
-                    account_names={unclaimed_accounts}
-                    onChange={this._claimAccountSelect.bind(this)}
-                    list_size={5}
-                />
-                <br>
-                
-                <div>
-                    <div className={ cname("button", {disabled:!import_ready}) }
-                        onClick={this._importBalances.bind(this,
-                            claim_account_name,
-                            unclaimed_account_balances[claim_account_name]
-                        )}
-                    >
-                        {claim_balance_label}
-                    </div>
-                </div>
-                </br>
-                
-            </div>:""}
-            
-            <br/>
-            { unclaimed_balance_rows.length ? <div>
-                
-                { this.state.balance_claim_active ? "":<div>
-                    <div className={ cname("button", {disabled:!has_unclaimed}) }
-                        onClick={this._setClaimActive.bind(this, true)}
-                        >Claim Balance
-                    </div>
-                </div>}
-                
-                { this.state.balance_claim_active ? <div>
-                    <div className="button"
-                        onClick={this._setClaimActive.bind(this, false)}
-                        >Cancel
-                    </div>
-                </div>:""}
-                
-            </div>:""}
-                
-        </div>
+        );
     }
     
     loadBalances() {
@@ -253,11 +245,10 @@ export default class BalanceClaim extends Component {
         ).then((result)=> {
             
             notify.success("Balance claimed to account: " + this.state.claim_account_name)
-            AccountActions.getAccount(this.state.claim_account_name);
-            this.reset()
-            if(result)
-                console.log("ExistingAccount._importBalances",
-                    result, JSON.stringify(result))
+            if(result) {
+                console.log("ExistingAccount._importBalances", result, JSON.stringify(result));
+            }
+            this.context.router.transitionTo("account", {account_name: this.state.claim_account_name});
                 
         }).catch((error)=> {
             console.log('_importBalances', error)
@@ -293,6 +284,8 @@ export default class BalanceClaim extends Component {
         return {unvested_balance_claims, wif_to_balances}
     }
 }
+
+BalanceClaim.contextTypes = {router: React.PropTypes.func.isRequired};
 
 BalanceClaim.propTypes = {
     onActive: PropTypes.func.isRequired,

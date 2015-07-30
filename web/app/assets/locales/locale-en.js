@@ -81,7 +81,10 @@ module.exports = {
         permissions: "Permissions",
         voting: "Voting",
         orders: "Orders",
-        select_placeholder: "Select Account..."
+        select_placeholder: "Select Account...",
+        errors: {
+            not_found: "The account %(name)s does not exist, are you sure you spelled it correctly?"
+        }
     },
     pagination: {
         newer: "Newer",
@@ -270,7 +273,8 @@ module.exports = {
             precision: "Precision"
         },
         asset: {
-            title: "Asset"
+            title: "Asset",
+            not_found: "The asset %(name)s does not exist"
         },
         witnesses: {
             title: "Witnesses"

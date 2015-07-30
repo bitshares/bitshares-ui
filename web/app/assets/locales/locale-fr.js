@@ -73,7 +73,10 @@ module.exports = {
         permissions: "Permissions",
         voting: "Votes",
         orders: "Ordres",
-        select_placeholder: "Selectionnez un compte.."
+        select_placeholder: "Selectionnez un compte..",
+        errors: {
+            not_found: "Le compte %(name)s n'existe pas, veuillez vérifier le nom"
+        }
     },
     transfer: {
         from: "De",
@@ -256,7 +259,8 @@ module.exports = {
             precision: "Précision"
         },
         asset: {
-            title: "Actif"
+            title: "Actif",
+            not_found: "L'actif %(name)s n'existe pas"
         },
         witnesses: {
             title: "Témoins"

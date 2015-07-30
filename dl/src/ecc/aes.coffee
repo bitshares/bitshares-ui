@@ -24,6 +24,7 @@ class Aes
         throw new Error("seed is required") if seed is undefined
         _hash = hash.sha512 seed
         _hash = _hash.toString('hex')
+        # DEBUG console.log('... Aes.fromSeed _hash',_hash)
         Aes.fromSha512(_hash)
     
     Aes.decrypt_with_checksum = (private_key, public_key, nonce, message) ->
@@ -32,24 +33,23 @@ class Aes
         
         S = private_key.get_shared_secret public_key
         aes = Aes.fromSeed Buffer.concat [
-            new Buffer(nonce)
+            new Buffer(""+nonce)
             new Buffer(S.toString('hex'))
         ]
         planebuffer = aes.decrypt message
         unless planebuffer.length >= 4
             throw new Error "Invalid key, could not decrypt message"
         
-        #console.log('... planebuffer',planebuffer)
+        # DEBUG console.log('... planebuffer',planebuffer)
         checksum = planebuffer.slice 0, 4
         plaintext = planebuffer.slice(4).toString()
         
-        #console.log('... checksum',checksum.toString('hex'))
-        #console.log('... plaintext',plaintext)
+        # DEBUG console.log('... checksum',checksum.toString('hex'))
+        # DEBUG console.log('... plaintext',plaintext)
         
-        # reverse() converts to big-endian (matches the c++ memo)
         new_checksum = hash.sha256 plaintext
         new_checksum = new_checksum.slice 0, 4
-        new_checksum = new_checksum.toString('binary').split("").reverse().join("")
+        new_checksum = new_checksum.toString('binary').split("").join("")
         
         unless checksum.toString('binary') is new_checksum
             throw new Error "Invalid key, could not decrypt message"
@@ -62,14 +62,15 @@ class Aes
         
         S = private_key.get_shared_secret public_key
         aes = Aes.fromSeed Buffer.concat [
-            new Buffer(nonce)
+            new Buffer(""+nonce)
             new Buffer(S.toString('hex'))
         ]
-        # reverse() converts to big-endian (matches the c++ memo)
+        # DEBUG console.log('... S',S.toString('hex'))
         checksum = hash.sha256(message).slice 0,4
-        checksum = checksum.toString('binary').split("").reverse().join("")
+        checksum = checksum.toString('binary').split("").join("")
         checksum = new Buffer(checksum, 'binary')
         payload = Buffer.concat [checksum, message]
+        # DEBUG console.log('... payload',payload.toString())
         aes.encrypt payload
     
     _decrypt_word_array: (cipher) ->

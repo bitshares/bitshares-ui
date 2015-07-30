@@ -5,7 +5,6 @@ import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
-import ChainStore from "stores/ChainStore";
 import LoadingIndicator from "../LoadingIndicator";
 
 class AccountOverview extends React.Component {
@@ -25,7 +24,17 @@ class AccountOverview extends React.Component {
     render() {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountBalances, accountHistories, account_id_to_name} = this.props;
         let account = account_name ? cachedAccounts.get(account_name) : null;
-        if (!account) {return <LoadingIndicator type="circle" />; }
+
+        let accountExists = true;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+        }
 
 
         let balances = null;
@@ -38,7 +47,6 @@ class AccountOverview extends React.Component {
                         <tr key={balance.asset_id}>
                             <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
                             <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
-                            <td>{/*<FormattedNumber style="percent" value={0.1 * Math.random()}/>*/}-</td>
                         </tr>
                     );
                 }
@@ -62,18 +70,16 @@ class AccountOverview extends React.Component {
                 );
             }
         });
-        let acnt = ChainStore.getState().getAccountByName( account_name );
         return (
             <div className="grid-content">
                 <div className="content-block">
-                    <h3><Translate content="explorer.assets.title" /></h3>
+                    <h3><Translate content="transfer.balances" /></h3>
                     <table className="table">
                         <thead>
                             <tr>
                                 <th><Translate component="span" content="account.asset" /></th>
                                 <th><Translate component="span" content="account.market_value" /></th>
                                 <th><Translate component="span" content="account.hour_24" /></th>
-                                <th>Test {acnt.name}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,6 +122,14 @@ class AccountOverview extends React.Component {
                 <div className="content-block">
                 <h3><Translate content="account.recent" /> <Link to="account-history" params={{account_name: account_name}}><small> (<Translate content="account.more" />) </small></Link></h3>
                     <table className="table">
+                        <thead>
+                            <tr>
+                                <th><Translate content="explorer.block.title" /></th>
+                                <th><Translate content="explorer.block.op" /></th>
+                                <th><Translate content="account.votes.info" /></th>
+                                <th><Translate content="transfer.fee" /></th>
+                            </tr>
+                        </thead>
                         <tbody>
                         {history}
                         </tbody>

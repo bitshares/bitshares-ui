@@ -4,6 +4,7 @@ import {Link} from "react-router";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
 import Translate from "react-translate-component";
+import LoadingIndicator from "../LoadingIndicator";
 import Inspector from "react-json-inspector";
 require("./json-inspector.scss");
 
@@ -27,6 +28,23 @@ class Asset extends React.Component {
         let {assets, accounts, asset_symbol_to_id, symbol} = this.props;
         let assetID = asset_symbol_to_id[symbol];
         let asset = assets.get(assetID);
+
+        let assetExists = true;
+        if (!asset) {
+            asset = assets.get(symbol);
+            if (!asset) {
+                return <LoadingIndicator type="circle"/>;
+            } else if (asset.notFound) {
+                assetExists = false;
+            } 
+        } else if (asset.notFound) {
+            assetExists = false;
+        } 
+        if (!assetExists) {
+            return <div className="grid-container"><h5><Translate component="h5" content="explorer.asset.not_found" name={symbol} /></h5></div>;
+        }
+
+
         return (
             <div className="grid-block small-offset-2">
                 <div className="grid-content">

@@ -7,6 +7,7 @@ import market_utils from "common/market_utils";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import notify from "actions/NotificationActions";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountOrders extends React.Component {
 
@@ -34,8 +35,15 @@ class AccountOrders extends React.Component {
         let cancel = counterpart.translate("account.perm.cancel");
 
         let markets = {};
+
+        let accountExists = true;
         if (!account) {
-            return <div className="grid-block"></div>;
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
 
         let orders = account.limit_orders.map(order => {

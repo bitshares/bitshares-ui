@@ -89,12 +89,19 @@ module.exports = _my =
             throw new Error "unmatched #{regex} #{field_name}: #{value}"
         value
     
-    require_match:(regex, value, field_name="")->
+    require_match: require_match=(regex, value, field_name="")->
         return value if is_empty value
         match = value.match regex
         if match is null
             throw new Error "unmatched #{regex} #{field_name}: #{value}"
         match
+    
+    require_object_id: require_object_id=(value, field_name)->
+        require_match(
+            /^([0-9]+)\.([0-9]+)\.([0-9]+)$/
+            value
+            field_name
+        )
     
     # Does not support over 53 bits
     require_range:(min,max,value, field_name="")->
@@ -141,6 +148,17 @@ module.exports = _my =
         return value if is_empty value
         require_object_type 1, type, value, field_name
         to_number value.split('.')[2]
+    
+    get_protocol_type: get_protocol_type=(value, field_name)->
+        return value if is_empty value
+        require_object_id value, field_name
+        values = value.split('.')
+        to_number values[1]
+        
+    get_protocol_type_name: (value, field_name)->
+        return value if is_empty value
+        type_id = get_protocol_type value, field_name
+        (Object.keys chain_types.object_type)[type_id]
     
     require_implementation_type: require_implementation_type=(type, value, field_name)->
         require_object_type 2, type, value, field_name

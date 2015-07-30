@@ -7,6 +7,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput"
+import notify from 'actions/NotificationActions'
 
 export default class WalletUnlock extends Component {
 
@@ -30,19 +31,21 @@ export default class WalletUnlock extends Component {
     }
 
     render() {
-        let modal = (
+        let modal = WalletDb.isLocked() ? (
             <Modal id="unlock_wallet_modal" ref="modal" overlay={true}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <div className="grid-block vertical">
                     <br/>
+                    <h3>Unlock wallet:</h3>
                     <form onSubmit={this._passSubmit.bind(this)}>
                         <div className="grid-content no-overflow">
                             <PasswordInput onChange={this._passChange.bind(this)} wrongPassword={this.state.password_error}/>
                         </div>
                         <div className="grid-content button-group no-overflow">
-                            <a className="button" href onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
+                            <a className="button success" href onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
+                            &nbsp; &nbsp;
                             <Trigger close="unlock_wallet_modal">
                                 <a href className="secondary button">Cancel</a>
                             </Trigger>
@@ -50,7 +53,7 @@ export default class WalletUnlock extends Component {
                     </form>
                 </div>
             </Modal>
-        );
+        ) : null;
         
         return <div>
             {modal}
@@ -87,9 +90,11 @@ export default class WalletUnlock extends Component {
         );
         if (WalletDb.isLocked())
             this.setState({password_error: true});
+
         else {
             this.setState({password_error: false});
             ZfApi.publish("unlock_wallet_modal", "close");
+            notify.success("Successfully unlocked the wallet")
         }
     }
 

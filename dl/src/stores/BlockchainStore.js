@@ -1,14 +1,19 @@
 var Immutable = require("immutable");
 var alt = require("../alt-instance");
 var BlockchainActions = require("../actions/BlockchainActions");
+import BaseStore from "./BaseStore";
+import {operations} from "chain/chain_types";
+
 import {
     Block, GlobalObject, DynGlobalObject
 }
 from "./tcomb_structs";
 
 
-class BlockchainStore {
+
+class BlockchainStore extends BaseStore{
     constructor() {
+        super();
         // This might not need to be an immutable map, a normal structure might suffice..
         this.blocks = Immutable.Map();
         this.latestBlocks = Immutable.List();
@@ -20,6 +25,27 @@ class BlockchainStore {
             onGetGlobals: BlockchainActions.subscribeGlobals,
             onGetLatest: BlockchainActions.getLatest
         });
+
+        this._export("getFee");
+    }
+
+    getFee(op_type, options) {
+        let op_code = operations[op_type];
+
+        let currentFees = this.globalObject.parameters.current_fees.parameters[op_code][1];
+
+        let fee = 0;
+        if (currentFees.fee) {
+            fee += currentFees.fee;
+        }
+
+        if (options) {
+            for (let option of options) {
+                fee += currentFees[option];
+            }
+        }
+
+        return fee;
     }
 
     onGetBlock(block) {

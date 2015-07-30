@@ -17,6 +17,8 @@ import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
 import Wallet from "components/Wallet/Wallet";
+import BlockchainStore from "stores/BlockchainStore";
+import FormattedAsset from "../Utility/FormattedAsset";
 
 require("./exchange.scss");
 
@@ -103,26 +105,33 @@ class Exchange extends React.Component {
         }
 
         var callback = function() { this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount); }.bind(this);
+
+        let fee = BlockchainStore.getFee("limit_order_create");
+
         if(this.props.settings.get("confirmMarketOrder")) // TODO: only show this confirmation modal if the user has not disabled it
         {
-            var content = (this.props.quote === buyAsset.symbol) ?
-                <Translate 
-                        component="span"
-                        content="exchange.confirm_buy"
-                        buy_amount={buyAssetAmount}
-                        buy_symbol={buyAsset.symbol}
-                        price_amount={sellAssetAmount / buyAssetAmount}
-                        price_symbol={sellAsset.symbol + "/" + buyAsset.symbol}
-                />                
-                :
-                <Translate 
-                        component="span"
-                        content="exchange.confirm_sell"
-                        sell_amount={sellAssetAmount}
-                        sell_symbol={sellAsset.symbol}
-                        price_amount={buyAssetAmount / sellAssetAmount}
-                        price_symbol={buyAsset.symbol + "/" + sellAsset.symbol}
-                />;
+            var content =
+                <div className="grid-content no-overflow">
+                    {(this.props.quote === buyAsset.symbol) ?
+                    <Translate
+                            component="p"
+                            content="exchange.confirm_buy"
+                            buy_amount={buyAssetAmount}
+                            buy_symbol={buyAsset.symbol}
+                            price_amount={sellAssetAmount / buyAssetAmount}
+                            price_symbol={sellAsset.symbol + "/" + buyAsset.symbol}
+                    />
+                    :
+                    <Translate
+                            component="p"
+                            content="exchange.confirm_sell"
+                            sell_amount={sellAssetAmount}
+                            sell_symbol={sellAsset.symbol}
+                            price_amount={buyAssetAmount / sellAssetAmount}
+                            price_symbol={buyAsset.symbol + "/" + sellAsset.symbol}
+                    />}
+                    <Translate content="transfer.fee" />: <FormattedAsset color="fee" amount={fee} asset={this.props.assets.get("1.3.0")} />
+                </div>
 
             this.refs.confirmModal.show(content, "Confirm Order", callback);
         }

@@ -21,7 +21,7 @@ import HeaderContainer from "./components/Header/HeaderContainer";
 import FooterContainer from "./components/Footer/FooterContainer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
-import AccountUserIssuedAssets from "./components/Account/AccountUserIssuedAssets";
+import AccountAssets from "./components/Account/AccountAssets";
 import AccountMemberStats from "./components/Account/AccountMemberStats";
 import AccountHistory from "./components/Account/AccountHistory";
 import AccountPayees from "./components/Account/AccountPayees";
@@ -37,7 +37,7 @@ import Login from "./components/Login";
 import BlockContainer from "./components/Blockchain/BlockContainer";
 import Asset from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
-import CreateAccount from "./components/CreateAccount";
+import CreateAccount from "./components/Account/CreateAccount";
 // import BaseComponent from "./components/BaseComponent";
 // import SessionStore from "stores/SessionStore";
 import AccountStore from "stores/AccountStore";
@@ -77,7 +77,7 @@ class App extends React.Component {
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
     }
-    
+
     componentDidMount() {
         NotificationStore.listen(this._onNotificationChange.bind(this));
         
@@ -89,26 +89,19 @@ class App extends React.Component {
         // Switch locale if the user has already set a different locale than en
         let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
 
-        let idb_promise = iDB.init_instance(indexedDB).init_promise;
         Promise.all([
-            // Non API but important shared services
+            // Non API
             localePromise,
-            idb_promise
-        ]).then( () => {
-            return Promise.all([
-                // Non API
-                WalletDb.loadDbData(),
-                PrivateKeyStore.loadDbData(),
-                Apis.instance().init_promise.then(() => {
-                    return Promise.all([
-                        // API 
-                        AssetActions.getAssetList("A", 100),
-                        BlockchainActions.subscribeGlobals(),
-                        AccountStore.loadDbData()
-                    ]);
-                })
-            ]);
-        }).then(() => {
+            PrivateKeyStore.loadDbData(),
+            Apis.instance().init_promise.then(() => {
+                return Promise.all([
+                    // API
+                    AssetActions.getAssetList("A", 100),
+                    BlockchainActions.subscribeGlobals(),
+                    AccountStore.loadDbData()
+                ]);
+            })
+        ]).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts
             let promises = AccountStore.getState().linkedAccounts.map( a => {
                 return AccountActions.getAccount(a);
@@ -121,8 +114,6 @@ class App extends React.Component {
             console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
             this.setState({loading: false});
         });
-        
-            
     }
     
     /** Usage: NotificationActions.[success,error,warning,info] */
@@ -166,6 +157,17 @@ class App extends React.Component {
     }
 }
 
+App.willTransitionTo = (transition, params, query, callback) => {
+    iDB.init_instance(indexedDB).init_promise.then(() => {
+        WalletDb.loadDbData().then(() => {
+            if(!WalletDb.getWallet() && transition.path !== "/create-account") {
+                transition.redirect("/create-account");
+            }
+            callback();
+        });
+    });
+};
+
 let routes = (
     <Route handler={App}>
         <Route name="dashboard" path="/dashboard" handler={DashboardContainer}/>
@@ -200,7 +202,7 @@ let routes = (
         <Route name="import-keys" path="import-keys" handler={ImportKeys}/>
         <Route name="account" path="/account/:account_name" handler={AccountPage}>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
-            <Route name="account-assets" path="user-issued-assets" handler={AccountUserIssuedAssets}/>
+            <Route name="account-assets" path="user-assets" handler={AccountAssets}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
             <Route name="account-history" path="history" handler={AccountHistory}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>
@@ -214,6 +216,6 @@ let routes = (
 );
 
 
-Router.run(routes, function (Handler) {
+Router.run(routes, Handler => {
     React.render(<Handler/>, document.getElementById("content"));
 });

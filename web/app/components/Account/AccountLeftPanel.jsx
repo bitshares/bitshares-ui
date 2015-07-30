@@ -8,6 +8,8 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
 import Immutable from "immutable";
+import BlockchainStore from "stores/BlockchainStore";
+import FormattedAsset from "../Utility/FormattedAsset";
 
 class AccountLeftPanel extends React.Component {
 
@@ -21,7 +23,8 @@ class AccountLeftPanel extends React.Component {
         }
         return this.props.account_name !== nextProps.account_name ||
                this.props.linkedAccounts !== nextProps.linkedAccounts ||
-               !Immutable.is(this.props.cachedAccounts, nextProps.cachedAccounts);
+               !Immutable.is(this.props.cachedAccounts, nextProps.cachedAccounts) ||
+               !Immutable.is(this.props.assets, nextProps.assets);
     }
 
     onLinkAccount(e) {
@@ -54,9 +57,14 @@ class AccountLeftPanel extends React.Component {
             });
         };
 
+        let fee = BlockchainStore.getFee("account_upgrade", ["membership_lifetime_fee"]);
+
         let content = (
-            <div>
-                <span>Upgrade account <strong>{this.props.account_name}</strong> to lifetime member?</span>
+            <div className="grid-block">
+                <p>Upgrade account <strong>{this.props.account_name}</strong> to lifetime member?</p>
+                <Translate content="transfer.fee" />: <FormattedAsset color="fee" amount={fee} asset={this.props.assets.get("1.3.0")} />
+                <br/>
+                <br/>
             </div>
         );
 
@@ -67,21 +75,20 @@ class AccountLeftPanel extends React.Component {
     render() {
         let {account_name, account_name_to_id, linkedAccounts, myAccounts} = this.props;
         let account = this.props.cachedAccounts.get(account_name);
+        let accountExists = true;
+        
         if (!account) {
             return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
         }
 
         let is_my_account = myAccounts.has(account_name);
         let linkBtn = null;
-        if(!is_my_account) {
-            linkBtn = (
-                <div className="grid-block no-margin center-content">
-                    {linkedAccounts.has(account_name) ?
-                        <a href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate content="account.unlink"/></a> :
-                        <a href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate content="account.link"/></a>
-                    }
-                </div>
-            );
+        if (!is_my_account && accountExists) {
+            linkBtn = linkedAccounts.has(account_name) ?
+                        <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate content="account.unlink"/></a> :
+                        <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate content="account.link"/></a>;
         }
 
         return (
@@ -90,23 +97,21 @@ class AccountLeftPanel extends React.Component {
                     modalId="confirm_modal"
                     ref="confirmModal"
                 />
-                <div className="regular-padding">
-                    <AccountInfo account_name={account_name} account_id={account.id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
-                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
-                        (<div className="grid-block" style={{marginBottom: "1rem"}}>
-                            <div className="grid-block center-content">
+                {accountExists ?
+                    <div className="regular-padding">
+                        <AccountInfo account_name={account_name} account_id={account.id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
+
+                        {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
+                            (<div className="grid-container" style={{marginBottom: "1rem"}}>
                                 <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate content="account.upgrade" /></a>
-                            </div>
-                        </div>)
-                        : null
-                    }
-                    <div className="grid-block no-margin account-buttons-row">
-                        { linkBtn }
-                        <div className="grid-block no-margin center-content">
+                            </div>)
+                            : null
+                        }
+                        <div className="grid-container no-margin">
+                            { linkBtn }
                             <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay" /></Link>
                         </div>
-                    </div>
-                </div>
+                    </div> : null}
                 <section className="block-list">
                     <ul className="account-left-menu">
                         <li><Link to="account-overview" params={{account_name: account_name}}><Translate content="account.overview" /></Link></li>

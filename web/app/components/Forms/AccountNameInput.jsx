@@ -67,21 +67,21 @@ class AccountNameInput extends BaseComponent {
     }
 
     validateAccountName(value) {
-        if(!value) return null;
+        if(!value) return;
+        this.state.error = null;
         if (!(/^[a-z]+(?:[a-z0-9\-\.])*$/.test(value) && /[a-z0-9]$/.test(value))) {
-            return "Account name can only contain lowercase alphanumeric characters, dots, and dashes.\nMust start with a letter and cannot end with a dash.";
+            this.state.error = "Account name can only contain lowercase alphanumeric characters, dots, and dashes.\nMust start with a letter and cannot end with a dash.";
         }
+        this.setState({value: value, error: this.state.error});
+        if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
         if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
-        return null;
     }
 
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
-        let value = e.target.value;
-        this.state.error = this.validateAccountName(value);
-        this.setState({value: value, error: this.state.error});
-        if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
+        this.validateAccountName(e.target.value);
+
     }
 
     onKeyDown(e) {

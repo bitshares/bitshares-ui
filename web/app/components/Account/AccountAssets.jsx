@@ -14,8 +14,9 @@ import utils from "common/utils";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import debounce from "lodash.debounce";
 import AccountInfo from "../Account/AccountInfo";
+import LoadingIndicator from "../LoadingIndicator";
 
-class AccountUserIssuedAssets extends React.Component {
+class AccountAssets extends React.Component {
     constructor() {
         super();
 
@@ -38,6 +39,15 @@ class AccountUserIssuedAssets extends React.Component {
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 150);
+    }
+
+    componentDidMount() {
+        let query_params = this.context.router.getCurrentQuery();
+        console.log("query_params:", query_params);
+        if(query_params.create_asset) {
+            console.log("zf publish create asset");
+            ZfApi.publish("create_asset", "open");
+        }
     }
 
     _onCreateInput(value, e) {
@@ -139,9 +149,18 @@ class AccountUserIssuedAssets extends React.Component {
         let account = cachedAccounts.get(account_name);
         let {issue} = this.state;
 
+
+        let accountExists = true;
         if (!account) {
-            return <div className="grid-content"></div>;
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
+
+
         let myAssets = assets.filter(asset => {
             return asset.issuer === account.id;
         })
@@ -149,7 +168,6 @@ class AccountUserIssuedAssets extends React.Component {
             return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
         })
         .map(asset => {
-            console.log("asset:", asset);
             return (
                     <tr>
                         <td>{asset.id}</td>
@@ -280,7 +298,9 @@ class AccountUserIssuedAssets extends React.Component {
     }
 }
 
-AccountUserIssuedAssets.defaultProps = {
+AccountAssets.contextTypes = { router: React.PropTypes.func.isRequired };
+
+AccountAssets.defaultProps = {
     assets: [],
     symbol: "",
     name: "",
@@ -289,9 +309,9 @@ AccountUserIssuedAssets.defaultProps = {
     precision: 0
 };
 
-AccountUserIssuedAssets.propTypes = {
+AccountAssets.propTypes = {
     assets: PropTypes.object.isRequired,
     symbol: PropTypes.string.isRequired
 };
 
-export default AccountUserIssuedAssets;
+export default AccountAssets;

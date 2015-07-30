@@ -72,6 +72,7 @@ class PermissionsTable extends React.Component {
                 <td colSpan="2">
                     <input type="number" style={{width: "4rem"}} ref="weight"/>
                     <button className="button" onClick={this.onSave}><Translate content="account.perm.confirm_add" /></button>
+                    &nbsp; &nbsp;
                     <button className="button secondary" onClick={this.onCancel}><Translate content="account.perm.cancel" /></button>
                 </td>
             </tr>

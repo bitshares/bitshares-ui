@@ -62,6 +62,14 @@ class AssetStore extends BaseStore {
             asset
         } = payload;
 
+        if (payload.asset === null) {
+            this.assets = this.assets.set(
+                payload.symbol,
+                {notFound: true}
+            );
+            return true;
+        }
+
         // console.log("onGetAsset payload:", payload);
         asset.dynamic_data = payload.dynamic_data;
 

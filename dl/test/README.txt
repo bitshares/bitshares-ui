@@ -24,11 +24,15 @@ $g.db.api.exec("get_objects",[["1.2.0"]])
 Built-in testnet account, this has a large test balance.
 
 In the cli_wallet importing the genesis key will unlock the balance:
->>> import_key "nathan" 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
->>> import_balance nathan ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"] true
->>> upgrade_account nathan true
->>> dbg_make_uia nathan TEST
->>> issue_asset nathan 2323231232 TEST "" true
+set_password password
+unlock password
+import_balance nathan ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"] true
+import_key "nathan" 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+upgrade_account nathan true
+dbg_make_uia nathan TEST
+dbg_make_uia nathan MORE
+issue_asset nathan 2323231232 TEST "" true
+issue_asset nathan 2323231232 MORE "" true
 >>> list_account_balances "1.2.15"
 >>> transfer "1.2.15" "1.2.0" 1 "GPH" "memo" true
 

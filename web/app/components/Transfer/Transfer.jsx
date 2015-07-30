@@ -52,9 +52,11 @@ class Transfer extends BaseComponent {
 
     componentDidMount() {
         let {cachedAccounts, currentAccount} = this.props;
-        let account = cachedAccounts.get(currentAccount.name);
-        if (!account) {
-            AccountActions.getAccount(currentAccount.name);
+        if (currentAccount) {
+            let account = cachedAccounts.get(currentAccount.name);
+            if (!account) {
+                AccountActions.getAccount(currentAccount.name);
+            }
         }
     }
 
@@ -376,6 +378,7 @@ class Transfer extends BaseComponent {
                         </div>
                         <div className="grid-content button-group">
                             <a className="button" href onClick={this.onConfirm}>Confirm</a>
+                            &nbsp; &nbsp;
                             <Trigger close="confirm_transaction">
                                 <a href className="secondary button">Cancel</a>
                             </Trigger>

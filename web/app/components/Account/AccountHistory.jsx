@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import Immutable from "immutable";
 import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountHistory extends React.Component {
 
@@ -93,16 +94,22 @@ class AccountHistory extends React.Component {
     render() {
         let {account_name, cachedAccounts, account_name_to_id, assets, accountHistories, account_id_to_name} = this.props;
         let {perPage, count, pages, currentPage, setPage} = this.state;
+        let account = account_name ? cachedAccounts.get(account_name) : null;
+        let accountExists = true;
+        if (!account) {
+            return <LoadingIndicator type="circle"/>;
+        } else if (account.notFound) {
+            accountExists = false;
+        } 
+        if (!accountExists) {
+            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+        }
+
         if (!pages) {
             return (
                 <div className="grid-content">
                 </div>
             );
-        }
-
-        let account = account_name ? cachedAccounts.get(account_name) : null;
-        if(!account) {
-            return <div className="grid-content">Account {account_name} couldn't be displayed</div>;
         }
 
         let myHistory = accountHistories.get(account_name), history = null;
@@ -137,7 +144,15 @@ class AccountHistory extends React.Component {
                     <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}><Translate content="pagination.older" /></li>
                     <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
                 </ul>
-                <table style={{width: "100%"}} className="table text-center">
+                <table style={{width: "100%"}} className="table">
+                    <thead>
+                        <tr>
+                            <th><Translate content="explorer.block.title" /></th>
+                            <th><Translate content="explorer.block.op" /></th>
+                            <th><Translate content="account.votes.info" /></th>
+                            <th><Translate content="transfer.fee" /></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {history}
                     </tbody>
