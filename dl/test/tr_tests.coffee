@@ -1,16 +1,19 @@
 PrivateKey = require '../src/ecc/key_private'
 PublicKey = require '../src/ecc/key_public'
 Signature = require '../src/ecc/signature'
+Aes = require 'ecc/aes'
 WebSocketRpc = require '../src/rpc_api/WebSocketRpc'
 GrapheneApi = require '../src/rpc_api/GrapheneApi'
 
 Promise = require '../src/common/Promise'
 ByteBuffer = require '../src/common/bytebuffer'
 secureRandom = require 'secure-random'
+assert = require 'assert'
 
 tr_helper = require '../src/chain/transaction_helper'
 th = require './test_helper'
 
+hash = require 'common/hash'
 so_type = require '../src/chain/serializer_operation_types'
 account_create_type = so_type.account_create
 transaction_type = so_type.transaction
@@ -23,9 +26,15 @@ account_create = tr_op.account_create
 
 ApiInstances = require('../src/rpc_api/ApiInstances')
 WalletApi = require '../src/rpc_api/WalletApi'
+WalletDb = require 'stores/WalletDb'
+PrivateKeyStore = require "stores/PrivateKeyStore"
 ApplicationApi = require '../src/rpc_api/ApplicationApi'
 wallet = new WalletApi()
 app = new ApplicationApi()
+
+helper = require "./test_helper"
+iDB = require "../src/idb-instance"
+fakeIndexedDB = require "fake-indexeddb"
 
 ###
 import_key "1.2.15" "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
@@ -35,17 +44,21 @@ describe "tr_tests", ->
 
     broadcast = process.env.GPH_TEST_NO_BROADCAST is undefined
     genesis_private = PrivateKey.fromWif "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-    #genesis_active_1_3_0_public = PublicKey.fromBtsPublic "GPH6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
     api = null
     
     before (done)->
-        api = ApiInstances.instance()
-        api.init_promise.then ()->
-            done()
-        .catch th.log_error
+        iDB.init_instance(fakeIndexedDB).init_promise.then () ->
+            #PrivateKeyStore.loadDbData().then ()->
+            api = ApiInstances.instance()
+            api.init_promise.then ()->
+                done()
+            .catch th.log_error
     
-    after ->
+    after (done)->
+        iDB.instance().db().close()
+        fakeIndexedDB.deleteDatabase("graphene_db")
         api.close()
+        done()
     
     it "wallet.account_create", (done)->
         suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
@@ -67,59 +80,60 @@ describe "tr_tests", ->
     
     #it "update account transaction", ->
     it "wallet.transfer nomemo", (done)->
-        wallet.transfer(
-            "1.2.15", "1.2.14", 1, "1.3.0", memo = null
-            broadcast
-        ).then (result)->
-            #th.print_result result
-            #th.print_hex ""
-            done()
-        .catch th.log_error
+        helper.test_wallet().then (suffix)=>
+            wallet.transfer(
+                "1.2.15", "1.2.14", 1, "1.3.0", memo = null
+                broadcast, encrypt_memo = no
+            ).then (result)->
+                #th.print_result result
+                #th.print_hex ""
+                done()
+            .catch th.log_error
         return
     
     it "wallet.transfer encmemo", (done)->
-        wallet.transfer(
-            "1.2.15", "1.2.14", 1, "1.3.0", memo = "memo"
-            broadcast
-        ).then (result)->
-            #th.print_result result
-            #th.print_hex ""
-            done()
-        .catch th.log_error
+        helper.test_wallet().then (suffix)=>
+            wallet.transfer(
+                "1.2.15", "1.2.14", 1, "1.3.0", memo = "memo"
+                broadcast
+            ).then (result)->
+                #th.print_result result
+                #th.print_hex ""
+                done()
+            .catch th.log_error
         return
     
-    it "app.transfer_extended textmemo", (done)->
-        tr = app.transfer_extended(
-            "1.2.15", "1.2.14", 1, "1.3.0", "memo"
-            "1.2.11", null #genesis_private
-            "1.2.14"
-            10, PrivateKey.fromSeed("nathan")
-            broadcast
-        ).then (result)->
-            #th.print_result result
-            #th.print_hex ""
-            done()
-        .catch th.log_error
-        return
-    
-    it "app.transfer_extended encmemo", (done)->
-        app.transfer_extended(
-            from = "1.2.15"
-            to = "1.2.14"
-            amount = 1
-            asset = "1.3.0"
-            memo = "memo"
-            memo_from = "1.2.11"
-            memo_from_private = genesis_private
-            memo_to = "1.2.14"
-            expire = 10
-            signer_private_key = PrivateKey.fromSeed("nathan")
-            broadcast
-        ).then (result)->
-            #th.print_result result
-            #th.print_hex ""
-            done()
-        , (e)-> th.log_error(e)
+    # Aes.encrypt data is not matching c++
+    it "wallet encmemo_format", ()->
+        sender = PrivateKey.fromSeed("1")
+        receiver = PrivateKey.fromSeed("2")
+        enc_hex = Aes.encrypt_with_checksum(
+            sender
+            receiver.toPublicKey()
+            nonce = 12345
+            "Hello, world!"
+        )
+        #console.log('... enc_hex',enc_hex.toString('hex'))
+        memo={
+            from: sender.toPublicKey()
+            to: receiver.toPublicKey()
+            nonce: 12345
+            message: new Buffer(enc_hex, 'hex')
+        }
+        enc_buffer = hash.sha256 so_type.memo_data.toBuffer memo
+        assert.equal(
+            enc_buffer.toString('hex')
+            "8de72a07d093a589f574460deb19023b4aff354b561eb34590d9f4629f51dbf3"
+        )
+        assert.equal(
+            Aes.decrypt_with_checksum(
+                receiver
+                sender.toPublicKey()
+                nonce = 12345
+                enc_hex
+            )
+            "Hello, world!"
+        )
         return
     
     ###
