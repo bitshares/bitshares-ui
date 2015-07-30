@@ -42,7 +42,7 @@ class Footer extends React.Component {
                     { block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
-                            <pre>#<Link to="block" params={{ height: block_height }}>{block_height}</Link></pre>
+                            <pre>#{block_height}</pre>
                         </div>) :
                         <div className="grid-block shrink">Loading..</div>}
                 </div>

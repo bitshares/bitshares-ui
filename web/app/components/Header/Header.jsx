@@ -6,6 +6,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import WalletDb from "stores/WalletDb";
 
 class Header extends React.Component {
 
@@ -43,6 +44,8 @@ class Header extends React.Component {
     }
 
     render() {
+        if(!WalletDb.getWallet()) return null;
+
         let {currentAccount, linkedAccounts} = this.props, accountsDropDown = null, plusDropDown = null;
 
         let settings = counterpart.translate("header.settings");
@@ -96,9 +99,6 @@ class Header extends React.Component {
             );
 
         }
-
-
-
 
         return (
             <div className="header menu-group primary">
