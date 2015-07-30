@@ -32,17 +32,18 @@ class CreateAccount extends React.Component {
 
     createAccount(name) {
         let registrar_account_id = null;
-        if(this.state.registrar_account) {
-            let res = AccountStore.getState().cachedAccounts.findEntry(a => a.name === this.state.registrar_account);
-            if(res && res.length === 2) registrar_account_id = res[1].id;
-        }
-        return AccountActions.createAccount(name, registrar_account_id).then(() => {
+
+        // if(this.state.registrar_account) {
+        //     let res = AccountStore.getState().cachedAccounts.findEntry(a => a.name === this.state.registrar_account);
+        //     if(res && res.length === 2) registrar_account_id = res[1].id;
+        // }
+        return AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account).then(() => {
             notify.addNotification({
                 message: `Successfully created account: ${name}`,
                 level: "success",
                 autoDismiss: 10
             });
-            this.context.router.transitionTo("account_name", {name: name});
+            this.context.router.transitionTo("account", {account_name: name});
         }).catch(error => {
             // Show in GUI
             console.log("ERROR AccountActions.createAccount", error);
@@ -75,7 +76,6 @@ class CreateAccount extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         let account_name = this.refs.account_name.value();
-
         if (WalletDb.getWallet()) {
             this.createAccount(account_name);
         } else {
@@ -110,23 +110,30 @@ class CreateAccount extends React.Component {
                         }
                         <br/>
                         {WalletDb.getWallet() ? <WalletUnlock/> : null}
+
+                            <div>
+                                {this.state.accountName && this.state.validAccountName ?
+                                    <AccountImage account={this.state.accountName}/> :
+                                    <AccountImage account="default_image"/>
+                                }
+                                <br/><br/>
+                            </div>
+
                         <form onSubmit={this.onSubmit.bind(this)} noValidate>
                             <AccountNameInput ref="account_name"
                                               onChange={this.onAccountNameChange.bind(this)}
                                               accountShouldNotExist={true}/>
-                            {this.state.accountName && this.state.validAccountName ?
-                                <div><AccountImage account={this.state.accountName}/><br/><br/></div>
-                                : null
-                            }
+
                             {WalletDb.getWallet() ?
                                 null :
                                 <PasswordInput ref="password" confirmation={true}/>
                             }
                             {
-                                first_account ? null : (<div className="full-width-content">
-                                    <label>Pay from</label>
-                                    <AccountSelect ref="pay_from" account_names={my_accounts} onChange={this.onRegistrarAccountChange.bind(this)}/>
-                                </div>)
+                                first_account ? null : (
+                                    <div className="full-width-content">
+                                        <label>Pay from</label>
+                                        <AccountSelect ref="pay_from" account_names={my_accounts} onChange={this.onRegistrarAccountChange.bind(this)}/>
+                                    </div>)
                             }
                             <br/>
                             <button className={buttonClass}>Create Account</button>
