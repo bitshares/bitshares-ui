@@ -30,7 +30,7 @@ export default class WalletUnlock extends Component {
     }
 
     render() {
-        let modal = (
+        let modal = WalletDb.isLocked() ? (
             <Modal id="unlock_wallet_modal" ref="modal" overlay={true}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
@@ -51,7 +51,7 @@ export default class WalletUnlock extends Component {
                     </form>
                 </div>
             </Modal>
-        );
+        ) : null;
         
         return <div>
             {modal}

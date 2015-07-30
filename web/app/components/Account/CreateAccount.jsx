@@ -2,12 +2,13 @@ import React from "react";
 import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
-import AccountNameInput from "./Forms/AccountNameInput";
-import PasswordInput from "./Forms/PasswordInput";
+import AccountNameInput from "./../Forms/AccountNameInput";
+import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import notify from 'actions/NotificationActions';
 import {Link} from "react-router";
-import AccountImage from "./Account/AccountImage";
+import AccountImage from "./AccountImage";
+import WalletUnlock from "../Wallet/WalletUnlock";
 
 
 class CreateAccount extends React.Component {
@@ -86,11 +87,15 @@ class CreateAccount extends React.Component {
                         <h1>Welcome to Graphene</h1>
                         <h3>Please create an account</h3>
                         <br/>
+                        {WalletDb.getWallet() ? <WalletUnlock/> : null}
                         <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
                             <AccountNameInput ref="account_name"
                                               onChange={this.onAccountNameChange.bind(this)}
                                               accountShouldNotExist={true}/>
-                            {this.state.accountName && this.state.validAccountName ? <div><AccountImage account={this.state.accountName}/><br/><br/></div> : null}
+                            {this.state.accountName && this.state.validAccountName ?
+                                <div><AccountImage account={this.state.accountName}/><br/><br/></div>
+                                : null
+                            }
                             {WalletDb.getWallet() ? null :
                                 <PasswordInput ref="password" confirmation={true}/>
                             }

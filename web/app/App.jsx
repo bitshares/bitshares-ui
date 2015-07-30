@@ -36,7 +36,7 @@ import Login from "./components/Login";
 import BlockContainer from "./components/Blockchain/BlockContainer";
 import Asset from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
-import CreateAccount from "./components/CreateAccount";
+import CreateAccount from "./components/Account/CreateAccount";
 // import BaseComponent from "./components/BaseComponent";
 // import SessionStore from "stores/SessionStore";
 import AccountStore from "stores/AccountStore";
