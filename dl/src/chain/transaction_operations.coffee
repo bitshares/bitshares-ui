@@ -44,6 +44,8 @@ _my.signed_transaction = ->
         operation_id = chain_types.operations[_type.operation_name]
         if operation_id is undefined
             throw new Error "unknown operation: #{_type.operation_name}"
+        unless operation.fee
+            operation.fee = {amount: 0, asset_id: 0}
         operation_instance = _type.fromObject operation
         @operations.push [operation_id, operation_instance]
         return
@@ -52,15 +54,23 @@ _my.signed_transaction = ->
         throw new Error "already finalized" if @tr_buffer
         @expiration = Math.round(Date.now()/1000) + (min*60)
     
-    set_required_fees:(asset_id = "1.3.0")->
+    set_required_fees:(asset_id)->
         throw new Error "already finalized" if @tr_buffer
+        throw new Error "add operations first" unless @operations.length
         operations = for op in @operations
             type.operation.toObject op
+        
+        if not asset_id
+            op1_fee = operations[0][1].fee
+            if op1_fee and op1_fee.asset_id isnt null
+                asset_id = op1_fee.asset_id
+            else
+                asset_id = "1.3.0"
+        
         api.db_api().exec( "get_required_fees",
             [operations, asset_id]
         ).then (assets)=>
-            #DEBUG
-            console.log('... get_required_fees',assets)
+            #DEBUG console.log('... get_required_fees',assets)
             for i in [0...@operations.length] by 1
                 @operations[i][1].fee = assets[i]
             return
@@ -125,55 +135,55 @@ _my.signed_transaction = ->
                 )
                 return
 
-class _my.transfer
-    _template = ->
-        fee : 
-            amount : 0
-            asset_id : 0 # 1.3.0
-        from: null       # 1.2.0
-        to: null         # 1.2.0
-        amount:
-            amount: "0"
-            asset_id: 0 # 1.3.0
-        memo:
-            from: null  # GPHXyz...public_key
-            to: null    # GPHXyz...public_key
-            nonce: "0" # "0"
-            message: null
-    
-    constructor:( @memo_from_privkey )->
-        for key in Object.keys _tmp = _template()
-            @[key] = _tmp[key]
-    
-    get_operations:->
-        @fee.asset_id = lookup.asset_id(@fee.asset_id)
-        @from = lookup.account_id(@from)
-        @to = lookup.account_id(@to)
-        @amount.asset_id = lookup.asset_id(@amount.asset_id)
-        if validation.is_empty_user_input @memo.message
-            @memo = undefined
-        else
-            to = @memo.to
-            @memo.from = lookup.memo_public_key(@memo.from)
-            @memo.to = lookup.memo_public_key(@memo.to)
-            if @memo_from_privkey
-                @memo.nonce = helper.unique_nonce_uint64()
-                @memo_to_public = lookup.memo_public_key(to)
-            else
-                empty_checksum = "\x00\x00\x00\x00"
-                # assert (new Buffer("\x00\x00\x00\x00")).toString() == "\x00\x00\x00\x00"
-                @memo.message = new Buffer(empty_checksum + @memo.message)
-            
-        [[ chain_types.operations.transfer, @]]
-
-    finalize:->
-        if @memo_from_privkey
-            ciphertext = Aes.encrypt_with_checksum(
-                @memo_from_privkey
-                @memo_to_public.resolve
-                @memo.nonce
-                @memo.message
-            )
-            @memo.message = new Buffer(ciphertext)
-        return
+#class _my.transfer
+#    _template = ->
+#        fee : 
+#            amount : 0
+#            asset_id : 0 # 1.3.0
+#        from: null       # 1.2.0
+#        to: null         # 1.2.0
+#        amount:
+#            amount: "0"
+#            asset_id: 0 # 1.3.0
+#        memo:
+#            from: null  # GPHXyz...public_key
+#            to: null    # GPHXyz...public_key
+#            nonce: "0" # "0"
+#            message: null
+#    
+#    constructor:( @memo_from_privkey )->
+#        for key in Object.keys _tmp = _template()
+#            @[key] = _tmp[key]
+#    
+#    get_operations:->
+#        @fee.asset_id = lookup.asset_id(@fee.asset_id)
+#        @from = lookup.account_id(@from)
+#        @to = lookup.account_id(@to)
+#        @amount.asset_id = lookup.asset_id(@amount.asset_id)
+#        if not @memo.message
+#            @memo = undefined
+#        else
+#            to = @memo.to
+#            @memo.from = lookup.memo_public_key(@memo.from)
+#            @memo.to = lookup.memo_public_key(@memo.to)
+#            if @memo_from_privkey
+#                @memo.nonce = helper.unique_nonce_uint64()
+#                @memo_to_public = lookup.memo_public_key(to)
+#            else
+#                empty_checksum = "\x00\x00\x00\x00"
+#                # assert (new Buffer("\x00\x00\x00\x00")).toString() == "\x00\x00\x00\x00"
+#                @memo.message = new Buffer(empty_checksum + @memo.message)
+#            
+#        [[ chain_types.operations.transfer, @]]
+#
+#    finalize:->
+#        if @memo_from_privkey
+#            ciphertext = Aes.encrypt_with_checksum(
+#                @memo_from_privkey
+#                @memo_to_public.resolve
+#                @memo.nonce
+#                @memo.message
+#            )
+#            @memo.message = new Buffer(ciphertext)
+#        return
 
