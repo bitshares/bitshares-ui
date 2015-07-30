@@ -12,11 +12,17 @@ class AccountPermissions extends React.Component {
 
     constructor() {
         super();
+        //this.initial_data = {
+        //    active_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
+        //    active_threshold: 90,
+        //    owner_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
+        //    owner_threshold: 90
+        //};
         this.initial_data = {
-            active_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
-            active_threshold: 90,
-            owner_permissions: Immutable.List.of({type: "account", name: "alice", weight: 10}, {type: "account", name: "bob", weight: 10}, {type: "key", name: "WIFPUBLICKEY", weight: 80}),
-            owner_threshold: 90
+            active_permissions: new Immutable.List,
+            active_threshold: 0,
+            owner_permissions: new Immutable.List,
+            owner_threshold: 0
         };
         this.state = this.getDefaultState();
     }
@@ -58,6 +64,7 @@ class AccountPermissions extends React.Component {
     }
 
     onPublish() {
+        // TODO: implement this
         console.log("[AccountPermissions.jsx:53] ----- onPublish ----->");
     }
 
@@ -67,8 +74,6 @@ class AccountPermissions extends React.Component {
     }
 
     render() {
-        console.log("[AccountPermissions.jsx:38] ----- render ----->", this.isStateChanged());
-
         let {account_name, cachedAccounts} = this.props;
         let account = account_name ? cachedAccounts.get(account_name) : null;
 
