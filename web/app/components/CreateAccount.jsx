@@ -6,15 +6,25 @@ import AccountNameInput from "./Forms/AccountNameInput";
 import PasswordInput from "./Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import notify from 'actions/NotificationActions';
+import {Link} from "react-router";
+import AccountImage from "./Account/AccountImage";
+
 
 class CreateAccount extends React.Component {
     constructor() {
         super();
-        this.state = {validAccountName: false};
+        this.state = {validAccountName: false, accountName: ""};
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.accountName !== this.state.accountName
+               || nextState.validAccountName !== this.state.validAccountName;
     }
 
     onAccountNameChange(e) {
-        this.setState({validAccountName: this.refs.account_name.valid()});
+        let state = {validAccountName: e.valid};
+        if(e.value || e.value === "") state.accountName = e.value;
+        this.setState(state);
     }
 
     createAccount(name) {
@@ -72,20 +82,22 @@ class CreateAccount extends React.Component {
         return (
             <div className="grid-block vertical">
                 <div className="grid-content">
-                    <div className="content-block">
+                    <div className="content-block center-content">
+                        <h1>Welcome to Graphene</h1>
+                        <h3>Please create an account</h3>
                         <br/>
-
-                        <h3>Create New Account</h3>
-                        <br/>
-
                         <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
                             <AccountNameInput ref="account_name"
                                               onChange={this.onAccountNameChange.bind(this)}
                                               accountShouldNotExist={true}/>
+                            {this.state.accountName && this.state.validAccountName ? <div><AccountImage account={this.state.accountName}/><br/><br/></div> : null}
                             {WalletDb.getWallet() ? null :
                                 <PasswordInput ref="password" confirmation={true}/>
                             }
                             <button className={buttonClass}>Create Account</button>
+                            <br/>
+                            <br/>
+                            <Link to="existing-account">Already have an account?</Link>
                         </form>
                     </div>
                 </div>
