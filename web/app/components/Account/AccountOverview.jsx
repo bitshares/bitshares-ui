@@ -46,7 +46,6 @@ class AccountOverview extends React.Component {
                         <tr key={balance.asset_id}>
                             <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
                             <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
-                            <td>{/*<FormattedNumber style="percent" value={0.1 * Math.random()}/>*/}-</td>
                         </tr>
                     );
                 }
@@ -73,13 +72,12 @@ class AccountOverview extends React.Component {
         return (
             <div className="grid-content">
                 <div className="content-block">
-                    <h3><Translate content="explorer.assets.title" /></h3>
+                    <h3><Translate content="transfer.balances" /></h3>
                     <table className="table">
                         <thead>
                             <tr>
                                 <th><Translate component="span" content="account.asset" /></th>
                                 <th><Translate component="span" content="account.market_value" /></th>
-                                <th><Translate component="span" content="account.hour_24" /></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,6 +120,14 @@ class AccountOverview extends React.Component {
                 <div className="content-block">
                 <h3><Translate content="account.recent" /> <Link to="account-history" params={{account_name: account_name}}><small> (<Translate content="account.more" />) </small></Link></h3>
                     <table className="table">
+                        <thead>
+                            <tr>
+                                <th><Translate content="explorer.block.title" /></th>
+                                <th><Translate content="explorer.block.op" /></th>
+                                <th><Translate content="account.votes.info" /></th>
+                                <th><Translate content="transfer.fee" /></th>
+                            </tr>
+                        </thead>
                         <tbody>
                         {history}
                         </tbody>

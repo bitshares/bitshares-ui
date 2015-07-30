@@ -144,7 +144,15 @@ class AccountHistory extends React.Component {
                     <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}><Translate content="pagination.older" /></li>
                     <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
                 </ul>
-                <table style={{width: "100%"}} className="table text-center">
+                <table style={{width: "100%"}} className="table">
+                    <thead>
+                        <tr>
+                            <th><Translate content="explorer.block.title" /></th>
+                            <th><Translate content="explorer.block.op" /></th>
+                            <th><Translate content="account.votes.info" /></th>
+                            <th><Translate content="transfer.fee" /></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {history}
                     </tbody>
