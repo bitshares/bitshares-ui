@@ -5,11 +5,12 @@ import Trigger from "react-foundation-apps/src/trigger"
 import ZfApi from "react-foundation-apps/src/utils/foundation-api"
 
 import notify from 'actions/NotificationActions'
-import Transaction from "components/Blockchain/Transaction"
+import Transaction from "./Transaction"
 //import BaseComponent from "./components/BaseComponent"
 import AccountStore from "stores/AccountStore"
 import AssetStore from "stores/AssetStore"
 import WalletDb from "stores/WalletDb"
+import Translate from "react-translate-component";
 
 export default class TransactionConfirm extends React.Component {
     
@@ -31,36 +32,18 @@ export default class TransactionConfirm extends React.Component {
         this.setState({tr, trx, resolve, reject})
         
         ZfApi.publish("transaction_confim_modal", "open");
-        
-        //let modal = React.findDOMNode(this.refs.modal);
-        //if(!modal) return
-        //ZfApi.subscribe( "transaction_confim_modal", e => {
-        //    modal.querySelector('[name="password"]').focus();
-        //});
     }
     
     render() {
-        
         if( ! this.state.trx) return <div/>
         
         var assets = AssetStore.getState().assets
         var account_id_to_name = AccountStore.getState().account_id_to_name
         
-        //var password = WalletDb.isLocked() ? <div>
-        //    <label>Password</label>
-        //    <input type="password" id="password"
-        //        value={this.state.password}
-        //        onChange={this._passwordChange.bind(this)}
-        //        />
-        //    </div>: null
-        //            <a className="button success" href
-        //                onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
         return (
             <Modal id="transaction_confim_modal" ref="modal" overlay={true}>
                 <Trigger close="">
-                    <a href="#" className="close-button"
-                        onClick={this.close.bind(this)}
-                        >&times;</a>
+                    <a href className="close-button">&times;</a>
                 </Trigger>
                 <div className="grid-block vertical">
                     <div className="shrink grid-content">
@@ -73,10 +56,14 @@ export default class TransactionConfirm extends React.Component {
                         assets={assets}
                         />
                     :null}
-                    
-                    <a href className="secondary button"
-                        onClick={this._confirmPress.bind(this)}
-                        >Confirm</a>
+
+                    <div className="grid-content button-group no-overflow">
+                        <a className="button" href onClick={this._confirmPress.bind(this)}>Confirm</a>
+                        &nbsp; &nbsp;
+                        <Trigger close="transaction_confim_modal">
+                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                        </Trigger>
+                    </div>
                 </div>
             </Modal>
         )

@@ -56,8 +56,8 @@ class ConfirmModal extends React.Component {
                                     <input key="false_checked" type="checkbox" checked={false} onChange={this._onCheck.bind(this)}/>}
                             </div>)
                             : null}
-                    <div className="grid-content button-group">
-                        <a className="button success" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
+                    <div className="grid-content button-group no-overflow">
+                        <a className="button" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
                         &nbsp; &nbsp;
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>

@@ -88,7 +88,7 @@ class AutocompleteInput extends Component {
         return (
             <div className="autocomplete">
                 <ActionSheet className="autocomplete" ref="action_sheet" id={action_sheet_id}>
-                    <input name="value" type="text" id={this.props.id}
+                    <input name="value" type="text" autoComplete="off" id={this.props.id}
                            placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                            onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
                     <ActionSheet.Content >
