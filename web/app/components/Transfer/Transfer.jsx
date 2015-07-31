@@ -172,6 +172,11 @@ class Transfer extends BaseComponent {
         AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
             ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: true, error: null});
+            notify.addNotification({
+                message: "Transfer completed",
+                level: "success",
+                autoDismiss: 10
+            });
         }).catch(error => {
             ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: false});
@@ -265,19 +270,19 @@ class Transfer extends BaseComponent {
 
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
 
-        if (this.state.done && currentAccount) {
-            return (
-                <div className="grid-block">
-                    <DoneScreen
-                        onCancel={this.newTransfer}
-                        key="ds"
-                        transfer={this.state.transfer}
-                        from={currentAccount.name}
-                        assets={assets}
-                        />
-                </div>
-            );
-        }
+        // if (this.state.done && currentAccount) {
+        //     return (
+        //         <div className="grid-block">
+        //             <DoneScreen
+        //                 onCancel={this.newTransfer}
+        //                 key="ds"
+        //                 transfer={this.state.transfer}
+        //                 from={currentAccount.name}
+        //                 assets={assets}
+        //                 />
+        //         </div>
+        //     );
+        // }
 
         let autoCompleteAccounts = searchAccounts.filter(a => {
             return a.indexOf(this.state.searchTerm) !== -1; 
