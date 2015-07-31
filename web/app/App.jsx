@@ -1,8 +1,5 @@
 import React from "react";
 import Router from "react-router";
-
-const { Route, RouteHandler, DefaultRoute } = Router;
-
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
 import Apis from "rpc_api/ApiInstances";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
@@ -32,14 +29,10 @@ import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
 import TransferPage from "./components/Transfer/TransferPage";
 import Settings from "./components/Settings/SettingsContainer";
-import Logout from "./components/Logout";
-import Login from "./components/Login";
 import BlockContainer from "./components/Blockchain/BlockContainer";
 import Asset from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
-// import BaseComponent from "./components/BaseComponent";
-// import SessionStore from "stores/SessionStore";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import AssetActions from "actions/AssetActions";
@@ -52,7 +45,6 @@ import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
-
 import ExistingAccount from "./components/Wallet/ExistingAccount";
 import Wallet from "./components/Wallet/Wallet";
 import WalletCreate from "./components/Wallet/WalletCreate";
@@ -66,6 +58,7 @@ import Invoice from "./components/Transfer/Invoice";
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/loader");
 
+const { Route, RouteHandler, DefaultRoute } = Router;
 
 class App extends React.Component {
     
@@ -192,8 +185,6 @@ let routes = (
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
-        <Route name="logout" path="logout" handler={Logout}/>
-        <Route name="login" path="login" handler={Login}/>
         <Route name="block" path="block/:height" handler={BlockContainer}/>
         <Route name="asset" path="asset/:symbol" handler={Asset}/>
         <Route name="tx" path="tx" handler={Transaction}/>

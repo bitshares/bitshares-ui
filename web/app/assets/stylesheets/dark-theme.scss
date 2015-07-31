@@ -20,7 +20,7 @@ $alert-color: #E3745B;
 $info-color: #A0D3E8;
 $success-color: #50D2C2;
 $warning-color: #FCAB53;
-$fee-color: #A57045;
+$fee-color: #deb869;
 
 // general
 
@@ -59,25 +59,18 @@ label, label > span {
   border-color: $alert-color;
 }
 
-.notification.success {
-  background-color: $success-color;
-  background-color: $panel-bg-color;
-  border-radius: 2px;
-  a {
-     color: $light-text-color;
-  }
+// notification
+
+.notification {
+  @include color($primary-text-color, $super-light-panel-bg-color, true);
 }
 
-.notification.info {
-  background-color: $info-color;
+.notification-dismiss {
+  @include color($primary-text-color, $super-light-panel-bg-color, true);
 }
 
-.notification.warning {
-  background-color: $warning-color;
-}
-
-.notification.cancel, .notification.alert {
-  background-color: $alert-color;
+.notification-success {
+  border-left-color: $success-color !important;
 }
 
 .action-sheet {

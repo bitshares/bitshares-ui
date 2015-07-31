@@ -1,15 +1,16 @@
-import React, {Component} from 'react'
-import WalletDb from "stores/WalletDb"
-import WalletCreate from "components/Wallet/WalletCreate"
-import NotificationActions from "actions/NotificationActions"
-import cname from "classnames"
+import React, {Component} from "react";
+import WalletDb from "stores/WalletDb";
+import WalletCreate from "components/Wallet/WalletCreate";
+import NotificationActions from "actions/NotificationActions";
+import cname from "classnames";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import PasswordInput from "../Forms/PasswordInput"
-import notify from 'actions/NotificationActions'
+import PasswordInput from "../Forms/PasswordInput";
+import notify from "actions/NotificationActions";
+import SessionActions from "actions/SessionActions";
 
-export default class WalletUnlock extends Component {
+class WalletUnlock extends Component {
 
     constructor() {
         super()
@@ -19,20 +20,19 @@ export default class WalletUnlock extends Component {
     }
 
     componentDidMount() {
-        if (WalletDb.isLocked()) {
-            this.open()
+        if (this.props.autoOpen) {
+            this.open();
+        } else {
+            ZfApi.subscribe("show-unlock-wallet-modal", e => {
+                this.open();
+            });
         }
     }
 
-    componentDidUpdate() {
-        if (WalletDb.isLocked()) {
-            this.open()
-        }
-    }
 
     render() {
         let modal = WalletDb.isLocked() ? (
-            <Modal id="unlock_wallet_modal" ref="modal" overlay={true}>
+            <Modal id={this.props.modalId} ref="modal" overlay={true}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
@@ -62,20 +62,14 @@ export default class WalletUnlock extends Component {
     }
     
     open() {
-        ZfApi.publish("unlock_wallet_modal", "open");
+        if (!WalletDb.isLocked()) return;
+        ZfApi.publish(this.props.modalId, "open");
         let modal = React.findDOMNode(this.refs.modal);
-        if(!modal) return
-        ZfApi.subscribe( "unlock_wallet_modal", e => {
+        if(!modal) return;
+        ZfApi.subscribe(this.props.modalId, e => {
             modal.querySelector('[name="password"]').focus();
         });
     }
-
-//   { ! this.props.relock_button ? "" : <div>
-//               <button className="button" onClick={this._lock.bind(this)}>
-//                   Re-Lock Wallet
-//               </button>
-//               <br>
-//           </div>}
 
     _passChange(e) {
         this.password_ui = e.value
@@ -92,15 +86,29 @@ export default class WalletUnlock extends Component {
             this.setState({password_error: true});
 
         else {
+            SessionActions.onUnlock();
             this.setState({password_error: false});
-            ZfApi.publish("unlock_wallet_modal", "close");
+            ZfApi.publish(this.props.modalId, "close");
             notify.success("Successfully unlocked the wallet")
         }
     }
 
-    _lock() {
-        WalletDb.onLock()
-        this.forceUpdate()
+    lock() {
+        WalletDb.onLock();
+        SessionActions.onLock();
+        notify.success("Wallet was locked");
     }
 
 }
+
+WalletUnlock.defaultProps = {
+    modalId: "unlock_wallet_modal",
+    autoOpen: true
+};
+
+WalletUnlock.propTypes = {
+    modalId: React.PropTypes.string.isRequired,
+    autoOpen: React.PropTypes.bool
+};
+
+export default WalletUnlock;

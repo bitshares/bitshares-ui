@@ -104,6 +104,7 @@ class CreateAccount extends React.Component {
         let buttonClass = classNames("button", {disabled: !valid});
         return (
             <div className="grid-block vertical">
+                {WalletDb.getWallet() ? <WalletUnlock/> : null}
                 <div className="grid-content">
                     <div className="content-block center-content">
                         <div className="page-header">
@@ -118,7 +119,6 @@ class CreateAccount extends React.Component {
                                 )
                         }
                         </div>
-                        {WalletDb.getWallet() ? <WalletUnlock/> : null}
                         <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
                             <AccountNameInput ref="account_name"
                                               onChange={this.onAccountNameChange.bind(this)}

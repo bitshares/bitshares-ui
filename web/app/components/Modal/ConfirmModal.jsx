@@ -13,10 +13,7 @@ class ConfirmModal extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return (
-            nextProps.modalId !== this.props.modalId ||
-            nextState.content !== this.state.content
-        );
+        return nextState.content !== this.state.content;
     }
 
     show(content, confirmText, callback) {

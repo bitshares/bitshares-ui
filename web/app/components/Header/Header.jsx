@@ -7,6 +7,7 @@ import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
+import WalletUnlock from "../Wallet/WalletUnlock";
 
 class Header extends React.Component {
 
@@ -41,6 +42,12 @@ class Header extends React.Component {
     _triggerMenu(e) {
         e.preventDefault();
         ZfApi.publish("mobile-menu", "toggle");
+    }
+
+    _toggleLock(e) {
+        e.preventDefault();
+        if (WalletDb.isLocked()) ZfApi.publish("show-unlock-wallet-modal", "open");
+        else this.refs.wallet_unlock.lock();
     }
 
     render() {
@@ -101,6 +108,7 @@ class Header extends React.Component {
         }
 
         return (
+            <div><WalletUnlock ref="wallet_unlock" modalId="header_unlock_wallet_modal" autoOpen={false}/>
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
                     <ul className="primary menu-bar title">
@@ -128,11 +136,15 @@ class Header extends React.Component {
                             {plusDropDown}
                         </div>
                         <div className="grp-menu-item" >
-                            <Link to="settings" data-place="bottom"><Icon name="cog"/> <Translate component="span" content="header.settings" /></Link>
+                            <Link to="settings" className="button" data-tip={settings} data-place="bottom"><Icon name="cog"/></Link>
+                        </div>
+                        <div className="grp-menu-item" >
+                            <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? "Unlock" : "Lock" }</a>
                         </div>
                         
                     </div>
                 </div>
+            </div>
             </div>
         );
     }

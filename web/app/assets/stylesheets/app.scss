@@ -90,8 +90,16 @@ button, .button {
   }
 }
 
-.notification, .notification.success {
-  border-radius: 0;
+.notification {
+  border-radius: 0 !important;
+  top: 50px !important;
+  border-top: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-left-width: 4px !important;
+  border-left-style: solid !important;
+  padding: 1rem !important;
+  font-size: 100% !important;
 }
 
 
