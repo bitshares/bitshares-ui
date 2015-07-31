@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router";
+import {RealLink} from "react-router";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
@@ -40,6 +40,12 @@ class OpType extends React.Component {
                 </td>
             </tr>
         );
+    }
+}
+
+class NoLinkDecorator extends React.Component {
+    render() {
+        return <span>{this.props.children}</span>;
     }
 }
 
@@ -118,6 +124,8 @@ class Transaction extends React.Component {
         info = [];
 
         let opCount = trx.operations.length;
+
+        let Link = this.props.no_links ? NoLinkDecorator : RealLink;
 
         trx.operations.forEach((op, opIndex) => {
             let missingFee = this.getAssets([op[1].fee.asset_id])[0];
@@ -271,7 +279,7 @@ class Transaction extends React.Component {
                         </tr>
                     );
 
-                    break;        
+                    break;
 
                 case "call_order_update":
                     rows.push(
@@ -287,7 +295,7 @@ class Transaction extends React.Component {
                         </tr>
                     );
 
-                    break;                                 
+                    break;
 
                 case "key_create":
                     rows.push(
@@ -314,7 +322,7 @@ class Transaction extends React.Component {
                             <td><Link to="account" params={{account_name: op[1].name}}>{op[1].name}</Link></td>
                         </tr>
                     );
-                    rows.push(                            
+                    rows.push(
                         <tr>
                             <td><Translate component="span" content="account.member.reg" />:</td>
                             <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].registrar]}}>{account_id_to_name[op[1].registrar]}</Link> : null}</td>
@@ -349,7 +357,7 @@ class Transaction extends React.Component {
                                     <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].referrer]}}>{account_id_to_name[op[1].referrer]}</Link> : null}</td>
                                 </tr>
                     );
-                    break;       
+                    break;
 
                 case "account_whitelist":
                     let missingAccounts = this.getAccounts([op[1].authorizing_account, op[1].account_to_list]);
@@ -365,14 +373,14 @@ class Transaction extends React.Component {
                             <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].account_to_list]}}>{account_id_to_name[op[1].account_to_list]}</Link> : null}</td>
                         </tr>
                     );
-                    rows.push(    
+                    rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.new_listing" />:</td>
                             <td>{op[1].new_listing.toString()}</td>
                         </tr>
                     );
 
-                    break;                    
+                    break;
 
                 case "account_upgrade":
                     let missingAccounts = this.getAccounts([op[1].account_to_upgrade]);
@@ -386,9 +394,9 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.lifetime" />:</td>
                             <td>{op[1].upgrade_to_lifetime_member.toString()}</td>
-                        </tr>                                  
+                        </tr>
                     );
-                    break;   
+                    break;
 
                 case "account_transfer":
                     let missingAccounts = this.getAccounts([op[1].account_id, op[1].new_owner]);
@@ -402,10 +410,10 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.lifetime" />:</td>
                             <td>{op[1].upgrade_to_lifetime_member.toString()}</td>
-                        </tr>                                  
+                        </tr>
                     );
 
-                    break;  
+                    break;
 
                 case "asset_create":
                     color = "warning";
@@ -492,7 +500,7 @@ class Transaction extends React.Component {
                     color = "warning";
                     let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
                     let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
-                    
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" />:</td>
@@ -563,7 +571,7 @@ class Transaction extends React.Component {
                         </tr>
                     );
 
-                    break;      
+                    break;
 
                 case "asset_settle":
                     color = "warning";
@@ -623,7 +631,7 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="transaction.coll_maint" />:</td>
                             <td>{feed.required_maintenance_collateral.toString()}</td>
                         </tr>
-                    );                                        
+                    );
 
                     rows.push(
                         <tr>
@@ -662,7 +670,7 @@ class Transaction extends React.Component {
 
                 case "delegate_create":
                     let missingAccounts = this.getAccounts(op[1].delegate_account);
-                    
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.delegate.title" />:</td>
@@ -670,11 +678,11 @@ class Transaction extends React.Component {
                         </tr>
                     );
 
-                    break;    
+                    break;
 
                 case "witness_create":
                     let missingAccounts = this.getAccounts(op[1].witness_account);
-                    
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.witness" />:</td>
@@ -738,14 +746,16 @@ class Transaction extends React.Component {
 }
 
 Transaction.defaultProps = {
-    account_id_to_name: {}
+    account_id_to_name: {},
+    no_links: false
 };
 
 Transaction.propTypes = {
     trx: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
     account_id_to_name: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired
+    assets: PropTypes.object.isRequired,
+    no_links: PropTypes.bool
 };
 
 export default Transaction;

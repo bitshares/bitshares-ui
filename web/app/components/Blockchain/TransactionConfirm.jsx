@@ -53,7 +53,7 @@ export default class TransactionConfirm extends React.Component {
                     {this.state.trx ?
                     <Transaction key={1} trx={this.state.trx} index={1}
                         account_id_to_name={account_id_to_name}
-                        assets={assets}
+                        assets={assets} no_links={true}
                         />
                     :null}
 
