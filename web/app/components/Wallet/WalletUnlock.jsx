@@ -1,8 +1,7 @@
-import React, {Component} from "react";
-import WalletDb from "stores/WalletDb";
-import WalletCreate from "components/Wallet/WalletCreate";
-import NotificationActions from "actions/NotificationActions";
-import cname from "classnames";
+import React from 'react'
+import WalletDb from "stores/WalletDb"
+import WalletCreate from "components/Wallet/WalletCreate"
+import cname from "classnames"
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
@@ -10,7 +9,7 @@ import PasswordInput from "../Forms/PasswordInput";
 import notify from "actions/NotificationActions";
 import SessionActions from "actions/SessionActions";
 
-class WalletUnlock extends Component {
+export default class WalletUnlock extends React.Component {
 
     constructor() {
         super()
