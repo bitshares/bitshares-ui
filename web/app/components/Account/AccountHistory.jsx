@@ -150,7 +150,7 @@ class AccountHistory extends React.Component {
                             <th><Translate content="explorer.block.title" /></th>
                             <th><Translate content="explorer.block.op" /></th>
                             <th><Translate content="account.votes.info" /></th>
-                            <th><Translate content="transfer.fee" /></th>
+                            <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
                         </tr>
                     </thead>
                     <tbody>
