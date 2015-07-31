@@ -40,9 +40,11 @@ import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
+import TransactionConfirm from "components/Blockchain/TransactionConfirm";
 import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
 import ExistingAccount from "./components/Wallet/ExistingAccount";
@@ -69,10 +71,12 @@ class App extends React.Component {
     
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
+        TransactionConfirmStore.unlisten(this._onTransactionConfirm);
     }
 
     componentDidMount() {
         NotificationStore.listen(this._onNotificationChange.bind(this));
+        TransactionConfirmStore.listen(this._onTransactionConfirm.bind(this));
         
         // Try to retrieve locale from cookies
         let locale;
@@ -117,6 +121,12 @@ class App extends React.Component {
         }
         this.refs.notificationSystem.addNotification(notification);
     }
+    
+    _onTransactionConfirm() {
+        var {tr, resolve, reject} = TransactionConfirmStore.getState()
+        this.refs.transactionConfirm.confirm_and_broadcast({tr, resolve, reject})
+        console.log('... _onTransactionConfirm',tr)
+    }
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
@@ -130,6 +140,7 @@ class App extends React.Component {
                 <HeaderContainer isUnlocked={this.state.isUnlocked}/>
                 <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                 <AccountNotifications/>
+                
                 <div className="grid-block vertical">
                     <RouteHandler />
                 </div>
@@ -144,6 +155,7 @@ class App extends React.Component {
             <div>
                 {content}
                 <NotificationSystem ref="notificationSystem" allowHTML={true}/>
+                <TransactionConfirm ref="transactionConfirm"/>
             </div>
         );
         

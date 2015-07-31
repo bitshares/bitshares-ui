@@ -156,7 +156,8 @@ class Transfer extends BaseComponent {
         e.preventDefault();
         this.validateTransferFields();
         if(this.state.isValid) {
-            this.setState({confirmation: true});
+            //this.setState({confirmation: true});
+            this.onConfirm()
         } else {
             this.setState({errors: this.state.errors});
         }
@@ -170,7 +171,6 @@ class Transfer extends BaseComponent {
             t.from_id = this.props.currentAccount.id;
         }
         AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
-            ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: true, error: null});
             notify.addNotification({
                 message: "Transfer completed",
@@ -178,13 +178,7 @@ class Transfer extends BaseComponent {
                 autoDismiss: 10
             });
         }).catch(error => {
-            ZfApi.publish("confirm_transaction", "close");
             this.setState({confirmation: false, done: false});
-            notify.addNotification({
-                message: "Transfer failed",
-                level: "error",
-                autoDismiss: 10
-            });
         });
     }
 
@@ -329,9 +323,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
                             <label>&nbsp;</label>
-                            <Trigger open="confirm_transaction">
-                                <button className={submitButtonClass} type="submit" value="Submit"><Translate component="span" content="transfer.send" /></button>
-                            </Trigger>
+                            <button className={submitButtonClass} type="submit" value="Submit"><Translate component="span" content="transfer.send" /></button>
                             { this.state.error ? <div>{this.state.error}</div> : <div>&nbsp;<br/></div> }
                         </div>
                     </div>
@@ -372,24 +364,7 @@ class Transfer extends BaseComponent {
                         </div>
                     </div>
                 </div>
-                {/* TODO: below should be a standard transaction confirmation component that lists operations and asks to confirm transaction */}
-                <Modal id="confirm_transaction" overlay={true}>
-                    <Trigger close="">
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
-                    <div className="grid-block vertical">
-                        <div className="shrink grid-content">
-                            <p>Please confirm transaction</p>
-                        </div>
-                        <div className="grid-content button-group">
-                            <a className="button" href onClick={this.onConfirm}>Confirm</a>
-                            &nbsp; &nbsp;
-                            <Trigger close="confirm_transaction">
-                                <a href className="secondary button">Cancel</a>
-                            </Trigger>
-                        </div>
-                    </div>
-                </Modal>
+
             </form>
         </Wallet>);
     }

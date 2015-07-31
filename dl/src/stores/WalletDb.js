@@ -9,6 +9,7 @@ import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimStore from "stores/BalanceClaimStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
+import TransactionConfirmActions from "actions/TransactionConfirmActions"
 
 var wallet_public_name = "default"
 var aes_private_map = {}
@@ -144,10 +145,9 @@ class WalletDb {
                         })
                     }
                 }).then(()=> {
-                    if(broadcast)
-                        //todo transaction preview modal
-                        return tr.broadcast()
-                    else
+                    if(broadcast) {
+                        return TransactionConfirmActions.confirm_and_broadcast(tr)
+                    } else
                         return tr.serialize()
                 })
             })
