@@ -1,6 +1,8 @@
 var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
+import {object_type} from "chain/chain_types";
+
 var Utils = {
     get_object_id: (obj_id) => {
         let id_regex_res = id_regex.exec(obj_id);
@@ -43,6 +45,16 @@ var Utils = {
         let basePrecision = this.get_asset_precision(baseAsset.precision);
 
         return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision))}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
+    },
+
+    get_op_type: function(object) {
+        let type = parseInt(object.split(".")[1], 10);
+
+        for (let id in object_type) {
+            if (object_type[id] === type) {
+                return id;
+            }
+        }
     }
 };
 
