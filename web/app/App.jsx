@@ -40,7 +40,7 @@ import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
-import TransactionConfirmContainer from "components/Blockchain/TransactionConfirmContainer";
+import TransactionConfirmContainer from "./components/Blockchain/TransactionConfirmContainer";
 import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";

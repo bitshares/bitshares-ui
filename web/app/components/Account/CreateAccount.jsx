@@ -99,8 +99,8 @@ class CreateAccount extends React.Component {
         let my_accounts = account_store_state.myAccounts.map(name => name);
         let first_account = my_accounts.size === 0;
         let valid = this.state.validAccountName;
-        if (first_account) valid = valid && this.state.validPassword;
-        else valid = valid && this.state.registrar_account;
+        if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
+        if (!first_account) valid = valid && this.state.registrar_account;
         let buttonClass = classNames("button", {disabled: !valid});
         return (
             <div className="grid-block vertical">
