@@ -1,48 +1,34 @@
-import React, {Component, PropTypes} from 'react'
+import React, {Component, PropTypes} from "react";
 
-import WalletDb from "stores/WalletDb"
-import AccountStore from "stores/AccountStore"
-import PrivateKeyStore from "stores/PrivateKeyStore"
-import BalanceClaimStore from "stores/BalanceClaimStore"
-import FormattedAsset from "components/Utility/FormattedAsset"
-import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect"
-import WalletActions from "actions/WalletActions"
-import AccountActions from "actions/AccountActions";
+import WalletDb from "stores/WalletDb";
+import PrivateKeyStore from "stores/PrivateKeyStore";
+import BalanceClaimStore from "stores/BalanceClaimStore";
+import FormattedAsset from "components/Utility/FormattedAsset";
+import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect";
+import WalletActions from "actions/WalletActions";
 
-import Apis from "rpc_api/ApiInstances"
+import notify from "actions/NotificationActions";
+import cname from "classnames";
+import lookup from "chain/lookup";
+import v from "chain/serializer_validation";
 
-import notify from 'actions/NotificationActions'
-import cname from "classnames"
-import lookup from "chain/lookup"
-import v from "chain/serializer_validation"
-import type from "chain/serializer_operation_types"
-import hash from "common/hash"
-
-var api = Apis.instance()
-            
 export default class BalanceClaim extends Component {
 
     constructor() {
-        super()
-        this.state = this._getInitialState()
+        super();
+        this.state = this._getInitialState();
     }
     
     _getInitialState() {
         return {
             claim_account_name: null,
             balance_claims: [],
-            balance_by_asset: [],
-            balance_claim_active: false
-        }
-    }
-    
-    reset() {
-        this.setState(this._getInitialState())
-        this.loadBalances()
+            balance_by_asset: []
+        };
     }
     
     componentWillMount() {
-        this.loadBalances()
+        this.loadBalances();
     }
     
     render() {
@@ -50,29 +36,38 @@ export default class BalanceClaim extends Component {
             return <div/>
         
         var unclaimed_balance_rows = [], claimed_balance_rows = []
-        var unclaimed_accounts = [], unclaimed_account_balances = {}
+        var unclaimed_accounts = [], unclaimed_account_balances = {};
+        let index = 0;
         for(let asset_balance of this.state.balance_by_asset) {
             var {accounts, symbol, precision, balance, balance_claims} =
                 asset_balance
             
             if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
-                var account_names = accounts.join(', ')
-                unclaimed_balance_rows.push(<tr>
-                    <td> <FormattedAsset color="info" amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
-                    <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
-                    <td> {account_names} </td>
-                </tr>)
+                var account_names = accounts.join(", ")
+                unclaimed_balance_rows.push(
+                    <tr key={index}>
+                        <td> <FormattedAsset color="info" amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
+                        <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
+                        <td> {account_names} </td>
+                    </tr>
+                );
                 
                 unclaimed_accounts.push(account_names)
                 unclaimed_account_balances[account_names] = balance_claims
+
+                index++;
             }
             
-            if(balance.unvested.claimed || balance.vesting.claimed)
-                claimed_balance_rows.push(<tr>
-                    <td> <FormattedAsset amount={balance.unvested.claimed} asset={{symbol, precision}}/></td>
-                    <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
-                    <td> {accounts.join(', ')} </td>
-                </tr>)
+            if(balance.unvested.claimed || balance.vesting.claimed) {
+                claimed_balance_rows.push(
+                    <tr key={index}>
+                        <td> <FormattedAsset amount={balance.unvested.claimed} asset={{symbol, precision}}/></td>
+                        <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
+                        <td> {accounts.join(", ")} </td>
+                    </tr>
+                );
+                index++;
+            }
         }
         var claim_account_name = this.state.claim_account_name
         var has_account = claim_account_name ? true : false
@@ -85,7 +80,6 @@ export default class BalanceClaim extends Component {
         return (
             <div>
                 <div className="content-block">
-                    <h1>Welcome to Graphene</h1>
                     <h3>Claim balances:</h3>
                 </div>
                 <div>
@@ -118,7 +112,6 @@ export default class BalanceClaim extends Component {
                     </div>) : null}
                 <br/>
                 
-                { this.props.claimActive ? (
                     <div>
                         <h3>Claim balance to account:</h3>
                         <ExistingAccountsAccountSelect
@@ -128,7 +121,7 @@ export default class BalanceClaim extends Component {
                         />
                         <br>
                         <div className="button-group">
-                            <div className={ cname("button success", {disabled:!import_ready}) }
+                            <div className={ cname("button success", {disabled: !import_ready}) }
                                 onClick={this._importBalances.bind(this,
                                     claim_account_name,
                                     unclaimed_account_balances[claim_account_name]
@@ -144,7 +137,7 @@ export default class BalanceClaim extends Component {
                         </div>
                         </br>
                 
-                    </div>): null}
+                    </div>
             
                 <br/>
             </div>
@@ -164,7 +157,7 @@ export default class BalanceClaim extends Component {
     balanceByAssetName(balance_claims) {
         return new Promise((resolve, reject)=> {
             var asset_totals = {}
-            //DEBUG console.log('... balance_claims',balance_claims)
+            //DEBUG console.log("... balance_claims",balance_claims)
             for(let balance_claim of balance_claims) {
                 var b = balance_claim.chain_balance_record
                 
@@ -175,7 +168,7 @@ export default class BalanceClaim extends Component {
                     private_key_tcomb.import_account_names
                 
                 var group_by =
-                    import_account_names.join('\t') +
+                    import_account_names.join("\t") +
                     b.balance.asset_id + "\t"
                 
                 var total =
@@ -224,9 +217,10 @@ export default class BalanceClaim extends Component {
     }
     
     _setClaimActive(active) {
-        this.setState({balance_claim_active: active})
-        if(! active) this.reset()
-        this.props.onActive(active)
+        if(!active) {
+            // this.reset();
+            this.props.exportState({balance_claim_active: active, import_active: true});
+        }
     }
     
     _claimAccountSelect(claim_account_name) {
@@ -251,7 +245,7 @@ export default class BalanceClaim extends Component {
             this.context.router.transitionTo("account", {account_name: this.state.claim_account_name});
                 
         }).catch((error)=> {
-            console.log('_importBalances', error)
+            console.log("_importBalances", error)
             var message = error
             try { message = error.data.message } catch(e) {}
             notify.error("Error claiming balance: " + message)
@@ -288,7 +282,6 @@ export default class BalanceClaim extends Component {
 BalanceClaim.contextTypes = {router: React.PropTypes.func.isRequired};
 
 BalanceClaim.propTypes = {
-    onActive: PropTypes.func.isRequired,
-    claimActive: PropTypes.bool.isRequired
+    exportState: PropTypes.func.isRequired
 }
 
