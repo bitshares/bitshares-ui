@@ -112,6 +112,9 @@ module.exports = {
         see: "SEE MY TRANSFERS"
     },
     transaction: {
+        confirm: "Please confirm the transaction",
+        broadcast_success: "Transaction has been broadcast",
+        broadcast_fail: "Failed to broadcast the transaction: %(message)s",
         sent: "Sent",
         to: "to",
         received: "Received",
