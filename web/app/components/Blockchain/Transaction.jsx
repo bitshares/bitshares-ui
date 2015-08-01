@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {RealLink} from "react-router";
+import {Link as RealLink} from "react-router";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
