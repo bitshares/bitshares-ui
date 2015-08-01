@@ -93,6 +93,7 @@ class App extends React.Component {
             Apis.instance().init_promise.then(() => {
                 return Promise.all([
                     // API
+                    AssetActions.getAsset("1.3.0"),
                     AssetActions.getAssetList("A", 100),
                     BlockchainActions.subscribeGlobals(),
                     AccountStore.loadDbData()
