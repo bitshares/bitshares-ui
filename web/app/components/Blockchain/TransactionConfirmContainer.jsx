@@ -21,7 +21,6 @@ class TransactionConfirmContainer extends React.Component {
     }
 
     _getConfirmFunction(func) {
-        console.log("got this func:", func);
         this.setState({onConfirmFunction: func});
     }
 
