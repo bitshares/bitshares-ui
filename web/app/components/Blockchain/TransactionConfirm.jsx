@@ -5,6 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 export default class TransactionConfirm extends React.Component {
     
@@ -46,7 +47,7 @@ export default class TransactionConfirm extends React.Component {
                 </Trigger>
                 <div className="grid-block vertical">
                     <div className="shrink grid-block">
-                        <h3>Please confirm transaction</h3>
+                        <Translate component="h3" content="transaction.confirm" />
                     </div>
 
                     <div className="grid-block" style={{maxHeight: "60vh"}}>
@@ -62,7 +63,7 @@ export default class TransactionConfirm extends React.Component {
                     </div>
                     <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
                         <div className="grid-content button-group">
-                            <a className="button success" href onClick={this._confirmPress.bind(this)}>Confirm</a>
+                            <a className="button success" href onClick={this._confirmPress.bind(this)}><Translate content="transfer.confirm" /></a>
                             <Trigger close="transaction_confim_modal">
                                 <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                             </Trigger>
@@ -78,13 +79,14 @@ export default class TransactionConfirm extends React.Component {
     _confirmPress() {
         ZfApi.publish("transaction_confim_modal", "close");
         this.state.tr.broadcast().then( ()=> {
-            notify.success("Transaction broadcasted");
+
+            notify.success(counterpart.translate("transaction.broadcast_success"));
             this.state.resolve();
             this.reset();
         }).catch( error => {
             console.log("TransactionConfirm broadcast error", error);
             var message = error;
-            notify.error("Transaction broadcast error: ", message);
+            notify.error(counterpart.translate("transaction.broadcast_success", {message: message}));
             this.state.reject(error);
             this.reset();
         });
