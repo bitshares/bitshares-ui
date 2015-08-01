@@ -7,7 +7,6 @@ import AccountActions from "actions/AccountActions";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import FormattedAsset from "../Utility/FormattedAsset";
-import Wallet from "components/Wallet/Wallet";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import utils from "common/utils";
@@ -15,6 +14,7 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import debounce from "lodash.debounce";
 import AccountInfo from "../Account/AccountInfo";
 import LoadingIndicator from "../LoadingIndicator";
+import WalletDb from "../stores/WalletDb";
 
 class AccountAssets extends React.Component {
     constructor() {
@@ -76,10 +76,13 @@ class AccountAssets extends React.Component {
 
     _createAsset(account_id, e) {
         e.preventDefault();
+        if( WalletDb.isLocked()) {
+            notify.error("Wallet is locked");
+            return;
+        }
         ZfApi.publish("create_asset", "close");
         let {create} = this.state;
         AssetActions.createAsset(account_id, create).then(result => {
-            
             if (result) {
                 notify.addNotification({
                     message: `Successfully created the asset ${create.symbol}`,//: ${this.state.wallet_public_name}
@@ -102,12 +105,15 @@ class AccountAssets extends React.Component {
 
     _issueAsset(account_id, e) {
         e.preventDefault();
+        if( WalletDb.isLocked()) {
+            notify.error("Wallet is locked");
+            return;
+        }
         ZfApi.publish("issue_asset", "close");
         let {issue} = this.state;
         let asset = this.props.assets.get(issue.asset_id);
         issue.amount *= utils.get_asset_precision(asset.precision);
         AssetActions.issueAsset(account_id, issue).then(result => {
-            
             if (result) {
                 notify.addNotification({
                     message: `Successfully issued ${utils.format_asset(issue.amount, this.props.assets.get(issue.asset_id))}`,//: ${this.state.wallet_public_name}
@@ -148,17 +154,17 @@ class AccountAssets extends React.Component {
         let account = cachedAccounts.get(account_name);
         let {issue} = this.state;
 
-
         let accountExists = true;
         if (!account) {
             return <LoadingIndicator type="circle"/>;
         } else if (account.notFound) {
             accountExists = false;
-        } 
+        }
         if (!accountExists) {
             return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
 
+        let isMyAccount = account.my_account;
 
         let myAssets = assets.filter(asset => {
             return asset.issuer === account.id;
@@ -175,23 +181,23 @@ class AccountAssets extends React.Component {
                         <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset} /></td>
                         <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset} /></td>
                         <td>{asset.precision}</td>
-                        <td>                        
-                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">Issue Asset</button>
-                        </td>
+                        {isMyAccount ?
+                            (<td>
+                                <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">Issue Asset</button>
+                            </td>) : null}
                     </tr>
                 );
         }).toArray();
 
         let autoCompleteAccounts = searchAccounts.filter(a => {
-            return a.indexOf(this.state.searchTerm) !== -1; 
+            return a.indexOf(this.state.searchTerm) !== -1;
         });
 
         return (
             <div className="grid-content">
-                <Wallet>
                     <div className="content-block">
                         <h3>Issued Assets</h3>
-                        
+
                         <div>
                             <table className="table">
                                 <thead>
@@ -203,7 +209,7 @@ class AccountAssets extends React.Component {
                                     <Translate component="th" content="markets.supply" />
                                     <th>Max Supply</th>
                                     <th>Precision</th>
-                                    <th>{/* Issue asset button */}</th>
+                                    {isMyAccount ? <th>{/* Issue asset button */}</th> : null}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -212,14 +218,15 @@ class AccountAssets extends React.Component {
                             </table>
                         </div>
                     </div>
-                    
-                    <div className="content-block">
-                        <div className="actions clearfix">
-                            <Trigger open="create_asset">
-                                <button className="button">Create New Asset</button>
-                            </Trigger>
-                        </div>
-                    </div>
+
+                    {isMyAccount ?
+                        (<div className="content-block">
+                            <div className="actions clearfix">
+                                <Trigger open="create_asset">
+                                    <button className="button">Create New Asset</button>
+                                </Trigger>
+                            </div>
+                        </div>) : null}
 
                     <Modal id="create_asset" overlay={true}>
                         <Trigger close="create_asset">
@@ -271,8 +278,8 @@ class AccountAssets extends React.Component {
                                             options={autoCompleteAccounts}
                                             initial_value={issue.to}
                                             onChange={this._onIssueInput.bind(this, "amount")}
-                                        />                                        
-                                    </div>  
+                                        />
+                                    </div>
                                 </div>
                                 { issue.to_id ?
                                     <AccountInfo account_name={issue.to} account_id={issue.to_id} image_size={{height: 100, width: 100}}/> :
@@ -291,7 +298,6 @@ class AccountAssets extends React.Component {
                             </form>
                         </div>
                     </Modal>
-                </Wallet>
             </div>
         );
     }
