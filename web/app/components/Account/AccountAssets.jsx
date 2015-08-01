@@ -14,7 +14,7 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import debounce from "lodash.debounce";
 import AccountInfo from "../Account/AccountInfo";
 import LoadingIndicator from "../LoadingIndicator";
-import WalletDb from "../stores/WalletDb";
+import WalletDb from "stores/WalletDb";
 
 class AccountAssets extends React.Component {
     constructor() {

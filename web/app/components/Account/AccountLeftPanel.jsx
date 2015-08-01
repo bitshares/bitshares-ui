@@ -8,7 +8,6 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
 import Immutable from "immutable";
-import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
 
 class AccountLeftPanel extends React.Component {
