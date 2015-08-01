@@ -152,6 +152,11 @@ table > tbody > tr.control-row > td {
   }
 }
 
+.modal {
+  max-width: 700px;
+  border-radius: 0px;
+}
+
 div.modal {
   overflow: visible !important;
 }
@@ -162,4 +167,8 @@ div.modal {
 
 .full-width-content > * {
   width: 100%;
+}
+
+.op-table > tbody > tr > td:first-child {
+  min-width: 12rem;
 }

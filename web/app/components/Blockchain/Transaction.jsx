@@ -54,9 +54,9 @@ class OperationTable extends React.Component {
     render() {
 
         return (
-            <div>
+            <div style={{display: "table"}}>
                 <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6>
-                <table style={{marginBottom: "1em"}} className="table">
+                <table style={{marginBottom: "1em"}} className="table op-table">
                     <caption></caption>
                     <tbody>
                         <OpType type={this.props.type} color={this.props.color}/>
@@ -699,7 +699,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.balance_owner" />:</td>
-                            <td>{op[1].balance_owner_key}</td>
+                            <td style={{fontSize: "80%"}}>{op[1].balance_owner_key}</td>
                         </tr>
                     );
                     rows.push(
@@ -735,11 +735,9 @@ class Transaction extends React.Component {
         });
 
         return (
-            <div className="grid-block">
-                <div className="grid-content">
-                    <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5>
-                    {info}
-                </div>
+            <div className="grid-content">
+                <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5>
+                {info}
             </div>
         );
     }

@@ -41,31 +41,35 @@ export default class TransactionConfirm extends React.Component {
         var account_id_to_name = AccountStore.getState().account_id_to_name
         
         return (
+            <div className="large">
             <Modal id="transaction_confim_modal" ref="modal" overlay={true}>
                 <Trigger close="">
                     <a href className="close-button">&times;</a>
                 </Trigger>
-                <div className="grid-block vertical">
-                    <div className="shrink grid-content">
+                <div className="grid-frame vertical">
+                    <div className="shrink grid-block">
                         <h3>Please confirm transaction</h3>
                     </div>
-                    
-                    {this.state.trx ?
-                    <Transaction key={1} trx={this.state.trx} index={1}
-                        account_id_to_name={account_id_to_name}
-                        assets={assets} no_links={true}
-                        />
-                    :null}
 
-                    <div className="grid-content button-group no-overflow">
+                    <div className="grid-block">
+                        {this.state.trx ?
+                            <Transaction key={0} trx={this.state.trx} index={0}
+                                account_id_to_name={account_id_to_name}
+                                assets={assets} no_links={true}
+                                />
+                            : null}
+                    </div>
+                    <div className="grid-block shrink" style={{paddingTop: "0.5rem", paddingBottom: "2rem"}}>
                         <a className="button" href onClick={this._confirmPress.bind(this)}>Confirm</a>
                         &nbsp; &nbsp;
                         <Trigger close="transaction_confim_modal">
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
                     </div>
+
                 </div>
             </Modal>
+            </div>
         )
     }
     
