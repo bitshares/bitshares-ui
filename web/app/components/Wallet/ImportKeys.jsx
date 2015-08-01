@@ -175,7 +175,6 @@ class ImportKeys extends Component {
                             <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
                                 Import
                             </div>
-                            &nbsp; &nbsp;
                             <div className="button secondary" onClick={this.reset.bind(this)}>
                                 Cancel
                             </div>

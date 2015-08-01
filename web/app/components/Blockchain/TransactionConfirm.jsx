@@ -60,12 +60,13 @@ export default class TransactionConfirm extends React.Component {
                             />
                             : null}
                     </div>
-                    <div className="grid-block shrink" style={{paddingTop: "0.5rem", paddingBottom: "2rem"}}>
-                        <a className="button success" href onClick={this._confirmPress.bind(this)}>Confirm</a>
-                        &nbsp; &nbsp;
-                        <Trigger close="transaction_confim_modal">
-                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
-                        </Trigger>
+                    <div className="grid-block shrink" style={{paddingTop: "0.5rem"}}>
+                        <div className="button-group">
+                            <a className="button success" href onClick={this._confirmPress.bind(this)}>Confirm</a>
+                            <Trigger close="transaction_confim_modal">
+                                <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                            </Trigger>
+                        </div>
                     </div>
 
                 </div>

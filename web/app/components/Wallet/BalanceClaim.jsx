@@ -129,7 +129,6 @@ export default class BalanceClaim extends Component {
                             >
                                 {claim_balance_label}
                             </div>
-                            &nbsp;&nbsp;
                             <div className="button secondary"
                                     onClick={this._setClaimActive.bind(this, false)}
                                     >Cancel
