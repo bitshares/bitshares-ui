@@ -189,26 +189,26 @@ class MarketsActions {
         let uniqueExpiration = addSeconds(expiration);
         console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
 
-        var order = {
-            expiration: uniqueExpiration,
-            for_sale: sellAmount,
-            id: "unknown", // order ID unknown until server reply. TODO: populate ASAP, for cancels. Is never populated
-            sell_price: {
-                base: {
-                    amount: sellAmount,
-                    asset_id: sellAssetID
-                },
-                quote: {
-                    amount: buyAmount,
-                    asset_id: buyAssetID
-                }
-            },
-            seller: account
-        };
+        // var order = {
+        //     expiration: uniqueExpiration,
+        //     for_sale: sellAmount,
+        //     id: "unknown", // order ID unknown until server reply. TODO: populate ASAP, for cancels. Is never populated
+        //     sell_price: {
+        //         base: {
+        //             amount: sellAmount,
+        //             asset_id: sellAssetID
+        //         },
+        //         quote: {
+        //             amount: buyAmount,
+        //             asset_id: buyAssetID
+        //         }
+        //     },
+        //     seller: account
+        // };
 
         // console.log("sellamount " + sellAmount + ". sellID " + sellAssetID + ". buyAmount " + buyAmount + ". buyID " + buyAssetID);
 
-        this.dispatch({newOrder: order});
+        // this.dispatch({newOrder: order});
 
         // TODO: enable the optimistic dispatch. It causes the order to appear twice, due to the subscription to market
         // this.dispatch({newOrderID: epochTime, order: order});

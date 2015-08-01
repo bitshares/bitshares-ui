@@ -19,6 +19,7 @@ import {Link} from "react-router";
 import Wallet from "components/Wallet/Wallet";
 import BlockchainStore from "stores/BlockchainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
+import WalletDb from "stores/WalletDb";
 
 require("./exchange.scss");
 
@@ -67,6 +68,11 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
+        if( WalletDb.isLocked()) {
+            notify.error("Wallet is locked");
+            return;
+        }
+
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
@@ -258,11 +264,8 @@ class Exchange extends React.Component {
 
         return (
 
-            <div className="grid-block vertical no-overflow">
-                <Wallet>
-
-                {/* Main vertical block with content */}
                 <div className="grid-block page-layout market-layout">
+                {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
                     <div className="grid-block left-column small-3 medium-2" style={{overflowY: "auto", justifyContent: "center"}}>
@@ -281,7 +284,7 @@ class Exchange extends React.Component {
                     </div>
 
                     {/* Center Column */}
-                    <div className="block grid-block main-content vertical small-9 medium-10 large-8">
+                    <div className="block grid-block main-content no-overflow vertical small-9 medium-10 large-8">
 
                         {/* Top bar with info */}
                         <div className="grid-block shrink">
@@ -395,7 +398,7 @@ class Exchange extends React.Component {
                                     /> : null}
                         </div>
 
-                        <div className="grid-block" style={{minHeight: "20rem"}}>
+                        <div className="grid-block no-overflow" style={{minHeight: "20rem"}}>
                             {limit_orders.size > 0 && base && quote ? <MyOpenOrders
                                 key="open_orders"
                                 orders={limit_orders}
@@ -425,8 +428,6 @@ class Exchange extends React.Component {
 
                 {/* End of Second Vertical Block */}
                 </div>
-                </Wallet>
-            </div>
         );
     }
 }
