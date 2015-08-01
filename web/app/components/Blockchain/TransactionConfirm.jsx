@@ -86,7 +86,7 @@ export default class TransactionConfirm extends React.Component {
         }).catch( error => {
             console.log("TransactionConfirm broadcast error", error);
             var message = error;
-            notify.error(counterpart.translate("transaction.broadcast_success", {message: message}));
+            notify.error(counterpart.translate("transaction.broadcast_fail", {message: message}));
             this.state.reject(error);
             this.reset();
         });

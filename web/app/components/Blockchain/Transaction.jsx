@@ -135,13 +135,13 @@ class Transaction extends React.Component {
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
                 case "transfer":
-                    console.log("op:", op);
+                    // console.log("op:", op);
 
                     color = "success";
                     let missingAccounts = this.getAccounts([op[1].from, op[1].to]);
                     let missingAssets = this.getAssets([op[1].amount.asset_id]);
 
-                    console.log("missingAccounts:", missingAccounts);
+                    // console.log("missingAccounts:", missingAccounts);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
@@ -166,26 +166,28 @@ class Transaction extends React.Component {
                 case "limit_order_create":
                     color = "warning";
                     let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                    let missingAccounts = this.getAccounts([op[1].seller]);
+
                     rows.push(
-                        <tr>
+                        <tr key="1">
                             <td><Translate component="span" content="transaction.amount_sell" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="2">
                             <td><Translate component="span" content="transaction.min_receive" />:</td>
                             <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="3">
                             <td><Translate component="span" content="transaction.seller" />:</td>
-                            <td>{account_id_to_name[op[1].seller] ? <Link to="account" params={{account_name: account_id_to_name[op[1].seller]}}>{account_id_to_name[op[1].seller]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].seller]}}>{account_id_to_name[op[1].seller]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="4">
                             <td><Translate component="span" content="transaction.expiration" />:</td>
                             <td>
                                 <FormattedDate
