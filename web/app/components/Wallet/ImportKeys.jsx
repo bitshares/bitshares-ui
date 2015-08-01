@@ -36,6 +36,7 @@ class ImportKeys extends Component {
                 wifs_to_account: null,
                 wif_to_balances: null
             },
+            no_file: true,
             wif_count: 0,
             account_keys: [],
             wifs_to_account: {},
@@ -109,69 +110,77 @@ class ImportKeys extends Component {
                 </div>
                 <br/>
                 <div>
-                    {this.state.wif_count ? "" : <div>
-                        <div>
+                    {!this.state.wif_count ?
+                        (<div>
                             <div>
-                                <input
-                                    type="file" id="file_input"
-                                    key={this.state.reset_file_name}
-                                    onChange={this.upload.bind(this)}
-                                />
+                                <div>
+                                    <input
+                                        type="file" id="file_input"
+                                        key={this.state.reset_file_name}
+                                        onChange={this.upload.bind(this)}
+                                    />
+                                </div>
                             </div>
-                            
-                        </div>
-                        <br/>
-                        <div>
-                            <input 
-                                type="password" ref="password"
-                                key={this.state.reset_password}
-                                placeholder={password_placeholder}
-                                onChange={this._decryptPrivateKeys.bind(this)}
-                            />
-                            <div>{this.state.import_password_message}</div>
-                            <div>{this.state.wif_text_message}</div>
-                        </div>
-                    </div>}
+                            <br/>
+
+                            {!this.state.no_file ?
+                                (<div>
+                                    <input
+                                        type="password" ref="password"
+                                        key={this.state.reset_password}
+                                        placeholder={password_placeholder}
+                                        onChange={this._decryptPrivateKeys.bind(this)}
+                                    />
+                                    <div>{this.state.import_password_message}</div>
+                                    <div>{this.state.wif_text_message}</div>
+                                </div>) : null}
+
+                        </div>) : null}
                     
                 </div>
-                                {this.state.keys.wif_count ? <div>
-                                    {account_rows ? <div>
-                                        <div>
-                                            {account_rows.length ? <div>
-                                                <table className="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style={{textAlign: "center"}}>Account</th>
-                                                            <th style={{textAlign: "center"}}># of keys</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {account_rows}
-                                                    </tbody>
-                                                </table>
-                                            </div> : "No Accounts"}
-                                        </div>
-                                    </div> : null}
-                                    
-                                    <br/>
-                                    <h3>Unclaimed balances belonging to these keys:</h3>
-                                    {balance_rows ? <div>
-                                        <div>
-                                            <label>Assets</label>
-                                            {balance_rows.length ? balance_rows : "No Balances"}
-                                        </div>
-                                    </div> : null}
-                                    <br/>
-                                    <div className="button-group">
-                                        <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
-                                            Import
-                                        </div>
-                                        &nbsp; &nbsp;
-                                        <div className="button secondary" onClick={this.reset.bind(this)}>
-                                            Cancel
-                                        </div>
-                                    </div>
-                                </div> : null}
+
+                {this.state.keys.wif_count ? 
+                    (<div>
+                        {account_rows ? 
+                        (<div>
+                            <div>
+                                {account_rows.length ? <div>
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th style={{textAlign: "center"}}>Account</th>
+                                                <th style={{textAlign: "center"}}># of keys</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {account_rows}
+                                        </tbody>
+                                    </table>
+                                </div> : "No Accounts"}
+                            </div>
+                        </div>) : null}
+                        <br/>
+
+                        <h3>Unclaimed balances belonging to these keys:</h3>
+                        {balance_rows ? 
+                            (<div>
+                                <div>
+                                    <label>Assets</label>
+                                    {balance_rows.length ? balance_rows : "No Balances"}
+                                </div>
+                            </div>) : null}
+                        <br/>
+                        
+                        <div className="button-group">
+                            <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
+                                Import
+                            </div>
+                            &nbsp; &nbsp;
+                            <div className="button secondary" onClick={this.reset.bind(this)}>
+                                Cancel
+                            </div>
+                        </div>
+                    </div>) : null}
             </div>
         );
     }
@@ -296,7 +305,6 @@ class ImportKeys extends Component {
     upload(evt) {
         var file = evt.target.files[0]
         var reader = new FileReader()
-        this.setState({import_password_message: null})
         reader.onload = evt => {
             var contents = evt.target.result
             try {
@@ -312,12 +320,13 @@ class ImportKeys extends Component {
                 this._decryptPrivateKeys()
                 
             } catch(message) {
-                console.log("... ImportKeys upload error",message)
+                console.log("... ImportKeys upload error", message)
                 this.setState({import_password_message: message})
             }
         }
-        reader.readAsText(file)
-        React.findDOMNode(this.refs.password).focus()
+        reader.readAsText(file);
+        this.setState({import_password_message: null, no_file: false});
+
     }
     
     _parseImportKeyUpload(contents, file) {
@@ -491,7 +500,6 @@ class ImportKeys extends Component {
             import_password_message: null,
             password_checksum: null
         })
-        
     }
 
     _saveImport() {
