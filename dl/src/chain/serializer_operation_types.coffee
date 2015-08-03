@@ -34,6 +34,9 @@ When updating generated code
 Replace:  operation = static_variant [
 with:     operation.st_operations = [
 
+replace: sha256 
+with: bytes 32
+
 Delete:
 operation  = new Serializer( 
     "operation "
@@ -920,7 +923,7 @@ transfer_to_blind = new Serializer(
     fee: asset
     amount: asset
     from: protocol_id_type "account"
-    blinding_factor: sha256
+    blinding_factor: bytes 32
     outputs: array blind_output
 )
 
@@ -942,7 +945,7 @@ transfer_from_blind = new Serializer(
     fee: asset
     amount: asset
     to: protocol_id_type "account"
-    blinding_factor: sha256
+    blinding_factor: bytes 32
     inputs: array blind_input
 )
 
