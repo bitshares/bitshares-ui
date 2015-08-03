@@ -35,6 +35,7 @@ var iDB = (function () {
             };
 
             openRequest.onerror = function (e) {
+                console.log("indexedDB open",e)
                 reject(e.target.error);
             };
 
