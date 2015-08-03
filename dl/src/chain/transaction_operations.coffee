@@ -81,12 +81,16 @@ _my.signed_transaction = ->
             if(@expiration == 0)
                 @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
         
-            resolve lookup.resolve().then ()=>
-                for op in @operations
-                    if op[1]["finalize"]
-                        op[1].finalize()
-                @tr_buffer = type.transaction.toBuffer @
-                return
+            resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
+                @ref_block_num = r[0].head_block_number
+                @ref_block_prefix =  new Buffer(r[0].head_block_id, 'hex').readUInt32LE(4)
+                #DEBUG console.log("ref_block",@ref_block_num,@ref_block_prefix,r)
+                lookup.resolve().then ()=>
+                    for op in @operations
+                        if op[1]["finalize"]
+                            op[1].finalize()
+                    @tr_buffer = type.transaction.toBuffer @
+                    return
             return
     
     get_required_signatures:(available_keys)->
