@@ -308,22 +308,18 @@ class WalletDb {
                 )
             }
             
-            this.setWalletModified(transaction).catch(
+            var p = this.setWalletModified(transaction).catch(
                 error => reject(error)
             ).then( ()=> {
-                var p = Promise.all(promises).catch( error => {
+                return Promise.all(promises).catch( error => {
                     //DEBUG
                     console.log('importKeys transaction.abort', error)    
-                    transaction.abort()
                     throw error
-                    //var message = error
-                    //try { message = error.target.error.message } catch(e) { }
-                    //return message
                 }).then( private_key_ids => {
                     return {import_count, duplicate_count, private_key_ids}
                 })
-                resolve(p)
             })
+            resolve(p)
         })
     }
 

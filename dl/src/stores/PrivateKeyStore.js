@@ -46,7 +46,7 @@ class PrivateKeyStore extends BaseStore {
                 // ignore_duplicates
                 var error = event.target.error
                 if( error.name != 'ConstraintError' ||
-                    error.message.indexOf('by_pubkey') == -1
+                    error.message.indexOf('by_encrypted_key') == -1
                 ) { throw event  }
                 duplicate = true
                 event.preventDefault()

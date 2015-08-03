@@ -312,7 +312,7 @@ class ImportKeys extends Component {
                 try {
                     this._parseWalletJson(contents)
                 } catch(e) {
-                    console.log("... _parseWalletJson",e)
+                    //DEBUG console.log("... _parseWalletJson",e)
                     this._parseImportKeyUpload(contents, file) 
                 }
                 // try empty password, also display "Enter import file password"
@@ -368,6 +368,10 @@ class ImportKeys extends Component {
         
         try {
             var wallet_json = JSON.parse(contents)
+            if(! Array.isArray(wallet_json)) {
+                //DEBUG console.log('... wallet_json',wallet_json)
+                throw new Error("Invalid wallet format")
+            }
             for(let element of wallet_json) {
                 
                 if( "key_record_type" == element.type &&
@@ -506,8 +510,11 @@ class ImportKeys extends Component {
             notify.error("Wallet is locked")
             return
         }
+        
+        var cachedAccounts = AccountStore.getState().cachedAccounts
         for(let account_name in this.state.account_keycount) {
-            AccountStore.onCreateAccount(account_name)
+            if( ! cachedAccounts.get(account_name))
+                AccountStore.onCreateAccount(account_name)
         }
         
         var wifs_to_account = this.state.keys.wifs_to_account
@@ -554,8 +561,10 @@ class ImportKeys extends Component {
             }
             
         }).catch( error => {
-            console.log("error:", error);
-            notify.error(`There was an error: ${error}`)
+            console.log("error:", error)
+            var message = error
+            try { message = error.target.error.message } catch (e){}
+            notify.error(`Key import error: ${message}`)
         })
     }
 
