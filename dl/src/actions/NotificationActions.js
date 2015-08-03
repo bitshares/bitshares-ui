@@ -11,6 +11,7 @@ class NotificationActions {
     success(notification) {
         notification = normalize(notification)
         notification.level = 'success'
+        notification.position = 'br' //bottom right
         this.dispatch(notification)
     }
     
