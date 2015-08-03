@@ -4,7 +4,7 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        de: "Deutsch"        
+        de: "Deutsch"
     },
     header: {
         title: "Graphene UI",
@@ -102,7 +102,7 @@ module.exports = {
         errors: {
             req: "Plfichtfeld",
             pos: "Betrag darf nicht negativ sein",
-            valid: "Bitte geben Sie einen positiven Betrag ein"
+            valid: "Bitte geben Sie einen positiven Betrag ein",
             balance: "Ihr abschließendes Guthaben kann nicht negativ sein!"
         },
         back: "ZURÜCK",
@@ -276,7 +276,7 @@ module.exports = {
             precision: "Genauigkeit"
         },
         asset: {
-            title: "Asset"
+            title: "Asset",
             not_found: "Das Asset %(name)s existiert nicht"
         },
         witnesses: {
