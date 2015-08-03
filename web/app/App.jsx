@@ -1,3 +1,4 @@
+import "./assets/loader";
 import React from "react";
 import Router from "react-router";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
@@ -58,7 +59,6 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
-require("./assets/loader");
 
 const { Route, RouteHandler, DefaultRoute } = Router;
 
