@@ -17,6 +17,9 @@ import helper from "./test_helper"
 
 var _catch = th.log_error
 
+// Confirm only works when there is a UI
+WalletDb.confirm_transactions = false
+
 describe( "wallet_actions", ()=> {
     
     var api
