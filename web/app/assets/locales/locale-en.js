@@ -332,7 +332,8 @@ module.exports = {
     markets: {
         choose_base: "Choose base asset",
         filter: "Filter",
-        core_rate: "Core rate:",
-        supply: "Supply"
+        core_rate: "Core rate",
+        supply: "Supply",
+        search: "Search"
     }
 };

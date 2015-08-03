@@ -9,7 +9,10 @@ import Markets from "./Markets";
 class MarketsContainer extends React.Component {
 
     componentDidMount() {
-        AssetActions.getAssetList("A", 100);
+        AssetActions.getAssetList("B", 100);
+        AssetActions.getAssetList("E", 100);
+        AssetActions.getAssetList("M", 100);
+        AssetActions.getAssetList("U", 100);
     }
 
     render() {
