@@ -8,21 +8,16 @@ var Apis = (function () {
     var db_api;
     var network_api;
     var history_api;
-    var indexedDB;
     
     function init() {
-        //console.log("[ApiInstances.js] ----- init ----->");
-        //var WEBSOCKET_URL = process.env.WEBSOCKET_URL || "ws://localhost:8090"
-        //console.log('WEBSOCKET_URL\t',WEBSOCKET_URL)
-        
-        // uncomment the following line to use the internal testnet instead of a localhost witness node
-        //  ws_rpc = new WebSocketRpc("ws://104.200.28.117:8090");
         let hostname = "localhost";
-        try { hostname = window.location.hostname } catch(e) {}
-        ws_rpc = new WebSocketRpc("ws://" + hostname + ":8090");
-        // ws_rpc = new WebSocketRpc("ws://graphene.cryptonomex.com:8090")
-        //ws_rpc = new WebSocketRpc("wss://104.131.205.149:8090")
-        
+        let protocol = "https:";
+        try {
+            hostname = window.location.hostname;
+            protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        } catch(e) {}
+        ws_rpc = new WebSocketRpc(protocol + hostname + ":8090");
+
         var init_promise = ws_rpc.login("", "").then(() => {
             db_api = new GrapheneApi(ws_rpc, "database");
             network_api = new GrapheneApi(ws_rpc, "network_broadcast");

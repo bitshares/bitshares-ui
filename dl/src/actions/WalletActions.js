@@ -9,7 +9,7 @@ import lookup from "chain/lookup"
 var alt = require("../alt-instance")
 var application_api = new ApplicationApi()
 var api = Apis.instance()
-var fetch = require('node-fetch')
+//var fetch = require('node-fetch')
 
 class WalletActions {
 
@@ -69,10 +69,13 @@ class WalletActions {
             return create_account_with_brain_key();
         } else {
             // using faucet
-            let hostname = "localhost";
-            try { hostname = window.location.hostname } catch (e) {}
+            let hostname = "localhost", protocol;
+            try {
+                hostname = window.location.hostname;
+                protocol = window.location.protocol === "https:" ? "https://" : "http://";
+            } catch(e) {}
             let port = hostname === "localhost" ? ":3000" : "";
-            let create_account_promise = fetch("http://" + hostname + port + "/api/v1/accounts", {
+            let create_account_promise = fetch(protocol + hostname + port + "/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',
                 headers: {

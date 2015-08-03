@@ -1,5 +1,4 @@
 import React from "react";
-import forms from "newforms";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";

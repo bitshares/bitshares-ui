@@ -2,15 +2,15 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-if(process.env.PROD){
-    console.log("PRODUCTION mode");
-}
-else if(process.env.TEST){
-    console.log("TEST mode");
-}
-else{
-    console.log("DEVELOPMENT mode");
-}
+//if(process.env.PROD){
+//    console.log("PRODUCTION mode");
+//}
+//else if(process.env.TEST){
+//    console.log("TEST mode");
+//}
+//else{
+//    console.log("DEVELOPMENT mode");
+//}
 
 var config = {
     entry: path.resolve(__dirname, "app/App.jsx"),
