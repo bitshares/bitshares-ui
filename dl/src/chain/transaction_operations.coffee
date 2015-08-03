@@ -82,7 +82,7 @@ _my.signed_transaction = ->
                 @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
         
             resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
-                @ref_block_num = r[0].head_block_number
+                @ref_block_num = r[0].head_block_number && 0xFFFF
                 @ref_block_prefix =  new Buffer(r[0].head_block_id, 'hex').readUInt32LE(4)
                 #DEBUG console.log("ref_block",@ref_block_num,@ref_block_prefix,r)
                 lookup.resolve().then ()=>
