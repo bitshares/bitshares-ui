@@ -11,7 +11,7 @@ var Apis = (function () {
     
     function init() {
         let hostname = "localhost";
-        let protocol = "https:";
+        let protocol = "ws:";
         try {
             hostname = window.location.hostname;
             protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
