@@ -145,7 +145,7 @@ export default class BalanceClaim extends Component {
     
     loadBalances() {
         BalanceClaimStore.getBalanceClaims().then( balance_claims => {
-                this.balanceByAssetName(balance_claims).then( balance_by_asset => {
+            this.balanceByAssetName(balance_claims).then( balance_by_asset => {
                 this.setState({balance_claims, balance_by_asset})
             })
         }).catch( error => {
