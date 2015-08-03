@@ -41,6 +41,14 @@ class Assets extends React.Component {
                     <td>{account ? <Link to="account" params={{account_name: account}}>{account} </Link> : asset.issuer}</td>
                 </tr>
             );
+        }).sort((a, b) => {
+            if (a.key > b.key) {
+                return 1;
+            } else if (a.key < b.key) {
+                return -1;
+            } else {
+                return 0;
+            }
         }).toArray();
 
         let mia = assets.filter(a => {
@@ -55,6 +63,14 @@ class Assets extends React.Component {
                     <td>{account ? <Link to="account" params={{account_name: account}}>{account} </Link> : asset.issuer}</td>
                 </tr>
             );
+        }).sort((a, b) => {
+            if (a.key > b.key) {
+                return 1;
+            } else if (a.key < b.key) {
+                return -1;
+            } else {
+                return 0;
+            }
         }).toArray();
 
         return (
