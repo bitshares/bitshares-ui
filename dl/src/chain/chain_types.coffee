@@ -69,3 +69,6 @@ ChainTypes.operations=
     assert: 34
     balance_claim: 35
     override_transfer: 36
+    transfer_to_blind: 37
+    blind_transfer: 38
+    transfer_from_blind: 39
