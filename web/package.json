@@ -16,7 +16,7 @@
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
-    "build": "node ./node_modules/webpack/bin/webpack.js --progress --colors"
+    "build": "node ./node_modules/webpack/bin/webpack.js --progress --colors --optimize-minimize"
   },
   "dependencies": {
     "alt": "~0.17.1",
@@ -37,9 +37,7 @@
     "lodash.clonedeep": "^3.0.1",
     "lodash.debounce": "^3.0.1",
     "lzma": "2.1.6",
-    "newforms": "^0.12.1",
     "node-fetch": "^1.3.1",
-    "node-libs-browser": "^0.5.0",
     "node-sass": "^3.0.0",
     "perfect-scrollbar": "^0.6.2",
     "react": "~0.13.2",

@@ -4,7 +4,7 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        de: "Deutsch"        
+        de: "Deutsch"
     },
     header: {
         title: "Graphene UI",
@@ -22,34 +22,88 @@ module.exports = {
         hour_24: "24hr Wechsel",
         recent: "Letzte Aktivität",
         name: "Konto Name",
+        more: "mehr",
         member: {
             stats: "Mitgliederstatistiken",
             join: "Beitritt am",
             reg: "Registriert von",
             ref: "Empfohlen von",
+            ref_percentage: "Prozent für Werbenden",
+            network_percentage: "Prozent für Netzwerk",
+            fees_paid: "Ingesamt bezahlte Gebühren",
+            fees_pending: "Anstehende Gebühren",
+            fees_vested: "Anstehnde Gebühren in Sperrfristguthaben",
+            in_orders: "Insgesamt %(core_asset)s in Anweisungen",
             referrals: "Empfehlungen",
             rewards: "Belohnungen",
             cashback: "Skonto",
             vested: "Zugesichert"
         },
+        user_issued_assets: {
+            symbol: "Symbol",
+            name: "Asset Name",
+            description: "Beschreibung",
+            max_supply: "Maximale Verfügbarkeit",
+            precision: "Genauigkeit",
+            to: "An Konto emittieren"
+        },
         connections: {
             known: "Bekannt von",
             "black": "Schwarzgelistet von"
+        },
+        perm: {
+            active: "Aktive Berechitigungen",
+            owner: "Eigentümer Berechtigungen",
+            publish: "Änderungen veröffentlichen",
+            reset: "Zurücksetzen",
+            add: "Berechtigung hinzufügen",
+            type: "Typ",
+            key: "Schlüssel/Name",
+            weight: "Gewicht",
+            threshold: "Schwellwert",
+            confirm_add: "Hinzufügen",
+            cancel: "Abbrechen"
+        },
+        votes: {
+            proxy: "Abstimmkonto vermitteln",
+            name: "Name",
+            info: "Info",
+            support: "Support",
+            workers: "Budgetpunkte"
+        },
+        upgrade: "Konto erweitern",
+        unlink: "Trennen",
+        link: "Verdinden",
+        pay: "Bezahlen",
+        overview: "Übersicht",
+        history: "Historie",
+        payees: "Empfänger",
+        permissions: "Berechitigungen",
+        voting: "Abstimmung",
+        orders: "Anweisungen",
+        select_placeholder: "Konto auswählen...",
+        errors: {
+            not_found: "Das Konto %(name)s existiert nicht. Bitte prüfgen Sie die Schreibweise!"
         }
+    },
+    pagination: {
+        newer: "Jüngere",
+        older: "Ältere"
     },
     transfer: {
         from: "Von",
         amount: "Betrag",
-        to: "An",
-        memo: "Notiz",
+        to: "Zu",
+        memo: "Memo",
         fee: "Gebühr",
         send: "Senden",
-        final: "Endguthaben",
+        final: "Abschließendes Guthaben",
         balances: "Guthaben",
         errors: {
             req: "Plfichtfeld",
             pos: "Betrag darf nicht negativ sein",
-            valid: "Bitte geben Sie einen positiven Betrag ein"
+            valid: "Bitte geben Sie einen positiven Betrag ein",
+            balance: "Ihr abschließendes Guthaben kann nicht negativ sein!"
         },
         back: "ZURÜCK",
         confirm: "BESTÄTIGEN",
@@ -58,6 +112,9 @@ module.exports = {
         see: "ÜBERWEISUNGSÜBERSICHT"
     },
     transaction: {
+        confirm: "Bitte bestätigen Sie die Transaktion",
+        broadcast_success: "Transaktion wurde übermittelt",
+        broadcast_fail: "Bei der Übermittlung der Transaction ist ein Fehler aufgetreten: %(message)s",
         sent: "Gesendet",
         to: "an",
         received: "Empfangen",
@@ -121,9 +178,14 @@ module.exports = {
         bond_accept_offer: "Ein Bondangebot wurde akzeptiert",
         bond_claim_collateral: "Eine Sicherheit wurde eingefordert",
         bond_pay_collateral: "Eine Sicherheit wurde bezahlt",
-        create_worker: "Ein Arbeiter wurde erzeugt. Bezahlung",
+        create_worker: "Ein Budgetpunkt wurde erzeugt. Bezahlung",
         custom: "Eine benutzerdefinierte Operation wurde definiert",
-        order_id: "Order ID",
+        order_id: "Anweisungskennung (ID)",
+        balance_claim: "Guthaben von %(balance_amount)s der Guthabenskennung (ID) #%(balance_id)s wurde beansprucht",
+        balance_owner: "Schlüssel des Guthabeneigentümers",
+        balance_id: "Guthabenskennung (ID)",
+        deposit_to: "Dem Konto gutgeschrieben",
+        claimed: "Ingesamt beantsprucht",
         trxTypes: {
             transfer: "Überweisung",
             limit_order_create: "Limit-Order",
@@ -158,7 +220,7 @@ module.exports = {
             delegate_update_global_parameters: "Globale Parameters aktualisiert",
             vesting_balance_create: "Sperrfristguthaben erstellt",
             vesting_balance_withdraw: "Sperrfristguthaben eingefordert",
-            worker_create: "Arbeiter erstellt",
+            worker_create: "Budgetpunkt erstellt",
             custom: "benutzerdefiniert",
             assert: "Assert Pperation",
             balance_claim: "Guthaben eingefordert",
@@ -214,7 +276,8 @@ module.exports = {
             precision: "Genauigkeit"
         },
         asset: {
-            title: "Asset"
+            title: "Asset",
+            not_found: "Das Asset %(name)s existiert nicht"
         },
         witnesses: {
             title: "Witnesses"
@@ -226,7 +289,7 @@ module.exports = {
             title: "Delegate"
         },
         workers: {
-            title: "Arbeiter"
+            title: "Budgetpunkte"
         },
         proposals: {
             title: "Vorschlag"
@@ -238,10 +301,38 @@ module.exports = {
     settings: {
         inverseMarket: "Bevorzugte Marktorientierung",
         unit: "Bevorzugte Rechnungseinheit",
-        confirmMarketOrder: "Ask for confirmation of market orders",
+        confirmMarketOrder: "Nach Bestätigung für Marktanweisungen fragen",
         locale: "Sprache wechseln",
-        confirm_yes: "Always",
-        confirm_no: "Never",
-        always_confirm: "Always ask for confirmation"
+        confirm_yes: "Immer",
+        confirm_no: "Nie",
+        always_confirm: "Für jede Transaction nach Bestätigung fragen"
+    },
+    footer: {
+        title: "Graphene",
+        block: "Spitzenblock"
+    },
+    exchange: {
+        price_history: "Preisverlauf",
+        order_depth: "Ordertiefe",
+        market_history: "Marktverlauf",
+        balance: "Guthaben",
+        total: "Ingesammt",
+        value: "Wert",
+        price: "Preis",
+        latest: "Letzer Preis",
+        call: "Call Preis",
+        volume: "Volumen",
+        spread: "Spread",
+        quantity: "Quantität",
+        buy: "Kaufen",
+        sell: "Verkaufen",
+        confirm_buy: "Bestätigen Sie die Anweisung: Kauf von %(buy_amount)s %(buy_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
+        confirm_sell: "Bestätigen Sie die Anweisung: Verkauf von %(sell_amount)s %(sell_symbol)s zum Preis von %(price_amount)s %(price_symbol)s"
+    },
+    markets: {
+        choose_base: "Wählen Sie Ihre Grundwährung (base)",
+        filter: "Filter",
+        core_rate: "Kernrate:",
+        supply: "Verfügbarkeit"
     }
 };

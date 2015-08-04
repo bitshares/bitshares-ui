@@ -315,7 +315,8 @@ module.exports = {
     markets: {
         choose_base: "Selectionner l'actif de base",
         filter: "Filtrer",
-        core_rate: "Taux de base:",
-        supply: "Réserve"
+        core_rate: "Taux de base",
+        supply: "Réserve",
+        search: "Chercher"
     }
 };

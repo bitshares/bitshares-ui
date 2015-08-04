@@ -112,6 +112,9 @@ module.exports = {
         see: "SEE MY TRANSFERS"
     },
     transaction: {
+        confirm: "Please confirm the transaction",
+        broadcast_success: "Transaction has been broadcast",
+        broadcast_fail: "Failed to broadcast the transaction: %(message)s",
         sent: "Sent",
         to: "to",
         received: "Received",
@@ -175,7 +178,7 @@ module.exports = {
         bond_accept_offer: "Accepted bond offer of",
         bond_claim_collateral: "Claimed collateral of",
         bond_pay_collateral: "Paid collateral of",
-        create_worker: "Created a worker with a pay of",
+        create_worker: "Created a budget item with a pay of",
         custom: "Created a custom operation",
         order_id: "Order ID",
         balance_claim: "Claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
@@ -217,7 +220,7 @@ module.exports = {
             delegate_update_global_parameters: "Global parameters update",
             vesting_balance_create: "Create vesting balance",
             vesting_balance_withdraw: "Withdraw vesting balance",
-            worker_create: "Create worker",
+            worker_create: "Create budget item",
             custom: "Custom",
             assert: "Assert operation",
             balance_claim: "Claim balance",
@@ -278,7 +281,7 @@ module.exports = {
         },
         witnesses: {
             title: "Witnesses"
-        },      
+        },
         delegates: {
             title: "Delegates"
         },
@@ -286,7 +289,7 @@ module.exports = {
             title: "Delegate"
         },
         workers: {
-            title: "Workers"
+            title: "Budget Items"
         },
         proposals: {
             title: "Proposals"
@@ -329,7 +332,8 @@ module.exports = {
     markets: {
         choose_base: "Choose base asset",
         filter: "Filter",
-        core_rate: "Core rate:",
-        supply: "Supply"
+        core_rate: "Core rate",
+        supply: "Supply",
+        search: "Search"
     }
 };

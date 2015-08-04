@@ -34,6 +34,9 @@ When updating generated code
 Replace:  operation = static_variant [
 with:     operation.st_operations = [
 
+replace: sha256 
+with: bytes 32
+
 Delete:
 operation  = new Serializer( 
     "operation "
@@ -60,7 +63,6 @@ Serializer=(operation_name, serilization_types_object)->
 ##  Generated code follows
 # programs/js_operation_serializer
 ## -------------------------------
-
 
 transfer_operation_fee_parameters = new Serializer( 
     "transfer_operation_fee_parameters"
@@ -260,6 +262,23 @@ override_transfer_operation_fee_parameters = new Serializer(
     price_per_kbyte: uint32
 )
 
+transfer_to_blind_operation_fee_parameters = new Serializer( 
+    "transfer_to_blind_operation_fee_parameters"
+    fee: uint64
+    price_per_output: uint32
+)
+
+blind_transfer_operation_fee_parameters = new Serializer( 
+    "blind_transfer_operation_fee_parameters"
+    fee: uint64
+    price_per_output: uint32
+)
+
+transfer_from_blind_operation_fee_parameters = new Serializer( 
+    "transfer_from_blind_operation_fee_parameters"
+    fee: uint64
+)
+
 fee_parameters = static_variant [
     transfer_operation_fee_parameters    
     limit_order_create_operation_fee_parameters    
@@ -297,7 +316,10 @@ fee_parameters = static_variant [
     custom_operation_fee_parameters    
     assert_operation_fee_parameters    
     balance_claim_operation_fee_parameters    
-    override_transfer_operation_fee_parameters
+    override_transfer_operation_fee_parameters    
+    transfer_to_blind_operation_fee_parameters    
+    blind_transfer_operation_fee_parameters    
+    transfer_from_blind_operation_fee_parameters
 ]
 
 fee_schedule = new Serializer( 
@@ -719,6 +741,7 @@ chain_parameters = new Serializer(
     current_fees: fee_schedule
     block_interval: uint8
     maintenance_interval: uint32
+    maintenance_skip_slots: uint8
     committee_proposal_review_period: uint32
     maximum_transaction_size: uint32
     maximum_block_size: uint32
@@ -880,6 +903,52 @@ override_transfer = new Serializer(
     extensions: set future_extensions
 )
 
+stealth_confirmation = new Serializer( 
+    "stealth_confirmation"
+    one_time_key: public_key
+    to: optional public_key
+    encrypted_memo: bytes()
+)
+
+blind_output = new Serializer( 
+    "blind_output"
+    commitment: bytes 33
+    range_proof: bytes()
+    owner: authority
+    stealth_memo: optional stealth_confirmation
+)
+
+transfer_to_blind = new Serializer( 
+    "transfer_to_blind"
+    fee: asset
+    amount: asset
+    from: protocol_id_type "account"
+    blinding_factor: bytes 32
+    outputs: array blind_output
+)
+
+blind_input = new Serializer( 
+    "blind_input"
+    commitment: bytes 33
+    owner: authority
+)
+
+blind_transfer = new Serializer( 
+    "blind_transfer"
+    fee: asset
+    inputs: array blind_input
+    outputs: array blind_output
+)
+
+transfer_from_blind = new Serializer( 
+    "transfer_from_blind"
+    fee: asset
+    amount: asset
+    to: protocol_id_type "account"
+    blinding_factor: bytes 32
+    inputs: array blind_input
+)
+
 operation.st_operations = [
     transfer    
     limit_order_create    
@@ -917,7 +986,10 @@ operation.st_operations = [
     custom    
     assert    
     balance_claim    
-    override_transfer
+    override_transfer    
+    transfer_to_blind    
+    blind_transfer    
+    transfer_from_blind
 ]
 
 transaction = new Serializer( 
@@ -938,3 +1010,4 @@ signed_transaction = new Serializer(
     extensions: set future_extensions
     signatures: array bytes 65
 )
+

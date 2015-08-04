@@ -44,7 +44,6 @@ export default class WalletUnlock extends React.Component {
                         </div>
                         <div className="grid-content button-group no-overflow">
                             <a className="button success" href onClick={this._passSubmit.bind(this)}>Unlock Wallet</a>
-                            &nbsp; &nbsp;
                             <Trigger close="unlock_wallet_modal">
                                 <a href className="secondary button">Cancel</a>
                             </Trigger>

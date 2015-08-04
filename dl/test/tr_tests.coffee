@@ -36,6 +36,9 @@ helper = require "./test_helper"
 iDB = require "../src/idb-instance"
 fakeIndexedDB = require "fake-indexeddb"
 
+# Confirm only works when there is a UI
+WalletDb.confirm_transactions = false
+
 ###
 import_key "1.2.15" "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
 create_account_with_brain_key "brainkey" "newaccountname" "1.2.15" "1.2.14" 0 true

@@ -90,6 +90,7 @@ class AccountStore extends BaseStore {
     }
 
     onGetAccount(payload) {
+        // console.log("onGetAccount:", payload);
         if (payload.fullAccount === null) {
             this.cachedAccounts = this.cachedAccounts.set(
                 payload.name,
@@ -122,7 +123,71 @@ class AccountStore extends BaseStore {
             account, vesting_balances, statistics, call_orders, limit_orders, referrer_name, registrar_name, lifetime_referrer_name
         } = payload.fullAccount;
 
-        if (account.id) {
+
+        
+        if (payload.sub) {
+
+            // Update accounthistory if any updates
+            if (payload.history_updates) {
+                let existingHistory = this.accountHistories.get(payload.account_name);
+
+                for (let entry of payload.history_updates) {
+                    existingHistory.unshift(entry);
+                }
+
+                this.accountHistories = this.accountHistories.set(
+                    payload.account_name,
+                    existingHistory
+                );
+
+            }
+
+            // Update balances if any updates
+            if (payload.balance_updates) {
+                let balances = this.balances.get(payload.account_name);
+                
+                let balanceUpdates = parseBalances(payload.balance_updates);
+
+                for (let i = 0; i < balanceUpdates.length; i++) {
+                    for (let j = 0; j < balances.length; j++) {
+                        if (balanceUpdates[i].asset_id === balances[j].asset_id) {
+                            balances[j] = balanceUpdates[i];
+                        }
+                    }
+                }
+
+                this.balances = this.balances.set(
+                    payload.account_name,
+                    balances
+                );
+            }
+
+            // Update account object
+            if (Object.keys(payload.fullAccount).length) {
+                let existingAccount = this.cachedAccounts.get(payload.account_name);
+                account = account || existingAccount;
+                // account.vesting_balances = vesting_balances || existingAccount.vesting_balances;
+                // account.stat_object = statistics || existingAccount.statistics;
+                // account.call_orders = call_orders;
+
+                if (limit_orders) {
+                    console.log("limit_orders:", limit_orders, existingAccount.limit_orders);
+                    for (let order of limit_orders) {
+                        existingAccount.limit_orders.push(order);
+                    }
+                }
+                account.limit_orders = limit_orders;
+                account.referrer_name = referrer_name;
+                account.registrar_name = registrar_name;
+                account.lifetime_referrer_name = lifetime_referrer_name;
+
+                let my_account = this._isMyAccount(account);
+
+            }
+
+
+        }
+        else if (account) {
             account.vesting_balances = vesting_balances;
             account.stat_object = statistics;
             account.call_orders = call_orders;
@@ -137,13 +202,6 @@ class AccountStore extends BaseStore {
 
             let AccountStruct = Account(payload.fullAccount.account);
 
-            let balances = parseBalances(payload.fullAccount.balances);
-
-            this.balances = this.balances.set(
-                account.name,
-                balances
-            );
-
             this.account_name_to_id[account.name] = account.id;
 
             this.cachedAccounts = this.cachedAccounts.set(
@@ -155,6 +213,15 @@ class AccountStore extends BaseStore {
                 account.name,
                 payload.history
             );
+
+            if (payload.fullAccount.balances) {
+                let balances = parseBalances(payload.fullAccount.balances);
+
+                this.balances = this.balances.set(
+                    payload.account_name,
+                    balances
+                );
+            }
 
             if (my_account) {
                 this.myAccounts = this.myAccounts.add(AccountStruct.name);
@@ -195,7 +262,7 @@ class AccountStore extends BaseStore {
     }
 
     onTransfer(result) {
-        console.log("[AccountStore.js] ----- onTransfer ----->", result);
+        // console.log("[AccountStore.js] ----- onTransfer ----->", result);
     }
 
     onCreateAccount(name_or_account) {

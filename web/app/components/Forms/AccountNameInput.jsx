@@ -93,7 +93,7 @@ class AccountNameInput extends BaseComponent {
         return (
             <div className={class_name}>
                 <label>Account Name</label>
-                <input name="value" type="text" id={this.props.id} ref="input"
+                <input name="value" type="text" id={this.props.id} ref="input" autoComplete="off"
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
                 {error}

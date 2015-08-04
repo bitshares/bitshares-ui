@@ -37,6 +37,9 @@ class SettingsEntry extends React.Component {
                 });
                 break;
 
+            case "defaultMarkets": 
+                break;
+
             default: 
                 let selected = settings.get(setting);
                 if (typeof selected === "number") {
@@ -62,6 +65,10 @@ class SettingsEntry extends React.Component {
 
         if (value && value.translate) {
             value = counterpart.translate(`settings.${value.translate}`);
+        }
+
+        if (!options) {
+            return null;
         }
 
         return (
@@ -107,6 +114,9 @@ class Settings extends React.Component {
                     cookies.set("graphene_locale", e.target.value, { expires: Infinity });
                     SettingsActions.changeSetting({setting: "locale", value: e.target.value });
                 }
+                break;
+
+            case "defaultMarkets": 
                 break;
 
             case "inverseMarket":

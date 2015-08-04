@@ -2,7 +2,6 @@ import iDB from "idb-instance";
 import key from "common/key_utils"
 import idb_helper from "idb-helper"
 import cloneDeep from "lodash.clonedeep"
-
 import Immutable from "immutable";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
@@ -20,6 +19,8 @@ class WalletDb {
     constructor() {
         this.secret_server_token = "secret_server_token";
         this.wallets = Immutable.Map();
+        // Confirm only works when there is a UI
+        this.confirm_transactions = true
     }
     
     getWallet() {
@@ -146,7 +147,10 @@ class WalletDb {
                     }
                 }).then(()=> {
                     if(broadcast) {
-                        return TransactionConfirmActions.confirm_and_broadcast(tr)
+                        if(this.confirm_transactions)
+                            return TransactionConfirmActions.confirm_and_broadcast(tr)
+                        else
+                            return tr.broadcast()
                     } else
                         return tr.serialize()
                 })
@@ -304,22 +308,18 @@ class WalletDb {
                 )
             }
             
-            this.setWalletModified(transaction).catch(
+            var p = this.setWalletModified(transaction).catch(
                 error => reject(error)
             ).then( ()=> {
-                var p = Promise.all(promises).catch( error => {
+                return Promise.all(promises).catch( error => {
                     //DEBUG
                     console.log('importKeys transaction.abort', error)    
-                    transaction.abort()
                     throw error
-                    //var message = error
-                    //try { message = error.target.error.message } catch(e) { }
-                    //return message
                 }).then( private_key_ids => {
                     return {import_count, duplicate_count, private_key_ids}
                 })
-                resolve(p)
             })
+            resolve(p)
         })
     }
 

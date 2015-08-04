@@ -43,7 +43,7 @@ class ExistingAccountsAccountSelect extends Component {
                     .sort()
                     .map((account_name) => {
                     if(!account_name || account_name == "") return null;
-                    return <option value={account_name}>{account_name}</option>
+                    return <option key={account_name} value={account_name}>{account_name}</option>
                 })}
             </select>
         );

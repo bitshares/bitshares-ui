@@ -11,7 +11,7 @@ class MarketCard extends React.Component {
 
     render() {
 
-        let {market, options, data, assets} = this.props;
+        let {market, quote, base} = this.props;
         let marketID = market.quoteSymbol + "_" + market.baseSymbol;
         let marketName = market.quoteSymbol + " vs " + market.baseSymbol;
 
@@ -21,22 +21,22 @@ class MarketCard extends React.Component {
                     <Link to="exchange" params={{marketID: marketID}}>
                         <div style={{padding: "5px"}}>
                         </div>
-                        <div style={{color: "black"}} className="card-divider">
-                            <center>{marketName}</center>
+                        <div style={{color: "black"}} className="card-divider text-center">
+                            <span>{marketName}{/*<span style={{zIndex:999}} onClick={this.props.removeMarket} className="badge float-right">-</span>*/}</span>
                         </div>
                         <div style={{color: "black", paddingLeft: "0.5rem"}} className="card-section">
                             <ul style={{color: "white", listStyle: "none", fontSize: "85%", marginLeft: 0}}>
                                 <li><Translate content="markets.core_rate" />: <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
-                                                    amount={options.core_exchange_rate.quote.amount}
-                                                    asset={assets.get(options.core_exchange_rate.quote.asset_id)}
-                                                    baseamount={options.core_exchange_rate.base.amount}
-                                                    base={assets.get(options.core_exchange_rate.base.asset_id)} /> 
+                                                    amount={quote.options.core_exchange_rate.quote.amount}
+                                                    asset={quote}
+                                                    baseamount={quote.options.core_exchange_rate.base.amount}
+                                                    base={base} /> 
                                 </li>
                                 <li><Translate content="markets.supply" />: <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
-                                                    amount={data.current_supply}
-                                                    asset={assets.get(options.core_exchange_rate.quote.asset_id)}
+                                                    amount={quote.dynamic_data.current_supply}
+                                                    asset={quote}
                                                     />
                                 </li>
                             </ul>

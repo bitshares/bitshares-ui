@@ -66,28 +66,80 @@ class AccountActions {
     }
 
     getAccount(name_or_id) {
-        let subscription = (account, result) => {
-             console.log("account sub result:", result, name_or_id);
+        let account_id, account_name;
+        let subscription = result => {
+            console.log("account sub result:", account_id, account_name, result, name_or_id);
 
-             /*
-            api.getFullAccounts(null, name_or_id)
-                .then(fullAccount => {
-                    api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
+            /* TODO: finish this parsing of the sub result once all necessary data is available
+            let fullAccount = {}, 
+                history_updates = null,
+                balance_updates = null;
 
-                        this.dispatch({
-                            sub: true,
-                            fullAccount: fullAccount[0][1],
-                            history: history
-                        });
+            for (let entry of result[0]) {
+
+                let type = utils.get_op_type(entry.id);
+
+                // Balance update
+                if (entry.balance && entry.owner === account_id) {
+                    if (!balance_updates) {
+                        balance_updates = [];
+                    }
+                    balance_updates.push(entry);
+                }
+
+                // Order history update
+                if (entry.block_num && entry.virtual_op) {
+                    if (!history_updates) {
+                        history_updates = [];
+                    }
+                    history_updates.push(entry);
+                }
+
+                // Account object update
+                if (entry.id === account_id) {
+                    fullAccount.account = entry;
+                }
+
+                if (type === "limit_order") {
+                    console.log("limit order:", entry);
+                    if (!fullAccount.limit_orders) {
+                        fullAccount.limit_orders = [];
+                    }
+                    fullAccount.limit_orders.push(entry);
+                }
+            }
+
+            this.dispatch({
+                sub: true,
+                fullAccount: fullAccount,
+                balance_updates: balance_updates,
+                history_updates: history_updates,
+                id: account_id,
+                account_name: account_name
+            });
+
+            */
+
+            // Use brute force and refetch everything until the parsing is possible
+
+            api.getFullAccounts(function(){}, name_or_id, true).then(fullAccount => {
+                api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
+                    this.dispatch({
+                        fullAccount: fullAccount[0][1],
+                        history: history,
+                        id: account_id,
+                        account_name: account_name
                     });
                 });
-                */
+            });
+
+
         };
 
         if (!inProgress[name_or_id]) {
             inProgress[name_or_id] = true;
 
-            return api.getFullAccounts(/*subscription.bind(this, name_or_id)*/null, name_or_id)
+            return api.getFullAccounts(subscription, name_or_id, true)
                 .then(fullAccount => {
                     if (fullAccount.length === 0) {
                         return this.dispatch({
@@ -96,11 +148,18 @@ class AccountActions {
                             name: name_or_id
                         });
                     }
+
+                    console.log(fullAccount[0][1]);
+                    account_id = fullAccount[0][1].account.id;
+                    account_name = fullAccount[0][1].account.name;
+
                     api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
 
                         this.dispatch({
                             fullAccount: fullAccount[0][1],
-                            history: history
+                            history: history,
+                            id: account_id,
+                            account_name: account_name
                         });
 
                         delete inProgress[name_or_id];
@@ -152,9 +211,9 @@ class AccountActions {
             referrer,
             referrer_percent
         ).then( () => {
-            this.dispatch(account_name)
-            return account_name
-        })
+            this.dispatch(account_name);
+            return account_name;
+        });
     }
 
     upgradeAccount(account_id) {
@@ -167,13 +226,7 @@ class AccountActions {
             "account_to_upgrade": account_id,
             "upgrade_to_lifetime_member": true
         });
-        return WalletDb.process_transaction(tr, null, true).then(result => {
-            this.dispatch(account_id);
-            return true;
-        }).catch(error => {
-            console.log("[AccountActions.js:150] ----- upgradeAccount error ----->", error);
-            return false;
-        });
+        return WalletDb.process_transaction(tr, null, true);
     }
 
     linkAccount(name) {

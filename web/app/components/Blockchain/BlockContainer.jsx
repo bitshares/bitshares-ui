@@ -3,6 +3,7 @@ import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import BlockchainStore from "stores/BlockchainStore";
 import WitnessStore from "stores/WitnessStore";
+import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt/AltContainer";
 import Block from "./Block";
 
@@ -13,7 +14,7 @@ class BlockContainer extends React.Component {
         // {flexWrap: "nowrap" is needed because medium-horizontal applies wrap, making the layout incorrect}
         return (
               <AltContainer 
-                  stores={[AccountStore, AssetStore, BlockchainStore, WitnessStore]}
+                  stores={[AccountStore, AssetStore, BlockchainStore, WitnessStore, SettingsStore]}
                   inject={{
                     blocks: () => {
                         return BlockchainStore.getState().blocks;
@@ -32,6 +33,9 @@ class BlockContainer extends React.Component {
                     },
                     witness_id_to_name: () => {
                         return WitnessStore.getState().witness_id_to_name;
+                    },
+                    settings: () => {
+                        return SettingsStore.getState().settings;
                     }
                   }} 
                   >

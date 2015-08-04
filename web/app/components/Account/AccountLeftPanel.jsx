@@ -8,8 +8,7 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
 import Immutable from "immutable";
-import BlockchainStore from "stores/BlockchainStore";
-import FormattedAsset from "../Utility/FormattedAsset";
+import WalletDb from "stores/WalletDb";
 
 class AccountLeftPanel extends React.Component {
 
@@ -39,37 +38,11 @@ class AccountLeftPanel extends React.Component {
 
     onUpgradeAccount(id, e) {
         e.preventDefault();
-        let callback = () => {
-            AccountActions.upgradeAccount(id).then(result => {
-                if (result) {
-                    notify.addNotification({
-                        message: `Successfully upgraded the account`,//: ${this.state.wallet_public_name}
-                        level: "success",
-                        autoDismiss: 10
-                    });
-                } else {
-                    notify.addNotification({
-                        message: `Failed to broadcast upgrade transaction`,//: ${this.state.wallet_public_name}
-                        level: "error",
-                        autoDismiss: 10
-                    });
-                }
-            });
-        };
-
-        let fee = BlockchainStore.getFee("account_upgrade", ["membership_lifetime_fee"]);
-
-        let content = (
-            <div className="grid-content">
-                <p>Upgrade account <strong>{this.props.account_name}</strong> to lifetime member?</p>
-                <Translate content="transfer.fee" />: <FormattedAsset color="fee" amount={fee} asset={this.props.assets.get("1.3.0")} />
-                <br/>
-                <br/>
-            </div>
-        );
-
-        this.refs.confirmModal.show(content, "Confirm Upgrade", callback);
-        
+        if( WalletDb.isLocked()) {
+            notify.error("Wallet is locked");
+            return;
+        }
+        AccountActions.upgradeAccount(id);
     }
 
     render() {

@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {RealLink} from "react-router";
+import {Link as RealLink} from "react-router";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
@@ -9,9 +9,10 @@ import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
-import Immutable from "immutable";
 import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
+import utils from "common/utils";
+import SettingsActions from "actions/SettingsActions";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -54,9 +55,9 @@ class OperationTable extends React.Component {
     render() {
 
         return (
-            <div>
+            <div >
                 <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6>
-                <table style={{marginBottom: "1em"}} className="table">
+                <table style={{marginBottom: "1em"}} className="table op-table">
                     <caption></caption>
                     <tbody>
                         <OpType type={this.props.type} color={this.props.color}/>
@@ -117,8 +118,17 @@ class Transaction extends React.Component {
         return missing;
     }
 
+    _flipMarketPrice(e) {
+        e.preventDefault();
+        console.log("_flipMarketPrice:", e);
+        SettingsActions.changeSetting({
+            setting: "inverseMarket",
+            value: !this.props.inverted
+        });
+    }
+
     render() {
-        let {trx, index, account_id_to_name, assets} = this.props;
+        let {trx, index, account_id_to_name, assets, inverted} = this.props;
         let info = null;
 
         info = [];
@@ -135,13 +145,13 @@ class Transaction extends React.Component {
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
                 case "transfer":
-                    console.log("op:", op);
+                    // console.log("op:", op);
 
                     color = "success";
                     let missingAccounts = this.getAccounts([op[1].from, op[1].to]);
                     let missingAssets = this.getAssets([op[1].amount.asset_id]);
 
-                    console.log("missingAccounts:", missingAccounts);
+                    // console.log("missingAccounts:", missingAccounts);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
@@ -166,26 +176,35 @@ class Transaction extends React.Component {
                 case "limit_order_create":
                     color = "warning";
                     let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                    let missingAccounts = this.getAccounts([op[1].seller]);
+                    let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
+                    
                     rows.push(
-                        <tr>
+                        <tr key="1">
                             <td><Translate component="span" content="transaction.amount_sell" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
-                            <td><Translate component="span" content="transaction.min_receive" />:</td>
-                            <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
+                        <tr key="2">
+                            <td><Translate component="span" content="exchange.price" />:</td>
+                            <td>{price} &nbsp;<span className="button secondary" onClick={this._flipMarketPrice.bind(this)}>Flip</span></td>
                         </tr>
                     );
+                    // rows.push(
+                    //     <tr key="2">
+                    //         <td><Translate component="span" content="transaction.min_receive" />:</td>
+                    //         <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
+                    //     </tr>
+                    // );
                     rows.push(
-                        <tr>
+                        <tr key="3">
                             <td><Translate component="span" content="transaction.seller" />:</td>
-                            <td>{account_id_to_name[op[1].seller] ? <Link to="account" params={{account_name: account_id_to_name[op[1].seller]}}>{account_id_to_name[op[1].seller]}</Link> : null}</td>
+                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].seller]}}>{account_id_to_name[op[1].seller]}</Link> : null}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="4">
                             <td><Translate component="span" content="transaction.expiration" />:</td>
                             <td>
                                 <FormattedDate
@@ -699,7 +718,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.balance_owner" />:</td>
-                            <td>{op[1].balance_owner_key}</td>
+                            <td style={{fontSize: "80%"}}>{op[1].balance_owner_key}</td>
                         </tr>
                     );
                     rows.push(
@@ -735,11 +754,9 @@ class Transaction extends React.Component {
         });
 
         return (
-            <div className="grid-block">
-                <div className="grid-content">
-                    <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5>
-                    {info}
-                </div>
+            <div className="grid-content">
+                <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5>
+                {info}
             </div>
         );
     }
