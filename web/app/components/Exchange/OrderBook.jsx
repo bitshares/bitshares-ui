@@ -101,9 +101,8 @@ class OrderBook extends React.Component {
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
 
         return (
-
-                <div className="valign" style={{overflowY: "hidden"}}>
-                    <table className="table order-table fixed-height table-hover text-right">
+                <div className="left-order-book" style={{overflowY: "hidden"}}>
+                    <table className="table order-table table-hover text-right">
                         <thead className="headers">
                             <tr>
                                 <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
@@ -115,8 +114,8 @@ class OrderBook extends React.Component {
                             {bidRows}
                         </tbody>
                     </table>
-                    <div className="text-center spread" style={{borderTop: "1px solid gray", borderBottom: "1px solid gray", padding: "0.5rem 0.25rem"}}><Translate content="exchange.spread" />: {spread} {baseSymbol}</div>
-                    <table className="table order-table fixed-height table-hover text-right">
+                    <div className="text-center spread"><Translate content="exchange.spread" />: {spread} {baseSymbol}</div>
+                    <table className="table order-table table-hover text-right">
                         <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
                             {askRows}
                         </tbody>

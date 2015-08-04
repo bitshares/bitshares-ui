@@ -126,45 +126,27 @@ p.order-table-title {
 
 }
 
-
-
-.valign {
+.left-order-book {
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  position: relative;
-}
-
-.spread {
-  height: 2rem;
-}
-
-.fixed-height {
-  .headers {
-    height: 5vh;
+  align-items: center;
+  > table {
+    width: 100%;
+    display: block;
+    flex-grow: 1;
+    th {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+    }
   }
-
-  .orderbook-top {
-    display: inline-block;
-    height: 40vh;
-    overflow-y: auto;
-    bottom: 0;
-    position: relative;
-  }
-
-  .orderbook-bottom {
-    display: inline-block;
-    height: 40vh;
-    overflow-y: auto;
-    top: 0;
-    position: relative;
-  }
-
-
-  thead, tbody tr {
-      display:table;
-      width:100%;
-      table-layout:fixed;/* even columns width , fix width of table too*/
+  > .spread {
+    flex-shrink: 1;
+    width: 100%;
+    padding: 0.25rem 0 0.25rem 0;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #777;
   }
 }
 
