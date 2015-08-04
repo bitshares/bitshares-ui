@@ -144,7 +144,9 @@ class MarketsStore {
 
         if (result.calls) {
             result.calls.forEach(call => {
-                call.expiration = new Date(call.expiration);
+                if (typeof call.collateral === "string") {
+                    call.collateral = parseInt(call.collateral, 10);
+                }
                 this.activeMarketCalls = this.activeMarketCalls.set(
                     call.id,
                     CallOrder(call)
