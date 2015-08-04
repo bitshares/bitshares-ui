@@ -178,7 +178,7 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.limit_order_sell" 
                                 sell_amount={utils.format_asset(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id))}
-                                sell_price={utils.format_price(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id))}
+                                sell_price={utils.format_price(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, inverted)}
                             /> : null}
                         </td>
                         :
@@ -187,7 +187,7 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.limit_order_buy" 
                                 buy_amount={utils.format_asset(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id))}
-                                buy_price={utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id))}
+                                buy_price={utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted)}
                             /> : null}
                         </td>
 

@@ -3,6 +3,8 @@ import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import AltContainer from "alt/AltContainer";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import SettingsStore from "stores/SettingsStore";
+
 import TransactionConfirm from "./TransactionConfirm";
 
 class TransactionConfirmContainer extends React.Component {
@@ -34,7 +36,7 @@ class TransactionConfirmContainer extends React.Component {
 
         return (
               <AltContainer 
-                  stores={[AccountStore, AssetStore, TransactionConfirmStore]}
+                  stores={[AccountStore, AssetStore, TransactionConfirmStore, SettingsStore]}
                   inject={{
                     tr: () => {
                         return TransactionConfirmStore.getState().tr;
@@ -50,6 +52,9 @@ class TransactionConfirmContainer extends React.Component {
                     },
                     account_id_to_name: () => {
                         return AccountStore.getState().account_id_to_name;
+                    },
+                    settings: () => {
+                        return SettingsStore.getState().settings;
                     }
                   }} 
                   >

@@ -21,6 +21,7 @@ class TransactionList extends React.Component {
                 !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
                 !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
                 !Immutable.is(nextProps.assets, this.props.assets) ||
+                !Immutable.is(nextProps.settings, this.props.settings) ||
                 // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
                 // returning true here until issue #93 has been resolved
                 true
@@ -53,7 +54,7 @@ class TransactionList extends React.Component {
     }
 
     render() {
-        let {block, assets, account_id_to_name, witnesses, witness_id_to_name} = this.props;
+        let {block, assets, account_id_to_name, witnesses, witness_id_to_name, inverted} = this.props;
         let transactions = null;
         
         transactions = [];
@@ -66,7 +67,14 @@ class TransactionList extends React.Component {
             transactions = [];
 
             block.transactions.forEach((trx, index) => {
-                transactions.push(<Transaction key={index} trx={trx} assets={assets} account_id_to_name={account_id_to_name} index={index}/>);
+                transactions.push(
+                    <Transaction
+                        key={index}
+                        trx={trx}
+                        assets={assets}
+                        account_id_to_name={account_id_to_name}
+                        inverted={inverted}
+                        index={index}/>);
             });
         }
 
@@ -96,6 +104,7 @@ class Block extends BaseComponent {
             !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
             !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
             !Immutable.is(nextProps.assets, this.props.assets) ||
+            !Immutable.is(nextProps.settings, this.props.settings) ||
             nextProps.dynGlobalObject !== this.props.dynGlobalObject
             );
     }
@@ -135,32 +144,41 @@ class Block extends BaseComponent {
 
     render() {
 
-        let {blocks, assets, account_id_to_name, witnesses, witness_id_to_name} = this.props;
+        let {blocks, assets, account_id_to_name, witnesses, witness_id_to_name, settings} = this.props;
         let height = parseInt(this.props.height, 10);
         let block = blocks.get(height);
 
         return (
-            <div className="grid-block small-offset-2">
-                <div className="grid-content">
-                    <h4><Translate style={{textTransform: "uppercase"}} component="span" content="explorer.block.title" /> #{height}</h4>
-                    {block ? (
-                    <ul>
-                        <li><Translate component="span" content="explorer.block.date" />: <FormattedDate
-                            value={block.timestamp}
-                            formats={intlData.formats}
-                            format="full"
-                            />
-                        </li>
-                        <li><Translate component="span" content="explorer.block.witness" />: {witness_id_to_name.get(block.witness) ?
-                            <Link to="account" params={{account_name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> :
-                            null}</li>
-                        <li><Translate component="span" content="explorer.block.previous" />: {block.previous}</li>
-                        <li><Translate component="span" content="explorer.block.previous_secret" />: {block.previous_secret}</li>
-                        <li><Translate component="span" content="explorer.block.next_secret" />: {block.next_secret_hash}</li>
-                        <li><Translate component="span" content="explorer.block.transactions" />: {block.transactions.length}</li>
-                    </ul>
-                    ) : null}
-                    {block ? <TransactionList assets={assets} account_id_to_name={account_id_to_name} block={block} witnesses={witnesses} witness_id_to_name={witness_id_to_name}/> : null}
+            <div className="grid-block">
+                <div className="grid-container">
+                    <div className="grid-content">
+                        <h4><Translate style={{textTransform: "uppercase"}} component="span" content="explorer.block.title" /> #{height}</h4>
+                        {block ? (
+                        <ul>
+                            <li><Translate component="span" content="explorer.block.date" />: <FormattedDate
+                                value={block.timestamp}
+                                formats={intlData.formats}
+                                format="full"
+                                />
+                            </li>
+                            <li><Translate component="span" content="explorer.block.witness" />: {witness_id_to_name.get(block.witness) ?
+                                <Link to="account" params={{account_name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> :
+                                null}</li>
+                            <li><Translate component="span" content="explorer.block.previous" />: {block.previous}</li>
+                            <li><Translate component="span" content="explorer.block.previous_secret" />: {block.previous_secret}</li>
+                            <li><Translate component="span" content="explorer.block.next_secret" />: {block.next_secret_hash}</li>
+                            <li><Translate component="span" content="explorer.block.transactions" />: {block.transactions.length}</li>
+                        </ul>
+                        ) : null}
+                        {block ?
+                            <TransactionList
+                                assets={assets}
+                                account_id_to_name={account_id_to_name}
+                                block={block} witnesses={witnesses}
+                                witness_id_to_name={witness_id_to_name}
+                                inverted={settings.get("inverseMarket")}
+                            /> : null}
+                    </div>
                 </div>
             </div>
         );

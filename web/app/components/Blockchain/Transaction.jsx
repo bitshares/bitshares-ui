@@ -9,9 +9,10 @@ import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import AssetActions from "actions/AssetActions";
 import AccountActions from "actions/AccountActions";
-import Immutable from "immutable";
 import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
+import utils from "common/utils";
+import SettingsActions from "actions/SettingsActions";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -54,7 +55,7 @@ class OperationTable extends React.Component {
     render() {
 
         return (
-            <div style={{display: "table"}}>
+            <div >
                 <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6>
                 <table style={{marginBottom: "1em"}} className="table op-table">
                     <caption></caption>
@@ -117,8 +118,17 @@ class Transaction extends React.Component {
         return missing;
     }
 
+    _flipMarketPrice(e) {
+        e.preventDefault();
+        console.log("_flipMarketPrice:", e);
+        SettingsActions.changeSetting({
+            setting: "inverseMarket",
+            value: !this.props.inverted
+        });
+    }
+
     render() {
-        let {trx, index, account_id_to_name, assets} = this.props;
+        let {trx, index, account_id_to_name, assets, inverted} = this.props;
         let info = null;
 
         info = [];
@@ -167,7 +177,8 @@ class Transaction extends React.Component {
                     color = "warning";
                     let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
                     let missingAccounts = this.getAccounts([op[1].seller]);
-
+                    let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
+                    
                     rows.push(
                         <tr key="1">
                             <td><Translate component="span" content="transaction.amount_sell" />:</td>
@@ -176,10 +187,16 @@ class Transaction extends React.Component {
                     );
                     rows.push(
                         <tr key="2">
-                            <td><Translate component="span" content="transaction.min_receive" />:</td>
-                            <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
+                            <td><Translate component="span" content="exchange.price" />:</td>
+                            <td>{price} &nbsp;<span className="button secondary" onClick={this._flipMarketPrice.bind(this)}>Flip</span></td>
                         </tr>
                     );
+                    // rows.push(
+                    //     <tr key="2">
+                    //         <td><Translate component="span" content="transaction.min_receive" />:</td>
+                    //         <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
+                    //     </tr>
+                    // );
                     rows.push(
                         <tr key="3">
                             <td><Translate component="span" content="transaction.seller" />:</td>

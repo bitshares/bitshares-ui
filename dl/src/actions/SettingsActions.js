@@ -1,10 +1,10 @@
 var alt = require("../alt-instance");
 
-class DelegateActions {
+class SettingsActions {
 
     changeSetting(value) {
         this.dispatch(value);        
     }
 }
 
-module.exports = alt.createActions(DelegateActions);
+module.exports = alt.createActions(SettingsActions);

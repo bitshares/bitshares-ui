@@ -37,7 +37,7 @@ export default class TransactionConfirm extends React.Component {
     
     render() {
         if ( !this.state.trx) {return <div/>; }
-        var {assets, account_id_to_name} = this.props;
+        var {assets, account_id_to_name, settings} = this.props;
         
         return (
             <div ref="transactionConfirm" className="large">
@@ -57,6 +57,7 @@ export default class TransactionConfirm extends React.Component {
                                 trx={this.state.trx}
                                 index={0}
                                 account_id_to_name={account_id_to_name}
+                                inverted={settings.get("inverseMarket")}
                                 assets={assets} no_links={true}
                             />
                             : null}

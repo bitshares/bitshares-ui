@@ -40,11 +40,22 @@ var Utils = {
         return `${this.format_number(amount / precision, asset.precision)}${!noSymbol ? " " + asset.symbol : ""}`;
     },
 
-    format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol) {
+    format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol,inverted) {
         let precision = this.get_asset_precision(quoteAsset.precision);
         let basePrecision = this.get_asset_precision(baseAsset.precision);
-
-        return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision))}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
+        if (inverted) {
+            if (parseInt(quoteAsset.id.split(".")[2], 10) < parseInt(baseAsset.id.split(".")[2], 10)) {
+                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision))}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
+            } else {
+                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision))}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
+            }
+        } else {
+            if (parseInt(quoteAsset.id.split(".")[2], 10) > parseInt(baseAsset.id.split(".")[2], 10)) {
+                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision))}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
+            } else {
+                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision))}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
+            }
+        }
     },
 
     get_op_type: function(object) {

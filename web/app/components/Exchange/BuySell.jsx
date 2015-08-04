@@ -19,7 +19,7 @@ class BuySell extends React.Component {
         // console.log("this.props", this.props);
         let total = amount * price;
         let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")} ${amount} ${quoteSymbol}`;
-        let buttonClass = classNames("button buySellButton", type);
+        let buttonClass = classNames("button buySellButton", type, {disabled: !(balance > 0 && amount > 0 && price > 0)});
         let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
         let divClass = classNames(this.props.className, `${type}-form`);
 
