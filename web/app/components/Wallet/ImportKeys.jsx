@@ -511,9 +511,9 @@ class ImportKeys extends Component {
             return
         }
         
-        var cachedAccounts = AccountStore.getState().cachedAccounts
+        var linkedAccounts = AccountStore.getState().linkedAccounts
         for(let account_name in this.state.account_keycount) {
-            if( ! cachedAccounts.get(account_name))
+            if( ! linkedAccounts.get(account_name))
                 AccountStore.onCreateAccount(account_name)
         }
         
@@ -529,6 +529,7 @@ class ImportKeys extends Component {
                 import_balances
             })
         }
+        
         WalletDb.importKeys( private_key_objs ).then( result => {
             var {import_count, duplicate_count, private_key_ids} = result
             try {
