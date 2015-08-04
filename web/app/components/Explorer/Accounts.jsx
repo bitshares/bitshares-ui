@@ -35,11 +35,12 @@ class Accounts extends React.Component {
 
     render() {
         let {searchAccounts} = this.props;
+        let {searchTerm} = this.state;
         let accountRows = null;
 
-        if (searchAccounts.size > 0) {
+        if (searchAccounts.size > 0 && searchTerm.length > 0) {
             accountRows = searchAccounts.filter(a => {
-                return a.indexOf(this.state.searchTerm) !== -1;
+                return a.indexOf(searchTerm) !== -1;
             })
             .sort((a, b) => {
                 if (a > b) {
