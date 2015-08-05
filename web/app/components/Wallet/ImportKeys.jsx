@@ -3,16 +3,12 @@ import PrivateKey from "ecc/key_private";
 import Aes from "ecc/aes";
 
 import WalletDb from "stores/WalletDb";
-// import WalletActions from "actions/WalletActions";
 import PublicKey from "ecc/key_public";
 import FormattedAsset from "components/Utility/FormattedAsset";
 
 import config from "chain/config";
-// import alt from "alt-instance";
-// import connectToStores from "alt/utils/connectToStores";
 import notify from "actions/NotificationActions";
 import hash from "common/hash";
-// import cname from "classnames";
 import Apis from "rpc_api/ApiInstances";
 import v from "chain/serializer_validation";
 import lookup from "chain/lookup";
@@ -172,7 +168,8 @@ class ImportKeys extends Component {
                         <br/>
                         
                         <div className="button-group">
-                            <div className={cname("button success", {disabled:!import_ready})} onClick={this._saveImport.bind(this)} >
+                            <div className={cname("button success", {disabled:!import_ready})}
+                                onClick={this._saveImport.bind(this)} >
                                 Import
                             </div>
                             <div className="button secondary" onClick={this.reset.bind(this)}>
@@ -506,11 +503,6 @@ class ImportKeys extends Component {
     }
 
     _saveImport() {
-        if( WalletDb.isLocked()) {
-            notify.error("Wallet is locked")
-            return
-        }
-        
         var linkedAccounts = AccountStore.getState().linkedAccounts
         for(let account_name in this.state.account_keycount) {
             if( ! linkedAccounts.get(account_name))

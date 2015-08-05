@@ -8,7 +8,6 @@ import WalletDb from "stores/WalletDb";
 import notify from 'actions/NotificationActions';
 import {Link} from "react-router";
 import AccountImage from "./AccountImage";
-import WalletUnlock from "../Wallet/WalletUnlock";
 import AccountSelect from "../Forms/AccountSelect";
 
 
@@ -103,7 +102,6 @@ class CreateAccount extends React.Component {
         let buttonClass = classNames("button", {disabled: !valid});
         return (
             <div className="grid-block vertical">
-                {WalletDb.getWallet() ? <WalletUnlock/> : null}
                 <div className="grid-content">
                     <div className="content-block center-content">
                         <div className="page-header">

@@ -15,6 +15,7 @@ import debounce from "lodash.debounce";
 import AccountInfo from "../Account/AccountInfo";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 class AccountAssets extends React.Component {
     constructor() {
@@ -76,10 +77,6 @@ class AccountAssets extends React.Component {
 
     _createAsset(account_id, e) {
         e.preventDefault();
-        if( WalletDb.isLocked()) {
-            notify.error("Wallet is locked");
-            return;
-        }
         ZfApi.publish("create_asset", "close");
         let {create} = this.state;
         AssetActions.createAsset(account_id, create).then(result => {
@@ -105,10 +102,6 @@ class AccountAssets extends React.Component {
 
     _issueAsset(account_id, e) {
         e.preventDefault();
-        if( WalletDb.isLocked()) {
-            notify.error("Wallet is locked");
-            return;
-        }
         ZfApi.publish("issue_asset", "close");
         let {issue} = this.state;
         let asset = this.props.assets.get(issue.asset_id);

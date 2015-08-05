@@ -38,10 +38,6 @@ class AccountLeftPanel extends React.Component {
 
     onUpgradeAccount(id, e) {
         e.preventDefault();
-        if( WalletDb.isLocked()) {
-            notify.error("Wallet is locked");
-            return;
-        }
         AccountActions.upgradeAccount(id);
     }
 

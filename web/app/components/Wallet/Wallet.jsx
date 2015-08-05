@@ -1,7 +1,6 @@
 import React from "react";
 
 import WalletCreate from "components/Wallet/WalletCreate";
-import WalletUnlock from "components/Wallet/WalletUnlock";
 
 export default class Wallet extends React.Component {
 
@@ -12,9 +11,7 @@ export default class Wallet extends React.Component {
         //}
         return (
             <WalletCreate>
-                <WalletUnlock>
-                    {this.props.children}
-                </WalletUnlock>
+                {this.props.children}
             </WalletCreate>
         );
     }
