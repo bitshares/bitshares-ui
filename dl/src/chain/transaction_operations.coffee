@@ -115,15 +115,22 @@ _my.signed_transaction = ->
     serialize:()->
         type.signed_transaction.toObject @
     
+    id:()->
+        throw new Error "not finalized" unless @tr_buffer
+        hash.sha256(@tr_buffer).toString( 'hex' ).substring(0,40)
+
+    toObject:()->
+        type.signed_transaction.toObject @
+
     broadcast:()->
         new Promise (resolve, reject)=>
             throw new Error "not finalized" unless @tr_buffer
             throw new Error "not signed" unless @signatures.length
             throw new Error "no operations" unless @operations.length
             tr_object = type.signed_transaction.toObject @
-            resolve api.network_api().exec(
-                "broadcast_transaction",
-                [tr_object]
+            api.network_api().exec(
+                "broadcast_transaction_with_callback",
+                [resolve,tr_object]
             ).then ()->
                 tr_object
             .catch (error)->

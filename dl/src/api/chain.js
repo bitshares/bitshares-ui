@@ -52,13 +52,60 @@ class ChainStore
       this.subscriptions_by_id      = new Map()
       this.subscriptions_by_account = new Map()
       this.subscriptions_by_market  = new Map()
+      this.pending_transactions     = new Map()
    }
 
-   getAssetBySymbol( symbol, min_age_ms = null )
+   /**
+    *  @return a promise that will resolve once the transaction has been included
+    *     in a block or if an error occurs
+    */
+   broadcastTransaction( transaction ) {
+      let id = transaction.id()
+      let pending = { id: id, pending_trx : transaction } 
+      this.pending_transactions.set( id, pending )
+
+      let promise = new Promise( (resolve, reject) => {
+         let on_confirmation = (confirmation) => {
+            console.log( "got confirmation: ", confirmation )
+            pending.block_num = confirmation.block_num
+            pending.trx_num = confirmation.trx_num
+            pending.processed_trx = confirmation.trx
+            resolve(pending)
+         }
+         Apis.instance().network_api().exec( "broadcast_transaction_with_callback",
+              [ on_confirmation, transaction.toObject() ] ).then( ok => {}, reject )
+      } )
+      return promise
+   }
+
+   getAccountByName( account_name ) {
+      let by_name = this.accounts_by_name.get( account_name )
+      console.log( "by name", account_name, by_name  )
+      if( by_name && 'id' in by_name )
+         return this.objects_by_id.get( by_name.id )
+      return null
+   }
+
+   getAssetBySymbol( symbol_name ) {
+       let by_symbol = this.assets_by_symbol.get( symbol )
+       if( by_symbol && 'id' in by_symbol )
+          return this.objects_by_id.get( by_symbol.id )
+        return null
+   }
+   getObject( id )
+   {
+      console.log( "get object id: ",id )
+      if( !utils.is_object_id(id) ) 
+         throw Error( "argument is not an object id: " + id )
+      return this.objects_by_id.get( id )
+   }
+
+
+   lookupAssetBySymbol( symbol, min_age_ms = null )
    {
       let asset = this.assets_by_symbol.get(symbol)
       if( asset && 'id' in asset )
-         return getObject( asset.id, min_age_ms )
+         return this.fetchObject( asset.id, min_age_ms )
 
       let now = new Date().getTime()
       if( asset && min_age_ms && asset.last_query <= now - min_age_ms )
@@ -98,11 +145,15 @@ class ChainStore
     *
     *  @return a Promise for the account value
     */
-   getAccountByName( name, min_age_ms = null )
+   lookupAccountByName( name, min_age_ms = null )
    {
+      console.log( "lookup account by name: ", name )
       let acnt = this.accounts_by_name.get(name)
       if( acnt && 'id' in acnt )
-         return getObject( acnt.id, min_age_ms )
+      {
+         console.log( "acnt", acnt, "id", acnt.id )
+         return this.fetchObject( acnt.id, min_age_ms )
+      }
 
       let now = new Date().getTime()
       if( acnt && min_age_ms && acnt.last_query <= now - min_age_ms ) 
@@ -125,8 +176,8 @@ class ChainStore
                   if( optional_account_object )
                   {
                      let new_obj = this._updateObject( optional_account_object )
-                     acnt.id = new_obj.id
-                     this.accounts_by_name.set( name, acnt )
+                     acnt.id = new_obj.get('id')
+                     this.accounts_by_name = this.accounts_by_name.set( name, acnt )
                      resolve( new_obj )
                   }
                   else
@@ -135,7 +186,7 @@ class ChainStore
                   }
               }).catch( error => reject(error) )
       })
-      this.accounts_by_name.set( name, acnt )
+      this.accounts_by_name = this.accounts_by_name.set( name, acnt )
       return acnt.last_promise
    }
 
@@ -157,8 +208,10 @@ class ChainStore
     *  and any time anything associated with this account changes, the
     *  method on_update will be called
     */
-   getFullAccountById( id, on_update = null, min_age_ms = null )
+   fetchFullAccountById( id, on_update = null, min_age_ms = null )
    {
+      if( !utils.is_object_id(id) ) 
+         throw Error( "argument is not an object id: " + id )
       let sub = this.subscriptions_by_account.get( id )
 
       let now = new Date().getTime()
@@ -176,6 +229,7 @@ class ChainStore
                                            [callback,[id],sub.subscriptions.size > 0])
                  .then( results => {
 
+                    console.log( "results: ", results )
                     let full_account = results[0][1]
 
                     let {
@@ -187,7 +241,9 @@ class ChainStore
                         referrer_name, registrar_name, lifetime_referrer_name
                     } = full_account
 
-                    this.accounts_by_name = this.accounts_by_name.setIn( [account.name], acnt => acnt.id = account.id )
+                    let cur = this.accounts_by_name.get( account.name )
+                    cur.id = account.id
+                    this.accounts_by_name = this.accounts_by_name.set( account.anme, cur ) 
 
                     account.referrer_name = referrer_name
                     account.lifetime_referrer_name = lifetime_referrer_name
@@ -213,13 +269,24 @@ class ChainStore
                     this._updateObject( statistics )
                     let updated_account = this._updateObject( account )
                     resolve( updated_account )
-                    this.getRecentHistory( updated_account )
+                    this.fetchRecentHistory( updated_account )
                  }, error => reject( error ) )
 
          })
       }
       this.subscriptions_by_account.set( id, sub )
       return sub.last_promise
+   }
+
+   getAccountMemberStatus( account ) {
+      if( !account ) return "Unknown Member" 
+      if( account.get( 'lifetime_referrer' ) == account.get( 'id' ) )
+         return "Lifetime Member"
+      let exp = new Date( account.get('membership_expiration_date') ).getTime()
+      let now = new Date().getTime()
+      if( exp < now )
+         return "Basic Member"
+      return "Annual Subscriber" 
    }
 
    getAccountBalance( account, asset_type )
@@ -246,7 +313,7 @@ class ChainStore
     *  @param account immutable account object
     *  @return a promise with the account history 
     */
-   getRecentHistory( account, limit = 100 )
+   fetchRecentHistory( account, limit = 100 )
    {
       /// TODO: make sure we do not submit a query if there is already one
       /// in flight...
@@ -296,7 +363,7 @@ class ChainStore
                           // it looks like some more history may have come in while we were
                           // waiting on the result, lets fetch anything new before we resolve
                           // this query.
-                          this.getRecentHistory(updated_account, limit ).then( resolve, reject )
+                          this.fetchRecentHistory(updated_account, limit ).then( resolve, reject )
                        }
                        else
                           resolve(updated_account)
@@ -368,7 +435,7 @@ class ChainStore
             this.objects_by_id = this.objects_by_id.set( acnt.id, acnt )
          }
       }
-      this.getRecentHistory( acnt ) 
+      this.fetchRecentHistory( acnt ) 
       this._notifyAccountSubscribers( account_id )
    }
 
@@ -388,24 +455,29 @@ class ChainStore
     *
     *  @return a promise with the object data
     */
-   getObject( id, min_age_ms = null) {
+   fetchObject( id, min_age_ms = null) {
       if( !utils.is_object_id(id) ) 
          throw Error( "argument is not an object id" )
 
+      let now = new Date().getTime()
+
       let current_sub = this.subscriptions_by_id.get(id)
+      console.log( " init current_sub: ", current_sub )
       if( !current_sub )
          current_sub = { last_update: now }
 
 
-      let now = new Date().getTime()
       if( min_age_ms && current_sub.last_update <= now - min_age_ms )
          current_sub.last_update = now
 
       if( current_sub.last_update != now ) 
+      {
+         console.log( ".. current_sub: ", current_sub )
          return current_sub.last_promise
+      }
       
       current_sub.last_promise = new Promise( (resolve, reject ) => {
-          Apis.instance().db_api().exec( "get_objects", [ id ] )
+          Apis.instance().db_api().exec( "get_objects", [ [id] ] )
               .then( optional_objects => {
                   let result = optional_objects[0]
                   if( result )
@@ -415,6 +487,7 @@ class ChainStore
               }).catch( error => reject(error) )
       })
       this.subscriptions_by_id.set( id, current_sub )
+      console.log("current_sub: ", current_sub )
       return current_sub.last_promise
    }
 
@@ -503,19 +576,21 @@ class ChainStore
          for( sub of current_sub.subscriptions )
             sub( current )
 
+      console.log("current_sub: ", current_sub )
+      this.subscriptions_by_id.set( object.id, current_sub )
       return current;
    }
 
-   getGlobalProperties( min_age_ms = null )
+   fetchGlobalProperties( min_age_ms = null )
    {
       /// TODO: replace "2.0.0" with constants defined from generated code
-      return this.getObject( "2.0.0", min_age_ms )
+      return this.fetchObject( "2.0.0", min_age_ms )
    }
 
-   getDynamicGlobalProperties( min_age = null )
+   fetchDynamicGlobalProperties( min_age = null )
    {
       /// TODO: replace "2.1.0" with constants defined from generated code
-      return this.getObject( "2.1.0", min_age_ms )
+      return this.fetchObject( "2.1.0", min_age_ms )
    }
 
    removeObject( object_id )

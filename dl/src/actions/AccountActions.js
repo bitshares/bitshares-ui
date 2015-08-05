@@ -188,6 +188,7 @@ class AccountActions {
                 amount, asset_id, memo
             );
             promise.then(result => {
+                console.log( "transfer result: ", result )
                 this.dispatch(result);
             });
         } catch (error) {

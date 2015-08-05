@@ -6,20 +6,26 @@ import utils from "common/utils";
 
 class FormattedAsset extends Component {
     shouldComponentUpdate(nextProps) {
+       return true
+          /*
         let symbol = (this.props.asset && nextProps.asset) ?
             nextProps.asset.symbol !== this.props.asset.symbol : true;
         return (
             nextProps.amount !== this.props.amount || 
             symbol
             );
+            */
     }
 
     render() {
         let {amount, asset, base, baseamount, decimalOffset, color} = this.props;
+        console.log( "props: ", this.props )
         
         if (!asset) {
             return <span></span>;
         }
+        if( 'toJS' in asset )
+           asset = asset.toJS()
 
         let colorClass = color ? "facolor-" + color : "";
 

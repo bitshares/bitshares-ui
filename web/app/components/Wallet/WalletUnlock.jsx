@@ -87,7 +87,6 @@ export default class WalletUnlock extends React.Component {
             SessionActions.onUnlock();
             this.setState({password_error: false});
             ZfApi.publish(this.props.modalId, "close");
-            notify.success("Successfully unlocked the wallet")
         }
     }
 

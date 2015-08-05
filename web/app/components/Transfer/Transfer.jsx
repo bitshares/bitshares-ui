@@ -6,6 +6,7 @@ import DoneScreen from "./DoneScreen";
 import classNames from "classnames";
 import utils from "common/utils";
 import AccountActions from "actions/AccountActions";
+import AccountImage from "../Account/AccountImage";
 import AccountInfo from "../Account/AccountInfo";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -17,7 +18,10 @@ import notify from "actions/NotificationActions";
 import AccountSelect from "../Forms/AccountSelect";
 import debounce from "lodash.debounce";
 import Immutable from "immutable";
+import ChainStore from "api/chain.js"
 import Wallet from "components/Wallet/Wallet";
+import validation from "common/validation"
+
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -25,11 +29,15 @@ class Transfer extends BaseComponent {
 
         this.state = {
             transfer: {
-                from: null,
+                from_account : null,
+                from: "",
                 from_id: null,
+                from_assets : [  ],
+                from_balance : 0,
                 amount: null,
                 asset: "1.3.0",
-                to: null,
+                to_account : null,
+                to: "",
                 to_id: null,
                 memo: null
             },
@@ -51,6 +59,7 @@ class Transfer extends BaseComponent {
     }
 
     componentDidMount() {
+       /*
         let {cachedAccounts, currentAccount} = this.props;
         if (currentAccount) {
             let account = cachedAccounts.get(currentAccount.name);
@@ -58,10 +67,11 @@ class Transfer extends BaseComponent {
                 AccountActions.getAccount(currentAccount.name);
             }
         }
+        */
     }
 
     componentWillReceiveProps(nextProps) {
-
+       /*
         // Update searchAccounts if the id is missing from transfer.to_id
         let {transfer} = this.state;
         if (!transfer.to_id && transfer.to && !Immutable.is(nextProps.searchAccounts, this.props.searchAccounts)) {
@@ -83,9 +93,31 @@ class Transfer extends BaseComponent {
                 this.setState({transfer: transfer});
             }
         }
+        */
     }
 
-    validateTransferFields() {
+    validateTransferFields( new_state ) {
+
+        new_state.errors = {
+            from: null,
+            amount: null,
+            to: null,
+            memo: null
+        }
+
+        if( new_state.transfer.from_account && (new_state.transfer.from_account == new_state.transfer.to_account) )
+           new_state.errors.to = "cannot transfer to the same account" 
+        if( new_state.transfer.to.length > 2 && !validation.is_account_name( new_state.transfer.to ) )
+           new_state.errors.to = "invalid account name"
+        if( new_state.transfer.from.length > 2 && !validation.is_account_name( new_state.transfer.from ) )
+           new_state.errors.from = "invalid account name"
+
+
+
+        let errors = new_state.errors
+        new_state.isValid = !(errors.from || errors.amount || errors.to || errors.memo);
+
+       /*
         function checkBalance(account_balance, asset_id, amount) {
             if (!account_balance || !asset_id || !amount) {
                 return -1;
@@ -122,39 +154,106 @@ class Transfer extends BaseComponent {
                 errors.to = req;
             }
         }
-        this.state.isValid = !(errors.from || errors.amount || errors.to || errors.memo);
-
-
+        */
     }
+    update() {
+       console.log( "init state:", this.state )
+       console.log( "this.state.from: ",this.state.transfer.from )
+        let transfer = { 
+            from_balance : 0,
+            from_assets : this.state.transfer.from_assets,
+            from: this.state.transfer.from.toLowerCase().trim(), 
+            to: this.state.transfer.to.toLowerCase().trim(),
+            amount : this.state.transfer.amount,
+            asset : this.state.transfer.asset,
+            memo: this.state.transfer.memo
+        }
+        let new_state  = {
+           error : null,
+           done : this.state.done,
+           isValid : false,
+           confirmation : false,
+           errors: {
+               from: null,
+               amount: null,
+               to: null,
+               memo: null
+           }
+        }
+
+        transfer.to_account   = ChainStore.getAccountByName( transfer.to )
+        transfer.to_id        = transfer.to_account ? transfer.to_account.get('id') : null
+        transfer.from_account = ChainStore.getAccountByName( transfer.from )
+        transfer.from_id      = transfer.from_account ? transfer.from_account.get('id') : null
+        new_state.transfer = transfer
+
+        if( transfer.from_id && transfer.from_id != this.state.transfer.from_id )
+        {
+            ChainStore.fetchFullAccountById( transfer.from_id ).then( this.update.bind(this) )
+        }
+
+        if( transfer.from_account )
+        {
+           console.log( transfer.from_account.toJS() )
+           let avalable_balances = transfer.from_account.get('balances')
+
+           console.log( "available balances: ", avalable_balances )
+           transfer.from_assets = []
+           if( avalable_balances )
+           {
+              for( let balance of avalable_balances.entries() )
+              {
+                 let aobj = ChainStore.getObject( balance[0] )
+                 if( !aobj ) 
+                    ChainStore.fetchObject( balance[0] ).then( this.update.bind(this) )
+
+                 let bobj = ChainStore.getObject( balance[1] )
+                 if( bobj )
+                 {
+                    if( balance[0] == transfer.asset )
+                       transfer.from_balance = bobj.get('balance')
+                    if( bobj.get( 'balance' ) > 0 )
+                       transfer.from_assets.push( [balance[0], aobj ? aobj.get('symbol') : balance[0] ] )
+                 }
+              }
+           }
+           transfer.from_available = ChainStore.getAccountBalance( transfer.from_account, transfer.asset )
+        }
+        this.validateTransferFields( new_state )
+
+        console.log("update state:",new_state)
+        this.setState(new_state)
+    }
+    shouldComponentUpdate() { return true }
 
     formChange(event) {
         let {error, transfer} = this.state;
         error = null;
         let key = event.target.id;
         let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
+        console.log( "key:",key)
+        console.log( "value:",value)
         if (key === "from") {
             transfer.from = value;
-            transfer.from_id = this.props.account_name_to_id[value];
-            if (!this.props.cachedAccounts.get(value)) { AccountActions.getAccount(value); }
+            if( validation.is_account_name( transfer.from ) )
+               ChainStore.lookupAccountByName( transfer.from ).then( this.update.bind(this), this.update.bind(this) )
         } else if (key === "to") {
-            this._searchAccounts(value);
             transfer.to = value;
-            let account = this.props.searchAccounts.findEntry((name) => {
-                return name === value;
-            });
-
-            transfer.to_id = account ? account[0] : null;
-
+            if( validation.is_account_name( transfer.to ) )
+               ChainStore.lookupAccountByName( transfer.to ).then( this.update.bind(this), this.update.bind(this) )
+        } 
+        else if( key == "asset" )
+        {
+            transfer.asset = value
         } else {
             transfer[key] = value;
         }
-        this.setState({error: error, transfer: transfer});
-        this.validateTransferFields();       
+        this.update()
     }
 
     onSubmit(e) {
         e.preventDefault();
-        this.validateTransferFields();
+        this.validateTransferFields(this.state);
         if(this.state.isValid) {
             //this.setState({confirmation: true});
             this.onConfirm()
@@ -170,6 +269,7 @@ class Transfer extends BaseComponent {
         if (!t.from_id) {
             t.from_id = this.props.currentAccount.id;
         }
+
         AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
             this.setState({confirmation: false, done: true, error: null});
             notify.addNotification({
@@ -213,112 +313,115 @@ class Transfer extends BaseComponent {
         let {transfer} = this.state;
         transfer.from = account_name;
         transfer.from_id = this.props.account_name_to_id[account_name];
+
         this.setState({transfer: transfer});
     }
 
     render() {
         let {transfer, errors} = this.state;
-        let {cachedAccounts, currentAccount, assets, accountBalances, myAccounts, payeeAccounts, account_name_to_id, searchAccounts} = this.props;
-        let query_params = this.context.router.getCurrentQuery();
-
-        if(query_params.to && !transfer.to) {
-            transfer.to = query_params.to;
-            // Launch a search for the account, the to_id will be updated in componentWillReceiveProps
-            transfer.to_id = this._searchAccounts(query_params.to);
-        }
-
-        let account = null;
-        let balancesComp = null, finalBalances = null;
-        let myAssets = [];
-
-        if(!transfer.from && currentAccount) {
-            transfer.from = currentAccount.name;
-            transfer.from_id = currentAccount.id;
-        } else if (transfer.from && !transfer.from_id) {
-            AccountActions.getAccount(transfer.from);
-        }
-
-        if (cachedAccounts.size > 0 && assets.size > 0 && accountBalances.size > 0) {
-            account = cachedAccounts.get(this.state.transfer.from) || null;
-            let balances = account ? accountBalances.get(account.name) : null;
-            if (account && balances) {
-                balancesComp = balances.map((balance) => {
-                    return <li key={balance.asset_id}><FormattedAsset amount={parseInt(balance.amount, 10)} asset={assets.get(balance.asset_id)}/></li>;
-                });
-
-                finalBalances = balances.map((balance) => {
-                    let asset = assets.get(balance.asset_id);
-                    if (asset) {
-                        myAssets.push([balance.asset_id, asset.symbol]);
-                        if (balance.asset_id === transfer.asset && transfer.amount >= 0) {
-                            let precision = utils.get_asset_precision(asset.precision);
-                            return <span key={balance.asset_id}>
-                                <Translate component="label" content="transfer.final" />
-                                <FormattedAsset amount={balance.amount - transfer.amount * precision} asset={asset}/>
-                            </span>;
-                        }
-                    }
-                });
-            }
-        }
+        console.log( "render state: ", this.state )
 
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
-
-        // if (this.state.done && currentAccount) {
-        //     return (
-        //         <div className="grid-block">
-        //             <DoneScreen
-        //                 onCancel={this.newTransfer}
-        //                 key="ds"
-        //                 transfer={this.state.transfer}
-        //                 from={currentAccount.name}
-        //                 assets={assets}
-        //                 />
-        //         </div>
-        //     );
-        // }
-
-        let autoCompleteAccounts = searchAccounts.filter(a => {
-            return a.indexOf(this.state.searchTerm) !== -1; 
-        });
-
-        return (<Wallet>
+        return (
             <form className="grid-block vertical overflow-visible" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
-                <div className="grid-block page-layout transfer-top shrink small-horizontal overflow-visible">
+                   <div className="grid-block" ></div>
+                   <div>
+                    <p/>
                     {/*  F R O M  */}
-                    <div className="grid-block medium-3">
-                        <div className={classNames("grid-content", "full-width-content", "no-overflow", {"has-error": errors.from})}>
-                            <Translate component="label" content="transfer.from" />
-                            {transfer.from && myAccounts.size > 0 ? <AccountSelect selected={transfer.from} account_names={myAccounts} onChange={this._onAccountSelect.bind(this)}/> : null}
-                            <div>{errors.from}</div>
+                    <div className="grid-block medium-5">
+                        <div className="grid-content shrink">
+                            <AccountImage size={{height: 80, width: 80}}
+                                          account={transfer.from} custom_image={null}/>
+                        </div>
+                        <div className="grid-block vertical">
+                           <div className="grid-block">  
+                              <div className="grid-content">
+                                  <Translate component="label" content="transfer.from" /> 
+                              </div>
+                              <div className="grid-content align-right shrink"> {/*balancesComp*/} </div>
+                           </div>
+                           <div className="grid-content full-width-content no-overflow"> 
+                                <input id="from" type="text" value={transfer.from}  defaultValue={transfer.from} ref="from" onChange={this.form_change}/>
+                           </div>
+                           <div className="grid-block"> 
+                               { errors.from ? null : 
+                                 (<div className="grid-content shrink">
+                                    {ChainStore.getAccountMemberStatus(transfer.from_account)}
+                                 </div>) 
+                               } 
+                               <div className="grid-content full-width-content no-overflow">{errors.from}</div>
+                               <div className="grid-content shrink">{transfer.from_id}</div>
+                           </div>
                         </div>
                     </div>
-                    {/*  A M O U N T  */}
-                    <div className="grid-block medium-3">
-                        <div className={classNames("grid-content", "no-overflow", {"has-error": errors.amount})}>
-                            <label>
-                                <Translate component="span" content="transfer.amount" />
-                                <span className="inline-label">
-                                    <input id="amount" type="text" placeholder="0.0" defaultValue={transfer.amount} ref="amount"/>
-                                    <span className="form-label select">{this.renderSelect("asset", myAssets)}</span>
-                                </span>
-                            </label>
-                            <div>{errors.amount}</div>
-                        </div>
-                    </div>
+                    <p/>
                     {/*  T O  */}
-                    <div className="grid-block medium-3 overflow-visible">
-                        <div className={classNames("medium-12", {"has-error": errors.to})}>
-                            <Translate component="label" content="transfer.to" />
-                            <AutocompleteInput
-                                id="to"
-                                options={autoCompleteAccounts}
-                                initial_value={transfer.to}
-                                onChange={this.formChange}
-                                test={this.testFunction} />
-                            <div>{errors.to}</div>
+                    <div className="grid-block medium-5">
+                        <div className="grid-content shrink">
+                            <AccountImage size={{height: 80, width: 80}}
+                                          account={transfer.to} custom_image={null}/>
+                        </div>
+                        <div className="grid-block vertical">
+                           <div className="grid-block">  
+                              <div className="grid-content">
+                                  <Translate component="label" content="transfer.to" /> 
+                              </div>
+                           </div>
+                           <div className="grid-content full-width-content no-overflow"> 
+                                <input id="to" type="text"  defaultValue={transfer.to} ref="to" onChange={this.form_change}/>
+                           </div>
+                           <div className="grid-block"> 
+                               { errors.to ? null : 
+                                 (<div className="grid-content shrink">
+                                    {ChainStore.getAccountMemberStatus(transfer.to_account)}
+                                 </div>)
+                               } 
+                               <div className="grid-content full-width-content no-overflow">{errors.to}</div>
+                               <div className="grid-content shrink">{transfer.to_id}</div>
+                           </div>
                         </div>
                     </div>
+                    <p/>
+                    {/*  A M O U N T  */}
+                    <div className="grid-block medium-5">
+                        <div className="grid-block vertical">
+                           <div className="grid-block">
+                              <div className="grid-content">
+                               <label> <Translate component="span" content="transfer.amount" /> </label>
+                              </div>
+                              <div className="grid-content align-right shrink">
+                                 { transfer.from_balance == 0 ? null : (
+                                    <span>
+                                    <Translate component="span" content="transfer.available" />  
+                                    <FormattedAsset amount={transfer.from_balance} 
+                                                    asset={ChainStore.getObject(transfer.asset)} />
+                                    </span>
+                                 )}
+                              </div>
+                           </div>
+                           <div className={classNames("grid-content", "no-overflow", {"has-error": errors.amount})}>
+                                   <span className="inline-label">
+                                       <input id="amount" type="text" placeholder="0.0" defaultValue={transfer.amount} ref="amount"/>
+                                       <span className="form-label select">{this.renderSelect("asset", transfer.from_assets)}</span>
+                                   </span>
+                           </div>
+                           <div className="grid-content">
+                               {errors.amount}
+                           </div>
+                        </div>
+                    </div>
+
+                    {/*  M E M O  */}
+                    <div className="grid-block medium-5">
+                        <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
+                            <label>
+                                <Translate component="span" content="transfer.memo" />
+                                <textarea id="memo" rows="1" ref="memo" value={transfer.memo}/>
+                            </label>
+                            <div>{errors.memo}</div>
+                        </div>
+                    </div>
+
                     {/*  S E N D  B U T T O N  */}
                     <div className="grid-block medium-3">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
@@ -330,43 +433,16 @@ class Transfer extends BaseComponent {
                 </div>
 
                 <div className="grid-block page-layout transfer-bottom small-horizontal">
-                    {/*  F R O M  A C C O U N T  */}
-                    <div className="grid-block medium-3 medium-order-1 small-order-3">
-                        <div className="grid-content">
-                            {transfer.from ? <AccountInfo account_name={transfer.from} account_id={transfer.from_id} image_size={{height: 120, width: 120}}/> : null}
-                            <hr/>
-                            <h5><Translate component="span" content="transfer.balances" />:</h5>
-                            <ul style={{listStyle: "none"}}>
-                                {balancesComp}
-                            </ul>
-                        </div>
-                    </div>
-                    {/*  M E M O  */}
-                    <div className="grid-block medium-3 medium-order-2 small-order-1">
-                        <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
-                            <label>
-                                <Translate component="span" content="transfer.memo" />
-                                <textarea id="memo" rows="5" ref="memo" value={transfer.memo}/>
-                            </label>
-                            <div>{errors.memo}</div>
-                        </div>
-                    </div>
-                    {/*  T O  A C C O U N T  */}
-                    <div className="grid-block medium-3 medium-order-3 small-order-4">
-                        <div className="grid-content">
-                            { transfer.to_id ? <AccountInfo account_name={transfer.to} account_id={transfer.to_id} image_size={{height: 120, width: 120}}/> : null }
-                        </div>
-                    </div>
                     {/*  F I N A L  B A L A N C E  A N D  F E E  */}
                     <div className="grid-block medium-3 medium-order-4 small-order-2">
                         <div className="grid-content">
-                            {finalBalances}
+                            {/*finalBalances*/}
                         </div>
                     </div>
                 </div>
 
             </form>
-        </Wallet>);
+        );
     }
 }
 

@@ -99,6 +99,7 @@ module.exports = {
         send: "Send",
         final: "Final balance",
         balances: "Balances",
+        available: "Available: ",
         errors: {
             req: "Required field",
             pos: "Amount must be positive",

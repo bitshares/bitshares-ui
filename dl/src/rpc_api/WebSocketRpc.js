@@ -30,7 +30,15 @@ class WebSocketRpc {
         this.current_callback_id += 1;
         var self = this;
 
-        if (params[1] === "subscribe_to_objects" || params[1] === "subscribe_to_market") {
+           
+        if (params[1] === "subscribe_to_objects" || params[1] === "subscribe_to_market" ||
+            params[1] === "broadcast_transaction_with_callback"
+            ) 
+           /*
+        if( params.length > 2 && 
+            typeof params[2] == 'object'  &&
+            typeof params[2][0] == 'function' ) */
+        {
             self.subscriptions[self.current_callback_id] = {
                 callback: params[2][0],
                 params: Immutable.fromJS(params[2][1])
