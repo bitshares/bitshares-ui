@@ -34,7 +34,7 @@ class Transfer extends BaseComponent {
                 from_id: null,
                 from_assets : [  ],
                 from_balance : 0,
-                amount: null,
+                amount: "0.0",
                 asset: "1.3.0",
                 to_account : null,
                 to: "",
@@ -112,10 +112,20 @@ class Transfer extends BaseComponent {
         if( new_state.transfer.from.length > 2 && !validation.is_account_name( new_state.transfer.from ) )
            new_state.errors.from = "invalid account name"
 
+        let value = new_state.transfer.amount
+        let fvalue = parseFloat(value)
+        if( isNaN(fvalue) )
+           new_state.errors.amount = "must be a number"
+         else if( fvalue < 0 )
+           new_state.errors.amount = "amount must be greater than 0" 
 
+        /*
+        if( value.length && (isNaN(parseFloat(value)) || !isFinite(value) || parseFloat(value) <= 0) )
+           new_state.errors.amount = "not a valid amount"
+           */
 
         let errors = new_state.errors
-        new_state.isValid = !(errors.from || errors.amount || errors.to || errors.memo);
+        new_state.isValid = !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
        /*
         function checkBalance(account_balance, asset_id, amount) {
@@ -164,7 +174,7 @@ class Transfer extends BaseComponent {
             from_assets : this.state.transfer.from_assets,
             from: this.state.transfer.from.toLowerCase().trim(), 
             to: this.state.transfer.to.toLowerCase().trim(),
-            amount : this.state.transfer.amount,
+            amount : this.state.transfer.amount.trim(),
             asset : this.state.transfer.asset,
             memo: this.state.transfer.memo
         }
@@ -231,9 +241,23 @@ class Transfer extends BaseComponent {
         error = null;
         let key = event.target.id;
         let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
+        value = value.trim()
+
         console.log( "key:",key)
         console.log( "value:",value)
-        if (key === "from") {
+        if (key === "amount") {
+           value = value.trim()
+           let float_value = parseFloat(value)
+           if( value == "." )
+              transfer.amount = value
+           else if( isNaN( float_value ) )
+               transfer.amount = ""
+           else if( float_value < 0 ) 
+              transfer.amount = value.substring(1,value.length-1)
+           else
+              transfer.amount = value
+        }
+        else if (key === "from") {
             transfer.from = value;
             if( validation.is_account_name( transfer.from ) )
                ChainStore.lookupAccountByName( transfer.from ).then( this.update.bind(this), this.update.bind(this) )
@@ -368,7 +392,7 @@ class Transfer extends BaseComponent {
                               </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="to" type="text"  defaultValue={transfer.to} ref="to" onChange={this.form_change}/>
+                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" onChange={this.form_change}/>
                            </div>
                            <div className="grid-block"> 
                                { errors.to ? null : 
@@ -401,7 +425,7 @@ class Transfer extends BaseComponent {
                            </div>
                            <div className={classNames("grid-content", "no-overflow", {"has-error": errors.amount})}>
                                    <span className="inline-label">
-                                       <input id="amount" type="text" placeholder="0.0" defaultValue={transfer.amount} ref="amount"/>
+                                       <input id="amount" type="text" placeholder="0.0" value={transfer.amount} defaultValue={transfer.amount} onChange={this.form_change} ref="amount"/>
                                        <span className="form-label select">{this.renderSelect("asset", transfer.from_assets)}</span>
                                    </span>
                            </div>
