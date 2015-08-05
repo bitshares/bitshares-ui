@@ -324,8 +324,7 @@ class Transfer extends BaseComponent {
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
         return (
             <form className="grid-block vertical overflow-visible" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
-                   <div className="grid-block" ></div>
-                   <div>
+               <div>
                     <p/>
                     {/*  F R O M  */}
                     <div className="grid-block medium-5">
@@ -430,16 +429,16 @@ class Transfer extends BaseComponent {
                             { this.state.error ? <div>{this.state.error}</div> : <div>&nbsp;<br/></div> }
                         </div>
                     </div>
-                </div>
+               </div>
 
-                <div className="grid-block page-layout transfer-bottom small-horizontal">
+               <div className="grid-block page-layout transfer-bottom small-horizontal">
                     {/*  F I N A L  B A L A N C E  A N D  F E E  */}
                     <div className="grid-block medium-3 medium-order-4 small-order-2">
                         <div className="grid-content">
                             {/*finalBalances*/}
                         </div>
                     </div>
-                </div>
+               </div>
 
             </form>
         );
