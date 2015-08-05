@@ -256,7 +256,7 @@ class Transfer extends BaseComponent {
         this.validateTransferFields(this.state);
         if(this.state.isValid) {
             //this.setState({confirmation: true});
-            this.onConfirm()
+            this.onConfirm();
         } else {
             this.setState({errors: this.state.errors});
         }

@@ -156,8 +156,7 @@ let CallOrder = t.struct({
     call_price: t.Obj,
     collateral: t.Num,
     debt: t.Num,
-    id: t.Str,
-    maintenance_collateral_ratio: t.Num
+    id: t.Str
 }, "CallOrder");
 
 let LimitTrx = t.struct({

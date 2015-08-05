@@ -204,15 +204,23 @@ class Exchange extends React.Component {
         });
     }
 
+    _addZero(value) {
+        console.log("value:", value);
+        if (value.length === 1 && value === ".") {
+            return "0.";
+        }
+        return value;
+    }
+
     _setDepthLine(value) { this.setState({depthLine: value}); }
 
-    _buyAmountChanged(e) { this.setState({buyAmount: e.target.value}); }
+    _buyAmountChanged(e) { this.setState({buyAmount: this._addZero(e.target.value)}); }
 
-    _buyPriceChanged(e) { this.setState({buyPrice: e.target.value}); this._setDepthLine(e.target.value); }
+    _buyPriceChanged(e) { this.setState({buyPrice: this._addZero(e.target.value)}); this._setDepthLine(e.target.value); }
 
-    _sellAmountChanged(e) { this.setState({sellAmount: e.target.value}); }
+    _sellAmountChanged(e) { this.setState({sellAmount: this._addZero(e.target.value)}); }
 
-    _sellPriceChanged(e) { this.setState({sellPrice: e.target.value}); this._setDepthLine(e.target.value); }
+    _sellPriceChanged(e) { this.setState({sellPrice: this._addZero(e.target.value)}); this._setDepthLine(e.target.value); }
 
     _changeTab(value) {
         this.setState({activeTab: value});
