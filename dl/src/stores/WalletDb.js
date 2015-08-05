@@ -9,6 +9,7 @@ import BalanceClaimStore from "stores/BalanceClaimStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
+import WalletUnlockActions from "actions/WalletUnlockActions"
 
 var wallet_public_name = "default"
 var aes_private_map = {}
@@ -121,8 +122,8 @@ class WalletDb {
     }
     
     process_transaction(tr, signer_private_keys, broadcast) {
-        return new Promise((resolve, reject)=> {
-            var p = tr.set_required_fees().then(()=> {
+        return WalletUnlockActions.unlock().then( () => {
+            return tr.set_required_fees().then(()=> {
                 return tr.finalize().then(()=> {
                     if(signer_private_keys) {
                         if( ! Array.isArray(signer_private_keys))
@@ -155,7 +156,6 @@ class WalletDb {
                         return tr.serialize()
                 })
             })
-            resolve(p)
         })
     }
     
@@ -271,16 +271,12 @@ class WalletDb {
         ]
     }
     
+    
     /** WIF format
-        @return resolve(insert_count)
     */
     importKeys(private_key_objs) {
-        return new Promise((resolve, reject) => {
+        return WalletUnlockActions.unlock().then( () => {
             var transaction = this.transaction_update_keys()
-            if(this.isLocked()) {
-                reject("wallet locked")
-                return
-            }
             var promises = []
             var import_count = 0, duplicate_count = 0
             for(let private_key_obj of private_key_objs) {
@@ -308,9 +304,7 @@ class WalletDb {
                 )
             }
             
-            var p = this.setWalletModified(transaction).catch(
-                error => reject(error)
-            ).then( ()=> {
+            return this.setWalletModified(transaction).then( ()=> {
                 return Promise.all(promises).catch( error => {
                     //DEBUG
                     console.log('importKeys transaction.abort', error)    
@@ -319,7 +313,6 @@ class WalletDb {
                     return {import_count, duplicate_count, private_key_ids}
                 })
             })
-            resolve(p)
         })
     }
 
@@ -395,7 +388,7 @@ class WalletDb {
     }
     
     _updateWallet(transaction, update_callback) {
-        return new Promise((resolve, reject) => {
+        return WalletUnlockActions.unlock().then( () => {
             var wallet = this.wallets.get(wallet_public_name)
             if ( ! wallet) {
                 reject("missing wallet " + wallet_public_name)
@@ -420,44 +413,10 @@ class WalletDb {
                     this.wallets.set( wallet_clone.public_name, wallet_clone )
                 }
             )
-            resolve(Promise.all([p,p2]))
+            return Promise.all([p,p2])
         })
     }
     
-    /*
-    onDeleteWallet(wallet_public_name = "default") {
-        var wallet = this.wallets.get(wallet_public_name)
-        if(!wallet) {
-            reject("no match")
-            return false
-        }
-        let transaction = iDB.instance().db().transaction(
-            ["wallets", "private_keys"],
-            "readwrite"
-        );
-        transaction.onerror = e => {
-            reject(e.target.error.message)
-        }
-        PrivateKeyStore.deleteByWalletId(wallet.id, transaction).then(()=>{
-            let wallet_store = transaction.objectStore("wallets");
-            let request = wallet_store.delete(wallet.id);
-            request.onsuccess = () => {
-                delete aes_private_map[wallet_public_name]
-                this.wallets = this.wallets.delete(wallet_public_name)
-                if(this.wallets.get(wallet_public_name))
-                    console.log("DEBUG delete failed")
-                
-                eventEmitter.emitChange()
-            }
-            request.onerror = (e) => {
-                console.log("ERROR!!! deleteWallet - ", e.target.error.message, value);
-                reject(e.target.error.message);
-            }
-        }).catch( error => {reject(error)})
-        return false
-    }*/
-    
-
     /*
     validateBrainkey(
         wallet,
@@ -481,8 +440,7 @@ class WalletDb {
         )
     }
     */
-    // delete_brainkey
-    
+
     loadDbData() {
         var map = this.wallets.asMutable()
         return idb_helper.cursor("wallets", cursor => {

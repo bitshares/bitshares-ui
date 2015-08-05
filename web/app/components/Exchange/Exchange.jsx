@@ -68,11 +68,6 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
-        if( WalletDb.isLocked()) {
-            notify.error("Wallet is locked");
-            return;
-        }
-
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(

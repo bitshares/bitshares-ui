@@ -7,7 +7,7 @@ import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
-import WalletUnlock from "../Wallet/WalletUnlock";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 class Header extends React.Component {
 
@@ -46,13 +46,15 @@ class Header extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        if (WalletDb.isLocked()) ZfApi.publish("show-unlock-wallet-modal", "open");
-        else this.refs.wallet_unlock.lock();
+        if (WalletDb.isLocked()) WalletUnlockActions.unlock();
+        else WalletUnlockActions.lock();
     }
 
     render() {
         if(!WalletDb.getWallet()) return null;
-
+        //DEBUG
+        console.log('... render WalletDb.isLocked()',WalletDb.isLocked())
+        
         let {currentAccount, linkedAccounts} = this.props, accountsDropDown = null, plusDropDown = null;
 
         let settings = counterpart.translate("header.settings");
@@ -108,7 +110,7 @@ class Header extends React.Component {
         }
 
         return (
-            <div><WalletUnlock ref="wallet_unlock" modalId="header_unlock_wallet_modal" autoOpen={false}/>
+            <div>
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
                     <ul className="primary menu-bar title">
