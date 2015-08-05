@@ -157,7 +157,7 @@ class Transfer extends BaseComponent {
         this.validateTransferFields();
         if(this.state.isValid) {
             //this.setState({confirmation: true});
-            this.onConfirm()
+            this.onConfirm();
         } else {
             this.setState({errors: this.state.errors});
         }
@@ -170,7 +170,8 @@ class Transfer extends BaseComponent {
         if (!t.from_id) {
             t.from_id = this.props.currentAccount.id;
         }
-        AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
+
+        AccountActions.transfer(t.from_id, t.to_id, parseInt(t.amount * precision, 10), t.asset, t.memo).then(() => {
             this.setState({confirmation: false, done: true, error: null});
             notify.addNotification({
                 message: "Transfer completed",
