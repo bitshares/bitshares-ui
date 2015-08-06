@@ -32,12 +32,14 @@ class Transfer extends BaseComponent {
                 from_account : null,
                 from: "",
                 from_id: null,
+                from_name : "?",
                 from_assets : [  ],
                 from_balance : 0,
                 amount: "0.0",
                 asset: "1.3.0",
                 to_account : null,
                 to: "",
+                to_name : "?",
                 to_id: null,
                 memo: null
             },
@@ -59,41 +61,9 @@ class Transfer extends BaseComponent {
     }
 
     componentDidMount() {
-       /*
-        let {cachedAccounts, currentAccount} = this.props;
-        if (currentAccount) {
-            let account = cachedAccounts.get(currentAccount.name);
-            if (!account) {
-                AccountActions.getAccount(currentAccount.name);
-            }
-        }
-        */
     }
 
     componentWillReceiveProps(nextProps) {
-       /*
-        // Update searchAccounts if the id is missing from transfer.to_id
-        let {transfer} = this.state;
-        if (!transfer.to_id && transfer.to && !Immutable.is(nextProps.searchAccounts, this.props.searchAccounts)) {
-            let to_account = nextProps.searchAccounts.findEntry(a => {
-                return a === transfer.to;
-            });
-            if (to_account) {
-                transfer.to_id = to_account[0];         
-                this.setState({transfer: transfer});
-                this.validateTransferFields();       
-            }
-        }
-
-        // Make sure transfer.from_id is defined
-        if (transfer.from && !transfer.from_id) { 
-            let {account_name_to_id} = nextProps;
-            if (account_name_to_id[transfer.from]) {
-                transfer.from_id = account_name_to_id[transfer.from];
-                this.setState({transfer: transfer});
-            }
-        }
-        */
     }
 
     validateTransferFields( new_state ) {
@@ -107,64 +77,31 @@ class Transfer extends BaseComponent {
 
         if( new_state.transfer.from_account && (new_state.transfer.from_account == new_state.transfer.to_account) )
            new_state.errors.to = "cannot transfer to the same account" 
-        if( new_state.transfer.to.length > 2 && !validation.is_account_name( new_state.transfer.to ) )
+
+        if( new_state.transfer.to.substring(0,1) == "#" ) 
+        {
+           if( isNaN( new_state.transfer.to.substring(1) ) ) new_state.errors.to = "invalid account number"
+        }
+        else if( new_state.transfer.to.length > 2 && !validation.is_account_name( new_state.transfer.to ) )
            new_state.errors.to = "invalid account name"
-        if( new_state.transfer.from.length > 2 && !validation.is_account_name( new_state.transfer.from ) )
+
+        if( new_state.transfer.from.substring(0,1) == "#" )
+        {
+           if(  isNaN( new_state.transfer.from.substring(1) ) ) new_state.errors.from = "invalid account number"
+        }
+        else if( new_state.transfer.from.length > 2 && !validation.is_account_name( new_state.transfer.from ) )
            new_state.errors.from = "invalid account name"
 
         let value = new_state.transfer.amount
         let fvalue = parseFloat(value)
-        if( isNaN(fvalue) )
+        if( value.length && isNaN(fvalue) && value != "." )
            new_state.errors.amount = "must be a number"
          else if( fvalue < 0 )
            new_state.errors.amount = "amount must be greater than 0" 
 
-        /*
-        if( value.length && (isNaN(parseFloat(value)) || !isFinite(value) || parseFloat(value) <= 0) )
-           new_state.errors.amount = "not a valid amount"
-           */
-
         let errors = new_state.errors
-        new_state.isValid = new_state.transfer.amount > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
+        new_state.isValid = Number(new_state.transfer.amount) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
-       /*
-        function checkBalance(account_balance, asset_id, amount) {
-            if (!account_balance || !asset_id || !amount) {
-                return -1;
-            }
-            for (var i = 0; i < account_balance.length; i++) {
-                if (account_balance[i].asset_id === asset_id) {
-                    return account_balance[i].amount - amount;
-                }
-            }
-        }
-
-        let errors = this.state.errors;
-        let transfer = this.state.transfer;
-        let req = counterpart.translate("transfer.errors.req");
-        let pos = counterpart.translate("transfer.errors.pos");
-        let valid = counterpart.translate("transfer.errors.valid");
-        let balance = counterpart.translate("transfer.errors.balance");
-        errors.amount = null;
-        let finalBalance = checkBalance(this.props.accountBalances.get(transfer.from), transfer.asset, transfer.amount );
-        if(transfer.amount !== null) {
-            if (!transfer.amount) {
-                errors.amount = req;
-            } else if ((Number(transfer.amount) === 0)) {
-                errors.amount = pos;
-            } else if (!(Number(transfer.amount) > 0.0)) {
-                errors.amount = valid;
-            } else if (finalBalance < 0) {
-                errors.amount = balance;
-            }
-        }
-        errors.to = null;
-        if(transfer.to !== null) {
-            if (!transfer.to || !transfer.to_id) {
-                errors.to = req;
-            }
-        }
-        */
     }
     update() {
        console.log( "init state:", this.state )
@@ -174,6 +111,8 @@ class Transfer extends BaseComponent {
             from_assets : this.state.transfer.from_assets,
             from: this.state.transfer.from.toLowerCase().trim(), 
             to: this.state.transfer.to.toLowerCase().trim(),
+            from_name : "?",
+            to_name : "?",
             amount : this.state.transfer.amount.trim(),
             asset : this.state.transfer.asset,
             memo: this.state.transfer.memo
@@ -191,19 +130,51 @@ class Transfer extends BaseComponent {
            }
         }
 
-        transfer.to_account   = ChainStore.getAccountByName( transfer.to )
-        transfer.to_id        = transfer.to_account ? transfer.to_account.get('id') : null
-        transfer.from_account = ChainStore.getAccountByName( transfer.from )
-        transfer.from_id      = transfer.from_account ? transfer.from_account.get('id') : null
-        new_state.transfer = transfer
-
-        if( transfer.from_id && transfer.from_id != this.state.transfer.from_id )
+        if( transfer.to.substring(0,1) == "#" ) 
         {
-            ChainStore.fetchFullAccountById( transfer.from_id ).then( this.update.bind(this) )
+           let substr = transfer.to.substring(1) 
+           if( parseInt( substr ) == Number(substr) )
+           {
+              transfer.to_account   = ChainStore.getObject( "1.2."+substr )
+              if( !transfer.to_account ) ChainStore.fetchObject( "1.2."+substr ).then( this.update.bind(this) )
+           }
+        }
+        else
+           transfer.to_account   = ChainStore.getAccountByName( transfer.to )
+
+        if( transfer.from.substring(0,1) == "#" )
+        {
+           let substr = transfer.from.substring(1) 
+           if( parseInt( substr ) == Number(substr) )
+           {
+              transfer.from_account   = ChainStore.getObject( "1.2."+substr )
+              if( !transfer.from_account ) ChainStore.fetchObject( "1.2."+substr ).then( this.update.bind(this) )
+           }
+        }
+        else
+        {
+           console.log( "lookup by name" )
+           transfer.from_account   = ChainStore.getAccountByName( transfer.from )
+        }
+
+        if( transfer.to_account )
+        {
+           transfer.to_id = transfer.to_account.get('id')
+           transfer.to_name = transfer.to_account.get('name')
+           transfer.to_lookup_display = transfer.to.substring(0,1) == "#" ? transfer.to_account.get('name') : "#"+transfer.to_id.substring(4)
         }
 
         if( transfer.from_account )
         {
+           transfer.from_name = transfer.from_account.get('name')
+           transfer.from_id = transfer.from_account.get('id')
+           if( transfer.from_id != this.state.transfer.from_id )
+           {
+               ChainStore.fetchFullAccountById( transfer.from_id ).then( this.update.bind(this) )
+           }
+
+           transfer.from_lookup_display = transfer.from.substring(0,1) == "#" ? transfer.from_account.get('name') : "#"+transfer.from_id.substring(4)
+
            console.log( transfer.from_account.toJS() )
            let avalable_balances = transfer.from_account.get('balances')
 
@@ -229,6 +200,8 @@ class Transfer extends BaseComponent {
            }
            transfer.from_available = ChainStore.getAccountBalance( transfer.from_account, transfer.asset )
         }
+
+        new_state.transfer = transfer
         this.validateTransferFields( new_state )
 
         console.log("update state:",new_state)
@@ -248,14 +221,17 @@ class Transfer extends BaseComponent {
         if (key === "amount") {
            value = value.trim()
            let float_value = parseFloat(value)
-           if( value == "." )
+           if( value == "." || value == "" )
+           {
               transfer.amount = value
-           else if( isNaN( float_value ) )
-               transfer.amount = ""
-           else if( float_value < 0 ) 
-              transfer.amount = value.substring(1,value.length-1)
-           else
-              transfer.amount = value
+           }
+           else if( value.length )
+           {
+              let n = Number(value)
+              if( isNaN( n ) )
+                 return
+               transfer.amount = value
+           }
         }
         else if (key === "from") {
             transfer.from = value;
@@ -347,13 +323,13 @@ class Transfer extends BaseComponent {
 
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
         return (
-            <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
+            <form className="grid-block vertical full-width-content" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
                <div className="grid-container" style={{paddingTop: "2rem"}}>
                     {/*  F R O M  */}
                     <div className="grid-block">
                         <div className="grid-content shrink">
                             <AccountImage size={{height: 80, width: 80}}
-                                          account={transfer.from} custom_image={null}/>
+                                          account={transfer.from_name} custom_image={null}/>
                         </div>
                         <div className="grid-block vertical">
                            <div className="grid-block">  
@@ -365,14 +341,15 @@ class Transfer extends BaseComponent {
                            <div className="grid-content full-width-content no-overflow"> 
                                 <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" onChange={this.form_change}/>
                            </div>
-                           <div className="grid-block"> 
+                           <div className="grid-block "> 
                                { errors.from ? null : 
-                                 (<div className="grid-content shrink no-overflow">
+                                 (<div className="grid-content medium-5  no-overflow">
                                     {ChainStore.getAccountMemberStatus(transfer.from_account)}
                                  </div>) 
                                } 
-                               { errors.from ? <div className="grid-content full-width-content no-overflow has-error">{errors.from}</div> : null}
-                               <div className="grid-content shrink no-overflow">{transfer.from_id}</div>
+                               { errors.from ? <div className="grid-content no-overflow has-error">{errors.from}</div> : null}
+                               <div className="grid-content full-width-content no-overflow"> </div>
+                               <div className="grid-content align-right shrink no-overflow">{ transfer.from_lookup_display }</div>
                            </div>
                         </div>
                     </div>
@@ -381,7 +358,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block">
                         <div className="grid-content shrink">
                             <AccountImage size={{height: 80, width: 80}}
-                                          account={transfer.to} custom_image={null}/>
+                                          account={transfer.to_name} custom_image={null}/>
                         </div>
                         <div className="grid-block vertical">
                            <div className="grid-block">  
@@ -395,11 +372,12 @@ class Transfer extends BaseComponent {
                            <div className="grid-block"> 
                                { errors.to ? null : 
                                  (<div className="grid-content shrink no-overflow">
-                                    {ChainStore.getAccountMemberStatus(transfer.to_account)}
+                                    { ChainStore.getAccountMemberStatus(transfer.to_account) }
                                  </div>)
                                } 
                                { errors.to ? <div className="grid-content full-width-content no-overflow has-error">{errors.to}</div> : null}
-                               <div className="grid-content shrink no-overflow">{transfer.to_id}</div>
+                               <div className="grid-content full-width-content no-overflow"> </div>
+                               <div className="grid-content shrink no-overflow">{ transfer.to_lookup_display }</div>
                            </div>
                         </div>
                     </div>
