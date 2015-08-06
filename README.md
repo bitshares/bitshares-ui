@@ -2,6 +2,14 @@ Graphene GUI
 ============
 
 ## Prerequisites
+
+Graphene GUI depends on Node.js.
+
+On Ubuntu you can install Node.js via the following command:
+```
+sudo apt-get install git nodejs-legacy npm
+```
+
 In order to use the GUI you will need to have a functioning witness node from the Graphene toolkit running with a websocket endpoint at localhost:8090. Instructions for this can be found here: https://github.com/cryptonomex/graphene 
 
 While waiting for the public testnet you may want to run a local chain, to do so add the following to your config.ini in ./witness_node_data_dir :
@@ -27,6 +35,11 @@ witness-id = "1.6.9"
 ```
 
 ## Install
+```
+git clone https://github.com/cryptonomex/graphene-ui.git
+cd graphene-ui
+```
+
 Before launching the GUI you will need to install the npm packages for each subdirectory:
 ```
 cd cli; npm install
