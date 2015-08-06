@@ -214,7 +214,9 @@ class Transfer extends BaseComponent {
         error = null;
         let key = event.target.id;
         let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
-        value = value.trim()
+
+        if( key != "memo" )
+           value = value.trim()
 
         console.log( "key:",key)
         console.log( "value:",value)
