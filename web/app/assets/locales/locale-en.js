@@ -108,6 +108,7 @@ module.exports = {
         },
         back: "BACK",
         confirm: "CONFIRM",
+        broadcasting: "Broadcasting...",
         broadcast: "Your transfer has been broadcast to the network",
         again: "MAKE ANOTHER TRANSFER",
         see: "SEE MY TRANSFERS"

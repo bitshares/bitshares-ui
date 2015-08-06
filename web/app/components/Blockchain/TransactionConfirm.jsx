@@ -64,7 +64,8 @@ export default class TransactionConfirm extends React.Component {
                     </div>
                     <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
                         <div className="grid-content button-group">
-                            <a className="button success" href onClick={this._confirmPress.bind(this)}><Translate content="transfer.confirm" /></a>
+                            { this.state.broadcast ? (<a className="button success disabled" ><Translate content="transfer.broadcasting" /></a> ) 
+                               : ( <a className="button success" href onClick={this._confirmPress.bind(this)}><Translate content="transfer.confirm" /></a> ) }
                             <Trigger close="transaction_confim_modal">
                                 <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                             </Trigger>
@@ -78,19 +79,21 @@ export default class TransactionConfirm extends React.Component {
     }
     
     _confirmPress() {
-        ZfApi.publish("transaction_confim_modal", "close");
-        this.state.tr.broadcast().then( ()=> {
-
-            notify.success(counterpart.translate("transaction.broadcast_success"));
-            this.state.resolve();
-            this.reset();
-        }).catch( error => {
-            console.log("TransactionConfirm broadcast error", error);
-            var message = error;
-            notify.error(counterpart.translate("transaction.broadcast_fail", {message: message}));
-            this.state.reject(error);
-            this.reset();
-        });
+        if( !this.state.broadcast )
+        {
+           this.setState( { broadcast : true } )
+           this.state.tr.broadcast().then( ()=> {
+               ZfApi.publish("transaction_confim_modal", "close");
+               this.state.resolve();
+               this.reset();
+           }).catch( error => {
+               console.log("TransactionConfirm broadcast error", error);
+               var message = error;
+               notify.error(counterpart.translate("transaction.broadcast_fail", {message: message}));
+               this.state.reject(error);
+               this.reset();
+           });
+        }
     }
     
     //_passwordChange(event) {
