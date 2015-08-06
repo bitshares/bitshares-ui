@@ -52,7 +52,8 @@ var config = {
         new webpack.ResolverPlugin(
             new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
         ),
-        new ExtractTextPlugin("app.css")
+        new ExtractTextPlugin("app.css"),
+        new webpack.optimize.DedupePlugin(),
     ]
 };
 
