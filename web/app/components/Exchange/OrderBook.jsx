@@ -102,24 +102,28 @@ class OrderBook extends React.Component {
 
         return (
                 <div className="left-order-book" style={{overflowY: "hidden"}}>
-                    <table className="table order-table table-hover text-right">
-                        <thead className="headers">
-                            <tr>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
-                                <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
-                            </tr>
-                        </thead>
-                        <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
-                            {bidRows}
-                        </tbody>
-                    </table>
+                    <div className="table-container">
+                        <table className="table order-table table-hover text-right">
+                            <thead className="headers">
+                                <tr>
+                                    <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
+                                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
+                                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
+                                </tr>
+                            </thead>
+                            <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
+                                {bidRows}
+                            </tbody>
+                        </table>
+                    </div>
                     <div className="text-center spread"><Translate content="exchange.spread" />: {spread} {baseSymbol}</div>
-                    <table className="table order-table table-hover text-right">
-                        <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
-                            {askRows}
-                        </tbody>
-                    </table>
+                    <div className="table-container">
+                        <table className="table order-table table-hover text-right">
+                            <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
+                                {askRows}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
         );
     }

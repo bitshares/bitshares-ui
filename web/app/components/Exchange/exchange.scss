@@ -132,14 +132,16 @@ p.order-table-title {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  > table {
+  table {
     width: 100%;
-    display: table;
-    flex-grow: 1;
     th {
       padding-top: 4px !important;
       padding-bottom: 4px !important;
     }
+  }
+  > .table-container {
+    flex-grow: 1;
+    width: 100%;
   }
   > .spread {
     flex-shrink: 1;
