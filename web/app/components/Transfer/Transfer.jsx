@@ -125,7 +125,7 @@ class Transfer extends BaseComponent {
            */
 
         let errors = new_state.errors
-        new_state.isValid = !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
+        new_state.isValid = new_state.transfer.amount > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
        /*
         function checkBalance(account_balance, asset_id, amount) {
@@ -294,7 +294,7 @@ class Transfer extends BaseComponent {
             t.from_id = this.props.currentAccount.id;
         }
 
-        AccountActions.transfer(t.from_id, t.to_id, t.amount * precision, t.asset, t.memo).then(() => {
+        AccountActions.transfer(t.from_id, t.to_id, parseInt(t.amount * precision, 10), t.asset, t.memo).then(() => {
             this.setState({confirmation: false, done: true, error: null});
             notify.addNotification({
                 message: "Transfer completed",
@@ -347,11 +347,10 @@ class Transfer extends BaseComponent {
 
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
         return (
-            <form className="grid-block vertical overflow-visible" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
-               <div>
-                    <p/>
+            <form className="grid-block vertical" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
+               <div className="grid-container" style={{paddingTop: "2rem"}}>
                     {/*  F R O M  */}
-                    <div className="grid-block medium-5">
+                    <div className="grid-block">
                         <div className="grid-content shrink">
                             <AccountImage size={{height: 80, width: 80}}
                                           account={transfer.from} custom_image={null}/>
@@ -364,22 +363,22 @@ class Transfer extends BaseComponent {
                               <div className="grid-content align-right shrink"> {/*balancesComp*/} </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="from" type="text" value={transfer.from}  defaultValue={transfer.from} ref="from" onChange={this.form_change}/>
+                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" onChange={this.form_change}/>
                            </div>
                            <div className="grid-block"> 
                                { errors.from ? null : 
-                                 (<div className="grid-content shrink">
+                                 (<div className="grid-content shrink no-overflow">
                                     {ChainStore.getAccountMemberStatus(transfer.from_account)}
                                  </div>) 
                                } 
-                               <div className="grid-content full-width-content no-overflow">{errors.from}</div>
-                               <div className="grid-content shrink">{transfer.from_id}</div>
+                               { errors.from ? <div className="grid-content full-width-content no-overflow has-error">{errors.from}</div> : null}
+                               <div className="grid-content shrink no-overflow">{transfer.from_id}</div>
                            </div>
                         </div>
                     </div>
                     <p/>
                     {/*  T O  */}
-                    <div className="grid-block medium-5">
+                    <div className="grid-block">
                         <div className="grid-content shrink">
                             <AccountImage size={{height: 80, width: 80}}
                                           account={transfer.to} custom_image={null}/>
@@ -395,24 +394,24 @@ class Transfer extends BaseComponent {
                            </div>
                            <div className="grid-block"> 
                                { errors.to ? null : 
-                                 (<div className="grid-content shrink">
+                                 (<div className="grid-content shrink no-overflow">
                                     {ChainStore.getAccountMemberStatus(transfer.to_account)}
                                  </div>)
                                } 
-                               <div className="grid-content full-width-content no-overflow">{errors.to}</div>
-                               <div className="grid-content shrink">{transfer.to_id}</div>
+                               { errors.to ? <div className="grid-content full-width-content no-overflow has-error">{errors.to}</div> : null}
+                               <div className="grid-content shrink no-overflow">{transfer.to_id}</div>
                            </div>
                         </div>
                     </div>
                     <p/>
                     {/*  A M O U N T  */}
-                    <div className="grid-block medium-5">
+                    <div className="grid-block">
                         <div className="grid-block vertical">
                            <div className="grid-block">
                               <div className="grid-content">
                                <label> <Translate component="span" content="transfer.amount" /> </label>
                               </div>
-                              <div className="grid-content align-right shrink">
+                              <div className="grid-content align-right shrink no-overflow">
                                  { transfer.from_balance == 0 ? null : (
                                     <span>
                                     <Translate component="span" content="transfer.available" />  
@@ -427,15 +426,13 @@ class Transfer extends BaseComponent {
                                        <input id="amount" type="text" placeholder="0.0" value={transfer.amount} defaultValue={transfer.amount} onChange={this.form_change} ref="amount"/>
                                        <span className="form-label select">{this.renderSelect("asset", transfer.from_assets)}</span>
                                    </span>
-                           </div>
-                           <div className="grid-content">
-                               {errors.amount}
+                                   <p>{errors.amount}</p>
                            </div>
                         </div>
                     </div>
 
                     {/*  M E M O  */}
-                    <div className="grid-block medium-5">
+                    <div className="grid-block">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
                             <label>
                                 <Translate component="span" content="transfer.memo" />
@@ -446,7 +443,7 @@ class Transfer extends BaseComponent {
                     </div>
 
                     {/*  S E N D  B U T T O N  */}
-                    <div className="grid-block medium-3">
+                    <div className="grid-block">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
                             <label>&nbsp;</label>
                             <button className={submitButtonClass} type="submit" value="Submit"><Translate component="span" content="transfer.send" /></button>
