@@ -1,56 +1,58 @@
 var WebSocketRpc = require("./WebSocketRpc");
 var GrapheneApi = require("./GrapheneApi");
 
-var Apis = (function () {
-
-    var apis_instance;
-    var ws_rpc;
-    var db_api;
-    var network_api;
-    var history_api;
+class Apis {
     
-    function init() {
+    constructor() {
         let hostname = "localhost";
         let protocol = "ws:";
         try {
             hostname = window.location.hostname;
             protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
-        ws_rpc = new WebSocketRpc(protocol + hostname + ":8090");
-
-        var init_promise = ws_rpc.login("", "").then(() => {
-            db_api = new GrapheneApi(ws_rpc, "database");
-            network_api = new GrapheneApi(ws_rpc, "network_broadcast");
-            history_api = new GrapheneApi(ws_rpc, "history");
-            return Promise.all([db_api.init(), network_api.init(), history_api.init()]);
+        this.ws_rpc = new WebSocketRpc(protocol + hostname + ":8090");
+        this.init_promise = this.ws_rpc.login("", "").then(() => {
+            this._db_api = new GrapheneApi(this.ws_rpc, "database");
+            this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");
+            this._history_api = new GrapheneApi(this.ws_rpc, "history");
+            var db_promise = this._db_api.init().then( ()=> {
+                //https://github.com/cryptonomex/graphene/wiki/chain-locked-tx
+                return this._db_api.exec("get_chain_id",[]).then( _chain_id => {
+                    this.chain_id = _chain_id
+                    //DEBUG console.log("chain_id1",this.chain_id)
+                });
+            });
+            return Promise.all([db_promise,
+                this._network_api.init(),
+                this._history_api.init()]);
         });
-        return {
-            init_promise: init_promise,
-            close: function () {
-                ws_rpc.close();
-                apis_instance = null;
-            },
-            db_api: function () {
-                return db_api;
-            },
-            network_api: function () {
-                return network_api;
-            },
-            history_api: function () {
-                return history_api;
-            }
-        };
     }
+    
+    close() {
+        this.ws_rpc.close();
+    }
+    
+    db_api () {
+        return this._db_api;
+    }
+    
+    network_api () {
+        return this._network_api;
+    }
+    
+    history_api () {
+        return this._history_api;
+    }
+    
+}
 
-    return {
-        instance: function () {
-            if ( !apis_instance ) {
-                apis_instance = init();
-            }
-            return apis_instance;
+var apis_instance
+
+module.exports = {
+    instance: function () {
+        if ( !apis_instance ) {
+            apis_instance = new Apis();
         }
-    };
-
-})();
-
-module.exports = Apis;
+        return apis_instance;
+    }
+};

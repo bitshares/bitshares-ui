@@ -76,7 +76,8 @@ let WalletTcomb = t.struct({
     brainkey_sequence: t.Num,
     created: t.Dat,
     last_modified: t.Dat,
-    last_backup: t.maybe(t.Dat)
+    last_backup: t.maybe(t.Dat),
+    chain_id: t.Str
 }, "WalletTcomb");
 
 let PrivateKeyTcomb = t.struct({
