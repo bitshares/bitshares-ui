@@ -15,7 +15,7 @@ class BalanceComponent extends ChainComponent {
 
       let amount = this.state.balance.get('balance')
       let type   = this.state.balance.get('asset_type')
-      return (<FormattedAsset amount={amount} asset={type.id} />)
+      return (<FormattedAsset amount={amount} asset={type} />)
    }
 }
 
