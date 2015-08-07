@@ -11,6 +11,7 @@ import WalletDb from "stores/WalletDb"
 import WalletUnlockStore from "stores/WalletUnlockStore"
 import SessionActions from "actions/SessionActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
+import Apis from "rpc_api/ApiInstances"
 
 class WalletUnlockModal extends React.Component {
 
