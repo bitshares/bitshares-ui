@@ -11,6 +11,7 @@ var type = require('../chain/serializer_operation_types')
 var api = require('./ApiInstances').instance();
 var key = require('../common/key_utils');
 
+import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
 import lookup from "chain/lookup"
 
@@ -83,7 +84,9 @@ class ApplicationApi {
             memo_to_public = lookup.memo_public_key(to_account_id)
         }
         var asset_id_lookup = lookup.asset_id(asset)
-        return lookup.resolve().then(()=> {
+        var lookup_promise = lookup.resolve()
+        var unlock_promise = WalletUnlockActions.unlock()
+        return Promise.all([lookup_promise, unlock_promise]).then(()=> {
             var asset_id = asset_id_lookup.resolve
             
             var memo_from_privkey

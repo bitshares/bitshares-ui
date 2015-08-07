@@ -13,6 +13,7 @@ validation = require('../common/validation')
 lookup = require './lookup'
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
+Apis = require('rpc_api/ApiInstances')
 
 module.exports = _my = {}
 
@@ -103,12 +104,14 @@ _my.signed_transaction = ->
             #DEBUG console.log('... required_public_keys',required_public_keys)
             required_public_keys
     
-    sign:(private_keys)->
+    sign:(private_keys, chain_id = Apis.instance().chain_id)->
         throw new Error "not finalized" unless @tr_buffer
         private_keys = [ private_keys ] unless Array.isArray private_keys
         for i in [0...private_keys.length] by 1
             private_key = private_keys[i]
-            sig = Signature.signBuffer @tr_buffer, private_key
+            sig = Signature.signBuffer(
+                Buffer.concat([new Buffer(chain_id, 'hex'),@tr_buffer]), private_key
+            )
             @signatures.push sig.toBuffer()
         return
     

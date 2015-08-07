@@ -11,6 +11,7 @@ import WalletDb from "stores/WalletDb"
 import WalletUnlockStore from "stores/WalletUnlockStore"
 import SessionActions from "actions/SessionActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
+import Apis from "rpc_api/ApiInstances"
 
 class WalletUnlockModal extends React.Component {
 
@@ -31,8 +32,16 @@ class WalletUnlockModal extends React.Component {
             if(msg === "close") {
                 this.props.reject()
                 WalletUnlockActions.cancel()
-            } else if (msg === "open")
+            } else if (msg === "open") {
+                if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
+                    notify.error("This wallet was intended for a different block-chain; expecting " +
+                        getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
+                        Apis.instance().chain_id.substring(0,4).toUpperCase())
+                    ZfApi.publish(this.props.modalId, "close")
+                    return
+                }
                 modal.querySelector('[name="password"]').focus()
+            }
         })
     }
     

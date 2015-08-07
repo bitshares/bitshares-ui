@@ -1,4 +1,5 @@
 import iDB from "idb-instance";
+import Apis from "rpc_api/ApiInstances"
 import key from "common/key_utils"
 import idb_helper from "idb-helper"
 import cloneDeep from "lodash.clonedeep"
@@ -122,6 +123,11 @@ class WalletDb {
     }
     
     process_transaction(tr, signer_private_keys, broadcast) {
+        if(Apis.instance().chain_id !== this.getWallet().chain_id)
+            return Promise.reject("Miss matched chain_id; expecting " +
+                this.getWallet().chain_id + ", but got " +
+                Apis.instance().chain_id)
+        
         return WalletUnlockActions.unlock().then( () => {
             return tr.set_required_fees().then(()=> {
                 return tr.finalize().then(()=> {
@@ -132,16 +138,16 @@ class WalletDb {
                             tr.sign(private_key)
                     } else {
                         var pubkeys = PrivateKeyStore.getPubkeys()
-                        //DEBUG console.log('... pubkeys',pubkeys)
+                        //DEBUG  console.log('... pubkeys',pubkeys)
                         if( ! pubkeys.length)
-                            throw new Error("missing signing key")
+                            throw new Error("Missing signing key")
                         return tr.get_required_signatures(pubkeys).then(
                             pubkey_strings => {
                             //DEBUG console.log('... pubkey_strings',pubkey_strings)
                             for(let pubkey_string of pubkey_strings) {
                                 var private_key = this.getPrivateKey(pubkey_string)
                                 if( ! private_key)
-                                    throw new Error("missing signing key for " + pubkey_string)
+                                    throw new Error("Missing signing key for " + pubkey_string)
                                 tr.sign(private_key)
                             }
                         })
@@ -207,7 +213,8 @@ class WalletDb {
                 brainkey_checksum,
                 brainkey_sequence: 0,
                 created: new Date(),
-                last_modified: new Date()
+                last_modified: new Date(),
+                chain_id: Apis.instance().chain_id
             }
             WalletTcomb(wallet)
             var transaction = this.transaction_update()

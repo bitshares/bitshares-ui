@@ -311,7 +311,8 @@ module.exports = {
     },
     footer: {
         title: "Graphene",
-        block: "Head block"
+        block: "Head block",
+        loading: "Loading..."
     },
     exchange: {
         price_history: "Price History",

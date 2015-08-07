@@ -26,9 +26,10 @@
     "strict": [2, "never"],
     // Code style
     "no-underscore-dangle": [0],
-    "indent": [4, 4],
+    //"indent": [4, 4],
     "camelcase": [0],
     "new-cap": [0],
-    "no-trailing-spaces": [0]
+    "no-trailing-spaces": [0],
+    "semi": [0]
   }
 }

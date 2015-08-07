@@ -44,7 +44,7 @@ class Footer extends React.Component {
                             <Translate content="footer.block" /> &nbsp;
                             <pre>#{block_height}</pre>
                         </div>) :
-                        <div className="grid-block shrink">Loading..</div>}
+                        <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                 </div>
             </div>
         );
