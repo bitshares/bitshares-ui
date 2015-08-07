@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes, Component} from "react";
 import sha256 from "js-sha256";
 import jdenticon from "jdenticon";
+import Icon from "../Icon/Icon";
 
 var canvas_id_count = 0
 
@@ -21,30 +22,35 @@ class Identicon extends Component {
       let {height, width} = this.props.size;
       let hash = account ? sha256(account) : null;
       return (
-        <div>
-          {hash ?
-            <canvas id={this.canvas_id} style={{height: height, width: width}} width={width * 2} height={height * 2} data-jdenticon-hash={hash} /> :
-            <div style={{height: height, width: width}} width={width * 2} height={height * 2}/>}
-        </div>
+           <canvas id={this.canvas_id} ref="canvas" style={{height: height, width: width}} width={width * 2} height={height * 2} data-jdenticon-hash={hash} />
       );
   }
 
-  componentDidMount() {
-      if (this.canvas_id) {
-          jdenticon.updateById(this.canvas_id);
+  repaint() {
+      if(this.props.account) jdenticon.updateById(this.canvas_id);
+      else {
+          let ctx = React.findDOMNode(this.refs.canvas).getContext('2d');
+          ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+          let size = ctx.canvas.width;
+          ctx.fillRect(0, 0, size, size);
+          ctx.clearRect(0+1, 0+1, size-2, size-2);
+          ctx.font = `${size}px sans-serif`;
+          ctx.fillText("?", size/4, size - size/6);
       }
   }
 
+  componentDidMount() {
+      this.repaint();
+  }
+
   componentDidUpdate() {
-      if (this.canvas_id) {
-          jdenticon.updateById(this.canvas_id);
-      }
+      this.repaint();
   }
 }
 
 Identicon.propTypes = {
   size: PropTypes.object.isRequired,
-  account: PropTypes.string.isRequired
+  account: PropTypes.string
 };
 
 export default Identicon;
