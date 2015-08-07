@@ -303,7 +303,7 @@ class ChainStore
 
                     let cur = this.accounts_by_name.get( account.name )
                     cur.id = account.id
-                    this.accounts_by_name = this.accounts_by_name.set( account.anme, cur ) 
+                    this.accounts_by_name = this.accounts_by_name.set( account.name, cur ) 
 
                     account.referrer_name = referrer_name
                     account.lifetime_referrer_name = lifetime_referrer_name
