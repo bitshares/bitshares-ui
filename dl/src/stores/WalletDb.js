@@ -124,8 +124,8 @@ class WalletDb {
     
     process_transaction(tr, signer_private_keys, broadcast) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)
-            Promise.reject("Miss matched chain_id; expecting " +
-                getWallet().chain_id + ", but got " +
+            return Promise.reject("Miss matched chain_id; expecting " +
+                this.getWallet().chain_id + ", but got " +
                 Apis.instance().chain_id)
         
         return WalletUnlockActions.unlock().then( () => {
@@ -138,17 +138,16 @@ class WalletDb {
                             tr.sign(private_key)
                     } else {
                         var pubkeys = PrivateKeyStore.getPubkeys()
-                        //DEBUG console.log('... pubkeys',pubkeys)
+                        //DEBUG  console.log('... pubkeys',pubkeys)
                         if( ! pubkeys.length)
-                            throw new Error("missing signing key")
+                            throw new Error("Missing signing key")
                         return tr.get_required_signatures(pubkeys).then(
                             pubkey_strings => {
                             //DEBUG console.log('... pubkey_strings',pubkey_strings)
                             for(let pubkey_string of pubkey_strings) {
                                 var private_key = this.getPrivateKey(pubkey_string)
                                 if( ! private_key)
-                                    throw new Error("missing signing key for " + pubkey_string)
-                                console.log('... Apis.instance().chain_id')
+                                    throw new Error("Missing signing key for " + pubkey_string)
                                 tr.sign(private_key)
                             }
                         })
