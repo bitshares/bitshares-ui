@@ -68,6 +68,10 @@ class ApplicationApi {
         })
     }
     
+    /**
+        Note, an empty or null memo will still be encypted if  encrypt_memo
+        is true.
+    */
     transfer(
         from_account_id,
         to_account_id,

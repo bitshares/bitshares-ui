@@ -2,15 +2,19 @@ import React, {Component, PropTypes} from "react";
 
 import WalletDb from "stores/WalletDb";
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import AccountStore from "stores/AccountStore";
 import BalanceClaimStore from "stores/BalanceClaimStore";
 import FormattedAsset from "components/Utility/FormattedAsset";
+import LoadingIndicator from "components/LoadingIndicator";
 import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect";
 import WalletActions from "actions/WalletActions";
-
+import ApplicationApi from "rpc_api/ApplicationApi";
 import notify from "actions/NotificationActions";
 import cname from "classnames";
 import lookup from "chain/lookup";
 import v from "chain/serializer_validation";
+
+var application_api = new ApplicationApi()
 
 export default class BalanceClaim extends Component {
 
@@ -23,12 +27,15 @@ export default class BalanceClaim extends Component {
         return {
             claim_account_name: null,
             balance_claims: [],
-            balance_by_asset: []
+            balance_by_asset: [],
+            my_accounts: [],
+            my_accounts_loading: false
         };
     }
     
     componentWillMount() {
-        this.loadBalances();
+        this.loadBalances()
+        this.loadMyAccounts()
     }
     
     render() {
@@ -36,7 +43,7 @@ export default class BalanceClaim extends Component {
             return <div/>
         
         var unclaimed_balance_rows = [], claimed_balance_rows = []
-        var unclaimed_accounts = [], unclaimed_account_balances = {};
+        var unclaimed_account_balances = {};
         let index = 0;
         for(let asset_balance of this.state.balance_by_asset) {
             var {accounts, symbol, precision, balance, balance_claims} =
@@ -52,7 +59,6 @@ export default class BalanceClaim extends Component {
                     </tr>
                 );
                 
-                unclaimed_accounts.push(account_names)
                 unclaimed_account_balances[account_names] = balance_claims
 
                 index++;
@@ -69,6 +75,7 @@ export default class BalanceClaim extends Component {
                 index++;
             }
         }
+        
         var claim_account_name = this.state.claim_account_name
         var has_account = claim_account_name ? true : false
         var has_unclaimed = unclaimed_balance_rows.length > 0
@@ -115,10 +122,12 @@ export default class BalanceClaim extends Component {
                     <div>
                         <h3>Claim balance to account:</h3>
                         <ExistingAccountsAccountSelect
-                            account_names={unclaimed_accounts}
+                            account_names={this.state.my_accounts}
                             onChange={this._claimAccountSelect.bind(this)}
                             list_size={5}
                         />
+                        {this.state.my_accounts_loading ? 
+                            <LoadingIndicator type="circle"/> : <div/>}
                         <br>
                         <div className="button-group">
                             <div className={ cname("button success", {disabled: !import_ready}) }
@@ -152,7 +161,58 @@ export default class BalanceClaim extends Component {
             notify.error(error.message || error)
         })
     }
+    
+    /** Populate this.state.my_accounts with only account where the wallet
+    has full transaction signing authority. */
+    loadMyAccounts() {
+        this.setState({my_accounts_loading:true})
+        var account_names = AccountStore.getState().linkedAccounts.toArray()
+        var account_name_to_id = AccountStore.getState().account_name_to_id
+        console.log('... account_names',account_names)
+        var promises = []
+        for(let account_name of account_names) {
+            var account_id = account_name_to_id[account_name]
+            if( ! account_id)
+                throw new Error("Missing account id for name "+account_name)
+            
+            account_name => {
+                // the fake transfer will check for required auths
+                //var tr = new ops.signed_transaction()
+                //tr.add_type_operation("transfer", {
+                //    fee: { amount: 0, asset_id },
+                //    from: account_id, to: account_id,
+                //    amount: { 0, 0},
+                //    null//memo
+                //})
+                var p = application_api.transfer(account_id,account_id,
+                    1,//amount
+                    0,//asset
+                    null,//memo
+                    false,//broadcast
+                    false//encrypt_memo
+                ).then( fake_transfer => {
+                    console.log('... my account',account_name)
+                    return account_name
+                }).catch( error => {
+                    console.log('... NOT my account',account_name,error)
+                    return null
+                })
+                promises.push(p)
+            }(account_name)//ensure correct account_name is returned in callback
+        }
+        Promise.all(promises).then( account_names => {
+            var my_accounts = []
+            for(let account_name of account_names) {
+                if( ! account_name) continue
+                my_accounts.push(account_name)
+            }
+            return my_accounts
+        }).then( my_accounts => {
+            this.setState({my_accounts, my_accounts_loading:false})
+        })
+    }
 
+    /** group things for reporting purposes */
     balanceByAssetName(balance_claims) {
         return new Promise((resolve, reject)=> {
             var asset_totals = {}
