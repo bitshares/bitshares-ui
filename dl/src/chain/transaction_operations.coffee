@@ -133,10 +133,14 @@ _my.signed_transaction = ->
             tr_object = type.signed_transaction.toObject @
             api.network_api().exec(
                 "broadcast_transaction_with_callback",
-                [resolve,tr_object]
+                [()->
+                    #DEBUG console.log('... broadcast_transaction_with_callback !!!')
+                    resolve()
+                ,tr_object]
             ).then ()->
-                tr_object
-            .catch (error)->
+                #DEBUG console.log('... broadcast success, waiting for callback')
+                return
+            .catch (error)=>
                 #DEBUG console.log error # logged in GrapheneApi
                 message = error.message
                 message = "" unless message
@@ -148,6 +152,7 @@ _my.signed_transaction = ->
                     ' ' + JSON.stringify(tr_object)
                 )
                 return
+            return
 
 #class _my.transfer
 #    _template = ->
