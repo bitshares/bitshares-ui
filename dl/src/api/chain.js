@@ -179,7 +179,7 @@ class ChainStore
                   {
                      let new_obj = this._updateObject( asset_objects[0] )
                      asset.id = new_obj.id
-                     this.assets_by_symbol.set( symbol, asset )
+                     this.assets_by_symbol = this.assets_by_symbol.set( symbol, asset )
                      resolve( new_obj )
                   }
                   else
@@ -189,7 +189,7 @@ class ChainStore
               }).catch( error => reject(error) )
       })
 
-      this.assets_by_symbol.set( symbol, asset )
+      this.assets_by_symbol = this.assets_by_symbol.set( symbol, asset )
       return asset.last_promise
    }
 
