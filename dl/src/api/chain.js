@@ -2,6 +2,7 @@ import Immutable from "immutable";
 import utils from "../common/utils"
 import Apis from "../rpc_api/ApiInstances.js"
 import {object_type} from "../chain/chain_types";
+import validation from "common/validation"
 
 let op_history   = parseInt(object_type.operation_history, 10);
 let limit_order  = parseInt(object_type.limit_order, 10);
@@ -78,9 +79,72 @@ class ChainStore
       return promise
    }
 
+   getObject( id, on_update = null )
+   {
+      if( !utils.is_object_id(id) ) 
+         throw Error( "argument is not an object id: " + id )
+      let result = this.objects_by_id.get( id )
+
+      if( !result && on_update )
+      {
+         let callback = (typeof on_update) == 'function' ? on_update : on_update.update.bind(on_update)
+         this.fetchObject( id ).then( callback )
+      }
+      return result
+   }
+
+
+   /**
+    *  This method does not subscribe to changes nor ensure that the full account data 
+    *
+    *  @param on_update a function that will be called when the account object goes from null to non-null, 
+    *                   it may also be an object with a "update" method.
+    */
+   getAccount( name_or_id, on_update = null, full_account = false )
+   {
+      if( !name_or_id  ) 
+         return null
+
+      let account = null
+      if( utils.is_object_id( name_or_id ) )
+         account = this.getObject( name_or_id )
+      else if( validation.is_account_name( name_or_id ) )
+         account = this.getAccountByName( name_or_id )
+
+      let callback =  null
+      if( on_update )
+         callback = (typeof on_update) == 'function' ? on_update : on_update.update.bind(on_update)
+
+      if( full_account && account )
+      {
+         this.fetchFullAccountById( account.get('id'), callback )
+      }
+
+      if( !account && on_update )
+      {
+         if( utils.is_object_id( name_or_id ) )
+         {
+            if( full_account )
+               this.fetchFullAccountById( name_or_id, callback )
+            else
+               this.fetchObject( name_or_id ).then(callback)
+         }
+         else if( validation.is_account_name( name_or_id ) )
+         {
+            // first lookup the account name, then fetch the full account by ID
+            this.lookupAccountByName( name_or_id ).then( (a)=>{
+                 if( full_account )
+                    this.fetchFullAccountById( a.get('id'), callback )
+                 callback()
+            })
+         }
+      }
+      return account
+   }
+
+
    getAccountByName( account_name ) {
       let by_name = this.accounts_by_name.get( account_name )
-      console.log( "by name", account_name, by_name  )
       if( by_name && 'id' in by_name )
          return this.objects_by_id.get( by_name.id )
       return null
@@ -92,14 +156,6 @@ class ChainStore
           return this.objects_by_id.get( by_symbol.id )
         return null
    }
-   getObject( id )
-   {
-      console.log( "get object id: ",id )
-      if( !utils.is_object_id(id) ) 
-         throw Error( "argument is not an object id: " + id )
-      return this.objects_by_id.get( id )
-   }
-
 
    lookupAssetBySymbol( symbol, min_age_ms = null )
    {
@@ -147,11 +203,9 @@ class ChainStore
     */
    lookupAccountByName( name, min_age_ms = null )
    {
-      console.log( "lookup account by name: ", name )
       let acnt = this.accounts_by_name.get(name)
       if( acnt && 'id' in acnt )
       {
-         console.log( "acnt", acnt, "id", acnt.id )
          return this.fetchObject( acnt.id, min_age_ms )
       }
 
@@ -171,6 +225,7 @@ class ChainStore
        * account object
        */
       acnt.last_promise = new Promise( (resolve,reject ) => {
+          console.log( "lookup account by name: ", name )
           Apis.instance().db_api().exec( "get_account_by_name", [ name ] )
               .then( optional_account_object => {
                   if( optional_account_object )
@@ -198,7 +253,8 @@ class ChainStore
       if( !account ) return
 
       let sub = this.subscriptions_by_account.get( account.get('id') )
-      sub.subscriptions.delete( on_update )
+      if( sub && 'subscriptions' in sub )
+         sub.subscriptions.delete( on_update )
    }
 
    /**
@@ -218,19 +274,23 @@ class ChainStore
       if( !sub )  sub = { last_query : now, subscriptions : new Set()  }
       if( on_update ) sub.subscriptions.add( on_update )
 
-      if( sub.last_query < now - min_age_ms )
-         sub.last_query = now
+      if( min_age_ms )
+      {
+         if( sub.last_query < now - min_age_ms )
+            sub.last_query = now
+      }
 
       let callback = change => this._updateAccount( id, change )
 
       if( sub.last_query == now ) {
          sub.last_promise = new Promise( (resolve,reject) => {
+             console.log( "FETCHING FULL ACCOUNT: ", id )
              Apis.instance().db_api().exec("get_full_accounts", 
                                            [callback,[id],sub.subscriptions.size > 0])
                  .then( results => {
 
-                    console.log( "results: ", results )
                     let full_account = results[0][1]
+                    console.log( "full_account: ", full_account )
 
                     let {
                         account, 
@@ -268,8 +328,10 @@ class ChainStore
 
                     this._updateObject( statistics )
                     let updated_account = this._updateObject( account )
-                    resolve( updated_account )
                     this.fetchRecentHistory( updated_account )
+                    resolve( updated_account )
+                    if( on_update ) 
+                       on_update( updated_account )
                  }, error => reject( error ) )
 
          })
@@ -462,7 +524,6 @@ class ChainStore
       let now = new Date().getTime()
 
       let current_sub = this.subscriptions_by_id.get(id)
-      console.log( " init current_sub: ", current_sub )
       if( !current_sub )
          current_sub = { last_update: now }
 
@@ -472,7 +533,6 @@ class ChainStore
 
       if( current_sub.last_update != now ) 
       {
-         console.log( ".. current_sub: ", current_sub )
          return current_sub.last_promise
       }
       
@@ -487,7 +547,6 @@ class ChainStore
               }).catch( error => reject(error) )
       })
       this.subscriptions_by_id.set( id, current_sub )
-      console.log("current_sub: ", current_sub )
       return current_sub.last_promise
    }
 
@@ -554,6 +613,8 @@ class ChainStore
     */
    _updateObject( object )
    {
+      console.log( "update: ", object )
+
       let current = this.objects_by_id.get( object.id )
       let by_id = this.objects_by_id
       if( !current )
@@ -576,7 +637,6 @@ class ChainStore
          for( sub of current_sub.subscriptions )
             sub( current )
 
-      console.log("current_sub: ", current_sub )
       this.subscriptions_by_id.set( object.id, current_sub )
       return current;
    }

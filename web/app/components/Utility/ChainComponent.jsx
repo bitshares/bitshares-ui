@@ -1,0 +1,122 @@
+import React from "react";
+import ChainStore from "api/chain.js"
+import utils from "common/utils";
+
+/**
+ * @brief provides automatic fetching and updating of chain data
+ *
+ * Any property that is an object id will automatically be converted into
+ * a state variable that is either null or an Immutable object.   The
+ * state will automatically be updated anytime the Immutable object changes.
+ *
+ * In addition to automatically fetching/subscribing to object IDs, this
+ * component will also automatically fetch / subscribe to the full accounts
+ * of any account listed in props.full_accounts.${account_x} = ${name_or_id} or
+ * automatically look up non-full accounts for props.accounts.${account_y} = ${name_or_id}
+ *
+ * Example:
+ *
+ * this.props = { 
+ *      asset: "1.3.0", 
+ *      balance: "2.5.1", 
+ *      accounts: { owner: "nathan", issuer: "1.2.3" },
+ *      full_accounts: { owner: "sam", issuer: "1.2.6" }
+ * }
+ *
+ * Gets converted to 
+ *
+ * this.state = { 
+ *      asset: Object, 
+ *      balance: Object, 
+ *      accounts: { owner: Object, issuer: Object },
+ *      full_accounts: { owner: Object, issuer: Object }
+ * }
+ *
+ */
+class ChainComponent extends React.Component
+{
+   constructor( props ) {
+      super(props)
+      this.update = this.update.bind(this)
+   }
+
+   update()
+   {
+      console.log( "update chain component", this.props )
+      let new_state = {}
+      for( var key in this.props )
+      {
+         if( utils.is_object_id( this.props[key] ) )
+            new_state[key] =  ChainStore.getObject( this.props[key], this.update, true )
+      }
+
+      if( 'accounts' in this.props && typeof this.props.accounts == 'object' )
+      {
+         let accounts = {}
+         for( var account in this.props.accounts )
+            accounts[account] = ChainStore.getAccount( this.props.accounts[account], this.update )
+         new_state.accounts = accounts
+      }
+      if( 'full_accounts' in this.props && typeof this.props.full_accounts == 'object' )
+      {
+         let full_accounts = {}
+         for( var account in this.props.full_accounts )
+            full_accounts[account] = ChainStore.getAccount( this.props.full_accounts[account], this.update, true )
+         new_state.full_accounts = full_accounts
+      }
+      console.log( "update chain component, new_state:", new_state )
+      this.setState( new_state )
+   }
+
+   componentWillMount() { this.update() }
+
+   componentWillReceiveProps( next_props ) {
+      let new_state = {}
+      for( var key in this.next_props )
+      {
+         if( utils.is_object_id( next_props[key] ) && next_props[key] != this.props[key] )
+            new_state[key] =  ChainStore.getObject( this.props[key], this.update, true )
+      }
+      if( 'accounts' in next_props && typeof next_props.accounts == 'object' )
+      {
+         let accounts = {}
+         for( var account in next_props.accounts )
+            accounts[account] = ChainStore.getAccount( next_props.accounts[account], this.update )
+         new_state.accounts = accounts
+      }
+      if( 'full_accounts' in next_props && typeof next_props.full_accounts == 'object' )
+      {
+         let full_accounts = {}
+         for( var account in next_props.full_accounts )
+            full_accounts[account] = ChainStore.getAccount( next_props.full_accounts[account], this.update, true )
+         new_state.full_accounts = full_accounts
+      }
+      this.setState( new_state )
+   }
+
+   componentShouldUpdate( next_props, next_state ){ 
+      /*
+      for( var key in next_props ) {
+         if( utils.is_object_id( next_props[key] ) )
+         {
+            if( next_state[key] !== this.state[key] ) 
+               return true
+         }
+      }
+      */
+      return true
+   }
+
+   componentWillUnmount()
+   {
+      for( var key in this.props )
+      {
+         if( utils.is_object_id( this.props[key] ) )
+            ChainStore.unsubscribeFromObject( this.props[key], this.update )
+      }
+   }
+
+}
+
+
+export default ChainComponent;

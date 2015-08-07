@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes} from "react";
 import BaseComponent from "../BaseComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
+import BalanceComponent from "../Utility/BalanceComponent";
 import DoneScreen from "./DoneScreen";
 import classNames from "classnames";
 import utils from "common/utils";
@@ -34,7 +35,7 @@ class Transfer extends BaseComponent {
                 from_id: null,
                 from_name : "?",
                 from_assets : [  ],
-                from_balance : 0,
+                from_balance : null,
                 amount: "0.0",
                 asset: "1.3.0",
                 to_account : null,
@@ -107,7 +108,7 @@ class Transfer extends BaseComponent {
        console.log( "init state:", this.state )
        console.log( "this.state.from: ",this.state.transfer.from )
         let transfer = { 
-            from_balance : 0,
+            from_balance : null,
             from_assets : this.state.transfer.from_assets,
             from: this.state.transfer.from.toLowerCase().trim(), 
             to: this.state.transfer.to.toLowerCase().trim(),
@@ -192,7 +193,7 @@ class Transfer extends BaseComponent {
                  if( bobj )
                  {
                     if( balance[0] == transfer.asset )
-                       transfer.from_balance = bobj.get('balance')
+                       transfer.from_balance = balance[1] //bobj.get('balance')
                     if( bobj.get( 'balance' ) > 0 )
                        transfer.from_assets.push( [balance[0], aobj ? aobj.get('symbol') : balance[0] ] )
                  }
@@ -392,11 +393,10 @@ class Transfer extends BaseComponent {
                                <label> <Translate component="span" content="transfer.amount" /> </label>
                               </div>
                               <div className="grid-content align-right shrink no-overflow">
-                                 { transfer.from_balance == 0 ? null : (
+                                 { !transfer.from_balance ? null : (
                                     <span>
                                     <Translate component="span" content="transfer.available" />  
-                                    <FormattedAsset amount={transfer.from_balance} 
-                                                    asset={ChainStore.getObject(transfer.asset)} />
+                                    <BalanceComponent balance={transfer.from_balance}/>
                                     </span>
                                  )}
                               </div>

@@ -1,31 +1,31 @@
 import React from "react";
-import {PropTypes, Component} from "react";
-
+import ChainComponent from "../Utility/ChainComponent"
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
+import {PropTypes} from "react";
+import {Link} from "react-router";
 
-class FormattedAsset extends Component {
-    shouldComponentUpdate(nextProps) {
-       return true
-          /*
-        let symbol = (this.props.asset && nextProps.asset) ?
-            nextProps.asset.symbol !== this.props.asset.symbol : true;
-        return (
-            nextProps.amount !== this.props.amount || 
-            symbol
-            );
-            */
-    }
-
+/**
+ *  Given an amount and an asset, render it with proper precision
+ *
+ *  Expected Properties:
+ *     asset:  asset id, which will be fetched from the 
+ *     base:   optional asset id if this should display a price
+ *     amount: the ammount of asset
+ *
+ */
+class FormattedAsset extends ChainComponent {
     render() {
-        let {amount, asset, base, baseamount, decimalOffset, color} = this.props;
+        let {amount, baseamount, decimalOffset, color} = this.props;
+        let {asset, base} = this.state
+
         console.log( "props: ", this.props )
         
         if (!asset) {
             return <span></span>;
         }
-        if( 'toJS' in asset )
-           asset = asset.toJS()
+        if( 'toJS' in asset ) asset = asset.toJS()
+        if( base && 'toJS' in base ) base = base.toJS()
 
         let colorClass = color ? "facolor-" + color : "";
 
@@ -42,7 +42,10 @@ class FormattedAsset extends Component {
                             value={amount / precision / (baseamount / baseprecision)}
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
-                        /> {asset.symbol + "/" + base.symbol}
+                        /> 
+                        <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol}</Link> 
+                          + "/" 
+                        <Link to="asset" params={{ symbol: base.symbol }}>{base.symbol}</Link> 
                     </span>
             );
         } else {
@@ -52,7 +55,8 @@ class FormattedAsset extends Component {
                             value={this.props.exact_amount ? amount : amount / precision}
                             minimumFractionDigits={decimals}
                             maximumFractionDigits={decimals}
-                        /> {asset.symbol}
+                        /> 
+                        <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol} </Link>
                     </span>
             );
         }
@@ -70,8 +74,8 @@ FormattedAsset.defaultProps = {
 
 FormattedAsset.propTypes = {
     amount: PropTypes.number.isRequired,
-    base: PropTypes.object,
-    asset: PropTypes.object.isRequired,
+    base: PropTypes.string,
+    asset: PropTypes.string.isRequired,
     exact_amount: PropTypes.bool,
     decimalOffset: PropTypes.number,
     color: PropTypes.string
