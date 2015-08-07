@@ -52,8 +52,7 @@ class Header extends React.Component {
 
     render() {
         if(!WalletDb.getWallet()) return null;
-        //DEBUG
-        console.log('... render WalletDb.isLocked()',WalletDb.isLocked())
+        //DEBUG console.log('... render WalletDb.isLocked()',WalletDb.isLocked())
         
         let {currentAccount, linkedAccounts} = this.props, accountsDropDown = null, plusDropDown = null;
 

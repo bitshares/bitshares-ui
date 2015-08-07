@@ -6,6 +6,12 @@ AccountActions = require "actions/AccountActions"
 PrivateKey = require "ecc/key_private"
 PrivateKeyStore = require "stores/PrivateKeyStore"
 
+# register listener
+require "stores/WalletUnlockStore"
+
+# Confirm only works when there is a UI
+WalletDb.confirm_transactions = false
+
 module.exports =
 
     print_result: (tr_object)->
@@ -57,10 +63,10 @@ module.exports =
             "brainkey" + suffix, 
             true # unlock  
         ).then(()=>
-            #DEBUG console.log('..."nathan"',PrivateKey.fromSeed("nathan").toPublicKey().toBtsPublic())
+            #DEBUG console.log('... test_wallet onCreateWallet')
             WalletDb.importKeys([
                 PrivateKey.fromSeed("nathan").toWif()
-            ])#.then( (result)=> console.log('test_wallet importKeys',result) )
+            ])#.then( (result)=> console.log('test_wallet importKeys success',result) )
         ).catch( (e)=>
             console.log('test_wallet',e)
         ).then => suffix

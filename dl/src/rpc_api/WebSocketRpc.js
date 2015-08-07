@@ -1,5 +1,7 @@
 var Immutable = require("immutable");
 
+var NODE_DEBUG = process.env.NODE_DEBUG
+
 class WebSocketRpc {
 
     constructor(ws_server) {
@@ -8,7 +10,8 @@ class WebSocketRpc {
         this.current_reject = null;
         var self = this;
         this.connect_promise = new Promise((resolve, reject) => {
-            //console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
+            if(NODE_DEBUG)
+                console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
             self.current_reject = reject;
             self.web_socket.onopen = () => resolve("con!");
             self.web_socket.onerror = (error) => {
@@ -26,7 +29,8 @@ class WebSocketRpc {
     }
 
     call(params) {
-        // console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
+        if(NODE_DEBUG)
+            console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
         this.current_callback_id += 1;
         var self = this;
 
@@ -54,7 +58,7 @@ class WebSocketRpc {
                 if (self.subscriptions[key].account && self.subscriptions[key].account === account) {
                     exists = true;
                     // self.subscriptions[key].callback = params[2][0].bind(account);
-                    // console.log("reusing subscription:", key, account);
+                    //DEBUG console.log("reusing subscription:", key, account);
                     params[2][0] = key;
                     break;
                 }
@@ -102,7 +106,9 @@ class WebSocketRpc {
     }
 
     listener(response) {
-        //console.log("[websocketrpc] <--- reply ----", response);
+        if(NODE_DEBUG)
+            console.log("[websocketrpc] <--- reply ----", response);
+        
         let sub = false,
             callback = null;
 
@@ -110,8 +116,6 @@ class WebSocketRpc {
             sub = true;
             response.id = response.params[0];
         }
-
-
 
         if (!sub) {
             callback = this.callbacks[response.id];

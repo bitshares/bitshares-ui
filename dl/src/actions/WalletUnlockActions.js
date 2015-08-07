@@ -6,7 +6,7 @@ class WalletUnlockActions {
     }
     
     unlock() {
-        //DEBUG console.log("... WalletUnlockActions\tunlock")//\n\t",(new Error()).stack)
+        //DEBUG console.log('... WalletUnlockActions.unlock')
         return new Promise( (resolve, reject) => {
             this.dispatch({resolve, reject})
         }).then( unlocked => {
@@ -27,5 +27,6 @@ class WalletUnlockActions {
         this.dispatch()
     }
 }
+
 var WrappedWalletUnlockActions = alt.createActions(WalletUnlockActions)
 export default WrappedWalletUnlockActions

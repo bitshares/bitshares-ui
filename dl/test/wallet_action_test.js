@@ -17,20 +17,21 @@ import helper from "./test_helper"
 
 var _catch = th.log_error
 
-// Confirm only works when there is a UI
-WalletDb.confirm_transactions = false
-
 describe( "wallet_actions", ()=> {
     
     var api
     
+    // broadcast with confirmation waits for a block
+    //this == undefined ??
+    //this.setTimeout(it(), 3 * 1000)
+    
     before( done => {
         iDB.init_instance(fakeIndexedDB).init_promise.then( ()=>  {
             api = ApiInstances.instance()
-            api.init_promise.then( ()=>
+            return api.init_promise.then( ()=> {
                 done()
-            ).catch( _catch )
-        })
+            })
+        }).catch( _catch )
     })
     
     after(()=>{
