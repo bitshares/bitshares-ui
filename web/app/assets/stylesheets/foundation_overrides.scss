@@ -92,3 +92,13 @@ a {
     $y: bottom // Can be top or bottom
   );
 }
+
+.modal {
+  padding: 1rem 1.75rem 1rem 1.75rem;
+  h3 {
+    margin-bottom: 1rem;
+  }
+  .button-group {
+    margin-bottom: 0;
+  }
+}

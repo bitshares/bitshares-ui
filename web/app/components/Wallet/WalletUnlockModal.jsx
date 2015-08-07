@@ -63,25 +63,20 @@ class WalletUnlockModal extends React.Component {
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
-                <div className="grid-block vertical">
-                    <br/>
-                    <h3>Unlock wallet:</h3>
-                    <form onSubmit={this._passSubmit.bind(this)}>
-                        <div className="grid-content no-overflow">
-                            <PasswordInput onChange={this._passChange.bind(this)}
-                                key={this.state.password_input_reset}
-                                wrongPassword={this.state.password_error}/>
-                        </div>
-                        <div className="grid-content button-group no-overflow">
-                            <a className="button success" href
-                                onClick={this._passSubmit.bind(this)}>
-                                Unlock Wallet</a>
-                            <Trigger close={this.props.modalId}>
-                                <a href className="secondary button">Cancel</a>
-                            </Trigger>
-                        </div>
-                    </form>
-                </div>
+                <h3>Unlock wallet</h3>
+                <form onSubmit={this._passSubmit.bind(this)}>
+                        <PasswordInput onChange={this._passChange.bind(this)}
+                            key={this.state.password_input_reset}
+                            wrongPassword={this.state.password_error}/>
+                    <div className="button-group">
+                        <a className="button" href
+                            onClick={this._passSubmit.bind(this)}>
+                            Unlock Wallet</a>
+                        <Trigger close={this.props.modalId}>
+                            <a href className="secondary button">Cancel</a>
+                        </Trigger>
+                    </div>
+                </form>
             </Modal>
         )
     }

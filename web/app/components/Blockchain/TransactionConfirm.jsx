@@ -65,7 +65,7 @@ export default class TransactionConfirm extends React.Component {
                     <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
                         <div className="grid-content button-group">
                             { this.state.broadcast ? (<a className="button success disabled" ><Translate content="transfer.broadcasting" /></a> ) 
-                               : ( <a className="button success" href onClick={this._confirmPress.bind(this)}><Translate content="transfer.confirm" /></a> ) }
+                               : ( <a className="button" href onClick={this._confirmPress.bind(this)}><Translate content="transfer.confirm" /></a> ) }
                             <Trigger close="transaction_confim_modal">
                                 <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                             </Trigger>
