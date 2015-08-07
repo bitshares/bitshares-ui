@@ -19,7 +19,7 @@ export default class TransactionConfirm extends React.Component {
     }
     
     _getInitialState() {
-        return {tr: null, confirmed: false};
+        return {tr: null, confirmed: false, broadcast: false};
     }
     
     reset() {
