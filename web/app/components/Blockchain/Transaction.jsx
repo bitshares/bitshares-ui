@@ -64,7 +64,7 @@ class OperationTable extends React.Component {
                         {this.props.children}
                         <tr>
                             <td><Translate component="span" content="transfer.fee" />:</td>
-                            <td>{!this.props.missingFee ? <FormattedAsset color="fee" amount={this.props.fee.amount} asset={this.props.assets.get(this.props.fee.asset_id)} /> : null}</td>
+                            <td>{!this.props.missingFee ? <FormattedAsset color="fee" amount={this.props.fee.amount} asset={this.props.fee.asset_id} /> : null}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -167,7 +167,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.amount" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}</td>
                         </tr>
                     );
 
@@ -182,7 +182,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr key="1">
                             <td><Translate component="span" content="transaction.amount_sell" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} /> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -194,7 +194,7 @@ class Transaction extends React.Component {
                     // rows.push(
                     //     <tr key="2">
                     //         <td><Translate component="span" content="transaction.min_receive" />:</td>
-                    //         <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={assets.get(op[1].min_to_receive.asset_id)} /> : null}</td>
+                    //         <td>{!missingAssets[1] ? <FormattedAsset amount={op[1].min_to_receive.amount} asset={op[1].min_to_receive.asset_id} /> : null}</td>
                     //     </tr>
                     // );
                     rows.push(
@@ -224,13 +224,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.amount_sell" />:</td>
-                            <td>{assets.get(op[1].amount_to_sell.asset_id) ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}</td>
+                            <td>{assets.get(op[1].amount_to_sell.asset_id) ? <FormattedAsset amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} /> : null}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.collateral" />:</td>
-                            <td>{assets.get(op[1].collateral.asset_id) ? <FormattedAsset amount={op[1].collateral.amount} asset={assets.get(op[1].collateral.asset_id)} /> : null}</td>
+                            <td>{assets.get(op[1].collateral.asset_id) ? <FormattedAsset amount={op[1].collateral.amount} asset={op[1].collateral.asset_id} /> : null}</td>
                         </tr>
                     );
                     rows.push(
@@ -530,7 +530,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.asset_issue" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={assets.get(op[1].asset_to_issue.asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} /> : null}</td>
                         </tr>
                     );
 
@@ -558,7 +558,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.amount" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_burn.amount} asset={assets.get(op[1].amount_to_burn.asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount_to_burn.amount} asset={op[1].amount_to_burn.asset_id} /> : null}</td>
                         </tr>
                     );
 
@@ -586,7 +586,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.amount" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount} asset={assets.get(op[1].asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount} asset={op[1].asset_id} /> : null}</td>
                         </tr>
                     );
 
@@ -614,7 +614,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.amount" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}</td>
                         </tr>
                     );
 
@@ -657,7 +657,7 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="explorer.block.call_limit" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset
                                                         amount={feed.call_limit.quote.amount}
-                                                        asset={assets.get(feed.call_limit.quote.asset_id)}
+                                                        asset={feed.call_limit.quote.asset_id}
                                                         baseamount={feed.call_limit.base.amount}
                                                         base={assets.get(feed.call_limit.base.asset_id)}/> : null}</td>
                         </tr>
@@ -668,7 +668,7 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="explorer.block.short_limit" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset
                                                         amount={feed.short_limit.quote.amount}
-                                                        asset={assets.get(feed.short_limit.quote.asset_id)}
+                                                        asset={feed.short_limit.quote.asset_id}
                                                         baseamount={feed.short_limit.base.amount}
                                                         base={assets.get(feed.short_limit.base.asset_id)}/> : null}</td>
                         </tr>
@@ -679,7 +679,7 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="explorer.block.settlement_price" />:</td>
                             <td>{!missingAssets[0] ? <FormattedAsset
                                                         amount={feed.settlement_price.quote.amount}
-                                                        asset={assets.get(feed.settlement_price.quote.asset_id)}
+                                                        asset={feed.settlement_price.quote.asset_id}
                                                         baseamount={feed.settlement_price.base.amount}
                                                         base={assets.get(feed.settlement_price.base.asset_id)}/> : null}</td>
                         </tr>
@@ -736,7 +736,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.claimed" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].total_claimed.amount} asset={assets.get(op[1].total_claimed.asset_id)} /> : null}</td>
+                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].total_claimed.amount} asset={op[1].total_claimed.asset_id} /> : null}</td>
                         </tr>
                     );
                     break;

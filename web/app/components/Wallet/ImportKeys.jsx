@@ -71,7 +71,7 @@ class ImportKeys extends Component {
                 // var {symbol, balance, precision} = asset_balance;
                 balance_rows.push(
                     <div key={index}>
-                        <FormattedAsset color="info" amount={asset_balance.balance} asset={asset_balance}/>
+                        <FormattedAsset color="info" amount={asset_balance.balance} asset={asset_balance.id}/>
                     </div>
                 );
             });

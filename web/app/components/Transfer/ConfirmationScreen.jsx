@@ -30,7 +30,7 @@ class ConfirmationScreen extends React.Component {
                             </div>                        
                             <div className="text-group">
                                 <div><Translate component="span" content="transfer.amount" />:</div> 
-                                <div><FormattedAsset amount={transfer.amount * precision} asset={assets.get(transfer.asset)}/></div>
+                                <div><FormattedAsset amount={transfer.amount * precision} asset={assets.get(transfer.asset.id)}/></div>
                             </div>
                             <div className="text-group">
                                 <div><Translate component="span" content="transfer.memo" />:</div>

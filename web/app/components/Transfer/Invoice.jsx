@@ -122,7 +122,7 @@ class Invoice extends BaseComponent {
                         <div className="item-name">{i.label}</div>
                         <div className="item-description">{i.quantity} x {<FormattedAsset amount={i.price} asset={asset} exact_amount={true}/>}</div>
                     </td>
-                    <td><FormattedAsset amount={amount} asset={asset} exact_amount={true} /></td>
+                    <td><FormattedAsset amount={amount} asset={asset.id} exact_amount={true} /></td>
                 </tr>
             );
         });
@@ -152,7 +152,7 @@ class Invoice extends BaseComponent {
                                     {items}
                                     <tr>
                                         <td className="text-right">Total:</td>
-                                        <td><FormattedAsset amount={total_amount} asset={asset} exact_amount={true} /></td>
+                                        <td><FormattedAsset amount={total_amount} asset={asset.id} exact_amount={true} /></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -168,13 +168,13 @@ class Invoice extends BaseComponent {
                                     {this.state.pay_from_account ?
                                         <div className={finalBalanceClass}>
                                             <label>Final Balance</label>
-                                            <FormattedAsset amount={final_balance} asset={asset}/>
+                                            <FormattedAsset amount={final_balance} asset={asset.id}/>
                                         </div> : null
                                     }
                                 </div>
                                 <br/>
                                 <a href className={payButtonClass} onClick={this.onPayClick.bind(this)}>
-                                    Pay <FormattedAsset amount={total_amount} asset={asset} exact_amount={true}/> to {invoice.to}
+                                    Pay <FormattedAsset amount={total_amount} asset={asset.id} exact_amount={true}/> to {invoice.to}
                                 </a>
                             </form>
                         </div>

@@ -44,19 +44,19 @@ class AccountMemberStats extends React.Component {
                         </tr>
                         <tr>
                             <td><Translate content="account.member.fees_paid"/>:</td>
-                            <td><FormattedAsset amount={account.stat_object.lifetime_fees_paid} asset={coreAsset} /></td>
+                            <td><FormattedAsset amount={account.stat_object.lifetime_fees_paid} asset={coreAsset.id} /></td>
                         </tr>    
                         <tr>
                             <td><Translate content="account.member.fees_pending"/>:</td>
-                            <td><FormattedAsset amount={parseInt(account.stat_object.pending_fees, 10)} asset={coreAsset} /></td>
+                            <td><FormattedAsset amount={parseInt(account.stat_object.pending_fees, 10)} asset={coreAsset.id} /></td>
                         </tr>    
                         <tr>
                             <td><Translate content="account.member.fees_vested"/>:</td>
-                            <td><FormattedAsset amount={account.stat_object.pending_vested_fees} asset={coreAsset} /></td>
+                            <td><FormattedAsset amount={account.stat_object.pending_vested_fees} asset={coreAsset.id} /></td>
                         </tr>   
                         <tr>
                             <td><Translate content="account.member.in_orders" core_asset={coreAsset.symbol}/></td>
-                            <td><FormattedAsset amount={account.stat_object.total_core_in_orders} asset={coreAsset} /></td>
+                            <td><FormattedAsset amount={account.stat_object.total_core_in_orders} asset={coreAsset.id} /></td>
                         </tr>                           
                     </table>
                 </div>

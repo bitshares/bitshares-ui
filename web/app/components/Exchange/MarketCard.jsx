@@ -29,14 +29,14 @@ class MarketCard extends React.Component {
                                 <li><Translate content="markets.core_rate" />: <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
                                                     amount={quote.options.core_exchange_rate.quote.amount}
-                                                    asset={quote}
+                                                    asset={quote.id}
                                                     baseamount={quote.options.core_exchange_rate.base.amount}
                                                     base={base} /> 
                                 </li>
                                 <li><Translate content="markets.supply" />: <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
                                                     amount={quote.dynamic_data.current_supply}
-                                                    asset={quote}
+                                                    asset={quote.id}
                                                     />
                                 </li>
                             </ul>

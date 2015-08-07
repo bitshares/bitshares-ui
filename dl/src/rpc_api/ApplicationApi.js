@@ -11,7 +11,7 @@ var type = require('../chain/serializer_operation_types')
 var api = require('./ApiInstances').instance();
 var key = require('../common/key_utils');
 
-import WalletUnlockActions from "actions/WalletUnlockActions"
+import WalletUnlockActions from "../actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
 import lookup from "chain/lookup"
 

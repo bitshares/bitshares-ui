@@ -9,6 +9,7 @@ import notify from 'actions/NotificationActions';
 import {Link} from "react-router";
 import AccountImage from "./AccountImage";
 import AccountSelect from "../Forms/AccountSelect";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 
 class CreateAccount extends React.Component {
@@ -35,26 +36,22 @@ class CreateAccount extends React.Component {
     }
 
     createAccount(name) {
-        let registrar_account_id = null;
-
-        // if(this.state.registrar_account) {
-        //     let res = AccountStore.getState().cachedAccounts.findEntry(a => a.name === this.state.registrar_account);
-        //     if(res && res.length === 2) registrar_account_id = res[1].id;
-        // }
-        return AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account).then(() => {
-            notify.addNotification({
-                message: `Successfully created account: ${name}`,
-                level: "success",
-                autoDismiss: 10
-            });
-            this.context.router.transitionTo("account", {account_name: name});
-        }).catch(error => {
-            // Show in GUI
-            console.log("ERROR AccountActions.createAccount", error);
-            notify.addNotification({
-                message: `Failed to create account: ${name}`,
-                level: "error",
-                autoDismiss: 10
+        WalletUnlockActions.unlock().then(() => {
+            AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account).then(() => {
+                notify.addNotification({
+                    message: `Successfully created account: ${name}`,
+                    level: "success",
+                    autoDismiss: 10
+                });
+                this.context.router.transitionTo("account", {account_name: name});
+            }).catch(error => {
+                // TODO: Show in GUI
+                console.log("ERROR AccountActions.createAccount", error);
+                notify.addNotification({
+                    message: `Failed to create account: ${name}`,
+                    level: "error",
+                    autoDismiss: 10
+                });
             });
         });
     }

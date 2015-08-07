@@ -45,8 +45,8 @@ class AccountOverview extends React.Component {
                 if (asset) {
                     return (
                         <tr key={balance.asset_id}>
-                            <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
-                            <td><FormattedAsset amount={balance.amount} asset={asset}/></td>
+                            <td><FormattedAsset amount={balance.amount} asset={asset.id}/></td>
+                            <td><FormattedAsset amount={balance.amount} asset={asset.id}/></td>
                         </tr>
                     );
                 }

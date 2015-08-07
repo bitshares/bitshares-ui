@@ -171,8 +171,8 @@ class AccountAssets extends React.Component {
                         <td>{asset.id}</td>
                         <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                         <td>{asset.options.description}</td>
-                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset} /></td>
-                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset} /></td>
+                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
+                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
                         <td>{asset.precision}</td>
                         {isMyAccount ?
                             (<td>

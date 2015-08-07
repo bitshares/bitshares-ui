@@ -46,7 +46,7 @@ class Row extends React.Component {
                     {block ? <td><Link to="block" params={{height: block}}>#{block}</Link></td> : null}
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
                     {this.props.children}   
-                    <td style={{paddingRight: "1.5rem"}} className="text-right">{!missing ? <FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={assets.get(fee.asset_id)} /> : null}</td>
+                    <td style={{paddingRight: "1.5rem"}} className="text-right">{!missing ? <FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={fee.asset_id} /> : null}</td>
                 </tr>
             );
     }
@@ -148,14 +148,14 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.sent" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.to" />{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}> {account_id_to_name[op[1].to]}</Link> : null}
                         </td>
                     );
                 } else if(current === op[1].to){
                     column = (
                         <td className="right-td"><Translate component="span" content="transaction.received" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.from" />{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}> {account_id_to_name[op[1].from]}</Link> : null}
                         </td>
                     );
@@ -201,9 +201,9 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.short_order" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_sell.amount} asset={assets.get(op[1].amount_to_sell.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} /> : null}
                         &nbsp;<Translate component="span" content="transaction.coll_of" />
-                        &nbsp;{!missingAssets[1] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral.amount} asset={assets.get(op[1].collateral.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[1] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral.amount} asset={op[1].collateral.asset_id} /> : null}
                     </td>
                 );
                 break;
@@ -384,7 +384,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.asset_issue" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={assets.get(op[1].asset_to_issue.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.to" />
                             &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].issue_to_account]) : null}
                         </td>
@@ -393,7 +393,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.was_issued" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={assets.get(op[1].asset_to_issue.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.by" />
                             &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].issuer]) : null}
                         </td>
@@ -409,7 +409,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.burn_asset" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_burn.amount} asset={assets.get(op[1].amount_to_burn.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_burn.amount} asset={op[1].amount_to_burn.asset_id} /> : null}
                     </td>
                 );
                 break;   
@@ -421,7 +421,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.fund_pool" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get(op[1].asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={op[1].asset_id} /> : null}
                     </td>
                 );
                 break;  
@@ -433,7 +433,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.asset_settle" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                     </td>
                 );
                 break;  
@@ -450,7 +450,7 @@ class Operation extends React.Component {
                         &nbsp;{!missingAssets[1] && !missingAssets[0] ? <FormattedAsset 
                                                     style={{fontWeight: "bold"}}
                                                     amount={op[1].price.quote.amount}
-                                                    asset={assets.get(op[1].price.quote.asset_id)}
+                                                    asset={op[1].price.quote.asset_id}
                                                     base={assets.get(op[1].price.base.asset_id)} /> : null}
                     </td>
                 );
@@ -501,7 +501,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.witness_pay" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.3.0")} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} /> : null}
                             <Translate component="span" content="transaction.to" /> 
                             &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].witness_account]) : null}
                         </td>
@@ -510,7 +510,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.received" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={assets.get("1.3.0")} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} /> : null}
                             <Translate component="span" content="transaction.from" /> 
                             &nbsp;{!missingWitnesses[0] ? this.linkToAccount(witness_id_to_name[op[1].witness_account]) : null}
                         </td>
@@ -606,9 +606,9 @@ class Operation extends React.Component {
                 column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.paid" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={assets.get(op[1].pays.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={op[1].pays.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.obtain" />
-                            &nbsp;{!missingAssets[1] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={assets.get(op[1].receives.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[1] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} /> : null}
                         </td>
                 );
 
@@ -640,7 +640,7 @@ class Operation extends React.Component {
                     <td className="right-td">
                         &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].creator]) : null}
                         <Translate component="span" content="transaction.vesting_balance_create" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                         &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].owner]) : null}
                     </td>
                 );
@@ -653,7 +653,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.vesting_balance_withdraw" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                     </td>
                 );
 
@@ -665,7 +665,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.bond_create_offer" />
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={assets.get(op[1].amount.asset_id)} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                     </td>
                 );
 
@@ -689,7 +689,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_accept_offer" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={assets.get(op[1].amount_borrowed.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} /> : null}
                             <Translate component="span" content="transaction.to" />
                             &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].borrower]) : null}
                         </td>
@@ -698,7 +698,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_accept_offer" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={assets.get(op[1].amount_borrowed.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} /> : null}
                             <Translate component="span" content="transaction.from" />
                             &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].lender]) : null}
                         </td>
@@ -715,7 +715,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_pay_collateral" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={assets.get(op[1].collateral_claimed.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} /> : null}
                             <Translate component="span" content="transaction.to" />
                             &nbsp;{!missingAccounts[1] ? this.linkToAccount(account_id_to_name[op[1].claimer]) : null}
                         </td>
@@ -724,7 +724,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.bond_claim_collateral" />
-                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={assets.get(op[1].collateral_claimed.asset_id)} /> : null}
+                            &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} /> : null}
                             <Translate component="span" content="transaction.from" />
                             &nbsp;{!missingAccounts[0] ? this.linkToAccount(account_id_to_name[op[1].lender]) : null}
                         </td>
@@ -739,7 +739,7 @@ class Operation extends React.Component {
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.create_worker" /> 
-                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={assets.get("1.3.0")} /> : null}
+                        &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={"1.3.0"} /> : null}
                     </td>
                 );
                 
