@@ -312,6 +312,7 @@ class ImportKeys extends Component {
                     //DEBUG console.log("... _parseWalletJson",e)
                     this._parseImportKeyUpload(contents, file) 
                 }
+                React.findDOMNode(this.refs.password).focus()
                 // try empty password, also display "Enter import file password"
                 this._decryptPrivateKeys()
                 
@@ -325,6 +326,7 @@ class ImportKeys extends Component {
 
     }
     
+    /** BTS 1.0 client wallet_export_keys format. */
     _parseImportKeyUpload(contents, file) {
         var password_checksum, account_keys
         try {
@@ -346,9 +348,14 @@ class ImportKeys extends Component {
         })
     }
     
+    /** BTS 1.0 hosted wallet backup (wallet.bitshares.org).
+    
+    Note,  not fully tested for the native wallet backup.  This does not include
+    BTS 1.0 client signing keys.  
+    */
     _parseWalletJson(contents) {
         var password_checksum
-        //var encrypted_brainkey
+        var encrypted_brainkey
         var address_to_enckeys = {}
         var account_addresses = {}
         
@@ -392,15 +399,12 @@ class ImportKeys extends Component {
                     continue
                 }
                 
-                // At this point the wallet is already created .. so importing
-                // the brainkey does not help us...
-                
-                //if ( "property_record_type" == element.type &&
-                //    "encrypted_brainkey" == element.data.key
-                //) {
-                //    encrypted_brainkey = element.data.value
-                //    continue
-                //}
+                if ( "property_record_type" == element.type &&
+                    "encrypted_brainkey" == element.data.key
+                ) {
+                    encrypted_brainkey = element.data.value
+                    continue
+                }
                 
                 if( "master_key_record_type" == element.type) {
                     if( ! element.data)
@@ -413,6 +417,9 @@ class ImportKeys extends Component {
                 }
                 
             }
+            if( ! encrypted_brainkey)
+                throw "Please use a BTS 1.0 wallet_export_keys file instead"
+            
             if( ! password_checksum)
                 throw file.name + " is missing password_checksum"
             
@@ -435,6 +442,9 @@ class ImportKeys extends Component {
                 encrypted_private_keys
             })
         }
+        // We could prompt for this brain key instead on first use.  The user
+        // may already have a brainkey at this point so with a single brainkey
+        // wallet we can't use it now.
         this.setState({
             password_checksum,
             account_keys
