@@ -7,7 +7,8 @@ import utils from "common/utils";
  *
  * Any property that is an object id will automatically be converted into
  * a state variable that is either null or an Immutable object.   The
- * state will automatically be updated anytime the Immutable object changes.
+ * Immutable object will automatically be updated anytime it changes on the
+ * blockchain.
  *
  * In addition to automatically fetching/subscribing to object IDs, this
  * component will also automatically fetch / subscribe to the full accounts
