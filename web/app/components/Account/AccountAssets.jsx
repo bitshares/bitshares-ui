@@ -16,6 +16,7 @@ import AccountInfo from "../Account/AccountInfo";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import BlockchainStore from "stores/BlockchainStore";
 
 class AccountAssets extends React.Component {
     constructor() {
@@ -147,6 +148,17 @@ class AccountAssets extends React.Component {
         let account = cachedAccounts.get(account_name);
         let {issue} = this.state;
 
+
+        // Calculate the CreateAsset fee by measuring the length of the symbol.
+        // TODO: apply the appropriate precision to the result. Example: 050000000000 should be 500000.00000
+        let len = this.state.create.symbol.length, createFee = "N/A";
+        if(len == 3)
+            createFee = BlockchainStore.getFee("asset_create", ["symbol3"]);
+        else if(len == 4)
+            createFee = BlockchainStore.getFee("asset_create", ["symbol4"]);
+        else if(len > 4)
+            createFee = BlockchainStore.getFee("asset_create", ["long_symbol"]);
+
         let accountExists = true;
         if (!account) {
             return <LoadingIndicator type="circle"/>;
@@ -241,6 +253,8 @@ class AccountAssets extends React.Component {
 
                                     <label><Translate content="account.user_issued_assets.precision" />
                                     <input type="number" value={this.state.create.precision} onChange={this._onCreateInput.bind(this, "precision")} /></label>
+                                
+                                    <p>Fee: {createFee} CORE {/* TODO: replace "CORE" with the proper base asset symbol */}</p>
                                 </div>
                                 <div className="grid-content button-group">
                                     <input type="submit" className="button" onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
