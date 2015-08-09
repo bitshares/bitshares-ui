@@ -46,15 +46,15 @@ export default class BalanceClaim extends Component {
         var unclaimed_account_balances = {};
         let index = 0;
         for(let asset_balance of this.state.balance_by_asset) {
-            var {accounts, symbol, precision, balance, balance_claims} =
+            var {accounts, asset_id, symbol, precision, balance, balance_claims} =
                 asset_balance
             
             if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
                 var account_names = accounts.join(", ")
                 unclaimed_balance_rows.push(
                     <tr key={index}>
-                        <td> <FormattedAsset color="info" amount={balance.unvested.unclaimed} asset={{symbol, precision}}/></td>
-                        <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={{symbol, precision}}/></td>
+                        <td> <FormattedAsset color="info" amount={balance.unvested.unclaimed} asset={asset_id}/></td>
+                        <td> <FormattedAsset amount={balance.vesting.unclaimed} asset={asset_id}/></td>
                         <td> {account_names} </td>
                     </tr>
                 );
@@ -67,8 +67,8 @@ export default class BalanceClaim extends Component {
             if(balance.unvested.claimed || balance.vesting.claimed) {
                 claimed_balance_rows.push(
                     <tr key={index}>
-                        <td> <FormattedAsset amount={balance.unvested.claimed} asset={{symbol, precision}}/></td>
-                        <td> <FormattedAsset amount={balance.vesting.claimed} asset={{symbol, precision}}/></td>
+                        <td> <FormattedAsset amount={balance.unvested.claimed} asset={asset_id}/></td>
+                        <td> <FormattedAsset amount={balance.vesting.claimed} asset={asset_id}/></td>
                         <td> {accounts.join(", ")} </td>
                     </tr>
                 );
@@ -167,11 +167,10 @@ export default class BalanceClaim extends Component {
     loadMyAccounts() {
         this.setState({my_accounts_loading:true})
         var account_names = AccountStore.getState().linkedAccounts.toArray()
-        var account_name_to_id = AccountStore.getState().account_name_to_id
-        console.log('... account_names',account_names)
+        var store = AccountStore.getState()
         var promises = []
         for(let account_name of account_names) {
-            var account_id = account_name_to_id[account_name]
+            var account_id = store.account_name_to_id[account_name]
             if( ! account_id)
                 throw new Error("Missing account id for name "+account_name)
             
@@ -184,7 +183,9 @@ export default class BalanceClaim extends Component {
                 //    amount: { 0, 0},
                 //    null//memo
                 //})
-                var p = application_api.transfer(account_id,account_id,
+                var p = application_api.transfer(
+                    account_id,
+                    account_id,
                     1,//amount
                     0,//asset
                     null,//memo
@@ -268,7 +269,8 @@ export default class BalanceClaim extends Component {
                     }
                     var balance_claims = total_record.balance_claims
                     balance_by_asset.push({
-                        accounts, symbol, precision, balance, balance_claims})
+                        accounts, asset_id:total_record.asset_id,
+                        symbol, precision, balance, balance_claims})
                 }
                 resolve(balance_by_asset)
             })

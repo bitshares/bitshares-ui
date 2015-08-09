@@ -71,7 +71,8 @@ class ImportKeys extends Component {
                 // var {symbol, balance, precision} = asset_balance;
                 balance_rows.push(
                     <div key={index}>
-                        <FormattedAsset color="info" amount={asset_balance.balance} asset={asset_balance.id}/>
+                        <FormattedAsset color="info" amount={asset_balance.balance}
+                            asset={asset_balance.asset_id}/>
                     </div>
                 );
             });
@@ -194,30 +195,20 @@ class ImportKeys extends Component {
             
             var assetid_balance = this.balanceByAsset(wif_to_balances);
             var asset_ids = Object.keys(assetid_balance);
-            var asset_symbol_precisions = [];
-            for(let asset_id of asset_ids) {
-                asset_symbol_precisions.push(
-                    lookup.asset_symbol_precision(asset_id)
-                );
+            var balance_by_asset = [];
+            for(let i = 0; i < asset_ids.length; i++) {
+                var asset_id = asset_ids[i];
+                var balance = assetid_balance[asset_id];
+                balance_by_asset.push({balance, asset_id});
             }
-            lookup.resolve().then(()=> {
-                var balance_by_asset = [];
-                for(let i = 0; i < asset_ids.length; i++) {
-                    var symbol = asset_symbol_precisions[i].resolve[0];
-                    var precision = asset_symbol_precisions[i].resolve[1];
-                    var asset_id = asset_ids[i];
-                    var balance = assetid_balance[asset_id];
-                    balance_by_asset.push({symbol, balance, precision});
-                }
-                keys.wif_to_balances = wif_to_balances;
-                this.setState({
-                    keys,
-                    wif_to_balances,
-                    balance_by_asset,
-                    balances_known: true,
-                    account_keycount:
-                        this.getImportAccountKeyCount(keys.wifs_to_account)
-                });
+            keys.wif_to_balances = wif_to_balances;
+            this.setState({
+                keys,
+                wif_to_balances,
+                balance_by_asset,
+                balances_known: true,
+                account_keycount:
+                    this.getImportAccountKeyCount(keys.wifs_to_account)
             });
         });
     }
