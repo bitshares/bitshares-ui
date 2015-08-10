@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import PrivateKey from "ecc/key_private";
 import Aes from "ecc/aes";
+import alt from "alt-instance"
 
 import WalletDb from "stores/WalletDb";
 import PublicKey from "ecc/key_public";
@@ -14,6 +15,7 @@ import v from "chain/serializer_validation";
 import lookup from "chain/lookup";
 import cname from "classnames";
 import AccountStore from "stores/AccountStore";
+import AccountActions from "actions/AccountActions";
 
 var api = Apis.instance();
 //var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
@@ -93,9 +95,8 @@ class ImportKeys extends Component {
         return (
             <div>
                 <div className="content-block">
-                    <h3>Import keys:</h3>
+                    <h3 className="no-border-bottom">Import Keys</h3>
                 </div>
-                <br/>
 
                 {/* Key file upload */}
                 <div>
@@ -506,8 +507,9 @@ class ImportKeys extends Component {
     _saveImport() {
         var linkedAccounts = AccountStore.getState().linkedAccounts
         for(let account_name in this.state.account_keycount) {
-            if( ! linkedAccounts.get(account_name))
-                AccountStore.onCreateAccount(account_name)
+            if( ! linkedAccounts.get(account_name)) {
+                AccountActions.addAccountName(account_name)
+            }
         }
         
         var wifs_to_account = this.state.keys.wifs_to_account
@@ -545,13 +547,11 @@ class ImportKeys extends Component {
                 else
                     notify.success(message)
                 
-                //if (import_count)
-                //    this.refs.balance_claim.updateBalances()
-            
+                if (import_count) {
+                    ImportKeysActions.change()
+                }
             } finally {
-                // this.reset()
-                this.setState({import_active: false, balance_claim_active: true});
-                this.props.exportState({import_active: false, balance_claim_active: true});
+                this.reset()
             }
             
         }).catch( error => {
@@ -585,11 +585,21 @@ class ImportKeys extends Component {
 
 }
 
-export default ImportKeys
-
 ImportKeys.propTypes = {
     exportState: PropTypes.func.isRequired
 }
+
+export var ImportKeysActions = alt.generateActions('change')
+class ImportKeysStore_ {
+    constructor() {
+        this.bindActions(ImportKeysActions)
+    }
+    onChange() {
+    }
+}
+export var ImportKeysStore = alt.createStore(ImportKeysStore_)
+export default ImportKeys
+
 
 class KeyCount extends Component {
     render() {

@@ -98,7 +98,9 @@ class App extends React.Component {
                     AssetActions.getAssetList("A", 100),
                     BlockchainActions.subscribeGlobals(),
                     AccountStore.loadDbData()
-                ]);
+                ]).then(()=> {
+                    AccountActions.change()
+                });
             })
         ]).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts

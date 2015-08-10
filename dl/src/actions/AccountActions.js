@@ -199,7 +199,11 @@ class AccountActions {
         }
         return promise;
     }
-
+    
+    addAccountName(account_name) {
+        this.dispatch(account_name)
+    }
+    
     createAccount(
         account_name,
         registrar,
@@ -237,7 +241,11 @@ class AccountActions {
     unlinkAccount(name) {
         this.dispatch(name);
     }
-
+    
+    change() {
+        this.dispatch()
+    }
+    
 }
 
 module.exports = alt.createActions(AccountActions);

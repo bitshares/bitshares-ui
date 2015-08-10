@@ -118,6 +118,10 @@ button, .button {
   }
 }
 
+.no-border-bottom {
+    border-bottom: none !important;
+}
+
 .page-header {
   margin-bottom: 2rem;
   border-bottom: 1px solid #444;

@@ -95,19 +95,6 @@ class ChainComponent extends React.Component
       this.setState( new_state )
    }
 
-   componentShouldUpdate( next_props, next_state ){ 
-      /*
-      for( var key in next_props ) {
-         if( utils.is_object_id( next_props[key] ) )
-         {
-            if( next_state[key] !== this.state[key] ) 
-               return true
-         }
-      }
-      */
-      return true
-   }
-
    componentWillUnmount()
    {
       for( var key in this.props )

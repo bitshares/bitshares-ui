@@ -8,7 +8,7 @@ class ExistingAccount extends React.Component {
     constructor() {
         super();
         this.state = {
-            balance_claim_active: false,
+            balance_claim_active: true,
             import_active: true
         };
     }
@@ -23,19 +23,14 @@ class ExistingAccount extends React.Component {
                             <div className="content-block">
                                 <h1>Welcome to Graphene</h1>
                             </div>
-                            {this.state.balance_claim_active ? (
-                                <BalanceClaim 
-                                    ref="balance_claim"
-                                    exportState={this._fetchState.bind(this)}
-                                />
-                            ) : null}
-                            
-                            {this.state.import_active ? (
-                                <ImportKeys
-                                    key={this.state.import_keys_ref}
-                                    exportState={this._fetchState.bind(this)}
-                                />
-                            ) : null}
+                            <ImportKeys
+                                key={this.state.import_keys_ref}
+                                exportState={this._fetchState.bind(this)}
+                            />
+                            <BalanceClaim 
+                                ref="balance_claim"
+                                exportState={this._fetchState.bind(this)}
+                            />
                         </Wallet>
                     </div>
                 </div>

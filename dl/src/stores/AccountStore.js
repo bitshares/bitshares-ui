@@ -32,7 +32,9 @@ class AccountStore extends BaseStore {
             onGetAccounts: AccountActions.getAccounts,
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
-            onAccountSearch: AccountActions.accountSearch
+            onAccountSearch: AccountActions.accountSearch,
+            onAddAccountName: AccountActions.addAccountName,
+            onChange: AccountActions.change
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount");
     }
@@ -264,6 +266,10 @@ class AccountStore extends BaseStore {
     onTransfer(result) {
         // console.log("[AccountStore.js] ----- onTransfer ----->", result);
     }
+    
+    onAddAccountName(account_name){
+        this.onCreateAccount(account_name)
+    }
 
     onCreateAccount(name_or_account) {
         var account = name_or_account;
@@ -306,6 +312,9 @@ class AccountStore extends BaseStore {
 
     onTransactUpdateAccount(account) {
         console.log("[AccountStore.js:154] ----- onTransactUpdateAccount ----->", account);
+    }
+    
+    onChange() {
     }
 
 }

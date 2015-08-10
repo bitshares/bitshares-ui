@@ -1,5 +1,7 @@
 import React, {Component, PropTypes} from "react";
+import AltContainer from "alt/AltContainer"
 
+import {ImportKeysStore} from "components/Wallet/ImportKeys"
 import WalletDb from "stores/WalletDb";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import AccountStore from "stores/AccountStore";
@@ -14,9 +16,11 @@ import cname from "classnames";
 import lookup from "chain/lookup";
 import v from "chain/serializer_validation";
 
+import chain_api from "api/chain"
+
 var application_api = new ApplicationApi()
 
-export default class BalanceClaim extends Component {
+class BalanceClaim extends Component {
 
     constructor() {
         super();
@@ -34,12 +38,14 @@ export default class BalanceClaim extends Component {
     }
     
     componentWillMount() {
+        //DEBUG console.log('... BalanceClaim componentWillMount')
         this.loadBalances()
         this.loadMyAccounts()
     }
     
     render() {
-        if( ! this.state.balance_claims.length)
+        //DEBUG  console.log('... render balance_by_asset',this.state.balance_by_asset.length)
+        if( ! this.state.balance_by_asset.length)
             return <div/>
         
         var unclaimed_balance_rows = [], claimed_balance_rows = []
@@ -86,8 +92,9 @@ export default class BalanceClaim extends Component {
 
         return (
             <div>
+                <hr/>
                 <div className="content-block">
-                    <h3>Claim balances:</h3>
+                    <h3 className="no-border-bottom">Claim balances</h3>
                 </div>
                 <div>
                     {unclaimed_balance_rows.length ? <div>
@@ -98,29 +105,9 @@ export default class BalanceClaim extends Component {
                         </tr></thead><tbody>
                             {unclaimed_balance_rows}
                         </tbody></table>
-                    </div> : "No Unclaimed Balances"}
                     
-                </div>
-                <br/>
-                
-                {claimed_balance_rows.length ? (
+                    <br/>
                     <div>
-                        <h3>Claimed Balance</h3>
-                        <div>
-                        
-                            <table className="table"><thead><tr>
-                                <th>Claimed</th>
-                                <th>Claimed (vesting)</th>
-                                <th>Account</th>
-                            </tr></thead><tbody>
-                                {claimed_balance_rows}
-                            </tbody></table>
-                        </div>
-                    </div>) : null}
-                <br/>
-                
-                    <div>
-                        <h3>Claim balance to account:</h3>
                         <ExistingAccountsAccountSelect
                             account_names={this.state.my_accounts}
                             onChange={this._claimAccountSelect.bind(this)}
@@ -128,7 +115,7 @@ export default class BalanceClaim extends Component {
                         />
                         {this.state.my_accounts_loading ? 
                             <LoadingIndicator type="circle"/> : <div/>}
-                        <br>
+                        <br></br>
                         <div className="button-group">
                             <div className={ cname("button success", {disabled: !import_ready}) }
                                 onClick={this._importBalances.bind(this,
@@ -138,16 +125,13 @@ export default class BalanceClaim extends Component {
                             >
                                 {claim_balance_label}
                             </div>
-                            <div className="button secondary"
-                                    onClick={this._setClaimActive.bind(this, false)}
-                                    >Cancel
-                            </div>
                         </div>
-                        </br>
-                
                     </div>
-            
-                <br/>
+                    
+                    </div> : "No Unclaimed Balances"}
+                    
+                </div>
+                    
             </div>
         );
     }
@@ -155,6 +139,7 @@ export default class BalanceClaim extends Component {
     loadBalances() {
         BalanceClaimStore.getBalanceClaims().then( balance_claims => {
             this.balanceByAssetName(balance_claims).then( balance_by_asset => {
+                //DEBUG console.log('... setState balance_claims',balance_claims.length)
                 this.setState({balance_claims, balance_by_asset})
             })
         }).catch( error => {
@@ -170,36 +155,25 @@ export default class BalanceClaim extends Component {
         var store = AccountStore.getState()
         var promises = []
         for(let account_name of account_names) {
-            var account_id = store.account_name_to_id[account_name]
-            if( ! account_id)
-                throw new Error("Missing account id for name "+account_name)
-            
-            account_name => {
+            var p = chain_api.lookupAccountByName(account_name).then ( account => {
                 // the fake transfer will check for required auths
-                //var tr = new ops.signed_transaction()
-                //tr.add_type_operation("transfer", {
-                //    fee: { amount: 0, asset_id },
-                //    from: account_id, to: account_id,
-                //    amount: { 0, 0},
-                //    null//memo
-                //})
-                var p = application_api.transfer(
-                    account_id,
-                    account_id,
+                return application_api.transfer(
+                    account.get("id"),
+                    account.get("id"),
                     1,//amount
                     0,//asset
                     null,//memo
                     false,//broadcast
                     false//encrypt_memo
                 ).then( fake_transfer => {
-                    console.log('... my account',account_name)
-                    return account_name
+                    //DEBUG console.log('... my account',account.get("name"))
+                    return account.get("name")
                 }).catch( error => {
-                    console.log('... NOT my account',account_name,error)
+                    //DEBUG console.log('... NOT my account',account.get("name"),error)
                     return null
                 })
-                promises.push(p)
-            }(account_name)//ensure correct account_name is returned in callback
+            })
+            promises.push(p)
         }
         Promise.all(promises).then( account_names => {
             var my_accounts = []
@@ -209,6 +183,7 @@ export default class BalanceClaim extends Component {
             }
             return my_accounts
         }).then( my_accounts => {
+            //DEBUG console.log('... my_accounts',my_accounts)    
             this.setState({my_accounts, my_accounts_loading:false})
         })
     }
@@ -301,7 +276,7 @@ export default class BalanceClaim extends Component {
             
             notify.success("Balance claimed to account: " + this.state.claim_account_name)
             if(result) {
-                console.log("ExistingAccount._importBalances", result, JSON.stringify(result));
+                //DEBUG console.log("ExistingAccount._importBalances", result, JSON.stringify(result));
             }
             this.context.router.transitionTo("account", {account_name: this.state.claim_account_name});
                 
@@ -346,3 +321,15 @@ BalanceClaim.propTypes = {
     exportState: PropTypes.func.isRequired
 }
 
+class BalanceClaimContainer extends React.Component {
+    render() {
+        this.seq = 0 //re-render on every store change
+        return (
+            <AltContainer stores={[AccountStore, ImportKeysStore]}
+                render={()=> <BalanceClaim key={this.seq++}/>}
+            >
+            </AltContainer>
+        )
+    }
+}
+export default BalanceClaimContainer
