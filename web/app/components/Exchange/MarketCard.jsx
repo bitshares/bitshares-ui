@@ -22,7 +22,7 @@ class MarketCard extends React.Component {
                         <div style={{padding: "5px"}}>
                         </div>
                         <div style={{color: "black"}} className="card-divider text-center">
-                            <span>{marketName}{/*<span style={{zIndex:999}} onClick={this.props.removeMarket} className="badge float-right">-</span>*/}</span>
+                            <span>{marketName} { /* <span style={{zIndex:999}} onClick={this.props.removeMarket} className="badge float-right">-</span> */ }</span>
                         </div>
                         <div style={{color: "black", paddingLeft: "0.5rem"}} className="card-section">
                             <ul style={{color: "white", listStyle: "none", fontSize: "85%", marginLeft: 0}}>
