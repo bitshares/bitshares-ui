@@ -20,8 +20,6 @@ class FormattedAsset extends ChainComponent {
         let {amount, baseamount, decimalOffset, color} = this.props;
         let {asset, base} = this.state
 
-        console.log( "props: ", this.props )
-        
         if (!asset) {
             return <span></span>;
         }

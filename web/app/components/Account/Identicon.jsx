@@ -2,7 +2,6 @@ import React from "react";
 import {PropTypes, Component} from "react";
 import sha256 from "js-sha256";
 import jdenticon from "jdenticon";
-import Icon from "../Icon/Icon";
 
 var canvas_id_count = 0
 
