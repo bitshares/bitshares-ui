@@ -1,7 +1,7 @@
 import React from "react";
-import ChainComponent from "../Utility/ChainComponent"
-import FormattedAsset from "../Utility/FormattedAsset";
-
+import ChainComponent from "./ChainComponent"
+import FormattedAsset from "./FormattedAsset";
+import {ObjectIdType} from "./CustomTypes";
 
 /**
  *  Given a balance_object, displays it in a pretty way
@@ -17,6 +17,11 @@ class BalanceComponent extends ChainComponent {
       let type   = this.state.balance.get('asset_type')
       return (<FormattedAsset amount={amount} asset={type} />)
    }
+}
+
+
+BalanceComponent.propTypes = {
+   balance: ObjectIdType
 }
 
 export default BalanceComponent;

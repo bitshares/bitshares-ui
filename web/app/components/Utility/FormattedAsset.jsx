@@ -4,6 +4,7 @@ import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import {PropTypes} from "react";
 import {Link} from "react-router";
+import {ObjectIdType} from "./CustomTypes.js";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -65,8 +66,8 @@ class FormattedAsset extends ChainComponent {
 
 FormattedAsset.defaultProps = {
     amount: 0,
-    base: undefined,
-    asset: undefined,
+    base: null,
+    asset: null,
     exact_amount: false,
     decimalOffset: 0,
     color: null
@@ -75,7 +76,7 @@ FormattedAsset.defaultProps = {
 FormattedAsset.propTypes = {
     amount: PropTypes.number.isRequired,
     base: PropTypes.string,
-    asset: PropTypes.string.isRequired,
+    asset: ObjectIdType.isRequired,
     exact_amount: PropTypes.bool,
     decimalOffset: PropTypes.number,
     color: PropTypes.string
