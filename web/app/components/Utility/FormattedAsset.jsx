@@ -41,7 +41,8 @@ class FormattedAsset extends ChainComponent {
                             value={amount / precision / (baseamount / baseprecision)}
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
-                        /> 
+                        />
+                        <span dangerouslySetInnerHTML={{__html: this.props.element_separator}} />
                         <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol}</Link> 
                           + "/" 
                         <Link to="asset" params={{ symbol: base.symbol }}>{base.symbol}</Link> 
@@ -54,7 +55,8 @@ class FormattedAsset extends ChainComponent {
                             value={this.props.exact_amount ? amount : amount / precision}
                             minimumFractionDigits={decimals}
                             maximumFractionDigits={decimals}
-                        /> 
+                        />
+                        <span dangerouslySetInnerHTML={{__html: this.props.element_separator}} />
                         <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol} </Link>
                     </span>
             );
