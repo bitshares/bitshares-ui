@@ -22,6 +22,14 @@ class Apis {
                     //DEBUG console.log("chain_id1",this.chain_id)
                 });
             });
+            this.ws_rpc.on_reconnect = () => {
+                console.log("[ApiInstances.js:26] ----- connection to rpc server was restored ----->");
+                this.ws_rpc.login("", "").then(() => {
+                    this._db_api.init();
+                    this._network_api.init();
+                    this._history_api.init();
+                });
+            }
             return Promise.all([db_promise,
                 this._network_api.init(),
                 this._history_api.init()]);

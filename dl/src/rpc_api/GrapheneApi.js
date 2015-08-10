@@ -8,7 +8,7 @@ class GrapheneApi {
     init() {
         var self = this
         return this.ws_rpc.call([1, this.api_name, []]).then( response => {
-            //console.log("[GrapheneApi.js:11] ----- api_id ----->", response);
+            //console.log("[GrapheneApi.js:11] ----- GrapheneApi.init ----->", this.api_name, response);
             self.api_id = response;
             return self;
         });

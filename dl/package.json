@@ -18,6 +18,7 @@
     "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:babel/register --require coffee-script/register"
   },
   "dependencies": {
+    "ReconnectingWebSocket": "git+https://github.com/joewalnes/reconnecting-websocket.git",
     "alt": "~0.15.3",
     "bigi": "1.1.0",
     "bs58": "2.0.0",
