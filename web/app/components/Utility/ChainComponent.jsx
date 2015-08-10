@@ -24,7 +24,7 @@ import utils from "common/utils";
  *      full_accounts: { owner: "sam", issuer: "1.2.6" }
  * }
  *
- * Gets converted to 
+ * Gets converted to
  *
  * this.state = { 
  *      asset: Object, 
@@ -73,7 +73,7 @@ class ChainComponent extends React.Component
 
    componentWillReceiveProps( next_props ) {
       let new_state = {}
-      for( var key in this.next_props )
+      for( let key in this.next_props )
       {
          if( utils.is_object_id( next_props[key] ) && next_props[key] != this.props[key] )
             new_state[key] =  ChainStore.getObject( this.props[key], this.update, true )
@@ -81,16 +81,22 @@ class ChainComponent extends React.Component
       if( 'accounts' in next_props && typeof next_props.accounts == 'object' )
       {
          let accounts = {}
-         for( var account in next_props.accounts )
+         for( let account in next_props.accounts )
             accounts[account] = ChainStore.getAccount( next_props.accounts[account], this.update )
          new_state.accounts = accounts
       }
       if( 'full_accounts' in next_props && typeof next_props.full_accounts == 'object' )
       {
          let full_accounts = {}
-         for( var account in next_props.full_accounts )
+         for( let account in next_props.full_accounts )
             full_accounts[account] = ChainStore.getAccount( next_props.full_accounts[account], this.update, true )
          new_state.full_accounts = full_accounts
+      }
+      // unsubscribe from no longer used objects
+      for( let key in this.props )
+      {
+         if( utils.is_object_id( this.props[key] ) && this.props[key] !== next_props[key] )
+            ChainStore.unsubscribeFromObject( this.props[key], this.update )
       }
       this.setState( new_state )
    }
