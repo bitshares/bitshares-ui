@@ -17,8 +17,8 @@ class PrivateKey
     constructor: (@d) ->
 
     PrivateKey.fromBuffer = (buf) ->
-        unless 32 is buf.length
-            throw new Error "Expecting 32 bytes, instead got #{buf.length}"
+        if 32 isnt buf.length
+            console.log("WARN: Expecting 32 bytes, instead got #{buf.length}")
         new PrivateKey BigInteger.fromBuffer(buf)
     
     PrivateKey.fromSeed = (seed) -> # generate_private_key
@@ -38,13 +38,6 @@ class PrivateKey
         new_checksum = new_checksum.slice 0, 4
         assert.deepEqual checksum, new_checksum #, 'Invalid checksum'
         private_key = private_key.slice 1
-        if private_key.length < 32
-            console.log "ERROR: WIF passes checksum but the private key's length was only #{private_key.length} instead of 32.  Zero padding is being applied"
-            pad = 32 - private_key.length
-            zeros = ""
-            zeros += "0" for i in [0...pad] by 1
-            private_key = Buffer.concat [new Buffer(zeros), private_key]
-        
         PrivateKey.fromBuffer private_key
         
     toWif: ->
