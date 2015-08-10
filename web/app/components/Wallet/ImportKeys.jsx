@@ -218,11 +218,15 @@ class ImportKeys extends Component {
         return new Promise((resolve, reject)=> {
             var address_params = [], wif_owner = {};
             for(let wif of wif_keys) {
-                var private_key = PrivateKey.fromWif(wif);
-                var public_key = private_key.toPublicKey();
-                var address_str = public_key.toBtsAddy();
-                address_params.push( address_str );
-                wif_owner[address_str] = wif;
+                try {
+                    var private_key = PrivateKey.fromWif(wif);
+                    var public_key = private_key.toPublicKey();
+                    var address_str = public_key.toBtsAddy();
+                    address_params.push( address_str );
+                    wif_owner[address_str] = wif;
+                } catch(e) {
+                    console.error("ImportKeys: Invalid private key error",e)
+                }
             }
             //DEBUG  console.log("... get_balance_objects", address_params)
             var db = api.db_api();
@@ -472,6 +476,15 @@ class ImportKeys extends Component {
             for(let encrypted_private of account.encrypted_private_keys) {
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
+                    if(private_plainhex.length < 32 * 2) {
+                        console.log("ERROR: Decrypted private key bytes should "+
+                            "be 32 byte length, instead found only " +
+                            private_plainhex.length)
+                        var pad = 32 - private_plainhex.length
+                        zeros = ""
+                        for(let i = 0; i < zeros; i++) zeros += "0"
+                        private_plainhex = zeros + private_plainhex
+                    }
                     var private_key = PrivateKey.fromBuffer(
                         new Buffer(private_plainhex, "hex"))
                     

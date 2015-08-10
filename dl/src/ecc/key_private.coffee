@@ -17,7 +17,8 @@ class PrivateKey
     constructor: (@d) ->
 
     PrivateKey.fromBuffer = (buf) ->
-        assert.equal 32, buf.length, "Expecting 32 bytes, instead got #{buf.length}"
+        unless 32 is buf.length
+            throw new Error "Expecting 32 bytes, instead got #{buf.length}"
         new PrivateKey BigInteger.fromBuffer(buf)
     
     PrivateKey.fromSeed = (seed) -> # generate_private_key
@@ -25,8 +26,8 @@ class PrivateKey
             throw new Error 'seed must be of type string'
         PrivateKey.fromBuffer hash.sha256 seed
     
-    PrivateKey.fromWif = (private_wif) ->
-        private_wif = new Buffer base58.decode private_wif
+    PrivateKey.fromWif = (_private_wif) ->
+        private_wif = new Buffer base58.decode _private_wif
         version = private_wif.readUInt8(0)
         assert.equal 0x80, version, "Expected version #{0x80}, instead got #{version}"
         # checksum includes the version
@@ -36,7 +37,15 @@ class PrivateKey
         new_checksum = hash.sha256 new_checksum
         new_checksum = new_checksum.slice 0, 4
         assert.deepEqual checksum, new_checksum #, 'Invalid checksum'
-        PrivateKey.fromBuffer private_key.slice 1
+        private_key = private_key.slice 1
+        if private_key.length < 32
+            console.log "ERROR: WIF passes checksum but the private key's length was only #{private_key.length} instead of 32.  Zero padding is being applied"
+            pad = 32 - private_key.length
+            zeros = ""
+            zeros += "0" for i in [0...pad] by 1
+            private_key = Buffer.concat [new Buffer(zeros), private_key]
+        
+        PrivateKey.fromBuffer private_key
         
     toWif: ->
         private_key = @toBuffer()
@@ -58,7 +67,15 @@ class PrivateKey
         PublicKey.fromPoint @toPublicKeyPoint()
     
     toBuffer: ->
-        @d.toBuffer()
+        buf = @d.toBuffer()
+        if buf.length isnt 32
+            len = buf.length
+            pad = 32 - len
+            zeros = ""
+            zeros += "0" for i in [0...pad] by 1
+            buf = Buffer.concat [new Buffer(zeros), buf]
+            #DEBUG console.log "BigInteger toBuffer was #{len} bytes and was padded to #{buf.length} bytes"
+        buf
     
     ###* ECIES ###
     get_shared_secret:(public_key)->
