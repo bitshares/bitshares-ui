@@ -30,8 +30,7 @@ class AccountCard extends ChainComponent {
            {
               console.log( "render ..", abal.toJS() ) 
               balances = abal.map( (x)=> { 
-                                   console.log( "bal: ", x ); 
-                                   return (<BalanceComponent balance={x}  />) 
+                                   return ( <div className="grid-content no-overflow"><BalanceComponent balance={x}  /></div>) 
                                   } ).toArray()
            }
         }
@@ -41,21 +40,22 @@ class AccountCard extends ChainComponent {
         if( this.state.full_accounts.account )
            console.log( "account", this.state.full_accounts.account.toJS() )
         return (
-            <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
-                <div className="card">
-                    <Link to="account" params={{account_name: name}}>
-                        <div>
-                            <AccountImage account={name} size={{height: 64, width: 64}}/>
-                        </div>
-                        <div className="card-divider">
-                            {name}
-                        </div>
-                        <div className="card-section" style={{padding: 0}}>
-                            {balances}
-                        </div>
-                    </Link>
-                </div>
-            </div>
+                  <div className="grid-block card ">
+                      <div className="grid-block shrink no-overflow">
+                          <AccountImage account={name} size={{height: 64, width: 64}}/>
+                      </div>
+                      <div className="grid-block vertical no-overflow">
+                          <Link to="account" params={{account_name: name}}>
+                             <div className="grid-content card-divider"> <center>{name}</center> </div>
+                          </Link>
+                          <div className="grid-block ">
+                             <div className="grid-content "/>
+                             <div className="grid-block vertical card-section shrink">
+                                {balances}
+                             </div>
+                          </div>
+                      </div>
+                  </div>
         );
     }
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import Identicon from "./Identicon";
 import {PropTypes, Component} from "react";
+import {Link} from "react-router";
 
 class AccountImage extends Component {
     render() {
@@ -12,7 +13,9 @@ class AccountImage extends Component {
 
         return (
             <div>
+              <Link to="account" params={{account_name: account}}>
                 {custom_image}
+              </Link>
             </div>
         );
     }
