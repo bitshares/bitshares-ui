@@ -15,11 +15,12 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "webpack-dev-server --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
+    "start": "webpack-dev-server --host 0.0.0.0 --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
     "build": "node ./node_modules/webpack/bin/webpack.js --progress --colors --optimize-minimize -p"
   },
   "dependencies": {
     "alt": "~0.17.1",
+    "autoprefixer-loader": "^2.0.0",
     "babel": "^5.8.21",
     "babel-core": "~5.2.17",
     "babel-loader": "~5.0.0",

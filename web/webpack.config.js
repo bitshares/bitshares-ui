@@ -31,7 +31,7 @@ var config = {
             {
                 test: /\.scss$/,
                 //loader: "style!css!sass?outputStyle=expanded&includePaths[]=" + (path.resolve(__dirname, "./node_modules"))
-                loader: ExtractTextPlugin.extract("css!sass?outputStyle=expanded&includePaths[]=" + (path.resolve(__dirname, "./node_modules")))
+                loader: ExtractTextPlugin.extract("css!autoprefixer!sass?outputStyle=expanded&includePaths[]=" + (path.resolve(__dirname, "./node_modules")))
             },
             { test: /fonts\/.*\.(eot|ttf|woff|svg)$/, loader: "file?name=fonts/[name].[ext]?[hash]" },
             { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] }

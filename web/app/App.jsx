@@ -162,7 +162,7 @@ class App extends React.Component {
 }
 
 App.willTransitionTo = (transition, params, query, callback) => {
-    iDB.init_instance(shimIndexedDB).init_promise.then(() => {
+    iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise.then(() => {
         WalletDb.loadDbData().then(() => {
             if (!WalletDb.getWallet() && transition.path !== "/create-account") {
                 transition.redirect("/create-account");
