@@ -144,12 +144,12 @@ _my.signed_transaction = ->
                 #DEBUG console.log error # logged in GrapheneApi
                 message = error.message
                 message = "" unless message
-                throw new Error (
+                reject( new Error (
                     message + "\n" +
                     'graphene-ui ' +
                     ' digest ' + hash.sha256(@tr_buffer).toString('hex') +
                     ' transaction ' + @tr_buffer.toString('hex') +
-                    ' ' + JSON.stringify(tr_object)
+                    ' ' + JSON.stringify(tr_object) )
                 )
                 return
             return

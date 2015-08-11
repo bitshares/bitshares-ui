@@ -27,7 +27,7 @@ export default class TransactionConfirm extends React.Component {
     }
     
     confirm_and_broadcast(tr, resolve, reject) {
-        console.log("confirm_and_broadcast:", tr);
+        console.log("confirm_and_broadcast:", tr, resolve, reject);
         // let {tr, resolve, reject} = this.props;
         var trx = tr.serialize();
         this.setState({tr, trx, resolve, reject});
@@ -87,11 +87,14 @@ export default class TransactionConfirm extends React.Component {
                this.state.resolve();
                this.reset();
            }).catch( error => {
-               console.log("TransactionConfirm broadcast error", error);
-               var message = error;
-               notify.error(counterpart.translate("transaction.broadcast_fail", {message: message}));
-               this.state.reject(error);
-               this.reset();
+               console.log("TransactionConfirm broadcast error", error)
+               var message = error
+               message = error.message.split( '\n' )[1]
+               notify.error(counterpart.translate("transaction.broadcast_fail", {message: message}))
+               this.setState( { broadcast : false } )
+               ZfApi.publish("transaction_confim_modal", "close")
+               //this.state.reject(error);
+               this.reset()
            });
         }
     }

@@ -56,7 +56,7 @@ class OperationTable extends React.Component {
 
         return (
             <div >
-                <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6>
+            {/*  <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6> */}
                 <table style={{marginBottom: "1em"}} className="table op-table">
                     <caption></caption>
                     <tbody>
@@ -755,7 +755,7 @@ class Transaction extends React.Component {
 
         return (
             <div className="grid-content">
-                <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5>
+            {/*     <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5> */ }
                 {info}
             </div>
         );
