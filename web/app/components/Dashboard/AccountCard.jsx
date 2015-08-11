@@ -35,8 +35,8 @@ class AccountCard extends ChainComponent {
            }
         }
 
-        console.log( "props: ", this.props )
-        console.log( "state: ", this.state )
+        //DEBUG console.log( "props: ", this.props )
+        //DEBUG console.log( "state: ", this.state )
         if( this.state.full_accounts.account )
            console.log( "account", this.state.full_accounts.account.toJS() )
         return (

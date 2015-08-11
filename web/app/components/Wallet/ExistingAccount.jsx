@@ -14,22 +14,19 @@ class ExistingAccount extends React.Component {
     }
     
     render() {
-        
         return (
             <div id="existing-account" className="grid-block vertical">
                 <div className="grid-container">
-                    <div className="content-block center-content">
+                    <div className="content-block">
                         <Wallet>
                             <div className="content-block">
                                 <h1>Welcome to Graphene</h1>
                             </div>
                             <ImportKeys
                                 key={this.state.import_keys_ref}
-                                exportState={this._fetchState.bind(this)}
                             />
                             <BalanceClaim 
                                 ref="balance_claim"
-                                exportState={this._fetchState.bind(this)}
                             />
                         </Wallet>
                     </div>
@@ -38,9 +35,6 @@ class ExistingAccount extends React.Component {
         );
     }
 
-    _fetchState(state) {
-        this.setState(state);
-    }
 }
 
 export default ExistingAccount;

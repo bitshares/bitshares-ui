@@ -72,9 +72,13 @@ class ImportKeys extends Component {
             this.state.balance_by_asset.forEach((asset_balance, index) => {
                 // var {symbol, balance, precision} = asset_balance;
                 balance_rows.push(
-                    <div key={index}>
-                        <FormattedAsset color="info" amount={asset_balance.balance}
-                            asset={asset_balance.asset_id}/>
+                    <div className="align-right">
+                        <div className="">
+                            <FormattedAsset color="info"
+                                amount={asset_balance.balance}
+                                asset={asset_balance.asset_id}
+                                />
+                        </div>
                     </div>
                 );
             });
@@ -94,12 +98,12 @@ class ImportKeys extends Component {
 
         return (
             <div>
-                <div className="content-block">
+                <div className="content-block center-content">
                     <h3 className="no-border-bottom">Import Keys</h3>
                 </div>
 
                 {/* Key file upload */}
-                <div>
+                <div className="center-content">
                     <KeyCount wif_count={this.state.wif_count}/>
                     {!this.state.wif_count ? 
                         <div>Upload BitShares keys file...</div> :
@@ -107,7 +111,7 @@ class ImportKeys extends Component {
                     }
                 </div>
                 <br/>
-                <div>
+                <div className="center-content">
                     {!this.state.wif_count ?
                         (<div>
                             <div>
@@ -127,7 +131,7 @@ class ImportKeys extends Component {
                                         type="password" ref="password"
                                         key={this.state.reset_password}
                                         placeholder={password_placeholder}
-                                        onChange={this._decryptPrivateKeys.bind(this)}
+                                        onChange={this._passwordCheck.bind(this)}
                                     />
                                     <div>{this.state.import_password_message}</div>
                                     <div>{this.state.wif_text_message}</div>
@@ -143,7 +147,7 @@ class ImportKeys extends Component {
                         (<div>
                             <div>
                                 {account_rows.length ? <div>
-                                    <table className="table">
+                                    <table className="table center-content">
                                         <thead>
                                             <tr>
                                                 <th style={{textAlign: "center"}}>Account</th>
@@ -159,17 +163,19 @@ class ImportKeys extends Component {
                         </div>) : null}
                         <br/>
 
-                        <h3>Unclaimed balances belonging to these keys:</h3>
+                        <h3 className="center-content">Unclaimed balances belonging to these keys:</h3>
                         {balance_rows ? 
                             (<div>
-                                <div>
-                                    <label>Assets</label>
-                                    {balance_rows.length ? balance_rows : "No Balances"}
+                                <div className="grid-block center-content">
+                                    <div className="grid-container">
+                                        <label>Asset Totals</label><br/>
+                                        {balance_rows.length ? balance_rows : "No Balances"}
+                                    </div>
                                 </div>
                             </div>) : null}
                         <br/>
                         
-                        <div className="button-group">
+                        <div className="button-group content-block center-content">
                             <div className={cname("button success", {disabled:!import_ready})}
                                 onClick={this._saveImport.bind(this)} >
                                 Import
@@ -310,7 +316,7 @@ class ImportKeys extends Component {
                 }
                 React.findDOMNode(this.refs.password).focus()
                 // try empty password, also display "Enter import file password"
-                this._decryptPrivateKeys()
+                this._passwordCheck()
                 
             } catch(message) {
                 console.log("... ImportKeys upload error", message)
@@ -448,7 +454,7 @@ class ImportKeys extends Component {
         })
     }
    
-    _decryptPrivateKeys(evt) {
+    _passwordCheck(evt) {
         if( ! this.state.account_keys.length)
             return
         
@@ -463,9 +469,12 @@ class ImportKeys extends Component {
         }
         this.setState({
             reset_password: Date.now(),
-            import_password_message:null
+            import_password_message: "Password matches. Loading..."
         })
-        
+        setTimeout(()=> this._decryptPrivateKeys(password), 250)
+    }
+    
+    _decryptPrivateKeys(password) {
         var password_aes = Aes.fromSeed(password)
         for(let account of this.state.account_keys) {
             if(! account.encrypted_private_keys) {
@@ -476,18 +485,20 @@ class ImportKeys extends Component {
             for(let encrypted_private of account.encrypted_private_keys) {
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
-                    if(private_plainhex.length < 32 * 2) {
-                        console.log("ERROR: Decrypted private key bytes should "+
-                            "be 32 byte length, instead found only " +
-                            private_plainhex.length)
-                        var pad = 32 - private_plainhex.length
-                        zeros = ""
-                        for(let i = 0; i < zeros; i++) zeros += "0"
-                        private_plainhex = zeros + private_plainhex
-                    }
                     var private_key = PrivateKey.fromBuffer(
                         new Buffer(private_plainhex, "hex"))
                     
+                    //var pub = private_key.toPublicKey()
+                    //var addy = pub.toBtsAddy()
+                    //var pubby = pub.toBtsPublic()
+                    //if(
+                    //    addy.indexOf("GPH..") == 0 ||
+                    //    pubby.indexOf("GPH..") == 0
+                    //)
+                    //    console.log("NOTE\t",pubby, addy)
+                    //else
+                        //console.log("\t",pubby, addy)
+                        
                     var private_key_wif = private_key.toWif()
                     var account_names = this.state.wifs_to_account[private_key_wif] || []
                     var dup = false
@@ -500,7 +511,7 @@ class ImportKeys extends Component {
                 } catch(e) {
                     console.log(e)
                     var message = e.message || e
-                    notify.error(`Account ${acccount_name} had a private key import error: `+message)
+                    notify.error(`Account ${account_name} had a private key import error: `+message)
                 }
             }
         }
@@ -515,13 +526,18 @@ class ImportKeys extends Component {
             import_password_message: null,
             password_checksum: null
         })
+        //})
     }
 
     _saveImport() {
         var linkedAccounts = AccountStore.getState().linkedAccounts
         for(let account_name in this.state.account_keycount) {
             if( ! linkedAccounts.get(account_name)) {
-                AccountActions.addAccountName(account_name)
+                try {
+                    AccountActions.addAccountName(account_name)
+                } catch(e) {
+                    console.log("WARN", e)
+                }
             }
         }
         
@@ -536,6 +552,7 @@ class ImportKeys extends Component {
                 import_account_names,
                 import_balances
             })
+            //DEBUG if(import_account_names.join('')=="") console.log('... import_balances empty account',import_balances)
         }
         
         WalletDb.importKeys( private_key_objs ).then( result => {
@@ -596,10 +613,6 @@ class ImportKeys extends Component {
 //        return count
 //    }
 
-}
-
-ImportKeys.propTypes = {
-    exportState: PropTypes.func.isRequired
 }
 
 export var ImportKeysActions = alt.generateActions('change')

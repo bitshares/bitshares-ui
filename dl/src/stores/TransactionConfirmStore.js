@@ -11,7 +11,7 @@ class TransactionConfirmStore {
     }
     
     onConfirm({tr, resolve, reject}) {
-        console.log('... onConfirm',{tr, resolve, reject})
+        //DEBUG console.log('... onConfirm',{tr, resolve, reject})
         this.setState({tr, resolve, reject})
     }
 }
