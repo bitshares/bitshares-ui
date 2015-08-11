@@ -16,10 +16,11 @@
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
-    "build": "node ./node_modules/webpack/bin/webpack.js --progress --colors --optimize-minimize"
+    "build": "node ./node_modules/webpack/bin/webpack.js --progress --colors --optimize-minimize -p"
   },
   "dependencies": {
     "alt": "~0.17.1",
+    "babel": "^5.8.21",
     "babel-core": "~5.2.17",
     "babel-loader": "~5.0.0",
     "classnames": "^2.1.1",
@@ -28,8 +29,9 @@
     "css-loader": "^0.12.0",
     "extract-text-webpack-plugin": "^0.8.0",
     "file-loader": "^0.8.1",
-    "react-highcharts": "git+https://github.com/svk31/react-highcharts.git",
     "immutable": "~3.7.2",
+    "indexeddbshim": "^2.0.4",
+    "intl": "^1.0.0",
     "jdenticon": "git+https://github.com/svk31/jdenticon.git",
     "js-sha256": "^0.2.3",
     "json-loader": "^0.5.1",
@@ -42,6 +44,7 @@
     "perfect-scrollbar": "^0.6.2",
     "react": "~0.13.2",
     "react-foundation-apps": "git+http://github.com/valzav/react-foundation-apps.git",
+    "react-highcharts": "git+https://github.com/svk31/react-highcharts.git",
     "react-hot-loader": "~1.2.7",
     "react-interpolate-component": "^0.7.1",
     "react-intl": "^1.2.0",

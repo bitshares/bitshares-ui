@@ -13,7 +13,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 //}
 
 var config = {
-    entry: path.resolve(__dirname, "app/App.jsx"),
+    entry: path.resolve(__dirname, "app/Main.js"),
     output: {
         path: path.resolve(__dirname, "bundle"),
         filename: "app.js"

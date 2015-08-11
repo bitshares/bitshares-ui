@@ -53,7 +53,7 @@ class WalletCreate extends Component {
                                     <br/>
                                 </div>
 
-                                <div className="grid-content">
+                                <div className="grid-content no-overflow">
                                     <input type="submit" value="Create"
                                         className={cname("button",{disabled: !this.state.isValid})}/>
                                     <br/>
