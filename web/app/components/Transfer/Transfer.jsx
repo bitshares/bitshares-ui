@@ -94,6 +94,7 @@ class Transfer extends BaseComponent {
            new_state.errors.from = "invalid account name"
 
         let value = new_state.transfer.amount
+        value = value.replace( /,/g, "" )
         let fvalue = parseFloat(value)
         if( value.length && isNaN(fvalue) && value != "." )
            new_state.errors.amount = "must be a number"
@@ -101,7 +102,7 @@ class Transfer extends BaseComponent {
            new_state.errors.amount = "amount must be greater than 0" 
 
         let errors = new_state.errors
-        new_state.isValid = Number(new_state.transfer.amount) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
+        new_state.isValid = Number(value) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
     }
     update() {
@@ -223,17 +224,23 @@ class Transfer extends BaseComponent {
         console.log( "value:",value)
         if (key === "amount") {
            value = value.trim()
-           let float_value = parseFloat(value)
+           value = value.replace( /,/g, "" )
            if( value == "." || value == "" )
            {
               transfer.amount = value
            }
            else if( value.length )
            {
+            //  console.log( "before: ",value )
               let n = Number(value)
               if( isNaN( n ) )
                  return
-               transfer.amount = value
+              let parts = value.split('.')
+           //   console.log( "split: ", parts )
+              transfer.amount = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              if( parts.length > 1 )
+                 transfer.amount += "." + parts[1]
+           //   console.log( "after: ",transfer.amount )
            }
         }
         else if (key === "from") {
@@ -273,7 +280,8 @@ class Transfer extends BaseComponent {
             t.from_id = this.props.currentAccount.id;
         }
 
-        AccountActions.transfer(t.from_id, t.to_id, parseInt(t.amount * precision, 10), t.asset, t.memo).then(() => {
+        let  amount = t.amount.replace( /,/g, "" )
+        AccountActions.transfer(t.from_id, t.to_id, parseInt(amount * precision, 10), t.asset, t.memo).then(() => {
             this.setState({confirmation: false, done: true, error: null});
             notify.addNotification({
                 message: "Transfer completed",
