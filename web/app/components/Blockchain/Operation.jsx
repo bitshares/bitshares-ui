@@ -11,6 +11,7 @@ import WitnessActions from "actions/WitnessActions";
 import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
+import BlockTime from "./BlockTime";
 
 require("./operations.scss");
 
@@ -43,7 +44,7 @@ class Row extends React.Component {
 
         return (
                 <tr>
-                    {block ? <td><Link to="block" params={{height: block}}>#{block}</Link></td> : null}
+                    <td><BlockTime block_number={block}/></td>
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
                     {this.props.children}   
                     <td style={{paddingRight: "1.5rem"}} className="text-right">{!missing ? <FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={fee.asset_id} /> : null}</td>

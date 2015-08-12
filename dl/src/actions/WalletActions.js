@@ -74,7 +74,7 @@ class WalletActions {
                 hostname = window.location.hostname;
                 protocol = window.location.protocol === "https:" ? "https://" : "http://";
             } catch(e) {}
-            let port = hostname === "localhost" ? ":3000" : "";
+            let port = (hostname === "localhost" || hostname.indexOf("192.168.") === 0) ? ":3000" : "";
             let create_account_promise = fetch(protocol + hostname + port + "/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',

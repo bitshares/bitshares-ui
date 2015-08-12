@@ -647,7 +647,7 @@ class ChainStore
       return this.fetchObject( "2.0.0", min_age_ms )
    }
 
-   fetchDynamicGlobalProperties( min_age = null )
+   fetchDynamicGlobalProperties( min_age_ms = null )
    {
       /// TODO: replace "2.1.0" with constants defined from generated code
       return this.fetchObject( "2.1.0", min_age_ms )

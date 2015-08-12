@@ -123,7 +123,7 @@ class AccountOverview extends React.Component {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th><Translate content="explorer.block.title" /></th>
+                                <th><Translate content="explorer.block.date" /></th>
                                 <th><Translate content="explorer.block.op" /></th>
                                 <th><Translate content="account.votes.info" /></th>
                                 <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
