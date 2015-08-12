@@ -12,12 +12,15 @@ import notify from "actions/NotificationActions";
 import hash from "common/hash";
 import Apis from "rpc_api/ApiInstances";
 import v from "chain/serializer_validation";
-import lookup from "chain/lookup";
+// import lookup from "chain/lookup";
 import cname from "classnames";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 
 var api = Apis.instance();
+
+require("./ImportKeys.scss");
+
 //var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
 
 class ImportKeys extends Component {
@@ -72,13 +75,11 @@ class ImportKeys extends Component {
             this.state.balance_by_asset.forEach((asset_balance, index) => {
                 // var {symbol, balance, precision} = asset_balance;
                 balance_rows.push(
-                    <div className="align-right">
-                        <div className="">
-                            <FormattedAsset color="info"
-                                amount={asset_balance.balance}
-                                asset={asset_balance.asset_id}
-                                />
-                        </div>
+                    <div className="asset-list">
+                        <FormattedAsset color="info"
+                            amount={asset_balance.balance}
+                            asset={asset_balance.asset_id}
+                            />
                     </div>
                 );
             });
@@ -167,9 +168,11 @@ class ImportKeys extends Component {
                         {balance_rows ? 
                             (<div>
                                 <div className="grid-block center-content">
-                                    <div className="grid-container">
-                                        <label>Asset Totals</label><br/>
-                                        {balance_rows.length ? balance_rows : "No Balances"}
+                                    <div className="grid-content">
+                                        <label>Asset Totals</label>
+                                        <div>
+                                            {balance_rows.length ? balance_rows : "No Balances"}
+                                        </div>
                                     </div>
                                 </div>
                             </div>) : null}
