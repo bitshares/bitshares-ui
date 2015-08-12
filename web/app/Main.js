@@ -1,6 +1,6 @@
 require("./assets/loader");
 if (!window.Intl) {
-    require(['Intl'], Intl => {
+    require(['intl'], Intl => {
         Intl.__addLocaleData(require("./assets/intl-data/en.json"));
         window.Intl = Intl;
         require("App.jsx");
