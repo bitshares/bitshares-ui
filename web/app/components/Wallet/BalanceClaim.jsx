@@ -146,11 +146,14 @@ class BalanceClaim extends Component {
                     <br/>
                     
                     <div id="unclaimed_balance_rows">
-                        <table className="table"><thead><tr>
-                            <th style={{textAlign: "center"}} colSpan="2">Unclaimed</th>
-                            <th style={{textAlign: "center"}} colSpan="2">Unclaimed (vesting)</th>
-                            <th style={{textAlign: "center"}}>Account</th>
-                        </tr></thead><tbody>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>{ /* Checkbox */ }</th>
+                                <th style={{textAlign: "center"}} colSpan="2">Unclaimed</th>
+                                <th style={{textAlign: "center"}} colSpan="2">Unclaimed (vesting)</th>
+                                <th style={{textAlign: "center"}}>Account</th>
+                            </tr></thead><tbody>
                             {unclaimed_balance_rows}
                         </tbody></table>
                     </div>
