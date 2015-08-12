@@ -21,8 +21,6 @@ var api = Apis.instance();
 
 require("./ImportKeys.scss");
 
-//var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
-
 class ImportKeys extends Component {
     
     constructor() {
@@ -222,8 +220,11 @@ class ImportKeys extends Component {
             for(let wif of wif_keys) {
                 try {
                     var private_key = PrivateKey.fromWif(wif);
+                    
                     var public_key = private_key.toPublicKey();
                     var address_str = public_key.toBtsAddy();
+                    //DEBUG console.log('... public_key',public_key.toBtsPublic())
+                    //DEBUG console.log('... address_str',address_str)
                     address_params.push( address_str );
                     wif_owner[address_str] = wif;
                 } catch(e) {
@@ -231,14 +232,14 @@ class ImportKeys extends Component {
                 }
             }
             //DEBUG console.log('... wif_keys done')
-            //DEBUG  console.log("... get_balance_objects", address_params)
+            //DEBUG console.log("... get_balance_objects", address_params)
             var db = api.db_api();
             if(db == null) {
                 notify.error("No witness node connection.");
                 resolve(undefined);
                 return;
             }
-            //DEBUG console.log('... get_balance_objects')
+            //DEBUG console.log('... get_balance_objects',address_params)
             var p = db.exec("get_balance_objects", [address_params]).then( result => {
                 //DEBUG console.log('... get_balance_objects done')
                     
@@ -303,15 +304,19 @@ class ImportKeys extends Component {
         reader.onload = evt => {
             var contents = evt.target.result
             try {
-                //if(this.addByPattern(contents)) return
-                
                 try {
                     this._parseWalletJson(contents)
                 } catch(e) {
                     //DEBUG console.log("... _parseWalletJson",e)
-                    this._parseImportKeyUpload(contents, file) 
+                    try {
+                        this._parseImportKeyUpload(contents, file)
+                    } catch(ee) {
+                        if( ! this.addByPattern(contents))
+                            throw ee
+                    }
                 }
-                React.findDOMNode(this.refs.password).focus()
+                var pwNode = React.findDOMNode(this.refs.password)
+                if(pwNode) pwNode.focus()
                 // try empty password, also display "Enter import file password"
                 this._passwordCheck()
                 
@@ -489,12 +494,12 @@ class ImportKeys extends Component {
                     //var addy = pub.toBtsAddy()
                     //var pubby = pub.toBtsPublic()
                     //if(
-                    //    addy.indexOf("GPH..") == 0 ||
-                    //    pubby.indexOf("GPH..") == 0
+                    //    addy.indexOf("GPHGqhRJW") == 0 //||
+                    //    //pubby.indexOf("GPH..") == 0
                     //)
                     //    console.log("NOTE\t",pubby, addy)
                     //else
-                        //console.log("\t",pubby, addy)
+                    //  //console.log("\t",pubby, addy)
                         
                     var private_key_wif = private_key.toWif()
                     var account_names = this.state.wifs_to_account[private_key_wif] || []
@@ -589,26 +594,27 @@ class ImportKeys extends Component {
         })
     }
 
-//    addByPattern(contents) {
-//        if( ! contents)
-//            return false
-//        
-//        var count = 0, invalid_count = 0
-//        for(let wif of contents.match(wif_regex) || [] ) {
-//            try { 
-//                PrivateKey.fromWif(wif) //throws 
-//                this.state.wifs_to_account[wif] = []
-//                count++
-//            } catch(e) { invalid_count++ }
-//        }
-//        this.updateOnChange()
-//        this.setState({
-//            wif_text_message: 
-//                (!count ? "" : count + " keys found from text.") +
-//                (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
-//        })
-//        return count
-//    }
+    addByPattern(contents) {
+        if( ! contents)
+            return false
+        
+        var count = 0, invalid_count = 0
+        var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
+        for(let wif of contents.match(wif_regex) || [] ) {
+            try { 
+                PrivateKey.fromWif(wif) //throws 
+                this.state.wifs_to_account[wif] = []
+                count++
+            } catch(e) { invalid_count++ }
+        }
+        this.updateOnChange()
+        this.setState({
+            wif_text_message: 
+                (!count ? "" : count + " keys found from text.") +
+                (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
+        })
+        return count
+    }
 
 }
 
