@@ -10,6 +10,7 @@ var Utils = {
     },
 
     is_object_id: (obj_id) => {
+        if( 'string' != typeof obj_id ) return false
         let match = id_regex.exec(obj_id);
         return (match !== null && obj_id.split(".").length === 3);
     },

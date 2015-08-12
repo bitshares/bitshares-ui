@@ -125,9 +125,9 @@ class ChainStore
          if( utils.is_object_id( name_or_id ) )
          {
             if( full_account )
-               this.fetchFullAccountById( name_or_id, callback )
+               this.fetchFullAccountById( name_or_id, callback ).catch(null)
             else
-               this.fetchObject( name_or_id ).then(callback)
+               this.fetchObject( name_or_id ).then(callback).catch(null)
          }
          else if( validation.is_account_name( name_or_id ) )
          {
@@ -136,7 +136,7 @@ class ChainStore
                  if( full_account )
                     this.fetchFullAccountById( a.get('id'), callback )
                  callback()
-            })
+            }, ()=>{})
          }
       }
       return account
