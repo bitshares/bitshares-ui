@@ -13,9 +13,10 @@ class AccountImage extends Component {
 
         return (
             <div>
-              <Link to="account" params={{account_name: account}}>
-                {custom_image}
-              </Link>
+              {account ? (
+                <Link to="account" params={{account_name: account}}>
+                    {custom_image}
+                </Link>) : custom_image}
             </div>
         );
     }
