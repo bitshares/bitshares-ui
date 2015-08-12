@@ -484,22 +484,34 @@ class ImportKeys extends Component {
                 continue
             }
             var account_name = account.account_name.trim()
-            for(let encrypted_private of account.encrypted_private_keys) {
+            for(let i = 0; i < account.encrypted_private_keys.length; i++) {
+                let encrypted_private = account.encrypted_private_keys[i]
+                
+                let public_key_string = account.public_keys ?
+                    account.public_keys[i] : null // assert checking
+                let address_string = account.addresses ? 
+                    account.addresses[i] : null // assert checking
+                
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
                     var private_key = PrivateKey.fromBuffer(
                         new Buffer(private_plainhex, "hex"))
                     
-                    //var pub = private_key.toPublicKey()
-                    //var addy = pub.toBtsAddy()
-                    //var pubby = pub.toBtsPublic()
-                    //if(
-                    //    addy.indexOf("GPHGqhRJW") == 0 //||
-                    //    //pubby.indexOf("GPH..") == 0
-                    //)
-                    //    console.log("NOTE\t",pubby, addy)
-                    //else
-                    //  //console.log("\t",pubby, addy)
+                    if(public_key_string) { // assert checking
+                        var pub = private_key.toPublicKey()
+                        var addy = pub.toBtsAddy()
+                        var pubby = pub.toBtsPublic()
+                        var error = ""
+                        
+                        if(addy.substring(3) != address_string.substring(3))
+                            error = "address imported " + address_string + " but calculated " + addy + ". "
+                        
+                        if(pubby.substring(3) != public_key_string.substring(3))
+                            error += "public key imported " + public_key_string + " but calculated " + pubby
+                        
+                        if(error != "")
+                            console.log("miss-match",error)
+                    }
                         
                     var private_key_wif = private_key.toWif()
                     var account_names = this.state.wifs_to_account[private_key_wif] || []

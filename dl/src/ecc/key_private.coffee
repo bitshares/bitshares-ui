@@ -64,6 +64,7 @@ class PrivateKey
         if buf.length isnt 32
             len = buf.length
             pad = 32 - len
+            console.log('... zeros',pad)
             zeros = ""
             zeros += "0" for i in [0...pad] by 1
             buf = Buffer.concat [new Buffer(zeros), buf]
