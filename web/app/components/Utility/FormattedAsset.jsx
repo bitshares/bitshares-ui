@@ -20,6 +20,7 @@ class FormattedAsset extends ChainComponent {
         let {amount, baseamount, decimalOffset, color} = this.props;
         let {asset, base} = this.state
 
+        //DEBUG console.log( "props: ", this.props )
         if (!asset) {
             return <span></span>;
         }
@@ -41,7 +42,8 @@ class FormattedAsset extends ChainComponent {
                             value={amount / precision / (baseamount / baseprecision)}
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
-                        /> 
+                        />
+                        <span dangerouslySetInnerHTML={{__html:this.props.element_separator}} />
                         <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol}</Link> 
                           + "/" 
                         <Link to="asset" params={{ symbol: base.symbol }}>{base.symbol}</Link> 
@@ -54,7 +56,8 @@ class FormattedAsset extends ChainComponent {
                             value={this.props.exact_amount ? amount : amount / precision}
                             minimumFractionDigits={decimals}
                             maximumFractionDigits={decimals}
-                        /> 
+                        />
+                        <span dangerouslySetInnerHTML={{__html:this.props.element_separator}} />
                         <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol} </Link>
                     </span>
             );
@@ -77,7 +80,8 @@ FormattedAsset.propTypes = {
     asset: ObjectIdType.isRequired,
     exact_amount: PropTypes.bool,
     decimalOffset: PropTypes.number,
-    color: PropTypes.string
+    color: PropTypes.string,
+    string: PropTypes.string
 };
 
 export default FormattedAsset;

@@ -352,15 +352,15 @@ class Transfer extends BaseComponent {
                            <div className="grid-content full-width-content no-overflow"> 
                                 <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" />
                            </div>
-                           <div className="grid-block "> 
+                           <div className="grid-block no-overflow">
                                { errors.from ? null : 
-                                 (<div className="grid-content medium-5  no-overflow">
+                                 (<div className="grid-content shrink">
                                     {ChainStore.getAccountMemberStatus(transfer.from_account)}
                                  </div>) 
                                } 
-                               { errors.from ? <div className="grid-content no-overflow has-error">{errors.from}</div> : null}
-                               <div className="grid-content full-width-content no-overflow"> </div>
-                               <div className="grid-content align-right shrink no-overflow">{ transfer.from_lookup_display }</div>
+                               { errors.from ? <div className="grid-content has-error">{errors.from}</div> : null}
+                               <div className="grid-content full-width-content"> </div>
+                               <div className="grid-content align-right shrink">{ transfer.from_lookup_display }</div>
                            </div>
                         </div>
                     </div>
@@ -380,15 +380,15 @@ class Transfer extends BaseComponent {
                            <div className="grid-content full-width-content no-overflow"> 
                                 <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" />
                            </div>
-                           <div className="grid-block"> 
+                           <div className="grid-block no-overflow">
                                { errors.to ? null : 
-                                 (<div className="grid-content shrink no-overflow">
+                                 (<div className="grid-content shrink">
                                     { ChainStore.getAccountMemberStatus(transfer.to_account) }
                                  </div>)
                                } 
-                               { errors.to ? <div className="grid-content full-width-content no-overflow has-error">{errors.to}</div> : null}
-                               <div className="grid-content full-width-content no-overflow"> </div>
-                               <div className="grid-content shrink no-overflow">{ transfer.to_lookup_display }</div>
+                               { errors.to ? <div className="grid-content full-width-content has-error">{errors.to}</div> : null}
+                               <div className="grid-content full-width-content"> </div>
+                               <div className="grid-content shrink">{ transfer.to_lookup_display }</div>
                            </div>
                         </div>
                     </div>

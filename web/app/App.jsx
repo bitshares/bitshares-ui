@@ -59,17 +59,16 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
-require("./assets/loader");
 
 const { Route, RouteHandler, DefaultRoute } = Router;
 
 class App extends React.Component {
-    
+
     constructor() {
         super();
         this.state = {loading: true};
     }
-    
+
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
         // TransactionConfirmStore.unlisten(this._onTransactionConfirm);
@@ -78,7 +77,7 @@ class App extends React.Component {
     componentDidMount() {
         NotificationStore.listen(this._onNotificationChange.bind(this));
         // TransactionConfirmStore.listen(this._onTransactionConfirm.bind(this));
-        
+
         // Try to retrieve locale from cookies
         let locale;
         if (cookies) {
@@ -104,7 +103,7 @@ class App extends React.Component {
             })
         ]).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts
-            let promises = AccountStore.getState().linkedAccounts.map( a => {
+            let promises = AccountStore.getState().linkedAccounts.map(a => {
                 return AccountActions.getAccount(a);
             });
             return Promise.all(promises);
@@ -116,7 +115,7 @@ class App extends React.Component {
             this.setState({loading: false});
         });
     }
-    
+
     /** Usage: NotificationActions.[success,error,warning,info] */
     _onNotificationChange() {
         let notification = NotificationStore.getState().notification;
@@ -125,7 +124,6 @@ class App extends React.Component {
         }
         this.refs.notificationSystem.addNotification(notification);
     }
-    
 
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
@@ -133,24 +131,24 @@ class App extends React.Component {
     //     console.log("add notification:", this.refs, params);
     //     this.refs.notificationSystem.addNotification(params);
     // }
-    
+
     render() {
         let content = (
             <div className="grid-frame vertical">
                 <HeaderContainer isUnlocked={this.state.isUnlocked}/>
                 <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                 <AccountNotifications/>
-                
+
                 <div className="grid-block vertical">
                     <RouteHandler />
                 </div>
                 <FooterContainer/>
-                <ReactTooltip type="dark" effect="solid" />
+                <ReactTooltip type="dark" effect="solid"/>
             </div>
         );
         if (this.state.loading) {
             content = <LoadingIndicator />;
-        } 
+        }
         return (
             <div>
                 {content}
@@ -159,17 +157,19 @@ class App extends React.Component {
                 <WalletUnlockModal/>
             </div>
         );
-        
+
     }
 }
 
 App.willTransitionTo = (transition, params, query, callback) => {
-    iDB.init_instance(indexedDB).init_promise.then(() => {
+    iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise.then(() => {
         WalletDb.loadDbData().then(() => {
-            if(!WalletDb.getWallet() && transition.path !== "/create-account") {
+            if (!WalletDb.getWallet() && transition.path !== "/create-account") {
                 transition.redirect("/create-account");
             }
             callback();
+        }).catch((error) => {
+            console.error("[App.jsx:172] ----- WalletDb.loadDbData error ----->", error);
         });
     });
 };
@@ -184,11 +184,11 @@ let routes = (
         <Route name="accounts" path="/explorer/accounts" handler={AccountsContainer}/>
         <Route name="witnesses" path="/explorer/witnesses" handler={WitnessesContainer}>
             <DefaultRoute handler={Witnesses}/>
-            <Route name="witness" path=":name" handler={Witness} />
+            <Route name="witness" path=":name" handler={Witness}/>
         </Route>
         <Route name="delegates" path="/explorer/delegates" handler={DelegatesContainer}>
             <DefaultRoute handler={Delegates}/>
-            <Route name="delegate" path=":name" handler={Delegate} />
+            <Route name="delegate" path=":name" handler={Delegate}/>
         </Route>
         <Route name="wallet" path="wallet" handler={Wallet}/>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>

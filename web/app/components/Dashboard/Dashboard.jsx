@@ -10,20 +10,18 @@ class Dashboard extends Component {
     }
 
     render() {
-        console.log("[Dashboard.jsx:24] ----- render ----->", this.props);
-        let {linkedAccounts} = this.props;
-
-        let itemRows = linkedAccounts.map((a) => {
-                console.log( "a", a )
-                return ( <AccountCard full_accounts={ {account: a} } />)
-            }).toArray();
+        let itemRows = this.props.linkedAccounts.map( a => <AccountCard full_accounts={ {account: a} } /> ).toArray();
 
         return (
-            <div className="grid-block vertical medium-4">
+            <div className="grid-block vertical">
                 <div className="grid-block page-layout">
-                    <div className="grid-block medium-12" style={{alignItems: "flex-start", overflowY: "auto", zIndex: 1}}>
-                        <div className="grid-block vertical small-up-1 medium-up-2 large-up-3">
-                           {itemRows}
+                    <div className="grid-block medium-9 main-content small-up-1 medium-up-2 large-up-3">
+                        {itemRows}
+                    </div>
+                    <div className="grid-block medium-3 right-column">
+                        <div className="grid-content">
+                            <h4>Recent Transactions</h4>
+                            TODO
                         </div>
                     </div>
                 </div>

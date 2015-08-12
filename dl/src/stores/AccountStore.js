@@ -8,6 +8,7 @@ import {
 from "./tcomb_structs";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore";
+import validation from "common/validation"
 
 class AccountStore extends BaseStore {
     constructor() {
@@ -278,7 +279,9 @@ class AccountStore extends BaseStore {
                 name: account
             };
         }
-
+        if( ! validation.is_account_name(account.name))
+            throw new Error("Invalid account name: " + account.name)
+        
         iDB.add_to_store("linked_accounts", account).then(() => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", name);
             this.linkedAccounts = this.linkedAccounts.add(account.name);

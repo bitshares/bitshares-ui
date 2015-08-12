@@ -44,7 +44,7 @@ class ChainComponent extends React.Component
 
    update()
    {
-      console.log( "update chain component", this.props )
+      //DEBUG console.log( "update chain component", this.props )
       let new_state = {}
       for( var key in this.props )
       {
@@ -72,7 +72,7 @@ class ChainComponent extends React.Component
             full_accounts[account] = ChainStore.getAccount( this.props.full_accounts[account], this.update, true )
          new_state.full_accounts = full_accounts
       }
-      console.log( "update chain component, new_state:", new_state )
+      //DEBUG console.log( "update chain component, new_state:", new_state )
       this.setState( new_state )
    }
 

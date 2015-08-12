@@ -1,6 +1,14 @@
 .card {
   border-radius: 0;
   border: none;
+  > h4 {
+    margin: 0;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+  > .card-content {
+    margin: 1rem;
+  }
 }
 
 .card-section .text-group {
@@ -8,17 +16,21 @@
 }
 
 .account-card {
-  max-width: 30rem;
   padding: 0 1rem 0 0 !important;
+  .balances {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .account-image {
+    padding-right: 0.5rem;
+  }
+  cursor: hand;
 }
 
 .card:hover {
   border: none;
 }
-
-//.card div:first-child {
-//  text-align: center;
-//}
 
 .card a>div:first-child {
   text-align: center;

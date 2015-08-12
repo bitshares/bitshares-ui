@@ -7,30 +7,33 @@ var iDB = (function () {
     var _instance;
     var idb;
 
-    function openIndexedDB(indexedDBimpl) {
+    function upgrade(db, oldVersion) {
+        if (oldVersion < 2) {
+            idb_helper.autoIncrement_unique(db, "wallets", "public_name")
+            idb_helper.autoIncrement_unique(db,
+                "private_keys", "encrypted_key")
+        }
+        if (oldVersion < 3) {
+            db.createObjectStore("linked_accounts", { keyPath: "name" });
+            db.createObjectStore("payee_accounts", { keyPath: "name" });
+        }
+        if (oldVersion < 4) {
+            db.createObjectStore("balance_claims", {
+                keyPath: "chain_balance_record.id" })
+        }
+        idb_helper.set_graphene_db(db); //last
+    }
 
+    function openIndexedDB(indexedDBimpl) {
         return new Promise((resolve, reject) => {
             var openRequest = indexedDBimpl.open("graphene_db", DB_VERSION);
 
             openRequest.onupgradeneeded = function (e) {
-                let db = e.target.result;
-                if (e.oldVersion < 2) {
-                    idb_helper.autoIncrement_unique(db, "wallets", "public_name")
-                    idb_helper.autoIncrement_unique(db,
-                        "private_keys", "encrypted_key")
-                }
-                if (e.oldVersion < 3) {
-                    db.createObjectStore("linked_accounts", { keyPath: "name" });
-                    db.createObjectStore("payee_accounts", { keyPath: "name" });
-                }
-                if (e.oldVersion < 4) {
-                    db.createObjectStore("balance_claims", {
-                        keyPath: "chain_balance_record.id" })
-                }
-                idb_helper.set_graphene_db(db) //last
+                upgrade(e.target.result, e.oldVersion);
             };
 
             openRequest.onsuccess = function (e) {
+                if(e.target.result.objectStoreNames.length === 0) upgrade(e.target.result, 0);
                 resolve(e.target.result);
             };
 

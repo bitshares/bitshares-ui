@@ -149,7 +149,7 @@ class AccountActions {
                         });
                     }
 
-                    console.log(fullAccount[0][1]);
+                    //DEBUG console.log("AccountActions getAccount",fullAccount[0][1]);
                     account_id = fullAccount[0][1].account.id;
                     account_name = fullAccount[0][1].account.name;
 

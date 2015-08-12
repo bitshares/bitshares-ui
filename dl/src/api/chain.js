@@ -225,7 +225,7 @@ class ChainStore
        * account object
        */
       acnt.last_promise = new Promise( (resolve,reject ) => {
-          console.log( "lookup account by name: ", name )
+          //DEBUG console.log( "lookup account by name: ", name )
           Apis.instance().db_api().exec( "get_account_by_name", [ name ] )
               .then( optional_account_object => {
                   if( optional_account_object )
@@ -613,7 +613,7 @@ class ChainStore
     */
    _updateObject( object )
    {
-      console.log( "update: ", object )
+      //DEBUG `console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
       let by_id = this.objects_by_id
@@ -647,7 +647,7 @@ class ChainStore
       return this.fetchObject( "2.0.0", min_age_ms )
    }
 
-   fetchDynamicGlobalProperties( min_age = null )
+   fetchDynamicGlobalProperties( min_age_ms = null )
    {
       /// TODO: replace "2.1.0" with constants defined from generated code
       return this.fetchObject( "2.1.0", min_age_ms )

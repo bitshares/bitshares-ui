@@ -137,17 +137,10 @@ class AccountHistory extends React.Component {
 
         return (
             <div className="grid-content">
-                <ul className="pagination">
-                    <li onClick={this._changePage.bind(this, "first")}>1</li>
-                    <li className="button outline block-button" onClick={this._changePage.bind(this, "up")}><Translate content="pagination.newer" /></li>
-                    <li style={{padding: "0", margin: "0"}}><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
-                    <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}><Translate content="pagination.older" /></li>
-                    <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
-                </ul>
                 <table style={{width: "100%"}} className="table">
                     <thead>
                         <tr>
-                            <th><Translate content="explorer.block.title" /></th>
+                            <th><Translate component="span" content="explorer.block.date" /></th>
                             <th><Translate content="explorer.block.op" /></th>
                             <th><Translate content="account.votes.info" /></th>
                             <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
@@ -157,6 +150,13 @@ class AccountHistory extends React.Component {
                         {history}
                     </tbody>
                 </table>
+                <ul className="pagination float-right">
+                    <li onClick={this._changePage.bind(this, "first")}>1</li>
+                    <li className="button outline block-button" onClick={this._changePage.bind(this, "up")}><Translate content="pagination.newer" /></li>
+                    <li style={{padding: "0", margin: "0"}}><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
+                    <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}><Translate content="pagination.older" /></li>
+                    <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
+                </ul>
             </div>
         );
     }

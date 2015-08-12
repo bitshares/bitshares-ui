@@ -35,7 +35,7 @@ class WalletUnlockModal extends React.Component {
             } else if (msg === "open") {
                 if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
                     notify.error("This wallet was intended for a different block-chain; expecting " +
-                        getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
+                        WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
                         Apis.instance().chain_id.substring(0,4).toUpperCase())
                     ZfApi.publish(this.props.modalId, "close")
                     return
