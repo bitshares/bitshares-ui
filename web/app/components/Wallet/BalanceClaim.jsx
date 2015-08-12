@@ -129,7 +129,8 @@ class BalanceClaim extends Component {
                                 list_size={5}
                             />
                         </div>
-                        {this.state.my_accounts_loading ? 
+                        {this.state.my_accounts_loading ||
+                            this.state.balance_claims_loading ? 
                             <LoadingIndicator type="circle"/> : <div/>}
                         <br></br>
                         <div className="button-group">
@@ -163,10 +164,6 @@ class BalanceClaim extends Component {
     
     _claimAccountSelect(claim_account_name) {
         this.setState({claim_account_name})
-        // Only auto-select once
-        if(this.state.checked.size > 0)
-            return
-        
         var checked = new Map()
         var index = -1
         for(let asset_balance of this.state.balance_by_account_asset) {
@@ -194,10 +191,12 @@ class BalanceClaim extends Component {
     }
     
     loadBalances() {
+        this.setState({balance_claims_loading:true})
         BalanceClaimStore.getBalanceClaims().then( balance_claims => {
             this.balanceByAssetName(balance_claims).then( balance_by_account_asset => {
                 //DEBUG console.log('... setState balance_claims',balance_claims.length)
-                this.setState({balance_claims, balance_by_account_asset})
+                this.setState({balance_claims, balance_by_account_asset,
+                    balance_claims_loading:false})
             })
         }).catch( error => {
             notify.error(error.message || error)
