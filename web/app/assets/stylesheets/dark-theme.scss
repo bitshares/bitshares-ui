@@ -214,12 +214,18 @@ h1, h2, h3, h4, h5, h6 {
   background-color: $panel-bg-color;
   &:hover {
     background-color: lighten($panel-bg-color, 4%);
+    > h4 {
+      background-color: lighten($light-panel-bg-color, 4%);
+    }
   }
   a {
     color: $primary-text-color;
   }
   .card-divider {
     @include color($primary-text-color, $light-panel-bg-color);
+  }
+  > h4 {
+    background-color: $light-panel-bg-color;
   }
 }
 

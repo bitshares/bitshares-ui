@@ -10,18 +10,17 @@ import {ObjectIdType} from "./CustomTypes";
  */
 class BalanceComponent extends ChainComponent {
 
-   render() {
-      if( !this.state.balance ) return null
-
-      let amount = this.state.balance.get('balance')
-      let type   = this.state.balance.get('asset_type')
-      return (<FormattedAsset amount={amount} asset={type} />)
-   }
+    render() {
+        if (!this.state.balance) return null;
+        let amount = Number(this.state.balance.get('balance'));
+        let type = this.state.balance.get('asset_type');
+        return (<FormattedAsset amount={amount} asset={type}/>);
+    }
 }
 
 
 BalanceComponent.propTypes = {
-   balance: ObjectIdType
+    balance: ObjectIdType
 }
 
 export default BalanceComponent;

@@ -12,7 +12,7 @@ class AccountImage extends Component {
             <Identicon id={account} account={account} size={this.props.size}/>;
 
         return (
-            <div>
+            <div className="account-image">
               {account ? (
                 <Link to="account" params={{account_name: account}}>
                     {custom_image}
