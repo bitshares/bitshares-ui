@@ -1,12 +1,11 @@
 var Immutable = require("immutable");
-var ReconnectingWebSocket = require("ReconnectingWebSocket");
 
 var NODE_DEBUG = process.env.NODE_DEBUG
 
 class WebSocketRpc {
 
     constructor(ws_server) {
-        var WebSocketClient = typeof(WebSocket) !== "undefined" ? ReconnectingWebSocket : require("websocket").w3cwebsocket;
+        var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
         this.web_socket = new WebSocketClient(ws_server);
         this.current_reject = null;
         this.on_reconnect = null;
