@@ -3,95 +3,140 @@ import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import VotesTable from "./VotesTable";
-import VoteActions from "actions/VoteActions";
-import VoteStore from "stores/VoteStore";
 import BaseComponent from "../BaseComponent";
 import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
+import AccountSelector from "./AccountSelector";
+import ChainComponent from "../Utility/ChainComponent"
+import utils from "common/utils";
+import WalletApi from "rpc_api/WalletApi";
+import WalletDb from "stores/WalletDb.js"
+import ChainStore from "api/chain.js"
+import validation from "common/validation"
 
-class AccountVoting extends BaseComponent {
+
+let wallet_api = new WalletApi()
+/**
+ *   Parameters:
+ *
+ *   account - the ID of the account that should be updated
+ *   account_name - the name of the account that is being used
+ *
+ */
+class AccountVoting extends ChainComponent {
 
     constructor(props) {
-        super(props, VoteStore);
+       super(props)
+       this.state = {
+          current_proxy : null, ///< the proxy used by the blockchain
+          new_proxy:      null, ///< the proxy specified by the user
+       }
+       this.map_accounts = { account_name: "account" }
     }
 
-    switchProxy() {
-        console.log("[AccountVoting.jsx:37] ----- switchProxy ----->");
-        let proxy_account = this.state.proxy_account === null ? "" : null;
-        VoteActions.setProxyAccount(this.props.account_name, proxy_account);
-        this.setState({proxy_account});
+    onUpdate( next_props = null )
+    {
+       if( !next_props ) next_props = this.props
+       let next_state = {}
+
+       let acnt = ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null) )
+       if( acnt ) {
+          let current_proxy_id = acnt.get('options').get('voting_account')
+          if( current_proxy_id == "1.2.0" ) next_state.current_proxy = null
+          else {
+            let proxy_acnt = ChainStore.getAccount( current_proxy_id, this.onUpdate.bind(this,null) ) 
+            if( proxy_acnt )
+               next_state.current_proxy = proxy_acnt.get('name')
+          }
+       }
+
+       this.setState(next_state)
     }
 
-    onAddRow(container_name, name) {
-        VoteActions.addItem(container_name, this.props.account_name, {name});
+    componentWillReceiveProps( next_props ) {
+       super.componentWillReceiveProps(next_props)
+       this.onUpdate(next_props)
     }
 
-    onRemoveRow(container_name, name) {
-        VoteActions.removeItem(container_name, this.props.account_name, {name});
+    onProxyChange( new_proxy ) {
+       this.setState( {new_proxy} )
     }
 
-    onProxyChanged(e) {
-        // TODO: get proxy_account's id before submitting it setProxyAccount
-        VoteActions.setProxyAccount(this.props.account_name, 0, this.refs.proxy_account.value());
+    onPublish(){
+       if( !this.state.account ) return
+
+       let updated_account = this.state.account.toJS()
+       updated_account.options.voting_account = this.state.new_proxy ? this.state.new_proxy : "1.2.0"
+       updated_account.new_options = updated_account.options
+       updated_account.new_options.voting_account = this.getNewProxyID()
+       updated_account.account = updated_account.id
+       console.log( "updated_account: ", updated_account)
+
+       var tr = wallet_api.new_transaction();
+       tr.add_type_operation("account_update", updated_account);
+       return WalletDb.process_transaction(tr, null, true).then(result => {
+           this.dispatch(account_name);
+       }).catch(error => {
+           console.log("[VoteActions.js] ----- publishChanges error ----->", error);
+       });
     }
 
-    onPublish() {
-        console.log("[AccountVoting.jsx:49] ----- onPublish ----->");
-        let account_name = this.props.account_name;
-        if (VoteStore.hasChanges(account_name)) {
-            let account_json = VoteStore.getAccountJsonWithChanges(account_name);
-            VoteActions.publishChanges(account_name, account_json);
-        }
-    }
-
-    onCancelChanges(e) {
-        e.preventDefault();
-        VoteActions.cancelChanges(this.props.account_name);
-        this.refs.proxy_account.setValue(this.state.c_proxies[this.props.account_name]);
+    getNewProxyID()
+    {
+       if( this.state.new_proxy == null) return null
+       if( this.state.new_proxy == "" ) return "1.2.0"
+       if( validation.is_account_name( this.state.new_proxy ) )
+       {
+          let acnt = ChainStore.getAccount( this.state.new_proxy, this.onUpdate.bind(this,null) )
+          if( acnt ) return acnt.get( 'id' )
+       }
+       else {
+          let id = "1.2."+this.state.new_proxy.substring(1) 
+          let acnt = ChainStore.getAccount( id, this.onUpdate.bind(this,null) )
+          if( acnt ) return acnt.get( 'id' )
+       }
+       return null
     }
 
     render() {
-        let {account_name, cachedAccounts} = this.props;
-        let account = account_name ? cachedAccounts.get(account_name) : null;
+        let current_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
+        let current_error = null
 
-        let accountExists = true;
-        if (!account) {
-            return <LoadingIndicator type="circle"/>;
-        } else if (account.notFound) {
-            accountExists = false;
-        } 
-        if (!accountExists) {
-            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
-        }
-        
-        let my_delegates = this.state.c_delegates[account_name];
-        let my_witnesses = this.state.c_witnesses[account_name];
-        let my_budget_items = this.state.c_budget_items[account_name];
-        let my_proxy_account = this.state.c_proxies[account_name];
-        //console.log("[AccountVoting.jsx:83] ----- render ----->", my_proxy_account, my_delegates, my_witnesses, my_budget_items);
-        let ad = this.props.account_name_to_id;
-        let all_delegates = Object.keys(ad).map(k => [`["${ad[k]}","${k}"]`, k]);
-        let all_witnesses = all_delegates;
-        let all_budget_items = all_delegates;
-        let action_buttons_class = "button" + (VoteStore.hasChanges(account_name) ? "" : " disabled");
+        let new_id = this.getNewProxyID()
+        if( new_id && this.state.account && this.state.account.get('id') == new_id )
+           current_error = "cannot proxy to yourself"
 
-        let tabTitles = {
-            delegates: counterpart.translate("explorer.delegates.title"),
-            witnesses: counterpart.translate("explorer.witnesses.title"),
-            workers: counterpart.translate("account.votes.workers")
-        };
+        let changed = this.state.account && 
+                      new_id && 
+                      !current_error 
+                      && new_id != this.state.account.get('options').get('voting_account')
 
+        let action_buttons_class = "button" + (changed? "" : " disabled");
         return (
+                <div className="grid-block vertical">
+                   <div className="grid-block shrink">
+                        <AccountSelector label="account.votes.proxy"
+                                         error={current_error}
+                                         placeholder="NONE"
+                                         account={current_input}
+                                         onChange={this.onProxyChange.bind(this)}
+                                         ref="proxy_selector" />
+                   </div>
+                   <div className="grid-content no-overflow shrink">
+                   &nbsp;
+                   </div>
+                   <div className="grid-content no-overflow">
+                        <button className={action_buttons_class} 
+                        onClick={this.onPublish.bind(this)}> 
+                        <Translate content="account.votes.publish" /></button> 
+                   </div>
+                </div>
+               )
+           /*
             <div className="grid-content">
                 <div className="content-block">
                     <div className="medium-4">
-                        <label><Translate content="account.votes.proxy" /></label>
-                        <AutocompleteInput
-                            id="proxy_account" ref="proxy_account"
-                            options={all_delegates}
-                            onChange={this.onProxyChanged.bind(this)}
-                            initial_value={my_proxy_account}/>
                     </div>
                 </div>
                 {my_proxy_account === "" ?
@@ -132,6 +177,7 @@ class AccountVoting extends BaseComponent {
                 </div>
             </div>
         );
+        */
     }
 }
 

@@ -39,6 +39,7 @@ class ChainComponent extends React.Component
    constructor( props ) {
       super(props)
       this.update = this.update.bind(this)
+      this.map_accounts = {}
    }
 
    update()
@@ -49,6 +50,12 @@ class ChainComponent extends React.Component
       {
          if( utils.is_object_id( this.props[key] ) )
             new_state[key] =  ChainStore.getObject( this.props[key], this.update, true )
+      }
+
+      if( this.map_accounts )
+      {
+         for( let key in this.map_accounts )
+            new_state[this.map_accounts[key]] = ChainStore.getAccount( this.props[key], this.update )
       }
 
       if( 'accounts' in this.props && typeof this.props.accounts == 'object' )
@@ -98,6 +105,13 @@ class ChainComponent extends React.Component
          if( utils.is_object_id( this.props[key] ) && this.props[key] !== next_props[key] )
             ChainStore.unsubscribeFromObject( this.props[key], this.update )
       }
+
+      if( this.map_accounts )
+      {
+         for( let key in this.map_accounts )
+            new_state[this.map_accounts[key]] = ChainStore.getAccount( this.props[key], this.update )
+      }
+
       this.setState( new_state )
    }
 

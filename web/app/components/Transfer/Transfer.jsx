@@ -350,7 +350,7 @@ class Transfer extends BaseComponent {
                               <div className="grid-content align-right shrink"> {/*balancesComp*/} </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" onChange={this.form_change}/>
+                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" />
                            </div>
                            <div className="grid-block "> 
                                { errors.from ? null : 
@@ -378,7 +378,7 @@ class Transfer extends BaseComponent {
                               </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" onChange={this.form_change}/>
+                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" />
                            </div>
                            <div className="grid-block"> 
                                { errors.to ? null : 

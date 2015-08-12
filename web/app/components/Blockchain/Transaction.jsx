@@ -13,6 +13,7 @@ import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
+import ChainStore from "api/chain.js"
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -357,25 +358,55 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_update":
-                    let missingAccounts = this.getAccounts([op[1].registrar, op[1].referrer]);
+                    let missingAccounts = this.getAccounts([op[1].registrar, op[1].referrer], op[1].new_options.voting_account);
+                    console.log( op[1] )
                     rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.name" />:</td>
                                     <td><Link to="account" params={{account_name: op[1].name}}>{op[1].name}</Link></td>
                                 </tr>
                     );
+                    let voting_account = ChainStore.getAccount(op[1].new_options.voting_account)
+                    let updating_account = ChainStore.getAccount(op[1].account)
+                    if( voting_account )
+                    {
+                       let proxy_account_name = voting_account.get('name')
+                       rows.push(
+                                   <tr>
+                                       <td><Translate component="span" content="account.proxy" />:</td>
+                                       <td><Link to="account" params={{account_name: proxy_account_name}}>{proxy_account_name}</Link></td>
+                                   </tr>
+                       );
+                    }
+                    else
+                    {
+                       rows.push(
+                                   <tr>
+                                       <td><Translate component="span" content="account.proxy" />:</td>
+                                       <td><Translate component="span" content="account.no_proxy" /></td>
+                                   </tr>
+                       );
+                       rows.push(
+                                   <tr>
+                                       <td><Translate component="span" content="account.num_committee" />:</td>
+                                       <td>{op[1].new_options.num_committee}</td>
+                                   </tr>
+                       );
+                       rows.push(
+                                   <tr>
+                                       <td><Translate component="span" content="account.num_witnesses" />:</td>
+                                       <td>{op[1].new_options.num_witnesses}</td>
+                                   </tr>
+                       );
+                    }
                     rows.push(
                                 <tr>
-                                    <td><Translate component="span" content="account.member.reg" />:</td>
-                                    <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].registrar]}}>{account_id_to_name[op[1].registrar]}</Link> : null}</td>
+                                    <td><Translate component="span" content="account.memo_key" />:</td>
+                                   {/* TODO replace with KEY render component that provides a popup */}
+                                    <td>{op[1].new_options.memo_key.substring(0,10)+"..."}</td>
                                 </tr>
                     );
-                    rows.push(
-                                <tr>
-                                    <td><Translate component="span" content="account.member.ref" />:</td>
-                                    <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].referrer]}}>{account_id_to_name[op[1].referrer]}</Link> : null}</td>
-                                </tr>
-                    );
+
                     break;
 
                 case "account_whitelist":

@@ -10,10 +10,12 @@ class AccountImage extends Component {
         let custom_image = image ?
             <img src={image} height={height + "px"} width={width + "px"}/> :
             <Identicon id={account} account={account} size={this.props.size}/>;
+        let link_to_account = account ? account : "null-account"
+           console.log( "link_to_account: ", link_to_account )
 
         return (
             <div>
-              <Link to="account" params={{account_name: account}}>
+              <Link to="account" params={{account_name: link_to_account}}>
                 {custom_image}
               </Link>
             </div>

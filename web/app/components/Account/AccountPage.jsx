@@ -8,6 +8,8 @@ import AltContainer from "alt/AltContainer";
 import AccountLeftPanel from "./AccountLeftPanel";
 import LoadingIndicator from "../LoadingIndicator";
 
+import AccountVoting from "./AccountVoting";
+
 class AccountPage extends React.Component {
 
     componentWillMount() {

@@ -54,9 +54,9 @@ module.exports = {
         perm: {
             active: "Active Permissions",
             owner: "Owner Permissions",
-            publish: "Publish changes",
-            reset: "Reset changes",
-            add: "Add permission",
+            publish: "Publish Changes",
+            reset: "Reset Changes",
+            add: "Add Permission",
             type: "Type",
             key: "Key/Name",
             weight: "Weight",
@@ -69,7 +69,8 @@ module.exports = {
             name: "Name",
             info: "Info",
             support: "Support",
-            workers: "Budget Items"
+            workers: "Budget Items",
+            publish: "Publish Changes"
         },
         upgrade: "Upgrade account",
         unlink: "Unlink",
