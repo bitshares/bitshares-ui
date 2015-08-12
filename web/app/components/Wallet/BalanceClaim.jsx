@@ -312,7 +312,8 @@ class BalanceClaim extends Component {
     
     _claimBalances(claim_account_name) {
         
-        var {wif_to_balances} = this.getWifToBalance(this.state.selected_balance_claims)
+        var selected_balance_claims = this.state.selected_balance_claims
+        var {wif_to_balances} = this.getWifToBalance(selected_balance_claims)
         
         //return
         WalletActions.importBalance(

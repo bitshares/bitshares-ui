@@ -32,15 +32,11 @@ class ImportKeys extends Component {
     
     _getInitialState() {
         return {
-            keys: {
-                wif_count: 0,
-                wifs_to_account: null,
-                wif_to_balances: null
-            },
-            no_file: true,
-            wif_count: 0,
-            account_keys: [],
             wifs_to_account: {},
+            wif_to_balances: null,
+            wif_count: 0,
+            no_file: true,
+            account_keys: [],
             //brainkey: null,
             //encrypted_brainkey: null,
             reset_file_name: Date.now(),
@@ -142,7 +138,7 @@ class ImportKeys extends Component {
                     
                 </div>
 
-                {this.state.keys.wif_count ? 
+                {this.state.wif_count ? 
                     (<div>
                         {account_rows ? 
                         (<div>
@@ -192,17 +188,15 @@ class ImportKeys extends Component {
         );
     }
 
-    _importKeysChange(keys) {
-        var wifs = Object.keys(keys.wifs_to_account);
+    _importKeysChange(wifs_to_account) {
+        var wifs = Object.keys(wifs_to_account);
         if( ! wifs.length) {
-            // this.reset();
             return;
         }
+        console.log('... lookupBalances')
         this.lookupBalances(wifs).then( wif_to_balances => {
-            //this.lookupAccounts(wifs).then( blockchain_accounts => {
-            //    this.setState({blockchain_accounts, accounts_known:true})
-            //})
-            
+            console.log('... lookupBalances done')
+                
             var assetid_balance = this.balanceByAsset(wif_to_balances);
             var asset_ids = Object.keys(assetid_balance);
             var balance_by_asset = [];
@@ -211,14 +205,12 @@ class ImportKeys extends Component {
                 var balance = assetid_balance[asset_id];
                 balance_by_asset.push({balance, asset_id});
             }
-            keys.wif_to_balances = wif_to_balances;
             this.setState({
-                keys,
                 wif_to_balances,
                 balance_by_asset,
                 balances_known: true,
                 account_keycount:
-                    this.getImportAccountKeyCount(keys.wifs_to_account)
+                    this.getImportAccountKeyCount(wifs_to_account)
             });
         });
     }
@@ -226,6 +218,7 @@ class ImportKeys extends Component {
     lookupBalances(wif_keys) {
         return new Promise((resolve, reject)=> {
             var address_params = [], wif_owner = {};
+            //DEBUG console.log('... wif_keys')
             for(let wif of wif_keys) {
                 try {
                     var private_key = PrivateKey.fromWif(wif);
@@ -237,6 +230,7 @@ class ImportKeys extends Component {
                     console.error("ImportKeys: Invalid private key error",e)
                 }
             }
+            //DEBUG console.log('... wif_keys done')
             //DEBUG  console.log("... get_balance_objects", address_params)
             var db = api.db_api();
             if(db == null) {
@@ -244,7 +238,10 @@ class ImportKeys extends Component {
                 resolve(undefined);
                 return;
             }
+            //DEBUG console.log('... get_balance_objects')
             var p = db.exec("get_balance_objects", [address_params]).then( result => {
+                //DEBUG console.log('... get_balance_objects done')
+                    
                 //DEBUG  console.log("... get_balance_objects",result)
                 var wif_to_balances = {};
                 for(let i = 0; i < result.length; i++) {
@@ -297,10 +294,7 @@ class ImportKeys extends Component {
     updateOnChange(wifs_to_account = this.state.wifs_to_account) {
         var wif_count = Object.keys(wifs_to_account).length
         this.setState({wif_count})
-        this._importKeysChange({
-            wifs_to_account: wifs_to_account,
-            wif_count
-        })
+        this._importKeysChange(wifs_to_account)
     }
     
     upload(evt) {
@@ -544,7 +538,7 @@ class ImportKeys extends Component {
             }
         }
         
-        var wifs_to_account = this.state.keys.wifs_to_account
+        var wifs_to_account = this.state.wifs_to_account
         var wif_to_balances = this.state.wif_to_balances
         var private_key_objs = []
         for(let wif of Object.keys(wifs_to_account)) {

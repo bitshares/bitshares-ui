@@ -137,8 +137,9 @@ class WalletDb {
                         for(let private_key of signer_private_keys) 
                             tr.sign(private_key)
                     } else {
+                        // set<public_key> get_potential_signatures(signed_transaction)
                         var pubkeys = PrivateKeyStore.getPubkeys()
-                        //DEBUG  console.log('... pubkeys',pubkeys)
+                        //DEBUG console.log('... pubkeys',pubkeys)
                         if( ! pubkeys.length)
                             throw new Error("Missing signing key")
                         return tr.get_required_signatures(pubkeys).then(
