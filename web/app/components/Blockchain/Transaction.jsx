@@ -139,7 +139,7 @@ class Transaction extends React.Component {
 
         trx.operations.forEach((op, opIndex) => {
             let missingFee = this.getAssets([op[1].fee.asset_id])[0];
-
+            let missingAccounts, missingAssets;
             let rows = [];
             let color = "";
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -148,8 +148,8 @@ class Transaction extends React.Component {
                     // console.log("op:", op);
 
                     color = "success";
-                    let missingAccounts = this.getAccounts([op[1].from, op[1].to]);
-                    let missingAssets = this.getAssets([op[1].amount.asset_id]);
+                    missingAccounts = this.getAccounts([op[1].from, op[1].to]);
+                    missingAssets = this.getAssets([op[1].amount.asset_id]);
 
                     // console.log("missingAccounts:", missingAccounts);
                     rows.push(
@@ -175,8 +175,8 @@ class Transaction extends React.Component {
 
                 case "limit_order_create":
                     color = "warning";
-                    let missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
-                    let missingAccounts = this.getAccounts([op[1].seller]);
+                    missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                    missingAccounts = this.getAccounts([op[1].seller]);
                     let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
                     
                     rows.push(
@@ -357,7 +357,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_update":
-                    let missingAccounts = this.getAccounts([op[1].registrar, op[1].referrer]);
+                    missingAccounts = this.getAccounts([op[1].registrar, op[1].referrer]);
                     rows.push(
                                 <tr>
                                     <td><Translate component="span" content="account.name" />:</td>
@@ -379,7 +379,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_whitelist":
-                    let missingAccounts = this.getAccounts([op[1].authorizing_account, op[1].account_to_list]);
+                    missingAccounts = this.getAccounts([op[1].authorizing_account, op[1].account_to_list]);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.authorizing_account" />:</td>
@@ -402,7 +402,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_upgrade":
-                    let missingAccounts = this.getAccounts([op[1].account_to_upgrade]);
+                    missingAccounts = this.getAccounts([op[1].account_to_upgrade]);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.account_upgrade" />:</td>
@@ -418,7 +418,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_transfer":
-                    let missingAccounts = this.getAccounts([op[1].account_id, op[1].new_owner]);
+                    missingAccounts = this.getAccounts([op[1].account_id, op[1].new_owner]);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
@@ -436,7 +436,7 @@ class Transaction extends React.Component {
 
                 case "asset_create":
                     color = "warning";
-                    let missingAccounts = this.getAccounts([op[1].issuer]);
+                    missingAccounts = this.getAccounts([op[1].issuer]);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" />:</td>
@@ -467,7 +467,7 @@ class Transaction extends React.Component {
                 case "asset_update":
                 case "asset_update_bitasset":
                     color = "warning";
-                    let missingAssets = this.getAssets(op[1].asset_to_update);
+                    missingAssets = this.getAssets(op[1].asset_to_update);
 
                     rows.push(
                         <tr>
@@ -493,7 +493,7 @@ class Transaction extends React.Component {
                 case "asset_update_feed_producers":
                     color = "warning";
                     console.log("op:", op);
-                    let missingAssets = this.getAssets(op[1].asset_to_update);
+                    missingAssets = this.getAssets(op[1].asset_to_update);
                     let producers = [];
                     op[1].new_feed_producers.forEach(producer => {
                         let missingAsset = this.getAccounts([producer])[0];
@@ -517,8 +517,8 @@ class Transaction extends React.Component {
 
                 case "asset_issue":
                     color = "warning";
-                    let missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
-                    let missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
+                    missingAssets = this.getAssets(op[1].asset_to_issue.asset_id);
+                    missingAccounts = this.getAccounts([op[1].issuer, op[1].issue_to_account]);
 
                     rows.push(
                         <tr>
@@ -545,8 +545,8 @@ class Transaction extends React.Component {
 
                 case "asset_burn":
                     color = "cancel";
-                    let missingAssets = this.getAssets(op[1].amount_to_burn.asset_id);
-                    let missingAccounts = this.getAccounts([op[1].payer]);
+                    missingAssets = this.getAssets(op[1].amount_to_burn.asset_id);
+                    missingAccounts = this.getAccounts([op[1].payer]);
 
                     rows.push(
                         <tr>
@@ -566,8 +566,8 @@ class Transaction extends React.Component {
 
                 case "asset_fund_fee_pool":
                     color = "warning";
-                    let missingAssets = this.getAssets(op[1].asset_id);
-                    let missingAccounts = this.getAccounts([op[1].from_account]);
+                    missingAssets = this.getAssets(op[1].asset_id);
+                    missingAccounts = this.getAccounts([op[1].from_account]);
 
                     rows.push(
                         <tr>
@@ -594,8 +594,8 @@ class Transaction extends React.Component {
 
                 case "asset_settle":
                     color = "warning";
-                    let missingAssets = this.getAssets(op[1].amount.asset_id);
-                   let missingAccounts = this.getAccounts([op[1].account]);
+                    missingAssets = this.getAssets(op[1].amount.asset_id);
+                   missingAccounts = this.getAccounts([op[1].account]);
 
                     rows.push(
                         <tr>
@@ -622,7 +622,7 @@ class Transaction extends React.Component {
 
                 case "asset_publish_feed":
                     color = "warning";
-                    let missingAssets = this.getAssets(op[1].asset_id);
+                    missingAssets = this.getAssets(op[1].asset_id);
                     let feed = op[1].feed;
                     rows.push(
                         <tr>
@@ -688,7 +688,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "delegate_create":
-                    let missingAccounts = this.getAccounts(op[1].delegate_account);
+                    missingAccounts = this.getAccounts(op[1].delegate_account);
 
                     rows.push(
                         <tr>
@@ -700,7 +700,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "witness_create":
-                    let missingAccounts = this.getAccounts(op[1].witness_account);
+                    missingAccounts = this.getAccounts(op[1].witness_account);
 
                     rows.push(
                         <tr>
@@ -713,8 +713,8 @@ class Transaction extends React.Component {
 
                 case "balance_claim":
                     color = "success";
-                    let missingAssets = this.getAssets(op[1].total_claimed.asset_id);
-                    let missingAccounts = this.getAccounts(op[1].deposit_to_account);
+                    missingAssets = this.getAssets(op[1].total_claimed.asset_id);
+                    missingAccounts = this.getAccounts(op[1].deposit_to_account);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.balance_owner" />:</td>

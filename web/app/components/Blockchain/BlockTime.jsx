@@ -3,6 +3,13 @@ import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import chain from "api/chain.js";
 
+/**
+ * @brief displays block's date and time based on block number
+ *
+ * properties: block_number - number
+ * Note, it doesn't fetch block, just calculates time based on number alone.
+ **/
+
 class BlockTime extends React.Component {
 
     constructor(props) {
@@ -40,5 +47,9 @@ class BlockTime extends React.Component {
         );
     }
 }
+
+BlockTime.propTypes = {
+    block_number: React.PropTypes.number.isRequired
+};
 
 export default BlockTime;
