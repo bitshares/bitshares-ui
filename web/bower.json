@@ -12,7 +12,5 @@
     "bower_components"
   ],
   "dependencies": {
-    "open-iconic": "~1.1.1",
-    "jdenticon": "~1.1.0"
   }
 }

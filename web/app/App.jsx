@@ -59,6 +59,7 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
+require("./assets/stylesheets/app.scss");
 
 const { Route, RouteHandler, DefaultRoute } = Router;
 
