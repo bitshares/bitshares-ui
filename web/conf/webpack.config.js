@@ -66,8 +66,8 @@ module.exports = function(options) {
             path: outputPath,
             filename: "app.js"
         },
-        cache: true,
-        debug: process.env.PROD ? false : true,
+        devtool: "#inline-source-map",
+        debug: options.prod ? false : true,
         module: {
             loaders: [
                 { 

@@ -6,7 +6,7 @@ new WebpackDevServer(webpack(config), {
   hot: true,
   historyApiFallback: true,
   quiet: false,
-  stats: { colors: true, progress: true},
+  stats: { colors: true},
   port: 8080
 }).listen(8080, 'localhost', function (err, result) {
   if (err) {
