@@ -28,6 +28,19 @@ module.exports =
         if is_empty value
             throw new Error "value required for #{field_name}: #{value}"
         value
+
+    is_valid_symbol: (value) ->
+        return true unless value
+        return false unless typeof value == 'string'
+        value = value.split '.'
+        scam_pattern = /^BIT/
+        pattern = /^([A-Z]{3,8})$/
+        if value.length == 1
+            return !!value[0].match(pattern) and not !!value[0].match(scam_pattern)
+        else if value.length == 2
+            rest = 12-(value[0].length+1)
+            pattern2 = new RegExp('^([A-Z]{3,'+rest+'})$');
+            return !!value[0].match(pattern) and !!value[1].match(pattern2)
     
     # ###* @parm1 string wallet_name can have dashes, numbers, or letters ###
     # is_wallet_name: (value)->

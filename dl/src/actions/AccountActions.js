@@ -200,8 +200,8 @@ class AccountActions {
         return promise;
     }
     
-    addAccountName(account_name) {
-        this.dispatch(account_name)
+    addAccount(name_or_account) {
+        this.dispatch(name_or_account)
     }
     
     createAccount(

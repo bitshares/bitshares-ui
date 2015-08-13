@@ -26,7 +26,6 @@ module.exports = function(options) {
     // COMMON PLUGINS
     var plugins = [
         new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"),
         new Clean(cleanDirectories)
     ];
 
@@ -39,27 +38,21 @@ module.exports = function(options) {
         plugins.push(new webpack.PrefetchPlugin("react"));
         plugins.push(new ExtractTextPlugin("app.css"));
         plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false}));
-
+        plugins.push(new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"));
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
     } else {
         plugins.push(new webpack.HotModuleReplacementPlugin());
     }
 
-    return {
+    var config = {
         entry: {
-            vendors: [
-                "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
-                "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-                "whatwg-fetch", "alt", "react-intl", "react-json-inspector", "numeral",
-                "immutable", "lzma", "bytebuffer_3.5.4.js", "intl"
-             ],
             app: options.prod ?
                 path.resolve(root_dir, "app/Main.js") :
                 [
                     "webpack-dev-server/client?http://localhost:8080",
                     "webpack/hot/only-dev-server",
-                    path.resolve(root_dir, "app/Main.js")
+                    path.resolve(root_dir, "app/Main-dev.js")
                 ]
         },
         output: {
@@ -98,7 +91,7 @@ module.exports = function(options) {
             //alias: {lzma: path.resolve(root_dir, "./node_modules/lzma/src/lzma.js")},
             root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
-            modulesDirectories: ["node_modules", "bower_components", path.resolve(root_dir, "../dl/node_modules"), path.resolve(root_dir, "../dl/lib")],
+            modulesDirectories: ["node_modules", "bower_components", path.resolve(root_dir, "../dl/lib")],
             fallback: [path.resolve(root_dir, "./node_modules")]
         },
         resolveLoader: {
@@ -108,5 +101,14 @@ module.exports = function(options) {
         plugins: plugins,
         root: outputPath
     };
+
+    if(options.prod) config.entry.vendors = [
+        "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
+        "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
+        "whatwg-fetch", "alt", "react-intl", "react-json-inspector",
+        "immutable", "lzma", "bytebuffer_3.5.4.js", "intl"
+    ];
+
+    return config;
 
 }

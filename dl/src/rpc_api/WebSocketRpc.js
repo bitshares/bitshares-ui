@@ -1,19 +1,17 @@
 var Immutable = require("immutable");
-var ReconnectingWebSocket = require("ReconnectingWebSocket");
 
 var NODE_DEBUG = process.env.NODE_DEBUG
 
 class WebSocketRpc {
 
     constructor(ws_server) {
-        var WebSocketClient = typeof(WebSocket) !== "undefined" ? ReconnectingWebSocket : require("websocket").w3cwebsocket;
+        var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
         this.web_socket = new WebSocketClient(ws_server);
         this.current_reject = null;
         this.on_reconnect = null;
         var self = this;
         this.connect_promise = new Promise((resolve, reject) => {
-            if(NODE_DEBUG)
-                console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
+            //DEBUG console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
             self.current_reject = reject;
             self.web_socket.onopen = () => {
                 if(self.on_reconnect) self.on_reconnect();

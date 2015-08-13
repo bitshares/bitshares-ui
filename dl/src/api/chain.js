@@ -620,41 +620,72 @@ class ChainStore
     *  be used to determine if the object should be refreshed from 
     *  the server.
     *
-    *  @return a promise with the object data
+    *  @param ids a string "1.2.5" or array ["1.2.5, "1.2.6"]
+    *
+    *  @return a promise with the object data, may resolve as null.
+    *       Results may be a string or an array (depending on ids type).
     */
-   fetchObject( id, min_age_ms = null) {
-      if( !utils.is_object_id(id) ) 
-         throw Error( "argument is not an object id" )
+   fetchObject( ids, min_age_ms = null) {
+       var is_array = Array.isArray(ids)
+       if( ! is_array ) ids = [ ids ]
+       
+       for(let id of ids)
+           if( !utils.is_object_id(id) ) 
+               throw Error( "argument is not an object id" )
 
-      let now = new Date().getTime()
-
-      let current_sub = this.subscriptions_by_id.get(id)
-      if( !current_sub )
-         current_sub = { last_update: now }
-
-
-      if( min_age_ms && current_sub.last_update <= now - min_age_ms )
-         current_sub.last_update = now
-
-      if( current_sub.last_update != now ) 
-      {
-         return current_sub.last_promise
-      }
+      let now = Date.now()
       
-      current_sub.last_promise = new Promise( (resolve, reject ) => {
-          Apis.instance().db_api().exec( "get_objects", [ [id] ] )
-              .then( optional_objects => {
-                  let result = optional_objects[0]
-                  if( result )
-                      resolve( this._updateObject( result ) )
-                  else
-                      reject( Error( "Unable to find object " + id ) )
-              }).catch( error => reject(error) )
-      })
-      this.subscriptions_by_id.set( id, current_sub )
-      return current_sub.last_promise
+      let promises = [], lookup_ids = []
+      
+      // Some IDs may have a promise already
+      for(let i = 0; i < ids.length; i++) {
+          let id = ids[i]
+          let current_sub = this.subscriptions_by_id.get(id)
+          if( !current_sub )
+             current_sub = { last_update: now }
+    
+    
+          if( min_age_ms && current_sub.last_update <= now - min_age_ms )
+             current_sub.last_update = now
+    
+          if( current_sub.last_update != now ) 
+          {
+              promises[i] = current_sub.last_promise
+          } else {
+              lookup_ids.push(id)
+          }
+      }
+      if(! lookup_ids.length)
+          return is_array ? Promise.all(promises) : promises[0]
+      
+      return (promises, lookup_ids, is_array) => {
+          let promises_i = 0
+          // These IDs do not have a promise, look up the object
+          return Apis.instance().db_api().exec(
+              "get_objects", [ lookup_ids ] ).then( optional_objects => {
+               //DEBUG console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
+          
+              for(let i = 0; i < lookup_ids.length; i++) {
+                  let optional_object = optional_objects[i]
+                  // skip over the last_promise found above
+                  while(promises[promises_i] != null) promises_i++
+                  promises[promises_i] = (result, id) => {
+                      return new Promise( (resolve, reject ) => {
+                          if( result )
+                              resolve( this._updateObject( result ) )
+                          else
+                              resolve( null )
+                      })
+                  }(optional_object, lookup_ids[i]) //copy vars for callback
+              }
+              return is_array ? Promise.all(promises) : promises[0]
+          }).catch( error => {
+              console.log('!!! Chain API error',error)
+              throw error
+          })
+      }(promises, lookup_ids, is_array) // copy vars for use in callback
    }
-
+   
    /**
     *  @return a promise to the current value of the object
     *  at the time of the subscription.  
