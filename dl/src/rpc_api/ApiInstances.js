@@ -4,12 +4,17 @@ var GrapheneApi = require("./GrapheneApi");
 class Apis {
     
     constructor() {
+        this.connect()
+    }
+    
+    connect() {
         let hostname = "localhost";
         let protocol = "ws:";
         try {
             hostname = window.location.hostname;
             protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
+        if(this.ws_rpc) return
         this.ws_rpc = new WebSocketRpc(protocol + hostname + ":8090");
         this.init_promise = this.ws_rpc.login("", "").then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
@@ -38,6 +43,7 @@ class Apis {
     
     close() {
         this.ws_rpc.close();
+        this.ws_rpc = null
     }
     
     db_api () {
@@ -61,6 +67,7 @@ module.exports = {
         if ( !apis_instance ) {
             apis_instance = new Apis();
         }
+        apis_instance.connect()
         return apis_instance;
     }
 };
