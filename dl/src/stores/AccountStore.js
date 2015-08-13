@@ -34,7 +34,7 @@ class AccountStore extends BaseStore {
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
-            onAddAccountName: AccountActions.addAccountName,
+            onAddAccount: AccountActions.addAccount,
             onChange: AccountActions.change
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount");
@@ -268,8 +268,8 @@ class AccountStore extends BaseStore {
         // console.log("[AccountStore.js] ----- onTransfer ----->", result);
     }
     
-    onAddAccountName(account_name){
-        this.onCreateAccount(account_name)
+    onAddAccount(name_or_account){
+        this.onCreateAccount(name_or_account)
     }
 
     onCreateAccount(name_or_account) {
@@ -279,6 +279,10 @@ class AccountStore extends BaseStore {
                 name: account
             };
         }
+        
+        if(account["toJS"])
+            account = account.toJS()
+        
         if( ! validation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
         

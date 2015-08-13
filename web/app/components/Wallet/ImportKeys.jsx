@@ -17,9 +17,13 @@ import cname from "classnames";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 
-var api = Apis.instance();
+import chain_api from "api/chain"
 
 require("./ImportKeys.scss");
+
+
+var api = Apis.instance();
+var import_keys_assert_checking = false
 
 class ImportKeys extends Component {
     
@@ -30,7 +34,7 @@ class ImportKeys extends Component {
     
     _getInitialState() {
         return {
-            wifs_to_account: {},
+            wifs_to_account: { },
             wif_to_balances: null,
             wif_count: 0,
             no_file: true,
@@ -41,6 +45,7 @@ class ImportKeys extends Component {
             reset_password: Date.now(),
             password_checksum: null,
             import_password_message: null,
+            imported_keys_public: {},
             wif_text_message: null,
             wif_textarea_private_keys_message: null,
             wif_textarea_private_keys: ""
@@ -65,11 +70,9 @@ class ImportKeys extends Component {
         var balance_rows = null;
         if(this.state.balance_by_asset) {
             balance_rows = [];
-            // for(let asset_balance of this.state.balance_by_asset) {
             this.state.balance_by_asset.forEach((asset_balance, index) => {
-                // var {symbol, balance, precision} = asset_balance;
                 balance_rows.push(
-                    <div className="asset-list">
+                    <div key={index} className="asset-list">
                         <FormattedAsset color="info"
                             amount={asset_balance.balance}
                             asset={asset_balance.asset_id}
@@ -234,11 +237,6 @@ class ImportKeys extends Component {
             //DEBUG console.log('... wif_keys done')
             //DEBUG console.log("... get_balance_objects", address_params)
             var db = api.db_api();
-            if(db == null) {
-                notify.error("No witness node connection.");
-                resolve(undefined);
-                return;
-            }
             //DEBUG console.log('... get_balance_objects',address_params)
             var p = db.exec("get_balance_objects", [address_params]).then( result => {
                 //DEBUG console.log('... get_balance_objects done')
@@ -285,7 +283,7 @@ class ImportKeys extends Component {
     getImportAccountKeyCount(wifs_to_account) {
         var account_keycount = {}
         for(let wif in wifs_to_account)
-        for(let account_name of wifs_to_account[wif]) {
+        for(let account_name of wifs_to_account[wif].account_names) {
             account_keycount[account_name] =
                 (account_keycount[account_name] || 0) + 1
         }
@@ -486,7 +484,6 @@ class ImportKeys extends Component {
             var account_name = account.account_name.trim()
             for(let i = 0; i < account.encrypted_private_keys.length; i++) {
                 let encrypted_private = account.encrypted_private_keys[i]
-                
                 let public_key_string = account.public_keys ?
                     account.public_keys[i] : null // assert checking
                 let address_string = account.addresses ? 
@@ -497,31 +494,38 @@ class ImportKeys extends Component {
                     var private_key = PrivateKey.fromBuffer(
                         new Buffer(private_plainhex, "hex"))
                     
-                    if(public_key_string) { // assert checking
+                    if(import_keys_assert_checking && public_key_string) {
                         var pub = private_key.toPublicKey()
                         var addy = pub.toBtsAddy()
                         var pubby = pub.toBtsPublic()
                         var error = ""
                         
-                        if(addy.substring(3) != address_string.substring(3))
+                        if(address_string && addy.substring(3) != address_string.substring(3))
                             error = "address imported " + address_string + " but calculated " + addy + ". "
                         
                         if(pubby.substring(3) != public_key_string.substring(3))
                             error += "public key imported " + public_key_string + " but calculated " + pubby
                         
                         if(error != "")
-                            console.log("miss-match",error)
+                            console.log("ERROR Miss-match key",error)
                     }
+                    if(! public_key_string) {
+                        var pub = private_key.toPublicKey()// S L O W
+                        public_key_string =  pub.toBtsPublic()
+                    }
+                    this.state.imported_keys_public[public_key_string] = true
                         
                     var private_key_wif = private_key.toWif()
-                    var account_names = this.state.wifs_to_account[private_key_wif] || []
+                    var {account_names} = this.state.wifs_to_account[private_key_wif] || 
+                        {account_names: []}
                     var dup = false
                     for(let _name of account_names)
                         if(_name == account_name)
                             dup = true
                     if(dup) continue
                     account_names.push(account_name)
-                    this.state.wifs_to_account[private_key_wif] = account_names
+                    this.state.wifs_to_account[private_key_wif] = 
+                        {account_names, public_key_string}
                 } catch(e) {
                     console.log(e)
                     var message = e.message || e
@@ -546,25 +550,48 @@ class ImportKeys extends Component {
     _saveImport() {
         var linkedAccounts = AccountStore.getState().linkedAccounts
         for(let account_name in this.state.account_keycount) {
+            if(account_name === "") continue
             if( ! linkedAccounts.get(account_name)) {
                 try {
-                    AccountActions.addAccountName(account_name)
+                    AccountActions.addAccount(account_name)
                 } catch(e) {
                     console.log("WARN", e)
                 }
             }
         }
         
+        // Add accounts referenced by the wifs
+        var imported_keys_public = this.state.imported_keys_public
+        var db = api.db_api()
+        console.log('... get_key_references')
+        var p = db.exec("get_key_references",
+            [Object.keys(imported_keys_public)]).then(
+            results => {
+            console.log('... get_key_references done')
+            var account_ids = {}
+            for(let result of results)
+                for(let account_id of result)
+                    account_ids[account_id] = true
+            
+            chain_api.fetchObject(Object.keys(account_ids)).then( results => {
+                for(let account of results) {
+                    if(account && ! linkedAccounts.get(account.get("name")))
+                        AccountActions.addAccount(account)
+                }
+            })
+        })
+        
         var wifs_to_account = this.state.wifs_to_account
         var wif_to_balances = this.state.wif_to_balances
         var private_key_objs = []
         for(let wif of Object.keys(wifs_to_account)) {
-            var import_account_names = wifs_to_account[wif]
+            var {account_names, public_key_string} = wifs_to_account[wif]
             var import_balances = wif_to_balances[wif]
             private_key_objs.push({
                 wif,
-                import_account_names,
-                import_balances
+                import_account_names: account_names,
+                import_balances,
+                public_key_string
             })
             //DEBUG if(import_account_names.join('')=="") console.log('... import_balances empty account',import_balances)
         }
@@ -614,8 +641,8 @@ class ImportKeys extends Component {
         var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
         for(let wif of contents.match(wif_regex) || [] ) {
             try { 
-                PrivateKey.fromWif(wif) //throws 
-                this.state.wifs_to_account[wif] = []
+                PrivateKey.fromWif(wif) //could throw and error 
+                this.state.wifs_to_account[wif] = {account_names: []}
                 count++
             } catch(e) { invalid_count++ }
         }

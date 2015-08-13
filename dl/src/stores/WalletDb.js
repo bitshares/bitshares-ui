@@ -297,7 +297,8 @@ class WalletDb {
                         private_key_obj.import_account_names,
                         private_key_obj.import_balances,
                         null,//brainkey_pos
-                        transaction
+                        transaction,
+                        private_key_obj.public_key_string
                     ).then(
                         ret => {
                             if(ret.result == "duplicate") {
@@ -324,7 +325,7 @@ class WalletDb {
         })
     }
 
-    saveKeys(private_keys, transaction) {
+    saveKeys(private_keys, transaction, public_key_string) {
         //private_keys = [{private_key, sequence}]
         var promises = []
         for(let private_key_record of private_keys) {
@@ -333,7 +334,8 @@ class WalletDb {
                 null, //import_account_names
                 null, //import_balances
                 private_key_record.sequence,
-                transaction
+                transaction,
+                public_key_string
             ))
         }
         return Promise.all(promises)
@@ -344,7 +346,8 @@ class WalletDb {
         import_account_names,
         import_balances,
         brainkey_pos,
-        transaction
+        transaction,
+        public_key_string
     ) {
         var password_aes_private = aes_private_map[
             wallet_public_name
@@ -360,7 +363,8 @@ class WalletDb {
             import_account_names,
             encrypted_key: private_cipherhex,
             brainkey_pos: brainkey_pos,
-            pubkey: public_key.toBtsPublic()
+            pubkey: public_key_string ? public_key_string :
+                public_key.toBtsPublic()//S L O W
         }
         return import_balances => {
             return PrivateKeyStore.onAddKey(
