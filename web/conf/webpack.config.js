@@ -12,16 +12,16 @@ function extractForProduction(loaders) {
 }
 
 module.exports = function(options) {
-
+    console.log(options.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
     var cssLoaders = "style-loader!css-loader",
       scssLoaders = "style!css!autoprefixer!sass?outputStyle=expanded";
 
     // DIRECTORY CLEANER
-    var cleanDirectories = ["bundle", "dist"];
+    var cleanDirectories = ["dist"];
 
     // OUTPUT PATH
-    var outputPath = path.join(root_dir, "bundle");
+    var outputPath = path.join(root_dir, "assets");
 
     // COMMON PLUGINS
     var plugins = [
@@ -42,17 +42,25 @@ module.exports = function(options) {
 
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
-    } 
+    } else {
+        plugins.push(new webpack.HotModuleReplacementPlugin());
+    }
 
     return {
         entry: {
             vendors: [
                 "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
                 "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-                "react-hot-loader", "whatwg-fetch", "alt", "react-intl", "react-json-inspector", "numeral",
+                "whatwg-fetch", "alt", "react-intl", "react-json-inspector", "numeral",
                 "immutable", "lzma", "bytebuffer_3.5.4.js", "intl"
              ],
-            app: path.resolve(root_dir, "app/Main.js")
+            app: options.prod ?
+                path.resolve(root_dir, "app/Main.js") :
+                [
+                    "webpack-dev-server/client?http://localhost:8080",
+                    "webpack/hot/only-dev-server",
+                    path.resolve(root_dir, "app/Main.js")
+                ]
         },
         output: {
             path: outputPath,
@@ -61,18 +69,11 @@ module.exports = function(options) {
         cache: true,
         debug: process.env.PROD ? false : true,
         module: {
-            preLoaders: [
-                { 
-                    test: /\.jsx$/,
-                    include: /react-foundation-apps/,
-                    loaders: ["babel-loader"] 
-                }
-            ],
             loaders: [
                 { 
                     test: /\.jsx$/,
-                    exclude: /node_modules/,
-                    loaders: ["react-hot", "babel-loader"] 
+                    include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps")],
+                    loaders: options.prod ? ["babel-loader"] : ["react-hot", "babel-loader"] 
                 },
                 { 
                     test: /\.js$/,

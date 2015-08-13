@@ -15,6 +15,7 @@
   },
   "scripts": {
     "test": "jest",
+    "new_start": "node server.js",
     "start": "webpack-dev-server --config conf/webpack-dev.js --host 0.0.0.0 --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
     "build": "webpack --config conf/webpack-prod.js  --progress --profile --colors"
   },
