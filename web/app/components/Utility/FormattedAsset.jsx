@@ -43,7 +43,7 @@ class FormattedAsset extends ChainComponent {
                             minimumSignificantDigits={decimals}
                             maximumSignificantDigits={decimals}
                         />
-                        <span dangerouslySetInnerHTML={{__html:this.props.element_separator}} />
+                        {this.props.element_separator ? <span dangerouslySetInnerHTML={{__html: this.props.element_separator}} /> : null}
                         <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol}</Link> 
                           + "/" 
                         <Link to="asset" params={{ symbol: base.symbol }}>{base.symbol}</Link> 
@@ -57,7 +57,7 @@ class FormattedAsset extends ChainComponent {
                             minimumFractionDigits={decimals}
                             maximumFractionDigits={decimals}
                         />
-                        <span dangerouslySetInnerHTML={{__html:this.props.element_separator}} />
+                        {this.props.element_separator ? <span dangerouslySetInnerHTML={{__html: this.props.element_separator}} /> : null}
                         <Link to="asset" params={{ symbol: asset.symbol }}> {asset.symbol} </Link>
                     </span>
             );
