@@ -11,8 +11,7 @@ class WebSocketRpc {
         this.on_reconnect = null;
         var self = this;
         this.connect_promise = new Promise((resolve, reject) => {
-            if(NODE_DEBUG)
-                console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
+            //DEBUG console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
             self.current_reject = reject;
             self.web_socket.onopen = () => {
                 if(self.on_reconnect) self.on_reconnect();
