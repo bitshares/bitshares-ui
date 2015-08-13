@@ -33,9 +33,10 @@ class Header extends React.Component {
         }
     }
 
-    createAccountHandler() {
+    transitionTo(to, params, query, e) {
+        e.preventDefault();
         this.closeDropDowns();
-        this.context.router.transitionTo("create-account");
+        this.context.router.transitionTo(to, params, query);
         return false;
     }
 
@@ -101,8 +102,8 @@ class Header extends React.Component {
                 </ActionSheet.Button>
                 <ActionSheet.Content >
                     <ul className="no-first-element-top-border">
-                        <li><Link to="create-account">Create Account</Link></li>
-                        {currentAccount ? <li><Link to="account-assets" query={{create_asset: true}} params={{account_name: currentAccount.name}}>Create Asset</Link></li> : null}
+                        <li><a href onClick={this.transitionTo.bind(this, "create-account", null, null)}>Create Account</a></li>
+                        {currentAccount ? <li><a href onClick={this.transitionTo.bind(this, "account-assets", {account_name: currentAccount.name}, {create_asset: true})}>Create Asset</a></li> : null}
                     </ul>
                 </ActionSheet.Content>
             </ActionSheet>
