@@ -15,8 +15,8 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "webpack-dev-server --host 0.0.0.0 --hot --inline --progress --colors --devtool inline-source-map --content-base assets/",
-    "build": "node ./node_modules/webpack/bin/webpack.js --progress --colors --optimize-minimize -p"
+    "start": "node server.js",
+    "build": "webpack --config conf/webpack-prod.js  --progress --profile --colors"
   },
   "dependencies": {
     "alt": "~0.17.1",
@@ -68,6 +68,7 @@
   "devDependencies": {
     "babel-eslint": "^3.1.1",
     "babel-jest": "^5.2.0",
+    "clean-webpack-plugin": "^0.1.3",
     "coffee-loader": "^0.7.2",
     "eslint": "^0.20.0",
     "eslint-plugin-react": "^2.2.0",

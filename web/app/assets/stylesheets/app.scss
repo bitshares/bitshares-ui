@@ -1,8 +1,8 @@
 @import "./fonts";
 @import "./foundation_settings";
-@import "../../../node_modules/react-foundation-apps/node_modules/foundation-apps/scss/foundation.scss";
+@import "~react-foundation-apps/node_modules/foundation-apps/scss/foundation.scss";
 @import "./foundation_overrides";
-@import "../../../node_modules/react-tooltip/dist/react-tooltip.scss";
+@import "~react-tooltip/dist/react-tooltip.scss";
 @import "./forms";
 @import "./page_layout";
 @import "./loading-indicator";
@@ -100,6 +100,9 @@ button, .button {
   border-left-style: solid !important;
   padding: 1rem !important;
   font-size: 100% !important;
+  > .notification-message {
+    word-break: break-all;
+  }
 }
 
 

@@ -47,8 +47,9 @@ class CreateAccount extends React.Component {
             }).catch(error => {
                 // TODO: Show in GUI
                 console.log("ERROR AccountActions.createAccount", error);
+                const error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown backend api error";
                 notify.addNotification({
-                    message: `Failed to create account: ${name}`,
+                    message: `Failed to create account: ${name} - ${error_msg}`,
                     level: "error",
                     autoDismiss: 10
                 });
