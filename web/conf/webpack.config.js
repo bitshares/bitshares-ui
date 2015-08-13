@@ -45,14 +45,8 @@ module.exports = function(options) {
         plugins.push(new webpack.HotModuleReplacementPlugin());
     }
 
-    return {
+    var config = {
         entry: {
-            vendors: options.prod ? [
-                "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
-                "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-                "whatwg-fetch", "alt", "react-intl", "react-json-inspector", "numeral",
-                "immutable", "lzma", "bytebuffer_3.5.4.js", "intl"
-             ] : [],
             app: options.prod ?
                 path.resolve(root_dir, "app/Main.js") :
                 [
@@ -107,5 +101,14 @@ module.exports = function(options) {
         plugins: plugins,
         root: outputPath
     };
+
+    if(options.prod) config.entry.vendors = [
+        "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
+        "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
+        "whatwg-fetch", "alt", "react-intl", "react-json-inspector",
+        "immutable", "lzma", "bytebuffer_3.5.4.js", "intl"
+    ];
+
+    return config;
 
 }
