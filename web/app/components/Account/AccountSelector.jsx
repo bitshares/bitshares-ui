@@ -47,13 +47,18 @@ class AccountSelector extends ChainComponent {
 
    onUpdate( next_props = null )
    { 
-      if( !next_props ) next_props = this.props
+      if( !next_props )
+      {
+         next_props = {}
+         for( let k in this.props ) next_props[k] = this.props[k]
+      }
       let next_state = 
       {
          account: null,
          lookup_display: null
       }
-      if( !next_props.account )
+      console.log( "next_props.account: ", next_props.account )
+      if( next_props.account == null )
       {
       }
       else if( validation.is_account_name( next_props.account ) )

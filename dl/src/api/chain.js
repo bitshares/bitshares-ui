@@ -8,10 +8,16 @@ let op_history   = parseInt(object_type.operation_history, 10);
 let limit_order  = parseInt(object_type.limit_order, 10);
 let balance_type  = parseInt(object_type.balance, 10);
 let vesting_balance_type  = parseInt(object_type.vesting_balance, 10);
+let witness_object_type  = parseInt(object_type.witness, 10);
+let worker_object_type  = parseInt(object_type.worker, 10);
+let committee_member_object_type  = parseInt(object_type.committee_member, 10);
 
 let order_prefix = "1." + limit_order + "."
 let balance_prefix = "1." + balance_type + "."
 let vesting_balance_prefix = "1." + vesting_balance_type + "."
+let witness_prefix = "1." + witness_object_type + "."
+let worker_prefix = "1." + worker_object_type + "."
+let committee_prefix = "1." + committee_member_object_type + "."
 
 
 /**
@@ -54,6 +60,7 @@ class ChainStore
       this.subscriptions_by_account = new Map()
       this.subscriptions_by_market  = new Map()
       this.witness_by_account_id    = new Map()
+      this.committee_by_account_id  = new Map()
       this.pending_transactions     = new Map()
    }
 
@@ -120,6 +127,23 @@ class ChainStore
       }
    }
 
+   getCommitteeMember( id_or_account, on_update = null )
+   {
+      if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
+      {
+         let account = this.getAccount( id_or_account, on_update )
+         if( !account ) return null
+
+         let account_id = account.get('id') 
+         let committee_id = this.committee_by_account_id.get( account_id )
+         console.log( "committee_id: ",committee_id )
+         if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
+
+         if( committee_id == undefined )
+            this.fetchCommitteeMemberByAccount( account_id ).then( on_update ) 
+      }
+   }
+
    /**
     *
     * @return a promise with the witness object
@@ -139,7 +163,31 @@ class ChainStore
                    }
                    else 
                    {
-                      this.witness_by_account_id.set( optional_witness_object.witness_account, null )
+                      this.witness_by_account_id.set( account_id, null )
+                      resolve(null)
+                   }
+              }, reject ) } )
+   }
+   /**
+    *
+    * @return a promise with the witness object
+    */
+   fetchCommitteeMemberByAccount( account_id )
+   {
+      console.log( "fetchCommittee for Account: ", account_id )
+      return new Promise( (resolve,reject ) => {
+          Apis.instance().db_api().exec( "get_committee_member_by_account", [ account_id ] )
+              .then( optional_committee_object => {
+                     console.log( "fetch committee result===========> ", optional_committee_object )
+                   if( optional_committee_object )
+                   {
+                      this.committee_by_account_id.set( optional_committee_object.committee_member_account, optional_committee_object.id )
+                      let committee_object = this._updateObject( optional_committee_object )
+                      resolve(committee_object)
+                   }
+                   else 
+                   {
+                      this.committee_by_account_id.set( account_id, null )
                       resolve(null)
                    }
               }, reject ) } )
@@ -350,7 +398,8 @@ class ChainStore
                         statistics, 
                         call_orders, 
                         limit_orders, 
-                        referrer_name, registrar_name, lifetime_referrer_name
+                        referrer_name, registrar_name, lifetime_referrer_name,
+                        votes
                     } = full_account
 
                     let cur = this.accounts_by_name.get( account.name )
@@ -369,6 +418,10 @@ class ChainStore
                     {
                        this._updateObject( vesting_balances[i] )
                        account.vesting_balances = account.vesting_balances.add( vesting_balances[i].id )
+                    }
+                    for( var i = 0; i < votes.length; ++i )
+                    {
+                       this._updateObject( votes[i] )
                     }
 
                     for( var i = 0; i < full_account.balances.length; ++i )
@@ -690,6 +743,12 @@ class ChainStore
             sub( current )
 
       this.subscriptions_by_id.set( object.id, current_sub )
+
+      if( object.id.substring(0,4) == witness_prefix )
+         this.witness_by_account_id.set( object.witness_account, object.id )
+      if( object.id.substring(0,4) == committee_prefix )
+         this.committee_by_account_id.set( object.committee_member_account, object.id )
+
       return current;
    }
 

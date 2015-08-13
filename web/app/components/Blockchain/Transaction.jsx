@@ -372,35 +372,43 @@ class Transaction extends React.Component {
                        let proxy_account_name = voting_account.get('name')
                        rows.push(
                                    <tr>
-                                       <td><Translate component="span" content="account.proxy" />:</td>
+                                       <td><Translate component="span" content="account.votes.proxy" />:</td>
                                        <td><Link to="account" params={{account_name: proxy_account_name}}>{proxy_account_name}</Link></td>
                                    </tr>
                        );
                     }
                     else
                     {
+                       console.log( "num witnesses: ", op[1].new_options.num_witness ) 
+                       console.log( "===============> NEW: ", op[1].new_options ) 
                        rows.push(
                                    <tr>
-                                       <td><Translate component="span" content="account.proxy" />:</td>
-                                       <td><Translate component="span" content="account.no_proxy" /></td>
+                                       <td><Translate component="span" content="account.votes.proxy" />:</td>
+                                       <td><Translate component="span" content="account.votes.no_proxy" /></td>
                                    </tr>
                        );
                        rows.push(
                                    <tr>
-                                       <td><Translate component="span" content="account.num_committee" />:</td>
+                                       <td><Translate component="span" content="account.options.num_committee" />:</td>
                                        <td>{op[1].new_options.num_committee}</td>
                                    </tr>
                        );
                        rows.push(
                                    <tr>
-                                       <td><Translate component="span" content="account.num_witnesses" />:</td>
-                                       <td>{op[1].new_options.num_witnesses}</td>
+                                       <td><Translate component="span" content="account.options.num_witnesses" />:</td>
+                                       <td>{op[1].new_options.num_witness}</td>
+                                   </tr>
+                       );
+                       rows.push(
+                                   <tr>
+                                       <td><Translate component="span" content="account.options.votes" />:</td>
+                                       <td>{JSON.stringify( op[1].new_options.votes) }</td>
                                    </tr>
                        );
                     }
                     rows.push(
                                 <tr>
-                                    <td><Translate component="span" content="account.memo_key" />:</td>
+                                    <td><Translate component="span" content="account.options.memo_key" />:</td>
                                    {/* TODO replace with KEY render component that provides a popup */}
                                     <td>{op[1].new_options.memo_key.substring(0,10)+"..."}</td>
                                 </tr>
