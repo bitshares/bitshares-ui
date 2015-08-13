@@ -100,6 +100,9 @@ button, .button {
   border-left-style: solid !important;
   padding: 1rem !important;
   font-size: 100% !important;
+  > .notification-message {
+    word-break: break-all;
+  }
 }
 
 
