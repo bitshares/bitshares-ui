@@ -1,7 +1,13 @@
 var webpack = require('webpack');
+var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./conf/webpack-dev');
-new WebpackDevServer(webpack(config), {
+var compiler = webpack(config);
+
+compiler.apply(new ProgressPlugin(function(percentage, msg) {
+  console.log((percentage * 100).toFixed(2) + '%', msg);
+}));
+new WebpackDevServer(compiler, {
   publicPath: config.output.publicPath,
   hot: true,
   historyApiFallback: true,
