@@ -17,6 +17,8 @@ import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import BlockchainStore from "stores/BlockchainStore";
+import validation from "common/validation";
+import classnames from "classnames";
 
 class AccountAssets extends React.Component {
     constructor() {
@@ -37,6 +39,10 @@ class AccountAssets extends React.Component {
                 asset_id: "",
                 symbol: ""
             },
+            errors: {
+                symbol: null
+            },
+            isValid: false,
             searchTerm: ""
         };
 
@@ -53,8 +59,26 @@ class AccountAssets extends React.Component {
 
     _onCreateInput(value, e) {
         let {create} = this.state;
+        if (value === "symbol") {
+            e.target.value = e.target.value.toUpperCase();
+            console.log(e.target.value, "is valid symbol", validation.is_valid_symbol(e.target.value));
+        }
         create[value] = e.target.value;
         this.setState({create: create});
+        this._validateCreateFields(create);
+    }
+
+    _validateCreateFields( new_state ) {
+
+        let errors = {
+            create: null
+        };
+
+        errors.create = validation.is_valid_symbol(new_state.symbol) ? null : "Invalid asset symbol";
+
+        let isValid = errors.create === null;
+
+        this.setState({isValid: isValid, errors: errors});
     }
 
     _onIssueInput(value, e) {
@@ -146,12 +170,12 @@ class AccountAssets extends React.Component {
     render() {
         let {account_name, cachedAccounts, assets, searchAccounts} = this.props;
         let account = cachedAccounts.get(account_name);
-        let {issue} = this.state;
+        let {issue, errors, isValid, create} = this.state;
 
 
         // Calculate the CreateAsset fee by measuring the length of the symbol.
         // TODO: apply the appropriate precision to the result. Example: 050000000000 should be 500000.00000
-        let symbolLength = this.state.create.symbol.length, createFee = "N/A";
+        let symbolLength = create.symbol.length, createFee = "N/A";
         if(symbolLength == 3)
             createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol3"])} asset={"1.3.0"} />;
         else if(symbolLength == 4)
@@ -242,22 +266,23 @@ class AccountAssets extends React.Component {
                             <form onSubmit={this._createAsset.bind(this, account.id)} noValidate>
                                 <div className="shrink grid-content">
                                     <label><Translate content="account.user_issued_assets.symbol" />
-                                        <input type="text" value={this.state.create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
+                                        <input type="text" value={create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
                                     </label>
+                                    { errors.create ? <p className="grid-content has-error">{errors.create}</p> : null}
 
                                     <label><Translate content="account.user_issued_assets.description" />
-                                    <input type="text" value={this.state.create.description} onChange={this._onCreateInput.bind(this, "description")} /></label>
+                                    <input type="text" value={create.description} onChange={this._onCreateInput.bind(this, "description")} /></label>
 
                                     <label><Translate content="account.user_issued_assets.max_supply" />
-                                    <input type="number" value={this.state.create.max_supply} onChange={this._onCreateInput.bind(this, "max_supply")} /></label>
+                                    <input type="number" value={create.max_supply} onChange={this._onCreateInput.bind(this, "max_supply")} /></label>
 
                                     <label><Translate content="account.user_issued_assets.precision" />
-                                    <input type="number" value={this.state.create.precision} onChange={this._onCreateInput.bind(this, "precision")} /></label>
+                                    <input type="number" value={create.precision} onChange={this._onCreateInput.bind(this, "precision")} /></label>
                                 
-                                    {symbolLength > 2 ? <p>Fee: {createFee}</p> : null}
+                                    {isValid && create.symbol.length > 2 ? <p>Fee: {createFee}</p> : null}
                                 </div>
                                 <div className="grid-content button-group">
-                                    <input type="submit" className="button" onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
+                                    <input type="submit" className={classnames("button", {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
                                     <Trigger close="create_asset">
                                         <a href className="secondary button">Cancel</a>
                                     </Trigger>
