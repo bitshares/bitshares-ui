@@ -53,6 +53,7 @@ class ChainStore
       this.subscriptions_by_id      = new Map()
       this.subscriptions_by_account = new Map()
       this.subscriptions_by_market  = new Map()
+      this.witness_by_account_id    = new Map()
       this.pending_transactions     = new Map()
    }
 
@@ -91,6 +92,57 @@ class ChainStore
          this.fetchObject( id ).then( callback )
       }
       return result
+   }
+
+   /**
+    * This method will attempt to lookup the account, and then query to see whether or not there is
+    * a witness for this account.  If the answer is known, it will return the witness_object, otherwise
+    * it will attempt to look it up and return null.   Once the lookup has completed on_update will 
+    * be called.
+    *
+    * @param id_or_account may either be an account_id, a witness_id, or an account_name
+    */
+   getWitness( id_or_account, on_update = null  )
+   {
+      console.log( "getWitness: ", id_or_account )
+      if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
+      {
+         let account = this.getAccount( id_or_account, on_update )
+         if( !account ) return null
+
+         let account_id = account.get('id') 
+         let witness_id = this.witness_by_account_id.get( account_id )
+         console.log( "witness_id: ",witness_id )
+         if( utils.is_object_id( witness_id ) ) return this.getObject( witness_id, on_update )
+
+         if( witness_id == undefined )
+            this.fetchWitnessByAccount( account_id ).then( on_update ) 
+      }
+   }
+
+   /**
+    *
+    * @return a promise with the witness object
+    */
+   fetchWitnessByAccount( account_id )
+   {
+      console.log( "fetchWitness for Account: ", account_id )
+      return new Promise( (resolve,reject ) => {
+          Apis.instance().db_api().exec( "get_witness_by_account", [ account_id ] )
+              .then( optional_witness_object => {
+                     console.log( "fetch witness result===========> ", optional_witness_object )
+                   if( optional_witness_object )
+                   {
+                      this.witness_by_account_id.set( optional_witness_object.witness_account, optional_witness_object.id )
+                      let witness_object = this._updateObject( optional_witness_object )
+                      resolve(witness_object)
+                   }
+                   else 
+                   {
+                      this.witness_by_account_id.set( optional_witness_object.witness_account, null )
+                      resolve(null)
+                   }
+              }, reject ) } )
    }
 
 

@@ -11,7 +11,6 @@ class AccountImage extends Component {
             <img src={image} height={height + "px"} width={width + "px"}/> :
             <Identicon id={account} account={account} size={this.props.size}/>;
         let link_to_account = account ? account : "null-account"
-           console.log( "link_to_account: ", link_to_account )
 
         return (
             <div>

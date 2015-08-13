@@ -98,7 +98,9 @@ class AccountSelector extends ChainComponent {
       {
          lookup_display = this.state.account.get( this.state.lookup_display )
          if( utils.is_object_id( lookup_display ) )
-            lookup_display = "#" + lookup_display.substring(4)
+            lookup_display = ": #" + lookup_display.substring(4)
+         else
+            lookup_display = ": "+lookup_display
       }
       let error = this.props.error
       if( !error )
@@ -115,11 +117,12 @@ class AccountSelector extends ChainComponent {
          }
       }
 
-      if( !error )
-         error = ChainStore.getAccountMemberStatus(this.state.account)
+      let member_status = null
+      if( this.props.account )
+         member_status = ChainStore.getAccountMemberStatus(this.state.account)
 
       return (
-                 <div className="grid-block">
+                 <div className="grid-block no-overflow">
                      <div className="grid-content shrink no-overflow">
                          <AccountImage size={{height: 80, width: 80}} 
                                        account={this.state.account?this.state.account.get('name'):null} custom_image={null}/> 
@@ -127,26 +130,40 @@ class AccountSelector extends ChainComponent {
                      <div className="grid-content shrink">
                      &nbsp; &nbsp; &nbsp;
                      </div>
-                     <div className="grid-block vertical">
+                     <div className="grid-block vertical no-overflow">
                         <div className="grid-block shrink">  
                            <div className="grid-content">
                                <Translate component="label" content={this.props.label} /> 
                            </div>
+                           <div className="grid-content full-width-content"> </div>
+                            <div className="grid-content align-right shrink no-overflow">{member_status}{ lookup_display }</div>
                         </div>
                         <div className="grid-block full-width-content no-overflow shrink"> 
-                           <div className="grid-content no-overflow" >
-                              <input id="account" type="text" 
-                                     value={this.props.account} 
-                                     defaultValue={this.props.account}
-                                     placeholder={this.props.placeholder}
-                                     ref="user_input" 
-                                     onChange={this.onInputChanged.bind(this)}/>
+
+                           <div className="grid-block  no-overflow shrink"> 
+                              <div className="grid-content no-overflow" >
+                                 <input id="account" type="text" 
+                                        value={this.props.account} 
+                                        defaultValue={this.props.account}
+                                        placeholder={this.props.placeholder}
+                                        ref="user_input" 
+                                        onChange={this.onInputChanged.bind(this)}/>
+                              </div>
+                           { !this.props.onAction ? null : (
+                                 <div className="grid-block no-overflow shrink"> 
+                                     <div className="grid-content no-overflow">
+                                          <button className={this.props.action_class} 
+                                          onClick={this.props.onAction}> 
+                                          <Translate content={this.props.action_label} /></button> 
+                                     </div>
+                                 </div>
+                           )}
                            </div>
+
                         </div>
                         <div className="grid-block shrink no-overflow"> 
                             <div className="grid-content no-overflow"> {error} </div> 
                             <div className="grid-content full-width-content no-overflow"> </div>
-                            <div className="grid-content align-right shrink no-overflow">{ lookup_display }</div>
                         </div>
                         <div className="grid-content"></div>
                      </div>

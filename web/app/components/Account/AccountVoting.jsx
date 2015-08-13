@@ -31,24 +31,42 @@ class AccountVoting extends ChainComponent {
        this.state = {
           current_proxy : null, ///< the proxy used by the blockchain
           new_proxy:      null, ///< the proxy specified by the user
+          new_witness:   null, ///< the new delegate specified by the user
+          new_committee:  null, ///< the new witness specified by the user
+          new_budget:   null ///< the new budget specified by the user
        }
        this.map_accounts = { account_name: "account" }
     }
 
-    onUpdate( next_props = null )
+    onUpdate( next_props = null, next_state = {} )
     {
        if( !next_props ) next_props = this.props
-       let next_state = {}
 
-       let acnt = ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null) )
+       let acnt = ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null,{}) )
        if( acnt ) {
           let current_proxy_id = acnt.get('options').get('voting_account')
           if( current_proxy_id == "1.2.0" ) next_state.current_proxy = null
           else {
-            let proxy_acnt = ChainStore.getAccount( current_proxy_id, this.onUpdate.bind(this,null) ) 
+            let proxy_acnt = ChainStore.getAccount( current_proxy_id, this.onUpdate.bind(this,null,{}) ) 
             if( proxy_acnt )
                next_state.current_proxy = proxy_acnt.get('name')
           }
+       }
+
+       if( next_state.new_witness == undefined && this.state.new_witness )
+          next_state.new_witness = this.state.new_witness
+
+       if( next_state.new_witness )
+       {
+          if( next_state.new_witness.length > 2 )
+             next_state.current_add_witness = ChainStore.getWitness( next_state.new_witness, this.onUpdate.bind(this,null,{}) )
+          else
+             next_state.current_add_witness = null
+
+          if( !next_state.current_add_witness && next_state.new_witness && next_state.new_witness.length > 2)
+             next_state.current_add_witness_error = "Account is not a witness"
+          else
+             next_state.current_add_witness_error = null
        }
 
        this.setState(next_state)
@@ -61,6 +79,12 @@ class AccountVoting extends ChainComponent {
 
     onProxyChange( new_proxy ) {
        this.setState( {new_proxy} )
+    }
+    onAddWitnessChange( new_witness ) {
+       this.onUpdate( null, {new_witness} )
+    }
+    onAddWitness( new_witness ) {
+       this.setState( {new_witness} )
     }
 
     onPublish(){
@@ -100,8 +124,11 @@ class AccountVoting extends ChainComponent {
     }
 
     render() {
+        console.log( "state: ", this.state )
         let current_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
         let current_error = null
+
+
 
         let new_id = this.getNewProxyID()
         if( new_id && this.state.account && this.state.account.get('id') == new_id )
@@ -112,10 +139,11 @@ class AccountVoting extends ChainComponent {
                       !current_error 
                       && new_id != this.state.account.get('options').get('voting_account')
 
-        let action_buttons_class = "button" + (changed? "" : " disabled");
+        let publish_buttons_class = "button" + (changed? "" : " disabled");
+        let add_witness_button_class = "button" + (this.state.current_add_witness?"":" disabled")
         return (
                 <div className="grid-block vertical">
-                   <div className="grid-block shrink">
+                   <div className="grid-block shrink no-overflow">
                         <AccountSelector label="account.votes.proxy"
                                          error={current_error}
                                          placeholder="NONE"
@@ -124,10 +152,42 @@ class AccountVoting extends ChainComponent {
                                          ref="proxy_selector" />
                    </div>
                    <div className="grid-content no-overflow shrink">
-                   &nbsp;
+                   <hr/>
                    </div>
+                   <div className="grid-block shrink no-overflow">
+                      <div className="grid-block no-overflow">
+                        <AccountSelector label="account.votes.add_witness_label"
+                                         error={this.state.current_add_witness_error}
+                                         placeholder="Witness Account"
+                                         account={this.state.new_witness}
+                                         onChange={this.onAddWitnessChange.bind(this)}
+                                         onAction={this.onAddWitness.bind(this)}
+                                         action_class={add_witness_button_class}
+                                         action_label="account.votes.add_witness"
+                                         ref="add_witness_selector" />
+                      </div>
+                   </div>
+
+                    <div className="grid-block">
+                        <Tabs>
+                            <Tabs.Tab title="Delegates">
+                                <VotesTable
+                                    />
+                            </Tabs.Tab>
+                            <Tabs.Tab title="Witnesses">
+                                <VotesTable
+                                    />
+                            </Tabs.Tab>
+                            <Tabs.Tab title="Budget">
+                                <VotesTable
+                                    />
+                            </Tabs.Tab>
+                          </Tabs>
+                    </div>
+
+
                    <div className="grid-content no-overflow">
-                        <button className={action_buttons_class} 
+                        <button className={publish_buttons_class} 
                         onClick={this.onPublish.bind(this)}> 
                         <Translate content="account.votes.publish" /></button> 
                    </div>
@@ -141,31 +201,6 @@ class AccountVoting extends ChainComponent {
                 </div>
                 {my_proxy_account === "" ?
                     (
-                    <div className="content-block">
-                        <Tabs>
-                            <Tabs.Tab title={tabTitles.delegates}>
-                                <VotesTable
-                                    selectedEntities={my_delegates}
-                                    allEntities={all_delegates}
-                                    onAddRow={this.onAddRow.bind(this, "delegates")}
-                                    onRemoveRow={this.onRemoveRow.bind(this, "delegates")} />
-                            </Tabs.Tab>
-                            <Tabs.Tab title={tabTitles.witnesses}>
-                                <VotesTable
-                                    selectedEntities={my_witnesses}
-                                    allEntities={all_witnesses}
-                                    onAddRow={this.onAddRow.bind(this, "witnesses")}
-                                    onRemoveRow={this.onRemoveRow.bind(this, "witnesses")} />
-                            </Tabs.Tab>
-                            <Tabs.Tab title={tabTitles.workers}>
-                                <VotesTable
-                                    selectedEntities={my_budget_items}
-                                    allEntities={all_budget_items}
-                                    onAddRow={this.onAddRow.bind(this, "budget_items")}
-                                    onRemoveRow={this.onRemoveRow.bind(this, "budget_items")} />
-                            </Tabs.Tab>
-                          </Tabs>
-                    </div>
                     ) : null
                 }
                 <div className="content-block">

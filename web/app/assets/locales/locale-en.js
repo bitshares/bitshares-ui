@@ -70,7 +70,11 @@ module.exports = {
             info: "Info",
             support: "Support",
             workers: "Budget Items",
-            publish: "Publish Changes"
+            publish: "Publish Changes",
+            add_witness: "Add",
+            add_committee: "Add",
+            add_committee_label: "Committee Member",
+            add_witness_label: "Witness"
         },
         upgrade: "Upgrade account",
         unlink: "Unlink",
