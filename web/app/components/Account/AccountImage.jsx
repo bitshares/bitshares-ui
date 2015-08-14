@@ -13,7 +13,7 @@ class AccountImage extends Component {
         let link_to_account = account ? account : "null-account"
 
         return (
-            <div>
+            <div className="account-image">
               <Link to="account" params={{account_name: link_to_account}}>
                 {custom_image}
               </Link>

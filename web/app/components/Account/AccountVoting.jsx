@@ -301,80 +301,71 @@ class AccountVoting extends ChainComponent {
 
         let cw = ["30px", "30px", "10%", "90%"] ;
         return (
-                <div className="grid-block vertical">
-                   <div className="grid-block shrink no-overflow">
-                        <AccountSelector label="account.votes.proxy"
-                                         error={current_proxy_error}
-                                         placeholder="NONE"
-                                         account={current_proxy_input}
-                                         onChange={this.onProxyChange.bind(this)}
-                                         ref="proxy_selector" />
-                   </div>
-                   <hr/>
-                   <div className={"grid-block shrink no-overflow" + (proxy_is_set ? " disabled" : "")}>
-                      <div className="grid-block no-overflow">
-                        <AccountSelector label="account.votes.add_witness_label"
-                                         error={this.state.current_add_witness_error}
-                                         placeholder="New Witness Account"
-                                         account={this.state.new_witness}
-                                         onChange={this.onAddWitnessChange.bind(this)}
-                                         onAction={this.onAddWitness.bind(this)}
-                                         action_class={add_witness_button_class}
-                                         action_label="account.votes.add_witness"
-                                         ref="add_witness_selector" />
-                      </div>
-                   </div>
-                   <div className={"grid-content shrink" + (proxy_is_set ? " disabled" : "")}>
-                      <table className="table">
-                         <thead>
-                             <tr>
-                                 <th style={{width: cw[0]}}>ACTION</th>
-                                 <th style={{width: cw[1]}}></th>
-                                 <th style={{width: cw[2]}}><Translate content="account.votes.name" /></th>
-                                 <th style={{width: cw[3]}}><Translate content="account.votes.url" /></th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                         {witness_rows}
-                         </tbody>
-                      </table>
-                    </div>
-                    <hr/>
-                   <div className={"grid-block shrink no-overflow" + (proxy_is_set ? " disabled" : "")}>
-                      <div className="grid-block no-overflow">
-                        <AccountSelector label="account.votes.add_committee_label"
-                                         error={this.state.current_add_committee_error}
-                                         placeholder="New Committee Account"
-                                         account={this.state.new_committee}
-                                         onChange={this.onAddCommitteeChange.bind(this)}
-                                         onAction={this.onAddCommittee.bind(this)}
-                                         action_class={add_committee_button_class}
-                                         action_label="account.votes.add_committee"
-                                         ref="add_committee_selector" />
-                      </div>
-                   </div>
-                   <div className={"grid-content shrink" + (proxy_is_set ? " disabled" : "")}>
-                      <table className="table">
-                         <thead>
-                             <tr>
-                                 <th style={{width: cw[0]}}>ACTION</th>
-                                 <th style={{width: cw[1]}}></th>
-                                 <th style={{width: cw[2]}}><Translate content="account.votes.name" /></th>
-                                 <th style={{width: cw[3]}}><Translate content="account.votes.url" /></th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                         {committee_rows}
-                         </tbody>
-                      </table>
-                    </div>
-
-                    <br/>
-                   <div className="grid-content no-overflow">
-                        <button className={publish_buttons_class} onClick={this.onPublish.bind(this)}> 
-                        <Translate content="account.votes.publish" /></button> 
-                   </div>
+            <div className="grid-content">
+                <div className="content-block">
+                    <h3>Proxy</h3>
+                    <AccountSelector label="account.votes.proxy"
+                                     error={current_proxy_error}
+                                     placeholder="NONE"
+                                     account={current_proxy_input}
+                                     onChange={this.onProxyChange.bind(this)}
+                                     ref="proxy_selector"/>
                 </div>
+                <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
+                    <h3>Witnesses</h3>
+                    <AccountSelector label="account.votes.add_witness_label"
+                                     error={this.state.current_add_witness_error}
+                                     placeholder="New Witness Account"
+                                     account={this.state.new_witness}
+                                     onChange={this.onAddWitnessChange.bind(this)}
+                                     onAction={this.onAddWitness.bind(this)}
+                                     action_class={add_witness_button_class}
+                                     action_label="account.votes.add_witness"
+                                     ref="add_witness_selector"/>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th style={{width: cw[0]}}>ACTION</th>
+                            <th style={{width: cw[1]}}></th>
+                            <th style={{width: cw[2]}}><Translate content="account.votes.name"/></th>
+                            <th style={{width: cw[3]}}><Translate content="account.votes.url"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {witness_rows}
+                        </tbody>
+                    </table>
+                </div>
+                <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
+                    <h3>Committee</h3>
+                    <AccountSelector label="account.votes.add_committee_label"
+                                     error={this.state.current_add_committee_error}
+                                     placeholder="New Committee Account"
+                                     account={this.state.new_committee}
+                                     onChange={this.onAddCommitteeChange.bind(this)}
+                                     onAction={this.onAddCommittee.bind(this)}
+                                     action_class={add_committee_button_class}
+                                     action_label="account.votes.add_committee"
+                                     ref="add_committee_selector"/>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th style={{width: cw[0]}}>ACTION</th>
+                            <th style={{width: cw[1]}}></th>
+                            <th style={{width: cw[2]}}><Translate content="account.votes.name"/></th>
+                            <th style={{width: cw[3]}}><Translate content="account.votes.url"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {committee_rows}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="content-block">
+                    <button className={publish_buttons_class} onClick={this.onPublish.bind(this)}>
+                        <Translate content="account.votes.publish"/></button>
+                </div>
+            </div>
                )
     }
 }
