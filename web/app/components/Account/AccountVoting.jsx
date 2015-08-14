@@ -216,7 +216,7 @@ class AccountVoting extends ChainComponent {
              new_witness : "",
              witnesses :  this.state.witnesses.set( this.state.new_witness, this.state.current_add_witness )
           }
-          next_state.witness = next_state.witness.sort()
+          next_state.witnesses = next_state.witnesses.sort()
           this.onUpdate( null, next_state )
        }
     }
