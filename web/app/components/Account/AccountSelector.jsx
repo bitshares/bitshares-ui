@@ -132,53 +132,36 @@ class AccountSelector extends ChainComponent {
          member_status = ChainStore.getAccountMemberStatus(this.state.account)
 
       return (
-                 <div className="grid-block no-overflow">
-                     <div className="grid-content shrink no-overflow">
-                         <AccountImage size={{height: 80, width: 80}} 
-                                       account={this.state.account?this.state.account.get('name'):null} custom_image={null}/> 
-                     </div>
-                     <div className="grid-content shrink">
-                     &nbsp; &nbsp; &nbsp;
-                     </div>
-                     <div className={"grid-block vertical no-overflow" + (error ? " has-error" : "")}>
-                        <div className="grid-block shrink">  
-                           <div className="grid-content">
-                               <Translate component="label" content={this.props.label} /> 
-                           </div>
-                           <div className="grid-content align-right shrink no-overflow">
-                               <span>{member_status}</span><span>{lookup_display}</span>
-                           </div>
-                        </div>
-                        <div className="grid-block full-width-content no-overflow shrink"> 
-
-                           <div className="grid-block  no-overflow shrink"> 
-                              <div className="grid-content no-overflow" >
-                                 <input id="account" type="text" 
-                                        value={this.props.account} 
-                                        defaultValue={this.props.account}
-                                        placeholder={this.props.placeholder}
-                                        ref="user_input" 
-                                        onChange={this.onInputChanged.bind(this)}
-                                        onKeyDown={this.onKeyDown.bind(this)}/>
-                              </div>
-                           { !this.props.onAction ? null : (
-                                 <div className="grid-block no-overflow shrink"> 
-                                     <div className="grid-content no-overflow">
-                                          <button className={this.props.action_class} 
-                                          onClick={this.props.onAction}> 
-                                          <Translate content={this.props.action_label} /></button> 
-                                     </div>
-                                 </div>
-                           )}
-                           </div>
-
-                        </div>
-                        <div className="grid-block shrink no-overflow"> 
-                            <div className="grid-content no-overflow">{error}</div>
-                        </div>
-                     </div>
-                 </div>
-             )
+          <div className="account-selector grid-content no-overflow">
+              <AccountImage size={{height: 80, width: 80}}
+                            account={this.state.account?this.state.account.get('name'):null} custom_image={null}/>
+              <div className="content-area">
+                  <div className="header-area">
+                      <div className="right-label"><span>{member_status}</span><span>{lookup_display}</span></div>
+                      <Translate component="label" content={this.props.label}/>
+                  </div>
+                  <div className="input-area">
+                      <span className="inline-label">
+                      <input id="account" type="text"
+                             value={this.props.account}
+                             defaultValue={this.props.account}
+                             placeholder={this.props.placeholder}
+                             ref="user_input"
+                             onChange={this.onInputChanged.bind(this)}
+                             onKeyDown={this.onKeyDown.bind(this)}/>
+                      { !this.props.onAction ? null : (
+                          <button className={this.props.action_class}
+                                  onClick={this.props.onAction}>
+                              <Translate content={this.props.action_label}/></button>
+                      )}
+                      </span>
+                  </div>
+                  <div className="error-area">
+                      <span>{error}</span>
+                  </div>
+              </div>
+          </div>
+      )
 
    }
 

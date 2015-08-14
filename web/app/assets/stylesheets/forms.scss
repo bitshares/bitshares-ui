@@ -34,3 +34,23 @@ td > input, td > .autocomplete input {
 .account-select {
   width: auto;
 }
+
+.account-selector {
+  > .account-image {
+    float: left;
+    width: 80px;
+  }
+  > .content-area {
+    //width: 100%;
+    margin-left: 80px;
+    padding-left: 1rem;
+  }
+  .error-area {
+    padding-top: 0.5rem;
+    height: 1.5rem;
+    font-size: 1rem;
+  }
+  .right-label {
+    float: right;
+  }
+}

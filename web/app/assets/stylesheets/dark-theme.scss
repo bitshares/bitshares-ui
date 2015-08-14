@@ -7,7 +7,7 @@ $dark-text-color: #444;
 $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #aeabff;
-$error-text-color: #ff9793;
+$error-text-color: #E3745B;
 
 $bg-color: #2a2a2a;
 $panel-bg-color: #3f3f3f;
@@ -16,7 +16,7 @@ $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
 $button-bg-color: #8c88ff;
 $secondary-button-bg-color: #999999;
 
-$alert-color: #E3745B;
+$alert-color: $error-text-color;
 $info-color: #A0D3E8;
 $success-color: #50D2C2;
 $warning-color: #FCAB53;
@@ -397,3 +397,13 @@ td.orderHistoryBid {
   color: $fee-color;
 }
 
+// AccountSelector component
+
+.account-selector {
+  .error-area {
+    color: $error-text-color;
+  }
+  .right-label {
+    color: $secondary-text-color;
+  }
+}
