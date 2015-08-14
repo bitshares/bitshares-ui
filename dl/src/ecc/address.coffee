@@ -25,6 +25,18 @@ class Address
         assert.deepEqual checksum, new_checksum, 'Checksum did not match'
         new Address(addy)
     
+    ###* @return Address - Compressed PTS format (by default) ###
+    Address.fromPublic = (public_key, compressed = true, version = 56) ->
+        sha2 = hash.sha256 public_key.toBuffer compressed
+        rep = hash.ripemd160 sha2
+        versionBuffer = new Buffer(1)
+        versionBuffer.writeUInt8((0xFF & version), 0)
+        addr = Buffer.concat [versionBuffer, rep]
+        check = hash.sha256 addr
+        check = hash.sha256 check
+        buffer = Buffer.concat [addr, check.slice 0, 4]
+        new Address hash.ripemd160 buffer
+    
     toBuffer: ->
         @addy
         
