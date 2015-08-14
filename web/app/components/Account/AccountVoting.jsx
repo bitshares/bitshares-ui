@@ -111,7 +111,10 @@ class AccountVoting extends ChainComponent {
        if( next_state.new_witness )
        {
           if( next_state.new_witness.length > 2 )
+          {
              next_state.current_add_witness = ChainStore.getWitness( next_state.new_witness, this.onUpdate.bind(this,null,{}) )
+             //console.log( "current add witness: ", next_state.current_add_witness )
+          }
           else
              next_state.current_add_witness = null
 
@@ -120,6 +123,8 @@ class AccountVoting extends ChainComponent {
           else
              next_state.current_add_witness_error = null
        }
+       else
+          next_state.current_add_witness = null
 
        if( next_state.new_committee )
        {
@@ -133,12 +138,19 @@ class AccountVoting extends ChainComponent {
           else
              next_state.current_add_committee_error = null
        }
+       else
+       {
+          next_state.current_add_committee = null
+       }
        this.setState(next_state)
     }
 
     componentWillReceiveProps( next_props ) {
        super.componentWillReceiveProps(next_props)
        this.onUpdate(next_props)
+    }
+    componentDidMount( ) {
+       this.onUpdate()
     }
 
     onProxyChange( new_proxy ) {
@@ -229,7 +241,11 @@ class AccountVoting extends ChainComponent {
     }
 
     render() {
-       // console.log( "state: ", this.state )
+        console.log( "state: ", this.state )
+        if( this.state.account ) console.log( "account: ", this.state.account.toJS() )
+        if( this.state.init_witnesses ) console.log( "init_witnesses: ", this.state.init_witnesses.toJS() )
+        if( this.state.init_committee ) console.log( "init_committee: ", this.state.init_committee.toJS() )
+
         let current_proxy_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
         let current_proxy_error = null
 
@@ -258,7 +274,7 @@ class AccountVoting extends ChainComponent {
 
         let witness_rows = this.state.witnesses.map( item => { 
              let witness = item.toJS()
-          //    console.log( "witness: ",witness )
+             //console.log( "witness: ",witness )
              let witness_account = ChainStore.getAccount( witness.witness_account )
              let url  = witness.url 
              let name = witness_account.get('name')
@@ -340,10 +356,10 @@ class AccountVoting extends ChainComponent {
                     <h3>Committee</h3>
                     <AccountSelector label="account.votes.add_committee_label"
                                      error={this.state.current_add_committee_error}
-                                     placeholder="New Committee Account"
+                                     placeholder="New Committee Member"
                                      account={this.state.new_committee}
                                      onChange={this.onAddCommitteeChange.bind(this)}
-                                     onAction={this.onAddCommittee.bind(this)}
+                                     onAction={this.onAddCommittee.bind(this,this.state.new_committee)}
                                      action_class={add_committee_button_class}
                                      action_label="account.votes.add_committee"
                                      ref="add_committee_selector"/>

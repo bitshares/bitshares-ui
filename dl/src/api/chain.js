@@ -112,26 +112,43 @@ class ChainStore
     */
    getWitness( id_or_account, on_update = null  )
    {
-   //   console.log( "getWitness: ", id_or_account )
+      console.log( "getWitness: ", id_or_account )
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
       {
-         let account = this.getAccount( id_or_account, on_update )
-         this.lookupAccountByName( id_or_account ).then ( account => {
-            if( !account ) return null
+         let account = this.getAccount( id_or_account )
+         if( !account ) 
+         {
+            this.lookupAccountByName( id_or_account ).then ( account => {
+               if( !account ) return null
 
+               let account_id = account.get('id') 
+               let witness_id = this.witness_by_account_id.get( account_id )
+               if( utils.is_object_id( witness_id ) ) 
+                   return this.getObject( witness_id, on_update )
+
+               if( witness_id == undefined )
+                  this.fetchWitnessByAccount( account_id ).then( witness => {
+                         this.witness_by_account_id.set( account_id, witness?witness.get('id'):null )
+                         if( witness && on_update ) on_update()
+                  })
+            }, error => {
+              //console.log( "error: ", error )
+               let witness_id = this.witness_by_account_id.set( id_or_account, null )
+            } )
+         }
+         else 
+         {
             let account_id = account.get('id') 
             let witness_id = this.witness_by_account_id.get( account_id )
-          //  console.log( "witness_id: ",witness_id )
-            if( utils.is_object_id( witness_id ) ) return this.getObject( witness_id, on_update )
+            if( utils.is_object_id( witness_id ) ) 
+                return this.getObject( witness_id, on_update )
 
             if( witness_id == undefined )
                this.fetchWitnessByAccount( account_id ).then( witness => {
-                      this.witness_by_account_id.set( account_id, witness )
+                      this.witness_by_account_id.set( account_id, witness?witness.get('id'):null )
                       if( witness && on_update ) on_update()
                })
-         }, error => {
-            let witness_id = this.witness_by_account_id.set( account_id, null )
-         } )
+         }
          return null
       }
       return null
@@ -141,23 +158,43 @@ class ChainStore
    {
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
       {
-         //let account = this.getAccount( id_or_account, on_update )
-         this.lookupAccountByName( id_or_account ).then( account=>{
-            let account_id = account.get('id') 
-            let committee_id = this.committee_by_account_id.get( account_id )
-          //  console.log( "committee_id: ",committee_id )
-            if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
+         let account = this.getAccount( id_or_account )
+         
+         if( !account ) 
+         {
+            this.lookupAccountByName( id_or_account ).then( account=>{
+               let account_id = account.get('id') 
+               let committee_id = this.committee_by_account_id.get( account_id )
+             //  console.log( "committee_id: ",committee_id )
+               if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
 
-            if( committee_id == undefined )
-            {
-         //      console.log( "fetch committee member by account" )
-               this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
-                    this.committee_by_account_id.set( account_id, committee )
-                    if( on_update && committee) on_update()
-                    } ) 
-            }
-         }, error => {
-         })
+               if( committee_id == undefined )
+               {
+            //      console.log( "fetch committee member by account" )
+                  this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
+                       this.committee_by_account_id.set( account_id, committee ? committee.get('id') : null )
+                       if( on_update && committee) on_update()
+                       } ) 
+               }
+            }, error => {
+               let witness_id = this.committee_by_account_id.set( id_or_account, null )
+            })
+         } 
+         else 
+         {
+               let account_id = account.get('id') 
+               let committee_id = this.committee_by_account_id.get( account_id )
+               if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
+
+               if( committee_id == undefined )
+               {
+            //      console.log( "fetch committee member by account" )
+                  this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
+                       this.committee_by_account_id.set( account_id, committee ? committee.get('id') : null )
+                       if( on_update && committee) on_update()
+                       } ) 
+               }
+         }
       }
       return null
    }

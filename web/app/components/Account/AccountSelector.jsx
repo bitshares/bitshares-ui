@@ -30,15 +30,6 @@ class AccountSelector extends ChainComponent {
       }
    }
 
-   getDefaultProps() { 
-      return { 
-        account: "", 
-        label: "account.select", 
-        error: "", 
-        placeholder: null, 
-        onChange:()=>{} 
-      }
-   }
 
    componentWillReceiveProps( next_props ) {
       super.componentWillReceiveProps(next_props)
@@ -84,7 +75,7 @@ class AccountSelector extends ChainComponent {
        let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
        value = value.trim()
        value = value.toLowerCase()
-       if( value == this.props.account ) return
+//       if( value == this.props.account ) return
 
        if (key === "account") {
            if( value == "#" ){ this.props.onChange(value); return }
@@ -98,9 +89,12 @@ class AccountSelector extends ChainComponent {
        this.onUpdate()
    }
 
-    onKeyDown(e) {
-        if (this.props.onAction && event.keyCode === 13) this.props.onAction(e);
-    }
+   onKeyDown(e) {
+       if (this.props.onAction && event.keyCode === 13) 
+       {
+          this.props.onAction(e);
+       }
+   }
 
    render() {
       let lookup_display = null
