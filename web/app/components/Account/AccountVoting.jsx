@@ -110,33 +110,49 @@ class AccountVoting extends ChainComponent {
 
        if( next_state.new_witness )
        {
-          if( next_state.new_witness.length > 2 )
+          console.log( "next_state: ", next_state )
+          if( this.state.witnesses.get( next_state.new_witness ) )
           {
-             next_state.current_add_witness = ChainStore.getWitness( next_state.new_witness, this.onUpdate.bind(this,null,{}) )
-             //console.log( "current add witness: ", next_state.current_add_witness )
+             next_state.current_add_witness_error = "Already voting for this witness"
           }
           else
-             next_state.current_add_witness = null
+          {
+             if( next_state.new_witness.length > 2 )
+             {
+                next_state.current_add_witness = ChainStore.getWitness( next_state.new_witness, this.onUpdate.bind(this,null,{}) )
+                //console.log( "current add witness: ", next_state.current_add_witness )
+             }
+             else
+                next_state.current_add_witness = null
 
-          if( !next_state.current_add_witness && next_state.new_witness && next_state.new_witness.length > 2)
-             next_state.current_add_witness_error = "Account is not a witness"
-          else
-             next_state.current_add_witness_error = null
+             if( !next_state.current_add_witness && next_state.new_witness && next_state.new_witness.length > 2)
+                next_state.current_add_witness_error = "Account is not a witness"
+             else
+                next_state.current_add_witness_error = null
+          }
        }
        else
           next_state.current_add_witness = null
 
+
        if( next_state.new_committee )
        {
-          if( next_state.new_committee.length > 2 )
-             next_state.current_add_committee = ChainStore.getCommitteeMember( next_state.new_committee, this.onUpdate.bind(this,null,{}) )
+          if( this.state.committee.get( next_state.new_committee ) )
+          {
+             next_state.current_add_committee_error = "Already voting for this committee member"
+          }
           else
-             next_state.current_add_committee = null
+          {
+             if( next_state.new_committee.length > 2 )
+                next_state.current_add_committee = ChainStore.getCommitteeMember( next_state.new_committee, this.onUpdate.bind(this,null,{}) )
+             else
+                next_state.current_add_committee = null
 
-          if( !next_state.current_add_committee && next_state.new_committee && next_state.new_committee.length > 2)
-             next_state.current_add_committee_error = "Account is not a committee canidate"
-          else
-             next_state.current_add_committee_error = null
+             if( !next_state.current_add_committee && next_state.new_committee && next_state.new_committee.length > 2)
+                next_state.current_add_committee_error = "Account is not a committee canidate"
+             else
+                next_state.current_add_committee_error = null
+          }
        }
        else
        {
@@ -180,21 +196,29 @@ class AccountVoting extends ChainComponent {
        this.onUpdate( null, next_state )
     }
     onAddCommittee( ) {
-       console.log( "Add Committee", this.state.new_committee )
-       let next_state = { 
-          new_committee : "",
-          committee :  this.state.committee.set( this.state.new_committee, this.state.current_add_committee )
+       if( this.state.current_add_committee )
+       {
+          console.log( "Add Committee", this.state.new_committee )
+          let next_state = { 
+             new_committee : "",
+             committee :  this.state.committee.set( this.state.new_committee, this.state.current_add_committee )
+          }
+          next_state.committee = next_state.committee.sort()
+          this.onUpdate( null, next_state )
        }
-       this.onUpdate( null, next_state )
     }
 
     onAddWitness( ) {
-       console.log( "Add Witness", this.state.new_witness )
-       let next_state = { 
-          new_witness : "",
-          witnesses :  this.state.witnesses.set( this.state.new_witness, this.state.current_add_witness )
+       if( this.state.current_add_witness )
+       {
+          console.log( "Add Witness", this.state.new_witness )
+          let next_state = { 
+             new_witness : "",
+             witnesses :  this.state.witnesses.set( this.state.new_witness, this.state.current_add_witness )
+          }
+          next_state.witness = next_state.witness.sort()
+          this.onUpdate( null, next_state )
        }
-       this.onUpdate( null, next_state )
     }
 
     onPublish(){
@@ -241,10 +265,10 @@ class AccountVoting extends ChainComponent {
     }
 
     render() {
-        console.log( "state: ", this.state )
-        if( this.state.account ) console.log( "account: ", this.state.account.toJS() )
-        if( this.state.init_witnesses ) console.log( "init_witnesses: ", this.state.init_witnesses.toJS() )
-        if( this.state.init_committee ) console.log( "init_committee: ", this.state.init_committee.toJS() )
+    //    console.log( "state: ", this.state )
+    //    if( this.state.account ) console.log( "account: ", this.state.account.toJS() )
+    //    if( this.state.init_witnesses ) console.log( "init_witnesses: ", this.state.init_witnesses.toJS() )
+    //    if( this.state.init_committee ) console.log( "init_committee: ", this.state.init_committee.toJS() )
 
         let current_proxy_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
         let current_proxy_error = null
