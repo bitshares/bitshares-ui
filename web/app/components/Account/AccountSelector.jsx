@@ -57,7 +57,7 @@ class AccountSelector extends ChainComponent {
          account: null,
          lookup_display: null
       }
-      console.log( "next_props.account: ", next_props.account )
+      //console.log( "next_props.account: ", next_props.account )
       if( next_props.account == null )
       {
       }
@@ -84,6 +84,7 @@ class AccountSelector extends ChainComponent {
        let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
        value = value.trim()
        value = value.toLowerCase()
+       if( value == this.props.account ) return
 
        if (key === "account") {
            if( value == "#" ){ this.props.onChange(value); return }

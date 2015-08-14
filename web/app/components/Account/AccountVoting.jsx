@@ -64,16 +64,16 @@ class AccountVoting extends ChainComponent {
           }
 
           let votes = acnt.get('options').get('votes')
-          console.log( "==========================> current_votes: ", votes.toJS() )
+          //console.log( "==========================> current_votes: ", votes.toJS() )
           let vote_objs = ChainStore.getObjectsByVoteID( votes.toArray(), this.onUpdate.bind(this,null,{}) )
-          console.log( "result: ", vote_objs )
+          //console.log( "result: ", vote_objs )
           
           for( let v = 0; v < vote_objs.length; ++ v )
           {
              let vote_id = votes.get(v)
-             console.log( "Vote: ", vote_id ) 
+           //  console.log( "Vote: ", vote_id ) 
              let obj = vote_objs[v]
-             console.log( "Obj: ", (obj?obj.toJS():null) )
+           //  console.log( "Obj: ", (obj?obj.toJS():null) )
              if( obj )
              {
                 let is_witness = false
@@ -229,7 +229,7 @@ class AccountVoting extends ChainComponent {
     }
 
     render() {
-        console.log( "state: ", this.state )
+       // console.log( "state: ", this.state )
         let current_proxy_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
         let current_proxy_error = null
 
@@ -252,13 +252,13 @@ class AccountVoting extends ChainComponent {
         let publish_buttons_class = "button" + (changed? "" : " disabled");
         let add_witness_button_class = "button" + (this.state.current_add_witness?"":" disabled")
         let add_committee_button_class = "button" + (this.state.current_add_committee?"":" disabled")
-        console.log( "witnesses: ", this.state.witnesses.toJS() )
+        // console.log( "witnesses: ", this.state.witnesses.toJS() )
 
                               //<button className="button" onClick={this.onRemoveWitness.bind(this,name)}> Remove </button> 
 
         let witness_rows = this.state.witnesses.map( item => { 
              let witness = item.toJS()
-             console.log( "witness: ",witness )
+          //    console.log( "witness: ",witness )
              let witness_account = ChainStore.getAccount( witness.witness_account )
              let url  = witness.url 
              let name = witness_account.get('name')
@@ -278,7 +278,7 @@ class AccountVoting extends ChainComponent {
 
         let committee_rows = this.state.committee.map( item => { 
              let committee = item.toJS()
-             console.log( "committee: ",committee )
+             //console.log( "committee: ",committee )
              let committee_account = ChainStore.getAccount( committee.committee_member_account )
              let url  = committee.url 
              let name = committee_account.get('name')
