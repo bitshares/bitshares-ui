@@ -61,7 +61,7 @@ class AccountLeftPanel extends React.Component {
         }
 
         return (
-            <div className="grid-content no-overflow account-left-panel">
+            <div className="grid-content account-left-panel no-padding">
                 <ConfirmModal
                     modalId="confirm_modal"
                     ref="confirmModal"
