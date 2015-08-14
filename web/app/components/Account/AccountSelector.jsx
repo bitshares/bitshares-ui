@@ -75,7 +75,7 @@ class AccountSelector extends ChainComponent {
        let value = event.target.value && event.target.value[0] === "[" ? JSON.parse(event.target.value) : event.target.value;
        value = value.trim()
        value = value.toLowerCase()
-//       if( value == this.props.account ) return
+       if( value == this.props.account ) return
 
        if (key === "account") {
            if( value == "#" ){ this.props.onChange(value); return }
