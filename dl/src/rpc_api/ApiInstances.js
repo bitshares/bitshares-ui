@@ -11,7 +11,7 @@ class Apis {
         let hostname = "localhost";
         let protocol = "ws:";
         try {
-            hostname = window.location.hostname;
+            hostname = window.location.hostname? window.location.hostname : "localhost";
             protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
         if(this.ws_rpc) return
