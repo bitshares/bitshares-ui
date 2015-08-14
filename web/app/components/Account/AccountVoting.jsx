@@ -225,9 +225,10 @@ class AccountVoting extends ChainComponent {
        if( !this.state.account ) return
 
        let updated_account = this.state.account.toJS()
-       updated_account.options.voting_account = this.state.new_proxy ? this.state.new_proxy : "1.2.0"
        updated_account.new_options = updated_account.options
-       updated_account.new_options.voting_account = this.getNewProxyID()
+       let new_proxy_id = this.getNewProxyID()
+       updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0"
+
        let witness_votes = this.state.witnesses.map( item => { console.log( "item:", item.toJS() ); return item.get('vote_id') } )
        let committee_votes = this.state.committee.map( item => { return item.get('vote_id') } )
        updated_account.new_options.num_committee = committee_votes.size
@@ -240,11 +241,7 @@ class AccountVoting extends ChainComponent {
 
        var tr = wallet_api.new_transaction();
        tr.add_type_operation("account_update", updated_account);
-       return WalletDb.process_transaction(tr, null, true).then(result => {
-           this.dispatch(account_name);
-       }).catch(error => {
-           console.log("[VoteActions.js] ----- publishChanges error ----->", error);
-       });
+       WalletDb.process_transaction(tr, null, true)
     }
 
     getNewProxyID()
