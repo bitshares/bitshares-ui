@@ -36,6 +36,7 @@ class AccountVoting extends ChainComponent {
           new_witness:   null, ///< the new delegate specified by the user
           new_committee:  null, ///< the new witness specified by the user
           new_budget:   null, ///< the new budget specified by the user
+          changed : false,
           witnesses: new Immutable.Map(),
           committee: new Immutable.Map(),
           init_witnesses: new Immutable.Map(),
@@ -46,7 +47,11 @@ class AccountVoting extends ChainComponent {
 
     onUpdate( next_props = null, next_state = {} )
     {
+       console.log( "======================> ON UPDATE!!! <======================" )
        if( !next_props ) next_props = this.props
+       if( !next_state.init_witnesses ) next_state.init_witnesses = this.state.init_witnesses
+       if( !next_state.init_committee ) next_state.init_committee = this.state.init_committee
+       if( !next_state.changed  ) next_state.changed = this.state.changed
 
        let acnt = ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null,{}) )
        if( acnt ) {
@@ -59,7 +64,42 @@ class AccountVoting extends ChainComponent {
           }
 
           let votes = acnt.get('options').get('votes')
-          console.log( "current_votes: ", votes.toJS() )
+          console.log( "==========================> current_votes: ", votes.toJS() )
+          let vote_objs = ChainStore.getObjectsByVoteID( votes.toArray(), this.onUpdate.bind(this,null,{}) )
+          console.log( "result: ", vote_objs )
+          
+          for( let v = 0; v < vote_objs.length; ++ v )
+          {
+             let vote_id = votes.get(v)
+             console.log( "Vote: ", vote_id ) 
+             let obj = vote_objs[v]
+             console.log( "Obj: ", (obj?obj.toJS():null) )
+             if( obj )
+             {
+                let is_witness = false
+                let account_id = obj.get( 'committee_member_account' )
+                if( !account_id ) 
+                {
+                   account_id = obj.get( 'witness_account' )
+                   is_witness = true
+                }
+                let acnt = ChainStore.getAccount( account_id, this.onUpdate.bind(this,null,{}) )
+                if( acnt )
+                {
+                   if( is_witness )
+                      next_state.init_witnesses = next_state.init_witnesses.set( acnt.get('name'), obj )
+                   else
+                      next_state.init_committee = next_state.init_committee.set( acnt.get('name'), obj )
+                }
+             }
+          }
+       }
+       next_state.init_witnesses = next_state.init_witnesses.sort()
+       next_state.init_committee = next_state.init_committee.sort()
+       if( !next_state.changed )
+       {
+          next_state.witnesses = next_state.init_witnesses
+          next_state.committee = next_state.init_committee
        }
 
        if( next_state.new_witness == undefined && this.state.new_witness )
@@ -105,17 +145,17 @@ class AccountVoting extends ChainComponent {
        this.setState( {new_proxy} )
     }
     onAddWitnessChange( new_witness ) {
-       this.onUpdate( null, {new_witness} )
+       this.onUpdate( null, {new_witness:new_witness,changed:true} )
     }
     onAddCommitteeChange( new_committee ) {
-       this.onUpdate( null, {new_committee} )
+       this.onUpdate( null, {new_committee:new_committee,changed:true} )
     }
 
     onRemoveWitness( witness_to_remove )
     {
        console.log( "Add Witness", this.state.new_witness )
        let next_state = { 
-            witnesses :  this.state.witnesses.delete( witness_to_remove )
+            witnesses :  this.state.witnesses.delete( witness_to_remove ), changed: true
        }
        this.onUpdate( null, next_state )
     }
@@ -123,7 +163,7 @@ class AccountVoting extends ChainComponent {
     {
        console.log( "Add Commitee", this.state.new_committee )
        let next_state = { 
-            committee :  this.state.committee.delete( member_to_remove )
+            committee :  this.state.committee.delete( member_to_remove ), changed : true
        }
        this.onUpdate( null, next_state )
     }
@@ -157,13 +197,7 @@ class AccountVoting extends ChainComponent {
        updated_account.new_options.num_committee = committee_votes.size
        updated_account.new_options.num_witness = witness_votes.size
        updated_account.new_options.votes = witness_votes.concat( committee_votes ).toArray()
-       console.log( "witness_votes: ", witness_votes.toJS() )
-       console.log( "committee_votes: ", committee_votes.toJS() )
-       console.log( "combined: ", updated_account.new_options.votes )
-       /// TODO: sort by second part of vote after :
-       updated_account.new_options.votes = updated_account.new_options.votes.sort( (a,b)=>{ return parseInt(a.split(':')[1]) < parseInt(b.split(':')[1]) } )
-
-
+       updated_account.new_options.votes = updated_account.new_options.votes.sort( (a,b)=>{ return parseInt(a.split(':')[1]) > parseInt(b.split(':')[1]) } )
       
        updated_account.account = updated_account.id
        console.log( "updated_account: ", updated_account)
@@ -224,6 +258,7 @@ class AccountVoting extends ChainComponent {
              let witness = item.toJS()
              console.log( "witness: ",witness )
              let witness_account = ChainStore.getAccount( witness.witness_account )
+             let url  = witness.url 
              let name = witness_account.get('name')
              return (
                          <tr key={name}>
@@ -235,7 +270,7 @@ class AccountVoting extends ChainComponent {
                                <AccountImage size={{height: 28, width: 28}} account={name} custom_image={null}/> 
                             </td>
                              <td>{name}</td>
-                             <td></td>
+                             <td>{url}</td>
                          </tr>
                     )} )
 
@@ -243,6 +278,7 @@ class AccountVoting extends ChainComponent {
              let committee = item.toJS()
              console.log( "committee: ",committee )
              let committee_account = ChainStore.getAccount( committee.committee_member_account )
+             let url  = committee.url 
              let name = committee_account.get('name')
              return (
                          <tr key={name}>
@@ -254,14 +290,14 @@ class AccountVoting extends ChainComponent {
                                <AccountImage size={{height: 28, width: 28}} account={name} custom_image={null}/> 
                             </td>
                              <td>{name}</td>
-                             <td></td>
+                             <td>{url}</td>
                          </tr>
                     )} )
 
 
 
 
-        let cw = ["30px", "30px", "10%", "50%"] ;
+        let cw = ["30px", "30px", "10%", "90%"] ;
         return (
                 <div className="grid-block vertical">
                    <div className="grid-block shrink no-overflow">
@@ -279,7 +315,7 @@ class AccountVoting extends ChainComponent {
                       <div className="grid-block no-overflow">
                         <AccountSelector label="account.votes.add_witness_label"
                                          error={this.state.current_add_witness_error}
-                                         placeholder="Witness Account"
+                                         placeholder="New Witness Account"
                                          account={this.state.new_witness}
                                          onChange={this.onAddWitnessChange.bind(this)}
                                          onAction={this.onAddWitness.bind(this)}
@@ -295,6 +331,7 @@ class AccountVoting extends ChainComponent {
                                  <th style={{width: cw[0]}}>ACTION</th>
                                  <th style={{width: cw[1]}}></th>
                                  <th style={{width: cw[2]}}><Translate content="account.votes.name" /></th>
+                                 <th style={{width: cw[3]}}><Translate content="account.votes.url" /></th>
                              </tr>
                          </thead>
                          <tbody>
@@ -306,7 +343,7 @@ class AccountVoting extends ChainComponent {
                       <div className="grid-block no-overflow">
                         <AccountSelector label="account.votes.add_committee_label"
                                          error={this.state.current_add_committee_error}
-                                         placeholder="Committee Account"
+                                         placeholder="New Committee Account"
                                          account={this.state.new_committee}
                                          onChange={this.onAddCommitteeChange.bind(this)}
                                          onAction={this.onAddCommittee.bind(this)}
@@ -322,6 +359,7 @@ class AccountVoting extends ChainComponent {
                                  <th style={{width: cw[0]}}>ACTION</th>
                                  <th style={{width: cw[1]}}></th>
                                  <th style={{width: cw[2]}}><Translate content="account.votes.name" /></th>
+                                 <th style={{width: cw[3]}}><Translate content="account.votes.url" /></th>
                              </tr>
                          </thead>
                          <tbody>

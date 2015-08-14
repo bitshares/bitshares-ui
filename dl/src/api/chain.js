@@ -62,6 +62,7 @@ class ChainStore
       this.witness_by_account_id    = new Map()
       this.committee_by_account_id  = new Map()
       this.pending_transactions     = new Map()
+      this.objects_by_vote_id       = new Map()
    }
 
    /**
@@ -776,11 +777,52 @@ class ChainStore
       this.subscriptions_by_id.set( object.id, current_sub )
 
       if( object.id.substring(0,4) == witness_prefix )
+      {
          this.witness_by_account_id.set( object.witness_account, object.id )
+         this.objects_by_vote_id.set( object.vote_id, object.id )
+      }
       if( object.id.substring(0,4) == committee_prefix )
+      {
          this.committee_by_account_id.set( object.committee_member_account, object.id )
+         this.objects_by_vote_id.set( object.vote_id, object.id )
+      }
 
       return current;
+   }
+
+
+   getObjectsByVoteID( vote_ids, on_update = null )
+   {
+      let result = []
+      let missing = []
+      for( let i = 0; i < vote_ids.length; ++i )
+      {
+         let obj = this.objects_by_vote_id.get( vote_ids[i] )
+         if( obj )
+            result.push(this.getObject( obj, on_update ) )
+         else
+         {
+            result.push( null )
+            missing.push( vote_ids[i] )
+         }
+      }
+
+      if( missing.length ) {
+         // we may need to fetch some objects
+          Apis.instance().db_api().exec( "lookup_vote_ids", [ missing ] )
+              .then( vote_obj_array => {
+                     console.log( "vote objects ===========> ", vote_obj_array )
+                   for( let i = 0; i < vote_obj_array.length; ++i )
+                   {
+                      if( vote_obj_array[i] )
+                      {
+                         this._updateObject( vote_obj_array[i] )
+                      }
+                   }
+                   if( on_update ) on_update()
+              }, error => console.log( "Error looking up vote ids: ", error ) ) 
+      }
+      return result
    }
 
    fetchGlobalProperties( min_age_ms = null )

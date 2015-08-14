@@ -70,6 +70,7 @@ module.exports = {
             name: "Name",
             info: "Info",
             votes: "Votes",
+            url: "Webpage",
             support: "Support",
             workers: "Budget Items",
             publish: "Publish Changes",
