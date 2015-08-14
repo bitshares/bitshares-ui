@@ -31,6 +31,7 @@ class Identicon extends Component {
           let ctx = React.findDOMNode(this.refs.canvas).getContext('2d');
           ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
           let size = ctx.canvas.width;
+          ctx.clearRect(0, 0, size, size);
           ctx.fillRect(0, 0, size, size);
           ctx.clearRect(0+1, 0+1, size-2, size-2);
           ctx.font = `${size}px sans-serif`;

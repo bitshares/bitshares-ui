@@ -52,7 +52,7 @@ class AccountSelector extends ChainComponent {
          next_props = {}
          for( let k in this.props ) next_props[k] = this.props[k]
       }
-      let next_state = 
+      let next_state =
       {
          account: null,
          lookup_display: null
@@ -92,10 +92,14 @@ class AccountSelector extends ChainComponent {
              else this.props.onChange(value)
            }
            else if( value.length > 2 && !validation.is_account_name( value ) ) return
-           this.props.onChange( value )
+           if(this.props.onChange) this.props.onChange( value )
        }
        this.onUpdate()
    }
+
+    onKeyDown(e) {
+        if (this.props.onAction && event.keyCode === 13) this.props.onAction(e);
+    }
 
    render() {
       let lookup_display = null
@@ -135,13 +139,14 @@ class AccountSelector extends ChainComponent {
                      <div className="grid-content shrink">
                      &nbsp; &nbsp; &nbsp;
                      </div>
-                     <div className="grid-block vertical no-overflow">
+                     <div className={"grid-block vertical no-overflow" + (error ? " has-error" : "")}>
                         <div className="grid-block shrink">  
                            <div className="grid-content">
                                <Translate component="label" content={this.props.label} /> 
                            </div>
-                           <div className="grid-content full-width-content"> </div>
-                            <div className="grid-content align-right shrink no-overflow">{member_status}{ lookup_display }</div>
+                           <div className="grid-content align-right shrink no-overflow">
+                               <span>{member_status}</span><span>{lookup_display}</span>
+                           </div>
                         </div>
                         <div className="grid-block full-width-content no-overflow shrink"> 
 
@@ -152,7 +157,8 @@ class AccountSelector extends ChainComponent {
                                         defaultValue={this.props.account}
                                         placeholder={this.props.placeholder}
                                         ref="user_input" 
-                                        onChange={this.onInputChanged.bind(this)}/>
+                                        onChange={this.onInputChanged.bind(this)}
+                                        onKeyDown={this.onKeyDown.bind(this)}/>
                               </div>
                            { !this.props.onAction ? null : (
                                  <div className="grid-block no-overflow shrink"> 
@@ -167,10 +173,8 @@ class AccountSelector extends ChainComponent {
 
                         </div>
                         <div className="grid-block shrink no-overflow"> 
-                            <div className="grid-content no-overflow"> {error} </div> 
-                            <div className="grid-content full-width-content no-overflow"> </div>
+                            <div className="grid-content no-overflow">{error}</div>
                         </div>
-                        <div className="grid-content"></div>
                      </div>
                  </div>
              )

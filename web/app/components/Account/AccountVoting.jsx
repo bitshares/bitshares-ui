@@ -230,18 +230,20 @@ class AccountVoting extends ChainComponent {
 
     render() {
         console.log( "state: ", this.state )
-        let current_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
-        let current_error = null
+        let current_proxy_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
+        let current_proxy_error = null
 
 
 
         let new_id = this.getNewProxyID()
         if( new_id && this.state.account && this.state.account.get('id') == new_id )
-           current_error = "cannot proxy to yourself"
+            current_proxy_error = "cannot proxy to yourself"
+
+        let proxy_is_set = new_id && new_id !== "1.2.0"
 
         let changed = this.state.account && 
                       new_id && 
-                      !current_error 
+                      !current_proxy_error
                       && new_id != this.state.account.get('options').get('voting_account')
 
         changed |= this.state.init_witnesses != this.state.witnesses
@@ -263,7 +265,7 @@ class AccountVoting extends ChainComponent {
              return (
                          <tr key={name}>
                             <td>
-                                <button className="button" onClick={this.onRemoveWitness.bind(this, name)}> 
+                                <button className="button outline" onClick={this.onRemoveWitness.bind(this, name)}>
                                 <Translate content="account.votes.remove_witness" /></button> 
                             </td>
                             <td>
@@ -283,7 +285,7 @@ class AccountVoting extends ChainComponent {
              return (
                          <tr key={name}>
                             <td>
-                                <button className="button" onClick={this.onRemoveCommittee.bind(this, name)}> 
+                                <button className="button outline" onClick={this.onRemoveCommittee.bind(this, name)}>
                                 <Translate content="account.votes.remove_committee" /></button> 
                             </td>
                             <td>
@@ -302,16 +304,14 @@ class AccountVoting extends ChainComponent {
                 <div className="grid-block vertical">
                    <div className="grid-block shrink no-overflow">
                         <AccountSelector label="account.votes.proxy"
-                                         error={current_error}
+                                         error={current_proxy_error}
                                          placeholder="NONE"
-                                         account={current_input}
+                                         account={current_proxy_input}
                                          onChange={this.onProxyChange.bind(this)}
                                          ref="proxy_selector" />
                    </div>
-                   <div className="grid-content no-overflow shrink">
                    <hr/>
-                   </div>
-                   <div className="grid-block shrink no-overflow">
+                   <div className={"grid-block shrink no-overflow" + (proxy_is_set ? " disabled" : "")}>
                       <div className="grid-block no-overflow">
                         <AccountSelector label="account.votes.add_witness_label"
                                          error={this.state.current_add_witness_error}
@@ -324,7 +324,7 @@ class AccountVoting extends ChainComponent {
                                          ref="add_witness_selector" />
                       </div>
                    </div>
-                   <div className="grid-content">
+                   <div className={"grid-content shrink" + (proxy_is_set ? " disabled" : "")}>
                       <table className="table">
                          <thead>
                              <tr>
@@ -339,7 +339,8 @@ class AccountVoting extends ChainComponent {
                          </tbody>
                       </table>
                     </div>
-                   <div className="grid-block shrink no-overflow">
+                    <hr/>
+                   <div className={"grid-block shrink no-overflow" + (proxy_is_set ? " disabled" : "")}>
                       <div className="grid-block no-overflow">
                         <AccountSelector label="account.votes.add_committee_label"
                                          error={this.state.current_add_committee_error}
@@ -352,7 +353,7 @@ class AccountVoting extends ChainComponent {
                                          ref="add_committee_selector" />
                       </div>
                    </div>
-                   <div className="grid-content">
+                   <div className={"grid-content shrink" + (proxy_is_set ? " disabled" : "")}>
                       <table className="table">
                          <thead>
                              <tr>
@@ -368,7 +369,7 @@ class AccountVoting extends ChainComponent {
                       </table>
                     </div>
 
-
+                    <br/>
                    <div className="grid-content no-overflow">
                         <button className={publish_buttons_class} onClick={this.onPublish.bind(this)}> 
                         <Translate content="account.votes.publish" /></button> 

@@ -28,6 +28,10 @@ body {
   @include color($primary-text-color, $bg-color);
 }
 
+hr {
+  border-color: $light-panel-bg-color;
+}
+
 a {
   color: $link-text-color;
   &:hover, &:focus, &:active {

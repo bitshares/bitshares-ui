@@ -187,3 +187,9 @@ div.modal {
 .empty-identicon {
   border: 1px solid #008CBA;
 }
+
+div.disabled * {
+    opacity: 0.9 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
