@@ -124,7 +124,7 @@ class WalletDb {
     
     process_transaction(tr, signer_private_keys, broadcast) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)
-            return Promise.reject("Miss matched chain_id; expecting " +
+            return Promise.reject("Mismatched chain_id; expecting " +
                 this.getWallet().chain_id + ", but got " +
                 Apis.instance().chain_id)
         
