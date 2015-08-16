@@ -60,7 +60,7 @@
     "svg-inline-loader": "^0.1.0",
     "svgo": "^0.5.1",
     "svgo-loader": "^1.1.0",
-    "tcomb": "~1.0.3",
+    "tcomb": "1.1.0",
     "webpack": "^1.9.6",
     "webpack-dev-server": "^1.8.2",
     "whatwg-fetch": "^0.9.0"
