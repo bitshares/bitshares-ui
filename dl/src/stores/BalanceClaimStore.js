@@ -1,8 +1,13 @@
 import idb_helper from "../idb-helper"
 import t from "tcomb"
+import alt from "alt-instance"
 import iDB from "idb-instance"
 
 import Apis from "rpc_api/ApiInstances"
+
+import BalanceClaimActions from "actions/BalanceClaimActions"
+import PrivateKeyStore from "stores/PrivateKeyStore";
+import v from "chain/serializer_validation"
 
 var api = Apis.instance()
 
@@ -12,16 +17,20 @@ export var BalanceClaimTcomb = t.struct({
     is_claimed: t.maybe(t.Bool)
 })
 
+var TRACE = true
+
 class BalanceClaimStore {
     
-    transaction_update() {
-        var transaction = iDB.instance().db().transaction(
-            ["balance_claims"], "readwrite"
-        )
-        return transaction
+    constructor() {
+        this.bindActions(BalanceClaimActions)
+        this.state = {
+            balances_loading: false,
+            balance_claims: [],
+            balance_by_account_asset: []
+        }
     }
-    
-    add(balance_claim, transaction) {
+        
+    onAdd({balance_claim, transaction}) {
         BalanceClaimTcomb(balance_claim)
         return idb_helper.add(
             transaction.objectStore("balance_claims"),
@@ -29,57 +38,129 @@ class BalanceClaimStore {
         )
     }
     
-    saveBalanceClaims(balance_claims) {
-        var transaction = this.transaction_update()
-        var store = transaction.objectStore("balance_claims")
-        var ps = []
-        for(let balance_claim of balance_claims) {
-            var request = store.put(balance_claim)
-            var p = idb_helper.on_request_end(request)
-            ps.push(p)
-        }
-        return Promise.all(ps)
-    }
-    
-    getBalanceClaims() {
-        return new Promise((resolve, reject) => {
-            var balance_claims = [], balance_ids = []
-            var p = idb_helper.cursor("balance_claims", cursor => {
-                if( ! cursor) return
-                var balance_claim = cursor.value
-                balance_claims.push( balance_claim )
-                balance_ids.push(balance_claim.chain_balance_record.id)
-                cursor.continue()
-            }).then( ()=> {
-                //DEBUG console.log('... refresh')
-                if( ! balance_claims.length)
-                    return balance_claims
-                
-                var db = api.db_api()
-                return db.exec("get_objects", [balance_ids]).then( result => {
-                    for(let i = 0; i < result.length; i++) {
-                        var balance_claim = balance_claims[i]
-                        var chain_balance_record = result[i]
-                        //DEBUG console.log('... chain_balance_record',chain_balance_record)
-                        if( ! chain_balance_record) {
-                            balance_claims[i] = BalanceClaimTcomb.update(
-                                BalanceClaimTcomb(balance_claim),
-                                { is_claimed: { '$set': true } }
-                            )
-                        } else
-                            balance_claims[i] = BalanceClaimTcomb.update(
-                                BalanceClaimTcomb(balance_claim),
-                                { chain_balance_record:
-                                    { '$set': chain_balance_record } }
-                            )
-                    }
-                    this.saveBalanceClaims(balance_claims)
-                    return balance_claims
+    onRefreshBalanceClaims(resolve) {
+        if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims start')
+        this.setState({loading: true})
+        var balance_claims = [], balance_ids = []
+        var p = idb_helper.cursor("balance_claims", cursor => {
+            if( ! cursor) return
+            var balance_claim = cursor.value
+            balance_claims.push( balance_claim )
+            balance_ids.push(balance_claim.chain_balance_record.id)
+            cursor.continue()
+        }).then( ()=> {
+            //DEBUG console.log('... refresh')
+            if( ! balance_claims.length) {
+                this.setBalanceClaims(balance_claims)
+                if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims done, no claims import keys first')
+                return
+            }
+            if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims get_objects start')
+            var db = api.db_api()
+            return db.exec("get_objects", [balance_ids]).then( result => {
+                if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims get_objects done')
+                for(let i = 0; i < result.length; i++) {
+                    var balance_claim = balance_claims[i]
+                    var chain_balance_record = result[i]
+                    //DEBUG console.log('... chain_balance_record',chain_balance_record)
+                    if( ! chain_balance_record) {
+                        balance_claims[i] = BalanceClaimTcomb.update(
+                            BalanceClaimTcomb(balance_claim),
+                            { is_claimed: { '$set': true } }
+                        )
+                    } else
+                        balance_claims[i] = BalanceClaimTcomb.update(
+                            BalanceClaimTcomb(balance_claim),
+                            { chain_balance_record:
+                                { '$set': chain_balance_record } }
+                        )
+                }
+                var transaction = this.transaction_update()
+                var store = transaction.objectStore("balance_claims")
+                var ps = []
+                for(let balance_claim of balance_claims) {
+                    var request = store.put(balance_claim)
+                    ps.push(idb_helper.on_request_end(request))
+                }
+                return Promise.all(ps).then( ()=> {
+                    this.setBalanceClaims(balance_claims)
+                    if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims done')
                 })
             })
-            resolve(p)
         })
+        resolve(p)
+    }
+    
+    setBalanceClaims(balance_claims) {
+        var balance_by_account_asset = this.balanceByAssetName(balance_claims)
+        this.setState({balance_claims, balance_by_account_asset, loading: false})
+    }
+    
+    transaction_update() {
+        var transaction = iDB.instance().db().transaction(
+            ["balance_claims"], "readwrite"
+        )
+        return transaction
+    }
+
+    /** group things for reporting purposes */
+    balanceByAssetName(balance_claims) {
+        var asset_totals = {}
+        var keys = PrivateKeyStore.getState().keys
+        //DEBUG console.log("... balance_claims",balance_claims)
+        for(let balance_claim of balance_claims) {
+            var b = balance_claim.chain_balance_record
+            
+            var private_key_id = balance_claim.private_key_id
+            var private_key_tcomb = keys.get(private_key_id)
+            
+            var import_account_names =
+                private_key_tcomb.import_account_names
+            
+            var group_by =
+                import_account_names.join("\t") +
+                b.balance.asset_id + "\t"
+            
+            var total =
+                asset_totals[group_by] || (
+                asset_totals[group_by] = 
+            {
+                vesting: {claimed:0, unclaimed:0},
+                unvested: {claimed:0, unclaimed:0},
+                accounts: import_account_names,
+                balance_claims: [],
+                asset_id: b.balance.asset_id
+            })
+            if(b.vesting) {
+                if(balance_claim.is_claimed)
+                    total.vesting.claimed += v.to_number(b.balance.amount)
+                else
+                    total.vesting.unclaimed += v.to_number(b.balance.amount)
+            } else {
+                if(balance_claim.is_claimed)
+                    total.unvested.claimed += v.to_number(b.balance.amount)
+                else
+                    total.unvested.unclaimed += v.to_number(b.balance.amount)
+            }
+            total.balance_claims.push(balance_claim)
+        }
+        var balance_by_account_asset = []
+        for(let key of Object.keys(asset_totals).sort()) {
+            var total_record = asset_totals[key]
+            var accounts = total_record.accounts
+            var balance = {
+                vesting: total_record.vesting,
+                unvested: total_record.unvested
+            }
+            var balance_claims = total_record.balance_claims
+            balance_by_account_asset.push({
+                accounts, asset_id:total_record.asset_id,
+                balance, balance_claims})
+        }
+        return balance_by_account_asset
     }
 
 }
-module.exports = new BalanceClaimStore()
+
+export var BalanceClaimStoreWrapped = alt.createStore(BalanceClaimStore)
+export default BalanceClaimStoreWrapped

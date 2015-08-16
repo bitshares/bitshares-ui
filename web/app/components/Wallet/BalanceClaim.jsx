@@ -1,15 +1,19 @@
 import React, {Component, PropTypes} from "react";
 import AltContainer from "alt/AltContainer"
+import connectToStores from "alt/utils/connectToStores"
 
-import {ImportKeysStore} from "components/Wallet/ImportKeys"
+import alt from "alt-instance"
 import WalletDb from "stores/WalletDb";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import AccountStore from "stores/AccountStore";
 import BalanceClaimStore from "stores/BalanceClaimStore";
+import ImportKeysStore from "stores/ImportKeysStore"
+import BalanceClaimActions from "actions/BalanceClaimActions"
 import FormattedAsset from "components/Utility/FormattedAsset";
 import LoadingIndicator from "components/LoadingIndicator";
 import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect";
 import WalletActions from "actions/WalletActions";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 import ApplicationApi from "rpc_api/ApplicationApi";
 import notify from "actions/NotificationActions";
 import cname from "classnames";
@@ -18,6 +22,8 @@ import v from "chain/serializer_validation";
 import chain_api from "api/chain"
 
 var application_api = new ApplicationApi()
+
+var TRACE = true
 
 class BalanceClaim extends Component {
 
@@ -29,8 +35,6 @@ class BalanceClaim extends Component {
     _getInitialState() {
         return {
             claim_account_name: null,
-            balance_claims: [],
-            balance_by_account_asset: [],
             selected_balance_claims: null,
             my_accounts: [],
             my_accounts_loading: false,
@@ -38,15 +42,25 @@ class BalanceClaim extends Component {
         };
     }
     
-    componentWillMount() {
-        //DEBUG console.log('... BalanceClaim componentWillMount')
-        this.loadBalances()
-        this.loadMyAccounts()
+    static getStores() {
+        return [AccountStore, BalanceClaimStore, ImportKeysStore]
     }
     
+    static getPropsFromStores() {
+        //DEBUG console.log('... BalanceClaimStore.getState()',BalanceClaimStore.getState())
+        return BalanceClaimStore.getState()
+    }
+    
+    componentWillMount() {
+        //DEBUG console.log('... BalanceClaim componentWillMount')
+        BalanceClaimActions.refreshBalanceClaims()
+        this.loadMyAccounts()
+    }
+
+    
     render() {
-        //DEBUG  console.log('... render balance_by_account_asset',this.state.balance_by_account_asset.length)
-        if( ! this.state.balance_by_account_asset.length)
+        //DEBUG  console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
+        if( ! this.props.balance_by_account_asset.length)
             return <div/>
         
         this.state.selected_balance_claims = []
@@ -55,17 +69,18 @@ class BalanceClaim extends Component {
         var unclaimed_account_balances = {};
         let index = 0;
         var checked = this.state.checked
-        for(let asset_balance of this.state.balance_by_account_asset) {
+        for(let asset_balance of this.props.balance_by_account_asset) {
             var {accounts, asset_id, balance, balance_claims} =
                 asset_balance
             
             if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
                 var account_names = accounts.join(", ")
                 unclaimed_balance_rows.push(
-                    <tr key={index} onChange={this._checked.bind(this, index)}>
+                    <tr key={index}>
                         <td>
                             <input type="checkbox"
                                 checked={checked.get(index)}
+                                onChange={this._checked.bind(this, index)}
                                 />
                         </td>
                         <td style={{textAlign: "right"}}>
@@ -129,8 +144,7 @@ class BalanceClaim extends Component {
                                 list_size={5}
                             />
                         </div>
-                        {this.state.my_accounts_loading ||
-                            this.state.balance_claims_loading ? 
+                        {this.state.my_accounts_loading || this.props.balances_loading ? 
                             <LoadingIndicator type="circle"/> : <div/>}
                         <br></br>
                         <div className="button-group">
@@ -169,7 +183,7 @@ class BalanceClaim extends Component {
         this.setState({claim_account_name})
         var checked = new Map()
         var index = -1
-        for(let asset_balance of this.state.balance_by_account_asset) {
+        for(let asset_balance of this.props.balance_by_account_asset) {
             index++
             var {accounts} = asset_balance
             if(accounts.length > 1)
@@ -193,27 +207,30 @@ class BalanceClaim extends Component {
         this.forceUpdate()
     }
     
-    loadBalances() {
-        this.setState({balance_claims_loading:true})
-        BalanceClaimStore.getBalanceClaims().then( balance_claims => {
-            this.balanceByAssetName(balance_claims).then( balance_by_account_asset => {
-                //DEBUG console.log('... setState balance_claims',balance_claims.length)
-                this.setState({balance_claims, balance_by_account_asset,
-                    balance_claims_loading:false})
-            })
-        }).catch( error => {
-            notify.error(error.message || error)
-        })
-    }
-    
     /** Populate this.state.my_accounts with only account where the wallet
     has full transaction signing authority. */
     loadMyAccounts() {
+        WalletUnlockActions.unlock().then( () => {
+            this._loadMyAccounts()
+        })
+    }
+    
+    _loadMyAccounts() {
+        if(TRACE) console.log('... BalanceClaim.loadMyAccounts START')
         this.setState({my_accounts_loading:true})
         var account_names = AccountStore.getState().linkedAccounts.toArray()
         var store = AccountStore.getState()
         var promises = []
         for(let account_name of account_names) {
+            
+            var found = false
+            for(let account of this.state.my_accounts)
+                if(account_name == account)
+                    found = true
+            if(found)
+                continue
+            
+            if(TRACE) console.log('... BalanceClaim.loadMyAccounts lookupAccountByName')
             var p = chain_api.lookupAccountByName(account_name).then ( account => {
                 //DEBUG console.log('... account lookupAccountByName',account.get("id"),account.get("name"))
                 
@@ -225,12 +242,15 @@ class BalanceClaim extends Component {
                     0,//asset
                     null,//memo
                     false,//broadcast
-                    false//encrypt_memo
+                    false,//encrypt_memo
+                    false//sign
                 ).then( fake_transfer => {
-                    //DEBUG console.log('... my account',account.get("name"))
+                    //DEBUG
+                    if(TRACE) console.log('... BalanceClaim my account',account.get("name"))
                     return account.get("name")
                 }).catch( error => {
-                    //DEBUG console.log('... NOT my account',account.get("name"),error)
+                    //DEBUG
+                    if(TRACE) console.log('... BalanceClaim NOT my account',account.get("name"),error)
                     return null
                 })
             }).catch( error => {
@@ -247,73 +267,14 @@ class BalanceClaim extends Component {
             }
             //DEBUG console.log('... my_accounts',my_accounts)    
             this.setState({my_accounts, my_accounts_loading:false})
+            if(TRACE) console.log('... BalanceClaim.loadMyAccounts DONE')
         })
     }
 
-    /** group things for reporting purposes */
-    balanceByAssetName(balance_claims) {
-        return new Promise((resolve, reject)=> {
-            var asset_totals = {}
-            //DEBUG console.log("... balance_claims",balance_claims)
-            for(let balance_claim of balance_claims) {
-                var b = balance_claim.chain_balance_record
-                
-                var private_key_id = balance_claim.private_key_id
-                var private_key_tcomb =
-                    PrivateKeyStore.getState().keys.get(private_key_id)
-                var import_account_names =
-                    private_key_tcomb.import_account_names
-                
-                var group_by =
-                    import_account_names.join("\t") +
-                    b.balance.asset_id + "\t"
-                
-                var total =
-                    asset_totals[group_by] || (
-                    asset_totals[group_by] = 
-                {
-                    vesting: {claimed:0, unclaimed:0},
-                    unvested: {claimed:0, unclaimed:0},
-                    account_names: import_account_names,
-                    balance_claims: [],
-                    asset_id: b.balance.asset_id
-                })
-                if(b.vesting) {
-                    if(balance_claim.is_claimed)
-                        total.vesting.claimed += v.to_number(b.balance.amount)
-                    else
-                        total.vesting.unclaimed += v.to_number(b.balance.amount)
-                } else {
-                    if(balance_claim.is_claimed)
-                        total.unvested.claimed += v.to_number(b.balance.amount)
-                    else
-                        total.unvested.unclaimed += v.to_number(b.balance.amount)
-                }
-                total.balance_claims.push(balance_claim)
-            }
-            lookup.resolve().then(()=> {
-                var balance_by_account_asset = []
-                for(let key of Object.keys(asset_totals).sort()) {
-                    var total_record = asset_totals[key]
-                    var accounts = total_record.account_names
-                    var balance = {
-                        vesting: total_record.vesting,
-                        unvested: total_record.unvested
-                    }
-                    var balance_claims = total_record.balance_claims
-                    balance_by_account_asset.push({
-                        accounts, asset_id:total_record.asset_id,
-                        balance, balance_claims})
-                }
-                resolve(balance_by_account_asset)
-            })
-        })
-    }
-    
     _claimBalances(claim_account_name) {
         
         var selected_balance_claims = this.state.selected_balance_claims
-        var {wif_to_balances} = this.getWifToBalance(selected_balance_claims)
+        var wif_to_balances = this.getWifToBalance(selected_balance_claims)
         
         //return
         WalletActions.importBalance(
@@ -341,7 +302,7 @@ class BalanceClaim extends Component {
         for(let balance_claim of balance_claims) {
             if(balance_claim.is_claimed) continue
             var chain_balance_record = balance_claim.chain_balance_record
-            //if(chain_balance_record.vesting) continue
+            if(chain_balance_record.vesting) continue //TODO get_vested_balances
             var balences =
                 privateid_to_balances[balance_claim.private_key_id] || []
             balences.push(chain_balance_record)
@@ -352,24 +313,14 @@ class BalanceClaim extends Component {
         for(let private_key_id of Object.keys(privateid_to_balances)) {
             var balances = privateid_to_balances[private_key_id]
             var private_key_tcomb = keys.get(parseInt(private_key_id))
+            var public_key_string = private_key_tcomb.pubkey
             var private_key = WalletDb.decryptTcomb_PrivateKey(private_key_tcomb)
-            wif_to_balances[private_key.toWif()] = balances
+            wif_to_balances[private_key.toWif()] = {balances, public_key_string}
         }
-        return {wif_to_balances}
+        return wif_to_balances
     }
 }
 
 BalanceClaim.contextTypes = {router: React.PropTypes.func.isRequired};
 
-class BalanceClaimContainer extends React.Component {
-    render() {
-        this.seq = 0 //re-render on every store change
-        return (
-            <AltContainer stores={[AccountStore, ImportKeysStore]}
-                render={()=> <BalanceClaim key={this.seq++}/>}
-            >
-            </AltContainer>
-        )
-    }
-}
-export default BalanceClaimContainer
+export default connectToStores(BalanceClaim)
