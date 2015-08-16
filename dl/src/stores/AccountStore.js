@@ -283,11 +283,14 @@ class AccountStore extends BaseStore {
         if(account["toJS"])
             account = account.toJS()
         
+        if(account.name == "" || this.linkedAccounts.get(account.name))
+            return
+        
         if( ! validation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
         
         iDB.add_to_store("linked_accounts", account).then(() => {
-            console.log("[AccountStore.js] ----- Added account to store: ----->", name);
+            console.log("[AccountStore.js] ----- Added account to store: ----->", account.name);
             this.linkedAccounts = this.linkedAccounts.add(account.name);
             if (this.linkedAccounts.size === 1) {
                 this.setCurrentAccount(account.name);

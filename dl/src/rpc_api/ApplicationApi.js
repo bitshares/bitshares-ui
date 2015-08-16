@@ -80,7 +80,8 @@ class ApplicationApi {
         memo_message,
         broadcast = true,
         encrypt_memo = true,
-        optional_nonce = null
+        optional_nonce = null,
+        sign = true
     ) {
         var memo_from_public, memo_to_public
         if(encrypt_memo || memo_message) {
@@ -137,7 +138,8 @@ class ApplicationApi {
             return WalletDb.process_transaction(
                 tr,
                 null, //signer_private_keys,
-                broadcast
+                broadcast,
+                sign
             )
         })
     }

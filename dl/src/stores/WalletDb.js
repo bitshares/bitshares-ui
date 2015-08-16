@@ -6,15 +6,18 @@ import cloneDeep from "lodash.clonedeep"
 import Immutable from "immutable";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
-import BalanceClaimStore from "stores/BalanceClaimStore"
+import BalanceClaimActions from "actions/BalanceClaimActions"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
+import chain_config from "chain/config"
 
 var wallet_public_name = "default"
 var aes_private_map = {}
 var transaction
+
+var TRACE = true
 
 class WalletDb {
     
@@ -122,7 +125,7 @@ class WalletDb {
         return null
     }
     
-    process_transaction(tr, signer_private_keys, broadcast) {
+    process_transaction(tr, signer_private_keys, broadcast, sign = true) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
                 this.getWallet().chain_id + ", but got " +
@@ -131,11 +134,12 @@ class WalletDb {
         return WalletUnlockActions.unlock().then( () => {
             return tr.set_required_fees().then(()=> {
                 return tr.finalize().then(()=> {
+                    
                     if(signer_private_keys) {
                         if( ! Array.isArray(signer_private_keys))
                             signer_private_keys = [ signer_private_keys ]
-                        for(let private_key of signer_private_keys) 
-                            tr.sign(private_key)
+                        for(let private_key of signer_private_keys)
+                            if(sign) tr.sign(private_key)
                     } else {
                         // set<public_key> get_potential_signatures(signed_transaction)
                         var pubkeys = PrivateKeyStore.getPubkeys()
@@ -149,7 +153,7 @@ class WalletDb {
                                 var private_key = this.getPrivateKey(pubkey_string)
                                 if( ! private_key)
                                     throw new Error("Missing signing key for " + pubkey_string)
-                                tr.sign(private_key)
+                                if(sign) tr.sign(private_key)
                             }
                         })
                     }
@@ -283,13 +287,19 @@ class WalletDb {
     /** WIF format
     */
     importKeys(private_key_objs) {
+        if(TRACE) console.log('... WalletDb.importKeys start')
         return WalletUnlockActions.unlock().then( () => {
             var transaction = this.transaction_update_keys()
             var promises = []
             var import_count = 0, duplicate_count = 0
+            console.log('... importKeys save key loop')
             for(let private_key_obj of private_key_objs) {
+                
                 var wif = private_key_obj.wif || private_key_obj
-                if( ! wif) continue
+                if( ! wif) {
+                    console.log("ERROR WalletDb importKeys, key object missing WIF")
+                    continue
+                }
                 var private_key = PrivateKey.fromWif(wif)
                 promises.push(
                     this.saveKey(
@@ -312,13 +322,14 @@ class WalletDb {
                     )
                 )
             }
-            
+            console.log('... importKeys setWalletModified')
             return this.setWalletModified(transaction).then( ()=> {
                 return Promise.all(promises).catch( error => {
                     //DEBUG
                     console.log('importKeys transaction.abort', error)    
                     throw error
                 }).then( private_key_ids => {
+                    if(TRACE) console.log('... WalletDb.importKeys done')
                     return {import_count, duplicate_count, private_key_ids}
                 })
             })
@@ -357,36 +368,49 @@ class WalletDb {
                 private_key.toBuffer()
             )
         var wallet = this.getWallet()
-        var public_key = private_key.toPublicKey()
+        
+        if( ! public_key_string) {
+            //S L O W
+            console.log('WARN: public key was not provided, this may incur slow performance')
+            var public_key = private_key.toPublicKey()
+            public_key_string = public_key.toBtsPublic()
+        } else 
+            if(public_key_string.indexOf(chain_config.address_prefix) != 0)
+                throw new Error("Public Key should start with " + chain_config.address_prefix)
+        
         var private_key_object = {
             wallet_id: wallet.id,
             import_account_names,
             encrypted_key: private_cipherhex,
             brainkey_pos: brainkey_pos,
-            pubkey: public_key_string ? public_key_string :
-                public_key.toBtsPublic()//S L O W
+            pubkey: public_key_string
         }
-        return import_balances => {
+        return (import_balances, private_key_object) => {
             return PrivateKeyStore.onAddKey(
-                private_key_object, transaction
-            ).then((ret)=> {
-                if(ret.result != "added")
-                    return ret
-                if( ! import_balances)
-                    return ret
-                
-                var private_key_id = ret.id
-                var ps = []
-                for(let chain_balance_record of import_balances) {
-                    var p = BalanceClaimStore.add({
-                        chain_balance_record,
-                        private_key_id
-                    }, transaction)
-                    ps.push(p)
+                private_key_object, transaction,
+                event => {
+                    if( ! import_balances) return
+                    var private_key_id = event.target.result
+                    private_key_object.id = private_key_id
+                    if(TRACE) console.log('... WalletDb saveKey import_balances private_key_id',private_key_id)
+                    var ps = []
+                    for(let chain_balance_record of import_balances) {
+                        var p = BalanceClaimActions.add({
+                            balance_claim: {
+                                chain_balance_record,
+                                private_key_id
+                            }, transaction
+                        })
+                        ps.push(p)
+                    }
+                    return Promise.all(ps)//.then( ()=> { return ret })
                 }
-                return Promise.all(ps).then( ()=> { return ret })
+            ).then((ret)=> {
+                if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
+                return ret
+               
             })
-        }(import_balances)
+        }(import_balances, private_key_object)//copy var reference for callback
     }
     
     incrementBrainKeySequence(transaction) {
@@ -399,34 +423,34 @@ class WalletDb {
         return this._updateWallet( transaction )
     }
     
+    /** This method can not unlock the wallet.  Unlocking a wallet is
+    not compatible with transactions. */
     _updateWallet(transaction, update_callback) {
-        return WalletUnlockActions.unlock().then( () => {
-            var wallet = this.wallets.get(wallet_public_name)
-            if ( ! wallet) {
-                reject("missing wallet " + wallet_public_name)
-                return
+        var wallet = this.wallets.get(wallet_public_name)
+        if ( ! wallet) {
+            reject("missing wallet " + wallet_public_name)
+            return
+        }
+        //DEBUG console.log('... wallet',wallet)
+        var wallet_clone = cloneDeep( wallet )
+        wallet_clone.last_modified = new Date()
+        if(update_callback)
+            update_callback(wallet_clone)
+        
+        WalletTcomb(wallet_clone)
+        //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
+        
+        var wallet_store = transaction.objectStore("wallets")
+        var p = idb_helper.on_request_end(
+            wallet_store.put(wallet_clone)
+        )
+        var p2 = idb_helper.on_transaction_end( transaction  ).then(
+            () => {
+                // Update RAM
+                this.wallets.set( wallet_clone.public_name, wallet_clone )
             }
-            //DEBUG console.log('... wallet',wallet)
-            var wallet_clone = cloneDeep( wallet )
-            wallet_clone.last_modified = new Date()
-            if(update_callback)
-                update_callback(wallet_clone)
-            
-            WalletTcomb(wallet_clone)
-            //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
-            
-            var wallet_store = transaction.objectStore("wallets")
-            var p = idb_helper.on_request_end(
-                wallet_store.put(wallet_clone)
-            )
-            var p2 = idb_helper.on_transaction_end( transaction  ).then(
-                () => {
-                    // Update RAM
-                    this.wallets.set( wallet_clone.public_name, wallet_clone )
-                }
-            )
-            return Promise.all([p,p2])
-        })
+        )
+        return Promise.all([p,p2])
     }
     
     /*
