@@ -17,7 +17,8 @@ class PrivateKeyStore extends BaseStore {
             onAddKey: PrivateKeyActions.addKey
         });*/
         this._export("loadDbData","onAddKey", "hasKey",
-            "getPubkeys", "getTcombs_byPubkey");
+            "getPubkeys", "getTcombs_byPubkey",
+            "getPubkeys_having_PrivateKey");
     }
 
     loadDbData() {
@@ -82,6 +83,16 @@ class PrivateKeyStore extends BaseStore {
     
     getPubkeys() {
         return this.keys.valueSeq().map( value => value.pubkey).toArray()
+    }
+    
+    getPubkeys_having_PrivateKey(public_keys) {
+        var return_public_keys = []
+        for(let public_key of public_keys) {
+            if(this.hasKey(public_key)) {
+                return_public_keys.push(public_key)
+            }
+        }
+        return return_public_keys
     }
     
     /** The same key may appear in multiple

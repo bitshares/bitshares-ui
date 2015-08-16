@@ -141,20 +141,21 @@ class WalletDb {
                         for(let private_key of signer_private_keys)
                             if(sign) tr.sign(private_key)
                     } else {
-                        // set<public_key> get_potential_signatures(signed_transaction)
-                        var pubkeys = PrivateKeyStore.getPubkeys()
-                        //DEBUG console.log('... pubkeys',pubkeys)
-                        if( ! pubkeys.length)
-                            throw new Error("Missing signing key")
-                        return tr.get_required_signatures(pubkeys).then(
-                            pubkey_strings => {
-                            //DEBUG console.log('... pubkey_strings',pubkey_strings)
-                            for(let pubkey_string of pubkey_strings) {
-                                var private_key = this.getPrivateKey(pubkey_string)
-                                if( ! private_key)
-                                    throw new Error("Missing signing key for " + pubkey_string)
-                                if(sign) tr.sign(private_key)
-                            }
+                        tr.get_potential_signatures().then((public_keys)=>{
+                            var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
+                            //DEBUG console.log('... pubkeys',pubkeys)
+                            if( ! pubkeys.length)
+                                throw new Error("Missing signing key")
+                            return tr.get_required_signatures(pubkeys).then(
+                                pubkey_strings => {
+                                //DEBUG console.log('... pubkey_strings',pubkey_strings)
+                                for(let pubkey_string of pubkey_strings) {
+                                    var private_key = this.getPrivateKey(pubkey_string)
+                                    if( ! private_key)
+                                        throw new Error("Missing signing key for " + pubkey_string)
+                                    if(sign) tr.sign(private_key)
+                                }
+                            })
                         })
                     }
                 }).then(()=> {
