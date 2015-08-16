@@ -34,41 +34,45 @@ class PrivateKeyStore extends BaseStore {
     }
     
     /** @return resolve 0 for duplicate or 1 if inserted */ 
-    onAddKey(_private_key_object, transaction) {
+    onAddKey(private_key_object, transaction, event_callback) {
         return new Promise((resolve, reject) => {
-            PrivateKeyTcomb(_private_key_object)
-            var private_key_object = _private_key_object
-            var duplicate = false
-            var p = idb_helper.add(
-                transaction.objectStore("private_keys"),
-                private_key_object
-            ).catch( event => {
-                // ignore_duplicates
-                var error = event.target.error
-                if( error.name != 'ConstraintError' ||
-                    error.message.indexOf('by_encrypted_key') == -1
-                ) { throw event  }
-                duplicate = true
-                event.preventDefault()
-            }).then( ()=> {
-                if(duplicate)
-                    return {result:"duplicate",id:null}
-                
-                idb_helper.on_transaction_end(transaction).then(
-                    () => {
-                        //DEBUG console.log('... this.keys.set',private_key_object.id)
-                        this.keys = this.keys.set(
-                            private_key_object.id,
-                            PrivateKeyTcomb(private_key_object)
-                        )
+            PrivateKeyTcomb(private_key_object)
+            private_key_object => {
+                var duplicate = false
+                var p = idb_helper.add(
+                    transaction.objectStore("private_keys"),
+                    private_key_object,
+                    event_callback
+                ).catch( event => {
+                    // ignore_duplicates
+                    var error = event.target.error
+                    //DEBUG
+                    console.log('... error',error)
+                    if( error.name != 'ConstraintError' ||
+                        error.message.indexOf('by_encrypted_key') == -1
+                    ) { throw event  }
+                    duplicate = true
+                    event.preventDefault()
+                }).then( ()=> {
+                    if(duplicate)
+                        return {result:"duplicate",id:null}
+                    
+                    idb_helper.on_transaction_end(transaction).then(
+                        () => {
+                            //DEBUG console.log('... this.keys.set',private_key_object.id)
+                            this.keys = this.keys.set(
+                                private_key_object.id,
+                                PrivateKeyTcomb(private_key_object)
+                            )
+                        }
+                    )
+                    return {
+                        result: "added", 
+                        id: private_key_object.id
                     }
-                )
-                return {
-                    result: "added", 
-                    id: private_key_object.id
-                }
-            })
-            resolve(p)
+                })
+                resolve(p)
+            }(private_key_object) //copy var ref for callback (or ids will be scrambled)
         })
     }
 

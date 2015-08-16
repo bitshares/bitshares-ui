@@ -33,10 +33,24 @@ module.exports = idb_helper = {
         })
     },
     
-    add: (store, object) => {
-        return object => {
+    /** Chain an add event.  Provide the @param store and @param object and
+        this method gives you convenient hooks into the database events.
+        
+        @param event_callback (within active transaction)
+        @return Promise (resolves or rejects outside of the transaction)
+    */
+    add: (store, object, event_callback) => {
+        return (object, event_callback) => {
             var request = store.add(object)
-            return idb_helper.on_request_end(request).then( event => {
+            
+            var event_promise = null
+            if(event_callback)
+                request.onsuccess = new ChainEvent(
+                    request.onsuccess, event => {
+                        event_promise = event_callback(event)
+                    }).event
+            
+            var request_promise = idb_helper.on_request_end(request).then( event => {
                 //DEBUG console.log('... object',object,'result',event.target.result,'event',event)
                 if ( event.target.result != void 0) {
                     //todo does event provide the keyPath name? (instead of id)
@@ -44,7 +58,12 @@ module.exports = idb_helper = {
                 }
                 return [ object, event ]
             })
-        }(object)
+            
+            if(event_promise)
+                return Promise.all([event_promise, request_promise])
+            return request_promise
+            
+        }(object, event_callback)//copy var references for callbacks
     },
     
     cursor: (store_name, callback, transaction) => {
@@ -100,16 +119,3 @@ class ChainEvent {
         }
     }
 }
-
-//var chain_event = (on_event, callback, request) => {
-//   var existing_on_event = on_event
-//   var new_on_event = (event)=> {
-//       //if(event.target.error) {
-//           //DEBUG console.log("---- transaction error ---->", event)
-//       //}
-//       callback(event, request)
-//       if(existing_on_event)
-//           existing_on_event(event)
-//   }
-//   return new_on_event
-//}
