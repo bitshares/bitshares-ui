@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from "react";
 import PrivateKey from "ecc/key_private";
+import Address from "ecc/address"
 import Aes from "ecc/aes";
 import alt from "alt-instance"
 
@@ -16,6 +17,9 @@ import v from "chain/serializer_validation";
 import cname from "classnames";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
+import ImportKeysActions from "actions/ImportKeysActions";
+import WalletUnlockActions from "actions/WalletUnlockActions"
+import BalanceClaimActions from "actions/BalanceClaimActions"
 
 import chain_api from "api/chain"
 
@@ -25,7 +29,9 @@ require("./ImportKeys.scss");
 var api = Apis.instance();
 var import_keys_assert_checking = false
 
-class ImportKeys extends Component {
+var TRACE = true
+
+export default class ImportKeys extends Component {
     
     constructor() {
         super();
@@ -188,16 +194,15 @@ class ImportKeys extends Component {
             </div>
         );
     }
+    
+    updateOnChange(wifs_to_account = this.state.wifs_to_account) {
+        var wif_count = Object.keys(wifs_to_account).length
+        this.setState({wif_count})
+        this._importKeysChange(wifs_to_account)
+    }
 
     _importKeysChange(wifs_to_account) {
-        var wifs = Object.keys(wifs_to_account);
-        if( ! wifs.length) {
-            return;
-        }
-        console.log('... lookupBalances')
-        this.lookupBalances(wifs).then( wif_to_balances => {
-            console.log('... lookupBalances done')
-                
+        this.lookupBalances(wifs_to_account).then( wif_to_balances => {
             var assetid_balance = this.balanceByAsset(wif_to_balances);
             var asset_ids = Object.keys(assetid_balance);
             var balance_by_asset = [];
@@ -216,31 +221,44 @@ class ImportKeys extends Component {
         });
     }
 
-    lookupBalances(wif_keys) {
+    lookupBalances(wifs_to_account) {
         return new Promise((resolve, reject)=> {
+            var wifs = Object.keys(wifs_to_account);
+            if( ! wifs.length) {
+                resolve()
+                return
+            }
             var address_params = [], wif_owner = {};
-            //DEBUG console.log('... wif_keys')
-            for(let wif of wif_keys) {
+            for(let wif of wifs) {
                 try {
-                    var private_key = PrivateKey.fromWif(wif);
-                    
-                    var public_key = private_key.toPublicKey();
-                    var address_str = public_key.toBtsAddy();
-                    //DEBUG console.log('... public_key',public_key.toBtsPublic())
-                    //DEBUG console.log('... address_str',address_str)
-                    address_params.push( address_str );
-                    wif_owner[address_str] = wif;
+                    var private_key = PrivateKey.fromWif(wif)
+                    var {public_key} = wifs_to_account[wif]
+                    var previous_address_prefix = config.address_prefix
+                    try {
+                        config.address_prefix = "BTS"
+                        var addresses = [
+                            //legacy formats
+                            Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
+                            Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
+                            Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
+                            Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
+                            public_key.toBtsAddy() //bts_short, most recent format
+                        ]
+                        for(let address of addresses) {
+                            address = previous_address_prefix + address.substring(3)
+                            address_params.push( address )
+                            wif_owner[address] = wif
+                        }
+                    } finally {
+                        config.address_prefix = previous_address_prefix
+                    }
                 } catch(e) {
                     console.error("ImportKeys: Invalid private key error",e)
                 }
             }
-            //DEBUG console.log('... wif_keys done')
-            //DEBUG console.log("... get_balance_objects", address_params)
             var db = api.db_api();
             //DEBUG console.log('... get_balance_objects',address_params)
             var p = db.exec("get_balance_objects", [address_params]).then( result => {
-                //DEBUG console.log('... get_balance_objects done')
-                    
                 //DEBUG  console.log("... get_balance_objects",result)
                 var wif_to_balances = {};
                 for(let i = 0; i < result.length; i++) {
@@ -266,14 +284,6 @@ class ImportKeys extends Component {
         for(let wif of Object.keys(wif_to_balances))
         for(let b of wif_to_balances[wif]) {
             var total = asset_balance[b.balance.asset_id] || 0
-            //    if(b.vesting_policy)
-            //        continue //todo
-            //    //var total_claimed = "0"
-            //    //if( ! b.vesting_policy)
-            //    //    total_claimed = b.balance
-            //    ////'else' Zero total_claimed is understood to mean that your
-            //    ////claiming the vesting balance on vesting terms.
-            //DEBUG 
             total += v.to_number(b.balance.amount)
             asset_balance[b.balance.asset_id] = total 
         }
@@ -288,12 +298,6 @@ class ImportKeys extends Component {
                 (account_keycount[account_name] || 0) + 1
         }
         return account_keycount
-    }
-
-    updateOnChange(wifs_to_account = this.state.wifs_to_account) {
-        var wif_count = Object.keys(wifs_to_account).length
-        this.setState({wif_count})
-        this._importKeysChange(wifs_to_account)
     }
     
     upload(evt) {
@@ -350,10 +354,16 @@ class ImportKeys extends Component {
         })
     }
     
-    /** BTS 1.0 hosted wallet backup (wallet.bitshares.org).
+    /**
+    BTS 1.0 hosted wallet backup (wallet.bitshares.org) is supported.
     
-    Note,  not fully tested for the native wallet backup.  This does not include
-    BTS 1.0 client signing keys.  
+    BTS 1.0 native wallets should use wallet_export_keys instead of a wallet backup.
+    
+    Note,  Native wallet backups will be rejected.  The logic below does not
+    capture assigned account names (for unregisted accounts) and does not capture
+    signing keys.  The hosted wallet has only registered accounts and no signing
+    keys.
+    
     */
     _parseWalletJson(contents) {
         var password_checksum
@@ -485,9 +495,7 @@ class ImportKeys extends Component {
             for(let i = 0; i < account.encrypted_private_keys.length; i++) {
                 let encrypted_private = account.encrypted_private_keys[i]
                 let public_key_string = account.public_keys ?
-                    account.public_keys[i] : null // assert checking
-                let address_string = account.addresses ? 
-                    account.addresses[i] : null // assert checking
+                    account.public_keys[i] : null // performance gain
                 
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
@@ -500,6 +508,9 @@ class ImportKeys extends Component {
                         var pubby = pub.toBtsPublic()
                         var error = ""
                         
+                        let address_string = account.addresses ? 
+                            account.addresses[i] : null // assert checking
+                        
                         if(address_string && addy.substring(3) != address_string.substring(3))
                             error = "address imported " + address_string + " but calculated " + addy + ". "
                         
@@ -509,9 +520,21 @@ class ImportKeys extends Component {
                         if(error != "")
                             console.log("ERROR Miss-match key",error)
                     }
-                    if(! public_key_string) {
-                        var pub = private_key.toPublicKey()// S L O W
-                        public_key_string =  pub.toBtsPublic()
+                    
+                    var public_key
+                    if( ! public_key_string) {
+                        public_key = private_key.toPublicKey()// S L O W
+                        public_key_string = public_key.toBtsPublic()
+                    } else {
+                        var previous_address_prefix = config.address_prefix
+                        try {
+                            config.address_prefix = "BTS"
+                            public_key = PublicKey.fromBtsPublic(public_key_string)
+                            public_key_string = previous_address_prefix +
+                                public_key_string.substring(3)
+                        } finally {
+                            config.address_prefix = previous_address_prefix
+                        }
                     }
                     this.state.imported_keys_public[public_key_string] = true
                         
@@ -524,10 +547,11 @@ class ImportKeys extends Component {
                             dup = true
                     if(dup) continue
                     account_names.push(account_name)
+                    var public_key = 
                     this.state.wifs_to_account[private_key_wif] = 
-                        {account_names, public_key_string}
+                        {account_names, public_key, public_key_string}
                 } catch(e) {
-                    console.log(e)
+                    console.log(e, e.stack)
                     var message = e.message || e
                     notify.error(`Account ${account_name} had a private key import error: `+message)
                 }
@@ -548,26 +572,32 @@ class ImportKeys extends Component {
     }
 
     _saveImport() {
-        var linkedAccounts = AccountStore.getState().linkedAccounts
-        for(let account_name in this.state.account_keycount) {
-            if(account_name === "") continue
-            if( ! linkedAccounts.get(account_name)) {
-                try {
-                    AccountActions.addAccount(account_name)
-                } catch(e) {
-                    console.log("WARN", e)
-                }
-            }
-        }
+        WalletUnlockActions.unlock().then(()=> {
+            this.saveImport()
+        })
+    }
+    
+    saveImport() {
+        //var linkedAccounts = AccountStore.getState().linkedAccounts
+        //for(let account_name in this.state.account_keycount) {
+        //    if(account_name === "") continue
+        //    if( ! linkedAccounts.get(account_name)) {
+        //        try {
+        //            AccountActions.addAccount(account_name)
+        //        } catch(e) {
+        //            console.log("WARN", e)
+        //        }
+        //    }
+        //}
         
-        // Add accounts referenced by the wifs
+        // Lookup and add accounts referenced by the wifs
         var imported_keys_public = this.state.imported_keys_public
         var db = api.db_api()
-        console.log('... get_key_references')
+        
+        if(TRACE) console.log('... ImportKeys._saveImport get_key_references START')
         var p = db.exec("get_key_references",
             [Object.keys(imported_keys_public)]).then(
             results => {
-            console.log('... get_key_references done')
             var account_ids = {}
             for(let result of results)
                 for(let account_id of result)
@@ -575,9 +605,12 @@ class ImportKeys extends Component {
             
             chain_api.fetchObject(Object.keys(account_ids)).then( results => {
                 for(let account of results) {
-                    if(account && ! linkedAccounts.get(account.get("name")))
+                    //DEBUG console.log('... get_key_references object lookup',account?account.toJS().name:null)
+                    if(account)
                         AccountActions.addAccount(account)
                 }
+                if(TRACE) console.log('... ImportKeys._saveImport get_key_references DONE')
+                BalanceClaimActions.refreshBalanceClaims()
             })
         })
         
@@ -587,6 +620,7 @@ class ImportKeys extends Component {
         for(let wif of Object.keys(wifs_to_account)) {
             var {account_names, public_key_string} = wifs_to_account[wif]
             var import_balances = wif_to_balances[wif]
+            //DEBUG console.log('... account_names',account_names,public_key_string)
             private_key_objs.push({
                 wif,
                 import_account_names: account_names,
@@ -656,18 +690,6 @@ class ImportKeys extends Component {
     }
 
 }
-
-export var ImportKeysActions = alt.generateActions('change')
-class ImportKeysStore_ {
-    constructor() {
-        this.bindActions(ImportKeysActions)
-    }
-    onChange() {
-    }
-}
-export var ImportKeysStore = alt.createStore(ImportKeysStore_)
-export default ImportKeys
-
 
 class KeyCount extends Component {
     render() {

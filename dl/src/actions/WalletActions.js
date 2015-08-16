@@ -4,7 +4,9 @@ import PrivateKey from "../ecc/key_private"
 import Apis from "../rpc_api/ApiInstances"
 import ops from "../chain/transaction_operations"
 import chain_types from "../chain/chain_types"
-import lookup from "chain/lookup" 
+import lookup from "chain/lookup"
+import PublicKey from "ecc/key_public"
+import Address from "ecc/address"
 
 var alt = require("../alt-instance")
 var application_api = new ApplicationApi()
@@ -128,7 +130,6 @@ class WalletActions {
         return new Promise((resolve, reject) => {
             
             var db = api.db_api()
-            var address_privatekey_map = {}
             var address_publickey_map = {}
             
             var account_lookup = lookup.account_id(account_name_or_id)
@@ -140,20 +141,30 @@ class WalletActions {
                 
                 var balance_claims = []
                 for(let wif of Object.keys(wifs_to_balances)) {
+                    var {public_key_string} = wifs_to_balances[wif]
                     var private_key = PrivateKey.fromWif(wif)
-                    var public_key = private_key.toPublicKey()
-                    var address_str = public_key.toBtsAddy()
-                    address_privatekey_map[address_str] = private_key
-                    address_publickey_map[address_str] = public_key
+                    
+                    var public_key = PublicKey.fromBtsPublic(public_key_string)
+                    var index = address_str => {
+                        address_publickey_map[address_str] = public_key
+                    }
+                    index(public_key.toBtsAddy())
+                    index(Address.fromPublic(public_key, false, 0).toString())
+                    index(Address.fromPublic(public_key, true, 0).toString())
+                    index(Address.fromPublic(public_key, false, 56).toString())
+                    index(Address.fromPublic(public_key, true, 56).toString())
                 }
                 for(let wif of Object.keys(wifs_to_balances)) {
-                    for(let b of wifs_to_balances[wif]) {
+                    var {balances, public_key_string} = wifs_to_balances[wif]
+                    for(let b of balances) {
                         //DEBUG console.log('... balance',b)
                         var total_claimed = "0"
                         if( ! b.vesting_policy)
                             total_claimed = b.balance.amount
                         //'else' Zero total_claimed is understood to mean that your
                         //claiming the vesting balance on vesting terms.
+                        if( ! address_publickey_map[b.owner])
+                            debugger
                         balance_claims.push({
                             fee: { amount: "0", asset_id: "1.3.0"},
                             deposit_to_account: account,
@@ -176,12 +187,8 @@ class WalletActions {
                 for(let balance_claim of balance_claims) {
                     tr.add_type_operation("balance_claim", balance_claim)
                 }
-                var keys = Object.keys(address_privatekey_map)
-                var signer_privates = keys.map(function(v) {
-                    return address_privatekey_map[v]
-                })
                 return WalletDb.process_transaction(
-                    tr, signer_privates, broadcast )
+                    tr, null/*signer_privates*/, broadcast )
             })
             resolve(p)
         })
