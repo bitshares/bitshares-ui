@@ -86,7 +86,7 @@ class AccountAssets extends React.Component {
         let {issue} = this.state;
 
         if (key === "to") {
-            this._searchAccounts(value);
+            this._searchAccounts(e.target.value);
             issue.to = e.target.value;
             let account = this.props.searchAccounts.findEntry((name) => {
                 return name === e.target.value;
