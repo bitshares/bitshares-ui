@@ -646,6 +646,7 @@ export default class ImportKeys extends Component {
                 
                 if (import_count) {
                     addAccountPromise.then(()=> {
+                        //ImportKeysActions.saved() // https://github.com/goatslacker/alt/issues/456
                         BalanceClaimActions.refreshBalanceClaims()
                         BalanceClaimActions.loadMyAccounts()
                     })
