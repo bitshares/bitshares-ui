@@ -358,7 +358,7 @@ class Transfer extends BaseComponent {
                                     {ChainStore.getAccountMemberStatus(transfer.from_account)}
                                  </div>) 
                                } 
-                               { errors.from ? <div className="grid-content has-error">{errors.from}</div> : null}
+                               { errors.from ? <div className="grid-content has-error no-overflow">{errors.from}</div> : null}
                                <div className="grid-content full-width-content"> </div>
                                <div className="grid-content align-right shrink">{ transfer.from_lookup_display }</div>
                            </div>
@@ -386,7 +386,7 @@ class Transfer extends BaseComponent {
                                     { ChainStore.getAccountMemberStatus(transfer.to_account) }
                                  </div>)
                                } 
-                               { errors.to ? <div className="grid-content full-width-content has-error">{errors.to}</div> : null}
+                               { errors.to ? <div className="grid-content full-width-content has-error no-overflow">{errors.to}</div> : null}
                                <div className="grid-content full-width-content"> </div>
                                <div className="grid-content shrink">{ transfer.to_lookup_display }</div>
                            </div>
