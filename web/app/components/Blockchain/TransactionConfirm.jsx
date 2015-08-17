@@ -53,7 +53,7 @@ export default class TransactionConfirm extends React.Component {
                     <div className="grid-block" style={{maxHeight: "60vh"}}>
                         {this.state.trx ?
                             <Transaction
-                                key={0}
+                                key={Date.now()}
                                 trx={this.state.trx}
                                 index={0}
                                 account_id_to_name={account_id_to_name}
