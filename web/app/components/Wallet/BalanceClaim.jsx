@@ -68,7 +68,8 @@ class BalanceClaim extends Component {
     //}
     
     render() {
-        //DEBUG  console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
+        //DEBUG
+        console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
         if( ! this.props.balance_by_account_asset.length)
             return <div/>
         
@@ -131,10 +132,7 @@ class BalanceClaim extends Component {
             //}
         }
         
-        console.log('... has_unclaimed',has_unclaimed)
-        console.log('... WalletDb.isLocked()',WalletDb.isLocked())
         if( has_unclaimed && WalletDb.isLocked()){
-            console.log('... unlock')
             setTimeout(()=>WalletUnlockActions.unlock().then(), 250)
         }
         var claim_account_name = this.state.claim_account_name

@@ -12,15 +12,20 @@ class WalletUnlockStore {
     onUnlock({resolve, reject}) {
         //DEBUG console.log('... onUnlock setState')
         if( ! WalletDb.isLocked()) {
-            resolve()
+            resolve(false)
             return
         }
         this.setState({resolve, reject})
     }
     
-    onLock() {
+    onLock({resolve}) {
         //DEBUG console.log('... WalletUnlockStore\tprogramatic lock')
+        if(WalletDb.isLocked()) {
+            resolve(false)
+            return
+        }
         WalletDb.onLock()
+        resolve(true)
         this.setState({resolve:null, reject:null})
     }
     

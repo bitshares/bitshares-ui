@@ -116,7 +116,7 @@ class BalanceClaimStore {
     someone else.
     */
     onLoadMyAccounts() {
-        console.log('... onLoadMyAccounts')
+        if(TRACE) console.log('... BalanceClaimStore.onLoadMyAccounts')
         
         if( WalletDb.isLocked()) return
         if(TRACE) console.log('... BalanceClaimStore.loadMyAccounts START')
@@ -145,6 +145,7 @@ class BalanceClaimStore {
                     null,//memo
                     false,//broadcast
                     false,//encrypt_memo
+                    null, //nonce
                     false//sign
                 ).then( fake_transfer => {
                     //DEBUG
@@ -162,7 +163,7 @@ class BalanceClaimStore {
             promises.push(p)
         }
         Promise.all(promises).then( account_names => {
-            var my_accounts = []
+            var my_accounts = this.state.my_accounts
             for(let account_name of account_names) {
                 if( ! account_name) continue
                 my_accounts.push(account_name)
@@ -190,7 +191,7 @@ class BalanceClaimStore {
     balanceByAssetName(balance_claims) {
         var asset_totals = {}
         var keys = PrivateKeyStore.getState().keys
-        //DEBUG console.log("... balance_claims",balance_claims)
+        //DEBUG console.log("... balanceByAssetName balance_claims",balance_claims,keys)
         for(let balance_claim of balance_claims) {
             var b = balance_claim.chain_balance_record
             
