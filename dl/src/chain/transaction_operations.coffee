@@ -100,8 +100,7 @@ _my.signed_transaction = ->
             "get_potential_signatures",
             [tr_object]
         ).then (potential_signatures)->
-            #DEBUG 
-            console.log('... get_potential_signatures',potential_signatures,tr_object)
+            #DEBUG  console.log('... get_potential_signatures',potential_signatures,tr_object)
             potential_signatures
     
     get_required_signatures:(available_keys)->
@@ -111,8 +110,7 @@ _my.signed_transaction = ->
             "get_required_signatures",
             [tr_object, available_keys]
         ).then (required_public_keys)->
-            #DEBUG
-            console.log('... get_required_signatures',required_public_keys)
+            #DEBUG console.log('... get_required_signatures',required_public_keys)
             required_public_keys
     
     sign:(private_keys, chain_id = Apis.instance().chain_id)->

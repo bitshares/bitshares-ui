@@ -405,12 +405,11 @@ class WalletDb {
                         })
                         ps.push(p)
                     }
-                    return Promise.all(ps)//.then( ()=> { return ret })
+                    return Promise.all(ps)
                 }
             ).then((ret)=> {
                 if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
                 return ret
-               
             })
         }(import_balances, private_key_object)//copy var reference for callback
     }

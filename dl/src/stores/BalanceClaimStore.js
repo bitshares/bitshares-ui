@@ -17,10 +17,16 @@ import ApplicationApi from "rpc_api/ApplicationApi"
 var application_api = new ApplicationApi()
 var api = Apis.instance()
 
+/*var AssetTcomb = t.struct({
+    amount: t.Obj,
+    asset_id: t.Str
+})*/
+
 export var BalanceClaimTcomb = t.struct({
     chain_balance_record: t.Obj,
     private_key_id: t.Num,
-    is_claimed: t.maybe(t.Bool)
+    is_claimed: t.maybe(t.Bool),
+    vested_balance: t.maybe(t.Obj)
 })
 
 var TRACE = true
@@ -55,6 +61,10 @@ class BalanceClaimStore {
         )
     }
     
+    /** Called both on initial import and display of balance claims and then
+    again anytime the balance claim UI is mounted.  This is to ensure the data
+    being viewed is accurate.  
+    */
     onRefreshBalanceClaims() {
         if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims START')
         this.setState({loading: true})
@@ -74,34 +84,41 @@ class BalanceClaimStore {
             }
             if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims get_objects start')
             var db = api.db_api()
-            return db.exec("get_objects", [balance_ids]).then( result => {
-                if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims get_objects done')
-                for(let i = 0; i < result.length; i++) {
-                    var balance_claim = balance_claims[i]
-                    var chain_balance_record = result[i]
-                    //DEBUG console.log('... chain_balance_record',chain_balance_record)
-                    if( ! chain_balance_record) {
-                        balance_claims[i] = BalanceClaimTcomb.update(
-                            BalanceClaimTcomb(balance_claim),
-                            { is_claimed: { '$set': true } }
-                        )
-                    } else
-                        balance_claims[i] = BalanceClaimTcomb.update(
-                            BalanceClaimTcomb(balance_claim),
-                            { chain_balance_record:
-                                { '$set': chain_balance_record } }
-                        )
-                }
-                var transaction = this.transaction_update()
-                var store = transaction.objectStore("balance_claims")
-                var ps = []
-                for(let balance_claim of balance_claims) {
-                    var request = store.put(balance_claim)
-                    ps.push(idb_helper.on_request_end(request))
-                }
-                return Promise.all(ps).then( ()=> {
-                    this.setBalanceClaims(balance_claims)
-                    if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims DONE')
+            
+            return db.exec("get_vested_balances", [balance_ids]).then( vested_balances => {
+                //DEBUG console.log("get_vested_balances",result)
+                return db.exec("get_objects", [balance_ids]).then( result => {
+                    if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims get_objects done')
+                    for(let i = 0; i < result.length; i++) {
+                        var balance_claim = balance_claims[i]
+                        var vested_balance = vested_balances[i]
+                        var chain_balance_record = result[i]
+                        //DEBUG console.log('... chain_balance_record',chain_balance_record)
+                        if( ! chain_balance_record) {
+                            balance_claims[i] = BalanceClaimTcomb.update(
+                                BalanceClaimTcomb(balance_claim), {
+                                    is_claimed: { '$set': true }
+                                }
+                            )
+                        } else
+                            balance_claims[i] = BalanceClaimTcomb.update(
+                                BalanceClaimTcomb(balance_claim), {
+                                    chain_balance_record: { '$set': chain_balance_record },
+                                    vested_balance: {'$set': vested_balance}
+                                }
+                            )
+                    }
+                    var transaction = this.transaction_update()
+                    var store = transaction.objectStore("balance_claims")
+                    var ps = []
+                    for(let balance_claim of balance_claims) {
+                        var request = store.put(balance_claim)
+                        ps.push(idb_helper.on_request_end(request))
+                    }
+                    return Promise.all(ps).then( ()=> {
+                        this.setBalanceClaims(balance_claims)
+                        if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims DONE')
+                    })
                 })
             })
         }).catch( balance_claim_error => this.setState({balance_claim_error}) )
@@ -194,6 +211,7 @@ class BalanceClaimStore {
         //DEBUG console.log("... balanceByAssetName balance_claims",balance_claims,keys)
         for(let balance_claim of balance_claims) {
             var b = balance_claim.chain_balance_record
+            var vested_balance = balance_claim.vested_balance
             
             var private_key_id = balance_claim.private_key_id
             var private_key_tcomb = keys.get(private_key_id)
@@ -209,7 +227,7 @@ class BalanceClaimStore {
                 asset_totals[group_by] || (
                 asset_totals[group_by] = 
             {
-                vesting: {claimed:0, unclaimed:0},
+                vesting: {claimed:0, unclaimed:0, total:0},
                 unvested: {claimed:0, unclaimed:0},
                 accounts: import_account_names,
                 balance_claims: [],
@@ -218,8 +236,11 @@ class BalanceClaimStore {
             if(b.vesting_policy) {
                 if(balance_claim.is_claimed)
                     total.vesting.claimed += v.to_number(b.balance.amount)
-                else
-                    total.vesting.unclaimed += v.to_number(b.balance.amount)
+                else {
+                    //DEBUG console.log('... b.balance.amount',b.balance.amount,vested_balance.amount)
+                    total.vesting.total += v.to_number(b.balance.amount)
+                    total.vesting.unclaimed += v.to_number(vested_balance.amount)
+                }
             } else {
                 if(balance_claim.is_claimed)
                     total.unvested.claimed += v.to_number(b.balance.amount)

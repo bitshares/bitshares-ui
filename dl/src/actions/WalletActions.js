@@ -156,23 +156,34 @@ class WalletActions {
                 }
                 for(let wif of Object.keys(wifs_to_balances)) {
                     var {balances, public_key_string} = wifs_to_balances[wif]
-                    for(let b of balances) {
+                    for(let {chain_balance_record, vested_balance} of balances) {
                         //DEBUG console.log('... balance',b)
-                        var total_claimed = "0"
-                        if( ! b.vesting_policy)
-                            total_claimed = b.balance.amount
-                        //'else' Zero total_claimed is understood to mean that your
-                        //claiming the vesting balance on vesting terms.
-                        if( ! address_publickey_map[b.owner])
-                            debugger
+                        var total_claimed
+                        if( vested_balance.amount) {
+                            if(vested_balance.amount == 0)
+                                // recently claimed 
+                                continue
+                            
+                            total_claimed = vested_balance.amount
+                        } else
+                            total_claimed = chain_balance_record.balance.amount
+                        
+                        //assert
+                        if(vested_balance.asset_id != chain_balance_record.balance.asset_id)
+                            throw new Error("Vested balance record and balance record asset_id missmatch",
+                                vested_balance.asset_id,
+                                chain_balance_record.balance.asset_id
+                            )
+                        
+                        //if( ! address_publickey_map[b.owner]) debugger
                         balance_claims.push({
                             fee: { amount: "0", asset_id: "1.3.0"},
                             deposit_to_account: account,
-                            balance_to_claim: b.id, //"1.15.0"
-                            balance_owner_key: address_publickey_map[b.owner],
+                            balance_to_claim: chain_balance_record.id,
+                            balance_owner_key: address_publickey_map[chain_balance_record.owner],
                             total_claimed: {
                                 amount: total_claimed,
-                                asset_id: b.balance.asset_id
+                                asset_id: chain_balance_record.balance.asset_id
                             }
                         })
                     }

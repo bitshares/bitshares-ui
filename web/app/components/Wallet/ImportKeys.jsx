@@ -263,6 +263,7 @@ export default class ImportKeys extends Component {
                 var wif_to_balances = {};
                 for(let i = 0; i < result.length; i++) {
                     var balance = result[i];
+                    //DEBUG  if( ! balance.vesting_policy) continue
                     var wif = wif_owner[balance.owner];
                     var balances = wif_to_balances[wif] || [];
                     balances.push(balance);

@@ -54,6 +54,7 @@ class BalanceClaim extends Component {
     componentWillReceiveProps() {
         console.log('... BalanceClaim componentWillReceiveProps')
         if(this.props.balance_claim_error) {
+            var balance_claim_error = this.props.balance_claim_error
             console.log("BalanceClaim", balance_claim_error)
             notify.error(balance_claim_error)
         }
@@ -68,8 +69,7 @@ class BalanceClaim extends Component {
     //}
     
     render() {
-        //DEBUG
-        console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
+        //DEBUG  console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
         if( ! this.props.balance_by_account_asset.length)
             return <div/>
         
@@ -97,14 +97,20 @@ class BalanceClaim extends Component {
                         </td>
                         <td style={{textAlign: "right"}}>
                             <FormattedAsset color="info"
-                                _element_separator="</td><td>"
                                 amount={balance.unvested.unclaimed}
                                 asset={asset_id}/></td>
                         <td style={{textAlign: "right"}}>
+                            {balance.vesting.total ? <div>
                             <FormattedAsset
-                                _element_separator="</td><td>"
                                 amount={balance.vesting.unclaimed}
-                                asset={asset_id}/></td>
+                                hide_asset={true}
+                                asset={asset_id}/>
+                            <span> of </span>
+                            <FormattedAsset
+                                amount={balance.vesting.total}
+                                asset={asset_id}/>
+                            </div>:null}
+                        </td>
                         <td> {account_names} </td>
                     </tr>
                 );
@@ -196,6 +202,9 @@ class BalanceClaim extends Component {
     
     _claimAccountSelect(claim_account_name) {
         this.setState({claim_account_name})
+        if(this.state.checked.size)
+            return
+        
         var checked = new Map()
         var index = -1
         for(let asset_balance of this.props.balance_by_account_asset) {
@@ -214,10 +223,12 @@ class BalanceClaim extends Component {
     
     _checked(index) {
         var checked = this.state.checked.get(index)
-        if(checked)
+        if(checked) {
             //delete reduces checked.size (0 for no selection) 
             this.state.checked.delete(index)
-        else
+            //if( ! this.state.checked.size)
+            //    this.setState({claim_account_name:null})
+        } else
             this.state.checked.set(index, true)
         
         if( ! this.state.claim_account_name) {
@@ -262,10 +273,14 @@ class BalanceClaim extends Component {
         for(let balance_claim of balance_claims) {
             if(balance_claim.is_claimed) continue
             var chain_balance_record = balance_claim.chain_balance_record
+            
             if(chain_balance_record.vesting) continue //TODO get_vested_balances
             var balences =
                 privateid_to_balances[balance_claim.private_key_id] || []
-            balences.push(chain_balance_record)
+            
+            //vested_balance kept up-to-date in the BalanceStore on refresh
+            var vested_balance = balance_claim.vested_balance
+            balences.push({chain_balance_record, vested_balance})
             privateid_to_balances[balance_claim.private_key_id] = balences
         }
         var wif_to_balances = {}
