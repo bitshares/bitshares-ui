@@ -215,7 +215,7 @@ class BalanceClaimStore {
                 balance_claims: [],
                 asset_id: b.balance.asset_id
             })
-            if(b.vesting) {
+            if(b.vesting_policy) {
                 if(balance_claim.is_claimed)
                     total.vesting.claimed += v.to_number(b.balance.amount)
                 else
