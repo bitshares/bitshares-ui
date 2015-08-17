@@ -3,7 +3,6 @@ import Immutable from "immutable";
 import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import VotesTable from "./VotesTable";
 import BaseComponent from "../BaseComponent";
 import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
