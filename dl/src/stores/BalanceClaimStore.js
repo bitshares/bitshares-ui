@@ -1,14 +1,20 @@
-import idb_helper from "../idb-helper"
 import t from "tcomb"
 import alt from "alt-instance"
 import iDB from "idb-instance"
-
-import Apis from "rpc_api/ApiInstances"
-
-import BalanceClaimActions from "actions/BalanceClaimActions"
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import idb_helper from "../idb-helper"
 import v from "chain/serializer_validation"
 
+import Apis from "rpc_api/ApiInstances"
+import WalletDb from "stores/WalletDb"
+import AccountStore from "stores/AccountStore";
+import PrivateKeyStore from "stores/PrivateKeyStore"
+import ImportKeysActions from "actions/ImportKeysActions"
+import BalanceClaimActions from "actions/BalanceClaimActions"
+import WalletUnlockActions from "actions/WalletUnlockActions"
+
+import chain_api from "api/chain"
+import ApplicationApi from "rpc_api/ApplicationApi"
+var application_api = new ApplicationApi()
 var api = Apis.instance()
 
 export var BalanceClaimTcomb = t.struct({
@@ -23,11 +29,22 @@ class BalanceClaimStore {
     
     constructor() {
         this.bindActions(BalanceClaimActions)
+        this.bindListeners({
+            //onRefreshBalanceClaims: ImportKeysActions.saved,
+            onLoadMyAccounts: [
+                WalletUnlockActions.change//, ImportKeysActions.saved
+            ]
+        })
         this.state = {
             balances_loading: false,
             balance_claims: [],
-            balance_by_account_asset: []
+            balance_by_account_asset: [],
+            my_accounts: [],
+            my_accounts_loading: false
         }
+    }
+    
+    refresh() {
     }
         
     onAdd({balance_claim, transaction}) {
@@ -38,8 +55,8 @@ class BalanceClaimStore {
         )
     }
     
-    onRefreshBalanceClaims(resolve) {
-        if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims start')
+    onRefreshBalanceClaims() {
+        if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims START')
         this.setState({loading: true})
         var balance_claims = [], balance_ids = []
         var p = idb_helper.cursor("balance_claims", cursor => {
@@ -84,16 +101,82 @@ class BalanceClaimStore {
                 }
                 return Promise.all(ps).then( ()=> {
                     this.setBalanceClaims(balance_claims)
-                    if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims done')
+                    if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims DONE')
                 })
             })
-        })
-        resolve(p)
+        }).catch( balance_claim_error => this.setState({balance_claim_error}) )
+    }
+    
+    /** Populate this.state.my_accounts with only account where the wallet
+    has full transaction signing authority.  This needs to be done until 
+    the user needs more flexibility and can be warned that they could not spend
+    the claimed balance in this wallet.
+    
+    Blocks the case where the import file may have an account name registered to
+    someone else.
+    */
+    onLoadMyAccounts() {
+        console.log('... onLoadMyAccounts')
+        
+        if( WalletDb.isLocked()) return
+        if(TRACE) console.log('... BalanceClaimStore.loadMyAccounts START')
+        this.setState({my_accounts_loading:true})
+        var account_names = AccountStore.getState().linkedAccounts.toArray()
+        var promises = []
+        for(let account_name of account_names) {
+            
+            var found = false
+            for(let account of this.state.my_accounts)
+                if(account_name == account)
+                    found = true
+            if(found)
+                continue
+            
+            if(TRACE) console.log('... BalanceClaimStore.onLoadMyAccounts lookupAccountByName')
+            var p = chain_api.lookupAccountByName(account_name).then ( account => {
+                //DEBUG console.log('... account lookupAccountByName',account.get("id"),account.get("name"))
+                
+                // the fake transfer will check for required auths
+                return application_api.transfer(
+                    account.get("id"),
+                    account.get("id"),
+                    1,//amount
+                    0,//asset
+                    null,//memo
+                    false,//broadcast
+                    false,//encrypt_memo
+                    false//sign
+                ).then( fake_transfer => {
+                    //DEBUG
+                    if(TRACE) console.log('... BalanceClaimStore my account',account.get("name"))
+                    return account.get("name")
+                }).catch( error => {
+                    //DEBUG
+                    if(TRACE) console.log('... BalanceClaimStore NOT my account',account.get("name"),error)
+                    return null
+                })
+            }).catch( error => {
+                //DEBUG Account not found console.log('... error1',error)
+            })
+            
+            promises.push(p)
+        }
+        Promise.all(promises).then( account_names => {
+            var my_accounts = []
+            for(let account_name of account_names) {
+                if( ! account_name) continue
+                my_accounts.push(account_name)
+            }
+            //DEBUG console.log('... my_accounts',my_accounts)    
+            this.setState({my_accounts, my_accounts_loading:false})
+            if(TRACE) console.log('... BalanceClaimStore.onLoadMyAccounts DONE')
+        }).catch( balance_claim_error => this.setState({balance_claim_error}) )
     }
     
     setBalanceClaims(balance_claims) {
         var balance_by_account_asset = this.balanceByAssetName(balance_claims)
-        this.setState({balance_claims, balance_by_account_asset, loading: false})
+        this.setState({balance_claims, balance_by_account_asset, loading: false,
+            balance_claim_error:null})
     }
     
     transaction_update() {

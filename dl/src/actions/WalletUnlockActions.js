@@ -1,31 +1,38 @@
 import alt from "alt-instance"
 
+import WalletDb from "stores/WalletDb"
+
 class WalletUnlockActions {
 
-    onChange() {
-    }
-    
     unlock() {
+        if ( ! WalletDb.isLocked())
+            return Promise.resolve()
+        
         //DEBUG console.log('... WalletUnlockActions.unlock')
         return new Promise( (resolve, reject) => {
             this.dispatch({resolve, reject})
         }).then( unlocked => {
             //DEBUG  console.log('... WalletUnlockStore\tmodal unlock')
-            WrappedWalletUnlockActions.onChange()
-        }).catch( locked => {
-            //DEBUG  console.log('... WalletUnlockStore\tmodal lock',locked)
-            WrappedWalletUnlockActions.onChange()
-        })
+            WrappedWalletUnlockActions.change()
+        }).catch ( ()=>{})
     }
     
     lock() {
+        if (WalletDb.isLocked()) return
         //DEBUG  console.log("... WalletUnlockActions\tprogramatic lock")
         this.dispatch()
+        WrappedWalletUnlockActions.change()
     }
     
     cancel() {
         this.dispatch()
     }
+    
+    change() {
+        this.dispatch()
+        console.log('... WalletUnlockActions.change')
+    }
+    
 }
 
 var WrappedWalletUnlockActions = alt.createActions(WalletUnlockActions)

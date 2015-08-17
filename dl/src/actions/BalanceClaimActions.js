@@ -2,18 +2,16 @@ import alt from "alt-instance"
 
 class BalanceClaimActions {
     
-    refreshBalanceClaims() {
-        new Promise( resolve =>
-            this.dispatch(resolve)
-        ).then( ()=>
-            BalanceClaimActionsWrapped.refreshComplete()
-        )
-    }
-    
-    refreshComplete() {}
-    
     add(params) {
         this.dispatch(params)
+    }
+    
+    refreshBalanceClaims() {
+        this.dispatch()
+    }
+    
+    loadMyAccounts() {
+        this.dispatch()
     }
 }
 

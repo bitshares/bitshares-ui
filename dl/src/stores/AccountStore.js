@@ -34,7 +34,6 @@ class AccountStore extends BaseStore {
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
-            onAddAccount: AccountActions.addAccount,
             onChange: AccountActions.change
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount");
@@ -268,10 +267,6 @@ class AccountStore extends BaseStore {
         // console.log("[AccountStore.js] ----- onTransfer ----->", result);
     }
     
-    onAddAccount(name_or_account){
-        this.onCreateAccount(name_or_account)
-    }
-
     onCreateAccount(name_or_account) {
         var account = name_or_account;
         if (typeof account === "string") {
@@ -289,7 +284,7 @@ class AccountStore extends BaseStore {
         if( ! validation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
         
-        iDB.add_to_store("linked_accounts", account).then(() => {
+        return iDB.add_to_store("linked_accounts", account).then(() => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", account.name);
             this.linkedAccounts = this.linkedAccounts.add(account.name);
             if (this.linkedAccounts.size === 1) {
@@ -297,7 +292,7 @@ class AccountStore extends BaseStore {
             }
         });
     }
-
+    
     onUpgradeAccount(account_id) {
         console.log("[AccountStore.js] ----- onUpgradeAccount ----->", account_id);
     }

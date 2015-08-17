@@ -4,7 +4,7 @@ import BalanceClaimActions from "actions/BalanceClaimActions"
 
 class ImportKeysActions {
     
-    change() {
+    saved() {
         this.dispatch()
     }
     

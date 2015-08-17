@@ -5,11 +5,7 @@ import WalletDb from "stores/WalletDb"
 class WalletUnlockStore {
     
     constructor() {
-        this.bindListeners({
-            onUnlock: WalletUnlockActions.unlock,
-            onLock: WalletUnlockActions.lock,
-            onCancel: WalletUnlockActions.cancel
-        })
+        this.bindActions(WalletUnlockActions)
         this.state = {}
     }
     
@@ -30,6 +26,9 @@ class WalletUnlockStore {
     
     onCancel() {
         this.setState({resolve:null, reject:null})
+    }
+    
+    onChange() {
     }
 }
 

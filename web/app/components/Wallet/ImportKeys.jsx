@@ -578,24 +578,13 @@ export default class ImportKeys extends Component {
     }
     
     saveImport() {
-        //var linkedAccounts = AccountStore.getState().linkedAccounts
-        //for(let account_name in this.state.account_keycount) {
-        //    if(account_name === "") continue
-        //    if( ! linkedAccounts.get(account_name)) {
-        //        try {
-        //            AccountActions.addAccount(account_name)
-        //        } catch(e) {
-        //            console.log("WARN", e)
-        //        }
-        //    }
-        //}
         
         // Lookup and add accounts referenced by the wifs
         var imported_keys_public = this.state.imported_keys_public
         var db = api.db_api()
         
         if(TRACE) console.log('... ImportKeys._saveImport get_key_references START')
-        var p = db.exec("get_key_references",
+        var addAccountPromise = db.exec("get_key_references",
             [Object.keys(imported_keys_public)]).then(
             results => {
             var account_ids = {}
@@ -603,14 +592,17 @@ export default class ImportKeys extends Component {
                 for(let account_id of result)
                     account_ids[account_id] = true
             
-            chain_api.fetchObject(Object.keys(account_ids)).then( results => {
+            return chain_api.fetchObject(Object.keys(account_ids)).then( results => {
+                var p = []
                 for(let account of results) {
                     //DEBUG console.log('... get_key_references object lookup',account?account.toJS().name:null)
                     if(account)
-                        AccountActions.addAccount(account)
+                        p.push(AccountStore.onCreateAccount(account).catch( error => {
+                            console.log("ImoprtKeys save import account error",account,error)
+                        }))
                 }
-                if(TRACE) console.log('... ImportKeys._saveImport get_key_references DONE')
-                BalanceClaimActions.refreshBalanceClaims()
+                if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
+                return Promise.all(p)
             })
         })
         
@@ -653,7 +645,10 @@ export default class ImportKeys extends Component {
                     notify.success(message)
                 
                 if (import_count) {
-                    ImportKeysActions.change()
+                    addAccountPromise.then(()=> {
+                        BalanceClaimActions.refreshBalanceClaims()
+                        BalanceClaimActions.loadMyAccounts()
+                    })
                 }
             } finally {
                 this.reset()
