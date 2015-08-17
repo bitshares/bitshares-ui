@@ -126,7 +126,7 @@ class AccountSelector extends ChainComponent {
          member_status = ChainStore.getAccountMemberStatus(this.state.account)
 
       return (
-          <div className="account-selector grid-content no-overflow">
+          <div className="account-selector no-overflow">
               <AccountImage size={{height: 80, width: 80}}
                             account={this.state.account?this.state.account.get('name'):null} custom_image={null}/>
               <div className="content-area">

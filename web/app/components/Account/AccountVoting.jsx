@@ -46,7 +46,7 @@ class AccountVoting extends ChainComponent {
 
     onUpdate( next_props = null, next_state = {} )
     {
-       console.log( "======================> ON UPDATE!!! <======================" )
+       //console.log( "======================> ON UPDATE!!! <======================" )
        if( !next_props ) next_props = this.props
        if( !next_state.init_witnesses ) next_state.init_witnesses = this.state.init_witnesses
        if( !next_state.init_committee ) next_state.init_committee = this.state.init_committee
@@ -109,7 +109,7 @@ class AccountVoting extends ChainComponent {
 
        if( next_state.new_witness )
        {
-          console.log( "next_state: ", next_state )
+          //console.log( "next_state: ", next_state )
           if( this.state.witnesses.get( next_state.new_witness ) )
           {
              next_state.current_add_witness_error = "Already voting for this witness"
@@ -261,15 +261,8 @@ class AccountVoting extends ChainComponent {
     }
 
     render() {
-    //    console.log( "state: ", this.state )
-    //    if( this.state.account ) console.log( "account: ", this.state.account.toJS() )
-    //    if( this.state.init_witnesses ) console.log( "init_witnesses: ", this.state.init_witnesses.toJS() )
-    //    if( this.state.init_committee ) console.log( "init_committee: ", this.state.init_committee.toJS() )
-
         let current_proxy_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
         let current_proxy_error = null
-
-
 
         let new_id = this.getNewProxyID()
         if( new_id && this.state.account && this.state.account.get('id') == new_id )
@@ -288,54 +281,49 @@ class AccountVoting extends ChainComponent {
         let publish_buttons_class = "button" + (changed? "" : " disabled");
         let add_witness_button_class = "button" + (this.state.current_add_witness?"":" disabled")
         let add_committee_button_class = "button" + (this.state.current_add_committee?"":" disabled")
-        // console.log( "witnesses: ", this.state.witnesses.toJS() )
-
-                              //<button className="button" onClick={this.onRemoveWitness.bind(this,name)}> Remove </button> 
 
         let witness_rows = this.state.witnesses.map( item => { 
              let witness = item.toJS()
-             //console.log( "witness: ",witness )
              let witness_account = ChainStore.getAccount( witness.witness_account )
              let url  = witness.url 
              let name = witness_account.get('name')
              return (
                          <tr key={name}>
                             <td>
-                                <button className="button outline" onClick={this.onRemoveWitness.bind(this, name)}>
-                                <Translate content="account.votes.remove_witness" /></button> 
-                            </td>
-                            <td>
                                <AccountImage size={{height: 28, width: 28}} account={name} custom_image={null}/> 
                             </td>
                              <td>{name}</td>
                              <td>{url}</td>
+                             <td>
+                                 <button className="button outline" onClick={this.onRemoveWitness.bind(this, name)}>
+                                     <Translate content="account.votes.remove_witness" /></button>
+                             </td>
                          </tr>
                     )} )
 
         let committee_rows = this.state.committee.map( item => { 
              let committee = item.toJS()
-             //console.log( "committee: ",committee )
              let committee_account = ChainStore.getAccount( committee.committee_member_account )
              let url  = committee.url 
              let name = committee_account.get('name')
              return (
                          <tr key={name}>
                             <td>
-                                <button className="button outline" onClick={this.onRemoveCommittee.bind(this, name)}>
-                                <Translate content="account.votes.remove_committee" /></button> 
-                            </td>
-                            <td>
                                <AccountImage size={{height: 28, width: 28}} account={name} custom_image={null}/> 
                             </td>
                              <td>{name}</td>
                              <td>{url}</td>
+                             <td>
+                                 <button className="button outline" onClick={this.onRemoveCommittee.bind(this, name)}>
+                                     <Translate content="account.votes.remove_committee" /></button>
+                             </td>
                          </tr>
                     )} )
 
 
 
 
-        let cw = ["30px", "30px", "10%", "90%"] ;
+        let cw = ["10%", "20%", "60%", "10%"] ;
         return (
             <div className="grid-content">
                 <div className="content-block">
@@ -361,10 +349,10 @@ class AccountVoting extends ChainComponent {
                     <table className="table">
                         <thead>
                         <tr>
-                            <th style={{width: cw[0]}}>ACTION</th>
-                            <th style={{width: cw[1]}}></th>
-                            <th style={{width: cw[2]}}><Translate content="account.votes.name"/></th>
-                            <th style={{width: cw[3]}}><Translate content="account.votes.url"/></th>
+                            <th style={{width: cw[0]}}></th>
+                            <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
+                            <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
+                            <th style={{width: cw[3]}}>ACTION</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -386,10 +374,10 @@ class AccountVoting extends ChainComponent {
                     <table className="table">
                         <thead>
                         <tr>
-                            <th style={{width: cw[0]}}>ACTION</th>
-                            <th style={{width: cw[1]}}></th>
-                            <th style={{width: cw[2]}}><Translate content="account.votes.name"/></th>
-                            <th style={{width: cw[3]}}><Translate content="account.votes.url"/></th>
+                            <th style={{width: cw[0]}}></th>
+                            <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
+                            <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
+                            <th style={{width: cw[3]}}>ACTION</th>
                         </tr>
                         </thead>
                         <tbody>
