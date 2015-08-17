@@ -328,20 +328,22 @@ class ChainStore
          return asset.last_promise
 
       asset.last_promise = new Promise( (resolve,reject ) => {
-          Apis.instance().db_api().exec( "lookup_asset_symbols", [ [symbol] ] )
-              .then( asset_objects => {
-                  if( asset_objects.length && asset_objects[0] )
-                  {
-                     let new_obj = this._updateObject( asset_objects[0] )
-                     asset.id = new_obj.id
-                     this.assets_by_symbol = this.assets_by_symbol.set( symbol, asset )
-                     resolve( new_obj )
-                  }
-                  else
-                  {
-                     reject( Error("Asset " + symbol + " was not found" ) )
-                  }
-              }).catch( error => reject(error) )
+          symbol => {
+              Apis.instance().db_api().exec( "lookup_asset_symbols", [ [symbol] ] )
+                  .then( asset_objects => {
+                      if( asset_objects.length && asset_objects[0] )
+                      {
+                         let new_obj = this._updateObject( asset_objects[0] )
+                         asset.id = new_obj.id
+                         this.assets_by_symbol = this.assets_by_symbol.set( symbol, asset )
+                         resolve( new_obj )
+                      }
+                      else
+                      {
+                         reject( Error("Asset " + symbol + " was not found" ) )
+                      }
+                  }).catch( error => reject(error) )
+          }(symbol) //copy var ref for callback
       })
 
       this.assets_by_symbol = this.assets_by_symbol.set( symbol, asset )
@@ -379,23 +381,25 @@ class ChainStore
        * accounts_by_name index to point to the object id, then return the
        * account object
        */
-      acnt.last_promise = new Promise( (resolve,reject ) => {
-          //DEBUG console.log( "lookup account by name: ", name )
-          Apis.instance().db_api().exec( "get_account_by_name", [ name ] )
-              .then( optional_account_object => {
-                  if( optional_account_object )
-                  {
-                     let new_obj = this._updateObject( optional_account_object )
-                     acnt.id = new_obj.get('id')
-                     this.accounts_by_name = this.accounts_by_name.set( name, acnt )
-                     resolve( new_obj )
-                  }
-                  else
-                  {
-                     reject( Error("Account " + name + " was not found" ) )
-                  }
-              }).catch( error => reject(error) )
-      })
+      name => {
+          acnt.last_promise = new Promise( (resolve,reject ) => {
+              //DEBUG console.log( "lookup account by name: ", name )
+              Apis.instance().db_api().exec( "get_account_by_name", [ name ] )
+                  .then( optional_account_object => {
+                      if( optional_account_object )
+                      {
+                         let new_obj = this._updateObject( optional_account_object )
+                         acnt.id = new_obj.get('id')
+                         this.accounts_by_name = this.accounts_by_name.set( name, acnt )
+                         resolve( new_obj )
+                      }
+                      else
+                      {
+                         reject( Error("Account " + name + " was not found" ) )
+                      }
+                  }).catch( error => reject(error) )
+          })
+      }(name)
       this.accounts_by_name = this.accounts_by_name.set( name, acnt )
       return acnt.last_promise
    }
@@ -440,59 +444,62 @@ class ChainStore
       if( sub.last_query == now ) {
          sub.last_promise = new Promise( (resolve,reject) => {
              console.log( "FETCHING FULL ACCOUNT: ", id )
-             Apis.instance().db_api().exec("get_full_accounts", 
-                                           [callback,[id],sub.subscriptions.size > 0])
-                 .then( results => {
-
-                    let full_account = results[0][1]
-                    console.log( "full_account: ", full_account )
-
-                    let {
-                        account, 
-                        vesting_balances, 
-                        statistics, 
-                        call_orders, 
-                        limit_orders, 
-                        referrer_name, registrar_name, lifetime_referrer_name,
-                        votes
-                    } = full_account
-
-                    let cur = this.accounts_by_name.get( account.name )
-                    cur.id = account.id
-                    this.accounts_by_name = this.accounts_by_name.set( account.name, cur ) 
-
-                    account.referrer_name = referrer_name
-                    account.lifetime_referrer_name = lifetime_referrer_name
-                    account.registrar_name = registrar_name
-                    account.balances = {}
-                    account.orders = new Immutable.Set()
-                    account.vesting_balances = new Immutable.Set()
-                    account.balances = new Immutable.Map()
-
-                    for( var i = 0; i < vesting_balances.length; ++i )
-                    {
-                       this._updateObject( vesting_balances[i] )
-                       account.vesting_balances = account.vesting_balances.add( vesting_balances[i].id )
-                    }
-                    for( var i = 0; i < votes.length; ++i )
-                    {
-                       this._updateObject( votes[i] )
-                    }
-
-                    for( var i = 0; i < full_account.balances.length; ++i )
-                    {
-                       let b = full_account.balances[i]
-                       this._updateObject( b )
-                       account.balances = account.balances.set( b.asset_type, full_account.balances[i].id )
-                    }
-
-                    this._updateObject( statistics )
-                    let updated_account = this._updateObject( account )
-                    this.fetchRecentHistory( updated_account )
-                    resolve( updated_account )
-                    if( on_update ) 
-                       on_update( updated_account )
-                 }, error => reject( error ) )
+             on_update => {
+                 Apis.instance().db_api().exec("get_full_accounts", 
+                       [callback,[id],sub.subscriptions.size > 0])
+                     .then( results => {
+    
+                        let full_account = results[0][1]
+                        console.log( "full_account: ", full_account )
+    
+                        let {
+                            account, 
+                            vesting_balances, 
+                            statistics, 
+                            call_orders, 
+                            limit_orders, 
+                            referrer_name, registrar_name, lifetime_referrer_name,
+                            votes
+                        } = full_account
+    
+                        let cur = this.accounts_by_name.get( account.name )
+                        cur.id = account.id
+                        this.accounts_by_name = this.accounts_by_name.set( account.name, cur ) 
+    
+                        account.referrer_name = referrer_name
+                        account.lifetime_referrer_name = lifetime_referrer_name
+                        account.registrar_name = registrar_name
+                        account.balances = {}
+                        account.orders = new Immutable.Set()
+                        account.vesting_balances = new Immutable.Set()
+                        account.balances = new Immutable.Map()
+    
+                        for( var i = 0; i < vesting_balances.length; ++i )
+                        {
+                           this._updateObject( vesting_balances[i] )
+                           account.vesting_balances = account.vesting_balances.add( vesting_balances[i].id )
+                        }
+                        for( var i = 0; i < votes.length; ++i )
+                        {
+                           this._updateObject( votes[i] )
+                        }
+    
+                        for( var i = 0; i < full_account.balances.length; ++i )
+                        {
+                           let b = full_account.balances[i]
+                           this._updateObject( b )
+                           account.balances = account.balances.set( b.asset_type, full_account.balances[i].id )
+                        }
+    
+                        this._updateObject( statistics )
+                        let updated_account = this._updateObject( account )
+                        this.fetchRecentHistory( updated_account )
+                        resolve( updated_account )
+                        if( on_update ) 
+                           on_update( updated_account )
+                     }, error => reject( error ) 
+                 )
+             }(on_update)
 
          })
       }
@@ -862,19 +869,21 @@ class ChainStore
       }
 
       if( missing.length ) {
-         // we may need to fetch some objects
-          Apis.instance().db_api().exec( "lookup_vote_ids", [ missing ] )
-              .then( vote_obj_array => {
-                     console.log( "vote objects ===========> ", vote_obj_array )
-                   for( let i = 0; i < vote_obj_array.length; ++i )
-                   {
-                      if( vote_obj_array[i] )
-                      {
-                         this._updateObject( vote_obj_array[i] )
-                      }
-                   }
-                   if( on_update ) on_update()
-              }, error => console.log( "Error looking up vote ids: ", error ) ) 
+          // we may need to fetch some objects
+          on_update => {
+              Apis.instance().db_api().exec( "lookup_vote_ids", [ missing ] )
+                  .then( vote_obj_array => {
+                         console.log( "vote objects ===========> ", vote_obj_array )
+                       for( let i = 0; i < vote_obj_array.length; ++i )
+                       {
+                          if( vote_obj_array[i] )
+                          {
+                             this._updateObject( vote_obj_array[i] )
+                          }
+                       }
+                       if( on_update ) on_update()
+                  }, error => console.log( "Error looking up vote ids: ", error ) ) 
+          }(on_update)
       }
       return result
    }
