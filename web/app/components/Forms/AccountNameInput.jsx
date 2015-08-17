@@ -10,7 +10,7 @@ class AccountNameInput extends BaseComponent {
 
     constructor(props) {
         super(props, AccountStore);
-        this.state.value = "";
+        this.state.value = null;
         this.state.error = null;
         this.state.existing_account = false;
         this.handleChange = this.handleChange.bind(this);
@@ -50,7 +50,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     getError() {
-        if(!this.state.value) return null;
+        if(this.state.value === null) return null;
         let error = null;
         if (this.state.error) {
             error = this.state.error;
@@ -70,6 +70,9 @@ class AccountNameInput extends BaseComponent {
         this.state.error = null;
         if (value && !(/^[a-z]+(?:[a-z0-9\-\.])*$/.test(value) && /[a-z0-9]$/.test(value))) {
             this.state.error = "Account name can only contain lowercase alphanumeric characters, dots, and dashes.\nMust start with a letter and cannot end with a dash.";
+        }
+        if(value === "") {
+            this.state.error = "Please enter valid account name";
         }
         this.setState({value: value, error: this.state.error});
         if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
