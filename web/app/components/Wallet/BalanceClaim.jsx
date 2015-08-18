@@ -234,9 +234,17 @@ class BalanceClaim extends Component {
         if( ! this.state.claim_account_name) {
             var {accounts} = this.props.balance_by_account_asset[index]
             if(accounts.length == 1) {
-                console.log('... accounts',accounts)
                 var claim_account_name = accounts[0]
-                this.setState({claim_account_name})
+                // !!! don't allow it unless it is one of this.props.my_accounts
+                var found = false
+                for(let my_account of this.props.my_accounts) {
+                    if(my_account == claim_account_name) {
+                        found = true
+                        break
+                    }
+                }
+                if(found)
+                    this.setState({claim_account_name})
             }
         }
         this.forceUpdate()
