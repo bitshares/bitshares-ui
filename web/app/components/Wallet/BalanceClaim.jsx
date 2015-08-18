@@ -47,8 +47,11 @@ class BalanceClaim extends Component {
     
     componentWillMount() {
         //DEBUG console.log('... BalanceClaim componentWillMount')
-        BalanceClaimActions.refreshBalanceClaims()
-        BalanceClaimActions.loadMyAccounts()
+        BalanceClaimActions.willMount()
+    }
+    
+    componentWillUnmount() {
+        BalanceClaimActions.willUnmount()
     }
     
     componentWillReceiveProps() {
@@ -70,6 +73,8 @@ class BalanceClaim extends Component {
     
     render() {
         //DEBUG  console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
+        
+        
         if( ! this.props.balance_by_account_asset.length)
             return <div/>
         

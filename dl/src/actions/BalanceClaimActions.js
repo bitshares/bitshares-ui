@@ -13,6 +13,11 @@ class BalanceClaimActions {
     loadMyAccounts() {
         this.dispatch()
     }
+    
+    willMount(){this.dispatch()}
+    
+    willUnmount(){this.dispatch()}
+
 }
 
 var BalanceClaimActionsWrapped = alt.createActions(BalanceClaimActions)

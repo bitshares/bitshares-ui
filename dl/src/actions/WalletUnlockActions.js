@@ -29,7 +29,7 @@ class WalletUnlockActions {
     
     change() {
         this.dispatch()
-        console.log('... WalletUnlockActions.change')
+        //DEBUG console.log('... WalletUnlockActions.change')
     }
     
 }

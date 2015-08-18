@@ -55,6 +55,14 @@ class BalanceClaimStore {
         }
     }
     
+    onWillMount() {
+        this.mounted = true
+    }
+    
+    onWillUnmount() {
+        this.mounted = false
+    }
+    
     /**
         No need to wait on the promises returned by this method as long
         as this.state.balances_error == null and this.state.balances_saving == 0
@@ -94,6 +102,7 @@ class BalanceClaimStore {
     being viewed is accurate.  
     */
     onRefreshBalanceClaims() {
+        if( ! this.mounted) return
         if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims START')
         var balance_claims = this.state.balance_claims
         var balance_ids = this.state.balance_ids
@@ -164,8 +173,8 @@ class BalanceClaimStore {
     someone else.
     */
     onLoadMyAccounts() {
+        if( ! this.mounted) return
         if(TRACE) console.log('... BalanceClaimStore.onLoadMyAccounts')
-        
         if( WalletDb.isLocked()) return
         if(TRACE) console.log('... BalanceClaimStore.loadMyAccounts START')
         this.setState({my_accounts_loading:true})
