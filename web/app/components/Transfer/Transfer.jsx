@@ -98,6 +98,7 @@ class Transfer extends BaseComponent {
         new_state.isValid = Number(value) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
     }
+
     update() {
        console.log( "init state:", this.state )
        console.log( "this.state.from: ",this.state.transfer.from )
@@ -202,7 +203,12 @@ class Transfer extends BaseComponent {
         console.log("update state:",new_state)
         this.setState(new_state)
     }
+
     shouldComponentUpdate() { return true }
+
+    componentDidMount() {
+        React.findDOMNode(this.refs.from).focus();
+    }
 
     formChange(event) {
         let {error, transfer} = this.state;
@@ -313,7 +319,6 @@ class Transfer extends BaseComponent {
 
     render() {
         let {transfer, errors} = this.state;
-        console.log( "render state: ", this.state )
 
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
         return (
@@ -333,7 +338,7 @@ class Transfer extends BaseComponent {
                               <div className="grid-content align-right shrink"> {/*balancesComp*/} </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" />
+                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" tabindex="1"/>
                            </div>
                            <div className="grid-block no-overflow">
                                { errors.from ? null : 
@@ -361,7 +366,7 @@ class Transfer extends BaseComponent {
                               </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" />
+                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" tabindex="2"/>
                            </div>
                            <div className="grid-block no-overflow">
                                { errors.to ? null : 
@@ -394,7 +399,7 @@ class Transfer extends BaseComponent {
                            </div>
                            <div className={classNames("grid-content", "no-overflow", {"has-error": errors.amount})}>
                                    <span className="inline-label">
-                                       <input id="amount" type="text" placeholder="0.0" value={transfer.amount} defaultValue={transfer.amount} onChange={this.form_change} ref="amount"/>
+                                       <input id="amount" type="text" placeholder="0.0" value={transfer.amount} defaultValue={transfer.amount} onChange={this.form_change} ref="amount" tabindex="3"/>
                                        <span className="form-label select">{this.renderSelect("asset", transfer.from_assets)}</span>
                                    </span>
                                    <p>{errors.amount}</p>
@@ -407,7 +412,7 @@ class Transfer extends BaseComponent {
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
                             <label>
                                 <Translate component="span" content="transfer.memo" />
-                                <textarea id="memo" rows="1" ref="memo" value={transfer.memo}/>
+                                <textarea id="memo" rows="1" ref="memo" value={transfer.memo} tabindex="4"/>
                             </label>
                             <div>{errors.memo}</div>
                         </div>
@@ -417,7 +422,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
                             <label>&nbsp;</label>
-                            <button className={submitButtonClass} type="submit" value="Submit"><Translate component="span" content="transfer.send" /></button>
+                            <button className={submitButtonClass} type="submit" value="Submit" tabindex="5"><Translate component="span" content="transfer.send" /></button>
                             { this.state.error ? <div>{this.state.error}</div> : <div>&nbsp;<br/></div> }
                         </div>
                     </div>
