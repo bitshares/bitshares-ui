@@ -533,7 +533,7 @@ class ChainStore
     * historic operations.
     *
     *  @param account immutable account object
-    *  @return a promise with the account history 
+    *  @return a promise with the account history
     */
    fetchRecentHistory( account, limit = 100 )
    {
@@ -895,4 +895,7 @@ class ChainStore
    }
 }
 
-export default new ChainStore();
+let chain_store = new ChainStore();
+if(window) window.chain_store = chain_store;
+
+export default chain_store;
