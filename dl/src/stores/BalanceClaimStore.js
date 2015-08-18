@@ -44,6 +44,7 @@ class BalanceClaimStore {
             ]
         })
         this.balances_saving = 0
+        this.pending_add_promises = []
         this.state = {
             balance_by_account_asset: [],
             my_accounts: [],
@@ -71,10 +72,12 @@ class BalanceClaimStore {
     onAdd({balance_claim, transaction}) {
         BalanceClaimTcomb(balance_claim)
         this.indexBalanceClaim(balance_claim)
-        return idb_helper.add(
+        var p1 = idb_helper.add(
             transaction.objectStore("balance_claims"),
             balance_claim
         )
+        this.pending_add_promises.push(p1)
+        return p1
     }
     
     loadBalanceClaims() {
@@ -95,6 +98,7 @@ class BalanceClaimStore {
     indexBalanceClaim(balance_claim) {
         this.state.balance_claims.push( balance_claim )
         this.state.balance_ids.push( balance_claim.chain_balance_record.id )
+        //this.setBalanceClaims(this.state.balance_claims)
     }
     
     /** Called both on initial import and display of balance claims and then
@@ -109,7 +113,7 @@ class BalanceClaimStore {
         this.loadBalanceClaims().then( ()=> {
             //DEBUG console.log('... refresh')
             if( ! balance_claims.length) {
-                this.setBalanceClaims(balance_claims)
+                this.setBalanceClaims( [] )
                 if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims done, no claims import keys first')
                 return
             }
@@ -117,7 +121,14 @@ class BalanceClaimStore {
             var db = api.db_api()
             
             //DEBUG console.log("get_vested_balances",result)
-            return db.exec("get_objects", [balance_ids]).then( result => {
+            
+            var get_objects_promise
+            //if(this.pending_add_promises.length)
+            //    get_objects_promise = Promise.resolve(balance_claims)
+            //else
+                get_objects_promise = db.exec("get_objects", [balance_ids])
+            
+            return get_objects_promise.then( result => {
                 if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims get_objects DONE')
                 var ps = []
                 for(let i = 0; i < result.length; i++) {
@@ -149,16 +160,20 @@ class BalanceClaimStore {
                         }(i) }
                     }
                 }
-                var transaction = this.transaction_update()
-                var store = transaction.objectStore("balance_claims")
-                
-                for(let balance_claim of balance_claims) {
-                    var request = store.put(balance_claim)
-                    ps.push(idb_helper.on_request_end(request))
-                }
-                return Promise.all(ps).then( ()=> {
-                    this.setBalanceClaims(balance_claims)
-                    if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims DONE')
+                Promise.all(ps).then(()=> this.setBalanceClaims(balance_claims))
+                return Promise.all(this.pending_add_promises).then( ()=> {
+                    this.pending_add_promises = []
+                    var transaction = this.transaction_update()
+                    var store = transaction.objectStore("balance_claims")
+                    
+                    for(let balance_claim of balance_claims) {
+                        var request = store.put(balance_claim)
+                        ps.push(idb_helper.on_request_end(request))
+                    }
+                    return Promise.all(ps).then( ()=> {
+                        this.setBalanceClaims(balance_claims)
+                        if(TRACE) console.log('... BalanceClaimStore.onRefreshBalanceClaims DONE')
+                    })
                 })
             })
         }).catch( balance_claim_error => this.setState({balance_claim_error}) )
@@ -206,7 +221,7 @@ class BalanceClaimStore {
                     false//sign
                 ).then( fake_transfer => {
                     //DEBUG
-                    if(TRACE) console.log('... BalanceClaimStore my account',account.get("name"))
+                    if(TRACE) console.log('... BalanceClaimStore my account')
                     return account.get("name")
                 }).catch( error => {
                     //DEBUG
@@ -279,7 +294,8 @@ class BalanceClaimStore {
                 else {
                     //DEBUG console.log('... b.balance.amount',b.balance.amount,vested_balance.amount)
                     total.vesting.total += v.to_number(b.balance.amount)
-                    total.vesting.unclaimed += v.to_number(vested_balance.amount)
+                    if(vested_balance)
+                        total.vesting.unclaimed += v.to_number(vested_balance.amount)
                 }
             } else {
                 if(balance_claim.is_claimed)

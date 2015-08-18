@@ -256,7 +256,6 @@ export default class ImportKeys extends Component {
                 }
             }
             
-            
             var db = api.db_api();
             //DEBUG console.log('... get_balance_objects',address_params)
             var p = db.exec("get_balance_objects", [address_params]).then( result => {
@@ -624,39 +623,36 @@ export default class ImportKeys extends Component {
             //DEBUG if(import_account_names.join('')=="") console.log('... import_balances empty account',import_balances)
         }
         
+        this.reset()
+        
         WalletDb.importKeys( private_key_objs ).then( result => {
             var {import_count, duplicate_count, private_key_ids} = result
-            try {
-                if( ! import_count && ! duplicate_count) {
-                    notify.warning(`There where no keys to import`)
-                    return
-                }
-                if( ! import_count && duplicate_count) {
-                    notify.warning(`${duplicate_count} duplicates (Not Imported)`)
-                    return
-                }
-                var message = ""
-                if (import_count)
-                    message = `Successfully imported ${import_count} keys.`
-                if (duplicate_count)
-                    message += `  ${duplicate_count} duplicates (Not Imported)`
-                
-                if(duplicate_count)
-                    notify.warning(message)
-                else
-                    notify.success(message)
-                
-                if (import_count) {
-                    addAccountPromise.then(()=> {
-                        //ImportKeysActions.saved() // https://github.com/goatslacker/alt/issues/456
-                        BalanceClaimActions.refreshBalanceClaims()
-                        BalanceClaimActions.loadMyAccounts()
-                    })
-                }
-            } finally {
-                this.reset()
+            if( ! import_count && ! duplicate_count) {
+                notify.warning(`There where no keys to import`)
+                return
             }
+            if( ! import_count && duplicate_count) {
+                notify.warning(`${duplicate_count} duplicates (Not Imported)`)
+                return
+            }
+            var message = ""
+            if (import_count)
+                message = `Successfully imported ${import_count} keys.`
+            if (duplicate_count)
+                message += `  ${duplicate_count} duplicates (Not Imported)`
             
+            if(duplicate_count)
+                notify.warning(message)
+            else
+                notify.success(message)
+            
+            if (import_count) {
+                addAccountPromise.then(()=> {
+                    //ImportKeysActions.saved() // https://github.com/goatslacker/alt/issues/456
+                    BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
+                    BalanceClaimActions.loadMyAccounts()
+                })
+            }
         }).catch( error => {
             console.log("error:", error)
             var message = error

@@ -48,6 +48,8 @@ class BalanceClaim extends Component {
     componentWillMount() {
         //DEBUG console.log('... BalanceClaim componentWillMount')
         BalanceClaimActions.willMount()
+        BalanceClaimActions.refreshBalanceClaims()
+        BalanceClaimActions.loadMyAccounts()
     }
     
     componentWillUnmount() {

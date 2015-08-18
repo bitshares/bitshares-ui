@@ -69,6 +69,7 @@ class PrivateKeyStore extends BaseStore {
             }
             var private_key_tcomb = PrivateKeyTcomb(cursor.value)
             map.set(private_key_tcomb.id, private_key_tcomb)
+            map.set(private_key_tcomb.pubkey, private_key_tcomb)
             cursor.continue()
         }).then(()=>{
             this.loadDbDataDone = true
@@ -81,6 +82,12 @@ class PrivateKeyStore extends BaseStore {
     
     onAddKey(private_key_object, transaction, event_callback) {
         this.pendingOperation()
+        this.setState({
+            keys: this.state.keys.set(
+                private_key_object.pubkey,
+                PrivateKeyTcomb(private_key_object)
+            )
+        })
         return new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
             var duplicate = false
@@ -150,11 +157,12 @@ class PrivateKeyStore extends BaseStore {
         if(! public_key) return null
         if(public_key.Q)
             public_key = public_key.toBtsPublic()
+        
         var array = this.state.keys.filter(
             value => value.pubkey == public_key
         ).toArray()
         //TODO move support for multiple wallets to indexeddb database name
-        if(array.length > 1)
+        if(array.length > 2)
             throw new Error("Invalid state")
         return array.length ? array[0] : null
     }
