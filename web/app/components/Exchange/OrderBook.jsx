@@ -101,7 +101,7 @@ class OrderBook extends React.Component {
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
 
         return (
-                <div className="left-order-book" style={{overflowY: "hidden"}}>
+                <div className="left-order-book no-padding" style={{overflowY: "hidden"}}>
                     <div className="table-container">
                         <table className="table order-table table-hover text-right">
                             <thead className="headers">

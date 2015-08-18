@@ -191,7 +191,7 @@ class MyOpenOrders extends React.Component {
         }
 
         return (
-            <div key="open_orders" className="grid-content text-center ps-container" ref="orders">
+            <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders">
                 <table className="table order-table my-orders text-right table-hover">
                     <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     <tbody>

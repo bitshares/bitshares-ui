@@ -44,7 +44,7 @@ class MarketHistory extends React.Component {
         }
 
         return (
-            <div className="grid-content market-content ps-container" ref="history">
+            <div className="grid-content market-content ps-container no-padding" ref="history">
                 <table className="table expand order-table table-hover text-right">
                     <p style={{textTransform: "uppercase"}}><Translate content="exchange.market_history" /></p>
                     <thead>

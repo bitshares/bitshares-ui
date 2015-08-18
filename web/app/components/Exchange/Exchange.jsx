@@ -272,7 +272,7 @@ class Exchange extends React.Component {
 
                     {/* Left Column - Open Orders */}
                     <div className="grid-block left-column small-4 medium-3 large-2" style={{overflowY: "auto", justifyContent: "center"}}>
-                        <div className="grid-block">
+                        <div className="grid-block no-padding">
                             <OrderBook
                                 orders={limit_orders}
                                 bids={bids}
@@ -290,7 +290,7 @@ class Exchange extends React.Component {
                     <div className="block grid-block main-content no-overflow vertical small-9 medium-10 large-8">
 
                         {/* Top bar with info */}
-                        <div className="grid-block shrink">
+                        <div className="grid-block no-padding shrink" style={{paddingTop: 0}}>
                             <span className="market-symbol">{`${baseSymbol} / ${quoteSymbol}`} <Link to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}>Flip</Link></span>
                             <ul className="market-stats stats">
                                 <li className="stat">
@@ -318,11 +318,11 @@ class Exchange extends React.Component {
                         </div>
 
                         {/* Price history chart and depth chart inside tabs */}
-                        <div className="grid-block" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
+                        <div className="grid-block no-overflow no-padding" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
 
                             <Tabs>
                                 <Tabs.Tab title={tabTitles.ph}>
-                                    <div style={{position: "absolute", top: "-10px", right: "20px"}}>
+                                    <div style={{position: "absolute", top: "-5px", right: "20px"}}>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
@@ -360,7 +360,7 @@ class Exchange extends React.Component {
 
 
                         {/* Buy/Sell forms */}
-                        <div className="grid-block shrink" style={{ flexGrow: "0" }} >
+                        <div className="grid-block shrink no-padding" style={{ flexGrow: "0" }} >
                                     <ConfirmModal
                                         key="confirm_modal"
                                         modalId="confirm_modal"
@@ -401,7 +401,7 @@ class Exchange extends React.Component {
                                     /> : null}
                         </div>
 
-                        <div className="grid-block no-overflow" style={{minHeight: "20rem"}}>
+                        <div className="grid-block no-overflow no-padding" style={{minHeight: "20rem"}}>
                             {limit_orders.size > 0 && base && quote ? <MyOpenOrders
                                 key="open_orders"
                                 orders={limit_orders}
@@ -419,7 +419,7 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block right-column  show-for-large large-2" style={{overflowY: "auto"}}>
+                    <div className="grid-block right-column show-for-large large-2" style={{overflowY: "auto"}}>
                         {/* Market History */}
                         <MarketHistory
                             history={this.props.activeMarketHistory}
