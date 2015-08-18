@@ -52,7 +52,7 @@ class BalanceClaim extends Component {
     }
     
     componentWillReceiveProps() {
-        console.log('... BalanceClaim componentWillReceiveProps')
+        //console.log('... BalanceClaim componentWillReceiveProps')
         if(this.props.balance_claim_error) {
             var balance_claim_error = this.props.balance_claim_error
             console.log("BalanceClaim", balance_claim_error)
@@ -278,25 +278,25 @@ class BalanceClaim extends Component {
     }
     
     getWifToBalance(balance_claims) {
-        var privateid_to_balances = {}
+        var pubkey_to_balances = {}
         for(let balance_claim of balance_claims) {
             if(balance_claim.is_claimed) continue
             var chain_balance_record = balance_claim.chain_balance_record
             
             if(chain_balance_record.vesting) continue //TODO get_vested_balances
             var balences =
-                privateid_to_balances[balance_claim.private_key_id] || []
+                pubkey_to_balances[balance_claim.pubkey] || []
             
             //vested_balance kept up-to-date in the BalanceStore on refresh
             var vested_balance = balance_claim.vested_balance
             balences.push({chain_balance_record, vested_balance})
-            privateid_to_balances[balance_claim.private_key_id] = balences
+            pubkey_to_balances[balance_claim.pubkey] = balences
         }
         var wif_to_balances = {}
         var keys = PrivateKeyStore.getState().keys
-        for(let private_key_id of Object.keys(privateid_to_balances)) {
-            var balances = privateid_to_balances[private_key_id]
-            var private_key_tcomb = keys.get(parseInt(private_key_id))
+        for(let pubkey of Object.keys(pubkey_to_balances)) {
+            var balances = pubkey_to_balances[pubkey]
+            var private_key_tcomb = PrivateKeyStore.getByPublicKey(pubkey)
             var public_key_string = private_key_tcomb.pubkey
             var private_key = WalletDb.decryptTcomb_PrivateKey(private_key_tcomb)
             wif_to_balances[private_key.toWif()] = {balances, public_key_string}

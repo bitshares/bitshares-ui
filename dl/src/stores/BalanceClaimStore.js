@@ -26,7 +26,7 @@ let AssetTypeTcomb = t.struct({
 
 export var BalanceClaimTcomb = t.struct({
     chain_balance_record: t.Obj,
-    private_key_id: t.Num,
+    pubkey: t.Str,
     is_claimed: t.maybe(t.Bool),
     vested_balance: t.maybe(AssetTypeTcomb)
 }, 'BalanceClaimTcomb')
@@ -244,8 +244,8 @@ class BalanceClaimStore {
             var b = balance_claim.chain_balance_record
             var vested_balance = balance_claim.vested_balance
             
-            var private_key_id = balance_claim.private_key_id
-            var private_key_tcomb = keys.get(private_key_id)
+            var pubkey = balance_claim.pubkey
+            var private_key_tcomb = PrivateKeyStore.getByPublicKey(pubkey)
             
             var import_account_names =
                 private_key_tcomb.import_account_names

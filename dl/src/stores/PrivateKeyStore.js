@@ -25,7 +25,7 @@ class PrivateKeyStore extends BaseStore {
         });*/
         this._export("loadDbData","onAddKey", "hasKey",
             "getPubkeys", "getTcombs_byPubkey",
-            "getPubkeys_having_PrivateKey");
+            "getPubkeys_having_PrivateKey", "getByPublicKey");
     }
     
     _getInitialState() {
@@ -145,6 +145,20 @@ class PrivateKeyStore extends BaseStore {
         }
         return return_public_keys
     }
+    
+    getByPublicKey(public_key) {
+        if(! public_key) return null
+        if(public_key.Q)
+            public_key = public_key.toBtsPublic()
+        var array = this.state.keys.filter(
+            value => value.pubkey == public_key
+        ).toArray()
+        //TODO move support for multiple wallets to indexeddb database name
+        if(array.length > 1)
+            throw new Error("Invalid state")
+        return array.length ? array[0] : null
+    }
+    
     
     /** The same key may appear in multiple wallets.
         Use WalletDb.getPrivateKey instead.

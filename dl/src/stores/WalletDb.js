@@ -291,12 +291,12 @@ class WalletDb {
     /** WIF format
     */
     importKeys(private_key_objs) {
-        if(TRACE) console.log('... WalletDb.importKeys start')
+        if(TRACE) console.log('... WalletDb.importKeys START')
         return WalletUnlockActions.unlock().then( () => {
             var transaction = this.transaction_update_keys()
             var promises = []
             var import_count = 0, duplicate_count = 0
-            console.log('... importKeys save key loop')
+            if(TRACE) console.log('... importKeys save key loop start')
             for(let private_key_obj of private_key_objs) {
                 
                 var wif = private_key_obj.wif || private_key_obj
@@ -326,6 +326,9 @@ class WalletDb {
                     )
                 )
             }
+            if(TRACE) console.log('... importKeys save key loop done')
+            BalanceClaimActions.refreshBalanceClaims()
+            BalanceClaimActions.loadMyAccounts()
             if(TRACE) console.log('... importKeys setWalletModified')
             return this.setWalletModified(transaction).then( ()=> {
                 return Promise.all(promises).catch( error => {
@@ -339,7 +342,7 @@ class WalletDb {
             })
         })
     }
-
+    
     saveKeys(private_keys, transaction, public_key_string) {
         //private_keys = [{private_key, sequence}]
         var promises = []
@@ -389,31 +392,33 @@ class WalletDb {
             brainkey_pos: brainkey_pos,
             pubkey: public_key_string
         }
-        return (import_balances, private_key_object) => {
-            return PrivateKeyStore.onAddKey(
-                private_key_object, transaction,
-                event => {
-                    if( ! import_balances) return
-                    var private_key_id = event.target.result
-                    private_key_object.id = private_key_id
-                    if(TRACE) console.log('... WalletDb saveKey import_balances private_key_id',private_key_id)
-                    var ps = []
-                    for(let chain_balance_record of import_balances) {
-                        var p = BalanceClaimActions.add({
-                            balance_claim: {
-                                chain_balance_record,
-                                private_key_id
-                            }, transaction
-                        })
-                        ps.push(p)
-                    }
-                    return Promise.all(ps)
-                }
-            ).then((ret)=> {
-                if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
-                return ret
-            })
-        }(import_balances, private_key_object)//copy var reference for callback
+        
+        var p1 = PrivateKeyStore.onAddKey(
+            private_key_object, transaction
+        ).then((ret)=> {
+            if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
+            return ret
+        })
+        
+        var p2
+        if( ! import_balances)
+            p2 = Promise.resolve()
+        else {
+            if(TRACE) console.log('... WalletDb saveKey import_balances')
+            var ps = []
+            for(let chain_balance_record of import_balances) {
+                var p = BalanceClaimActions.add({
+                    balance_claim: {
+                        chain_balance_record,
+                        pubkey: public_key_string,
+                    }, transaction
+                })
+                ps.push(p)
+            }
+            p2 = Promise.all(ps)
+        }
+        
+        return p2.then(()=>p1)//save the results from p1
     }
     
     incrementBrainKeySequence(transaction) {

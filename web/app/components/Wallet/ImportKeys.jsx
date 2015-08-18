@@ -599,7 +599,7 @@ export default class ImportKeys extends Component {
                     //DEBUG console.log('... get_key_references object lookup',account?account.toJS().name:null)
                     if(account)
                         p.push(AccountStore.onCreateAccount(account).catch( error => {
-                            console.log("ImoprtKeys save import account error",account,error)
+                            console.log("ImportKeys save import account error",account,error)
                         }))
                 }
                 if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
