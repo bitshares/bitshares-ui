@@ -162,11 +162,11 @@ class WalletDb {
                 }).then(()=> {
                     if(broadcast) {
                         if(this.confirm_transactions)
-                            return TransactionConfirmActions.confirm_and_broadcast(tr)
+                            TransactionConfirmActions.confirm(tr)
                         else
-                            return tr.broadcast()
+                            tr.broadcast()
                     } else
-                        return tr.serialize()
+                        tr.serialize()
                 })
             })
         })

@@ -117,6 +117,20 @@ h1, h2, h3, h4, h5, h6 {
 
 .modal {
   @include color($light-text-color, $light-panel-bg-color);
+  .close-button {
+    color: $secondary-text-color;
+    &:hover {
+      color: $primary-text-color;
+    }
+  }
+  .modal-header {
+    > h6 {
+      color: $secondary-text-color;
+    }
+    &.has-error > h6 {
+      color: $error-text-color
+    }
+  }
 }
 
 .footer {
@@ -405,5 +419,24 @@ td.orderHistoryBid {
   }
   .right-label {
     color: $secondary-text-color;
+  }
+}
+
+.icon.success {
+  padding-right: 1rem;
+  > svg > path {
+    fill: $success-color;
+  }
+}
+
+.circle-wrapper {
+   .circle:before {
+     background-color: $secondary-text-color;
+   }
+}
+
+.modal .circle-wrapper {
+  .circle:before {
+    background-color: $primary-text-color;
   }
 }

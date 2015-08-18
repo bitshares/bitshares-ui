@@ -290,7 +290,7 @@ class AccountVoting extends ChainComponent {
              return (
                          <tr key={name}>
                             <td>
-                               <AccountImage size={{height: 28, width: 28}} account={name} custom_image={null}/> 
+                               <AccountImage size={{height: 30, width: 30}} account={name} custom_image={null}/>
                             </td>
                              <td>{name}</td>
                              <td>{url}</td>
@@ -309,7 +309,7 @@ class AccountVoting extends ChainComponent {
              return (
                          <tr key={name}>
                             <td>
-                               <AccountImage size={{height: 28, width: 28}} account={name} custom_image={null}/> 
+                               <AccountImage size={{height: 30, width: 30}} account={name} custom_image={null}/>
                             </td>
                              <td>{name}</td>
                              <td>{url}</td>

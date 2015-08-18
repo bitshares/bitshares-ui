@@ -91,7 +91,7 @@ class ApplicationApi {
         var asset_id_lookup = lookup.asset_id(asset)
         var lookup_promise = lookup.resolve()
         var unlock_promise = WalletUnlockActions.unlock()
-        return Promise.all([lookup_promise, unlock_promise]).then(()=> {
+        Promise.all([lookup_promise, unlock_promise]).then(()=> {
             var asset_id = asset_id_lookup.resolve
             
             var memo_from_privkey
@@ -135,7 +135,7 @@ class ApplicationApi {
                 amount: { amount, asset_id}, //lookup.asset_id(
                 memo
             })
-            return WalletDb.process_transaction(
+            WalletDb.process_transaction(
                 tr,
                 null, //signer_private_keys,
                 broadcast,
@@ -144,20 +144,5 @@ class ApplicationApi {
         })
     }
 
-    //account_name_for_id(account_ids) {
-    //    if( ! Array.isArray(account_ids))
-    //        account_ids = [account_ids]
-    //    
-    //    promise = api.database_api().exec("get_accounts", [account_ids]).then(response => {
-    //        console.log("----- get_accounts response ----->\n", response)
-    //        return response
-    //    })
-    //    
-    //    return promise
-    //}
-    //return this.api.exec("lookup_account_names", [accounts]).then(response => {
-    //        return response
-    //    })
-    
 }
 module.exports = ApplicationApi;
