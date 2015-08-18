@@ -68,7 +68,7 @@ class AccountActions {
     getAccount(name_or_id) {
         let account_id, account_name;
         let subscription = result => {
-            console.log("account sub result:", account_id, account_name, result, name_or_id);
+            // console.log("account sub result:", account_id, account_name, result, name_or_id);
 
             /* TODO: finish this parsing of the sub result once all necessary data is available
             let fullAccount = {}, 
