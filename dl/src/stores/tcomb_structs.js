@@ -117,7 +117,6 @@ let Delegate = t.struct({
 let GlobalObject = t.struct({
     active_committee_members: t.Arr,
     active_witnesses: t.Arr,
-    chain_id: t.Str,
     id: t.Str,
     next_available_vote_id: t.Num,
     parameters: t.Obj
