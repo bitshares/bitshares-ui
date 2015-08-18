@@ -76,11 +76,12 @@ class BalanceClaim extends Component {
         this.state.selected_balance_claims = []
         var unclaimed_balance_rows = []
         //, claimed_balance_rows = []
-        let index = 0;
         var has_unclaimed = false
         var unclaimed_account_balances = {};
         var checked = this.state.checked
+        let index = -1
         for(let asset_balance of this.props.balance_by_account_asset) {
+            index++
             var {accounts, asset_id, balance, balance_claims} =
                 asset_balance
             
@@ -120,7 +121,6 @@ class BalanceClaim extends Component {
                         this.state.selected_balance_claims.push(balance_claim)
                     }
                 }
-                index++;
             }
             
             // Claimed balances are hidden from the witness API (removed from RAM).
@@ -226,14 +226,15 @@ class BalanceClaim extends Component {
         if(checked) {
             //delete reduces checked.size (0 for no selection) 
             this.state.checked.delete(index)
-            //if( ! this.state.checked.size)
-            //    this.setState({claim_account_name:null})
+            if( ! this.state.checked.size)
+                this.setState({claim_account_name:null})
         } else
             this.state.checked.set(index, true)
         
         if( ! this.state.claim_account_name) {
             var {accounts} = this.props.balance_by_account_asset[index]
             if(accounts.length == 1) {
+                console.log('... accounts',accounts)
                 var claim_account_name = accounts[0]
                 this.setState({claim_account_name})
             }
