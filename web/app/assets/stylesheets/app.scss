@@ -79,6 +79,7 @@ button, .button {
   text-transform: uppercase;
   transition: all 0.3s ease 0s !important;
   margin: 0;
+  vertical-align: middle;
   &.outline {
     &:hover, &:focus, &:active {
       background: none !important;
@@ -196,4 +197,11 @@ div.disabled * {
 
 a.currency {
   font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.modal-header {
+  > h3, >h6 {
+    margin-bottom: 0;
+  }
+  margin-bottom: 1rem;
 }

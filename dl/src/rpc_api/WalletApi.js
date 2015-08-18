@@ -86,7 +86,7 @@ class WalletApi {
         encrypt_memo = true,
         optional_nonce = null
     ) {
-        return this.application_api.transfer(
+        this.application_api.transfer(
             from_account_id,
             to_account_id,
             amount, 

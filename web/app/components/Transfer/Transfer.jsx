@@ -21,8 +21,7 @@ import debounce from "lodash.debounce";
 import Immutable from "immutable";
 import ChainStore from "api/chain.js"
 import Wallet from "components/Wallet/Wallet";
-import validation from "common/validation"
-
+import validation from "common/validation";
 
 class Transfer extends BaseComponent {
     constructor(props) {
@@ -59,12 +58,6 @@ class Transfer extends BaseComponent {
 
         this._bind("formChange", "onSubmit", "onConfirm", "newTransfer");
         this._searchAccounts = debounce(this._searchAccounts, 150);
-    }
-
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
     }
 
     validateTransferFields( new_state ) {
@@ -265,7 +258,6 @@ class Transfer extends BaseComponent {
         e.preventDefault();
         this.validateTransferFields(this.state);
         if(this.state.isValid) {
-            //this.setState({confirmation: true});
             this.onConfirm();
         } else {
             this.setState({errors: this.state.errors});
@@ -281,16 +273,7 @@ class Transfer extends BaseComponent {
         }
 
         let  amount = t.amount.replace( /,/g, "" )
-        AccountActions.transfer(t.from_id, t.to_id, parseInt(amount * precision, 10), t.asset, t.memo).then(() => {
-            this.setState({confirmation: false, done: true, error: null});
-            notify.addNotification({
-                message: "Transfer completed",
-                level: "success",
-                autoDismiss: 10
-            });
-        }).catch(error => {
-            this.setState({confirmation: false, done: false});
-        });
+        AccountActions.transfer(t.from_id, t.to_id, parseInt(amount * precision, 10), t.asset, t.memo);
     }
 
     newTransfer() {

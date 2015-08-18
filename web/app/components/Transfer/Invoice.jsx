@@ -87,12 +87,7 @@ class Invoice extends BaseComponent {
         let to_id = this.findAccountId(this.state.invoice.to);
         let memo = this.state.invoice.memo;
         console.log("[Invoice.jsx:89] ----- onConfirmPayment ----->", from_id, to_id, total_amount * precision, asset.id, memo);
-        AccountActions.transfer(from_id, to_id, total_amount * asset.preciosion, asset.id, memo).then(() => {
-            console.log("[Invoice.jsx:91] ----- success ----->");
-            //this.setState({confirmation: false, done: true, error: null});
-        }).catch(error => {
-            console.log("[Invoice.jsx:94] ----- error ----->");
-        });
+        AccountActions.transfer(from_id, to_id, total_amount * asset.preciosion, asset.id, memo);
     }
 
     onAccountChange(account_name) {

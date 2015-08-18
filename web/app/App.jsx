@@ -40,7 +40,7 @@ import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
-import TransactionConfirmContainer from "./components/Blockchain/TransactionConfirmContainer";
+import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "components/Wallet/WalletUnlockModal"
 import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
@@ -154,7 +154,7 @@ class App extends React.Component {
             <div>
                 {content}
                 <NotificationSystem ref="notificationSystem" allowHTML={true}/>
-                <TransactionConfirmContainer />
+                <TransactionConfirm/>
                 <WalletUnlockModal/>
             </div>
         );

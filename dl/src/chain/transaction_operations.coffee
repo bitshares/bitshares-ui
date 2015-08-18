@@ -142,9 +142,9 @@ _my.signed_transaction = ->
             tr_object = type.signed_transaction.toObject @
             api.network_api().exec(
                 "broadcast_transaction_with_callback",
-                [()->
+                [ (res) ->
                     #DEBUG console.log('... broadcast_transaction_with_callback !!!')
-                    resolve()
+                    resolve(res)
                 ,tr_object]
             ).then ()->
                 #DEBUG console.log('... broadcast success, waiting for callback')
