@@ -324,7 +324,7 @@ class WalletDb {
                     )
                 )
             }
-            console.log('... importKeys setWalletModified')
+            if(TRACE) console.log('... importKeys setWalletModified')
             return this.setWalletModified(transaction).then( ()=> {
                 return Promise.all(promises).catch( error => {
                     //DEBUG

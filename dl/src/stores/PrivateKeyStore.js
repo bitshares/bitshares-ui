@@ -8,11 +8,18 @@ import {PrivateKeyTcomb} from "./tcomb_structs";
 
 import hash from "../common/hash"
 
+/** No need to wait on the promises returned by this store as long as
+    this.state.catastrophic_error == false and
+    this.state.pending_operation_count == 0 before performing any important
+    operations.
+*/
 class PrivateKeyStore extends BaseStore {
     
     constructor() {
-        super();
-        this.keys = Immutable.Map();
+        super()
+        this.state = this._getInitialState()
+        this.pending_operation_count = 0
+        
         /*this.bindListeners({
             onAddKey: PrivateKeyActions.addKey
         });*/
@@ -20,69 +27,113 @@ class PrivateKeyStore extends BaseStore {
             "getPubkeys", "getTcombs_byPubkey",
             "getPubkeys_having_PrivateKey");
     }
+    
+    _getInitialState() {
+        return {
+            keys: Immutable.Map(),
+            catastrophic_error: false,
+            pending_operation_count: 0,
+            catastrophic_error_add_key: null,
+            catastrophic_error_loading: null
+        }
+    }
+    
+    pendingOperation() {
+        this.pending_operation_count++
+        this.setState({pending_operation_count: this.pending_operation_count})
+    }
+    
+    pendingOperationDone() {
+        if(this.pending_operation_count == 0)
+            throw new Error("Pending operation done called too many times")
+        this.pending_operation_count--
+        this.setState({pending_operation_count: this.pending_operation_count})
+    }
+    
+    catastrophicError(property, error) {
+        this.pendingOperationDone()
+        var state = { catastrophic_error: true }
+        state["catastrophic_error_" + propery] = error
+        console.log("catastrophic_error_" + propery, error)
+        this.setState(state)
+    }
 
     loadDbData() {
-        var map = this.keys.asMutable()
+        if(this.loadDbDataDone) return Promise.resolve()
+        var map = this.state.keys.asMutable()
+        this.pendingOperation()
         return idb_helper.cursor("private_keys", cursor => {
             if( ! cursor) {
-                this.keys = map.asImmutable()
+                this.state.keys = map.asImmutable()
                 return
             }
             var private_key_tcomb = PrivateKeyTcomb(cursor.value)
             map.set(private_key_tcomb.id, private_key_tcomb)
             cursor.continue()
-        });
+        }).then(()=>{
+            this.loadDbDataDone = true
+            this.pendingOperationDone()
+        }).catch( error => {
+            this.setState(this._getInitialState())
+            this.catastrophicError('loading', error)
+        })
     }
     
-    /** @return resolve 0 for duplicate or 1 if inserted */ 
     onAddKey(private_key_object, transaction, event_callback) {
+        this.pendingOperation()
         return new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
-            private_key_object => {
-                var duplicate = false
-                var p = idb_helper.add(
-                    transaction.objectStore("private_keys"),
-                    private_key_object,
-                    event_callback
-                ).catch( event => {
-                    // ignore_duplicates
-                    var error = event.target.error
-                    //DEBUG
-                    console.log('... error',error)
-                    if( error.name != 'ConstraintError' ||
-                        error.message.indexOf('by_encrypted_key') == -1
-                    ) { throw event  }
-                    duplicate = true
-                    event.preventDefault()
-                }).then( ()=> {
-                    if(duplicate)
-                        return {result:"duplicate",id:null}
-                    
-                    idb_helper.on_transaction_end(transaction).then(
-                        () => {
-                            //DEBUG console.log('... this.keys.set',private_key_object.id)
-                            this.keys = this.keys.set(
+            var duplicate = false
+            var p = idb_helper.add(
+                transaction.objectStore("private_keys"),
+                private_key_object,
+                event_callback
+            ).catch( event => {
+                
+                // ignore_duplicates
+                var error = event.target.error
+                //DEBUG
+                console.log('... error',error)
+                if( error.name != 'ConstraintError' ||
+                    error.message.indexOf('by_encrypted_key') == -1
+                ) {
+                    this.catastrophicError('add_key', error)
+                    throw event
+                }
+                duplicate = true
+                event.preventDefault()
+            }).then( ()=> {
+                this.pendingOperationDone()
+                
+                if(duplicate)
+                    return {result:"duplicate",id:null}
+                
+                idb_helper.on_transaction_end(transaction).then(
+                    () => {
+                        //DEBUG console.log('... this.state.keys.set',private_key_object.id)
+                        this.setState({
+                            keys: this.state.keys.set(
                                 private_key_object.id,
                                 PrivateKeyTcomb(private_key_object)
                             )
-                        }
-                    )
-                    return {
-                        result: "added", 
-                        id: private_key_object.id
+                        })
                     }
-                })
-                resolve(p)
-            }(private_key_object) //copy var ref for callback (or ids will be scrambled)
+                )
+                return {
+                    result: "added", 
+                    id: private_key_object.id
+                }
+            })
+            resolve(p)
         })
     }
 
     hasKey(pubkey) {
-        return this.keys.some(k => k.pubkey === pubkey);
+        return this.state.keys.some(k => k.pubkey === pubkey);
     }
     
     getPubkeys() {
-        return this.keys.valueSeq().map( value => value.pubkey).toArray()
+        return this.state.keys.valueSeq().map( value => value.pubkey).toArray()
     }
     
     getPubkeys_having_PrivateKey(public_keys) {
@@ -95,43 +146,17 @@ class PrivateKeyStore extends BaseStore {
         return return_public_keys
     }
     
-    /** The same key may appear in multiple
-    wallets.  Use WalletDb.getPrivateKey instead. */
+    /** The same key may appear in multiple wallets.
+        Use WalletDb.getPrivateKey instead.
+    */
     getTcombs_byPubkey(public_key) {
         if(! public_key) return null
         if(public_key.Q)
             public_key = public_key.toBtsPublic()
-        return this.keys.filter(
+        return this.state.keys.filter(
             value => value.pubkey == public_key
         ).toArray()
     }
-    
-    //onDeleteByWalletId(wallet_id, transaction, cascade = true) {
-    //    var store = transaction.objectStore("private_keys")
-    //    var delete_ids = [], promises = []
-    //    for(let key of this.keys) {
-    //        var private_key = key[1]
-    //        if(private_key.wallet_id === wallet_id) {
-    //            promises.push(
-    //                new Promise((resolve, reject)=>{
-    //                    let request = store.delete(private_key.id)
-    //                    ((private_id, resolve)=>{
-    //                        request.onsuccess = () => {
-    //                            this.keys = this.keys.delete(private_id)
-    //                            resolve()
-    //                        }
-    //                    })(private_key.id, resolve)
-    //                    request.onerror = (e) => {
-    //                        console.log("ERROR!!! onDeleteByWalletId - ", e.target.error.message, value);
-    //                        reject(e.target.error.message)
-    //                    }
-    //                })
-    //            )
-    //        }
-    //    }
-    //    return Promise.all(promises)
-    //}
-
 
 
 }
