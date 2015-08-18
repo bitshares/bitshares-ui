@@ -33,7 +33,7 @@
     "immutable": "~3.7.2",
     "indexeddbshim": "^2.0.4",
     "intl": "^1.0.0",
-    "jdenticon": "git+https://github.com/svk31/jdenticon.git",
+    "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
     "js-sha256": "^0.2.3",
     "json-loader": "^0.5.1",
     "keyboardjs": "^0.4.2",
