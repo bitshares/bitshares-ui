@@ -231,7 +231,6 @@ export default class ImportKeys extends Component {
             var address_params = [], wif_owner = {};
             for(let wif of wifs) {
                 try {
-                    var private_key = PrivateKey.fromWif(wif)
                     var {public_key} = wifs_to_account[wif]
                     var previous_address_prefix = config.address_prefix
                     try {
@@ -256,6 +255,8 @@ export default class ImportKeys extends Component {
                     console.error("ImportKeys: Invalid private key error",e)
                 }
             }
+            
+            
             var db = api.db_api();
             //DEBUG console.log('... get_balance_objects',address_params)
             var p = db.exec("get_balance_objects", [address_params]).then( result => {

@@ -63,17 +63,8 @@ class BalanceClaim extends Component {
         }
     }
     
-    //loadAccounts() {
-    //    console.log('... this.props.balance_by_account_asset',this.props.balance_by_account_asset)
-    //    if(this.props.balance_by_account_asset.length)
-    //        WalletUnlockActions.unlock().then(()=> {
-    //            BalanceClaimActions.loadMyAccounts()
-    //        })
-    //}
-    
     render() {
         //DEBUG  console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
-        
         
         if( ! this.props.balance_by_account_asset.length)
             return <div/>
