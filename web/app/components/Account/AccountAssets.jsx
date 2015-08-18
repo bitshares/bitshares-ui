@@ -19,6 +19,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import BlockchainStore from "stores/BlockchainStore";
 import validation from "common/validation";
 import classnames from "classnames";
+import counterpart from "counterpart";
 
 class AccountAssets extends React.Component {
     constructor() {
@@ -174,7 +175,6 @@ class AccountAssets extends React.Component {
 
 
         // Calculate the CreateAsset fee by measuring the length of the symbol.
-        // TODO: apply the appropriate precision to the result. Example: 050000000000 should be 500000.00000
         let symbolLength = create.symbol.length, createFee = "N/A";
         if(symbolLength == 3)
             createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol3"])} asset={"1.3.0"} />;
@@ -209,11 +209,18 @@ class AccountAssets extends React.Component {
                         <td>{asset.options.description}</td>
                         <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                         <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
+{/*}
+                            The precision is not important enough for this screen real estate. It is removed to make more room for Description.
                         <td>{asset.precision}</td>
+                    */}
                         {isMyAccount ?
                             (<td>
-                                <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">Issue Asset</button>
+                                <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button"><Translate content="transaction.trxTypes.asset_issue" /></button>
                             </td>) : null}
+                        {isMyAccount ?
+                        (<td>
+                            <Link to="asset" className="button" params={{symbol: asset.symbol}}><Translate content="account.user_issued_assets.details" /></Link>
+                        </td>) : null}
                     </tr>
                 );
         }).toArray();
@@ -222,7 +229,7 @@ class AccountAssets extends React.Component {
             return a.indexOf(this.state.searchTerm) !== -1;
         });
 
-        return (
+        return (    
             <div className="grid-content">
                     <div className="content-block">
                         <h3>Issued Assets</h3>
@@ -237,8 +244,8 @@ class AccountAssets extends React.Component {
                                     {/* <th>Public Data</th> FIXME: this column is hidden because its purpose overlaps with Description */}
                                     <Translate component="th" content="markets.supply" />
                                     <th>Max Supply</th>
-                                    <th>Precision</th>
                                     {isMyAccount ? <th>{/* Issue asset button */}</th> : null}
+                                    {isMyAccount ? <th>{/* Details button*/}</th> : null}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -322,7 +329,7 @@ class AccountAssets extends React.Component {
                                     </span>
                                  }
                                 <div className="grid-content button-group">
-                                    <input type="submit" className="button" onClick={this._issueAsset.bind(this, account.id)} value="Issue Asset" />
+                                    <input type="submit" className="button" onClick={this._issueAsset.bind(this, account.id)} value={counterpart.translate("transaction.trxTypes.asset_issue")} />
                                     <Trigger close="issue_asset">
                                         <a href className="secondary button">Cancel</a>
                                     </Trigger>

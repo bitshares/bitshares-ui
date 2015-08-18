@@ -45,7 +45,8 @@ module.exports = {
             description: "Description",
             max_supply: "Maximum supply",
             precision: "Precision",
-            to: "Issue to account"
+            to: "Issue to account",
+            details: "Details"
         },
         connections: {
             known: "Known by",
