@@ -159,7 +159,7 @@ class WalletActions {
                     for(let {chain_balance_record, vested_balance} of balances) {
                         //DEBUG console.log('... balance',b)
                         var total_claimed
-                        if( vested_balance.amount) {
+                        if( vested_balance ) {
                             if(vested_balance.amount == 0)
                                 // recently claimed 
                                 continue
@@ -169,7 +169,7 @@ class WalletActions {
                             total_claimed = chain_balance_record.balance.amount
                         
                         //assert
-                        if(vested_balance.asset_id != chain_balance_record.balance.asset_id)
+                        if(vested_balance && vested_balance.asset_id != chain_balance_record.balance.asset_id)
                             throw new Error("Vested balance record and balance record asset_id missmatch",
                                 vested_balance.asset_id,
                                 chain_balance_record.balance.asset_id
