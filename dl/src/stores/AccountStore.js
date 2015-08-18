@@ -279,7 +279,7 @@ class AccountStore extends BaseStore {
             account = account.toJS()
         
         if(account.name == "" || this.linkedAccounts.get(account.name))
-            return
+            return Promise.resolve()
         
         if( ! validation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
