@@ -14,20 +14,22 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 
 import chain_api from "api/chain"
 import ApplicationApi from "rpc_api/ApplicationApi"
+import AssetTcomb from "stores/tcomb_structs"
+
 var application_api = new ApplicationApi()
 var api = Apis.instance()
 
-/*var AssetTcomb = t.struct({
-    amount: t.Obj,
+let AssetTypeTcomb = t.struct({
+    amount: t.Any, //string or number, TODO fix in c++
     asset_id: t.Str
-})*/
+}, 'AssetTypeTcomb')
 
 export var BalanceClaimTcomb = t.struct({
     chain_balance_record: t.Obj,
     private_key_id: t.Num,
     is_claimed: t.maybe(t.Bool),
-    vested_balance: t.maybe(t.Obj)
-})
+    vested_balance: t.maybe(AssetTypeTcomb)
+}, 'BalanceClaimTcomb')
 
 var TRACE = true
 
