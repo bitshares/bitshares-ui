@@ -91,7 +91,7 @@ class ApplicationApi {
         var asset_id_lookup = lookup.asset_id(asset)
         var lookup_promise = lookup.resolve()
         var unlock_promise = WalletUnlockActions.unlock()
-        Promise.all([lookup_promise, unlock_promise]).then(()=> {
+        return Promise.all([lookup_promise, unlock_promise]).then(()=> {
             var asset_id = asset_id_lookup.resolve
             
             var memo_from_privkey
@@ -135,7 +135,7 @@ class ApplicationApi {
                 amount: { amount, asset_id}, //lookup.asset_id(
                 memo
             })
-            WalletDb.process_transaction(
+            return WalletDb.process_transaction(
                 tr,
                 null, //signer_private_keys,
                 broadcast,

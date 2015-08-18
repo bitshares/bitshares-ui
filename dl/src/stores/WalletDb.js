@@ -161,12 +161,14 @@ class WalletDb {
                     }
                 }).then(()=> {
                     if(broadcast) {
-                        if(this.confirm_transactions)
+                        if(this.confirm_transactions) {
                             TransactionConfirmActions.confirm(tr)
+                            return Promise.resolve();
+                        }
                         else
-                            tr.broadcast()
+                            return tr.broadcast()
                     } else
-                        tr.serialize()
+                        return tr.serialize()
                 })
             })
         })

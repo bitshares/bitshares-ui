@@ -186,8 +186,10 @@ class AccountActions {
             wallet_api.transfer(
                 from_account_id, to_account_id,
                 amount, asset_id, memo
-            );
-            this.dispatch();
+            ).then(result => {
+                    console.log( "transfer result: ", result )
+                    this.dispatch(result);
+            });
         } catch (error) {
             console.log("[AccountActions.js:90] ----- transfer error ----->", error);
             return new Promise((resolve, reject) => {
