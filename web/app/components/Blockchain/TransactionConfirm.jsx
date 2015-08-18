@@ -19,7 +19,6 @@ class TransactionConfirm extends BaseComponent {
     
     constructor(props) {
         super(props, TransactionConfirmStore);
-        this.state.broadcasting = false;
     }
 
     componentDidUpdate() {
@@ -33,12 +32,10 @@ class TransactionConfirm extends BaseComponent {
     onConfirmClick(e) {
         e.preventDefault();
         TransactionConfirmActions.broadcast(this.state.transaction);
-        this.setState({broadcasting: true});
     }
 
     onCloseClick(e) {
         e.preventDefault();
-        this.state.broadcasting = false;
         TransactionConfirmActions.close();
     }
 
@@ -58,7 +55,7 @@ class TransactionConfirm extends BaseComponent {
                 ) :
                 (
                 <div className="modal-header">
-                    <div className="float-right"><Icon name="checkmark-circle" size="4x" className="success"/></div>
+                    <div className="float-left"><Icon name="checkmark-circle" size="4x" className="success"/></div>
                     <h3>Transaction was successfully broadcasted</h3>
                     <h6>#{this.state.trx_id}@{this.state.trx_block_num}</h6>
                 </div>
@@ -96,9 +93,7 @@ class TransactionConfirm extends BaseComponent {
         return (
             <div ref="transactionConfirm">
                 <Modal id="transaction_confim_modal" ref="modal" overlay={true}>
-                    <Trigger close="">
-                        <a href className="close-button">&times;</a>
-                    </Trigger>
+                    {!this.state.broadcasting ? <a href className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</a> : null}
                     {header}
                     <div style={{maxHeight: "60vh"}}>
                         <Transaction

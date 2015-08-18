@@ -896,6 +896,6 @@ class ChainStore
 }
 
 let chain_store = new ChainStore();
-if(window) window.chain_store = chain_store;
+if(typeof(window) !== "undefined") window.chain_store = chain_store;
 
 export default chain_store;
