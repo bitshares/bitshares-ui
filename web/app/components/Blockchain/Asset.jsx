@@ -44,22 +44,99 @@ class Asset extends React.Component {
             return <div className="grid-container"><h5><Translate component="h5" content="explorer.asset.not_found" name={symbol} /></h5></div>;
         }
 
+        // TODO: load whitelist from server, storing in this.state, instead of hardcoding
+        let accountWhitelist = [
+            "init0",
+            "init3",
+            "init4",
+            "init5"
+        ];
+
+        let accountWhitelistMarkup = accountWhitelist.map(account => {
+            return (
+                <li>{account} <button className="button">Remove</button></li>
+            );
+        });
+
+        // TODO: load whitelist from server,storing in this.state, instead of hardcoding
+        let marketWhitelist = [
+            "CORE",
+            "BitUSD"
+        ];
+
+        let marketWhitelistMarkup = marketWhitelist.map(market => {
+            return (
+                <li>{market} <button className="button">Remove</button></li>
+            );
+        });
+
 
         return (
             <div className="grid-block small-offset-2">
                 <div className="grid-content">
-                    <h4>Asset: {this.props.symbol}</h4>
+                    <h4>Asset {asset.id}: {this.props.symbol}</h4>
                     {asset ? (
-                    <ul>
-                        <li><Translate component="span" content="explorer.assets.id" />: {asset.id}</li>
-                        <li><Translate component="span" content="explorer.assets.issuer" />: {accounts[asset.issuer] ?
-                            <Link to="account" params={{account_name: accounts[asset.issuer]}}>{accounts[asset.issuer]}</Link> :
-                            null}</li>
-                        <li><Translate component="span" content="explorer.assets.precision" />: {asset.precision}</li>
-                        <li><Translate component="span" content="explorer.block.common_options" />:
-                        <Inspector data={ asset.options } search={false}/></li>
-                    </ul>
-                    ) : null}
+                    <div>
+                        <p>{asset.options.description}</p>
+                        <div>
+                            <h3>Feed Producers</h3>
+                            <p>TODO: list of authorized feed producer accounts.</p>
+                            <p>TODO: account picker. <button className="button">Authorize as Feed Producer</button></p>
+                        </div>
+
+                        <div>
+                            <h3>Fee pool</h3>
+                            <p>
+                                Transaction fees can be paid at a rate of X {this.props.symbol} per CORE. A standard transfer will require Y {this.props.symbol}.
+                                <button className="button">Adjust Exchange Rate</button>
+                            </p>
+                            <p>
+                                This asset has X CORE available to pay fees.
+                                <button className="button">Add to Fee Pool</button>
+                            </p>
+                        </div>
+                        <div>
+                            <h3>Whitelisted Accounts</h3>
+                            <ul>
+                                {accountWhitelistMarkup}
+                            </ul>
+                            <form>
+                                <input type="text" /><button className="button">Add to Account Whitelist</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3>Whitelisted Markets</h3>
+                            <ul>
+                                {marketWhitelistMarkup}
+                            </ul>
+                            <form>
+                                <p>TODO: Asset picker here<button className="button">Add to Market Whitelist</button></p>
+                            </form>
+                        </div>
+                        <div>
+                            {/*TODO: show actual permissions from server, and make them editable */}
+                            <h3>Permissions</h3>
+                            <ul>
+                                <li><input type="checkbox" disabled />Permission #1</li>
+                                <li><input type="checkbox" disabled />Permission #2</li>
+                                <li><input type="checkbox" disabled />Permission #3</li>
+                                <li><input type="checkbox" disabled />Permission #4</li>
+                            </ul>
+                            <button className="button">Edit Permissions</button>
+                        </div>
+                        <div>
+                            <ul>
+                                <li><Translate component="span" content="explorer.assets.id" />: {asset.id}</li>
+                                <li><Translate component="span" content="explorer.assets.issuer" />: {accounts[asset.issuer] ?
+                                    <Link to="account" params={{account_name: accounts[asset.issuer]}}>{accounts[asset.issuer]}</Link> :
+                                    null}</li>
+                                <li><Translate component="span" content="explorer.assets.precision" />: {asset.precision}</li>
+                                <li><Translate component="span" content="explorer.block.common_options" />:
+                                <Inspector data={ asset.options } search={false}/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    ) : <p>Asset {assetID} not found.</p>}
                 </div>
             </div>
         );
