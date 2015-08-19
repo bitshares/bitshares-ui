@@ -112,7 +112,7 @@ class ApplicationApi {
                     optional_nonce
                 memo = {
                     from: memo_from_public.resolve,
-                    to: memo_from_public.resolve,
+                    to: memo_to_public.resolve,
                     nonce,
                     message: encrypt_memo ?
                         Aes.encrypt_with_checksum(
