@@ -37,6 +37,7 @@ class ExistingAccountsAccountSelect extends Component {
                 size={this.props.list_size}
                 className="form-control existing-accounts-select"
                 onChange={this._onAccountChange.bind(this)}
+                style={{backgroundImage: 'none'}}
             >
                 {placeholder}
                 {account_names
