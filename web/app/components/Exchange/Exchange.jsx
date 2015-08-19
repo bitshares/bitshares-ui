@@ -326,7 +326,7 @@ class Exchange extends React.Component {
                     </div>
 
                     {/* Center Column */}
-                    <div className="grid-block main-content vertical small-8 medium-9 large-8ps-container" ref="center">
+                    <div className="grid-block main-content vertical small-8 medium-9 large-8 ps-container" ref="center">
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink" style={{paddingTop: 0}}>

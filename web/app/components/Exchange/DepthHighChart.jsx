@@ -35,7 +35,7 @@ class DepthHighChart extends React.Component {
             chart: {
                 type: "area",
                 backgroundColor: "rgba(255, 0, 0, 0)",
-                spacing: [10, 0, 5, 0]
+                spacing: [0, 0, 5, 0]
             },
             title: {
                 text: null
