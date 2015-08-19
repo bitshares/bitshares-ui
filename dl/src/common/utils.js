@@ -27,6 +27,11 @@ var Utils = {
         return this.get_asset_amount(quoteAmount, quoteAsset) / this.get_asset_amount(baseAmount, baseAsset);
     },
 
+    round_number: function(number, asset) {
+        let precision = this.get_asset_precision(asset.precision);
+        return Math.round(number * precision) / precision;
+    },
+
     format_number: (number, decimals) => {
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
@@ -67,6 +72,42 @@ var Utils = {
                 return id;
             }
         }
+    },
+
+    add_comma: function(value) {
+        if (typeof value === "number") {
+            value = value.toString();
+        }
+        value = value.trim()
+        value = value.replace( /,/g, "" )
+        if( value == "." || value == "" ) {
+           return value;
+        }
+        else if( value.length ) {
+            // console.log( "before: ",value )
+            let n = Number(value)
+            if( isNaN( n ) )
+                return
+            let parts = value.split('.')
+            // console.log( "split: ", parts )
+            n = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if( parts.length > 1 )
+                n += "." + parts[1]
+            // console.log( "after: ",transfer.amount )
+            return n;
+       }
+    },
+
+    parse_float_with_comma: function(value) {
+        // let value = new_state.transfer.amount
+        value = value.replace( /,/g, "" )
+        let fvalue = parseFloat(value)
+        if( value.length && isNaN(fvalue) && value != "." )
+           throw "parse_float_with_comma: must be a number"
+         else if( fvalue < 0 )
+           return 0;
+
+        return fvalue;
     }
 };
 

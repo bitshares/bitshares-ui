@@ -9,16 +9,31 @@ class BuySell extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 nextProps.amount !== this.props.amount ||
+                nextProps.total !== this.props.total ||
+                nextProps.currentPrice !== this.props.currentPrice ||
                 nextProps.price !== this.props.price ||
                 nextProps.balance !== this.props.balance
             );
     }
 
+    _addBalance(balance) {
+        if (this.props.type === "buy") {
+            this.props.totalChange({target: {value: balance.toString()}});
+        } else {
+            this.props.amountChange({target: {value: balance.toString()}});
+        }
+    }
+
+    _setPrice(price) {
+        this.props.priceChange({target: {value: price.toString()}});
+    }
+
     render() {
-        let {type, quoteSymbol, baseSymbol, amount, price, amountChange, priceChange, onSubmit, balance, totalPrecision, balancePrecision} = this.props;
-        // console.log("this.props", this.props);
-        let total = amount * price;
-        let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")} ${amount} ${quoteSymbol}`;
+        let {type, quoteSymbol, baseSymbol, amount, price, amountChange,
+            priceChange, onSubmit, balance, totalPrecision, total, totalChange,
+            balancePrecision, quotePrecision, currentPrice} = this.props;
+
+        let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")}`;
         let buttonClass = classNames("button buySellButton", type, {disabled: !(balance > 0 && amount > 0 && price > 0)});
         let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
         let divClass = classNames(this.props.className, `${type}-form`);
@@ -26,24 +41,63 @@ class BuySell extends React.Component {
         return (
             <div className={divClass}>
                 <form className="order-form" onSubmit={onSubmit}>
-                    <div className="grid-block">
+                    <div className="grid-block vertical">
                         <div className="grid-content">
-                            <label> {/* TODO: move the margin style into a CSS class */}
-                                <Translate content="exchange.quantity" /> ({quoteSymbol}):
-                                <input type="text" id="buyAmount" value={amount} onChange={amountChange}/>
-                            </label>
+                            <div className="buy-sell-info">
+                                <Translate content="exchange.balance" />:&nbsp;
+                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balance)}>{utils.format_number(balance, balancePrecision)}</span> {balanceSymbol}
+                            </div>
+                            <div className="buy-sell-info">
+                                {this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;
+                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setPrice.bind(this, currentPrice)}>{currentPrice}</span> {quoteSymbol}/{baseSymbol}
+                            </div>
                         </div>
-                        <div className="grid-content">
-                            <label>
-                                <Translate content="exchange.price" />: ({baseSymbol}/{quoteSymbol}):
-                                <input type="text" id="buyPrice" value={price} onChange={priceChange}/>
-                            </label>
+
+                        <div className="grid-content no-overflow no-padding" style={{width: "90%", margin: "0 5%"}}>
+
+                            <div className="buy-sell-row">
+                                <div className="buy-sell-label">
+                                    <Translate  content="exchange.price" />:
+                                </div>
+                                <div className="buy-sell-details">
+                                    <div className="buy-sell-box">{quoteSymbol}</div>
+                                    <div className="buy-sell-input">
+                                        <input type="text" id="buyPrice" value={price} onChange={priceChange}/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="buy-sell-row">
+                                <div className="buy-sell-label">
+                                    <Translate  content="exchange.quantity" />:
+                                </div>
+                                <div className="buy-sell-details">
+                                    <div className="buy-sell-box">{quoteSymbol}</div>
+                                    <div className="buy-sell-input">
+                                        <input type="text" id="buyAmount" value={amount} onChange={amountChange} style={{float: "right", width: "100%"}}/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="buy-sell-row bottom-row">
+                                <div className="buy-sell-label">
+                                    <Translate  content="exchange.total" />:
+                                </div>
+                                <div className="buy-sell-details">
+                                    <div className="buy-sell-box">{baseSymbol}</div>
+                                    <div className="buy-sell-input">
+                                        <input type="text" id="buyAmount" value={total} onChange={totalChange} style={{float: "right", width: "100%"}}/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input className={buttonClass} type="submit" value={buttonText} />
                         </div>
+
+
                     </div>
   
-                    <input className={buttonClass} type="submit" value={buttonText} />
-                    <p className="buy-sell-info"><Translate content="exchange.balance" />: {`${utils.format_number(balance, balancePrecision)} ${balanceSymbol}`}</p>
-                    <p className="buy-sell-info"><Translate content="exchange.total" /> ({baseSymbol}): { utils.format_number(total, totalPrecision) }</p>
+                    
                 </form>
                 </div>
         );

@@ -20,6 +20,7 @@ import Wallet from "components/Wallet/Wallet";
 import BlockchainStore from "stores/BlockchainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
 import WalletDb from "stores/WalletDb";
+import Ps from "perfect-scrollbar";
 
 require("./exchange.scss");
 
@@ -31,8 +32,10 @@ class Exchange extends React.Component {
             history: [],
             buyAmount: 0,
             buyPrice: 0,
+            buyTotal: 0,
             sellAmount: 0,
             sellPrice: 0,
+            sellTotal: 0,
             sub: null,
             activeTab: "buy",
             showBuySell: true
@@ -44,6 +47,8 @@ class Exchange extends React.Component {
 
     componentDidMount() {
         this._subToMarket(this.props);
+        let centerContainer = React.findDOMNode(this.refs.center);
+        Ps.initialize(centerContainer);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +73,7 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
+        console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
@@ -90,7 +96,6 @@ class Exchange extends React.Component {
     
     _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
-
         if (sellAssetAmount > balance) {
             return notify.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
@@ -105,41 +110,7 @@ class Exchange extends React.Component {
             });
         }
 
-        // var callback = function() { this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount); }.bind(this);
         this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount);
-        // let fee = BlockchainStore.getFee("limit_order_create");
-
-        // if(this.props.settings.get("confirmMarketOrder")) // TODO: only show this confirmation modal if the user has not disabled it
-        // {
-        //     var content =
-        //         <div className="grid-content no-overflow">
-        //             {(this.props.quote === buyAsset.symbol) ?
-        //             <Translate
-        //                     component="p"
-        //                     content="exchange.confirm_buy"
-        //                     buy_amount={buyAssetAmount}
-        //                     buy_symbol={buyAsset.symbol}
-        //                     price_amount={sellAssetAmount / buyAssetAmount}
-        //                     price_symbol={sellAsset.symbol + "/" + buyAsset.symbol}
-        //             />
-        //             :
-        //             <Translate
-        //                     component="p"
-        //                     content="exchange.confirm_sell"
-        //                     sell_amount={sellAssetAmount}
-        //                     sell_symbol={sellAsset.symbol}
-        //                     price_amount={buyAssetAmount / sellAssetAmount}
-        //                     price_symbol={buyAsset.symbol + "/" + sellAsset.symbol}
-        //             />}
-        //             <Translate content="transfer.fee" />: <FormattedAsset color="fee" amount={fee} asset={this.props.assets.get("1.3.0")} />
-        //         </div>
-
-        //     this.refs.confirmModal.show(content, "Confirm Order", callback);
-        // }
-        // else
-        // {
-        //     callback();
-        // }
     }
 
     _cancelLimitOrder(orderID, e) {
@@ -186,36 +157,101 @@ class Exchange extends React.Component {
         }
     }
 
-    _depthChartClick(e) {
+    _depthChartClick(base, quote, e) {
         e.preventDefault();
         // let base_id = this.props.asset_symbol_to_id[this.props.base];
         // let base = this.props.assets.get(base_id);
         // let precision = utils.get_asset_precision(base.precision);
-        let value = e.xAxis[0].value;
+        let value = this._limitByPrecision(e.xAxis[0].value, quote);
         this.setState({
-            buyPrice: value,
-            sellPrice: value,
             depthLine: value
         });
+
+        this._buyPriceChanged(base, {target: {value: value}});
+        this._sellPriceChanged(base, {target: {value: value}});
     }
 
     _addZero(value) {
-        console.log("value:", value);
+        if (typeof value === "number") {
+            value = value.toString();
+        }
         if (value.length === 1 && value === ".") {
             return "0.";
         }
+
         return value;
     }
 
     _setDepthLine(value) { this.setState({depthLine: value}); }
 
-    _buyAmountChanged(e) { this.setState({buyAmount: this._addZero(e.target.value)}); }
+    _limitByPrecision(value, asset) {
+        let precision = utils.get_asset_precision(asset.precision);
+        value = Math.floor(value * precision) / precision;
+        if (isNaN(value) || !isFinite(value)) {
+            return 0;
+        }
+        return value;
+    }
 
-    _buyPriceChanged(e) { this.setState({buyPrice: this._addZero(e.target.value)}); this._setDepthLine(e.target.value); }
+    _buyPriceChanged(base, e) {
+        this.setState({
+            buyPrice: this._addZero(e.target.value),
+            buyTotal: this._limitByPrecision(this.state.buyAmount * e.target.value, base)
+        });
+        this._setDepthLine(e.target.value); 
+    }
 
-    _sellAmountChanged(e) { this.setState({sellAmount: this._addZero(e.target.value)}); }
+    _buyAmountChanged(base, quote, e) {
+        let value = e.target.value;
+        if (e.target.value.indexOf(".") !== e.target.value.length -1) {
+            value = this._limitByPrecision(e.target.value, quote);
+        }
+        this.setState({
+            buyAmount: this._addZero(value),
+            buyTotal: this._limitByPrecision(value * this.state.buyPrice, base)
+        }); 
+    }
 
-    _sellPriceChanged(e) { this.setState({sellPrice: this._addZero(e.target.value)}); this._setDepthLine(e.target.value); }
+    _buyTotalChanged(base, quote, e) {
+        let value = e.target.value;
+        if (e.target.value.indexOf(".") !== e.target.value.length -1) {
+            value = this._limitByPrecision(e.target.value, base);
+        }
+        this.setState({
+            buyAmount: this._limitByPrecision(value / this.state.buyPrice, quote),
+            buyTotal: this._addZero(value)
+        });
+    }
+
+    _sellAmountChanged(base, quote, e) {
+        let value = e.target.value;
+        if (e.target.value.indexOf(".") !== e.target.value.length -1) {
+            value = this._limitByPrecision(e.target.value, quote);
+        }
+        this.setState({
+            sellAmount: this._addZero(value),
+            sellTotal: this._limitByPrecision(value * this.state.sellPrice, base)
+        }); 
+    }
+
+    _sellPriceChanged(base, e) {
+        this.setState({
+            sellPrice: this._addZero(e.target.value),
+            sellTotal: this._limitByPrecision(this.state.sellAmount * e.target.value, base)
+        });
+        this._setDepthLine(e.target.value);
+    }
+
+    _sellTotalChanged(base, quote, e) {
+        let value = e.target.value;
+        if (e.target.value.indexOf(".") !== e.target.value.length -1) {
+            value = this._limitByPrecision(e.target.value, base);
+        }
+        this.setState({
+            sellAmount: this._limitByPrecision(value / this.state.sellPrice, quote),
+            sellTotal: this._addZero(value)
+        });
+    }
 
     _changeTab(value) {
         this.setState({activeTab: value});
@@ -237,7 +273,7 @@ class Exchange extends React.Component {
         let {asset_symbol_to_id, assets, currentAccount, limit_orders,
             base: baseSymbol, quote: quoteSymbol,
             balances, totalBids, flat_asks, flat_bids, bids, asks} = this.props;
-        let {buyAmount, buyPrice, sellAmount, sellPrice} = this.state;
+        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0;
 
         if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
@@ -265,6 +301,9 @@ class Exchange extends React.Component {
             od: counterpart.translate("exchange.order_depth")
         };
 
+        let lowestAsk = asks[0] ? asks[0].price_full : 0;
+        let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
+
         return (
 
                 <div className="grid-block page-layout market-layout">
@@ -287,7 +326,7 @@ class Exchange extends React.Component {
                     </div>
 
                     {/* Center Column */}
-                    <div className="block grid-block main-content no-overflow vertical small-9 medium-10 large-8">
+                    <div className="grid-block main-content vertical small-8 medium-9 large-8ps-container" ref="center">
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink" style={{paddingTop: 0}}>
@@ -317,11 +356,82 @@ class Exchange extends React.Component {
                             </ul>
                         </div>
 
-                        {/* Price history chart and depth chart inside tabs */}
-                        <div className="grid-block no-overflow no-padding" id="market-charts" style={{display: "inline-block", flexGrow: "0", minHeight: "350px" }} >
+                        <div className="grid-block no-overflow no-padding shrink">
+                            <DepthHighChart
+                                orders={limit_orders}
+                                flat_asks={flat_asks}
+                                flat_bids={flat_bids}
+                                totalBids={totalBids}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                                height={300}
+                                onClick={this._depthChartClick.bind(this, base, quote)}
+                                plotLine={this.state.depthLine}
+                            />
+                        </div>
 
-                            <Tabs>
-                                <Tabs.Tab title={tabTitles.ph}>
+                        {/* Buy/Sell forms */}
+                        <div className="grid-block shrink no-padding" style={{ flexGrow: "0" }} >
+                            {quote && base ?
+                            <BuySell
+                                className="small-6"
+                                type="buy"
+                                amount={buyAmount}
+                                price={buyPrice}
+                                total={buyTotal}
+                                quoteSymbol={quoteSymbol}
+                                baseSymbol={baseSymbol}
+                                amountChange={this._buyAmountChanged.bind(this, base, quote)}
+                                priceChange={this._buyPriceChanged.bind(this, base)}
+                                totalChange={this._buyTotalChanged.bind(this, base, quote)}
+                                balance={baseBalance / utils.get_asset_precision(base.precision)}
+                                onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
+                                balancePrecision={base.precision}
+                                quotePrecision={quote.precision}
+                                totalPrecision={base.precision}
+                                currentPrice={lowestAsk}
+                            /> : null}
+                            {quote && base ?
+                            <BuySell
+                                className="small-6"
+                                type="sell"
+                                amount={sellAmount}
+                                price={sellPrice}
+                                total={sellTotal}
+                                quoteSymbol={quoteSymbol}
+                                baseSymbol={baseSymbol}
+                                amountChange={this._sellAmountChanged.bind(this, base, quote)}
+                                priceChange={this._sellPriceChanged.bind(this, base)}
+                                totalChange={this._sellTotalChanged.bind(this, base, quote)}
+                                balance={quoteBalance / utils.get_asset_precision(quote.precision)}
+                                onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
+                                balancePrecision={quote.precision}
+                                quotePrecision={quote.precision}
+                                totalPrecision={base.precision}
+                                currentPrice={highestBid}
+                            /> : null}
+                        </div>
+
+
+
+                        <div className="grid-content no-overflow shrink no-padding">
+                            {limit_orders.size > 0 && base && quote ? <MyOpenOrders
+                                key="open_orders"
+                                orders={limit_orders}
+                                currentAccount={currentAccount.id}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                                onCancel={this._cancelLimitOrder.bind(this)}
+                            /> : null}
+                        </div>
+
+                        {/* Price history chart and depth chart inside tabs */}
+                        <div className="grid-block shrink no-overflow no-padding" id="market-charts" style={{marginTop: "0.5rem"}}>
+
                                     <div style={{position: "absolute", top: "-5px", right: "20px"}}>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
@@ -338,81 +448,11 @@ class Exchange extends React.Component {
                                         quoteSymbol={quoteSymbol}
                                         height={300}
                                     />
-                                </Tabs.Tab>
-                                <Tabs.Tab title={tabTitles.od}>
-                                    <DepthHighChart
-                                        orders={limit_orders}
-                                        flat_asks={flat_asks}
-                                        flat_bids={flat_bids}
-                                        totalBids={totalBids}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        height={300}
-                                        onClick={this._depthChartClick.bind(this)}
-                                        plotLine={this.state.depthLine}
-                                    />
-                                </Tabs.Tab>
-                            </Tabs>
+
+
 
                         </div>
 
-
-                        {/* Buy/Sell forms */}
-                        <div className="grid-block shrink no-padding" style={{ flexGrow: "0" }} >
-                                    <ConfirmModal
-                                        key="confirm_modal"
-                                        modalId="confirm_modal"
-                                        ref="confirmModal"
-                                        setting="confirmMarketOrder"
-                                        value={this.props.settings.get("confirmMarketOrder")}
-                                    />
-
-                                    {quote && base ?
-                                    <BuySell
-                                        className="small-6"
-                                        type="buy"
-                                        amount={buyAmount}
-                                        price={buyPrice}
-                                        quoteSymbol={quoteSymbol}
-                                        baseSymbol={baseSymbol}
-                                        amountChange={this._buyAmountChanged.bind(this)}
-                                        priceChange={this._buyPriceChanged.bind(this)}
-                                        balance={baseBalance / utils.get_asset_precision(base.precision)}
-                                        onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
-                                        balancePrecision={base.precision}
-                                        totalPrecision={base.precision}
-                                    /> : null}
-                                    {quote && base ?
-                                    <BuySell
-                                        className="small-6"
-                                        type="sell"
-                                        amount={sellAmount}
-                                        price={sellPrice}
-                                        quoteSymbol={quoteSymbol}
-                                        baseSymbol={baseSymbol}
-                                        amountChange={this._sellAmountChanged.bind(this)}
-                                        priceChange={this._sellPriceChanged.bind(this)}
-                                        balance={quoteBalance / utils.get_asset_precision(quote.precision)}
-                                        onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
-                                        balancePrecision={quote.precision}
-                                        totalPrecision={base.precision}
-                                    /> : null}
-                        </div>
-
-                        <div className="grid-block no-overflow no-padding" style={{minHeight: "20rem"}}>
-                            {limit_orders.size > 0 && base && quote ? <MyOpenOrders
-                                key="open_orders"
-                                orders={limit_orders}
-                                currentAccount={currentAccount.id}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                onCancel={this._cancelLimitOrder.bind(this)}
-                            /> : null}
-                        </div>
 
                     {/* End of Main Content Column */}
                     </div>

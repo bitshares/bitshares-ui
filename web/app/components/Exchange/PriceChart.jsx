@@ -312,7 +312,7 @@ class PriceChart extends React.Component {
         // };
 
         return (
-            <div className="grid-content">
+            <div className="grid-content no-padding no-overflow">
                 <div style={{position: "relative"}}>
                     {currentValue}
                 </div>
