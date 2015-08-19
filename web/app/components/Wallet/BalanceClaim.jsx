@@ -37,12 +37,14 @@ class BalanceClaim extends Component {
     }
     
     static getStores() {
-        return [BalanceClaimStore]
+        return [BalanceClaimStore, ImportKeysStore]
     }
     
     static getPropsFromStores() {
         //DEBUG console.log('... BalanceClaimStore.getState()',BalanceClaimStore.getState())
-        return BalanceClaimStore.getState()
+        var props = BalanceClaimStore.getState()
+        
+        return props
     }
     
     componentWillMount() {
@@ -67,9 +69,15 @@ class BalanceClaim extends Component {
     
     render() {
         //DEBUG  console.log('... render balance_by_account_asset',this.props.balance_by_account_asset.length)
-        
         if( ! this.props.balance_by_account_asset.length)
             return <div/>
+        
+        var import_keys_status = ImportKeysStore.getState().status
+        var import_keys_loading = import_keys_status == "saving"
+        var import_keys_error = import_keys_status == "saveError"
+        var import_keys_ready = ! import_keys_loading && ! import_keys_error
+        
+        //DEBUG console.log('... import_keys loading, error, ready',import_keys_loading,import_keys_error,import_keys_ready)
         
         this.state.selected_balance_claims = []
         var unclaimed_balance_rows = []
@@ -142,7 +150,7 @@ class BalanceClaim extends Component {
         var claim_account_name = this.state.claim_account_name
         var has_account = claim_account_name ? true : false
         var has_checked = checked.size > 0
-        var import_ready = has_account && has_checked
+        var import_ready = has_account && has_checked && import_keys_ready
         var claim_balance_label = import_ready ?
                 `Claim Balance to account: ${claim_account_name}` :
                 "Claim Balance"
@@ -163,7 +171,10 @@ class BalanceClaim extends Component {
                                 list_size={5}
                             />
                         </div>
-                        {this.props.my_accounts_loading || this.props.balances_loading ? 
+                        {
+                            this.props.my_accounts_loading ||
+                            this.props.balances_loading ||
+                            import_keys_loading ? 
                             <LoadingIndicator type="circle"/> : <div/>}
                         <br></br>
                         <div className="button-group">

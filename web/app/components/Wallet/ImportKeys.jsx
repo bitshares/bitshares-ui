@@ -585,6 +585,8 @@ export default class ImportKeys extends Component {
         var db = api.db_api()
         
         if(TRACE) console.log('... ImportKeys._saveImport get_key_references START')
+        ImportKeysActions.setStatus("saving")
+    
         var addAccountPromise = db.exec("get_key_references",
             [Object.keys(imported_keys_public)]).then(
             results => {
@@ -648,12 +650,14 @@ export default class ImportKeys extends Component {
             
             if (import_count) {
                 addAccountPromise.then(()=> {
-                    //ImportKeysActions.saved() // https://github.com/goatslacker/alt/issues/456
+                    ImportKeysActions.setStatus("saveDone")
+                    // https://github.com/goatslacker/alt/issues/456
                     BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
                     BalanceClaimActions.loadMyAccounts()
                 })
             }
         }).catch( error => {
+            ImportKeysActions.setStatus("saveError")
             console.log("error:", error)
             var message = error
             try { message = error.target.error.message } catch (e){}

@@ -1,7 +1,8 @@
 import alt from "alt-instance"
 
-import BalanceClaimActions from "actions/BalanceClaimActions"
+export default alt.generateActions( "setStatus" )
 
+/*
 class ImportKeysActions {
     
     saved() {
@@ -13,3 +14,4 @@ class ImportKeysActions {
 
 var ImportKeysActionsWrapped = alt.createActions(ImportKeysActions)
 export default ImportKeysActionsWrapped
+*/
