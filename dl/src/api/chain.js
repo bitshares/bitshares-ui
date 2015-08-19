@@ -339,7 +339,7 @@ class ChainStore
                   }
                   else
                   {
-                     reject( Error("Asset " + symbol + " was not found" ) )
+                     resolve()
                   }
           }).catch( error => reject(error) )
       })
@@ -392,7 +392,7 @@ class ChainStore
                   }
                   else
                   {
-                     reject( Error("Account " + name + " was not found" ) )
+                     resolve()
                   }
               }).catch( error => reject(error) )
       })
