@@ -6,6 +6,25 @@ import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
 import LoadingIndicator from "../LoadingIndicator";
 
+class AccountHistoryHeader extends React.Component {
+    shouldComponentUpdate(nextProps) {
+        return false;
+    }
+
+    render() {
+        return (
+            <thead>
+                <tr>
+                    <th><Translate component="span" content="explorer.block.date" /></th>
+                    <th><Translate content="explorer.block.op" /></th>
+                    <th><Translate content="account.votes.info" /></th>
+                    <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
+                </tr>
+            </thead>
+        );
+    }
+}
+
 class AccountHistory extends React.Component {
 
     constructor() {
@@ -137,26 +156,20 @@ class AccountHistory extends React.Component {
 
         return (
             <div className="grid-content">
-                <table style={{width: "100%"}} className="table">
-                    <thead>
-                        <tr>
-                            <th><Translate component="span" content="explorer.block.date" /></th>
-                            <th><Translate content="explorer.block.op" /></th>
-                            <th><Translate content="account.votes.info" /></th>
-                            <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {history}
-                    </tbody>
-                </table>
-                <ul className="pagination float-right">
+                <ul className="pagination float-left">
                     <li onClick={this._changePage.bind(this, "first")}>1</li>
                     <li className="button outline block-button" onClick={this._changePage.bind(this, "up")}><Translate content="pagination.newer" /></li>
                     <li style={{padding: "0", margin: "0"}}><input value={setPage} onChange={this._setPage.bind(this)} type="number" onSubmit={this._changePage.bind(this, "set")}/></li>
                     <li className="button outline block-button" onClick={this._changePage.bind(this, "down")}><Translate content="pagination.older" /></li>
                     <li onClick={this._changePage.bind(this, "last")}>{pages.toString()}</li>
                 </ul>
+                <table style={{width: "100%"}} className="table">
+                    <AccountHistoryHeader/>
+                    <tbody>
+                        {history}
+                    </tbody>
+                </table>
+
             </div>
         );
     }
