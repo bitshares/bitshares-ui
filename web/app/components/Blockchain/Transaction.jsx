@@ -93,6 +93,7 @@ class Transaction extends React.Component {
         let missing = new Array(ids.length);
 
         ids.forEach((id, index) => {
+            
             if (!this.props.assets.get(id)) {
                 AssetActions.getAsset(id);
                 missing[index] = true;
@@ -149,26 +150,26 @@ class Transaction extends React.Component {
                     // console.log("op:", op);
 
                     color = "success";
-                    missingAccounts = this.getAccounts([op[1].from, op[1].to]);
-                    missingAssets = this.getAssets([op[1].amount.asset_id]);
+                    let from = ChainStore.getAccount( op[1].from, this.forceUpdate.bind(this) )
+                    let to = ChainStore.getAccount( op[1].to, this.forceUpdate.bind(this) )
 
                     // console.log("missingAccounts:", missingAccounts);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}>{account_id_to_name[op[1].from]}</Link> : null}</td>
+                            <td> { to ? to.get('name') : null } </td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.to" />:</td>
-                            <td>{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}>{account_id_to_name[op[1].to]}</Link> : null}</td>
+                            <td> {from ? from.get('name') : null }</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.amount" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}</td>
+                            <td><FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /></td>
                         </tr>
                     );
 
