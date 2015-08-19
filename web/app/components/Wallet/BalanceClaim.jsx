@@ -270,20 +270,7 @@ class BalanceClaim extends Component {
             claim_account_name,
             wif_to_balances,
             true //broadcast
-        ).then((result)=> {
-            notify.success("Balance claimed to account: " + this.state.claim_account_name)
-            if(result) {
-                //DEBUG console.log("ExistingAccount._claimBalances", result, JSON.stringify(result));
-            }
-            this.context.router.transitionTo("account", {account_name: this.state.claim_account_name});
-                
-        }).catch((error)=> {
-            console.log("_claimBalances", error)
-            var message = error
-            try { message = error.data.message } catch(e) {}
-            notify.error("Error claiming balance: " + message)
-            throw error
-        })
+        )
     }
     
     getWifToBalance(balance_claims) {
