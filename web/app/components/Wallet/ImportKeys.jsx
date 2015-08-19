@@ -169,10 +169,10 @@ export default class ImportKeys extends Component {
                         <br/>
 
                         <h3 className="center-content">Unclaimed balances belonging to these keys:</h3>
-                        {balance_rows ? 
+                        {balance_rows ?
                             (<div>
                                 <div className="grid-block center-content">
-                                    <div className="grid-content">
+                                    <div className="grid-content no-overflow">
                                         <label>Asset Totals</label>
                                         <div>
                                             {balance_rows.length ? balance_rows : "No Balances"}
@@ -181,14 +181,16 @@ export default class ImportKeys extends Component {
                                 </div>
                             </div>) : null}
                         <br/>
-                        
-                        <div className="button-group content-block center-content">
-                            <div className={cname("button success", {disabled:!import_ready})}
-                                onClick={this._saveImport.bind(this)} >
-                                Import
-                            </div>
-                            <div className="button secondary" onClick={this.reset.bind(this)}>
-                                Cancel
+
+                        <div className="center-content" style={{width: "100%"}}>
+                            <div className="button-group content-block">
+                                <a href className={cname("button success", {disabled:!import_ready})}
+                                   onClick={this._saveImport.bind(this)} >
+                                    Import
+                                </a>
+                                <a href className="button secondary" onClick={this.reset.bind(this)}>
+                                    Cancel
+                                </a>
                             </div>
                         </div>
                     </div>) : null}
