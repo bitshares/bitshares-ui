@@ -162,11 +162,22 @@ class App extends React.Component {
     }
 }
 
+class Auth extends React.Component {
+    render() {return null; }
+}
+
 App.willTransitionTo = (transition, params, query, callback) => {
+    if (transition.path.indexOf("/auth/") === 0) {
+        console.log("auth: ", transition.path);
+        // TODO: pass auth params to RPC API init subroutine
+    }
     iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise.then(() => {
         WalletDb.loadDbData().then(() => {
             if (!WalletDb.getWallet() && transition.path !== "/create-account") {
                 transition.redirect("/create-account");
+            }
+            if (transition.path.indexOf("/auth/") === 0) {
+                transition.redirect("/dashboard");
             }
             callback();
         }).catch((error) => {
@@ -177,6 +188,8 @@ App.willTransitionTo = (transition, params, query, callback) => {
 
 let routes = (
     <Route handler={App}>
+        <DefaultRoute handler={DashboardContainer}/>
+        <Route name="auth" path="/auth/:data" handler={Auth}/>
         <Route name="dashboard" path="/dashboard" handler={DashboardContainer}/>
         <Route name="explorer" path="/explorer" handler={Explorer}/>
         <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
@@ -206,6 +219,7 @@ let routes = (
         <Route name="existing-account" path="existing-account" handler={ExistingAccount}/>
         <Route name="import-keys" path="import-keys" handler={ImportKeys}/>
         <Route name="account" path="/account/:account_name" handler={AccountPage}>
+            <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-assets" path="user-assets" handler={AccountAssets}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
@@ -214,9 +228,7 @@ let routes = (
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
-            <DefaultRoute handler={AccountOverview}/>
         </Route>
-        <DefaultRoute handler={DashboardContainer}/>
     </Route>
 );
 
