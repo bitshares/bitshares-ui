@@ -125,7 +125,7 @@ class WalletDb {
         return null
     }
     
-    process_transaction(tr, signer_private_keys, broadcast, sign = true) {
+    process_transaction(tr, signer_pubkeys, broadcast) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
                 this.getWallet().chain_id + ", but got " +
@@ -134,31 +134,40 @@ class WalletDb {
         return WalletUnlockActions.unlock().then( () => {
             return tr.set_required_fees().then(()=> {
                 return tr.finalize().then(()=> {
-                    
-                    if(signer_private_keys) {
-                        if( ! Array.isArray(signer_private_keys))
-                            signer_private_keys = [ signer_private_keys ]
-                        for(let private_key of signer_private_keys)
-                            if(sign) tr.sign(private_key)
-                    } else {
-                        return tr.get_potential_signatures().then((public_keys)=>{
-                            //var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
-                            var pubkeys = PrivateKeyStore.getPubkeys()
-                            //DEBUG console.log('... pubkeys',pubkeys)
-                            if( ! pubkeys.length)
-                                throw new Error("Missing signing key")
-                            return tr.get_required_signatures(pubkeys).then(
-                                pubkey_strings => {
-                                //DEBUG console.log('... pubkey_strings',pubkey_strings)
-                                for(let pubkey_string of pubkey_strings) {
-                                    var private_key = this.getPrivateKey(pubkey_string)
-                                    if( ! private_key)
-                                        throw new Error("Missing signing key for " + pubkey_string)
-                                    if(sign) tr.sign(private_key)
-                                }
-                            })
+                    return tr.get_potential_signatures().then( public_keys => {
+                        
+                        if(signer_pubkeys) {
+                            // Balance claims are by address, only the private
+                            // key holder can know about these additional 
+                            // potential keys.
+                            for(let public_key_string of signer_pubkeys)
+                                public_keys.push(public_key_string)
+                        }
+                        
+                        var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
+                        if( ! pubkeys.length)
+                            throw new Error("Missing signing key")
+                        
+                        //{//Testing only, don't send All public keys!
+                        //    var pubkeys_all = PrivateKeyStore.getPubkeys()
+                        //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
+                        //        console.log('required_pubkeys all\t',required_pubkey_strings.sort()))
+                        //    tr.get_required_signatures(pubkeys).then( required_pubkey_strings =>
+                        //        console.log('required_pubkeys normal\t',required_pubkey_strings.sort()))
+                        //}
+                        
+                        return tr.get_required_signatures(pubkeys).then(
+                            required_pubkeys => {
+                            //DEBUG console.log('required_pubkeys actual\t',required_pubkeys.sort())
+                            for(let pubkey_string of required_pubkeys) {
+                                var private_key = this.getPrivateKey(pubkey_string)
+                                if( ! private_key)
+                                    throw new Error("Missing signing key for " + pubkey_string)
+                                tr.sign(private_key)
+                            }
+                            //DEBUG console.log('... pubkey_strings',pubkey_strings,tr.serialize())
                         })
-                    }
+                    })
                 }).then(()=> {
                     if(broadcast) {
                         if(this.confirm_transactions) {

@@ -46,8 +46,7 @@ class Api {
         return Apis.instance().app_api().create_account_with_brain_key(
             PrivateKey.fromSeed("owner").toPublicKey().toBtsPublic(),
             PrivateKey.fromSeed("active").toPublicKey().toBtsPublic(), 
-            name, 11, 0, 0, null, //signer_private_key
-            true
+            name, 11, 0, 0, true //broadcast
         );
     }
 

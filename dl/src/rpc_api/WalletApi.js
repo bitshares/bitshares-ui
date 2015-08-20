@@ -71,7 +71,6 @@ class WalletApi {
             registrar_id,
             referrer_id,
             referrer_percent,
-            null, //signer_private_key
             broadcast
         )
     }

@@ -1,4 +1,6 @@
 import WalletDb from "stores/WalletDb"
+import WalletUnlockActions from "actions/WalletUnlockActions"
+//import BalanceClaimStore from "stores/BalanceClaimStore"//circular dep somewhere
 import ApplicationApi from "../rpc_api/ApplicationApi"
 import PrivateKey from "../ecc/key_private"
 import Apis from "../rpc_api/ApiInstances"
@@ -55,11 +57,10 @@ class WalletActions {
                 registrar, //registrar_id,
                 referrer, //referrer_id,
                 referrer_percent, //referrer_percent,
-                null, //signer_private_key,
                 true //broadcast
             ).then( () => {
-                    return updateWallet().then(()=>
-                        this.actions.brainKeyAccountCreated())
+                return updateWallet().then(()=>
+                    this.actions.brainKeyAccountCreated())
                 }).catch(  error => {
                     this.actions.brainKeyAccountCreateError(error);
                     throw error;
@@ -126,34 +127,24 @@ class WalletActions {
         //return db.exec("get_key_references", public_keyaddress_params).then( result => {
     }
     
-    importBalance( account_name_or_id, wifs_to_balances, broadcast ) {
+    importBalance( account_name_or_id, wifs_to_balances, broadcast, private_key_tcombs) {
         return new Promise((resolve, reject) => {
             
             var db = api.db_api()
             var address_publickey_map = {}
             
             var account_lookup = lookup.account_id(account_name_or_id)
-            var p = lookup.resolve().then( ()=> {
+            var unlock = WalletUnlockActions.unlock()
+            var plookup = lookup.resolve()
+            
+            var p = Promise.all([ unlock, plookup ]).then( ()=> {
                 var account = account_lookup.resolve
                 //DEBUG console.log('... account',account)
                 if(account == void 0)
                     return Promise.reject("Unknown account " + account_name_or_id)
                 
                 var balance_claims = []
-                for(let wif of Object.keys(wifs_to_balances)) {
-                    var {public_key_string} = wifs_to_balances[wif]
-                    var private_key = PrivateKey.fromWif(wif)
-                    
-                    var public_key = PublicKey.fromBtsPublic(public_key_string)
-                    var index = address_str => {
-                        address_publickey_map[address_str] = public_key
-                    }
-                    index(public_key.toBtsAddy())
-                    index(Address.fromPublic(public_key, false, 0).toString())
-                    index(Address.fromPublic(public_key, true, 0).toString())
-                    index(Address.fromPublic(public_key, false, 56).toString())
-                    index(Address.fromPublic(public_key, true, 56).toString())
-                }
+                var signer_pubkeys = {}
                 for(let wif of Object.keys(wifs_to_balances)) {
                     var {balances, public_key_string} = wifs_to_balances[wif]
                     for(let {chain_balance_record, vested_balance} of balances) {
@@ -175,12 +166,12 @@ class WalletActions {
                                 chain_balance_record.balance.asset_id
                             )
                         
-                        //if( ! address_publickey_map[b.owner]) debugger
+                        signer_pubkeys[public_key_string] = true
                         balance_claims.push({
                             fee: { amount: "0", asset_id: "1.3.0"},
                             deposit_to_account: account,
                             balance_to_claim: chain_balance_record.id,
-                            balance_owner_key: address_publickey_map[chain_balance_record.owner],
+                            balance_owner_key: public_key_string,
                             total_claimed: {
                                 amount: total_claimed,
                                 asset_id: chain_balance_record.balance.asset_id
@@ -199,7 +190,7 @@ class WalletActions {
                     tr.add_type_operation("balance_claim", balance_claim)
                 }
                 return WalletDb.process_transaction(
-                    tr, null/*signer_privates*/, broadcast )
+                    tr, Object.keys(signer_pubkeys), broadcast )
             })
             resolve(p)
         })

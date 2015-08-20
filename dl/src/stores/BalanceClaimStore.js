@@ -15,6 +15,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import chain_api from "api/chain"
 import ApplicationApi from "rpc_api/ApplicationApi"
 import AssetTcomb from "stores/tcomb_structs"
+import ops from 'chain/transaction_operations'
 
 var application_api = new ApplicationApi()
 var api = Apis.instance()
@@ -48,6 +49,7 @@ class BalanceClaimStore {
         this.state = {
             balance_by_account_asset: [],
             my_accounts: [],
+            my_account_private_key_tcombs: {},
             my_accounts_loading: false,
             balance_claims: [],
             balance_ids: [],
@@ -208,42 +210,71 @@ class BalanceClaimStore {
             var p = chain_api.lookupAccountByName(account_name).then ( account => {
                 //DEBUG console.log('... account lookupAccountByName',account.get("id"),account.get("name"))
                 
+                // todo, move to ChainStore
                 // the fake transfer will check for required auths
-                return application_api.transfer(
-                    account.get("id"),
-                    account.get("id"),
-                    1,//amount
-                    0,//asset
-                    null,//memo
-                    false,//broadcast
-                    false,//encrypt_memo
-                    null, //nonce
-                    false//sign
-                ).then( fake_transfer => {
-                    //DEBUG
-                    if(TRACE) console.log('... BalanceClaimStore my account')
-                    return account.get("name")
-                }).catch( error => {
-                    //DEBUG
-                    if(TRACE) console.log('... BalanceClaimStore NOT my account',account.get("name"),error)
-                    return null
+                var tr = new ops.signed_transaction()
+                tr.add_type_operation("transfer", {
+                    fee: { amount: 0, asset_id: 0 },
+                    from: account.get("id"),
+                    to: account.get("id"),
+                    amount: { amount: 1, asset_id: 0},
+                    null//memo
                 })
+                return tr.get_potential_signatures().then((public_keys)=>{
+                    //var pubkeys = PrivateKeyStore.getPubkeys()
+                    var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
+                    if( ! pubkeys.length)
+                        return {account_name:null, private_key_tcombs: []}
+                    
+                    return tr.get_required_signatures(pubkeys).then(
+                        pubkey_strings => {
+                        //DEBUG console.log('... get_required_signatures',pubkey_strings)//,tr.serialize())
+                        var private_key_tcombs = []
+                        for(let pubkey_string of pubkey_strings) {
+                            //var private_key = WalletDb.getPrivateKey(pubkey_string)
+                            var private_key_tcomb = PrivateKeyStore.getTcombs_byPubkey(pubkey_string)
+                            if( private_key_tcomb )
+                                private_key_tcombs.push(private_key_tcomb[0])
+                            else {
+                                // Missing signing key
+                                console.log('... BalanceClaimStore NOT my account1', account.get("name"))
+                                return null
+                            }
+                        }
+                        return {
+                            account_name: account.get("name"),
+                            private_key_tcombs
+                        }
+                    })
+                })
+
             }).catch( error => {
                 //DEBUG Account not found console.log('... error1',error)
             })
-            
             promises.push(p)
         }
         Promise.all(promises).then( account_names => {
             var my_accounts = this.state.my_accounts
-            for(let account_name of account_names) {
-                if( ! account_name) continue
+            var my_account_private_key_tcombs = this.state.my_account_private_key_tcombs
+            for(let obj of account_names) {
+                if( ! obj) {
+                    if(TRACE) console.log('... BalanceClaimStore NOT my account2',
+                        account.get("name"),error)
+                    continue
+                }
+                if(TRACE) console.log('... BalanceClaimStore my account')
+                var {account_name, private_key_tcombs} = obj
                 my_accounts.push(account_name)
+                my_account_private_key_tcombs[account_name] = private_key_tcombs
             }
             //DEBUG console.log('... my_accounts',my_accounts)    
-            this.setState({my_accounts, my_accounts_loading:false})
+            this.setState({my_accounts, my_account_private_key_tcombs,
+                my_accounts_loading:false})
             if(TRACE) console.log('... BalanceClaimStore.onLoadMyAccounts DONE')
-        }).catch( balance_claim_error => this.setState({balance_claim_error}) )
+        }).catch( balance_claim_error => {
+            console.log('BalanceClaimStore.onLoadMyAccounts', balance_claim_error)
+            this.setState({balance_claim_error}) 
+        })
     }
     
     setBalanceClaims(balance_claims) {

@@ -24,7 +24,6 @@ class ApplicationApi {
         registrar_id,
         referrer_id,
         referrer_percent,
-        signer_private_keys,
         broadcast = false
     ) {
         var tr = new ops.signed_transaction();
@@ -62,7 +61,7 @@ class ApplicationApi {
             })
             return WalletDb.process_transaction(
                 tr,
-                signer_private_keys,
+                null, //signer_private_keys,
                 broadcast
             )
         })

@@ -264,12 +264,14 @@ class BalanceClaim extends Component {
         
         var selected_balance_claims = this.state.selected_balance_claims
         var wif_to_balances = this.getWifToBalance(selected_balance_claims)
+        var private_key_tcombs = BalanceClaimStore.getState().my_account_private_key_tcombs[claim_account_name]
         
         //return
         WalletActions.importBalance(
             claim_account_name,
             wif_to_balances,
-            true //broadcast
+            true, //broadcast
+            private_key_tcombs
         )
     }
     
