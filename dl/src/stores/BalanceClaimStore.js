@@ -9,6 +9,7 @@ import WalletDb from "stores/WalletDb"
 import AccountStore from "stores/AccountStore";
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import ImportKeysActions from "actions/ImportKeysActions"
+import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import BalanceClaimActions from "actions/BalanceClaimActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 
@@ -39,7 +40,7 @@ class BalanceClaimStore {
     constructor() {
         this.bindActions(BalanceClaimActions)
         this.bindListeners({
-            //onRefreshBalanceClaims: ImportKeysActions.saved,
+            onRefreshBalanceClaims: TransactionConfirmActions.broadcasted,
             onLoadMyAccounts: [
                 WalletUnlockActions.change//, ImportKeysActions.saved
             ]

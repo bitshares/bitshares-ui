@@ -63,6 +63,22 @@ label, label > span {
   border-color: $alert-color;
 }
 
+.txtlabel.success {
+  color: $success-color;
+}
+
+.txtlabel.info {
+  color: $info-color;
+}
+
+.txtlabel.warning {
+  color: $warning-color;
+}
+
+.txtlabel.cancel, .label.alert {
+  color: $alert-color;
+}
+
 // notification
 
 .notification {
@@ -250,11 +266,11 @@ h1, h2, h3, h4, h5, h6 {
 // tables
 .table {
   > thead > tr > th {
-    border-bottom: 2px solid $dark-text-color;
+    border-bottom: 2px solid darken($secondary-text-color, 10%);
     color: $secondary-text-color;
   }
   > tbody > tr > td {
-    border-bottom: 1px solid $dark-text-color;
+    border-bottom: 1px solid darken($secondary-text-color, 10%);
   }
   &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
     background-color: lighten($bg-color, 4%);

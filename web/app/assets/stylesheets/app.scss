@@ -122,6 +122,10 @@ button, .button {
   }
 }
 
+.no-border {
+  border: none !important;
+}
+
 .no-border-bottom {
     border-bottom: none !important;
 }
@@ -195,7 +199,7 @@ div.disabled * {
     pointer-events: none !important;
 }
 
-a.currency {
+a.currency, span.currency {
   font-family: 'Roboto-Light', arial, sans-serif;
 }
 
@@ -204,4 +208,9 @@ a.currency {
     margin-bottom: 0;
   }
   margin-bottom: 1rem;
+}
+
+.txtlabel {
+  text-transform: uppercase;
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
 }

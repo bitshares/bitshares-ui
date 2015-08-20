@@ -134,7 +134,7 @@ export default class ImportKeys extends Component {
                             {!this.state.no_file ?
                                 (<div>
                                     <input
-                                        type="password" ref="password"
+                                        type="password" ref="password" autoComplete="off"
                                         key={this.state.reset_password}
                                         placeholder={password_placeholder}
                                         onChange={this._passwordCheck.bind(this)}
