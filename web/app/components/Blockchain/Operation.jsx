@@ -200,8 +200,7 @@ class Operation extends React.Component {
                         <td className="right-td"><Translate component="span" content="transaction.received" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.from" />{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}> {account_id_to_name[op[1].from]}</Link> : null}
-                            <br/>
-                            {memo_text}
+                            {/*<br/> {memo_text}*/}
                         </td>
                     );
                 }
