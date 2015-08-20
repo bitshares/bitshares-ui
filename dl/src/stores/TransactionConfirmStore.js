@@ -5,30 +5,36 @@ class TransactionConfirmStore {
     
     constructor() {
         this.bindActions(TransactionConfirmActions);
-        this.state = {
+        this.state = this.getInitialState();
+    }
+
+    getInitialState() {
+        return {
             transaction: null,
             error: null,
             broadcasted: false,
             broadcasting: false,
             trx_id: null,
-            trx_block_num: null
+            trx_block_num: null,
+            closed: true
         };
     }
 
     onConfirm({transaction}) {
-        this.setState({transaction, broadcasted: false, error: null, trx_id: null});
+        let init_state = this.getInitialState();
+        this.setState({...init_state, transaction, closed: false});
     }
 
     onClose() {
-        this.setState({transaction: null, broadcasted: false, error: null});
+        this.setState({closed: true});
     }
 
     onBroadcast() {
-        this.setState({broadcasted: false, broadcasting: true, error: null});
+        this.setState({broadcasting: true});
     }
 
     onBroadcasted(res) {
-        this.setState({broadcasted: true, broadcasting: false, trx_id: res[0].id, trx_block_num: res[0].block_num, error: null});
+        this.setState({broadcasted: true, broadcasting: false, trx_id: res[0].id, trx_block_num: res[0].block_num});
     }
 
     onError(error) {

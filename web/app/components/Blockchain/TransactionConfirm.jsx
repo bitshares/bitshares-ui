@@ -22,7 +22,7 @@ class TransactionConfirm extends BaseComponent {
     }
 
     componentDidUpdate() {
-        if(this.state.transaction || this.state.error || this.state.broadcasted) {
+        if(!this.state.closed) {
             ZfApi.publish("transaction_confim_modal", "open");
         } else {
             ZfApi.publish("transaction_confim_modal", "close");

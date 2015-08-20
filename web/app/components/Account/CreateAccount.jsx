@@ -10,12 +10,14 @@ import {Link} from "react-router";
 import AccountImage from "./AccountImage";
 import AccountSelect from "../Forms/AccountSelect";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
 
 
 class CreateAccount extends React.Component {
     constructor() {
         super();
         this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null};
+        this.onFinishConfirm = this.onFinishConfirm.bind(this)
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -35,19 +37,28 @@ class CreateAccount extends React.Component {
         this.setState({validPassword: e.valid});
     }
 
+    onFinishConfirm(confirm_store_state) {
+        if(confirm_store_state.broadcasted && confirm_store_state.closed && confirm_store_state.transaction) {
+            let trx_obj = confirm_store_state.transaction.toObject();
+            let op0 = trx_obj.operations[0];
+            if(op0[0] === 5 && op0[1].name === this.state.accountName) {
+                this.context.router.transitionTo("account", {account_name: this.state.accountName});
+            }
+            TransactionConfirmStore.unlisten(this.onFinishConfirm);
+        }
+    }
+
     createAccount(name) {
         WalletUnlockActions.unlock().then(() => {
             AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account).then(() => {
-                notify.addNotification({
-                    message: `Successfully created account: ${name}`,
-                    level: "success",
-                    autoDismiss: 10
-                });
-                this.context.router.transitionTo("account", {account_name: name});
+                if(this.state.registrar_account) {
+                    TransactionConfirmStore.listen(this.onFinishConfirm);
+                } else {
+                    this.context.router.transitionTo("account", {account_name: name});
+                }
             }).catch(error => {
-                // TODO: Show in GUI
                 console.log("ERROR AccountActions.createAccount", error);
-                const error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown backend api error";
+                const error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
                 notify.addNotification({
                     message: `Failed to create account: ${name} - ${error_msg}`,
                     level: "error",
@@ -61,8 +72,8 @@ class CreateAccount extends React.Component {
         return WalletDb.onCreateWallet(
             account_name,
             password,
-            null, //this.state.brainkey,
-            true //unlock
+            null,
+            true
         ).then(()=> {
             console.log("Congratulations, your wallet was successfully created.");
         }).catch(err => {
