@@ -11,7 +11,7 @@ module.exports =
         return no if is_empty value
         length = value.length
         return no if length < 3 or length > 64
-        /^(([a-z][a-z0-9]*([\.-][a-z][a-z0-9]*)*)(\/([a-z][a-z0-9]*([\.-][a-z][a-z0-9]*)*))?)$/.test value
+        /^(([a-z][a-z0-9]*([\.-][a-z0-9]*)*)(\/([a-z][a-z0-9]*([\.-][a-z0-9]*)*))?)$/.test value
     
     is_cheap_name: (account_name)->
         account_name.length > 8 or
