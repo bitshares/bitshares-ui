@@ -103,10 +103,10 @@ class TransactionConfirm extends BaseComponent {
                             account_id_to_name={account_id_to_name}
                             inverted={settings.get("inverseMarket")}
                             assets={assets} no_links={true}
-                        />
-                        <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
-                            {button_group}
-                        </div>
+                            />
+                    </div>
+                    <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
+                        {button_group}
                     </div>
                 </Modal>
             </div>
