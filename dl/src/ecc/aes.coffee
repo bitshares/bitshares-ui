@@ -49,7 +49,7 @@ class Aes
         
         new_checksum = hash.sha256 plaintext
         new_checksum = new_checksum.slice 0, 4
-        new_checksum = new_checksum.toString('binary').split("").join("")
+        new_checksum = new_checksum.toString('binary')
         
         unless checksum.toString('binary') is new_checksum
             throw new Error "Invalid key, could not decrypt message"
@@ -67,7 +67,7 @@ class Aes
         ]
         # DEBUG console.log('... S',S.toString('hex'))
         checksum = hash.sha256(message).slice 0,4
-        checksum = checksum.toString('binary').split("").join("")
+        checksum = checksum.toString('binary')
         checksum = new Buffer(checksum, 'binary')
         payload = Buffer.concat [checksum, message]
         # DEBUG console.log('... payload',payload.toString())
