@@ -221,7 +221,7 @@ Types.set = (st_operation)->
             if dup_map[o_str] isnt undefined
                 throw new Error "duplicate"
             dup_map[o_str] = on
-        array.sort()
+        array.sort(st_operation.compare)
     fromByteBuffer:(b)->
         size = b.readVarint32()
         if config.hex_dump
@@ -338,6 +338,8 @@ Types.vote_id =
         if debug.use_default and object is undefined
             return "0:0"
         object.type + ":" + object.id
+    compare: (a, b) ->
+        parseInt(a.split(':')[1]) - parseInt(b.split(':')[1])
 
 Types.optional = (st_operation)->
     v.required st_operation, "st_operation"
