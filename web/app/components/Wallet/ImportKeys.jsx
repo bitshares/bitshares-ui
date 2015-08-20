@@ -59,7 +59,8 @@ export default class ImportKeys extends Component {
         };
     }
     
-    reset() {
+    reset(e) {
+        if(e) e.preventDefault()
         var state = this._getInitialState();
         this.setState(state);
         this.updateOnChange({});
@@ -575,7 +576,8 @@ export default class ImportKeys extends Component {
         //})
     }
 
-    _saveImport() {
+    _saveImport(e) {
+        e.preventDefault()
         var keys = PrivateKeyStore.getState().keys
         for(let public_key_string in this.state.imported_keys_public) {
             if(keys.get(public_key_string)) {
