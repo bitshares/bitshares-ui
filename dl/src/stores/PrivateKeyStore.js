@@ -160,14 +160,7 @@ class PrivateKeyStore extends BaseStore {
         if(public_key.Q)
             public_key = public_key.toBtsPublic()
         
-        var array = this.state.keys.filter(
-            value => value.pubkey == public_key
-        ).toArray()
-        //would be nice to have separate maps (id, pubkey)
-        if(array.length > 2){
-            throw new Error("Invalid state")
-        }
-        return array.length ? array[0] : null
+        return this.state.keys.get(public_key)
     }
     
     
