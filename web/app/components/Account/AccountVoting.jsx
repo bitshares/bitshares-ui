@@ -233,7 +233,8 @@ class AccountVoting extends ChainComponent {
        updated_account.new_options.num_committee = committee_votes.size
        updated_account.new_options.num_witness = witness_votes.size
        updated_account.new_options.votes = witness_votes.concat( committee_votes ).toArray()
-       updated_account.new_options.votes = updated_account.new_options.votes.sort( (a,b)=>{ return parseInt(a.split(':')[1]) > parseInt(b.split(':')[1]) } )
+       updated_account.new_options.votes = updated_account.new_options.votes.sort( (a,b)=>{ return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) } )
+       console.log( "SORTED VOTES: ", updated_account.new_options.votes )
       
        updated_account.account = updated_account.id
        console.log( "updated_account: ", updated_account)
