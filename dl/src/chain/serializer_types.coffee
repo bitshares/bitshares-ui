@@ -339,7 +339,7 @@ Types.vote_id =
             return "0:0"
         object.type + ":" + object.id
     compare: (a, b) ->
-        parseInt(a.split(':')[1]) - parseInt(b.split(':')[1])
+        parseInt(a.id) - parseInt(b.id)
 
 Types.optional = (st_operation)->
     v.required st_operation, "st_operation"
