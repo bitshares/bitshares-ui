@@ -210,11 +210,13 @@ class Operation extends React.Component {
 
             case "limit_order_create": 
                 color = "warning";
+                console.log( "LIMIT OP", op )
                 let isAsk = market_utils.isAskOp(op[1]);
                 if (!inverted) {
                     isAsk = !isAsk;
                 }
                 missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                console.log( "PROPS: ", this.props )
                 
                 column = (
                         isAsk ?
@@ -222,8 +224,10 @@ class Operation extends React.Component {
                             {!missingAssets[0] && !missingAssets[1] ? <Translate
                                 component="span"
                                 content="transaction.limit_order_sell" 
-                                sell_amount={utils.format_asset(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id))}
-                                sell_price={utils.format_price(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, inverted)}
+                                sell_amount={utils.format_asset(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, true)}
+                                sell_price={utils.format_price(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), 
+                                                               op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, inverted, true)}
+                                num={this.props.result[1].substring(4)}
                             /> : null}
                         </td>
                         :
@@ -232,7 +236,9 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.limit_order_buy" 
                                 buy_amount={utils.format_asset(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id))}
-                                buy_price={utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted)}
+                                buy_price={utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), 
+                                                              op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted)}
+                                num={this.props.result[1].substring(4)}
                             /> : null}
                         </td>
 
@@ -255,10 +261,11 @@ class Operation extends React.Component {
 
             case "limit_order_cancel":  
                 color = "cancel";            
+
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.limit_order_cancel" />
-                        &nbsp;{op[1].order}
+                        &nbsp;#{op[1].order.substring(4)}
                     </td>
                 );
                 break;
@@ -804,7 +811,7 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.balance_claim" 
                                 balance_amount={utils.format_asset(op[1].total_claimed.amount, assets.get(op[1].total_claimed.asset_id))}
-                                balance_id={op[1].balance_to_claim}
+                                balance_id={op[1].balance_to_claim.substring(5)}
                             /> : null}
                     </td>
                 );

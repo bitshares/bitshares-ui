@@ -163,6 +163,7 @@ class BalanceClaimStore {
                         }(i) }
                     }
                 }
+               if(TRACE) console.log('... there')
                 Promise.all(ps).then(()=> this.setBalanceClaims(balance_claims))
                 return Promise.all(this.pending_add_promises).then( ()=> {
                     this.pending_add_promises = []
@@ -180,6 +181,7 @@ class BalanceClaimStore {
                 })
             })
         }).catch( balance_claim_error => this.setState({balance_claim_error}) )
+        if(TRACE) console.log('... here')
     }
     
     /** Populate this.state.my_accounts with only account where the wallet
@@ -254,6 +256,8 @@ class BalanceClaimStore {
             })
             promises.push(p)
         }
+        if(TRACE) console.log('... done..');
+
         Promise.all(promises).then( account_names => {
             var my_accounts = this.state.my_accounts
             var my_account_private_key_tcombs = this.state.my_account_private_key_tcombs

@@ -55,10 +55,12 @@ class AccountOverview extends React.Component {
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = accountHistories.get(account_name).map((trx, index) => {
             if (index < 10) {
+                  console.log( "trx: ", trx )
                 return (
                     <Operation
                         key={index}
                         op={trx.op}
+                        result={trx.result}
                         block={trx.block_num}
                         account_id_to_name={account_id_to_name}
                         assets={assets}

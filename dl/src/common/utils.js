@@ -32,34 +32,37 @@ var Utils = {
         return Math.round(number * precision) / precision;
     },
 
-    format_number: (number, decimals) => {
+    format_number: (number, decimals, trailing_zeros = true) => {
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
             zeros += "0";     
         }
-        return numeral(number).format("0,0" + zeros);
+        let num = numeral(number).format("0,0" + zeros);
+        if( num.indexOf('.') > 0 )
+           return num.replace(/0+$/,"").replace(/\.$/,"")
+        return num
     },
 
-    format_asset: function(amount, asset, noSymbol) {
+    format_asset: function(amount, asset, noSymbol, trailing_zeros=true) {
         let precision = this.get_asset_precision(asset.precision);
 
-        return `${this.format_number(amount / precision, asset.precision)}${!noSymbol ? " " + asset.symbol : ""}`;
+        return `${this.format_number(amount / precision, asset.precision, trailing_zeros)}${!noSymbol ? " " + asset.symbol : ""}`;
     },
 
-    format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol,inverted) {
+    format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol,inverted,trailing_zeros=true) {
         let precision = this.get_asset_precision(quoteAsset.precision);
         let basePrecision = this.get_asset_precision(baseAsset.precision);
         if (inverted) {
             if (parseInt(quoteAsset.id.split(".")[2], 10) < parseInt(baseAsset.id.split(".")[2], 10)) {
-                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision))}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
+                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision),trailing_zeros)}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
             } else {
-                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision))}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
+                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision)),trailing_zeros}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
             }
         } else {
             if (parseInt(quoteAsset.id.split(".")[2], 10) > parseInt(baseAsset.id.split(".")[2], 10)) {
-                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision))}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
+                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision),trailing_zeros)}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
             } else {
-                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision))}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
+                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision),trailing_zeros)}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
             }
         }
     },
