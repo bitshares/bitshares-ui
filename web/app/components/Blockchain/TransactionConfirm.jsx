@@ -95,7 +95,7 @@ class TransactionConfirm extends BaseComponent {
                 <Modal id="transaction_confim_modal" ref="modal" overlay={true}>
                     {!this.state.broadcasting ? <a href className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</a> : null}
                     {header}
-                    <div style={{maxHeight: "60vh"}}>
+                    <div style={{maxHeight: "60vh", overflowY:'auto'}}>
                         <Transaction
                             key={Date.now()}
                             trx={this.state.transaction.serialize()}
