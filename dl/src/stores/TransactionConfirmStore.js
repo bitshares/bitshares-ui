@@ -26,7 +26,7 @@ class TransactionConfirmStore {
     }
 
     onClose() {
-        this.setState({closed: true});
+        this.setState({closed: true, transaction: null});
     }
 
     onBroadcast() {

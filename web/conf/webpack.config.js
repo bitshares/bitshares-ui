@@ -105,7 +105,7 @@ module.exports = function(options) {
     if(options.prod) config.entry.vendors = [
         "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-        "whatwg-fetch", "alt", "react-intl", "react-json-inspector",
+        "whatwg-fetch", "alt", "react-json-inspector",
         "immutable", "lzma", "bytebuffer_3.5.4.js", "intl"
     ];
 

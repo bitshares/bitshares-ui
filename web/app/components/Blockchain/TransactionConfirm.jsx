@@ -40,7 +40,7 @@ class TransactionConfirm extends BaseComponent {
     }
 
     render() {
-        if ( !this.state.transaction) {return <div/>; }
+        if ( !this.state.transaction || this.state.closed ) {return null; }
         let assets = AssetStore.getState().assets;
         let account_id_to_name =  AccountStore.getState().account_id_to_name;
         let settings = SettingsStore.getState().settings;
