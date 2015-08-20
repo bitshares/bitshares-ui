@@ -33,12 +33,11 @@ class OpType extends React.Component {
         return (
             <tr>
                 <td>
-                    <Translate component="span" content="explorer.block.op_type" />:
-                </td>
-                <td>
                     <span className={labelClass}>
                         {trxTypes[ops[this.props.type]]}
                     </span>
+                </td>
+                <td>
                 </td>
             </tr>
         );
@@ -55,6 +54,11 @@ class OperationTable extends React.Component {
 
     render() {
 
+       let fee_row = this.props.fee.amount > 0 ? ( <tr>
+                            <td><Translate component="span" content="transfer.fee" />:</td>
+                            <td>{!this.props.missingFee ? <FormattedAsset color="fee" amount={this.props.fee.amount} asset={this.props.fee.asset_id} /> : null}</td>
+                        </tr> ) : null
+
         return (
             <div >
             {/*  <h6><Translate component="span" content="explorer.block.op" /> #{this.props.index + 1}/{this.props.opCount}</h6> */}
@@ -63,10 +67,7 @@ class OperationTable extends React.Component {
                     <tbody>
                         <OpType type={this.props.type} color={this.props.color}/>
                         {this.props.children}
-                        <tr>
-                            <td><Translate component="span" content="transfer.fee" />:</td>
-                            <td>{!this.props.missingFee ? <FormattedAsset color="fee" amount={this.props.fee.amount} asset={this.props.fee.asset_id} /> : null}</td>
-                        </tr>
+                        {fee_row}
                     </tbody>
                 </table>
             </div>
@@ -752,30 +753,32 @@ class Transaction extends React.Component {
 
                 case "balance_claim":
                     color = "success";
-                    missingAssets = this.getAssets(op[1].total_claimed.asset_id);
-                    missingAccounts = this.getAccounts(op[1].deposit_to_account);
+                    let to_acnt = ChainStore.getAccount( op[1].deposit_to_account, this.forceUpdate.bind(this) );
+                    let to_name = to_acnt ? to_acnt.get('name') : null
+                    let bal_id = op[1].balance_to_claim.substring(5)
+                    console.log( "bal_id: ", bal_id, op[1].balance_to_claim )
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="transaction.balance_owner" />:</td>
-                            <td style={{fontSize: "80%"}}>{op[1].balance_owner_key}</td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="transaction.balance_id" />:</td>
-                            <td>#{op[1].balance_to_claim}</td>
+                            <td><Translate component="span" content="transaction.claimed" />:</td>
+                            <td><FormattedAsset amount={op[1].total_claimed.amount} asset={op[1].total_claimed.asset_id} /></td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.deposit_to" />:</td>
-                            <td>{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].deposit_to_account]}}>{account_id_to_name[op[1].deposit_to_account]}</Link> : null}</td>
+                            <td><Link to="account" params={{account_name: to_name}}>{to_name}</Link></td>
                         </tr>
                     );
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="transaction.claimed" />:</td>
-                            <td>{!missingAssets[0] ? <FormattedAsset amount={op[1].total_claimed.amount} asset={op[1].total_claimed.asset_id} /> : null}</td>
+                            <td><Translate component="span" content="transaction.balance_id" />:</td>
+                            <td>#{bal_id}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.balance_owner" />:</td>
+                            <td style={{fontSize: "80%"}}>{op[1].balance_owner_key.substring(0,10)}...</td>
                         </tr>
                     );
                     break;

@@ -112,7 +112,7 @@ export default class ImportKeys extends Component {
                 <div className="center-content">
                     <KeyCount wif_count={this.state.wif_count}/>
                     {!this.state.wif_count ? 
-                        <div>Upload BitShares keys file...</div> :
+                        <span>Import keys file...</span> :
                         <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
                     }
                 </div>
