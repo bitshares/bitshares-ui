@@ -64,14 +64,14 @@ class PasswordInput extends Component {
             <div>
                 <div className={password_class_name}>
                     <label>Password</label>
-                    <input name="password" type="password" ref="password"
+                    <input name="password" type="password" ref="password" autoComplete="off"
                            onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
                     {password_error}
                 </div>
                 { this.props.confirmation ?
                 <div className={password_confirmation_class_name}>
                     <label>Confirm Password</label>
-                    <input name="confirm_password" type="password" ref="confirm_password"
+                    <input name="confirm_password" type="password" ref="confirm_password" autoComplete="off"
                            onChange={this.handleChange}/>
                     {confirmation_error}
                 </div> : null}

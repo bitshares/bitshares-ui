@@ -45,10 +45,10 @@ class WalletCreate extends Component {
                             >
                                 <div className={cname("grid-content", "no-overflow", {"has-error": errors.password_match || errors.password_length})}>
                                     <label>Password</label>
-                                    <input type="password" id="password" value={this.state.password} />
+                                    <input type="password" id="password" value={this.state.password} autoComplete="off" />
 
                                     <label>Password (confirm)</label>
-                                        <input type="password" id="password_confirm" value={this.state.password_confirm}/>
+                                        <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
                                     <div>{errors.password_match || errors.password_length}</div>
                                     <br/>
                                 </div>

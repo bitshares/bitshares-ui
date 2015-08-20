@@ -162,7 +162,7 @@ class Operation extends React.Component {
                     }
                     catch(e) {
                         private_key = null;
-                        console.log("[Operation.jsx:160] ----- catch ----->", e);
+                        //console.log("[Operation.jsx:160] ----- catch ----->", e);
                     }
 
                     //console.log("[Operation.jsx:154] ----- keys 2 ----->", private_key, public_key);
@@ -192,8 +192,7 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.to" />{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}> {account_id_to_name[op[1].to]}</Link> : null}
-                            <br/>
-                            {memo_text}
+                            {/*<br/> {memo_text}*/}
                         </td>
                     );
                 } else if(current === op[1].to){

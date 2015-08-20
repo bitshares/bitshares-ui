@@ -35,7 +35,7 @@ class Transfer extends BaseComponent {
                 from_name : "",
                 from_assets : [  ],
                 from_balance : null,
-                amount: "0.0",
+                amount: null,
                 asset: "1.3.0",
                 to_account : null,
                 to: "",
@@ -87,15 +87,15 @@ class Transfer extends BaseComponent {
            new_state.errors.from = "invalid account name"
 
         let value = new_state.transfer.amount
-        value = value.replace( /,/g, "" )
+        if(value) value = value.replace( /,/g, "" )
         let fvalue = parseFloat(value)
-        if( value.length && isNaN(fvalue) && value != "." )
+        if( value && value.length && isNaN(fvalue) && value != "." )
            new_state.errors.amount = "must be a number"
          else if( fvalue < 0 )
            new_state.errors.amount = "amount must be greater than 0" 
 
         let errors = new_state.errors
-        new_state.isValid = Number(value) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
+        new_state.isValid = value && Number(value) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
     }
 
@@ -109,7 +109,7 @@ class Transfer extends BaseComponent {
             to: this.state.transfer.to.toLowerCase().trim(),
             from_name : "",
             to_name : "",
-            amount : this.state.transfer.amount.trim(),
+            amount : this.state.transfer.amount ? this.state.transfer.amount.trim() : null,
             asset : this.state.transfer.asset,
             memo: this.state.transfer.memo
         }
@@ -412,8 +412,8 @@ class Transfer extends BaseComponent {
                         <div className={classNames("grid-content", "no-overflow", {"has-error": errors.memo})}>
                             <label>
                                 <Translate component="span" content="transfer.memo" />
-                                <textarea id="memo" rows="1" ref="memo" value={transfer.memo} tabindex="4"/>
                             </label>
+                            <textarea id="memo" rows="1" ref="memo" value={transfer.memo} tabindex="4"/>
                             <div>{errors.memo}</div>
                         </div>
                     </div>
