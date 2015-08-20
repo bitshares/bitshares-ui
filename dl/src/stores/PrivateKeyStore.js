@@ -143,6 +143,8 @@ class PrivateKeyStore extends BaseStore {
         return this.state.keys.valueSeq().map( value => value.pubkey).toArray()
     }
     
+    // TODO move support for multiple wallets to indexeddb database name
+    // this would have only one public key returned
     getPubkeys_having_PrivateKey(public_keys) {
         var return_public_keys = []
         for(let public_key of public_keys) {
@@ -161,9 +163,10 @@ class PrivateKeyStore extends BaseStore {
         var array = this.state.keys.filter(
             value => value.pubkey == public_key
         ).toArray()
-        //TODO move support for multiple wallets to indexeddb database name
-        if(array.length > 2)
+        //would be nice to have separate maps (id, pubkey)
+        if(array.length > 2){
             throw new Error("Invalid state")
+        }
         return array.length ? array[0] : null
     }
     
