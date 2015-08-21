@@ -2,25 +2,25 @@
 
 // variables
 
-$light-text-color: #fff;
-$dark-text-color: #444;
-$primary-text-color: #e0e0e0;
+$light-text-color: #3F2E55;
+$dark-text-color: #3F2E55;
+$primary-text-color: #3F2E55;
 $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #aeabff;
 $error-text-color: #E3745B;
 
-$bg-color: #2a2a2a;
-$panel-bg-color: #3f3f3f;
-$light-panel-bg-color: #6a6a6a;
-$super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$bg-color: #FFF;
+$panel-bg-color: #e5e6e4;
+$light-panel-bg-color: #FFF;
+$super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
 $button-bg-color: #8c88ff;
 $secondary-button-bg-color: #999999;
 
 $alert-color: $error-text-color;
-$info-color: #A0D3E8;
-$success-color: #50D2C2;
-$warning-color: #FCAB53;
-$fee-color: #deb869;
+$info-color: #A0A4B8;
+$success-color: #21D19F;
+$warning-color: #f35b92;
+$fee-color: #7f055e;
 
 // general
 
@@ -35,7 +35,7 @@ hr {
 a {
   color: $link-text-color;
   &:hover, &:focus, &:active {
-    color: lighten($link-text-color, 4%);
+    color: darken($link-text-color, 4%);
   }
 }
 
@@ -154,7 +154,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .panel-left {
-  @include color($light-text-color, $light-panel-bg-color);
+  @include color($dark-text-color, $light-panel-bg-color);
   .block-list li > a {
     color: $light-text-color;
     &:hover {
@@ -168,13 +168,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+.menu-group.primary {
+  background-color: darken($panel-bg-color, 20%);
+  .menu-bar {
+  background-color: darken($panel-bg-color, 20%);
+  }
+    .button {
+    background-color: darken($panel-bg-color, 20%);
+    &:hover {
+    background-color: lighten($panel-bg-color, 80%);
+    }
+  }
+}
+
+
 .page-layout {
   background-color: $bg-color;
 
   .left-column {
     border-top-color: $bg-color;
     border-bottom-color: $bg-color;
-    background-color: $panel-bg-color; //lighten($bg-color, 4%);
+    background-color: lighten($panel-bg-color, 4%);
 
   }
 
@@ -211,8 +225,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: lighten($button-bg-color, 4%) !important;
   }
   &.outline {
-    color: $secondary-text-color;
-    border-color: $secondary-text-color;
+    color: lighten($primary-text-color, 40%);
     &:hover {
       color: $light-text-color;
       border-color: $light-text-color;
@@ -243,17 +256,17 @@ h1, h2, h3, h4, h5, h6 {
 
 // cards
 
-
 .card-section {
   color: black;
   padding-left: 0.5rem;
   > ul {
-    color: #FFF;
+    color: $primary-text-color;
     list-style: none;
     font-size: 85%;
     margin-left: 0;
   }
 }
+
 
 
 .card {
@@ -269,24 +282,24 @@ h1, h2, h3, h4, h5, h6 {
     color: $primary-text-color;
   }
   .card-divider {
-    @include color($primary-text-color, $light-panel-bg-color);
+    @include color($primary-text-color, darken($light-panel-bg-color, 20%));
   }
   > h4 {
-    background-color: $light-panel-bg-color;
+    background-color: darken($super-light-panel-bg-color, 4%);
   }
 }
 
 // tables
 .table {
   > thead > tr > th {
-    border-bottom: 2px solid darken($secondary-text-color, 10%);
+    border-bottom: 2px solid lighten($secondary-text-color, 80%);
     color: $secondary-text-color;
   }
   > tbody > tr > td {
-    border-bottom: 1px solid darken($secondary-text-color, 10%);
+    border-bottom: 1px solid lighten($secondary-text-color, 80%);
   }
   &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
-    background-color: lighten($bg-color, 4%);
+    background-color: darken($bg-color, 4%);
   }
 }
 
@@ -309,6 +322,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   header {
     color: $secondary-text-color;
+    background-color: $panel-bg-color;
   }
 }
 
@@ -329,12 +343,23 @@ div.has-error > input, div.has-error > input:hover, div.has-error > input:focus 
 
 input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
   background-color: #e0e0e0;
+  border: none;
   &:hover, &:focus, &:active {
-    background-color: #e0e0e0;
+    background-color: #cfd2cd;
+    border: none;
   }
   &:focus {
-    border-color: $light-text-color;
+    border: none;
   }
+}
+
+
+div.buy-sell-box {
+  background-color: #e0e0e0;
+  text-shadow: none;
+  font-weight: 300;
+  border-left: 1px solid #FFF;
+  border-radius: 0px;
 }
 
 
@@ -393,20 +418,28 @@ td.orderHistoryBid {
 }
 
 .account-left-menu {
+  > li {
+    border-bottom: 1px solid lighten($secondary-text-color, 80%);
+    &:first-child {
+    border-top: 1px solid lighten($secondary-text-color, 80%);
+    }
+  }
+
   > li > a:hover, > li > label:hover, > li select:hover {
     color: $light-text-color;
     background-color: $panel-bg-color;
+    border-top: none;
   }
   > li > a.active {
     color: $light-text-color;
-    background-color: lighten($panel-bg-color, 4%);
+    background-color: darken($panel-bg-color, 4%);
     border-left-color: darken($button-bg-color, 4%);
   }
 }
 
 
 .pagination {
-    background-color: $panel-bg-color;
+    background-color: lighten($panel-bg-color, 4%) ;
 }
 
 .invoice {
@@ -457,6 +490,12 @@ td.orderHistoryBid {
     fill: $success-color;
   }
 }
+
+.icon > svg > path {
+    fill:  darken($light-panel-bg-color, 20%);
+  }
+
+
 
 .circle-wrapper {
    .circle:before {
