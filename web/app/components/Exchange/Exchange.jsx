@@ -263,9 +263,9 @@ class Exchange extends React.Component {
 
     _orderbookClick(price, amount, type) {
         if (type === "bid") {
-            this.setState({sellPrice: price, sellAmount: amount});
+            this._buyPriceChanged(base, {target: {value: value}});
         } else if (type === "ask") {
-            this.setState({buyPrice: price, buyAmount: amount});
+            this._buyPriceChanged(base, {target: {value: value}});
         }
     }
 
@@ -432,7 +432,7 @@ class Exchange extends React.Component {
                         {/* Price history chart and depth chart inside tabs */}
                         <div className="grid-block shrink no-overflow no-padding" id="market-charts" style={{marginTop: "0.5rem"}}>
 
-                                    <div style={{position: "absolute", top: "-5px", right: "20px"}}>
+                                    <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
                                         <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
