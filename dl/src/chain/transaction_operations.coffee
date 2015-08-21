@@ -1,5 +1,6 @@
 ObjectId = require './object_id'
 Signature = require '../ecc/signature'
+PublicKey = require '../ecc/key_public'
 ByteBuffer = require('../common/bytebuffer')
 Long = ByteBuffer.Long
 Aes = require '../ecc/aes'
@@ -114,9 +115,11 @@ _my.signed_transaction = ->
             #DEBUG console.log('... get_required_signatures',required_public_keys)
             required_public_keys
     
-    add_signer:(private_key)->
+    add_signer:(private_key, public_key)->
         throw new Error "already signed" if @signed
-        @signer_private_keys.push private_key
+        unless public_key.Q
+            public_key = PublicKey.fromBtsPublic public_key
+        @signer_private_keys.push [private_key, public_key]
     
     sign:(chain_id = Apis.instance().chain_id)->
         throw new Error "not finalized" unless @tr_buffer
@@ -124,10 +127,11 @@ _my.signed_transaction = ->
         unless @signer_private_keys.length
             throw new Error "call add_signer first"
         for i in [0...@signer_private_keys.length] by 1
-            private_key = @signer_private_keys[i]
+            [private_key, public_key] = @signer_private_keys[i]
             sig = Signature.signBuffer(
                 Buffer.concat([new Buffer(chain_id, 'hex'), @tr_buffer])
                 private_key
+                public_key
             )
             @signatures.push sig.toBuffer()
         @signer_private_keys = []

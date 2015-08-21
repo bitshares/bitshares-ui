@@ -163,7 +163,7 @@ class WalletDb {
                                 var private_key = this.getPrivateKey(pubkey_string)
                                 if( ! private_key)
                                     throw new Error("Missing signing key for " + pubkey_string)
-                                tr.add_signer(private_key)
+                                tr.add_signer(private_key, pubkey_string)
                             }
                             //DEBUG console.log('... pubkey_strings',pubkey_strings,tr.serialize())
                         })
