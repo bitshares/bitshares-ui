@@ -62,7 +62,7 @@ class BuySell extends React.Component {
                                 <div className="buy-sell-details">
                                     <div className="buy-sell-box">{quoteSymbol}</div>
                                     <div className="buy-sell-input">
-                                        <input type="text" id="buyPrice" value={price} onChange={priceChange}/>
+                                        <input type="text" id="buyPrice" value={price} onChange={priceChange} style={{ paddingRight: "4px" ,}}/>
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@ class BuySell extends React.Component {
                                 <div className="buy-sell-details">
                                     <div className="buy-sell-box">{quoteSymbol}</div>
                                     <div className="buy-sell-input">
-                                        <input type="text" id="buyAmount" value={amount} onChange={amountChange} style={{float: "right", width: "100%"}}/>
+                                        <input type="text" id="buyAmount" value={amount} onChange={amountChange} style={{float: "right", width: "100%" , paddingRight: "4px"}}/>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ class BuySell extends React.Component {
                                 <div className="buy-sell-details">
                                     <div className="buy-sell-box">{baseSymbol}</div>
                                     <div className="buy-sell-input">
-                                        <input type="text" id="buyAmount" value={total} onChange={totalChange} style={{float: "right", width: "100%"}}/>
+                                        <input type="text" id="buyAmount" value={total} onChange={totalChange} style={{float: "right", width: "100%" , paddingRight: "4px"}}/>
                                     </div>
                                 </div>
                             </div>
@@ -96,8 +96,8 @@ class BuySell extends React.Component {
 
 
                     </div>
-  
-                    
+
+
                 </form>
                 </div>
         );
