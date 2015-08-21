@@ -67,8 +67,8 @@ class Signature
                 break
             
             # signing is slow, keep an eye out for this...
-            console.log "WARN: at least 10 attempts to find canonical signature" if nonce is 10
-            throw new Error "Too many attempts: "+nonce if nonce is 100
+            if nonce % 1 == 0
+                console.log "WARN: #{nonce} attempts to find canonical signature"
         
         new Signature ecsignature.r, ecsignature.s, i
     
