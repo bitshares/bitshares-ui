@@ -18,10 +18,9 @@ class ExistingAccount extends React.Component {
             <div id="existing-account" className="grid-block vertical">
                 <div className="grid-container">
                     <div className="content-block">
+                        <br/>
+                        <br/>
                         <Wallet>
-                            <div className="content-block">
-                                <h1>Welcome to Graphene</h1>
-                            </div>
                             <ImportKeys
                                 key={this.state.import_keys_ref}
                             />
