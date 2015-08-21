@@ -8,7 +8,12 @@ import {ObjectIdType} from "./CustomTypes";
  *
  *  Expects one property, 'balance' which should be a balance_object id
  */
-class BalanceComponent extends ChainComponent {
+
+export default class BalanceComponent extends ChainComponent {
+
+    static propTypes = {
+        balance: ObjectIdType
+    }
 
     render() {
         if (!this.state.balance) return null;
@@ -17,10 +22,3 @@ class BalanceComponent extends ChainComponent {
         return (<FormattedAsset amount={amount} asset={type}/>);
     }
 }
-
-
-BalanceComponent.propTypes = {
-    balance: ObjectIdType
-}
-
-export default BalanceComponent;
