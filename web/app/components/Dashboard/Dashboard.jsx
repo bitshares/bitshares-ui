@@ -14,7 +14,7 @@ class Dashboard extends Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-3">
+                <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-3" style={{alignItems: "flex-start", overflowY: "auto", zIndex: 1}}>
                     {itemRows}
                 </div>
                 <div className="grid-block medium-3 right-column">
