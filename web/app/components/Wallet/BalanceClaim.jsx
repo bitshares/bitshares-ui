@@ -274,22 +274,18 @@ class BalanceClaim extends Component {
         var wif_to_balances = this.getWifToBalance(selected_balance_claims)
         var private_key_tcombs = BalanceClaimStore.getState().my_account_private_key_tcombs[claim_account_name]
         
-        //return
         WalletActions.importBalance(
             claim_account_name,
             wif_to_balances,
             true, //broadcast
             private_key_tcombs
-        ).then((result)=> {
-             //notify.success("Balance claimed to account: " + this.state.claim_account_name)
-             this.reset()
-         }).catch((error)=> {
-             console.log("_claimBalances", error)
-             var message = error
-             try { message = error.data.message } catch(e) {}
-             notify.error("Error claiming balance: " + message)
-             throw error
-         })
+        ).catch((error)=> {
+            console.log("_claimBalances", error)
+            var message = error
+            try { message = error.data.message } catch(e) {}
+            notify.error("Error claiming balance: " + message)
+            throw error
+        })
     }
     
     getWifToBalance(balance_claims) {
