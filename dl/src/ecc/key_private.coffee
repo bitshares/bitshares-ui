@@ -57,7 +57,8 @@ class PrivateKey
         Q = secp256k1.G.multiply(@d)
 
     toPublicKey: ->
-        PublicKey.fromPoint @toPublicKeyPoint()
+        return @public_key if @public_key
+        @public_key = PublicKey.fromPoint @toPublicKeyPoint()
     
     toBuffer: ->
         pad32 @d.toBuffer()
