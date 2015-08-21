@@ -76,7 +76,6 @@ class ChainStore
 
       let promise = new Promise( (resolve, reject) => {
          let on_confirmation = (confirmation) => {
-            console.log( "got confirmation: ", confirmation )
             pending.block_num = confirmation.block_num
             pending.trx_num = confirmation.trx_num
             pending.processed_trx = confirmation.trx
@@ -112,7 +111,6 @@ class ChainStore
     */
    getWitness( id_or_account, on_update = null  )
    {
-      console.log( "getWitness: ", id_or_account )
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
       {
          let account = this.getAccount( id_or_account )
@@ -132,7 +130,6 @@ class ChainStore
                          if( witness && on_update ) on_update()
                   })
             }, error => {
-              //console.log( "error: ", error )
                let witness_id = this.witness_by_account_id.set( id_or_account, null )
             } )
          }
@@ -165,12 +162,10 @@ class ChainStore
             this.lookupAccountByName( id_or_account ).then( account=>{
                let account_id = account.get('id') 
                let committee_id = this.committee_by_account_id.get( account_id )
-             //  console.log( "committee_id: ",committee_id )
                if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
 
                if( committee_id == undefined )
                {
-            //      console.log( "fetch committee member by account" )
                   this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
                        this.committee_by_account_id.set( account_id, committee ? committee.get('id') : null )
                        if( on_update && committee) on_update()
@@ -188,7 +183,6 @@ class ChainStore
 
                if( committee_id == undefined )
                {
-            //      console.log( "fetch committee member by account" )
                   this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
                        this.committee_by_account_id.set( account_id, committee ? committee.get('id') : null )
                        if( on_update && committee) on_update()
@@ -205,11 +199,9 @@ class ChainStore
     */
    fetchWitnessByAccount( account_id )
    {
-      console.log( "fetchWitness for Account: ", account_id )
       return new Promise( (resolve,reject ) => {
           Apis.instance().db_api().exec( "get_witness_by_account", [ account_id ] )
               .then( optional_witness_object => {
-                    // console.log( "fetch witness result===========> ", optional_witness_object )
                    if( optional_witness_object )
                    {
                       this.witness_by_account_id.set( optional_witness_object.witness_account, optional_witness_object.id )
@@ -229,11 +221,9 @@ class ChainStore
     */
    fetchCommitteeMemberByAccount( account_id )
    {
-      console.log( "fetchCommittee for Account: ", account_id )
       return new Promise( (resolve,reject ) => {
           Apis.instance().db_api().exec( "get_committee_member_by_account", [ account_id ] )
               .then( optional_committee_object => {
-                     //console.log( "fetch committee result===========> ", optional_committee_object )
                    if( optional_committee_object )
                    {
                       this.committee_by_account_id.set( optional_committee_object.committee_member_account, optional_committee_object.id )
@@ -270,6 +260,8 @@ class ChainStore
       if( on_update )
          callback = (typeof on_update) == 'function' ? on_update : on_update.update.bind(on_update)
 
+      callback = a => { if( a ) callback() }
+
       if( full_account && account )
       {
          this.fetchFullAccountById( account.get('id'), callback )
@@ -280,9 +272,13 @@ class ChainStore
          if( utils.is_object_id( name_or_id ) )
          {
             if( full_account )
+            {
                this.fetchFullAccountById( name_or_id, callback ).catch(null)
+            }
             else
+            {
                this.fetchObject( name_or_id ).then(callback).catch(null)
+            }
          }
          else if( validation.is_account_name( name_or_id ) )
          {
