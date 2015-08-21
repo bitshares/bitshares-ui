@@ -325,12 +325,12 @@ div.has-error > input, div.has-error > input:hover, div.has-error > input:focus 
 }
 
 input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
-  background-color: #e0e0e0;
+  background-color: #ddd;
   &:hover, &:focus, &:active {
-    background-color: #e0e0e0;
+    background-color: #ddd;
   }
   &:focus {
-    border-color: $light-text-color;
+    border-color: #aaa;
   }
 }
 

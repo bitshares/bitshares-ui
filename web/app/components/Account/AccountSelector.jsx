@@ -19,6 +19,7 @@ import ChainStore from "api/chain.js"
  *    onChange      - a method to be called any time user input changes
  *    placeholder   - the placeholder text to be displayed when there is no user_input
  *    account       - the current value of the account selector, the string the user enters
+ *    tabIndex      - tabindex property to be passed to input tag
  *
  */
 class AccountSelector extends ChainComponent {
@@ -142,7 +143,9 @@ class AccountSelector extends ChainComponent {
                              placeholder={this.props.placeholder}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}
-                             onKeyDown={this.onKeyDown.bind(this)}/>
+                             onKeyDown={this.onKeyDown.bind(this)}
+                             tabIndex={this.props.tabIndex}
+                          />
                       { !this.props.onAction ? null : (
                           <button className={this.props.action_class}
                                   onClick={this.props.onAction}>

@@ -338,7 +338,7 @@ class Transfer extends BaseComponent {
                               <div className="grid-content align-right shrink"> {/*balancesComp*/} </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" tabindex="1"/>
+                                <input id="from" type="text" value={transfer.from} defaultValue={transfer.from} ref="from" tabIndex="1"/>
                            </div>
                            <div className="grid-block no-overflow">
                                { errors.from ? null : 
@@ -366,7 +366,7 @@ class Transfer extends BaseComponent {
                               </div>
                            </div>
                            <div className="grid-content full-width-content no-overflow"> 
-                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" tabindex="2"/>
+                                <input id="to" type="text"  value={transfer.to} defaultValue={transfer.to} ref="to" tabIndex="2"/>
                            </div>
                            <div className="grid-block no-overflow">
                                { errors.to ? null : 
@@ -399,7 +399,7 @@ class Transfer extends BaseComponent {
                            </div>
                            <div className={classNames("grid-content", "no-overflow", {"has-error": errors.amount})}>
                                    <span className="inline-label">
-                                       <input id="amount" type="text" placeholder="0.0" value={transfer.amount} defaultValue={transfer.amount} onChange={this.form_change} ref="amount" tabindex="3"/>
+                                       <input id="amount" type="text" placeholder="0.0" value={transfer.amount} defaultValue={transfer.amount} onChange={this.form_change} ref="amount" tabIndex="3"/>
                                        <span className="form-label select">{this.renderSelect("asset", transfer.from_assets)}</span>
                                    </span>
                                    <p>{errors.amount}</p>
@@ -413,7 +413,7 @@ class Transfer extends BaseComponent {
                             <label>
                                 <Translate component="span" content="transfer.memo" />
                             </label>
-                            <textarea id="memo" rows="1" ref="memo" value={transfer.memo} tabindex="4"/>
+                            <textarea id="memo" rows="1" ref="memo" value={transfer.memo} tabIndex="4"/>
                             <div>{errors.memo}</div>
                         </div>
                     </div>
@@ -422,7 +422,7 @@ class Transfer extends BaseComponent {
                     <div className="grid-block">
                         <div className={classNames("grid-content", "no-overflow", {"has-error": this.state.error})}>
                             <label>&nbsp;</label>
-                            <button className={submitButtonClass} type="submit" value="Submit" tabindex="5"><Translate component="span" content="transfer.send" /></button>
+                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex="5"><Translate component="span" content="transfer.send" /></button>
                             { this.state.error ? <div>{this.state.error}</div> : <div>&nbsp;<br/></div> }
                         </div>
                     </div>

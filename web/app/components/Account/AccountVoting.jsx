@@ -334,7 +334,8 @@ class AccountVoting extends ChainComponent {
                                      placeholder="NONE"
                                      account={current_proxy_input}
                                      onChange={this.onProxyChange.bind(this)}
-                                     ref="proxy_selector"/>
+                                     ref="proxy_selector"
+                                     />
                 </div>
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Witnesses</h3>
@@ -346,7 +347,8 @@ class AccountVoting extends ChainComponent {
                                      onAction={this.onAddWitness.bind(this)}
                                      action_class={add_witness_button_class}
                                      action_label="account.votes.add_witness"
-                                     ref="add_witness_selector"/>
+                                     ref="add_witness_selector"
+                                     tabIndex={proxy_is_set ? -1 : 2}/>
                     <table className="table">
                         <thead>
                         <tr>
@@ -371,7 +373,8 @@ class AccountVoting extends ChainComponent {
                                      onAction={this.onAddCommittee.bind(this,this.state.new_committee)}
                                      action_class={add_committee_button_class}
                                      action_label="account.votes.add_committee"
-                                     ref="add_committee_selector"/>
+                                     ref="add_committee_selector"
+                                     tabIndex={proxy_is_set ? -1 : 3}/>
                     <table className="table">
                         <thead>
                         <tr>
