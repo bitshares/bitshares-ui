@@ -17,7 +17,7 @@ var wallet_public_name = "default"
 var aes_private_map = {}
 var transaction
 
-var TRACE = true
+var TRACE = false
 
 class WalletDb {
     
@@ -163,7 +163,7 @@ class WalletDb {
                                 var private_key = this.getPrivateKey(pubkey_string)
                                 if( ! private_key)
                                     throw new Error("Missing signing key for " + pubkey_string)
-                                tr.sign(private_key)
+                                tr.add_signer(private_key)
                             }
                             //DEBUG console.log('... pubkey_strings',pubkey_strings,tr.serialize())
                         })
@@ -176,6 +176,7 @@ class WalletDb {
                         }
                         else
                             return tr.broadcast()
+                        
                     } else
                         return tr.serialize()
                 })

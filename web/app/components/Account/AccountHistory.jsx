@@ -142,6 +142,7 @@ class AccountHistory extends React.Component {
                     <Operation
                         key={i}
                         op={trx.op}
+                        result={trx.result}
                         block={trx.block_num}
                         account_id_to_name={account_id_to_name}
                         assets={assets}

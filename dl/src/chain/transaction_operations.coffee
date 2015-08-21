@@ -24,6 +24,7 @@ _my.signed_transaction = ->
     expiration: 0
     operations: []
     signatures: []
+    signer_private_keys: []
     
     add_operation: (operation) ->
         throw new Error "already finalized" if @tr_buffer
@@ -113,15 +114,24 @@ _my.signed_transaction = ->
             #DEBUG console.log('... get_required_signatures',required_public_keys)
             required_public_keys
     
-    sign:(private_keys, chain_id = Apis.instance().chain_id)->
+    add_signer:(private_key)->
+        throw new Error "already signed" if @signed
+        @signer_private_keys.push private_key
+    
+    sign:(chain_id = Apis.instance().chain_id)->
         throw new Error "not finalized" unless @tr_buffer
-        private_keys = [ private_keys ] unless Array.isArray private_keys
-        for i in [0...private_keys.length] by 1
-            private_key = private_keys[i]
+        throw new Error "already signed" if @signed
+        unless @signer_private_keys.length
+            throw new Error "call add_signer first"
+        for i in [0...@signer_private_keys.length] by 1
+            private_key = @signer_private_keys[i]
             sig = Signature.signBuffer(
-                Buffer.concat([new Buffer(chain_id, 'hex'),@tr_buffer]), private_key
+                Buffer.concat([new Buffer(chain_id, 'hex'), @tr_buffer])
+                private_key
             )
             @signatures.push sig.toBuffer()
+        @signer_private_keys = []
+        @signed = true
         return
     
     serialize:()->
@@ -136,6 +146,7 @@ _my.signed_transaction = ->
 
     broadcast:()->
         new Promise (resolve, reject)=>
+            @sign() if not @signed
             throw new Error "not finalized" unless @tr_buffer
             throw new Error "not signed" unless @signatures.length
             throw new Error "no operations" unless @operations.length

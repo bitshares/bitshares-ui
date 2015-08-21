@@ -36,6 +36,10 @@ class BalanceClaim extends Component {
         };
     }
     
+    reset() {
+        this.setState(this._getInitialState())
+    }
+    
     static getStores() {
         return [BalanceClaimStore, ImportKeysStore]
     }
@@ -224,8 +228,12 @@ class BalanceClaim extends Component {
                 continue
             
             var account_name = accounts[0]
-            if(account_name === claim_account_name)
-                checked.set(index, true)
+            if(account_name === claim_account_name) {
+                var {balance} = asset_balance
+                if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
+                    checked.set(index, true)
+                }
+            }
         }
         this.setState({checked})
     }
@@ -266,13 +274,18 @@ class BalanceClaim extends Component {
         var wif_to_balances = this.getWifToBalance(selected_balance_claims)
         var private_key_tcombs = BalanceClaimStore.getState().my_account_private_key_tcombs[claim_account_name]
         
-        //return
         WalletActions.importBalance(
             claim_account_name,
             wif_to_balances,
             true, //broadcast
             private_key_tcombs
-        )
+        ).catch((error)=> {
+            console.log("_claimBalances", error)
+            var message = error
+            try { message = error.data.message } catch(e) {}
+            notify.error("Error claiming balance: " + message)
+            throw error
+        })
     }
     
     getWifToBalance(balance_claims) {
