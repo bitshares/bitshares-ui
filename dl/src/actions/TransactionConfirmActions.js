@@ -10,7 +10,7 @@ class TransactionConfirmActions {
         this.dispatch();
         setTimeout(()=>{//timeout necessary to see the UI loading indicator
             transaction.broadcast().then( (res)=> {
-                this.actions.broadcasted(res);
+                this.actions.wasBroadcast(res);
             }).catch( error => {
                 console.log("TransactionConfirmActions.broadcast error", error);
                 let message = error.message.split( '\n' )[1];
@@ -20,7 +20,7 @@ class TransactionConfirmActions {
         
     }
 
-    broadcasted(res){
+    wasBroadcast(res){
         this.dispatch(res);
     }
 

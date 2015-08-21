@@ -12,7 +12,7 @@ class TransactionConfirmStore {
         return {
             transaction: null,
             error: null,
-            broadcasted: false,
+            broadcast: false,
             broadcasting: false,
             trx_id: null,
             trx_block_num: null,
@@ -33,12 +33,12 @@ class TransactionConfirmStore {
         this.setState({broadcasting: true});
     }
 
-    onBroadcasted(res) {
-        this.setState({broadcasted: true, broadcasting: false, trx_id: res[0].id, trx_block_num: res[0].block_num});
+    onWasBroadcast(res) {
+        this.setState({broadcast: true, broadcasting: false, trx_id: res[0].id, trx_block_num: res[0].block_num});
     }
 
     onError(error) {
-        this.setState({broadcasted: false, broadcasting: false, error});
+        this.setState({broadcast: false, broadcasting: false, error});
     }
 
 }

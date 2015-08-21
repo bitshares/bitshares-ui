@@ -40,7 +40,7 @@ class BalanceClaimStore {
     constructor() {
         this.bindActions(BalanceClaimActions)
         this.bindListeners({
-            onRefreshBalanceClaims: TransactionConfirmActions.broadcasted,
+            onRefreshBalanceClaims: TransactionConfirmActions.wasBroadcast,
             onLoadMyAccounts: [
                 WalletUnlockActions.change//, ImportKeysActions.saved
             ]

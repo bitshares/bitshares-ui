@@ -46,7 +46,7 @@ class TransactionConfirm extends BaseComponent {
         let settings = SettingsStore.getState().settings;
 
         let button_group, header;
-        if(this.state.error || this.state.broadcasted) {
+        if(this.state.error || this.state.broadcast) {
             header = this.state.error ? (
                 <div className="modal-header has-error">
                     <h3>Failed to broadcast transaction</h3>
@@ -56,7 +56,7 @@ class TransactionConfirm extends BaseComponent {
                 (
                 <div className="modal-header">
                     <div className="float-left"><Icon name="checkmark-circle" size="4x" className="success"/></div>
-                    <h3>Transaction was successfully broadcasted</h3>
+                    <h3>Transaction was successfully broadcast</h3>
                     <h6>#{this.state.trx_id}@{this.state.trx_block_num}</h6>
                 </div>
             );
