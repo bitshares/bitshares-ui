@@ -39,7 +39,7 @@ class PrivateKey
         assert.deepEqual checksum, new_checksum #, 'Invalid checksum'
         private_key = private_key.slice 1
         PrivateKey.fromBuffer private_key
-        
+
     toWif: ->
         private_key = @toBuffer()
         # checksum includes the version
@@ -60,16 +60,7 @@ class PrivateKey
         PublicKey.fromPoint @toPublicKeyPoint()
     
     toBuffer: ->
-        buf = @d.toBuffer()
-        if buf.length isnt 32
-            len = buf.length
-            pad = 32 - len
-            #DEBUG console.log('... zeros',pad)
-            zeros = ""
-            zeros += "0" for i in [0...pad] by 1
-            buf = Buffer.concat [new Buffer(zeros), buf]
-            #DEBUG console.log "BigInteger toBuffer was #{len} bytes and was padded to #{buf.length} bytes"
-        buf
+        pad32 @d.toBuffer()
     
     ###* ECIES ###
     get_shared_secret:(public_key)->
@@ -101,3 +92,10 @@ class PrivateKey
     ### </helper_functions> ###
 
 module.exports = PrivateKey
+
+pad32 = (buf) ->
+    pad = 32 - buf.length
+    zeros = ""
+    zeros += "00" for i in [0...pad] by 1
+    Buffer.concat [new Buffer(zeros, 'hex'), buf]
+
