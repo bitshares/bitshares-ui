@@ -36,6 +36,10 @@ class BalanceClaim extends Component {
         };
     }
     
+    reset() {
+        this.setState(this._getInitialState())
+    }
+    
     static getStores() {
         return [BalanceClaimStore, ImportKeysStore]
     }
@@ -224,8 +228,12 @@ class BalanceClaim extends Component {
                 continue
             
             var account_name = accounts[0]
-            if(account_name === claim_account_name)
-                checked.set(index, true)
+            if(account_name === claim_account_name) {
+                var {balance} = asset_balance
+                if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
+                    checked.set(index, true)
+                }
+            }
         }
         this.setState({checked})
     }
@@ -272,7 +280,16 @@ class BalanceClaim extends Component {
             wif_to_balances,
             true, //broadcast
             private_key_tcombs
-        )
+        ).then((result)=> {
+             //notify.success("Balance claimed to account: " + this.state.claim_account_name)
+             this.reset()
+         }).catch((error)=> {
+             console.log("_claimBalances", error)
+             var message = error
+             try { message = error.data.message } catch(e) {}
+             notify.error("Error claiming balance: " + message)
+             throw error
+         })
     }
     
     getWifToBalance(balance_claims) {
