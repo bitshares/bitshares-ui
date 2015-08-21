@@ -3,6 +3,8 @@
 Aes = require '../src/ecc/aes'
 PrivateKey = require '../src/ecc/key_private'
 PublicKey = require '../src/ecc/key_public'
+Signature = require '../src/ecc/signature'
+
 Long = require('../src/common/bytebuffer').Long
 
 secureRandom = require '../src/common/secureRandom'
@@ -12,6 +14,12 @@ key = require '../src/common/key_utils'
 th = require './test_helper'
 
 describe "crypto", ->
+    
+    it "sign fast", ->
+        @timeout(10000)
+        private_key = PrivateKey.fromSeed "1"
+        for i in [0...10] by 1
+            Signature.signBuffer (new Buffer i), private_key
     
     it "memo encryption", ->
         sender = PrivateKey.fromSeed "1"
