@@ -32,7 +32,7 @@ class AccountCard extends ChainComponent {
            let abal = this.state.full_accounts.account.get('balances' )
            if( abal )
            {
-              balances = abal.map( x => <li><BalanceComponent balance={x}/></li>).toArray();
+              balances = abal.map( x => <li key={x}><BalanceComponent balance={x}/></li>).toArray();
            }
         }
 
