@@ -102,13 +102,13 @@ class ApplicationApi {
                 if(! memo_from_privkey)
                     throw new Error("Missing private memo key for sender: " +
                         from_account_id)
-                
             }
             var memo
             if(memo_message) {
                 var nonce = optional_nonce == null ?
                     helper.unique_nonce_uint64() :
                     optional_nonce
+                
                 memo = {
                     from: memo_from_public.resolve,
                     to: memo_to_public.resolve,

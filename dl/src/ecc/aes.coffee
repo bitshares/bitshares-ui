@@ -28,8 +28,16 @@ class Aes
         Aes.fromSha512(_hash)
     
     Aes.decrypt_with_checksum = (private_key, public_key, nonce, message) ->
+        
+        #console.log('decrypt_with_checksum', {
+        #    priv_to_pub: private_key.toPublicKey().toBtsPublic()
+        #    pub: public_key.toBtsPublic()
+        #    nonce: nonce
+        #    message: message
+        #})
+        
         unless Buffer.isBuffer message
-            message = new Buffer message
+            message = new Buffer message, 'hex'
         
         S = private_key.get_shared_secret public_key
         aes = Aes.fromSeed Buffer.concat [
@@ -57,6 +65,14 @@ class Aes
         plaintext
     
     Aes.encrypt_with_checksum = (private_key, public_key, nonce, message) ->
+        
+        #console.log('encrypt_with_checksum', {
+        #    priv_to_pub: private_key.toPublicKey().toBtsPublic()
+        #    pub: public_key.toBtsPublic()
+        #    nonce: nonce
+        #    message: message
+        #})
+        
         unless Buffer.isBuffer message
             message = new Buffer message
         

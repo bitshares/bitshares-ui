@@ -30,7 +30,7 @@ helper.unique_nonce_uint64=->
     #console.log('unique_nonce_uint64 entropy\t',ByteBuffer.allocate(8).writeUint64(Long.fromNumber(entropy)).toHex(0))
     long = long.shiftLeft(8).or(Long.fromNumber(entropy))
     #console.log('unique_nonce_uint64 shift8\t',ByteBuffer.allocate(8).writeUint64(long).toHex(0))
-    long
+    long.toString()
 
 ### Todo, set fees ###
 helper.to_json=( tr, broadcast = false ) ->
