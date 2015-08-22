@@ -49,7 +49,7 @@ class BuySell extends React.Component {
                             </div>
                             <div className="buy-sell-info">
                                 {this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;
-                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setPrice.bind(this, currentPrice)}>{currentPrice}</span> {quoteSymbol}/{baseSymbol}
+                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setPrice.bind(this, currentPrice)}>{utils.format_number(currentPrice, quotePrecision)}</span> {baseSymbol}/{quoteSymbol}
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@ class BuySell extends React.Component {
                                     <Translate  content="exchange.price" />:
                                 </div>
                                 <div className="buy-sell-details">
-                                    <div className="buy-sell-box">{quoteSymbol}</div>
+                                    <div className="buy-sell-box">{baseSymbol}</div>
                                     <div className="buy-sell-input">
                                         <input type="text" id="buyPrice" value={price} onChange={priceChange} style={{ paddingRight: "4px" ,}}/>
                                     </div>
