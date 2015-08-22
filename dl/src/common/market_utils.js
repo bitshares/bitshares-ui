@@ -88,6 +88,15 @@ class MarketUtils {
         return op.amount_to_sell.asset_id !== op.fee.asset_id;
     }
 
+    static limitByPrecision(value, asset) {
+        let precision = utils.get_asset_precision(asset.precision);
+        value = Math.floor(value * precision) / precision;
+        if (isNaN(value) || !isFinite(value)) {
+            return 0;
+        }
+        return value;
+    }
+
     static parseOrder(order, base, quote) {
         let ask = this.isAsk(order, base);
         let quotePrecision = utils.get_asset_precision(quote.precision);
@@ -96,7 +105,7 @@ class MarketUtils {
         let sell = ask ? order.sell_price.quote : order.sell_price.base;
 
         let price = {full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)};
-        let amount;
+        let amount, value;
 
         // We need to figure out a better way to set the number of decimals
         let price_split = utils.format_number(price.full, Math.max(5, quote.precision)).split(".");
@@ -104,13 +113,20 @@ class MarketUtils {
         price.dec = price_split[1];
 
         if (!ask) {
-            amount = (buy.amount / sell.amount) * order.for_sale / quotePrecision;
+            amount = this.limitByPrecision((buy.amount / sell.amount) * order.for_sale / quotePrecision, quote);
+            value = order.for_sale / basePrecision;
+
         } else {
-            amount = order.for_sale / quotePrecision;
+            amount = this.limitByPrecision(order.for_sale / quotePrecision, quote);
+            value = price.full * amount;
         }
 
-        let value = price.full * amount;
+        value = this.limitByPrecision(value, base);
 
+
+        if (!ask) {
+            let value = this.limitByPrecision(price.full * amount, base);
+        }
         return {
             value: value,
             price: price,

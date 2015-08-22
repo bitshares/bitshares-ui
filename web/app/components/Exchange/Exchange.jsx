@@ -159,9 +159,6 @@ class Exchange extends React.Component {
 
     _depthChartClick(base, quote, e) {
         e.preventDefault();
-        // let base_id = this.props.asset_symbol_to_id[this.props.base];
-        // let base = this.props.assets.get(base_id);
-        // let precision = utils.get_asset_precision(base.precision);
         let value = this._limitByPrecision(e.xAxis[0].value, quote);
         this.setState({
             depthLine: value
@@ -261,11 +258,32 @@ class Exchange extends React.Component {
         this.setState({showBuySell: !this.state.showBuySell});
     }
 
-    _orderbookClick(price, amount, type) {
+    _orderbookClick(base, quote, price, amount, type) {
+        console.log("price:", price, "amount:", amount, "type:", type);
         if (type === "bid") {
-            this._buyPriceChanged(base, {target: {value: value}});
+
+            let value = amount.toString();
+            if (value.indexOf(".") !== value.length -1) {
+                value = this._limitByPrecision(amount, quote);
+            }
+            this.setState({
+                sellPrice: price,
+                sellAmount: value,
+                sellTotal: this._limitByPrecision(value * price, base)
+            });
+            
         } else if (type === "ask") {
-            this._buyPriceChanged(base, {target: {value: value}});
+            let value = amount.toString();
+            if (value.indexOf(".") !== value.length -1) {
+                value = this._limitByPrecision(amount, base);
+            }
+            this.setState({
+                buyPrice: price,
+                buyAmount: value,
+                buyTotal: this._limitByPrecision(value * price, base)
+            });
+            // this._buyPriceChanged(base, {target: {value: price}});
+            // this._buyAmountChanged(base, quote, {target: {value: amount.toString()}});
         }
     }
 
@@ -320,7 +338,7 @@ class Exchange extends React.Component {
                                 quote={quote}
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
-                                onClick={this._orderbookClick.bind(this)}
+                                onClick={this._orderbookClick.bind(this, base, quote)}
                             />
                         </div>
                     </div>
