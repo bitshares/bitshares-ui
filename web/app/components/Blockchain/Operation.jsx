@@ -223,9 +223,9 @@ class Operation extends React.Component {
                             {!missingAssets[0] && !missingAssets[1] ? <Translate
                                 component="span"
                                 content="transaction.limit_order_sell" 
-                                sell_amount={utils.format_asset(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, true)}
+                                sell_amount={utils.format_asset(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, false)}
                                 sell_price={utils.format_price(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), 
-                                                               op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, inverted, true)}
+                                                               op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, inverted, false)}
                                 num={this.props.result[1].substring(4)}
                             /> : null}
                         </td>
@@ -234,9 +234,9 @@ class Operation extends React.Component {
                             {!missingAssets[0] && !missingAssets[1] ? <Translate
                                 component="span"
                                 content="transaction.limit_order_buy" 
-                                buy_amount={utils.format_asset(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id))}
+                                buy_amount={utils.format_asset(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, false)}
                                 buy_price={utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), 
-                                                              op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted)}
+                                                              op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted, false)}
                                 num={this.props.result[1].substring(4)}
                             /> : null}
                         </td>

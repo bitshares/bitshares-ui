@@ -38,7 +38,7 @@ var Utils = {
             zeros += "0";     
         }
         let num = numeral(number).format("0,0" + zeros);
-        if( num.indexOf('.') > 0 )
+        if( num.indexOf('.') > 0 && !trailing_zeros)
            return num.replace(/0+$/,"").replace(/\.$/,"")
         return num
     },
