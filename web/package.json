@@ -76,7 +76,7 @@
     "script-loader": "^0.6.1"
   },
   "jest": {
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",
     "testPathDirs": [
       "<rootDir>/__tests__"
     ],
@@ -96,6 +96,7 @@
       "jsx"
     ],
     "testPathIgnorePatterns": [
+      "/jest-preprocessor.js",
       "/node_modules/",
       "/utils/"
     ]
