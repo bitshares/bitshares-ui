@@ -29,6 +29,8 @@ class Asset extends React.Component {
         let assetID = asset_symbol_to_id[symbol];
         let asset = assets.get(assetID);
 
+        console.log(asset);
+
         let assetExists = true;
         if (!asset) {
             asset = assets.get(symbol);
@@ -44,27 +46,13 @@ class Asset extends React.Component {
             return <div className="grid-container"><h5><Translate component="h5" content="explorer.asset.not_found" name={symbol} /></h5></div>;
         }
 
-        // TODO: load whitelist from server, storing in this.state, instead of hardcoding
-        let accountWhitelist = [
-            "init0",
-            "init3",
-            "init4",
-            "init5"
-        ];
-
-        let accountWhitelistMarkup = accountWhitelist.map(account => {
+        let authorityWhitelist = asset.options.whitelist_authorities.map(authority => {
             return (
-                <li>{account} <button className="button">Remove</button></li>
+                <li>{authority} <button className="button">Remove</button></li>
             );
         });
 
-        // TODO: load whitelist from server,storing in this.state, instead of hardcoding
-        let marketWhitelist = [
-            "CORE",
-            "BitUSD"
-        ];
-
-        let marketWhitelistMarkup = marketWhitelist.map(market => {
+        let marketWhitelist = asset.options.whitelist_markets.map(market => {
             return (
                 <li>{market} <button className="button">Remove</button></li>
             );
@@ -90,7 +78,7 @@ class Asset extends React.Component {
                             <div>
                                 <h3>Fee pool</h3>
                                 <p>
-                                    Transaction fees can be paid at a rate of X {this.props.symbol} per CORE. A standard transfer will require Y {this.props.symbol}.
+                                    Transaction fees can be paid at a rate of {asset.options.core_exchange_rate.quote.amount} {this.props.symbol} per {asset.options.core_exchange_rate.base.amount} CORE.
                                     <button className="button">Adjust Exchange Rate</button>
                                 </p>
                                 <p>
@@ -101,19 +89,22 @@ class Asset extends React.Component {
                             <div>
                                 <h3>Whitelisted Accounts</h3>
                                 <ul>
-                                    {accountWhitelistMarkup}
+                                    {asset.options.whitelist_authorities.length > 0 ? authorityWhitelist : "Account whitelist not in use."}
+                                    
                                 </ul>
                                 <form>
-                                    <input type="text" /><button className="button">Add to Account Whitelist</button>
+                                    <input type="text" style={{width: '100px'}} />{/*TODO: use an account picker instead of an <input>.
+                                    <button className="button">Add to Account Whitelist</button>
                                 </form>
                             </div>
                             <div>
                                 <h3>Whitelisted Markets</h3>
                                 <ul>
-                                    {marketWhitelistMarkup}
+                                    {asset.options.marketWhitelist.length > 0 ? marketWhitelist : "Market whitelist not in use."}
                                 </ul>
                                 <form>
-                                    <p>TODO: Asset picker here<button className="button">Add to Market Whitelist</button></p>
+                                    <input type="text" style={{width: '100px'}} />{/*TODO: use an asset picker instead of an <input>. Exchange/Markets.jsx contains one that could be its own reusable component*/}
+                                    <button className="button">Add to Market Whitelist</button>
                                 </form>
                             </div>
                             <div>
