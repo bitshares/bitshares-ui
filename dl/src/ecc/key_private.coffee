@@ -61,7 +61,7 @@ class PrivateKey
         @public_key = PublicKey.fromPoint @toPublicKeyPoint()
     
     toBuffer: ->
-        pad32 @d.toBuffer()
+        @d.toBuffer(32)
     
     ###* ECIES ###
     get_shared_secret:(public_key)->
@@ -93,10 +93,3 @@ class PrivateKey
     ### </helper_functions> ###
 
 module.exports = PrivateKey
-
-pad32 = (buf) ->
-    pad = 32 - buf.length
-    zeros = ""
-    zeros += "00" for i in [0...pad] by 1
-    Buffer.concat [new Buffer(zeros, 'hex'), buf]
-
