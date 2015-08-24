@@ -45,7 +45,7 @@ module.exports = {
             description: "Beschreibung",
             max_supply: "Maximale Verfügbarkeit",
             precision: "Genauigkeit",
-            to: "An Konto emittieren"
+            to: "An Konto emittieren",
             details: "Details"
         },
         connections: {
@@ -73,7 +73,7 @@ module.exports = {
             votes: "Stimmen",
             url: "Webseite",
             support: "Support",
-            workers: "Budgetpunkte"
+            workers: "Budgetpunkte",
             publish: "Änderungen bekanntgeben",
             add_witness: "Hinzufügen",
             remove_witness: "Entfernen",
@@ -126,7 +126,7 @@ module.exports = {
         confirm: "BESTÄTIGEN",
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
-        see: "ÜBERWEISUNGSÜBERSICHT"
+        see: "ÜBERWEISUNGSÜBERSICHT",
         see: "MEINE ÜBERWEISEUNGEN ANZEIGEN"
     },
     transaction: {
@@ -327,7 +327,7 @@ module.exports = {
     },
     footer: {
         title: "Graphene",
-        block: "Spitzenblock"
+        block: "Spitzenblock",
         loading: "Lade..."
     },
     exchange: {
@@ -354,7 +354,7 @@ module.exports = {
         choose_base: "Wählen Sie Ihre Grundwährung (base)",
         filter: "Filter",
         core_rate: "Kernrate:",
-        supply: "Verfügbarkeit"
+        supply: "Verfügbarkeit",
         search: "Suche"
     }
 };

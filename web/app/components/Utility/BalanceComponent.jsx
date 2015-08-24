@@ -1,7 +1,7 @@
 import React from "react";
 import ChainComponent from "./ChainComponent"
 import FormattedAsset from "./FormattedAsset";
-import {ObjectIdType} from "./CustomTypes";
+import {ChainObject} from "./ChainTypes";
 
 /**
  *  Given a balance_object, displays it in a pretty way
@@ -12,7 +12,7 @@ import {ObjectIdType} from "./CustomTypes";
 export default class BalanceComponent extends ChainComponent {
 
     static propTypes = {
-        balance: ObjectIdType
+        balance: ChainObject
     }
 
     render() {

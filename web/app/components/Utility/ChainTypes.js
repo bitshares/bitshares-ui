@@ -36,4 +36,7 @@ function objectIdChecker(props, propName, componentName, location) {
     return null;
 }
 
-export var ObjectIdType = createChainableTypeChecker(objectIdChecker);
+let ChainObject = createChainableTypeChecker(objectIdChecker);
+let ChainAccount = createChainableTypeChecker(objectIdChecker);
+
+export default {ChainObject, ChainAccount};
