@@ -46,6 +46,7 @@ module.exports = {
             max_supply: "Maximale Verfügbarkeit",
             precision: "Genauigkeit",
             to: "An Konto emittieren"
+            details: "Details"
         },
         connections: {
             known: "Bekannt von",
@@ -66,10 +67,25 @@ module.exports = {
         },
         votes: {
             proxy: "Abstimmkonto vermitteln",
+            no_proxy: "Keine Vermittlung",
             name: "Name",
             info: "Info",
+            votes: "Stimmen",
+            url: "Webseite",
             support: "Support",
             workers: "Budgetpunkte"
+            publish: "Änderungen bekanntgeben",
+            add_witness: "Hinzufügen",
+            remove_witness: "Entfernen",
+            remove_committee: "Entfernen",
+            add_committee: "Hinzufügen",
+            add_committee_label: "Mitglied des Komitees",
+            add_witness_label: "Witness"
+        },
+        options: {
+            num_witnesses : "Gewünschte Anzahl Witnesses",
+            num_committee : "Gewünschte Größe des Komitees",
+            memo_key : "Memo Schlüssel",
         },
         upgrade: "Konto erweitern",
         unlink: "Trennen",
@@ -99,6 +115,7 @@ module.exports = {
         send: "Senden",
         final: "Abschließendes Guthaben",
         balances: "Guthaben",
+        available: "Verfügbar: ",
         errors: {
             req: "Plfichtfeld",
             pos: "Betrag darf nicht negativ sein",
@@ -110,6 +127,7 @@ module.exports = {
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
         see: "ÜBERWEISUNGSÜBERSICHT"
+        see: "MEINE ÜBERWEISEUNGEN ANZEIGEN"
     },
     transaction: {
         confirm: "Bitte bestätigen Sie die Transaktion",
@@ -310,6 +328,7 @@ module.exports = {
     footer: {
         title: "Graphene",
         block: "Spitzenblock"
+        loading: "Lade..."
     },
     exchange: {
         price_history: "Preisverlauf",
@@ -321,6 +340,8 @@ module.exports = {
         price: "Preis",
         latest: "Letzer Preis",
         call: "Call Preis",
+        volume: "Volumen",
+        call: "Call Price",
         volume: "Volumen",
         spread: "Spread",
         quantity: "Quantität",
@@ -334,5 +355,6 @@ module.exports = {
         filter: "Filter",
         core_rate: "Kernrate:",
         supply: "Verfügbarkeit"
+        search: "Suche"
     }
 };
