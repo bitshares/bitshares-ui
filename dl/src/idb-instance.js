@@ -2,7 +2,12 @@ import idb_helper from "./idb-helper"
 
 const DB_VERSION = 4;
 
-var iDB = (function () {
+var BACKUP_STORE_NAMES = [
+    "wallets", "private_keys",
+    "linked_accounts", "payee_accounts"
+]
+
+module.exports = (function () {
 
     var _instance;
     var idb;
@@ -60,6 +65,7 @@ var iDB = (function () {
 
     return {
         init_instance: function (indexedDBimpl) {
+            this.impl = indexedDBimpl
             if (!_instance) {
                 _instance = init(indexedDBimpl);
             }
@@ -116,9 +122,22 @@ var iDB = (function () {
                     reject(e.target.error.message);
                 };
             });
+        },
+        backup: function (store_names = BACKUP_STORE_NAMES) {
+            var promises = []
+            for (var store_name of store_names) {
+                promises.push(this.load_data(store_name))
+            }
+            //Add each store name
+            return Promise.all(promises).then( results => {
+                var obj = {}
+                for (let i = 0; i < store_names.length; i++) {
+                    var store_name = store_names[i]
+                    obj[store_name] = results[i]
+                }
+                return obj
+            })
         }
     };
 
 })();
-
-module.exports = iDB;
