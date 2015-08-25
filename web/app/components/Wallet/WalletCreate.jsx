@@ -77,11 +77,11 @@ class WalletCreate extends Component {
     validate() {
         let state = this.state
         let errors = state.errors
-        let wallets = WalletDb.wallets
+        let wallet = WalletDb.wallet
         errors.password_length = state.password.length === 0 || state.password.length > 7 ? null : "Password must be longer than 7 characters";
         
         errors.wallet_public_name = 
-            !wallets.get(state.wallet_public_name) ? 
+            !wallet.get(state.wallet_public_name) ? 
             null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
         
         errors.password_match = null

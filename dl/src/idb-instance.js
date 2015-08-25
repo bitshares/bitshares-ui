@@ -3,7 +3,7 @@ import idb_helper from "./idb-helper"
 const DB_VERSION = 4;
 
 var BACKUP_STORE_NAMES = [
-    "wallets", "private_keys",
+    "wallet", "private_keys",
     "linked_accounts", "payee_accounts"
 ]
 

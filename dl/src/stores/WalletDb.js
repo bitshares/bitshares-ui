@@ -23,13 +23,13 @@ class WalletDb {
     
     constructor() {
         this.secret_server_token = "secret_server_token";
-        this.wallets = Immutable.Map();
+        this.wallet = Immutable.Map();
         // Confirm only works when there is a UI
         this.confirm_transactions = true
     }
     
     getWallet() {
-        return this.wallets.get(wallet_public_name)
+        return this.wallet.get(wallet_public_name)
     }
     
     getCurrentWalletName() {
@@ -41,7 +41,7 @@ class WalletDb {
     }
     
     getBrainKey() {
-        var wallet = this.wallets.get(wallet_public_name)
+        var wallet = this.wallet.get(wallet_public_name)
         if ( ! wallet)
             throw new Error("missing wallet " + wallet_public_name)
         
@@ -75,7 +75,7 @@ class WalletDb {
     }
     
     validatePassword( password, unlock = false ) {
-        var wallet = this.wallets.get(wallet_public_name)
+        var wallet = this.wallet.get(wallet_public_name)
         if ( ! wallet)
             return false
         
@@ -200,7 +200,7 @@ class WalletDb {
         unlock = false
     ) {
         return new Promise( (resolve, reject) => {
-            if(this.wallets.get(wallet_public_name)) {
+            if(this.wallet.get(wallet_public_name)) {
                 reject("wallet exists")
                 return
             }
@@ -237,7 +237,7 @@ class WalletDb {
                 wallet
             )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
-                this.wallets = this.wallets.set(
+                this.wallet = this.wallet.set(
                     wallet.public_name,
                     wallet//WalletTcomb(wallet)
                 )
@@ -268,7 +268,7 @@ class WalletDb {
     }
     
     generateKeys() {
-        var wallet = this.wallets.get(wallet_public_name)
+        var wallet = this.wallet.get(wallet_public_name)
         if( ! wallet)
             throw new Error("missing wallet " + wallet_public_name)
         
@@ -439,7 +439,7 @@ class WalletDb {
     /** This method can not unlock the wallet.  Unlocking a wallet is
     not compatible with transactions. */
     _updateWallet(transaction, update_callback) {
-        var wallet = this.wallets.get(wallet_public_name)
+        var wallet = this.wallet.get(wallet_public_name)
         if ( ! wallet) {
             reject("missing wallet " + wallet_public_name)
             return
@@ -460,7 +460,7 @@ class WalletDb {
         var p2 = idb_helper.on_transaction_end( transaction  ).then(
             () => {
                 // Update RAM
-                this.wallets.set( wallet_clone.public_name, wallet_clone )
+                this.wallet.set( wallet_clone.public_name, wallet_clone )
             }
         )
         return Promise.all([p,p2])
@@ -491,10 +491,10 @@ class WalletDb {
     */
 
     loadDbData() {
-        var map = this.wallets.asMutable()
+        var map = this.wallet.asMutable()
         return idb_helper.cursor("wallet", cursor => {
             if( ! cursor) {
-                this.wallets = map.asImmutable()
+                this.wallet = map.asImmutable()
                 return
             }
             var wallet = cursor.value//WalletTcomb(cursor.value)
