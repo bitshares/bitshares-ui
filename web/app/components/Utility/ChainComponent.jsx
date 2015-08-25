@@ -83,7 +83,7 @@ class ChainComponent extends React.Component
       for( let key in this.next_props )
       {
          if( utils.is_object_id( next_props[key] ) && next_props[key] != this.props[key] )
-            new_state[key] =  ChainStore.getObject( this.props[key], this.update, true )
+            new_state[key] =  ChainStore.getObject( this.next_props[key], this.update, true )
       }
       if( 'accounts' in next_props && typeof next_props.accounts == 'object' )
       {

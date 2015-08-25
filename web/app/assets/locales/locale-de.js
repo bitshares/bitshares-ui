@@ -126,8 +126,7 @@ module.exports = {
         confirm: "BESTÄTIGEN",
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
-        see: "ÜBERWEISUNGSÜBERSICHT",
-        see: "MEINE ÜBERWEISEUNGEN ANZEIGEN"
+        see: "ÜBERWEISUNGSÜBERSICHT"
     },
     transaction: {
         confirm: "Bitte bestätigen Sie die Transaktion",
@@ -340,8 +339,6 @@ module.exports = {
         price: "Preis",
         latest: "Letzer Preis",
         call: "Call Preis",
-        volume: "Volumen",
-        call: "Call Price",
         volume: "Volumen",
         spread: "Spread",
         quantity: "Quantität",
