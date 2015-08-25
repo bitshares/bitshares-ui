@@ -10,7 +10,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        let itemRows = this.props.linkedAccounts.map( a => <AccountCard key={a} full_accounts={ {account: a} } /> ).toArray();
+        let itemRows = this.props.linkedAccounts.map( a => <AccountCard key={a} account={a}/> ).toArray();
 
         return (
             <div className="grid-block page-layout">

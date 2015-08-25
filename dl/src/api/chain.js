@@ -260,7 +260,7 @@ class ChainStore
       if( on_update )
          callback = (typeof on_update) == 'function' ? on_update : on_update.update.bind(on_update)
 
-      callback = a => { if( a ) callback() }
+      //callback = a => { if( a ) callback() }
 
       if( full_account && account )
       {

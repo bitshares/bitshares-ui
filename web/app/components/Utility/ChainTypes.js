@@ -23,13 +23,15 @@ function createChainableTypeChecker(validate) {
 }
 
 function objectIdChecker(props, propName, componentName, location) {
-    componentName = componentName || 'ANONYMOUS';
+    componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
             return utils.is_object_id(value) ? null : new Error(`${propName} in ${componentName} should be an object id`);
+        } else if (typeof value === "object") {
+            // TODO: check object type (probably we should require an object to be a tcomb structure)
         } else {
-            return new Error(`${propName} in ${componentName} should be a string`);
+            return new Error(`${propName} in ${componentName} should be an object id or object`);
         }
     }
     // assume all ok
