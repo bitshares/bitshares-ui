@@ -3,12 +3,10 @@ import Immutable from "immutable";
 import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import BaseComponent from "../BaseComponent";
 import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
-import ChainComponent from "../Utility/ChainComponent"
 import utils from "common/utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
@@ -25,7 +23,7 @@ let wallet_api = new WalletApi()
  *   account_name - the name of the account that is being used
  *
  */
-class AccountVoting extends ChainComponent {
+class AccountVoting extends React.Component {
 
     constructor(props) {
        super(props)
@@ -161,7 +159,6 @@ class AccountVoting extends ChainComponent {
     }
 
     componentWillReceiveProps( next_props ) {
-       super.componentWillReceiveProps(next_props)
        this.onUpdate(next_props)
     }
     componentDidMount( ) {

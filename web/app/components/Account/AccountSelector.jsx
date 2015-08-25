@@ -1,10 +1,9 @@
 import React from "react";
-import ChainComponent from "../Utility/ChainComponent"
 import utils from "common/utils"
 import validation from "common/validation"
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/chain.js"
+import ChainStore from "api/chain.js";
 
 
 /**
@@ -22,7 +21,7 @@ import ChainStore from "api/chain.js"
  *    tabIndex      - tabindex property to be passed to input tag
  *
  */
-class AccountSelector extends ChainComponent {
+class AccountSelector extends React.Component {
    constructor( props ) {
       super(props)
       this.state = {
@@ -31,9 +30,7 @@ class AccountSelector extends ChainComponent {
       }
    }
 
-
    componentWillReceiveProps( next_props ) {
-      super.componentWillReceiveProps(next_props)
       this.onUpdate( next_props )
    }
 

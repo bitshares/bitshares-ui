@@ -1,5 +1,4 @@
 import React from "react";
-import ChainComponent from "../Utility/ChainComponent"
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import {PropTypes} from "react";

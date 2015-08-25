@@ -1,5 +1,4 @@
 import React from "react";
-import ChainComponent from "./ChainComponent"
 import FormattedAsset from "./FormattedAsset";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
@@ -11,7 +10,7 @@ import BindToChainState from "./BindToChainState";
  */
 
 @BindToChainState()
-class Balance extends React.Component {
+class BalanceComponent extends React.Component {
 
     static propTypes = {
         balance: ChainTypes.ChainObject.isRequired
@@ -24,4 +23,4 @@ class Balance extends React.Component {
     }
 }
 
-export default Balance;
+export default BalanceComponent;
