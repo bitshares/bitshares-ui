@@ -14,7 +14,7 @@ module.exports = (function () {
 
     function upgrade(db, oldVersion) {
         if (oldVersion < 2) {
-            idb_helper.autoIncrement_unique(db, "wallets", "public_name")
+            idb_helper.autoIncrement_unique(db, "wallet", "public_name")
             idb_helper.autoIncrement_unique(db,
                 "private_keys", "encrypted_key")
         }

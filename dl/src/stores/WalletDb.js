@@ -181,14 +181,14 @@ class WalletDb {
     
     transaction_update() {
         var transaction = iDB.instance().db().transaction(
-            ["wallets"], "readwrite"
+            ["wallet"], "readwrite"
         )
         return transaction
     }
     
     transaction_update_keys() {
         var transaction = iDB.instance().db().transaction(
-            ["wallets", "private_keys", "balance_claims"], "readwrite"
+            ["wallet", "private_keys", "balance_claims"], "readwrite"
         )
         return transaction
     }
@@ -233,7 +233,7 @@ class WalletDb {
             WalletTcomb(wallet)
             var transaction = this.transaction_update()
             var add = idb_helper.add(
-                transaction.objectStore("wallets"),
+                transaction.objectStore("wallet"),
                 wallet
             )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
@@ -453,7 +453,7 @@ class WalletDb {
         WalletTcomb(wallet_clone)
         //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
         
-        var wallet_store = transaction.objectStore("wallets")
+        var wallet_store = transaction.objectStore("wallet")
         var p = idb_helper.on_request_end(
             wallet_store.put(wallet_clone)
         )
@@ -492,7 +492,7 @@ class WalletDb {
 
     loadDbData() {
         var map = this.wallets.asMutable()
-        return idb_helper.cursor("wallets", cursor => {
+        return idb_helper.cursor("wallet", cursor => {
             if( ! cursor) {
                 this.wallets = map.asImmutable()
                 return
