@@ -24,10 +24,7 @@ repl_instance.on("exit", function () {
 var hist_file = process.env.HOME + "/.graphene_history";
 repl_history(repl_instance, hist_file);
 
-var dl_cli_index = require('dl_cli_index')
-for(let object_name in dl_cli_index) {
-    repl_instance.context[object_name] = dl_cli_index[object_name]
-}
+require('dl_cli_index').init(repl_instance.context)
 
 repl_instance.context.$g = {}
 //var init_promise = iDB.init_instance.bind(repl_instance.context, fakeIndexedDB).init_promise

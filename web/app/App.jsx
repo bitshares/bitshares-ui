@@ -60,6 +60,7 @@ import Invoice from "./components/Transfer/Invoice";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
+require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
 const { Route, RouteHandler, DefaultRoute } = Router;
 
@@ -236,3 +237,4 @@ let routes = (
 Router.run(routes, Handler => {
     React.render(<Handler/>, document.getElementById("content"));
 });
+
