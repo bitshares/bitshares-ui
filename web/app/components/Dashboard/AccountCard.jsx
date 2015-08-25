@@ -37,7 +37,6 @@ class AccountCard extends React.Component {
     }
 
     render() {
-        console.log("-- render -->", this.props.account);
         let name = null;
         let balances = null;
         if( this.props.account )

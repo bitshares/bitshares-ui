@@ -1,7 +1,8 @@
 import React from "react";
 import ChainComponent from "./ChainComponent"
 import FormattedAsset from "./FormattedAsset";
-import {ChainObject} from "./ChainTypes";
+import ChainTypes from "./ChainTypes";
+import BindToChainState from "./BindToChainState";
 
 /**
  *  Given a balance_object, displays it in a pretty way
@@ -9,16 +10,18 @@ import {ChainObject} from "./ChainTypes";
  *  Expects one property, 'balance' which should be a balance_object id
  */
 
-export default class BalanceComponent extends ChainComponent {
+@BindToChainState()
+class Balance extends React.Component {
 
     static propTypes = {
-        balance: ChainObject
+        balance: ChainTypes.ChainObject.isRequired
     }
 
     render() {
-        if (!this.state.balance) return null;
-        let amount = Number(this.state.balance.get('balance'));
-        let type = this.state.balance.get('asset_type');
+        let amount = Number(this.props.balance.get('balance'));
+        let type = this.props.balance.get('asset_type');
         return (<FormattedAsset amount={amount} asset={type}/>);
     }
 }
+
+export default Balance;

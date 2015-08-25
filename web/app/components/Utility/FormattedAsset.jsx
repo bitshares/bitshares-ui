@@ -4,7 +4,8 @@ import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import {PropTypes} from "react";
 import {Link} from "react-router";
-import {ChainObject} from "./ChainTypes";
+import ChainTypes from "./ChainTypes";
+import BindToChainState from "./BindToChainState";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -15,23 +16,36 @@ import {ChainObject} from "./ChainTypes";
  *     amount: the ammount of asset
  *
  */
-class FormattedAsset extends ChainComponent {
-    render() {
-        let {amount, baseamount, decimalOffset, color} = this.props;
-        let {asset, base} = this.state
 
-        //DEBUG console.log( "props: ", this.props )
-        if (!asset) {
-            return <span></span>;
-        }
-        if( 'toJS' in asset ) asset = asset.toJS()
-        if( base && 'toJS' in base ) base = base.toJS()
+@BindToChainState()
+class FormattedAsset extends React.Component {
+
+    static propTypes = {
+        amount: PropTypes.number.isRequired,
+        base: ChainTypes.ChainObject,
+        asset: ChainTypes.ChainObject.isRequired,
+        exact_amount: PropTypes.bool,
+        decimalOffset: PropTypes.number,
+        color: PropTypes.string,
+        string: PropTypes.string,
+        hide_asset: PropTypes.bool
+    };
+
+    static defaultProps = {
+        decimalOffset: 0
+    };
+
+    render() {
+        let {amount, baseamount, decimalOffset, color, asset, base} = this.props;
+
+        if( asset.toJS ) asset = asset.toJS()
+        if( base && base.toJS ) base = base.toJS()
 
         let colorClass = color ? "facolor-" + color : "";
 
         let precision = utils.get_asset_precision(asset.precision);
 
-        let decimals = Math.max(0, asset.precision - decimalOffset); 
+        let decimals = Math.max(0, asset.precision - decimalOffset);
 
         if (base && baseamount) {
             decimals++;
@@ -62,26 +76,6 @@ class FormattedAsset extends ChainComponent {
         }
     }
 }
-
-FormattedAsset.defaultProps = {
-    amount: 0,
-    base: null,
-    asset: null,
-    exact_amount: false,
-    decimalOffset: 0,
-    color: null
-};
-
-FormattedAsset.propTypes = {
-    amount: PropTypes.number.isRequired,
-    base: PropTypes.string,
-    asset: ChainObject.isRequired,
-    exact_amount: PropTypes.bool,
-    decimalOffset: PropTypes.number,
-    color: PropTypes.string,
-    string: PropTypes.string,
-    hide_asset: PropTypes.bool
-};
 
 export default FormattedAsset;
 
