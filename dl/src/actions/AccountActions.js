@@ -180,10 +180,9 @@ class AccountActions {
         var from_account_id = from_account_name_or_id;
         var to_account_id = to_account_name_or_id;
         var asset_id = asset_name_or_id;
-        let promise;
 
         try {
-            wallet_api.transfer(
+            return  wallet_api.transfer(
                 from_account_id, to_account_id,
                 amount, asset_id, memo
             ).then(result => {
@@ -196,7 +195,6 @@ class AccountActions {
                 reject(error);
             });
         }
-        return promise;
     }
     
     createAccount(

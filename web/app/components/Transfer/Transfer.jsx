@@ -20,6 +20,7 @@ import AccountSelect from "../Forms/AccountSelect";
 import debounce from "lodash.debounce";
 import Immutable from "immutable";
 import ChainStore from "api/chain.js"
+import AccountStore from "stores/AccountStore.js"
 import Wallet from "components/Wallet/Wallet";
 import validation from "common/validation";
 
@@ -64,7 +65,7 @@ class Transfer extends BaseComponent {
 
         new_state.errors = {
             from: null,
-            amount: null,
+            amount: "",
             to: null,
             memo: null
         }
@@ -94,6 +95,10 @@ class Transfer extends BaseComponent {
          else if( fvalue < 0 )
            new_state.errors.amount = "amount must be greater than 0" 
 
+        if( new_state.transfer.from_account && !AccountStore.getState().myAccounts.contains( new_state.transfer.from) )
+        {
+           new_state.errors.from = "Not your account"
+        }
         let errors = new_state.errors
         new_state.isValid = value && Number(value) > 0 && !(errors.from || errors.amount || errors.to || errors.memo) && new_state.transfer.from_account && new_state.transfer.to_account
 
@@ -109,7 +114,7 @@ class Transfer extends BaseComponent {
             to: this.state.transfer.to.toLowerCase().trim(),
             from_name : "",
             to_name : "",
-            amount : this.state.transfer.amount ? this.state.transfer.amount.trim() : null,
+            amount : this.state.transfer.amount ? this.state.transfer.amount.trim() : "",
             asset : this.state.transfer.asset,
             memo: this.state.transfer.memo
         }
@@ -221,25 +226,41 @@ class Transfer extends BaseComponent {
 
         console.log( "key:",key)
         console.log( "value:",value)
-        if (key === "amount") {
+        if (key == "amount") {
            value = value.trim()
            value = value.replace( /,/g, "" )
-           if( value == "." || value == "" )
+           while( value.substring(0,2) == "00" )
+              value = value.substring(1)
+
+           console.log( "Value: ", value )
+
+
+           if( value === "" )
            {
               transfer.amount = value
            }
+           else if( value === "." ) transfer.amount = "0."
            else if( value.length )
            {
-            //  console.log( "before: ",value )
+              console.log( "before: ",value )
               let n = Number(value)
               if( isNaN( n ) )
+              {
+                 console.log( "NAN" );
+                 transfer.amount = parseFloat(value) + ""
+                 if( transfer.amount == "NaN" )
+                    transfer.amount = ""
+                 
+                 this.update();
                  return
+              }
+              
               let parts = value.split('.')
-           //   console.log( "split: ", parts )
+              console.log( "split: ", parts )
               transfer.amount = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
               if( parts.length > 1 )
                  transfer.amount += "." + parts[1]
-           //   console.log( "after: ",transfer.amount )
+              console.log( "after: ",transfer.amount )
            }
         }
         else if (key === "from") {
@@ -279,7 +300,11 @@ class Transfer extends BaseComponent {
         }
 
         let  amount = t.amount.replace( /,/g, "" )
-        AccountActions.transfer(t.from_id, t.to_id, parseInt(amount * precision, 10), t.asset, t.memo);
+        AccountActions.transfer(t.from_id, t.to_id, parseInt(amount * precision, 10), t.asset, t.memo)
+                      .then( r => { console.log( "resolve: ", r) }, 
+                             e => {
+                             console.log( "error: ",e)
+                             } );
     }
 
     newTransfer() {
@@ -320,6 +345,8 @@ class Transfer extends BaseComponent {
     render() {
         let {transfer, errors} = this.state;
 
+        console.log( "transfer.amount", transfer.amount )
+        if( transfer.amount == null ) transfer.amount = ""
         let submitButtonClass = classNames("button", {disabled: !this.state.isValid});
         return (
             <form className="grid-block vertical full-width-content" onSubmit={this.onSubmit} onChange={this.formChange} noValidate>
