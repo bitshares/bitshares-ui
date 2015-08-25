@@ -235,7 +235,7 @@ class BalanceClaimStore {
                         var private_key_tcombs = []
                         for(let pubkey_string of pubkey_strings) {
                             //var private_key = WalletDb.getPrivateKey(pubkey_string)
-                            var private_key_tcomb = PrivateKeyStore.getTcombs_byPubkey(pubkey_string)
+                            var private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(pubkey_string)
                             if( private_key_tcomb )
                                 private_key_tcombs.push(private_key_tcomb[0])
                             else {
@@ -305,7 +305,7 @@ class BalanceClaimStore {
             var vested_balance = balance_claim.vested_balance
             
             var pubkey = balance_claim.pubkey
-            var private_key_tcomb = PrivateKeyStore.getByPublicKey(pubkey)
+            var private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(pubkey)
             
             var import_account_names =
                 private_key_tcomb.import_account_names

@@ -111,18 +111,13 @@ class WalletDb {
     getPrivateKey(public_key) {
         if(! public_key) return null
         if(public_key.Q) public_key = public_key.toBtsPublic()
-        var private_key_tcombs =
-            PrivateKeyStore.getTcombs_byPubkey(public_key)
+        var private_key_tcomb =
+            PrivateKeyStore.getTcomb_byPubkey(public_key)
         
-        if(! private_key_tcombs)
+        if(! private_key_tcomb)
             return null
         
-        var wallet_id = this.getWallet().id
-        for(let private_key_tcomb of private_key_tcombs)
-            if(private_key_tcomb.wallet_id == wallet_id)
-                return this.decryptTcomb_PrivateKey(private_key_tcomb)
-        
-        return null
+        return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
     
     process_transaction(tr, signer_pubkeys, broadcast) {

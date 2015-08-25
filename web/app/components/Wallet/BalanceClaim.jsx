@@ -307,7 +307,7 @@ class BalanceClaim extends Component {
         var keys = PrivateKeyStore.getState().keys
         for(let pubkey of Object.keys(pubkey_to_balances)) {
             var balances = pubkey_to_balances[pubkey]
-            var private_key_tcomb = PrivateKeyStore.getByPublicKey(pubkey)
+            var private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(pubkey)
             var public_key_string = private_key_tcomb.pubkey
             var private_key = WalletDb.decryptTcomb_PrivateKey(private_key_tcomb)
             wif_to_balances[private_key.toWif()] = {balances, public_key_string}

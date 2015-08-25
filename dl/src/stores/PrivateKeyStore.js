@@ -24,8 +24,8 @@ class PrivateKeyStore extends BaseStore {
             onAddKey: PrivateKeyActions.addKey
         });*/
         this._export("loadDbData","onAddKey", "hasKey",
-            "getPubkeys", "getTcombs_byPubkey",
-            "getPubkeys_having_PrivateKey", "getByPublicKey");
+            "getPubkeys", "getTcomb_byPubkey",
+            "getPubkeys_having_PrivateKey");
     }
     
     _getInitialState() {
@@ -143,8 +143,6 @@ class PrivateKeyStore extends BaseStore {
         return this.state.keys.valueSeq().map( value => value.pubkey).toArray()
     }
     
-    // TODO move support for multiple wallets to indexeddb database name
-    // this would have only one public key returned
     getPubkeys_having_PrivateKey(public_keys) {
         var return_public_keys = []
         for(let public_key of public_keys) {
@@ -155,25 +153,11 @@ class PrivateKeyStore extends BaseStore {
         return return_public_keys
     }
     
-    getByPublicKey(public_key) {
+    getTcomb_byPubkey(public_key) {
         if(! public_key) return null
         if(public_key.Q)
             public_key = public_key.toBtsPublic()
-        
         return this.state.keys.get(public_key)
-    }
-    
-    
-    /** The same key may appear in multiple wallets.
-        Use WalletDb.getPrivateKey instead.
-    */
-    getTcombs_byPubkey(public_key) {
-        if(! public_key) return null
-        if(public_key.Q)
-            public_key = public_key.toBtsPublic()
-        return this.state.keys.filter(
-            value => value.pubkey == public_key
-        ).toArray()
     }
 
 
