@@ -16,13 +16,14 @@ class TransactionConfirmStore {
             broadcasting: false,
             trx_id: null,
             trx_block_num: null,
-            closed: true
+            closed: true,
+            broadcasted_transaction: null
         };
     }
 
     onConfirm({transaction}) {
         let init_state = this.getInitialState();
-        this.setState({...init_state, transaction, closed: false});
+        this.setState({...init_state, transaction, closed: false, broadcasted_transaction: null});
     }
 
     onClose() {
@@ -34,7 +35,12 @@ class TransactionConfirmStore {
     }
 
     onWasBroadcast(res) {
-        this.setState({broadcast: true, broadcasting: false, trx_id: res[0].id, trx_block_num: res[0].block_num});
+        this.setState({
+            broadcast: true,
+            broadcasting: false,
+            trx_id: res[0].id,
+            trx_block_num: res[0].block_num,
+            broadcasted_transaction: this.state.transaction});
     }
 
     onError(error) {
