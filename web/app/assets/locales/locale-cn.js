@@ -14,7 +14,11 @@ module.exports = {
         payments: "支付",
         logout: "注销",
         settings: "设置",
-        current: "当前账户"
+        current: "当前账户",
+        create_account: "创建账户",
+        create_asset: "创建资产",
+        lock: "锁定钱包",
+        unlock: "解锁钱包"
     },
     account: {
         assets: "资产",

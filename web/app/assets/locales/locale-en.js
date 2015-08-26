@@ -14,7 +14,11 @@ module.exports = {
         payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
-        current: "Current Account"
+        current: "Current Account",
+        create_account: "Create Account",
+        create_asset: "Create Asset",
+        lock: "Lock",
+        unlock: "Unlock"
     },
     account: {
         asset: "Asset",
