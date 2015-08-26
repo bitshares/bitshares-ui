@@ -4,6 +4,7 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
+import WalletUnlockStore from "stores/WalletUnlockStore";
 import AltContainer from "alt/AltContainer";
 import AccountLeftPanel from "./AccountLeftPanel";
 import LoadingIndicator from "../LoadingIndicator";
@@ -71,7 +72,7 @@ class AccountPage extends React.Component {
                 </div>
                 <div className="grid-block medium-10 main-content">
                     <AltContainer
-                        stores={[AccountStore, AssetStore, SettingsStore]}
+                        stores={[AccountStore, AssetStore, SettingsStore, WalletUnlockStore]}
                         inject={{
                             account_name: () => {
                                 return account_name;
@@ -102,6 +103,9 @@ class AccountPage extends React.Component {
                             },
                             settings: () => {
                                 return SettingsStore.getState().settings;
+                            },
+                            wallet_locked: () => {
+                                return WalletUnlockStore.getState().locked;
                             }
                           }}
                         >

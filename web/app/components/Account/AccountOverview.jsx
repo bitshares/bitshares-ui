@@ -15,6 +15,7 @@ class AccountOverview extends React.Component {
             nextProps.cachedAccounts !== this.props.cachedAccounts ||
             nextProps.assets !== this.props.assets ||
             nextProps.accountBalances !== this.props.accountBalances ||
+            nextProps.wallet_locked !== this.props.wallet_locked ||
             // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
             // returning true here until issue #93 has been resolved
             true
@@ -55,7 +56,6 @@ class AccountOverview extends React.Component {
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = accountHistories.get(account_name).map((trx, index) => {
             if (index < 10) {
-                  console.log( "trx: ", trx )
                 return (
                     <Operation
                         key={index}

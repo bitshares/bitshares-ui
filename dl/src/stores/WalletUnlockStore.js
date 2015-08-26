@@ -6,7 +6,7 @@ class WalletUnlockStore {
     
     constructor() {
         this.bindActions(WalletUnlockActions)
-        this.state = {}
+        this.state = {locked: true}
     }
     
     onUnlock({resolve, reject}) {
@@ -15,7 +15,7 @@ class WalletUnlockStore {
             resolve(false)
             return
         }
-        this.setState({resolve, reject})
+        this.setState({resolve, reject, locked: false})
     }
     
     onLock({resolve}) {
@@ -26,7 +26,7 @@ class WalletUnlockStore {
         }
         WalletDb.onLock()
         resolve(true)
-        this.setState({resolve:null, reject:null})
+        this.setState({resolve:null, reject:null, locked: true})
     }
     
     onCancel() {

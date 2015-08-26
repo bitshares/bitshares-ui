@@ -144,16 +144,12 @@ class Operation extends React.Component {
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
             case "transfer":
-                //console.log("[Operation.jsx:147] ----- transfer ----->", op[1]);
-                let memo_text = "";
+                let memo_text = null;
                 
                 if(op[1].memo) {
                     let memo = op[1].memo;
-                    //console.log("-- transfer op:", memo);
-
                     let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
                     let to_private_key = PrivateKeyStore.getState().keys.get(memo.to)
-                    //console.log("[Operation.jsx:153] ----- keys 1 ----->", from_private_key, to_private_key);
                     let private_key = from_private_key ? from_private_key : to_private_key;
                     let public_key = from_private_key ? memo.to : memo.from;
                     public_key = PublicKey.fromBtsPublic(public_key)
@@ -163,17 +159,14 @@ class Operation extends React.Component {
                     }
                     catch(e) {
                         private_key = null;
-                        //console.log("[Operation.jsx:160] ----- catch ----->", e);
                     }
-
-                    //console.log("[Operation.jsx:154] ----- keys 2 ----->", private_key, public_key);
                     try {
                         memo_text = private_key ? Aes.decrypt_with_checksum(
                             private_key,
                             public_key,
                             memo.nonce,
                             memo.message
-                        ) : "***";
+                        ) : null;
                     } catch(e) {
                         console.log("transfer memo exception ...", e);
                         memo_text = "*";
@@ -192,7 +185,7 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.to" />{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}> {account_id_to_name[op[1].to]}</Link> : null}
-                            <div>{memo_text}</div>
+                            {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
                 } else if(current === op[1].to){
@@ -200,7 +193,7 @@ class Operation extends React.Component {
                         <td className="right-td"><Translate component="span" content="transaction.received" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
                             &nbsp;<Translate component="span" content="transaction.from" />{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}> {account_id_to_name[op[1].from]}</Link> : null}
-                            <div>{memo_text}</div>
+                            {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
                 }
