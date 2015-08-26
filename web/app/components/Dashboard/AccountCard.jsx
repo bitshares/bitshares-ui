@@ -33,7 +33,7 @@ class AccountCard extends React.Component {
     onCardClick(e) {
         e.preventDefault();
         let name = this.props.account.get('name');
-        this.context.router.transitionTo("account", {account_name: name});
+        this.context.router.transitionTo("account-overview", {account_name: name});
     }
 
     render() {
