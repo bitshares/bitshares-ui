@@ -19,11 +19,13 @@ class BlockchainStore extends BaseStore{
         this.latestBlocks = Immutable.List();
         this.dynGlobalObject = {};
         this.globalObject = {};
+        this.rpc_connection_status = "open";
 
         this.bindListeners({
             onGetBlock: BlockchainActions.getBlock,
             onGetGlobals: BlockchainActions.subscribeGlobals,
-            onGetLatest: BlockchainActions.getLatest
+            onGetLatest: BlockchainActions.getLatest,
+            onUpdateRpcConnectionStatus: BlockchainActions.updateRpcConnectionStatus
         });
 
         this._export("getFee");
@@ -79,6 +81,10 @@ class BlockchainStore extends BaseStore{
                 this.dynGlobalObject = DynGlobalObject(object);
             }
         });
+    }
+
+    onUpdateRpcConnectionStatus(status){
+        this.rpc_connection_status = status;
     }
 
 }

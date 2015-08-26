@@ -12,6 +12,9 @@ class FooterContainer extends React.Component {
                   inject={{
                     dynGlobalObject: () => {
                         return BlockchainStore.getState().dynGlobalObject;
+                    },
+                    rpc_connection_status: () => {
+                        return BlockchainStore.getState().rpc_connection_status;
                     }
                   }} 
                   >

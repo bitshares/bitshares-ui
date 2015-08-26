@@ -84,6 +84,13 @@ class BlockchainActions {
                 console.log("Error in BlockchainActions.getBlock: ", error);
             });
     }
+
+    updateRpcConnectionStatus(status) {
+        this.dispatch(status);
+    }
 }
 
-module.exports = alt.createActions(BlockchainActions);
+const BlockchainActionsInstance = alt.createActions(BlockchainActions)
+Apis.setRpcConnectionStatusCallback(BlockchainActionsInstance.updateRpcConnectionStatus);
+
+module.exports = BlockchainActionsInstance;
