@@ -67,7 +67,6 @@ let Block = t.struct({
 }, "Block");
 
 let WalletTcomb = t.struct({
-    id: t.maybe(t.Num),
     public_name: t.Str,
     login_account_name: t.maybe(t.Str),
     password_checksum: t.Str,
@@ -82,13 +81,12 @@ let WalletTcomb = t.struct({
 
 let PrivateKeyTcomb = t.struct({
     id: t.maybe(t.Num),
-    wallet_id: t.Num,
+    pubkey: t.Str,
     label: t.maybe(t.Str),
     import_account_names: t.maybe(t.Arr),
     // brainkey_pos: "0" = 1st owner key, "0.0" = 1st active for owner "0"
     brainkey_pos: t.maybe(t.Str),
-    encrypted_key: t.Str,
-    pubkey: t.Str
+    encrypted_key: t.Str
 }, "PrivateKeyTcomb");
 
 //let PublicKeyTcomb = t.struct({

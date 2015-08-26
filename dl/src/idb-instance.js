@@ -2,9 +2,8 @@ import idb_helper from "./idb-helper"
 
 const DB_VERSION = 4;
 
-var BACKUP_STORE_NAMES = [
-    "wallet", "private_keys",
-    "linked_accounts", "payee_accounts"
+var WALLET_BACKUP_STORES = [
+    "wallet", "private_keys", "linked_accounts"
 ]
 
 module.exports = (function () {
@@ -16,7 +15,7 @@ module.exports = (function () {
         if (oldVersion < 2) {
             idb_helper.autoIncrement_unique(db, "wallet", "public_name")
             idb_helper.autoIncrement_unique(db,
-                "private_keys", "encrypted_key")
+                "private_keys", "pubkey")
         }
         if (oldVersion < 3) {
             db.createObjectStore("linked_accounts", { keyPath: "name" });
@@ -64,6 +63,7 @@ module.exports = (function () {
     }
 
     return {
+        WALLET_BACKUP_STORES,
         init_instance: function (indexedDBimpl) {
             this.impl = indexedDBimpl
             if (!_instance) {
@@ -123,7 +123,7 @@ module.exports = (function () {
                 };
             });
         },
-        backup: function (store_names = BACKUP_STORE_NAMES) {
+        backup: function (store_names = WALLET_BACKUP_STORES) {
             var promises = []
             for (var store_name of store_names) {
                 promises.push(this.load_data(store_name))

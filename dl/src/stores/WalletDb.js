@@ -95,8 +95,6 @@ class WalletDb {
     
     //rename to decryptTcomb_PrivateKey
     decryptTcomb_PrivateKey(private_key_tcomb) {
-        if(private_key_tcomb.wallet_id != this.getWallet().id)
-            throw new Error("Incorrect wallet")
         if( ! private_key_tcomb)
             return null
         var aes_private = aes_private_map[ wallet_public_name ] 
@@ -391,7 +389,6 @@ class WalletDb {
                 throw new Error("Public Key should start with " + chain_config.address_prefix)
         
         var private_key_object = {
-            wallet_id: wallet.id,
             import_account_names,
             encrypted_key: private_cipherhex,
             brainkey_pos: brainkey_pos,
