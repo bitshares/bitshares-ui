@@ -11,12 +11,13 @@ import AccountImage from "./AccountImage";
 import AccountSelect from "../Forms/AccountSelect";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import LoadingIndicator from "../LoadingIndicator";
 
 
 class CreateAccount extends React.Component {
     constructor() {
         super();
-        this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null};
+        this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null, loading: false};
         this.onFinishConfirm = this.onFinishConfirm.bind(this)
     }
 
@@ -24,7 +25,8 @@ class CreateAccount extends React.Component {
         return nextState.accountName !== this.state.accountName
                || nextState.validAccountName !== this.state.validAccountName
                || nextState.validPassword !== this.state.validPassword
-               || nextState.registrar_account !== this.state.registrar_account;
+               || nextState.registrar_account !== this.state.registrar_account
+               || nextState.loading !== this.state.loading;
     }
 
     onAccountNameChange(e) {
@@ -50,8 +52,10 @@ class CreateAccount extends React.Component {
 
     createAccount(name) {
         WalletUnlockActions.unlock().then(() => {
+            this.setState({loading: true});
             AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account).then(() => {
                 if(this.state.registrar_account) {
+                    this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else {
                     this.context.router.transitionTo("account", {account_name: name});
@@ -64,6 +68,7 @@ class CreateAccount extends React.Component {
                     level: "error",
                     autoDismiss: 10
                 });
+                this.setState({loading: false});
             });
         });
     }
@@ -102,6 +107,7 @@ class CreateAccount extends React.Component {
     }
 
     render() {
+        if(this.state.loading) return <LoadingIndicator/>;
         let account_store_state = AccountStore.getState();
         let my_accounts = account_store_state.myAccounts.map(name => name).toJS();
         let first_account = my_accounts.length === 0;
