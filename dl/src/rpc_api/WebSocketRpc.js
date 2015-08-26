@@ -9,21 +9,23 @@ class WebSocketRpc {
         this.web_socket = new WebSocketClient(ws_server);
         this.current_reject = null;
         this.on_reconnect = null;
-        var self = this;
         this.connect_promise = new Promise((resolve, reject) => {
-            //DEBUG console.log("[WebSocketRpc.js:9] ----- connect_promise ----->", this);
-            self.current_reject = reject;
-            self.web_socket.onopen = () => {
-                if(self.on_reconnect) self.on_reconnect();
+            this.current_reject = reject;
+            this.web_socket.onopen = () => {
+                if(this.update_rpc_connection_status_callback) this.update_rpc_connection_status_callback("open");
+                if(this.on_reconnect) this.on_reconnect();
                 resolve();
             }
-            self.web_socket.onerror = (error) => {
+            this.web_socket.onerror = (error) => {
                 console.log("!!! WebSocket Error ", ws_server);
-                if (self.current_reject) {
-                    self.current_reject(error);
+                if (this.current_reject) {
+                    this.current_reject(error);
                 }
             };
-            self.web_socket.onmessage = (message) => self.listener(JSON.parse(message.data));
+            this.web_socket.onmessage = (message) => this.listener(JSON.parse(message.data));
+            this.web_socket.onclose = () => {
+                if(this.update_rpc_connection_status_callback) this.update_rpc_connection_status_callback("closed");
+            };
         });
         this.current_callback_id = 0;
         this.callbacks = {};
@@ -35,18 +37,10 @@ class WebSocketRpc {
         if(NODE_DEBUG)
             console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
         this.current_callback_id += 1;
-        var self = this;
-
-           
         if (params[1] === "subscribe_to_objects" || params[1] === "subscribe_to_market" ||
-            params[1] === "broadcast_transaction_with_callback"
-            ) 
-           /*
-        if( params.length > 2 && 
-            typeof params[2] == 'object'  &&
-            typeof params[2][0] == 'function' ) */
+            params[1] === "broadcast_transaction_with_callback")
         {
-            self.subscriptions[self.current_callback_id] = {
+            this.subscriptions[this.current_callback_id] = {
                 callback: params[2][0],
                 params: Immutable.fromJS(params[2][1])
             };
@@ -57,30 +51,28 @@ class WebSocketRpc {
             let account = params[2][1][0];
             let exists = false;
             // Look for existing sub to that account and reuse if it exists
-            for (let key in self.subscriptions) {
-                if (self.subscriptions[key].account && self.subscriptions[key].account === account) {
+            for (let key in this.subscriptions) {
+                if (this.subscriptions[key].account && this.subscriptions[key].account === account) {
                     exists = true;
-                    // self.subscriptions[key].callback = params[2][0].bind(account);
-                    //DEBUG console.log("reusing subscription:", key, account);
                     params[2][0] = key;
                     break;
                 }
             }
             if (!exists) {
-                self.subscriptions[self.current_callback_id] = {
+                this.subscriptions[this.current_callback_id] = {
                     callback: params[2][0].bind(account),
                     account: account,
                     params: Immutable.fromJS(params[2][1])
                 };
-                params[2][0] = self.current_callback_id;
+                params[2][0] = this.current_callback_id;
             }
         }
 
         if (params[1] === "unsubscribe_from_objects" || params[1] === "unsubscribe_from_market" || params[1] === "unsubscribe_from_accounts") {
             let unSubParams = Immutable.fromJS(params[2][0]);
-            for (let id in self.subscriptions) {
-                if (Immutable.is(self.subscriptions[id].params, unSubParams)) {
-                    self.unsub[this.current_callback_id] = id;
+            for (let id in this.subscriptions) {
+                if (Immutable.is(this.subscriptions[id].params, unSubParams)) {
+                    this.unsub[this.current_callback_id] = id;
                     break;
                 }
             }
@@ -94,16 +86,16 @@ class WebSocketRpc {
 
 
         return new Promise((resolve, reject) => {
-            self.callbacks[self.current_callback_id] = {
+            this.callbacks[this.current_callback_id] = {
                 time: new Date(),
                 resolve: resolve,
                 reject: reject
             };
-            self.web_socket.onerror = (error) => {
+            this.web_socket.onerror = (error) => {
                 console.log("!!! WebSocket Error ", error);
                 reject(error);
             };
-            self.web_socket.send(JSON.stringify(request));
+            this.web_socket.send(JSON.stringify(request));
         });
 
     }
@@ -147,14 +139,17 @@ class WebSocketRpc {
     }
 
     login(user, password) {
-        var self = this;
         return this.connect_promise.then(() => {
-            return self.call([1, "login", [user, password]]);
+            return this.call([1, "login", [user, password]]);
         });
     }
 
     close() {
         this.web_socket.close();
+    }
+
+    setRpcConnectionStatusCallback(callback) {
+        this.update_rpc_connection_status_callback = callback;
     }
 
 }

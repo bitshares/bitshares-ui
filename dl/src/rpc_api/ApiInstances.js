@@ -2,12 +2,8 @@ var WebSocketRpc = require("./WebSocketRpc");
 var GrapheneApi = require("./GrapheneApi");
 
 class Apis {
-    
-    constructor() {
-        this.connect()
-    }
-    
-    connect() {
+
+    connect(update_rpc_connection_status_callback) {
         let hostname = "localhost";
         let protocol = "ws:";
         try {
@@ -15,7 +11,7 @@ class Apis {
             protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
         if(this.ws_rpc) return
-        this.ws_rpc = new WebSocketRpc(protocol + hostname + ":8090");
+        this.ws_rpc = new WebSocketRpc(protocol + hostname + ":8090", update_rpc_connection_status_callback);
         this.init_promise = this.ws_rpc.login("", "").then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");
@@ -60,14 +56,18 @@ class Apis {
     
 }
 
-var apis_instance
+var apis_instance, updateRpcConnectionStatus;
 
 module.exports = {
+    setRpcConnectionStatusCallback: function(callback) {
+        updateRpcConnectionStatus = callback;
+        if(apis_instance && apis_instance.ws_rpc) apis_instance.ws_rpc.setRpcConnectionStatusCallback(callback);
+    },
     instance: function () {
         if ( !apis_instance ) {
             apis_instance = new Apis();
+            apis_instance.connect(updateRpcConnectionStatus);
         }
-        apis_instance.connect()
         return apis_instance;
     }
 };

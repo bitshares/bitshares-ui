@@ -10,7 +10,8 @@ class Footer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.dynGlobalObject !== this.props.dynGlobalObject;
+        return nextProps.dynGlobalObject !== this.props.dynGlobalObject
+            || nextProps.rpc_connection_status !== this.props.rpc_connection_status;
     }
 
     _triggerPerf() {
@@ -39,7 +40,8 @@ class Footer extends React.Component {
                             <Translate content="footer.title" />
                         </div>
                     </div>
-                    { block_height ?
+                    {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
+                    {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
                             <pre>#{block_height}</pre>
