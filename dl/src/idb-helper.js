@@ -99,7 +99,7 @@ module.exports = idb_helper = {
     },
     
     autoIncrement_unique: (db, table_name, unique_index) => {
-        db.createObjectStore(
+        return db.createObjectStore(
             table_name, { keyPath: "id", autoIncrement: true }
         ).createIndex(
             "by_"+unique_index, unique_index, { unique: true }

@@ -91,17 +91,14 @@ class App extends React.Component {
         Promise.all([
             // Non API
             localePromise,
-            PrivateKeyStore.loadDbData(),
-            Apis.instance().init_promise.then(() => {
-                return Promise.all([
-                    // API
-                    AssetActions.getAsset("1.3.0"),
-                    AssetActions.getAssetList("A", 100),
-                    BlockchainActions.subscribeGlobals(),
-                    AccountStore.loadDbData()
-                ]).then(()=> {
-                    AccountActions.change()
-                });
+            Promise.all([
+                // API
+                AssetActions.getAsset("1.3.0"),
+                AssetActions.getAssetList("A", 100),
+                BlockchainActions.subscribeGlobals(),
+                AccountStore.loadDbData()
+            ]).then(()=> {
+                AccountActions.change()
             })
         ]).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts
@@ -172,19 +169,29 @@ App.willTransitionTo = (transition, params, query, callback) => {
         console.log("auth: ", transition.path);
         // TODO: pass auth params to RPC API init subroutine
     }
-    iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise.then(() => {
-        WalletDb.loadDbData().then(() => {
-            if (!WalletDb.getWallet() && transition.path !== "/create-account") {
-                transition.redirect("/create-account");
-            }
-            if (transition.path.indexOf("/auth/") === 0) {
-                transition.redirect("/dashboard");
-            }
-            callback();
-        }).catch((error) => {
-            console.error("[App.jsx:172] ----- WalletDb.loadDbData error ----->", error);
+    //API is used to read the chain_id .. The chain_id defines the database name
+    Apis.instance().init_promise.then(() => {
+        return iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise.then(() => {
+            return Promise.all([
+                PrivateKeyStore.loadDbData(),
+                WalletDb.loadDbData().then(() => {
+                    if (!WalletDb.getWallet() && transition.path !== "/create-account") {
+                        transition.redirect("/create-account");
+                    }
+                    if (transition.path.indexOf("/auth/") === 0) {
+                        transition.redirect("/dashboard");
+                    }
+                    
+                }).catch((error) => {
+                    console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
+                })
+            ]).then(()=> {
+                callback();
+            })
         });
-    });
+    }).catch( error => {
+        console.error("[App.jsx] ----- App.willTransitionTo error ----->", error);
+    })
 };
 
 let routes = (

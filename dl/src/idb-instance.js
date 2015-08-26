@@ -1,60 +1,60 @@
-import idb_helper from "./idb-helper"
+import idb_helper from "idb-helper"
+import Apis from "rpc_api/ApiInstances"
 
-const DB_VERSION = 4;
-
-var WALLET_BACKUP_STORES = [
+const DB_VERSION = 1
+const DB_PREFIX = "graphene_db"
+const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
 
-module.exports = (function () {
+var iDB
+module.exports = iDB = (function () {
 
     var _instance;
     var idb;
 
     function upgrade(db, oldVersion) {
-        if (oldVersion < 2) {
-            idb_helper.autoIncrement_unique(db, "wallet", "public_name")
-            idb_helper.autoIncrement_unique(db,
-                "private_keys", "pubkey")
+        // DEBUG console.log('... oldVersion',oldVersion)
+        if (oldVersion === 0) {
+            db.createObjectStore("wallet", { keyPath: "public_name" })
+            idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
+            db.createObjectStore("linked_accounts", { keyPath: "name" })
+            db.createObjectStore("balance_claims", { keyPath: "chain_balance_record.id" })
         }
-        if (oldVersion < 3) {
-            db.createObjectStore("linked_accounts", { keyPath: "name" });
-            db.createObjectStore("payee_accounts", { keyPath: "name" });
-        }
-        if (oldVersion < 4) {
-            db.createObjectStore("balance_claims", {
-                keyPath: "chain_balance_record.id" })
-        }
-        idb_helper.set_graphene_db(db); //last
+        // if (oldVersion < 2) {
+        //     
+        // }
     }
-
-    function openIndexedDB(indexedDBimpl) {
+    
+    function openIndexedDB(db_name = getDatabaseName()) {
         return new Promise((resolve, reject) => {
-            var openRequest = indexedDBimpl.open("graphene_db", DB_VERSION);
+            // DEBUG console.log('... db_name',db_name)
+            var openRequest = iDB.impl.open(db_name, DB_VERSION);
 
             openRequest.onupgradeneeded = function (e) {
-                upgrade(e.target.result, e.oldVersion);
+                // DEBUG console.log('... openRequest.onupgradeneeded')
+                upgrade(e.target.result, e.oldVersion)
             };
 
             openRequest.onsuccess = function (e) {
-                if(e.target.result.objectStoreNames.length === 0) upgrade(e.target.result, 0);
+                // DEBUG console.log('... openRequest.onsuccess', e.target.result)
+                idb_helper.set_graphene_db(e.target.result)
                 resolve(e.target.result);
             };
 
             openRequest.onerror = function (e) {
-                console.log("indexedDB open",e)
+                // DEBUG console.log("indexedDB open",e.target.error, e)
                 reject(e.target.error);
             };
 
         });
     }
 
-    function init(indexedDBimpl) {
+    function init() {
         let instance;
-        let promise = openIndexedDB(indexedDBimpl);
+        let promise = openIndexedDB();
         promise.then(db => {
             idb = db;
-            idb_helper.set_graphene_db(db);
         });
         return {
             init_promise: promise,
@@ -64,10 +64,21 @@ module.exports = (function () {
 
     return {
         WALLET_BACKUP_STORES,
+        database_name: ()=> getDatabaseName(),
+        delete_database: function(are_you_sure = false) {
+            if( ! are_you_sure) return "Are you sure?"
+            console.log("INFO", "Removing", getDatabaseName())
+            var req = iDB.impl.deleteDatabase(getDatabaseName())
+            return req.result
+        },
         init_instance: function (indexedDBimpl) {
             this.impl = indexedDBimpl
+            //if("__useShim" in this.impl) {
+            //    console.log('... iDB.impl.__useShim()')
+            //    this.impl.__useShim()
+            //}
             if (!_instance) {
-                _instance = init(indexedDBimpl);
+                _instance = init();
             }
             return _instance;
         },
@@ -141,3 +152,10 @@ module.exports = (function () {
     };
 
 })();
+
+function getDatabaseName() {
+    var chain_id = Apis.instance().chain_id
+    var name = DB_PREFIX + (chain_id ? "_" + chain_id.substring(0, 6) : "")
+    //console.log("INFO", "iDB", name)
+    return name
+}
