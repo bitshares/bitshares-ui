@@ -12,6 +12,7 @@ import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import chain_config from "chain/config"
+import key_utils from "common/key_utils"
 
 var wallet_public_name = "default"
 var aes_private_map = {}
@@ -217,6 +218,11 @@ class WalletDb {
             var {brainkey_checksum, brainkey_cipherhex} =
                 this.encrypteBrainKey(password, brainkey_plaintext)
             
+            // Create a public key used to encrypt backups
+            var brainkey_pubkey = PrivateKey.fromSeed(
+                key_utils.normalize_brain_key(brainkey_plaintext)
+            ).toPublicKey().toBtsPublic()
+            
             let wallet = {
                 public_name: wallet_public_name,
                 login_account_name,
@@ -224,6 +230,7 @@ class WalletDb {
                 encrypted_brainkey: brainkey_cipherhex,
                 brainkey_checksum,
                 brainkey_sequence: 0,
+                brainkey_pubkey,
                 created: new Date(),
                 last_modified: new Date(),
                 chain_id: Apis.instance().chain_id

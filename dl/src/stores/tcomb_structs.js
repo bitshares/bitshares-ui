@@ -73,6 +73,7 @@ let WalletTcomb = t.struct({
     encrypted_brainkey: t.maybe(t.Str),
     brainkey_checksum: t.maybe(t.Str),
     brainkey_sequence: t.Num,
+    brainkey_pubkey: t.Str,
     created: t.Dat,
     last_modified: t.Dat,
     last_backup: t.maybe(t.Dat),
