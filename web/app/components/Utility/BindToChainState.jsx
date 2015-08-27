@@ -61,7 +61,7 @@ function BindToChainState(options) {
             }
 
             getChangedProps(next_props) {
-                return this.all_chain_props.filter( key => next_props[key] !== this.props[key]);
+                return this.all_chain_props.filter( key => (next_props[key] || Component.defaultProps[key]) === this.props[key]);
             }
 
             shouldComponentUpdate(nextProps, nextState){
@@ -74,13 +74,15 @@ function BindToChainState(options) {
             }
 
             componentWillMount() {
-                ChainStore.subscribe( this.update )
-                this.update()
+                ChainStore.subscribe( this.update );
+                this.update();
             }
 
             componentWillUnmount() { ChainStore.unsubscribe( this.update ) }
-            componentWillReceiveProps( next_props ) { 
-               this.update() 
+
+            componentWillReceiveProps( next_props ) {
+               next_props = _.defaults(next_props, Component.defaultProps);
+               this.update();
             }
 
             update()
@@ -90,16 +92,14 @@ function BindToChainState(options) {
                 {
                     if(this.props[key]) {
                         let new_obj = ChainStore.getObject(this.props[key]);
-                        new_state[key] = new_obj;
+                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
                     }
                 }
                 for( let key of this.chain_accounts )
                 {
                     if(this.props[key] ) {
                         let new_obj = ChainStore.getAccount(this.props[key]);
-
-                        if(new_obj !== this.state[key]) 
-                           new_state[key] = new_obj;
+                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
                     }
                 }
 

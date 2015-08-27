@@ -188,7 +188,7 @@ class Operation extends React.Component {
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
-                } else if(current === op[1].to){
+                } else {//if(current === op[1].to){
                     column = (
                         <td className="right-td"><Translate component="span" content="transaction.received" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}

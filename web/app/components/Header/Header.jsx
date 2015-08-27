@@ -66,7 +66,7 @@ class Header extends React.Component {
 
         if (currentAccount) {
 
-            let account_display_name = currentAccount.name.length > 20 ? `${currentAccount.name.slice(0, 20)}..` : currentAccount.name;
+            let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
 
             if(linkedAccounts.size > 1) {
                 let accountsList = linkedAccounts
@@ -91,7 +91,7 @@ class Header extends React.Component {
             }
             else {
                 accountsDropDown = (
-                    <Link to="account-overview" params={{account_name: currentAccount.name}}><Icon name="user"/> {account_display_name}</Link>
+                    <Link to="account-overview" params={{account_name: currentAccount}}><Icon name="user"/> {account_display_name}</Link>
                 );
             }
 

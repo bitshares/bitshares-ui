@@ -133,7 +133,7 @@ class App extends React.Component {
                 <div className="grid-block vertical">
                     <RouteHandler />
                 </div>
-                <Footer dynGlobalObject="2.1.0"/>
+                <Footer/>
                 <ReactTooltip type="dark" effect="solid"/>
             </div>
         );

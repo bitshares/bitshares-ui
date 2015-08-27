@@ -22,8 +22,6 @@ class AccountStore extends BaseStore {
         this.myAccounts = Immutable.Set();
         this.payeeAccounts = Immutable.Set();
         this.searchAccounts = Immutable.Map();
-        this.balances = Immutable.Map();
-        this.accountHistories = Immutable.Map();
         this.bindListeners({
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onCreateAccount: AccountActions.createAccount,

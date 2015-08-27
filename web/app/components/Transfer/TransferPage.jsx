@@ -23,9 +23,6 @@ class TransferPage extends React.Component {
                 payeeAccounts: () => {
                     return AccountStore.getState().linkedAccounts;
                 },
-                currentAccount: () => {
-                    return AccountStore.getState().currentAccount;
-                },
                 accountBalances: () => {
                     return AccountStore.getState().balances;
                 },

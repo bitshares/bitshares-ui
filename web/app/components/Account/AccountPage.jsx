@@ -2,7 +2,6 @@ import React from "react";
 import { RouteHandler } from "react-router";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import AltContainer from "alt/AltContainer";
@@ -12,16 +11,6 @@ import LoadingIndicator from "../LoadingIndicator";
 import AccountVoting from "./AccountVoting";
 
 class AccountPage extends React.Component {
-
-    componentWillMount() {
-        AccountActions.getAccount(this.props.params.account_name, true);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.params.account_name !== this.props.params.account_name) {
-            AccountActions.getAccount(nextProps.params.account_name, true);
-        }
-    }
 
     componentWillUnmount() {
         let {account_name} = this.props.params;
@@ -33,11 +22,6 @@ class AccountPage extends React.Component {
                 return false;
             }
         });
-
-        // Remain subbed to linkedAccounts, remove other subscriptions
-        if (!isLinked) {
-            AccountActions.unSubscribe(account_name);
-        }
     }
 
     render() {
@@ -46,60 +30,30 @@ class AccountPage extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">
                     <AltContainer
-                        stores={[AccountStore, AssetStore]}
+                        stores={[AccountStore]}
                         inject={{
-                            account_name: () => {
-                                return account_name;
-                            },
-                            account_name_to_id: () => {
-                                return AccountStore.getState().account_name_to_id;
-                            },
                             linkedAccounts: () => {
                                 return AccountStore.getState().linkedAccounts;
                             },
                             myAccounts: () => {
                                 return AccountStore.getState().myAccounts;
-                            },
-                            cachedAccounts: () => {
-                                return AccountStore.getState().cachedAccounts;
-                            },
-                            assets: () => {
-                                return AssetStore.getState().assets;
                             }
                         }}>
-                    <AccountLeftPanel/>
+                        <AccountLeftPanel account={account_name}/>
                     </AltContainer>
                 </div>
                 <div className="grid-block medium-10 main-content">
-                    <AltContainer
+                    {/*<AltContainer
                         stores={[AccountStore, AssetStore, SettingsStore, WalletUnlockStore]}
                         inject={{
                             account_name: () => {
                                 return account_name;
                             },
-                            cachedAccounts: () => {
-                                return AccountStore.getState().cachedAccounts;
-                            },
                             linkedAccounts: () => {
                                 return AccountStore.getState().linkedAccounts;
                             },
-                            accountBalances: () => {
-                                return AccountStore.getState().balances;
-                            },
-                            accountHistories: () => {
-                                return AccountStore.getState().accountHistories;
-                            },
-                            account_name_to_id: () => {
-                                return AccountStore.getState().account_name_to_id;
-                            },
-                            account_id_to_name: () => {
-                                return AccountStore.getState().account_id_to_name;
-                            },
                             searchAccounts: () => {
                                 return AccountStore.getState().searchAccounts;
-                            },
-                            assets: () => {
-                                return AssetStore.getState().assets;
                             },
                             settings: () => {
                                 return SettingsStore.getState().settings;
@@ -110,7 +64,7 @@ class AccountPage extends React.Component {
                           }}
                         >
                         <RouteHandler account_name={account_name} />
-                    </AltContainer>
+                    </AltContainer>*/}
                 </div>
             </div>
         );
