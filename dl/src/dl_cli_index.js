@@ -15,8 +15,9 @@ module.exports = {
     
     Apis,
     // db: Apis.instance().db_api(), //why is this null?
+    chain_api: require("api/chain"),
     
-    log: object => {
+    resolve: (object, atty = "_") => {
         if( ! object["then"]) {
             console.log(object)
             return object
@@ -25,9 +26,11 @@ module.exports = {
             object.then( result => {
                 console.log(result)
                 resolve(result)
+                window[atty] = result
             }).catch( error => {
                 console.error(error)
                 reject(error)
+                window[atty] = error
             })
         })
     },
