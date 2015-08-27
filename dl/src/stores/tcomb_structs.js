@@ -124,14 +124,15 @@ let GlobalObject = t.struct({
 let DynGlobalObject = t.struct({
     accounts_registered_this_interval: t.Num,
     current_witness: t.Str,
-    //first_maintenance_block_with_current_interval: t.Num,
     head_block_id: t.Str,
     head_block_number: t.Num,
     id: t.Str,
     next_maintenance_time: t.Dat,
-    random: t.Str,
     time: t.Dat,
-    witness_budget: t.Num
+    witness_budget: t.Num,
+    current_aslot: t.Num,
+    recent_slots_filled: t.Str,
+    dynamic_flags: t.Num
 }, "DynGlobalObject");
 
 let LimitOrder = t.struct({
