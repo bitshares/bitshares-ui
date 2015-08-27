@@ -30,7 +30,6 @@ class AccountStore extends BaseStore {
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
-            onChange: AccountActions.change
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount");
     }
@@ -86,8 +85,6 @@ class AccountStore extends BaseStore {
             this.currentAccount = null;
         } else {
             this.currentAccount = name
-                name: name,
-            };
         }
     }
 
