@@ -23,6 +23,7 @@ let committee_prefix = "1." + committee_member_object_type + "."
 let asset_prefix = "1." + asset_object_type + "."
 let account_prefix = "1." + account_object_type + "."
 
+const DEBUG = false
 
 /**
  *  @brief maintains a local cache of blockchain state 
@@ -67,7 +68,7 @@ class ChainStore
 
    onUpdate( updated_objects ) /// map from account id to objects
    {
-      console.log( "updated objects: ", updated_objects )
+      if(DEBUG) console.log( "updated objects: ", updated_objects )
       for( let a = 0; a < updated_objects.length; ++a )
       {
          for( let i = 0; i < updated_objects[a].length; ++i )
@@ -190,11 +191,11 @@ class ChainStore
          return result
       }
 
-      console.log( "fetchObject: ", id )
+      if(DEBUG) console.log( "fetchObject: ", id )
       if( this.subscribed  != true ) 
          return undefined
 
-      console.log( "maybe fetch object: ", id )
+      if(DEBUG) console.log( "maybe fetch object: ", id )
       if( !utils.is_object_id(id) ) 
          throw Error( "argument is not an object id: " + id )
 
@@ -203,9 +204,9 @@ class ChainStore
       
       let result = this.objects_by_id.get( id )
       if( result === undefined ) { // the fetch
-         console.log( "fetching object: ", id )
+         if(DEBUG) console.log( "fetching object: ", id )
          Apis.instance().db_api().exec( "get_objects", [ [id] ] ).then( optional_objects => {
-                    //DEBUG console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
+                    //if(DEBUG) console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
                    for(let i = 0; i < optional_objects.length; i++) {
                        let optional_object = optional_objects[i]
                        if( optional_object )
@@ -402,7 +403,7 @@ class ChainStore
     */
    fetchFullAccount( name_or_id )
    {
-      console.log( "Fetch full account: ", name_or_id )
+      if(DEBUG) console.log( "Fetch full account: ", name_or_id )
 
       let fetch_account = false
       if( utils.is_object_id(name_or_id) ) 
@@ -420,11 +421,11 @@ class ChainStore
       }
 
       if( fetch_account ) {
-          console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
+          if(DEBUG) console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
                  let full_account = results[0][1]
-                 console.log( "full_account: ", full_account )
+                 if(DEBUG) console.log( "full_account: ", full_account )
 
                  let {
                      account,
@@ -654,7 +655,7 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-      console.log( "update: ", object )
+      if(DEBUG) console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
       if( current === undefined || current === true )
@@ -707,7 +708,7 @@ class ChainStore
           // we may need to fetch some objects
           Apis.instance().db_api().exec( "lookup_vote_ids", [ missing ] )
               .then( vote_obj_array => {
-                     console.log( "vote objects ===========> ", vote_obj_array )
+                     if(DEBUG) console.log( "vote objects ===========> ", vote_obj_array )
                    for( let i = 0; i < vote_obj_array.length; ++i )
                    {
                       if( vote_obj_array[i] )
