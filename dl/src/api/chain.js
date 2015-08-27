@@ -35,7 +35,7 @@ const DEBUG = false
 class ChainStore 
 {
    constructor() {
-      /** tracks everyone who wants to receive updates when the chache changes */
+      /** tracks everyone who wants to receive updates when the cache changes */
       this.subscribers = new Set()
       this.clearCache()
    }
