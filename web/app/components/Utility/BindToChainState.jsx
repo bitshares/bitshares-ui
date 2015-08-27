@@ -75,39 +75,35 @@ function BindToChainState(options) {
 
             componentWillMount() {
                 ChainStore.subscribe( this.update )
-                this.update(null, this.props, null);
+                this.update()
             }
 
-            componentWillUnmount() {
-                ChainStore.unsubscribe( this.update )
+            componentWillUnmount() { ChainStore.unsubscribe( this.update ) }
+            componentWillReceiveProps( next_props ) { 
+               this.update() 
             }
 
-            componentWillReceiveProps( next_props ) {
-                let changed_props = this.getChangedProps(next_props);
-                //console.log(" ----- componentWillReceiveProps all_chain_objs_changed ----->", changed_props);
-                if(changed_props.length === 0) return;
-                this.update(null, next_props, changed_props);
-            }
-
-            update(res = null, props = null, props_to_update = null)
+            update()
             {
-                if(!props) props = this.props;
                 let new_state = {};
                 for( let key of this.chain_objects )
                 {
-                    if(props[key] && (props_to_update === null || props_to_update.includes(key))) {
-                        let new_obj = ChainStore.getObject(props[key]);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                    if(this.props[key]) {
+                        let new_obj = ChainStore.getObject(this.props[key]);
+                        new_state[key] = new_obj;
                     }
                 }
                 for( let key of this.chain_accounts )
                 {
-                    if(props[key] && (props_to_update === null || props_to_update.includes(key))) {
-                        let new_obj = ChainStore.getAccount(props[key]);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                    if(this.props[key] ) {
+                        let new_obj = ChainStore.getAccount(this.props[key]);
+
+                        if(new_obj !== this.state[key]) 
+                           new_state[key] = new_obj;
                     }
                 }
-                //console.log("----- Wrapper update ----->", props_to_update, this.state, new_state);
+
+                //console.log("----- Wrapper update ----->", this.props, this.state, new_state);
                 this.setState( new_state )
             }
 

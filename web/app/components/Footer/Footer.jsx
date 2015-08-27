@@ -22,6 +22,7 @@ class Footer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+       return true
         return nextProps.dynGlobalObject !== this.props.dynGlobalObject
             || nextProps.rpc_connection_status !== this.props.rpc_connection_status;
     }

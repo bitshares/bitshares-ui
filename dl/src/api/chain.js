@@ -655,7 +655,7 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-      if(DEBUG) console.log( "update: ", object )
+      console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
       if( current === undefined || current === true )
