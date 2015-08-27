@@ -117,6 +117,9 @@ class AccountStore extends BaseStore {
     }
 
     onLinkAccount(name) {
+        if( ! validation.is_account_name(name))
+            throw new Error("Invalid account name: " + name)
+        
         iDB.add_to_store("linked_accounts", {
             name
         });
@@ -127,6 +130,9 @@ class AccountStore extends BaseStore {
     }
 
     onUnlinkAccount(name) {
+        if( ! validation.is_account_name(name))
+            throw new Error("Invalid account name: " + name)
+        
         iDB.remove_from_store("linked_accounts", name);
         this.linkedAccounts = this.linkedAccounts.remove(name);
         if (this.linkedAccounts.size === 0) {
