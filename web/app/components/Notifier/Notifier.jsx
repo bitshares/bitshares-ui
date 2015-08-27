@@ -7,7 +7,7 @@ import Immutable from "immutable";
 class Notifier extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        let name = nextProps.currentAccount ? nextProps.currentAccount.name : null;
+        let name = nextProps.currentAccount ? nextProps.currentAccoun : null;
         if (name) {
             let ch = this.props.accountHistories.get(name);
             let nh = nextProps.accountHistories.get(name);
@@ -23,7 +23,7 @@ class Notifier extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.accountHistories, this.props.accountHistories) ||
-                (this.props.currentAccount && nextProps.currentAccount.id !== this.props.currentAccount.id) ||
+                (this.props.currentAccount && nextProps.currentAccount !== this.props.currentAccount) ||
                 !Immutable.is(nextProps.assets, this.props.assets) ||
                 !Immutable.is(nextProps.settings, this.props.settings)
             );
@@ -35,12 +35,9 @@ class Notifier extends React.Component {
 
         if(!currentAccount) { return <div></div>; }
 
-        let {id, name} = currentAccount,
-            trx, info;
+        let trx, info;
             
-        if (!id) {
-            id = this.props.account_name_to_id[name];
-        }
+        let id = this.props.account_name_to_id[currentAccount];
 
         if (this.props.accountHistories.get(name)) {
             trx = this.props.accountHistories.get(name)[0];

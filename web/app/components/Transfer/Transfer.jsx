@@ -295,9 +295,6 @@ class Transfer extends BaseComponent {
         // Launch api action here
         let t = this.state.transfer;
         let precision = utils.get_asset_precision(this.props.assets.get(this.state.transfer.asset).precision);
-        if (!t.from_id) {
-            t.from_id = this.props.currentAccount.id;
-        }
 
         let  amount = t.amount.replace( /,/g, "" )
         AccountActions.transfer(t.from_id, t.to_id, parseInt(amount * precision, 10), t.asset, t.memo)
@@ -471,14 +468,12 @@ class Transfer extends BaseComponent {
 
 Transfer.defaultProps = {
     cachedAccounts: {},
-    assets: {},
-    currentAccount: {}
+    assets: {}
 };
 
 Transfer.propTypes = {
     cachedAccounts: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired,
-    currentAccount: PropTypes.object.isRequired
+    assets: PropTypes.object.isRequired
 };
 
 Transfer.contextTypes = { router: React.PropTypes.func.isRequired };
