@@ -61,7 +61,7 @@ function BindToChainState(options) {
             }
 
             getChangedProps(next_props) {
-                return this.all_chain_props.filter( key => (next_props[key] || Component.defaultProps[key]) === this.props[key]);
+                return this.all_chain_props.filter( key => (next_props[key] || Component.defaultProps[key]) !== this.props[key]);
             }
 
             shouldComponentUpdate(nextProps, nextState){
