@@ -230,7 +230,7 @@ class ChainStore
     *  @return the account object if it does exist
     */
    getAccount( name_or_id ) {
-      if( utils.is_object_id(name_or_id) ) 
+      if( utils.is_object_id(name_or_id) )
       {
          let account = getObject( name_or_id )
          if( account === undefined ) 
@@ -244,7 +244,7 @@ class ChainStore
             return undefined 
          if( account_id === undefined ) // then no query, fetch it
             return this.fetchFullAccount( name_or_id )
-         return getObject( account_id ) // return it
+         return this.getObject( account_id ) // return it
       }
       throw Error( "Argument is not an account name or id: ", id  )
    }
@@ -417,7 +417,7 @@ class ChainStore
             throw Error( "argument is not an account name: " + name_or_id )
 
          let account_id = this.accounts_by_name.get( name_or_id )
-         let fetch_account = account_id === undefined 
+         fetch_account = account_id === undefined
       }
 
       if( fetch_account ) {

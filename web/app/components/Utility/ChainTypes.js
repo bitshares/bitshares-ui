@@ -40,6 +40,5 @@ function objectIdChecker(props, propName, componentName, location) {
 
 let ChainObject = createChainableTypeChecker(objectIdChecker);
 let ChainAccount = createChainableTypeChecker(objectIdChecker);
-let ChainFullAccount = createChainableTypeChecker(objectIdChecker);
 
-export default {ChainObject, ChainAccount, ChainFullAccount};
+export default {ChainObject, ChainAccount};

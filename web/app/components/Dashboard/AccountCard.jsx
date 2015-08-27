@@ -21,7 +21,7 @@ class AccountCard extends React.Component {
     };
 
     static propTypes = {
-        account: ChainTypes.ChainFullAccount.isRequired
+        account: ChainTypes.ChainAccount.isRequired
     };
 
 
