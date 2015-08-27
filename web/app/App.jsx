@@ -90,10 +90,8 @@ class App extends React.Component {
         let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
 
         Promise.all([
-            // Non API
-            localePromise,
-            // API
-            ChainStore.init()
+            localePromise, // Non API
+            ChainStore.init() // API
         ]).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts
             let promises = AccountStore.getState().linkedAccounts.map(a => {
@@ -135,7 +133,7 @@ class App extends React.Component {
                 <div className="grid-block vertical">
                     <RouteHandler />
                 </div>
-                <Footer dynGlobalObject="2.1.0"/>
+                <Footer/>
                 <ReactTooltip type="dark" effect="solid"/>
             </div>
         );

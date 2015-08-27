@@ -7,9 +7,15 @@ import ChainTypes from "../Utility/ChainTypes"
 
 @BindToChainState()
 class Footer extends React.Component {
+
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired
     }
+
+    static defaultProps = {
+        dynGlobalObject: "2.1.0"
+    }
+
     constructor() {
         super();
         this.state = {perf: false};    

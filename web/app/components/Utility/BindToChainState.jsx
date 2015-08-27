@@ -48,6 +48,7 @@ function BindToChainState(options) {
 
         return class Wrapper extends React.Component {
             constructor(props) {
+                props = _.defaults(props, Component.defaultProps);
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
                 this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
