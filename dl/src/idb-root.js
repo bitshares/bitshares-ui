@@ -5,7 +5,7 @@ const DB_VERSION_MAIN = 1
 const DB_PREFIX = "graphene_db"
 
 /** Usage: openIndexDB.then( db => ... */
-export default class iDBMain {
+export default class iDBRoot {
     
     constructor(impl, db_suffix) {
         this.impl = impl

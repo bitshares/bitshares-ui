@@ -1,6 +1,6 @@
 import Apis from "rpc_api/ApiInstances"
 import idb_helper from "idb-helper"
-import iDBMain from "idb-main"
+import iDBRoot from "idb-root"
 
 const DB_VERSION = 1
 const DB_PREFIX = "graphene_db"
@@ -28,7 +28,7 @@ module.exports = iDB = (function () {
     }
     
     function openIndexedDB() {
-        return iDB.main.getProperty("current_wallet", "default").then( current_wallet => {
+        return iDB.root.getProperty("current_wallet", "default").then( current_wallet => {
             return new Promise((resolve, reject) => {
 
                 var chain_id = Apis.instance().chain_id
@@ -92,7 +92,7 @@ module.exports = iDB = (function () {
                 this.impl = indexedDBimpl
                 var chain_id = Apis.instance().chain_id
                 var chain_substring = chain_id ? chain_id.substring(0, 6) : ""
-                this.main = new iDBMain(this.impl, "_" + chain_substring)
+                this.root = new iDBRoot(this.impl, "_" + chain_substring)
                 _instance = init()
             }
             return _instance;
