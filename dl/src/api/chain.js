@@ -49,6 +49,8 @@ class ChainStore
       this.accounts_by_name         = Immutable.Map()
       this.assets_by_id             = Immutable.Map()
       this.assets_by_symbol         = Immutable.Map()
+      this.account_ids_by_key       = Immutable.Map()
+      this.getAccountRefsOfKeyCalls = Immutable.Map()
       this.account_history_requests = new Map() ///< tracks pending history requests
       this.subscriptions_by_market  = new Map()
       this.witness_by_account_id    = new Map()
@@ -126,8 +128,10 @@ class ChainStore
 
       let result = this.objects_by_id.get( id )
 
-      if( !result )
+      if( result === undefined )
          return this.fetchObject( id )
+      if( result === true ) 
+         return undefined
 
       return result
    }
@@ -172,6 +176,56 @@ class ChainStore
       return undefined
    }
 
+   /**
+    *  @param the public key to find accounts that reference it
+    *
+    *  @return Set of account ids that reference the given key
+    *  @return null if no accounts reference the given key
+    *  @return undefined if the result is unknown
+    *
+    *  If this method returns undefined, then it will send a request to
+    *  the server for the current set of accounts after which the
+    *  server will notify us of any accounts that reference these keys
+    */
+   getAccountRefsOfKey( key )
+   {
+      if( this.getAccountRefsOfKeyCalls.contains(key) )
+         return this.account_ids_by_key.get( key )
+      else
+      {
+         this.getAccountRefsOfKeyCalls = this.getAccountRefsOfKeyCalls.add(key)
+         Apis.instance().db_api().exec( "get_key_references", [ [key] ] )
+         .then( vec_account_id => {
+                  let refs = Immutable.Set()
+                  refs = refs.withMutations( r => {
+                     for( let i = 0; i < vec_account_id.length; ++i ) {
+                        r.add(vec_account_id[i]) 
+                     }
+                  } )
+                  this.account_ids_by_key = this.account_ids_by_key.set( key, refs )
+                },
+                error => {
+                  this.account_ids_by_key       = this.account_ids_by_key.delete( key )
+                  this.getAccountRefsOfKeyCalls = this.getAccountRefsOfKeyCalls.delete(key)
+                })
+         return undefined
+      }
+      return undefined
+   }
+
+   /**
+    * @return a Set of balance ids that are claimable with the given address
+    * @return undefined if a query is pending and the set is not known at this time
+    * @return a empty Set if no items are found
+    *
+    * If this method returns undefined, then it will send a request to the server for
+    * the current state after which it will be subscribed to changes to this set.
+    */
+   getBalanceObjects( address )
+   {
+      return undefined
+   }
+
    
    /**
     *  If there is not already a pending request to fetch this object, a new
@@ -192,7 +246,7 @@ class ChainStore
       }
 
       if(DEBUG) console.log( "fetchObject: ", id )
-      if( this.subscribed  != true ) 
+      if( this.subscribed  !== true ) 
          return undefined
 
       if(DEBUG) console.log( "maybe fetch object: ", id )
@@ -205,6 +259,7 @@ class ChainStore
       let result = this.objects_by_id.get( id )
       if( result === undefined ) { // the fetch
          if(DEBUG) console.log( "fetching object: ", id )
+         this.objects_by_id = this.objects_by_id.set( id, true )
          Apis.instance().db_api().exec( "get_objects", [ [id] ] ).then( optional_objects => {
                     //if(DEBUG) console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
                    for(let i = 0; i < optional_objects.length; i++) {
@@ -400,6 +455,10 @@ class ChainStore
     *  Fetches an account and all of its associated data in a single query
     *
     *  @param an account name or account id
+    *
+    *  @return undefined if the account in question is in the process of being fetched
+    *  @return the object if it has already been fetched
+    *  @return null if the object has been queried and was not found
     */
    fetchFullAccount( name_or_id )
    {
@@ -410,6 +469,7 @@ class ChainStore
       {
          let current = this.objects_by_id.get( name_or_id )
          fetch_account = current === undefined
+         if( !fetch_account ) return current
       }
       else
       {
@@ -418,7 +478,10 @@ class ChainStore
 
          let account_id = this.accounts_by_name.get( name_or_id )
          fetch_account = account_id === undefined
+         if( !fetch_account ) 
+            return this.objects_by_id.get( account_id )
       }
+      
 
       if( fetch_account ) {
           if(DEBUG) console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
