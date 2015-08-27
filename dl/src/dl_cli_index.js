@@ -1,3 +1,5 @@
+import Apis from "rpc_api/ApiInstances"
+
 module.exports = {
     
     PrivateKey: require('ecc/key_private'),
@@ -10,7 +12,25 @@ module.exports = {
     
     alt: require('alt-instance'),
     iDB: require('idb-instance'),
-    Apis: require("rpc_api/ApiInstances"),
+    
+    Apis,
+    db: Apis.instance().db_api(), //why is this null?
+    
+    log: object => {
+        if( ! object["then"]) {
+            console.log(object)
+            return object
+        }
+        return new Promise( (resolve, reject) => {
+            object.then( result => {
+                console.log(result)
+                resolve(result)
+            }).catch( error => {
+                console.error(error)
+                reject(error)
+            })
+        })
+    },
     
     init: context => {
         if( ! context) return
@@ -19,4 +39,5 @@ module.exports = {
             context[obj] = module.exports[obj]
         }
     }
+    
 }
