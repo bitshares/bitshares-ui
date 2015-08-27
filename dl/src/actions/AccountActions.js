@@ -12,8 +12,18 @@ let accountSearch = {};
 let wallet_api = new WalletApi();
 let inProgress = {};
 
+/**
+ *  @brief  Actions that modify linked accounts 
+ *
+ *  @note this class also includes accountSearch actions which keep track of search result state.  The presumption 
+ *  is that there is only ever one active "search result" at a time.  
+ */
 class AccountActions {
 
+    /**
+     *  Account search results are not managed by the chain.js cache so are
+     *  tracked as part of the AccountStore. 
+     */
     accountSearch(start_symbol, limit = 50) {
         let uid = `${start_symbol}_${limit}}`;
         if (!accountSearch[uid]) {
@@ -26,155 +36,16 @@ class AccountActions {
         }
     }
 
-    getAccounts(start_symbol, limit) {
-        let uid = `${start_symbol}_${limit}`;
-        if (!accountLookup[uid]) {
-            accountLookup[uid] = true;
-
-            if (utils.is_object_id(start_symbol) && limit === 1) {
-                return api.getObjects(start_symbol).then(result => {
-                    this.dispatch([
-                        [result[0].name, result[0].id]
-                    ]);
-                });
-            }
-
-            return api.lookupAccounts(start_symbol, limit)
-                .then(result => {
-                    accountLookup[uid] = false;
-                    this.dispatch(result);
-                });
-        }
-    }
-
-    getAllAccounts() {
-        return api.lookupAccounts("", 1000).then(result => {
-            this.dispatch(result);
-        }).catch(error => {
-            console.log("Error in AccountActions.getAllAccounts: ", error);
-        });
-    }
-
-    unSubscribe(id) {
-        api.unSubscribeAccounts(id).then(unSubResult => {
-            console.log("unsub from", id, "result:", unSubResult);
-            delete accountSubs[id];
-        })
-        .catch(err => {
-            console.log("unsub error:", err);
-        });
-    }
-
-    getAccount(name_or_id) {
-        let account_id, account_name;
-        let subscription = result => {
-            // console.log("account sub result:", account_id, account_name, result, name_or_id);
-
-            /* TODO: finish this parsing of the sub result once all necessary data is available
-            let fullAccount = {}, 
-                history_updates = null,
-                balance_updates = null;
-
-            for (let entry of result[0]) {
-
-                let type = utils.get_op_type(entry.id);
-
-                // Balance update
-                if (entry.balance && entry.owner === account_id) {
-                    if (!balance_updates) {
-                        balance_updates = [];
-                    }
-                    balance_updates.push(entry);
-                }
-
-                // Order history update
-                if (entry.block_num && entry.virtual_op) {
-                    if (!history_updates) {
-                        history_updates = [];
-                    }
-                    history_updates.push(entry);
-                }
-
-                // Account object update
-                if (entry.id === account_id) {
-                    fullAccount.account = entry;
-                }
-
-                if (type === "limit_order") {
-                    console.log("limit order:", entry);
-                    if (!fullAccount.limit_orders) {
-                        fullAccount.limit_orders = [];
-                    }
-                    fullAccount.limit_orders.push(entry);
-                }
-            }
-
-            this.dispatch({
-                sub: true,
-                fullAccount: fullAccount,
-                balance_updates: balance_updates,
-                history_updates: history_updates,
-                id: account_id,
-                account_name: account_name
-            });
-
-            */
-
-            // Use brute force and refetch everything until the parsing is possible
-
-            api.getFullAccounts(function(){}, name_or_id, true).then(fullAccount => {
-                api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
-                    this.dispatch({
-                        fullAccount: fullAccount[0][1],
-                        history: history,
-                        id: account_id,
-                        account_name: account_name
-                    });
-                });
-            });
-
-
-        };
-
-        if (!inProgress[name_or_id]) {
-            inProgress[name_or_id] = true;
-
-            return api.getFullAccounts(subscription, name_or_id, true)
-                .then(fullAccount => {
-                    if (fullAccount.length === 0) {
-                        return this.dispatch({
-                            fullAccount: null,
-                            history: [],
-                            name: name_or_id
-                        });
-                    }
-
-                    //DEBUG console.log("AccountActions getAccount",fullAccount[0][1]);
-                    account_id = fullAccount[0][1].account.id;
-                    account_name = fullAccount[0][1].account.name;
-
-                    api.getHistory(fullAccount[0][1].account.id, 100).then(history => {
-
-                        this.dispatch({
-                            fullAccount: fullAccount[0][1],
-                            history: history,
-                            id: account_id,
-                            account_name: account_name
-                        });
-
-                        delete inProgress[name_or_id];
-                    });
-                }).catch((error) => {
-                    console.log("Error in AccountActions.getAccount: ", error);
-                    delete inProgress[name_or_id];
-                });
-        }
-    }
-
+    /**
+     *  TODO:  The concept of current accounts is deprecated and needs to be removed
+     */
     setCurrentAccount(name) {
         this.dispatch(name);
     }
 
+    /**
+     *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
+     */
     transfer(from_account_name_or_id, to_account_name_or_id, amount, asset_name_or_id, memo) {
         //console.log("[AccountActions.js:68] ----- transfer ----->", from_account_name_or_id, to_account_name_or_id, amount, asset_name_or_id, memo);
         var from_account_id = from_account_name_or_id;
@@ -197,6 +68,10 @@ class AccountActions {
         }
     }
     
+    /**
+     *  This method exists ont he AccountActions because after creating the account via the wallet, the account needs
+     *  to be linked and added to the local database.
+     */
     createAccount(
         account_name,
         registrar,
@@ -214,6 +89,10 @@ class AccountActions {
         });
     }
 
+    /**
+     *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions, the account should already
+     *  be linked.  
+     */
     upgradeAccount(account_id) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_upgrade", {
@@ -234,11 +113,6 @@ class AccountActions {
     unlinkAccount(name) {
         this.dispatch(name);
     }
-    
-    change() {
-        this.dispatch()
-    }
-    
 }
 
 module.exports = alt.createActions(AccountActions);

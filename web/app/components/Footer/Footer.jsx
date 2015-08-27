@@ -2,8 +2,14 @@ import React from "react/addons";
 let Perf = React.addons.Perf;
 import {Link} from "react-router";
 import Translate from "react-translate-component";
+import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "../Utility/ChainTypes"
 
+@BindToChainState()
 class Footer extends React.Component {
+    static propTypes = {
+        dynGlobalObject: ChainTypes.ChainObject.isRequired
+    }
     constructor() {
         super();
         this.state = {perf: false};    
@@ -31,7 +37,7 @@ class Footer extends React.Component {
     }
 
     render() {
-        let block_height = this.props.dynGlobalObject.head_block_number;
+        let block_height = this.props.dynGlobalObject.get('head_block_number')
         return (
             <div className="grid-block shrink footer">
                 <div className="align-justify grid-block">

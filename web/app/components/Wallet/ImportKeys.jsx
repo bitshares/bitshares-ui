@@ -607,8 +607,8 @@ export default class ImportKeys extends Component {
                 for(let account_id of result)
                     account_ids[account_id] = true
             
-            return chain_api.fetchObject(Object.keys(account_ids)).then( results => {
                 var p = []
+                results = chain_api.fetchObject(Object.keys(account_ids))
                 for(let account of results) {
                     //DEBUG console.log('... get_key_references object lookup',account?account.toJS().name:null)
                     if(account)
@@ -618,7 +618,6 @@ export default class ImportKeys extends Component {
                 }
                 if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
                 return Promise.all(p)
-            })
         })
         
         var wifs_to_account = this.state.wifs_to_account
