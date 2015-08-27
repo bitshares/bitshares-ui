@@ -14,7 +14,7 @@ module.exports = {
     iDB: require('idb-instance'),
     
     Apis,
-    db: Apis.instance().db_api(), //why is this null?
+    // db: Apis.instance().db_api(), //why is this null?
     
     log: object => {
         if( ! object["then"]) {
