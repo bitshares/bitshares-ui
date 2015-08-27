@@ -60,7 +60,7 @@ module.exports = key =
         Aes.fromSeed secret
     
     ###* @param1 string entropy of at least 32 bytes ###
-    suggest_brain_key:(entropy) ->
+    random32ByteBuffer:(entropy = @browserEntropy()) ->
         unless typeof entropy is 'string'
             throw new Error "string required for entropy"
         
@@ -84,10 +84,11 @@ module.exports = key =
         # Note, this is after hashing for 1 second. Helps to ensure the computer
         # is not low on entropy.
         hash_array.push secureRandom.randomBuffer(32)
-        
-        # randomBuffer will be 32 bytes
-        randomBuffer = hash.sha256 Buffer.concat(hash_array)
-        # DEBUG console.log '... randomBuffer',randomBuffer.toString 'hex'
+        hash.sha256 Buffer.concat(hash_array)
+    
+    ###* @param1 string entropy of at least 32 bytes ###
+    suggest_brain_key:(entropy) ->
+        randomBuffer = @random32ByteBuffer entropy
         
         word_count = 16
         dictionary_lines = dictionary.split ','
@@ -107,6 +108,27 @@ module.exports = key =
             dictionary_lines[wordIndex]
         
         key.normalize_brain_key brainkey.join ' '
+    
+    get_random_key: (entropy) ->
+        PrivateKey.fromBuffer @random32ByteBuffer entropy
+    
+    get_active_private: (owner_private, sequence = 0)->
+        unless sequence >= 0
+            throw new Error "invalid sequence"
+        
+        PrivateKey.fromBuffer(
+            hash.sha256(hash.sha512(
+                owner_private.toWif() + " " + sequence
+            ))
+        )
+    
+    normalize_brain_key: (brain_key)->
+        unless typeof brain_key is 'string'
+            throw new Error "string required for brain_key"
+        
+        brain_key = brain_key.trim()
+        brain_key = brain_key.toUpperCase()
+        brain_key.split(/[\t\n\v\f\r ]+/).join ' '
     
     browserEntropy: ->
         req = (variable, name)-> unless variable
@@ -139,33 +161,17 @@ module.exports = key =
         # DEBUG console.log('... entropyStr',entropyStr)
         entropyStr
     
-    normalize_brain_key: (brain_key)->
-        unless typeof brain_key is 'string'
-            throw new Error "string required for brain_key"
-        
-        brain_key = brain_key.trim()
-        brain_key = brain_key.toUpperCase()
-        brain_key.split(/[\t\n\v\f\r ]+/).join ' '
-    
-    get_owner_private: (brain_key, sequence = 0)->
-        unless sequence >= 0
-            throw new Error "invalid sequence"
-        
-        brain_key = key.normalize_brain_key brain_key
-        
-        PrivateKey.fromBuffer(
-            hash.sha256(hash.sha512(
-                brain_key + " " + sequence
-            ))
-        )
-    
-    get_active_private: (owner_private, sequence = 0)->
-        unless sequence >= 0
-            throw new Error "invalid sequence"
-        
-        PrivateKey.fromBuffer(
-            hash.sha256(hash.sha512(
-                owner_private.toWif() + " " + sequence
-            ))
-        )
+    # https://github.com/cryptonomex/graphene-ui/issues/177
+    # get_owner_private: (brain_key, sequence = 0)->
+    #     unless sequence >= 0
+    #         throw new Error "invalid sequence"
+    #     
+    #     brain_key = key.normalize_brain_key brain_key
+    #     
+    #     PrivateKey.fromBuffer(
+    #         hash.sha256(hash.sha512(
+    #             brain_key + " " + sequence
+    #         ))
+    #     )
+
 
