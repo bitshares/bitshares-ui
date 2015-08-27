@@ -92,12 +92,8 @@ class App extends React.Component {
         Promise.all([
             // Non API
             localePromise,
-            Promise.all([
-                // API
-                ChainStore.init()
-            ]).then(()=> {
-                AccountActions.change()
-            })
+            // API
+            ChainStore.init()
         ]).then(() => {
             // let's retrieve linked accounts - this is needed to populate myAccounts
             let promises = AccountStore.getState().linkedAccounts.map(a => {
