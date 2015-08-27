@@ -10,6 +10,7 @@ let latestBlocks = {};
 class BlockchainActions {
 
     unSubscribeGlobals() {
+       /*
         if (subs.globals) {
             Apis.instance().db_api().exec("unsubscribe_from_objects", [
                     ["2.0.0", "2.1.0"]
@@ -23,9 +24,11 @@ class BlockchainActions {
                     console.log("Error in BlockchainActions.subscribeDynGlobal unsubscribe: ", error);
                 });
         }
+        */
     }
 
     subscribeGlobals() {
+       /*
         let subscription = (result) => {
             this.dispatch(result);
         };
@@ -50,6 +53,7 @@ class BlockchainActions {
                 });
         }
         return Promise.resolve(true);
+        */
     }
 
     getLatest(height) {

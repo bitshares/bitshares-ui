@@ -15,7 +15,7 @@ import DelegatesContainer from "./components/Explorer/DelegatesContainer";
 import Delegates from "./components/Explorer/Delegates";
 import Delegate from "./components/Explorer/Delegate";
 import HeaderContainer from "./components/Header/HeaderContainer";
-import FooterContainer from "./components/Footer/FooterContainer";
+import Footer from "./components/Footer/Footer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
@@ -57,6 +57,7 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
+import ChainStore from "api/chain"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -93,10 +94,7 @@ class App extends React.Component {
             localePromise,
             Promise.all([
                 // API
-                AssetActions.getAsset("1.3.0"),
-                AssetActions.getAssetList("A", 100),
-                BlockchainActions.subscribeGlobals(),
-                AccountStore.loadDbData()
+                ChainStore.init()
             ]).then(()=> {
                 AccountActions.change()
             })
@@ -141,7 +139,7 @@ class App extends React.Component {
                 <div className="grid-block vertical">
                     <RouteHandler />
                 </div>
-                <FooterContainer/>
+                <Footer dynGlobalObject="2.1.0"/>
                 <ReactTooltip type="dark" effect="solid"/>
             </div>
         );

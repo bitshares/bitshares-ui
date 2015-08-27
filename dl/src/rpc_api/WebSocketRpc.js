@@ -37,8 +37,12 @@ class WebSocketRpc {
         if(NODE_DEBUG)
             console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
         this.current_callback_id += 1;
-        if (params[1] === "subscribe_to_objects" || params[1] === "subscribe_to_market" ||
-            params[1] === "broadcast_transaction_with_callback")
+        var self = this;
+
+           
+        if (params[1] === "set_subscribe_callback" || params[1] === "subscribe_to_market" ||
+            params[1] === "broadcast_transaction_with_callback"
+            ) 
         {
             this.subscriptions[this.current_callback_id] = {
                 callback: params[2][0],
@@ -47,28 +51,7 @@ class WebSocketRpc {
             params[2][0] = this.current_callback_id;
         }
 
-        if (params[1] === "get_full_accounts") {
-            let account = params[2][1][0];
-            let exists = false;
-            // Look for existing sub to that account and reuse if it exists
-            for (let key in this.subscriptions) {
-                if (this.subscriptions[key].account && this.subscriptions[key].account === account) {
-                    exists = true;
-                    params[2][0] = key;
-                    break;
-                }
-            }
-            if (!exists) {
-                this.subscriptions[this.current_callback_id] = {
-                    callback: params[2][0].bind(account),
-                    account: account,
-                    params: Immutable.fromJS(params[2][1])
-                };
-                params[2][0] = this.current_callback_id;
-            }
-        }
-
-        if (params[1] === "unsubscribe_from_objects" || params[1] === "unsubscribe_from_market" || params[1] === "unsubscribe_from_accounts") {
+        if( params[1] === "unsubscribe_from_market" || params[1] === "unsubscribe_from_accounts") {
             let unSubParams = Immutable.fromJS(params[2][0]);
             for (let id in this.subscriptions) {
                 if (Immutable.is(this.subscriptions[id].params, unSubParams)) {
