@@ -43,8 +43,8 @@ class AccountPage extends React.Component {
                     </AltContainer>
                 </div>
                 <div className="grid-block medium-10 main-content">
-                    {/*<AltContainer
-                        stores={[AccountStore, AssetStore, SettingsStore, WalletUnlockStore]}
+                    <AltContainer
+                        stores={[AccountStore, SettingsStore, WalletUnlockStore]}
                         inject={{
                             account_name: () => {
                                 return account_name;
@@ -63,8 +63,8 @@ class AccountPage extends React.Component {
                             }
                           }}
                         >
-                        <RouteHandler account_name={account_name} />
-                    </AltContainer>*/}
+                        <RouteHandler account={account_name}/>
+                    </AltContainer>
                 </div>
             </div>
         );

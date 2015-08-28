@@ -16,6 +16,7 @@ import Aes from "ecc/aes";
 import PublicKey from "ecc/key_public";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletDb from "stores/WalletDb";
+import LinkToAccountById from "../Account/LinkToAccountById";
 
 require("./operations.scss");
 
@@ -59,6 +60,26 @@ class Row extends React.Component {
 
 class Operation extends React.Component {
 
+    static defaultProps = {
+        op: [],
+        current: "",
+        account_id_to_name: {},
+        assets: null,
+        block: false,
+        witnesses: {},
+        witness_id_to_name: {}
+    }
+
+    static propTypes = {
+        op: PropTypes.array.isRequired,
+        current: PropTypes.string.isRequired,
+        account_id_to_name: PropTypes.object.isRequired,
+        assets: PropTypes.object.isRequired,
+        block: PropTypes.number,
+        witnesses: PropTypes.object,
+        witness_id_to_name: PropTypes.object
+    }
+
     getAssets(ids) {
 
         if (!Array.isArray(ids)) {
@@ -68,10 +89,10 @@ class Operation extends React.Component {
         let missing = new Array(ids.length);
         
         ids.forEach((id, index) => {
-            if (id && !this.props.assets.get(id)) {
+            //if (id && !this.props.assets.get(id)) {
                 AssetActions.getAsset(id);
                 missing[index] = true;
-            }
+            //}
         });
         
         return missing;
@@ -86,10 +107,10 @@ class Operation extends React.Component {
         let missing = new Array(ids.length);
 
         ids.forEach((id, index) => {
-            if (id && !this.props.account_id_to_name[id]) {
-                AccountActions.getAccounts(id, 1);
-                missing[index] = true;
-            }
+            //if (id && !this.props.account_id_to_name[id]) {
+            //    AccountActions.getAccounts(id, 1);
+            //    missing[index] = true;
+            //}
         });
         
         return missing;
@@ -126,11 +147,11 @@ class Operation extends React.Component {
         return missing;
     }
 
-    linkToAccount(name) {
-        if(!name) {
-            return <span>-</span>;
-        }
-        return <Link to="account" params={{account_name: name}}>{name}</Link>;
+    linkToAccount(name_or_id) {
+        if(!name) return <span>-</span>;
+        if(utils.is_object_id(name_or_id))
+            return <LinkToAccountById account="name_or_id"/>
+        return <Link to="account" params={{account_name: name_or_id}}>{name_or_id}</Link>;
     }
 
     render() {
@@ -184,7 +205,7 @@ class Operation extends React.Component {
                         <td className="right-td">
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
-                            &nbsp;<Translate component="span" content="transaction.to" />{!missingAccounts[1] ? <Link to="account" params={{account_name: account_id_to_name[op[1].to]}}> {account_id_to_name[op[1].to]}</Link> : null}
+                            &nbsp;<Translate component="span" content="transaction.to" /> <LinkToAccountById account={op[1].to}/>
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
@@ -192,7 +213,7 @@ class Operation extends React.Component {
                     column = (
                         <td className="right-td"><Translate component="span" content="transaction.received" />
                             &nbsp;{!missingAssets[0] ? <FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} /> : null}
-                            &nbsp;<Translate component="span" content="transaction.from" />{!missingAccounts[0] ? <Link to="account" params={{account_name: account_id_to_name[op[1].from]}}> {account_id_to_name[op[1].from]}</Link> : null}
+                            &nbsp;<Translate component="span" content="transaction.from" /> <LinkToAccountById account={op[1].from}/>
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
@@ -370,12 +391,12 @@ class Operation extends React.Component {
 
             case "asset_create":
                 color = "warning"; 
-                let exists = assets.find(v => {
-                    return v.symbol === op[1].symbol;
-                });
-                if (!exists) {
-                    AssetActions.getAsset(op[1].symbol);      
-                }
+                //let exists = assets.find(v => {
+                //    return v.symbol === op[1].symbol;
+                //});
+                //if (!exists) {
+                //    AssetActions.getAsset(op[1].symbol);
+                //}
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.create_asset" />
@@ -841,25 +862,5 @@ class Operation extends React.Component {
         );
     }
 }
-
-Operation.defaultProps = {
-    op: [],
-    current: "",
-    account_id_to_name: {},
-    assets: null,
-    block: false,
-    witnesses: {},
-    witness_id_to_name: {}
-};
-
-Operation.propTypes = {
-    op: PropTypes.array.isRequired,
-    current: PropTypes.string.isRequired,
-    account_id_to_name: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired,
-    block: PropTypes.number,
-    witnesses: PropTypes.object,
-    witness_id_to_name: PropTypes.object
-};
 
 export default Operation;

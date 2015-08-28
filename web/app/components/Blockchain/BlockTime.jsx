@@ -1,8 +1,8 @@
 import React from "react";
 import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
-import chain from "api/chain.js";
-import BlockchainStore from "stores/BlockchainStore";
+import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "../Utility/ChainTypes";
 
 /**
  * @brief displays block's date and time based on block number
@@ -11,12 +11,23 @@ import BlockchainStore from "stores/BlockchainStore";
  * Note, it doesn't fetch block, just calculates time based on number alone.
  **/
 
+@BindToChainState()
 class BlockTime extends React.Component {
+
+    static propTypes = {
+        block_number: React.PropTypes.number.isRequired,
+        globalObject: ChainTypes.ChainObject.isRequired,
+        dynGlobalObject: ChainTypes.ChainObject.isRequired
+    }
+
+    static defaultProps = {
+        globalObject: "2.0.0",
+        dynGlobalObject: "2.1.0"
+    }
 
     constructor(props) {
         super(props);
         this.state = {time: null};
-        
     }
 
     componentDidMount() {
@@ -24,15 +35,12 @@ class BlockTime extends React.Component {
     }
 
     calcTime(block_number) {
-        // Promise.all([chain.fetchGlobalProperties(), chain.fetchDynamicGlobalProperties()]).then( results => {
-        let {dynGlobalObject, globalObject} = BlockchainStore.getState();
-        let block_interval = globalObject.parameters.block_interval;
-        let head_block = dynGlobalObject.head_block_number;
-        let head_block_time = new Date(dynGlobalObject.time);
+        let block_interval = this.props.globalObject.get("parameters").get("block_interval");
+        let head_block = this.props.dynGlobalObject.get("head_block_number");
+        let head_block_time = new Date(this.props.dynGlobalObject.get("time"));
         let seconds_below = (head_block - block_number) * block_interval;
         let time = new Date(head_block_time - seconds_below * 1000);
         this.setState({time});
-        // });
     }
 
     componentWillReceiveProps(next_props) {
@@ -47,15 +55,11 @@ class BlockTime extends React.Component {
 
     render() {
         return (
-            <span className="time">
+            <span className="time" key={this.props.block_number}>
                 {this.state.time ?  <FormattedDate value={this.state.time} formats={intlData.formats} format="short"/> : null}
             </span>
         );
     }
 }
-
-BlockTime.propTypes = {
-    block_number: React.PropTypes.number.isRequired
-};
 
 export default BlockTime;

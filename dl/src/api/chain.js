@@ -617,8 +617,8 @@ class ChainStore
                        let updated_account = current_account.set( 'history', updated_history )
                        this.objects_by_id = this.objects_by_id.set( account_id, updated_account )
 
-                       if( current_history != updated_history )
-                          this._notifyAccountSubscribers( account_id )
+                       //if( current_history != updated_history )
+                       //   this._notifyAccountSubscribers( account_id )
 
                        let pending_request = this.account_history_requests.get(account_id)
                        this.account_history_requests.delete(account_id)
@@ -638,14 +638,14 @@ class ChainStore
         return pending_request.promise
    }
 
-   _notifyAccountSubscribers( account_id )
-   {
-      let sub = this.subscriptions_by_account.get( account_id )
-      let acnt = this.objects_by_id.get(account_id)
-      if( !sub ) return
-      for( let item of sub.subscriptions )
-         item( acnt )
-   }
+   //_notifyAccountSubscribers( account_id )
+   //{
+   //   let sub = this.subscriptions_by_account.get( account_id )
+   //   let acnt = this.objects_by_id.get(account_id)
+   //   if( !sub ) return
+   //   for( let item of sub.subscriptions )
+   //      item( acnt )
+   //}
 
    /**
     *  Callback that receives notification of objects that have been
