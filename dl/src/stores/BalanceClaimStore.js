@@ -209,8 +209,11 @@ class BalanceClaimStore {
             if(found)
                 continue
             
+            var db = api.db_api()
             if(TRACE) console.log('... BalanceClaimStore.onLoadMyAccounts lookupAccountByName')
-            var p = chain_api.lookupAccountByName(account_name).then ( account => {
+            var p = db.exec("get_account_by_name", [account_name]).then ( account => {
+                    
+                if( ! account) return
                 //DEBUG console.log('... account lookupAccountByName',account.get("id"),account.get("name"))
                 
                 // todo, move to ChainStore
@@ -218,8 +221,8 @@ class BalanceClaimStore {
                 var tr = new ops.signed_transaction()
                 tr.add_type_operation("transfer", {
                     fee: { amount: 0, asset_id: 0 },
-                    from: account.get("id"),
-                    to: account.get("id"),
+                    from: account.id,
+                    to: account.id,
                     amount: { amount: 1, asset_id: 0},
                     null//memo
                 })
@@ -240,12 +243,12 @@ class BalanceClaimStore {
                                 private_key_tcombs.push(private_key_tcomb[0])
                             else {
                                 // Missing signing key
-                                console.log('... BalanceClaimStore NOT my account1', account.get("name"))
+                                console.log('... BalanceClaimStore NOT my account1', account.name)
                                 return null
                             }
                         }
                         return {
-                            account_name: account.get("name"),
+                            account_name: account.name,
                             private_key_tcombs
                         }
                     })
