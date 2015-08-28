@@ -12,18 +12,6 @@ import AccountVoting from "./AccountVoting";
 
 class AccountPage extends React.Component {
 
-    componentWillUnmount() {
-        let {account_name} = this.props.params;
-        let {linkedAccounts} = AccountStore.getState();
-        let isLinked = false;
-        linkedAccounts.forEach(account => {
-            if (account === account_name) {
-                isLinked = true;
-                return false;
-            }
-        });
-    }
-
     render() {
         let account_name = this.props.params.account_name;
         return (

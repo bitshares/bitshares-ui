@@ -91,14 +91,9 @@ class App extends React.Component {
 
         Promise.all([
             localePromise, // Non API
-            ChainStore.init() // API
+            ChainStore.init(), // API
+            AccountStore.loadDbData()
         ]).then(() => {
-            // let's retrieve linked accounts - this is needed to populate myAccounts
-            let promises = AccountStore.getState().linkedAccounts.map(a => {
-                return AccountActions.getAccount(a);
-            });
-            return Promise.all(promises);
-        }).then(() => {
             AccountStore.tryToSetCurrentAccount();
             this.setState({loading: false});
         }).catch(error => {
@@ -128,7 +123,7 @@ class App extends React.Component {
             <div className="grid-frame vertical">
                 <HeaderContainer isUnlocked={this.state.isUnlocked}/>
                 <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                <AccountNotifications/>
+                {/*<AccountNotifications/>*/}
 
                 <div className="grid-block vertical">
                     <RouteHandler />

@@ -56,7 +56,7 @@ var Utils = {
             if (parseInt(quoteAsset.id.split(".")[2], 10) < parseInt(baseAsset.id.split(".")[2], 10)) {
                 return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision),trailing_zeros)}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
             } else {
-                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision)),trailing_zeros}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
+                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision),trailing_zeros)}${!noSymbol ? " " + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
             }
         } else {
             if (parseInt(quoteAsset.id.split(".")[2], 10) > parseInt(baseAsset.id.split(".")[2], 10)) {
@@ -111,6 +111,20 @@ var Utils = {
            return 0;
 
         return fvalue;
+    },
+
+    are_equal_shallow: function(a, b) {
+        for(var key in a) {
+            if(!(key in b) || a[key] !== b[key]) {
+                return false;
+            }
+        }
+        for(var key in b) {
+            if(!(key in a) || a[key] !== b[key]) {
+                return false;
+            }
+        }
+        return true;
     }
 };
 
