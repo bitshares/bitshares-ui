@@ -48,7 +48,6 @@ function BindToChainState(options) {
 
         return class Wrapper extends React.Component {
             constructor(props) {
-                props = _.defaults(props, Component.defaultProps);
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
                 this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
@@ -80,29 +79,27 @@ function BindToChainState(options) {
 
             componentWillUnmount() { ChainStore.unsubscribe( this.update ) }
 
-            componentWillReceiveProps( next_props ) {
-               next_props = _.defaults(next_props, Component.defaultProps);
-               this.update();
-            }
+            componentWillReceiveProps( next_props ) { this.update(); }
 
             update()
             {
                 let new_state = {};
                 for( let key of this.chain_objects )
                 {
-                    if(this.props[key]) {
-                        let new_obj = ChainStore.getObject(this.props[key]);
+                    let prop = this.props[key] || Component.defaultProps[key];
+                    if(prop) {
+                        let new_obj = ChainStore.getObject(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                     }
                 }
                 for( let key of this.chain_accounts )
                 {
-                    if(this.props[key] ) {
-                        let new_obj = ChainStore.getAccount(this.props[key]);
+                    let prop = this.props[key] || Component.defaultProps[key];
+                    if(prop) {
+                        let new_obj = ChainStore.getAccount(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                     }
                 }
-
                 //console.log("----- Wrapper update ----->", this.props, this.state, new_state);
                 this.setState( new_state )
             }
