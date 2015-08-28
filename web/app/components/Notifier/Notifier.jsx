@@ -46,7 +46,6 @@ class Notifier extends React.Component {
                             op={trx.op}
                             result={trx.result}
                             block={trx.block_num}
-                            account_id_to_name={account_id_to_name}
                             assets={assets}
                             current={id}
                             witnesses={witnesses}
