@@ -50,7 +50,7 @@ class ChainStore
       this.assets_by_id             = Immutable.Map()
       this.assets_by_symbol         = Immutable.Map()
       this.account_ids_by_key       = Immutable.Map()
-      this.getAccountRefsOfKeyCalls = Immutable.Map()
+      this.get_account_refs_of_keys_calls = Immutable.Map()
       this.account_history_requests = new Map() ///< tracks pending history requests
       this.subscriptions_by_market  = new Map()
       this.witness_by_account_id    = new Map()
@@ -189,11 +189,11 @@ class ChainStore
     */
    getAccountRefsOfKey( key )
    {
-      if( this.getAccountRefsOfKeyCalls.contains(key) )
+      if( this.get_account_refs_of_keys_calls.contains(key) )
          return this.account_ids_by_key.get( key )
       else
       {
-         this.getAccountRefsOfKeyCalls = this.getAccountRefsOfKeyCalls.add(key)
+         this.get_account_refs_of_keys_calls = this.get_account_refs_of_keys_calls.add(key)
          Apis.instance().db_api().exec( "get_key_references", [ [key] ] )
          .then( vec_account_id => {
                   let refs = Immutable.Set()
@@ -205,8 +205,8 @@ class ChainStore
                   this.account_ids_by_key = this.account_ids_by_key.set( key, refs )
                 },
                 error => {
-                  this.account_ids_by_key       = this.account_ids_by_key.delete( key )
-                  this.getAccountRefsOfKeyCalls = this.getAccountRefsOfKeyCalls.delete(key)
+                  this.account_ids_by_key             = this.account_ids_by_key.delete( key )
+                  this.get_account_refs_of_keys_calls = this.get_account_refs_of_keys_calls.delete(key)
                 })
          return undefined
       }
@@ -223,7 +223,28 @@ class ChainStore
     */
    getBalanceObjects( address )
    {
-      return undefined
+      let current = this.balance_objects_by_address.get( address )
+      if( current === undefined )
+      {
+          /** because balance objects are simply part of the genesis state, there is no need to worry about
+           * having to update them / merge them or index them in updateObject.
+           */
+          this.balance_objects_by_address = this.balance_objects_by_address.set( address, Immutable.Set() )
+          Apis.instance().db_api().exec( "get_balance_objects", [ [address] ] )
+              .then( balance_objects => {
+                         let set = new Set()
+                         for( let i = 0; i < balance_objects.length; ++i )
+                         {
+                            this._updateObject( balance_objects[i] )
+                            set.add(balance_objects[i].id)
+                         }
+                         this.balance_objects_by_address = this.balance_objects_by_address.set( address, Immutable.Set(set) )
+                     },
+                     error => {
+                         this.balance_objects_by_address = this.balance_objects_by_address.delete( address )
+                     } )
+      }
+      return this.balance_objects_by_address.get( address )
    }
 
    
