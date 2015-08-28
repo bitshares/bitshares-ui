@@ -209,7 +209,7 @@ class AccountAssets extends React.Component {
                         <td>{asset.options.description}</td>
                         <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                         <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
-{/*}
+{/*
                             The precision is not important enough for this screen real estate. It is removed to make more room for Description.
                         <td>{asset.precision}</td>
                     */}
