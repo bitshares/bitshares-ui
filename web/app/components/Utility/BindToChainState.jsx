@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 import ChainStore from "api/chain.js";
 import ChainTypes from "./ChainTypes";
+import utils from "common/utils";
 
 /**
  * @brief provides automatic fetching and updating of chain data
@@ -59,16 +60,9 @@ function BindToChainState(options) {
                 this.state = {};
             }
 
-            getChangedProps(next_props) {
-                return this.all_chain_props.filter( key => (next_props[key] || Component.defaultProps[key]) !== this.props[key]);
-            }
-
             shouldComponentUpdate(nextProps, nextState){
-                if(this.getChangedProps(nextProps).length > 0) return true;
-                for( let key of this.all_chain_props ) {
-                    //console.log("-- shouldComponentUpdate -->", key, nextState[key], this.state[key]);
-                    if (nextState[key] !== this.state[key]) return true;
-                }
+                if(!utils.are_equal_shallow(this.props, nextProps)) return true;
+                if(!utils.are_equal_shallow(this.state, nextState)) return true;
                 return false;
             }
 

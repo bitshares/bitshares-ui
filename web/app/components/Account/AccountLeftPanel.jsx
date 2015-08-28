@@ -15,11 +15,6 @@ import BindToChainState from "../Utility/BindToChainState";
 @BindToChainState()
 class AccountLeftPanel extends React.Component {
 
-    static defaultProps = {
-        linkedAccounts: {},
-        myAccounts: {}
-    }
-
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         linkedAccounts: PropTypes.object.isRequired,
@@ -31,11 +26,6 @@ class AccountLeftPanel extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        //if(this.context.router) {
-        //    const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
-        //    this.pureComponentLastPath = this.context.router.getCurrentPath();
-        //    if(changed) return true;
-        //}
         return this.props.account !== nextProps.account ||
                this.props.linkedAccounts !== nextProps.linkedAccounts ||
                this.props.myAccounts !== nextProps.myAccounts;
@@ -75,7 +65,7 @@ class AccountLeftPanel extends React.Component {
                     ref="confirmModal"
                 />
                 <div className="regular-padding">
-                    <AccountInfo account_name={account_name} account_id={account.id} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
+                    <AccountInfo account_name={account_name} account_id={account.get("id")} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
                     {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
                         (<div className="grid-container" style={{marginBottom: "1rem"}}>
                             <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate content="account.upgrade" /></a>
