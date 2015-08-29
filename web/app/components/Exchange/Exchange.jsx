@@ -10,7 +10,7 @@ import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import Tabs from "react-foundation-apps/src/tabs";
-import debounce from "lodash.debounce";
+import {debounce} from "lodash";
 import ConfirmModal from "../Modal/ConfirmModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";

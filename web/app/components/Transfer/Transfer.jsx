@@ -17,7 +17,7 @@ import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import AccountSelect from "../Forms/AccountSelect";
-import debounce from "lodash.debounce";
+import {debounce} from "lodash";
 import Immutable from "immutable";
 import ChainStore from "api/chain.js"
 import AccountStore from "stores/AccountStore.js"
