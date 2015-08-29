@@ -147,14 +147,14 @@ class ChainStore
          return null
 
       if( utils.is_object_id( id_or_symbol ) )
-         return getObject( id_or_symbol )
+         return this.getObject( id_or_symbol )
 
       /// TODO: verify id_or_symbol is a valid symbol name
 
       let asset_id = this.assets_by_symbol.get( id_or_symbol )
 
       if( utils.is_object_id( asset_id ) )
-         return getObject( asset_id )
+         return this.getObject( asset_id )
 
       if( asset_id === null ) 
          return null
@@ -308,7 +308,7 @@ class ChainStore
    getAccount( name_or_id ) {
       if( utils.is_object_id(name_or_id) )
       {
-         let account = getObject( name_or_id )
+         let account = this.getObject( name_or_id )
          if( account === undefined ) 
             return this.fetchFullAccount( name_or_id )
          return account
@@ -342,7 +342,7 @@ class ChainStore
       let witness_id = this.witness_by_account_id.get( account_id )
       if( witness_id === undefined )
          this.fetchWitnessByAccount( account_id )
-      return getObject( witness_id )
+      return this.getObject( witness_id )
        
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
       {
