@@ -4,7 +4,7 @@ import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
-import debounce from "lodash.debounce";
+import {debounce} from "lodash";
 
 class Accounts extends React.Component {
 

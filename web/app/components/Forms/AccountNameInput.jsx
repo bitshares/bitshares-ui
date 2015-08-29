@@ -3,7 +3,7 @@ import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import debounce from "lodash.debounce";
+import {debounce} from "lodash";
 import BaseComponent from "../BaseComponent";
 
 class AccountNameInput extends BaseComponent {
