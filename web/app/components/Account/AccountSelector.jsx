@@ -3,7 +3,7 @@ import utils from "common/utils"
 import validation from "common/validation"
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/chain.js";
+import ChainStore from "api/ChainStore";
 
 
 /**

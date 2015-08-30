@@ -716,7 +716,7 @@ class Operation extends React.Component {
         }
 
         line = column ? (
-            <Row block={block} type={op[0]} color={color} missing={missingFee} fee={op[1].fee}>
+            <Row block={block} type={op[0]} color={color} fee={op[1].fee}>
                 {column}
             </Row>
         ) : null;

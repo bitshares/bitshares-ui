@@ -1,6 +1,6 @@
 import React from "react";
 import _ from "lodash";
-import ChainStore from "api/chain.js";
+import ChainStore from "api/ChainStore";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
 

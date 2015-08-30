@@ -13,7 +13,7 @@ import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import BalanceClaimActions from "actions/BalanceClaimActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 
-import chain_api from "api/chain"
+import chain_api from "api/ChainStore";
 import ApplicationApi from "rpc_api/ApplicationApi"
 import AssetTcomb from "stores/tcomb_structs"
 import ops from 'chain/transaction_operations'

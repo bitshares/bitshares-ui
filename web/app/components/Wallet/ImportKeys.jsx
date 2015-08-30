@@ -22,7 +22,7 @@ import ImportKeysActions from "actions/ImportKeysActions";
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import BalanceClaimActions from "actions/BalanceClaimActions"
 
-import chain_api from "api/chain"
+import chain_api from "api/ChainStore"
 
 require("./ImportKeys.scss");
 

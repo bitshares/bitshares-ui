@@ -10,7 +10,7 @@ import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/chain.js"
+import ChainStore from "api/ChainStore";
 import validation from "common/validation"
 import AccountImage from "./AccountImage";
 

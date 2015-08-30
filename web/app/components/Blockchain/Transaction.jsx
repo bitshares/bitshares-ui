@@ -13,7 +13,7 @@ import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
-import ChainStore from "api/chain.js"
+import ChainStore from "api/ChainStore";
 
 require("./operations.scss");
 require("./json-inspector.scss");

@@ -19,7 +19,7 @@ import notify from "actions/NotificationActions";
 import AccountSelect from "../Forms/AccountSelect";
 import {debounce} from "lodash";
 import Immutable from "immutable";
-import ChainStore from "api/chain.js"
+import ChainStore from "api/ChainStore";
 import AccountStore from "stores/AccountStore.js"
 import Wallet from "components/Wallet/Wallet";
 import validation from "common/validation";
