@@ -1,7 +1,7 @@
 import assert from "assert"
 
 import ApiInstances from "rpc_api/ApiInstances"
-import chain_api from "api/chain"
+import chain_api from "api/ChainStore"
 import th from "./test_helper"
 
 var _catch = th.log_error

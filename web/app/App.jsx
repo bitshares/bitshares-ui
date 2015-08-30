@@ -57,7 +57,7 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
-import ChainStore from "api/chain"
+import ChainStore from "api/ChainStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");

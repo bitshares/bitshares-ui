@@ -15,7 +15,7 @@ module.exports = {
     
     Apis,
     // db: Apis.instance().db_api(), //why is this null?
-    chain_api: require("api/chain"),
+    chain_api: require("api/ChainStore"),
     
     resolve: (object, atty = "_") => {
         if( ! object["then"]) {
