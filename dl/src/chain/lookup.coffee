@@ -68,7 +68,7 @@ class Lookup
         return resolve: name_key_or_id if v.is_empty name_key_or_id
         return resolve: name_key_or_id if name_key_or_id.Q # typeof is PublicKey
         if name_key_or_id.indexOf(chain_config.address_prefix) is 0
-            return resolve: PublicKey.fromBtsPublic name_key_or_id
+            return resolve: PublicKey.fromPublicKeyString name_key_or_id
         
         _private = @_private
         index_name = if name_key_or_id.indexOf("1." + chain_types.object_type.account + ".") is 0
@@ -80,7 +80,7 @@ class Lookup
         ((ret)->
             _private.deferred_lookup index_name, name_key_or_id, (account)->
                 # DEBUG console.log('... account.options.memo_key',index_name,name_key_or_id,account.options)    
-                ret.resolve = PublicKey.fromBtsPublic account.options.memo_key
+                ret.resolve = PublicKey.fromPublicKeyString account.options.memo_key
         )(ret)
         ret
     

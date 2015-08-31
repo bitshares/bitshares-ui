@@ -12,19 +12,19 @@ test = (key) ->
         it "Calcualtes public key from private key", ->
             private_key = PrivateKey.fromHex key.private_key
             public_key = private_key.toPublicKey()
-            assert.equal key.public_key, public_key.toBtsPublic()
+            assert.equal key.public_key, public_key.toPublicKeyString()
 
         it "Create BTS short address", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
+            public_key = PublicKey.fromPublicKeyString key.public_key
             assert.equal key.bts_address, public_key.toBtsAddy() 
 
         it "Blockchain Address", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
+            public_key = PublicKey.fromPublicKeyString key.public_key
             assert.equal key.blockchain_address, public_key.toBlockchainAddress().toString('hex')
             
         it "BTS public key import / export", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
-            assert.equal key.public_key, public_key.toBtsPublic()
+            public_key = PublicKey.fromPublicKeyString key.public_key
+            assert.equal key.public_key, public_key.toPublicKeyString()
 
         it "PTS", ->
             private_key = PrivateKey.fromHex key.private_key
@@ -51,22 +51,22 @@ test = (key) ->
         
             
         it "BTS/BTC uncompressed", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
+            public_key = PublicKey.fromPublicKeyString key.public_key
             address = Address.fromPublic public_key, false, 0
             assert.equal key.Uncompressed_BTC, address.toString()
         
         it "BTS/BTC compressed", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
+            public_key = PublicKey.fromPublicKeyString key.public_key
             address = Address.fromPublic public_key, true, 0
             assert.equal key.Compressed_BTC, address.toString()
         
         it "BTS/PTS uncompressed", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
+            public_key = PublicKey.fromPublicKeyString key.public_key
             address = Address.fromPublic public_key, false, 56
             assert.equal key.Uncompressed_PTS, address.toString()
         
         it "BTS/PTS compressed", ->
-            public_key = PublicKey.fromBtsPublic key.public_key
+            public_key = PublicKey.fromPublicKeyString key.public_key
             address = Address.fromPublic public_key, true, 56
             assert.equal key.Compressed_PTS, address.toString()
 

@@ -1,21 +1,32 @@
 import Apis from "rpc_api/ApiInstances"
 
+import PrivateKey from 'ecc/key_private'
+import PublicKey from 'ecc/key_public'
+import Aes from 'ecc/aes'
+import key from "common/key_utils"
+
+import WalletDb from 'stores/WalletDb'
+import AccountStore from 'stores/AccountStore'
+import PrivateKeyStore from 'stores/PrivateKeyStore'
+import chain_store from "api/ChainStore"
+
+import BackupActions from "actions/BackupActions"
+
+import alt from 'alt-instance'
+import iDB from 'idb-instance'
+
+
 module.exports = {
     
-    PrivateKey: require('ecc/key_private'),
-    PublicKey: require('ecc/key_public'),
-    Aes: require('ecc/aes'),
+    PrivateKey, PublicKey, Aes, key,
     
-    WalletDb: require('stores/WalletDb'),
-    AccountStore: require('stores/AccountStore'),
-    PrivateKeyStore: require('stores/PrivateKeyStore'),
+    WalletDb, AccountStore, PrivateKeyStore,
     
-    alt: require('alt-instance'),
-    iDB: require('idb-instance'),
+    BackupActions,
     
-    Apis,
-    // db: Apis.instance().db_api(), //why is this null?
-    chain_api: require("api/ChainStore"),
+    alt, iDB,  Apis,
+    db: Apis.instance().db_api(), // todo, fix db == undefined
+    chain_store,
     
     resolve: (object, atty = "_") => {
         if( ! object["then"]) {

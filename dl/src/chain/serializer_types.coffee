@@ -460,7 +460,7 @@ Types.public_key =
     _to_public:(object)->
         object = object.resolve if object.resolve isnt undefined
         return object if object.Q
-        PublicKey.fromBtsPublic object
+        PublicKey.fromPublicKeyString object
     fromByteBuffer:(b)->
         fp.public_key b
     appendByteBuffer:(b, object)->
@@ -468,11 +468,11 @@ Types.public_key =
         return
     fromObject:(object)->
         return object if object.Q
-        PublicKey.fromBtsPublic object
+        PublicKey.fromPublicKeyString object
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "GPHXyz...public_key"
-        Types.public_key._to_public(object).toBtsPublic()
+        Types.public_key._to_public(object).toPublicKeyString()
 
 Types.address =
     _to_address:(object)->

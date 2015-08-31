@@ -119,7 +119,7 @@ _my.signed_transaction = ->
     add_signer:(private_key, public_key)->
         throw new Error "already signed" if @signed
         unless public_key.Q
-            public_key = PublicKey.fromBtsPublic public_key
+            public_key = PublicKey.fromPublicKeyString public_key
         @signer_private_keys.push [private_key, public_key]
     
     sign:(chain_id = Apis.instance().chain_id)->
