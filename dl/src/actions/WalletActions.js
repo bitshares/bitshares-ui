@@ -50,8 +50,8 @@ class WalletActions {
 
         let create_account_with_brain_key = () => {
             return application_api.create_account_with_brain_key(
-                owner_private.private_key.toPublicKey().toBtsPublic(),
-                active_private.private_key.toPublicKey().toBtsPublic(),
+                owner_private.private_key.toPublicKey().toPublicKeyString(),
+                active_private.private_key.toPublicKey().toPublicKeyString(),
                 account_name,
                 registrar, //registrar_id,
                 referrer, //referrer_id,
@@ -87,8 +87,8 @@ class WalletActions {
                 body: JSON.stringify({
                     "account": {
                         "name": account_name,
-                        "owner_key": owner_private.private_key.toPublicKey().toBtsPublic(),
-                        "active_key": active_private.private_key.toPublicKey().toBtsPublic()
+                        "owner_key": owner_private.private_key.toPublicKey().toPublicKeyString(),
+                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString()
                     }
                 })
             }).then(r => r.json());

@@ -65,8 +65,8 @@ class WalletApi {
         var owner_privkey = key.get_owner_private( brainkey, "0" )
         var active_privkey = key.get_active_private( owner_privkey )
         return this.application_api.create_account_with_brain_key(
-            owner_privkey.toPublicKey().toBtsPublic(),
-            active_privkey.toPublicKey().toBtsPublic(),
+            owner_privkey.toPublicKey().toPublicKeyString(),
+            active_privkey.toPublicKey().toPublicKeyString(),
             new_account_name,
             registrar_id,
             referrer_id,

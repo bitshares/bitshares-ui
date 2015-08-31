@@ -38,8 +38,7 @@ module.exports = iDB = (function () {
                     current_wallet
                 ].join("_")
 
-                // DEBUG
-                console.log('... iDB.database_name',iDB.database_name)
+                // DEBUG console.log('... iDB.database_name',iDB.database_name)
 
                 var openRequest = iDB.impl.open(iDB.database_name, DB_VERSION);
 
@@ -83,16 +82,21 @@ module.exports = iDB = (function () {
             var req = iDB.impl.deleteDatabase(this.database_name)
             return req.result
         },
+        
+        set_impl: function(impl) {
+            this.impl = impl
+            var chain_id = Apis.instance().chain_id
+            var chain_substring = chain_id ? chain_id.substring(0, 6) : ""
+            this.root = new iDBRoot(this.impl, "_" + chain_substring)
+        },
+        
         init_instance: function (indexedDBimpl) {
             if (!_instance) {
                 //if("__useShim" in indexedDBimpl) {
                 //    console.log('... iDB.impl.__useShim()')
                 //    this.impl.__useShim() //always use shim
                 //}
-                this.impl = indexedDBimpl
-                var chain_id = Apis.instance().chain_id
-                var chain_substring = chain_id ? chain_id.substring(0, 6) : ""
-                this.root = new iDBRoot(this.impl, "_" + chain_substring)
+                if(indexedDBimpl) this.set_impl( indexedDBimpl )
                 _instance = init()
             }
             return _instance;

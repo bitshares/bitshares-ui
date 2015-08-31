@@ -5,16 +5,12 @@ class BackupStore {
     
     constructor() {
         this.bindActions(BackupActions)
-        
     }
     
-    onMount() {
-        this.mounted = true
+    onCreateWalletJson(walletObject) {
+        console.log('... walletObject',walletObject)
     }
     
-    onUnmount() {
-        this.mounted = false
-    }
 }
 
 export var BackupStoreWrapped = alt.createStore(BackupStore)

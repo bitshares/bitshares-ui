@@ -14,8 +14,6 @@ class Aes
     # TODO arg should be a binary type... HEX works best with crypto-js
     Aes.fromSha512 = (hash) ->
         assert.equal hash.length, 128, "A Sha512 in HEX should be 128 characters long, instead got #{hash.length}"
-        #https://github.com/InvictusInnovations/fc/blob/978de7885a8065bc84b07bfb65b642204e894f55/src/crypto/aes.cpp#L330
-        #Bitshares aes_decrypt uses part of the password hash as the initilization vector
         iv = CryptoJS.enc.Hex.parse(hash.substring(64, 96))
         key = CryptoJS.enc.Hex.parse(hash.substring(0, 64))
         new Aes(iv, key)
@@ -29,24 +27,26 @@ class Aes
     
     Aes.decrypt_with_checksum = (private_key, public_key, nonce, message) ->
         
-        #console.log('decrypt_with_checksum', {
-        #    priv_to_pub: private_key.toPublicKey().toBtsPublic()
-        #    pub: public_key.toBtsPublic()
-        #    nonce: nonce
-        #    message: message
-        #})
+        # console.log('decrypt_with_checksum', {
+        #     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
+        #     pub: public_key.toPublicKeyString()
+        #     nonce: nonce
+        #     message: message
+        # })
         
         unless Buffer.isBuffer message
             message = new Buffer message, 'hex'
         
         S = private_key.get_shared_secret public_key
+        #DEBUG console.log('... S',S)
+        
         aes = Aes.fromSeed Buffer.concat [
             new Buffer(""+nonce)
             new Buffer(S.toString('hex'))
         ]
         planebuffer = aes.decrypt message
         unless planebuffer.length >= 4
-            throw new Error "Invalid key, could not decrypt message"
+            throw new Error "Invalid key, could not decrypt message(1)"
         
         # DEBUG console.log('... planebuffer',planebuffer)
         checksum = planebuffer.slice 0, 4
@@ -60,23 +60,24 @@ class Aes
         new_checksum = new_checksum.toString('binary')
         
         unless checksum.toString('binary') is new_checksum
-            throw new Error "Invalid key, could not decrypt message"
+            throw new Error "Invalid key, could not decrypt message(2)"
         
         plaintext
     
     Aes.encrypt_with_checksum = (private_key, public_key, nonce, message) ->
         
-        #console.log('encrypt_with_checksum', {
-        #    priv_to_pub: private_key.toPublicKey().toBtsPublic()
-        #    pub: public_key.toBtsPublic()
-        #    nonce: nonce
-        #    message: message
-        #})
+        # console.log('encrypt_with_checksum', {
+        #     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
+        #     pub: public_key.toPublicKeyString()
+        #     nonce: nonce
+        #     message: message
+        # })
         
         unless Buffer.isBuffer message
             message = new Buffer message
         
         S = private_key.get_shared_secret public_key
+        #DEBUG console.log('... S',S)
         aes = Aes.fromSeed Buffer.concat [
             new Buffer(""+nonce)
             new Buffer(S.toString('hex'))

@@ -44,7 +44,7 @@ class PublicKey
     Full public key 
     {return} string
     ###
-    toBtsPublic: ->
+    toPublicKeyString: ->
         pub_buf = @toBuffer()
         checksum = hash.ripemd160 pub_buf
         addy = Buffer.concat [pub_buf, checksum.slice 0, 4]
@@ -54,7 +54,7 @@ class PublicKey
     {param1} public_key string
     {return} PublicKey
     ###
-    PublicKey.fromBtsPublic = (public_key) ->
+    PublicKey.fromPublicKeyString = (public_key) ->
         prefix = public_key.slice 0, config.address_prefix.length
         assert.equal config.address_prefix, prefix, "Expecting key to begin with #{config.address_prefix}, instead got #{prefix}"
         public_key = public_key.slice config.address_prefix.length
@@ -101,8 +101,8 @@ class PublicKey
     toHex: ->
         @toBuffer().toString 'hex'
         
-    PublicKey.fromBtsPublicHex = (hex) ->
-        PublicKey.fromBtsPublic new Buffer hex, 'hex'
+    PublicKey.fromPublicKeyStringHex = (hex) ->
+        PublicKey.fromPublicKeyString new Buffer hex, 'hex'
         
     ### </HEX> ###
 

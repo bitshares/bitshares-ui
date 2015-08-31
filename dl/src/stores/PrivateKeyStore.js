@@ -156,7 +156,7 @@ class PrivateKeyStore extends BaseStore {
     getTcomb_byPubkey(public_key) {
         if(! public_key) return null
         if(public_key.Q)
-            public_key = public_key.toBtsPublic()
+            public_key = public_key.toPublicKeyString()
         return this.state.keys.get(public_key)
     }
 

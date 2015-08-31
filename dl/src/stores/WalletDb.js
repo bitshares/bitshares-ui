@@ -109,7 +109,7 @@ class WalletDb {
     /** @return ecc/PrivateKey or null */
     getPrivateKey(public_key) {
         if(! public_key) return null
-        if(public_key.Q) public_key = public_key.toBtsPublic()
+        if(public_key.Q) public_key = public_key.toPublicKeyString()
         var private_key_tcomb =
             PrivateKeyStore.getTcomb_byPubkey(public_key)
         
@@ -221,7 +221,7 @@ class WalletDb {
             // Create a public key used to encrypt backups
             var brainkey_pubkey = PrivateKey.fromSeed(
                 key_utils.normalize_brain_key(brainkey_plaintext)
-            ).toPublicKey().toBtsPublic()
+            ).toPublicKey().toPublicKeyString()
             
             let wallet = {
                 public_name: wallet_public_name,
@@ -380,9 +380,9 @@ class WalletDb {
         
         if( ! public_key_string) {
             //S L O W
-            console.log('WARN: public key was not provided, this may incur slow performance')
+            // console.log('WARN: public key was not provided, this may incur slow performance')
             var public_key = private_key.toPublicKey()
-            public_key_string = public_key.toBtsPublic()
+            public_key_string = public_key.toPublicKeyString()
         } else 
             if(public_key_string.indexOf(chain_config.address_prefix) != 0)
                 throw new Error("Public Key should start with " + chain_config.address_prefix)
