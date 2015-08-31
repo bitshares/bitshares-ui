@@ -23,6 +23,11 @@ class AccountLeftPanel extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        if(this.context.router) {
+            const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
+            this.pureComponentLastPath = this.context.router.getCurrentPath();
+            if(changed) return true;
+        }
         return this.props.account !== nextProps.account ||
                this.props.linkedAccounts !== nextProps.linkedAccounts ||
                this.props.myAccounts !== nextProps.myAccounts;
