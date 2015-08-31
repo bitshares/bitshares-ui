@@ -61,9 +61,8 @@ function BindToChainState(options) {
             }
 
             shouldComponentUpdate(nextProps, nextState){
-                if(!utils.are_equal_shallow(this.props, nextProps)) return true;
-                if(!utils.are_equal_shallow(this.state, nextState)) return true;
-                return false;
+                return !utils.are_equal_shallow(this.props, nextProps) ||
+                       !utils.are_equal_shallow(this.state, nextState);
             }
 
             componentWillMount() {
