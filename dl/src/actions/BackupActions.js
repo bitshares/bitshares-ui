@@ -56,7 +56,7 @@ export function createWalletBackup(backup_pubkey, wallet_object,
         lzma.compress(walletString, compression_mode, compressedWalletBytes => {
             var backup_buffer =
                 Aes.encrypt_with_checksum(onetime_private_key, public_key,
-                    0, new Buffer(compressedWalletBytes, "binary").toString('hex'))
+                    null/*nonce*/, compressedWalletBytes)
             
             var onetime_public_key = onetime_private_key.toPublicKey()
             var backup = Buffer.concat([ onetime_public_key.toBuffer(), backup_buffer ])
@@ -72,8 +72,8 @@ export function decryptWalletBackup(backup_wif, backup_buffer) {
         
         backup_buffer = backup_buffer.slice(33)
         backup_buffer = Aes.decrypt_with_checksum(private_key, public_key,
-            0, backup_buffer)
-        lzma.decompress(new Buffer(backup_buffer, 'hex'), backup => {
+            null/*nonce*/, backup_buffer)
+        lzma.decompress(new Buffer(backup_buffer, 'binary'), backup => {
             resolve(JSON.parse(backup))
         })
     })
