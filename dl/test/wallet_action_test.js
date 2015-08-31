@@ -1,6 +1,10 @@
 import iDB from "../src/idb-instance"
 import fakeIndexedDB from "fake-indexeddb"
 
+import BackupActions, {
+    createWalletObject, createWalletBackup,
+    decryptWalletBackup
+} from "actions/BackupActions"
 import AccountActions from "../src/actions/AccountActions"
 import WalletActions from "../src/actions/WalletActions"
 import WalletDb from "../src/stores/WalletDb"
@@ -25,20 +29,57 @@ describe( "wallet_actions", ()=> {
     //this == undefined ??
     //this.setTimeout(it(), 3 * 1000)
     
-    before( done => {
-        iDB.init_instance(fakeIndexedDB).init_promise.then( ()=>  {
-            api = ApiInstances.instance()
-            return api.init_promise.then( ()=> {
-                done()
+    beforeEach( done => {
+        api = ApiInstances.instance()
+        api.init_promise.then( ()=>  {
+            iDB.set_impl(fakeIndexedDB)
+            var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
+            //create a unique wallet name
+            iDB.root.setProperty("current_wallet", "wallet" + suffix).then( ()=> {
+                return iDB.init_instance().init_promise.then( ()=> {
+                    done()
+                })
             })
         }).catch( _catch )
     })
     
-    after(()=>{
+    afterEach(()=>{
         iDB.instance().db().close()
-        // Does Not delete the database ???
+        // Does Not delete the database...
         fakeIndexedDB.deleteDatabase("graphene_db")
         api.close()
+    })
+    
+    it( "wallet_backups", done => {
+        var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
+        var public_name = "default_" + suffix
+        helper.test_wallet( suffix ).then(()=>{
+            
+            return createWalletObject().then( wallet_object => {
+                assert( wallet_object.wallet )
+                var wallet_object_string = JSON.stringify(wallet_object, null, 0)
+                var backup_private = PrivateKey.fromSeed("1")
+                var backup_public = backup_private.toPublicKey()
+                var backup_public_string = backup_public.toPublicKeyString()
+                
+                return createWalletBackup(
+                    backup_public_string, wallet_object, 9,
+                    secureRandom.randomBuffer(32).toString('binary')//"entropy"
+                    ).then( binary_backup => {
+                
+                    console.log('... binary_backup',binary_backup.length,
+                        "original", wallet_object_string.length, "bytes")
+                
+                    return decryptWalletBackup(backup_private.toWif(), binary_backup).then(
+                        wallet_object2 => {
+                        assert( wallet_object2.wallet )
+                        var wallet_object2_string = JSON.stringify(wallet_object2, null, 0)
+                        assert.equal(wallet_object_string, wallet_object2_string)
+                        done()
+                    })
+                })
+            })
+        }).catch(_catch)
     })
     
     it( "wallet_create", done => {
