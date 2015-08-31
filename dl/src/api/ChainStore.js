@@ -322,7 +322,7 @@ class ChainStore
             return this.fetchFullAccount( name_or_id )
          return this.getObject( account_id ) // return it
       }
-      throw Error( "Argument is not an account name or id: ", id  )
+      throw Error( `Argument is not an account name or id: ${name_or_id}` )
    }
 
    /**

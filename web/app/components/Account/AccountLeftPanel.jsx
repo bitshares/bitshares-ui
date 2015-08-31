@@ -9,16 +9,13 @@ import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
 import Immutable from "immutable";
 import WalletDb from "stores/WalletDb";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
 class AccountLeftPanel extends React.Component {
 
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired,
-        linkedAccounts: PropTypes.object.isRequired,
-        myAccounts: PropTypes.object.isRequired
+        account: React.PropTypes.object.isRequired,
+        linkedAccounts: PropTypes.object,
+        myAccounts: PropTypes.object
     };
 
     static contextTypes = {

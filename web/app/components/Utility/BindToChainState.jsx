@@ -55,6 +55,13 @@ function BindToChainState(options) {
                 this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
                 this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
                 this.all_chain_props = [...this.chain_objects, ...this.chain_accounts ];
+                this.default_props = _.clone(Component.defaultProps);
+                for(let key in this.default_props) {
+                    let value = this.default_props[key];
+                    if(typeof(value) === "string" && value.indexOf("props.") === 0) {
+                        this.default_props[key] = _.get(this, value);
+                    }
+                }
                 //console.log("----- Wrapper constructor ----->", this.all_chain_props);
                 this.update = this.update.bind(this);
                 this.state = {};
@@ -79,7 +86,7 @@ function BindToChainState(options) {
                 let new_state = {};
                 for( let key of this.chain_objects )
                 {
-                    let prop = this.props[key] || Component.defaultProps[key];
+                    let prop = this.props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getObject(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
@@ -87,7 +94,7 @@ function BindToChainState(options) {
                 }
                 for( let key of this.chain_accounts )
                 {
-                    let prop = this.props[key] || Component.defaultProps[key];
+                    let prop = this.props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getAccount(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
