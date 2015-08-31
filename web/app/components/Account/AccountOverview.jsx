@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
+import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
 import LoadingIndicator from "../LoadingIndicator";
@@ -44,7 +45,7 @@ class AccountOverview extends React.Component {
         let history = {};
         let account_history = account.get("history");
         if(account_history) {
-            account_history.take(10).forEach( t => {
+            account_history.take(20).forEach( t => {
                 let trx = t.toJS();
                 history[trx.id] = (
                     <Operation
@@ -77,7 +78,7 @@ class AccountOverview extends React.Component {
                     </table>
                 </div>
                 <div className="content-block">
-                <h3><Translate content="account.recent" /> <Link to="account-history" params={{account_name: account.get("name")}}><small> (<Translate content="account.more" />) </small></Link></h3>
+                <h3><Translate content="account.recent" /> <small> (<Translate content="account.more" /> TODO)</small></h3>
                     <table className="table">
                         <thead>
                             <tr>
