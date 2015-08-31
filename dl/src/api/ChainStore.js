@@ -322,7 +322,7 @@ class ChainStore
             return this.fetchFullAccount( name_or_id )
          return this.getObject( account_id ) // return it
       }
-      throw Error( `Argument is not an account name or id: ${name_or_id}` )
+      //throw Error( `Argument is not an account name or id: ${name_or_id}` )
    }
 
    /**
@@ -508,6 +508,7 @@ class ChainStore
           if(DEBUG) console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
+                 if(results.length === 0) return;
                  let full_account = results[0][1]
                  if(DEBUG) console.log( "full_account: ", full_account )
 
