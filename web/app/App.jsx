@@ -19,7 +19,6 @@ import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
 import AccountMemberStats from "./components/Account/AccountMemberStats";
-import AccountHistory from "./components/Account/AccountHistory";
 import AccountPayees from "./components/Account/AccountPayees";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountVoting from "./components/Account/AccountVoting";
@@ -167,7 +166,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
                     if (transition.path.indexOf("/auth/") === 0) {
                         transition.redirect("/dashboard");
                     }
-                    
+
                 }).catch((error) => {
                     console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
                 })
@@ -216,7 +215,6 @@ let routes = (
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-assets" path="assets" handler={AccountAssets}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
-            <Route name="account-history" path="history" handler={AccountHistory}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
