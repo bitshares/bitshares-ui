@@ -67,8 +67,7 @@ describe( "wallet_actions", ()=> {
                     secureRandom.randomBuffer(32).toString('binary')//"entropy"
                     ).then( binary_backup => {
                 
-                    console.log('... binary_backup',binary_backup.length,
-                        "original", wallet_object_string.length, "bytes")
+                    //console.log('... binary_backup',binary_backup.length, "original", wallet_object_string.length, "bytes")
                 
                     return decryptWalletBackup(backup_private.toWif(), binary_backup).then(
                         wallet_object2 => {

@@ -21,21 +21,17 @@ describe "crypto", ->
         for i in [0...10] by 1
             Signature.signBuffer (new Buffer i), private_key
     
-    it "memo encryption", ->
+    it "binary_encryption", ->
         sender = PrivateKey.fromSeed "1"
         receiver = PrivateKey.fromSeed "2"
         S = sender.get_shared_secret receiver.toPublicKey()
         nonce = "289662526069530675"
         
-        #console.log '... senderpriv',sender.toBuffer().toString 'hex'
-        #console.log '... receiverpub',receiver.toPublicKey().toBuffer().toString 'hex'  
-        #console.log '... S ecies',S.toString 'hex'
-        
         ciphertext = Aes.encrypt_with_checksum(
             sender
             receiver.toPublicKey()
             nonce
-            "Hello, world!"
+            new Buffer("\xff\x00", 'binary')
         )
         #console.log '... ciphertext',ciphertext
         plaintext = Aes.decrypt_with_checksum(
@@ -45,7 +41,7 @@ describe "crypto", ->
             ciphertext
         )
         #console.log '... plaintext',plaintext.toString()
-        assert.equal "Hello, world!", plaintext.toString()
+        assert.equal "ff00", plaintext.toString('hex')
         
     # time-based, probably want to keep these last
     it "key_checksum", ()->

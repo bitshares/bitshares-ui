@@ -25,7 +25,8 @@ class Aes
         # DEBUG console.log('... Aes.fromSeed _hash',_hash)
         Aes.fromSha512(_hash)
     
-    Aes.decrypt_with_checksum = (private_key, public_key, nonce, message) ->
+    ##* nonce is optional (null or empty string)
+    Aes.decrypt_with_checksum = (private_key, public_key, nonce = "", message) ->
         
         # console.log('decrypt_with_checksum', {
         #     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
@@ -41,7 +42,8 @@ class Aes
         #DEBUG console.log('... S',S)
         
         aes = Aes.fromSeed Buffer.concat [
-            new Buffer(""+nonce)
+            # A null or empty string nonce will not effect the hash
+            new Buffer(""+nonce) 
             new Buffer(S.toString('hex'))
         ]
         planebuffer = aes.decrypt message
@@ -50,21 +52,21 @@ class Aes
         
         # DEBUG console.log('... planebuffer',planebuffer)
         checksum = planebuffer.slice 0, 4
-        plaintext = planebuffer.slice(4).toString()
+        plaintext = planebuffer.slice(4)
         
         # DEBUG console.log('... checksum',checksum.toString('hex'))
         # DEBUG console.log('... plaintext',plaintext)
         
         new_checksum = hash.sha256 plaintext
         new_checksum = new_checksum.slice 0, 4
-        new_checksum = new_checksum.toString('binary')
+        new_checksum = new_checksum.toString('hex')
         
-        unless checksum.toString('binary') is new_checksum
+        unless checksum.toString('hex') is new_checksum
             throw new Error "Invalid key, could not decrypt message(2)"
         
         plaintext
     
-    Aes.encrypt_with_checksum = (private_key, public_key, nonce, message) ->
+    Aes.encrypt_with_checksum = (private_key, public_key, nonce = "", message) ->
         
         # console.log('encrypt_with_checksum', {
         #     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
@@ -74,18 +76,17 @@ class Aes
         # })
         
         unless Buffer.isBuffer message
-            message = new Buffer message
+            message = new Buffer message, 'binary'
         
         S = private_key.get_shared_secret public_key
         #DEBUG console.log('... S',S)
         aes = Aes.fromSeed Buffer.concat [
+            # A null or empty string nonce will not effect the hash
             new Buffer(""+nonce)
             new Buffer(S.toString('hex'))
         ]
         # DEBUG console.log('... S',S.toString('hex'))
         checksum = hash.sha256(message).slice 0,4
-        checksum = checksum.toString('binary')
-        checksum = new Buffer(checksum, 'binary')
         payload = Buffer.concat [checksum, message]
         # DEBUG console.log('... payload',payload.toString())
         aes.encrypt payload
@@ -151,6 +152,7 @@ class Aes
         
     encryptHex: (plainhex) ->
         #assert plainhex, "Missing plain text"
+        #console.log('... plainhex',plainhex)
         plain_array = CryptoJS.enc.Hex.parse plainhex
         cipher_array = @_encrypt_word_array plain_array
         CryptoJS.enc.Hex.stringify cipher_array
