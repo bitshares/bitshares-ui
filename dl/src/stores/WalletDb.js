@@ -145,14 +145,14 @@ class WalletDb {
                         //{//Testing only, don't send All public keys!
                         //    var pubkeys_all = PrivateKeyStore.getPubkeys()
                         //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
-                        //        console.log('required_pubkeys all\t',required_pubkey_strings.sort()))
+                        //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
                         //    tr.get_required_signatures(pubkeys).then( required_pubkey_strings =>
-                        //        console.log('required_pubkeys normal\t',required_pubkey_strings.sort()))
+                        //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
                         //}
                         
                         return tr.get_required_signatures(pubkeys).then(
                             required_pubkeys => {
-                            //DEBUG console.log('required_pubkeys actual\t',required_pubkeys.sort())
+                            //DEBUG console.log('get_required_signatures actual\t',required_pubkeys.sort())
                             for(let pubkey_string of required_pubkeys) {
                                 var private_key = this.getPrivateKey(pubkey_string)
                                 if( ! private_key)
