@@ -150,7 +150,7 @@ class BalanceClaimStore {
                                 chain_balance_record: { '$set': chain_balance_record }
                             }
                         )
-                        if(chain_balance_record.vesting_policy) { i => {
+                        if(chain_balance_record.vesting_policy) { (i => {
                             ps.push(db.exec("get_vested_balances",
                                 [[chain_balance_record.id]]).then( vested_balances => {
                                 var vested_balance = vested_balances[0]
@@ -160,7 +160,7 @@ class BalanceClaimStore {
                                     }
                                 )
                             }))
-                        }(i) }
+                        })(i) }
                     }
                 }
                if(TRACE) console.log('... there')

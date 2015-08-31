@@ -38,10 +38,10 @@ class Asset extends React.Component {
                 return <LoadingIndicator type="circle"/>;
             } else if (asset.notFound) {
                 assetExists = false;
-            } 
+            }
         } else if (asset.notFound) {
             assetExists = false;
-        } 
+        }
         if (!assetExists) {
             return <div className="grid-container"><h5><Translate component="h5" content="explorer.asset.not_found" name={symbol} /></h5></div>;
         }
@@ -90,10 +90,10 @@ class Asset extends React.Component {
                                 <h3>Whitelisted Accounts</h3>
                                 <ul>
                                     {asset.options.whitelist_authorities.length > 0 ? authorityWhitelist : "Account whitelist not in use."}
-                                    
+
                                 </ul>
                                 <form>
-                                    <input type="text" style={{width: '100px'}} />{/*TODO: use an account picker instead of an <input>.
+                                    <input type="text" style={{width: '100px'}} /> {/* TODO: use an account picker instead of an <input>. */}
                                     <button className="button">Add to Account Whitelist</button>
                                 </form>
                             </div>
