@@ -1,25 +1,16 @@
 import React from "react";
-import {PropTypes} from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
 import LoadingIndicator from "../LoadingIndicator";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
 
-@BindToChainState()
 class AccountOverview extends React.Component {
 
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired,
-        //accountHistories: PropTypes.object.isRequired,
-        //accountBalances: PropTypes.object.isRequired,
-        //account_name_to_id: PropTypes.object.isRequired,
-        //assets: PropTypes.object.isRequired,
-        //account_id_to_name: PropTypes.object.isRequired
+        account: React.PropTypes.object.isRequired
     }
 
     shouldComponentUpdate(nextProps) {
@@ -38,25 +29,25 @@ class AccountOverview extends React.Component {
 
     render() {
         let account = this.props.account;
-        let balances = null;
+        let balances = {};
         let account_balances = account.get("balances");
         if(account_balances) {
-            balances = account_balances.map( balance => {
-                return (
+            account_balances.forEach( balance => {
+                balances[balance] = (
                     <tr key={balance}>
                         <td><BalanceComponent balance={balance}/></td>
                         <td><BalanceComponent balance={balance}/></td>
                     </tr>
                 );
-            });
+            })
         }
         let witness_store_state = WitnessStore.getState().witnesses;
-        let history = null;
+        let history = {};
         let account_history = account.get("history");
         if(account_history) {
-            history = account_history.take(10).map( t => {
+            account_history.take(10).forEach( t => {
                 let trx = t.toJS();
-                return (
+                history[trx.id] = (
                     <Operation
                         key={trx.id}
                         op={trx.op}
@@ -82,7 +73,7 @@ class AccountOverview extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {balances}
+                            {React.addons.createFragment(balances)}
                         </tbody>
                     </table>
                 </div>
@@ -98,7 +89,7 @@ class AccountOverview extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                        {history}
+                        {React.addons.createFragment(history)}
                         </tbody>
                     </table>
                 </div>

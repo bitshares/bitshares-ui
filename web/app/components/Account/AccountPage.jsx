@@ -7,13 +7,21 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import AltContainer from "alt/AltContainer";
 import AccountLeftPanel from "./AccountLeftPanel";
 import LoadingIndicator from "../LoadingIndicator";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
 
-import AccountVoting from "./AccountVoting";
-
+@BindToChainState()
 class AccountPage extends React.Component {
 
+    static propTypes = {
+        account: ChainTypes.ChainAccount.isRequired
+    }
+
+    static defaultProps = {
+        account: "props.params.account_name"
+    }
+
     render() {
-        let account_name = this.props.params.account_name;
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block medium-2 left-column no-padding">
@@ -27,7 +35,7 @@ class AccountPage extends React.Component {
                                 return AccountStore.getState().myAccounts;
                             }
                         }}>
-                        <AccountLeftPanel account={account_name}/>
+                        <AccountLeftPanel account={this.props.account}/>
                     </AltContainer>
                 </div>
                 <div className="grid-block medium-10 main-content">
@@ -35,7 +43,7 @@ class AccountPage extends React.Component {
                         stores={[AccountStore, SettingsStore, WalletUnlockStore]}
                         inject={{
                             account_name: () => {
-                                return account_name;
+                                return this.props.params.account_name;
                             },
                             linkedAccounts: () => {
                                 return AccountStore.getState().linkedAccounts;
@@ -51,7 +59,7 @@ class AccountPage extends React.Component {
                             }
                           }}
                         >
-                        <RouteHandler account={account_name}/>
+                        <RouteHandler account={this.props.account}/>
                     </AltContainer>
                 </div>
             </div>
