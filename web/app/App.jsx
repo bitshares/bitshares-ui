@@ -214,7 +214,7 @@ let routes = (
         <Route name="account" path="/account/:account_name" handler={AccountPage}>
             <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
-            <Route name="account-assets" path="user-assets" handler={AccountAssets}/>
+            <Route name="account-assets" path="assets" handler={AccountAssets}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMemberStats}/>
             <Route name="account-history" path="history" handler={AccountHistory}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>

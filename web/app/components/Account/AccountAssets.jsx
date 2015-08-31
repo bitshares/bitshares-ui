@@ -3,6 +3,7 @@ import {PropTypes} from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
 import AssetActions from "actions/AssetActions";
+import AssetStore from "stores/AssetStore";
 import AccountActions from "actions/AccountActions";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
@@ -22,8 +23,23 @@ import classnames from "classnames";
 import counterpart from "counterpart";
 
 class AccountAssets extends React.Component {
-    constructor() {
-        super();
+
+    static contextTypes = { router: React.PropTypes.func.isRequired }
+
+    static defaultProps = {
+        symbol: "",
+        name: "",
+        description: "",
+        max_supply: 0,
+        precision: 0
+    }
+
+    static propTypes = {
+        symbol: PropTypes.string.isRequired
+    }
+
+    constructor(props) {
+        super(props);
 
         this.state = {
             create: {
@@ -44,18 +60,28 @@ class AccountAssets extends React.Component {
                 symbol: null
             },
             isValid: false,
-            searchTerm: ""
+            searchTerm: "",
+            assets: AssetStore.getState().assets
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 150);
     }
 
+    onAssetsChange(state) {
+        this.setState({assets: state.assets});
+    }
+
     componentDidMount() {
+        AssetStore.listen(this.onAssetsChange);
         let query_params = this.context.router.getCurrentQuery();
         if(query_params.create_asset) {
             console.log("zf publish create asset");
             ZfApi.publish("create_asset", "open");
         }
+    }
+
+    componentWillUnmount() {
+        AssetStore.unlisten(this.onAssetsChange);
     }
 
     _onCreateInput(value, e) {
@@ -169,9 +195,8 @@ class AccountAssets extends React.Component {
     }
 
     render() {
-        let {account_name, cachedAccounts, assets, searchAccounts} = this.props;
-        let account = cachedAccounts.get(account_name);
-        let {issue, errors, isValid, create} = this.state;
+        let {account, account_name, searchAccounts} = this.props;
+        let {issue, errors, isValid, create, assets} = this.state;
 
 
         // Calculate the CreateAsset fee by measuring the length of the symbol.
@@ -341,21 +366,5 @@ class AccountAssets extends React.Component {
         );
     }
 }
-
-AccountAssets.contextTypes = { router: React.PropTypes.func.isRequired };
-
-AccountAssets.defaultProps = {
-    assets: [],
-    symbol: "",
-    name: "",
-    description: "",
-    max_supply: 0,
-    precision: 0
-};
-
-AccountAssets.propTypes = {
-    assets: PropTypes.object.isRequired,
-    symbol: PropTypes.string.isRequired
-};
 
 export default AccountAssets;
