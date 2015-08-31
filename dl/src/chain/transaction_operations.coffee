@@ -108,6 +108,7 @@ _my.signed_transaction = ->
     get_required_signatures:(available_keys)->
         return Promise.resolve([]) unless available_keys.length
         tr_object = type.signed_transaction.toObject @
+        #DEBUG console.log('... tr_object',tr_object)
         api.db_api().exec(
             "get_required_signatures",
             [tr_object, available_keys]
