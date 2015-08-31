@@ -607,19 +607,19 @@ export default class ImportKeys extends Component {
                 for(let account_id of result)
                     account_ids[account_id] = true
             
+            //results = chain_api.fetchObject(Object.keys(account_ids))
+            return db.exec("get_objects", [Object.keys(account_ids)]).then( results => {
                 var p = []
-                //results = chain_api.fetchObject(Object.keys(account_ids))
-                db.exec("get_objects", [Object.keys(account_ids)]).then( results => {
-                    for(let account of results) {
-                        //DEBUG console.log('... get_key_references object lookup',account?account.name:null)
-                        if(account)
-                            p.push(AccountStore.onCreateAccount(account).catch( error => {
-                                console.log("ImportKeys save import account error",account,error)
-                            }))
-                    }
-                    if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
-                })
+                for(let account of results) {
+                    //DEBUG console.log('... get_key_references object lookup',account?account.name:null)
+                    if(account)
+                        p.push(AccountStore.onCreateAccount(account).catch( error => {
+                            console.log("ImportKeys save import account error",account,error)
+                        }))
+                }
+                if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
                 return Promise.all(p)
+            })
         })
         
         var wifs_to_account = this.state.wifs_to_account
@@ -663,6 +663,7 @@ export default class ImportKeys extends Component {
             
             if (import_count) {
                 addAccountPromise.then(()=> {
+                    console.log('... addAccountPromise.then...',addAccountPromise)
                     ImportKeysActions.setStatus("saveDone")
                     // https://github.com/goatslacker/alt/issues/456
                     BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
