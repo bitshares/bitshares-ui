@@ -219,9 +219,18 @@ class WalletDb {
                 this.encrypteBrainKey(password, brainkey_plaintext)
             
             // Create a public key used to encrypt backups
-            var brainkey_pubkey = PrivateKey.fromSeed(
-                key_utils.normalize_brain_key(brainkey_plaintext)
-            ).toPublicKey().toPublicKeyString()
+            
+            // "\tbackup_pubkey" is being appended to provide a separation
+            // between the backup recovery private key and the brainkey
+            // ... In other words, a backup can be decrypted by either a 
+            // backup recovery key or the brain key.  Someone with the 
+            // private backup recovery key can not access private keys to
+            // accounts derived from the brainkey.
+            var backup_private_key = PrivateKey.fromSeed(
+                key_utils.normalize_brain_key(brainkey_plaintext) +
+                "\tbackup_pubkey"
+            )
+            var backup_pubkey = backup_private_key.toPublicKey().toPublicKeyString()
             
             let wallet = {
                 public_name: wallet_public_name,
@@ -229,7 +238,7 @@ class WalletDb {
                 password_checksum: password.checksum,
                 encrypted_brainkey: brainkey_cipherhex,
                 brainkey_checksum,
-                brainkey_pubkey,
+                backup_pubkey,
                 created: new Date(),
                 last_modified: new Date(),
                 chain_id: Apis.instance().chain_id
