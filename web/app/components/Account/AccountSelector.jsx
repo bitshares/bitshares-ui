@@ -13,22 +13,20 @@ import BindToChainState from "../Utility/BindToChainState";
  * This component is designed to be stateless as possible.  It's primary responsbility is to
  * manage the layout of data and to filter the user input.
  *
- * Properties:
- *    label         - a translation key for the label
- *    error         - a transaltion key for the error message override, displayed when there is otherwise no error
- *    onChange      - a method to be called any time user input changes
- *    placeholder   - the placeholder text to be displayed when there is no user_input
- *    accountName   - the current value of the account selector, the string the user enters
- *    account       - account object retrieved via BindToChainState decorator
- *    tabIndex      - tabindex property to be passed to input tag
- *
  */
 
 @BindToChainState()
 class AccountSelector extends React.Component {
 
     static propTypes = {
-        account: ChainTypes.ChainAccount
+        label: React.PropTypes.string.isRequired, // a translation key for the label
+        error: React.PropTypes.string, // the error message override
+        placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
+        onChange: React.PropTypes.func, // a method to be called any time user input changes
+        onAccountChanged: React.PropTypes.func, // a method to be called when existing account is selected
+        accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
+        account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
+        tabIndex: React.PropTypes.number // tabindex property to be passed to input tag
     }
 
     // can be used in parent component: this.refs.account_selector.getAccount()
@@ -56,8 +54,12 @@ class AccountSelector extends React.Component {
         if (event.keyCode === 13) this.onInputChanged(e);
     }
 
+    componentWillReceiveProps(newProps) {
+        if(this.props.onAccountChanged && newProps.account !== this.props.account)
+            this.props.onAccountChanged(newProps.account);
+    }
+
     render() {
-        //console.log("-- AccountSelector.render -->", this.props.accountName, this.props.account ? this.props.account.toJS().name : "-");
         let error = this.props.error;
         if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
             error = "invalid account name";
