@@ -53,22 +53,24 @@ ChainTypes.operations=
     asset_global_settle: 18
     asset_publish_feed: 19
     witness_create: 20
-    proposal_create: 21
-    proposal_update: 22
-    proposal_delete: 23
-    withdraw_permission_create: 24
-    withdraw_permission_update: 25
-    withdraw_permission_claim: 26
-    withdraw_permission_delete: 27
-    committee_member_create: 28
-    committee_member_update_global_parameters: 29
-    vesting_balance_create: 30
-    vesting_balance_withdraw: 31
-    worker_create: 32
-    custom: 33
-    assert: 34
-    balance_claim: 35
-    override_transfer: 36
-    transfer_to_blind: 37
-    blind_transfer: 38
-    transfer_from_blind: 39
+    witness_update: 21
+    proposal_create: 22
+    proposal_update: 23
+    proposal_delete: 24
+    withdraw_permission_create: 25
+    withdraw_permission_update: 26
+    withdraw_permission_claim: 27
+    withdraw_permission_delete: 28
+    committee_member_create: 29
+    committee_member_update: 30
+    committee_member_update_global_parameters: 31
+    vesting_balance_create: 32
+    vesting_balance_withdraw: 33
+    worker_create: 34
+    custom: 35
+    assert: 36
+    balance_claim: 37
+    override_transfer: 38
+    transfer_to_blind: 39
+    blind_transfer: 40
+    transfer_from_blind: 41

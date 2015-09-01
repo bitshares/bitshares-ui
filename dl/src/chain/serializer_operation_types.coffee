@@ -178,6 +178,11 @@ witness_create_operation_fee_parameters = new Serializer(
     fee: uint64
 )
 
+witness_update_operation_fee_parameters = new Serializer( 
+    "witness_update_operation_fee_parameters"
+    fee: int64
+)
+
 proposal_create_operation_fee_parameters = new Serializer( 
     "proposal_create_operation_fee_parameters"
     fee: uint64
@@ -218,6 +223,11 @@ withdraw_permission_delete_operation_fee_parameters = new Serializer(
 
 committee_member_create_operation_fee_parameters = new Serializer( 
     "committee_member_create_operation_fee_parameters"
+    fee: uint64
+)
+
+committee_member_update_operation_fee_parameters = new Serializer( 
+    "committee_member_update_operation_fee_parameters"
     fee: uint64
 )
 
@@ -301,6 +311,7 @@ fee_parameters = static_variant [
     asset_global_settle_operation_fee_parameters    
     asset_publish_feed_operation_fee_parameters    
     witness_create_operation_fee_parameters    
+    witness_update_operation_fee_parameters    
     proposal_create_operation_fee_parameters    
     proposal_update_operation_fee_parameters    
     proposal_delete_operation_fee_parameters    
@@ -309,6 +320,7 @@ fee_parameters = static_variant [
     withdraw_permission_claim_operation_fee_parameters    
     withdraw_permission_delete_operation_fee_parameters    
     committee_member_create_operation_fee_parameters    
+    committee_member_update_operation_fee_parameters    
     committee_member_update_global_parameters_operation_fee_parameters    
     vesting_balance_create_operation_fee_parameters    
     vesting_balance_withdraw_operation_fee_parameters    
@@ -360,8 +372,6 @@ signed_block = new Serializer(
     previous: bytes 20
     timestamp: time_point_sec
     witness: protocol_id_type "witness"
-    next_secret_hash: bytes 20
-    previous_secret: bytes 20
     transaction_merkle_root: bytes 20
     extensions: set future_extensions
     witness_signature: bytes 65
@@ -373,8 +383,6 @@ block_header = new Serializer(
     previous: bytes 20
     timestamp: time_point_sec
     witness: protocol_id_type "witness"
-    next_secret_hash: bytes 20
-    previous_secret: bytes 20
     transaction_merkle_root: bytes 20
     extensions: set future_extensions
 )
@@ -384,8 +392,6 @@ signed_block_header = new Serializer(
     previous: bytes 20
     timestamp: time_point_sec
     witness: protocol_id_type "witness"
-    next_secret_hash: bytes 20
-    previous_secret: bytes 20
     transaction_merkle_root: bytes 20
     extensions: set future_extensions
     witness_signature: bytes 65
@@ -652,7 +658,15 @@ witness_create = new Serializer(
     witness_account: protocol_id_type "account"
     url: string
     block_signing_key: public_key
-    initial_secret: bytes 20
+)
+
+witness_update = new Serializer( 
+    "witness_update"
+    fee: asset
+    witness: protocol_id_type "witness"
+    witness_account: protocol_id_type "account"
+    new_url: optional string
+    new_signing_key: optional public_key
 )
 
 proposal_create = new Serializer( 
@@ -734,6 +748,14 @@ committee_member_create = new Serializer(
     fee: asset
     committee_member_account: protocol_id_type "account"
     url: string
+)
+
+committee_member_update = new Serializer( 
+    "committee_member_update"
+    fee: asset
+    committee_member: protocol_id_type "committee_member"
+    committee_member_account: protocol_id_type "account"
+    new_url: optional string
 )
 
 chain_parameters = new Serializer( 
@@ -971,6 +993,7 @@ operation.st_operations = [
     asset_global_settle    
     asset_publish_feed    
     witness_create    
+    witness_update    
     proposal_create    
     proposal_update    
     proposal_delete    
@@ -979,6 +1002,7 @@ operation.st_operations = [
     withdraw_permission_claim    
     withdraw_permission_delete    
     committee_member_create    
+    committee_member_update    
     committee_member_update_global_parameters    
     vesting_balance_create    
     vesting_balance_withdraw    
@@ -1011,3 +1035,6 @@ signed_transaction = new Serializer(
     signatures: array bytes 65
 )
 
+## -------------------------------
+##  Generated code end
+## -------------------------------
