@@ -166,6 +166,7 @@ class AccountVoting extends React.Component {
     }
 
     onProxyChange( new_proxy ) {
+        console.log("-- AccountVoting.onProxyChange -->", new_proxy);
        this.setState( {new_proxy} )
     }
     onAddWitnessChange( new_witness ) {
