@@ -140,7 +140,6 @@ class WalletDb {
                         
                         for(let pubkey_string of pubkeys) {
                             var private_key = this.getPrivateKey(pubkey_string)
-                            //public_keys.push(public_key_string)
                             tr.add_signer(private_key, pubkey_string)
                             signer_pubkeys_added[pubkey_string] = true
                         }
@@ -148,11 +147,9 @@ class WalletDb {
                     
                     return tr.get_potential_signatures().then( public_keys => {
                         var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
-                        if( ! pubkeys.length)
-                            throw new Error("Missing signing key")
                         
                         //{//Testing only, don't send All public keys!
-                        //    var pubkeys_all = PrivateKeyStore.getPubkeys()
+                        //    var pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
                         //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
                         //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
                         //    tr.get_required_signatures(pubkeys).then( required_pubkey_strings =>
@@ -161,7 +158,6 @@ class WalletDb {
                         
                         return tr.get_required_signatures(pubkeys).then(
                             required_pubkeys => {
-                            //DEBUG console.log('get_required_signatures actual\t',required_pubkeys.sort())
                             for(let pubkey_string of required_pubkeys) {
                                 if(signer_pubkeys_added[pubkey_string]) continue
                                 var private_key = this.getPrivateKey(pubkey_string)
@@ -169,7 +165,6 @@ class WalletDb {
                                     throw new Error("Missing signing key for " + pubkey_string)
                                 tr.add_signer(private_key, pubkey_string)
                             }
-                            //DEBUG console.log('... pubkey_strings',pubkey_strings,tr.serialize())
                         })
                     })
                 }).then(()=> {
