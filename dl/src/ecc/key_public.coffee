@@ -67,7 +67,7 @@ class PublicKey
         assert.deepEqual checksum, new_checksum, 'Checksum did not match'
         PublicKey.fromBuffer public_key
     
-    toBtsAddy: ->
+    toAddressString: ->
         pub_buf = @toBuffer()
         pub_sha = hash.sha512 pub_buf
         addy = hash.ripemd160 pub_sha
