@@ -19,7 +19,7 @@ account_create_type = so_type.account_create
 transaction_type = so_type.transaction
 signed_transaction_type = so_type.signed_transaction
 
-tr_op = require '../src/chain/transaction_operations'
+tr_op = require '../src/chain/signed_transaction'
 signed_transaction = tr_op.signed_transaction
 key_create =  tr_op.key_create
 account_create = tr_op.account_create
