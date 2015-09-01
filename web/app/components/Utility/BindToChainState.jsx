@@ -105,6 +105,8 @@ function BindToChainState(options) {
                 {
                     let prop = props[key] || this.default_props[key];
                     if(prop) {
+                        if(prop[0] === "#" && Number.parseInt(prop.substring(1)))
+                            prop = "1.2." + prop.substring(1);
                         let new_obj = ChainStore.getAccount(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                     }
