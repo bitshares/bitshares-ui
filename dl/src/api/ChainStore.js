@@ -335,7 +335,7 @@ class ChainStore
     */
    getWitness( id_or_account )
    {
-      let account = getAccount( id_or_account )
+      let account = this.getAccount( id_or_account )
       if( !account ) return null
       let account_id = account.get('id') 
 
