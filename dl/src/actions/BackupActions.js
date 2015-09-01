@@ -40,6 +40,8 @@ export function createWalletObject() {
         for(let linked_account of bak.linked_accounts) {
             linked_accounts.push(linked_account.name)
         }
+        //todo remove public_name from indexed db
+        delete wallet.public_name
         return { wallet, private_keys, linked_accounts }
     })
 }
