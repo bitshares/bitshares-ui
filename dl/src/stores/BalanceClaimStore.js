@@ -16,7 +16,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import chain_api from "api/ChainStore";
 import ApplicationApi from "rpc_api/ApplicationApi"
 import AssetTcomb from "stores/tcomb_structs"
-import ops from 'chain/transaction_operations'
+import ops from 'chain/signed_transaction'
 
 var application_api = new ApplicationApi()
 var api = Apis.instance()
