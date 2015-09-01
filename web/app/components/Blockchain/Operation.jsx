@@ -1,6 +1,4 @@
-// TODO:
-// replace assets in Translate
-// get rid of witnesses and witness_id_to_name
+// TODO: get rid of witnesses and witness_id_to_name
 
 import React from "react";
 import {PropTypes} from "react";
@@ -197,9 +195,8 @@ class Operation extends React.Component {
                             <Translate
                                 component="span"
                                 content="transaction.limit_order_sell" 
-                                sell_amount={utils.format_asset(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, false)}
-                                sell_price={utils.format_price(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), 
-                                                               op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), false, inverted, false)}
+                                sell_amount={op[1].amount_to_sell.amount}
+                                sell_price={op[1].min_to_receive.amount}
                                 num={this.props.result[1].substring(4)}
                             />
                         </td>
@@ -208,9 +205,8 @@ class Operation extends React.Component {
                             <Translate
                                 component="span"
                                 content="transaction.limit_order_buy" 
-                                buy_amount={utils.format_asset(op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, false)}
-                                buy_price={utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), 
-                                                              op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted, false)}
+                                buy_amount={op[1].min_to_receive.amount}
+                                buy_price={op[1].amount_to_sell.amount}
                                 num={this.props.result[1].substring(4)}
                             />
                         </td>
@@ -691,7 +687,7 @@ class Operation extends React.Component {
                         <Translate
                             component="span"
                             content="transaction.balance_claim"
-                            balance_amount={utils.format_asset(op[1].total_claimed.amount, assets.get(op[1].total_claimed.asset_id))}
+                            balance_amount={op[1].total_claimed.amount}
                             balance_id={op[1].balance_to_claim.substring(5)}
                         />
                     </td>
