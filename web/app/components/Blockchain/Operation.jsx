@@ -138,7 +138,7 @@ class Operation extends React.Component {
                     let to_private_key = PrivateKeyStore.getState().keys.get(memo.to)
                     let private_key = from_private_key ? from_private_key : to_private_key;
                     let public_key = from_private_key ? memo.to : memo.from;
-                    public_key = PublicKey.fromBtsPublic(public_key)
+                    public_key = PublicKey.fromPublicKeyString(public_key)
 
                     try {
                         private_key = WalletDb.decryptTcomb_PrivateKey(private_key);

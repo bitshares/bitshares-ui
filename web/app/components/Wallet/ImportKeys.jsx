@@ -379,7 +379,7 @@ export default class ImportKeys extends Component {
         var savePubkeyAccount = function (pubkey, account_name) {
             //replace BTS with GPH
             pubkey = config.address_prefix + pubkey.substring(3)
-            var address = PublicKey.fromBtsPublic(pubkey).toAddressString()
+            var address = PublicKey.fromPublicKeyString(pubkey).toAddressString()
             var addresses = account_addresses[account_name] || []
             address = "BTS" + address.substring(3)
             //DEBUG console.log("... address",address,account_name)
@@ -534,7 +534,7 @@ export default class ImportKeys extends Component {
                         var previous_address_prefix = config.address_prefix
                         try {
                             config.address_prefix = "BTS"
-                            public_key = PublicKey.fromBtsPublic(public_key_string)
+                            public_key = PublicKey.fromPublicKeyString(public_key_string)
                             public_key_string = previous_address_prefix +
                                 public_key_string.substring(3)
                         } finally {
