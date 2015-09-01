@@ -51,15 +51,23 @@ function BindToChainState(options) {
             constructor(props) {
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
-                this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
-                this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
-                this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
-                this.all_chain_props = [...this.chain_objects, ...this.chain_accounts ];
-                this.default_props = _.clone(Component.defaultProps) || {};
-                for(let key in this.default_props) {
-                    let value = this.default_props[key];
-                    if(typeof(value) === "string" && value.indexOf("props.") === 0) {
-                        this.default_props[key] = _.get(this, value);
+                if(options && options.all_props) {
+                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children");
+                    this.chain_accounts = [];
+                    this.required_props = this.chain_objects;
+                    this.all_chain_props = this.chain_objects;
+                    this.default_props = {};
+                } else {
+                    this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
+                    this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
+                    this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
+                    this.all_chain_props = [...this.chain_objects, ...this.chain_accounts];
+                    this.default_props = _.clone(Component.defaultProps) || {};
+                    for (let key in this.default_props) {
+                        let value = this.default_props[key];
+                        if (typeof(value) === "string" && value.indexOf("props.") === 0) {
+                            this.default_props[key] = _.get(this, value);
+                        }
                     }
                 }
                 //console.log("----- Wrapper constructor ----->", this.all_chain_props);
@@ -115,5 +123,16 @@ function BindToChainState(options) {
 
     }
 }
+
+@BindToChainState({all_props: true})
+class Wrapper extends React.Component {
+    render() {
+        return <div className="wrapper">
+            {this.props.children(this.props)}
+        </div>;
+    }
+}
+
+BindToChainState.Wrapper = Wrapper;
 
 export default BindToChainState;

@@ -19,6 +19,7 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletDb from "stores/WalletDb";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import BindToChainState from "../Utility/BindToChainState";
 
 require("./operations.scss");
 
@@ -172,9 +173,10 @@ class Operation extends React.Component {
                     );
                 } else {//if(current === op[1].to){
                     column = (
-                        <td className="right-td"><Translate component="span" content="transaction.received" />
-                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                            &nbsp;<Translate component="span" content="transaction.from" /> <LinkToAccountById account={op[1].from}/>
+                        <td key={"transfer_"+this.props.key} className="right-td">
+                            <Translate component="span" content="transaction.received"/>
+                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
+                            &nbsp;<Translate component="span" content="transaction.from"/> <LinkToAccountById account={op[1].from}/>
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
@@ -190,27 +192,29 @@ class Operation extends React.Component {
                     isAsk = !isAsk;
                 }
                 column = (
-                        isAsk ?
-                            <td className="right-td">
-                            <Translate
-                                component="span"
-                                content="transaction.limit_order_sell" 
-                                sell_amount={op[1].amount_to_sell.amount}
-                                sell_price={op[1].min_to_receive.amount}
-                                num={this.props.result[1].substring(4)}
-                            />
-                        </td>
-                        :
-                        <td className="right-td">
-                            <Translate
-                                component="span"
-                                content="transaction.limit_order_buy" 
-                                buy_amount={op[1].min_to_receive.amount}
-                                buy_price={op[1].amount_to_sell.amount}
-                                num={this.props.result[1].substring(4)}
-                            />
-                        </td>
-
+                        <BindToChainState.Wrapper asset_sell={op[1].amount_to_sell.asset_id} asset_min={op[1].min_to_receive.asset_id}>
+                            { ({asset_sell, asset_min}) =>
+                                isAsk ?
+                                    <td key={"limit_order_create_" + this.props.key} className="right-td">
+                                        <Translate
+                                            component="span"
+                                            content="transaction.limit_order_sell"
+                                            sell_amount={utils.format_asset(op[1].amount_to_sell.amount, asset_sell, false, false)}
+                                            sell_price={utils.format_price(op[1].min_to_receive.amount, asset_sell, op[1].amount_to_sell.amount, asset_min, false, inverted, false)}
+                                            num={this.props.result[1].substring(4)}
+                                            />
+                                    </td> :
+                                    <td className="right-td">
+                                        <Translate
+                                            component="span"
+                                            content="transaction.limit_order_buy"
+                                            buy_amount={utils.format_asset(op[1].min_to_receive.amount, asset_min, false, false)}
+                                            buy_price={utils.format_price(op[1].amount_to_sell.amount, asset_sell, op[1].min_to_receive.amount, asset_min, false, inverted, false)}
+                                            num={this.props.result[1].substring(4)}
+                                            />
+                                    </td>
+                            }
+                        </BindToChainState.Wrapper>
                 );
                 break;
 
@@ -683,14 +687,18 @@ class Operation extends React.Component {
                 color = "success";
                 op[1].total_claimed.amount = parseInt(op[1].total_claimed.amount, 10);
                 column = (
-                    <td className="right-td">
-                        <Translate
-                            component="span"
-                            content="transaction.balance_claim"
-                            balance_amount={op[1].total_claimed.amount}
-                            balance_id={op[1].balance_to_claim.substring(5)}
-                        />
-                    </td>
+                    <BindToChainState.Wrapper asset={op[1].total_claimed.asset_id}>
+                        { ({asset}) =>
+                            <td className="right-td">
+                                <Translate
+                                    component="span"
+                                    content="transaction.balance_claim"
+                                    balance_amount={utils.format_asset(op[1].total_claimed.amount, asset)}
+                                    balance_id={op[1].balance_to_claim.substring(5)}
+                                />
+                            </td>
+                        }
+                    </BindToChainState.Wrapper>
                 );
                 break;  
 
