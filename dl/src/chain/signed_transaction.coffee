@@ -127,7 +127,6 @@ _my.signed_transaction = ->
         throw new Error "already signed" if @signed
         unless @signer_private_keys.length
             throw new Error "call add_signer first"
-        dedup = {}
         for i in [0...@signer_private_keys.length] by 1
             [private_key, public_key] = @signer_private_keys[i]
             sig = Signature.signBuffer(
