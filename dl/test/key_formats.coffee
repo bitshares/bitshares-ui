@@ -16,7 +16,7 @@ test = (key) ->
 
         it "Create BTS short address", ->
             public_key = PublicKey.fromPublicKeyString key.public_key
-            assert.equal key.bts_address, public_key.toBtsAddy() 
+            assert.equal key.bts_address, public_key.toAddressString() 
 
         it "Blockchain Address", ->
             public_key = PublicKey.fromPublicKeyString key.public_key
@@ -42,7 +42,7 @@ test = (key) ->
         it "Calc public key", ->
             private_key = PrivateKey.fromHex key.private_key
             public_key = private_key.toPublicKey()
-            assert.equal key.bts_address, public_key.toBtsAddy()
+            assert.equal key.bts_address, public_key.toAddressString()
             
         it "Decrypt private key", ->
             aes = Aes.fromSeed "Password00"

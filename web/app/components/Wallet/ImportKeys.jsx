@@ -245,7 +245,7 @@ export default class ImportKeys extends Component {
                             Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
                             Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
                             Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
-                            public_key.toBtsAddy() //bts_short, most recent format
+                            public_key.toAddressString() //bts_short, most recent format
                         ]
                         for(let address of addresses) {
                             address = previous_address_prefix + address.substring(3)
@@ -379,7 +379,7 @@ export default class ImportKeys extends Component {
         var savePubkeyAccount = function (pubkey, account_name) {
             //replace BTS with GPH
             pubkey = config.address_prefix + pubkey.substring(3)
-            var address = PublicKey.fromBtsPublic(pubkey).toBtsAddy()
+            var address = PublicKey.fromBtsPublic(pubkey).toAddressString()
             var addresses = account_addresses[account_name] || []
             address = "BTS" + address.substring(3)
             //DEBUG console.log("... address",address,account_name)
@@ -509,8 +509,8 @@ export default class ImportKeys extends Component {
                     
                     if(import_keys_assert_checking && public_key_string) {
                         var pub = private_key.toPublicKey()
-                        var addy = pub.toBtsAddy()
-                        var pubby = pub.toBtsPublic()
+                        var addy = pub.toAddressString()
+                        var pubby = pub.toPublicKeyString()
                         var error = ""
                         
                         let address_string = account.addresses ? 
@@ -529,7 +529,7 @@ export default class ImportKeys extends Component {
                     var public_key
                     if( ! public_key_string) {
                         public_key = private_key.toPublicKey()// S L O W
-                        public_key_string = public_key.toBtsPublic()
+                        public_key_string = public_key.toPublicKeyString()
                     } else {
                         var previous_address_prefix = config.address_prefix
                         try {
