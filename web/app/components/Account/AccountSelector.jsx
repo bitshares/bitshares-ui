@@ -31,6 +31,11 @@ class AccountSelector extends React.Component {
         account: ChainTypes.ChainAccount
     }
 
+    // can be used in parent component: this.refs.account_selector.getAccount()
+    getAccount() {
+        return this.props.account;
+    }
+
     getNameType(value) {
         if(!value) return null;
         if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
@@ -40,7 +45,11 @@ class AccountSelector extends React.Component {
 
     onInputChanged(event) {
         let value = event.target.value.trim().toLowerCase();
-        if(this.props.onChange && (value.length < 4 || this.getNameType(value)) && value !== this.props.accountName) this.props.onChange(value);
+        if
+        (   this.props.onChange
+            && (value.length < 4 || this.getNameType(value))
+            && value !== this.props.accountName
+        ) this.props.onChange(value);
     }
 
     onKeyDown(e) {
