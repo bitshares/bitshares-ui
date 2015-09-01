@@ -17,7 +17,6 @@ class TransactionConfirmActions {
                 this.actions.error(message);
             });
         }, 250)
-        
     }
 
     wasBroadcast(res){

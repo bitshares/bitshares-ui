@@ -266,7 +266,7 @@ class ChainStore
          return result
       }
 
-      if(DEBUG) console.log( "fetchObject: ", id )
+      console.log( "fetchObject: ", id )
       if( this.subscribed  !== true ) 
          return undefined
 
@@ -505,7 +505,7 @@ class ChainStore
       
 
       if( fetch_account ) {
-          if(DEBUG) console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
+          console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
                  if(results.length === 0) return;
@@ -740,7 +740,7 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-      if(DEBUG) console.log( "update: ", object )
+      console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
       if( current === undefined || current === true )
@@ -748,7 +748,14 @@ class ChainStore
       else
          this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
 
-      if( object.id.substring(0,4) == witness_prefix )
+      if( object.id.substring(0,4) == balance_prefix )
+      {
+         console.log( "balance object update: ", object )
+         let owner = this.objects_by_id.get( object.owner )
+         owner = owner.setIn( ['balances', object.asset_id ], object.id )
+         this.objects_by_id = this.objects_by_id.set( object.owner, owner  )
+      }
+      else if( object.id.substring(0,4) == witness_prefix )
       {
          this.witness_by_account_id.set( object.witness_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
