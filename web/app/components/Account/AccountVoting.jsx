@@ -50,7 +50,7 @@ class AccountVoting extends React.Component {
        if( !next_state.init_committee ) next_state.init_committee = this.state.init_committee
        if( !next_state.changed  ) next_state.changed = this.state.changed
 
-       let acnt = ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null,{}) )
+       let acnt = null; //ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null,{}) )
        if( acnt ) {
           let current_proxy_id = acnt.get('options').get('voting_account')
           if( current_proxy_id == "1.2.0" ) next_state.current_proxy = null
@@ -243,18 +243,18 @@ class AccountVoting extends React.Component {
 
     getNewProxyID()
     {
-       if( this.state.new_proxy == null) return null
-       if( this.state.new_proxy == "" ) return "1.2.0"
-       if( validation.is_account_name( this.state.new_proxy ) )
-       {
-          let acnt = ChainStore.getAccount( this.state.new_proxy, this.onUpdate.bind(this,null) )
-          if( acnt ) return acnt.get( 'id' )
-       }
-       else {
-          let id = "1.2."+this.state.new_proxy.substring(1) 
-          let acnt = ChainStore.getAccount( id, this.onUpdate.bind(this,null) )
-          if( acnt ) return acnt.get( 'id' )
-       }
+       //if( this.state.new_proxy == null) return null
+       //if( this.state.new_proxy == "" ) return "1.2.0"
+       //if( validation.is_account_name( this.state.new_proxy ) )
+       //{
+       //   let acnt = ChainStore.getAccount( this.state.new_proxy, this.onUpdate.bind(this,null) )
+       //   if( acnt ) return acnt.get( 'id' )
+       //}
+       //else {
+       //   let id = "1.2."+this.state.new_proxy.substring(1)
+       //   let acnt = ChainStore.getAccount( id, this.onUpdate.bind(this,null) )
+       //   if( acnt ) return acnt.get( 'id' )
+       //}
        return null
     }
 
@@ -330,6 +330,7 @@ class AccountVoting extends React.Component {
                                      error={current_proxy_error}
                                      placeholder="NONE"
                                      account={current_proxy_input}
+                                     accountName={current_proxy_input}
                                      onChange={this.onProxyChange.bind(this)}
                                      ref="proxy_selector"
                                      />
