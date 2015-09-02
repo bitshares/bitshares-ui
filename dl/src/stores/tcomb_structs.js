@@ -56,9 +56,7 @@ let Asset = t.struct({
 let Block = t.struct({
     extensions: t.Arr,
     id: t.Num,
-    next_secret_hash: t.Str,
     previous: t.Str,
-    previous_secret: t.Str,
     timestamp: t.Dat,
     transactions: t.Arr,
     transaction_merkle_root: t.Str,
@@ -95,8 +93,6 @@ let PrivateKeyTcomb = t.struct({
 
 let Witness = t.struct({
     id: t.Str,
-    next_secret_hash: t.Str,
-    previous_secret: t.Str,
     signing_key: t.Str,
     url: t.Str,
     vote_id: t.Str,

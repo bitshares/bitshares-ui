@@ -56,8 +56,8 @@ class BlockchainActions {
         */
     }
 
-    getLatest(height) {
-        if (!latestBlocks[height]) {
+    getLatest(height, maxBlock) {
+        if (!latestBlocks[height] && maxBlock) {
             latestBlocks[height] = true;
             Apis.instance().db_api().exec("get_block", [
                     height
@@ -67,7 +67,7 @@ class BlockchainActions {
                         return;
                     }
                     result.id = height; // The returned object for some reason does not include the block height..
-                    this.dispatch(result);
+                    this.dispatch({block: result, maxBlock: maxBlock});
                 }).catch((error) => {
                     console.log("Error in BlockchainActions.getLatest: ", error);
                 });

@@ -15,15 +15,6 @@ class BlocksContainer extends React.Component {
                     latestBlocks: () => {
                         return BlockchainStore.getState().latestBlocks;
                     },
-                    dynGlobalObject: () => {
-                        return BlockchainStore.getState().dynGlobalObject;
-                    },
-                    globalObject: () => {
-                        return BlockchainStore.getState().globalObject;
-                    },
-                    accounts: () => {
-                        return AccountStore.getState().accounts;
-                    },
                     witnesses: () => {
                         return WitnessStore.getState().witnesses;
                     },
@@ -32,7 +23,7 @@ class BlocksContainer extends React.Component {
                     }
                   }} 
                   >
-                <Blocks/>
+                <Blocks globalObject={this.props.globalObject} dynGlobalObject={this.props.dynGlobalObject} />
               </AltContainer>
         );
     }

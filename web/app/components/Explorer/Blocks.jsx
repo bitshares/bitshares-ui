@@ -9,8 +9,25 @@ import Translate from "react-translate-component";
 import {FormattedDate} from "react-intl";
 import Inspector from "react-json-inspector";
 require("../Blockchain/json-inspector.scss");
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
 
+@BindToChainState()
 class Blocks extends React.Component {
+
+    static propTypes = {
+        globalObject: ChainTypes.ChainObject.isRequired,
+        dynGlobalObject: ChainTypes.ChainObject.isRequired
+    }
+
+    static defaultProps = {
+        globalObject: "2.0.0",
+        dynGlobalObject: "2.1.0"
+    }
+
+    constructor(props) {
+        super(props);
+    }
 
     shouldComponentUpdate(nextProps) {
         return (
@@ -20,21 +37,22 @@ class Blocks extends React.Component {
             );
     }
 
-    _getLatestBlocks(height) {
+    _getBlock(height, maxBlock) {
         if (height) {
             height = parseInt(height, 10);
-            BlockchainActions.getLatest(height);
+            BlockchainActions.getLatest(height, maxBlock);
         }
     }
 
     componentWillReceiveProps(nextProps) {
 
         if (nextProps.latestBlocks.size === 0) {
-            this._getInitialBlocks();
+            return this._getInitialBlocks();
         }
 
-        if (nextProps.latestBlocks.size === 10 && nextProps.dynGlobalObject.head_block_number !== nextProps.latestBlocks.get(0).id) {
-            this._getLatestBlocks(nextProps.dynGlobalObject.head_block_number);
+        let maxBlock = nextProps.dynGlobalObject.get("head_block_number");
+        if (nextProps.latestBlocks.size === 20 && nextProps.dynGlobalObject.get("head_block_number") !== nextProps.latestBlocks.get(0).id) {
+            return this._getBlock(maxBlock, maxBlock);
         }
     }
 
@@ -43,9 +61,9 @@ class Blocks extends React.Component {
     }
 
     _getInitialBlocks() {
-        let maxBlock = this.props.dynGlobalObject.head_block_number;
+        let maxBlock = parseInt(this.props.dynGlobalObject.get("head_block_number"), 10);
         if (maxBlock) {
-            for (let i = 9; i >= 0; i--) {
+            for (let i = 19; i >= 0; i--) {
                 let exists = false;
                 if (this.props.latestBlocks.size > 0) {
                     for (let j = 0; j < this.props.latestBlocks.size; j++) {
@@ -56,7 +74,7 @@ class Blocks extends React.Component {
                     }
                 }
                 if (!exists) {
-                    this._getLatestBlocks(maxBlock - i);    
+                    this._getBlock(maxBlock - i, maxBlock);    
                 }
             }
         }
@@ -90,10 +108,10 @@ class Blocks extends React.Component {
 
     render() {
 
-        let {latestBlocks, accounts, witnesses, witness_id_to_name, globalObject} = this.props;
+        let {latestBlocks, witnesses, witness_id_to_name, globalObject} = this.props;
         let blocks = null;
 
-        if (latestBlocks && latestBlocks.size === 10) {
+        if (latestBlocks && latestBlocks.size === 20) {
 
             let missingWitnesses = [];
             latestBlocks.forEach(block => {
@@ -125,7 +143,6 @@ class Blocks extends React.Component {
             }).toArray();
         }
 
-        // console.log("globalObject:", globalObject);
         // let params = [];
         // let index = 0;
         // for (let key in globalObject.parameters) {
@@ -140,7 +157,7 @@ class Blocks extends React.Component {
                 <div className="grid-block page-layout">
                     <div className="grid-block shrink">
                         <ul>
-                            <li><Translate component="span" content="explorer.blocks.globals" />: <Inspector data={ globalObject.parameters } search={false}/></li>
+                            <li><Translate component="span" content="explorer.blocks.globals" />: <Inspector data={ globalObject.get("parameters").toJS() } search={false}/></li>
                         </ul>
                     </div>
                     <div className="grid-block">
