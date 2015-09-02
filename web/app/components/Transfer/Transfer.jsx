@@ -96,6 +96,7 @@ class Transfer extends React.Component {
                     
                     />
                     {/*  A M O U N T   */}
+                    <br/>
                     <AmountSelector label="transfer.amount"
                                      amount={this.state.amount}
                                      onChange={this.onAmountChanged.bind(this)}
