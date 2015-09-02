@@ -25,7 +25,7 @@ AccountImage.defaultProps = {
 
 AccountImage.propTypes = {
     src: PropTypes.string,
-    account: PropTypes.string.isRequired,
+    account: PropTypes.string,
     size: PropTypes.object.isRequired
 };
 

@@ -6,14 +6,17 @@ import BindToChainState from "../Utility/BindToChainState";
 
 @BindToChainState()
 class AssetOption extends React.Component {
+
     static propTypes = {
         asset: ChainTypes.ChainObject,
         asset_id: React.PropTypes.string
     }
+
     render() {
         let symbol = this.props.asset ? this.props.asset.get("symbol") : this.props.asset_id;
         return (<option value={this.props.asset_id}>{symbol}</option>);
     }
+
 }
 
 class AssetSelector extends React.Component {
@@ -42,6 +45,7 @@ class AssetSelector extends React.Component {
             </select>
         );
     }
+
 }
 
 @BindToChainState()
@@ -53,7 +57,8 @@ class AmountSelector extends React.Component {
         assets: React.PropTypes.array,
         amount: React.PropTypes.string,
         placeholder: React.PropTypes.string,
-        onChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired,
+        display_balance: React.PropTypes.object
     }
 
     constructor(props){
@@ -64,6 +69,12 @@ class AmountSelector extends React.Component {
        }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.asset && nextProps.asset != this.props.asset && !this.state.asset) {
+            this.props.onChange({amount: this.state.amount, asset: nextProps.asset});
+        }
+    }
+
     formatAmount() {
       return this.state.amount 
     }
@@ -72,7 +83,7 @@ class AmountSelector extends React.Component {
     {
        let amount = event.target.value
        this.setState( {amount} )
-       this.props.onChange({amount: amount, asset: this.state.selected_asset})
+       this.props.onChange({amount: amount, asset: this.state.selected_asset || this.props.asset})
     }
 
     onAssetChange( selected_asset ) {
@@ -83,7 +94,7 @@ class AmountSelector extends React.Component {
     render() {
          return (
              <div className="amount-selector">
-                 <div className="float-right">[TODO: show balance]</div>
+                 <div className="float-right">{this.props.display_balance}</div>
                  <Translate component="label" content={this.props.label}/>
                  <div className="inline-label">
                     <input type="text"
@@ -101,6 +112,7 @@ class AmountSelector extends React.Component {
              </div>
           )
     }
+
 }
 
 export default AmountSelector;
