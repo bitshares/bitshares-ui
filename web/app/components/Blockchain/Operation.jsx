@@ -687,18 +687,18 @@ class Operation extends React.Component {
                 color = "success";
                 op[1].total_claimed.amount = parseInt(op[1].total_claimed.amount, 10);
                 column = (
-                    <BindToChainState.Wrapper asset={op[1].total_claimed.asset_id}>
-                        { ({asset}) =>
-                            <td className="right-td">
-                                <Translate
-                                    component="span"
-                                    content="transaction.balance_claim"
-                                    balance_amount={utils.format_asset(op[1].total_claimed.amount, asset)}
-                                    balance_id={op[1].balance_to_claim.substring(5)}
-                                />
-                            </td>
-                        }
-                    </BindToChainState.Wrapper>
+                    <td className="right-td">
+                       <BindToChainState.Wrapper asset={op[1].total_claimed.asset_id}>
+                           { ({asset}) =>
+                                   <Translate
+                                       component="span"
+                                       content="transaction.balance_claim"
+                                       balance_amount={utils.format_asset(op[1].total_claimed.amount, asset)}
+                                       balance_id={op[1].balance_to_claim.substring(5)}
+                                   />
+                           }
+                       </BindToChainState.Wrapper>
+                    </td>
                 );
                 break;  
 
