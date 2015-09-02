@@ -8,56 +8,65 @@ const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
 
+var upgrade = function(db, oldVersion) {
+    // DEBUG console.log('... oldVersion',oldVersion)
+    if (oldVersion === 0) {
+        db.createObjectStore("wallet", { keyPath: "public_name" })
+        idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
+        db.createObjectStore("linked_accounts", { keyPath: "name" })
+        db.createObjectStore("balance_claims", { keyPath: "chain_balance_record.id" })
+    }
+    // if (oldVersion < 2) {
+    //     
+    // }
+}
+
+var getDatabaseName = function(wallet_name = "default") {
+    var chain_id = Apis.instance().chain_id
+    return [
+        DB_PREFIX,
+        chain_id ? chain_id.substring(0, 6) : "",
+        wallet_name
+    ].join("_")
+}
+
+var openDatabase = function(database_name = this.getDatabaseName()) {
+    return new Promise((resolve, reject) => {
+
+        var openRequest = iDB.impl.open(database_name, DB_VERSION);
+
+        openRequest.onupgradeneeded = function (e) {
+            // DEBUG console.log('... openRequest.onupgradeneeded')
+            upgrade(e.target.result, e.oldVersion)
+        };
+
+        openRequest.onsuccess = function (e) {
+            // DEBUG console.log('... openRequest.onsuccess', e.target.result)
+            var db = e.target.result
+            resolve(db);
+        };
+
+        openRequest.onerror = function (e) {
+            // DEBUG console.log("indexedDB open",e.target.error, e)
+            reject(e.target.error);
+        };
+    })
+}
+
 var iDB
 module.exports = iDB = (function () {
 
     var _instance;
     var idb;
 
-    function upgrade(db, oldVersion) {
-        // DEBUG console.log('... oldVersion',oldVersion)
-        if (oldVersion === 0) {
-            db.createObjectStore("wallet", { keyPath: "public_name" })
-            idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
-            db.createObjectStore("linked_accounts", { keyPath: "name" })
-            db.createObjectStore("balance_claims", { keyPath: "chain_balance_record.id" })
-        }
-        // if (oldVersion < 2) {
-        //     
-        // }
-    }
-    
     function openIndexedDB() {
-        return iDB.root.getProperty("current_wallet", "default").then( current_wallet => {
-            return new Promise((resolve, reject) => {
-
-                var chain_id = Apis.instance().chain_id
-                iDB.database_name = [
-                    DB_PREFIX,
-                    chain_id ? chain_id.substring(0, 6) : "",
-                    current_wallet
-                ].join("_")
-
-                // DEBUG console.log('... iDB.database_name',iDB.database_name)
-
-                var openRequest = iDB.impl.open(iDB.database_name, DB_VERSION);
-
-                openRequest.onupgradeneeded = function (e) {
-                    // DEBUG console.log('... openRequest.onupgradeneeded')
-                    upgrade(e.target.result, e.oldVersion)
-                };
-
-                openRequest.onsuccess = function (e) {
-                    // DEBUG console.log('... openRequest.onsuccess', e.target.result)
-                    var db = e.target.result
-                    idb_helper.set_graphene_db(db)
-                    resolve(db);
-                };
-
-                openRequest.onerror = function (e) {
-                    // DEBUG console.log("indexedDB open",e.target.error, e)
-                    reject(e.target.error);
-                };
+        return iDB.root.getProperty("current_wallet", "default").then(
+            current_wallet => {
+            var database_name = getDatabaseName(current_wallet)
+            return openDatabase(database_name).then( db => {
+                iDB.database_name = database_name
+                idb_helper.set_graphene_db(db)
+                return db
             })
         })
     }
@@ -101,12 +110,19 @@ module.exports = iDB = (function () {
             }
             return _instance;
         },
+        
         instance: function () {
             if (!_instance) {
                 throw new Error("Internal Database instance is not initialized");
             }
             return _instance;
         },
+        
+        close: function () {
+            init().db().close()
+            _instance = undefined
+        },
+        
         add_to_store: function (store_name, value) {
             return new Promise((resolve, reject) => {
                 let transaction = this.instance().db().transaction([store_name], "readwrite");
@@ -166,6 +182,21 @@ module.exports = iDB = (function () {
                     obj[store_name] = results[i]
                 }
                 return obj
+            })
+        },
+        restore: function(wallet_name, object) {
+            var database_name = getDatabaseName(wallet_name)
+            return openDatabase(database_name).then( db => {
+                var store_names = Object.keys(object)
+                var trx = db.transaction(store_names, "readwrite")
+                for(let store_name of store_names) {
+                    var store = trx.objectStore(store_name)
+                    var records = object[store_name]
+                    for(let record of records) {
+                        store.put(record)
+                    }
+                }
+                return idb_helper.on_transaction_end(trx)
             })
         }
     };
