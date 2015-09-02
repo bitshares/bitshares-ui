@@ -8,7 +8,6 @@
 @import "./loading-indicator";
 @import "./header";
 @import "./footer";
-@import "./transfer";
 @import "./tables";
 @import "./cards";
 @import "./account";
@@ -101,9 +100,6 @@ button, .button {
   border-left-style: solid !important;
   padding: 1rem !important;
   font-size: 100% !important;
-  > .notification-message {
-    word-break: break-all;
-  }
 }
 
 
@@ -229,4 +225,14 @@ a.currency, span.currency {
 
 .resolved {
   border: 1px solid green;
+}
+
+.invoice {
+  .item-name {
+    padding: 0.2rem 0 0.2rem 0;
+  }
+  .item-description {
+    padding: 0.2rem 0 0.2rem 0;
+    font-size: 90%;
+  }
 }
