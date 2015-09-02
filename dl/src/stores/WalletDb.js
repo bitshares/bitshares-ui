@@ -2,7 +2,7 @@ import iDB from "idb-instance";
 import Apis from "rpc_api/ApiInstances"
 import key from "common/key_utils"
 import idb_helper from "idb-helper"
-import cloneDeep from "lodash.clonedeep"
+import {clonedeep} from "lodash"
 import Immutable from "immutable";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
