@@ -446,7 +446,7 @@ class WalletDb {
             return
         }
         //DEBUG console.log('... wallet',wallet)
-        var wallet_clone = cloneDeep( wallet )
+        var wallet_clone = clonedeep( wallet )
         wallet_clone.last_modified = new Date()
         if(update_callback)
             update_callback(wallet_clone)
