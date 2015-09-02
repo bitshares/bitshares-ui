@@ -100,7 +100,7 @@ class Asset extends React.Component {
                             <div>
                                 <h3>Whitelisted Markets</h3>
                                 <ul>
-                                    {asset.options.marketWhitelist.length > 0 ? marketWhitelist : "Market whitelist not in use."}
+                                    {asset.options.whitelist_markets.length > 0 ? marketWhitelist : "Market whitelist not in use."}
                                 </ul>
                                 <form>
                                     <input type="text" style={{width: '100px'}} />{/*TODO: use an asset picker instead of an <input>. Exchange/Markets.jsx contains one that could be its own reusable component*/}
