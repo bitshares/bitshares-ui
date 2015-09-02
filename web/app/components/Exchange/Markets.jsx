@@ -1,20 +1,53 @@
 import React from "react";
-import {PropTypes, Component} from "react";
+import {PropTypes} from "react";
 import MarketCard from "./MarketCard";
-import Immutable from "immutable";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
 import {Link} from "react-router";
+import AssetActions from "actions/AssetActions";
 
-class Markets extends Component {
+class Markets extends React.Component {
 
     constructor() {
         super();
         this.state = {
             filterMarket: "",
-            searchTerm: ""
+            searchTerm: "",
+            assetsFetched: 0
         };
+    }
+
+    componentDidMount() {
+      this._checkAssets(this.props.assets, true);
+    }
+
+    _checkAssets(assets, force) {
+
+      let lastAsset = assets.sort((a, b) => {
+          if (a.symbol > b.symbol) {
+              return 1;
+          } else if (a.symbol < b.symbol) {
+              return -1;
+          } else {
+              return 0;
+          }
+      }).last();
+
+      // console.log("assets.size:", assets.size, "assetsFetched:", this.state.assetsFetched);
+      
+      if (assets.size === 0 || force) {
+          AssetActions.getAssetList("A", 100);
+          this.setState({assetsFetched: 100});  
+      } else if (assets.size >= this.state.assetsFetched) {
+          // console.log("assets.last():", lastAsset.symbol);
+          AssetActions.getAssetList(lastAsset.symbol, 100);           
+          this.setState({assetsFetched: this.state.assetsFetched + 99}); 
+      }
+    }
+
+    componentWillReceiveProps(nextProps) {
+      this._checkAssets(nextProps.assets);
     }
 
     // shouldComponentUpdate(nextProps, nextState) {
@@ -55,9 +88,7 @@ class Markets extends Component {
         MarketsActions.addMarket(quote, base);
     }
 
-    _removeMarket(quote, base, e) {
-        // e.preventPropagation();
-        // e.preventDefault();
+    _removeMarket(quote, base) {
         MarketsActions.removeMarket(quote, base);        
     }
 
@@ -138,7 +169,6 @@ class Markets extends Component {
                             market={market}
                             quote={quote}
                             base={base}
-                            assets={assets}
                             removeMarket={this._removeMarket.bind(quote.symbol, base.symbol)}
                             />
                     );
