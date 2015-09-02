@@ -58,4 +58,4 @@ let ChainAccount = createChainableTypeChecker(objectIdChecker);
 let ChainKeyRefs = createChainableTypeChecker(keyChecker);
 let ChainAddressBalances = createChainableTypeChecker(keyChecker);
 
-export default {ChainObject, ChainAccount};
+export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances};
