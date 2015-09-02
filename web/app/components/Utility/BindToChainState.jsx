@@ -67,7 +67,7 @@ function BindToChainState(options) {
                     this.chain_key_refs = prop_types_array.filter(_.flow(secondEl, isKeyRefsType)).map(firstEl);
                     this.chain_address_balances = prop_types_array.filter(_.flow(secondEl, isAddressBalancesType)).map(firstEl);
                     this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
-                    this.all_chain_props = [...this.chain_objects, ...this.chain_accounts, ...this.chain_key_refs, ...chain_address_balances];
+                    this.all_chain_props = [...this.chain_objects, ...this.chain_accounts, ...this.chain_key_refs, ...this.chain_address_balances];
                     this.default_props = _.clone(Component.defaultProps) || {};
                     for (let key in this.default_props) {
                         let value = this.default_props[key];
