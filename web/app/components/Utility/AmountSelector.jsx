@@ -49,8 +49,12 @@ class AssetSelector extends React.Component {
 class AmountSelector extends React.Component {
 
     static propTypes = {
-        value: React.PropTypes.string, // asset id
-        onChange: React.PropTypes.func
+        label: React.PropTypes.string, // a translation key for the label
+        asset: ChainTypes.ChainObject,
+        assets: React.PropTypes.array,
+        amount: React.PropTypes.string,
+        placeholder: React.PropTypes.string,
+        onChange: React.PropTypes.func.isRequired
     }
 
     constructor(props){
@@ -61,15 +65,6 @@ class AmountSelector extends React.Component {
        }
     }
 
-    static propTypes = {
-        label: React.PropTypes.string, // a translation key for the label
-        asset: ChainTypes.ChainObject,
-        assets: React.PropTypes.array,
-        amount: React.PropTypes.string,
-        placeholder: React.PropTypes.string,
-        onChange: React.PropTypes.func
-    }
-
     formatAmount() {
       return this.state.amount 
     }
@@ -78,10 +73,13 @@ class AmountSelector extends React.Component {
     {
        let amount = event.target.value
        this.setState( {amount} )
-       this.props.onChange(amount)
+       this.props.onChange({amount: amount, asset: this.state.selected_asset})
     }
 
-    onAssetChange( selected_asset ) { this.setState( {selected_asset} ) }
+    onAssetChange( selected_asset ) {
+        this.setState( {selected_asset} )
+        this.props.onChange({amount: this.state.amount, asset: selected_asset})
+    }
 
     render() {
          return (
