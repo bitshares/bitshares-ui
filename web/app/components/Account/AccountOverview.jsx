@@ -31,6 +31,7 @@ class AccountOverview extends React.Component {
                 );
             })
         }
+        console.log( "account: ", account.toJS() )
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = {};
         let account_history = account.get("history");
@@ -43,7 +44,7 @@ class AccountOverview extends React.Component {
                         op={trx.op}
                         result={trx.result}
                         block={trx.block_num}
-                        current={account.get("name")}
+                        current={account.get("id")}
                         witnesses={witness_store_state.witnesses}
                         witness_id_to_name={witness_store_state.witness_id_to_name}
                         inverted={this.props.settings.get("inverseMarket")}

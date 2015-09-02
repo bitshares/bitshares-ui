@@ -20,7 +20,7 @@ import AccountSelector from "../Account/AccountSelector";
 import {debounce} from "lodash";
 import Immutable from "immutable";
 import ChainStore from "api/ChainStore";
-import AccountStore from "stores/AccountStore.js"
+import AccountStore from "stores/AccountStore";
 import Wallet from "components/Wallet/Wallet";
 import validation from "common/validation";
 import AmountSelector from "../Utility/AmountSelector";
@@ -97,18 +97,26 @@ class Transfer extends React.Component {
             asset_types = Object.keys(account_balances);
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
-                balance = <BalanceComponent balance={account_balances[current_asset_id]}/>
+                balance = (<span>Available: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
             }
         }
         let submitButtonClass = "button";
         if(!this.state.from_account || !this.state.to_account || !this.state.amount || !this.state.asset)
             submitButtonClass += " disabled";
 
+        let from_error = null
+
+        let from = ChainStore.getAccount( this.state.from_name )
+        if( from && !AccountStore.getState().linkedAccounts.contains( this.state.from_name ) ) {
+           from_error = "Not your Account"
+        }
+
         return (
             <form className="grid-block vertical full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
                 <div className="grid-container" style={{paddingTop: "2rem"}}>
                     {/*  F R O M  */}
                     <AccountSelector label="transfer.from"
+                                     error={from_error}
                                      accountName={this.state.from_name}
                                      onChange={this.fromChanged.bind(this)}
                                      onAccountChanged={this.onFromAccountChanged.bind(this)}

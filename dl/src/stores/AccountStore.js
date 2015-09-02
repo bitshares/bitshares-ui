@@ -19,7 +19,6 @@ class AccountStore extends BaseStore {
         super();
         this.currentAccount = null;
         this.linkedAccounts = Immutable.Set();
-        this.myAccounts = Immutable.Set();
         this.payeeAccounts = Immutable.Set();
         this.searchAccounts = Immutable.Map();
         this.bindListeners({
@@ -50,27 +49,6 @@ class AccountStore extends BaseStore {
             });
         });
     }
-
-
-    _isMyAccount(account) {
-        let my_account = false;
-        if (account) {
-            for (let k of account.owner.key_auths) {
-                if (PrivateKeyStore.hasKey(k[0])) {
-                    my_account = true;
-                    break;
-                }
-            }
-            for (let k of account.active.key_auths) {
-                if (PrivateKeyStore.hasKey(k[0])) {
-                    my_account = true;
-                    break;
-                }
-            }
-        }
-        return my_account;
-    }
-
 
     tryToSetCurrentAccount() {
         if (this.linkedAccounts.size > 0) {

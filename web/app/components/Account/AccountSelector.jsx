@@ -69,7 +69,7 @@ class AccountSelector extends React.Component {
             let type = this.getNameType(this.props.accountName);
             if(type === "name") lookup_display = "#" + this.props.account.get("id").substring(4);
             else if(type === "id") lookup_display = this.props.account.get("name");
-        }
+        } else if( !error && this.props.accountName != "" ) error = "Unknown Account"
 
         let member_status = null;
         if (this.props.account)

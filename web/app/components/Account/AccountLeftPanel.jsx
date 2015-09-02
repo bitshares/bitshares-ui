@@ -15,7 +15,6 @@ class AccountLeftPanel extends React.Component {
     static propTypes = {
         account: React.PropTypes.object.isRequired,
         linkedAccounts: PropTypes.object,
-        myAccounts: PropTypes.object
     };
 
     static contextTypes = {
@@ -29,8 +28,7 @@ class AccountLeftPanel extends React.Component {
             if(changed) return true;
         }
         return this.props.account !== nextProps.account ||
-               this.props.linkedAccounts !== nextProps.linkedAccounts ||
-               this.props.myAccounts !== nextProps.myAccounts;
+               this.props.linkedAccounts !== nextProps.linkedAccounts 
     }
 
     onLinkAccount(e) {
@@ -49,10 +47,10 @@ class AccountLeftPanel extends React.Component {
     }
 
     render() {
-        let {account, linkedAccounts, myAccounts} = this.props;
+        let {account, linkedAccounts} = this.props;
         let account_name = account.get("name");
 
-        let is_my_account = myAccounts.has(account_name);
+        let is_my_account = false; // TODO: use new API from wallet to determine if we have keys.
         let linkBtn = null;
         if (!is_my_account) {
             linkBtn = linkedAccounts.has(account_name) ?
