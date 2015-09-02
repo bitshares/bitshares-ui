@@ -107,7 +107,7 @@ class AccountStore extends BaseStore {
         if( ! validation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
         
-        return iDB.add_to_store("linked_accounts", account).then(() => {
+        return iDB.add_to_store("linked_accounts", {name: account.name}).then(() => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", account.name);
             this.linkedAccounts = this.linkedAccounts.add(account.name);
             if (this.linkedAccounts.size === 1) {
