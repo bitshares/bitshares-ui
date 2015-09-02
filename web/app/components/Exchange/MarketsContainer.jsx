@@ -3,17 +3,9 @@ import MarketsStore from "stores/MarketsStore";
 import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt/AltContainer";
-import AssetActions from "actions/AssetActions";
 import Markets from "./Markets";
 
 class MarketsContainer extends React.Component {
-
-    componentDidMount() {
-        AssetActions.getAssetList("B", 100);
-        AssetActions.getAssetList("E", 100);
-        AssetActions.getAssetList("M", 100);
-        AssetActions.getAssetList("U", 100);
-    }
 
     render() {
 
