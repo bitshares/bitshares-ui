@@ -1,4 +1,5 @@
 import alt from "alt-instance"
+import PrivateKeyStore from "stores/PrivateKeyStore"
 import WalletActions from "actions/WalletActions"
 import WalletCreateActions from "actions/WalletCreateActions"
 import BaseStore from "stores/BaseStore"
@@ -15,7 +16,7 @@ class WalletStore extends BaseStore {
             onRestore: WalletActions.restore,
             onDefaultWalletCreated: WalletCreateActions.defaultWalletCreated
         })
-        super._export("init")
+        super._export("init","getMyAuthorityForAccount")
     }
     
     _getInitialState() {
@@ -36,6 +37,31 @@ class WalletStore extends BaseStore {
                 })
             })
         ])
+    }
+    
+    /**
+        @todo "partial"
+        @return string "none", "full", "partial"
+    */
+    getMyAuthorityForAccount(account) {
+        if(account === undefined) return undefined
+        if( ! account) return null
+        let my_authority = "none";
+        if (account) {
+            for (let k of account.owner.key_auths) {
+                if (PrivateKeyStore.hasKey(k[0])) {
+                    my_authority = "full";
+                    break;
+                }
+            }
+            for (let k of account.active.key_auths) {
+                if (PrivateKeyStore.hasKey(k[0])) {
+                    my_authority = "full";
+                    break;
+                }
+            }
+        }
+        return my_authority;
     }
     
     onDefaultWalletCreated() {
