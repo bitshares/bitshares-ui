@@ -10,7 +10,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class AccountPage extends React.Component {
 
     static propTypes = {

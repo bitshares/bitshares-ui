@@ -16,7 +16,6 @@ class AssetOption extends React.Component {
     }
 }
 
-@BindToChainState()
 class AssetSelector extends React.Component {
 
     static propTypes = {
@@ -50,7 +49,7 @@ class AmountSelector extends React.Component {
 
     static propTypes = {
         label: React.PropTypes.string, // a translation key for the label
-        asset: ChainTypes.ChainObject,
+        asset: ChainTypes.ChainObject, // selected asset by default (TODO: make sure resolve works)
         assets: React.PropTypes.array,
         amount: React.PropTypes.string,
         placeholder: React.PropTypes.string,

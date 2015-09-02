@@ -5,7 +5,7 @@ import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class Footer extends React.Component {
 
     static propTypes = {

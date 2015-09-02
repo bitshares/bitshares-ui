@@ -15,7 +15,7 @@ import BindToChainState from "../Utility/BindToChainState";
  *
  */
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class AccountSelector extends React.Component {
 
     static propTypes = {

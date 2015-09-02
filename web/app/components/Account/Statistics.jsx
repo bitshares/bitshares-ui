@@ -4,7 +4,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class Statistics extends React.Component {
 
     static propTypes = {
