@@ -58,7 +58,6 @@ module.exports =
         #DEBUG console.log('... test_wallet')
         WalletDb.setCurrentWalletName("default_" + suffix)
         WalletDb.onCreateWallet(
-            "my_account",
             "password",
             "brainkey" + suffix, 
             true # unlock  

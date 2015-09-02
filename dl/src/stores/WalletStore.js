@@ -11,7 +11,10 @@ class WalletStore extends BaseStore {
     constructor() {
         super()
         this.state = this._getInitialState()
-        this.bindActions([ WalletActions, WalletCreateActions ])
+        this.bindListeners({
+            onRestore: WalletActions.restore,
+            onDefaultWalletCreated: WalletCreateActions.defaultWalletCreated
+        })
         super._export("init")
     }
     

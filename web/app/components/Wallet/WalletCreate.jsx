@@ -106,7 +106,7 @@ class WalletCreate extends Component {
             value = value.toLowerCase()
         }
         //TODO BrainKeyCreate.jsx
-        //key.suggest_brain_key(key.browserEntropy() + secret_server_token)
+        //key.suggest_brain_key(key.browserEntropy())
         //if(key_id === "brainkey") {
         //    value = value.toUpperCase()
         //    value = value.split(/[\t\n\v\f\r ]+/).join(" ")
@@ -120,7 +120,6 @@ class WalletCreate extends Component {
     onSubmit(e) {
         e.preventDefault()
         WalletDb.onCreateWallet(
-            null,//login_account_name
             this.state.password,
             null, //this.state.brainkey,
             true //unlock

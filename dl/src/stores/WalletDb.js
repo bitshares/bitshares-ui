@@ -11,8 +11,10 @@ import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
+import WalletCreateActions from "actions/WalletCreateActions"
 import chain_config from "chain/config"
 import key_utils from "common/key_utils"
+//import WalletActions from "actions/WalletActions"
 
 var wallet_public_name = "default"
 var aes_private_map = {}
@@ -23,7 +25,6 @@ var TRACE = false
 class WalletDb {
     
     constructor() {
-        this.secret_server_token = "secret_server_token";
         this.wallet = Immutable.Map();
         // Confirm only works when there is a UI
         this.confirm_transactions = true
@@ -57,10 +58,7 @@ class WalletDb {
             wallet.encrypted_brainkey
         )
         try {
-            key.aes_private(
-                brainkey_plaintext + this.secret_server_token,
-                wallet.brainkey_checksum
-            )
+            key.aes_private( brainkey_plaintext, wallet.brainkey_checksum )
         } catch(e) {
             throw new Error('Brainkey checksum mis-match')
         }
@@ -81,10 +79,9 @@ class WalletDb {
             return false
         
         try {
-            var aes_private = key.aes_private(
-                password + this.secret_server_token,
-                wallet.password_checksum
-            )
+            var aes_private = key.aes_private( password,
+                wallet.password_checksum )
+            
             if(unlock) {
                 aes_private_map[wallet_public_name] = aes_private
             }
@@ -197,7 +194,7 @@ class WalletDb {
         return transaction
     }
     
-    getBackupPrivateKey(brainkey_plaintext = this.getBrainKey()) {
+    getBrainKey_PrivateKey(brainkey_plaintext = this.getBrainKey()) {
         if( ! brainkey_plaintext)
             throw new Error("Missing brainkey")
         
@@ -206,7 +203,6 @@ class WalletDb {
     }
     
     onCreateWallet(
-        login_account_name,
         password_plaintext,
         brainkey_plaintext,
         unlock = false
@@ -217,31 +213,31 @@ class WalletDb {
                 return
             }
             
-            var password = key.aes_checksum(
-                password_plaintext + this.secret_server_token
-            )
+            var password = key.aes_checksum( password_plaintext )
             
             if( ! brainkey_plaintext) {
                 brainkey_plaintext = key.suggest_brain_key(
-                    key.browserEntropy() +
-                    this.secret_server_token
-                )
+                    key.browserEntropy() )
             }
             
             var {brainkey_checksum, brainkey_cipherhex} =
                 this.encrypteBrainKey(password, brainkey_plaintext)
             
-            var backup_private_key = this.getBackupPrivateKey(brainkey_plaintext)
-            // Create a public key used to encrypt backups
-            var backup_pubkey = backup_private_key.toPublicKey().toPublicKeyString()
+            // Create public keys that may be used to encrypt backups
+            
+            var brainkey_private_key = this.getBrainKey_PrivateKey(brainkey_plaintext)
+            var brainkey_pubkey = brainkey_private_key.toPublicKey().toPublicKeyString()
+            
+            var password_private_key = PrivateKey.fromSeed( password_plaintext )
+            var password_pubkey = password_private_key.toPublicKey().toPublicKeyString()
             
             let wallet = {
                 public_name: wallet_public_name,
-                login_account_name,
                 password_checksum: password.checksum,
                 encrypted_brainkey: brainkey_cipherhex,
                 brainkey_checksum,
-                backup_pubkey,
+                brainkey_pubkey,
+                password_pubkey,
                 created: new Date(),
                 last_modified: new Date(),
                 chain_id: Apis.instance().chain_id
@@ -253,6 +249,7 @@ class WalletDb {
                 wallet
             )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
+                WalletCreateActions.defaultWalletCreated()
                 this.wallet = this.wallet.set(
                     wallet.public_name,
                     wallet//WalletTcomb(wallet)
@@ -272,9 +269,7 @@ class WalletDb {
     encrypteBrainKey(password, brainkey_plaintext){
         var brainkey_checksum=null, brainkey_cipherhex=null
         if(brainkey_plaintext) {
-            brainkey_checksum = key.aes_checksum(
-                brainkey_plaintext + this.secret_server_token
-            ).checksum
+            brainkey_checksum = key.aes_checksum( brainkey_plaintext ).checksum
         
             brainkey_cipherhex = password.aes_private.encryptToHex(
                 brainkey_plaintext
@@ -466,30 +461,6 @@ class WalletDb {
         )
         return Promise.all([p,p2])
     }
-    
-    /*
-    validateBrainkey(
-        wallet,
-        brain_key
-    ) {
-        if ( ! wallet)
-            throw new Error("wrong password")
-        
-        if(! brain_key || typeof brain_key != 'string')
-            throw new Error("required: brain_key")
-        
-        if(! secret_server_token || typeof password != 'string')
-            throw new Error("required: secret_server_token")
-        
-        if ( ! wallet.brainkey_checksum)
-            throw new Error("wrong password")
-        
-        var aes_private = key.aes_private(
-            brain_key + secret_server_token,
-            wallet.brainkey_checksum
-        )
-    }
-    */
 
     loadDbData() {
         var map = this.wallet.asMutable()
