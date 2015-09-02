@@ -1,14 +1,16 @@
 import alt from "alt-instance"
 import BackupActions from "actions/BackupActions"
+import BaseStore from "stores/BaseStore"
 
-class BackupStore {
+class BackupStore extends BaseStore {
     
     constructor() {
+        super()
         this.bindActions(BackupActions)
     }
     
-    onCreateWalletJson(walletObject) {
-        console.log('... walletObject',walletObject)
+    onBackup(backup) {
+        this.setState({backup})
     }
     
 }

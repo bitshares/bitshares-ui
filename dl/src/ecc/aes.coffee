@@ -28,18 +28,19 @@ class Aes
     ##* nonce is optional (null or empty string)
     Aes.decrypt_with_checksum = (private_key, public_key, nonce = "", message) ->
         
+        unless Buffer.isBuffer message
+            message = new Buffer message, 'hex'
+        
+        S = private_key.get_shared_secret public_key
+        
+        # D E B U G
         # console.log('decrypt_with_checksum', {
         #     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
         #     pub: public_key.toPublicKeyString()
         #     nonce: nonce
         #     message: message
+        #     S: S
         # })
-        
-        unless Buffer.isBuffer message
-            message = new Buffer message, 'hex'
-        
-        S = private_key.get_shared_secret public_key
-        #DEBUG console.log('... S',S)
         
         aes = Aes.fromSeed Buffer.concat [
             # A null or empty string nonce will not effect the hash
@@ -68,18 +69,20 @@ class Aes
     
     Aes.encrypt_with_checksum = (private_key, public_key, nonce = "", message) ->
         
+        unless Buffer.isBuffer message
+            message = new Buffer message, 'binary'
+        
+        S = private_key.get_shared_secret public_key
+        
+        # D E B U G
         # console.log('encrypt_with_checksum', {
         #     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
         #     pub: public_key.toPublicKeyString()
         #     nonce: nonce
         #     message: message
+        #     S: S
         # })
         
-        unless Buffer.isBuffer message
-            message = new Buffer message, 'binary'
-        
-        S = private_key.get_shared_secret public_key
-        #DEBUG console.log('... S',S)
         aes = Aes.fromSeed Buffer.concat [
             # A null or empty string nonce will not effect the hash
             new Buffer(""+nonce)

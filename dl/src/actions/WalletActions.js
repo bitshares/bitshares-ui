@@ -19,10 +19,20 @@ class WalletActions {
 
     constructor() {
         this.generateActions(
-            'brainKeyAccountCreated',
-            'brainKeyAccountCreateError'
+            'restore'
         )
     }
+    
+    // restore(wallet_name, wallet_object) {
+    //     return iDB.restore(wallet_name, wallet_object).then( () => {
+    //         this.dispatch(wallet_name)
+    //     }).catch( event => {
+    //         var error = event.target.error
+    //         console.error("Error saving wallet to database",
+    //             error.name, error.message, error)
+    //         throw new Error("Error saving wallet to database")
+    //     })
+    // }
 
     createBrainKeyAccount(
         account_name,
@@ -32,14 +42,13 @@ class WalletActions {
     ) {
         if( WalletDb.isLocked()) {
             var error = "wallet locked"
-            this.actions.brainKeyAccountCreateError( error )
+            //this.actions.brainKeyAccountCreateError( error )
             return Promise.reject( error )
         }
         
         var [owner_private, active_private] = WalletDb.generateKeys();
 
         var updateWallet = ()=> {
-            //DEBUG console.log('... brainKeyAccountCreated')
             var transaction = WalletDb.transaction_update_keys()
             var p = WalletDb.saveKeys(
                 [ owner_private, active_private ],
@@ -57,13 +66,15 @@ class WalletActions {
                 referrer, //referrer_id,
                 referrer_percent, //referrer_percent,
                 true //broadcast
-            ).then( () => {
-                return updateWallet().then(()=>
-                    this.actions.brainKeyAccountCreated())
-                }).catch(  error => {
-                    this.actions.brainKeyAccountCreateError(error);
-                    throw error;
-                });
+            ).then( () => updateWallet() )
+            // {
+            //     return updateWallet().then(()=> {
+            //         //this.actions.brainKeyAccountCreated())
+            //     }).catch(  error => {
+            //         //this.actions.brainKeyAccountCreateError(error);
+            //         throw error;
+            //     });
+            // })
         };
 
         if(registrar) {
@@ -95,10 +106,10 @@ class WalletActions {
 
             return create_account_promise.then(result => {
                 if (result.error) {
-                    this.actions.brainKeyAccountCreateError(result.error);
+                    //this.actions.brainKeyAccountCreateError(result.error);
                     throw result.error;
                 }
-                return updateWallet().then(() => this.actions.brainKeyAccountCreated());
+                return updateWallet()//.then(() => this.actions.brainKeyAccountCreated());
             }).catch(error => {
                 if (
                     error instanceof TypeError ||
@@ -107,7 +118,7 @@ class WalletActions {
                     console.log("Warning! faucet registration failed, falling back to direct application_api.create_account_with_brain_key..");
                     return create_account_with_brain_key();
                 }
-                this.actions.brainKeyAccountCreateError(error);
+                //this.actions.brainKeyAccountCreateError(error);
                 throw error;
             })
         }

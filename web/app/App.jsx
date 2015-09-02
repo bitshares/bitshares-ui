@@ -56,6 +56,8 @@ import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
+import Backup from "components/Persistance/Backup";
+import WalletStore from "stores/WalletStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -169,7 +171,8 @@ App.willTransitionTo = (transition, params, query, callback) => {
 
                 }).catch((error) => {
                     console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
-                })
+                }),
+                WalletStore.init()
             ]).then(()=> {
                 callback();
             })
@@ -220,6 +223,7 @@ let routes = (
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
+        <Route name="backup" path="backup" handler={Backup}/>
     </Route>
 );
 
