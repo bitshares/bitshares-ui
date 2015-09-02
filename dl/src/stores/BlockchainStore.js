@@ -60,11 +60,12 @@ class BlockchainStore extends BaseStore{
         }
     }
 
-    onGetLatest(block) {
+    onGetLatest(payload) {
+        let {block, maxBlock} = payload;
         block.timestamp = new Date(block.timestamp);
-        if (block.id > this.dynGlobalObject.head_block_number - 10) {
+        if (block.id > maxBlock - 20) {
             this.latestBlocks = this.latestBlocks.unshift(Block(block));
-            if (this.latestBlocks.size > 10) {
+            if (this.latestBlocks.size > 20) {
                 this.latestBlocks = this.latestBlocks.pop();
             }
         }
