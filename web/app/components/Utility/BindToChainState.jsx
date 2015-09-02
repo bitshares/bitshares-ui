@@ -36,6 +36,8 @@ const secondEl = _.curry(arrayElement)(1);
 const checkChainType = _.curry( (chain_type, t) => t === chain_type || t === chain_type.isRequired );
 const isObjectType = checkChainType(ChainTypes.ChainObject);
 const isAccountType = checkChainType(ChainTypes.ChainAccount);
+const isKeyRefsType = checkChainType(ChainTypes.ChainKeyRefs);
+const isAddressBalancesType = checkChainType(ChainTypes.ChainAddressBalances);
 function checkIfRequired(t) {
     for(let k in ChainTypes) {
         let v = ChainTypes[k];
@@ -54,14 +56,18 @@ function BindToChainState(options) {
                 if(options && options.all_props) {
                     this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children");
                     this.chain_accounts = [];
+                    this.chain_key_refs = [];
+                    this.chain_address_balances = [];
                     this.required_props = this.chain_objects;
                     this.all_chain_props = this.chain_objects;
                     this.default_props = {};
                 } else {
                     this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
                     this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
+                    this.chain_key_refs = prop_types_array.filter(_.flow(secondEl, isKeyRefsType)).map(firstEl);
+                    this.chain_address_balances = prop_types_array.filter(_.flow(secondEl, isAddressBalancesType)).map(firstEl);
                     this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
-                    this.all_chain_props = [...this.chain_objects, ...this.chain_accounts];
+                    this.all_chain_props = [...this.chain_objects, ...this.chain_accounts, ...this.chain_key_refs, ...chain_address_balances];
                     this.default_props = _.clone(Component.defaultProps) || {};
                     for (let key in this.default_props) {
                         let value = this.default_props[key];
@@ -108,6 +114,22 @@ function BindToChainState(options) {
                         if(prop[0] === "#" && Number.parseInt(prop.substring(1)))
                             prop = "1.2." + prop.substring(1);
                         let new_obj = ChainStore.getAccount(prop);
+                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                    }
+                }
+                for( let key of this.chain_key_refs )
+                {
+                    let prop = props[key] || this.default_props[key];
+                    if(prop) {
+                        let new_obj = ChainStore.getAccountRefsOfKey(prop);
+                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                    }
+                }
+                for( let key of this.chain_address_balances )
+                {
+                    let prop = props[key] || this.default_props[key];
+                    if(prop) {
+                        let new_obj = ChainStore.getBalanceObjects(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                     }
                 }
