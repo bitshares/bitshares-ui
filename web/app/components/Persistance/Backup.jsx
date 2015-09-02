@@ -102,7 +102,7 @@ class BackupDisk extends React.Component {
     }
     
     backupClick() {
-        var backup_pubkey = WalletDb.getWallet().backup_pubkey
+        var backup_pubkey = WalletDb.getWallet().brainkey_pubkey
         backup(backup_pubkey).then( backup => {
             var current_wallet = this.props.current_wallet
             var file_name = current_wallet + ".bin"
@@ -139,14 +139,15 @@ class RestoreDisk extends React.Component {
     }
     
     static getPropsFromStores() {
-        return {}
+        var props = WalletStore.getState()
+        return props
     }
     
     render() {
         var has_file = !!this.state.restore
         var has_wallet_name = !!this.state.wallet_public_name
         var has_unique_wallet_name = has_wallet_name ?
-            ! WalletStore.hasWallet(this.state.wallet_public_name) : undefined
+            ! this.props.wallet_names.has(this.state.wallet_public_name) : undefined
         
         var errors_wallet_name =
             has_unique_wallet_name === false ? "Wallet exists, choose a new name" : null
@@ -179,7 +180,7 @@ class RestoreDisk extends React.Component {
     
     restoreClick() {
         WalletUnlockActions.unlock().then( ()=> {
-            var private_key = WalletDb.getBackupPrivateKey()
+            var private_key = WalletDb.getBrainKey_PrivateKey()
             var contents = this.state.restore.contents
             var wallet_name = this.state.wallet_public_name
             restore(private_key.toWif(), contents, wallet_name).then(()=> {
