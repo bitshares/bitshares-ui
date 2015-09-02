@@ -15,16 +15,6 @@ class AccountOverview extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return true;
-        //return (
-        //    nextProps.account_name !== this.props.account_name ||
-        //    nextProps.cachedAccounts !== this.props.cachedAccounts ||
-        //    nextProps.assets !== this.props.assets ||
-        //    nextProps.accountBalances !== this.props.accountBalances ||
-        //    nextProps.wallet_locked !== this.props.wallet_locked ||
-        //    // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
-        //    // returning true here until issue #93 has been resolved
-        //    true
-        //);
     }
 
     render() {

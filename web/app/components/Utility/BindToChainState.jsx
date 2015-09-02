@@ -78,7 +78,7 @@ function BindToChainState(options) {
                 }
                 //console.log("----- Wrapper constructor ----->", this.all_chain_props);
                 this.update = this.update.bind(this);
-                this.state = {};
+                this.state = { resolved: false };
             }
 
             shouldComponentUpdate(nextProps, nextState){
@@ -97,14 +97,21 @@ function BindToChainState(options) {
 
             update(next_props)
             {
+                let keep_updating = (options && options.keep_updating) || this.props.keep_updating;
+                if(!next_props && !keep_updating && this.state.resolved) return;
+
                 let props = next_props || this.props;
                 let new_state = {};
+                let all_objects_counter = 0;
+                let resolved_objects_counter = 0;
                 for( let key of this.chain_objects )
                 {
                     let prop = props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getObject(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        ++all_objects_counter;
+                        if(new_obj !== undefined) ++resolved_objects_counter;
                     }
                 }
                 for( let key of this.chain_accounts )
@@ -115,6 +122,8 @@ function BindToChainState(options) {
                             prop = "1.2." + prop.substring(1);
                         let new_obj = ChainStore.getAccount(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        ++all_objects_counter;
+                        if(new_obj !== undefined) ++resolved_objects_counter;
                     }
                 }
                 for( let key of this.chain_key_refs )
@@ -123,6 +132,8 @@ function BindToChainState(options) {
                     if(prop) {
                         let new_obj = ChainStore.getAccountRefsOfKey(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        ++all_objects_counter;
+                        if(new_obj !== undefined) ++resolved_objects_counter;
                     }
                 }
                 for( let key of this.chain_address_balances )
@@ -131,9 +142,12 @@ function BindToChainState(options) {
                     if(prop) {
                         let new_obj = ChainStore.getBalanceObjects(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        ++all_objects_counter;
+                        if(new_obj !== undefined) ++resolved_objects_counter;
                     }
                 }
-                //console.log("----- Wrapper update ----->", props, this.state, new_state);
+                //console.log("----- Wrapper update ----->", this.all_chain_props, this.all_chain_props.length, all_objects_counter, resolved_objects_counter);
+                if(all_objects_counter === resolved_objects_counter) new_state.resolved = true;
                 this.setState( new_state )
             }
 
@@ -141,6 +155,7 @@ function BindToChainState(options) {
                 const props = _.omit(this.props, this.all_chain_props);
                 //console.log("----- Wrapper render ----->", props, this.state, this.required_props);
                 for(let prop of this.required_props) if(!this.state[prop]) return null;
+                //return <span className={this.state.resolved ? "resolved":"notresolved"}><Component {...props} {...this.state}/></span>;
                 return <Component {...props} {...this.state}/>;
             }
         }

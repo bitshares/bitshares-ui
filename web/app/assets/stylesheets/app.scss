@@ -222,3 +222,11 @@ a.currency, span.currency {
 .memo {
   padding-top: 0.4rem;
 }
+
+.notresolved {
+  border: 1px solid red;
+}
+
+.resolved {
+  border: 1px solid green;
+}

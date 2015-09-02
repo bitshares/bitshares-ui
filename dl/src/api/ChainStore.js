@@ -266,7 +266,7 @@ class ChainStore
          return result
       }
 
-      console.log( "fetchObject: ", id )
+      //console.log( "fetchObject: ", id )
       if( this.subscribed  !== true ) 
          return undefined
 
@@ -505,7 +505,7 @@ class ChainStore
       
 
       if( fetch_account ) {
-          console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
+          //console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
                  if(results.length === 0) return;
@@ -740,7 +740,7 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-      console.log( "update: ", object )
+      //console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
       if( current === undefined || current === true )
@@ -750,7 +750,7 @@ class ChainStore
 
       if( object.id.substring(0,4) == balance_prefix )
       {
-         console.log( "balance object update: ", object )
+         //console.log( "balance object update: ", object )
          let owner = this.objects_by_id.get( object.owner )
          owner = owner.setIn( ['balances', object.asset_id ], object.id )
          this.objects_by_id = this.objects_by_id.set( object.owner, owner  )
