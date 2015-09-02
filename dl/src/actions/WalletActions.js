@@ -1,6 +1,5 @@
 import WalletDb from "stores/WalletDb"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-//import BalanceClaimStore from "stores/BalanceClaimStore"//circular dep somewhere
 import ApplicationApi from "../rpc_api/ApplicationApi"
 import PrivateKey from "../ecc/key_private"
 import Apis from "../rpc_api/ApiInstances"
@@ -9,8 +8,8 @@ import chain_types from "../chain/chain_types"
 import lookup from "chain/lookup"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
+import alt from "alt-instance"
 
-var alt = require("../alt-instance")
 var application_api = new ApplicationApi()
 var api = Apis.instance()
 //var fetch = require('node-fetch')
@@ -18,21 +17,8 @@ var api = Apis.instance()
 class WalletActions {
 
     constructor() {
-        this.generateActions(
-            'restore'
-        )
+        this.generateActions( 'restore' )
     }
-    
-    // restore(wallet_name, wallet_object) {
-    //     return iDB.restore(wallet_name, wallet_object).then( () => {
-    //         this.dispatch(wallet_name)
-    //     }).catch( event => {
-    //         var error = event.target.error
-    //         console.error("Error saving wallet to database",
-    //             error.name, error.message, error)
-    //         throw new Error("Error saving wallet to database")
-    //     })
-    // }
 
     createBrainKeyAccount(
         account_name,
