@@ -44,9 +44,26 @@ var Utils = {
     },
 
     format_asset: function(amount, asset, noSymbol, trailing_zeros=true) {
-        let precision = this.get_asset_precision(asset.precision);
+        let symbol = asset
+        let digits = 0
+        if( asset === undefined )
+           return undefined
+        if( 'symbol' in asset ) 
+        {
+            console.log( "asset: ", asset )
+            symbol = asset.symbol
+            digits = asset.precision
+        }
+        else 
+        {
+           console.log( "asset: ", asset.toJS() )
+           symbol = asset.get('symbol')
+           digits = asset.get('precision')
+        }
+        let precision = this.get_asset_precision(digits);
+        console.log( "precision: ", precision )
 
-        return `${this.format_number(amount / precision, asset.precision, trailing_zeros)}${!noSymbol ? " " + asset.symbol : ""}`;
+        return `${this.format_number(amount / precision, digits, trailing_zeros)}${!noSymbol ? " " + symbol : ""}`;
     },
 
     format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol,inverted,trailing_zeros=true) {
