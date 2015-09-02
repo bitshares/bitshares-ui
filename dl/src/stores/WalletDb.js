@@ -1,8 +1,8 @@
 import iDB from "idb-instance";
 import Apis from "rpc_api/ApiInstances"
-import key from "common/key_utils"
-import idb_helper from "idb-helper"
-import {clonedeep} from "lodash"
+import key from "common/key_utils";
+import idb_helper from "idb-helper";
+import _ from "lodash";
 import Immutable from "immutable";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
@@ -446,7 +446,7 @@ class WalletDb {
             return
         }
         //DEBUG console.log('... wallet',wallet)
-        var wallet_clone = clonedeep( wallet )
+        var wallet_clone = _.cloneDeep( wallet )
         wallet_clone.last_modified = new Date()
         if(update_callback)
             update_callback(wallet_clone)
