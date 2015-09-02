@@ -28,15 +28,16 @@ class AssetSelector extends React.Component {
     }
 
     constructor(props) {
-       super(props)
+        super(props)
     }
 
-    onChange( event ) {
-        this.props.onChange( ChainStore.getAsset(event.target.value) )
+    onChange(event) {
+        this.props.onChange(ChainStore.getAsset(event.target.value))
     }
 
     render() {
-        var options = this.props.assets.map(function(value) {
+        if(this.props.assets.length === 0) return null;
+        var options = this.props.assets.map(function (value) {
             return <AssetOption asset={value} asset_id={value}/>
         });
         return (
@@ -48,69 +49,83 @@ class AssetSelector extends React.Component {
 
 }
 
-@BindToChainState()
-class AmountSelector extends React.Component {
+@BindToChainState() class AmountSelector extends React.Component {
 
     static propTypes = {
         label: React.PropTypes.string, // a translation key for the label
-        asset: ChainTypes.ChainObject, // selected asset by default (TODO: make sure resolve works)
+        asset: ChainTypes.ChainObject, // selected asset by default
         assets: React.PropTypes.array,
         amount: React.PropTypes.string,
         placeholder: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired,
-        display_balance: React.PropTypes.object
+        display_balance: React.PropTypes.object,
+        tabIndex: React.PropTypes.number
     }
 
-    constructor(props){
-       super(props)
-       this.state = { 
-          amount:"",
-          selected_asset: props.asset
-       }
+    constructor(props) {
+        super(props)
+        this.state = {
+            amount: "",
+            selected_asset: props.asset
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.asset && nextProps.asset != this.props.asset && !this.state.asset) {
+        if (nextProps.asset && nextProps.asset != this.props.asset && !this.state.asset) {
             this.props.onChange({amount: this.state.amount, asset: nextProps.asset});
         }
     }
 
-    formatAmount() {
-      return this.state.amount 
+    formatAmount(v) {
+        // TODO: use asset's precision to format the number
+        let value = v.trim().replace(/,/g, "");
+        while (value.substring(0, 2) == "00")
+            value = value.substring(1);
+        if (value[0] === ".") value = "0" + value;
+        else if (value.length) {
+            let n = Number(value)
+            if (isNaN(n)) {
+                value = parseFloat(value);
+                if (isNaN(value)) return "";
+            }
+            let parts = (value + "").split('.');
+            value = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (parts.length > 1) value += "." + parts[1];
+        }
+        return value;
     }
 
-    onChange( event )
-    {
-       let amount = event.target.value
-       this.setState( {amount} )
-       this.props.onChange({amount: amount, asset: this.state.selected_asset || this.props.asset})
+    onChange(event) {
+        let amount = event.target.value
+        this.setState({amount})
+        this.props.onChange({amount: amount, asset: this.state.selected_asset || this.props.asset})
     }
 
-    onAssetChange( selected_asset ) {
-        this.setState( {selected_asset} )
+    onAssetChange(selected_asset) {
+        this.setState({selected_asset})
         this.props.onChange({amount: this.state.amount, asset: selected_asset})
     }
 
     render() {
-         return (
-             <div className="amount-selector">
-                 <div className="float-right">{this.props.display_balance}</div>
-                 <Translate component="label" content={this.props.label}/>
-                 <div className="inline-label">
+        let value = this.formatAmount(this.state.amount);
+        return (
+            <div className="amount-selector">
+                <div className="float-right">{this.props.display_balance}</div>
+                <Translate component="label" content={this.props.label}/>
+                <div className="inline-label">
                     <input type="text"
-                     value={this.formatAmount()}
-                     placeholder={this.props.placeholder}
-                     onChange={this.onChange.bind(this) }
-                   />
+                           value={value}
+                           placeholder={this.props.placeholder}
+                           onChange={this.onChange.bind(this) }
+                           tabIndex={this.props.tabIndex}/>
                    <span className="form-label select">
                        <AssetSelector
-                         assets={this.props.assets}
-                         onChange={this.onAssetChange.bind(this)}
-                       />
+                           assets={this.props.assets}
+                           onChange={this.onAssetChange.bind(this)}/>
                    </span>
-                 </div>
-             </div>
-          )
+                </div>
+            </div>
+        )
     }
 
 }
