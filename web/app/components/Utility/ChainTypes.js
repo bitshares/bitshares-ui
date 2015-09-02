@@ -38,7 +38,24 @@ function objectIdChecker(props, propName, componentName, location) {
     return null;
 }
 
+function keyChecker(props, propName, componentName, location) {
+    componentName = componentName || "ANONYMOUS";
+    if (props[propName]) {
+        let value = props[propName];
+        if (typeof value === "string") {
+            // TODO: check if it's valid key
+            return null
+        } else {
+            return new Error(`${propName} in ${componentName} should be a key string`);
+        }
+    }
+    // assume all ok
+    return null;
+}
+
 let ChainObject = createChainableTypeChecker(objectIdChecker);
 let ChainAccount = createChainableTypeChecker(objectIdChecker);
+let ChainKeyRefs = createChainableTypeChecker(keyChecker);
+let ChainAddressBalances = createChainableTypeChecker(keyChecker);
 
 export default {ChainObject, ChainAccount};
