@@ -49,6 +49,7 @@ export default class iDBRoot {
         return this.openIndexedDB().then( db => {
             var transaction = db.transaction(["properties"], "readwrite")
             var store = transaction.objectStore("properties")
+            if(value["toJS"]) value = value.toJS() //Immutable-js
             return idb_helper.on_request_end( store.put({name, value}) )
         })
     }

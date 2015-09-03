@@ -1,13 +1,93 @@
 import React, {Component} from "react"
 
+import {RestoreDisk} from "components/Wallet/Backup"
 import WalletDb from "stores/WalletDb"
+import WalletStore from "stores/WalletStore"
 import NotificationSystem from 'react-notification-system'
 import notify from 'actions/NotificationActions'
-
+import connectToStores from "alt/utils/connectToStores"
 import key from "common/key_utils"
 import cname from "classnames"
 
+@connectToStores
 class WalletCreate extends Component {
+
+    constructor() {
+        super()
+        this.state = { show: "create_new_wallet" }
+    }
+    
+    static getStores() {
+        return [WalletStore];
+    }
+    
+    static getPropsFromStores() {
+        return {}
+    }
+    
+    render() {
+        
+        if(WalletDb.getWallet() && this.props.children)
+            return <div>{this.props.children}</div>
+        
+        return (
+            <div className="grid-block vertical">
+                <div className="grid-container">
+                    <div className="content-block center-content">
+                        <div className="content-block">
+                                        <h1>Welcome to Graphene</h1>
+                                        <h3>Please create a new wallet first:</h3>
+                        </div>
+                        <div className="content-block">
+                        
+                        { this.state.show === "create_new_wallet" ? <span>
+                            
+                            <CreateNewWallet />
+                            
+                            <br/>
+                            <label><a onClick={this.uploadBackupClick.bind(this)}>
+                                Upload a Backup</a></label>
+
+                        </span> : null}
+                        
+                        { this.state.show === "upload_backup" ? <span>
+                            
+                            <UploadWalletBackup />
+                            
+                            <br/>
+                            <label><a onClick={this.createNewWalletClick.bind(this)}>
+                                Create new Wallet</a></label>
+
+                        </span>: null}
+                                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    
+    uploadBackupClick() {
+        this.setState({show: "upload_backup"})
+    }
+    
+    createNewWalletClick() {
+        this.setState({show: "create_new_wallet"})
+    }
+    
+}
+
+class UploadWalletBackup extends Component {
+    
+    render() {
+        return <span>
+            <RestoreDisk/>
+        </span>
+    }
+}
+
+
+class CreateNewWallet extends Component {
     
     constructor() {
         super()
@@ -26,43 +106,30 @@ class WalletCreate extends Component {
         let errors = state.errors
         // let submitDisabled = this.state.isValid ? "" : "disabled"
         
-        if(WalletDb.getWallet() && this.props.children)
-            return <div>{this.props.children}</div>
-        
         return (
-            <div className="grid-block vertical">
-                <div className="grid-container">
-                    <div className="content-block center-content">
-                        <div className="content-block">
-                                        <h1>Welcome to Graphene</h1>
-                                        <h3>Please create a new wallet first:</h3>
-                        </div>
-                        <div className="content-block">
-                            <form
-                                className="name-form"
-                                onSubmit={this.onSubmit.bind(this)}
-                                onChange={this.formChange.bind(this)} noValidate
-                            >
-                                <div className={cname("grid-content", "no-overflow", {"has-error": errors.password_match || errors.password_length})}>
-                                    <label>Password</label>
-                                    <input type="password" id="password" value={this.state.password} autoComplete="off" />
+            <form
+                className="name-form"
+                onSubmit={this.onSubmit.bind(this)}
+                onChange={this.formChange.bind(this)} noValidate
+            >
+                <div className={cname("grid-content", "no-overflow", {"has-error": errors.password_match || errors.password_length})}>
+                    <label>Password</label>
+                    <input type="password" id="password" value={this.state.password} autoComplete="off" />
 
-                                    <label>Password (confirm)</label>
-                                        <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
-                                    <div>{errors.password_match || errors.password_length}</div>
-                                    <br/>
-                                </div>
-
-                                <div className="grid-content no-overflow">
-                                    <button className={cname("button",{disabled: !(this.state.password && this.state.isValid)})}>Create</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    <label>Password (confirm)</label>
+                    <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
+                    <div>{errors.password_match || errors.password_length}</div>
+                    <br/>
+                    
                 </div>
-            </div>
+
+                <div className="grid-content no-overflow">
+                    <button className={cname("button",{disabled: !(this.state.password && this.state.isValid)})}>Create</button>
+                </div>
+            </form>
         )
     }
+    
 // Multiple wallets:
 //                <div className={cname("grid-content", {"has-error": errors.from})}>
 //                    <label>Name</label>
