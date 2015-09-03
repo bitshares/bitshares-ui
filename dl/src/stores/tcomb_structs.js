@@ -103,7 +103,8 @@ let Delegate = t.struct({
     id: t.Str,
     url: t.Str,
     committee_member_account: t.Str,
-    vote_id: t.Str
+    vote_id: t.Str,
+    total_votes: t.Num
 }, "Delegate");
 
 let GlobalObject = t.struct({

@@ -23,12 +23,12 @@ class Api {
     }
 
     lookupDelegates(start_symbol, limit) {
-        return Apis.instance().db_api().exec("lookup_delegate_accounts", [
+        return Apis.instance().db_api().exec("lookup_committee_member_accounts", [
             start_symbol, limit]);
     }
 
     getDelegateByAccount(id) {
-        return Apis.instance().db_api().exec("get_delegate_by_account", [
+        return Apis.instance().db_api().exec("get_committee_member_by_account", [
             id
         ]);
     }
@@ -37,7 +37,7 @@ class Api {
         if (!Array.isArray(ids)) {
             ids = [ids];
         }
-        return Apis.instance().db_api().exec("get_delegates", [
+        return Apis.instance().db_api().exec("get_committee_members", [
             ids
         ]);
     }

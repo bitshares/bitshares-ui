@@ -1,6 +1,5 @@
 import React from "react";
 import DelegateStore from "stores/DelegateStore";
-import BlockchainStore from "stores/BlockchainStore";
 import AltContainer from "alt/AltContainer";
 import { RouteHandler } from "react-router";
 
@@ -9,7 +8,7 @@ class DelegatesContainer extends React.Component {
     render() {
         return (
               <AltContainer 
-                  stores={[BlockchainStore, DelegateStore]}
+                  stores={[DelegateStore]}
                   inject={{
                     delegates: () => {
                         return DelegateStore.getState().delegates;
@@ -22,9 +21,6 @@ class DelegatesContainer extends React.Component {
                     },
                     delegateAccounts: () => {
                         return DelegateStore.getState().delegateAccounts;
-                    },
-                    globalObject: () => {
-                        return BlockchainStore.getState().globalObject;
                     }
                   }} 
                   >

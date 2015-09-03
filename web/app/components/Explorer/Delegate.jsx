@@ -1,9 +1,8 @@
 import React from "react";
-import {PropTypes} from "react";
 import DelegateActions from "actions/DelegateActions";
 import Immutable from "immutable";
-import Translate from "react-translate-component";
 import Inspector from "react-json-inspector";
+import AccountImage from "../Account/AccountImage";
 require("../Blockchain/json-inspector.scss");
 
 class Delegate extends React.Component {
@@ -27,7 +26,7 @@ class Delegate extends React.Component {
 
     render() {
         let name = this.context.router.getCurrentParams().name;
-        let {delegates, delegateAccounts, delegate_id_to_name, delegate_name_to_id } = this.props;
+        let {delegates, delegateAccounts, delegate_name_to_id } = this.props;
         let id = delegate_name_to_id.get(name);
         let delegate = delegates.get(id);
         this._getDelegate(id);
@@ -39,14 +38,18 @@ class Delegate extends React.Component {
             );    
         }
 
-        
-
         return (
             <div className="grid-block vertical">
-                <div className="grid-block page-layout">
-                    <div className="grid-block">
-                        <h4>{name} | id: {id} </h4>
-                        <Inspector data={ delegates.get(id) } search={false}/>
+                <div className="grid-container text-center">
+                    <h4>{name}</h4>
+                    <AccountImage account={name} />
+                    <h5>#{id}</h5>
+                </div>
+                <div className="grid-block small-vertical medium-horizontal">        
+                    <div className="grid-content">
+                        <Inspector data={ delegate } search={false}/>
+                    </div>
+                    <div className="grid-content">
                         <Inspector data={ delegateAccounts.get(id) } search={false}/>
                     </div>
                 </div>
@@ -54,12 +57,6 @@ class Delegate extends React.Component {
         );
     }
 }
-
-Delegate.defaultProps = {
-};
-
-Delegate.propTypes = {
-};
 
 Delegate.contextTypes = { router: React.PropTypes.func.isRequired };
 

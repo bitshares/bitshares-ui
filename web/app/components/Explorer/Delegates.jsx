@@ -1,29 +1,39 @@
 import React from "react";
-import {PropTypes, Component} from "react";
 import Immutable from "immutable";
 import DelegateActions from "actions/DelegateActions";
 import AccountImage from "../Account/AccountImage";
-import { Link } from "react-router";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import FormattedAsset from "../Utility/FormattedAsset";
 
 class DelegateCard extends React.Component {
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
 
     shouldComponentUpdate(nextProps) {
         return nextProps.name !== this.props.name;
     }
 
+    _onCardClick(e) {
+        e.preventDefault();
+        this.context.router.transitionTo("delegate", {name: this.props.name});
+    }
+
     render() {
         return (
-            <div style={{padding: "0.5em 0.5em", minHeight: "15em"}} className="grid-content account-card">
+            <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
                 <div className="card">
-                    {this.props.name ? (<Link to="delegate" params={{name: this.props.name}}>
-                        <div>
-                            <AccountImage account={this.props.name} size={{height: 150, width: 150}}/>
+                    <h4 className="text-center">{this.props.name}</h4>
+                    <div className="card-content clearfix">
+                        <div className="float-left">
+                            <AccountImage account={this.props.name} size={{height: 64, width: 64}}/>
                         </div>
-                        <div className="card-divider">
-                            {this.props.name}
-                        </div>
-                    {this.props.children}
-                    </Link>) : null}
+                        <ul className="balances">
+                            <li>Total votes: <FormattedAsset decimalOffset={5} amount={this.props.delegate.total_votes} asset={"1.3.0"}/></li>
+                        </ul>                        
+                    </div>
                 </div>
             </div>
         );
@@ -50,8 +60,9 @@ class DelegateList extends React.Component {
         if (delegates.size > 0) {
             itemRows = delegates
                 .map((a) => {
+                    console.log("delegate:", a);
                     return (
-                        <DelegateCard key={a.id} name={delegate_id_to_name.get(a.id)}>
+                        <DelegateCard key={a.id} name={delegate_id_to_name.get(a.id)} delegate={a}>
                         </DelegateCard>
                     );
                 }).toArray();
@@ -65,15 +76,26 @@ class DelegateList extends React.Component {
     }
 }
 
+@BindToChainState({keep_updating: true})
+class Delegates extends React.Component {
 
+    static propTypes = {
+        globalObject: ChainTypes.ChainObject.isRequired
+    }
 
-class Delegates extends Component {
+    static defaultProps = {
+        globalObject: "2.0.0"
+    }
+
+    constructor(props) {
+        super(props);
+    }
 
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.delegates, this.props.delegates) ||
             !Immutable.is(nextProps.delegate_id_to_name, this.props.delegate_id_to_name) ||
-            !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject)
+            !Immutable.is(nextProps.globalObject, this.props.globalObject)
         );
     }
 
@@ -104,7 +126,9 @@ class Delegates extends Component {
     }
 
     render() {
-        let {delegate_id_to_name, delegates, dynGlobalObject, globalObject} = this.props;
+        let {delegate_id_to_name, delegates, globalObject} = this.props;
+        globalObject = globalObject.toJS();
+
         let activeDelegates = [];
         for (let key in globalObject.active_committee_members) {
             if (globalObject.active_committee_members.hasOwnProperty(key)) {
@@ -117,13 +141,13 @@ class Delegates extends Component {
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
-                    <div className="grid-block shrink">
+                    <div className="grid-block small-5 medium-3">
                         <div className="grid-content">
                             <h5>Total number of delegates active: {Object.keys(globalObject.active_committee_members).length}</h5>
                             <br/>
                         </div>
                     </div>
-                    <div className="grid-block" style={{overflowY: "auto", zIndex: 1}}>
+                    <div className="grid-block" style={{alignItems: "flex-start", overflowY: "auto", zIndex: 1}}>
                         <DelegateList delegates={delegates} delegate_id_to_name={delegate_id_to_name}/>
                     </div>
                 </div>
@@ -131,16 +155,5 @@ class Delegates extends Component {
         );
     }
 }
-
-
-Delegates.defaultProps = {
-    accounts: {},
-    assets: {}
-};
-
-Delegates.propTypes = {
-    accounts: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired
-};
 
 export default Delegates;
