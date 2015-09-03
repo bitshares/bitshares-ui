@@ -38,6 +38,7 @@ const isObjectType = checkChainType(ChainTypes.ChainObject);
 const isAccountType = checkChainType(ChainTypes.ChainAccount);
 const isKeyRefsType = checkChainType(ChainTypes.ChainKeyRefs);
 const isAddressBalancesType = checkChainType(ChainTypes.ChainAddressBalances);
+const isAssetType = checkChainType(ChainTypes.ChainAsset);
 function checkIfRequired(t) {
     for(let k in ChainTypes) {
         let v = ChainTypes[k];
@@ -50,6 +51,11 @@ function BindToChainState(options) {
     return function (Component) {
 
         return class Wrapper extends React.Component {
+
+            static contextTypes = {
+                router: React.PropTypes.func.isRequired
+            }
+
             constructor(props) {
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
@@ -58,6 +64,7 @@ function BindToChainState(options) {
                     this.chain_accounts = [];
                     this.chain_key_refs = [];
                     this.chain_address_balances = [];
+                    this.chain_assets = [];
                     this.required_props = this.chain_objects;
                     this.all_chain_props = this.chain_objects;
                     this.default_props = {};
@@ -66,14 +73,19 @@ function BindToChainState(options) {
                     this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
                     this.chain_key_refs = prop_types_array.filter(_.flow(secondEl, isKeyRefsType)).map(firstEl);
                     this.chain_address_balances = prop_types_array.filter(_.flow(secondEl, isAddressBalancesType)).map(firstEl);
+                    this.chain_assets = prop_types_array.filter(_.flow(secondEl, isAssetType)).map(firstEl);
                     this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
-                    this.all_chain_props = [...this.chain_objects, ...this.chain_accounts, ...this.chain_key_refs, ...this.chain_address_balances];
-                    this.default_props = _.clone(Component.defaultProps) || {};
-                    for (let key in this.default_props) {
-                        let value = this.default_props[key];
-                        if (typeof(value) === "string" && value.indexOf("props.") === 0) {
-                            this.default_props[key] = _.get(this, value);
-                        }
+                    this.all_chain_props = [...this.chain_objects,
+                                            ...this.chain_accounts,
+                                            ...this.chain_key_refs,
+                                            ...this.chain_address_balances,
+                                            ...this.chain_assets];
+                }
+                this.default_props = _.clone(Component.defaultProps) || {};
+                for (let key in this.default_props) {
+                    let value = this.default_props[key];
+                    if (typeof(value) === "string" && value.indexOf("props.") === 0) {
+                        this.default_props[key] = _.get(this, value);
                     }
                 }
                 //console.log("----- Wrapper constructor ----->", this.all_chain_props);
@@ -141,6 +153,16 @@ function BindToChainState(options) {
                     let prop = props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getBalanceObjects(prop);
+                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        ++all_objects_counter;
+                        if(new_obj !== undefined) ++resolved_objects_counter;
+                    }
+                }
+                for( let key of this.chain_assets )
+                {
+                    let prop = props[key] || this.default_props[key];
+                    if(prop) {
+                        let new_obj = ChainStore.getAsset(prop);
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;

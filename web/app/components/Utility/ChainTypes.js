@@ -53,9 +53,25 @@ function keyChecker(props, propName, componentName, location) {
     return null;
 }
 
+function assetChecker(props, propName, componentName, location) {
+    componentName = componentName || "ANONYMOUS";
+    if (props[propName]) {
+        let value = props[propName];
+        if (typeof value === "string") {
+            // TODO: check if it's valid asset symbol or id
+            return null
+        } else {
+            return new Error(`${propName} in ${componentName} should be an asset symbol or id`);
+        }
+    }
+    // assume all ok
+    return null;
+}
+
 let ChainObject = createChainableTypeChecker(objectIdChecker);
 let ChainAccount = createChainableTypeChecker(objectIdChecker);
 let ChainKeyRefs = createChainableTypeChecker(keyChecker);
 let ChainAddressBalances = createChainableTypeChecker(keyChecker);
+let ChainAsset = createChainableTypeChecker(assetChecker);
 
-export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances};
+export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances, ChainAsset};

@@ -22,7 +22,7 @@ class FormattedAsset extends React.Component {
     static propTypes = {
         amount: PropTypes.number.isRequired,
         base: ChainTypes.ChainObject,
-        asset: ChainTypes.ChainObject.isRequired,
+        asset: ChainTypes.ChainAsset.isRequired,
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
