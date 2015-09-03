@@ -7,7 +7,10 @@ import Translate from "react-translate-component";
 import LoadingIndicator from "../LoadingIndicator";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import LinkToAccountById from "./LinkToAccountById";
+import FormattedAsset from "../Utility/FormattedAsset";
 import Inspector from "react-json-inspector";
+import FormattedPrice from "../Utility/FormattedPrice";
 require("./json-inspector.scss");
 
 @BindToChainState({keep_updating: true})
@@ -22,8 +25,22 @@ class Asset extends React.Component {
     }
 
     render() {
-        console.log( "Assest: ", this.props.asset.toJS() )
-        return <div>Hello World, {this.props.asset.get('symbol')}</div>
+        var core_exchange = this.props.asset.getIn(["options","core_exchange_rate"]);
+        console.log( "Assets: ", this.props.asset.toJS() )
+        return <div>Hello World, {this.props.asset.get('symbol')}, 
+                I am: <LinkToAccountById account={this.props.asset.get('issuer')} />
+                   <p/>
+                   <FormattedAsset amount={this.props.asset.getIn(["options","max_supply"])}
+                                   asset={this.props.asset.get('id')}
+                                   hide_asset="true"
+                                   />
+                   <p/>
+                   <FormattedPrice base_asset={core_exchange.getIn(["base","asset_id"])}
+                                   quote_asset={core_exchange.getIn(["quote","asset_id"])}
+                                   base_amount={core_exchange.getIn(["base","amount"])}
+                                   quote_amount={core_exchange.getIn(["quote","amount"])}
+                                   />
+                </div>
 
         let {assets, accounts, asset_symbol_to_id, symbol} = this.props;
         let assetID = asset_symbol_to_id[symbol];
