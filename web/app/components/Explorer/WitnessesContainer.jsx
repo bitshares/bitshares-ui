@@ -1,6 +1,5 @@
 import React from "react";
 import WitnessStore from "stores/WitnessStore";
-import BlockchainStore from "stores/BlockchainStore";
 import AltContainer from "alt/AltContainer";
 import { RouteHandler } from "react-router";
 
@@ -9,7 +8,7 @@ class WitnessesContainer extends React.Component {
     render() {
         return (
               <AltContainer 
-                  stores={[BlockchainStore, WitnessStore]}
+                  stores={[WitnessStore]}
                   inject={{
                     witnesses: () => {
                         return WitnessStore.getState().witnesses;
@@ -22,12 +21,6 @@ class WitnessesContainer extends React.Component {
                     },
                     witnessAccounts: () => {
                         return WitnessStore.getState().witnessAccounts;
-                    },
-                    dynGlobalObject: () => {
-                        return BlockchainStore.getState().dynGlobalObject;
-                    },
-                    globalObject: () => {
-                        return BlockchainStore.getState().globalObject;
                     }
                   }} 
                   >

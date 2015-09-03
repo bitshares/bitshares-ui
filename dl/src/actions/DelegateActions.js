@@ -24,10 +24,8 @@ class DelegateActions {
                 } else {
                     id = id_or_name;
                 }
-
                 witnessApi.getDelegates(id).then(delegate => {
-
-                    api.getObjects(delegate[0].delegate_account).then(account => {
+                    api.getObjects(delegate[0].committee_member_account).then(account => {
                         delegate_in_prog[id_or_name] = false;
                         this.dispatch({
                             delegate: delegate[0],

@@ -1,29 +1,35 @@
 import React from "react";
-import {PropTypes, Component} from "react";
 import Immutable from "immutable";
 import WitnessActions from "actions/WitnessActions";
 import AccountImage from "../Account/AccountImage";
-import { Link } from "react-router";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
 
 class WitnessCard extends React.Component {
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
 
     shouldComponentUpdate(nextProps) {
         return nextProps.name !== this.props.name;
     }
 
+    _onCardClick(e) {
+        e.preventDefault();
+        this.context.router.transitionTo("witness", {name: this.props.name});
+    }
+
     render() {
         return (
-            <div style={{padding: "0.5em 0.5em", minHeight: "15em"}} className="grid-content account-card">
+            <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
                 <div className="card">
-                    {this.props.name ? (<Link to="witness" params={{name: this.props.name}}>
-                        <div>
-                            <AccountImage account={this.props.name} size={{height: 150, width: 150}}/>
+                    <h4 className="text-center">{this.props.name}</h4>
+                    <div className="card-content">
+                        <div className="text-center">
+                            <AccountImage account={this.props.name} size={{height: 64, width: 64}}/>
                         </div>
-                        <div className="card-divider">
-                            {this.props.name}
-                        </div>
-                        {this.props.children}
-                    </Link>) : null}
+                    </div>
                 </div>
             </div>
         );
@@ -67,8 +73,22 @@ class WitnessList extends React.Component {
 }
 
 
+@BindToChainState({keep_updating: true})
+class Witnesses extends React.Component {
 
-class Witnesses extends Component {
+    static propTypes = {
+        globalObject: ChainTypes.ChainObject.isRequired,
+        dynGlobalObject: ChainTypes.ChainObject.isRequired
+    }
+
+    static defaultProps = {
+        globalObject: "2.0.0",
+        dynGlobalObject: "2.1.0"
+    }
+
+    constructor(props) {
+        super(props);
+    }
 
     shouldComponentUpdate(nextProps) {
         return (
@@ -107,6 +127,9 @@ class Witnesses extends Component {
     render() {
         let {witness_id_to_name, witnesses, dynGlobalObject, globalObject} = this.props;
         let activeWitnesses = [];
+        dynGlobalObject = dynGlobalObject.toJS();
+        globalObject = globalObject.toJS();
+
         for (let key in globalObject.active_witnesses) {
             if (globalObject.active_witnesses.hasOwnProperty(key)) {
                 activeWitnesses.push(globalObject.active_witnesses[key]);
@@ -118,14 +141,14 @@ class Witnesses extends Component {
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
-                    <div className="grid-block shrink">
+                    <div className="grid-block small-5 medium-3">
                         <div className="grid-content">
                             <h4>Currently active witness: {witness_id_to_name.get(dynGlobalObject.current_witness)}</h4>
                             <h5>Total number of witnesses active: {Object.keys(globalObject.active_witnesses).length}</h5>
                             <br/>
                         </div>
                     </div>
-                    <div className="grid-block" style={{overflowY: "auto", zIndex: 1}}>
+                    <div className="grid-block" style={{alignItems: "flex-start", overflowY: "auto", zIndex: 1}}>
                             <WitnessList witnesses={witnesses} witness_id_to_name={witness_id_to_name}/>
                     </div>
                 </div>
@@ -133,16 +156,5 @@ class Witnesses extends Component {
         );
     }
 }
-
-
-Witnesses.defaultProps = {
-    accounts: {},
-    assets: {}
-};
-
-Witnesses.propTypes = {
-    accounts: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired
-};
 
 export default Witnesses;

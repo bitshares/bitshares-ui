@@ -63,7 +63,7 @@ class DelegateStore {
 
         this.delegates = this.delegates.set(
                 payload.delegate.id,
-                Witness(payload.delegate)
+                Delegate(payload.delegate)
         );
 
         this.delegate_id_to_name = this.delegate_id_to_name.set(

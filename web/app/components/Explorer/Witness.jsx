@@ -1,9 +1,8 @@
 import React from "react";
-import {PropTypes} from "react";
 import WitnessActions from "actions/WitnessActions";
 import Immutable from "immutable";
-import Translate from "react-translate-component";
 import Inspector from "react-json-inspector";
+import AccountImage from "../Account/AccountImage";
 require("../Blockchain/json-inspector.scss");
 
 class Witness extends React.Component {
@@ -27,9 +26,10 @@ class Witness extends React.Component {
 
     render() {
         let name = this.context.router.getCurrentParams().name;
-        let {witnesses, witnessAccounts, delegate_id_to_name, witness_name_to_id } = this.props;
+        let {witnesses, witnessAccounts, witness_name_to_id } = this.props;
         let id = witness_name_to_id.get(name);
         let witness = witnesses.get(id);
+        console.log("id:", id, "witness:", witness);
         this._getWitness(id);
 
         if (!id || !witness) {
@@ -41,10 +41,16 @@ class Witness extends React.Component {
 
         return (
             <div className="grid-block vertical">
-                <div className="grid-block page-layout">
-                    <div className="grid-block">
-                        <h4>{name} | id: {id} </h4>
+                <div className="grid-container text-center">
+                    <h4>{name}</h4>
+                    <AccountImage account={name} />
+                    <h5>#{id}</h5>
+                </div>
+                <div className="grid-block small-vertical medium-horizontal">        
+                    <div className="grid-content">                
                         <Inspector data={ witness } search={false}/>
+                    </div>
+                    <div className="grid-content">                
                         <Inspector data={ witnessAccounts.get(witness.witness_account) } search={false}/>
                     </div>
                 </div>
@@ -52,12 +58,6 @@ class Witness extends React.Component {
         );
     }
 }
-
-Witness.defaultProps = {
-};
-
-Witness.propTypes = {
-};
 
 Witness.contextTypes = { router: React.PropTypes.func.isRequired };
 
