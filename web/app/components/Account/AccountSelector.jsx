@@ -24,6 +24,7 @@ class AccountSelector extends React.Component {
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         onChange: React.PropTypes.func, // a method to be called any time user input changes
         onAccountChanged: React.PropTypes.func, // a method to be called when existing account is selected
+        onAction: React.PropTypes.func, // a method called when Add button is clicked
         accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: React.PropTypes.number // tabindex property to be passed to input tag
@@ -43,20 +44,21 @@ class AccountSelector extends React.Component {
 
     onInputChanged(event) {
         let value = event.target.value.trim().toLowerCase();
-        if
-        (   this.props.onChange
-            && (value.length < 4 || this.getNameType(value))
-            && value !== this.props.accountName
-        ) this.props.onChange(value);
+        if (this.props.onChange && value !== this.props.accountName) this.props.onChange(value);
     }
 
     onKeyDown(e) {
-        if (event.keyCode === 13) this.onInputChanged(e);
+        if (event.keyCode === 13) this.onAction(e);
     }
 
     componentWillReceiveProps(newProps) {
         if(this.props.onAccountChanged && newProps.account !== this.props.account)
             this.props.onAccountChanged(newProps.account);
+    }
+
+    onAction(e) {
+        e.preventDefault();
+        if(this.props.onAction) this.props.onAction(this.props.account);
     }
 
     render() {
@@ -69,7 +71,7 @@ class AccountSelector extends React.Component {
             let type = this.getNameType(this.props.accountName);
             if(type === "name") lookup_display = "#" + this.props.account.get("id").substring(4);
             else if(type === "id") lookup_display = this.props.account.get("name");
-        } else if( !error && this.props.accountName != "" ) error = "Unknown Account"
+        } else if( !error && this.props.accountName ) error = "Unknown Account"
 
         let member_status = null;
         if (this.props.account)
@@ -90,7 +92,7 @@ class AccountSelector extends React.Component {
                       <input type="text"
                              value={this.props.accountName}
                              defaultValue={this.props.accountName}
-                             placeholder={this.props.placeholder}
+                             placeholder={this.props.placeholder || "Account Name"}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}
                              onKeyDown={this.onKeyDown.bind(this)}
@@ -98,7 +100,7 @@ class AccountSelector extends React.Component {
                           />
                           { !this.props.onAction ? null : (
                               <button className={this.props.action_class}
-                                      onClick={this.props.onAction}>
+                                      onClick={this.onAction.bind(this)}>
                                   <Translate content={this.props.action_label}/></button>
                           )}
                       </span>
