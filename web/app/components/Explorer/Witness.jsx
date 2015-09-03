@@ -29,7 +29,6 @@ class Witness extends React.Component {
         let {witnesses, witnessAccounts, witness_name_to_id } = this.props;
         let id = witness_name_to_id.get(name);
         let witness = witnesses.get(id);
-        console.log("id:", id, "witness:", witness);
         this._getWitness(id);
 
         if (!id || !witness) {
