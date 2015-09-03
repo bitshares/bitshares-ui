@@ -60,12 +60,12 @@ function BindToChainState(options) {
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
                 if(options && options.all_props) {
-                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children");
+                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children" || e === "keep_updating");
                     this.chain_accounts = [];
                     this.chain_key_refs = [];
                     this.chain_address_balances = [];
                     this.chain_assets = [];
-                    this.required_props = this.chain_objects;
+                    this.required_props = []; //this.chain_objects;
                     this.all_chain_props = this.chain_objects;
                     this.default_props = {};
                 } else {
@@ -103,9 +103,18 @@ function BindToChainState(options) {
                 this.update();
             }
 
-            componentWillUnmount() { ChainStore.unsubscribe( this.update ) }
+            componentWillUnmount() {
+                ChainStore.unsubscribe( this.update );
+            }
 
-            componentWillReceiveProps( next_props ) { this.update(next_props); }
+            componentWillReceiveProps( next_props ) {
+                if(options && options.all_props) {
+                    this.chain_objects = _.reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating");
+                    this.all_chain_props = this.chain_objects;
+                    this.state = _.pick(this.state, this.chain_objects);
+                }
+                this.update(next_props);
+            }
 
             update(next_props)
             {
@@ -124,6 +133,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_accounts )
@@ -136,6 +147,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_key_refs )
@@ -146,6 +159,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_address_balances )
@@ -156,6 +171,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_assets )
@@ -166,6 +183,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 //console.log("----- Wrapper update ----->", this.all_chain_props, this.all_chain_props.length, all_objects_counter, resolved_objects_counter);
