@@ -60,7 +60,6 @@ class DelegateList extends React.Component {
         if (delegates.size > 0) {
             itemRows = delegates
                 .map((a) => {
-                    console.log("delegate:", a);
                     return (
                         <DelegateCard key={a.id} name={delegate_id_to_name.get(a.id)} delegate={a}>
                         </DelegateCard>
