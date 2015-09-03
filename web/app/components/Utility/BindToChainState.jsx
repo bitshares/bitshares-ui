@@ -65,7 +65,7 @@ function BindToChainState(options) {
                     this.chain_key_refs = [];
                     this.chain_address_balances = [];
                     this.chain_assets = [];
-                    this.required_props = []; //this.chain_objects;
+                    this.required_props = [];
                     this.all_chain_props = this.chain_objects;
                     this.default_props = {};
                 } else {
@@ -80,6 +80,9 @@ function BindToChainState(options) {
                                             ...this.chain_key_refs,
                                             ...this.chain_address_balances,
                                             ...this.chain_assets];
+                }
+                if(options && options.require_all_props){
+                    this.required_props = this.all_chain_props;
                 }
                 this.default_props = _.clone(Component.defaultProps) || {};
                 for (let key in this.default_props) {
@@ -204,7 +207,7 @@ function BindToChainState(options) {
     }
 }
 
-@BindToChainState({all_props: true})
+@BindToChainState({all_props: true, require_all_props: true})
 class Wrapper extends React.Component {
     render() {
         return <div className="wrapper">
@@ -213,6 +216,16 @@ class Wrapper extends React.Component {
     }
 }
 
+@BindToChainState({all_props: true})
+class WrapperNR extends React.Component {
+    render() {
+        return <div className="wrapper">
+            {this.props.children(this.props)}
+        </div>;
+    }
+}
+
 BindToChainState.Wrapper = Wrapper;
+BindToChainState.WrapperNR = WrapperNR;
 
 export default BindToChainState;
