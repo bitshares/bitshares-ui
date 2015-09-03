@@ -8,23 +8,20 @@ import LoadingIndicator from "../LoadingIndicator";
 import Inspector from "react-json-inspector";
 require("./json-inspector.scss");
 
+@BindToChainState({keep_updating: true})
 class Asset extends React.Component {
 
-    shouldComponentUpdate(nextProps) {
-        return (
-            !Immutable.is(nextProps.assets, this.props.assets) ||
-            nextProps.accounts !== this.props.accounts
-            );
-    }
-
-    componentDidMount() {
-        if (!this.props.asset_symbol_to_id[this.props.symbol]) {
-            AssetActions.getAsset(this.props.symbol);
-        }
+	static propTypes = {
+        asset: ChainTypes.ChainObject, // account object retrieved via BindToChainState decorator (not input)
     }
 
     render() {
-
+		console.log( "Assest: ", this.props.asset.toJS() )
+		return <div>Hello World, {this.props.asset.get('symbol')}</div>
+		
+		
+		
+		// BLOW THIS DOES NOT EXEC
         let {assets, accounts, asset_symbol_to_id, symbol} = this.props;
         let assetID = asset_symbol_to_id[symbol];
         let asset = assets.get(assetID);
