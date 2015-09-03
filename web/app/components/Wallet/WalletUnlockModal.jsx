@@ -57,13 +57,15 @@ class WalletUnlockModal extends React.Component {
     
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
+        var unlock_what = this.props.unlock_what || "Wallet"
+        
         return ( 
             // U N L O C K
             <Modal id={this.props.modalId} ref="modal" overlay={true}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
-                <h3>Unlock wallet</h3>
+                <h3>Unlock {unlock_what}</h3>
                 <form onSubmit={this._passSubmit.bind(this)}>
                         <PasswordInput onChange={this._passChange.bind(this)}
                             key={this.state.password_input_reset}
@@ -71,7 +73,7 @@ class WalletUnlockModal extends React.Component {
                     <div className="button-group">
                         <a className="button" href
                             onClick={this._passSubmit.bind(this)}>
-                            Unlock Wallet</a>
+                            Unlock {unlock_what}</a>
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button">Cancel</a>
                         </Trigger>

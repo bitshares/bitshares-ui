@@ -12,19 +12,24 @@ import WalletActions from "actions/WalletActions"
 
 class BackupActions {
     
-    //backup() {
-    //}
+    incommingWebFile(file) {
+        var reader = new FileReader()
+        reader.onload = evt => {
+            var contents = new Buffer(evt.target.result, 'binary')
+            var name = file.name
+            var last_modified = file.lastModifiedDate.toString()
+            this.dispatch({name, contents, last_modified})
+        }
+        reader.readAsBinaryString(file)
+    }
     
-    //importwallet_object(wallet_object, walletName = "default") {
-    //}
-    //
-    //createWalletBackup(backup_pubkey) {
-    //}
-    //
-    //importWalletBackup(encryptedWalletBuffer, walletName = "default") {
-    //    
-    //}
+    incommingBuffer(params) {
+        this.dispatch(params)
+    }
     
+    reset() {
+        this.dispatch()
+    }
 
 }
 
@@ -94,7 +99,7 @@ export function decryptWalletBackup(backup_wif, backup_buffer) {
                 private_key, public_key, null/*nonce*/, backup_buffer)
         } catch(error) {
             console.error("Error decrypting wallet", error, error.stack)
-            reject("Error decrypting wallet")
+            reject("invalid_decryption_key")
             return
         }
         

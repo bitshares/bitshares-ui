@@ -56,7 +56,7 @@ import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
-import Backup from "components/Persistance/Backup";
+import Backup from "components/Wallet/Backup";
 import WalletStore from "stores/WalletStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate

@@ -155,7 +155,7 @@ class CreateAccount extends React.Component {
                             <button className={buttonClass}>Create Account</button>
                             <br/>
                             <br/>
-                            <Link to="existing-account">Balance Import</Link>
+                            <label><Link to="existing-account">Existing Acccounts</Link></label>
                         </form>
                     </div>
                 </div>
