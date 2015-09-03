@@ -12,7 +12,7 @@ require("../Blockchain/json-inspector.scss");
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class Blocks extends React.Component {
 
     static propTypes = {
@@ -33,7 +33,8 @@ class Blocks extends React.Component {
         return (
             !Immutable.is(nextProps.latestBlocks, this.props.latestBlocks) ||
             !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name)
+            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
+            !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject)
             );
     }
 
