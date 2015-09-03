@@ -14,9 +14,9 @@ new WebpackDevServer(compiler, {
     quiet: false,
     stats: {colors: true},
     port: 8080
-}).listen(8080, 'localhost', function (err, result) {
+}).listen(8080, '0.0.0.0', function (err, result) {
     if (err) {
         console.log(err);
     }
-    console.log('Listening at localhost:8080');
+    console.log('Listening at 0.0.0.0:8080');
 });
