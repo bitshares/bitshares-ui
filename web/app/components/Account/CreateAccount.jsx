@@ -108,7 +108,7 @@ class CreateAccount extends React.Component {
     render() {
         if(this.state.loading) return <LoadingIndicator/>;
         let account_store_state = AccountStore.getState();
-        let my_accounts = account_store_state.myAccounts.map(name => name).toJS();
+        let my_accounts = account_store_state.myAccounts ? account_store_state.myAccounts.map(name => name).toJS() : [];
         let first_account = my_accounts.length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
