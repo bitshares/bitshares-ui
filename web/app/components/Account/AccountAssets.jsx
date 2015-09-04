@@ -15,12 +15,13 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import {debounce} from "lodash";
 import AccountInfo from "../Account/AccountInfo";
 import LoadingIndicator from "../LoadingIndicator";
-import WalletDb from "stores/WalletDb";
-import WalletUnlockActions from "actions/WalletUnlockActions";
+// import WalletDb from "stores/WalletDb";
+// import WalletUnlockActions from "actions/WalletUnlockActions";
 import BlockchainStore from "stores/BlockchainStore";
 import validation from "common/validation";
 import classnames from "classnames";
 import counterpart from "counterpart";
+import PrivateKeyStore from "stores/PrivateKeyStore";
 
 class AccountAssets extends React.Component {
 
@@ -88,7 +89,7 @@ class AccountAssets extends React.Component {
         let {create} = this.state;
         if (value === "symbol") {
             e.target.value = e.target.value.toUpperCase();
-            console.log(e.target.value, "is valid symbol", validation.is_valid_symbol(e.target.value));
+            // console.log(e.target.value, "is valid symbol", validation.is_valid_symbol(e.target.value));
         }
         create[value] = e.target.value;
         this.setState({create: create});
@@ -128,6 +129,7 @@ class AccountAssets extends React.Component {
     }
 
     _createAsset(account_id, e) {
+        console.log("account_id:", account_id);
         e.preventDefault();
         ZfApi.publish("create_asset", "close");
         let {create} = this.state;
@@ -200,13 +202,16 @@ class AccountAssets extends React.Component {
 
 
         // Calculate the CreateAsset fee by measuring the length of the symbol.
-        let symbolLength = create.symbol.length, createFee = "N/A";
-        if(symbolLength == 3)
-            createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol3"])} asset={"1.3.0"} />;
-        else if(symbolLength == 4)
-            createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol4"])} asset={"1.3.0"} />;
-        else if(symbolLength > 4)
-            createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["long_symbol"])} asset={"1.3.0"} />;
+        // let symbolLength = create.symbol.length, createFee = "N/A";
+        // if(symbolLength === 3) {
+        //     createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol3"])} asset={"1.3.0"} />;
+        // }
+        // else if(symbolLength === 4) {
+        //     createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol4"])} asset={"1.3.0"} />;
+        // }
+        // else if(symbolLength > 4) {
+        //     createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["long_symbol"])} asset={"1.3.0"} />;
+        // }
 
         let accountExists = true;
         if (!account) {
@@ -218,10 +223,11 @@ class AccountAssets extends React.Component {
             return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
 
-        let isMyAccount = account.my_account;
 
+        let isMyAccount = PrivateKeyStore.hasKey(account.getIn(["owner", "key_auths", "0", "0"]));
+        // console.log("account:", account, "id:", account.get("id"));
         let myAssets = assets.filter(asset => {
-            return asset.issuer === account.id;
+            return asset.issuer === account.get("id");
         })
         .sort((a, b) => {
             return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
@@ -295,7 +301,7 @@ class AccountAssets extends React.Component {
                         </Trigger>
                         <br/>
                         <div className="grid-block vertical">
-                            <form onSubmit={this._createAsset.bind(this, account.id)} noValidate>
+                            <form onSubmit={this._createAsset.bind(this, account.get("id"))} noValidate>
                                 <div className="shrink grid-content">
                                     <label><Translate content="account.user_issued_assets.symbol" />
                                         <input type="text" value={create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
@@ -310,11 +316,10 @@ class AccountAssets extends React.Component {
 
                                     <label><Translate content="account.user_issued_assets.precision" />
                                     <input type="number" value={create.precision} onChange={this._onCreateInput.bind(this, "precision")} /></label>
-                                
-                                    {isValid && create.symbol.length > 2 ? <p>Fee: {createFee}</p> : null}
+
                                 </div>
                                 <div className="grid-content button-group">
-                                    <input type="submit" className={classnames("button", {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.id)} value="Create Asset" />
+                                    <input type="submit" className={classnames("button", {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.get("id"))} value="Create Asset" />
                                     <Trigger close="create_asset">
                                         <a href className="secondary button">Cancel</a>
                                     </Trigger>
@@ -329,7 +334,7 @@ class AccountAssets extends React.Component {
                         </Trigger>
                         <br/>
                         <div className="grid-block vertical">
-                            <form onSubmit={this._issueAsset.bind(this, account.id)} noValidate>
+                            <form onSubmit={this._issueAsset.bind(this, account.get("id"))} noValidate>
                                 <div className="shrink grid-content">
                                     <label><Translate content="explorer.block.asset_issue" /><span>&nbsp;({issue.symbol})</span>
                                     <input type="number" value={issue.amount} onChange={this._onIssueInput.bind(this, "amount")} /></label>
@@ -354,7 +359,7 @@ class AccountAssets extends React.Component {
                                     </span>
                                  }
                                 <div className="grid-content button-group">
-                                    <input type="submit" className="button" onClick={this._issueAsset.bind(this, account.id)} value={counterpart.translate("transaction.trxTypes.asset_issue")} />
+                                    <input type="submit" className="button" onClick={this._issueAsset.bind(this, account.get("id"))} value={counterpart.translate("transaction.trxTypes.asset_issue")} />
                                     <Trigger close="issue_asset">
                                         <a href className="secondary button">Cancel</a>
                                     </Trigger>
