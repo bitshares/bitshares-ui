@@ -43,7 +43,7 @@ class AccountVotingItems extends React.Component {
         items: ChainTypes.ChainObjectsList,
         onAddItem: React.PropTypes.func.isRequired,
         onRemoveItem: React.PropTypes.func.isRequired,
-        validateAccount: React.PropTypes.func.isRequired,
+        validateAccount: React.PropTypes.func,
         label: React.PropTypes.string.isRequired, // a translation key for the label,
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: React.PropTypes.number // tabindex property to be passed to input tag
@@ -53,7 +53,8 @@ class AccountVotingItems extends React.Component {
         super(props);
         this.state = {
             selected_item: null,
-            item_name_input: ""
+            item_name_input: "",
+            error: null
         }
         this.onItemChange = this.onItemChange.bind(this);
         this.onItemAccountChange = this.onItemAccountChange.bind(this);
@@ -65,14 +66,22 @@ class AccountVotingItems extends React.Component {
     }
 
     onItemAccountChange(selected_item) {
-        this.setState({selected_item});
+        this.setState({selected_item, error: null});
+        if(selected_item && this.props.validateAccount) {
+            let res = this.props.validateAccount(selected_item);
+            console.log("-- AccountVotingItems.onItemAccountChange -->", res);
+            if(res === null) return;
+            if(typeof(res) === "string") this.setState({error: res});
+            else res.then(error => this.setState({error: error}));
+        }
     }
 
     onAddItem(item) {
         if(!item) return;
         let next_state = {
             selected_item: null,
-            item_name_input: ""
+            item_name_input: "",
+            error: null
         };
         this.setState(next_state);
         this.props.onAddItem(item.get("id"));
@@ -83,9 +92,12 @@ class AccountVotingItems extends React.Component {
             return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem}/>)
         });
 
-        let error = null;
-        if(this.state.selected_item && this.props.items.includes(this.state.selected_item))
+        let error = this.state.error;
+        if(!error && this.state.selected_item && this.props.items.includes(this.state.selected_item))
             error = "Account is already in the list";
+
+        //if(!error && this.state.selected_item && this.props.validateAccount)
+        //    error = this.props.validateAccount(this.state.selected_item);
 
         let cw = ["10%", "20%", "60%", "10%"];
 

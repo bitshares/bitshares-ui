@@ -7,7 +7,7 @@ import ChainTypes from "../Utility/ChainTypes";
 class AccountVotingProxy extends React.Component {
 
     static propTypes = {
-        proxyAccount: ChainTypes.ChainAccount.isRequired,
+        proxyAccount: ChainTypes.ChainAccount,
         currentAccount: React.PropTypes.object.isRequired,
         onProxyAccountChanged: React.PropTypes.func.isRequired
     }
@@ -15,11 +15,17 @@ class AccountVotingProxy extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            current_proxy_input: this.props.proxyAccount.get("name"),
+            current_proxy_input: null,
             new_proxy_account: null
         }
         this.onProxyChange = this.onProxyChange.bind(this);
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(!this.state.current_proxy_input) this.setState({
+            current_proxy_input: nextProps.proxyAccount ? nextProps.proxyAccount.get("name") : ""
+        });
     }
 
     onProxyChange(current_proxy_input) {
@@ -50,7 +56,7 @@ class AccountVotingProxy extends React.Component {
                              accountName={this.state.current_proxy_input}
                              onChange={this.onProxyChange}
                              onAccountChanged={this.onProxyAccountChange}
-                             ref="proxy_selector"/>
+                             ref="proxy_selector" tabIndex={1}/>
         </div>
         );
     }
