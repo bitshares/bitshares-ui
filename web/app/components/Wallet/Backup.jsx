@@ -5,7 +5,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletStore from "stores/WalletStore"
 import BackupStore from "stores/BackupStore"
 import WalletDb from "stores/WalletDb"
-import {backup, restore} from "actions/BackupActions"
+import {backup, restore, decryptWalletBackup} from "actions/BackupActions"
 import notify from "actions/NotificationActions"
 import {saveAs} from "filesaver.js"
 import cname from "classnames"
@@ -19,25 +19,37 @@ class Backup extends React.Component {
     }
     
     static getStores() {
-        return [WalletStore]
+        return [WalletStore, BackupStore]
     }
     
     static getPropsFromStores() {
         var wallet = WalletStore.getState()
-        return { wallet }
+        var backup = BackupStore.getState()
+        return { wallet, backup }
     }
     
     render() {
+        var is_default = this.props.wallet.current_wallet === "default"
+        var has_contents = !!this.props.backup.contents
+        
         return <div className="grid-block vertical full-width-content">
             <div className="grid-content shrink" style={{paddingTop: "2rem"}}>
             
+                { ! is_default ? <span>
                 <h5>Current Wallet</h5>
                 <label>{this.props.wallet.current_wallet}</label>
+                </span> : null }
                 
-                <hr/>
+                { ! has_contents ? <span>
                 
-                <h3>Backup</h3>
-                <BackupDisk/>
+                    <h3>Backup</h3>
+                    <BackupDisk/>
+                    <hr/>
+                
+                </span> : null}
+                
+                <h3>Verify</h3>
+                <VerifyDisk/>
                 
             </div>
         </div>
@@ -82,17 +94,9 @@ export class BackupDisk extends React.Component {
         var action_label = this.props.backup.contents ? "Save Backup" : "Create Backup"
         
         return <div>
-            <div onClick={this.onActionClick.bind(this)}
+            <div onClick={this.onCreateBackup.bind(this)}
                 className={cname("button success", {disabled:!save_ready})}>
                 {action_label} ({current_wallet} Wallet)</div>
-            
-            { this.state.name ? <span>
-            <h5>Backup File</h5>
-            <pre className="no-overflow">
-                {this.props.backup.name} ({this.props.backup.size} bytes)<br/>
-                {this.props.backup.sha1} * SHA1
-            </pre>
-            </span> : null}
             
             {this.props.backup.contents ? <p>
             <label><a onClick={this.onReset.bind(this)}>Reset</a></label>
@@ -101,17 +105,11 @@ export class BackupDisk extends React.Component {
         </div>
     }
     
-    onActionClick() {
-        this.props.backup.contents ?
-            this.saveBackup() :
-            this.createAndSaveBackup()
-    }
-    
     onReset() {
         BackupActions.reset()
     }
     
-    createAndSaveBackup() {
+    onCreateBackup() {
         var backup_pubkey = WalletDb.getWallet().password_pubkey
         backup(backup_pubkey).then( contents => {
             var current_wallet = this.props.wallet.current_wallet
@@ -119,16 +117,6 @@ export class BackupDisk extends React.Component {
             BackupActions.incommingBuffer({name, contents})
             this.setState({ componentDidUpdateAction : "saveBackup" })
         })
-    }
-    
-    saveBackup() {
-        var blob = new Blob([ this.props.backup.contents ], {
-            type: "application/octet-stream; charset=us-ascii"})
-        
-        if(blob.size !== this.props.backup.size)
-            throw new Error("Invalid backup to download conversion")
-        
-        saveAs(blob, this.props.backup.name);
     }
     
     componentDidUpdate() {
@@ -141,13 +129,131 @@ export class BackupDisk extends React.Component {
 }
 
 @connectToStores
+export class VerifyDisk extends React.Component {
+    
+    constructor() {
+        super()
+        this.state = this._getInitialState()
+    }
+    
+    _getInitialState() {
+        return {
+            backup_password: null,
+            verified: null,
+            verifying_upload: false
+        }
+    }
+    
+    static getStores() {
+        return [WalletStore, BackupStore]
+    }
+    
+    static getPropsFromStores() {
+        var wallet = WalletStore.getState()
+        var backup = BackupStore.getState()
+        return { wallet, backup }
+    }
+    
+    render() {
+        var has_contents = !!this.props.backup.contents
+        var has_invalid_format = has_contents && ! this.props.backup.public_key
+        
+        return <form onChange={this.formChange.bind(this)}>
+        
+            { ! this.props.backup.name || has_invalid_format ? <span>
+                <input type="file" id="backup_input_file" style={{ border: 'solid' }}
+                    onChange={this.onFileUpload.bind(this)} />
+            </span> : null}
+            
+            { has_invalid_format ? <h5>Invalid Format</h5> : has_contents ? <div>
+                <p>
+                    <b>{this.props.backup.name}</b> ({this.props.backup.size} bytes)<br/>
+                    {this.props.backup.last_modified}
+                </p>
+                
+                { ! this.state.verified ? <span>
+                <label>Password</label>
+                <input type="password" id="backup_password"
+                    value={this.state.backup_password}/>
+                </span> : null }
+                
+                <pre className="no-overflow">{this.props.backup.sha1} * SHA1</pre>
+            </div> : null}
+            
+            {has_contents ? <div>
+                <br></br>
+                { this.state.verified ? <span>
+                    <h4>Verified</h4>
+                    { ! this.state.verifying_upload ? <span>
+                        <span className="button success"
+                            onClick={this.onDownload.bind(this)}>Download</span>
+                        &nbsp;&nbsp;
+                    </span> : null}
+                </span> : <span>
+                    <span className="button success"
+                        onClick={this.onVerify.bind(this)}>Verify</span>
+                    &nbsp;&nbsp;
+                </span> }
+                
+                <span className="button cancel"
+                    onClick={this.onReset.bind(this)}>Reset</span>
+                
+            </div>: null}
+        </form>
+    }
+    
+    onFileUpload(evt) {
+        var file = evt.target.files[0]
+        BackupActions.incommingWebFile(file)
+        this.setState({ verifying_upload: true })
+    }
+    
+    onVerify() {
+        var private_key = PrivateKey.fromSeed(this.state.backup_password || "")
+        var contents = this.props.backup.contents
+        decryptWalletBackup(private_key.toWif(), contents).then(()=> {
+            this.setState({verified: true})
+        }).catch( error => {
+            console.error("Error verifying wallet " + this.props.backup.name,
+                error, error.stack)
+            if(error === "invalid_decryption_key")
+                notify.error("Invalid Password")
+            else
+                notify.error(""+error)
+        })
+    }
+    
+    onDownload() {
+        var blob = new Blob([ this.props.backup.contents ], {
+            type: "application/octet-stream; charset=us-ascii"})
+        
+        if(blob.size !== this.props.backup.size)
+            throw new Error("Invalid backup to download conversion")
+        
+        saveAs(blob, this.props.backup.name);
+    }
+    
+    onReset() {
+        this.setState(this._getInitialState())
+        BackupActions.reset()
+    }
+    
+    formChange(event) {
+        let key_id = event.target.id
+        let value = event.target.value
+        this.state[key_id] = value
+        this.forceUpdate()
+    }
+    
+}
+
+@connectToStores
 export class RestoreDisk extends React.Component {
     
     constructor() {
         super()
         this.state = {
             wallet_public_name: null,
-            reset_name: 0,
             backup_password: null
         }
     }
@@ -183,9 +289,8 @@ export class RestoreDisk extends React.Component {
         return <form onChange={this.formChange.bind(this)}>
         
             { ! this.props.backup.name || has_invalid_format ? <span>
-                <input type="file" id="backup_input_file" key={this.state.reset_name}
-                    style={{ border: 'solid' }}
-                    onChange={this.restoreFileUpload.bind(this)} />
+                <input type="file" id="backup_input_file" style={{ border: 'solid' }}
+                    onChange={this.onFileUpload.bind(this)} />
             </span> : null}
             
             { has_invalid_format ? <h5>Invalid Format</h5> : has_contents ? <div>
@@ -241,7 +346,7 @@ export class RestoreDisk extends React.Component {
         })
     }
     
-    restoreFileUpload(evt) {
+    onFileUpload(evt) {
         var file = evt.target.files[0]
         if( ! this.state.wallet_public_name) {
             if(WalletDb.getWallet()){
