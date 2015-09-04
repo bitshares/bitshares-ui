@@ -36,19 +36,28 @@ class AccountItemRow extends React.Component {
     }
 }
 
+@BindToChainState()
 class AccountVotingItems extends React.Component {
+
+    static propTypes = {
+        items: ChainTypes.ChainObjectsList,
+        onAddItem: React.PropTypes.func.isRequired,
+        onRemoveItem: React.PropTypes.func.isRequired,
+        validateAccount: React.PropTypes.func.isRequired,
+        label: React.PropTypes.string.isRequired, // a translation key for the label,
+        placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
+        tabIndex: React.PropTypes.number // tabindex property to be passed to input tag
+    }
 
     constructor(props) {
         super(props);
         this.state = {
             selected_item: null,
-            item_name_input: "",
-            items: this.props.items
+            item_name_input: ""
         }
         this.onItemChange = this.onItemChange.bind(this);
         this.onItemAccountChange = this.onItemAccountChange.bind(this);
         this.onAddItem = this.onAddItem.bind(this);
-        this.onRemoveItem = this.onRemoveItem.bind(this);
     }
 
     onItemChange(item_name_input) {
@@ -61,65 +70,51 @@ class AccountVotingItems extends React.Component {
 
     onAddItem(item) {
         if(!item) return;
-        this.state.items[item.get("id")] = item.get("id");
         let next_state = {
             selected_item: null,
-            item_name_input: "",
-            items: this.state.items
+            item_name_input: ""
         };
         this.setState(next_state);
-    }
-
-    onRemoveItem(item_id) {
-        delete this.state.items[item_id];
-        this.setState({items: this.state.items});
+        this.props.onAddItem(item.get("id"));
     }
 
     render() {
-        console.log("-- AccountVotingItems.render -->", this.state.items);
+        let item_rows = this.props.items.filter(i => i).sort((a,b) => a.get("name") > b.get("name")).map(i => {
+            return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem}/>)
+        });
 
-        let error = "";
+        let error = null;
+        if(this.state.selected_item && this.props.items.includes(this.state.selected_item))
+            error = "Account is already in the list";
 
         let cw = ["10%", "20%", "60%", "10%"];
 
         return (
-            <BindToChainState.Wrapper {...this.state.items}>
-                { (items) =>
-                    <div>
-                        <AccountSelector label="account.votes.add_witness_label"
-                                         error={error}
-                                         placeholder="New Witness Account"
-                                         account={this.state.item_name_input}
-                                         accountName={this.state.item_name_input}
-                                         onChange={this.onItemChange}
-                                         onAction={this.onAddItem}
-                                         action_class={"button"}
-                                         action_label="account.votes.add_witness"
-                                         ref="item_selector"
-                                         tabIndex={this.props.tabIndex}/>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th style={{width: cw[0]}}></th>
-                                <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
-                                <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
-                                <th style={{width: cw[3]}}>ACTION</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                _.pairs(items)
-                                    .filter(e => e[1] && typeof(e[1]) === "object" && e[0].indexOf("1.2.") === 0)
-                                    .sort((a,b) => b[1].get("name") < a[1].get("name"))
-                                    .map(e => {
-                                        return (<AccountItemRow account={e[1]} onRemoveItem={this.onRemoveItem}/>)
-                                    })
-                            }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-            </BindToChainState.Wrapper>
+            <div>
+                <AccountSelector label={this.props.label}
+                                 error={error}
+                                 placeholder={this.props.placeholder}
+                                 account={this.state.item_name_input}
+                                 accountName={this.state.item_name_input}
+                                 onChange={this.onItemChange}
+                                 onAccountChanged={this.onItemAccountChange}
+                                 onAction={this.onAddItem}
+                                 action_label="account.votes.add_witness"
+                                 tabIndex={this.props.tabIndex}/>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th style={{width: cw[0]}}></th>
+                        <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
+                        <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
+                        <th style={{width: cw[3]}}>ACTION</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {item_rows}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 

@@ -17,8 +17,6 @@ import AccountImage from "./AccountImage";
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountVotingItems from "./AccountVotingItems";
 
-
-
 let wallet_api = new WalletApi()
 
 class AccountVoting extends React.Component {
@@ -31,68 +29,15 @@ class AccountVoting extends React.Component {
         super(props)
         this.state = {
             proxy_account: null, ///< the proxy used by the blockchain
-            new_witness_input: "", ///< the new delegate specified by the user
-            new_witness_account: null, ///< the new delegate specified by the user
-            new_committee: null, ///< the new witness specified by the user
-            new_budget: null, ///< the new budget specified by the user
             changed: false,
-            witnesses: new Immutable.Map(),
+            witnesses: new Immutable.List(["1.2.10", "1.2.17", "1.2.1", "1.2.3"]),
             committee: new Immutable.Map(),
             init_witnesses: new Immutable.Map(),
             init_committee: new Immutable.Map()
         }
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
-    }
-
-    onProxyAccountChange(proxy_account) {
-        //console.log("-- AccountVoting.onProxyAccountChange -->", !!proxy_account);
-        this.setState({proxy_account});
-    }
-
-
-
-    onAddWitnessChange(new_witness) {
-        console.log("-- AccountVoting.onAddWitnessChange -->", new_witness);
-    }
-
-    onAddCommitteeChange(new_committee) {
-        console.log("-- AccountVoting.onAddCommitteeChange -->", new_committee);
-    }
-
-    onRemoveWitness(witness_to_remove) {
-        console.log("Add Witness", this.state.new_witness)
-        let next_state = {
-            witnesses: this.state.witnesses.delete(witness_to_remove), changed: true
-        }
-    }
-
-    onRemoveCommittee(member_to_remove) {
-        console.log("Add Commitee", this.state.new_committee)
-        let next_state = {
-            committee: this.state.committee.delete(member_to_remove), changed: true
-        }
-    }
-
-    onAddCommittee() {
-        if (this.state.current_add_committee) {
-            console.log("Add Committee", this.state.new_committee)
-            let next_state = {
-                new_committee: "",
-                committee: this.state.committee.set(this.state.new_committee, this.state.current_add_committee)
-            }
-            next_state.committee = next_state.committee.sort()
-        }
-    }
-
-    onAddWitness() {
-        if (this.state.current_add_witness) {
-            console.log("Add Witness", this.state.new_witness)
-            let next_state = {
-                new_witness: "",
-                witnesses: this.state.witnesses.set(this.state.new_witness, this.state.current_add_witness)
-            }
-            next_state.witnesses = next_state.witnesses.sort()
-        }
+        this.onAddWitnessItem = this.onAddWitnessItem.bind(this);
+        this.onRemoveWitnessItem = this.onRemoveWitnessItem.bind(this);
     }
 
     onPublish() {
@@ -122,62 +67,26 @@ class AccountVoting extends React.Component {
         WalletDb.process_transaction(tr, null, true)
     }
 
+    onAddWitnessItem(item_id){
+        this.setState({witnesses: this.state.witnesses.push(item_id)});
+    }
+
+    onRemoveWitnessItem(item_id){
+        this.setState({witnesses: this.state.witnesses.filter(i => i !== item_id)});
+    }
+
+    onProxyAccountChange(proxy_account) {
+        this.setState({proxy_account});
+    }
+
     render() {
+        console.log("-- AccountVoting.render -->", this.state.witnesses);
         let current_voting_account_id = this.props.account.get('options').get('voting_account');
         let proxy_is_set = !!this.state.proxy_account;
 
-        //let changed = new_id && !current_proxy_error
-        //    && new_id != this.state.account.get('options').get('voting_account')
-
-        let changed = this.state.init_witnesses != this.state.witnesses
-        changed |= this.state.init_committee != this.state.committee
-
+        let changed = false;
         let publish_buttons_class = "button" + (changed ? "" : " disabled");
-        let add_witness_button_class = "button" + (this.state.current_add_witness ? "" : " disabled")
-        let add_committee_button_class = "button" + (this.state.current_add_committee ? "" : " disabled")
 
-        let witness_rows = this.state.witnesses.map(item => {
-            let witness = item.toJS()
-            let witness_account = ChainStore.getAccount(witness.witness_account)
-            let url = witness.url
-            let name = witness_account.get('name')
-            return (
-                <tr key={name}>
-                    <td>
-                        <AccountImage size={{height: 30, width: 30}} account={name} custom_image={null}/>
-                    </td>
-                    <td>{name}</td>
-                    <td>{url}</td>
-                    <td>
-                        <button className="button outline" onClick={this.onRemoveWitness.bind(this, name)}>
-                            <Translate content="account.votes.remove_witness"/></button>
-                    </td>
-                </tr>
-            )
-        })
-
-        let committee_rows = this.state.committee.map(item => {
-            let committee = item.toJS()
-            let committee_account = ChainStore.getAccount(committee.committee_member_account)
-            let url = committee.url
-            let name = committee_account.get('name')
-            return (
-                <tr key={name}>
-                    <td>
-                        <AccountImage size={{height: 30, width: 30}} account={name} custom_image={null}/>
-                    </td>
-                    <td>{name}</td>
-                    <td>{url}</td>
-                    <td>
-                        <button className="button outline" onClick={this.onRemoveCommittee.bind(this, name)}>
-                            <Translate content="account.votes.remove_committee"/></button>
-                    </td>
-                </tr>
-            )
-        })
-
-
-        let cw = ["10%", "20%", "60%", "10%"];
         return (
             <div className="grid-content">
                 <AccountVotingProxy
@@ -188,7 +97,10 @@ class AccountVoting extends React.Component {
                 <div className={"content-block" + (proxy_is_set && false ? " disabled" : "")}>
                     <h3>Witnesses</h3>
                     <AccountVotingItems
-                        items={{"1.2.10":"1.2.10", "1.2.17":"1.2.17", "1.2.1":"1.2.1", "1.2.3":"1.2.3"}}/>
+                        label="account.votes.add_committee_label"
+                        items={this.state.witnesses}
+                        onAddItem={this.onAddWitnessItem}
+                        onRemoveItem={this.onRemoveWitnessItem}/>
                 </div>
 
                 {/*<div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
