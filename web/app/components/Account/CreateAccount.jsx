@@ -155,7 +155,7 @@ class CreateAccount extends React.Component {
                             <button className={buttonClass}>Create Account</button>
                             <br/>
                             <br/>
-                            <label><Link to="existing-account">Existing Acccounts</Link></label>
+                            <label><Link to="existing-account">Existing Accounts</Link></label>
                         </form>
                     </div>
                 </div>
