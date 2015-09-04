@@ -9,21 +9,25 @@ import BuySell from "./BuySell";
 import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
-import Tabs from "react-foundation-apps/src/tabs";
+// import Tabs from "react-foundation-apps/src/tabs";
 import {debounce} from "lodash";
-import ConfirmModal from "../Modal/ConfirmModal";
+// import ConfirmModal from "../Modal/ConfirmModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
-import Wallet from "components/Wallet/Wallet";
-import BlockchainStore from "stores/BlockchainStore";
-import FormattedAsset from "../Utility/FormattedAsset";
-import WalletDb from "stores/WalletDb";
+// import Wallet from "components/Wallet/Wallet";
+// import BlockchainStore from "stores/BlockchainStore";
+// import FormattedAsset from "../Utility/FormattedAsset";
+// import WalletDb from "stores/WalletDb";
 import Ps from "perfect-scrollbar";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import ChainStore from "api/ChainStore";
 
 require("./exchange.scss");
 
+@BindToChainState({keep_updating: true})
 class Exchange extends React.Component {
     constructor() {
         super();
@@ -43,6 +47,45 @@ class Exchange extends React.Component {
 
         this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
         this._setDepthLine = debounce(this._setDepthLine.bind(this), 500);
+    }
+
+    static propTypes = {
+        account: ChainTypes.ChainAccount.isRequired,
+        quote: PropTypes.string.isRequired,
+        base: PropTypes.string.isRequired,
+        limit_orders: PropTypes.array.isRequired,
+        balances: PropTypes.array.isRequired,
+        totalBids: PropTypes.number.isRequired,
+        flat_asks: PropTypes.array.isRequired,
+        flat_bids: PropTypes.array.isRequired,
+        bids: PropTypes.array.isRequired,
+        asks: PropTypes.array.isRequired,
+        asset_symbol_to_id: PropTypes.object.isRequired,
+        assets: PropTypes.object.isRequired,
+        activeMarketHistory: PropTypes.object.isRequired,
+        settings: PropTypes.object.isRequired,
+        priceData: PropTypes.array.isRequired,
+        volumeData: PropTypes.array.isRequired
+    }
+
+    static defaultProps = {
+        account: "props.currentAccount",
+        quote: null,
+        base: null,
+        limit_orders: [],
+        balances: [],
+        totalBids: 0,
+        flat_asks: [],
+        flat_bids: [],
+        bids: [],
+        asks: [],
+        asset_symbol_to_id: {},
+        assets: {},
+        setting: null,
+        activeMarketHistory: {},
+        settings: {},
+        priceData: [],
+        volumeData: []
     }
 
     componentDidMount() {
@@ -77,7 +120,7 @@ class Exchange extends React.Component {
         let expiration = new Date();
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
-            this.props.currentAccount.id,
+            this.props.account.get("id"),
             parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.precision), 10),
             sellAsset.id,
             parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
@@ -116,9 +159,9 @@ class Exchange extends React.Component {
     _cancelLimitOrder(orderID, e) {
         e.preventDefault();
         console.log("canceling limit order:", orderID);
-        let {currentAccount} = this.props;
+        let {account} = this.props;
         MarketsActions.cancelLimitOrder(
-            currentAccount.id,
+            account.get("id"),
             orderID // order id to cancel
         ).then(result => {
             if (!result) {
@@ -290,34 +333,42 @@ class Exchange extends React.Component {
     render() {
         let {asset_symbol_to_id, assets, currentAccount, limit_orders,
             base: baseSymbol, quote: quoteSymbol,
-            balances, totalBids, flat_asks, flat_bids, bids, asks} = this.props;
+            totalBids, flat_asks, flat_bids, bids, asks, account} = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0;
 
-        if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol]) {
+        if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol] && account.size) {
             let quote_id = asset_symbol_to_id[quoteSymbol];
             let base_id = asset_symbol_to_id[baseSymbol];
             base = assets.get(base_id);
             quote = assets.get(quote_id);
 
-            accountBalance = balances.get(currentAccount.name);
-
-            if (accountBalance) {
-                for (var i = 0; i < accountBalance.length; i++) {
-                    if (accountBalance[i].asset_id === quote_id) {
-                        quoteBalance = parseInt(accountBalance[i].amount, 10);
-                    }
-                    if (accountBalance[i].asset_id === base_id) {
-                        baseBalance = parseInt(accountBalance[i].amount, 10);
-                    }
-                }
-            } 
+            // accountBalance = balances.get(currentAccount.name);
+            
+            accountBalance = account.get("balances").toJS();
+            // let name = account.get("name");
+            // console.log("name:", name);
+            quoteBalance = ChainStore.getAccountBalance(account, quote_id);
+            baseBalance = ChainStore.getAccountBalance(account, base_id);
+            // console.log("account:", account.toJS(), "accountBalance:", accountBalance);
+            // if (accountBalance) {
+            //     for (var i = 0; i < accountBalance.length; i++) {
+            //         if (accountBalance[i].asset_id === quote_id) {
+            //             quoteBalance = parseInt(accountBalance[i].amount, 10);
+            //         }
+            //         if (accountBalance[i].asset_id === base_id) {
+            //             baseBalance = parseInt(accountBalance[i].amount, 10);
+            //         }
+            //     }
+            // } 
+            
+            // console.log("quoteBalance:", quoteBalance, "baseBalance:", baseBalance);
         }
 
-        let tabTitles = {
-            ph: counterpart.translate("exchange.price_history"),
-            od: counterpart.translate("exchange.order_depth")
-        };
+        // let tabTitles = {
+        //     ph: counterpart.translate("exchange.price_history"),
+        //     od: counterpart.translate("exchange.order_depth")
+        // };
 
         let lowestAsk = asks[0] ? asks[0].price_full : 0;
         let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
@@ -438,7 +489,7 @@ class Exchange extends React.Component {
                             {limit_orders.size > 0 && base && quote ? <MyOpenOrders
                                 key="open_orders"
                                 orders={limit_orders}
-                                currentAccount={currentAccount.id}
+                                currentAccount={account.get("id")}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
@@ -492,42 +543,5 @@ class Exchange extends React.Component {
         );
     }
 }
-
-Exchange.defaultProps = {
-    quote: null, 
-    base: null, 
-    limit_orders: [],
-    balances: [], 
-    totalBids: 0, 
-    flat_asks: [], 
-    flat_bids: [], 
-    bids: [], 
-    asks: [],
-    asset_symbol_to_id: {}, 
-    assets: {},
-    setting: null,
-    activeMarketHistory: {},
-    settings: {},
-    priceData: [],
-    volumeData: []
-};
-
-Exchange.propTypes = {
-    quote: PropTypes.string.isRequired, 
-    base: PropTypes.string.isRequired, 
-    limit_orders: PropTypes.array.isRequired, 
-    balances: PropTypes.array.isRequired, 
-    totalBids: PropTypes.number.isRequired, 
-    flat_asks: PropTypes.array.isRequired,
-    flat_bids: PropTypes.array.isRequired,
-    bids: PropTypes.array.isRequired,
-    asks: PropTypes.array.isRequired,
-    asset_symbol_to_id: PropTypes.object.isRequired, 
-    assets: PropTypes.object.isRequired,
-    activeMarketHistory: PropTypes.object.isRequired,
-    settings: PropTypes.object.isRequired,
-    priceData: PropTypes.array.isRequired,
-    volumeData: PropTypes.array.isRequired
-};
 
 export default Exchange;
