@@ -21,6 +21,12 @@ a {
   transition: all 0.3s ease 0s;
 }
 
+// border is needed when centering
+// input[type="file"] did not work
+input[type="file"] {
+    border: 'solid';
+}
+
 .error {
   color: #ff0000;
   //padding: 16px;
