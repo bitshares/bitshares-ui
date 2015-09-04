@@ -6,6 +6,7 @@ import Translate from "react-translate-component";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import classnames from "classnames";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -35,6 +36,13 @@ class AccountSelector extends React.Component {
         return this.props.account;
     }
 
+    getError() {
+        let error = this.props.error;
+        if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
+            error = "Invalid account name";
+        return error;
+    }
+
     getNameType(value) {
         if(!value) return null;
         if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
@@ -58,14 +66,11 @@ class AccountSelector extends React.Component {
 
     onAction(e) {
         e.preventDefault();
-        if(this.props.onAction) this.props.onAction(this.props.account);
+        if(this.props.onAction && !this.getError()) this.props.onAction(this.props.account);
     }
 
     render() {
-        let error = this.props.error;
-        if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
-            error = "invalid account name";
-
+        let error = this.getError();
         let lookup_display = null;
         if(this.props.account) {
             let type = this.getNameType(this.props.accountName);
@@ -76,6 +81,8 @@ class AccountSelector extends React.Component {
         let member_status = null;
         if (this.props.account)
             member_status = ChainStore.getAccountMemberStatus(this.props.account);
+
+        let action_class = this.props.action_class || classnames("button", {"disabled" : !this.props.account || error});
 
         return (
             <div className="account-selector no-overflow">
@@ -98,11 +105,11 @@ class AccountSelector extends React.Component {
                              onKeyDown={this.onKeyDown.bind(this)}
                              tabIndex={this.props.tabIndex}
                           />
-                          { !this.props.onAction ? null : (
-                              <button className={this.props.action_class}
+                          { this.props.onAction ? (
+                              <button className={action_class}
                                       onClick={this.onAction.bind(this)}>
                                   <Translate content={this.props.action_label}/></button>
-                          )}
+                          ) : null }
                       </span>
                     </div>
                     <div className="error-area">
