@@ -158,7 +158,7 @@ class AccountAssets extends React.Component {
         e.preventDefault();
         ZfApi.publish("issue_asset", "close");
         let {issue} = this.state;
-        let asset = this.props.assets.get(issue.asset_id);
+        let asset = this.state.assets.get(issue.asset_id);
         issue.amount *= utils.get_asset_precision(asset.precision);
         AssetActions.issueAsset(account_id, issue).then(result => {
             if (result) {
