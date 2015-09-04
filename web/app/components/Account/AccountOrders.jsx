@@ -30,8 +30,8 @@ class AccountOrders extends React.Component {
     }
 
     render() {
-        let {account_name, cachedAccounts, assets} = this.props;
-        let account = cachedAccounts.get(account_name);
+        let {account_name, assets, account} = this.props;
+        // let account = cachedAccounts.get(account_name);
         let cancel = counterpart.translate("account.perm.cancel");
 
         let markets = {};
@@ -46,7 +46,7 @@ class AccountOrders extends React.Component {
             return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
 
-        let orders = account.limit_orders.map(order => {
+        let orders = account.get("orders").map(order => {
             let base = assets.get(order.sell_price.base.asset_id);
             let quote = assets.get(order.sell_price.quote.asset_id);
 
