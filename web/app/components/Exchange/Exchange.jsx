@@ -91,7 +91,6 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps:", "quote:", nextProps.quoteAsset.get("symbol"), "base:", nextProps.baseAsset.get("symbol"));
         if (!this.state.sub) {
             return this._subToMarket(nextProps);
         }
@@ -179,7 +178,6 @@ class Exchange extends React.Component {
 
     _subToMarket(props, newBucketSize) {
         let {quoteAsset, baseAsset, bucketSize} = props;
-        console.log("quoteAsset:", quoteAsset.get("symbol"));
         if (newBucketSize) {
             bucketSize = newBucketSize;
         }

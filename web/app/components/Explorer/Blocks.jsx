@@ -11,6 +11,7 @@ import Inspector from "react-json-inspector";
 require("../Blockchain/json-inspector.scss");
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import TransactionChart from "./TransactionChart";
 
 @BindToChainState({keep_updating: true})
 class Blocks extends React.Component {
@@ -156,12 +157,13 @@ class Blocks extends React.Component {
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
-                    <div className="grid-block shrink">
+                    <div className="grid-block small-4">
                         <ul>
                             <li><Translate component="span" content="explorer.blocks.globals" />: <Inspector data={ globalObject.get("parameters").toJS() } search={false}/></li>
                         </ul>
                     </div>
-                    <div className="grid-block">
+                    <div className="grid-block small-8 vertical">
+                        <TransactionChart blocks={latestBlocks} />
                         <div className="grid-content">
                             <h3><Translate component="span" content="explorer.blocks.recent" /></h3>
                             <table className="table">
@@ -179,6 +181,8 @@ class Blocks extends React.Component {
                                 </tbody>
                             </table>
                         </div>
+
+
                     </div>
                 </div>
             </div>
