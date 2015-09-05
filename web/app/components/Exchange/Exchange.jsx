@@ -27,7 +27,7 @@ import ChainStore from "api/ChainStore";
 
 require("./exchange.scss");
 
-@BindToChainState({keep_updating: true})
+@BindToChainState({keep_updating: false, component: "Exchange"})
 class Exchange extends React.Component {
     constructor() {
         super();
@@ -51,6 +51,8 @@ class Exchange extends React.Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
+        quoteAsset: ChainTypes.ChainAsset.isRequired,
+        baseAsset: ChainTypes.ChainAsset.isRequired,
         quote: PropTypes.string.isRequired,
         base: PropTypes.string.isRequired,
         limit_orders: PropTypes.array.isRequired,
@@ -60,8 +62,6 @@ class Exchange extends React.Component {
         flat_bids: PropTypes.array.isRequired,
         bids: PropTypes.array.isRequired,
         asks: PropTypes.array.isRequired,
-        asset_symbol_to_id: PropTypes.object.isRequired,
-        assets: PropTypes.object.isRequired,
         activeMarketHistory: PropTypes.object.isRequired,
         settings: PropTypes.object.isRequired,
         priceData: PropTypes.array.isRequired,
@@ -70,8 +70,6 @@ class Exchange extends React.Component {
 
     static defaultProps = {
         account: "props.currentAccount",
-        quote: null,
-        base: null,
         limit_orders: [],
         balances: [],
         totalBids: 0,
@@ -79,8 +77,6 @@ class Exchange extends React.Component {
         flat_bids: [],
         bids: [],
         asks: [],
-        asset_symbol_to_id: {},
-        assets: {},
         setting: null,
         activeMarketHistory: {},
         settings: {},
@@ -95,12 +91,12 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        
-        if (!this.state.sub && nextProps.assets.size > 0) {
+        console.log("nextProps:", "quote:", nextProps.quoteAsset.get("symbol"), "base:", nextProps.baseAsset.get("symbol"));
+        if (!this.state.sub) {
             return this._subToMarket(nextProps);
         }
 
-        if (nextProps.quote !== this.props.quote) {
+        if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol")) {
             
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
@@ -109,10 +105,8 @@ class Exchange extends React.Component {
     }
 
     componentWillUnmount() {
-        let {quote, base, asset_symbol_to_id} = this.props;
-        let quote_id = asset_symbol_to_id[quote];
-        let base_id = asset_symbol_to_id[base];
-        MarketsActions.unSubscribeMarket(quote_id, base_id);
+        let {quoteAsset, baseAsset} = this.props;
+        MarketsActions.unSubscribeMarket(quoteAsset.get("id"), baseAsset.get("id"));
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
@@ -184,19 +178,14 @@ class Exchange extends React.Component {
     }
 
     _subToMarket(props, newBucketSize) {
-        let {quote, base, asset_symbol_to_id, assets, bucketSize} = props;
+        let {quoteAsset, baseAsset, bucketSize} = props;
+        console.log("quoteAsset:", quoteAsset.get("symbol"));
         if (newBucketSize) {
             bucketSize = newBucketSize;
         }
-        if (asset_symbol_to_id[quote] && asset_symbol_to_id[base]) {
-            let quote_id = asset_symbol_to_id[quote];
-            let base_id = asset_symbol_to_id[base];
-            let baseAsset = assets.get(base_id);
-            let quoteAsset = assets.get(quote_id);
-            if (quoteAsset && baseAsset) {
-                MarketsActions.subscribeMarket(baseAsset, quoteAsset, bucketSize);
-                this.setState({sub: `${quote_id}_${base_id}`});
-            }
+        if (quoteAsset.get("id") && baseAsset.get("id")) {
+            MarketsActions.subscribeMarket(baseAsset.toJS(), quoteAsset.toJS(), bucketSize);
+            this.setState({sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}`});
         }
     }
 
@@ -331,44 +320,34 @@ class Exchange extends React.Component {
     }
 
     render() {
-        let {asset_symbol_to_id, assets, currentAccount, limit_orders,
-            base: baseSymbol, quote: quoteSymbol,
-            totalBids, flat_asks, flat_bids, bids, asks, account} = this.props;
+        let { currentAccount, limit_orders,
+            totalBids, flat_asks, flat_bids, bids, asks, account, quoteAsset, baseAsset } = this.props;
+        
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
-        let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0;
+        
+        let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0,
+            quoteSymbol, baseSymbol;
 
-        if (asset_symbol_to_id[quoteSymbol] && asset_symbol_to_id[baseSymbol] && account.size) {
-            let quote_id = asset_symbol_to_id[quoteSymbol];
-            let base_id = asset_symbol_to_id[baseSymbol];
-            base = assets.get(base_id);
-            quote = assets.get(quote_id);
+        if (quoteAsset.size && baseAsset.size && account.size) {
+            base = baseAsset.toJS();
+            quote = quoteAsset.toJS();
+            baseSymbol = base.symbol;
+            quoteSymbol = quote.symbol;
 
-            // accountBalance = balances.get(currentAccount.name);
-            
             accountBalance = account.get("balances").toJS();
-            // let name = account.get("name");
-            // console.log("name:", name);
-            quoteBalance = ChainStore.getAccountBalance(account, quote_id);
-            baseBalance = ChainStore.getAccountBalance(account, base_id);
-            // console.log("account:", account.toJS(), "accountBalance:", accountBalance);
-            // if (accountBalance) {
-            //     for (var i = 0; i < accountBalance.length; i++) {
-            //         if (accountBalance[i].asset_id === quote_id) {
-            //             quoteBalance = parseInt(accountBalance[i].amount, 10);
-            //         }
-            //         if (accountBalance[i].asset_id === base_id) {
-            //             baseBalance = parseInt(accountBalance[i].amount, 10);
-            //         }
-            //     }
-            // } 
             
-            // console.log("quoteBalance:", quoteBalance, "baseBalance:", baseBalance);
-        }
+            if (accountBalance) {
+                for (var id in accountBalance) {
+                    if (id === quote.id) {
+                        quoteBalance = accountBalance[id];
+                    }
+                    if (id === base.id) {
+                        baseBalance = accountBalance[id];
+                    }
+                }
+            } 
 
-        // let tabTitles = {
-        //     ph: counterpart.translate("exchange.price_history"),
-        //     od: counterpart.translate("exchange.order_depth")
-        // };
+        }
 
         let lowestAsk = asks[0] ? asks[0].price_full : 0;
         let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
@@ -455,7 +434,7 @@ class Exchange extends React.Component {
                                 amountChange={this._buyAmountChanged.bind(this, base, quote)}
                                 priceChange={this._buyPriceChanged.bind(this, base)}
                                 totalChange={this._buyTotalChanged.bind(this, base, quote)}
-                                balance={baseBalance / utils.get_asset_precision(base.precision)}
+                                balance={baseBalance}
                                 onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
                                 balancePrecision={base.precision}
                                 quotePrecision={quote.precision}
@@ -474,7 +453,7 @@ class Exchange extends React.Component {
                                 amountChange={this._sellAmountChanged.bind(this, base, quote)}
                                 priceChange={this._sellPriceChanged.bind(this, base)}
                                 totalChange={this._sellTotalChanged.bind(this, base, quote)}
-                                balance={quoteBalance / utils.get_asset_precision(quote.precision)}
+                                balance={quoteBalance}
                                 onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
                                 balancePrecision={quote.precision}
                                 quotePrecision={quote.precision}
@@ -532,7 +511,6 @@ class Exchange extends React.Component {
                         {/* Market History */}
                         <MarketHistory
                             history={this.props.activeMarketHistory}
-                            assets={assets}
                             base={base}
                             baseSymbol={baseSymbol}
                             quoteSymbol={quoteSymbol}/>
