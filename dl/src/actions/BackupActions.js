@@ -48,8 +48,7 @@ export function backup(backup_pubkey) {
 export function restore(backup_wif, backup, wallet_name) {
     return new Promise( resolve => {
         resolve(decryptWalletBackup(backup_wif, backup).then( wallet_object => {
-            //return iDB.restore(wallet_name, wallet_object)
-            WalletActions.restore({wallet_name, wallet_object})
+            return WalletActions.restore(wallet_name, wallet_object)
         }))
     })
 }

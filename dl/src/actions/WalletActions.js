@@ -9,6 +9,8 @@ import lookup from "chain/lookup"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 import alt from "alt-instance"
+import iDB from "idb-instance"
+import Immutable from "immutable"
 
 var application_api = new ApplicationApi()
 var api = Apis.instance()
@@ -16,10 +18,25 @@ var api = Apis.instance()
 
 class WalletActions {
 
-    constructor() {
-        this.generateActions( 'restore' )
+    restore(wallet_name, wallet_object) {
+        return iDB.root.getProperty("wallet_names", []).then(
+            wallet_names => {
+            if(Immutable.Set(wallet_names).has(wallet_name))
+                throw new Error("Wallet exists")
+            
+            wallet_names.push(wallet_name)
+            return iDB.restore(wallet_name, wallet_object).then( () => {
+                return iDB.root.setProperty("wallet_names", wallet_names).then(
+                    ()=> { this.dispatch(wallet_name) })
+            })
+        }).catch( event => {
+            var error = event.target ? event.target.error : event
+            console.error("Error saving wallet to database",
+                error.name, error.message, error)
+            throw new Error("Error saving wallet to database")
+        })
     }
-
+    
     createBrainKeyAccount(
         account_name,
         registrar,

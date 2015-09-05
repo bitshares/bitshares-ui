@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-import {RestoreDisk} from "components/Wallet/Backup"
+import {BackupRestore} from "components/Wallet/Backup"
 import WalletDb from "stores/WalletDb"
 import WalletStore from "stores/WalletStore"
 import NotificationSystem from 'react-notification-system'
@@ -81,7 +81,7 @@ class UploadWalletBackup extends Component {
     
     render() {
         return <span>
-            <RestoreDisk/>
+            <BackupRestore/>
         </span>
     }
 }

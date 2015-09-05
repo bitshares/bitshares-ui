@@ -83,7 +83,7 @@ button, .button {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   text-transform: uppercase;
   transition: all 0.3s ease 0s !important;
-  margin: 0;
+  margin: 0 5 0 5;
   vertical-align: middle;
   &.outline {
     &:hover, &:focus, &:active {

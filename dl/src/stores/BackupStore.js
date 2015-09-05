@@ -13,7 +13,7 @@ class BackupStore extends BaseStore {
             onIncommingBuffer: BackupActions.incommingBuffer,
             onReset: BackupActions.reset
         })
-        //this._export("isValid")
+        this._export("setWalletObjct")
     }
     
     _getInitialState() {
@@ -23,8 +23,13 @@ class BackupStore extends BaseStore {
             sha1: null,
             size: null,
             last_modified: null,
-            public_key: null
+            public_key: null,
+            wallet_object: null
         }
+    }
+    
+    setWalletObjct(wallet_object) {
+        this.setState({wallet_object})
     }
     
     onReset() {
