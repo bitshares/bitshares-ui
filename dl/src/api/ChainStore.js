@@ -771,7 +771,7 @@ class ChainStore
       }
       else if( object.id.substring(0,4) == asset_prefix )
       {
-         this.assets_by_symbol = this.assets_by_id.set( object.symbol, object.id )
+         this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
       }
 
       if( notify_subscribers ) 
