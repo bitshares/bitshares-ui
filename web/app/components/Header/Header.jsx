@@ -54,11 +54,16 @@ class Header extends React.Component {
     render() {
         if(!WalletDb.getWallet()) return null;
         //DEBUG console.log('... render WalletDb.isLocked()',WalletDb.isLocked())
-        
+
         let {currentAccount, linkedAccounts} = this.props, accountsDropDown = null, plusDropDown = null;
 
-        let settings = counterpart.translate("header.settings");
-        let current = counterpart.translate("header.current");
+        let settings       = counterpart.translate("header.settings");
+        let current        = counterpart.translate("header.current");
+        let create_account = counterpart.translate("header.create_account");
+        let create_asset   = counterpart.translate("header.create_asset");
+        let lock           = counterpart.translate("header.lock");
+        let unlock         = counterpart.translate("header.unlock");
+
         if (currentAccount) {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
@@ -101,8 +106,8 @@ class Header extends React.Component {
                 </ActionSheet.Button>
                 <ActionSheet.Content >
                     <ul className="no-first-element-top-border">
-                        <li><a href onClick={this.transitionTo.bind(this, "create-account", null, null)}>Create Account</a></li>
-                        {currentAccount ? <li><a href onClick={this.transitionTo.bind(this, "account-assets", {account_name: currentAccount}, {create_asset: true})}>Create Asset</a></li> : null}
+                        <li><a href onClick={this.transitionTo.bind(this, "create-account", null, null)}>{create_account}</a></li>
+                        {currentAccount ? <li><a href onClick={this.transitionTo.bind(this, "account-assets", {account_name: currentAccount}, {create_asset: true})}>{create_asset}</a></li> : null}
                     </ul>
                 </ActionSheet.Content>
             </ActionSheet>
@@ -140,9 +145,9 @@ class Header extends React.Component {
                             <Link to="settings" className="button" data-tip={settings} data-place="bottom"><Icon name="cog"/></Link>
                         </div>
                         <div className="grp-menu-item" >
-                            <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? "Unlock" : "Lock" }</a>
+                            <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? unlock : lock }</a>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

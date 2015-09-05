@@ -14,11 +14,15 @@ module.exports = {
         payments: "支付",
         logout: "注销",
         settings: "设置",
-        current: "当前账户"
+        current: "当前账户",
+        create_account: "创建账户",
+        create_asset: "创建资产",
+        lock: "锁定钱包",
+        unlock: "解锁钱包"
     },
     account: {
         assets: "资产",
-        value: "价值",
+        market_value: "市值",
         hour_24: "24小时",
         recent: "近期活动",
         name: "账户名",
@@ -30,11 +34,77 @@ module.exports = {
             referrals: "被推荐人",
             rewards: "返现奖励",
             cashback: "返现",
-            vested: "既得"
+            vested: "既得",
+            ref_percentage: "Referrer fee percentage",
+            network_percentage: "Network fee percentage",
+            fees_paid: "Lifetime fees paid",
+            fees_pending: "Pending fees",
+            fees_vested: "Pending vested fees",
+            in_orders: "Total %(core_asset)s in orders"
         },
         connections: {
             known: "Known by",
-            "black": "被屏蔽"
+            black: "被屏蔽"
+        },
+        asset: "资产",
+        more: "查看更多",
+        user_issued_assets: {
+            symbol: "符号",
+            name: "资产名称",
+            description: "描述",
+            max_supply: "最大供给量",
+            precision: "精度",
+            to: "发行到账户",
+            details: "详细"
+        },
+        perm: {
+            active: "活跃权限",
+            owner: "所有人权限",
+            publish: "保存修改",
+            reset: "重置修改",
+            add: "增加权限",
+            type: "类型",
+            key: "键/名字",
+            weight: "权重",
+            threshold: "阈值",
+            confirm_add: "增加",
+            cancel: "取消"
+        },
+        votes: {
+            proxy: "代理投票账户",
+            no_proxy: "无代理",
+            name: "账户名",
+            info: "信息",
+            votes: "votes",
+            url: "主页",
+            support: "支持",
+            workers: "预算项目",
+            publish: "保存修改",
+            add_witness: "添加",
+            remove_witness: "移除",
+            remove_committee: "移除",
+            add_committee: "添加",
+            add_committee_label: "受托人",
+            add_witness_label: "见证人"
+        },
+        options: {
+            num_witnesses: "Desired Witnesses",
+            num_committee: "Desired Committee Members",
+            memo_key: "Memo Key"
+        },
+        upgrade: "升级账户",
+        unlink: "取消关联",
+        link: "关联",
+        pay: "向他付款",
+        overview: "概述",
+        history: "交易历史",
+        payees: "付款人",
+        permissions: "权限",
+        voting: "投票",
+        orders: "订单",
+        select_placeholder: "选择账户...",
+        errors: {
+            not_found: "账户 %(name)s 不存在, 你确定输入正确么?"
         }
     },
     transfer: {
@@ -44,18 +114,21 @@ module.exports = {
         memo: "备注消息",
         fee: "手续费",
         send: "发送",
-        final: "转账后余额",
+        "final": "转账后余额",
         balances: "余额",
         errors: {
             req: "必填信息",
             pos: "数量必须大于0",
-            valid: "请输入一个合法的大于0的半角数字"
+            valid: "请输入一个合法的大于0的半角数字",
+            balance: "最终余额必须大于0"
         },
         back: "返回",
         confirm: "确认发送",
         broadcast: "你的转账已经向网络广播",
         again: "发起新的转账",
-        see: "查看我的转账记录"
+        see: "查看我的转账记录",
+        available: "可用余额: ",
+        broadcasting: "交易广播中..."
     },
     transaction: {
         sent: "已发送",
@@ -70,7 +143,7 @@ module.exports = {
         collateral: "抵押",
         coll_ratio: "初始抵押率",
         coll_maint: "Collateral maintenance ratio",
-        "create_key": "创建一个公钥",
+        create_key: "创建一个公钥",
         reg_account: "注册账户",
         was_reg_account: "注册人",
         create_asset: "Created the asset",
@@ -78,7 +151,7 @@ module.exports = {
         limit_order_buy: "限价买入单",
         limit_order_cancel: "已取消的限价单",
         short_order: "空单",
-        short_order_cancel: "已取消的空单Cancelled short with id",
+        short_order_cancel: "已取消的空单",
         at: "at",
         coll_of: "抵押为",
         call_order_update: "Updated call order",
@@ -114,7 +187,7 @@ module.exports = {
         global_parameters_update: "Updated global parameters",
         file_write: "Wrote a file",
         vesting_balance_create: "created vesting balance of",
-        for: "for",
+        "for": "for",
         vesting_balance_withdraw: "Withdrew vesting balance of",
         bond_create_offer: "Created bond offer",
         bond_cancel_offer: "Cancelled bond offer",
@@ -123,7 +196,7 @@ module.exports = {
         bond_pay_collateral: "Paid collateral of",
         create_worker: "Created a worker with a pay of",
         custom: "Created a custom operation",
-        order_id: "Order ID",
+        order_id: "订单ID",
         trxTypes: {
             transfer: "转账",
             limit_order_create: "限价单",
@@ -163,7 +236,16 @@ module.exports = {
             assert: "Assert operation",
             balance_claim: "Claim balance",
             override_transfer: "Override transfer"
-        }
+        },
+        confirm: "Please confirm the transaction",
+        broadcast_success: "Transaction has been broadcast",
+        broadcast_fail: "Failed to broadcast the transaction: %(message)s",
+        limit_order_sell: "Placed order #%(num)s to sell %(sell_amount)s at %(sell_price)s",
+        balance_claim: "Claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
+        balance_owner: "Balance owner key",
+        balance_id: "Balance ID",
+        deposit_to: "Deposited to account",
+        claimed: "Total claimed"
     },
     explorer: {
         accounts: {
@@ -214,7 +296,8 @@ module.exports = {
             precision: "精度"
         },
         asset: {
-            title: "资产"
+            title: "资产",
+            not_found: "资产 %(name)s 不存在"
         },
         witnesses: {
             title: "见证人"
@@ -238,10 +321,46 @@ module.exports = {
     settings: {
         inverseMarket: "市场交易对视角",
         unit: "显示记账单位",
-        confirmMarketOrder: "Ask for confirmation of market orders",
+        confirmMarketOrder: "市场订单要求确认",
         locale: "语言选择",
-        confirm_yes: "Always",
-        confirm_no: "Never",
-        always_confirm: "Always ask for confirmation"
+        confirm_yes: "总是",
+        confirm_no: "从不",
+        always_confirm: "总是要求确认"
+    },
+    pagination: {
+        newer: "更近",
+        older: "更早"
+    },
+    footer: {
+        title: "Graphene 石墨烯",
+        block: "最新区块",
+        loading: "载入中..."
+    },
+    exchange: {
+        price_history: "Price History",
+        order_depth: "订单深度",
+        market_history: "市场历史",
+        balance: "我的余额",
+        lowest_ask: "最低卖单",
+        highest_bid: "最高买单",
+        total: "Total",
+        value: "Value",
+        price: "Price",
+        latest: "Latest Price",
+        call: "Call Price",
+        volume: "成交量",
+        spread: "Spread",
+        quantity: "Amount",
+        buy: "Buy",
+        sell: "Sell",
+        confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
+        confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
+    },
+    markets: {
+        choose_base: "选择基准资产",
+        filter: "筛选",
+        core_rate: "Core rate",
+        supply: "供应量",
+        search: "搜索"
     }
 };
