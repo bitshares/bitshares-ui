@@ -61,8 +61,6 @@ class Header extends React.Component {
         let current        = counterpart.translate("header.current");
         let create_account = counterpart.translate("header.create_account");
         let create_asset   = counterpart.translate("header.create_asset");
-        let lock           = counterpart.translate("header.lock");
-        let unlock         = counterpart.translate("header.unlock");
 
         if (currentAccount) {
 
@@ -145,7 +143,7 @@ class Header extends React.Component {
                             <Link to="settings" className="button" data-tip={settings} data-place="bottom"><Icon name="cog"/></Link>
                         </div>
                         <div className="grp-menu-item" >
-                            <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? unlock : lock }</a>
+                            <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? <Translate component="span" content="header.unlock" /> : <Translate component="span" content="header.lock" /> }</a>
                         </div>
 
                     </div>
