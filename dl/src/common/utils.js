@@ -44,7 +44,7 @@ var Utils = {
     },
 
     format_asset: function(amount, asset, noSymbol, trailing_zeros=true) {
-        let symbol = asset
+        let symbol;
         let digits = 0
         if( asset === undefined )
            return undefined
@@ -67,8 +67,12 @@ var Utils = {
     },
 
     format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol,inverted,trailing_zeros=true) {
+        if (quoteAsset.size) quoteAsset = quoteAsset.toJS();
+        if (baseAsset.size) baseAsset = baseAsset.toJS();
+
         let precision = this.get_asset_precision(quoteAsset.precision);
         let basePrecision = this.get_asset_precision(baseAsset.precision);
+
         if (inverted) {
             if (parseInt(quoteAsset.id.split(".")[2], 10) < parseInt(baseAsset.id.split(".")[2], 10)) {
                 return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision),trailing_zeros)}${!noSymbol ? " " + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
