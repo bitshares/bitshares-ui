@@ -10,7 +10,7 @@ import BindToChainState from "../Utility/BindToChainState";
 @BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
     static propTypes = {
-        balance: ChainTypes.ChainObject.isRequired,
+        balance: ChainTypes.ChainObject,
         type: PropTypes.string,
         amountChange: PropTypes.func.isRequired,
         priceChange: PropTypes.func.isRequired,
@@ -18,7 +18,6 @@ class BuySell extends React.Component {
     }
 
     static defaultProps = {
-        account: "props.currentAccount",
         type: "buy"
     }
 
@@ -48,13 +47,13 @@ class BuySell extends React.Component {
         let {type, quoteSymbol, baseSymbol, amount, price, amountChange,
             priceChange, onSubmit, balance, totalPrecision, total, totalChange,
             balancePrecision, quotePrecision, currentPrice} = this.props;
-
+        
         let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")}`;
-        let buttonClass = classNames("button buySellButton", type, {disabled: !(balance.get("balance") > 0 && amount > 0 && price > 0)});
+        let buttonClass = classNames("button buySellButton", type, {disabled: !(balance && balance.get("balance") > 0 && amount > 0 && price > 0)});
         let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
         let divClass = classNames(this.props.className, `${type}-form`);
 
-        let balanceAmount = utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision});
+        let balanceAmount = balance ? utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision}) : 0;
 
         return (
             <div className={divClass}>

@@ -323,7 +323,7 @@ class Exchange extends React.Component {
         
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         
-        let base = null, quote = null, accountBalance = null, quoteBalance = 0, baseBalance = 0,
+        let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
             quoteSymbol, baseSymbol;
 
         if (quoteAsset.size && baseAsset.size && account.size) {
@@ -333,7 +333,7 @@ class Exchange extends React.Component {
             quoteSymbol = quote.symbol;
 
             accountBalance = account.get("balances").toJS();
-            
+
             if (accountBalance) {
                 for (var id in accountBalance) {
                     if (id === quote.id) {
