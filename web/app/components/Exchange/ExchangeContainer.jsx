@@ -1,6 +1,5 @@
 import React from "react";
 import MarketsStore from "stores/MarketsStore";
-import AssetStore from "stores/AssetStore";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt/AltContainer";
@@ -13,7 +12,7 @@ class ExchangeContainer extends React.Component {
 
         return (
                 <AltContainer 
-                  stores={[MarketsStore, AccountStore, AssetStore, SettingsStore]}
+                  stores={[MarketsStore, AccountStore, SettingsStore]}
                   inject={{
                     limit_orders: () => {
                         return MarketsStore.getState().activeMarketLimits;
@@ -51,24 +50,15 @@ class ExchangeContainer extends React.Component {
                     bucketSize: () => {
                         return MarketsStore.getState().bucketSize;
                     },
-                    assets: () => {
-                        return AssetStore.getState().assets;
-                    },
-                    asset_symbol_to_id: () => {
-                        return AssetStore.getState().asset_symbol_to_id;
-                    },
                     currentAccount: () => {
                         return AccountStore.getState().currentAccount;
-                    },
-                    balances: () => {
-                        return AccountStore.getState().balances;
                     },
                     settings: () => {
                         return SettingsStore.getState().settings;
                     }
                   }} 
                   >
-                <Exchange quote={symbols[0]} base={symbols[1]} />
+                    <Exchange quoteAsset={symbols[0]} baseAsset={symbols[1]} />
                 </AltContainer>
         );
     }
