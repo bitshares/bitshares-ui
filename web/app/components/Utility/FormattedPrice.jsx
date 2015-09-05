@@ -54,7 +54,7 @@ class FormattedPrice extends React.Component {
         let base_precision = utils.get_asset_precision(base_asset.get("precision"));
         let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
         let value = base_amount / base_precision / (quote_amount / quote_precision);
-        console.log(value);
+        // console.log(value);
         return (
                 <span>
                    <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={base_asset.get("precision")} />
