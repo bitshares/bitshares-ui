@@ -65,7 +65,10 @@ class Transfer extends React.Component {
             asset.get("id"),
             this.state.memo
         ).then( () => {
-            this.setState(Transfer.getInitialState());
+            this.setState({
+                amount: "",
+                memo: ""
+            });
         }).catch( e => {
             console.log( "error: ",e)
         } );
@@ -118,7 +121,7 @@ class Transfer extends React.Component {
                         <AmountSelector label="transfer.amount"
                                         amount={this.state.amount}
                                         onChange={this.onAmountChanged.bind(this)}
-                                        asset={asset_types.length > 0 ? asset_types[0] : null}
+                                        asset={asset_types.length > 0 && this.state.asset ? this.state.asset.get("id") : asset_types[0]}
                                         assets={asset_types}
                                         display_balance={balance}
                                         tabIndex={3}/>

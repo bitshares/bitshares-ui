@@ -100,7 +100,7 @@ class AccountSelector extends React.Component {
                       <input type="text"
                              value={this.props.accountName}
                              defaultValue={this.props.accountName}
-                             placeholder={this.props.placeholder || "Account Name"}
+                             placeholder={this.props.placeholder || counterpart.translate("account.name")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}
                              onKeyDown={this.onKeyDown.bind(this)}
