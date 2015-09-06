@@ -121,7 +121,7 @@ export class BackupRestore extends BackupBaseComponent {
     
     render() {
         return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink" style={{paddingTop: "2rem"}}>
+            <div className="grid-content shrink" style={{padding: "2rem 0 2rem 0"}}>
                 
                 <h3>Restore Backup</h3>
                 
@@ -129,9 +129,9 @@ export class BackupRestore extends BackupBaseComponent {
                     <NameSizeModified/>
                     <DecryptBackup saveWalletObject={true}>
                         <NewWalletName onNewWalletName={this.onNewWalletName.bind(this)}>
-                            <Restore newWalletName={this.newWalletName}>
+                            <Restore newWalletName={this.state.newWalletName}>
                                 
-                                <h4>Successfully restored wallet <b>{this.newWalletName}</b></h4>
+                                <h4>Successfully restored <label>{this.state.newWalletName}</label></h4>
                                 
                                 <Link to="dashboard">
                                     <div className="button success">Dashboard</div>
@@ -148,7 +148,7 @@ export class BackupRestore extends BackupBaseComponent {
     }
     
     onNewWalletName(newWalletName) {
-        this.newWalletName = newWalletName
+        this.setState({newWalletName})
     }
     
 }
@@ -163,16 +163,18 @@ class Restore extends BackupBaseComponent {
         }
     }
     
-    static propTypes = {
-        newWalletName: PropTypes.string.isRequired
-    }
-    
     render() {
-        if(this.state.success)
-            return <span>{this.props.children}</span>
+        var new_wallet = this.props.wallet.new_wallet
+        var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
+        
+        if(has_new_wallet)
+            return <span>
+                <div>Wallet restored <b>{new_wallet}</b></div>
+                <div>{this.props.children}</div>
+            </span>
         
         return <span>
-            <h3>Restore wallet <b>{this.props.newWalletName}</b></h3>
+            <h3>Click to restore wallet <b>{new_wallet}</b></h3>
             <div className="button success" 
                 onClick={this.onRestore.bind(this)}>Restore</div>
         </span>
@@ -180,15 +182,9 @@ class Restore extends BackupBaseComponent {
     
     onRestore() {
         WalletActions.restore(
-            this.props.newWalletName,
+            this.props.wallet.new_wallet,
             this.props.backup.wallet_object
-        ).then(()=> {
-            notify.success("Wallet Restored")
-            this.setState({ success: true })
-        }).catch( error => {
-            notify.error("Error restoring wallet")
-            console.error("Error restoring wallet", error, error.stack)
-        })
+        )
     }
     
 }
@@ -196,37 +192,35 @@ class Restore extends BackupBaseComponent {
 @connectToStores
 class NewWalletName extends BackupBaseComponent {
     
-    static propTypes = {
-        onNewWalletName: PropTypes.func.isRequired
-    }
-    
     constructor() {
         super()
         this.state = {
-            newWalletName: null
+            new_wallet: null,
+            accept: false
+        }
+    }
+    
+    componentWillMount() {
+        var has_current_wallet = !!this.props.wallet.current_wallet
+        if( ! has_current_wallet) {
+            WalletStore.setNewWallet("default")
+            this.setState({accept: true})
         }
     }
     
     render() {
-        if(this.accept)
+        if(this.state.accept)
             return <span>{this.props.children}</span>
         
-        var has_current_wallet = !!this.props.wallet.current_wallet
-        if( ! has_current_wallet) {
-            this.accept = true
-            this.props.onNewWalletName("default")
-            return <span walletName="default">{this.props.children}</span>
-        }
-        
-        var has_wallet_name = !!this.state.newWalletName
+        var has_wallet_name = !!this.state.new_wallet
         var has_unique_wallet_name = has_wallet_name ?
             ! this.props.wallet.wallet_names.has(this.state.wallet_public_name) : undefined
         
         return <span>
             <h5>New Wallet Name</h5>
-            <input type="text" id="newWalletName"
+            <input type="text" id="new_wallet"
                 onChange={this.formChange.bind(this)}
-                value={this.state.newWalletName} />
+                value={this.state.new_wallet} />
             <p>{! has_unique_wallet_name ? "Wallet exists, choose a new name" : null}</p>
             <div className={cname("button success", {disabled: ! has_unique_wallet_name})}
                 onClick={this.onAccept.bind(this)}>Accept</div>
@@ -234,9 +228,8 @@ class NewWalletName extends BackupBaseComponent {
     }
     
     onAccept() {
-        this.accept = true
-        this.props.onNewWalletName(this.state.newWalletName)
-        this.forceUpdate()
+        this.setState({accept: true})
+        WalletStore.setNewWallet(this.state.new_wallet)
     }
     
     formChange(event) {
@@ -348,7 +341,7 @@ class Upload extends BackupBaseComponent {
 class NameSizeModified extends BackupBaseComponent {
     render() {
         return <span>
-            <div><b>{this.props.backup.name}</b> ({this.props.backup.size} bytes)</div>
+            <h5><b>{this.props.backup.name}</b> ({this.props.backup.size} bytes)</h5>
             {this.props.backup.last_modified ?
                 <div>{this.props.backup.last_modified}</div> : null }
             <br/>
@@ -376,7 +369,7 @@ class DecryptBackup extends BackupBaseComponent {
     }
     
     render() {
-        if(this.state.verified) return <span><Sha1/>{this.props.children}</span>
+        if(this.state.verified) return <span>{this.props.children}</span>
         return <span>
             <label>Enter Password</label>
             <input type="password" id="backup_password"

@@ -18,23 +18,10 @@ var api = Apis.instance()
 
 class WalletActions {
 
+    /** @throws error */
     restore(wallet_name, wallet_object) {
-        return iDB.root.getProperty("wallet_names", []).then(
-            wallet_names => {
-            if(Immutable.Set(wallet_names).has(wallet_name))
-                throw new Error("Wallet exists")
-            
-            wallet_names.push(wallet_name)
-            return iDB.restore(wallet_name, wallet_object).then( () => {
-                return iDB.root.setProperty("wallet_names", wallet_names).then(
-                    ()=> { this.dispatch(wallet_name) })
-            })
-        }).catch( event => {
-            var error = event.target ? event.target.error : event
-            console.error("Error saving wallet to database",
-                error.name, error.message, error)
-            throw new Error("Error saving wallet to database")
-        })
+        wallet_name = wallet_name.toLowerCase()
+        this.dispatch({wallet_name, wallet_object})
     }
     
     createBrainKeyAccount(

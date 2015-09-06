@@ -16,14 +16,19 @@ class WalletStore extends BaseStore {
             onRestore: WalletActions.restore,
             onDefaultWalletCreated: WalletCreateActions.defaultWalletCreated
         })
-        super._export("init","getMyAuthorityForAccount")
+        super._export("init","getMyAuthorityForAccount", "setNewWallet")
     }
     
     _getInitialState() {
         return {
+            new_wallet: undefined,// pending restore
             current_wallet: undefined,
             wallet_names: Immutable.Set()
         }
+    }
+    
+    setNewWallet(new_wallet) {
+        this.setState({new_wallet})
     }
     
     init() {
@@ -77,11 +82,18 @@ class WalletStore extends BaseStore {
         })
     }
     
-    onRestore(wallet_name) {
-        if( ! this.state.current_wallet)
-            this.setState({ current_wallet: "default" })
-        var wallet_names = this.state.wallet_names.add(wallet_name)
-        this.setState({ wallet_names })
+    onRestore({wallet_name, wallet_object}) {
+        iDB.restore(wallet_name, wallet_object).then( () => {
+            var wallet_names = this.state.wallet_names.add(wallet_name)
+            return iDB.root.setProperty("wallet_names", wallet_names).then(
+                ()=> {
+                    this.setState({wallet_names})
+                    if( ! this.state.current_wallet)
+                        this.setState({ current_wallet: "default" })
+                })
+        }).catch( error => {
+            console.error(error)
+        })
     }
     
 }
