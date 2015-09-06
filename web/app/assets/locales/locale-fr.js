@@ -341,6 +341,8 @@ module.exports = {
         order_depth: "Carnet d'ordres",
         market_history: "Historique du marché",
         balance: "Solde",
+        lowest_ask: "Offre le plus bas",
+        highest_bid: "Demande le plus haut",
         total: "Total",
         value: "Valeur",
         price: "Prix",
