@@ -5,6 +5,8 @@ import Modal from "react-foundation-apps/src/modal"
 import ZfApi from "react-foundation-apps/src/utils/foundation-api"
 import PasswordInput from "../Forms/PasswordInput"
 import notify from "actions/NotificationActions"
+import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 import AltContainer from "alt/AltContainer"
 import WalletDb from "stores/WalletDb"
@@ -57,7 +59,7 @@ class WalletUnlockModal extends React.Component {
     
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
-        var unlock_what = this.props.unlock_what || "Wallet"
+        var unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
         
         return ( 
             // U N L O C K
@@ -65,7 +67,7 @@ class WalletUnlockModal extends React.Component {
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
-                <h3>Unlock {unlock_what}</h3>
+                <h3><Translate content="header.unlock" /> {unlock_what}</h3>
                 <form onSubmit={this._passSubmit.bind(this)}>
                         <PasswordInput onChange={this._passChange.bind(this)}
                             key={this.state.password_input_reset}
@@ -73,9 +75,9 @@ class WalletUnlockModal extends React.Component {
                     <div className="button-group">
                         <a className="button" href
                             onClick={this._passSubmit.bind(this)}>
-                            Unlock {unlock_what}</a>
+                            <Translate content="header.unlock" /> {unlock_what}</a>
                         <Trigger close={this.props.modalId}>
-                            <a href className="secondary button">Cancel</a>
+                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
                     </div>
                 </form>

@@ -131,14 +131,17 @@ module.exports = {
         },
         back: "REVENIR",
         confirm: "CONFIRMER",
-        broadcast: "Votre transfert a bien été soumis au reseau",
+        broadcast: "Votre transfert a bien été diffusé au reseau",
         again: "FAIRE UN AUTRE TRANSFERT",
-        see: "VOIRE MES TRANSFERTS"
+        see: "VOIRE MES TRANSFERTS",
+        close: "Fermer"
     },
     transaction: {
         confirm: "Veuillez confirmer la transaction",
         broadcast_success: "La transaction a été diffusée ",
         broadcast_fail: "La diffusion de la transaction a échoué: %(message)s",
+        broadcasting: "Diffusion de la transaction en cours..",
+        broadcasting_short: "Diffusion en cours..",
         sent: "A envoyé",
         to: "à",
         received: "A reçu",
@@ -357,5 +360,10 @@ module.exports = {
         core_rate: "Taux de base",
         supply: "Réserve",
         search: "Chercher"
+    },
+    wallet: {
+        title: "Portefeuille",
+        confirm: "Confirmer le mot de passe",
+        password: "Mot de passe"
     }
 };

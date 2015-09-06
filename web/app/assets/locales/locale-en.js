@@ -138,12 +138,15 @@ module.exports = {
         broadcasting: "Broadcasting...",
         broadcast: "Your transfer has been broadcast to the network",
         again: "MAKE ANOTHER TRANSFER",
-        see: "SEE MY TRANSFERS"
+        see: "SEE MY TRANSFERS",
+        close: "Close"
     },
     transaction: {
         confirm: "Please confirm the transaction",
         broadcast_success: "Transaction has been broadcast",
         broadcast_fail: "Failed to broadcast the transaction: %(message)s",
+        broadcasting: "Broadcasting transaction..",
+        broadcasting_short: "Broadcasting..",
         sent: "Sent",
         to: "to",
         received: "Received",
@@ -367,5 +370,10 @@ module.exports = {
         core_rate: "Core rate",
         supply: "Supply",
         search: "Search"
+    },
+    wallet: {
+        title: "Wallet",
+        confirm: "Confirm Password",
+        password: "Password"
     }
 };

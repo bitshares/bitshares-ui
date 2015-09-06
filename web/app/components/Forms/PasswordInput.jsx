@@ -1,6 +1,7 @@
 import React from "react";
 import {PropTypes, Component} from "react";
 import classNames from "classnames";
+import Translate from "react-translate-component";
 
 class PasswordInput extends Component {
 
@@ -63,14 +64,14 @@ class PasswordInput extends Component {
         return (
             <div>
                 <div className={password_class_name}>
-                    <label>Password</label>
+                    <Translate component="label" content="wallet.password" />
                     <input name="password" type="password" ref="password" autoComplete="off"
                            onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
                     {password_error}
                 </div>
                 { this.props.confirmation ?
                 <div className={password_confirmation_class_name}>
-                    <label>Confirm Password</label>
+                    <Translate component="label" content="wallet.confirm" />
                     <input name="confirm_password" type="password" ref="confirm_password" autoComplete="off"
                            onChange={this.handleChange}/>
                     {confirmation_error}
