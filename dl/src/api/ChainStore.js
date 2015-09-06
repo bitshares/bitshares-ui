@@ -565,14 +565,14 @@ class ChainStore
 
    getAccountMemberStatus( account ) {
       if( account === undefined ) return undefined
-      if( account === null ) return "Unknown Member" 
+      if( account === null ) return "unknown" 
       if( account.get( 'lifetime_referrer' ) == account.get( 'id' ) )
-         return "Lifetime Member"
+         return "lifetime"
       let exp = new Date( account.get('membership_expiration_date') ).getTime()
       let now = new Date().getTime()
       if( exp < now )
-         return "Basic Member"
-      return "Annual Subscriber" 
+         return "basic"
+      return "annual" 
    }
 
    getAccountBalance( account, asset_type )

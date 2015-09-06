@@ -41,7 +41,11 @@ module.exports = {
             referrals: "Referrals",
             rewards: "Cashback Rewards",
             cashback: "Cashback",
-            vested: "Vested"
+            vested: "Vested",
+            unknown: "Unknown member",
+            lifetime: "Lifetime member",
+            basic: "Basic member",
+            annual: "Annual subscriber"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -103,7 +107,10 @@ module.exports = {
         orders: "Orders",
         select_placeholder: "Select Account...",
         errors: {
-            not_found: "The account %(name)s does not exist, are you sure you spelled it correctly?"
+            not_found: "The account %(name)s does not exist, are you sure you spelled it correctly?",
+            invalid: "Invalid account name",
+            unknown: "Unknown account",
+            not_yours: "Not your account"
         }
     },
     pagination: {
@@ -119,7 +126,7 @@ module.exports = {
         send: "Send",
         final: "Final balance",
         balances: "Balances",
-        available: "Available: ",
+        available: "Available",
         errors: {
             req: "Required field",
             pos: "Amount must be positive",

@@ -7,6 +7,7 @@ import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
+import counterpart from "counterpart";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -39,7 +40,7 @@ class AccountSelector extends React.Component {
     getError() {
         let error = this.props.error;
         if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
-            error = "Invalid account name";
+            error = counterpart.translate("account.errors.invalid");
         return error;
     }
 
@@ -76,11 +77,11 @@ class AccountSelector extends React.Component {
             let type = this.getNameType(this.props.accountName);
             if(type === "name") lookup_display = "#" + this.props.account.get("id").substring(4);
             else if(type === "id") lookup_display = this.props.account.get("name");
-        } else if( !error && this.props.accountName ) error = "Unknown Account"
+        } else if( !error && this.props.accountName ) error = counterpart.translate("account.errors.unknown");
 
         let member_status = null;
         if (this.props.account)
-            member_status = ChainStore.getAccountMemberStatus(this.props.account);
+            member_status = counterpart.translate("account.member." + ChainStore.getAccountMemberStatus(this.props.account));
 
         let action_class = this.props.action_class || classnames("button", {"disabled" : !this.props.account || error});
 

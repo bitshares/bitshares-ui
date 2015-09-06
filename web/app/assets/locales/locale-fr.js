@@ -14,7 +14,11 @@ module.exports = {
         payments: "Paiments",
         logout: "Déconnexion",
         settings: "Options",
-        current: "Mon Compte"
+        current: "Mon Compte",
+        create_account: "Créér un compte",
+        create_asset: "Créér un actif",
+        lock: "Vérouiller",
+        unlock: "Dévérouiller"
     },
     account: {
         asset: "Actif",
@@ -37,11 +41,24 @@ module.exports = {
             referrals: "Recrutements",
             rewards: "Gains totaux",
             cashback: "Gagné",
-            vested: "Bloqué"
+            vested: "Bloqué",
+            unknown: "Inconnu",
+            lifetime: "Membre à vie",
+            basic: "Membre basique",
+            annual: "Abonné annuel"
+        },
+        user_issued_assets: {
+            symbol: "Symbol",
+            name: "Asset Name",
+            description: "Description",
+            max_supply: "Maximum supply",
+            precision: "Precision",
+            to: "Issue to account",
+            details: "Details"
         },
         connections: {
             known: "Connu par",
-            "black": "Blacklisté par"
+            black: "Blacklisté par"
         },
         perm: {
             active: "Permissions actifs",
@@ -61,7 +78,22 @@ module.exports = {
             name: "Nom",
             info: "Info",
             support: "Support",
-            workers: "Ouvriers"
+            workers: "Ouvriers",
+            no_proxy: "No Proxy",
+            votes: "Votes",
+            url: "Webpage",
+            publish: "Publish Changes",
+            add_witness: "Add",
+            remove_witness: "Remove",
+            remove_committee: "Remove",
+            add_committee: "Add",
+            add_committee_label: "Committee Member",
+            add_witness_label: "Witness"
+        },
+        options: {
+            num_witnesses: "Desired Witnesses",
+            num_committee: "Desired Committee Members",
+            memo_key: "Memo Key"
         },
         upgrade: "Mettre à niveau",
         unlink: "Délier",
@@ -75,7 +107,10 @@ module.exports = {
         orders: "Ordres",
         select_placeholder: "Selectionnez un compte..",
         errors: {
-            not_found: "Le compte %(name)s n'existe pas, veuillez vérifier le nom"
+            not_found: "Le compte %(name)s n'existe pas, veuillez vérifier le nom",
+            invalid: "Compte non valable",
+            unknown: "Compte inconnu",
+            not_yours: "Pas votre compte"
         }
     },
     transfer: {
@@ -87,6 +122,7 @@ module.exports = {
         send: "Envoyer",
         final: "Soldes finaux",
         balances: "Soldes",
+        available: "Disponible",
         errors: {
             req: "Champ obligatoire",
             pos: "Le montant doit étre positif",
@@ -100,6 +136,9 @@ module.exports = {
         see: "VOIRE MES TRANSFERTS"
     },
     transaction: {
+        confirm: "Veuillez confirmer la transaction",
+        broadcast_success: "La transaction a été diffusée ",
+        broadcast_fail: "La diffusion de la transaction a échoué: %(message)s",
         sent: "A envoyé",
         to: "à",
         received: "A reçu",
