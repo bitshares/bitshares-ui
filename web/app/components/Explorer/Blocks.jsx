@@ -6,12 +6,68 @@ import intlData from "../Utility/intlData";
 import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
-import {FormattedDate} from "react-intl";
+import {FormattedDate, FormattedRelative} from "react-intl";
+
 import Inspector from "react-json-inspector";
 require("../Blockchain/json-inspector.scss");
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import TransactionChart from "./TransactionChart";
+import BlocktimeChart from "./BlocktimeChart";
+import classNames from "classnames";
+import utils from "common/utils";
+
+class BlockTimeAgo extends React.Component {
+    
+    constructor(props) {
+        super(props);
+
+        this.interval = null;
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.blockTime !== this.props.blockTime;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.blockTime !== this.props.blockTime) {
+            this._setInterval();
+        }
+    }
+
+    _setInterval() {
+        this._clearInterval();
+        this.interval = setInterval(() => {this.forceUpdate(); }, 1000);
+    }
+
+    _clearInterval() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+    }
+
+    componentWillUnmount() {
+        this._clearInterval();
+    }
+
+    render() {
+        let {blockTime} = this.props;
+
+        let timePassed = Date.now() - blockTime;
+
+        let textClass = classNames("txtlabel",
+            {"success":timePassed <= 6000},
+            {"info":timePassed > 6000 && timePassed <= 15000},
+            {"warning":timePassed > 15000 && timePassed <= 25000},
+            {"error":timePassed > 25000}
+        );
+
+        return (
+            blockTime ? <div className={textClass} ><FormattedRelative value={blockTime} /></div>: null
+        );
+
+    }
+}
 
 @BindToChainState({keep_updating: true})
 class Blocks extends React.Component {
@@ -110,10 +166,12 @@ class Blocks extends React.Component {
 
     render() {
 
-        let {latestBlocks, witnesses, witness_id_to_name, globalObject} = this.props;
+        let {latestBlocks, witnesses, witness_id_to_name, globalObject, dynGlobalObject} = this.props;
         let blocks = null;
+        let headBlock = null;
+        let trxCount = 0, blockCount = 0, timeDelta = 0, blockTimes = [], avgTime = 0;
 
-        if (latestBlocks && latestBlocks.size === 20) {
+        if (latestBlocks && latestBlocks.size >= 20) {
 
             let missingWitnesses = [];
             latestBlocks.forEach(block => {
@@ -125,11 +183,21 @@ class Blocks extends React.Component {
                 this._fetchWitnesses(missingWitnesses, witnesses, witness_id_to_name);
             }
 
+            let previousTime;
+
             blocks = latestBlocks
             .sort((a, b) => {
                 return b.id > a.id;
             })
             .map((block) => {
+                trxCount += block.transactions.length;
+                blockCount += 1;
+                if (blockCount > 1) {
+                    blockTimes.unshift([block.id, (previousTime - block.timestamp) / 1000]);
+                }
+
+                previousTime = block.timestamp;
+
                 return (
                         <tr key={block.id}>
                             <td><Link to="block" params={{height: block.id}}>#{block.id}</Link></td>
@@ -143,19 +211,57 @@ class Blocks extends React.Component {
                         </tr>
                     );
             }).toArray();
+            headBlock = latestBlocks.first().timestamp;
+            avgTime = blockTimes.reduce((previous, current, idx, array) => {
+                // console.log("previous:", previous,"current", current, "idx", idx);
+                return previous + current[1] / array.length;
+            }, 0)
         }
-
-        // let params = [];
-        // let index = 0;
-        // for (let key in globalObject.parameters) {
-        //     if (globalObject.parameters.hasOwnProperty(key)) {
-        //         params.push(<li key={index}>{key} : {globalObject.parameters[key]} </li>);
-        //         index++;
-        //     }
-        // }
 
         return (
             <div className="grid-block vertical">
+                <div className="grid-block page-layout">
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                            Current Block: <div className="txtlabel success">#{utils.format_number(dynGlobalObject.get("head_block_number"), 0)}</div>
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                            Last block: <BlockTimeAgo blockTime={headBlock} />
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                            Avg # of transactions <div>{trxCount / blockCount}/block</div>
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                            Avg block time <div>{utils.format_number(avgTime, 2)}s</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="grid-block page-layout">
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                            <BlocktimeChart blockTimes={blockTimes} />
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                            <TransactionChart blocks={latestBlocks} />
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-3">
+                        <div className="grid-content no-overflow">
+                        </div>
+                    </div>                                                        
+                </div>
                 <div className="grid-block page-layout">
                     <div className="grid-block small-4">
                         <ul>
@@ -163,7 +269,7 @@ class Blocks extends React.Component {
                         </ul>
                     </div>
                     <div className="grid-block small-8 vertical">
-                        <TransactionChart blocks={latestBlocks} />
+                        
                         <div className="grid-content">
                             <h3><Translate component="span" content="explorer.blocks.recent" /></h3>
                             <table className="table">
@@ -181,8 +287,6 @@ class Blocks extends React.Component {
                                 </tbody>
                             </table>
                         </div>
-
-
                     </div>
                 </div>
             </div>

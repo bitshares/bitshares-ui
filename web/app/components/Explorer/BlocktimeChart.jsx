@@ -2,27 +2,18 @@
 import React from "react";
 import Highcharts from "react-highcharts/stocks";
 
-class TransactionChart extends React.Component {
+class BlocktimeChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.blocks.size !== 20) {
+        if (nextProps.blockTimes.length === 0 || this.props.blockTimes.length === 0) {
             return false;
         }
-        return nextProps.blocks !== this.props.blocks;
+        return nextProps.blockTimes[0][0] !== this.props.blockTimes[0][0];
     }
 
     render() {
 
-        let {blocks} = this.props;
-
-        let trxData = [];
-        let max = 0;
-        trxData = blocks.sort((a, b) => {
-            return a.id - b.id;
-        }).map(block => {
-            max = Math.max(block.transactions.length, max);
-            return [block.id, block.transactions.length];
-        }).toArray();
+        let {blockTimes} = this.props;
 
         let config = {
             chart: {
@@ -42,8 +33,8 @@ class TransactionChart extends React.Component {
             },
             series: [
                 {
-                    name: "Transactions",
-                    data: trxData,
+                    name: "Block time",
+                    data: blockTimes,
                     color: "#50D2C2"
                 }
             ],
@@ -57,7 +48,6 @@ class TransactionChart extends React.Component {
             },
             yAxis: {
                 min: 0,
-                max: Math.max(1.5, max + 0.5),
                 title: {
                     text: null
                 },
@@ -74,9 +64,9 @@ class TransactionChart extends React.Component {
         };
 
         return (
-            trxData.length ? <Highcharts config={config}/> : null
+            blockTimes.length ? <Highcharts config={config}/> : null
         );
     }
 };
 
-export default TransactionChart;
+export default BlocktimeChart;
