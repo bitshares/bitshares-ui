@@ -50,18 +50,18 @@ var Utils = {
            return undefined
         if( 'symbol' in asset ) 
         {
-            console.log( "asset: ", asset )
+            // console.log( "asset: ", asset )
             symbol = asset.symbol
             digits = asset.precision
         }
         else 
         {
-           console.log( "asset: ", asset.toJS() )
+           // console.log( "asset: ", asset.toJS() )
            symbol = asset.get('symbol')
            digits = asset.get('precision')
         }
         let precision = this.get_asset_precision(digits);
-        console.log( "precision: ", precision )
+        // console.log( "precision: ", precision )
 
         return `${this.format_number(amount / precision, digits, trailing_zeros)}${!noSymbol ? " " + symbol : ""}`;
     },
