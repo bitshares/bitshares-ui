@@ -44,29 +44,25 @@ class AccountVoting extends React.Component {
         let votes = options.get('votes');
         let vote_ids = votes.toArray();
         ChainStore.getObjectsByVoteIds(vote_ids);
-        FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 2000).then(vote_objs => {
+        FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000).then(vote_objs => {
             let witnesses = new Immutable.List();
             let committee = new Immutable.List();
-            for (let v = 0; v < vote_objs.length; ++v) {
-                let obj = vote_objs[v]
-                console.log("Obj: ", (obj ? obj.toJS() : null))
-                if (obj) {
-                    let account_id = obj.get("committee_member_account");
-                    if (account_id) {
-                        committee = committee.push(account_id);
-                    } else {
-                        account_id = obj.get("witness_account");
-                        if (account_id) witnesses = witnesses.push(account_id);
-                    }
+            vote_objs.forEach( obj => {
+                let account_id = obj.get("committee_member_account");
+                if (account_id) {
+                    committee = committee.push(account_id);
+                } else {
+                    account_id = obj.get("witness_account");
+                    if (account_id) witnesses = witnesses.push(account_id);
                 }
-            }
+            });
             let state = {
                 proxy_account_id: proxy_account_id,
                 witnesses: witnesses,
                 committee: committee,
-                prev_proxy_account_id: this.state.proxy_account_id,
-                prev_witnesses: this.state.witnesses,
-                prev_committee: this.state.committee
+                prev_proxy_account_id: proxy_account_id,
+                prev_witnesses: witnesses,
+                prev_committee: committee
             };
             this.setState(state);
         });
@@ -89,35 +85,24 @@ class AccountVoting extends React.Component {
 
     onPublish() {
         let updated_account = this.props.account.toJS();
+        updated_account.account = updated_account.id;
         updated_account.new_options = updated_account.options
         let new_proxy_id = this.state.proxy_account_id;
         updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0";
-
+        updated_account.new_options.num_witness = this.state.witnesses.size;
+        updated_account.new_options.num_committee = this.state.committee.size;
         FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
             let witnesses_vote_ids = res.map(o => o.get("vote_id"));
-            return Promise.all[Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)];
+            return Promise.all([Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)]);
         }).then( res => {
-            console.log("-- AccountVoting.onPublish -->", res);
+            updated_account.new_options.votes = res[0]
+                .concat(res[1].map(o => o.get("vote_id")))
+                .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
+            console.log("updated_account: ", updated_account);
+            var tr = wallet_api.new_transaction();
+            tr.add_type_operation("account_update", updated_account);
+            WalletDb.process_transaction(tr, null, true);
         });
-        // TODO: finish
-
-        //let witness_votes = this.state.witnesses.map(witness_id => {
-        //    console.log("witness_id:", item.toJS());
-        //    return item.get('vote_id')
-        //})
-        //let committee_votes = this.state.committee.map(item => { return item.get('vote_id') })
-        //updated_account.new_options.num_committee = committee_votes.size
-        //updated_account.new_options.num_witness = witness_votes.size
-        //updated_account.new_options.votes = witness_votes.concat(committee_votes).toArray()
-        //updated_account.new_options.votes = updated_account.new_options.votes.sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) })
-        //console.log("SORTED VOTES: ", updated_account.new_options.votes)
-        //
-        //updated_account.account = updated_account.id
-        //console.log("updated_account: ", updated_account)
-        //
-        //var tr = wallet_api.new_transaction();
-        //tr.add_type_operation("account_update", updated_account);
-        //WalletDb.process_transaction(tr, null, true)
     }
 
     onAddItem(collection, item_id){
