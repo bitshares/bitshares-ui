@@ -41,7 +41,7 @@ class WebSocketRpc {
 
            
         if (params[1] === "set_subscribe_callback" || params[1] === "subscribe_to_market" ||
-            params[1] === "broadcast_transaction_with_callback"
+            params[1] === "broadcast_transaction_with_callback" || params[1] === "set_pending_transaction_callback" 
             ) 
         {
             this.subscriptions[this.current_callback_id] = {
