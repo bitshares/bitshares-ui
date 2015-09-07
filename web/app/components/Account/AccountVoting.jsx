@@ -88,14 +88,21 @@ class AccountVoting extends React.Component {
     }
 
     onPublish() {
+        let updated_account = this.props.account.toJS();
+        updated_account.new_options = updated_account.options
+        let new_proxy_id = this.state.proxy_account_id;
+        updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0";
 
-        //let updated_account = this.props.account.toJS();
-        //updated_account.new_options = updated_account.options
-        //let new_proxy_id = this.state.proxy_account_id;
-        //updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0";
-        //
-        //let witness_votes = this.state.witnesses.map(item => {
-        //    console.log("item:", item.toJS());
+        FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
+            let witnesses_vote_ids = res.map(o => o.get("vote_id"));
+            return Promise.all[Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)];
+        }).then( res => {
+            console.log("-- AccountVoting.onPublish -->", res);
+        });
+        // TODO: finish
+
+        //let witness_votes = this.state.witnesses.map(witness_id => {
+        //    console.log("witness_id:", item.toJS());
         //    return item.get('vote_id')
         //})
         //let committee_votes = this.state.committee.map(item => { return item.get('vote_id') })
@@ -133,14 +140,12 @@ class AccountVoting extends React.Component {
         console.log("-- AccountVoting.validateAccount -->", collection, account);
         if(!account) return null;
         if(collection === "witnesses") {
-            // TODO: replace ChainStore.getObject with proper method
-            return FetchChainObjects(ChainStore.getObject, [account.get("id")], 1000).then(res => {
+            return FetchChainObjects(ChainStore.getWitnessById, [account.get("id")], 3000).then(res => {
                 return res[0] ? null : "Not a witness";
             });
         }
         if(collection === "committee") {
-            // TODO: replace ChainStore.getObject with proper method
-            return FetchChainObjects(ChainStore.getObject, [account.get("id")], 1000).then(res => {
+            return FetchChainObjects(ChainStore.getCommitteeMemberById, [account.get("id")], 3000).then(res => {
                 return res[0] ? null : "Not a committee member";
             });
         }
@@ -161,7 +166,7 @@ class AccountVoting extends React.Component {
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Witnesses</h3>
                     <AccountVotingItems
-                        label="account.votes.add_committee_label"
+                        label="account.votes.add_witness_label"
                         items={this.state.witnesses}
                         validateAccount={this.validateAccount.bind(this, "witnesses")}
                         onAddItem={this.onAddItem.bind(this, "witnesses")}

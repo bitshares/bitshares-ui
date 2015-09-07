@@ -325,7 +325,38 @@ class ChainStore
       //throw Error( `Argument is not an account name or id: ${name_or_id}` )
    }
 
+    /**
+     * This method will attempt to lookup witness by account_id.
+     * If witness doesn't exist it will return null, if witness is found it will return witness object,
+     * if it's not fetched yet it will return undefined.
+     * @param account_id - account id
+     */
+    getWitnessById(account_id) {
+        let witness_id = this.witness_by_account_id.get(account_id);
+        if (witness_id === undefined) {
+            this.fetchWitnessByAccount(account_id);
+            return undefined;
+        }
+        return witness_id ? this.getObject(witness_id) : null;
+    }
+
+    /**
+     * This method will attempt to lookup committee member by account_id.
+     * If committee member doesn't exist it will return null, if committee member is found it will return committee member object,
+     * if it's not fetched yet it will return undefined.
+     * @param account_id - account id
+     */
+    getCommitteeMemberById(account_id) {
+        let cm_id = this.committee_by_account_id.get(account_id);
+        if (cm_id === undefined) {
+            this.fetchCommitteeMemberByAccount(account_id);
+            return undefined;
+        }
+        return cm_id ? this.getObject(cm_id) : null;
+    }
+
    /**
+    * Obsolete! Please use getWitnessById
     * This method will attempt to lookup the account, and then query to see whether or not there is
     * a witness for this account.  If the answer is known, it will return the witness_object, otherwise
     * it will attempt to look it up and return null.   Once the lookup has completed on_update will 
@@ -384,6 +415,7 @@ class ChainStore
       return null
    }
 
+    // Obsolete! Please use getCommitteeMemberById
    getCommitteeMember( id_or_account, on_update = null )
    {
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
@@ -437,13 +469,14 @@ class ChainStore
               .then( optional_witness_object => {
                    if( optional_witness_object )
                    {
-                      this.witness_by_account_id.set( optional_witness_object.witness_account, optional_witness_object.id )
+                       this.witness_by_account_id = this.witness_by_account_id.set( optional_witness_object.witness_account, optional_witness_object.id )
                       let witness_object = this._updateObject( optional_witness_object, true )
                       resolve(witness_object)
                    }
                    else 
                    {
-                      this.witness_by_account_id.set( account_id, null )
+                       this.witness_by_account_id = this.witness_by_account_id.set( account_id, null )
+                       this.notifySubscribers()
                       resolve(null)
                    }
               }, reject ) } )
@@ -459,13 +492,14 @@ class ChainStore
               .then( optional_committee_object => {
                    if( optional_committee_object )
                    {
-                      this.committee_by_account_id.set( optional_committee_object.committee_member_account, optional_committee_object.id )
+                      this.committee_by_account_id = this.committee_by_account_id.set( optional_committee_object.committee_member_account, optional_committee_object.id )
                       let committee_object = this._updateObject( optional_committee_object, true )
                       resolve(committee_object)
                    }
                    else 
                    {
-                      this.committee_by_account_id.set( account_id, null )
+                       this.committee_by_account_id = this.committee_by_account_id.set( account_id, null )
+                       this.notifySubscribers()
                       resolve(null)
                    }
               }, reject ) } )
@@ -774,8 +808,8 @@ class ChainStore
          this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
       }
 
-      if( notify_subscribers ) 
-         this.notifySubscribers() 
+      if( notify_subscribers )
+         this.notifySubscribers()
 
       return current;
    }
