@@ -13,7 +13,7 @@ import WalletDb from "stores/WalletDb.js"
 import ChainStore from "api/ChainStore";
 import validation from "common/validation"
 import AccountImage from "./AccountImage";
-import FetchChainObject from "../Utility/FetchChainObject";
+import {FetchChainObjects} from "api/ChainStore";
 
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountVotingItems from "./AccountVotingItems";
@@ -30,25 +30,46 @@ class AccountVoting extends React.Component {
         super(props);
         this.state = {
             proxy_account_id: "",//"1.2.16",
-            witnesses: new Immutable.List(["1.2.10", "1.2.17", "1.2.1", "1.2.3"]),
-            committee: new Immutable.List(["1.2.10", "1.2.17", "1.2.3"])
+            witnesses: null,
+            committee: null
         };
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
     }
 
     updateAccountData(account) {
-        console.log("-- AccountVoting.updateData -->", account);
-        // TODO: extract data from account object here
-        let state = {
-            proxy_account_id: this.state.proxy_account_id,
-            witnesses: this.state.witnesses,
-            committee: this.state.committee,
-            prev_proxy_account_id: this.state.proxy_account_id,
-            prev_witnesses: this.state.witnesses,
-            prev_committee: this.state.committee
-        };
-        this.setState(state);
+        let options = account.get('options');
+        let proxy_account_id = options.get('voting_account');
+        if(proxy_account_id === "1.2.0" || proxy_account_id === "1.2.5") proxy_account_id = "";
+        let votes = options.get('votes');
+        let vote_ids = votes.toArray();
+        ChainStore.getObjectsByVoteIds(vote_ids);
+        FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 2000).then(vote_objs => {
+            let witnesses = new Immutable.List();
+            let committee = new Immutable.List();
+            for (let v = 0; v < vote_objs.length; ++v) {
+                let obj = vote_objs[v]
+                console.log("Obj: ", (obj ? obj.toJS() : null))
+                if (obj) {
+                    let account_id = obj.get("committee_member_account");
+                    if (account_id) {
+                        committee = committee.push(account_id);
+                    } else {
+                        account_id = obj.get("witness_account");
+                        if (account_id) witnesses = witnesses.push(account_id);
+                    }
+                }
+            }
+            let state = {
+                proxy_account_id: proxy_account_id,
+                witnesses: witnesses,
+                committee: committee,
+                prev_proxy_account_id: this.state.proxy_account_id,
+                prev_witnesses: this.state.witnesses,
+                prev_committee: this.state.committee
+            };
+            this.setState(state);
+        });
     }
 
     isChanged() {
@@ -63,15 +84,15 @@ class AccountVoting extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.account !== this.props.account) this.updateAccountData();
+        if(nextProps.account !== this.props.account) this.updateAccountData(this.props.account);
     }
 
     onPublish() {
-        // TODO: make the code below work
-        //let updated_account = this.state.account.toJS()
+
+        //let updated_account = this.props.account.toJS();
         //updated_account.new_options = updated_account.options
-        //let new_proxy_id = this.getNewProxyID()
-        //updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0"
+        //let new_proxy_id = this.state.proxy_account_id;
+        //updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0";
         //
         //let witness_votes = this.state.witnesses.map(item => {
         //    console.log("item:", item.toJS());
@@ -113,14 +134,14 @@ class AccountVoting extends React.Component {
         if(!account) return null;
         if(collection === "witnesses") {
             // TODO: replace ChainStore.getObject with proper method
-            return FetchChainObject(ChainStore.getObject, account.get("id"), 1000).then(res => {
-                return res ? null : "Not a witness";
+            return FetchChainObjects(ChainStore.getObject, [account.get("id")], 1000).then(res => {
+                return res[0] ? null : "Not a witness";
             });
         }
         if(collection === "committee") {
             // TODO: replace ChainStore.getObject with proper method
-            return FetchChainObject(ChainStore.getObject, account.get("id"), 1000).then(res => {
-                return res ? null : "Not a committee member";
+            return FetchChainObjects(ChainStore.getObject, [account.get("id")], 1000).then(res => {
+                return res[0] ? null : "Not a committee member";
             });
         }
         return null;

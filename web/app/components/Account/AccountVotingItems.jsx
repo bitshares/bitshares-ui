@@ -88,6 +88,7 @@ class AccountVotingItems extends React.Component {
     }
 
     render() {
+        if(!this.props.items) return null;
         let item_rows = this.props.items.filter(i => i).sort((a,b) => a.get("name") > b.get("name")).map(i => {
             return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem}/>)
         });

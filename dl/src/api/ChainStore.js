@@ -780,7 +780,7 @@ class ChainStore
       return current;
    }
 
-   getObjectsByVoteID( vote_ids, on_update = null )
+   getObjectsByVoteIds( vote_ids )
    {
       let result = []
       let missing = []
@@ -788,7 +788,7 @@ class ChainStore
       {
          let obj = this.objects_by_vote_id.get( vote_ids[i] )
          if( obj )
-            result.push(this.getObject( obj, on_update ) )
+            result.push(this.getObject( obj ) )
          else
          {
             result.push( null )
@@ -808,13 +808,46 @@ class ChainStore
                          this._updateObject( vote_obj_array[i] )
                       }
                    }
-                   if( on_update ) on_update()
           }, error => console.log( "Error looking up vote ids: ", error ) )
       }
       return result
    }
+
+    getObjectByVoteID( vote_id )
+    {
+        let obj_id = this.objects_by_vote_id.get( vote_id )
+        if( obj_id ) return this.getObject( obj_id );
+        return undefined;
+    }
 }
 
 let chain_store = new ChainStore();
 
 export default chain_store;
+
+export function FetchChainObjects(method, object_ids, timeout) {
+    let get_object = method.bind(chain_store);
+
+    return new Promise((resolve, reject) => {
+
+        function onUpdate(not_subscribed_yet = false) {
+            let res = object_ids.map(id => get_object(id));
+            if (res.findIndex(o => o === undefined) === -1) {
+                if(!not_subscribed_yet) chain_store.unsubscribe(onUpdate);
+                resolve(res);
+                return true;
+            }
+            return false;
+        }
+
+        let resolved = onUpdate(true);
+        if(!resolved) chain_store.subscribe(onUpdate);
+
+        if(timeout) setTimeout(() => {
+            chain_store.unsubscribe(onUpdate);
+            reject("timeout");
+        }, timeout);
+
+    });
+
+}
