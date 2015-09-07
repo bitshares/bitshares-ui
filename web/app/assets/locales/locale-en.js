@@ -14,7 +14,11 @@ module.exports = {
         payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
-        current: "Current Account"
+        current: "Current Account",
+        create_account: "Create Account",
+        create_asset: "Create Asset",
+        lock: "Lock",
+        unlock: "Unlock"
     },
     account: {
         asset: "Asset",
@@ -37,7 +41,11 @@ module.exports = {
             referrals: "Referrals",
             rewards: "Cashback Rewards",
             cashback: "Cashback",
-            vested: "Vested"
+            vested: "Vested",
+            unknown: "Unknown member",
+            lifetime: "Lifetime member",
+            basic: "Basic member",
+            annual: "Annual subscriber"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -99,7 +107,10 @@ module.exports = {
         orders: "Orders",
         select_placeholder: "Select Account...",
         errors: {
-            not_found: "The account %(name)s does not exist, are you sure you spelled it correctly?"
+            not_found: "The account %(name)s does not exist, are you sure you spelled it correctly?",
+            invalid: "Invalid account name",
+            unknown: "Unknown account",
+            not_yours: "Not your account"
         }
     },
     pagination: {
@@ -115,7 +126,7 @@ module.exports = {
         send: "Send",
         final: "Final balance",
         balances: "Balances",
-        available: "Available: ",
+        available: "Available",
         errors: {
             req: "Required field",
             pos: "Amount must be positive",
@@ -127,12 +138,15 @@ module.exports = {
         broadcasting: "Broadcasting...",
         broadcast: "Your transfer has been broadcast to the network",
         again: "MAKE ANOTHER TRANSFER",
-        see: "SEE MY TRANSFERS"
+        see: "SEE MY TRANSFERS",
+        close: "Close"
     },
     transaction: {
         confirm: "Please confirm the transaction",
         broadcast_success: "Transaction has been broadcast",
         broadcast_fail: "Failed to broadcast the transaction: %(message)s",
+        broadcasting: "Broadcasting transaction..",
+        broadcasting_short: "Broadcasting..",
         sent: "Sent",
         to: "to",
         received: "Received",
@@ -356,5 +370,10 @@ module.exports = {
         core_rate: "Core rate",
         supply: "Supply",
         search: "Search"
+    },
+    wallet: {
+        title: "Wallet",
+        confirm: "Confirm Password",
+        password: "Password"
     }
 };

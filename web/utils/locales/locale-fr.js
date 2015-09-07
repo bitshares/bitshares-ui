@@ -14,11 +14,7 @@ module.exports = {
         payments: "Paiments",
         logout: "Déconnexion",
         settings: "Options",
-        current: "Mon Compte",
-        create_account: "Créér un compte",
-        create_asset: "Créér un actif",
-        lock: "Vérouiller",
-        unlock: "Dévérouiller"
+        current: "Mon Compte"
     },
     account: {
         asset: "Actif",
@@ -41,20 +37,7 @@ module.exports = {
             referrals: "Recrutements",
             rewards: "Gains totaux",
             cashback: "Gagné",
-            vested: "Bloqué",
-            unknown: "Inconnu",
-            lifetime: "Membre à vie",
-            basic: "Membre basique",
-            annual: "Abonné annuel"
-        },
-        user_issued_assets: {
-            symbol: "Symbol",
-            name: "Asset Name",
-            description: "Description",
-            max_supply: "Maximum supply",
-            precision: "Precision",
-            to: "Issue to account",
-            details: "Details"
+            vested: "Bloqué"
         },
         connections: {
             known: "Connu par",
@@ -90,11 +73,6 @@ module.exports = {
             add_committee_label: "Committee Member",
             add_witness_label: "Witness"
         },
-        options: {
-            num_witnesses: "Desired Witnesses",
-            num_committee: "Desired Committee Members",
-            memo_key: "Memo Key"
-        },
         upgrade: "Mettre à niveau",
         unlink: "Délier",
         link: "Lier",
@@ -107,10 +85,21 @@ module.exports = {
         orders: "Ordres",
         select_placeholder: "Selectionnez un compte..",
         errors: {
-            not_found: "Le compte %(name)s n'existe pas, veuillez vérifier le nom",
-            invalid: "Compte non valable",
-            unknown: "Compte inconnu",
-            not_yours: "Pas votre compte"
+            not_found: "Le compte %(name)s n'existe pas, veuillez vérifier le nom"
+        },
+        user_issued_assets: {
+            symbol: "Symbol",
+            name: "Asset Name",
+            description: "Description",
+            max_supply: "Maximum supply",
+            precision: "Precision",
+            to: "Issue to account",
+            details: "Details"
+        },
+        options: {
+            num_witnesses: "Desired Witnesses",
+            num_committee: "Desired Committee Members",
+            memo_key: "Memo Key"
         }
     },
     transfer: {
@@ -120,9 +109,8 @@ module.exports = {
         memo: "Message",
         fee: "Frais",
         send: "Envoyer",
-        final: "Soldes finaux",
+        "final": "Soldes finaux",
         balances: "Soldes",
-        available: "Disponible",
         errors: {
             req: "Champ obligatoire",
             pos: "Le montant doit étre positif",
@@ -131,17 +119,13 @@ module.exports = {
         },
         back: "REVENIR",
         confirm: "CONFIRMER",
-        broadcast: "Votre transfert a bien été diffusé au reseau",
+        broadcast: "Votre transfert a bien été soumis au reseau",
         again: "FAIRE UN AUTRE TRANSFERT",
         see: "VOIRE MES TRANSFERTS",
-        close: "Fermer"
+        available: "Available: ",
+        broadcasting: "Broadcasting..."
     },
     transaction: {
-        confirm: "Veuillez confirmer la transaction",
-        broadcast_success: "La transaction a été diffusée ",
-        broadcast_fail: "La diffusion de la transaction a échoué: %(message)s",
-        broadcasting: "Diffusion de la transaction en cours..",
-        broadcasting_short: "Diffusion en cours..",
         sent: "A envoyé",
         to: "à",
         received: "A reçu",
@@ -158,8 +142,8 @@ module.exports = {
         reg_account: "A créé le compte",
         was_reg_account: " a été créé par",
         create_asset: "A créé l'actif",
-        limit_order_sell: "A placé l'ordre #%(num)s pour vendre  %(sell_amount)s à %(sell_price)s",
-        limit_order_buy: "A placé l'ordre #%(num)s pour acheter %(buy_amount)s à %(buy_price)s",
+        limit_order: "A placé un ordre à limite pour vendre",
+        limit_order_buy: "A placé un ordre à limite pour acheter",
         limit_order_cancel: "Annulation de l'ordre à limite avec id",
         short_order: "A placé un ordre à découvert pour vendre",
         at: "à",
@@ -196,7 +180,7 @@ module.exports = {
         global_parameters_update: "A mis à jour les parametres globaux",
         file_write: "A écrit un fichier",
         vesting_balance_create: "a créé un solde bloqué pour",
-        for: "pour",
+        "for": "pour",
         vesting_balance_withdraw: "A retiré du solde bloqué",
         bond_create_offer: "A créé une offre d'obligation",
         bond_cancel_offer: "A annulé l'offre d'obligation",
@@ -225,7 +209,7 @@ module.exports = {
             asset_update: "Mise à jour d'actif",
             asset_update_bitasset: "Mise à jour d'actif de marché",
             asset_update_feed_producers: "Mise à jour des flux",
-            asset_issue: "Assigner un actif",
+            asset_issue: "Assigner d'un actif",
             asset_reserve: "Destruction d'actif",
             asset_fund_fee_pool: "Financement de pot de frais",
             asset_settle: "Couvrement d'actif",
@@ -250,7 +234,13 @@ module.exports = {
             assert: "Assert operation",
             balance_claim: "Récuperation de solde",
             override_transfer: "Forcing de transfert"
-        }
+        },
+        confirm: "Please confirm the transaction",
+        broadcast_success: "Transaction has been broadcast",
+        broadcast_fail: "Failed to broadcast the transaction: %(message)s",
+        limit_order_sell: "Placed order #%(num)s to sell %(sell_amount)s at %(sell_price)s",
+        short_order_cancel: "Cancelled short ",
+        witness_receive: "Received witness from witness"
     },
     explorer: {
         accounts: {
@@ -334,15 +324,14 @@ module.exports = {
     },
     footer: {
         title: "Graphene",
-        block: "Bloc courant"
+        block: "Bloc courant",
+        loading: "Loading..."
     },
     exchange: {
         price_history: "Historique du prix",
         order_depth: "Carnet d'ordres",
         market_history: "Historique du marché",
         balance: "Solde",
-        lowest_ask: "Offre le plus bas",
-        highest_bid: "Demande le plus haut",
         total: "Total",
         value: "Valeur",
         price: "Prix",
@@ -354,7 +343,9 @@ module.exports = {
         buy: "Acheter",
         sell: "Vendre",
         confirm_buy: "Confirmation d'ordre: Acheter %(buy_amount)s %(buy_symbol)s au prix de %(price_amount)s %(price_symbol)s",
-        confirm_sell: "Confirmation d'ordre: Vendre %(sell_amount)s %(sell_symbol)s au prix de %(price_amount)s %(price_symbol)s"
+        confirm_sell: "Confirmation d'ordre: Vendre %(sell_amount)s %(sell_symbol)s au prix de %(price_amount)s %(price_symbol)s",
+        lowest_ask: "Lowest ask",
+        highest_bid: "Highest bid"
     },
     markets: {
         choose_base: "Selectionner l'actif de base",
@@ -363,9 +354,8 @@ module.exports = {
         supply: "Réserve",
         search: "Chercher"
     },
-    wallet: {
-        title: "Portefeuille",
-        confirm: "Confirmer le mot de passe",
-        password: "Mot de passe"
+    pagination: {
+        newer: "Newer",
+        older: "Older"
     }
 };

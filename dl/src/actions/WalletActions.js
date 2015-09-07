@@ -9,6 +9,8 @@ import lookup from "chain/lookup"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 import alt from "alt-instance"
+import iDB from "idb-instance"
+import Immutable from "immutable"
 
 var application_api = new ApplicationApi()
 var api = Apis.instance()
@@ -16,10 +18,12 @@ var api = Apis.instance()
 
 class WalletActions {
 
-    constructor() {
-        this.generateActions( 'restore' )
+    /** @throws error */
+    restore(wallet_name, wallet_object) {
+        wallet_name = wallet_name.toLowerCase()
+        this.dispatch({wallet_name, wallet_object})
     }
-
+    
     createBrainKeyAccount(
         account_name,
         registrar,

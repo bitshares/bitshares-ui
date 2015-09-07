@@ -16,27 +16,33 @@ class WalletStore extends BaseStore {
             onRestore: WalletActions.restore,
             onDefaultWalletCreated: WalletCreateActions.defaultWalletCreated
         })
-        super._export("init","getMyAuthorityForAccount")
+        super._export("init","getMyAuthorityForAccount", "setNewWallet")
     }
     
     _getInitialState() {
         return {
+            new_wallet: undefined,// pending restore
             current_wallet: undefined,
             wallet_names: Immutable.Set()
         }
     }
     
+    setNewWallet(new_wallet) {
+        this.setState({new_wallet})
+    }
+    
     init() {
-        return Promise.all([
-            iDB.root.getProperty("current_wallet").then( current_wallet => {
-                this.setState({ current_wallet })
-            }),
-            iDB.root.getProperty("wallet_names", []).then( wallet_names => {
+        return iDB.root.getProperty("current_wallet").then(
+            current_wallet => {
+            return iDB.root.getProperty("wallet_names", []).then( wallet_names => {
+                if( ! current_wallet && wallet_names.length) {
+                    this.setState({ current_wallet: "default" })
+                }
                 this.setState({
                     wallet_names: Immutable.Set(wallet_names)
                 })
             })
-        ])
+        })
     }
     
     /**
@@ -77,16 +83,16 @@ class WalletStore extends BaseStore {
     }
     
     onRestore({wallet_name, wallet_object}) {
-        return iDB.restore(wallet_name, wallet_object).then( () => {
+        iDB.restore(wallet_name, wallet_object).then( () => {
             var wallet_names = this.state.wallet_names.add(wallet_name)
-            iDB.root.setProperty("wallet_names", wallet_names).then( ()=> {
-                this.setState({wallet_names})
-            })
-        }).catch( event => {
-            var error = event.target.error
-            console.error("Error saving wallet to database",
-                error.name, error.message, error)
-            throw new Error("Error saving wallet to database")
+            return iDB.root.setProperty("wallet_names", wallet_names).then(
+                ()=> {
+                    this.setState({wallet_names})
+                    if( ! this.state.current_wallet)
+                        this.setState({ current_wallet: "default" })
+                })
+        }).catch( error => {
+            console.error(error)
         })
     }
     

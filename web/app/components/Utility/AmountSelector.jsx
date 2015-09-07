@@ -62,22 +62,23 @@ class AssetSelector extends React.Component {
         tabIndex: React.PropTypes.number
     }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            amount: "",
-            selected_asset: props.asset
-        }
-    }
+    // constructor(props) {
+    //     super(props)
+    //     this.state = {
+    //         amount: "",
+    //         selected_asset: props.asset
+    //     }
+    // }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.asset && nextProps.asset != this.props.asset && !this.state.asset) {
-            this.props.onChange({amount: this.state.amount, asset: nextProps.asset});
-        }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     if (nextProps.asset && nextProps.asset != this.props.asset && !this.state.asset) {
+    //         this.props.onChange({amount: this.state.amount, asset: nextProps.asset});
+    //     }
+    // }
 
     formatAmount(v) {
         // TODO: use asset's precision to format the number
+        if (!v) v = "";
         let value = v.trim().replace(/,/g, "");
         while (value.substring(0, 2) == "00")
             value = value.substring(1);
@@ -95,19 +96,19 @@ class AssetSelector extends React.Component {
         return value;
     }
 
-    onChange(event) {
+    _onChange(event) {
         let amount = event.target.value
-        this.setState({amount})
-        this.props.onChange({amount: amount, asset: this.state.selected_asset || this.props.asset})
+        // this.setState({amount})
+        this.props.onChange({amount: amount, asset: this.props.asset})
     }
 
     onAssetChange(selected_asset) {
-        this.setState({selected_asset})
-        this.props.onChange({amount: this.state.amount, asset: selected_asset})
+        // this.setState({selected_asset})
+        this.props.onChange({amount: this.props.amount, asset: selected_asset})
     }
 
     render() {
-        let value = this.formatAmount(this.state.amount);
+        let value = this.formatAmount(this.props.amount);
         return (
             <div className="amount-selector">
                 <div className="float-right">{this.props.display_balance}</div>
@@ -116,7 +117,7 @@ class AssetSelector extends React.Component {
                     <input type="text"
                            value={value}
                            placeholder={this.props.placeholder}
-                           onChange={this.onChange.bind(this) }
+                           onChange={this._onChange.bind(this) }
                            tabIndex={this.props.tabIndex}/>
                    <span className="form-label select">
                        <AssetSelector

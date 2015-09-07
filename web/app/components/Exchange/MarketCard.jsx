@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router";
 import FormattedAsset from "../Utility/FormattedAsset";
+import FormattedPrice from "../Utility/FormattedPrice";
 import Translate from "react-translate-component";
 
 class MarketCard extends React.Component {
@@ -26,12 +27,12 @@ class MarketCard extends React.Component {
                         </div>
                         <div className="card-section">
                             <ul >
-                                <li><Translate content="markets.core_rate" />: <FormattedAsset
+                                <li><Translate content="markets.core_rate" />: <FormattedPrice
                                                     style={{fontWeight: "bold"}}
-                                                    amount={quote.options.core_exchange_rate.quote.amount}
-                                                    asset={quote.id}
-                                                    baseamount={quote.options.core_exchange_rate.base.amount}
-                                                    base={base.id} />
+                                                    quote_amount={quote.options.core_exchange_rate.quote.amount}
+                                                    quote_asset={quote.id}
+                                                    base_amount={quote.options.core_exchange_rate.base.amount}
+                                                    base_asset={base.id} />
                                 </li>
                                 <li><Translate content="markets.supply" />: <FormattedAsset
                                                     style={{fontWeight: "bold"}}

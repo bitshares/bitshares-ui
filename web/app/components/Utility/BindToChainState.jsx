@@ -39,6 +39,7 @@ const isAccountType = checkChainType(ChainTypes.ChainAccount);
 const isKeyRefsType = checkChainType(ChainTypes.ChainKeyRefs);
 const isAddressBalancesType = checkChainType(ChainTypes.ChainAddressBalances);
 const isAssetType = checkChainType(ChainTypes.ChainAsset);
+const isObjectsListType = checkChainType(ChainTypes.ChainObjectsList);
 function checkIfRequired(t) {
     for(let k in ChainTypes) {
         let v = ChainTypes[k];
@@ -60,12 +61,13 @@ function BindToChainState(options) {
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
                 if(options && options.all_props) {
-                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children");
+                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children" || e === "keep_updating");
                     this.chain_accounts = [];
                     this.chain_key_refs = [];
                     this.chain_address_balances = [];
                     this.chain_assets = [];
-                    this.required_props = this.chain_objects;
+                    this.chain_objects_list = [];
+                    this.required_props = [];
                     this.all_chain_props = this.chain_objects;
                     this.default_props = {};
                 } else {
@@ -74,12 +76,17 @@ function BindToChainState(options) {
                     this.chain_key_refs = prop_types_array.filter(_.flow(secondEl, isKeyRefsType)).map(firstEl);
                     this.chain_address_balances = prop_types_array.filter(_.flow(secondEl, isAddressBalancesType)).map(firstEl);
                     this.chain_assets = prop_types_array.filter(_.flow(secondEl, isAssetType)).map(firstEl);
+                    this.chain_objects_list = prop_types_array.filter(_.flow(secondEl, isObjectsListType)).map(firstEl);
                     this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
                     this.all_chain_props = [...this.chain_objects,
                                             ...this.chain_accounts,
                                             ...this.chain_key_refs,
                                             ...this.chain_address_balances,
-                                            ...this.chain_assets];
+                                            ...this.chain_assets,
+                                            ...this.chain_objects_list];
+                }
+                if(options && options.require_all_props){
+                    this.required_props = this.all_chain_props;
                 }
                 this.default_props = _.clone(Component.defaultProps) || {};
                 for (let key in this.default_props) {
@@ -103,11 +110,20 @@ function BindToChainState(options) {
                 this.update();
             }
 
-            componentWillUnmount() { ChainStore.unsubscribe( this.update ) }
+            componentWillUnmount() {
+                ChainStore.unsubscribe( this.update );
+            }
 
-            componentWillReceiveProps( next_props ) { this.update(next_props); }
+            componentWillReceiveProps( next_props ) {
+                if(options && options.all_props) {
+                    this.chain_objects = _.reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating");
+                    this.all_chain_props = this.chain_objects;
+                    this.state = _.pick(this.state, this.chain_objects);
+                }
+                this.update(next_props);
+            }
 
-            update(next_props)
+            update(next_props = null)
             {
                 let keep_updating = (options && options.keep_updating) || this.props.keep_updating;
                 if(!next_props && !keep_updating && this.state.resolved) return;
@@ -124,6 +140,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_accounts )
@@ -136,6 +154,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_key_refs )
@@ -146,6 +166,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_address_balances )
@@ -156,6 +178,8 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 for( let key of this.chain_assets )
@@ -166,10 +190,44 @@ function BindToChainState(options) {
                         if(new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
+                    }
+                }
+                for( let key of this.chain_objects_list )
+                {
+                    //console.log("-- Wrapper.update -->", this.chain_objects_list);
+                    let prop = props[key] || this.default_props[key];
+                    if(prop) {
+                        let prop_prev_state = this.state[key];
+                        let prop_new_state = [];
+                        let changes = false;
+                        if(!prop_prev_state || prop_prev_state.length !== prop.size) {
+                            prop_prev_state = [];
+                            changes = true;
+                        }
+                        prop.forEach( (obj_id, index) => {
+                            //console.log("-- Wrapper.chain_objects_list item -->", obj_id, index);
+                            if(obj_id) {
+                                let new_obj = ChainStore.getObject(obj_id);
+                                if(new_obj) ++resolved_objects_counter;
+                                if(prop_prev_state[index] !== new_obj) {
+                                    changes = true;
+                                    prop_new_state[index] = new_obj;
+                                } else {
+                                    prop_new_state[index] = prop_prev_state[index];
+                                }
+                            }
+                            ++all_objects_counter;
+                        });
+                        //console.log("-- Wrapper.chain_objects_list: ", prop_new_state);
+                        if(changes) new_state[key] = prop_new_state;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
                     }
                 }
                 //console.log("----- Wrapper update ----->", this.all_chain_props, this.all_chain_props.length, all_objects_counter, resolved_objects_counter);
-                if(all_objects_counter === resolved_objects_counter) new_state.resolved = true;
+                if(all_objects_counter <= resolved_objects_counter) new_state.resolved = true;
                 this.setState( new_state )
             }
 
@@ -185,7 +243,7 @@ function BindToChainState(options) {
     }
 }
 
-@BindToChainState({all_props: true})
+@BindToChainState({all_props: true, require_all_props: true})
 class Wrapper extends React.Component {
     render() {
         return <div className="wrapper">

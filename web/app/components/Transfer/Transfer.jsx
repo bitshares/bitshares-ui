@@ -6,6 +6,7 @@ import AccountSelector from "../Account/AccountSelector";
 import AccountStore from "stores/AccountStore";
 import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
+import counterpart from "counterpart";
 
 // TODO: add support for url params: from, to, amount, asset, memo
 
@@ -64,7 +65,10 @@ class Transfer extends React.Component {
             asset.get("id"),
             this.state.memo
         ).then( () => {
-            this.setState(Transfer.getInitialState());
+            this.setState({
+                amount: "",
+                memo: ""
+            });
         }).catch( e => {
             console.log( "error: ",e)
         } );
@@ -73,7 +77,7 @@ class Transfer extends React.Component {
     render() {
         let from_error = null;
         if(this.state.from_account && !AccountStore.getState().linkedAccounts.contains(this.state.from_name) )
-            from_error = "Not your account";
+            from_error = counterpart.translate("account.errors.not_yours");
 
         let asset_types = [];
         let balance = null;
@@ -82,7 +86,7 @@ class Transfer extends React.Component {
             asset_types = Object.keys(account_balances);
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
-                balance = (<span>Available: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
             }
         }
 
@@ -117,7 +121,7 @@ class Transfer extends React.Component {
                         <AmountSelector label="transfer.amount"
                                         amount={this.state.amount}
                                         onChange={this.onAmountChanged.bind(this)}
-                                        asset={asset_types.length > 0 ? asset_types[0] : null}
+                                        asset={asset_types.length > 0 && this.state.asset ? this.state.asset.get("id") : asset_types[0]}
                                         assets={asset_types}
                                         display_balance={balance}
                                         tabIndex={3}/>

@@ -4,8 +4,23 @@ import classNames from "classnames";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
 
+@BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
+    static propTypes = {
+        balance: ChainTypes.ChainObject,
+        type: PropTypes.string,
+        amountChange: PropTypes.func.isRequired,
+        priceChange: PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired
+    }
+
+    static defaultProps = {
+        type: "buy"
+    }
+
     shouldComponentUpdate(nextProps) {
         return (
                 nextProps.amount !== this.props.amount ||
@@ -32,11 +47,13 @@ class BuySell extends React.Component {
         let {type, quoteSymbol, baseSymbol, amount, price, amountChange,
             priceChange, onSubmit, balance, totalPrecision, total, totalChange,
             balancePrecision, quotePrecision, currentPrice} = this.props;
-
+        
         let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")}`;
-        let buttonClass = classNames("button buySellButton", type, {disabled: !(balance > 0 && amount > 0 && price > 0)});
+        let buttonClass = classNames("button buySellButton", type, {disabled: !(balance && balance.get("balance") > 0 && amount > 0 && price > 0)});
         let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
         let divClass = classNames(this.props.className, `${type}-form`);
+
+        let balanceAmount = balance ? utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision}) : 0;
 
         return (
             <div className={divClass}>
@@ -45,7 +62,7 @@ class BuySell extends React.Component {
                         <div className="grid-content">
                             <div className="buy-sell-info">
                                 <Translate content="exchange.balance" />:&nbsp;
-                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balance)}>{utils.format_number(balance, balancePrecision)}</span> {balanceSymbol}
+                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceAmount)}>{utils.format_number(balanceAmount, balancePrecision)}</span> {balanceSymbol}
                             </div>
                             <div className="buy-sell-info">
                                 {this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;
@@ -103,16 +120,5 @@ class BuySell extends React.Component {
         );
     }
 }
-
-BuySell.defaultProps = {
-    type: "buy"
-};
-
-BuySell.propTypes = {
-    type: PropTypes.string,
-    amountChange: PropTypes.func.isRequired,
-    priceChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
-};
 
 export default BuySell;

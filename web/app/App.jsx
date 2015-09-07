@@ -56,7 +56,7 @@ import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
-import Backup from "components/Persistance/Backup";
+import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
 import WalletStore from "stores/WalletStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -224,6 +224,9 @@ let routes = (
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
         <Route name="backup" path="backup" handler={Backup}/>
+        <Route name="backup-create" path="backup/create" handler={BackupCreate}/>
+        <Route name="backup-verify" path="backup/verify" handler={BackupVerify}/>
+        <Route name="backup-restore" path="backup/restore" handler={BackupRestore}/>
     </Route>
 );
 

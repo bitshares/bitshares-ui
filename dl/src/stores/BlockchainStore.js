@@ -29,6 +29,8 @@ class BlockchainStore extends BaseStore{
         });
 
         this._export("getFee");
+
+        this.maxBlocks = 20;
     }
 
     getFee(op_type, options) {
@@ -63,9 +65,9 @@ class BlockchainStore extends BaseStore{
     onGetLatest(payload) {
         let {block, maxBlock} = payload;
         block.timestamp = new Date(block.timestamp);
-        if (block.id > maxBlock - 20) {
+        if (block.id > maxBlock - this.maxBlocks) {
             this.latestBlocks = this.latestBlocks.unshift(Block(block));
-            if (this.latestBlocks.size > 20) {
+            if (this.latestBlocks.size > this.maxBlocks) {
                 this.latestBlocks = this.latestBlocks.pop();
             }
         }

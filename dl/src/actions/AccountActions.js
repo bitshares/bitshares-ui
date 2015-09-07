@@ -57,7 +57,7 @@ class AccountActions {
                 from_account_id, to_account_id,
                 amount, asset_id, memo
             ).then(result => {
-                    console.log( "transfer result: ", result )
+                    // console.log( "transfer result: ", result )
                     this.dispatch(result);
             });
         } catch (error) {

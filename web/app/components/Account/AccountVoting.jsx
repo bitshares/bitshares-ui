@@ -13,399 +13,185 @@ import WalletDb from "stores/WalletDb.js"
 import ChainStore from "api/ChainStore";
 import validation from "common/validation"
 import AccountImage from "./AccountImage";
+import {FetchChainObjects} from "api/ChainStore";
 
+import AccountVotingProxy from "./AccountVotingProxy";
+import AccountVotingItems from "./AccountVotingItems";
 
 let wallet_api = new WalletApi()
-/**
- *   Parameters:
- *
- *   account - the ID of the account that should be updated
- *   account_name - the name of the account that is being used
- *
- */
+
 class AccountVoting extends React.Component {
 
+    static propTypes = {
+        account: React.PropTypes.object.isRequired // the account object that should be updated
+    }
+
     constructor(props) {
-       super(props)
-       this.state = {
-          current_proxy : null, ///< the proxy used by the blockchain
-          new_proxy:      null, ///< the proxy specified by the user
-          new_witness:   null, ///< the new delegate specified by the user
-          new_committee:  null, ///< the new witness specified by the user
-          new_budget:   null, ///< the new budget specified by the user
-          changed : false,
-          witnesses: new Immutable.Map(),
-          committee: new Immutable.Map(),
-          init_witnesses: new Immutable.Map(),
-          init_committee: new Immutable.Map()
-       }
-       this.map_accounts = { account_name: "account" }
+        super(props);
+        this.state = {
+            proxy_account_id: "",//"1.2.16",
+            witnesses: null,
+            committee: null
+        };
+        this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
+        this.onPublish = this.onPublish.bind(this);
     }
 
-    onUpdate( next_props = null, next_state = {} )
-    {
-       //console.log( "======================> ON UPDATE!!! <======================" )
-       if( !next_props ) next_props = this.props
-       if( !next_state.init_witnesses ) next_state.init_witnesses = this.state.init_witnesses
-       if( !next_state.init_committee ) next_state.init_committee = this.state.init_committee
-       if( !next_state.changed  ) next_state.changed = this.state.changed
-
-       let acnt = null; //ChainStore.getAccount( next_props.account_name, this.onUpdate.bind(this,null,{}) )
-       if( acnt ) {
-          let current_proxy_id = acnt.get('options').get('voting_account')
-          if( current_proxy_id == "1.2.0" ) next_state.current_proxy = null
-          else {
-            let proxy_acnt = ChainStore.getAccount( current_proxy_id, this.onUpdate.bind(this,null,{}) ) 
-            if( proxy_acnt )
-               next_state.current_proxy = proxy_acnt.get('name')
-          }
-
-          let votes = acnt.get('options').get('votes')
-          //console.log( "==========================> current_votes: ", votes.toJS() )
-          let vote_objs = ChainStore.getObjectsByVoteID( votes.toArray(), this.onUpdate.bind(this,null,{}) )
-          //console.log( "result: ", vote_objs )
-          
-          for( let v = 0; v < vote_objs.length; ++ v )
-          {
-             let vote_id = votes.get(v)
-           //  console.log( "Vote: ", vote_id ) 
-             let obj = vote_objs[v]
-           //  console.log( "Obj: ", (obj?obj.toJS():null) )
-             if( obj )
-             {
-                let is_witness = false
-                let account_id = obj.get( 'committee_member_account' )
-                if( !account_id ) 
-                {
-                   account_id = obj.get( 'witness_account' )
-                   is_witness = true
+    updateAccountData(account) {
+        let options = account.get('options');
+        let proxy_account_id = options.get('voting_account');
+        if(proxy_account_id === "1.2.0" || proxy_account_id === "1.2.5") proxy_account_id = "";
+        let votes = options.get('votes');
+        let vote_ids = votes.toArray();
+        ChainStore.getObjectsByVoteIds(vote_ids);
+        FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 2000).then(vote_objs => {
+            let witnesses = new Immutable.List();
+            let committee = new Immutable.List();
+            for (let v = 0; v < vote_objs.length; ++v) {
+                let obj = vote_objs[v]
+                console.log("Obj: ", (obj ? obj.toJS() : null))
+                if (obj) {
+                    let account_id = obj.get("committee_member_account");
+                    if (account_id) {
+                        committee = committee.push(account_id);
+                    } else {
+                        account_id = obj.get("witness_account");
+                        if (account_id) witnesses = witnesses.push(account_id);
+                    }
                 }
-                let acnt = ChainStore.getAccount( account_id, this.onUpdate.bind(this,null,{}) )
-                if( acnt )
-                {
-                   if( is_witness )
-                      next_state.init_witnesses = next_state.init_witnesses.set( acnt.get('name'), obj )
-                   else
-                      next_state.init_committee = next_state.init_committee.set( acnt.get('name'), obj )
-                }
-             }
-          }
-       }
-       next_state.init_witnesses = next_state.init_witnesses.sort()
-       next_state.init_committee = next_state.init_committee.sort()
-       if( !next_state.changed )
-       {
-          next_state.witnesses = next_state.init_witnesses
-          next_state.committee = next_state.init_committee
-       }
-
-       if( next_state.new_witness == undefined && this.state.new_witness )
-          next_state.new_witness = this.state.new_witness
-
-       if( next_state.new_committee == undefined && this.state.new_committee )
-          next_state.new_committee = this.state.new_committee
-
-       if( next_state.new_witness )
-       {
-          //console.log( "next_state: ", next_state )
-          if( this.state.witnesses.get( next_state.new_witness ) )
-          {
-             next_state.current_add_witness_error = "Already voting for this witness"
-          }
-          else
-          {
-             if( next_state.new_witness.length > 2 )
-             {
-                next_state.current_add_witness = ChainStore.getWitness( next_state.new_witness, this.onUpdate.bind(this,null,{}) )
-                //console.log( "current add witness: ", next_state.current_add_witness )
-             }
-             else
-                next_state.current_add_witness = null
-
-             if( !next_state.current_add_witness && next_state.new_witness && next_state.new_witness.length > 2)
-                next_state.current_add_witness_error = "Account is not a witness"
-             else
-                next_state.current_add_witness_error = null
-          }
-       }
-       else
-          next_state.current_add_witness = null
-
-
-       if( next_state.new_committee )
-       {
-          if( this.state.committee.get( next_state.new_committee ) )
-          {
-             next_state.current_add_committee_error = "Already voting for this committee member"
-          }
-          else
-          {
-             if( next_state.new_committee.length > 2 )
-                next_state.current_add_committee = ChainStore.getCommitteeMember( next_state.new_committee, this.onUpdate.bind(this,null,{}) )
-             else
-                next_state.current_add_committee = null
-
-             if( !next_state.current_add_committee && next_state.new_committee && next_state.new_committee.length > 2)
-                next_state.current_add_committee_error = "Account is not a committee canidate"
-             else
-                next_state.current_add_committee_error = null
-          }
-       }
-       else
-       {
-          next_state.current_add_committee = null
-       }
-       this.setState(next_state)
+            }
+            let state = {
+                proxy_account_id: proxy_account_id,
+                witnesses: witnesses,
+                committee: committee,
+                prev_proxy_account_id: this.state.proxy_account_id,
+                prev_witnesses: this.state.witnesses,
+                prev_committee: this.state.committee
+            };
+            this.setState(state);
+        });
     }
 
-    componentWillReceiveProps( next_props ) {
-       this.onUpdate(next_props)
-    }
-    componentDidMount( ) {
-       this.onUpdate()
-    }
-
-    onProxyChange( new_proxy ) {
-        console.log("-- AccountVoting.onProxyChange -->", new_proxy);
-       this.setState( {new_proxy} )
-    }
-    onAddWitnessChange( new_witness ) {
-       this.onUpdate( null, {new_witness:new_witness,changed:true} )
-    }
-    onAddCommitteeChange( new_committee ) {
-       this.onUpdate( null, {new_committee:new_committee,changed:true} )
+    isChanged() {
+        let s = this.state;
+        return s.proxy_account_id !== s.prev_proxy_account_id ||
+               s.witnesses !== s.prev_witnesses ||
+               s.committee !== s.prev_committee;
     }
 
-    onRemoveWitness( witness_to_remove )
-    {
-       console.log( "Add Witness", this.state.new_witness )
-       let next_state = { 
-            witnesses :  this.state.witnesses.delete( witness_to_remove ), changed: true
-       }
-       this.onUpdate( null, next_state )
-    }
-    onRemoveCommittee( member_to_remove )
-    {
-       console.log( "Add Commitee", this.state.new_committee )
-       let next_state = { 
-            committee :  this.state.committee.delete( member_to_remove ), changed : true
-       }
-       this.onUpdate( null, next_state )
-    }
-    onAddCommittee( ) {
-       if( this.state.current_add_committee )
-       {
-          console.log( "Add Committee", this.state.new_committee )
-          let next_state = { 
-             new_committee : "",
-             committee :  this.state.committee.set( this.state.new_committee, this.state.current_add_committee )
-          }
-          next_state.committee = next_state.committee.sort()
-          this.onUpdate( null, next_state )
-       }
+    componentWillMount() {
+        this.updateAccountData(this.props.account);
     }
 
-    onAddWitness( ) {
-       if( this.state.current_add_witness )
-       {
-          console.log( "Add Witness", this.state.new_witness )
-          let next_state = { 
-             new_witness : "",
-             witnesses :  this.state.witnesses.set( this.state.new_witness, this.state.current_add_witness )
-          }
-          next_state.witnesses = next_state.witnesses.sort()
-          this.onUpdate( null, next_state )
-       }
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.account !== this.props.account) this.updateAccountData(this.props.account);
     }
 
-    onPublish(){
-       if( !this.state.account ) return
+    onPublish() {
+        let updated_account = this.props.account.toJS();
+        updated_account.new_options = updated_account.options
+        let new_proxy_id = this.state.proxy_account_id;
+        updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0";
 
-       let updated_account = this.state.account.toJS()
-       updated_account.new_options = updated_account.options
-       let new_proxy_id = this.getNewProxyID()
-       updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0"
+        FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
+            let witnesses_vote_ids = res.map(o => o.get("vote_id"));
+            return Promise.all[Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)];
+        }).then( res => {
+            console.log("-- AccountVoting.onPublish -->", res);
+        });
+        // TODO: finish
 
-       let witness_votes = this.state.witnesses.map( item => { console.log( "item:", item.toJS() ); return item.get('vote_id') } )
-       let committee_votes = this.state.committee.map( item => { return item.get('vote_id') } )
-       updated_account.new_options.num_committee = committee_votes.size
-       updated_account.new_options.num_witness = witness_votes.size
-       updated_account.new_options.votes = witness_votes.concat( committee_votes ).toArray()
-       updated_account.new_options.votes = updated_account.new_options.votes.sort( (a,b)=>{ return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) } )
-       console.log( "SORTED VOTES: ", updated_account.new_options.votes )
-      
-       updated_account.account = updated_account.id
-       console.log( "updated_account: ", updated_account)
-
-       var tr = wallet_api.new_transaction();
-       tr.add_type_operation("account_update", updated_account);
-       WalletDb.process_transaction(tr, null, true)
+        //let witness_votes = this.state.witnesses.map(witness_id => {
+        //    console.log("witness_id:", item.toJS());
+        //    return item.get('vote_id')
+        //})
+        //let committee_votes = this.state.committee.map(item => { return item.get('vote_id') })
+        //updated_account.new_options.num_committee = committee_votes.size
+        //updated_account.new_options.num_witness = witness_votes.size
+        //updated_account.new_options.votes = witness_votes.concat(committee_votes).toArray()
+        //updated_account.new_options.votes = updated_account.new_options.votes.sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) })
+        //console.log("SORTED VOTES: ", updated_account.new_options.votes)
+        //
+        //updated_account.account = updated_account.id
+        //console.log("updated_account: ", updated_account)
+        //
+        //var tr = wallet_api.new_transaction();
+        //tr.add_type_operation("account_update", updated_account);
+        //WalletDb.process_transaction(tr, null, true)
     }
 
-    getNewProxyID()
-    {
-       //if( this.state.new_proxy == null) return null
-       //if( this.state.new_proxy == "" ) return "1.2.0"
-       //if( validation.is_account_name( this.state.new_proxy ) )
-       //{
-       //   let acnt = ChainStore.getAccount( this.state.new_proxy, this.onUpdate.bind(this,null) )
-       //   if( acnt ) return acnt.get( 'id' )
-       //}
-       //else {
-       //   let id = "1.2."+this.state.new_proxy.substring(1)
-       //   let acnt = ChainStore.getAccount( id, this.onUpdate.bind(this,null) )
-       //   if( acnt ) return acnt.get( 'id' )
-       //}
-       return null
+    onAddItem(collection, item_id){
+        let state = {};
+        state[collection] = this.state[collection].push(item_id);
+        this.setState(state);
+    }
+
+    onRemoveItem(collection, item_id){
+        let state = {};
+        state[collection] = this.state[collection].filter(i => i !== item_id);
+        this.setState(state);
+    }
+
+    onProxyAccountChange(proxy_account) {
+        this.setState({proxy_account_id: proxy_account ? proxy_account.get("id") : ""});
+    }
+
+    validateAccount(collection, account) {
+        console.log("-- AccountVoting.validateAccount -->", collection, account);
+        if(!account) return null;
+        if(collection === "witnesses") {
+            return FetchChainObjects(ChainStore.getWitnessById, [account.get("id")], 3000).then(res => {
+                return res[0] ? null : "Not a witness";
+            });
+        }
+        if(collection === "committee") {
+            return FetchChainObjects(ChainStore.getCommitteeMemberById, [account.get("id")], 3000).then(res => {
+                return res[0] ? null : "Not a committee member";
+            });
+        }
+        return null;
     }
 
     render() {
-        let current_proxy_input = this.state.new_proxy != null ? this.state.new_proxy : this.state.current_proxy
-        let current_proxy_error = null
-
-        let new_id = this.getNewProxyID()
-        if( new_id && this.state.account && this.state.account.get('id') == new_id )
-            current_proxy_error = "cannot proxy to yourself"
-
-        let proxy_is_set = new_id && new_id !== "1.2.0"
-
-        let changed = this.state.account && 
-                      new_id && 
-                      !current_proxy_error
-                      && new_id != this.state.account.get('options').get('voting_account')
-
-        changed |= this.state.init_witnesses != this.state.witnesses
-        changed |= this.state.init_committee != this.state.committee
-
-        let publish_buttons_class = "button" + (changed? "" : " disabled");
-        let add_witness_button_class = "button" + (this.state.current_add_witness?"":" disabled")
-        let add_committee_button_class = "button" + (this.state.current_add_committee?"":" disabled")
-
-        let witness_rows = this.state.witnesses.map( item => { 
-             let witness = item.toJS()
-             let witness_account = ChainStore.getAccount( witness.witness_account )
-             let url  = witness.url 
-             let name = witness_account.get('name')
-             return (
-                         <tr key={name}>
-                            <td>
-                               <AccountImage size={{height: 30, width: 30}} account={name} custom_image={null}/>
-                            </td>
-                             <td>{name}</td>
-                             <td>{url}</td>
-                             <td>
-                                 <button className="button outline" onClick={this.onRemoveWitness.bind(this, name)}>
-                                     <Translate content="account.votes.remove_witness" /></button>
-                             </td>
-                         </tr>
-                    )} )
-
-        let committee_rows = this.state.committee.map( item => { 
-             let committee = item.toJS()
-             let committee_account = ChainStore.getAccount( committee.committee_member_account )
-             let url  = committee.url 
-             let name = committee_account.get('name')
-             return (
-                         <tr key={name}>
-                            <td>
-                               <AccountImage size={{height: 30, width: 30}} account={name} custom_image={null}/>
-                            </td>
-                             <td>{name}</td>
-                             <td>{url}</td>
-                             <td>
-                                 <button className="button outline" onClick={this.onRemoveCommittee.bind(this, name)}>
-                                     <Translate content="account.votes.remove_committee" /></button>
-                             </td>
-                         </tr>
-                    )} )
-
-
-
-
-        let cw = ["10%", "20%", "60%", "10%"] ;
+        console.log("-- AccountVoting.render -->", this.state.witnesses);
+        let proxy_is_set = !!this.state.proxy_account_id;
+        let publish_buttons_class = "button" + (this.isChanged() ? "" : " disabled");
         return (
             <div className="grid-content">
-                <div className="content-block">
-                    <h3>Proxy</h3>
-                    <AccountSelector label="account.votes.proxy"
-                                     error={current_proxy_error}
-                                     placeholder="NONE"
-                                     account={current_proxy_input}
-                                     accountName={current_proxy_input}
-                                     onChange={this.onProxyChange.bind(this)}
-                                     ref="proxy_selector"
-                                     />
-                </div>
+                <AccountVotingProxy
+                    currentAccount={this.props.account}
+                    proxyAccount={this.state.proxy_account_id}
+                    onProxyAccountChanged={this.onProxyAccountChange}/>
+
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Witnesses</h3>
-                    <AccountSelector label="account.votes.add_witness_label"
-                                     error={this.state.current_add_witness_error}
-                                     placeholder="New Witness Account"
-                                     account={this.state.new_witness}
-                                     onChange={this.onAddWitnessChange.bind(this)}
-                                     onAction={this.onAddWitness.bind(this)}
-                                     action_class={add_witness_button_class}
-                                     action_label="account.votes.add_witness"
-                                     ref="add_witness_selector"
-                                     tabIndex={proxy_is_set ? -1 : 2}/>
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th style={{width: cw[0]}}></th>
-                            <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
-                            <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
-                            <th style={{width: cw[3]}}>ACTION</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {witness_rows}
-                        </tbody>
-                    </table>
+                    <AccountVotingItems
+                        label="account.votes.add_witness_label"
+                        items={this.state.witnesses}
+                        validateAccount={this.validateAccount.bind(this, "witnesses")}
+                        onAddItem={this.onAddItem.bind(this, "witnesses")}
+                        onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
+                        tabIndex={proxy_is_set ? -1 : 2}/>
                 </div>
+
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Committee</h3>
-                    <AccountSelector label="account.votes.add_committee_label"
-                                     error={this.state.current_add_committee_error}
-                                     placeholder="New Committee Member"
-                                     account={this.state.new_committee}
-                                     onChange={this.onAddCommitteeChange.bind(this)}
-                                     onAction={this.onAddCommittee.bind(this,this.state.new_committee)}
-                                     action_class={add_committee_button_class}
-                                     action_label="account.votes.add_committee"
-                                     ref="add_committee_selector"
-                                     tabIndex={proxy_is_set ? -1 : 3}/>
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th style={{width: cw[0]}}></th>
-                            <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
-                            <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
-                            <th style={{width: cw[3]}}>ACTION</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {committee_rows}
-                        </tbody>
-                    </table>
+                    <AccountVotingItems
+                        label="account.votes.add_committee_label"
+                        items={this.state.committee}
+                        validateAccount={this.validateAccount.bind(this, "committee")}
+                        onAddItem={this.onAddItem.bind(this, "committee")}
+                        onRemoveItem={this.onRemoveItem.bind(this, "committee")}
+                        tabIndex={proxy_is_set ? -1 : 3}/>
                 </div>
+
                 <div className="content-block">
-                    <button className={publish_buttons_class} onClick={this.onPublish.bind(this)}>
+                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={4}>
                         <Translate content="account.votes.publish"/></button>
                 </div>
             </div>
-               )
+        )
     }
 }
-
-
-AccountVoting.defaultProps = {
-    account_name: "",
-    account_name_to_id: {}
-};
-
-AccountVoting.propTypes = {
-    account_name: PropTypes.string.isRequired,
-    account_name_to_id: PropTypes.object.isRequired
-};
 
 export default AccountVoting;

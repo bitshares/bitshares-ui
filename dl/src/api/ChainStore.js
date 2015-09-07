@@ -325,7 +325,38 @@ class ChainStore
       //throw Error( `Argument is not an account name or id: ${name_or_id}` )
    }
 
+    /**
+     * This method will attempt to lookup witness by account_id.
+     * If witness doesn't exist it will return null, if witness is found it will return witness object,
+     * if it's not fetched yet it will return undefined.
+     * @param account_id - account id
+     */
+    getWitnessById(account_id) {
+        let witness_id = this.witness_by_account_id.get(account_id);
+        if (witness_id === undefined) {
+            this.fetchWitnessByAccount(account_id);
+            return undefined;
+        }
+        return witness_id ? this.getObject(witness_id) : null;
+    }
+
+    /**
+     * This method will attempt to lookup committee member by account_id.
+     * If committee member doesn't exist it will return null, if committee member is found it will return committee member object,
+     * if it's not fetched yet it will return undefined.
+     * @param account_id - account id
+     */
+    getCommitteeMemberById(account_id) {
+        let cm_id = this.committee_by_account_id.get(account_id);
+        if (cm_id === undefined) {
+            this.fetchCommitteeMemberByAccount(account_id);
+            return undefined;
+        }
+        return cm_id ? this.getObject(cm_id) : null;
+    }
+
    /**
+    * Obsolete! Please use getWitnessById
     * This method will attempt to lookup the account, and then query to see whether or not there is
     * a witness for this account.  If the answer is known, it will return the witness_object, otherwise
     * it will attempt to look it up and return null.   Once the lookup has completed on_update will 
@@ -384,6 +415,7 @@ class ChainStore
       return null
    }
 
+    // Obsolete! Please use getCommitteeMemberById
    getCommitteeMember( id_or_account, on_update = null )
    {
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
@@ -437,13 +469,14 @@ class ChainStore
               .then( optional_witness_object => {
                    if( optional_witness_object )
                    {
-                      this.witness_by_account_id.set( optional_witness_object.witness_account, optional_witness_object.id )
+                       this.witness_by_account_id = this.witness_by_account_id.set( optional_witness_object.witness_account, optional_witness_object.id )
                       let witness_object = this._updateObject( optional_witness_object, true )
                       resolve(witness_object)
                    }
                    else 
                    {
-                      this.witness_by_account_id.set( account_id, null )
+                       this.witness_by_account_id = this.witness_by_account_id.set( account_id, null )
+                       this.notifySubscribers()
                       resolve(null)
                    }
               }, reject ) } )
@@ -459,13 +492,14 @@ class ChainStore
               .then( optional_committee_object => {
                    if( optional_committee_object )
                    {
-                      this.committee_by_account_id.set( optional_committee_object.committee_member_account, optional_committee_object.id )
+                      this.committee_by_account_id = this.committee_by_account_id.set( optional_committee_object.committee_member_account, optional_committee_object.id )
                       let committee_object = this._updateObject( optional_committee_object, true )
                       resolve(committee_object)
                    }
                    else 
                    {
-                      this.committee_by_account_id.set( account_id, null )
+                       this.committee_by_account_id = this.committee_by_account_id.set( account_id, null )
+                       this.notifySubscribers()
                       resolve(null)
                    }
               }, reject ) } )
@@ -565,14 +599,14 @@ class ChainStore
 
    getAccountMemberStatus( account ) {
       if( account === undefined ) return undefined
-      if( account === null ) return "Unknown Member" 
+      if( account === null ) return "unknown" 
       if( account.get( 'lifetime_referrer' ) == account.get( 'id' ) )
-         return "Lifetime Member"
+         return "lifetime"
       let exp = new Date( account.get('membership_expiration_date') ).getTime()
       let now = new Date().getTime()
       if( exp < now )
-         return "Basic Member"
-      return "Annual Subscriber" 
+         return "basic"
+      return "annual" 
    }
 
    getAccountBalance( account, asset_type )
@@ -771,16 +805,16 @@ class ChainStore
       }
       else if( object.id.substring(0,4) == asset_prefix )
       {
-         this.assets_by_symbol = this.assets_by_id.set( object.symbol, object.id )
+         this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
       }
 
-      if( notify_subscribers ) 
-         this.notifySubscribers() 
+      if( notify_subscribers )
+         this.notifySubscribers()
 
       return current;
    }
 
-   getObjectsByVoteID( vote_ids, on_update = null )
+   getObjectsByVoteIds( vote_ids )
    {
       let result = []
       let missing = []
@@ -788,7 +822,7 @@ class ChainStore
       {
          let obj = this.objects_by_vote_id.get( vote_ids[i] )
          if( obj )
-            result.push(this.getObject( obj, on_update ) )
+            result.push(this.getObject( obj ) )
          else
          {
             result.push( null )
@@ -808,13 +842,46 @@ class ChainStore
                          this._updateObject( vote_obj_array[i] )
                       }
                    }
-                   if( on_update ) on_update()
           }, error => console.log( "Error looking up vote ids: ", error ) )
       }
       return result
    }
+
+    getObjectByVoteID( vote_id )
+    {
+        let obj_id = this.objects_by_vote_id.get( vote_id )
+        if( obj_id ) return this.getObject( obj_id );
+        return undefined;
+    }
 }
 
 let chain_store = new ChainStore();
 
 export default chain_store;
+
+export function FetchChainObjects(method, object_ids, timeout) {
+    let get_object = method.bind(chain_store);
+
+    return new Promise((resolve, reject) => {
+
+        function onUpdate(not_subscribed_yet = false) {
+            let res = object_ids.map(id => get_object(id));
+            if (res.findIndex(o => o === undefined) === -1) {
+                if(!not_subscribed_yet) chain_store.unsubscribe(onUpdate);
+                resolve(res);
+                return true;
+            }
+            return false;
+        }
+
+        let resolved = onUpdate(true);
+        if(!resolved) chain_store.subscribe(onUpdate);
+
+        if(timeout) setTimeout(() => {
+            chain_store.unsubscribe(onUpdate);
+            reject("timeout");
+        }, timeout);
+
+    });
+
+}

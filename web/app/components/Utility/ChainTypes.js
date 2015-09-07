@@ -1,4 +1,5 @@
 import utils from "common/utils";
+import Immutable from "immutable";
 
 function createChainableTypeChecker(validate) {
     function checkType(isRequired, props, propName, componentName, location) {
@@ -68,10 +69,25 @@ function assetChecker(props, propName, componentName, location) {
     return null;
 }
 
+function objectsListChecker(props, propName, componentName, location) {
+    componentName = componentName || "ANONYMOUS";
+    if (props[propName]) {
+        let value = props[propName];
+        if (Immutable.List.isList(value)) {
+            return null
+        } else {
+            return new Error(`${propName} in ${componentName} should be Immutable.List`);
+        }
+    }
+    // assume all ok
+    return null;
+}
+
 let ChainObject = createChainableTypeChecker(objectIdChecker);
 let ChainAccount = createChainableTypeChecker(objectIdChecker);
 let ChainKeyRefs = createChainableTypeChecker(keyChecker);
 let ChainAddressBalances = createChainableTypeChecker(keyChecker);
 let ChainAsset = createChainableTypeChecker(assetChecker);
+let ChainObjectsList = createChainableTypeChecker(objectsListChecker);
 
-export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances, ChainAsset};
+export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances, ChainAsset, ChainObjectsList};

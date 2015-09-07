@@ -6,6 +6,8 @@ import Translate from "react-translate-component";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import classnames from "classnames";
+import counterpart from "counterpart";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -24,6 +26,7 @@ class AccountSelector extends React.Component {
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         onChange: React.PropTypes.func, // a method to be called any time user input changes
         onAccountChanged: React.PropTypes.func, // a method to be called when existing account is selected
+        onAction: React.PropTypes.func, // a method called when Add button is clicked
         accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: React.PropTypes.number // tabindex property to be passed to input tag
@@ -32,6 +35,13 @@ class AccountSelector extends React.Component {
     // can be used in parent component: this.refs.account_selector.getAccount()
     getAccount() {
         return this.props.account;
+    }
+
+    getError() {
+        let error = this.props.error;
+        if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
+            error = counterpart.translate("account.errors.invalid");
+        return error;
     }
 
     getNameType(value) {
@@ -43,15 +53,11 @@ class AccountSelector extends React.Component {
 
     onInputChanged(event) {
         let value = event.target.value.trim().toLowerCase();
-        if
-        (   this.props.onChange
-            && (value.length < 4 || this.getNameType(value))
-            && value !== this.props.accountName
-        ) this.props.onChange(value);
+        if (this.props.onChange && value !== this.props.accountName) this.props.onChange(value);
     }
 
     onKeyDown(e) {
-        if (event.keyCode === 13) this.onInputChanged(e);
+        if (event.keyCode === 13) this.onAction(e);
     }
 
     componentWillReceiveProps(newProps) {
@@ -59,21 +65,25 @@ class AccountSelector extends React.Component {
             this.props.onAccountChanged(newProps.account);
     }
 
-    render() {
-        let error = this.props.error;
-        if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
-            error = "invalid account name";
+    onAction(e) {
+        e.preventDefault();
+        if(this.props.onAction && !this.getError()) this.props.onAction(this.props.account);
+    }
 
+    render() {
+        let error = this.getError();
         let lookup_display = null;
         if(this.props.account) {
             let type = this.getNameType(this.props.accountName);
             if(type === "name") lookup_display = "#" + this.props.account.get("id").substring(4);
             else if(type === "id") lookup_display = this.props.account.get("name");
-        } else if( !error && this.props.accountName != "" ) error = "Unknown Account"
+        } else if( !error && this.props.accountName ) error = counterpart.translate("account.errors.unknown");
 
         let member_status = null;
         if (this.props.account)
-            member_status = ChainStore.getAccountMemberStatus(this.props.account);
+            member_status = counterpart.translate("account.member." + ChainStore.getAccountMemberStatus(this.props.account));
+
+        let action_class = this.props.action_class || classnames("button", {"disabled" : !this.props.account || error});
 
         return (
             <div className="account-selector no-overflow">
@@ -90,17 +100,17 @@ class AccountSelector extends React.Component {
                       <input type="text"
                              value={this.props.accountName}
                              defaultValue={this.props.accountName}
-                             placeholder={this.props.placeholder}
+                             placeholder={this.props.placeholder || counterpart.translate("account.name")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}
                              onKeyDown={this.onKeyDown.bind(this)}
                              tabIndex={this.props.tabIndex}
                           />
-                          { !this.props.onAction ? null : (
-                              <button className={this.props.action_class}
-                                      onClick={this.props.onAction}>
+                          { this.props.onAction ? (
+                              <button className={action_class}
+                                      onClick={this.onAction.bind(this)}>
                                   <Translate content={this.props.action_label}/></button>
-                          )}
+                          ) : null }
                       </span>
                     </div>
                     <div className="error-area">
