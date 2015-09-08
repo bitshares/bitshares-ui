@@ -377,7 +377,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.name" /></td>
-                            <td>{this.linkToAccount(op[1].name)}</td>
+                            <td>{this.linkToAccount(op[1].account)}</td>
                         </tr>
                     );
                     // let voting_account = ChainStore.getAccount(op[1].new_options.voting_account)

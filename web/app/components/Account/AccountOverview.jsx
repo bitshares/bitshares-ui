@@ -31,7 +31,6 @@ class AccountOverview extends React.Component {
                 );
             })
         }
-        console.log( "account: ", account.toJS() )
         let witness_store_state = WitnessStore.getState().witnesses;
         let history = {};
         let account_history = account.get("history");

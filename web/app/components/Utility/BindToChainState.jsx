@@ -69,7 +69,6 @@ function BindToChainState(options) {
                     this.chain_objects_list = [];
                     this.required_props = [];
                     this.all_chain_props = this.chain_objects;
-                    this.default_props = {};
                 } else {
                     this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
                     this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
@@ -88,11 +87,12 @@ function BindToChainState(options) {
                 if(options && options.require_all_props){
                     this.required_props = this.all_chain_props;
                 }
+                this.dynamic_props = {}
                 this.default_props = _.clone(Component.defaultProps) || {};
                 for (let key in this.default_props) {
                     let value = this.default_props[key];
                     if (typeof(value) === "string" && value.indexOf("props.") === 0) {
-                        this.default_props[key] = _.get(this, value);
+                        this.dynamic_props[key] = _.get(this, value);
                     }
                 }
                 //console.log("----- Wrapper constructor ----->", this.all_chain_props);
@@ -106,19 +106,29 @@ function BindToChainState(options) {
             }
 
             componentWillMount() {
-                ChainStore.subscribe( this.update );
+                ChainStore.subscribe(this.update);
                 this.update();
             }
 
             componentWillUnmount() {
-                ChainStore.unsubscribe( this.update );
+                ChainStore.unsubscribe(this.update);
             }
 
-            componentWillReceiveProps( next_props ) {
+            componentWillReceiveProps(next_props) {
                 if(options && options.all_props) {
                     this.chain_objects = _.reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating");
                     this.all_chain_props = this.chain_objects;
                     this.state = _.pick(this.state, this.chain_objects);
+                }
+                let props_obj = null;
+                for(let k in this.dynamic_props) {
+                    let selector = this.default_props[k];
+                    if(!props_obj) props_obj = {props: next_props};
+                    let cur_value  = _.get(this, selector);
+                    let next_value = _.get(props_obj, selector);
+                    if (next_value && next_value !== cur_value) {
+                        this.dynamic_props[k] = _.get(props_obj, selector);
+                    }
                 }
                 this.update(next_props);
             }
@@ -134,10 +144,10 @@ function BindToChainState(options) {
                 let resolved_objects_counter = 0;
                 for( let key of this.chain_objects )
                 {
-                    let prop = props[key] || this.default_props[key];
+                    let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getObject(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if(new_obj !== undefined && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
                     } else {
@@ -146,12 +156,12 @@ function BindToChainState(options) {
                 }
                 for( let key of this.chain_accounts )
                 {
-                    let prop = props[key] || this.default_props[key];
+                    let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         if(prop[0] === "#" && Number.parseInt(prop.substring(1)))
                             prop = "1.2." + prop.substring(1);
                         let new_obj = ChainStore.getAccount(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if(new_obj !== undefined && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
                     } else {
@@ -160,10 +170,10 @@ function BindToChainState(options) {
                 }
                 for( let key of this.chain_key_refs )
                 {
-                    let prop = props[key] || this.default_props[key];
+                    let prop = props[key] || this.dynamic_prop[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getAccountRefsOfKey(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if(new_obj !== undefined && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
                     } else {
@@ -172,10 +182,10 @@ function BindToChainState(options) {
                 }
                 for( let key of this.chain_address_balances )
                 {
-                    let prop = props[key] || this.default_props[key];
+                    let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getBalanceObjects(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if(new_obj !== undefined && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
                     } else {
@@ -184,10 +194,10 @@ function BindToChainState(options) {
                 }
                 for( let key of this.chain_assets )
                 {
-                    let prop = props[key] || this.default_props[key];
+                    let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getAsset(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if(new_obj !== undefined && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
                         if(new_obj !== undefined) ++resolved_objects_counter;
                     } else {
@@ -197,7 +207,7 @@ function BindToChainState(options) {
                 for( let key of this.chain_objects_list )
                 {
                     //console.log("-- Wrapper.update -->", this.chain_objects_list);
-                    let prop = props[key] || this.default_props[key];
+                    let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let prop_prev_state = this.state[key];
                         let prop_new_state = [];
