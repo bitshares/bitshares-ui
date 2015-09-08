@@ -58,9 +58,10 @@ class PrivateKeyStore extends BaseStore {
         this.setState(state)
     }
 
+    /** This method may be called again should the main database change */
     loadDbData() {
-        if(this.loadDbDataDone) return Promise.resolve()
-        var map = this.state.keys.asMutable()
+        this.setState(this._getInitialState())
+        var map = Immutable.Map().asMutable()
         this.pendingOperation()
         return idb_helper.cursor("private_keys", cursor => {
             if( ! cursor) {
@@ -72,7 +73,6 @@ class PrivateKeyStore extends BaseStore {
             map.set(private_key_tcomb.pubkey, private_key_tcomb)
             cursor.continue()
         }).then(()=>{
-            this.loadDbDataDone = true
             this.pendingOperationDone()
         }).catch( error => {
             this.setState(this._getInitialState())

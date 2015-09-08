@@ -40,6 +40,13 @@ input[type="file"] {
   overflow: hidden;
 }
 
+//padding: "2rem 0 2rem 0"  Using top and bottom padding prevents
+//unnecessary scroll bars but does not disable them for future use.
+.no-overflow-padding {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
 .no-padding {
   padding: 0 !important;
 }

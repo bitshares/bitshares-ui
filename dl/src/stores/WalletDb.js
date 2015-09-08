@@ -38,6 +38,7 @@ class WalletDb {
         return wallet_public_name
     }
     
+    /** for unit testing */
     setCurrentWalletName(public_name) {
         wallet_public_name = public_name
     }
@@ -462,8 +463,9 @@ class WalletDb {
         return Promise.all([p,p2])
     }
 
+    /** This method may be called again should the main database change */
     loadDbData() {
-        var map = this.wallet.asMutable()
+        var map = Immutable.Map().asMutable()
         return idb_helper.cursor("wallet", cursor => {
             if( ! cursor) {
                 this.wallet = map.asImmutable()

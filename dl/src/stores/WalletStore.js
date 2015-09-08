@@ -1,7 +1,9 @@
 import alt from "alt-instance"
+import WalletDb from "stores/WalletDb"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import WalletActions from "actions/WalletActions"
 import WalletCreateActions from "actions/WalletCreateActions"
+import ChainStore from "api/ChainStore"
 import BaseStore from "stores/BaseStore"
 import iDB from "idb-instance"
 import Immutable from "immutable"
@@ -14,9 +16,12 @@ class WalletStore extends BaseStore {
         this.state = this._getInitialState()
         this.bindListeners({
             onRestore: WalletActions.restore,
-            onDefaultWalletCreated: WalletCreateActions.defaultWalletCreated
+            onDefaultWalletCreated: WalletCreateActions.defaultWalletCreated,
+            onCreateWallet: WalletActions.createWallet,
+            onChangeWallet: WalletActions.changeWallet
         })
-        super._export("init","getMyAuthorityForAccount", "setNewWallet")
+        super._export("init","getMyAuthorityForAccount", "setNewWallet",
+            "onChangeWallet", "addWalletName")
     }
     
     _getInitialState() {
@@ -25,6 +30,49 @@ class WalletStore extends BaseStore {
             current_wallet: undefined,
             wallet_names: Immutable.Set()
         }
+    }
+    
+    onCreateWallet({wallet_name, password}) {
+        // The database must be renamed first (via onChangeWallet) before
+        // the current application code can initialize new data structures.
+        WalletStoreWrapped.onChangeWallet({wallet_name}).then( ()=> {
+            return WalletDb.onCreateWallet(
+                password,
+                null, //brainkey,
+                true //unlock
+            ).then( ()=> {
+                return WalletStoreWrapped.addWalletName(wallet_name).then(()=>
+                    this.setState({current_wallet: wallet_name}))
+            })
+        }).catch( error => {
+            console.error(error)
+        })
+    }
+    
+    addWalletName(wallet_name) {
+        var wallet_names = this.state.wallet_names.add(wallet_name)
+        return iDB.root.setProperty("wallet_names", wallet_names)
+    }
+    
+    onChangeWallet({wallet_name}) {
+        if(this.state.wallet_names.size == 0)
+            wallet_name = "default"
+        
+        if( ! wallet_name)
+            throw new Error("Wallet name is required")
+        
+        return iDB.root.setProperty("current_wallet", wallet_name).then(()=>{
+            iDB.close() // after closing, open a new "current_wallet" database
+            return iDB.init_instance().init_promise.then(()=>{ 
+                return Promise.all([
+                    WalletDb.loadDbData(),
+                    PrivateKeyStore.loadDbData(),
+                    AccountStore.loadDbData()//, ChainStore.init() //setState(...): Cannot update during an existing state transition
+                ]).then(()=>{
+                    this.setState({current_wallet: wallet_name})
+                })
+            })
+        })
     }
     
     setNewWallet(new_wallet) {
@@ -36,10 +84,11 @@ class WalletStore extends BaseStore {
             current_wallet => {
             return iDB.root.getProperty("wallet_names", []).then( wallet_names => {
                 if( ! current_wallet && wallet_names.length) {
-                    this.setState({ current_wallet: "default" })
+                    current_wallet = "default"
                 }
                 this.setState({
-                    wallet_names: Immutable.Set(wallet_names)
+                    wallet_names: Immutable.Set(wallet_names),
+                    current_wallet
                 })
             })
         })

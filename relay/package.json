@@ -5,6 +5,7 @@
   "author": "Cryptonomex, Inc.",
   "license": "LicenseRef-LICENSE",
   "version": "0.0.1",
+  "bin" : "./bootstrap.js",
   "engines": {
     "node": "0.12.2",
     "npm": "2.8.3"
