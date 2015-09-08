@@ -211,7 +211,7 @@ class NewWalletName extends BackupBaseComponent {
     render() {
         if(this.state.accept)
             return <span>{this.props.children}</span>
-        
+        console.log(this.state.wallet_public_name);
         var has_wallet_name = !!this.state.new_wallet
         var has_unique_wallet_name = has_wallet_name ?
             ! this.props.wallet.wallet_names.has(this.state.wallet_public_name) : undefined
@@ -233,8 +233,9 @@ class NewWalletName extends BackupBaseComponent {
     }
     
     formChange(event) {
-        this.state[event.target.id] = event.target.value
-        this.forceUpdate()
+        var state = {}
+        state[event.target.id] = event.target.value
+        this.setState(state)
     }
     
 }
@@ -400,8 +401,9 @@ class DecryptBackup extends BackupBaseComponent {
     }
     
     formChange(event) {
-        this.state[event.target.id] = event.target.value
-        this.forceUpdate()
+        var state = {}
+        state[event.target.id] = event.target.value
+        this.setState(state)
     }
     
 }
