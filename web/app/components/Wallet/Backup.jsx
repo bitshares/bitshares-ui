@@ -1,17 +1,17 @@
 import React, {PropTypes, Component} from "react"
 import {Link} from "react-router";
 import connectToStores from "alt/utils/connectToStores"
-import BackupActions from "actions/BackupActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletActions from "actions/WalletActions"
 import WalletStore from "stores/WalletStore"
 import BackupStore from "stores/BackupStore"
 import WalletDb from "stores/WalletDb"
-import {backup, restore, decryptWalletBackup} from "actions/BackupActions"
+import BackupActions, {backup, restore, decryptWalletBackup} from "actions/BackupActions"
 import notify from "actions/NotificationActions"
 import {saveAs} from "filesaver.js"
 import cname from "classnames"
 import hash from "common/hash"
+import { CurrentWallet } from "components/Wallet/Wallet"
 
 class BackupBaseComponent extends Component {
     
@@ -25,9 +25,6 @@ class BackupBaseComponent extends Component {
         return { wallet, backup }
     }
     
-    onReset() {
-        BackupActions.reset()
-    }
 }
 
 @connectToStores
@@ -48,9 +45,9 @@ export default class Backup extends BackupBaseComponent {
         var current_operation = this.props.current_operation
         
         return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink" style={{paddingTop: "2rem"}}>
+            <div className="grid-content shrink no-overflow-padding">
             
-                <CurrentWallet/>
+                <h3>Backups</h3>
                 
                 <Link to="backup-create">
                 <div className="button success">Create Backup</div></Link>
@@ -70,7 +67,7 @@ export default class Backup extends BackupBaseComponent {
 export class BackupCreate extends BackupBaseComponent {
     render() {
         return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink" style={{paddingTop: "2rem"}}>
+            <div className="grid-content shrink no-overflow-padding">
                 
                 <h3>Create Backup</h3>
                 
@@ -91,7 +88,7 @@ export class BackupCreate extends BackupBaseComponent {
 export class BackupVerify extends BackupBaseComponent {
     render() {
         return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink" style={{paddingTop: "2rem"}}>
+            <div className="grid-content shrink no-overflow-padding">
                 
                 <h3>Verify Prior Backup</h3>
                 
@@ -120,23 +117,20 @@ export class BackupRestore extends BackupBaseComponent {
     }
     
     render() {
+        
         return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink" style={{padding: "2rem 0 2rem 0"}}>
+            <div className="grid-content shrink no-overflow-padding">
                 
                 <h3>Restore Backup</h3>
                 
                 <Upload>
                     <NameSizeModified/>
                     <DecryptBackup saveWalletObject={true}>
-                        <NewWalletName onNewWalletName={this.onNewWalletName.bind(this)}>
-                            <Restore newWalletName={this.state.newWalletName}>
-                                
-                                <h4>Successfully restored <label>{this.state.newWalletName}</label></h4>
-                                
-                                <Link to="dashboard">
-                                    <div className="button success">Dashboard</div>
-                                </Link>
-                                
+                        <NewWalletName>
+                            <Restore>
+                                <Link to="wallet">
+                                    <span className="button success">
+                                    Manage Wallets</span></Link>
                             </Restore>
                         </NewWalletName>
                     </DecryptBackup>
@@ -145,10 +139,6 @@ export class BackupRestore extends BackupBaseComponent {
             
             </div>
         </div>
-    }
-    
-    onNewWalletName(newWalletName) {
-        this.setState({newWalletName})
     }
     
 }
@@ -169,14 +159,14 @@ class Restore extends BackupBaseComponent {
         
         if(has_new_wallet)
             return <span>
-                <div>Wallet restored <b>{new_wallet}</b></div>
+                <h4>Successfully restored <b>{new_wallet.toUpperCase()}</b></h4>
                 <div>{this.props.children}</div>
             </span>
         
         return <span>
-            <h3>Click to restore wallet <b>{new_wallet}</b></h3>
+            <h3>Ready to Restore</h3>
             <div className="button success" 
-                onClick={this.onRestore.bind(this)}>Restore</div>
+                onClick={this.onRestore.bind(this)}>Restore ({new_wallet} Wallet)</div>
         </span>
     }
     
@@ -206,23 +196,30 @@ class NewWalletName extends BackupBaseComponent {
             WalletStore.setNewWallet("default")
             this.setState({accept: true})
         }
+        if( has_current_wallet && this.props.backup.name && ! this.state.new_wallet) {
+            // begning of the file name might make a good wallet name
+            var new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
+            if( new_wallet )
+                this.setState({new_wallet})
+        }
     }
     
     render() {
         if(this.state.accept)
             return <span>{this.props.children}</span>
-        console.log(this.state.wallet_public_name);
+        
         var has_wallet_name = !!this.state.new_wallet
-        var has_unique_wallet_name = has_wallet_name ?
-            ! this.props.wallet.wallet_names.has(this.state.wallet_public_name) : undefined
+        var has_wallet_name_conflict = has_wallet_name ?
+            this.props.wallet.wallet_names.has(this.state.new_wallet) : false
+        var name_ready = ! has_wallet_name_conflict && has_wallet_name
         
         return <span>
             <h5>New Wallet Name</h5>
             <input type="text" id="new_wallet"
                 onChange={this.formChange.bind(this)}
                 value={this.state.new_wallet} />
-            <p>{! has_unique_wallet_name ? "Wallet exists, choose a new name" : null}</p>
-            <div className={cname("button success", {disabled: ! has_unique_wallet_name})}
+            <p>{ has_wallet_name_conflict ? "Wallet exists, choose a new name" : null}</p>
+            <div className={cname("button success", {disabled: ! name_ready})}
                 onClick={this.onAccept.bind(this)}>Accept</div>
         </span>
     }
@@ -233,24 +230,22 @@ class NewWalletName extends BackupBaseComponent {
     }
     
     formChange(event) {
+        var key_id = event.target.id
+        var value = event.target.value
+        if(key_id === "new_wallet") {
+            //case in-sensitive
+            value = value.toLowerCase()
+            // Allow only valid file name characters
+            if( /[^a-z0-9_-]/.test(value) ) return
+        }
         var state = {}
-        state[event.target.id] = event.target.value
+        state[key_id] = value
         this.setState(state)
     }
     
 }
 
 
-@connectToStores
-class CurrentWallet extends BackupBaseComponent {
-    render() {
-        if( ! this.props.wallet.current_wallet) return <div/>
-        return <div>
-            <h5>Current Wallet</h5>
-            <label>{this.props.wallet.current_wallet}</label>
-        </div>
-    }
-}
 
 
 @connectToStores
@@ -284,10 +279,6 @@ class Download extends BackupBaseComponent {
 @connectToStores
 class Create extends BackupBaseComponent {
     
-    static propTypes = {
-        name: PropTypes.string.isRequired
-    }
-    
     render() {
         var has_backup = !!this.props.backup.contents
         if( has_backup ) return <div>{this.props.children}</div>
@@ -296,13 +287,13 @@ class Create extends BackupBaseComponent {
         
         return <div onClick={this.onCreateBackup.bind(this)}
             className={cname("button success", {disabled: !ready})}>
-            Create Backup ({this.props.name} Wallet)</div>
+            Create Backup ({this.props.wallet.current_wallet} Wallet)</div>
     }
     
     onCreateBackup() {
         var backup_pubkey = WalletDb.getWallet().password_pubkey
         backup(backup_pubkey).then( contents => {
-            var name = this.props.name + ".bin"
+            var name = this.props.wallet.current_wallet + ".bin"
             BackupActions.incommingBuffer({name, contents})
         })
     }

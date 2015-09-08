@@ -18,10 +18,17 @@ var api = Apis.instance()
 
 class WalletActions {
 
-    /** @throws error */
     restore(wallet_name, wallet_object) {
         wallet_name = wallet_name.toLowerCase()
         this.dispatch({wallet_name, wallet_object})
+    }
+    
+    createWallet(wallet_name, password) {
+        this.dispatch({wallet_name, password})
+    }
+    
+    changeWallet(wallet_name) {
+        this.dispatch({wallet_name})
     }
     
     createBrainKeyAccount(

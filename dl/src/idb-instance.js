@@ -101,11 +101,13 @@ module.exports = iDB = (function () {
         
         init_instance: function (indexedDBimpl) {
             if (!_instance) {
-                //if("__useShim" in indexedDBimpl) {
-                //    console.log('... iDB.impl.__useShim()')
-                //    this.impl.__useShim() //always use shim
-                //}
-                if(indexedDBimpl) this.set_impl( indexedDBimpl )
+                if(indexedDBimpl) {
+                    this.set_impl( indexedDBimpl )
+                    if("__useShim" in indexedDBimpl) {
+                       console.log('... iDB.impl.__useShim()')
+                       this.impl.__useShim() //always use shim
+                    }
+                }
                 _instance = init()
             }
             return _instance;
@@ -120,6 +122,7 @@ module.exports = iDB = (function () {
         
         close: function () {
             init().db().close()
+            idb_helper.set_graphene_db(null)
             _instance = undefined
         },
         

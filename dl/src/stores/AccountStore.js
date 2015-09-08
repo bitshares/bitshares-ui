@@ -32,6 +32,7 @@ class AccountStore extends BaseStore {
     }
 
     loadDbData() {
+        this.linkedAccounts = Immutable.Set();
         return iDB.load_data("linked_accounts").then(data => {
             this.linkedAccounts = this.linkedAccounts.withMutations(set => {
                 for (let a of data) {
