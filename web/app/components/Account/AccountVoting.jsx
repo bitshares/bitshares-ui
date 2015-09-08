@@ -138,7 +138,6 @@ class AccountVoting extends React.Component {
     }
 
     render() {
-        console.log("-- AccountVoting.render -->", this.state.witnesses);
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = "button" + (this.isChanged() ? "" : " disabled");
         return (

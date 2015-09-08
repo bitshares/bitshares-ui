@@ -1,9 +1,11 @@
 import React from "react/addons";
 let Perf = React.addons.Perf;
 import {Link} from "react-router";
+import connectToStores from "alt/utils/connectToStores";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import BlockchainStore from "stores/BlockchainStore";
 
 @BindToChainState({keep_updating: true})
 class Footer extends React.Component {
@@ -16,15 +18,28 @@ class Footer extends React.Component {
         dynGlobalObject: "2.1.0"
     }
 
-    constructor() {
-        super();
-        this.state = {perf: false};    
+    constructor(props) {
+        super(props);
+        this.state = {perf: false, rpc_connection_status: BlockchainStore.getState().rpc_connection_status};
+        this.onChange = this.onChange.bind(this);
     }
 
-    shouldComponentUpdate(nextProps) {
+    componentDidMount() {
+        BlockchainStore.listen(this.onChange);
+    }
+
+    componentWillUnmount() {
+        BlockchainStore.unlisten(this.onChange);
+    }
+
+    onChange(state) {
+        this.setState({rpc_connection_status: state.rpc_connection_status});
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
        return true
         return nextProps.dynGlobalObject !== this.props.dynGlobalObject
-            || nextProps.rpc_connection_status !== this.props.rpc_connection_status;
+            || nextState.rpc_connection_status !== this.state.rpc_connection_status;
     }
 
     _triggerPerf() {
@@ -53,7 +68,7 @@ class Footer extends React.Component {
                             <Translate content="footer.title" />
                         </div>
                     </div>
-                    {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
+                    {this.state.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
