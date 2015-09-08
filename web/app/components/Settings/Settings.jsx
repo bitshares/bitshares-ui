@@ -160,9 +160,9 @@ class Settings extends React.Component {
                 </div>
                 <div className="grid-block medium-3 right-column">
                     <div className="grid-content">
-                        <div><Link to="console">JavaScript Console</Link></div>
-                        <div><Link to="existing-account">Import</Link></div>
-                        <div><Link to="backup">Backups</Link></div>
+                        <div><label><h5><Link to="console">Console</Link></h5></label></div>
+                        <div><label><h5><Link to="existing-account">Import</Link></h5></label></div>
+                        <div><label><h5><Link to="backup">Backups</Link></h5></label></div>
                     </div>
                 </div>
             </div>
