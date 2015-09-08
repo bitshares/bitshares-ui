@@ -1,5 +1,5 @@
 import React from "react";
-import Wallet from "components/Wallet/Wallet";
+import WalletCreate from "components/Wallet/WalletCreate";
 import BalanceClaim from "components/Wallet/BalanceClaim";
 import ImportKeys from "components/Wallet/ImportKeys";
 
@@ -20,14 +20,14 @@ class ExistingAccount extends React.Component {
                     <div className="content-block">
                         <br/>
                         <br/>
-                        <Wallet>
+                        <WalletCreate>
                             <ImportKeys
                                 key={this.state.import_keys_ref}
                             />
                             <BalanceClaim 
                                 ref="balance_claim"
                             />
-                        </Wallet>
+                        </WalletCreate>
                     </div>
                 </div>
             </div>
