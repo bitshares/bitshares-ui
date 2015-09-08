@@ -78,8 +78,8 @@ class RelayNode {
                               },
                               error => { console.log( "onChainStateUpdate error: ", error ); } );
 
-            if( this.upstream && !this.upstream.synced )
-               this.upstream.send(JSON.stringify( ['start', item.head_block_number + 1] ) );
+         //   if( this.upstream && !this.upstream.synced )
+         //      this.upstream.send(JSON.stringify( ['start', item.head_block_number + 1] ) );
          }
       } )
    }
@@ -190,6 +190,7 @@ class RelayNode {
                            if( block ) 
                            {
                               con.send( JSON.stringify( ['block',block] ) );
+                              this.onDownstreamStartSync( con, from_block_num + 1 );
                            }
                            else 
                            {
