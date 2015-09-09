@@ -18,7 +18,7 @@ class WalletManagerStore extends BaseStore {
             onRestore: WalletActions.restore,
             onSetWallet: WalletActions.setWallet
         })
-        super._export("init", "setNewWallet")
+        super._export("init", "setNewWallet", "onDeleteAllWallets")
     }
     
     _getInitialState() {
@@ -101,31 +101,39 @@ class WalletManagerStore extends BaseStore {
         this.setState({new_wallet})
     }
     
-
-    // onDefaultWalletCreated() {
-    //     Promise.all([
-    //         iDB.root.setProperty("current_wallet", "default"),
-    //         iDB.root.setProperty("wallet_names", ["default"])
-    //     ]).then(()=>{
-    //         this.setState({
-    //             current_wallet: "default",
-    //             wallet_names: Immutable.Set(["default"])
-    //         })
-    //     })
-    // }
-    
     init() {
         return iDB.root.getProperty("current_wallet").then(
             current_wallet => {
             return iDB.root.getProperty("wallet_names", []).then( wallet_names => {
-                if( ! current_wallet && wallet_names.length) {
-                    current_wallet = "default"
-                }
                 this.setState({
                     wallet_names: Immutable.Set(wallet_names),
                     current_wallet
                 })
             })
+        })
+    }
+    
+    onDeleteAllWallets() {
+        var deletes = []
+        this.state.wallet_names.forEach( wallet_name =>
+            deletes.push(this.onDeleteWallet(wallet_name)))
+        return Promise.all(deletes)
+    }
+    
+    onDeleteWallet(delete_wallet_name) {
+        return new Promise( resolve => {
+            var {current_wallet, wallet_names} = this.state
+            if( ! wallet_names.has(delete_wallet_name) ) {
+                throw new Error("Can't delete wallet, does not exist in index")
+            }
+            wallet_names = wallet_names.delete(delete_wallet_name)
+            if(current_wallet == delete_wallet_name) {
+                current_wallet = undefined
+            }
+            this.setState({current_wallet, wallet_names})
+            var database_name = iDB.getDatabaseName(delete_wallet_name)
+            var req = iDB.impl.deleteDatabase(database_name)
+            resolve( database_name )
         })
     }
     

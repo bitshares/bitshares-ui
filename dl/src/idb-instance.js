@@ -9,7 +9,7 @@ const WALLET_BACKUP_STORES = [
 ]
 
 var upgrade = function(db, oldVersion) {
-    // DEBUG console.log('... oldVersion',oldVersion)
+    // DEBUG console.log('... upgrade oldVersion',oldVersion)
     if (oldVersion === 0) {
         db.createObjectStore("wallet", { keyPath: "public_name" })
         idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
@@ -36,19 +36,21 @@ var openDatabase = function(database_name = this.getDatabaseName()) {
         var openRequest = iDB.impl.open(database_name, DB_VERSION);
 
         openRequest.onupgradeneeded = function (e) {
-            // DEBUG console.log('... openRequest.onupgradeneeded')
+            // DEBUG console.log('... openRequest.onupgradeneeded ' + database_name)
             // Don't resolve here, indexedDb will call onsuccess or onerror next
             upgrade(e.target.result, e.oldVersion)
         };
 
         openRequest.onsuccess = function (e) {
-            // DEBUG console.log('... openRequest.onsuccess', e.target.result)
+            // DEBUG console.log('... openRequest.onsuccess ' + database_name, e.target.result)
             var db = e.target.result
+            iDB.database_name = database_name
+            idb_helper.set_graphene_db(db)
             resolve(db);
         };
 
         openRequest.onerror = function (e) {
-            // DEBUG console.log("indexedDB open",e.target.error, e)
+            // DEBUG console.log("... openRequest.onerror " + database_name,e.target.error, e)
             reject(e.target.error);
         };
     })
@@ -60,15 +62,14 @@ module.exports = iDB = (function () {
     var _instance;
     var idb;
 
+    /** Be carefull not to call twice especially for a new database
+       needing an upgrade...
+    */
     function openIndexedDB() {
         return iDB.root.getProperty("current_wallet", "default").then(
             current_wallet => {
             var database_name = getDatabaseName(current_wallet)
-            return openDatabase(database_name).then( db => {
-                iDB.database_name = database_name
-                idb_helper.set_graphene_db(db)
-                return db
-            })
+            return openDatabase(database_name)
         })
     }
 
@@ -105,7 +106,7 @@ module.exports = iDB = (function () {
                 if(indexedDBimpl) {
                     this.set_impl( indexedDBimpl )
                     if("__useShim" in indexedDBimpl) {
-                       this.impl.__useShim() //always use shim
+                        this.impl.__useShim() //always use shim
                     }
                 }
                 _instance = init()
@@ -121,7 +122,7 @@ module.exports = iDB = (function () {
         },
         
         close: function () {
-            init().db().close()
+            if (_instance) _instance.db().close()
             idb_helper.set_graphene_db(null)
             _instance = undefined
         },
@@ -201,7 +202,8 @@ module.exports = iDB = (function () {
                 }
                 return idb_helper.on_transaction_end(trx)
             })
-        }
+        },
+        getDatabaseName: getDatabaseName
     };
 
 })();
