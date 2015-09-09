@@ -87,6 +87,8 @@ class Transfer extends React.Component {
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
                 balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+            } else {
+                balance = "No funds";
             }
         }
 
