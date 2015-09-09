@@ -26,7 +26,6 @@ class AccountOverview extends React.Component {
                 balances[balance] = (
                     <tr key={balance}>
                         <td><BalanceComponent balance={balance}/></td>
-                        <td><BalanceComponent balance={balance}/></td>
                     </tr>
                 );
             })
@@ -59,7 +58,6 @@ class AccountOverview extends React.Component {
                         <thead>
                             <tr>
                                 <th><Translate component="span" content="account.asset" /></th>
-                                <th><Translate component="span" content="account.market_value" /></th>
                             </tr>
                         </thead>
                         <tbody>
