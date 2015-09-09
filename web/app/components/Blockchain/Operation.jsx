@@ -558,12 +558,15 @@ class Operation extends React.Component {
 
             case "fill_order":
                 color = "success";
+                o = op[1];
                 column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.paid" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={op[1].pays.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.obtain" />
-                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} />
+                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} />,
+                            &nbsp;<FormattedPrice base_asset={o.pays.asset_id} base_amount={o.pays.amount} 
+                                                  quote_asset={o.receives.asset_id} quote_amount={o.receives.amount}  />
                         </td>
                 );
                 break;   
