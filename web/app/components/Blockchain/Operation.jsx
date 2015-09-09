@@ -20,6 +20,7 @@ import WalletDb from "stores/WalletDb";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
+import FormattedPrice from "../Utility/FormattedPrice";
 
 require("./operations.scss");
 
@@ -186,49 +187,41 @@ class Operation extends React.Component {
 
             case "limit_order_create":
                 color = "warning";
-                console.log( "LIMIT OP", op )
+                let o = op[1];
                 let isAsk = market_utils.isAskOp(op[1]);
                 if (!inverted) {
                     isAsk = !isAsk;
                 }
                 column = (
+                        <td className="right-td">
                         <BindToChainState.Wrapper asset_sell={op[1].amount_to_sell.asset_id} asset_min={op[1].min_to_receive.asset_id}>
                             { ({asset_sell, asset_min}) =>
                                 isAsk ?
-                                    <td key={"limit_order_create_" + this.props.key} className="right-td">
+                                    <span>
                                         <Translate
                                             component="span"
                                             content="transaction.limit_order_sell"
                                             sell_amount={utils.format_asset(op[1].amount_to_sell.amount, asset_sell, false, false)}
-                                            sell_price={utils.format_price(op[1].min_to_receive.amount, asset_sell, op[1].amount_to_sell.amount, asset_min, false, inverted, false)}
                                             num={this.props.result[1].substring(4)}
                                             />
-                                    </td> :
-                                    <td className="right-td">
+                                        <FormattedPrice  quote_asset={o.amount_to_sell.asset_id} base_asset={o.min_to_receive.asset_id}  quote_amount={o.amount_to_sell.amount} base_amount={o.min_to_receive.amount} />
+                                    </span>
+                                    :
+                                    <span>
                                         <Translate
                                             component="span"
                                             content="transaction.limit_order_buy"
                                             buy_amount={utils.format_asset(op[1].min_to_receive.amount, asset_min, false, false)}
-                                            buy_price={utils.format_price(op[1].amount_to_sell.amount, asset_sell, op[1].min_to_receive.amount, asset_min, false, inverted, false)}
                                             num={this.props.result[1].substring(4)}
                                             />
-                                    </td>
+                                        <FormattedPrice  base_asset={o.amount_to_sell.asset_id} quote_asset={o.min_to_receive.asset_id}  base_amount={o.amount_to_sell.amount} quote_amount={o.min_to_receive.amount} />
+                                    </span>
                             }
                         </BindToChainState.Wrapper>
+                        </td>
                 );
                 break;
 
-            case "short_order_create": 
-                color = "short";
-                column = (
-                    <td className="right-td">
-                        <Translate component="span" content="transaction.short_order" />
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} />
-                        &nbsp;<Translate component="span" content="transaction.coll_of" />
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral.amount} asset={op[1].collateral.asset_id} />
-                    </td>
-                );
-                break;
 
             case "limit_order_cancel":  
                 color = "cancel";            
