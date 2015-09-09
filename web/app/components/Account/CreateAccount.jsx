@@ -74,10 +74,9 @@ class CreateAccount extends React.Component {
     }
 
     createWallet(password) {
-        return WalletDb.onCreateWallet(
-            password,
-            null,
-            true
+        return WalletActions.setWallet(
+            null, //wallet name
+            password
         ).then(()=> {
             console.log("Congratulations, your wallet was successfully created.");
         }).catch(err => {

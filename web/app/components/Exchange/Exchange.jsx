@@ -16,7 +16,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
-// import Wallet from "components/Wallet/Wallet";
+// import Wallet from "transitionTo";
 // import BlockchainStore from "stores/BlockchainStore";
 // import FormattedAsset from "../Utility/FormattedAsset";
 // import WalletDb from "stores/WalletDb";

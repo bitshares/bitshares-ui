@@ -37,6 +37,7 @@ var openDatabase = function(database_name = this.getDatabaseName()) {
 
         openRequest.onupgradeneeded = function (e) {
             // DEBUG console.log('... openRequest.onupgradeneeded')
+            // Don't resolve here, indexedDb will call onsuccess or onerror next
             upgrade(e.target.result, e.oldVersion)
         };
 
@@ -104,7 +105,6 @@ module.exports = iDB = (function () {
                 if(indexedDBimpl) {
                     this.set_impl( indexedDBimpl )
                     if("__useShim" in indexedDBimpl) {
-                       console.log('... iDB.impl.__useShim()')
                        this.impl.__useShim() //always use shim
                     }
                 }

@@ -8,7 +8,7 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import AccountSelect from "../Forms/AccountSelect";
 import AccountInfo from "../Account/AccountInfo";
 import BaseComponent from "../BaseComponent";
-import Wallet from "..//Wallet/Wallet";
+import Wallet from "components/Wallet/WalletCreate";
 import lzma from "lzma";
 import bs58 from "common/base58";
 import utils from "common/utils";
@@ -125,8 +125,7 @@ class Invoice extends BaseComponent {
         let accounts = account_store_state.myAccounts.map(name => name);
         let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account || !account_id || final_balance <= 0.0});
         let finalBalanceClass = classNames("grid-content", {error: final_balance <= 0.0});
-        return (
-            <Wallet>
+        return ( <WalletCreate>
             <div className="grid-block vertical">
                 <div className="grid-content">
                     <div className="content-block invoice">
@@ -177,8 +176,7 @@ class Invoice extends BaseComponent {
                 </div>
                 <ConfirmModal modalId="confirm_modal" ref="confirm_modal"/>
             </div>
-            </Wallet>
-        );
+        </WalletCreate> );
     }
 }
 

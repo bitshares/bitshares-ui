@@ -2,7 +2,7 @@ import React, {Component} from "react"
 
 import {BackupRestore} from "components/Wallet/Backup"
 import WalletDb from "stores/WalletDb"
-import WalletStore from "stores/WalletStore"
+import WalletManagerStore from "stores/WalletManagerStore"
 import WalletActions from "actions/WalletActions"
 import NotificationSystem from 'react-notification-system'
 import notify from 'actions/NotificationActions'
@@ -19,7 +19,7 @@ class WalletCreate extends Component {
     }
     
     static getStores() {
-        return [WalletStore];
+        return [WalletManagerStore];
     }
     
     static getPropsFromStores() {
@@ -91,11 +91,11 @@ class UploadWalletBackup extends Component {
 class CreateNewWallet extends Component {
     
     static getStores() {
-        return [WalletStore]
+        return [WalletManagerStore]
     }
     
     static getPropsFromStores() {
-        var wallet = WalletStore.getState()
+        var wallet = WalletManagerStore.getState()
         return wallet
     }
     
@@ -136,12 +136,12 @@ class CreateNewWallet extends Component {
                     <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
                     <div>{errors.password_match || errors.password_length}</div>
                     <br/>
-                    { has_wallet ? <div className={cname({"has-error": errors.wallet_public_name})}>
+                    { has_wallet ? <div>
                         <label>Wallet Name</label>
                         <input type="text" id="wallet_public_name"
                             value={this.state.wallet_public_name}
                         />
-                        <div>{errors.wallet_public_name}</div>
+                    <div className="has-error">{errors.wallet_public_name}</div>
                         <br/>
                     </div>:null}
                 </div>
@@ -156,14 +156,14 @@ class CreateNewWallet extends Component {
     onSubmit(e) {
         e.preventDefault()
         var wallet_name = this.state.wallet_public_name
-        WalletActions.createWallet(wallet_name, this.state.password)
+        WalletActions.setWallet(wallet_name, this.state.password)
         this.setState({create_submitted: true})
     }
     
     validate() {
         let state = this.state
         let errors = state.errors
-        let wallet_names = WalletStore.getState().wallet_names
+        let wallet_names = WalletManagerStore.getState().wallet_names
         errors.password_length = state.password.length === 0 || state.password.length > 7 ? null : "Password must be longer than 7 characters";
         
         errors.wallet_public_name = 
