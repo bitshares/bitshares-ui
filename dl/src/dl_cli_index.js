@@ -6,7 +6,7 @@ import Aes from 'ecc/aes'
 import key from "common/key_utils"
 
 import WalletDb from 'stores/WalletDb'
-import WalletStore from 'stores/WalletStore'
+import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
 import PrivateKeyStore from 'stores/PrivateKeyStore'
 import chain_store from "api/ChainStore"
@@ -21,7 +21,7 @@ module.exports = {
     
     PrivateKey, PublicKey, Aes, key,
     
-    WalletDb, WalletStore, PrivateKeyStore,
+    WalletDb, WalletManagerStore, PrivateKeyStore,
     
     AccountStore, 
     

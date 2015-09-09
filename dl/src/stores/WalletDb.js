@@ -11,17 +11,19 @@ import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import WalletCreateActions from "actions/WalletCreateActions"
 import chain_config from "chain/config"
 import key_utils from "common/key_utils"
 //import WalletActions from "actions/WalletActions"
 
+//TODO delete wallet_public_name, this is managed in WalletManagerStore
 var wallet_public_name = "default"
+
 var aes_private_map = {}
 var transaction
 
 var TRACE = false
 
+/** Represents a single wallet and related indexedDb database operations. */
 class WalletDb {
     
     constructor() {
@@ -117,6 +119,33 @@ class WalletDb {
         return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
     
+    
+    /**
+        @todo "partial"
+        @return string "none", "full", "partial"
+    */
+    getMyAuthorityForAccount(account) {
+        if(account === undefined) return undefined
+        if( ! account) return null
+        let my_authority = "none";
+        if (account) {
+            for (let k of account.owner.key_auths) {
+                if (PrivateKeyStore.hasKey(k[0])) {
+                    my_authority = "full";
+                    break;
+                }
+            }
+            for (let k of account.active.key_auths) {
+                if (PrivateKeyStore.hasKey(k[0])) {
+                    my_authority = "full";
+                    break;
+                }
+            }
+        }
+        return my_authority;
+    }
+    
+    // todo -> wallet actions
     process_transaction(tr, signer_pubkeys, broadcast) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
@@ -250,9 +279,8 @@ class WalletDb {
                 wallet
             )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
-                WalletCreateActions.defaultWalletCreated()
                 this.wallet = this.wallet.set(
-                    wallet.public_name,
+                    wallet_public_name,
                     wallet//WalletTcomb(wallet)
                 )
                 if(unlock) {
@@ -457,7 +485,7 @@ class WalletDb {
         var p2 = idb_helper.on_transaction_end( transaction  ).then(
             () => {
                 // Update RAM
-                this.wallet.set( wallet_clone.public_name, wallet_clone )
+                this.wallet = this.wallet.set( wallet_public_name, wallet_clone )
             }
         )
         return Promise.all([p,p2])
@@ -472,7 +500,7 @@ class WalletDb {
                 return
             }
             var wallet = cursor.value//WalletTcomb(cursor.value)
-            map.set(wallet.public_name, wallet)
+            map.set(wallet_public_name, wallet)
             cursor.continue()
         });
     }

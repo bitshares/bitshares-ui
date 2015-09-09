@@ -3,16 +3,12 @@ import {Link} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
 import WalletCreate from "components/Wallet/WalletCreate";
-import WalletStore from "stores/WalletStore"
+import WalletManagerStore from "stores/WalletManagerStore"
 
-export default class Wallet extends Component {
+export default class WalletManager extends Component {
 
     render() {
-        //if( !WalletDb.getWallet()){
-        //    this.context.router.transitionTo("create-wallet")
-        //    return
-        //}
-        var has_wallet = !!WalletStore.getState().current_wallet
+        var has_wallet = !!WalletManagerStore.getState().current_wallet
         return <div className="grid-block vertical full-width-content">
             <div className="grid-content shrink no-overflow-padding">
                 
@@ -33,7 +29,10 @@ export default class Wallet extends Component {
             <div className="button success">Verify Prior Backup</div></Link>
             
             <Link to="backup-restore">
-            <div className="button success">Restore Backup</div></Link>
+            <div className="button success">Import Backup</div></Link>
+            
+            <Link to="existing-account">
+            <div className="button success">Import Keys</div></Link>
             
         </div></div>
     }
@@ -43,11 +42,11 @@ export default class Wallet extends Component {
 class WalletBaseComponent extends Component {
     
     static getStores() {
-        return [WalletStore]
+        return [WalletManagerStore]
     }
     
     static getPropsFromStores() {
-        var wallet = WalletStore.getState()
+        var wallet = WalletManagerStore.getState()
         return wallet
     }
     
@@ -62,13 +61,13 @@ export class ChangeActiveWallet extends WalletBaseComponent {
     }
     
     componentWillMount() {
-        var current_wallet = WalletStore.getState().current_wallet
+        var current_wallet = WalletManagerStore.getState().current_wallet
         console.log("... current_wallet", current_wallet)
         this.setState({current_wallet})
     }
     
     render() {
-        var state = WalletStore.getState()
+        var state = WalletManagerStore.getState()
         if(state.wallet_names.size === 1)
             return <label>{this.state.current_wallet}</label>
         
@@ -89,7 +88,7 @@ export class ChangeActiveWallet extends WalletBaseComponent {
     }
     
     onConfirm() {
-        WalletActions.changeWallet(this.state.current_wallet)
+        WalletActions.setWallet(this.state.current_wallet)
     }
     
     onChange(event) {

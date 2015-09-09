@@ -46,10 +46,10 @@ import NotificationStore from "stores/NotificationStore";
 // import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
-import ExistingAccount from "./components/Wallet/ExistingAccount";
-import Wallet from "./components/Wallet/Wallet";
-import WalletCreate from "./components/Wallet/WalletCreate";
-import ImportKeys from "./components/Wallet/ImportKeys";
+import ExistingAccount from "components/Wallet/ExistingAccount";
+import WalletManager from "components/Wallet/WalletManager";
+import WalletCreate from "components/Wallet/WalletCreate";
+import ImportKeys from "components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import Console from "./components/Console/Console";
@@ -57,7 +57,7 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
 import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
-import WalletStore from "stores/WalletStore";
+import WalletManagerStore from "stores/WalletManagerStore";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -172,7 +172,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
                 }).catch((error) => {
                     console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
                 }),
-                WalletStore.init()
+                WalletManagerStore.init()
             ]).then(()=> {
                 callback();
             })
@@ -199,7 +199,7 @@ let routes = (
             <DefaultRoute handler={Delegates}/>
             <Route name="delegate" path=":name" handler={Delegate}/>
         </Route>
-        <Route name="wallet" path="wallet" handler={Wallet}/>
+        <Route name="wallet" path="wallet" handler={WalletManager}/>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
