@@ -316,6 +316,7 @@ class ChainStore
       else if( validation.is_account_name( name_or_id ) )
       {
          let account_id = this.accounts_by_name.get( name_or_id )
+         if(account_id === null) return null; // already fetched and it wasn't found
          if( account_id === true ) // then a query is pending
             return undefined 
          if( account_id === undefined ) // then no query, fetch it
@@ -533,7 +534,7 @@ class ChainStore
 
          let account_id = this.accounts_by_name.get( name_or_id )
          fetch_account = account_id === undefined
-         if( !fetch_account ) 
+         if( !fetch_account )
             return this.objects_by_id.get( account_id )
       }
       
@@ -542,7 +543,10 @@ class ChainStore
           //console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
-                 if(results.length === 0) return;
+                 if(results.length === 0) {
+                     this.objects_by_id = this.objects_by_id.set( name_or_id, null );
+                     return;
+                 }
                  let full_account = results[0][1]
                  if(DEBUG) console.log( "full_account: ", full_account )
 
