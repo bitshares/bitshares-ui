@@ -1,7 +1,7 @@
 import Immutable from "immutable";
 import utils from "../common/utils"
 import Apis from "../rpc_api/ApiInstances.js"
-import {object_type} from "../chain/chain_types";
+import {object_type,impl_object_type} from "../chain/chain_types";
 import validation from "common/validation"
 
 let op_history   = parseInt(object_type.operation_history, 10);
@@ -15,7 +15,8 @@ let account_object_type  = parseInt(object_type.account, 10);
 let asset_object_type  = parseInt(object_type.asset, 10);
 
 let order_prefix = "1." + limit_order + "."
-let balance_prefix = "1." + balance_type + "."
+let balance_prefix = "2." + parseInt(impl_object_type.account_balance,10) + "."
+let account_stats_prefix = "2." + parseInt(impl_object_type.account_statistics,10) + "."
 let vesting_balance_prefix = "1." + vesting_balance_type + "."
 let witness_prefix = "1." + witness_object_type + "."
 let worker_prefix = "1." + worker_object_type + "."
@@ -70,7 +71,6 @@ class ChainStore
 
    onUpdate( updated_objects ) /// map from account id to objects
    {
-      if(DEBUG) console.log( "updated objects: ", updated_objects )
       for( let a = 0; a < updated_objects.length; ++a )
       {
          for( let i = 0; i < updated_objects[a].length; ++i )
@@ -639,9 +639,19 @@ class ChainStore
     */
    fetchRecentHistory( account, limit = 100 )
    {
+      // console.log( "get account history: ", account )
       /// TODO: make sure we do not submit a query if there is already one
       /// in flight...
-        let account_id = account.get('id')
+        let account_id = account;
+        if( !utils.is_object_id(account_id) && account.toJS ) 
+           account_id = account.get('id')
+
+        if( !utils.is_object_id(account_id)  )
+           return
+        
+        account = this.objects_by_id.get(account_id)
+        if( !account ) return
+        
 
         let pending_request = this.account_history_requests.get(account_id)
         if( pending_request ) 
@@ -781,33 +791,49 @@ class ChainStore
       //console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
+      let prior   = current
       if( current === undefined || current === true )
          this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
       else
          this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
 
-      if( object.id.substring(0,4) == balance_prefix )
+      if( object.id.substring(0,balance_prefix.length) == balance_prefix )
       {
-         //console.log( "balance object update: ", object )
          let owner = this.objects_by_id.get( object.owner )
-         owner = owner.setIn( ['balances', object.asset_id ], object.id )
+         if( owner === undefined ) 
+         {
+            owner = {id:object.owner, balances:{ } }
+            owner.balances[object.asset_type] = object.id
+            owner = Immutable.fromJS( owner )
+         }
+         else
+            owner = owner.setIn( ['balances',object.asset_type],  object.id )
          this.objects_by_id = this.objects_by_id.set( object.owner, owner  )
       }
-      else if( object.id.substring(0,4) == witness_prefix )
+      else if( object.id.substring(0,account_stats_prefix.length) == account_stats_prefix )
+      {
+        // console.log( "HISTORY CHANGED" )
+         let prior_most_recent_op = prior ? prior.get('most_recent_op') : "2.9.0"
+
+         if( prior_most_recent_op != object.most_recent_op ) {
+            this.fetchRecentHistory( object.owner );
+         }
+      }
+      else if( object.id.substring(0,witness_prefix.length) == witness_prefix )
       {
          this.witness_by_account_id.set( object.witness_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
       }
-      else if( object.id.substring(0,4) == committee_prefix )
+      else if( object.id.substring(0,committee_prefix.length) == committee_prefix )
       {
          this.committee_by_account_id.set( object.committee_member_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
       }
-      else if( object.id.substring(0,4) == account_prefix )
+      else if( object.id.substring(0,account_prefix.length) == account_prefix )
       {
          this.accounts_by_name = this.accounts_by_name.set( object.name, object.id )
       }
-      else if( object.id.substring(0,4) == asset_prefix )
+      else if( object.id.substring(0,asset_prefix.length) == asset_prefix )
       {
          this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
       }
