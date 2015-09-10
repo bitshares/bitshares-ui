@@ -568,28 +568,34 @@ class ChainStore
                  account.orders = new Immutable.Set()
                  account.vesting_balances = new Immutable.Set()
                  account.balances = new Immutable.Map()
+                 account.call_orders = new Immutable.Set()
 
-                 for( var i = 0; i < vesting_balances.length; ++i )
-                 {
-                    this._updateObject( vesting_balances[i], false )
-                    account.vesting_balances = account.vesting_balances.add( vesting_balances[i].id )
-                 }
-                 for( var i = 0; i < votes.length; ++i )
-                 {
-                    this._updateObject( votes[i], false )
-                 }
+                  account.vesting_balances = account.vesting_balances.withMutations(set => {
+                      vesting_balances.forEach(vb => {
+                          this._updateObject( vb, false );
+                          set.add( vb.id );
+                      });
+                  });
 
-                 for( var i = 0; i < full_account.balances.length; ++i )
-                 {
-                    let b = full_account.balances[i]
-                    this._updateObject( b, false )
-                    account.balances = account.balances.set( b.asset_type, full_account.balances[i].id )
-                 }
+                  votes.forEach(v => this._updateObject( votes[i], false ));
+
+                  account.balances = account.balances.withMutations(map => {
+                      full_account.balances.forEach(b => {
+                          this._updateObject( b, false );
+                          map.set( b.asset_type, b.id );
+                      });
+                  });
+
+                  account.call_orders = account.call_orders.withMutations(set => {
+                      call_orders.forEach(co => {
+                          this._updateObject( co, false )
+                          set.add( co.id )
+                      });
+                  });
 
                  this._updateObject( statistics, false )
                  let updated_account = this._updateObject( account, false )
                  this.fetchRecentHistory( updated_account )
-
                  this.notifySubscribers()
          }, error => {
             console.log( "Error: ", error )

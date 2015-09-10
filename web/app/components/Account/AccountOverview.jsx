@@ -6,6 +6,7 @@ import Operation from "../Blockchain/Operation";
 import WitnessStore from "stores/WitnessStore";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
+import CollateralPosition from "../Blockchain/CollateralPosition";
 
 class AccountOverview extends React.Component {
 
@@ -19,6 +20,7 @@ class AccountOverview extends React.Component {
 
     render() {
         let account = this.props.account;
+        let call_orders = account.get("call_orders").toJS();
         let balances = {};
         let account_balances = account.get("balances");
         if(account_balances) {
@@ -55,16 +57,31 @@ class AccountOverview extends React.Component {
                 <div className="content-block">
                     <h3><Translate content="transfer.balances" /></h3>
                     <table className="table">
-                        <thead>
+                        {/*<thead>
                             <tr>
                                 <th><Translate component="span" content="account.asset" /></th>
                             </tr>
-                        </thead>
+                        </thead>*/}
                         <tbody>
                             {React.addons.createFragment(balances)}
                         </tbody>
                     </table>
                 </div>
+                {call_orders.length > 0 ? <div className="content-block">
+                    <h3>Collateral Positions</h3>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Debt</th>
+                            <th>Collateral</th>
+                            <th>Call Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { call_orders.map(id =><CollateralPosition object={id}/>) }
+                        </tbody>
+                    </table>
+                </div> : null}
                 <div className="content-block">
                 <h3><Translate content="account.recent" /> <small> (<Translate content="account.more" /> TODO)</small></h3>
                     <table className="table">
