@@ -17,6 +17,7 @@ let asset_object_type  = parseInt(object_type.asset, 10);
 let order_prefix = "1." + limit_order + "."
 let balance_prefix = "2." + parseInt(impl_object_type.account_balance,10) + "."
 let account_stats_prefix = "2." + parseInt(impl_object_type.account_statistics,10) + "."
+let asset_dynamic_data_prefix = "2." + parseInt(impl_object_type.asset_dynamic_data,10) + "."
 let vesting_balance_prefix = "1." + vesting_balance_type + "."
 let witness_prefix = "1." + witness_object_type + "."
 let worker_prefix = "1." + worker_object_type + "."
@@ -164,6 +165,7 @@ class ChainStore
 
       Apis.instance().db_api().exec( "lookup_asset_symbols", [ [id_or_symbol] ] )
           .then( asset_objects => {
+                 console.log( "lookup symbol ", id_or_symbol )
               if( asset_objects.length && asset_objects[0] )
                  this._updateObject( asset_objects[0], true )
               else
@@ -788,7 +790,7 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-      //console.log( "update: ", object )
+//      console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
       let prior   = current
@@ -796,6 +798,7 @@ class ChainStore
          this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
       else
          this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
+
 
       if( object.id.substring(0,balance_prefix.length) == balance_prefix )
       {
@@ -836,6 +839,16 @@ class ChainStore
       else if( object.id.substring(0,asset_prefix.length) == asset_prefix )
       {
          this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
+         let dynamic = current.get( 'dynamic' );
+         if( !dynamic )
+            this.getObject( object.dynamic_asset_data_id );
+      }
+      else if( object.id.substring(0,asset_dynamic_data_prefix.length) == asset_dynamic_data_prefix )
+      {
+         let asset_id = asset_prefix + object.id.substring( asset_dynamic_data_prefix.length )
+         let asset_obj = this.objects_by_id.get( asset_id );
+         asset_obj = asset_obj.set( 'dynamic', current );
+         this.objects_by_id = this.objects_by_id.set( asset_id, asset_obj );
       }
 
       if( notify_subscribers )
