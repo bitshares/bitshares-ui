@@ -19,12 +19,12 @@ module.exports = _my =
     
     required: (value, field_name="")->
         if is_empty value
-            throw new Error "value required for #{field_name}: #{value}"
+            throw new Error "value required #{field_name} #{value}"
         value
     
     require_long: (value, field_name="")->
         unless Long.isLong value
-            throw new Error "Long value required for #{field_name}: #{value}"
+            throw new Error "Long value required #{field_name} #{value}"
         value
     
     string: (value)->
@@ -42,13 +42,13 @@ module.exports = _my =
     whole_number: (value, field_name="")->
         return value if is_empty value
         if /\./.test value
-            throw new Error "whole number required #{field_name}: #{value}"
+            throw new Error "whole number required #{field_name} #{value}"
         value
     
     unsigned: (value, field_name="")->
         return value if is_empty value
         if /-/.test value
-            throw new Error "unsigned required #{field_name}: #{value}"
+            throw new Error "unsigned required #{field_name} #{value}"
         value
     
     is_digits: is_digits=(value)->
@@ -86,14 +86,14 @@ module.exports = _my =
     require_test:(regex, value, field_name="")->
         return value if is_empty value
         unless regex.test value
-            throw new Error "unmatched #{regex} #{field_name}: #{value}"
+            throw new Error "unmatched #{regex} #{field_name} #{value}"
         value
     
     require_match: require_match=(regex, value, field_name="")->
         return value if is_empty value
         match = value.match regex
         if match is null
-            throw new Error "unmatched #{regex} #{field_name}: #{value}"
+            throw new Error "unmatched #{regex} #{field_name} #{value}"
         match
     
     require_object_id: require_object_id=(value, field_name)->
@@ -108,7 +108,7 @@ module.exports = _my =
         return value if is_empty value
         number = to_number value
         if value < min or value > max
-            throw new Error "out of range #{value} #{field_name}: #{value}"
+            throw new Error "out of range #{value} #{field_name} #{value}"
         value
     
     require_object_type: require_object_type=(
@@ -118,12 +118,12 @@ module.exports = _my =
         return value if is_empty value
         object_type = chain_types.object_type[type]
         unless object_type
-            throw new Error "Unknown object type #{type} #{field_name}: #{value}"
+            throw new Error "Unknown object type #{type} #{field_name} #{value}"
         re = new RegExp "#{reserved_spaces}\.#{object_type}\.[0-9]+$"
         unless re.test value
             throw new Error "Expecting #{type} in format "+
                 "#{reserved_spaces}.#{object_type}.[0-9]+ "+
-                "instead of #{value} #{field_name}: #{value}"
+                "instead of #{value} #{field_name} #{value}"
         value
     
     get_instance: get_instance=(reserve_spaces, type, value, field_name)->
@@ -173,12 +173,12 @@ module.exports = _my =
     no_overflow53: (value, field_name="")->
         if typeof value is "number"
             if value > MAX_SAFE_INT or value < MIN_SAFE_INT
-                throw new Error "overflow #{field_name}: #{value}"
+                throw new Error "overflow #{field_name} #{value}"
             return
         if typeof value is "string"
             int = parseInt value
             if value > MAX_SAFE_INT or value < MIN_SAFE_INT
-                throw new Error "overflow #{field_name}: #{value}"
+                throw new Error "overflow #{field_name} #{value}"
             return
         if Long.isLong value
             # typeof value.toInt() is 'number'
@@ -208,11 +208,11 @@ module.exports = _my =
             value = "0" if value is ""
             long_string = Long.fromString(value).toString()
             if long_string isnt value.trim()
-                throw new Error "overflow #{field_name}: #{value}"
+                throw new Error "overflow #{field_name} #{value}"
             return
         if typeof value is "number"
             if value > MAX_SAFE_INT or value < MIN_SAFE_INT
-                throw new Error "overflow #{field_name}: #{value}"
+                throw new Error "overflow #{field_name} #{value}"
             return
             
         throw "unsupported type #{field_name}: (#{typeof value}) #{value}"
