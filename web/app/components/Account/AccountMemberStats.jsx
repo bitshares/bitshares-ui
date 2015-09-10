@@ -18,7 +18,6 @@ class AccountMemberStats extends React.Component {
         console.log("-- AccountMemberStats.render -->", this.props);
         let account_name = this.props.account_name;
         let account = this.props.account.toJS();
-        console.log( "account: ", account.account.toJS() );
 
         return (
             <div className="grid-block">
