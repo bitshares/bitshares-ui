@@ -218,6 +218,10 @@ module.exports = {
         balance_id: "Balance ID",
         deposit_to: "Deposited to account",
         claimed: "Total claimed",
+        borrow_amount: "Amount to borrow",
+        funding_account: "Funding account",
+        delta_collateral: "Collateral change",
+        delta_debt: "Debt change",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
