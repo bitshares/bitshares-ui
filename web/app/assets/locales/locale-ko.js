@@ -14,7 +14,11 @@ module.exports = {
         payments: "전송",
         logout: "로그아웃",
         settings: "설정",
-        current: "현재 계정"
+        current: "현재 계정",
+        create_account: "계정 생성",
+        create_asset: "자산 생성",
+        lock: "잠금",
+        unlock: "잠금해제"
     },
     account: {
         asset: "자산",
