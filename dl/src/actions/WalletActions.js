@@ -34,7 +34,7 @@ class WalletActions {
         })
     }
     
-    createBrainKeyAccount(
+    createAccount(
         account_name,
         registrar,
         referrer,
