@@ -31,42 +31,38 @@ class BackupBaseComponent extends Component {
 @connectToStores
 export class BackupCreate extends BackupBaseComponent {
     render() {
-        return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink no-overflow-padding">
+        return <span>
                 
-                <h3>Create Backup</h3>
-                
-                <Create>
-                    <NameSizeModified/>
-                    <DecryptBackup>
-                        <Download/>
-                    </DecryptBackup>
-                    <Reset/>
-                </Create>
-                
-            </div>
-        </div>
+            <h3>Create Backup</h3>
+            
+            <Create>
+                <NameSizeModified/>
+                <DecryptBackup>
+                    <Download/>
+                </DecryptBackup>
+                <Reset/>
+            </Create>
+            
+        </span>
     }
 }
 
 @connectToStores
 export class BackupVerify extends BackupBaseComponent {
     render() {
-        return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink no-overflow-padding">
+        return <span>
                 
-                <h3>Verify Prior Backup</h3>
-                
-                <Upload>
-                    <NameSizeModified/>
-                    <DecryptBackup>
-                        <h4>Verified</h4>
-                    </DecryptBackup>
-                    <Reset/>
-                </Upload>
+            <h3>Verify Prior Backup</h3>
             
-            </div>
-        </div>
+            <Upload>
+                <NameSizeModified/>
+                <DecryptBackup>
+                    <h4>Verified</h4>
+                </DecryptBackup>
+                <Reset/>
+            </Upload>
+        
+        </span>
     }
 }
 
@@ -86,23 +82,20 @@ export class BackupRestore extends BackupBaseComponent {
         var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
         var restored = has_new_wallet
         
-        return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink no-overflow-padding">
-                
-                <h3>Restore Backup</h3>
-                
-                <Upload>
-                    <NameSizeModified/>
-                    <DecryptBackup saveWalletObject={true}>
-                        <NewWalletName>
-                            <Restore/>
-                        </NewWalletName>
-                    </DecryptBackup>
-                    <Reset label={restored ? "done" : "reset"}/>
-                </Upload>
+        return <span>
             
-            </div>
-        </div>
+            <h3>Import Backup</h3>
+            
+            <Upload>
+                <NameSizeModified/>
+                <DecryptBackup saveWalletObject={true}>
+                    <NewWalletName>
+                        <Restore/>
+                    </NewWalletName>
+                </DecryptBackup>
+                <Reset label={restored ? "done" : "reset"}/>
+            </Upload>
+        </span>
     }
     
 }

@@ -1,43 +1,10 @@
 import React, {Component} from "react";
-import {Link} from "react-router"
+import {Link, RouteHandler} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
 import WalletCreate from "components/Wallet/WalletCreate";
 import WalletManagerStore from "stores/WalletManagerStore"
-
-export default class WalletManager extends Component {
-
-    render() {
-        var has_wallet = !!WalletManagerStore.getState().current_wallet
-        return <div className="grid-block vertical full-width-content">
-            <div className="grid-content shrink no-overflow-padding">
-                
-            <h3>Wallet Management Console</h3>
-            
-            <h5>Active Wallet</h5>
-            <ChangeActiveWallet/>
-            
-            <hr/>
-            
-            <Link to="create-wallet">
-            <div className="button success">Create Wallet</div></Link>
-            
-            {has_wallet ? <Link to="backup-create">
-            <div className="button success">Create Backup</div></Link>:null}
-            
-            <Link to="backup-verify">
-            <div className="button success">Verify Prior Backup</div></Link>
-            
-            <Link to="backup-restore">
-            <div className="button success">Import Backup</div></Link>
-            
-            <Link to="existing-account">
-            <div className="button success">Import Keys</div></Link>
-            
-        </div></div>
-    }
-
-}
+import BalanceClaim from "components/Wallet/BalanceClaim"
 
 class WalletBaseComponent extends Component {
     
@@ -53,6 +20,66 @@ class WalletBaseComponent extends Component {
 }
 
 @connectToStores
+export default class WalletManager extends WalletBaseComponent {
+
+    render() {
+        return (
+            <div className="grid-block vertical">
+                <div className="grid-container">
+                    <div className="content-block center-content">
+                        <div className="page-header">
+                            <h3>Wallet Management Console</h3>
+                        </div>
+                        <div className="content-block">
+                            <RouteHandler/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+@connectToStores
+export class WalletOptions extends WalletBaseComponent {
+
+    render() {
+        var has_wallet = !!this.props.current_wallet
+        var has_wallets = this.props.wallet_names.count() != 0
+        return <span>
+                
+            {has_wallets ? <span>
+            <h5>Active Wallet</h5>
+            <ChangeActiveWallet/>
+            <hr/>
+            </span>:null}
+            
+            <Link to="wmc-backup-restore">
+            <div className="button success">Import Backup</div></Link>
+            
+            {has_wallet ? <Link to="wmc-import-keys">
+            <div className="button success">Import Keys</div></Link>:null}
+            
+            <Link to="wmc-provide-brainkey">
+            <div className="button success">Provide Brainkey</div></Link>
+            
+            <Link to="wmc-wallet-create">
+            <div className="button success">Create Wallet</div></Link>
+            
+            {has_wallet ? <Link to="wmc-backup-create">
+            <div className="button success">Create Backup</div></Link>:null}
+            
+            <Link to="wmc-backup-verify">
+            <div className="button success">Verify Prior Backup</div></Link>
+            
+            <BalanceClaim/>
+            
+        </span>
+    }
+
+}
+
+@connectToStores
 export class ChangeActiveWallet extends WalletBaseComponent {
     
     constructor() {
@@ -61,14 +88,13 @@ export class ChangeActiveWallet extends WalletBaseComponent {
     }
     
     componentWillMount() {
-        var current_wallet = WalletManagerStore.getState().current_wallet
-        console.log("... current_wallet", current_wallet)
+        var current_wallet = this.props.current_wallet
         this.setState({current_wallet})
     }
     
     render() {
         var state = WalletManagerStore.getState()
-        if(state.wallet_names.size === 1)
+        if(state.wallet_names.count() === 1)
             return <label>{this.state.current_wallet}</label>
         
         var options = []

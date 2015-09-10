@@ -21,6 +21,9 @@ import AccountActions from "actions/AccountActions";
 import ImportKeysActions from "actions/ImportKeysActions";
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import BalanceClaimActions from "actions/BalanceClaimActions"
+import BalanceClaimStore from "stores/BalanceClaimStore"
+import WalletCreate from "components/Wallet/WalletCreate"
+import BalanceClaim from "components/Wallet/BalanceClaim"
 
 import chain_api from "api/ChainStore"
 
@@ -53,6 +56,7 @@ export default class ImportKeys extends Component {
             password_checksum: null,
             import_password_message: null,
             imported_keys_public: {},
+            import_complete: false,
             wif_text_message: null,
             wif_textarea_private_keys_message: null,
             wif_textarea_private_keys: ""
@@ -104,15 +108,13 @@ export default class ImportKeys extends Component {
 
         return (
             <div>
-                <div className="content-block center-content">
-                    <h3 className="no-border-bottom">Import Keys</h3>
-                </div>
+                <h3>Import Keys</h3>
 
                 {/* Key file upload */}
-                <div className="center-content">
+                <div>
                     <KeyCount wif_count={this.state.wif_count}/>
                     {!this.state.wif_count ? 
-                        <span>Import keys file...</span> :
+                        null :
                         <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
                     }
                 </div>
@@ -124,6 +126,7 @@ export default class ImportKeys extends Component {
                                 <div>
                                     <input
                                         type="file" id="file_input"
+                                        style={{ border: 'solid' }}
                                         key={this.state.reset_file_name}
                                         onChange={this.upload.bind(this)}
                                     />
@@ -185,18 +188,29 @@ export default class ImportKeys extends Component {
 
                         <div className="center-content" style={{width: "100%"}}>
                             <div className="button-group content-block">
-                                <a href className={cname("button success", {disabled:!import_ready})}
-                                   onClick={this._saveImport.bind(this)} >
-                                    Import
-                                </a>
-                                <a href className="button secondary" onClick={this.reset.bind(this)}>
-                                    Cancel
-                                </a>
+                                <WalletCreate>
+                                    <a href className={cname("button success", {disabled:!import_ready})}
+                                       onClick={this._saveImport.bind(this)} >
+                                        Import
+                                    </a>
+                                    <a href className="button secondary" onClick={this.reset.bind(this)}>
+                                        Cancel
+                                    </a>
+                                </WalletCreate>
                             </div>
                         </div>
                     </div>) : null}
+                {this.state.import_complete ? <span>
+                    <h5>If you had balances you may go BACK and claim them</h5>
+                    <div className="button success"
+                        onClick={this.onBack.bind(this)}>Back</div>
+                </span>:null}
             </div>
         );
+    }
+    
+    onBack() {
+        window.history.back()
     }
     
     updateOnChange(wifs_to_account = this.state.wifs_to_account) {
@@ -665,6 +679,7 @@ export default class ImportKeys extends Component {
                 addAccountPromise.then(()=> {
                     console.log('... addAccountPromise.then...',addAccountPromise)
                     ImportKeysActions.setStatus("saveDone")
+                    this.setState({import_complete: true})
                     // https://github.com/goatslacker/alt/issues/456
                     BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
                     BalanceClaimActions.loadMyAccounts()
@@ -705,7 +720,7 @@ export default class ImportKeys extends Component {
 
 class KeyCount extends Component {
     render() {
-        if( !this.props.wif_count) return <div/>
+        if( !this.props.wif_count) return <span/>
         return <span>Found {this.props.wif_count} private keys</span>
     }
 }
