@@ -119,21 +119,23 @@ class App extends React.Component {
     // }
 
     render() {
-        let content = (
-            <div className="grid-frame vertical">
-                <HeaderContainer isUnlocked={this.state.isUnlocked}/>
-                <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                {/*<AccountNotifications/>*/}
-
-                <div className="grid-block vertical">
-                    <RouteHandler />
-                </div>
-                <Footer/>
-                <ReactTooltip type="dark" effect="solid"/>
-            </div>
-        );
+        let content = null;
         if (this.state.loading) {
             content = <LoadingIndicator />;
+        } else {
+            content = (
+                <div className="grid-frame vertical">
+                    <HeaderContainer isUnlocked={this.state.isUnlocked}/>
+                    <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
+                    {/*<AccountNotifications/>*/}
+
+                    <div className="grid-block vertical">
+                        <RouteHandler />
+                    </div>
+                    <Footer/>
+                    <ReactTooltip type="dark" effect="solid"/>
+                </div>
+            );
         }
         return (
             <div>
