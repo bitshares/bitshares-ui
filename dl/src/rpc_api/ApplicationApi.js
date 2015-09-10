@@ -10,6 +10,7 @@ var ops = require('../chain/signed_transaction');
 var type = require('../chain/serializer_operation_types')
 var api = require('./ApiInstances').instance();
 var key = require('../common/key_utils');
+var v = require('common/validation')
 
 import WalletUnlockActions from "../actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
@@ -27,6 +28,8 @@ class ApplicationApi {
         broadcast = false
     ) {
         var tr = new ops.signed_transaction();
+        v.required(registrar_id, "registrar_id")
+        v.required(referrer_id, "referrer_id")
         var _registrar = lookup.account_id(registrar_id)
         var _referrer = lookup.account_id(referrer_id)
         return lookup.resolve().then(()=> {
