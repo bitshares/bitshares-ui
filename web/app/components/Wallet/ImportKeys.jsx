@@ -201,9 +201,8 @@ export default class ImportKeys extends Component {
                         </div>
                     </div>) : null}
                 {this.state.import_complete ? <span>
-                    <h5>If you had balances you may go BACK and claim them</h5>
                     <div className="button success"
-                        onClick={this.onBack.bind(this)}>Back</div>
+                        onClick={this.onBack.bind(this)}>Claim Balance</div>
                 </span>:null}
             </div>
         );
