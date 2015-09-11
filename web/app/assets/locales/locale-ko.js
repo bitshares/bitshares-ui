@@ -107,7 +107,7 @@ module.exports = {
         orders: "주문내역",
         select_placeholder: "계정을 선택하세요...",
         errors: {
-            not_found: "%(name)s 계정은 존재하지 않습니다. 철자를 정확히 입력하셨습니까?"
+            not_found: "%(name)s 계정은 존재하지 않습니다. 철자를 정확히 입력하셨습니까?",
             invalid: "잘못된 계정이름",
             unknown: "알 수 없는 계정",
             not_yours: "소유 계정이 아님"
