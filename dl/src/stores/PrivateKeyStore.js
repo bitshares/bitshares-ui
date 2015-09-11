@@ -3,8 +3,11 @@ import alt from "../alt-instance";
 import BaseStore from "./BaseStore";
 import iDB from "../idb-instance";
 import idb_helper from "../idb-helper";
+import chain_store from "api/ChainStore"
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
+import PublicKey from "ecc/key_public"
+import Address from "ecc/address"
 
 import hash from "../common/hash"
 
@@ -31,6 +34,7 @@ class PrivateKeyStore extends BaseStore {
     _getInitialState() {
         return {
             keys: Immutable.Map(),
+            pubkey_to_addresses: new Map(),
             catastrophic_error: false,
             pending_operation_count: 0,
             catastrophic_error_add_key: null,
@@ -65,12 +69,13 @@ class PrivateKeyStore extends BaseStore {
         this.pendingOperation()
         return idb_helper.cursor("private_keys", cursor => {
             if( ! cursor) {
-                this.state.keys = map.asImmutable()
+                this.setState({keys: map.asImmutable()})
                 return
             }
             var private_key_tcomb = PrivateKeyTcomb(cursor.value)
             map.set(private_key_tcomb.id, private_key_tcomb)
             map.set(private_key_tcomb.pubkey, private_key_tcomb)
+            this.newPublicKey(private_key_tcomb.pubkey)
             cursor.continue()
         }).then(()=>{
             this.pendingOperationDone()
@@ -80,14 +85,37 @@ class PrivateKeyStore extends BaseStore {
         })
     }
     
+    newPublicKey(pubkey) {
+        chain_store.getAccountRefsOfKey(pubkey)
+        var public_key = PublicKey.fromPublicKeyString(pubkey)
+        var addresses = this.state.pubkey_to_addresses.get(pubkey)
+        if(!addresses) this.state.pubkey_to_addresses.set(pubkey, addresses = new Set())
+        for(let address_string of [
+            Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
+            Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
+            Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
+            Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
+        ]) {
+            addresses.add(address_string)
+            chain_store.getBalanceObjects(address_string)
+        }
+    }
+    
     onAddKey(private_key_object, transaction, event_callback) {
+        if(this.state.keys.has(private_key_object.pubkey))
+            return Promise.resolve({result:"duplicate",id:null})
+        
         this.pendingOperation()
+        //console.log("... onAddKey private_key_object.pubkey", private_key_object.pubkey)
+        
         this.setState({
             keys: this.state.keys.set(
                 private_key_object.pubkey,
                 PrivateKeyTcomb(private_key_object)
             )
         })
+        this.newPublicKey(private_key_object.pubkey)
+        
         return new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
             var duplicate = false

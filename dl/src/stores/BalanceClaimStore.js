@@ -33,7 +33,7 @@ export var BalanceClaimTcomb = t.struct({
     vested_balance: t.maybe(AssetTypeTcomb)
 }, 'BalanceClaimTcomb')
 
-var TRACE = true
+var TRACE = false
 
 class BalanceClaimStore {
     
@@ -267,7 +267,7 @@ class BalanceClaimStore {
             for(let obj of account_names) {
                 if( ! obj) {
                     if(TRACE) console.log('... BalanceClaimStore NOT my account2',
-                        account.get("name"),error)
+                        obj.account_name,error)
                     continue
                 }
                 if(TRACE) console.log('... BalanceClaimStore my account')
@@ -301,8 +301,6 @@ class BalanceClaimStore {
     /** group things for reporting purposes */
     balanceByAssetName(balance_claims) {
         var asset_totals = {}
-        var keys = PrivateKeyStore.getState().keys
-        //DEBUG console.log("... balanceByAssetName balance_claims",balance_claims,keys)
         for(let balance_claim of balance_claims) {
             var b = balance_claim.chain_balance_record
             var vested_balance = balance_claim.vested_balance
