@@ -579,7 +579,7 @@ class ChainStore
                       });
                   });
 
-                  votes.forEach(v => this._updateObject( votes[i], false ));
+                  votes.forEach(v => this._updateObject( v, false ));
 
                   account.balances = account.balances.withMutations(map => {
                       full_account.balances.forEach(b => {

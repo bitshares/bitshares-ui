@@ -46,10 +46,10 @@ class TransactionLabel extends React.Component {
 
 class Row extends React.Component {
     render() {
-        let {block, fee, color, type} = this.props;
+        let {block, fee, color, type, key} = this.props;
         fee.amount = parseInt(fee.amount, 10);
         return (
-                <tr>
+                <tr key={key}>
                     <td><BlockTime block_number={block}/></td>
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
                     {this.props.children}   
@@ -716,7 +716,7 @@ class Operation extends React.Component {
         }
 
         line = column ? (
-            <Row block={block} type={op[0]} color={color} fee={op[1].fee}>
+            <Row key={this.props.key} block={block} type={op[0]} color={color} fee={op[1].fee}>
                 {column}
             </Row>
         ) : null;

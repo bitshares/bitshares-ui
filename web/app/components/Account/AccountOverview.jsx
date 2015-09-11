@@ -20,7 +20,7 @@ class AccountOverview extends React.Component {
 
     render() {
         let account = this.props.account;
-        let call_orders = account.get("call_orders").toJS();
+        let call_orders = account.get("call_orders") ? account.get("call_orders").toJS() : [];
         let balances = {};
         let account_balances = account.get("balances");
         if(account_balances) {
