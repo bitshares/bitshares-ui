@@ -26,27 +26,27 @@ module.exports = {
         hour_24: "24시간 변동액",
         recent: "최근 활동",
         name: "계정명",
+        more: "더 보기",
         member: {
             stats: "회원정보",
             join: "가입일",
             reg: "등록인",
             ref: "추천인",
-            referrals: "피추천인",
-            rewards: "캐쉬백 리워드",
-            cashback: "캐쉬백",
-            vested: "확정",
             ref_percentage: "추천인 수수료 비율",
             network_percentage: "네트워크 수수료 비율",
             fees_paid: "지불된 평생회원 수수료",
             fees_pending: "보류중인 수수료",
             fees_vested: "보류중인 확정 수수료",
-            in_orders: "주문중인 총 %(core_asset)s"
+            in_orders: "주문중인 총 %(core_asset)s",
+            referrals: "피추천인",
+            rewards: "캐쉬백 리워드",
+            cashback: "캐쉬백",
+            vested: "확정",
+            unknown: "잘못된 계정",
+            lifetime: "평생회원",
+            basic: "기본회원",
+            annual: "연간회원"
         },
-        connections: {
-            known: "나와 연결됨",
-            black: "나를 차단함"
-        },
-        more: "더 보기",
         user_issued_assets: {
             symbol: "약자",
             name: "자산 이름",
@@ -55,6 +55,10 @@ module.exports = {
             precision: "소수자리수",
             to: "다음 계정으로 발행",
             details: "세부사항"
+        },
+        connections: {
+            known: "나와 연결됨",
+            black: "나를 차단함"
         },
         perm: {
             active: "활성화된 사용권한",
@@ -76,8 +80,8 @@ module.exports = {
             info: "정보",
             votes: "득표수",
             url: "웹페이지",
-            support: "Support",
-            workers: "Budget Items",
+            support: "찬성하기",
+            workers: "예산 항목",
             publish: "변경사항 적용",
             add_witness: "추가",
             remove_witness: "제거",
@@ -104,7 +108,14 @@ module.exports = {
         select_placeholder: "계정을 선택하세요...",
         errors: {
             not_found: "%(name)s 계정은 존재하지 않습니다. 철자를 정확히 입력하셨습니까?"
+            invalid: "잘못된 계정이름",
+            unknown: "알 수 없는 계정",
+            not_yours: "소유 계정이 아님"
         }
+    },
+    pagination: {
+        newer: "이전",
+        older: "다음"
     },
     transfer: {
         from: "보내는 사람",
@@ -113,8 +124,9 @@ module.exports = {
         memo: "메모",
         fee: "수수료",
         send: "전송",
-        "final": "전송 후 잔고",
+        final: "전송 후 잔고",
         balances: "잔고",
+        available: "사용가능액",
         errors: {
             req: "필수 입력",
             pos: "금액은 양수를 입력해주세요",
@@ -123,13 +135,18 @@ module.exports = {
         },
         back: "뒤로가기",
         confirm: "확인",
-        broadcast: "전송요청이 네트워크에 전파되었습니다",
-        again: "전송요청 추가",
-        see: "전송내역 보기",
-        available: "사용가능: ",
-        broadcasting: "처리중..."
+        broadcasting: "처리중...",
+        broadcast: "거래가 네트워크에 전파되었습니다",
+        again: "추가 거래",
+        see: "내 전송내역 보기",
+        close: "닫기"
     },
     transaction: {
+        confirm: "거래를 승인하세요",
+        broadcast_success: "거래가 처리되었습니다",
+        broadcast_fail: "거래를 처리할 수 없음: %(message)s",
+        broadcasting: "Broadcasting transaction..",
+        broadcasting_short: "Broadcasting..",
         sent: "전송됨",
         to: "받는 사람",
         received: "수신됨",
@@ -142,12 +159,12 @@ module.exports = {
         collateral: "담보",
         coll_ratio: "초기 담보 비율",
         coll_maint: "담보 유지 비율",
-        create_key: "공개키 생성",
+        "create_key": "공개키 생성",
         reg_account: "계정 등록",
         was_reg_account: "다음 계정에 의해 등록됨",
         create_asset: "자산 생성",
-        limit_order: "매도주문 요청",
-        limit_order_buy: "매수주문 요청",
+        limit_order_sell: "Placed order #%(num)s to sell %(sell_amount)s at ",
+        limit_order_buy: "Placed order #%(num)s to buy %(buy_amount)s at ",
         limit_order_cancel: "주문 취소",
         short_order: "공매도주문 요청",
         short_order_cancel: "공매도 취소",
@@ -196,6 +213,15 @@ module.exports = {
         create_worker: "Created a worker with a pay of",
         custom: "Created a custom operation",
         order_id: "주문 ID",
+        balance_claim: "Claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
+        balance_owner: "잔고 소유자 키",
+        balance_id: "잔고 ID",
+        deposit_to: "계정으로 입금 처리됨",
+        claimed: "총 요청액",
+        borrow_amount: "대출 금액",
+        funding_account: "Funding account",
+        delta_collateral: "담보금 변경",
+        delta_debt: "대출액 변경",        
         trxTypes: {
             transfer: "전송",
             limit_order_create: "주문",
@@ -235,16 +261,7 @@ module.exports = {
             assert: "Assert operation",
             balance_claim: "잔고 요청",
             override_transfer: "Override transfer"
-        },
-        confirm: "거래를 승인하세요",
-        broadcast_success: "거래가 처리되었습니다",
-        broadcast_fail: "거래를 처리할 수 없음: %(message)s",
-        limit_order_sell: "Placed order #%(num)s to sell %(sell_amount)s at %(sell_price)s",
-        balance_claim: "Claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
-        balance_owner: "잔고 소유자 키",
-        balance_id: "잔고 ID",
-        deposit_to: "계정으로 입금 처리됨",
-        claimed: "총 요청액"
+        }
     },
     explorer: {
         accounts: {
@@ -252,7 +269,7 @@ module.exports = {
         },
         blocks: {
             title: "블록체인",
-            globals: "총괄 매개변수",
+            globals: "전체 매개변수",
             recent: "최근 블록"
         },
         block: {
@@ -264,9 +281,9 @@ module.exports = {
             previous: "이전",
             previous_secret: "이전 비밀해쉬",
             next_secret: "다음 비밀해쉬",
-            op: "Operation",
+            op: "작업",
             trx: "거래",
-            op_type: "Operation type",
+            op_type: "작업 유형",
             fee_payer: "수수료 지불 계정",
             key: "공개키",
             transactions: "거래 수",
@@ -308,7 +325,7 @@ module.exports = {
             title: "대표자"
         },
         workers: {
-            title: "직원"
+            title: "예산 항목"
         },
         proposals: {
             title: "제안서"
@@ -322,13 +339,9 @@ module.exports = {
         unit: "선호 화폐단위",
         confirmMarketOrder: "주문시 주문확인을 함",
         locale: "언어 전환",
-        confirm_yes: "Always",
-        confirm_no: "Never",
-        always_confirm: "Always ask for confirmation"
-    },
-    pagination: {
-        newer: "Newer",
-        older: "Older"
+        confirm_yes: "항상",
+        confirm_no: "사용안함",
+        always_confirm: "항상 확인을 함"
     },
     footer: {
         title: "그래핀",
@@ -361,5 +374,10 @@ module.exports = {
         core_rate: "Core rate",
         supply: "공급량",
         search: "찾기"
+    },
+    wallet: {
+        title: "지갑",
+        confirm: "비밀번호 확인",
+        password: "비밀번호"
     }
 };
