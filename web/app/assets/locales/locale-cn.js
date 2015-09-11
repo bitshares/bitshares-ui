@@ -41,6 +41,10 @@ module.exports = {
             fees_pending: "待付金额",
             fees_vested: "待解冻金额",
             in_orders: "委单冻结金额 %(core_asset)s ",
+            unknown: "未知的会员",
+            lifetime: "终身会员",
+            basic: "普通会员",
+            annual: "年度订阅者"
         },
         connections: {
             known: "Known by",
