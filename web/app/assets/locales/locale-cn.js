@@ -47,7 +47,7 @@ module.exports = {
             annual: "年度订阅者"
         },
         connections: {
-            known: "Known by",
+            known: "识别为",
             black: "被屏蔽"
         },
         asset: "资产",
@@ -92,9 +92,9 @@ module.exports = {
             add_witness_label: "见证人"
         },
         options: {
-            num_witnesses: "Desired Witnesses",
-            num_committee: "Desired Committee Members",
-            memo_key: "Memo Key"
+            num_witnesses: "信任见证人",
+            num_committee: "信任受托人",
+            memo_key: "备注公钥"
         },
         upgrade: "升级账户",
         unlink: "取消关联",
@@ -102,13 +102,16 @@ module.exports = {
         pay: "向他付款",
         overview: "概述",
         history: "交易历史",
-        payees: "付款人",
+        payees: "收款人",
         permissions: "权限",
         voting: "投票",
         orders: "订单",
         select_placeholder: "选择账户...",
         errors: {
-            not_found: "账户 %(name)s 不存在, 你确定输入正确么?"
+            not_found: "账户 %(name)s 不存在, 你确定输入正确么?",
+            invalid: "非法的账户名",
+            unknown: "未知的账户",
+            not_yours: "不是你的账户"
         }
     },
     transfer: {
