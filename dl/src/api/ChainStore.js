@@ -866,7 +866,7 @@ class ChainStore
       {
          let asset_id = asset_prefix + object.id.substring( asset_dynamic_data_prefix.length )
          let asset_obj = this.objects_by_id.get( asset_id );
-         asset_obj = asset_obj.set( 'dynamic', current );
+         if(asset_obj) asset_obj = asset_obj.set( 'dynamic', current );
          this.objects_by_id = this.objects_by_id.set( asset_id, asset_obj );
       }
 
