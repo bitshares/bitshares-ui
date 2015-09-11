@@ -344,7 +344,7 @@ module.exports = {
         loading: "载入中..."
     },
     exchange: {
-        price_history: "Price History",
+        price_history: "价格历史",
         order_depth: "订单深度",
         market_history: "市场历史",
         balance: "我的余额",
@@ -353,21 +353,26 @@ module.exports = {
         total: "Total",
         value: "Value",
         price: "Price",
-        latest: "Latest Price",
+        latest: "最新价格",
         call: "Call Price",
         volume: "成交量",
         spread: "Spread",
-        quantity: "Amount",
-        buy: "Buy",
-        sell: "Sell",
-        confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-        confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
+        quantity: "数量",
+        buy: "买入",
+        sell: "卖出",
+        confirm_buy: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
+        confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s "
     },
     markets: {
         choose_base: "选择基准资产",
         filter: "筛选",
-        core_rate: "Core rate",
+        core_rate: "CORE 汇率",
         supply: "供应量",
         search: "搜索"
+    },
+    wallet: {
+        title: "钱包",
+        confirm: "确认密码",
+        password: "密码"
     }
 };
