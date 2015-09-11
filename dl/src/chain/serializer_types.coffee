@@ -93,12 +93,15 @@ Types.int64 =
     fromByteBuffer:(b)->
         b.readInt64()
     appendByteBuffer:(b, object)->
+        v.required object
         b.writeInt64 v.to_long object
         return
     fromObject:(object)->
+        v.required object
         v.to_long object
     toObject:(object, debug = {})->
         return "0" if debug.use_default and object is undefined
+        v.required object
         v.to_long(object).toString()
 
 Types.uint64 =
@@ -119,10 +122,12 @@ Types.string =
         b_copy = b.copy(b.offset, b.offset + len); b.skip len
         new Buffer(b_copy.toBinary(), 'binary')
     appendByteBuffer:(b, object)->
+        v.required object
         b.writeVarint32(object.length)
         b.append(object.toString('binary'), 'binary')
         return
     fromObject:(object)->
+        v.required object
         new Buffer object
     toObject:(object, debug = {})->
         return "" if debug.use_default and object is undefined
@@ -138,18 +143,19 @@ Types.bytes = (size)->
             b_copy = b.copy(b.offset, b.offset + size); b.skip size
             new Buffer(b_copy.toBinary(), 'binary')
     appendByteBuffer:(b, object)->
+        v.required object
         if size is undefined
             b.writeVarint32(object.length)
-            b.append(object.toString('binary'), 'binary')
-        else
-            b.append(object.toString('binary'), 'binary')
+        b.append(object.toString('binary'), 'binary')
         return
     fromObject:(object)->
+        v.required object
         new Buffer object, 'hex'
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             zeros=(num)-> new Array( num ).join( "00" )
             return zeros size
+        v.required object
         object.toString 'hex'
 
 Types.bool =
@@ -186,16 +192,19 @@ Types.array = (st_operation)->
         for i in [0...size] by 1
             st_operation.fromByteBuffer b
     appendByteBuffer:(b, object)->
+        v.required object
         b.writeVarint32 object.length
         for o in object
             st_operation.appendByteBuffer b, o
         return
     fromObject:(object)->
+        v.required object
         for o in object
             st_operation.fromObject o
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return [ st_operation.toObject(object, debug) ]
+        v.required object
         for o in object
             st_operation.toObject o, debug
 
@@ -205,10 +214,12 @@ Types.time_point_sec =
         b.writeUint32 object
         return
     fromObject:(object)->
+        v.required object
         Math.round( (new Date(object)).getTime() / 1000 )
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return (new Date(0)).toISOString().split('.')[0]
+        v.required object
         int = parseInt object
         v.require_range 0,0xFFFFFFFF,int, "uint32 #{object}"
         (new Date(int*1000)).toISOString().split('.')[0]
@@ -251,16 +262,19 @@ Types.fixed_array = (count, st_operation)->
         for i in [0...count] by 1
             st_operation.fromByteBuffer b
     appendByteBuffer:(b, object)->
+        v.required object unless count is 0
         for i in [0...count] by 1
             st_operation.appendByteBuffer b, object[i]
         return
     fromObject:(object)->
+        v.required object unless count is 0
         for i in [0...count] by 1
             st_operation.fromObject object[i]
     toObject:(object, debug = {})->
         return if debug.use_default and object is undefined
             for i in [0...count] by 1
                 st_operation.toObject undefined, debug
+        v.required object unless count is 0
         for i in [0...count] by 1
             st_operation.toObject object[i], debug
 
@@ -272,6 +286,7 @@ id_type = (reserved_spaces, object_type)->
     fromByteBuffer:(b)->
         b.readVarint32()
     appendByteBuffer:(b, object)->
+        v.required object
         object = object.resolve if object.resolve isnt undefined
         # convert 1.2.n into just n
         if /^[0-9]+\.[0-9]+\.[0-9]+$/.test object
@@ -279,6 +294,7 @@ id_type = (reserved_spaces, object_type)->
         b.writeVarint32 object
         return
     fromObject:(object)->
+        v.required object
         object = object.resolve if object.resolve isnt undefined
         if v.is_digits object
             return v.to_number object
@@ -287,6 +303,7 @@ id_type = (reserved_spaces, object_type)->
         object_type_id = chain_types.object_type[object_type]
         if debug.use_default and object is undefined
             return "#{reserved_spaces}.#{object_type_id}.0"
+        v.required object
         object = object.resolve if object.resolve isnt undefined
         if /^[0-9]+\.[0-9]+\.[0-9]+$/.test object
             object = v.get_instance reserved_spaces, object_type, object
@@ -300,16 +317,19 @@ Types.object_id_type =
     fromByteBuffer:(b)->
         ObjectId.fromByteBuffer b
     appendByteBuffer:(b, object)->
+        v.required object
         object = object.resolve if object.resolve isnt undefined
         object = ObjectId.fromString object
         object.appendByteBuffer b
         return
     fromObject:(object)->
+        v.required object
         object = object.resolve if object.resolve isnt undefined
         ObjectId.fromString object
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "0.0.0"
+        v.required object
         if object.resolve isnt undefined
             object = object.resolve
         object = ObjectId.fromString object
@@ -323,11 +343,12 @@ Types.vote_id =
         type: value & @TYPE
         id: value & @ID
     appendByteBuffer:(b, object)->
+        v.required object
         value = object.id << 8 | object.type
         b.writeUint32 value
         return
     fromObject:(object)->
-        v.required object, "vote_id"
+        v.required object, "(type vote_id)"
         v.require_test /^[0-9]+:[0-9]+$/, object, "vote_id format #{object}" 
         [type, id] = object.split ':'
         v.require_range 0,0xff,type,"vote type #{object}"
@@ -337,6 +358,7 @@ Types.vote_id =
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "0:0"
+        v.required object
         object.type + ":" + object.id
     compare: (a, b) ->
         parseInt(a.id) - parseInt(b.id)
@@ -384,6 +406,7 @@ Types.static_variant = (_st_operations)->
             st_operation.fromByteBuffer b
         ]
     appendByteBuffer:(b, object)->
+        v.required object
         type_id = object[0]
         st_operation = @st_operations[type_id]
         v.required st_operation, "operation #{type_id}"
@@ -391,6 +414,7 @@ Types.static_variant = (_st_operations)->
         st_operation.appendByteBuffer b, object[1]
         return
     fromObject:(object)->
+        v.required object
         type_id = object[0]
         st_operation = @st_operations[type_id]
         v.required st_operation, "operation #{type_id}"
@@ -401,6 +425,7 @@ Types.static_variant = (_st_operations)->
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return [0, @st_operations[0].toObject(undefined, debug)]
+        v.required object
         type_id = object[0]
         st_operation = @st_operations[type_id]
         v.required st_operation, "operation #{type_id}"
@@ -437,6 +462,7 @@ Types.map = (key_st_operation, value_st_operation)->
             value_st_operation.appendByteBuffer b, o[1]
         return
     fromObject:(object)->
+        v.required object
         @validate (for o in object
             [
                 key_st_operation.fromObject o[0]
@@ -450,6 +476,7 @@ Types.map = (key_st_operation, value_st_operation)->
                     value_st_operation.toObject(undefined, debug)
                 ]
             ]
+        v.required object
         @validate (for o in object
             [
                 key_st_operation.toObject o[0], debug
@@ -464,18 +491,22 @@ Types.public_key =
     fromByteBuffer:(b)->
         fp.public_key b
     appendByteBuffer:(b, object)->
+        v.required object
         fp.public_key b, Types.public_key._to_public object
         return
     fromObject:(object)->
+        v.required object
         return object if object.Q
         PublicKey.fromPublicKeyString object
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
             return "GPHXyz...public_key"
+        v.required object
         Types.public_key._to_public(object).toPublicKeyString()
 
 Types.address =
     _to_address:(object)->
+        v.required object
         return object if object.addy
         Address.fromString(object)
     fromByteBuffer:(b)->

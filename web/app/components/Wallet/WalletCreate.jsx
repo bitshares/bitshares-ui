@@ -2,7 +2,7 @@ import React, {Component} from "react"
 
 import {BackupRestore} from "components/Wallet/Backup"
 import WalletDb from "stores/WalletDb"
-import WalletStore from "stores/WalletStore"
+import WalletManagerStore from "stores/WalletManagerStore"
 import WalletActions from "actions/WalletActions"
 import NotificationSystem from 'react-notification-system'
 import notify from 'actions/NotificationActions'
@@ -13,13 +13,8 @@ import cname from "classnames"
 @connectToStores
 class WalletCreate extends Component {
 
-    constructor() {
-        super()
-        this.state = { show: "create_new_wallet" }
-    }
-    
     static getStores() {
-        return [WalletStore];
+        return [WalletManagerStore];
     }
     
     static getPropsFromStores() {
@@ -27,75 +22,25 @@ class WalletCreate extends Component {
     }
     
     render() {
-        
         if(WalletDb.getWallet() && this.props.children)
             return <div>{this.props.children}</div>
         
-        return (
-            <div className="grid-block vertical">
-                <div className="grid-container">
-                    <div className="content-block center-content">
-                        <div className="content-block">
-                                        <h1>Welcome to Graphene</h1>
-                                        <h3>Please create a new wallet first:</h3>
-                        </div>
-                        <div className="content-block">
-                        
-                        { this.state.show === "create_new_wallet" ? <span>
-                            
-                            <CreateNewWallet />
-                            
-                            <br/>
-                            <label><a onClick={this.uploadBackupClick.bind(this)}>
-                                Upload a Backup</a></label>
-
-                        </span> : null}
-                        
-                        { this.state.show === "upload_backup" ? <span>
-                            
-                            <UploadWalletBackup />
-                            
-                            <br/>
-                            <label><a onClick={this.createNewWalletClick.bind(this)}>
-                                Create new Wallet</a></label>
-
-                        </span>: null}
-                                        
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-    
-    uploadBackupClick() {
-        this.setState({show: "upload_backup"})
-    }
-    
-    createNewWalletClick() {
-        this.setState({show: "create_new_wallet"})
-    }
-    
-}
-
-class UploadWalletBackup extends Component {
-    
-    render() {
         return <span>
-            <BackupRestore/>
+            <CreateNewWallet />
         </span>
     }
+    
 }
 
 @connectToStores
 class CreateNewWallet extends Component {
     
     static getStores() {
-        return [WalletStore]
+        return [WalletManagerStore]
     }
     
     static getPropsFromStores() {
-        var wallet = WalletStore.getState()
+        var wallet = WalletManagerStore.getState()
         return wallet
     }
     
@@ -119,10 +64,15 @@ class CreateNewWallet extends Component {
         
         if(this.state.create_submitted &&
             this.state.wallet_public_name === this.props.current_wallet) {
-            return <h2>Wallet Created</h2>
+            return <div>
+                <h4>Wallet Created</h4>
+                <span onClick={this.onDone.bind(this)}
+                    className="button success">Done</span>
+            </div>
         }
         
-        return (
+        return (<span>
+            <h3>Create Wallet</h3>
             <form
                 className="name-form"
                 onSubmit={this.onSubmit.bind(this)}
@@ -136,12 +86,12 @@ class CreateNewWallet extends Component {
                     <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
                     <div>{errors.password_match || errors.password_length}</div>
                     <br/>
-                    { has_wallet ? <div className={cname({"has-error": errors.wallet_public_name})}>
+                    { has_wallet ? <div>
                         <label>Wallet Name</label>
                         <input type="text" id="wallet_public_name"
                             value={this.state.wallet_public_name}
                         />
-                        <div>{errors.wallet_public_name}</div>
+                    <div className="has-error">{errors.wallet_public_name}</div>
                         <br/>
                     </div>:null}
                 </div>
@@ -150,20 +100,20 @@ class CreateNewWallet extends Component {
                     <button className={cname("button",{disabled: !(this.state.password && this.state.isValid)})}>Create</button>
                 </div>
             </form>
-        )
+        </span>)
     }
 
     onSubmit(e) {
         e.preventDefault()
         var wallet_name = this.state.wallet_public_name
-        WalletActions.createWallet(wallet_name, this.state.password)
+        WalletActions.setWallet(wallet_name, this.state.password)
         this.setState({create_submitted: true})
     }
     
     validate() {
         let state = this.state
         let errors = state.errors
-        let wallet_names = WalletStore.getState().wallet_names
+        let wallet_names = WalletManagerStore.getState().wallet_names
         errors.password_length = state.password.length === 0 || state.password.length > 7 ? null : "Password must be longer than 7 characters";
         
         errors.wallet_public_name = 
@@ -207,6 +157,9 @@ class CreateNewWallet extends Component {
         this.validate()
     }
     
+    onDone() {
+        window.history.back()
+    }
 }
 
 export default WalletCreate

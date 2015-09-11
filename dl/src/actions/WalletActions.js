@@ -18,20 +18,23 @@ var api = Apis.instance()
 
 class WalletActions {
 
-    restore(wallet_name, wallet_object) {
+    /** Restore and make active a new wallet_object. */
+    restore(wallet_name = "default", wallet_object) {
         wallet_name = wallet_name.toLowerCase()
         this.dispatch({wallet_name, wallet_object})
     }
     
-    createWallet(wallet_name, password) {
-        this.dispatch({wallet_name, password})
+    /** Make an existing wallet active or create a wallet (and make it active).
+        If <b>wallet_name</b> does not exist, provide a <b>create_wallet_password</b>.
+    */
+    setWallet(wallet_name, create_wallet_password) {
+        if( ! wallet_name) wallet_name = "default"
+        return new Promise( resolve => {
+            this.dispatch({wallet_name, create_wallet_password, resolve})
+        })
     }
     
-    changeWallet(wallet_name) {
-        this.dispatch({wallet_name})
-    }
-    
-    createBrainKeyAccount(
+    createAccount(
         account_name,
         registrar,
         referrer,

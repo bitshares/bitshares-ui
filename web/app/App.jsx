@@ -46,10 +46,10 @@ import NotificationStore from "stores/NotificationStore";
 // import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
-import ExistingAccount from "./components/Wallet/ExistingAccount";
-import Wallet from "./components/Wallet/Wallet";
-import WalletCreate from "./components/Wallet/WalletCreate";
-import ImportKeys from "./components/Wallet/ImportKeys";
+import ExistingAccount,{ExistingAccountOptions} from "components/Wallet/ExistingAccount";
+import WalletCreate from "components/Wallet/WalletCreate";
+import ImportKeys from "components/Wallet/ImportKeys";
+import {ImportBrainkey} from "components/Wallet/Brainkey"
 import WalletDb from "stores/WalletDb";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import Console from "./components/Console/Console";
@@ -57,7 +57,9 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
 import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
-import WalletStore from "stores/WalletStore";
+import WalletManagerStore from "stores/WalletManagerStore";
+import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
+import BalanceClaim from "components/Wallet/BalanceClaim"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -119,21 +121,23 @@ class App extends React.Component {
     // }
 
     render() {
-        let content = (
-            <div className="grid-frame vertical">
-                <HeaderContainer isUnlocked={this.state.isUnlocked}/>
-                <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                {/*<AccountNotifications/>*/}
-
-                <div className="grid-block vertical">
-                    <RouteHandler />
-                </div>
-                <Footer/>
-                <ReactTooltip type="dark" effect="solid"/>
-            </div>
-        );
+        let content = null;
         if (this.state.loading) {
             content = <LoadingIndicator />;
+        } else {
+            content = (
+                <div className="grid-frame vertical">
+                    <HeaderContainer isUnlocked={this.state.isUnlocked}/>
+                    <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
+                    {/*<AccountNotifications/>*/}
+
+                    <div className="grid-block vertical">
+                        <RouteHandler />
+                    </div>
+                    <Footer/>
+                    <ReactTooltip type="dark" effect="solid"/>
+                </div>
+            );
         }
         return (
             <div>
@@ -172,7 +176,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
                 }).catch((error) => {
                     console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
                 }),
-                WalletStore.init()
+                WalletManagerStore.init()
             ]).then(()=> {
                 callback();
             })
@@ -199,7 +203,16 @@ let routes = (
             <DefaultRoute handler={Delegates}/>
             <Route name="delegate" path=":name" handler={Delegate}/>
         </Route>
-        <Route name="wallet" path="wallet" handler={Wallet}/>
+        <Route name="wallet" path="wallet" handler={WalletManager}>
+            {/* wallet management console */}
+            <DefaultRoute handler={WalletOptions}/>
+            <Route name="wmc-backup-restore" path="backup/restore" handler={BackupRestore}/>
+            <Route name="wmc-import-keys" path="import-keys" handler={ImportKeys}/>
+            <Route name="wmc-provide-brainkey" path="provide-brainkey" handler={ImportBrainkey}/>
+            <Route name="wmc-wallet-create" path="wallet/create" handler={WalletCreate}/>
+            <Route name="wmc-backup-create" path="backup/create" handler={BackupCreate}/>
+            <Route name="wmc-backup-verify" path="backup/verify" handler={BackupVerify}/>
+        </Route>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={TransferPage}/>
@@ -211,8 +224,14 @@ let routes = (
         <Route name="asset" path="asset/:symbol" handler={Asset}/>
         <Route name="tx" path="tx" handler={Transaction}/>
         <Route name="create-account" path="create-account" handler={CreateAccount}/>
-        <Route name="existing-account" path="existing-account" handler={ExistingAccount}/>
-        <Route name="import-keys" path="import-keys" handler={ImportKeys}/>
+        <Route name="existing-account" path="existing-account" handler={ExistingAccount}>
+            <DefaultRoute handler={ExistingAccountOptions}/>
+            <Route name="welcome-import-backup" path="import-backup" handler={BackupRestore}/>
+            <Route name="welcome-import-keys" path="import-keys" handler={ImportKeys}/>
+            <Route name="welcome-provide-brainkey" path="provide-brainkey" handler={ImportBrainkey}/>
+            <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaim}/>
+        </Route>
+        
         <Route name="account" path="/account/:account_name" handler={AccountPage}>
             <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
@@ -223,10 +242,7 @@ let routes = (
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
-        <Route name="backup" path="backup" handler={Backup}/>
-        <Route name="backup-create" path="backup/create" handler={BackupCreate}/>
-        <Route name="backup-verify" path="backup/verify" handler={BackupVerify}/>
-        <Route name="backup-restore" path="backup/restore" handler={BackupRestore}/>
+        
     </Route>
 );
 

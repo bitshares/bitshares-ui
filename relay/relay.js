@@ -25,7 +25,7 @@ class RelayNode {
    }
 
    addKnownTransaction( message ) {
-      if( !this.isKnownTransaction() ) 
+      if( !this.isKnownTransaction(message) ) 
       {
          this.known_trxsa.add(message)
          return true;

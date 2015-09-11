@@ -19,7 +19,7 @@ import lookup from "chain/lookup";
 import v from "chain/serializer_validation";
 
 
-var TRACE = true
+var TRACE = false
 
 class BalanceClaim extends Component {
 

@@ -40,6 +40,8 @@ const isKeyRefsType = checkChainType(ChainTypes.ChainKeyRefs);
 const isAddressBalancesType = checkChainType(ChainTypes.ChainAddressBalances);
 const isAssetType = checkChainType(ChainTypes.ChainAsset);
 const isObjectsListType = checkChainType(ChainTypes.ChainObjectsList);
+const isAccountsListType = checkChainType(ChainTypes.ChainAccountsList);
+
 function checkIfRequired(t) {
     for(let k in ChainTypes) {
         let v = ChainTypes[k];
@@ -67,6 +69,7 @@ function BindToChainState(options) {
                     this.chain_address_balances = [];
                     this.chain_assets = [];
                     this.chain_objects_list = [];
+                    this.chain_accounts_list = [];
                     this.required_props = [];
                     this.all_chain_props = this.chain_objects;
                 } else {
@@ -76,6 +79,7 @@ function BindToChainState(options) {
                     this.chain_address_balances = prop_types_array.filter(_.flow(secondEl, isAddressBalancesType)).map(firstEl);
                     this.chain_assets = prop_types_array.filter(_.flow(secondEl, isAssetType)).map(firstEl);
                     this.chain_objects_list = prop_types_array.filter(_.flow(secondEl, isObjectsListType)).map(firstEl);
+                    this.chain_accounts_list = prop_types_array.filter(_.flow(secondEl, isAccountsListType)).map(firstEl);
                     this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
                     this.all_chain_props = [...this.chain_objects,
                                             ...this.chain_accounts,
@@ -236,6 +240,41 @@ function BindToChainState(options) {
                         if(this.state[key]) new_state[key] = null;
                     }
                 }
+
+                for( let key of this.chain_accounts_list )
+                {
+                    //console.log("-- Wrapper.update -->", this.chain_accounts_list);
+                    let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
+                    if(prop) {
+                        let prop_prev_state = this.state[key];
+                        let prop_new_state = [];
+                        let changes = false;
+                        if(!prop_prev_state || prop_prev_state.length !== prop.size) {
+                            prop_prev_state = [];
+                            changes = true;
+                        }
+                        prop.forEach( (obj_id, index) => {
+                            //console.log("-- Wrapper.chain_accounts_list item -->", obj_id, index);
+                            if(obj_id) {
+                                let new_obj = ChainStore.getAccount(obj_id);
+                                if(new_obj) ++resolved_objects_counter;
+                                if(prop_prev_state[index] !== new_obj) {
+                                    changes = true;
+                                    prop_new_state[index] = new_obj;
+                                } else {
+                                    prop_new_state[index] = prop_prev_state[index];
+                                }
+                            }
+                            ++all_objects_counter;
+                        });
+                        //console.log("-- Wrapper.chain_accounts_list: ", prop_new_state);
+                        if(changes) new_state[key] = prop_new_state;
+                    } else {
+                        if(this.state[key]) new_state[key] = null;
+                    }
+                }
+
+
                 //console.log("----- Wrapper update ----->", this.all_chain_props, this.all_chain_props.length, all_objects_counter, resolved_objects_counter);
                 if(all_objects_counter <= resolved_objects_counter) new_state.resolved = true;
                 this.setState( new_state )

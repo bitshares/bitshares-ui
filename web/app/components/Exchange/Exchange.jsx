@@ -11,12 +11,12 @@ import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 // import Tabs from "react-foundation-apps/src/tabs";
 import {debounce} from "lodash";
-// import ConfirmModal from "../Modal/ConfirmModal";
+import BorrowModal from "../Modal/BorrowModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
-// import Wallet from "components/Wallet/Wallet";
+// import Wallet from "transitionTo";
 // import BlockchainStore from "stores/BlockchainStore";
 // import FormattedAsset from "../Utility/FormattedAsset";
 // import WalletDb from "stores/WalletDb";
@@ -27,7 +27,7 @@ import ChainStore from "api/ChainStore";
 
 require("./exchange.scss");
 
-@BindToChainState({keep_updating: false, component: "Exchange"})
+@BindToChainState({keep_updating: false})
 class Exchange extends React.Component {
     constructor() {
         super();
@@ -317,6 +317,14 @@ class Exchange extends React.Component {
         }
     }
 
+    _borrowQuote() {
+        this.refs.borrowQuote.show();
+    }
+
+    _borrowBase() {
+        this.refs.borrowBase.show();
+    }
+
     render() {
         let { currentAccount, limit_orders,
             totalBids, flat_asks, flat_bids, bids, asks, account, quoteAsset, baseAsset } = this.props;
@@ -324,7 +332,7 @@ class Exchange extends React.Component {
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            quoteSymbol, baseSymbol;
+            coreBalance = null, quoteSymbol, baseSymbol;
 
         if (quoteAsset.size && baseAsset.size && account.size) {
             base = baseAsset.toJS();
@@ -333,7 +341,7 @@ class Exchange extends React.Component {
             quoteSymbol = quote.symbol;
 
             accountBalance = account.get("balances").toJS();
-
+            
             if (accountBalance) {
                 for (var id in accountBalance) {
                     if (id === quote.id) {
@@ -342,11 +350,20 @@ class Exchange extends React.Component {
                     if (id === base.id) {
                         baseBalance = accountBalance[id];
                     }
+
+                    if (id === "1.3.0") {
+                        coreBalance = accountBalance[id];
+                    }
                 }
             } 
 
         }
 
+        let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
+        let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
+
+
+        console.log("quoteIsBitAsset:", quoteIsBitAsset, "baseIsBitAsset:", baseIsBitAsset);
         let lowestAsk = asks[0] ? asks[0].price_full : 0;
         let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
 
@@ -420,6 +437,7 @@ class Exchange extends React.Component {
 
                         {/* Buy/Sell forms */}
                         <div className="grid-block shrink no-padding" style={{ flexGrow: "0" }} >
+                            {false ? <div><button onClick={this._borrowQuote.bind(this)} className="button success">Borrow {quoteAsset.get("symbol")}</button></div> : null}
                             {quote && base ?
                             <BuySell
                                 className="small-6"
@@ -439,6 +457,7 @@ class Exchange extends React.Component {
                                 totalPrecision={base.precision}
                                 currentPrice={lowestAsk}
                             /> : null}
+                            {false ? <div><button onClick={this._borrowBase.bind(this)} className="button success">Borrow {baseAsset.get("symbol")}</button></div> : null}
                             {quote && base ?
                             <BuySell
                                 className="small-6"
@@ -513,7 +532,28 @@ class Exchange extends React.Component {
                             baseSymbol={baseSymbol}
                             quoteSymbol={quoteSymbol}/>
                     </div>
-
+                    {quoteIsBitAsset ?
+                        <BorrowModal
+                            modalId="quote_modal"
+                            ref="borrowQuote"
+                            asset={quoteAsset.get("id")}
+                            bitasset_data={quoteAsset.get("bitasset_data_id")}
+                            bitasset_balance={quoteBalance}
+                            backing_asset={"1.3.0"}
+                            backing_balance={coreBalance}
+                            account={account.get("id")}
+                         /> : null}
+                    {baseIsBitAsset ?
+                        <BorrowModal
+                            modalId="base_modal"
+                            ref="borrowBase"
+                            asset={baseAsset.get("id")}
+                            bitasset_data={baseAsset.get("bitasset_data_id")}
+                            bitasset_balance={baseBalance}
+                            backing_asset={"1.3.0"}
+                            backing_balance={coreBalance}
+                            account={account.get("id")}
+                        /> : null}
                 {/* End of Second Vertical Block */}
                 </div>
         );

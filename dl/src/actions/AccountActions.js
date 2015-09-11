@@ -78,7 +78,7 @@ class AccountActions {
         referrer,
         referrer_percent = 100
     ) {
-        return WalletActions.createBrainKeyAccount(
+        return WalletActions.createAccount(
             account_name,
             registrar,
             referrer,

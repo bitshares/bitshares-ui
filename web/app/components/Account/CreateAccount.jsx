@@ -12,7 +12,7 @@ import AccountSelect from "../Forms/AccountSelect";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
-
+import WalletActions from "actions/WalletActions"
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -74,10 +74,9 @@ class CreateAccount extends React.Component {
     }
 
     createWallet(password) {
-        return WalletDb.onCreateWallet(
-            password,
-            null,
-            true
+        return WalletActions.setWallet(
+            "default", //wallet name
+            password
         ).then(()=> {
             console.log("Congratulations, your wallet was successfully created.");
         }).catch(err => {

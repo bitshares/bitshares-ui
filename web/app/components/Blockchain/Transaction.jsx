@@ -321,17 +321,22 @@ class Transaction extends React.Component {
                 case "call_order_update":
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="transaction.order_id" /></td>
-                            <td>{op[1].order}</td>
+                            <td><Translate component="span" content="transaction.funding_account" /></td>
+                            <td>{this.linkToAccount(op[1].funding_account)}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="explorer.block.fee_payer" /></td>
-                            <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
+                            <td><Translate component="span" content="transaction.delta_collateral" /></td>
+                            <td><FormattedAsset amount={op[1].delta_collateral.amount} asset={op[1].delta_collateral.asset_id} /></td>
                         </tr>
                     );
-
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.delta_debt" /></td>
+                            <td><FormattedAsset amount={op[1].delta_debt.amount} asset={op[1].delta_debt.asset_id} /></td>
+                        </tr>
+                    );
                     break;
 
                 case "key_create":

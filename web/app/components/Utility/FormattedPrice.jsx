@@ -57,8 +57,8 @@ class FormattedPrice extends React.Component {
         // console.log(value);
         return (
                 <span>
-                   <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={base_asset.get("precision")} />
-                   <span onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + " / " + quote_asset.get("symbol")}</span>
+                   <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={base_asset.get("precision") + quote_asset.get("precision")} />
+                   <a onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + " / " + quote_asset.get("symbol")}</a>
                </span>
          )
     }

@@ -8,16 +8,17 @@ class DashboardContainer extends React.Component {
     render() {
         return (
             <AltContainer
-                stores={[AccountStore, AssetStore]}
+                stores={[AccountStore]}
                 inject={{
-                linkedAccounts: () => {
+                /** bind to chain state will use this to trigger updates to the dashboard */
+                resolvedLinkedAccounts: () => {
+                    console.log( "Linked Accounts: ", AccountStore.getState().linkedAccounts,  AccountStore.getState().linkedAccounts.toJS() );
                     return AccountStore.getState().linkedAccounts;
                 },
-                balances: () => {
-                    return AccountStore.getState().balances;
-                },
-                assets: () => {
-                    return AssetStore.getState().assets;
+                /** the dashboard only really needs the list of accounts */
+                linkedAccounts: () => {
+                    console.log( "Linked Accounts: ", AccountStore.getState().linkedAccounts,  AccountStore.getState().linkedAccounts.toJS() );
+                    return AccountStore.getState().linkedAccounts;
                 }
               }}>
                 <Dashboard/>

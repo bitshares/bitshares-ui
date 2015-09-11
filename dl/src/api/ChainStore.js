@@ -1,7 +1,7 @@
 import Immutable from "immutable";
 import utils from "../common/utils"
 import Apis from "../rpc_api/ApiInstances.js"
-import {object_type} from "../chain/chain_types";
+import {object_type,impl_object_type} from "../chain/chain_types";
 import validation from "common/validation"
 
 let op_history   = parseInt(object_type.operation_history, 10);
@@ -15,7 +15,9 @@ let account_object_type  = parseInt(object_type.account, 10);
 let asset_object_type  = parseInt(object_type.asset, 10);
 
 let order_prefix = "1." + limit_order + "."
-let balance_prefix = "1." + balance_type + "."
+let balance_prefix = "2." + parseInt(impl_object_type.account_balance,10) + "."
+let account_stats_prefix = "2." + parseInt(impl_object_type.account_statistics,10) + "."
+let asset_dynamic_data_prefix = "2." + parseInt(impl_object_type.asset_dynamic_data,10) + "."
 let vesting_balance_prefix = "1." + vesting_balance_type + "."
 let witness_prefix = "1." + witness_object_type + "."
 let worker_prefix = "1." + worker_object_type + "."
@@ -70,7 +72,6 @@ class ChainStore
 
    onUpdate( updated_objects ) /// map from account id to objects
    {
-      if(DEBUG) console.log( "updated objects: ", updated_objects )
       for( let a = 0; a < updated_objects.length; ++a )
       {
          for( let i = 0; i < updated_objects[a].length; ++i )
@@ -164,6 +165,7 @@ class ChainStore
 
       Apis.instance().db_api().exec( "lookup_asset_symbols", [ [id_or_symbol] ] )
           .then( asset_objects => {
+                 console.log( "lookup symbol ", id_or_symbol )
               if( asset_objects.length && asset_objects[0] )
                  this._updateObject( asset_objects[0], true )
               else
@@ -316,6 +318,7 @@ class ChainStore
       else if( validation.is_account_name( name_or_id ) )
       {
          let account_id = this.accounts_by_name.get( name_or_id )
+         if(account_id === null) return null; // already fetched and it wasn't found
          if( account_id === true ) // then a query is pending
             return undefined 
          if( account_id === undefined ) // then no query, fetch it
@@ -523,8 +526,10 @@ class ChainStore
       if( utils.is_object_id(name_or_id) ) 
       {
          let current = this.objects_by_id.get( name_or_id )
-         fetch_account = current === undefined
-         if( !fetch_account ) return current
+         if( current === null ) return undefined;
+         if( current === undefined )
+            this.objects_by_id = this.objects_by_id.set( name_or_id, null )
+         else return current;
       }
       else
       {
@@ -532,17 +537,22 @@ class ChainStore
             throw Error( "argument is not an account name: " + name_or_id )
 
          let account_id = this.accounts_by_name.get( name_or_id )
-         fetch_account = account_id === undefined
-         if( !fetch_account ) 
-            return this.objects_by_id.get( account_id )
+         if( account_id === undefined )
+            this.accounts_by_name = this.accounts_by_name.set( name_or_id, null );
+         if( account_id === null ) return undefined
+         else if( utils.is_object_id( account_id ) )
+            return this.getAccount(account_id);
       }
       
 
-      if( fetch_account ) {
+      if( true ) {
           //console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
-                 if(results.length === 0) return;
+                 if(results.length === 0) {
+                     this.objects_by_id = this.objects_by_id.set( name_or_id, null );
+                     return;
+                 }
                  let full_account = results[0][1]
                  if(DEBUG) console.log( "full_account: ", full_account )
 
@@ -564,28 +574,34 @@ class ChainStore
                  account.orders = new Immutable.Set()
                  account.vesting_balances = new Immutable.Set()
                  account.balances = new Immutable.Map()
+                 account.call_orders = new Immutable.Set()
 
-                 for( var i = 0; i < vesting_balances.length; ++i )
-                 {
-                    this._updateObject( vesting_balances[i], false )
-                    account.vesting_balances = account.vesting_balances.add( vesting_balances[i].id )
-                 }
-                 for( var i = 0; i < votes.length; ++i )
-                 {
-                    this._updateObject( votes[i], false )
-                 }
+                  account.vesting_balances = account.vesting_balances.withMutations(set => {
+                      vesting_balances.forEach(vb => {
+                          this._updateObject( vb, false );
+                          set.add( vb.id );
+                      });
+                  });
 
-                 for( var i = 0; i < full_account.balances.length; ++i )
-                 {
-                    let b = full_account.balances[i]
-                    this._updateObject( b, false )
-                    account.balances = account.balances.set( b.asset_type, full_account.balances[i].id )
-                 }
+                  votes.forEach(v => this._updateObject( v, false ));
+
+                  account.balances = account.balances.withMutations(map => {
+                      full_account.balances.forEach(b => {
+                          this._updateObject( b, false );
+                          map.set( b.asset_type, b.id );
+                      });
+                  });
+
+                  account.call_orders = account.call_orders.withMutations(set => {
+                      call_orders.forEach(co => {
+                          this._updateObject( co, false )
+                          set.add( co.id )
+                      });
+                  });
 
                  this._updateObject( statistics, false )
                  let updated_account = this._updateObject( account, false )
                  this.fetchRecentHistory( updated_account )
-
                  this.notifySubscribers()
          }, error => {
             console.log( "Error: ", error )
@@ -635,9 +651,19 @@ class ChainStore
     */
    fetchRecentHistory( account, limit = 100 )
    {
+      // console.log( "get account history: ", account )
       /// TODO: make sure we do not submit a query if there is already one
       /// in flight...
-        let account_id = account.get('id')
+        let account_id = account;
+        if( !utils.is_object_id(account_id) && account.toJS ) 
+           account_id = account.get('id')
+
+        if( !utils.is_object_id(account_id)  )
+           return
+        
+        account = this.objects_by_id.get(account_id)
+        if( !account ) return
+        
 
         let pending_request = this.account_history_requests.get(account_id)
         if( pending_request ) 
@@ -774,38 +800,74 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-      //console.log( "update: ", object )
+//      console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
+      if( !current ) 
+         current = Immutable.Map(); 
+      let prior   = current
       if( current === undefined || current === true )
          this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
       else
-         this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
-
-      if( object.id.substring(0,4) == balance_prefix )
       {
-         //console.log( "balance object update: ", object )
+         this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
+      }
+
+
+      if( object.id.substring(0,balance_prefix.length) == balance_prefix )
+      {
          let owner = this.objects_by_id.get( object.owner )
-         owner = owner.setIn( ['balances', object.asset_id ], object.id )
+         if( owner === undefined || owner === null ) 
+         {
+            owner = {id:object.owner, balances:{ } }
+            owner.balances[object.asset_type] = object.id
+            owner = Immutable.fromJS( owner )
+         }
+         else
+         {
+            let balances = owner.get( "balances" );
+            if( !balances ) 
+               owner = owner.set( "balances", Immutable.Map() )
+            owner = owner.setIn( ['balances',object.asset_type],  object.id )
+         }
          this.objects_by_id = this.objects_by_id.set( object.owner, owner  )
       }
-      else if( object.id.substring(0,4) == witness_prefix )
+      else if( object.id.substring(0,account_stats_prefix.length) == account_stats_prefix )
+      {
+        // console.log( "HISTORY CHANGED" )
+         let prior_most_recent_op = prior ? prior.get('most_recent_op') : "2.9.0"
+
+         if( prior_most_recent_op != object.most_recent_op ) {
+            this.fetchRecentHistory( object.owner );
+         }
+      }
+      else if( object.id.substring(0,witness_prefix.length) == witness_prefix )
       {
          this.witness_by_account_id.set( object.witness_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
       }
-      else if( object.id.substring(0,4) == committee_prefix )
+      else if( object.id.substring(0,committee_prefix.length) == committee_prefix )
       {
          this.committee_by_account_id.set( object.committee_member_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
       }
-      else if( object.id.substring(0,4) == account_prefix )
+      else if( object.id.substring(0,account_prefix.length) == account_prefix )
       {
          this.accounts_by_name = this.accounts_by_name.set( object.name, object.id )
       }
-      else if( object.id.substring(0,4) == asset_prefix )
+      else if( object.id.substring(0,asset_prefix.length) == asset_prefix )
       {
          this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
+         let dynamic = current.get( 'dynamic' );
+         if( !dynamic )
+            this.getObject( object.dynamic_asset_data_id );
+      }
+      else if( object.id.substring(0,asset_dynamic_data_prefix.length) == asset_dynamic_data_prefix )
+      {
+         let asset_id = asset_prefix + object.id.substring( asset_dynamic_data_prefix.length )
+         let asset_obj = this.objects_by_id.get( asset_id );
+         if(asset_obj) asset_obj = asset_obj.set( 'dynamic', current );
+         this.objects_by_id = this.objects_by_id.set( asset_id, asset_obj );
       }
 
       if( notify_subscribers )

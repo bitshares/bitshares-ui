@@ -25,6 +25,20 @@ ChainTypes.object_type=
     worker: 14
     balance: 15
 
+ChainTypes.impl_object_type=
+    global_property: 0
+    dynamic_global_property: 1
+    index_meta: 2
+    asset_dynamic_data: 3
+    asset_bitasset_data: 4
+    account_balance: 5
+    account_statistics: 6
+    transaction: 7
+    block_summary: 8
+    account_transaction_history: 9
+    blinded_balance: 10
+    chain_property: 11
+
 ChainTypes.vote_type=
     committee:0
     witness:1

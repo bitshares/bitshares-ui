@@ -102,7 +102,7 @@ class OrderBook extends React.Component {
 
         return (
                 <div className="left-order-book no-padding" style={{overflowY: "hidden"}}>
-                    <div className="table-container">
+                    <div className="table-container top">
                         <table className="table order-table table-hover text-right">
                             <thead className="headers">
                                 <tr>

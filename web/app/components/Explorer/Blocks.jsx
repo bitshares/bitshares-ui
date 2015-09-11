@@ -254,7 +254,7 @@ class Blocks extends React.Component {
                     </div>
                     <div className="grid-block text-center small-3">
                         <div className="grid-content no-overflow">
-                            <TransactionChart blocks={latestBlocks} />
+                            {<TransactionChart blocks={latestBlocks} />}
                         </div>
                     </div>
                     <div className="grid-block text-center small-3">
