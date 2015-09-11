@@ -93,7 +93,7 @@ module.exports = {
         options: {
             num_witnesses: "선호 증인 수",
             num_committee: "선호 위원 수",
-            memo_key: "메모 키",
+            memo_key: "메모 키"
         },
         upgrade: "계정 업그레이드",
         unlink: "연결해제",
