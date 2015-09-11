@@ -526,8 +526,10 @@ class ChainStore
       if( utils.is_object_id(name_or_id) ) 
       {
          let current = this.objects_by_id.get( name_or_id )
-         fetch_account = current === undefined
-         if( !fetch_account ) return current
+         if( current === null ) return undefined;
+         if( current === undefined )
+            this.objects_by_id = this.objects_by_id.set( name_or_id, null )
+         else return current;
       }
       else
       {
@@ -535,13 +537,15 @@ class ChainStore
             throw Error( "argument is not an account name: " + name_or_id )
 
          let account_id = this.accounts_by_name.get( name_or_id )
-         fetch_account = account_id === undefined
-         if( !fetch_account )
-            return this.objects_by_id.get( account_id )
+         if( account_id === undefined )
+            this.accounts_by_name = this.accounts_by_name.set( name_or_id, null );
+         if( account_id === null ) return undefined
+         else if( utils.is_object_id( account_id ) )
+            return this.getAccount(account_id);
       }
       
 
-      if( fetch_account ) {
+      if( true ) {
           //console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
@@ -799,24 +803,33 @@ class ChainStore
 //      console.log( "update: ", object )
 
       let current = this.objects_by_id.get( object.id )
+      if( !current ) 
+         current = Immutable.Map(); 
       let prior   = current
       if( current === undefined || current === true )
          this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
       else
+      {
          this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
+      }
 
 
       if( object.id.substring(0,balance_prefix.length) == balance_prefix )
       {
          let owner = this.objects_by_id.get( object.owner )
-         if( owner === undefined ) 
+         if( owner === undefined || owner === null ) 
          {
             owner = {id:object.owner, balances:{ } }
             owner.balances[object.asset_type] = object.id
             owner = Immutable.fromJS( owner )
          }
          else
+         {
+            let balances = owner.get( "balances" );
+            if( !balances ) 
+               owner = owner.set( "balances", Immutable.Map() )
             owner = owner.setIn( ['balances',object.asset_type],  object.id )
+         }
          this.objects_by_id = this.objects_by_id.set( object.owner, owner  )
       }
       else if( object.id.substring(0,account_stats_prefix.length) == account_stats_prefix )

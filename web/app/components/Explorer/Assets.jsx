@@ -75,7 +75,7 @@ class Assets extends React.Component {
             return <span>-</span>;
         }
         // return utils.is_object_id(name_or_id) ?
-        //     <LinkToAccountById account={name_or_id}/> :
+        return <LinkToAccountById account={name_or_id}/> 
         //     <Link to="account-overview" params={{account_name: name_or_id}}>{name_or_id}</Link>;
         return <span>{name_or_id}</span>;
     }
@@ -91,7 +91,6 @@ class Assets extends React.Component {
             return (
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
-                    <td>{asset.id}</td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                 </tr>
             );
@@ -113,7 +112,6 @@ class Assets extends React.Component {
             return (
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
-                    <td>{asset.id}</td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                 </tr>
             );
@@ -137,7 +135,6 @@ class Assets extends React.Component {
                                 <thead>
                                 <tr>
                                     <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                    <th><Translate component="span" content="explorer.assets.id" /></th>
                                     <th><Translate component="span" content="explorer.assets.issuer" /></th>
                                 </tr>
                                 </thead>
@@ -154,7 +151,6 @@ class Assets extends React.Component {
                                 <thead>
                                 <tr>
                                     <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                    <th><Translate component="span" content="explorer.assets.id" /></th>
                                     <th><Translate component="span" content="explorer.assets.issuer" /></th>
                                 </tr>
                                 </thead>
