@@ -60,8 +60,8 @@ export class WalletOptions extends WalletBaseComponent {
             {has_wallet ? <Link to="wmc-import-keys">
             <div className="button success">Import Keys</div></Link>:null}
             
-            <Link to="wmc-provide-brainkey">
-            <div className="button success">Provide Brainkey</div></Link>
+            {/*<Link to="wmc-provide-brainkey">
+            <div className="button success">Provide Brainkey</div></Link>*/}
             
             <Link to="wmc-wallet-create">
             <div className="button success">Create Wallet</div></Link>

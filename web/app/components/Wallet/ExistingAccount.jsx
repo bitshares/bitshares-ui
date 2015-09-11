@@ -52,8 +52,8 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                 <Link to="welcome-import-keys">
                 <div className="button success">Import Keys</div></Link>
                 
-                <Link to="welcome-provide-brainkey">
-                <div className="button success">Provide Brainkey</div></Link>
+                {/*<Link to="welcome-provide-brainkey">
+                <div className="button success">Provide Brainkey</div></Link>*/}
                 
                 <BalanceClaim/>
                 
