@@ -40,7 +40,7 @@ class AccountVoting extends React.Component {
     updateAccountData(account) {
         let options = account.get('options');
         let proxy_account_id = options.get('voting_account');
-        if(proxy_account_id === "1.2.0" || proxy_account_id === "1.2.5") proxy_account_id = "";
+        if(proxy_account_id === "1.2.5" ) proxy_account_id = "";
         let votes = options.get('votes');
         let vote_ids = votes.toArray();
         ChainStore.getObjectsByVoteIds(vote_ids);
@@ -88,7 +88,7 @@ class AccountVoting extends React.Component {
         updated_account.account = updated_account.id;
         updated_account.new_options = updated_account.options
         let new_proxy_id = this.state.proxy_account_id;
-        updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.0";
+        updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         updated_account.new_options.num_witness = this.state.witnesses.size;
         updated_account.new_options.num_committee = this.state.committee.size;
         FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {

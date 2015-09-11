@@ -4,16 +4,19 @@ import WitnessActions from "actions/WitnessActions";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import ChainStore from "api/ChainStore";
+import FormattedAsset from "../Utility/FormattedAsset";
 
+@BindToChainState({keep_updating: true})
 class WitnessCard extends React.Component {
+
+    static propTypes = {
+        witness: ChainTypes.ChainAccount.isRequired
+    }
 
     static contextTypes = {
         router: React.PropTypes.func.isRequired
     };
-
-    shouldComponentUpdate(nextProps) {
-        return nextProps.name !== this.props.name;
-    }
 
     _onCardClick(e) {
         e.preventDefault();
@@ -21,13 +24,25 @@ class WitnessCard extends React.Component {
     }
 
     render() {
+        let witness_data = ChainStore.getWitnessById( this.props.witness.get('id') )
+        if( witness_data )
+           console.log( "Witness Data: ", witness_data.toJS() )
+        else {
+           console.log( "Witness Data: ", witness_data )
+           return null
+        }
+        let total_votes = witness_data.get( "total_votes" );
+
         return (
             <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
                 <div className="card">
-                    <h4 className="text-center">{this.props.name}</h4>
+                    <h4 className="text-center">{this.props.witness.get('name')}</h4>
                     <div className="card-content">
                         <div className="text-center">
-                            <AccountImage account={this.props.name} size={{height: 64, width: 64}}/>
+                            <AccountImage account={this.props.witness.get('name')} size={{height: 64, width: 64}}/>
+                        </div>
+                        <div className="text-center">
+                        Votes:  <FormattedAsset amount={total_votes} asset="1.3.0" />
                         </div>
                     </div>
                 </div>
@@ -58,7 +73,7 @@ class WitnessList extends React.Component {
                 .map((a) => {
                     // console.log("witness:", a, witness_id_to_name.get(a.id));
                     return (
-                        <WitnessCard key={a.id} name={witness_id_to_name.get(a.id)}>
+                        <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)}>
                         </WitnessCard>
                     );
                 }).toArray();
