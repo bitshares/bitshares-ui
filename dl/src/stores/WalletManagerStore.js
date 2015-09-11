@@ -66,12 +66,12 @@ class WalletManagerStore extends BaseStore {
                 // The database must be closed and re-opened first before the current
                 // application code can initialize its new state.
                 iDB.close()
+                ChainStore.clearCache()
                 return iDB.init_instance().init_promise.then(()=>{ 
                     return Promise.all([
                         WalletDb.loadDbData(),
                         PrivateKeyStore.loadDbData(),
-                        AccountStore.loadDbData(),
-                        ChainStore.init()
+                        AccountStore.loadDbData()
                     ]).then(()=>{
                         // Update state here again to make sure listeners re-render
                         
