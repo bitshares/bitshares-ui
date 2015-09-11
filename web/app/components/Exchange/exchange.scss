@@ -143,6 +143,12 @@ p.order-table-title {
   > .table-container {
     flex-grow: 1;
     width: 100%;
+    position: relative;
+  }
+  .table-container.top > table {
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
   > .spread {
     flex-shrink: 1;
