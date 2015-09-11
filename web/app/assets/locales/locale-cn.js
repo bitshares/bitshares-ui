@@ -255,7 +255,11 @@ module.exports = {
         deposit_to: "向账户存入",
         claimed: "领取总额",
         broadcasting: "交易广播中..",
-        broadcasting_short: "交易广播中.."
+        broadcasting_short: "交易广播中..",
+        borrow_amount: "借入金额",
+        funding_account: "Funding account",
+        delta_collateral: "抵押变化",
+        delta_debt: "债务变化"
     },
     explorer: {
         accounts: {
