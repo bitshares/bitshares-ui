@@ -24,7 +24,7 @@ class FormattedPrice extends React.Component {
         base_asset: ChainTypes.ChainAsset.isRequired,
         quote_asset: ChainTypes.ChainAsset.isRequired,
         base_amount: React.PropTypes.number,
-        quote_amount: React.PropTypes.number,
+        quote_amount: React.PropTypes.number
     };  
 
     constructor( props )
@@ -34,7 +34,7 @@ class FormattedPrice extends React.Component {
     }
 
     onFlip() {
-       this.setState( {flipped:!this.state.flipped} )
+       this.setState( {flipped: !this.state.flipped} )
     }
 
     render() {
@@ -58,7 +58,7 @@ class FormattedPrice extends React.Component {
         return (
                 <span>
                    <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={base_asset.get("precision") + quote_asset.get("precision")} />
-                   <a onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + " / " + quote_asset.get("symbol")}</a>
+                   <a onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + "/" + quote_asset.get("symbol")}</a>
                </span>
          )
     }

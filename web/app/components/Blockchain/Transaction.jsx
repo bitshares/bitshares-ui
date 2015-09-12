@@ -8,14 +8,15 @@ import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
 import AssetActions from "actions/AssetActions";
-import AccountActions from "actions/AccountActions";
+// import AccountActions from "actions/AccountActions";
 import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
-import ChainStore from "api/ChainStore";
+// import ChainStore from "api/ChainStore";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import FormattedPrice from "../Utility/FormattedPrice";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -104,24 +105,24 @@ class Transaction extends React.Component {
             <Link to="asset" params={{symbol: symbol_or_id}}>{symbol_or_id}</Link>;
     }
 
-    getAssets(ids) {
+    // getAssets(ids) {
 
-        if (!Array.isArray(ids)) {
-            ids = [ids];
-        }
+    //     if (!Array.isArray(ids)) {
+    //         ids = [ids];
+    //     }
 
-        let missing = new Array(ids.length);
+    //     let missing = new Array(ids.length);
 
-        ids.forEach((id, index) => {
+    //     ids.forEach((id, index) => {
             
-            if (!this.props.assets.get(id)) {
-                AssetActions.getAsset(id);
-                missing[index] = true;
-            }
-        });
+    //         if (!this.props.assets.get(id)) {
+    //             AssetActions.getAsset(id);
+    //             missing[index] = true;
+    //         }
+    //     });
         
-        return missing;
-    }
+    //     return missing;
+    // }
 
     // getAccounts(ids) {
 
@@ -150,18 +151,16 @@ class Transaction extends React.Component {
     }
 
     render() {
-        let {trx, index, assets, inverted} = this.props;
+        let {trx, assets, inverted} = this.props;
         let info = null;
 
         info = [];
 
         let opCount = trx.operations.length;
 
-        let Link = this.props.no_links ? NoLinkDecorator : RealLink;
-
         trx.operations.forEach((op, opIndex) => {
             // let missingFee = this.getAssets([op[1].fee.asset_id])[0];
-            let missingAssets;
+            // let missingAssets;
             let rows = [];
             let color = "";
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -194,8 +193,8 @@ class Transaction extends React.Component {
 
                 case "limit_order_create":
                     color = "warning";
-                    missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
-                    let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
+                    // missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
+                    // let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
                     
                     rows.push(
                         <tr key="1">
@@ -206,7 +205,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr key="2">
                             <td><Translate component="span" content="exchange.price" /></td>
-                            <td>{price} &nbsp;<span className="button secondary" onClick={this._flipMarketPrice.bind(this)}>Flip</span></td>
+                            <td>
+                                <FormattedPrice
+                                    base_asset={op[1].amount_to_sell.asset_id}
+                                    quote_asset={op[1].min_to_receive.asset_id}
+                                    base_amount={op[1].amount_to_sell.amount}
+                                    quote_amount={op[1].min_to_receive.amount} />
+                            </td>
                         </tr>
                     );
                     // rows.push(
@@ -813,7 +818,6 @@ Transaction.defaultProps = {
 Transaction.propTypes = {
     trx: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    assets: PropTypes.object.isRequired,
     no_links: PropTypes.bool
 };
 
