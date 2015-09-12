@@ -303,20 +303,22 @@ class Blocks extends React.Component {
             {/* Fourth row: transactions and blocks */ }
                 <div className="grid-block">
                     <div className="grid-block small-6 vertical">
-                        <h3><Translate content="account.recent" /> </h3>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th><Translate content="explorer.block.date" /></th>
-                                    <th><Translate content="explorer.block.op" /></th>
-                                    <th><Translate content="account.votes.info" /></th>
-                                    <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {transactions}
-                            </tbody>
-                        </table>
+                        <div className="grid-content">
+                            <h3><Translate content="account.recent" /> </h3>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th><Translate content="explorer.block.date" /></th>
+                                        <th><Translate content="explorer.block.op" /></th>
+                                        <th><Translate content="account.votes.info" /></th>
+                                        <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {transactions}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div className="grid-block small-6 vertical">
                         
