@@ -1,5 +1,6 @@
 import React, {PropTypes, Component} from "react"
 import {Link} from "react-router";
+import Inspector from "react-json-inspector";
 import connectToStores from "alt/utils/connectToStores"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletActions from "actions/WalletActions"
@@ -56,8 +57,10 @@ export class BackupVerify extends BackupBaseComponent {
             
             <Upload>
                 <NameSizeModified/>
-                <DecryptBackup>
+                <DecryptBackup saveWalletObject={true}>
                     <h4>Verified</h4>
+                    <WalletObjectInspector
+                        walletObject={this.props.backup.wallet_object}/>
                 </DecryptBackup>
                 <Reset/>
             </Upload>
@@ -66,6 +69,16 @@ export class BackupVerify extends BackupBaseComponent {
     }
 }
 
+class WalletObjectInspector extends Component {
+    static propTypes={ walletObject: PropTypes.object }
+    render() {
+        return <div style={{overflowY:'auto'}}>
+            <Inspector
+                data={ this.props.walletObject || {} }
+                search={false}/>
+        </div>
+    }
+}
 
 @connectToStores
 export class BackupRestore extends BackupBaseComponent {
