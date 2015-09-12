@@ -58,64 +58,62 @@ class BuySell extends React.Component {
         return (
             <div className={divClass}>
                 <form className="order-form" onSubmit={onSubmit}>
-                    <div className="grid-block vertical">
+                    <div className="grid-block vertical no-overflow no-padding">
 
-                        <div className="grid-content no-overflow no-padding" style={{width: "90%", margin: "0 5%"}}>
-
-                            <div className="buy-sell-row">
-                                <div className="buy-sell-label">
-                                {/* <Translate  content="exchange.quantity" />*/ buttonText}:
+                            <div className="grid-block no-padding buy-sell-row">
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                                    {buttonText}:
                                 </div>
-                                <div className="buy-sell-details">
-                                    <div className="buy-sell-box">{quoteSymbol}</div>
-                                    <div className="buy-sell-input">
-                                        <input type="text" id="buyAmount" value={amount} onChange={amountChange} style={{float: "right", width: "100%" , paddingRight: "4px"}} autoComplete="off"/>
-                                    </div>
+                                <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <input type="text" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off"/>
+                                </div>
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    {quoteSymbol}
                                 </div>
                             </div>
 
-                            <div className="buy-sell-row">
-                                <div className="buy-sell-label">
-                                    <Translate  content="exchange.price" />:
+                            <div className="grid-block no-padding buy-sell-row">
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                                    <Translate content="exchange.price" />:
                                 </div>
-                                <div className="buy-sell-details">
-                                    <div className="buy-sell-box">{baseSymbol}/{quoteSymbol}</div>
-                                    <div className="buy-sell-input">
-                                        <input type="text" id="buyPrice" value={price} onChange={priceChange} style={{ paddingRight: "4px"}} autoComplete="off"/>
-                                    </div>
+                                <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <input type="text" id="buyPrice" value={price} onChange={priceChange} autoComplete="off"/>
                                 </div>
-                            </div>
-
-                            <div className="buy-sell-row bottom-row">
-                                <div className="buy-sell-label">
-                                    <Translate  content="exchange.total" />:
-                                </div>
-                                <div className="buy-sell-details">
-                                    <div className="buy-sell-box">{baseSymbol}</div>
-                                    <div className="buy-sell-input">
-                                        <input type="text" id="buyAmount" value={total} onChange={totalChange} style={{float: "right", width: "100%" , paddingRight: "4px"}} autoComplete="off"/>
-                                    </div>
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    {baseSymbol}/{quoteSymbol}
                                 </div>
                             </div>
 
+                            <div className="grid-block no-padding buy-sell-row bottom-row">
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                                    <Translate content="exchange.total" />:
+                                </div>
+                                <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <input type="text" id="buyAmount" value={total} onChange={totalChange} autoComplete="off"/>
+                                </div>
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    {baseSymbol}
+                                </div>
+                            </div>
                         </div>
                         <div>
-                              <div className="grid-content">
-                                  <div className="buy-sell-info">
-                                      <Translate content="exchange.balance" />:&nbsp;
-                                      <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceAmount)}>{utils.format_number(balanceAmount, balancePrecision)}</span> {balanceSymbol}
+                            <div className="grid-content clear-fix no-padding">
+                                <div className="float-left">
+                                      <div className="buy-sell-info">
+                                          <Translate content="exchange.balance" />:&nbsp;
+                                          <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceAmount)}>{utils.format_number(balanceAmount, balancePrecision)}</span> {balanceSymbol}
+                                      </div>
+                                      <div className="buy-sell-info">
+                                          {this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;
+                                          <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setPrice.bind(this, currentPrice)}>{utils.format_number(currentPrice, quotePrecision)}</span> {baseSymbol}/{quoteSymbol}
+                                      </div>
                                   </div>
-                                  <div className="buy-sell-info">
-                                      {this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;
-                                      <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setPrice.bind(this, currentPrice)}>{utils.format_number(currentPrice, quotePrecision)}</span> {baseSymbol}/{quoteSymbol}
+                                  <div className="float-right">
+                                    <input className={buttonClass} type="submit" value={buttonText} />
                                   </div>
                               </div>
-                              <input className={buttonClass} type="submit" value={buttonText} />
+                              
                         </div>
-
-
-                    </div>
-
 
                 </form>
                 </div>

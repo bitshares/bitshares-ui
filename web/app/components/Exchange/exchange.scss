@@ -94,12 +94,12 @@ p.order-table-title {
 .buy-form {
   padding-top: 0.25rem !important;
   padding-left: 1rem !important;
-  padding-right: 1rem !important;
+  padding-right: 0.5rem !important;
 }
 
 .sell-form {
   padding-top: 0.25rem !important;
-  padding-left: 1rem !important;
+  padding-left: 0.5rem !important;
   padding-right: 1rem !important;
 }
 
@@ -261,47 +261,26 @@ a.order-cancel {
 }
 
 .buy-sell-row {
-    float: left;
-    clear: left;
-    margin-bottom: 10px;
-    width: 100%;
-    display: table-row;
+  margin-bottom: 10px;
 }
 
 .bottom-row {
   border-top: #A09F9F 1px dotted;
-  padding-top: 5px;
+  padding-top: 5px !important;
 }
 
 .buy-sell-label {
-    display: table-cell;
-    float: left;
-
-    > span {
-      line-height: 1.75rem;
-      height: 1.75rem;
-    }
+    font-size: 90%;
+    line-height: 1.75rem;
+    height: 1.75rem;
 }
-
-.buy-sell-details {
-    display: table-cell;
-    float: right;
-    width: 70%;
-}
-
 
 .buy-sell-input {
-    float: right;
-    width: 70%;
-    margin: 0;
-    padding: 0;
     height: 1.75rem;
     line-height: 1.75rem;
 }
 
 .buy-sell-input > input {
-    float: right;
-    width: 100%;
     margin: 0;
     padding: 0;
     height: 1.75rem;
@@ -310,13 +289,12 @@ a.order-cancel {
 }
 
 .buy-sell-box {
-    float: right;
     text-align: center;
     background: grey;
     height: 1.75rem;
     line-height: 1.75rem;
     font-weight: 700;
-    font-size: 80%;
-    padding: 0 5px 0 5px;
+    font-size: 75%;
+    padding: 0 0 0 5px;
     min-width: 5rem;
 }

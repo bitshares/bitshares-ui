@@ -436,11 +436,11 @@ class Exchange extends React.Component {
                         </div>
 
                         {/* Buy/Sell forms */}
-                        <div className="grid-block shrink no-padding" style={{ flexGrow: "0" }} >
+                        <div className="grid-block small-vertical medium-horizontal shrink no-padding" style={{ flexGrow: "0" }} >
                             {false ? <div><button onClick={this._borrowQuote.bind(this)} className="button success">Borrow {quoteAsset.get("symbol")}</button></div> : null}
                             {quote && base ?
                             <BuySell
-                                className="small-6"
+                                className="small-12 medium-6"
                                 type="buy"
                                 amount={buyAmount}
                                 price={buyPrice}
@@ -460,7 +460,7 @@ class Exchange extends React.Component {
                             {false ? <div><button onClick={this._borrowBase.bind(this)} className="button success">Borrow {baseAsset.get("symbol")}</button></div> : null}
                             {quote && base ?
                             <BuySell
-                                className="small-6"
+                                className="small-12 medium-6"
                                 type="sell"
                                 amount={sellAmount}
                                 price={sellPrice}
