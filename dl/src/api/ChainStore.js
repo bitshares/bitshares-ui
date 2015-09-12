@@ -527,10 +527,8 @@ class ChainStore
       if( utils.is_object_id(name_or_id) ) 
       {
          let current = this.objects_by_id.get( name_or_id )
-         if( current === null ) return undefined;
-         if( current === undefined )
-            this.objects_by_id = this.objects_by_id.set( name_or_id, null )
-         else return current;
+          fetch_account = current === undefined
+          if( !fetch_account ) return current;
       }
       else
       {
