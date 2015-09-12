@@ -1,14 +1,13 @@
 import React from "react";
 import {PropTypes} from "react";
-import WitnessActions from "actions/WitnessActions";
 import {Link} from "react-router";
 import intlData from "../Utility/intlData";
-import Immutable from "immutable";
+// import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate, FormattedRelative} from "react-intl";
 import Operation from "../Blockchain/Operation";
-import Inspector from "react-json-inspector";
+import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
 require("../Blockchain/json-inspector.scss");
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -86,15 +85,6 @@ class Blocks extends React.Component {
         super(props);
     }
 
-    shouldComponentUpdate(nextProps) {
-        return (
-            !Immutable.is(nextProps.latestBlocks, this.props.latestBlocks) ||
-            !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
-            !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject)
-        );
-    }
-
     _getBlock(height, maxBlock) {
         if (height) {
             height = parseInt(height, 10);
@@ -138,32 +128,6 @@ class Blocks extends React.Component {
         }
     }
 
-    _fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
-        if (!Array.isArray(witnessIds)) {
-            witnessIds = [witnessIds];
-        }
-
-        let missing = [];
-        let missingAccounts = [];
-        witnessIds.forEach(id => {
-            // Check for missing witness data
-            if (!witnesses.get(id)) {
-                missing.push(id);
-            // Check for missing witness account data
-            } else if (!witness_id_to_name.get(id)) {
-                missingAccounts.push(witnesses.get(id).witness_account);
-            }
-        });
-
-        if (missing.length > 0) {
-            WitnessActions.getWitnesses(missing);
-        } 
-
-        if (missingAccounts.length > 0) {
-            WitnessActions.getWitnessAccounts(missingAccounts);
-        }
-    }
-
     render() {
 
         let {latestBlocks, latestTransactions, witnesses, witness_id_to_name, globalObject, dynGlobalObject} = this.props;
@@ -171,21 +135,7 @@ class Blocks extends React.Component {
         let headBlock = null;
         let trxCount = 0, blockCount = latestBlocks.size, trxPerSec = 0, blockTimes = [], avgTime = 0;
 
-
         if (latestBlocks && latestBlocks.size >= 20) {
-
-            // Fetch missing witnesses
-            // TODO: replace with chainstore methods
-            let missingWitnesses = [];
-            latestBlocks.forEach(block => {
-                if (!witness_id_to_name.get(block.witness)) {
-                    missingWitnesses.push(block.witness);
-                }
-            });
-
-            if (missingWitnesses.length > 0) {
-                this._fetchWitnesses(missingWitnesses, witnesses, witness_id_to_name);
-            }
 
             let previousTime;
 
@@ -221,7 +171,7 @@ class Blocks extends React.Component {
                                 formats={intlData.formats}
                                 format="short"
                             /></td>
-                            <td>{witness_id_to_name.get(block.witness) ? <Link to="witness" params={{name: witness_id_to_name.get(block.witness)}}>{witness_id_to_name.get(block.witness)}</Link> : null}</td>
+                            <td><LinkToWitnessById witness={block.witness} /></td>
                             <td>{block.transactions.length}</td>
                         </tr>
                     );
@@ -251,7 +201,6 @@ class Blocks extends React.Component {
 
             headBlock = latestBlocks.first().timestamp;
             avgTime = blockTimes.reduce((previous, current, idx, array) => {
-                // console.log("previous:", previous,"current", current, "idx", idx);
                 return previous + current[1] / array.length;
             }, 0);
 

@@ -7,8 +7,8 @@ import {Link} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import AssetActions from "actions/AssetActions";
-import WitnessActions from "actions/WitnessActions";
+// import AssetActions from "actions/AssetActions";
+// import WitnessActions from "actions/WitnessActions";
 import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
@@ -19,6 +19,7 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletDb from "stores/WalletDb";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 
@@ -64,49 +65,45 @@ class Operation extends React.Component {
     static defaultProps = {
         op: [],
         current: "",
-        block: false,
-        witnesses: {},
-        witness_id_to_name: {}
+        block: false
     }
 
     static propTypes = {
         op: PropTypes.array.isRequired,
         current: PropTypes.string.isRequired,
-        block: PropTypes.number,
-        witnesses: PropTypes.object,
-        witness_id_to_name: PropTypes.object
+        block: PropTypes.number
     }
 
-    fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
-        if (!Array.isArray(witnessIds)) {
-            witnessIds = [witnessIds];
-        }
-        let missing = new Array(witnessIds.length);
-        let missingWitnessIds = new Array(witnessIds.length);
+    // fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
+    //     if (!Array.isArray(witnessIds)) {
+    //         witnessIds = [witnessIds];
+    //     }
+    //     let missing = new Array(witnessIds.length);
+    //     let missingWitnessIds = new Array(witnessIds.length);
 
-        let missingAccounts = [];
-        witnessIds.forEach((id, index) => {
-            // Check for missing witness data
-            if (id && !witnesses.get(id)) {
-                missingWitnessIds.push(id);
-                missing[index] = true;
-            // Check for missing witness account data
-            } else if (id && !witness_id_to_name.get(id)) {
-                missingAccounts.push(witnesses.get(id).witness_account);
-                missing[index] = true;
-            }
-        });
+    //     let missingAccounts = [];
+    //     witnessIds.forEach((id, index) => {
+    //         // Check for missing witness data
+    //         if (id && !witnesses.get(id)) {
+    //             missingWitnessIds.push(id);
+    //             missing[index] = true;
+    //         // Check for missing witness account data
+    //         } else if (id && !witness_id_to_name.get(id)) {
+    //             missingAccounts.push(witnesses.get(id).witness_account);
+    //             missing[index] = true;
+    //         }
+    //     });
 
-        if (missingWitnessIds.length > 0) {
-            WitnessActions.getWitnesses(missingWitnessIds);
-        } 
+    //     if (missingWitnessIds.length > 0) {
+    //         WitnessActions.getWitnesses(missingWitnessIds);
+    //     } 
 
-        if (missingAccounts.length > 0) {
-            WitnessActions.getWitnessAccounts(missingAccounts);
-        }
+    //     if (missingAccounts.length > 0) {
+    //         WitnessActions.getWitnessAccounts(missingAccounts);
+    //     }
 
-        return missing;
-    }
+    //     return missing;
+    // }
 
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
@@ -123,7 +120,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block, witnesses, witness_id_to_name, inverted} = this.props;
+        let {op, current, block, inverted} = this.props;
 
         let line = null, column = null, color = "info";
 
@@ -198,7 +195,6 @@ class Operation extends React.Component {
             case "limit_order_create":
                 color = "warning";
                 let o = op[1];
-                console.log("op:", op);
                 let isAsk = market_utils.isAskOp(op[1]);
                 if (!inverted) {
                     isAsk = !isAsk;
@@ -215,7 +211,7 @@ class Operation extends React.Component {
                                             sell_amount={utils.format_asset(op[1].amount_to_sell.amount, asset_sell, false, false)}
                                             num={this.props.result[1].substring(4)}
                                             />
-                                        <FormattedPrice  quote_asset={o.amount_to_sell.asset_id} base_asset={o.min_to_receive.asset_id}  quote_amount={o.amount_to_sell.amount} base_amount={o.min_to_receive.amount} />
+                                        <FormattedPrice quote_asset={o.amount_to_sell.asset_id} base_asset={o.min_to_receive.asset_id} quote_amount={o.amount_to_sell.amount} base_amount={o.min_to_receive.amount} />
                                     </span>
                                     :
                                     <span>
@@ -225,7 +221,7 @@ class Operation extends React.Component {
                                             buy_amount={utils.format_asset(op[1].min_to_receive.amount, asset_min, false, false)}
                                             num={this.props.result[1].substring(4)}
                                             />
-                                        <FormattedPrice  base_asset={o.amount_to_sell.asset_id} quote_asset={o.min_to_receive.asset_id}  base_amount={o.amount_to_sell.amount} quote_amount={o.min_to_receive.amount} />
+                                        <FormattedPrice base_asset={o.amount_to_sell.asset_id} quote_asset={o.min_to_receive.asset_id} base_amount={o.amount_to_sell.amount} quote_amount={o.min_to_receive.amount} />
                                     </span>
                             }
                         </BindToChainState.Wrapper>
@@ -467,6 +463,7 @@ class Operation extends React.Component {
                 break;
 
             case "witness_create":
+                console.log("witness_create:", op[1].witness_account);
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.witness_create" /> 
@@ -477,14 +474,14 @@ class Operation extends React.Component {
                 break;
 
             case "witness_withdraw_pay":
-                let missingWitnesses = this.fetchWitnesses(op[1].witness_account, witnesses, witness_id_to_name);
+                console.log("witness_withdraw_pay:", op[1].witness_account);
                 if (current === op[1].witness_account) {
                     column = (
                         <td className="right-td">
                             <Translate component="span" content="transaction.witness_pay" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
                             <Translate component="span" content="transaction.to" /> 
-                            &nbsp;{this.linkToAccount(op[1].witness_account)}
+                            &nbsp;<LinkToWitnessById witness={op[1].witness_account} />
                         </td>
                     );
                 } else {
@@ -493,7 +490,7 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.received" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
                             <Translate component="span" content="transaction.from" /> 
-                            &nbsp;{!missingWitnesses[0] ? this.linkToAccount(witness_id_to_name[op[1].witness_account]) : null}
+                            &nbsp;<LinkToWitnessById witness={op[1].witness_account} />
                         </td>
                     ); 
                 }
