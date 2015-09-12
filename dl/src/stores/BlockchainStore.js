@@ -17,20 +17,20 @@ class BlockchainStore extends BaseStore{
         // This might not need to be an immutable map, a normal structure might suffice..
         this.blocks = Immutable.Map();
         this.latestBlocks = Immutable.List();
+        this.latestTransactions = Immutable.List();
         this.dynGlobalObject = {};
         this.globalObject = {};
         this.rpc_connection_status = "open";
 
         this.bindListeners({
             onGetBlock: BlockchainActions.getBlock,
-            onGetGlobals: BlockchainActions.subscribeGlobals,
             onGetLatest: BlockchainActions.getLatest,
             onUpdateRpcConnectionStatus: BlockchainActions.updateRpcConnectionStatus
         });
 
         this._export("getFee");
 
-        this.maxBlocks = 20;
+        this.maxBlocks = 100;
     }
 
     getFee(op_type, options) {
@@ -69,6 +69,18 @@ class BlockchainStore extends BaseStore{
             this.latestBlocks = this.latestBlocks.unshift(Block(block));
             if (this.latestBlocks.size > this.maxBlocks) {
                 this.latestBlocks = this.latestBlocks.pop();
+            }
+            
+
+            if (block.transactions.length > 0) {
+                block.transactions.forEach(trx => {
+                    trx.block_num = block.id;
+                    this.latestTransactions = this.latestTransactions.unshift(trx);
+                })
+            }
+
+            if (this.latestTransactions.size > this.maxBlocks) {
+                this.latestTransactions = this.latestTransactions.pop();
             }
         }
 

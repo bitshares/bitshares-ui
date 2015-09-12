@@ -7,7 +7,7 @@ import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate, FormattedRelative} from "react-intl";
-
+import Operation from "../Blockchain/Operation";
 import Inspector from "react-json-inspector";
 require("../Blockchain/json-inspector.scss");
 import ChainTypes from "../Utility/ChainTypes";
@@ -56,14 +56,14 @@ class BlockTimeAgo extends React.Component {
         let timePassed = Date.now() - blockTime;
 
         let textClass = classNames("txtlabel",
-            {"success":timePassed <= 6000},
-            {"info":timePassed > 6000 && timePassed <= 15000},
-            {"warning":timePassed > 15000 && timePassed <= 25000},
-            {"error":timePassed > 25000}
+            {"success": timePassed <= 6000},
+            {"info": timePassed > 6000 && timePassed <= 15000},
+            {"warning": timePassed > 15000 && timePassed <= 25000},
+            {"error": timePassed > 25000}
         );
 
         return (
-            blockTime ? <div className={textClass} ><FormattedRelative value={blockTime} /></div>: null
+            blockTime ? <h3 className={textClass} ><FormattedRelative value={blockTime} /></h3> : null
         );
 
     }
@@ -92,7 +92,7 @@ class Blocks extends React.Component {
             !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
             !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
             !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject)
-            );
+        );
     }
 
     _getBlock(height, maxBlock) {
@@ -109,7 +109,7 @@ class Blocks extends React.Component {
         }
 
         let maxBlock = nextProps.dynGlobalObject.get("head_block_number");
-        if (nextProps.latestBlocks.size === 20 && nextProps.dynGlobalObject.get("head_block_number") !== nextProps.latestBlocks.get(0).id) {
+        if (nextProps.latestBlocks.size >= 20 && nextProps.dynGlobalObject.get("head_block_number") !== nextProps.latestBlocks.get(0).id) {
             return this._getBlock(maxBlock, maxBlock);
         }
     }
@@ -166,37 +166,52 @@ class Blocks extends React.Component {
 
     render() {
 
-        let {latestBlocks, witnesses, witness_id_to_name, globalObject, dynGlobalObject} = this.props;
-        let blocks = null;
+        let {latestBlocks, latestTransactions, witnesses, witness_id_to_name, globalObject, dynGlobalObject} = this.props;
+        let blocks = null, transactions = null;
         let headBlock = null;
-        let trxCount = 0, blockCount = 0, timeDelta = 0, blockTimes = [], avgTime = 0;
+        let trxCount = 0, blockCount = latestBlocks.size, trxPerSec = 0, blockTimes = [], avgTime = 0;
+
 
         if (latestBlocks && latestBlocks.size >= 20) {
 
+            // Fetch missing witnesses
+            // TODO: replace with chainstore methods
             let missingWitnesses = [];
             latestBlocks.forEach(block => {
                 if (!witness_id_to_name.get(block.witness)) {
                     missingWitnesses.push(block.witness);
                 }
             });
+
             if (missingWitnesses.length > 0) {
                 this._fetchWitnesses(missingWitnesses, witnesses, witness_id_to_name);
             }
 
             let previousTime;
 
+            let lastBlock, firstBlock;
+
+            // Map out the block times for the latest blocks and count the number of transactions
+            latestBlocks.sort((a, b) => {
+                return a.id - b.id;
+            }).forEach((block, index) => {
+                trxCount += block.transactions.length;
+                if (index > 0) {
+                    blockTimes.push([block.id, (block.timestamp - previousTime) / 1000]);
+                    lastBlock = block.timestamp;
+                } else {
+                    firstBlock = block.timestamp;
+                }
+                previousTime = block.timestamp;
+            });
+
+            // Output block rows for the last 20 blocks
             blocks = latestBlocks
             .sort((a, b) => {
-                return b.id > a.id;
+                return b.id - a.id;
             })
+            .take(20)
             .map((block) => {
-                trxCount += block.transactions.length;
-                blockCount += 1;
-                if (blockCount > 1) {
-                    blockTimes.unshift([block.id, (previousTime - block.timestamp) / 1000]);
-                }
-
-                previousTime = block.timestamp;
 
                 return (
                         <tr key={block.id}>
@@ -211,64 +226,150 @@ class Blocks extends React.Component {
                         </tr>
                     );
             }).toArray();
+
+            let trxIndex = 0;
+            transactions = latestTransactions
+            .map((trx) => {
+
+                let opIndex = 0;
+                return trx.operations.map(op => {
+                    return (
+                        <Operation
+                            key={trxIndex++}
+                            op={op}
+                            result={trx.operation_results[opIndex++]}
+                            block={trx.block_num}
+                            current={"1.2.0"}
+                            witnesses={witnesses}
+                            witness_id_to_name={witness_id_to_name}
+                            inverted={this.props.settings.get("inverseMarket")}
+                        />
+                    );
+                })
+                
+            }).toArray();
+
             headBlock = latestBlocks.first().timestamp;
             avgTime = blockTimes.reduce((previous, current, idx, array) => {
                 // console.log("previous:", previous,"current", current, "idx", idx);
                 return previous + current[1] / array.length;
-            }, 0)
+            }, 0);
+
+            trxPerSec = trxCount / ((lastBlock - firstBlock) / 1000);
         }
 
         return (
-            <div className="grid-block vertical">
-                <div className="grid-block page-layout">
-                    <div className="grid-block text-center small-3">
+            <div className="grid-block vertical page-layout">
+
+                {/* First row of stats */}
+                <div className="grid-block shrink" style={{paddingBottom: "1.5rem"}}>
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            Current Block: <div className="txtlabel success">#{utils.format_number(dynGlobalObject.get("head_block_number"), 0)}</div>
+                            <span className="txtlabel subheader">Current Block:</span>
+                            <h3 className="txtlabel success">
+                                #{utils.format_number(dynGlobalObject.get("head_block_number"), 0)}
+                            </h3>
                         </div>
                     </div>
-                    <div className="grid-block text-center small-3">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            Last block: <BlockTimeAgo blockTime={headBlock} />
+                            <span className="txtlabel subheader">Last block:</span>
+                            <BlockTimeAgo blockTime={headBlock} />
                         </div>
                     </div>
-                    <div className="grid-block text-center small-3">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            Avg # of transactions <div>{trxCount / blockCount}/block</div>
+                            <span className="txtlabel subheader">Trx/block</span>
+                            <h3>{utils.format_number(trxCount / blockCount || 0, 2)}/block</h3>
                         </div>
                     </div>
-                    <div className="grid-block text-center small-3">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            Avg block time <div>{utils.format_number(avgTime, 2)}s</div>
+                            <span className="txtlabel subheader">Avg block time</span>
+                            <h3>{utils.format_number(avgTime, 2)}s</h3>
                         </div>
                     </div>
                 </div>
-                <div className="grid-block page-layout">
-                    <div className="grid-block text-center small-3">
+
+                {/* Second row of stats */ }
+                <div className="grid-block shrink" style={{paddingBottom: "1rem"}}>
+                    <div className="grid-block text-center small-6 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel float-left">Active delegates:</span>
+                            <span className="txtlabel success float-right">
+                                {globalObject.get("active_witnesses").size}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-6 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel float-left">Active committee members:</span>
+                            <span className="txtlabel success float-right">
+                                {globalObject.get("active_committee_members").size}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-6 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel float-left">Transactions per second:</span>
+                            <span className="success float-right">
+                                <span className="txtlabel">{utils.format_number(trxPerSec, 2)}</span><span>/s</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-6 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel float-left">Recently missed blocks:</span>
+                            <span className="txtlabel success float-right">
+                                {dynGlobalObject.get("recently_missed_count")}
+                            </span>
+                        </div>
+                    </div>                    
+                </div>
+            
+            {/* Third row: graphs */ }
+                <div className="grid-block shrink">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
                         </div>
                     </div>
-                    <div className="grid-block text-center small-3">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
+                        <div className="text-left txtlabel">Block times</div>
                             <BlocktimeChart blockTimes={blockTimes} />
                         </div>
                     </div>
-                    <div className="grid-block text-center small-3">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            {<TransactionChart blocks={latestBlocks} />}
+                            <div className="text-left txtlabel">Transactions</div>
+                            <TransactionChart blocks={latestBlocks} />
                         </div>
                     </div>
-                    <div className="grid-block text-center small-3">
+                    <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
                         </div>
                     </div>                                                        
                 </div>
-                <div className="grid-block page-layout">
-                    <div className="grid-block small-4">
-                        <ul>
-                            <li><Translate component="span" content="explorer.blocks.globals" />: <Inspector data={ globalObject.get("parameters").toJS() } search={false}/></li>
-                        </ul>
+            
+            {/* Fourth row: transactions and blocks */ }
+                <div className="grid-block">
+                    <div className="grid-block small-6 vertical">
+                        <h3><Translate content="account.recent" /> </h3>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th><Translate content="explorer.block.date" /></th>
+                                    <th><Translate content="explorer.block.op" /></th>
+                                    <th><Translate content="account.votes.info" /></th>
+                                    <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {transactions}
+                            </tbody>
+                        </table>
                     </div>
-                    <div className="grid-block small-8 vertical">
+                    <div className="grid-block small-6 vertical">
                         
                         <div className="grid-content">
                             <h3><Translate component="span" content="explorer.blocks.recent" /></h3>

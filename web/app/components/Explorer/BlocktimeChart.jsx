@@ -1,19 +1,43 @@
 
 import React from "react";
 import Highcharts from "react-highcharts/stocks";
+import _ from "lodash";
 
 class BlocktimeChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.blockTimes.length === 0 || this.props.blockTimes.length === 0) {
+
+        if (nextProps.blockTimes.length < 19) {
             return false;
+        } else if (this.props.blockTimes.length === 0) {
+            return true;
         }
-        return nextProps.blockTimes[0][0] !== this.props.blockTimes[0][0];
+
+        return (
+            nextProps.blockTimes[nextProps.blockTimes.length - 1][0] !== this.props.blockTimes[this.props.blockTimes.length - 1][0] ||
+            nextProps.blockTimes.length !== this.props.blockTimes.length
+        );
     }
 
     render() {
 
         let {blockTimes} = this.props;
+
+        if (blockTimes && blockTimes.length) {
+            blockTimes = _.takeRight(blockTimes, 30);
+        }
+
+        let colors = blockTimes.map(entry => {
+            if (entry[1] <= 5) {
+                return "#50D2C2";
+            } else if (entry[1] <= 10) {
+                return "#A0D3E8";
+            } else if (entry[1] <= 20) {
+                return "#FCAB53";
+            } else {
+                return "#deb869";
+            }
+        })
 
         let config = {
             chart: {
@@ -30,6 +54,11 @@ class BlocktimeChart extends React.Component {
             },
             legend: {
                 enabled: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return this.point.y + "s";
+                }
             },
             series: [
                 {
@@ -53,12 +82,16 @@ class BlocktimeChart extends React.Component {
                 },
                 labels: {
                     enabled: false
-                }
+                },
+                gridLineWidth: 0
             },
             plotOptions: {
                 column: {
                     animation: false,
-                    minPointLength: 3
+                    minPointLength: 3,
+                    colorByPoint: true,
+                    colors: colors,
+                    borderWidth: 0
                 }
             }
         };

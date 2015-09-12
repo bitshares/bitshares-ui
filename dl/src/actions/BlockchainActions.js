@@ -9,54 +9,8 @@ let latestBlocks = {};
 
 class BlockchainActions {
 
-    unSubscribeGlobals() {
-       /*
-        if (subs.globals) {
-            Apis.instance().db_api().exec("unsubscribe_from_objects", [
-                    ["2.0.0", "2.1.0"]
-                ])
-                .then((unSubResult) => {
-                    console.log("unsubscription success:", unSubResult);
-                    if (unSubResult) {
-                        subs.globals = false;
-                    }
-                }).catch((error) => {
-                    console.log("Error in BlockchainActions.subscribeDynGlobal unsubscribe: ", error);
-                });
-        }
-        */
-    }
-
-    subscribeGlobals() {
-       /*
-        let subscription = (result) => {
-            this.dispatch(result);
-        };
-
-        if (!subs.globals) {
-            return Promise.all([
-                    Apis.instance().db_api().exec("subscribe_to_objects", [
-                        subscription, ["2.0.0", "2.1.0"]
-                    ]),
-                    Apis.instance().db_api().exec("get_objects", [
-                        ["2.0.0", "2.1.0"]
-                    ])
-                ])
-                .then((result) => {
-                    console.log("global subscription success:", result[0]);
-                    if (result[0]) {
-                        subs.globals = true;
-                    }
-                    this.dispatch(result[1]);
-                }).catch((error) => {
-                    console.log("Error in BlockchainActions.subscribeDynGlobal subscribe: ", error);
-                });
-        }
-        return Promise.resolve(true);
-        */
-    }
-
     getLatest(height, maxBlock) {
+        // let start = new Date();
         if (!latestBlocks[height] && maxBlock) {
             latestBlocks[height] = true;
             Apis.instance().db_api().exec("get_block", [
@@ -67,6 +21,7 @@ class BlockchainActions {
                         return;
                     }
                     result.id = height; // The returned object for some reason does not include the block height..
+                    // console.log("time to fetch block #" + height,":", new Date() - start, "ms");
                     this.dispatch({block: result, maxBlock: maxBlock});
                 }).catch((error) => {
                     console.log("Error in BlockchainActions.getLatest: ", error);

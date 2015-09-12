@@ -19,10 +19,23 @@ class TransactionChart extends React.Component {
         let max = 0;
         trxData = blocks.sort((a, b) => {
             return a.id - b.id;
-        }).map(block => {
+        }).take(30).map(block => {
             max = Math.max(block.transactions.length, max);
             return [block.id, block.transactions.length];
         }).toArray();
+
+        let colors = trxData.map(entry => {
+            // console.log("entry:", entry);
+            if (entry[1] <= 5) {
+                return "#50D2C2";
+            } else if (entry[1] <= 10) {
+                return "#A0D3E8";
+            } else if (entry[1] <= 20) {
+                return "#FCAB53";
+            } else {
+                return "#deb869";
+            }
+        })
 
         let config = {
             chart: {
@@ -39,6 +52,14 @@ class TransactionChart extends React.Component {
             },
             legend: {
                 enabled: false
+            },
+            tooltip: {
+                // positioner: function(w, h, point) {
+                //     return {x: point.plotX, y: point.plotY - 30};
+                // }
+                formatter: function() {
+                    return this.point.y;
+                }
             },
             series: [
                 {
@@ -63,12 +84,16 @@ class TransactionChart extends React.Component {
                 },
                 labels: {
                     enabled: false
-                }
+                },
+                gridLineWidth: 0
             },
             plotOptions: {
                 column: {
                     animation: false,
-                    minPointLength: 3
+                    minPointLength: 3,
+                    colorByPoint: true,
+                    colors: colors,
+                    borderWidth: 0
                 }
             }
         };

@@ -172,10 +172,20 @@ class Operation extends React.Component {
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
-                } else {//if(current === op[1].to){
+                } else if(current === op[1].to){
                     column = (
-                        <td key={"transfer_"+this.props.key} className="right-td">
+                        <td key={"transfer_" + this.props.key} className="right-td">
                             <Translate component="span" content="transaction.received"/>
+                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
+                            &nbsp;<Translate component="span" content="transaction.from"/> <LinkToAccountById account={op[1].from}/>
+                            {memo_text ? <div className="memo">{memo_text}</div> : null}
+                        </td>
+                    );
+                } else {
+                    column = (
+                        <td key={"transfer_" + this.props.key} className="right-td">
+                            <LinkToAccountById account={op[1].to}/>
+                            &nbsp;<Translate component="span" content="transaction.received"/>
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
                             &nbsp;<Translate component="span" content="transaction.from"/> <LinkToAccountById account={op[1].from}/>
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
@@ -188,6 +198,7 @@ class Operation extends React.Component {
             case "limit_order_create":
                 color = "warning";
                 let o = op[1];
+                console.log("op:", op);
                 let isAsk = market_utils.isAskOp(op[1]);
                 if (!inverted) {
                     isAsk = !isAsk;
