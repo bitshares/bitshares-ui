@@ -6,6 +6,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
+import Translate from "react-translate-component";
 
 @BindToChainState({keep_updating: true})
 class WitnessCard extends React.Component {
@@ -20,15 +21,16 @@ class WitnessCard extends React.Component {
 
     _onCardClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("witness", {name: this.props.name});
+        this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
     }
 
     render() {
         let witness_data = ChainStore.getWitnessById( this.props.witness.get('id') )
-        if( witness_data )
-           console.log( "Witness Data: ", witness_data.toJS() )
+        if( witness_data ) {
+           // console.log( "Witness Data: ", witness_data.toJS() )
+        }
         else {
-           console.log( "Witness Data: ", witness_data )
+           // console.log( "Witness Data: ", witness_data )
            return null
         }
         let total_votes = witness_data.get( "total_votes" );
@@ -51,16 +53,13 @@ class WitnessCard extends React.Component {
     }
 }
 
-WitnessCard.defaultProps = {
-    name: null
-};
-
 class WitnessList extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-                !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name)
+                !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
+                nextProps.filter !== this.props.filter
             );
     }
 
@@ -70,8 +69,19 @@ class WitnessList extends React.Component {
         let itemRows = null;
         if (witnesses.size > 0) {
             itemRows = witnesses
+                .filter(a => {
+                    return witness_id_to_name.get(a.id).indexOf(this.props.filter) !== -1;
+                })
+                .sort((a, b) => {
+                    if (witness_id_to_name.get(a.id) > witness_id_to_name.get(b.id)) {
+                        return 1;
+                    } else if (witness_id_to_name.get(a.id) < witness_id_to_name.get(b.id)) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                })
                 .map((a) => {
-                    // console.log("witness:", a, witness_id_to_name.get(a.id));
                     return (
                         <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)}>
                         </WitnessCard>
@@ -103,13 +113,17 @@ class Witnesses extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            filterWitness: ""
+        };
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
             !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
-            !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject)
+            !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject) ||
+            nextState.filterWitness !== this.state.filterWitness
         );
     }
 
@@ -139,6 +153,11 @@ class Witnesses extends React.Component {
         }
     }
 
+    _onFilter(e) {
+        e.preventDefault();
+        this.setState({filterWitness: e.target.value});
+    }
+
     render() {
         let {witness_id_to_name, witnesses, dynGlobalObject, globalObject} = this.props;
         let activeWitnesses = [];
@@ -158,13 +177,24 @@ class Witnesses extends React.Component {
                 <div className="grid-block page-layout">
                     <div className="grid-block small-5 medium-3">
                         <div className="grid-content">
-                            <h4>Currently active witness: {witness_id_to_name.get(dynGlobalObject.current_witness)}</h4>
+                            <h4>Currently active witness:</h4>
+                            <h3>{witness_id_to_name.get(dynGlobalObject.current_witness)}</h3>
                             <h5>Total number of witnesses active: {Object.keys(globalObject.active_witnesses).length}</h5>
                             <br/>
                         </div>
                     </div>
-                    <div className="grid-block" style={{alignItems: "flex-start", overflowY: "auto", zIndex: 1}}>
-                            <WitnessList witnesses={witnesses} witness_id_to_name={witness_id_to_name}/>
+                    <div className="grid-block">
+                            <div className="grid-content">
+                                <div className="grid-block small-6">
+                                    <Translate component="h3" content="markets.filter" />
+                                    <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} />
+                                </div>
+                                <WitnessList
+                                    witnesses={witnesses}
+                                    witness_id_to_name={witness_id_to_name}
+                                    filter={this.state.filterWitness}
+                                />
+                            </div>
                     </div>
                 </div>
             </div>
