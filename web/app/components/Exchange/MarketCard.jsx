@@ -3,19 +3,25 @@ import {Link} from "react-router";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import Translate from "react-translate-component";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import ChainStore from "api/ChainStore";
 
+@BindToChainState()
 class MarketCard extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {newAccount: "", error: false};
+    
+    static propTypes = {
+        quote: ChainTypes.ChainAsset.isRequired,
+        base: ChainTypes.ChainAsset.isRequired
     }
 
     render() {
 
-        let {market, quote, base} = this.props;
-        let marketID = market.quoteSymbol + "_" + market.baseSymbol;
-        let marketName = market.quoteSymbol + " vs " + market.baseSymbol;
-
+        let {quote, base} = this.props;
+        let marketID = quote.get("symbol") + "_" + base.get("symbol");
+        let marketName = quote.get("symbol") + " vs " + base.get("symbol");
+        let dynamic_data = ChainStore.getObject(quote.get("dynamic_asset_data_id"));
+        
         return (
             <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
                 <div className="card">
@@ -29,15 +35,15 @@ class MarketCard extends React.Component {
                             <ul >
                                 <li><Translate content="markets.core_rate" />: <FormattedPrice
                                                     style={{fontWeight: "bold"}}
-                                                    quote_amount={quote.options.core_exchange_rate.quote.amount}
-                                                    quote_asset={quote.id}
-                                                    base_amount={quote.options.core_exchange_rate.base.amount}
-                                                    base_asset={base.id} />
+                                                    quote_amount={quote.getIn(["options", "core_exchange_rate", "quote", "amount"])}
+                                                    quote_asset={quote.get("id")}
+                                                    base_amount={quote.get(["options", "core_exchange_rate", "base", "amount"])}
+                                                    base_asset={base.get("id")} />
                                 </li>
                                 <li><Translate content="markets.supply" />: <FormattedAsset
                                                     style={{fontWeight: "bold"}}
-                                                    amount={quote.dynamic_data.current_supply}
-                                                    asset={quote.id}
+                                                    amount={dynamic_data.get("current_supply")}
+                                                    asset={quote.get("id")}
                                                     />
                                 </li>
                             </ul>

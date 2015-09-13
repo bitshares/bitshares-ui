@@ -6,6 +6,7 @@ import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
 import {Link} from "react-router";
 import AssetActions from "actions/AssetActions";
+import ChainStore from "api/ChainStore";
 
 class Markets extends React.Component {
 
@@ -50,20 +51,7 @@ class Markets extends React.Component {
       this._checkAssets(nextProps.assets);
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log("nextProps.settings update:", !Immutable.is(nextProps.settings, this.props.settings), nextProps.settings.toJS());
-    //     return (
-    //         !Immutable.is(nextProps.assets, this.props.assets) ||
-    //         !Immutable.is(nextProps.settings, this.props.settings) ||
-    //         nextProps.baseAsset !== this.props.baseAsset ||
-    //         nextState.filterMarket !== this.state.filterMarket ||
-    //         nextState.searchTerm !== this.state.searchTerm
-    //     );
-    // }
-
     _switchMarkets() {
-        console.log("switch markets");
-
         SettingsActions.changeSetting({
             setting: "inverseMarket",
             value: !this.props.settings.get("inverseMarket")
@@ -108,6 +96,7 @@ class Markets extends React.Component {
         let defaultMarkets = this.props.settings.get("defaultMarkets");
         let {searchTerm, filterMarket, } = this.state;
 
+        console.log("defaultMarkets:", defaultMarkets);
         let marketSearch = null;
         if (searchTerm.length > 0) {
 
@@ -137,42 +126,35 @@ class Markets extends React.Component {
 
         let preferredMarkets = defaultMarkets
             .filter(a => {
-                let asset = assets.get(a.quote);
+                let asset = ChainStore.getAsset(a.quote);
                 if (!asset) {
                     return null;
                 }
-                return asset.symbol.indexOf(filterMarket.toUpperCase()) !== -1;
+                return asset.get("symbol").indexOf(filterMarket.toUpperCase()) !== -1;
             }) 
             .sort((a, b) => {
-                let a_asset = assets.get(a.quote);
-                let b_asset = assets.get(b.quote);
+                let a_asset = ChainStore.getAsset(a.quote);
+                let b_asset = ChainStore.getAsset(b.quote);
                 if (!a_asset || !b_asset) {
                     return 0;
                 }
-                if (a_asset.symbol > b_asset.symbol) {
+                if (a_asset.get("symbol") > b_asset.get("symbol")) {
                     return 1;
-                } else if (a_asset.symbol < b_asset.symbol) {
+                } else if (a_asset.get("symbol") < b_asset.get("symbol")) {
                     return -1;
                 } else {
                     return 0;
                 }
             })
             .map(market => {
-                let base = assets.get(market.base);
-                let quote = assets.get(market.quote);
-                if (quote && base) {
-                    market = {quoteSymbol: quote.symbol, baseSymbol: base.symbol};
-
-                    return (
-                        <MarketCard
-                            key={quote.symbol + "__" + base.symbol}
-                            market={market}
-                            quote={quote}
-                            base={base}
-                            removeMarket={this._removeMarket.bind(quote.symbol, base.symbol)}
-                            />
-                    );
-                }
+                return (
+                    <MarketCard
+                        key={market.quote + "__" + market.base}
+                        quote={market.quote}
+                        base={market.base}
+                        removeMarket={this._removeMarket.bind(market)}
+                        />
+                );
         });
 
         let baseOptions = assets.map(a => {
