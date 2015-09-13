@@ -35,7 +35,7 @@ class TransactionLabel extends React.Component {
     }
     render() {
         let trxTypes = counterpart.translate("transaction.trxTypes");
-        let labelClass = classNames("label", this.props.color);
+        let labelClass = classNames("label", this.props.color || "info");
         return (
             <span className={labelClass}>
                 {trxTypes[ops[this.props.type]]}    
@@ -45,15 +45,23 @@ class TransactionLabel extends React.Component {
 }
 
 class Row extends React.Component {
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    }
+
+    _onTimeClick() {
+        this.context.router.transitionTo("block", {height: this.props.block});
+    }
+
     render() {
-        let {block, fee, color, type, key} = this.props;
+        let {block, fee, color, type, key, hideDate, hideFee} = this.props;
         fee.amount = parseInt(fee.amount, 10);
         return (
                 <tr key={key}>
-                    <td><BlockTime block_number={block}/></td>
+                    {!hideDate ? <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td> : null}
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
                     {this.props.children}   
-                    <td style={{paddingRight: "1.5rem"}} className="text-right"><FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={fee.asset_id} /></td>
+                    {!hideFee ? <td style={{paddingRight: "1.5rem"}} className="text-right"><FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={fee.asset_id} /></td> : null}
                 </tr>
             );
     }
@@ -64,13 +72,17 @@ class Operation extends React.Component {
     static defaultProps = {
         op: [],
         current: "",
-        block: false
+        block: false,
+        hideDate: false,
+        hideFee: false
     }
 
     static propTypes = {
         op: PropTypes.array.isRequired,
         current: PropTypes.string.isRequired,
-        block: PropTypes.number
+        block: PropTypes.number,
+        hideDate: PropTypes.bool,
+        hideFee: PropTypes.bool
     }
 
     linkToAccount(name_or_id) {
@@ -88,8 +100,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block, inverted} = this.props;
-        console.log("op:", op);
+        let {op, current, block} = this.props;
         let line = null, column = null, color = "info";
 
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -164,9 +175,9 @@ class Operation extends React.Component {
                 color = "warning";
                 let o = op[1];
                 let isAsk = market_utils.isAskOp(op[1]);
-                if (!inverted) {
-                    isAsk = !isAsk;
-                }
+                // if (!inverted) {
+                //     isAsk = !isAsk;
+                // }
                 column = (
                         <td className="right-td">
                         <BindToChainState.Wrapper asset_sell={op[1].amount_to_sell.asset_id} asset_min={op[1].min_to_receive.asset_id}>
@@ -549,7 +560,8 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.paid" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={op[1].pays.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.obtain" />
-                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} />,
+                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} />
+                            &nbsp;<Translate component="span" content="transaction.at" />
                             &nbsp;<FormattedPrice base_asset={o.pays.asset_id} base_amount={o.pays.amount} 
                                                   quote_asset={o.receives.asset_id} quote_amount={o.receives.amount}  />
                         </td>
@@ -701,7 +713,15 @@ class Operation extends React.Component {
         }
 
         line = column ? (
-            <Row key={this.props.key} block={block} type={op[0]} color={color} fee={op[1].fee}>
+            <Row
+                key={this.props.key}
+                block={block}
+                type={op[0]}
+                color={color}
+                fee={op[1].fee}
+                hideDate={this.props.hideDate}
+                hideFee={this.props.hideFee} 
+            >
                 {column}
             </Row>
         ) : null;

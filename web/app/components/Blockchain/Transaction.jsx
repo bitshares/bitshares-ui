@@ -7,13 +7,9 @@ import counterpart from "counterpart";
 import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import intlData from "../Utility/intlData";
-import AssetActions from "actions/AssetActions";
-// import AccountActions from "actions/AccountActions";
 import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
-import SettingsActions from "actions/SettingsActions";
-// import ChainStore from "api/ChainStore";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
@@ -32,7 +28,7 @@ class OpType extends React.Component {
 
     render() {
         let trxTypes = counterpart.translate("transaction.trxTypes");
-        let labelClass = classNames("txtlabel", this.props.color);
+        let labelClass = classNames("txtlabel", this.props.color || "info");
         return (
             <tr>
                 <td>
@@ -80,14 +76,6 @@ class OperationTable extends React.Component {
 }
 
 class Transaction extends React.Component {
-    // shouldComponentUpdate(nextProps) {
-    //     console.log(nextProps.account_id_to_name, this.props.account_id_to_name, Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length);
-    //     return (
-    //         nextProps.trx.operations.ref_block_prefix !== this.props.trx.operations.ref_block_prefix ||
-    //         !Immutable.is(nextProps.assets, this.props.assets) ||
-    //         Object.keys(nextProps.account_id_to_name).length !== Object.keys(this.props.account_id_to_name).length
-    //     );
-    // }
 
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
@@ -105,53 +93,8 @@ class Transaction extends React.Component {
             <Link to="asset" params={{symbol: symbol_or_id}}>{symbol_or_id}</Link>;
     }
 
-    // getAssets(ids) {
-
-    //     if (!Array.isArray(ids)) {
-    //         ids = [ids];
-    //     }
-
-    //     let missing = new Array(ids.length);
-
-    //     ids.forEach((id, index) => {
-            
-    //         if (!this.props.assets.get(id)) {
-    //             AssetActions.getAsset(id);
-    //             missing[index] = true;
-    //         }
-    //     });
-        
-    //     return missing;
-    // }
-
-    // getAccounts(ids) {
-
-    //     if (!Array.isArray(ids)) {
-    //         ids = [ids];
-    //     }
-
-    //     let missing = new Array(ids.length);
-    //     ids.forEach((id, index) => {
-    //         if (id && !this.props.account_id_to_name[id]) {
-    //             AccountActions.getAccounts(id, 1);
-    //             missing[index] = true;
-    //         }
-    //     });
-        
-    //     return missing;
-    // }
-
-    _flipMarketPrice(e) {
-        e.preventDefault();
-        console.log("_flipMarketPrice:", e);
-        SettingsActions.changeSetting({
-            setting: "inverseMarket",
-            value: !this.props.inverted
-        });
-    }
-
     render() {
-        let {trx, assets, inverted} = this.props;
+        let {trx} = this.props;
         let info = null;
 
         info = [];
@@ -159,14 +102,12 @@ class Transaction extends React.Component {
         let opCount = trx.operations.length;
 
         trx.operations.forEach((op, opIndex) => {
-            // let missingFee = this.getAssets([op[1].fee.asset_id])[0];
-            // let missingAssets;
+
             let rows = [];
             let color = "";
             switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
                 case "transfer":
-                    // console.log("op:", op);
 
                     color = "success";
 
@@ -699,11 +640,12 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.call_limit" /></td>
                             <td>
-                                <FormattedAsset
-                                    amount={feed.call_limit.quote.amount}
-                                    asset={feed.call_limit.quote.asset_id}
-                                    baseamount={feed.call_limit.base.amount}
-                                    base={assets.get(feed.call_limit.base.asset_id)}/>
+                                <FormattedPrice
+                                    base_asset={feed.call_limit.base.asset_id}
+                                    quote_asset={feed.call_limit.quote.asset_id}
+                                    base_amount={feed.call_limit.base.amount}
+                                    quote_amount={feed.call_limit.quote.amount} 
+                                />
                             </td>
                         </tr>
                     );
@@ -712,11 +654,12 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.short_limit" /></td>
                             <td>
-                                <FormattedAsset
-                                    amount={feed.short_limit.quote.amount}
-                                    asset={feed.short_limit.quote.asset_id}
-                                    baseamount={feed.short_limit.base.amount}
-                                    base={assets.get(feed.short_limit.base.asset_id)}/>
+                                <FormattedPrice
+                                    base_asset={feed.short_limit.base.asset_id}
+                                    quote_asset={feed.short_limit.quote.asset_id}
+                                    base_amount={feed.short_limit.base.amount}
+                                    quote_amount={feed.short_limit.quote.amount} 
+                                />  
                             </td>
                         </tr>
                     );
@@ -725,11 +668,12 @@ class Transaction extends React.Component {
                         <tr>
                             <td><Translate component="span" content="explorer.block.settlement_price" /></td>
                             <td>
-                                <FormattedAsset
-                                    amount={feed.settlement_price.quote.amount}
-                                    asset={feed.settlement_price.quote.asset_id}
-                                    baseamount={feed.settlement_price.base.amount}
-                                    base={assets.get(feed.settlement_price.base.asset_id)}/>
+                                <FormattedPrice
+                                    base_asset={feed.settlement_price.base.asset_id}
+                                    quote_asset={feed.settlement_price.quote.asset_id}
+                                    base_amount={feed.settlement_price.base.amount}
+                                    quote_amount={feed.settlement_price.quote.amount} 
+                                />
                             </td>
                         </tr>
                     );
@@ -810,13 +754,31 @@ class Transaction extends React.Component {
                     );
                     break;
 
+                case "vesting_balance_withdraw":
+                    color = "success";
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.to" /></td>
+                            <td>{this.linkToAccount(op[1].owner)}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" /></td>
+                            <td><FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /></td>
+                        </tr>
+                    );
+
+                    break;
+
                 default: 
                     rows = null;
                     break;
             }
 
             info.push(
-                <OperationTable key={opIndex} opCount={opCount} index={opIndex} color={color} type={op[0]} fee={op[1].fee} assets={assets}>
+                <OperationTable key={opIndex} opCount={opCount} index={opIndex} color={color} type={op[0]} fee={op[1].fee}>
                     {rows}
                 </OperationTable>
             );

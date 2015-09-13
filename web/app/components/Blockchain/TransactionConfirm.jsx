@@ -6,9 +6,6 @@ import notify from "actions/NotificationActions";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import AccountStore from "stores/AccountStore";
-import AssetStore from "stores/AssetStore";
-import SettingsStore from "stores/SettingsStore";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import BaseComponent from "../BaseComponent";
@@ -41,9 +38,6 @@ class TransactionConfirm extends BaseComponent {
 
     render() {
         if ( !this.state.transaction || this.state.closed ) {return null; }
-        let assets = AssetStore.getState().assets;
-        let account_id_to_name =  AccountStore.getState().account_id_to_name;
-        let settings = SettingsStore.getState().settings;
 
         let button_group, header;
         if(this.state.error || this.state.broadcast) {
@@ -100,9 +94,7 @@ class TransactionConfirm extends BaseComponent {
                             key={Date.now()}
                             trx={this.state.transaction.serialize()}
                             index={0}
-                            account_id_to_name={account_id_to_name}
-                            inverted={settings.get("inverseMarket")}
-                            assets={assets} no_links={true}
+                            no_links={true}
                             />
                     </div>
                     <div className="grid-block shrink" style={{paddingTop: "1rem"}}>

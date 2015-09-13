@@ -2,7 +2,6 @@ import React from "react";
 import {PropTypes} from "react";
 import MarketCard from "./MarketCard";
 import MarketsActions from "actions/MarketsActions";
-import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
 import {Link} from "react-router";
 import AssetActions from "actions/AssetActions";
@@ -49,14 +48,6 @@ class Markets extends React.Component {
 
     componentWillReceiveProps(nextProps) {
       this._checkAssets(nextProps.assets);
-    }
-
-    _switchMarkets() {
-        SettingsActions.changeSetting({
-            setting: "inverseMarket",
-            value: !this.props.settings.get("inverseMarket")
-        });
-
     }
 
     _onChangeBase(e) {
@@ -213,14 +204,14 @@ class Markets extends React.Component {
 }
 
 Markets.defaultProps = {
-    settings: {},
     assets: {},
+    settings: {},
     markets: {}
 };
 
 Markets.propTypes = {
-    settings: PropTypes.object.isRequired,
     assets: PropTypes.object.isRequired,
+    settings: PropTypes.object.isRequired,
     markets: PropTypes.object
 };
 

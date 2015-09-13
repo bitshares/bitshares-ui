@@ -3,7 +3,6 @@ import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
-import WitnessStore from "stores/WitnessStore";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
@@ -32,7 +31,6 @@ class AccountOverview extends React.Component {
                 );
             })
         }
-        let witness_store_state = WitnessStore.getState().witnesses;
         let history = {};
         let account_history = account.get("history");
         if(account_history) {
@@ -45,8 +43,6 @@ class AccountOverview extends React.Component {
                         result={trx.result}
                         block={trx.block_num}
                         current={account.get("id")}
-                        witnesses={witness_store_state.witnesses}
-                        witness_id_to_name={witness_store_state.witness_id_to_name}
                         inverted={this.props.settings.get("inverseMarket")}
                         />
                 );

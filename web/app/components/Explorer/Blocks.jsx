@@ -130,7 +130,7 @@ class Blocks extends React.Component {
 
     render() {
 
-        let {latestBlocks, latestTransactions, witnesses, witness_id_to_name, globalObject, dynGlobalObject} = this.props;
+        let {latestBlocks, latestTransactions, globalObject, dynGlobalObject} = this.props;
         let blocks = null, transactions = null;
         let headBlock = null;
         let trxCount = 0, blockCount = latestBlocks.size, trxPerSec = 0, blockTimes = [], avgTime = 0;
@@ -190,9 +190,6 @@ class Blocks extends React.Component {
                             result={trx.operation_results[opIndex++]}
                             block={trx.block_num}
                             current={"1.2.0"}
-                            witnesses={witnesses}
-                            witness_id_to_name={witness_id_to_name}
-                            inverted={this.props.settings.get("inverseMarket")}
                         />
                     );
                 })
