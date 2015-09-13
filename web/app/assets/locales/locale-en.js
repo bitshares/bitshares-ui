@@ -187,7 +187,7 @@ module.exports = {
         asset_settle: "Requested settlement of",
         asset_global_settle: "Requested global settlement of",
         publish_feed: "Published new feed for asset",
-        delegate_create: "Created the delegate",
+        delegate_create: "Created the committee member",
         witness_create: "Created the witness",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
@@ -242,7 +242,7 @@ module.exports = {
             asset_settle: "Asset settlement",
             asset_global_settle: "Global asset settlement",
             asset_publish_feed: "Publish asset feed",
-            delegate_create: "Create delegate",
+            delegate_create: "Create committee member",
             witness_create: "Create witness",
             witness_withdraw_pay: "Witness pay withdrawal",
             proposal_create: "Create proposal",
@@ -319,10 +319,10 @@ module.exports = {
             title: "Witnesses"
         },
         delegates: {
-            title: "Delegates"
+            title: "Committee members"
         },
         delegate: {
-            title: "Delegate"
+            title: "Committee member"
         },
         workers: {
             title: "Budget Items"

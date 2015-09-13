@@ -4,34 +4,43 @@ import DelegateActions from "actions/DelegateActions";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
+import Translate from "react-translate-component";
 
+@BindToChainState({keep_updating: true})
 class DelegateCard extends React.Component {
+
+    static propTypes = {
+        delegate: ChainTypes.ChainAccount.isRequired
+    }
 
     static contextTypes = {
         router: React.PropTypes.func.isRequired
     };
 
-    shouldComponentUpdate(nextProps) {
-        return nextProps.name !== this.props.name;
-    }
-
     _onCardClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("delegate", {name: this.props.name});
+        this.context.router.transitionTo("account", {account_name: this.props.delegate.get("name")});
     }
 
     render() {
+        let delegate_data = ChainStore.getCommitteeMemberById( this.props.delegate.get('id') )
+
+        if (!delegate_data) {
+            return null;
+        }
+
         return (
             <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
                 <div className="card">
-                    <h4 className="text-center">{this.props.name}</h4>
+                    <h4 className="text-center">{this.props.delegate.get("name")}</h4>
                     <div className="card-content clearfix">
                         <div className="float-left">
-                            <AccountImage account={this.props.name} size={{height: 64, width: 64}}/>
+                            <AccountImage account={this.props.delegate.get("name")} size={{height: 64, width: 64}}/>
                         </div>
                         <ul className="balances">
-                            <li>Total votes: <FormattedAsset decimalOffset={5} amount={this.props.delegate.total_votes} asset={"1.3.0"}/></li>
+                            <li>Total votes: <FormattedAsset decimalOffset={5} amount={delegate_data.get("total_votes")} asset={"1.3.0"}/></li>
                         </ul>                        
                     </div>
                 </div>
@@ -40,16 +49,13 @@ class DelegateCard extends React.Component {
     }
 }
 
-DelegateCard.defaultProps = {
-    name: null
-};
-
 class DelegateList extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.delegates, this.props.delegates) ||
-                !Immutable.is(nextProps.delegate_id_to_name, this.props.delegate_id_to_name)
+                !Immutable.is(nextProps.delegate_id_to_name, this.props.delegate_id_to_name) ||
+                nextProps.filter !== this.props.filter
             );
     }
 
@@ -59,10 +65,21 @@ class DelegateList extends React.Component {
         let itemRows = null;
         if (delegates.size > 0) {
             itemRows = delegates
+                .filter(a => {
+                    return delegate_id_to_name.get(a.id).indexOf(this.props.filter) !== -1;
+                })
+                .sort((a, b) => {
+                    if (delegate_id_to_name.get(a.id) > delegate_id_to_name.get(b.id)) {
+                        return 1;
+                    } else if (delegate_id_to_name.get(a.id) < delegate_id_to_name.get(b.id)) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                })
                 .map((a) => {
                     return (
-                        <DelegateCard key={a.id} name={delegate_id_to_name.get(a.id)} delegate={a}>
-                        </DelegateCard>
+                        <DelegateCard key={a.id} delegate={delegate_id_to_name.get(a.id)} />
                     );
                 }).toArray();
         } 
@@ -88,13 +105,17 @@ class Delegates extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            filterDelegate: ""
+        };
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.delegates, this.props.delegates) ||
             !Immutable.is(nextProps.delegate_id_to_name, this.props.delegate_id_to_name) ||
-            !Immutable.is(nextProps.globalObject, this.props.globalObject)
+            !Immutable.is(nextProps.globalObject, this.props.globalObject) ||
+            nextState.filterDelegate !== this.state.filterDelegate
         );
     }
 
@@ -124,6 +145,11 @@ class Delegates extends React.Component {
         }
     }
 
+    _onFilter(e) {
+        e.preventDefault();
+        this.setState({filterDelegate: e.target.value});
+    }
+
     render() {
         let {delegate_id_to_name, delegates, globalObject} = this.props;
         globalObject = globalObject.toJS();
@@ -146,8 +172,14 @@ class Delegates extends React.Component {
                             <br/>
                         </div>
                     </div>
-                    <div className="grid-block" style={{alignItems: "flex-start", overflowY: "auto", zIndex: 1}}>
-                        <DelegateList delegates={delegates} delegate_id_to_name={delegate_id_to_name}/>
+                    <div className="grid-block">
+                        <div className="grid-content">
+                            <div className="grid-block small-12 medium-6">
+                                <Translate component="h3" content="markets.filter" />
+                                <input type="text" value={this.state.filterDelegate} onChange={this._onFilter.bind(this)} />
+                            </div>
+                            <DelegateList delegates={delegates} delegate_id_to_name={delegate_id_to_name} filter={this.state.filterDelegate}/>
+                        </div>
                     </div>
                 </div>
             </div>

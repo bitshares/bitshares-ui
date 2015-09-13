@@ -83,8 +83,7 @@ class WitnessList extends React.Component {
                 })
                 .map((a) => {
                     return (
-                        <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)}>
-                        </WitnessCard>
+                        <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)} />
                     );
                 }).toArray();
         } 
@@ -185,7 +184,7 @@ class Witnesses extends React.Component {
                     </div>
                     <div className="grid-block">
                             <div className="grid-content">
-                                <div className="grid-block small-6">
+                                <div className="grid-block small-12 medium-6">
                                     <Translate component="h3" content="markets.filter" />
                                     <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} />
                                 </div>
