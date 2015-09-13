@@ -121,7 +121,7 @@ class Markets extends React.Component {
                     let marketName = a.symbol + "/" + baseAsset.symbol;
                     let isPreferred = this._isPreferred(a.id, baseAsset.id);
                     return (
-                        <tr key={marketID}>
+                        <tr key={marketID + "_search"}>
                             <td><Link to="exchange" params={{marketID: marketID}}>{marketName}</Link></td>
                             {isPreferred ?
                                 <td className="clickable" onClick={this._removeMarket.bind(this, a.id, baseAsset.id)}>-</td> :
