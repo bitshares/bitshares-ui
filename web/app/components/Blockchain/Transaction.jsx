@@ -758,6 +758,26 @@ class Transaction extends React.Component {
 
                     break;
 
+                case "witness_update":
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.witness" /></td>
+                            <td>{this.linkToAccount(op[1].witness_account)}</td>
+                        </tr>
+                    );
+
+                    if (op[1].new_url) {
+                        rows.push(
+                            <tr>
+                                <td><Translate component="span" content="transaction.new_url" /></td>
+                                <td><a href={op[1].new_url} target="_blank">{op[1].new_url}</a></td>
+                            </tr>
+                        );
+                    }
+
+                    break;
+
                 case "balance_claim":
                     color = "success";
 

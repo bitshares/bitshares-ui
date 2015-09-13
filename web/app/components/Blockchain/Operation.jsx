@@ -19,7 +19,6 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletDb from "stores/WalletDb";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
-import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 
@@ -74,37 +73,6 @@ class Operation extends React.Component {
         block: PropTypes.number
     }
 
-    // fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
-    //     if (!Array.isArray(witnessIds)) {
-    //         witnessIds = [witnessIds];
-    //     }
-    //     let missing = new Array(witnessIds.length);
-    //     let missingWitnessIds = new Array(witnessIds.length);
-
-    //     let missingAccounts = [];
-    //     witnessIds.forEach((id, index) => {
-    //         // Check for missing witness data
-    //         if (id && !witnesses.get(id)) {
-    //             missingWitnessIds.push(id);
-    //             missing[index] = true;
-    //         // Check for missing witness account data
-    //         } else if (id && !witness_id_to_name.get(id)) {
-    //             missingAccounts.push(witnesses.get(id).witness_account);
-    //             missing[index] = true;
-    //         }
-    //     });
-
-    //     if (missingWitnessIds.length > 0) {
-    //         WitnessActions.getWitnesses(missingWitnessIds);
-    //     } 
-
-    //     if (missingAccounts.length > 0) {
-    //         WitnessActions.getWitnessAccounts(missingAccounts);
-    //     }
-
-    //     return missing;
-    // }
-
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
@@ -121,7 +89,7 @@ class Operation extends React.Component {
 
     render() {
         let {op, current, block, inverted} = this.props;
-
+        console.log("op:", op);
         let line = null, column = null, color = "info";
 
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -463,10 +431,19 @@ class Operation extends React.Component {
                 break;
 
             case "witness_create":
-                console.log("witness_create:", op[1].witness_account);
                 column = (
                     <td className="right-td">
                         <Translate component="span" content="transaction.witness_create" /> 
+                        &nbsp;{this.linkToAccount(op[1].witness_account)}
+                    </td>
+                );
+
+                break;
+
+            case "witness_update":
+                column = (
+                    <td className="right-td">
+                        <Translate component="span" content="transaction.witness_update" />
                         &nbsp;{this.linkToAccount(op[1].witness_account)}
                     </td>
                 );
@@ -481,7 +458,7 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.witness_pay" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
                             <Translate component="span" content="transaction.to" /> 
-                            &nbsp;<LinkToWitnessById witness={op[1].witness_account} />
+                            &nbsp;{this.linkToAccount(op[1].witness_account)}
                         </td>
                     );
                 } else {
@@ -490,7 +467,7 @@ class Operation extends React.Component {
                             <Translate component="span" content="transaction.received" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
                             <Translate component="span" content="transaction.from" /> 
-                            &nbsp;<LinkToWitnessById witness={op[1].witness_account} />
+                            &nbsp;{this.linkToAccount(op[1].witness_account)}
                         </td>
                     ); 
                 }

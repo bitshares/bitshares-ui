@@ -189,6 +189,7 @@ module.exports = {
         publish_feed: "Published new feed for asset",
         delegate_create: "Created the committee member",
         witness_create: "Created the witness",
+        witness_update: "Updated the witness",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
         proposal_create: "Created a proposal",
@@ -222,6 +223,7 @@ module.exports = {
         funding_account: "Funding account",
         delta_collateral: "Collateral change",
         delta_debt: "Debt change",
+        new_url: "Website",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -244,6 +246,7 @@ module.exports = {
             asset_publish_feed: "Publish asset feed",
             delegate_create: "Create committee member",
             witness_create: "Create witness",
+            witness_update: "Update witness",
             witness_withdraw_pay: "Witness pay withdrawal",
             proposal_create: "Create proposal",
             proposal_update: "Update proposal",
