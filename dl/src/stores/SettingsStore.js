@@ -7,15 +7,17 @@ var Immutable = require("immutable");
 class SettingsStore {
     constructor() {
         this.settings = Immutable.Map({
-            inverseMarket: true,
-            unit: 0,
+            // inverseMarket: true,
+            // unit: 0,
             locale: "en",
-            confirmMarketOrder: true,
+            // confirmMarketOrder: true,
             defaultMarkets: [
                 {quote: "1.3.361", base: "1.3.0"},
                 {quote: "1.3.527", base: "1.3.0"},
                 {quote: "1.3.325", base: "1.3.0"},
-                {quote: "1.3.421", base: "1.3.0"}
+                {quote: "1.3.421", base: "1.3.0"},
+                {quote: "1.3.280", base: "1.3.0"},
+                {quote: "1.3.213", base: "1.3.0"}
             ]
         });
 
@@ -24,14 +26,14 @@ class SettingsStore {
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
         this.defaults = {
-            unit: [
-                "$",
-                "¥",
-                "€",
-                "£",
-                "\u0243",
-                "BTS"
-            ],
+            // unit: [
+            //     "$",
+            //     "¥",
+            //     "€",
+            //     "£",
+            //     "\u0243",
+            //     "BTS"
+            // ],
             locale: [
                 "en",
                 "cn",
@@ -39,14 +41,14 @@ class SettingsStore {
                 "ko",
                 "de"
             ],
-            inverseMarket: [
-                "CORE/USD",
-                "USD/CORE"
-            ],
-            confirmMarketOrder: [
-                {translate: "confirm_yes"},
-                {translate: "confirm_no"}
-            ]
+            // inverseMarket: [
+            //     "CORE/USD",
+            //     "USD/CORE"
+            // ],
+            // confirmMarketOrder: [
+            //     {translate: "confirm_yes"},
+            //     {translate: "confirm_no"}
+            // ]
         };
 
         this.bindListeners({
@@ -55,8 +57,8 @@ class SettingsStore {
             onRemoveMarket: MarketsActions.removeMarket
         });
 
-        if (localStorage.settings) {
-            let settings = Immutable.Map(JSON.parse(localStorage.settings));
+        if (localStorage.settings_v2) {
+            let settings = Immutable.Map(JSON.parse(localStorage.settings_v2));
             this.settings = settings;
         }
 
@@ -68,7 +70,7 @@ class SettingsStore {
             payload.value
         );
 
-        localStorage.settings = JSON.stringify(this.settings.toJS());
+        localStorage.settings_v2 = JSON.stringify(this.settings.toJS());
     }
 
     onAddMarket(market) {
@@ -87,7 +89,7 @@ class SettingsStore {
             this.settings = this.settings.set(
                 "defaultMarkets",
                 defaultMarkets);
-            localStorage.settings = JSON.stringify(this.settings.toJS());
+            localStorage.settings_v2 = JSON.stringify(this.settings.toJS());
         } else {
             return false;
         }
@@ -98,7 +100,7 @@ class SettingsStore {
         for (var i = 0; i < defaultMarkets.length; i++) {
             if (defaultMarkets[i].quote === market.quote && defaultMarkets[i].base === market.base) {
                 defaultMarkets.splice(i, 1);
-                localStorage.settings = JSON.stringify(this.settings.toJS());
+                localStorage.settings_v2 = JSON.stringify(this.settings.toJS());
                 break;
             }
         }
