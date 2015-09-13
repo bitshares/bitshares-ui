@@ -11,7 +11,6 @@ import BindToChainState from "./BindToChainState";
  *
  *  Expected Properties:
  *     asset:  asset id, which will be fetched from the 
- *     base:   optional asset id if this should display a price
  *     amount: the ammount of asset
  *
  */
@@ -21,12 +20,10 @@ class FormattedAsset extends React.Component {
 
     static propTypes = {
         amount: PropTypes.number.isRequired,
-        base: ChainTypes.ChainObject,
         asset: ChainTypes.ChainAsset.isRequired,
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
-        string: PropTypes.string,
         hide_asset: PropTypes.bool
     };
 
@@ -35,10 +32,9 @@ class FormattedAsset extends React.Component {
     };
 
     render() {
-        let {amount, baseamount, decimalOffset, color, asset, base} = this.props;
+        let {amount, decimalOffset, color, asset, hide_asset} = this.props;
 
-        if( asset.toJS ) asset = asset.toJS()
-        if( base && base.toJS ) base = base.toJS()
+        if( asset && asset.toJS ) asset = asset.toJS();
 
         let colorClass = color ? "facolor-" + color : "";
 
@@ -46,33 +42,16 @@ class FormattedAsset extends React.Component {
 
         let decimals = Math.max(0, asset.precision - decimalOffset);
 
-        if (base && baseamount) {
-            decimals++;
-            let baseprecision = utils.get_asset_precision(base.precision);
-            return (
-                    <span className={colorClass}>
-                        <FormattedNumber
-                            value={amount / precision / (baseamount / baseprecision)}
-                            minimumSignificantDigits={decimals}
-                            maximumSignificantDigits={decimals}
-                        />
-                        {asset.symbol}
-                          + "/" 
-                        {base.symbol}
-                    </span>
-            );
-        } else {
-            return (
-                    <span className={colorClass}>
-                        <FormattedNumber 
-                            value={this.props.exact_amount ? amount : amount / precision}
-                            minimumFractionDigits={0}
-                            maximumFractionDigits={decimals}
-                        />
-                        {this.props.hide_asset ? null : <span className="currency">{"\u00a0" + asset.symbol}</span>}
-                    </span>
-            );
-        }
+        return (
+                <span className={colorClass}>
+                    <FormattedNumber 
+                        value={this.props.exact_amount ? amount : amount / precision}
+                        minimumFractionDigits={0}
+                        maximumFractionDigits={decimals}
+                    />
+                    {hide_asset ? null : <span className="currency">{"\u00a0" + asset.symbol}</span>}
+                </span>
+        );
     }
 }
 
