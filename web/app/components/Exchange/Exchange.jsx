@@ -16,6 +16,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
+import AccountNotifications from "../Notifier/NotifierContainer";
 // import Wallet from "transitionTo";
 // import BlockchainStore from "stores/BlockchainStore";
 // import FormattedAsset from "../Utility/FormattedAsset";
@@ -363,14 +364,15 @@ class Exchange extends React.Component {
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
 
-        console.log("quoteIsBitAsset:", quoteIsBitAsset, "baseIsBitAsset:", baseIsBitAsset);
+        // console.log("quoteIsBitAsset:", quoteIsBitAsset, "baseIsBitAsset:", baseIsBitAsset);
         let lowestAsk = asks[0] ? asks[0].price_full : 0;
         let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
 
         return (
 
                 <div className="grid-block page-layout market-layout">
-                {/* Main vertical block with content */}
+                    <AccountNotifications/>
+                    {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
                     <div className="grid-block left-column small-4 medium-3 large-2" style={{overflowY: "auto", justifyContent: "center"}}>

@@ -40,7 +40,6 @@ import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "components/Wallet/WalletUnlockModal"
-import AccountNotifications from "./components/Notifier/NotifierContainer";
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
 // import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -129,7 +128,6 @@ class App extends React.Component {
                 <div className="grid-frame vertical">
                     <HeaderContainer isUnlocked={this.state.isUnlocked}/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                    {/*<AccountNotifications/>*/}
 
                     <div className="grid-block vertical">
                         <RouteHandler />
