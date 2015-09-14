@@ -181,6 +181,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
         });
     }).catch( error => {
         console.error("[App.jsx] ----- App.willTransitionTo error ----->", error);
+        if(error.name === "InvalidStateError") alert("Can't access local storage.\nPlease make sure you are not running your browser in private/incognito mode.");
     })
 };
 
