@@ -1,7 +1,9 @@
 import assert from "assert"
 
+import PublicKey from "ecc/key_public"
+import PrivateKey from "ecc/key_private"
 import ApiInstances from "rpc_api/ApiInstances"
-import chain_api from "api/ChainStore"
+import ChainStore from "api/ChainStore"
 import th from "./test_helper"
 
 var _catch = th.log_error
@@ -16,13 +18,14 @@ var _catch = th.log_error
     For parameters after the --, see:
     ./node_modules/.bin/mocha --help
 */
-describe( "chain_api", ()=> {
+describe( "ChainStore", ()=> {
     
     var api
         
     before( done => {
         api = ApiInstances.instance()
         return api.init_promise.then( ()=> {
+            ChainStore.init()
             done()
         }).catch( _catch )
     })
@@ -31,22 +34,64 @@ describe( "chain_api", ()=> {
         api.close()
     })
     
-    it( "fetchObject", done => {
-        var ps = [
-            chain_api.fetchObject("2.0.0").then( result => {
-                assert(result)
-                assert.equal("2.0.0",result.get("id"))
-            }),
-            chain_api.fetchObject("1.3.9999").then( result => {
-                assert.equal(null, result)
-            }),
-            chain_api.fetchObject( [ "2.0.0" ] ).then( result => {
-                assert.equal(true, Array.isArray(result))
-                assert.equal(1, result.length)
-                assert.equal("2.0.0", result[0].get("id"))
-            })
-        ]
-        Promise.all(ps).then(()=>{done()}).catch( _catch )
+    beforeEach( ()=> {
+        ChainStore.init() 
+    })
+    
+    afterEach( ()=> {
+        ChainStore.subscribers.clear()
+    })
+    
+    it( "getObject", done => {
+        function update() {
+            if(ChainStore.getObject("2.0.0") != undefined) {
+                ChainStore.subscribers.clear()
+                done()
+            }
+        }
+        ChainStore.subscribe(update)
+        ChainStore.getObject("2.0.0")
+    })
+    
+    it( "getAccount", done => {
+        function update() {
+            var set = ChainStore.getAccount("1.2.0")
+            assert(set && set.size > 0, "missing account")
+            if(set != undefined) {
+                ChainStore.subscribers.clear()
+                done()
+            }
+        }
+        ChainStore.subscribe(update)
+        ChainStore.getAccount("1.2.0")
+    })
+    
+    it( "getAccountRefsOfKey", done => {
+        var pubkey = PrivateKey.fromSeed("nathan").toPublicKey().toPublicKeyString()
+        function update() {
+            var set = ChainStore.getAccountRefsOfKey(pubkey)
+            assert(set && set.size > 0, "empty set")
+            if(set != undefined) {
+                ChainStore.subscribers.clear()
+                done()
+            }
+        }
+        ChainStore.subscribe(update)
+        ChainStore.getAccountRefsOfKey(pubkey)
+    })
+    
+    it( "getBalanceObjects", done => {
+        var addy = "GPHHYhQcrjVg5kBzCoeeD38eQdncCC5pBgee"
+        function update() {
+            var set = ChainStore.getBalanceObjects(addy)
+            assert(set.size > 0, "empty set")
+            if(set != undefined) {
+                ChainStore.subscribers.clear()
+                done()
+            }
+        }
+        ChainStore.subscribe(update)
+        ChainStore.getBalanceObjects(addy)
     })
     
 })
