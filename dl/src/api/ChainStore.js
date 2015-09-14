@@ -104,6 +104,8 @@ class ChainStore
     *  Remove a callback that was previously added via subscribe
     */
    unsubscribe( callback ) {
+      if(this.subscribers.has(callback))
+          throw new Error("Unsubscribe callback does not exists")
       this.subscribers.delete( callback ) 
    }
 
@@ -201,8 +203,8 @@ class ChainStore
          .then( vec_account_id => {
                   let refs = Immutable.Set()
                   refs = refs.withMutations( r => {
-                     for( let i = 0; i < vec_account_id.length; ++i ) {
-                        r.add(vec_account_id[i]) 
+                     for( let i = 0; i < vec_account_id[0].length; ++i ) {
+                        r.add(vec_account_id[0][i]) 
                      }
                   } )
                   this.account_ids_by_key = this.account_ids_by_key.set( key, refs )
@@ -312,9 +314,10 @@ class ChainStore
       if( utils.is_object_id(name_or_id) )
       {
          let account = this.getObject( name_or_id )
-         if( account === undefined ) 
+         if( account === undefined ) {
             return this.fetchFullAccount( name_or_id )
-         return account
+        }
+        return account
       }
       else if( validation.is_account_name( name_or_id ) )
       {
