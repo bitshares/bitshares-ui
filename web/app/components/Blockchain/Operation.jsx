@@ -144,7 +144,7 @@ class Operation extends React.Component {
                         <td className="right-td">
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                            &nbsp;<Translate component="span" content="transaction.to" /> <LinkToAccountById account={op[1].to}/>
+                            &nbsp;<Translate component="span" content="transaction.to" /> {this.linkToAccount(op[1].to)}/>
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
@@ -153,17 +153,17 @@ class Operation extends React.Component {
                         <td key={"transfer_" + this.props.key} className="right-td">
                             <Translate component="span" content="transaction.received"/>
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                            &nbsp;<Translate component="span" content="transaction.from"/> <LinkToAccountById account={op[1].from}/>
+                            &nbsp;<Translate component="span" content="transaction.from"/> {this.linkToAccount(op[1].from)}
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
                 } else {
                     column = (
                         <td key={"transfer_" + this.props.key} className="right-td">
-                            <LinkToAccountById account={op[1].to}/>
+                            {this.linkToAccount(op[1].to)}
                             &nbsp;<Translate component="span" content="transaction.received"/>
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                            &nbsp;<Translate component="span" content="transaction.from"/> <LinkToAccountById account={op[1].from}/>
+                            &nbsp;<Translate component="span" content="transaction.from"/> {this.linkToAccount(op[1].from)}
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
