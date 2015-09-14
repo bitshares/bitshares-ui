@@ -104,7 +104,7 @@ class ChainStore
     *  Remove a callback that was previously added via subscribe
     */
    unsubscribe( callback ) {
-      if(this.subscribers.has(callback))
+      if( ! this.subscribers.has(callback))
           throw new Error("Unsubscribe callback does not exists")
       this.subscribers.delete( callback ) 
    }

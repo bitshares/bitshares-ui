@@ -45,7 +45,7 @@ describe( "ChainStore", ()=> {
     it( "getObject", done => {
         function update() {
             if(ChainStore.getObject("2.0.0") != undefined) {
-                ChainStore.subscribers.clear()
+                ChainStore.unsubscribe(update)
                 done()
             }
         }
@@ -58,7 +58,7 @@ describe( "ChainStore", ()=> {
             var set = ChainStore.getAccount("1.2.0")
             assert(set && set.size > 0, "missing account")
             if(set != undefined) {
-                ChainStore.subscribers.clear()
+                ChainStore.unsubscribe(update)
                 done()
             }
         }
@@ -72,7 +72,7 @@ describe( "ChainStore", ()=> {
             var set = ChainStore.getAccountRefsOfKey(pubkey)
             assert(set && set.size > 0, "empty set")
             if(set != undefined) {
-                ChainStore.subscribers.clear()
+                ChainStore.unsubscribe(update)
                 done()
             }
         }
@@ -86,7 +86,7 @@ describe( "ChainStore", ()=> {
             var set = ChainStore.getBalanceObjects(addy)
             assert(set.size > 0, "empty set")
             if(set != undefined) {
-                ChainStore.subscribers.clear()
+                ChainStore.unsubscribe(update)
                 done()
             }
         }
