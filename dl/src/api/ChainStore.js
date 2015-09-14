@@ -868,6 +868,11 @@ class ChainStore
          if(asset_obj) asset_obj = asset_obj.set( 'dynamic', current );
          this.objects_by_id = this.objects_by_id.set( asset_id, asset_obj );
       }
+      else if( object.id.substring(0,worker_prefix.length ) == worker_prefix )
+      {
+        this.objects_by_vote_id.set( object.vote_for, object.id );
+        this.objects_by_vote_id.set( object.vote_against, object.id );
+      }
 
       if( notify_subscribers )
          this.notifySubscribers()
@@ -895,7 +900,8 @@ class ChainStore
           // we may need to fetch some objects
           Apis.instance().db_api().exec( "lookup_vote_ids", [ missing ] )
               .then( vote_obj_array => {
-                     if(DEBUG) console.log( "vote objects ===========> ", vote_obj_array )
+                   console.log( "missing ===========> ", missing )
+                   console.log( "vote objects ===========> ", vote_obj_array )
                    for( let i = 0; i < vote_obj_array.length; ++i )
                    {
                       if( vote_obj_array[i] )

@@ -11,10 +11,11 @@ import BindToChainState from "../Utility/BindToChainState";
 class AccountItemRow extends React.Component {
     static propTypes = {
         account: React.PropTypes.object.isRequired,
+        vote_id: React.PropTypes.string.isRequired,
         onRemoveItem: React.PropTypes.func.isRequired
     }
     onRemoveItem(item_id){
-        this.props.onRemoveItem(item_id);
+        this.props.onRemoveItem(item_id,this.props.vote_id);
     }
     render() {
         let name = this.props.account.get("name");
@@ -90,7 +91,7 @@ class AccountVotingItems extends React.Component {
     render() {
         if(!this.props.items) return null;
         let item_rows = this.props.items.filter(i => i).sort((a,b) => a.get("name") > b.get("name")).map(i => {
-            return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem}/>)
+            return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem} vote_id={"1"}/>)
         });
 
         let error = this.state.error;
