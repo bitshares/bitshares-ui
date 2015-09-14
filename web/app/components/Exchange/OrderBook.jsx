@@ -21,32 +21,32 @@ class OrderBook extends React.Component {
     }
 
     componentDidMount() {
-        let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        let askContainer = React.findDOMNode(this.refs.asksTbody);
-        bidContainer.scrollTop = bidContainer.scrollHeight;
-        Ps.initialize(bidContainer);
-        Ps.initialize(askContainer);
-
-        if (bidContainer.scrollTop !== bidContainer.scrollHeight) {
-            this.setState({didScrollOnMount: false});
-        }
+        //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
+        //let askContainer = React.findDOMNode(this.refs.asksTbody);
+        //bidContainer.scrollTop = bidContainer.scrollHeight;
+        //Ps.initialize(bidContainer);
+        //Ps.initialize(askContainer);
+        //
+        //if (bidContainer.scrollTop !== bidContainer.scrollHeight) {
+        //    this.setState({didScrollOnMount: false});
+        //}
     }
 
     componentWillReceiveProps() {
-        let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        this.setState({shouldScrollBottom: Math.round(bidContainer.scrollTop + bidContainer.offsetHeight) === bidContainer.scrollHeight});
+        //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
+        //this.setState({shouldScrollBottom: Math.round(bidContainer.scrollTop + bidContainer.offsetHeight) === bidContainer.scrollHeight});
     }
 
     componentDidUpdate() {
-        let askContainer = React.findDOMNode(this.refs.asksTbody);
-        let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        if (this.state.shouldScrollBottom || !this.state.didScrollOnMount) {
-            bidContainer.scrollTop = bidContainer.scrollHeight;
-            this.setState({didScrollOnMount: true});
-        }
-
-        Ps.update(bidContainer);
-        Ps.update(askContainer);
+        //let askContainer = React.findDOMNode(this.refs.asksTbody);
+        //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
+        //if (this.state.shouldScrollBottom || !this.state.didScrollOnMount) {
+        //    bidContainer.scrollTop = bidContainer.scrollHeight;
+        //    this.setState({didScrollOnMount: true});
+        //}
+        //
+        //Ps.update(bidContainer);
+        //Ps.update(askContainer);
     }
 
     render() {
@@ -102,28 +102,37 @@ class OrderBook extends React.Component {
 
         return (
                 <div className="left-order-book no-padding" style={{overflowY: "hidden"}}>
-                    <div className="table-container top">
+                    <div className="table-container">
                         <table className="table order-table table-hover text-right">
-                            <thead className="headers">
-                                <tr>
-                                    <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
-                                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
-                                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
-                                </tr>
-                            </thead>
                             <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                                 {bidRows}
+                                <tr key="top-header" className="top-header">
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /> <small>({baseSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><small>({quoteSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /> <small>({baseSymbol}/{quoteSymbol})</small></td>
+                                </tr>
+                                <tr key="spread">
+                                    <td colSpan="3" className="text-center spread">
+                                        <Translate content="exchange.spread" />: {spread} {baseSymbol}
+                                    </td>
+                                </tr>
+                                <tr key="bottom-header" className="bottom-header">
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /> <small>({baseSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /> <small>({quoteSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /> <small>({baseSymbol}/{quoteSymbol})</small></td>
+                                </tr>
+                                {askRows}
                             </tbody>
                         </table>
                     </div>
-                    <div className="text-center spread"><Translate content="exchange.spread" />: {spread} {baseSymbol}</div>
+                    {/*<div className="text-center spread"><Translate content="exchange.spread" />: {spread} {baseSymbol}</div>
                     <div className="table-container">
                         <table className="table order-table table-hover text-right">
                             <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
                                 {askRows}
                             </tbody>
                         </table>
-                    </div>
+                    </div>*/}
                 </div>
         );
     }
