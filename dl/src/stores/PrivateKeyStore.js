@@ -86,6 +86,7 @@ class PrivateKeyStore extends BaseStore {
     }
     
     newPublicKey(pubkey) {
+        /*
         chain_store.getAccountRefsOfKey(pubkey)
         var public_key = PublicKey.fromPublicKeyString(pubkey)
         var addresses = this.state.pubkey_to_addresses.get(pubkey)
@@ -99,6 +100,7 @@ class PrivateKeyStore extends BaseStore {
             addresses.add(address_string)
             chain_store.getBalanceObjects(address_string)
         }
+        */
     }
     
     onAddKey(private_key_object, transaction, event_callback) {
