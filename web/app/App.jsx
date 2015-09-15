@@ -25,7 +25,7 @@ import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
 import Exchange from "components/Exchange/ExchangeContainer";
 import Markets from "components/Exchange/MarketsContainer";
-import TransferPage from "./components/Transfer/TransferPage";
+import Transfer from "./components/Transfer/Transfer";
 import Settings from "./components/Settings/SettingsContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
 import Asset from "./components/Blockchain/AssetContainer";
@@ -214,7 +214,7 @@ let routes = (
         </Route>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
-        <Route name="transfer" path="transfer" handler={TransferPage}/>
+        <Route name="transfer" path="transfer" handler={Transfer}/>
         <Route name="invoice" path="invoice/:data" handler={Invoice}/>
         <Route name="markets" path="markets" handler={Markets}/>
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>

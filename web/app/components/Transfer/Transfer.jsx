@@ -7,14 +7,23 @@ import AccountStore from "stores/AccountStore";
 import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
 import counterpart from "counterpart";
-
-// TODO: add support for url params: from, to, amount, asset, memo
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
 
 class Transfer extends React.Component {
 
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    }
+
     constructor(props) {
-        super(props)
+        super(props);
         this.state = Transfer.getInitialState();
+        if(props.query.from) this.state.from_name = props.query.from;
+        if(props.query.to) this.state.to_name = props.query.to;
+        if(props.query.amount) this.state.amount = props.query.amount;
+        if(props.query.asset) this.state.asset_id = props.query.asset;
+        if(props.query.memo) this.state.memo = props.query.memo;
+        this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
     }
 
     static getInitialState(){
@@ -24,6 +33,7 @@ class Transfer extends React.Component {
             from_account: null,
             to_account: null,
             amount: "",
+            asset_id: null,
             asset: null,
             memo: ""
         };
@@ -53,6 +63,13 @@ class Transfer extends React.Component {
         this.setState({memo: e.target.value});
     }
 
+    onBroadcastAndConfirm(confirm_store_state) {
+        if(confirm_store_state.broadcast && confirm_store_state.closed && confirm_store_state.broadcasted_transaction) {
+            this.setState(Transfer.getInitialState());
+            TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
+        }
+    }
+
     onSubmit(e) {
         e.preventDefault();
         let asset = this.state.asset;
@@ -65,10 +82,7 @@ class Transfer extends React.Component {
             asset.get("id"),
             this.state.memo
         ).then( () => {
-            this.setState({
-                amount: "",
-                memo: ""
-            });
+            TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
         }).catch( e => {
             console.log( "error: ",e)
         } );
@@ -123,7 +137,7 @@ class Transfer extends React.Component {
                         <AmountSelector label="transfer.amount"
                                         amount={this.state.amount}
                                         onChange={this.onAmountChanged.bind(this)}
-                                        asset={asset_types.length > 0 && this.state.asset ? this.state.asset.get("id") : asset_types[0]}
+                                        asset={asset_types.length > 0 && this.state.asset ? this.state.asset.get("id") : ( this.state.asset_id ? this.state.asset_id : asset_types[0])}
                                         assets={asset_types}
                                         display_balance={balance}
                                         tabIndex={3}/>
