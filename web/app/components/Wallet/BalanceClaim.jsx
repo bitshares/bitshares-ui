@@ -94,7 +94,8 @@ class BalanceClaim extends Component {
             index++
             var {accounts, asset_id, balance, balance_claims} =
                 asset_balance
-            
+            console.log("... asset_id", asset_id)
+            console.log("... balance.unvested.unclaimed", balance.unvested.unclaimed)
             if(balance.unvested.unclaimed || balance.vesting.unclaimed) {
                 has_unclaimed = true
                 var account_names = accounts.join(", ")
