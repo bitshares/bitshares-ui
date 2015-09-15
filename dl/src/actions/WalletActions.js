@@ -54,7 +54,8 @@ class WalletActions {
                 [ owner_private, active_private ],
                 transaction
             )
-            return p.catch( error => transaction.abort() )
+            var p2 = WalletDb.incrementBrainKeySequence(transaction)
+            return Promise.all([p,p2]).catch( error => transaction.abort() )
         };
 
         let create_account_with_brain_key = () => {
@@ -122,6 +123,19 @@ class WalletActions {
                 throw error;
             })
         }
+    }
+    
+    findAccountsByBrainKey(brainkey) {
+        var privates = []
+        for(let sequence = 0; sequence < 10; sequence++) {
+            var owner_privkey = key.get_owner_private(
+                this.state.brainkey, sequence
+            )
+            //var active_privkey = key.get_active_private(owner_privkey)
+            privates.push([owner_privkey, sequence])
+        }
+        //var db = api.db_api()
+        //return db.exec("get_key_references", public_keyaddress_params).then( result => {
     }
     
     importBalance( account_name_or_id, wifs_to_balances, broadcast, private_key_tcombs) {

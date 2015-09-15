@@ -240,6 +240,7 @@ class WalletDb {
                 password_checksum: password.checksum,
                 encrypted_brainkey: brainkey_cipherhex,
                 brainkey_checksum,
+                brainkey_sequence: 0,
                 brainkey_pubkey,
                 password_pubkey,
                 created: new Date(),
@@ -290,14 +291,18 @@ class WalletDb {
         if( ! brainkey)
             throw new Error("missing brainkey")
         
-        var owner_privkey = key.get_random_key()
+        var owner_privkey = key.get_owner_private(
+            brainkey, wallet.brainkey_sequence
+        )
         var active_privkey = key.get_active_private(owner_privkey)
 
         return [
             {
-                private_key: owner_privkey
+                private_key: owner_privkey,
+                sequence: wallet.brainkey_sequence + ""
             },{
-                private_key: active_privkey
+                private_key: active_privkey,
+                sequence: wallet.brainkey_sequence + ".0"
             }
         ]
     }
@@ -325,6 +330,7 @@ class WalletDb {
                         private_key,
                         private_key_obj.import_account_names,
                         private_key_obj.import_balances,
+                        null,//brainkey_pos
                         transaction,
                         private_key_obj.public_key_string
                     ).then(
@@ -358,13 +364,14 @@ class WalletDb {
     }
     
     saveKeys(private_keys, transaction, public_key_string) {
-        //private_keys = [{private_key}]
+        //private_keys = [{private_key, sequence}]
         var promises = []
         for(let private_key_record of private_keys) {
             promises.push( this.saveKey(
                 private_key_record.private_key,
                 null, //import_account_names
                 null, //import_balances
+                private_key_record.sequence,
                 transaction,
                 public_key_string
             ))
@@ -376,6 +383,7 @@ class WalletDb {
         private_key,
         import_account_names,
         import_balances,
+        brainkey_pos,
         transaction,
         public_key_string
     ) {
@@ -400,6 +408,7 @@ class WalletDb {
         var private_key_object = {
             import_account_names,
             encrypted_key: private_cipherhex,
+            brainkey_pos: brainkey_pos,
             pubkey: public_key_string
         }
         
@@ -429,6 +438,12 @@ class WalletDb {
         }
         
         return p2.then(()=>p1)//save the results from p1
+    }
+    
+    incrementBrainKeySequence(transaction) {
+        return this._updateWallet( transaction, wallet => {
+            wallet.brainkey_sequence = wallet.brainkey_sequence + 1
+        })
     }
     
     setWalletModified(transaction) {
