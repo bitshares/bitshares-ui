@@ -45,6 +45,7 @@ function keyChecker(props, propName, componentName, location) {
         let value = props[propName];
         if (typeof value === "string") {
             // TODO: check if it's valid key
+            // PublicKey.fromPublicKeyString(value)
             return null
         } else {
             return new Error(`${propName} in ${componentName} should be a key string`);
