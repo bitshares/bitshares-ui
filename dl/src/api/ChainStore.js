@@ -60,6 +60,11 @@ class ChainStore
       this.subscribed = undefined
    }
 
+   resetCache() {
+       this.clearCache()
+       this.init()
+   }
+
    init() {
       return Apis.instance().db_api().exec( "set_subscribe_callback", [ this.onUpdate.bind(this), true ] )
           .then( v => { this.subscribed = true })
@@ -124,7 +129,7 @@ class ChainStore
     */
    getObject( id )
    {
-      if( !utils.is_object_id(id) ) 
+      if( !utils.is_object_id(id) )
          throw Error( "argument is not an object id: " + id )
 
       let result = this.objects_by_id.get( id )
@@ -144,7 +149,7 @@ class ChainStore
     */
    getAsset( id_or_symbol ) 
    {
-      if( !id_or_symbol ) 
+      if( !id_or_symbol )
          return null
 
       if( utils.is_object_id( id_or_symbol ) )

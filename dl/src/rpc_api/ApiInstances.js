@@ -3,7 +3,7 @@ var GrapheneApi = require("./GrapheneApi");
 
 class Apis {
 
-    connect(update_rpc_connection_status_callback, hostname="localhost", port=8090) {
+    connect(hostname="localhost", port=8090) {
         let protocol = "ws:";
         try {
             hostname = window.location.hostname? window.location.hostname : "localhost";
@@ -11,7 +11,7 @@ class Apis {
         } catch(e) {}
         if(this.ws_rpc) return
         console.log( "connecting to ", hostname, ":", port );
-        this.ws_rpc = new WebSocketRpc(protocol + hostname + ":" + port, update_rpc_connection_status_callback);
+        this.ws_rpc = new WebSocketRpc(protocol + hostname + ":" + port);
         this.init_promise = this.ws_rpc.login("", "").then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");
@@ -24,9 +24,11 @@ class Apis {
                 });
             });
             this.ws_rpc.on_reconnect = () => {
-                console.log("[ApiInstances.js:26] ----- connection to rpc server was restored ----->");
                 this.ws_rpc.login("", "").then(() => {
-                    this._db_api.init();
+                    this._db_api.init().then(() => {
+                        if(this.update_rpc_connection_status_callback)
+                            this.update_rpc_connection_status_callback("reconnect");
+                    });
                     this._network_api.init();
                     this._history_api.init();
                 });
@@ -53,20 +55,24 @@ class Apis {
     history_api () {
         return this._history_api;
     }
+
+    setRpcConnectionStatusCallback(callback) {
+        this.update_rpc_connection_status_callback = callback;
+        this.ws_rpc.setRpcConnectionStatusCallback(callback);
+    }
     
 }
 
-var apis_instance, updateRpcConnectionStatus;
+var apis_instance;
 
 module.exports = {
     setRpcConnectionStatusCallback: function(callback) {
-        updateRpcConnectionStatus = callback;
-        if(apis_instance && apis_instance.ws_rpc) apis_instance.ws_rpc.setRpcConnectionStatusCallback(callback);
+        if(apis_instance) apis_instance.setRpcConnectionStatusCallback(callback);
     },
     instance: function ( host="localhost", port=8090) {
         if ( !apis_instance ) {
             apis_instance = new Apis();
-            apis_instance.connect(updateRpcConnectionStatus, host, port);
+            apis_instance.connect(host, port);
         }
         return apis_instance;
     }

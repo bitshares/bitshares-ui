@@ -100,8 +100,8 @@ class BlockchainStore extends BaseStore{
     }
 
     onUpdateRpcConnectionStatus(status){
-        if(this.rpc_connection_status === "closed" && status === "open") ChainStore.clearCache();
-        this.rpc_connection_status = status;
+        if(status === "reconnect")  ChainStore.resetCache();
+        else this.rpc_connection_status = status;
     }
 
 }
