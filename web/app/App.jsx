@@ -92,7 +92,6 @@ class App extends React.Component {
 
         Promise.all([
             localePromise, // Non API
-            ChainStore.init(), // API
             AccountStore.loadDbData()
         ]).then(() => {
             AccountStore.tryToSetCurrentAccount();
@@ -160,7 +159,9 @@ App.willTransitionTo = (transition, params, query, callback) => {
     }
     //API is used to read the chain_id .. The chain_id defines the database name
     Apis.instance().init_promise.then(() => {
-        return iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise.then(() => {
+        var chain = ChainStore.init()
+        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
+        return Promise.all([chain, db]).then(() => {
             return Promise.all([
                 PrivateKeyStore.loadDbData(),
                 WalletDb.loadDbData().then(() => {
