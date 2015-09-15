@@ -59,6 +59,7 @@ import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wall
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
 import BalanceClaim from "components/Wallet/BalanceClaim"
+import ComponentTest from "components/Utility/ComponentTest"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -242,7 +243,7 @@ let routes = (
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
-        
+        <Route name="test" path="/test" handler={ComponentTest}/>
     </Route>
 );
 
