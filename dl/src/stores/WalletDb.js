@@ -119,32 +119,6 @@ class WalletDb {
         return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
     
-    
-    /**
-        @todo "partial"
-        @return string "none", "full", "partial"
-    */
-    getMyAuthorityForAccount(account) {
-        if(account === undefined) return undefined
-        if( ! account) return null
-        let my_authority = "none";
-        if (account) {
-            for (let k of account.owner.key_auths) {
-                if (PrivateKeyStore.hasKey(k[0])) {
-                    my_authority = "full";
-                    break;
-                }
-            }
-            for (let k of account.active.key_auths) {
-                if (PrivateKeyStore.hasKey(k[0])) {
-                    my_authority = "full";
-                    break;
-                }
-            }
-        }
-        return my_authority;
-    }
-    
     // todo -> wallet actions
     process_transaction(tr, signer_pubkeys, broadcast) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)

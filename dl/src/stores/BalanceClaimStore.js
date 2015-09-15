@@ -33,7 +33,7 @@ export var BalanceClaimTcomb = t.struct({
     vested_balance: t.maybe(AssetTypeTcomb)
 }, 'BalanceClaimTcomb')
 
-var TRACE = false
+var TRACE = true
 
 class BalanceClaimStore {
     
@@ -163,7 +163,6 @@ class BalanceClaimStore {
                         })(i) }
                     }
                 }
-               if(TRACE) console.log('... there')
                 Promise.all(ps).then(()=> this.setBalanceClaims(balance_claims))
                 return Promise.all(this.pending_add_promises).then( ()=> {
                     this.pending_add_promises = []
@@ -181,7 +180,6 @@ class BalanceClaimStore {
                 })
             })
         }).catch( balance_claim_error => this.setState({balance_claim_error}) )
-        if(TRACE) console.log('... here')
     }
     
     /** Populate this.state.my_accounts with only account where the wallet

@@ -51,7 +51,6 @@ describe "tr_tests", ->
     
     before (done)->
         iDB.init_instance(fakeIndexedDB).init_promise.then () ->
-            #PrivateKeyStore.loadDbData().then ()->
             api = ApiInstances.instance()
             api.init_promise.then ()->
                 done()

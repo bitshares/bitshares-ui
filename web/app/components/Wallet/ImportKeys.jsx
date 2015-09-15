@@ -676,10 +676,8 @@ export default class ImportKeys extends Component {
             
             if (import_count) {
                 addAccountPromise.then(()=> {
-                    console.log('... addAccountPromise.then...',addAccountPromise)
                     ImportKeysActions.setStatus("saveDone")
                     this.setState({import_complete: true})
-                    // https://github.com/goatslacker/alt/issues/456
                     BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
                     BalanceClaimActions.loadMyAccounts()
                 })
