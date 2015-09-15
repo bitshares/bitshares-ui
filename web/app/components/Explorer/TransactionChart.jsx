@@ -5,7 +5,7 @@ import Highcharts from "react-highcharts/stocks";
 class TransactionChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.blocks.size !== 20) {
+        if (nextProps.blocks.size < 20) {
             return false;
         }
         return nextProps.blocks !== this.props.blocks;
