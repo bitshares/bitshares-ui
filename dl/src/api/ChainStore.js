@@ -49,18 +49,15 @@ class ChainStore
    clearCache() {
       this.objects_by_id            = Immutable.Map()
       this.accounts_by_name         = Immutable.Map()
-      this.assets_by_id             = Immutable.Map()
       this.assets_by_symbol         = Immutable.Map()
       this.account_ids_by_key       = Immutable.Map()
       this.balance_objects_by_address = Immutable.Map()
       this.get_account_refs_of_keys_calls = Immutable.Set()
       this.account_history_requests = new Map() ///< tracks pending history requests
-      this.subscriptions_by_market  = new Map()
       this.witness_by_account_id    = new Map()
       this.committee_by_account_id  = new Map()
       this.objects_by_vote_id       = new Map()
       this.subscribed = undefined
-
    }
 
    init() {

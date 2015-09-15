@@ -3,6 +3,7 @@ var alt = require("../alt-instance");
 var BlockchainActions = require("../actions/BlockchainActions");
 import BaseStore from "./BaseStore";
 import {operations} from "chain/chain_types";
+import ChainStore from "../api/ChainStore";
 
 import {
     Block, GlobalObject, DynGlobalObject
@@ -99,6 +100,7 @@ class BlockchainStore extends BaseStore{
     }
 
     onUpdateRpcConnectionStatus(status){
+        if(this.rpc_connection_status === "closed" && status === "open") ChainStore.clearCache();
         this.rpc_connection_status = status;
     }
 

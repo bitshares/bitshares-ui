@@ -87,7 +87,6 @@ function accountsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        console.log( "value: ", value )
         if (Immutable.List.isList(value)) {
             return null
         } else {
