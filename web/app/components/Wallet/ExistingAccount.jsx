@@ -58,7 +58,7 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                 <BalanceClaim/>
                 
                 {!has_wallet ? <p>
-                    <h5>Import your BTS 2.0+ BACKUP file first (if you have one)</h5>
+                    <h5>Import your BTS 2.0+ BACKUP first</h5>
                 </p>:null}
             </span>
         )
