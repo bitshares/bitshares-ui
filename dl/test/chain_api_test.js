@@ -66,6 +66,22 @@ describe( "ChainStore", ()=> {
         ChainStore.getAccount("1.2.0")
     })
     
+    it( "getAccount byName", done => {
+        function update() {
+            var set = ChainStore.getAccount("init0")
+            if(set != undefined) {
+                ChainStore.unsubscribe(update)
+                assert(set.get('active'))
+                assert(set.get('owner'))
+                // console.log("... set", JSON.stringify(set,null,1))
+                assert(set && set.size > 0, "missing account")
+                done()
+            }
+        }
+        ChainStore.subscribe(update)
+        ChainStore.getAccount("init0")
+    })
+    
     it( "getAccountRefsOfKey", done => {
         var pubkey = PrivateKey.fromSeed("nathan").toPublicKey().toPublicKeyString()
         function update() {
