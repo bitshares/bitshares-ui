@@ -357,6 +357,4 @@ Blocks.propTypes = {
     height: PropTypes.number.isRequired
 };
 
-Blocks.contextTypes = { router: React.PropTypes.func.isRequired };
-
 export default Blocks;

@@ -144,7 +144,7 @@ class Operation extends React.Component {
                         <td className="right-td">
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                            &nbsp;<Translate component="span" content="transaction.to" /> {this.linkToAccount(op[1].to)}/>
+                            &nbsp;<Translate component="span" content="transaction.to" /> {this.linkToAccount(op[1].to)}
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
                         </td>
                     );
