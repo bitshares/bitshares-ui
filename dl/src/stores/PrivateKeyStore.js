@@ -57,8 +57,8 @@ class PrivateKeyStore extends BaseStore {
     catastrophicError(property, error) {
         this.pendingOperationDone()
         var state = { catastrophic_error: true }
-        state["catastrophic_error_" + propery] = error
-        console.log("catastrophic_error_" + propery, error)
+        state["catastrophic_error_" + property] = error
+        console.log("catastrophic_error_" + property, error)
         this.setState(state)
     }
 

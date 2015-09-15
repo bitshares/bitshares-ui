@@ -38,8 +38,8 @@ class Footer extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
        return true
-        return nextProps.dynGlobalObject !== this.props.dynGlobalObject
-            || nextState.rpc_connection_status !== this.state.rpc_connection_status;
+        //return nextProps.dynGlobalObject !== this.props.dynGlobalObject
+        //    || nextState.rpc_connection_status !== this.state.rpc_connection_status;
     }
 
     _triggerPerf() {
