@@ -107,7 +107,7 @@ class ChainStore
     */
    unsubscribe( callback ) {
       if( ! this.subscribers.has(callback))
-          throw new Error("Unsubscribe callback does not exists")
+          console.error("Unsubscribe callback does not exists", callback)
       this.subscribers.delete( callback ) 
    }
 
@@ -949,7 +949,7 @@ export function FetchChainObjects(method, object_ids, timeout) {
         let resolved = onUpdate(true);
         if(!resolved) chain_store.subscribe(onUpdate);
 
-        if(timeout) setTimeout(() => {
+        if(timeout && !resolved) setTimeout(() => {
             chain_store.unsubscribe(onUpdate);
             reject("timeout");
         }, timeout);
