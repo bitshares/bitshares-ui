@@ -50,6 +50,23 @@ describe( "wallet_actions", ()=> {
         api.close()
     })
     
+    it("import_keys", done => {
+        var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
+        helper.test_wallet( suffix ).then(()=>{
+            var private_key = PrivateKey.fromSeed("nathan")
+            var wif = private_key.toWif()
+            var private_key_obj = {
+                wif,
+                import_account_names: ["nathan"],
+                public_key_string: private_key.toPublicKey().toPublicKeyString()
+            }
+            WalletDb.importKeys([ private_key_obj ]).then( result => {
+                // console.log("importKeys", result)
+                done()
+            })
+        }).catch(_catch)
+    })
+    
     it( "wallet_backups", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         var public_name = "default_" + suffix
