@@ -20,9 +20,9 @@ class TransactionConfirm extends BaseComponent {
 
     componentDidUpdate() {
         if(!this.state.closed) {
-            ZfApi.publish("transaction_confim_modal", "open");
+            ZfApi.publish("transaction_confirm_modal", "open");
         } else {
-            ZfApi.publish("transaction_confim_modal", "close");
+            ZfApi.publish("transaction_confirm_modal", "close");
         }
     }
 
@@ -86,7 +86,7 @@ class TransactionConfirm extends BaseComponent {
 
         return (
             <div ref="transactionConfirm">
-                <Modal id="transaction_confim_modal" ref="modal" overlay={true}>
+                <Modal id="transaction_confirm_modal" ref="modal" overlay={true} overlayClose={!this.state.broadcasting}>
                     {!this.state.broadcasting ? <a href className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</a> : null}
                     {header}
                     <div style={{maxHeight: "60vh", overflowY:'auto'}}>
@@ -94,8 +94,7 @@ class TransactionConfirm extends BaseComponent {
                             key={Date.now()}
                             trx={this.state.transaction.serialize()}
                             index={0}
-                            no_links={true}
-                            />
+                            no_links={true}/>
                     </div>
                     <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
                         {button_group}
