@@ -1,21 +1,25 @@
 import React, {Component} from "react"
-import ResolveLinkedAccounts from "components/Utility/ComponentTest"
+import ChainTypes from "components/Utility/ChainTypes"
+import BindToChainState from "components/Utility/BindToChainState"
+import Immutable from "immutable"
 
+import AccountStore from "stores/AccountStore"
+
+@BindToChainState()
 export default class ComponentTest extends Component {
+    
+    static propTypes = {
+        resolvedLinkedAccounts: ChainTypes.ChainAccountsList.isRequired
+    }
+    
+    static defaultProps = {
+        resolvedLinkedAccounts: Immutable.List(AccountStore.getState().linkedAccounts)
+    }
     
     render() {
         return (
-            <ResolveLinkedAccounts>
-                <MyList/>
-            </ResolveLinkedAccounts>
+            <span>{this.props.resolvedLinkedAccounts.size}</span>
         )
     }
 
-}
-
-class MyList extends Component {
-    
-    render() {
-        return <span>hi</span>
-    }
 }
