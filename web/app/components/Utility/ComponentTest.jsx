@@ -6,20 +6,28 @@ import Immutable from "immutable"
 import AccountStore from "stores/AccountStore"
 
 @BindToChainState()
-export default class ComponentTest extends Component {
+class ComponentTest extends Component {
     
     static propTypes = {
-        resolvedLinkedAccounts: ChainTypes.ChainAccountsList.isRequired
-    }
-    
-    static defaultProps = {
-        resolvedLinkedAccounts: Immutable.List(AccountStore.getState().linkedAccounts)
+        linkedAccounts: ChainTypes.ChainAccountsList.isRequired
     }
     
     render() {
         return (
-            <span>{this.props.resolvedLinkedAccounts.size}</span>
+            <ul>
+                {this.props.linkedAccounts.filter(a => a).map( a => <li>{a.get("id")} : {a.get("name")}</li>)}
+            </ul>
         )
     }
 
 }
+
+
+class ComponentTestContainer {
+    render() {
+        return <ComponentTest linkedAccounts={Immutable.List(["init1", "init2", "init3", "nathan"])}/>
+    }
+}
+
+
+export default ComponentTestContainer;

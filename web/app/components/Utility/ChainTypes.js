@@ -74,7 +74,7 @@ function objectsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        if (Immutable.List.isList(value)) {
+        if (Immutable.List.isList(value) || value instanceof Array) {
             return null
         } else {
             return new Error(`${propName} in ${componentName} should be Immutable.List`);
@@ -88,7 +88,7 @@ function accountsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        if (Immutable.List.isList(value)) {
+        if (Immutable.List.isList(value) || value instanceof Array) {
             return null
         } else {
             return new Error(`${propName} in ${componentName} should be Immutable.List`);
