@@ -34,11 +34,10 @@ class AccountStore extends BaseStore {
     
     clearCache() {
         this.state = { update: false }
-        this.currentAccount = null;
-        this.linkedAccounts = Immutable.Set();
-        this.searchAccounts = Immutable.Map();
+        this.state.currentAccount = null;
+        this.state.linkedAccounts = Immutable.Set();
+        this.state.searchAccounts = Immutable.Map();
         // this.refAccounts = Immutable.Map()
-        this.notify_listeners = false
     }
     
     chainStoreUpdate() {
@@ -50,7 +49,7 @@ class AccountStore extends BaseStore {
     
     getMyAccounts() {
         var accounts = []
-        for(let account_name of this.linkedAccounts) {
+        for(let account_name of this.state.linkedAccounts) {
             var account = ChainStore.getAccount(account_name)
             if(account === undefined) {
                 this.state.update = true
@@ -97,25 +96,25 @@ class AccountStore extends BaseStore {
     }
     
     onAccountSearch(accounts) {
-        this.searchAccounts = this.searchAccounts.clear();
+        this.state.searchAccounts = this.state.searchAccounts.clear();
         accounts.forEach(account => {
-            this.searchAccounts = this.searchAccounts.withMutations(map => {
+            this.state.searchAccounts = this.state.searchAccounts.withMutations(map => {
                 map.set(account[1], account[0]);
             });
         });
     }
 
     tryToSetCurrentAccount() {
-        if (this.linkedAccounts.size > 0) {
-            this.setCurrentAccount(this.linkedAccounts.first());
+        if (this.state.linkedAccounts.size > 0) {
+            this.state.setCurrentAccount(this.state.linkedAccounts.first());
         }  
     }
 
     setCurrentAccount(name) {
         if (!name) {
-            this.currentAccount = null;
+            this.state.currentAccount = null;
         } else {
-            this.currentAccount = name
+            this.state.currentAccount = name
         }
     }
 
@@ -134,7 +133,7 @@ class AccountStore extends BaseStore {
         if(account["toJS"])
             account = account.toJS()
         
-        if(account.name == "" || this.linkedAccounts.get(account.name))
+        if(account.name == "" || this.state.linkedAccounts.get(account.name))
             return Promise.resolve()
         
         if( ! validation.is_account_name(account.name))
@@ -142,8 +141,8 @@ class AccountStore extends BaseStore {
         
         return iDB.add_to_store("linked_accounts", {name: account.name}).then(() => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", account.name);
-            this.linkedAccounts = this.linkedAccounts.add(account.name);
-            if (this.linkedAccounts.size === 1) {
+            this.state.linkedAccounts = this.state.linkedAccounts.add(account.name);
+            if (this.state.linkedAccounts.size === 1) {
                 this.setCurrentAccount(account.name);
             }
         });
@@ -156,9 +155,8 @@ class AccountStore extends BaseStore {
         iDB.add_to_store("linked_accounts", {
             name
         });
-        this.linkedAccounts = this.linkedAccounts.add(name);
-        updateLinkedAccounts()
-        if (this.linkedAccounts.size === 1) {
+        this.state.linkedAccounts = this.state.linkedAccounts.add(name);
+        if (this.state.linkedAccounts.size === 1) {
             this.setCurrentAccount(name);
         }
     }
@@ -168,16 +166,16 @@ class AccountStore extends BaseStore {
             throw new Error("Invalid account name: " + name)
         
         iDB.remove_from_store("linked_accounts", name);
-        this.linkedAccounts = this.linkedAccounts.delete(name);
-        if (this.linkedAccounts.size === 0) {
+        this.state.linkedAccounts = this.state.linkedAccounts.delete(name);
+        if (this.state.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
         }
     }
     
     loadDbData() {
-        this.linkedAccounts = Immutable.Set();
+        this.state.linkedAccounts = Immutable.Set();
         return iDB.load_data("linked_accounts").then(data => {
-            this.linkedAccounts = this.linkedAccounts.withMutations(set => {
+            this.state.linkedAccounts = this.state.linkedAccounts.withMutations(set => {
                 for (let a of data) {
                     set.add(a.name);
                 }
