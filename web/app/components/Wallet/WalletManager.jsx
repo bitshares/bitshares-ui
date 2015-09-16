@@ -54,23 +54,20 @@ export class WalletOptions extends WalletBaseComponent {
             <hr/>
             </span>:null}
             
-            <Link to="wmc-backup-restore">
-            <div className="button success">Import Backup</div></Link>
+            {has_wallet ? <Link to="wmc-backup-create">
+            <div className="button success">Create Backup</div></Link>:null}
+            
+            <Link to="wmc-backup-verify-restore">
+            <div className="button success">Verify Restore Backup</div></Link>
             
             {has_wallet ? <Link to="wmc-import-keys">
             <div className="button success">Import Keys</div></Link>:null}
             
-            {/*<Link to="wmc-provide-brainkey">
-            <div className="button success">Provide Brainkey</div></Link>*/}
+            {/*<Link to="wmc-brainkey">
+            <div className="button success">Brainkey</div></Link>*/}
             
             <Link to="wmc-wallet-create">
             <div className="button success">Create Wallet</div></Link>
-            
-            {has_wallet ? <Link to="wmc-backup-create">
-            <div className="button success">Create Backup</div></Link>:null}
-            
-            <Link to="wmc-backup-verify">
-            <div className="button success">Verify Prior Backup</div></Link>
             
             <BalanceClaim/>
             

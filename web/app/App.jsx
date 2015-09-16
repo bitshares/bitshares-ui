@@ -48,7 +48,6 @@ import iDB from "idb-instance";
 import ExistingAccount,{ExistingAccountOptions} from "components/Wallet/ExistingAccount";
 import WalletCreate from "components/Wallet/WalletCreate";
 import ImportKeys from "components/Wallet/ImportKeys";
-import {ImportBrainkey} from "components/Wallet/Brainkey"
 import WalletDb from "stores/WalletDb";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import Console from "./components/Console/Console";
@@ -59,7 +58,9 @@ import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wall
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
 import BalanceClaim from "components/Wallet/BalanceClaim"
+import Brainkey from "components/Wallet/Brainkey"
 import ComponentTest from "components/Utility/ComponentTest"
+
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -207,12 +208,11 @@ let routes = (
         <Route name="wallet" path="wallet" handler={WalletManager}>
             {/* wallet management console */}
             <DefaultRoute handler={WalletOptions}/>
-            <Route name="wmc-backup-restore" path="backup/restore" handler={BackupRestore}/>
+            <Route name="wmc-backup-verify-restore" path="backup/restore" handler={BackupRestore}/>
             <Route name="wmc-import-keys" path="import-keys" handler={ImportKeys}/>
-            <Route name="wmc-provide-brainkey" path="provide-brainkey" handler={ImportBrainkey}/>
+            <Route name="wmc-brainkey" path="brainkey" handler={Brainkey}/>
             <Route name="wmc-wallet-create" path="wallet/create" handler={WalletCreate}/>
             <Route name="wmc-backup-create" path="backup/create" handler={BackupCreate}/>
-            <Route name="wmc-backup-verify" path="backup/verify" handler={BackupVerify}/>
         </Route>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
@@ -229,7 +229,7 @@ let routes = (
             <DefaultRoute handler={ExistingAccountOptions}/>
             <Route name="welcome-import-backup" path="import-backup" handler={BackupRestore}/>
             <Route name="welcome-import-keys" path="import-keys" handler={ImportKeys}/>
-            <Route name="welcome-provide-brainkey" path="provide-brainkey" handler={ImportBrainkey}/>
+            <Route name="welcome-brainkey" path="brainkey" handler={Brainkey}/>
             <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaim}/>
         </Route>
         
@@ -244,6 +244,7 @@ let routes = (
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
         <Route name="test" path="/test" handler={ComponentTest}/>
+        
     </Route>
 );
 
