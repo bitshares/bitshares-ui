@@ -45,7 +45,7 @@ class MarketsActions {
 
     subscribeMarket(base, quote, bucketSize) {
         let subID = quote.id + "_" + base.id;
-        console.log("sub to market:", subID);
+        // console.log("sub to market:", subID);
 
         let isMarketAsset = quote.market_asset && quote.bitasset_data.options.short_backing_asset === base.id;
 
@@ -186,8 +186,8 @@ class MarketsActions {
     }
 
     createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
-        let uniqueExpiration = addSeconds(expiration);
-        console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
+        // let uniqueExpiration = addSeconds(expiration);
+        // console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
 
         // var order = {
         //     expiration: uniqueExpiration,
@@ -232,26 +232,26 @@ class MarketsActions {
             "fill_or_kill": isFillOrKill
         });
         return WalletDb.process_transaction(tr, null, true).then(result => {
-            console.log("order result:", result);
+            // console.log("order result:", result);
             return true;
                 // TODO: update order ID from the server's response, if possible
         })
             .catch(error => {
                 console.log("order error:", error);
 
-                this.dispatch({
-                    failedOrder: {expiration: uniqueExpiration}
-                });
+                // this.dispatch({
+                //     failedOrder: {expiration: uniqueExpiration}
+                // });
 
                 return false;
             });
     }
 
     cancelLimitOrder(accountID, orderID) {
-        console.log("cancel action:", accountID, orderID);
-        this.dispatch({
-            newOrderID: orderID
-        });
+        // console.log("cancel action:", accountID, orderID);
+        // this.dispatch({
+        //     newOrderID: orderID
+        // });
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
             fee: {
@@ -262,14 +262,14 @@ class MarketsActions {
             "order": orderID
         });
         return WalletDb.process_transaction(tr, null, true).then(result => {
-            console.log("cancel result:", result);
+            // console.log("cancel result:", result);
             return true;
         })
         .catch(error => {
             console.log("cancel error:", error);
-            this.dispatch({
-                failedOrderID: orderID
-            });
+            // this.dispatch({
+            //     failedOrderID: orderID
+            // });
             return false;
         });
     }

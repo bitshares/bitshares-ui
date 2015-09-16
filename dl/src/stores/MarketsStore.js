@@ -47,8 +47,6 @@ class MarketsStore {
             onSubscribeMarket: MarketsActions.subscribeMarket,
             onUnSubscribeMarket: MarketsActions.unSubscribeMarket,
             onGetMarkets: MarketsActions.getMarkets,
-            onCreateLimitOrder: MarketsActions.createLimitOrder,
-            onCancelLimitOrder: MarketsActions.cancelLimitOrder,
             onChangeBase: MarketsActions.changeBase,
             onInverseMarket: SettingsActions.changeSetting,
             onChangeBucketSize: MarketsActions.changeBucketSize
@@ -214,66 +212,66 @@ class MarketsStore {
 
     }
 
-    onCreateLimitOrder(e) {
-        this.pendingCounter++;
-        if (e.newOrder) { // Optimistic update
-            e.newOrder.id = `${e.newOrder.seller}_${this.pendingCounter}`;
-            this.pendingCreateLimitOrders.push({id: e.newOrder.id, seller: e.newOrder.seller, expiration: e.newOrder.expiration});
-            e.newOrder.for_sale = parseInt(e.newOrder.for_sale, 10);
-            e.newOrder.expiration = new Date(e.newOrder.expiration);
-            this.activeMarketLimits = this.activeMarketLimits.set(
-                e.newOrder.id,
-                LimitOrder(e.newOrder)
-            );
-        }
+    // onCreateLimitOrder(e) {
+    //     this.pendingCounter++;
+    //     if (e.newOrder) { // Optimistic update
+    //         e.newOrder.id = `${e.newOrder.seller}_${this.pendingCounter}`;
+    //         this.pendingCreateLimitOrders.push({id: e.newOrder.id, seller: e.newOrder.seller, expiration: e.newOrder.expiration});
+    //         e.newOrder.for_sale = parseInt(e.newOrder.for_sale, 10);
+    //         e.newOrder.expiration = new Date(e.newOrder.expiration);
+    //         this.activeMarketLimits = this.activeMarketLimits.set(
+    //             e.newOrder.id,
+    //             LimitOrder(e.newOrder)
+    //         );
+    //     }
 
-        if (e.failedOrder) { // Undo order if failed
-            let uid;
-            for (var i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
-                if (this.pendingCreateLimitOrders[i].expiration === e.failedOrder.expiration) {
-                    console.log("found failed order to remove", this.pendingCreateLimitOrders[i]);
-                    uid = this.pendingCreateLimitOrders[i].id;
-                    this.pendingCreateLimitOrders.splice(i, 1);
-                    this.activeMarketLimits = this.activeMarketLimits.delete(uid);
-                    break;
-                }
-            }
+    //     if (e.failedOrder) { // Undo order if failed
+    //         let uid;
+    //         for (var i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
+    //             if (this.pendingCreateLimitOrders[i].expiration === e.failedOrder.expiration) {
+    //                 console.log("found failed order to remove", this.pendingCreateLimitOrders[i]);
+    //                 uid = this.pendingCreateLimitOrders[i].id;
+    //                 this.pendingCreateLimitOrders.splice(i, 1);
+    //                 this.activeMarketLimits = this.activeMarketLimits.delete(uid);
+    //                 break;
+    //             }
+    //         }
 
-            if (this.pendingCreateLimitOrders.length === 0) {
-                this.pendingCounter = 0;
-            }
-        }
+    //         if (this.pendingCreateLimitOrders.length === 0) {
+    //             this.pendingCounter = 0;
+    //         }
+    //     }
 
-        // Update orderbook
-        this._orderBook();
+    //     // Update orderbook
+    //     this._orderBook();
 
-        // Update depth chart data
-        this._depthChart();
+    //     // Update depth chart data
+    //     this._depthChart();
 
-    }
+    // }
 
-    onCancelLimitOrder(e) {
-        if (e.newOrderID) { // Optimistic update
-            this.pendingCancelLimitOrders[e.newOrderID] = this.activeMarketLimits.get(e.newOrderID);
-            this.activeMarketLimits = this.activeMarketLimits.delete(e.newOrderID);
-        }
+    // onCancelLimitOrder(e) {
+    //     if (e.newOrderID) { // Optimistic update
+    //         this.pendingCancelLimitOrders[e.newOrderID] = this.activeMarketLimits.get(e.newOrderID);
+    //         this.activeMarketLimits = this.activeMarketLimits.delete(e.newOrderID);
+    //     }
 
-        if (e.failedOrderID) { // Undo removal if cancel failed
-            this.activeMarketLimits = this.activeMarketLimits.set(
-                e.failedOrderID,
-                this.pendingCancelLimitOrders[e.failedOrderID]
-            );
+    //     if (e.failedOrderID) { // Undo removal if cancel failed
+    //         this.activeMarketLimits = this.activeMarketLimits.set(
+    //             e.failedOrderID,
+    //             this.pendingCancelLimitOrders[e.failedOrderID]
+    //         );
 
-            delete this.pendingCancelLimitOrders[e.failedOrderID];
-        }
+    //         delete this.pendingCancelLimitOrders[e.failedOrderID];
+    //     }
 
-        // Update orderbook
-        this._orderBook();
+    //     // Update orderbook
+    //     this._orderBook();
 
-        // Update depth chart data
-        this._depthChart();
+    //     // Update depth chart data
+    //     this._depthChart();
 
-    }
+    // }
 
     onGetMarkets(markets) {
         markets.forEach(market => {
