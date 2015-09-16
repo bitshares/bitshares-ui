@@ -72,8 +72,8 @@ describe( "ChainStore", ()=> {
             if(set != undefined) {
                 ChainStore.unsubscribe(update)
                 assert(set.get('active'))
-                assert(set.get('owner'))
-                // console.log("... set", JSON.stringify(set,null,1))
+                assert(set.get('owner').get("key_auths"))
+                // console.log("... set", set, JSON.stringify(set,null,1))
                 assert(set && set.size > 0, "missing account")
                 done()
             }

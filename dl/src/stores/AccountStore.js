@@ -39,23 +39,34 @@ class AccountStore extends BaseStore {
         // this.refAccounts = Immutable.Map()
     }
     
+    static getMyAccounts(accounts) {
+        var accounts = []
+        for(let account of accounts) {
+            if(this.getMyAuthorityForAccount(account) === "full") {
+                accounts.push(account_name)
+                console.log("DEBUG my full account account_name", account_name)
+            }
+        }
+        return accounts
+    }
+    
     /**
         @todo "partial"
         @return string "none", "full", "partial"
     */
-    getMyAuthorityForAccount(account) {
+    static getMyAuthorityForAccount(account) {
         if(account === undefined) return undefined
         if( ! account) return null
         let my_authority = "none";
         if (account) {
-            for (let k of account.owner.key_auths) {
-                if (this.hasKey(k[0])) {
+            for (let k of account.get("owner").get("key_auths")) {
+                if (this.hasKey(k.get(0))) {
                     my_authority = "full";
                     break;
                 }
             }
-            for (let k of account.active.key_auths) {
-                if (this.hasKey(k[0])) {
+            for (let k of account.get("active").get("key_auths")) {
+                if (this.hasKey(k.get(0))) {
                     my_authority = "full";
                     break;
                 }
@@ -63,15 +74,6 @@ class AccountStore extends BaseStore {
         }
         return my_authority;
     }
-    
-    // getRefAccountNames(full_auth = true) {
-    //     var names = []
-    //     for(let account of this.state.refAccounts) {
-    //         if(!full_auth || this.getMyAuthorityForAccount(account) === "full")
-    //             names.push(account.name)
-    //     }
-    //     return names
-    // }
     
     onAccountSearch(accounts) {
         this.searchAccounts = this.searchAccounts.clear();
