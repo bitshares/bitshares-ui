@@ -33,6 +33,7 @@ export default class Brainkey extends BrainkeyBaseComponent {
                 <h3>Brainkey</h3>
                 
                 <BrainkeyInput>
+                    <ViewBrainkey/>
                 </BrainkeyInput>
                 
             </span>

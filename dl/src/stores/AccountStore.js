@@ -106,7 +106,7 @@ class AccountStore extends BaseStore {
 
     tryToSetCurrentAccount() {
         if (this.state.linkedAccounts.size > 0) {
-            this.state.setCurrentAccount(this.state.linkedAccounts.first());
+            this.setCurrentAccount(this.state.linkedAccounts.first());
         }  
     }
 
