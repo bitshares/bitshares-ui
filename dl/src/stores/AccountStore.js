@@ -63,7 +63,7 @@ class AccountStore extends BaseStore {
                 accounts.push(account_name)
             }
         }
-        return accounts
+        return accounts.sort()
     }
     
     /**
