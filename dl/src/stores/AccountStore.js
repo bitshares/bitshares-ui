@@ -33,17 +33,18 @@ class AccountStore extends BaseStore {
     }
     
     clearCache() {
+        this.state = { update: false }
         this.currentAccount = null;
         this.linkedAccounts = Immutable.Set();
         this.searchAccounts = Immutable.Map();
         // this.refAccounts = Immutable.Map()
-        this.update = false
+        this.notify_listeners = false
     }
     
     chainStoreUpdate() {
-        if(this.update) {
-            this.setState({})
-            this.update = false
+        if(this.state.update) {
+            // console.log("Account chainStoreUpdate, notify listners");
+            this.setState({update: false})
         }
     }
     
@@ -52,10 +53,13 @@ class AccountStore extends BaseStore {
         for(let account_name of this.linkedAccounts) {
             var account = ChainStore.getAccount(account_name)
             if(account === undefined) {
-                this.update = true
+                this.state.update = true
                 continue
             }
-            if(account == null) continue
+            if(account == null) {
+                console.log("... ChainStore.getAccount("+account_name+") == null")
+                continue
+            }
             if(this.getMyAuthorityForAccount(account) === "full") {
                 accounts.push(account_name)
             }

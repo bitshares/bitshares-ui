@@ -29,14 +29,6 @@ class CreateAccount extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this)
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.accountName !== this.state.accountName
-               || nextState.validAccountName !== this.state.validAccountName
-               || nextState.validPassword !== this.state.validPassword
-               || nextState.registrar_account !== this.state.registrar_account
-               || nextState.loading !== this.state.loading;
-    }
-
     onAccountNameChange(e) {
         let state = {validAccountName: e.valid};
         if(e.value || e.value === "") state.accountName = e.value;
