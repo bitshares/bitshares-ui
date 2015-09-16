@@ -134,19 +134,21 @@ class AccountAssets extends React.Component {
         ZfApi.publish("create_asset", "close");
         let {create} = this.state;
         AssetActions.createAsset(account_id, create).then(result => {
-            if (result) {
-                notify.addNotification({
-                    message: `Successfully created the asset ${create.symbol}`,//: ${this.state.wallet_public_name}
-                    level: "success",
-                    autoDismiss: 10
-                });
-            } else {
-                notify.addNotification({
-                    message: `Failed to create the asset`,//: ${this.state.wallet_public_name}
-                    level: "error",
-                    autoDismiss: 10
-                });
-            }
+            console.log("... AssetActions.createAsset(account_id, create)", account_id, create)
+            // Notify 'Successfully created the asset' was running before transaction dialog confirm
+            // if (result) {
+            //     notify.addNotification({
+            //         message: `Successfully created the asset ${create.symbol}`,//: ${this.state.wallet_public_name}
+            //         level: "success",
+            //         autoDismiss: 10
+            //     });
+            // } else {
+            //     notify.addNotification({
+            //         message: `Failed to create the asset`,//: ${this.state.wallet_public_name}
+            //         level: "error",
+            //         autoDismiss: 10
+            //     });
+            // }
         });
     }
 
