@@ -3,6 +3,7 @@ import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import AltContainer from "alt/AltContainer";
 import Dashboard from "./Dashboard";
+import Immutable from "immutable";
 
 class DashboardContainer extends React.Component {
     render() {
@@ -13,7 +14,7 @@ class DashboardContainer extends React.Component {
                 /** bind to chain state will use this to trigger updates to the dashboard */
                 resolvedLinkedAccounts: () => {
                     console.log( "Linked Accounts: ", AccountStore.getState().linkedAccounts,  AccountStore.getState().linkedAccounts.toJS() );
-                    return AccountStore.getState().linkedAccounts;
+                    return Immutable.List(AccountStore.getState().linkedAccounts);
                 },
                 /** the dashboard only really needs the list of accounts */
                 linkedAccounts: () => {
