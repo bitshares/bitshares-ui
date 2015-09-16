@@ -395,7 +395,7 @@ class Exchange extends React.Component {
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink" style={{paddingTop: 0}}>
-                            <span className="market-symbol">{`${baseSymbol} / ${quoteSymbol}`} <Link to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}>Flip</Link></span>
+                            <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${baseSymbol} / ${quoteSymbol}`}</span></Link>
                             <ul className="market-stats stats">
                                 <li className="stat">
                                     <span>
@@ -458,6 +458,7 @@ class Exchange extends React.Component {
                                 quotePrecision={quote.precision}
                                 totalPrecision={base.precision}
                                 currentPrice={lowestAsk}
+                                account={account.get("name")}
                             /> : null}
                             {false ? <div><button onClick={this._borrowBase.bind(this)} className="button success">Borrow {baseAsset.get("symbol")}</button></div> : null}
                             {quote && base ?
@@ -478,6 +479,7 @@ class Exchange extends React.Component {
                                 quotePrecision={quote.precision}
                                 totalPrecision={base.precision}
                                 currentPrice={highestBid}
+                                account={account.get("name")}
                             /> : null}
                         </div>
 

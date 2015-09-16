@@ -27,7 +27,8 @@ class BuySell extends React.Component {
                 nextProps.total !== this.props.total ||
                 nextProps.currentPrice !== this.props.currentPrice ||
                 nextProps.price !== this.props.price ||
-                nextProps.balance !== this.props.balance
+                nextProps.balance !== this.props.balance ||
+                nextProps.account !== this.props.account
             );
     }
 
@@ -100,11 +101,11 @@ class BuySell extends React.Component {
                             <div className="grid-content clear-fix no-padding">
                                 <div className="float-left">
                                       <div className="buy-sell-info">
-                                          <Translate content="exchange.balance" />:&nbsp;
+                                          <div style={{display: "inline-block", minWidth: "7rem"}}>{this.props.account}:&nbsp;</div>
                                           <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceAmount)}>{utils.format_number(balanceAmount, balancePrecision)}</span> {balanceSymbol}
                                       </div>
                                       <div className="buy-sell-info">
-                                          {this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;
+                                          <div style={{display: "inline-block", minWidth: "7rem"}}>{this.props.type === "buy" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</div>
                                           <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setPrice.bind(this, currentPrice)}>{utils.format_number(currentPrice, quotePrecision)}</span> {baseSymbol}/{quoteSymbol}
                                       </div>
                                   </div>
