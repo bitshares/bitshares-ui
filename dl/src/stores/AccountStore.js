@@ -20,7 +20,7 @@ class AccountStore extends BaseStore {
     constructor() {
         super();
         this.clearCache()
-        //ChainStore.subscribe(this.chainStoreUpdate_accountsByKey.bind(this))
+        ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onCreateAccount: AccountActions.createAccount,
@@ -29,7 +29,7 @@ class AccountStore extends BaseStore {
             onAccountSearch: AccountActions.accountSearch,
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
         });
-        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount");
+        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount", "getMyAccounts");
     }
     
     clearCache() {
@@ -37,14 +37,27 @@ class AccountStore extends BaseStore {
         this.linkedAccounts = Immutable.Set();
         this.searchAccounts = Immutable.Map();
         // this.refAccounts = Immutable.Map()
+        this.update = false
     }
     
-    static getMyAccounts(accounts) {
+    chainStoreUpdate() {
+        if(this.update) {
+            this.setState({})
+            this.update = false
+        }
+    }
+    
+    getMyAccounts() {
         var accounts = []
-        for(let account of accounts) {
+        for(let account_name of this.linkedAccounts) {
+            var account = ChainStore.getAccount(account_name)
+            if(account === undefined) {
+                this.update = true
+                continue
+            }
+            if(account == null) continue
             if(this.getMyAuthorityForAccount(account) === "full") {
                 accounts.push(account_name)
-                console.log("DEBUG my full account account_name", account_name)
             }
         }
         return accounts
@@ -54,25 +67,29 @@ class AccountStore extends BaseStore {
         @todo "partial"
         @return string "none", "full", "partial"
     */
-    static getMyAuthorityForAccount(account) {
-        if(account === undefined) return undefined
-        if( ! account) return null
-        let my_authority = "none";
-        if (account) {
-            for (let k of account.get("owner").get("key_auths")) {
-                if (this.hasKey(k.get(0))) {
-                    my_authority = "full";
-                    break;
+    getMyAuthorityForAccount(account) {
+        if (! account) return undefined
+        // @return 3 full, 2 partial, 0 none
+        function pubkeyThreshold(authority) {
+            var available = 0
+            var required = authority.get("weight_threshold")
+            for (let k of authority.get("key_auths")) {
+                if (PrivateKeyStore.hasKey(k.get(0))) {
+                    available += k.get(1)
                 }
+                if(available >= required) break
             }
-            for (let k of account.get("active").get("key_auths")) {
-                if (this.hasKey(k.get(0))) {
-                    my_authority = "full";
-                    break;
-                }
-            }
+            return available >= required ? 3 : available > 0 ? 2 : 0
         }
-        return my_authority;
+        var owner = pubkeyThreshold(account.get("owner"))
+        if(owner == 3) return "full"
+        
+        var active = pubkeyThreshold(account.get("active"))
+        if(active == 3) return "full"
+        
+        if(owner == 2 || active == 2) return "partial"
+        
+        return "none"
     }
     
     onAccountSearch(accounts) {
@@ -136,6 +153,7 @@ class AccountStore extends BaseStore {
             name
         });
         this.linkedAccounts = this.linkedAccounts.add(name);
+        updateLinkedAccounts()
         if (this.linkedAccounts.size === 1) {
             this.setCurrentAccount(name);
         }
@@ -146,7 +164,7 @@ class AccountStore extends BaseStore {
             throw new Error("Invalid account name: " + name)
         
         iDB.remove_from_store("linked_accounts", name);
-        this.linkedAccounts = this.linkedAccounts.remove(name);
+        this.linkedAccounts = this.linkedAccounts.delete(name);
         if (this.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
         }
