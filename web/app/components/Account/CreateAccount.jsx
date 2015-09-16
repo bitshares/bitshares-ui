@@ -1,4 +1,5 @@
 import React from "react";
+import connectToStores from "alt/utils/connectToStores";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -14,7 +15,14 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletActions from "actions/WalletActions"
 
+@connectToStores
 class CreateAccount extends React.Component {
+    static getStores() {
+        return [AccountStore]
+    }
+    static getPropsFromStores() {
+        return {}
+    }
     constructor() {
         super();
         this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null, loading: false};
@@ -106,8 +114,9 @@ class CreateAccount extends React.Component {
 
     render() {
         if(this.state.loading) return <LoadingIndicator/>;
-        let account_store_state = AccountStore.getState();
-        let my_accounts = account_store_state.myAccounts ? account_store_state.myAccounts.map(name => name).toJS() : [];
+        // let account_store_state = AccountStore.getState();
+        // let my_accounts = account_store_state.myAccounts ? account_store_state.myAccounts.map(name => name).toJS() : [];
+        let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
@@ -147,8 +156,9 @@ class CreateAccount extends React.Component {
                             {
                                 first_account ? null : (
                                     <div className="full-width-content form-group">
-                                        <label>Pay from</label>
-                                        <AccountSelect ref="pay_from" account_names={my_accounts} onChange={this.onRegistrarAccountChange.bind(this)}/>
+                                        <label>Pay From</label>
+                                        <AccountSelect account_names={my_accounts} 
+                                            onChange={this.onRegistrarAccountChange.bind(this)}/>
                                     </div>)
                             }
                             <button className={buttonClass}>Create Account</button>
