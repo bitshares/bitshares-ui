@@ -26,7 +26,7 @@ class WalletCreate extends Component {
             return <div>{this.props.children}</div>
         
         return <span>
-            <CreateNewWallet />
+            <CreateNewWallet {...this.props}/>
         </span>
     }
     
@@ -42,6 +42,10 @@ class CreateNewWallet extends Component {
     static getPropsFromStores() {
         var wallet = WalletManagerStore.getState()
         return wallet
+    }
+    
+    static propTypes = {
+        hideTitle: React.PropTypes.bool
     }
     
     constructor() {
@@ -72,7 +76,7 @@ class CreateNewWallet extends Component {
         }
         
         return (<span>
-            <h3>Create Wallet</h3>
+            {this.props.hideTitle ? null:<h3>Create Wallet</h3>}
             <form
                 className="name-form"
                 onSubmit={this.onSubmit.bind(this)}

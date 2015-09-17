@@ -108,8 +108,8 @@ export default class ImportKeys extends Component {
         // Create wallet prior to the import keys (helps keep the layout clean)
         return (
             <div>
+                <WalletCreate hideTitle={true}>
                 <h3>Import Keys</h3>
-                <WalletCreate>
                 {/* Key file upload */}
                 <div>
                     <KeyCount wif_count={this.state.wif_count}/>
