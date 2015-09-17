@@ -58,6 +58,7 @@ class ChainStore
       this.committee_by_account_id  = new Map()
       this.objects_by_vote_id       = new Map()
       this.subscribed = undefined
+      this.fetching_get_full_accounts = new Set()
    }
 
    resetCache() {
@@ -325,8 +326,6 @@ class ChainStore
       {
          let account_id = this.accounts_by_name.get( name_or_id )
          if(account_id === null) return null; // already fetched and it wasn't found
-         if( account_id === true ) // then a query is pending
-            return undefined 
          if( account_id === undefined ) // then no query, fetch it
             return this.fetchFullAccount( name_or_id )
          return this.getObject( account_id ) // return it
@@ -541,18 +540,18 @@ class ChainStore
             throw Error( "argument is not an account name: " + name_or_id )
 
          let account_id = this.accounts_by_name.get( name_or_id )
-         if( account_id === undefined )
-            this.accounts_by_name = this.accounts_by_name.set( name_or_id, null );
-         if( account_id === null ) return undefined
+         if( account_id === null ) return null
          else if( utils.is_object_id( account_id ) )
             return this.getAccount(account_id);
       }
       
 
-      if( true ) {
+      if( ! this.fetching_get_full_accounts.has(name_or_id) ) {
+          this.fetching_get_full_accounts.add(name_or_id)
           //console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
+                 this.fetching_get_full_accounts.delete(name_or_id)
                  if(results.length === 0) {
                      this.objects_by_id = this.objects_by_id.set( name_or_id, null );
                      return;
