@@ -213,6 +213,11 @@ class Exchange extends React.Component {
     _setDepthLine(value) { this.setState({depthLine: value}); }
 
     _limitByPrecision(value, asset) {
+        let valueString = value.toString();
+        let splitString = valueString.split(".");
+        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= asset.precision) {
+            return value;
+        }
         let precision = utils.get_asset_precision(asset.precision);
         value = Math.floor(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
