@@ -105,11 +105,11 @@ export default class ImportKeys extends Component {
                     </tr>);
             }
         }
-
+        // Create wallet prior to the import keys (helps keep the layout clean)
         return (
             <div>
                 <h3>Import Keys</h3>
-
+                <WalletCreate>
                 {/* Key file upload */}
                 <div>
                     <KeyCount wif_count={this.state.wif_count}/>
@@ -188,15 +188,13 @@ export default class ImportKeys extends Component {
 
                         <div className="center-content" style={{width: "100%"}}>
                             <div className="button-group content-block">
-                                <WalletCreate>
-                                    <a href className={cname("button success", {disabled:!import_ready})}
-                                       onClick={this._saveImport.bind(this)} >
-                                        Import
-                                    </a>
-                                    <a href className="button secondary" onClick={this.reset.bind(this)}>
-                                        Cancel
-                                    </a>
-                                </WalletCreate>
+                                <a href className={cname("button success", {disabled:!import_ready})}
+                                   onClick={this._saveImport.bind(this)} >
+                                    Import
+                                </a>
+                                <a href className="button secondary" onClick={this.reset.bind(this)}>
+                                    Cancel
+                                </a>
                             </div>
                         </div>
                     </div>) : null}
@@ -204,6 +202,7 @@ export default class ImportKeys extends Component {
                     <div className="button success"
                         onClick={this.onBack.bind(this)}>Claim Balance</div>
                 </span>:null}
+                </WalletCreate>
             </div>
         );
     }
