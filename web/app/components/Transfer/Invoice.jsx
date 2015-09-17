@@ -9,6 +9,7 @@ import ChainStore from "api/ChainStore";
 import BalanceComponent from "../Utility/BalanceComponent";
 import {FetchChainObjects} from "api/ChainStore";
 import NotificationActions from "actions/NotificationActions";
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import lzma from "lzma";
 import bs58 from "common/base58";
 import utils from "common/utils";
@@ -38,6 +39,7 @@ class Invoice extends React.Component {
             pay_from_account: null,
             error: null
         };
+        this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
     }
 
     componentDidMount() {
@@ -71,6 +73,17 @@ class Invoice extends React.Component {
         return total_amount;
     }
 
+    onBroadcastAndConfirm(confirm_store_state) {
+        if(confirm_store_state.broadcast && confirm_store_state.closed && confirm_store_state.broadcasted_transaction) {
+            if(this.state.invoice.callback) {
+                let trx =  confirm_store_state.broadcasted_transaction;
+                let url = `${this.state.invoice.callback}?block=${trx.ref_block_num}&trx=${trx.id()}`;
+                window.location.href = url;
+            }
+            TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
+        }
+    }
+
     onPayClick(e) {
         e.preventDefault();
         let asset = this.state.asset;
@@ -88,8 +101,7 @@ class Invoice extends React.Component {
             asset.get("id"),
             this.state.invoice.memo
         ).then( () => {
-                // TODO: call callback url when confirmed
-                //TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
+                TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
             }).catch( e => {
                 console.log( "error: ",e)
             } );
