@@ -2,8 +2,13 @@ import React from "react";
 import classNames from "classnames";
 import FormattedAsset from "../Utility/FormattedAsset";
 import ConfirmModal from "../Modal/ConfirmModal";
+import AccountActions from "actions/AccountActions";
 import AccountSelector from "../Account/AccountSelector";
 import AccountInfo from "../Account/AccountInfo";
+import ChainStore from "api/ChainStore";
+import BalanceComponent from "../Utility/BalanceComponent";
+import {FetchChainObjects} from "api/ChainStore";
+import NotificationActions from "actions/NotificationActions";
 import lzma from "lzma";
 import bs58 from "common/base58";
 import utils from "common/utils";
@@ -30,16 +35,24 @@ class Invoice extends React.Component {
         this.state = {
             invoice: null,
             pay_from_name: null,
-            pay_from_account: null
+            pay_from_account: null,
+            error: null
         };
     }
 
     componentDidMount() {
         let compressed_data = bs58.decode(this.props.params.data);
-        lzma.decompress(compressed_data, result => {
-            let invoice = JSON.parse(result);
-            this.setState({invoice});
-        });
+        try {
+            lzma.decompress(compressed_data, result => {
+                let invoice = JSON.parse(result);
+                FetchChainObjects(ChainStore.getAsset, [invoice.currency]).then(assets_array => {
+                    this.setState({invoice, asset: assets_array[0]});
+                });
+            });
+        } catch(error) {
+            console.dir(error);
+            this.setState({error: error.message});
+        }
     }
 
     parsePrice(price) {
@@ -60,27 +73,27 @@ class Invoice extends React.Component {
 
     onPayClick(e) {
         e.preventDefault();
-        //let total_amount = this.getTotal(this.state.invoice.line_items);
-        //let content = `Pay ${total_amount} ${this.state.invoice.currency} to ${this.state.invoice.to} from account ${this.refs.pay_from.value()}`;
-        //this.refs.confirm_modal.show(content, "Confirm Payment", this.onConfirmPayment.bind(this));
+        let asset = this.state.asset;
+        let precision = utils.get_asset_precision(asset.get("precision"));
+        let amount = this.getTotal(this.state.invoice.line_items);
+        let to_account = ChainStore.getAccount(this.state.invoice.to);
+        if(!to_account) {
+            NotificationActions.error(`Account ${this.state.invoice.to} not found`);
+            return;
+        }
+        AccountActions.transfer(
+            this.state.pay_from_account.get("id"),
+            to_account.get("id"),
+            parseInt(amount * precision, 10),
+            asset.get("id"),
+            this.state.invoice.memo
+        ).then( () => {
+                // TODO: call callback url when confirmed
+                //TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
+            }).catch( e => {
+                console.log( "error: ",e)
+            } );
     }
-
-    onConfirmPayment() {
-        //let total_amount = this.getTotal(this.state.invoice.line_items);
-        //let asset = AssetStore.getAsset(this.state.invoice.currency);
-        //let precision = utils.get_asset_precision(asset.precision);
-        //// TODO: finish transfer and redirect to transfer confirmation page
-        //let account_store_state = AccountStore.getState();
-        //let from_id = account_store_state.account_name_to_id[this.state.pay_from_account];
-        //let to_id = this.findAccountId(this.state.invoice.to);
-        //let memo = this.state.invoice.memo;
-        //console.log("[Invoice.jsx:89] ----- onConfirmPayment ----->", from_id, to_id, total_amount * precision, asset.id, memo);
-        //AccountActions.transfer(from_id, to_id, total_amount * asset.preciosion, asset.id, memo);
-    }
-
-    //onAccountChange(account_name) {
-    //    this.setState({pay_from_account: account_name});
-    //}
 
     fromChanged(pay_from_name) {
         this.setState({pay_from_name});
@@ -92,22 +105,19 @@ class Invoice extends React.Component {
 
     render() {
         console.log("-- Invoice.render -->", this.state.invoice);
-        if(!this.state.invoice) return (<div>Reading invoice data...</div>);
-        //return null;
+        if(this.state.error) return(<div><br/><h4 className="has-error text-center">{this.state.error}</h4></div>);
+        if(!this.state.invoice) return null;
+        if(!this.state.asset) return (<div><br/><h4 className="has-error text-center">Asset {this.state.invoice.currency} is not supported by this blockchain.</h4></div>);
 
         let invoice = this.state.invoice;
         let total_amount = this.getTotal(invoice.line_items);
-        let asset = this.state.invoice.currency; //AssetStore.getAsset(this.state.invoice.currency);
-        let account_id = null; //this.findAccountId(invoice.to);
-        console.log("-- Invoice.render -->", total_amount, asset);
-        let final_balance = 0.0;
-        //if(this.state.pay_from_account && asset) {
-        //    let balances = this.state.balances.get(this.state.pay_from_account);
-        //    let current_balance = balances.reduce((bal, item) => {
-        //        return item.asset_id === asset.id ? bal + item.amount : bal;
-        //    }, 0.0);
-        //    final_balance = current_balance - total_amount * utils.get_asset_precision(asset.precision);
-        //}
+        let asset = this.state.invoice.currency;
+        let balance = null;
+        if(this.state.pay_from_account) {
+            let balances = this.state.pay_from_account.get("balances");
+            console.log("-- Invoice.render balances -->", balances.get(this.state.asset.get("id")));
+            balance = balances.get(this.state.asset.get("id"));
+        }
         let items = invoice.line_items.map( i => {
             let price = this.parsePrice(i.price);
             let amount = i.quantity * price;
@@ -121,19 +131,17 @@ class Invoice extends React.Component {
                 </tr>
             );
         });
-        //let account_store_state = AccountStore.getState();
-        //let accounts = account_store_state.myAccounts.map(name => name);
-        let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account || !account_id || final_balance <= 0.0});
-        let finalBalanceClass = classNames("grid-content", {error: final_balance <= 0.0});
+        let payButtonClass = classNames("button", {disabled: !this.state.pay_from_account});
         return (
             <div className="grid-block vertical">
                 <div className="grid-content">
                     <div className="content-block invoice">
                         <br/>
-                        <h3>{invoice.memo}</h3>
+                        <h3>Pay Invoice</h3>
+                        <h4>{invoice.memo}</h4>
                         <br/>
                         <div>
-                            {account_id ? <AccountInfo title={invoice.to_label} account_name={invoice.to} account_id={account_id} image_size={{height: 120, width: 120}}/> : null}
+                            <AccountInfo title={invoice.to_label} account={invoice.to} image_size={{height: 80, width: 80}}/>
                             <br/>
                             <table className="table">
                                 <thead>
@@ -155,7 +163,7 @@ class Invoice extends React.Component {
 
                             <form>
                                 <div className="grid-block">
-                                    <div className="grid-content shrink">
+                                    <div className="grid-content medium-4">
                                         {/*<AccountSelect ref="pay_from" account_names={accounts} onChange={this.onAccountChange.bind(this)}/>*/}
                                         <AccountSelector label="transfer.pay_from"
                                                          accountName={this.state.pay_from_name}
@@ -164,9 +172,9 @@ class Invoice extends React.Component {
                                                          account={this.state.pay_from_name}/>
                                     </div>
                                     {this.state.pay_from_account ?
-                                        <div className={finalBalanceClass}>
-                                            <label>Final Balance</label>
-                                            <FormattedAsset amount={final_balance} asset={asset}/>
+                                        <div className="grid-content medium-1">
+                                            <label>Balance</label>
+                                            <BalanceComponent balance={balance}/>
                                         </div> : null
                                     }
                                 </div>
@@ -178,7 +186,6 @@ class Invoice extends React.Component {
                         </div>
                     </div>
                 </div>
-                <ConfirmModal modalId="confirm_modal" ref="confirm_modal"/>
             </div>
         );
     }

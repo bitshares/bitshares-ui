@@ -119,6 +119,7 @@ module.exports = {
     },
     transfer: {
         from: "From",
+        pay_from: "Pay From",
         amount: "Amount",
         to: "To",
         memo: "Memo",

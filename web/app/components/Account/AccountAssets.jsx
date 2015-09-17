@@ -353,7 +353,7 @@ class AccountAssets extends React.Component {
                                     </div>
                                 </div>
                                 { issue.to_id ?
-                                    <AccountInfo account_name={issue.to} account_id={issue.to_id} image_size={{height: 100, width: 100}}/> :
+                                    <AccountInfo account={issue.to_id} image_size={{height: 100, width: 100}}/> :
                                     <span>
                                         <div style={{height: 105, width: 100}} width={100 * 2} height={100 * 2}/>
                                         <br/>

@@ -63,7 +63,7 @@ function assetChecker(props, propName, componentName, location) {
             // TODO: check if it's valid asset symbol or id
             return null
         } else {
-            return new Error(`${propName} in ${componentName} should be an asset symbol or id`);
+            return new Error(`${propName} of ${value} in ${componentName} should be an asset symbol or id`);
         }
     }
     // assume all ok
