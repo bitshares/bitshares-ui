@@ -19,8 +19,8 @@ class Notifier extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.account.size && this.props.account.get("history")) {
-            let ch = this.props.account.get("history").first() ? this.props.account.get("history").first().toJS() : null;
-            let nh = nextProps.account.get("history").first() ? nextProps.account.get("history").first().toJS(): null;
+            let ch = this.props.account.get("history") && this.props.account.get("history").first() ? this.props.account.get("history").first().toJS() : null;
+            let nh = nextProps.account.get("history") && nextProps.account.get("history").first() ? nextProps.account.get("history").first().toJS(): null;
             if (nh && ch) {
                 // Only trigger notifications for order fills
                 if ( ops[nh.op[0]] === "fill_order" && ((!ch && nh.id) || (nh.id !== ch.id))) {
