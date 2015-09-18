@@ -79,6 +79,9 @@ class App extends React.Component {
         NotificationStore.unlisten(this._onNotificationChange);
         // TransactionConfirmStore.unlisten(this._onTransactionConfirm);
     }
+    componentWillMount() {
+       console.log( "will mount" );
+    }
 
     componentDidMount() {
         NotificationStore.listen(this._onNotificationChange.bind(this));
@@ -155,9 +158,8 @@ class Auth extends React.Component {
 }
 
 App.willTransitionTo = (transition, params, query, callback) => {
+    console.log( "here: ", transition );
     if (transition.path.indexOf("/auth/") === 0) {
-        console.log("auth: ", transition.path);
-        // TODO: pass auth params to RPC API init subroutine
     }
     //API is used to read the chain_id .. The chain_id defines the database name
     Apis.instance().init_promise.then(() => {

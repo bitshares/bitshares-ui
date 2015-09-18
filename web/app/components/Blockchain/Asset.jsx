@@ -24,6 +24,17 @@ class Asset extends React.Component {
         asset: ChainTypes.ChainAsset.isRequired
     }
 
+    static exampleData = {
+        name: "BitUSD",
+        subtitle: "A Smartcoin pegged to the value of One United States Dollar.",
+        header_image: "assets/USD/header.png"
+    }
+
+    constructor( props ) {
+       super(props);
+       this.state = Asset.exampleData;
+    }
+
     render() {
         var core_exchange = this.props.asset.getIn(["options","core_exchange_rate"]);
         console.log( "Assets: ", this.props.asset.toJS() )
@@ -32,7 +43,6 @@ class Asset extends React.Component {
                    <p/>
                    <FormattedAsset amount={this.props.asset.getIn(["options","max_supply"])}
                                    asset={this.props.asset.get('id')}
-                                   hide_asset="true"
                                    />
                    <p/>
                    <FormattedPrice base_asset={core_exchange.getIn(["base","asset_id"])}
@@ -79,7 +89,11 @@ class Asset extends React.Component {
         return (
            <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-6 medium-offset-3">
+                /// PAGE HEADER
+                  <div className="grid-block medium-6 medium-offset-3" style="background-color: #cccccc;">
                     <div className="grid-content shrink">
+                        <h3>{this.state.symbol}</h3>
+                        <h6>{this.props.tag_line}</h6>
                         <h3>{this.props.symbol}</h3>
                     </div>
                     <div className="grid-content">
@@ -149,6 +163,7 @@ class Asset extends React.Component {
                         </div>
                         ) : <p>Asset {assetID} not found.</p>}
                     </div>
+                  </div>
                 </div>
             </div>
         );
