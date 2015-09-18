@@ -19,11 +19,14 @@ class MobileMenu extends React.Component {
         let {id, isUnlocked} = this.props;
         let accounts = null;
         let linkedAccounts = AccountStore.getState().linkedAccounts;
+        // if (!linkedAccounts.size) {
+        //   return null;
+        // }
         if(linkedAccounts.size > 1) {
             accounts = linkedAccounts.map( a => {
                 return <li key={a} onClick={this.onClick}><Link to="account-overview" params={{account_name: a}}>{a}</Link></li>;
             });
-        }  else {
+        }  else if (linkedAccounts.size) {
             accounts = <li key="account" onClick={this.onClick}><Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link></li>;
         }
 

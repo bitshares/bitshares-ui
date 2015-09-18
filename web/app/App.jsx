@@ -79,9 +79,6 @@ class App extends React.Component {
         NotificationStore.unlisten(this._onNotificationChange);
         // TransactionConfirmStore.unlisten(this._onTransactionConfirm);
     }
-    componentWillMount() {
-       console.log( "will mount" );
-    }
 
     componentDidMount() {
         NotificationStore.listen(this._onNotificationChange.bind(this));
