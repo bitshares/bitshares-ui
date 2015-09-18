@@ -60,9 +60,12 @@ class OrderBook extends React.Component {
 
             high = bids.length > 0 ? bids[bids.length - 1].price_full : 0;
 
-            bidRows = bids.map(order => {
+            let totalBidAmount = 0;
+
+            bidRows = bids.reverse().map(order => {
+                totalBidAmount += order.amount;
                 return (
-                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, order.amount, "bid")}>
+                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}>
                         <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
                         <td>{utils.format_number(order.amount, quote.precision)}</td>
                         <td className="orderHistoryBid">
@@ -72,7 +75,7 @@ class OrderBook extends React.Component {
                         </td>
                     </tr>
                     );
-            });
+            }).reverse();
 
             // console.log("time to process bids in orderbook:", new Date() - start, "ms");
 
@@ -80,9 +83,11 @@ class OrderBook extends React.Component {
 
             low = asks.length > 0 ? asks[0].price_full : 0;
 
+            let totalAskAmount = 0;
             askRows = asks.map(order => {
+                totalAskAmount += order.amount;
                 return (
-                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, order.amount, "ask")}>
+                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}>
                         <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
                         <td >{utils.format_number(order.amount, quote.precision)}</td>
                         <td className="orderHistoryAsk">

@@ -228,7 +228,7 @@ class MarketsActions {
                 "amount": buyAmount,
                 "asset_id": buyAssetID
             },
-            "expiration": uniqueExpiration,
+            "expiration": expiration,
             "fill_or_kill": isFillOrKill
         });
         return WalletDb.process_transaction(tr, null, true).then(result => {

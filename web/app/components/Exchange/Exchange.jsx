@@ -5,11 +5,9 @@ import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import BuySell from "./BuySell";
-// import Margin from "./Margin";
 import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
-// import Tabs from "react-foundation-apps/src/tabs";
 import {debounce} from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
 import Translate from "react-translate-component";
@@ -17,10 +15,6 @@ import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
 import AccountNotifications from "../Notifier/NotifierContainer";
-// import Wallet from "transitionTo";
-// import BlockchainStore from "stores/BlockchainStore";
-// import FormattedAsset from "../Utility/FormattedAsset";
-// import WalletDb from "stores/WalletDb";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -112,6 +106,7 @@ class Exchange extends React.Component {
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
         console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
         let expiration = new Date();
+        // TODO: Add selector for expiry
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
             this.props.account.get("id"),
@@ -119,8 +114,8 @@ class Exchange extends React.Component {
             sellAsset.id,
             parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
             buyAsset.id,
-            expiration.toISOString().slice(0, -7), // the seconds will be added in the actionCreator to set a unique identifer for this user and order
-            false // fill or kill
+            expiration, 
+            false // fill or kill TODO: add fill or kill switch
         ).then(result => {
             if (!result) {
                 notify.addNotification({
@@ -295,7 +290,6 @@ class Exchange extends React.Component {
     }
 
     _orderbookClick(base, quote, price, amount, type) {
-        console.log("price:", price, "amount:", amount, "type:", type);
         if (type === "bid") {
 
             let value = amount.toString();
