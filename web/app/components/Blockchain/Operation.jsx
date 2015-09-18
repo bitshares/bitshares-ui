@@ -60,8 +60,7 @@ class Row extends React.Component {
                 <tr key={key}>
                     {!hideDate ? <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td> : null}
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
-                    {this.props.children}   
-                    {!hideFee ? <td style={{paddingRight: "1.5rem"}} className="text-right"><FormattedAsset color="fee" style={{fontWeight: "bold"}} amount={fee.amount} asset={fee.asset_id} /></td> : null}
+                    <td>{this.props.info} {hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
                 </tr>
             );
     }
@@ -141,31 +140,31 @@ class Operation extends React.Component {
                 if (current === op[1].from) {
 
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.sent" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.to" /> {this.linkToAccount(op[1].to)}
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                        </td>
+                        </span>
                     );
                 } else if(current === op[1].to){
                     column = (
-                        <td key={"transfer_" + this.props.key} className="right-td">
+                        <span key={"transfer_" + this.props.key} className="right-td">
                             <Translate component="span" content="transaction.received"/>
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
                             &nbsp;<Translate component="span" content="transaction.from"/> {this.linkToAccount(op[1].from)}
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                        </td>
+                        </span>
                     );
                 } else {
                     column = (
-                        <td key={"transfer_" + this.props.key} className="right-td">
+                        <span key={"transfer_" + this.props.key} className="right-td">
                             {this.linkToAccount(op[1].to)}
                             &nbsp;<Translate component="span" content="transaction.received"/>
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
                             &nbsp;<Translate component="span" content="transaction.from"/> {this.linkToAccount(op[1].from)}
                             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                        </td>
+                        </span>
                     );
                 }
 
@@ -179,7 +178,7 @@ class Operation extends React.Component {
                 //     isAsk = !isAsk;
                 // }
                 column = (
-                        <td className="right-td">
+                        <span>
                         <BindToChainState.Wrapper asset_sell={op[1].amount_to_sell.asset_id} asset_min={op[1].min_to_receive.asset_id}>
                             { ({asset_sell, asset_min}) =>
                                 isAsk ?
@@ -204,7 +203,7 @@ class Operation extends React.Component {
                                     </span>
                             }
                         </BindToChainState.Wrapper>
-                        </td>
+                        </span>
                 );
                 break;
 
@@ -213,112 +212,112 @@ class Operation extends React.Component {
                 color = "cancel";            
 
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.limit_order_cancel" />
                         &nbsp;#{op[1].order.substring(4)}
-                    </td>
+                    </span>
                 );
                 break;
 
             case "short_order_cancel": 
                 color = "cancel";            
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.short_order_cancel" />
                         &nbsp;{op[1].order}
-                    </td>
+                    </span>
                 );
                 break;
 
             case "call_order_update":
                 color = "warning";            
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.call_order_update" />
-                    </td>
+                    </span>
                 );
                 break;
 
             case "key_create":
                 column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.create_key" />
-                        </td>
+                        </span>
                 );
                 break;
 
             case "account_create":
                 if (current === op[1].registrar) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.reg_account" />
                             &nbsp;{this.linkToAccount(op[1].name)}
-                        </td>
+                        </span>
                     );
                 } else {
                     column = (
-                        <td className="right-td">
+                        <span>
                             {this.linkToAccount(op[1].name)}
                             &nbsp;<Translate component="span" content="transaction.was_reg_account" /> 
                             &nbsp;{this.linkToAccount(op[1].registrar)}
-                        </td>
+                        </span>
                     );    
                 }
                 break;
 
             case "account_update":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.update_account" /> 
                         &nbsp;{this.linkToAccount(op[1].account)}
-                    </td>
+                    </span>
                 );
                 break;
 
             case "account_whitelist":
                 if (current === op[1].authorizing_account) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.whitelist_account" />
                             &nbsp;{this.linkToAccount(op[1].account_to_list)}
-                        </td>
+                        </span>
                     );
                 } else {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.whitelisted_by" />
                             &nbsp;{this.linkToAccount(op[1].authorizing_account)}
-                        </td>
+                        </span>
                     );
                 }
                 break;
 
             case "account_upgrade":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.upgrade_account" />
-                    </td>
+                    </span>
                 );
                 break;
 
             case "account_transfer":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.transfer_account" />
                         &nbsp;{this.linkToAccount(op[1].account_id)}
                         <Translate component="span" content="transaction.to" />
                         &nbsp;{this.linkToAccount(op[1].new_owner)}
-                    </td>
+                    </span>
                 );
                 break;
 
             case "asset_create":
                 color = "warning"; 
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.create_asset" />
                         &nbsp;{this.linkToAsset(op[1].symbol)}
-                    </td>
+                    </span>
                 );
                 break;
 
@@ -326,10 +325,10 @@ class Operation extends React.Component {
             case "asset_update_bitasset":
                 color = "warning";
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.update_asset" />
                         &nbsp;{this.linkToAsset(op[1].asset_to_update)}
-                    </td>
+                    </span>
                 );
                 break;
 
@@ -337,17 +336,17 @@ class Operation extends React.Component {
                 color = "warning";
                 if (current === op[1].issuer) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.update_feed_producers" />
                             &nbsp;{this.linkToAsset(op[1].asset_to_update)}
-                        </td>
+                        </span>
                     );
                 } else {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.feed_producer" />
                             &nbsp;{this.linkToAsset(op[1].asset_to_update)}
-                        </td>
+                        </span>
                     );
                 }
                 break;   
@@ -357,21 +356,21 @@ class Operation extends React.Component {
                 op[1].asset_to_issue.amount = parseInt(op[1].asset_to_issue.amount, 10);
                 if (current === op[1].issuer) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.asset_issue" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.to" />
                             &nbsp;{this.linkToAccount(op[1].issue_to_account)}
-                        </td>
+                        </span>
                     );
                 } else {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.was_issued" />
                             &nbsp;{<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} />}
                             &nbsp;<Translate component="span" content="transaction.by" />
                             &nbsp;{this.linkToAccount(op[1].issuer)}
-                        </td>
+                        </span>
                     );
                 }
                 break;  
@@ -379,37 +378,37 @@ class Operation extends React.Component {
             case "asset_burn":
                 color = "cancel";
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.burn_asset" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_burn.amount} asset={op[1].amount_to_burn.asset_id} />
-                    </td>
+                    </span>
                 );
                 break;   
 
             case "asset_fund_fee_pool":
                 color = "warning";
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.fund_pool" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={op[1].asset_id} />
-                    </td>
+                    </span>
                 );
                 break;  
 
             case "asset_settle":
                 color = "warning";
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.asset_settle" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                    </td>
+                    </span>
                 );
                 break;  
 
             case "asset_global_settle":
                 color = "warning";
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.asset_global_settle" />
                         &nbsp;{this.linkToAsset(op[1].asset_to_settle)}
                         &nbsp;<Translate component="span" content="transaction.at" />
@@ -427,38 +426,38 @@ class Operation extends React.Component {
             case "asset_publish_feed":
                 color = "warning";
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.publish_feed" />
                         &nbsp;{this.linkToAsset(op[1].asset_id)}
-                    </td>
+                    </span>
                 );
                 break;
 
             case "delegate_create":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.delegate_create" /> 
                         &nbsp;{this.linkToAccount(op[1].delegate_account)}
-                    </td>
+                    </span>
                 );
                 break;
 
             case "witness_create":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.witness_create" /> 
                         &nbsp;{this.linkToAccount(op[1].witness_account)}
-                    </td>
+                    </span>
                 );
 
                 break;
 
             case "witness_update":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.witness_update" />
                         &nbsp;{this.linkToAccount(op[1].witness_account)}
-                    </td>
+                    </span>
                 );
 
                 break;
@@ -467,90 +466,90 @@ class Operation extends React.Component {
                 console.log("witness_withdraw_pay:", op[1].witness_account);
                 if (current === op[1].witness_account) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.witness_pay" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
                             <Translate component="span" content="transaction.to" /> 
                             &nbsp;{this.linkToAccount(op[1].witness_account)}
-                        </td>
+                        </span>
                     );
                 } else {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.received" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
                             <Translate component="span" content="transaction.from" /> 
                             &nbsp;{this.linkToAccount(op[1].witness_account)}
-                        </td>
+                        </span>
                     ); 
                 }
                 break;         
 
             case "proposal_create":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.proposal_create" />
-                    </td>
+                    </span>
                 );
                 break;      
 
             case "proposal_update":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.proposal_update" />
-                    </td>
+                    </span>
                 );
                 break;   
 
             case "proposal_delete":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.proposal_delete" />
-                    </td>
+                    </span>
                 );
                 break;  
 
             case "withdraw_permission_create":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.withdraw_permission_create" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
                         &nbsp;{this.linkToAccount(op[1].authorized_account)}
-                    </td>
+                    </span>
                 );
                 break; 
 
             case "withdraw_permission_update":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.withdraw_permission_update" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
                         &nbsp;{this.linkToAccount(op[1].authorized_account)}
-                    </td>
+                    </span>
                 );
                 break; 
 
             case "withdraw_permission_claim":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.withdraw_permission_claim" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_to_account)}
-                    </td>
+                    </span>
                 );
                 break;                 
 
             case "withdraw_permission_delete":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.withdraw_permission_delete" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
                         &nbsp;{this.linkToAccount(op[1].authorized_account)}
-                    </td>
+                    </span>
                 );
                 break;      
 
@@ -558,7 +557,7 @@ class Operation extends React.Component {
                 color = "success";
                 o = op[1];
                 column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.paid" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={op[1].pays.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.obtain" />
@@ -566,82 +565,82 @@ class Operation extends React.Component {
                             &nbsp;<Translate component="span" content="transaction.at" />
                             &nbsp;<FormattedPrice base_asset={o.pays.asset_id} base_amount={o.pays.amount} 
                                                   quote_asset={o.receives.asset_id} quote_amount={o.receives.amount}  />
-                        </td>
+                        </span>
                 );
                 break;   
 
             case "global_parameters_update":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.global_parameters_update" />
-                    </td>
+                    </span>
                 );
                 break;      
 
             case "file_write":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.file_write" />
-                    </td>
+                    </span>
                 );
                 break;       
 
             case "vesting_balance_create":
                 column = (
-                    <td className="right-td">
+                    <span>
                         &nbsp;{this.linkToAccount(op[1].creator)}
                         <Translate component="span" content="transaction.vesting_balance_create" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                         &nbsp;{this.linkToAccount(op[1].owner)}
-                    </td>
+                    </span>
                 );
                 break;                     
 
             case "vesting_balance_withdraw":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.vesting_balance_withdraw" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                    </td>
+                    </span>
                 );
                 break;        
 
             case "bond_create_offer":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.bond_create_offer" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                    </td>
+                    </span>
                 );
                 break;                     
 
             case "bond_cancel_offer":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.bond_cancel_offer" />
                         &nbsp;{op[1].offer_id}
-                    </td>
+                    </span>
                 );
                 break;  
 
             case "bond_accept_offer":
                 if (current === op[1].lender) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.bond_accept_offer" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} />
                             <Translate component="span" content="transaction.to" />
                             &nbsp;{this.linkToAccount(op[1].borrower)}
-                        </td>
+                        </span>
                     );
                 } else if (current === op[1].borrower) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.bond_accept_offer" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} />
                             <Translate component="span" content="transaction.from" />
                             &nbsp;{this.linkToAccount(op[1].lender)}
-                        </td>
+                        </span>
                     );
                 }
                 break;  
@@ -649,31 +648,31 @@ class Operation extends React.Component {
             case "bond_claim_collateral":
                 if (current === op[1].lender) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.bond_pay_collateral" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} />
                             <Translate component="span" content="transaction.to" />
                             &nbsp;{this.linkToAccount(op[1].claimer)}
-                        </td>
+                        </span>
                     );
                 } else if (current === op[1].claimer) {
                     column = (
-                        <td className="right-td">
+                        <span>
                             <Translate component="span" content="transaction.bond_claim_collateral" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} />
                             <Translate component="span" content="transaction.from" />
                             &nbsp;{this.linkToAccount(op[1].lender)}
-                        </td>
+                        </span>
                     );
                 }
                 break; 
 
             case "worker_create":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.create_worker" /> 
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={"1.3.0"} />
-                    </td>
+                    </span>
                 );
                 break;
 
@@ -682,7 +681,7 @@ class Operation extends React.Component {
                 color = "success";
                 op[1].total_claimed.amount = parseInt(op[1].total_claimed.amount, 10);
                 column = (
-                    <td className="right-td">
+                    <span>
                        <BindToChainState.Wrapper asset={op[1].total_claimed.asset_id}>
                            { ({asset}) =>
                                    <Translate
@@ -693,23 +692,23 @@ class Operation extends React.Component {
                                    />
                            }
                        </BindToChainState.Wrapper>
-                    </td>
+                    </span>
                 );
                 break;  
 
             case "custom":
                 column = (
-                    <td className="right-td">
+                    <span>
                         <Translate component="span" content="transaction.custom" /> 
-                    </td>
+                    </span>
                 );
                 break;                
 
             default: 
                 column = (
-                    <td>
+                    <span>
                         <Link to="block" params={{height: block}}>#{block}</Link>
-                    </td>
+                    </span>
 
                 );
         }
@@ -722,9 +721,9 @@ class Operation extends React.Component {
                 color={color}
                 fee={op[1].fee}
                 hideDate={this.props.hideDate}
-                hideFee={this.props.hideFee} 
+                hideFee={this.props.hideFee}
+                info={column}
             >
-                {column}
             </Row>
         ) : null;
 

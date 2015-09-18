@@ -20,7 +20,7 @@ $alert-color: $error-text-color;
 $info-color: #A0D3E8;
 $success-color: #50D2C2;
 $warning-color: #FCAB53;
-$fee-color: #deb869;
+$fee-color: $secondary-text-color;
 
 // general
 
@@ -237,8 +237,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.header .button {
-  background-color: $panel-bg-color;
+.header .button,  header .button:active {
+  background-color: $panel-bg-color !important;
 }
 
 .grp-menu-item button {
@@ -399,6 +399,9 @@ td.orderHistoryBid {
   }
   .my-account h5 {
     color: $info-color;
+  }
+  .bottom {
+    border-top-color: $bg-color;
   }
 }
 

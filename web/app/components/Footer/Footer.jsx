@@ -61,7 +61,7 @@ class Footer extends React.Component {
     render() {
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         return (
-            <div className="grid-block shrink footer">
+            <div className="show-for-medium grid-block shrink footer">
                 <div className="align-justify grid-block">
                     <div onClick={this._triggerPerf.bind(this)} className="grid-block">
                         <div className="logo">
