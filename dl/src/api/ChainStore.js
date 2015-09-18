@@ -100,6 +100,8 @@ class ChainStore
     *  Add a callback that will be called anytime any object in the cache is updated
     */
    subscribe( callback ) {
+      if(this.subscribers.has(callback))
+          console.error("Subscribe callback already exists", callback)
       this.subscribers.add( callback )
    }
 
@@ -205,16 +207,19 @@ class ChainStore
          Apis.instance().db_api().exec( "get_key_references", [ [key] ] )
          .then( vec_account_id => {
                   let refs = Immutable.Set()
+                  vec_account_id = vec_account_id[0]
                   refs = refs.withMutations( r => {
-                     for( let i = 0; i < vec_account_id[0].length; ++i ) {
-                        r.add(vec_account_id[0][i]) 
+                     for( let i = 0; i < vec_account_id.length; ++i ) {
+                        r.add(vec_account_id[i]) 
                      }
                   } )
                   this.account_ids_by_key = this.account_ids_by_key.set( key, refs )
+                  this.notifySubscribers()
                 },
                 error => {
                   this.account_ids_by_key             = this.account_ids_by_key.delete( key )
                   this.get_account_refs_of_keys_calls = this.get_account_refs_of_keys_calls.delete(key)
+                  this.notifySubscribers()
                 })
          return undefined
       }
@@ -247,9 +252,11 @@ class ChainStore
                             set.add(balance_objects[i].id)
                          }
                          this.balance_objects_by_address = this.balance_objects_by_address.set( address, Immutable.Set(set) )
+                         this.notifySubscribers()
                      },
                      error => {
                          this.balance_objects_by_address = this.balance_objects_by_address.delete( address )
+                         this.notifySubscribers()
                      } )
       }
       return this.balance_objects_by_address.get( address )
