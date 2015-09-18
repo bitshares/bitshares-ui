@@ -12,12 +12,14 @@ class SettingsStore {
             locale: "en",
             // confirmMarketOrder: true,
             defaultMarkets: [
-                {quote: "1.3.361", base: "1.3.0"},
-                {quote: "1.3.527", base: "1.3.0"},
-                {quote: "1.3.325", base: "1.3.0"},
-                {quote: "1.3.421", base: "1.3.0"},
-                {quote: "1.3.280", base: "1.3.0"},
-                {quote: "1.3.213", base: "1.3.0"}
+                {quote: "1.3.1", base: "1.3.0"},
+                {quote: "1.3.626", base: "1.3.0"},
+                {quote: "1.3.379", base: "1.3.0"},
+                {quote: "1.3.424", base: "1.3.0"},
+                {quote: "1.3.520", base: "1.3.0"},
+                {quote: "1.3.312", base: "1.3.0"},
+                {quote: "1.3.316", base: "1.3.0"},
+                {quote: "1.3.460", base: "1.3.0"}
             ]
         });
 
@@ -57,8 +59,8 @@ class SettingsStore {
             onRemoveMarket: MarketsActions.removeMarket
         });
 
-        if (localStorage.settings_v2) {
-            let settings = Immutable.Map(JSON.parse(localStorage.settings_v2));
+        if (localStorage.settings_v3) {
+            let settings = Immutable.Map(JSON.parse(localStorage.settings_v3));
             this.settings = settings;
         }
 
@@ -70,7 +72,7 @@ class SettingsStore {
             payload.value
         );
 
-        localStorage.settings_v2 = JSON.stringify(this.settings.toJS());
+        localStorage.settings_v3 = JSON.stringify(this.settings.toJS());
     }
 
     onAddMarket(market) {
@@ -89,7 +91,7 @@ class SettingsStore {
             this.settings = this.settings.set(
                 "defaultMarkets",
                 defaultMarkets);
-            localStorage.settings_v2 = JSON.stringify(this.settings.toJS());
+            localStorage.settings_v3 = JSON.stringify(this.settings.toJS());
         } else {
             return false;
         }
@@ -100,7 +102,7 @@ class SettingsStore {
         for (var i = 0; i < defaultMarkets.length; i++) {
             if (defaultMarkets[i].quote === market.quote && defaultMarkets[i].base === market.base) {
                 defaultMarkets.splice(i, 1);
-                localStorage.settings_v2 = JSON.stringify(this.settings.toJS());
+                localStorage.settings_v3 = JSON.stringify(this.settings.toJS());
                 break;
             }
         }
