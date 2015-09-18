@@ -413,11 +413,13 @@ class Operation extends React.Component {
                         <Translate component="span" content="transaction.asset_global_settle" />
                         &nbsp;{this.linkToAsset(op[1].asset_to_settle)}
                         &nbsp;<Translate component="span" content="transaction.at" />
-                        &nbsp;<FormattedAsset
+                        &nbsp;<FormattedPrice
                                 style={{fontWeight: "bold"}}
-                                amount={op[1].price.quote.amount}
-                                asset={op[1].price.quote.asset_id}
-                                base={op[1].price.base.asset_id} />
+                                quote_amount={op[1].price.quote.amount}
+                                quote_asset={op[1].price.quote.asset_id}
+                                base_asset={op[1].price.base.asset_id}
+                                base_amount={op[1].price.base.amount}
+                            />
                     </td>
                 );
                 break; 
