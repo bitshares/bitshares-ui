@@ -8,7 +8,6 @@ module.exports = {
     },
     header: {
         title: "Graphene UI",
-        account: "Account",
         dashboard: "Dashboard",
         explorer: "Explorer",
         exchange: "Exchange",

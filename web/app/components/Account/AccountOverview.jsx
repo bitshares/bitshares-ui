@@ -34,7 +34,7 @@ class AccountOverview extends React.Component {
         let history = {};
         let account_history = account.get("history");
         if(account_history) {
-            account_history.take(100).forEach( t => {
+            account_history.take(20).forEach( t => {
                 let trx = t.toJS();
                 history[trx.id] = (
                     <Operation
@@ -44,7 +44,6 @@ class AccountOverview extends React.Component {
                         block={trx.block_num}
                         current={account.get("id")}
                         inverted={this.props.settings.get("inverseMarket")}
-                        hideFee={false}
                         />
                 );
             });
@@ -80,13 +79,14 @@ class AccountOverview extends React.Component {
                     </table>
                 </div> : null}
                 <div className="content-block">
-                <h3><Translate content="account.recent" /></h3>
+                <h3><Translate content="account.recent" /> <small> (<Translate content="account.more" /> TODO)</small></h3>
                     <table className="table">
                         <thead>
                             <tr>
                                 <th><Translate content="explorer.block.date" /></th>
                                 <th><Translate content="explorer.block.op" /></th>
                                 <th><Translate content="account.votes.info" /></th>
+                                <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
                             </tr>
                         </thead>
                         <tbody>
