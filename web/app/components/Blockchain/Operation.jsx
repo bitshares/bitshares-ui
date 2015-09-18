@@ -419,7 +419,7 @@ class Operation extends React.Component {
                                 base_asset={op[1].price.base.asset_id}
                                 base_amount={op[1].price.base.amount}
                             />
-                    </td>
+                    </span>
                 );
                 break; 
 
