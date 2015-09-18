@@ -7,10 +7,11 @@ class Apis {
        this.rpc_password = "";
     }
 
-    connect(hostname="localhost", port=8090) {
+    connect(hostname="localhost", port=8091) {
+        console.log( "Connecting..." );
         let protocol = "ws:";
         try {
-            console.log( "Location: ", window.location.hash );
+           console.log( "Location: ", window.location );
 
            let args     = window.location.hash.split("/");
            console.log( "args: ", args );
@@ -33,7 +34,7 @@ class Apis {
            port = this.rpc_port;
 
         console.log( "connecting to ", hostname, ":", port );
-        this.ws_rpc = new WebSocketRpc(protocol + hostname + ":" + port);
+        this.ws_rpc = new WebSocketRpc(protocol + "localhost:8090");
         this.init_promise = this.ws_rpc.login(this.rpc_user, this.rpc_password).then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");

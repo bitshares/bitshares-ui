@@ -98,12 +98,12 @@ class AssetSelector extends React.Component {
 
     _onChange(event) {
         let amount = event.target.value
-        // this.setState({amount})
+        this.setState({amount})
         this.props.onChange({amount: amount, asset: this.props.asset})
     }
 
     onAssetChange(selected_asset) {
-        // this.setState({selected_asset})
+        this.setState({selected_asset})
         this.props.onChange({amount: this.props.amount, asset: selected_asset})
     }
 

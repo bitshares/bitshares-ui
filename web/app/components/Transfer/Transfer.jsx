@@ -40,7 +40,9 @@ class Transfer extends React.Component {
     }
 
     fromChanged(from_name) {
-        this.setState({from_name})
+        let asset = undefined
+        let amount = undefined
+        this.setState({from_name,asset,amount})
     }
 
     toChanged(to_name) {
@@ -56,6 +58,7 @@ class Transfer extends React.Component {
     }
 
     onAmountChanged({amount, asset}) {
+        console.log( "onAmountChanged: ", amount, asset );
         this.setState({amount, asset})
     }
 
@@ -95,11 +98,14 @@ class Transfer extends React.Component {
 
         let asset_types = [];
         let balance = null;
+   //     console.log( "state.from_account: ", this.state.from_account ? this.state.from_account.toJS() : null, "from_error: ", from_error );
         if (this.state.from_account && !from_error) {
             let account_balances = this.state.from_account.get("balances").toJS();
+            console.log( "account_balances: ", account_balances );
             asset_types = Object.keys(account_balances);
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
+    //            console.log( "account_balances[current_asset_id]: ", account_balances[current_asset_id], "  current_asset_id: ", current_asset_id );
                 balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
             } else {
                 balance = "No funds";
