@@ -140,5 +140,5 @@ class WalletManagerStore extends BaseStore {
     
 }
 
-export var WalletManagerStoreWrapped = alt.createStore(WalletManagerStore)
+export var WalletManagerStoreWrapped = alt.createStore(WalletManagerStore, "WalletManagerStore");
 export default WalletManagerStoreWrapped

@@ -358,5 +358,5 @@ class BalanceClaimStore {
 
 }
 
-export var BalanceClaimStoreWrapped = alt.createStore(BalanceClaimStore)
+export var BalanceClaimStoreWrapped = alt.createStore(BalanceClaimStore, "BalanceClaimStore");
 export default BalanceClaimStoreWrapped

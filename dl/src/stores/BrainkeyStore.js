@@ -20,5 +20,5 @@ class BrainkeyStore extends BaseStore {
     
 }
 
-export var BrainkeyStoreWrapped = alt.createStore(BrainkeyStore)
+export var BrainkeyStoreWrapped = alt.createStore(BrainkeyStore, "BrainkeyStore");
 export default BrainkeyStoreWrapped

@@ -53,7 +53,7 @@ class BackupStore extends BaseStore {
     
 }
 
-export var BackupStoreWrapped = alt.createStore(BackupStore)
+export var BackupStoreWrapped = alt.createStore(BackupStore, "BackupStore");
 export default BackupStoreWrapped
 
 function getBackupPublicKey(contents) {

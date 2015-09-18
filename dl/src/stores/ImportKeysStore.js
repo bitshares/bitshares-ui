@@ -14,5 +14,5 @@ class ImportKeysStore {
 
 }
 
-export var ImportKeysStoreWrapped = alt.createStore(ImportKeysStore)
+export var ImportKeysStoreWrapped = alt.createStore(ImportKeysStore, "ImportKeysStore");
 export default ImportKeysStoreWrapped
