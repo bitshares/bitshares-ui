@@ -59,7 +59,6 @@ function keyChecker(props, propName, componentName, location) {
 function assetChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
-        console.log("props:", props, "propName:", propName, typeof props[propName]);
         let value = props[propName];
         if (typeof value === "string") {
             return null;
