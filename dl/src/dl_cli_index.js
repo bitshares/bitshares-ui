@@ -9,7 +9,7 @@ import WalletDb from 'stores/WalletDb'
 import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
 import PrivateKeyStore from 'stores/PrivateKeyStore'
-import chain_store from "api/ChainStore"
+import ChainStore from "api/ChainStore"
 
 import BackupActions from "actions/BackupActions"
 
@@ -20,16 +20,13 @@ import iDB from 'idb-instance'
 module.exports = {
     
     PrivateKey, PublicKey, Aes, key,
-    
     WalletDb, WalletManagerStore, PrivateKeyStore,
-    
     AccountStore, 
-    
     BackupActions,
+    ChainStore,
     
     alt, iDB,  Apis,
     db: Apis.instance().db_api(), // todo, fix db == undefined
-    chain_store,
     
     resolve: (object, atty = "_") => {
         if( ! object["then"]) {
