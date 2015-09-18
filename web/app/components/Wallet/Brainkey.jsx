@@ -2,40 +2,40 @@
 import React, {Component, Children} from "react"
 import { RouteHandler } from "react-router"
 import connectToStores from "alt/utils/connectToStores"
+import Immutable from "immutable"
 import cname from "classnames"
 import key from "common/key_utils"
 import dictionary from "common/dictionary_en"
-import BrainkeyStore from "stores/BrainkeyStore"
 import BrainkeyActions from "actions/BrainkeyActions"
+import BrainkeyStoreFactory from "stores/BrainkeyStore"
+import BindToChainState from "components/Utility/BindToChainState"
+import ChainTypes from "components/Utility/ChainTypes"
 
 var dictionary_set = new Set(dictionary.split(','))
 
 class BrainkeyBaseComponent extends Component {
-    
     static getStores() {
-        return [BrainkeyStore]
+        return [BrainkeyStoreFactory.getInstance("wmc")]
     }
-    
     static getPropsFromStores() {
-        var brnkey = BrainkeyStore.getState()
+        var brnkey = BrainkeyStoreFactory.getInstance("wmc").getState()
         return brnkey
     }
-    
 }
 
 @connectToStores
 export default class Brainkey extends BrainkeyBaseComponent {
-
+    componentWillUnmount() {
+        console.log("brnkey componentWillUnmount");
+        BrainkeyStoreFactory.closeInstance("wmc")
+    }
     render() {
         return (
             <span>
-                    
                 <h3>Brainkey</h3>
-                
                 <BrainkeyInput>
                     <ViewBrainkey/>
                 </BrainkeyInput>
-                
             </span>
         )
     }
@@ -43,13 +43,39 @@ export default class Brainkey extends BrainkeyBaseComponent {
 
 @connectToStores
 class ViewBrainkey extends BrainkeyBaseComponent {
-    
     render() {
-        var short_brnkey = this.props.brnkey.substring(0, 10) + "..."
-        return <div>{this.props.brnkey}</div>
+        var short_brnkey = this.props.brnkey.substring(0, 10)
+        console.log("this.props.account_ids.toArray()", this.props.account_ids.toArray())
+        return <span>
+            <div><span className="">{short_brnkey}</span>&hellip;</div>
+
+            <h5>Accounts</h5>
+            <BrainkeyAccounts accounts={Immutable.List(this.props.account_ids.toArray())}/>
+        </span>
     }
 }
 
+@BindToChainState()
+class BrainkeyAccounts {
+
+    static propTypes = {
+        accounts: ChainTypes.ChainAccountsList.isRequired
+    }
+    
+    render() {
+        var names = []
+        console.log("this.props.accounts", this.props.accounts)
+        this.props.accounts.forEach( (account, i) => {
+            console.log("account", account)
+            if(! account) return
+            names.push(<div key={i}>{account.get("id")} {account.get("name")}</div>)
+        })
+        return <span>
+            {names.sort()}
+        </span>
+    }
+
+}
 
 class BrainkeyInput extends Component {
     
@@ -62,15 +88,15 @@ class BrainkeyInput extends Component {
         if(this.state.accept)
             return <span>{this.props.children}</span>
         
-        var spellcheck_words = key.normalize_brain_key(this.state.brnkey).split(' ')
+        var spellcheck_words = this.state.brnkey.split(" ")
         var checked_words = []
-        for(let word of spellcheck_words) {
-            if(word === "") continue
+        spellcheck_words.forEach( (word, i) => {
+            if(word === "") return
             if(dictionary_set.has(word.toLowerCase()))
-                checked_words.push(<span>{word} </span>)
+                checked_words.push(<span key={i}>{word} </span>)
             else 
-                checked_words.push(<MissspelledWord>{word}</MissspelledWord>)
-        }
+                checked_words.push(<MissspelledWord key={i}>{word}</MissspelledWord>)
+        })
         var ready = checked_words.length > 0
         var word_count_label
         if(checked_words.length > 3)
@@ -93,7 +119,7 @@ class BrainkeyInput extends Component {
     
     onAccept() {
         this.setState({accept: true})
-        BrainkeyActions.setBrainKey(this.state.brnkey)
+        BrainkeyActions.setBrainkey(this.state.brnkey)
     }
     
     formChange(event) {

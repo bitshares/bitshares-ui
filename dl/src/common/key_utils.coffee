@@ -112,6 +112,18 @@ module.exports = key =
     get_random_key: (entropy) ->
         PrivateKey.fromBuffer @random32ByteBuffer entropy
     
+    get_owner_private: (brain_key, sequence = 0)->
+            unless sequence >= 0
+                throw new Error "invalid sequence"
+            
+            brain_key = key.normalize_brain_key brain_key
+            
+            PrivateKey.fromBuffer(
+                hash.sha256(hash.sha512(
+                    brain_key + " " + sequence
+                ))
+            )
+
     get_active_private: (owner_private, sequence = 0)->
         unless sequence >= 0
             throw new Error "invalid sequence"
@@ -160,17 +172,3 @@ module.exports = key =
             (new Date()).toString()
         # DEBUG console.log('... entropyStr',entropyStr)
         entropyStr
-    
-    get_owner_private: (brain_key, sequence = 0)->
-        unless sequence >= 0
-            throw new Error "invalid sequence"
-        
-        brain_key = key.normalize_brain_key brain_key
-        
-        PrivateKey.fromBuffer(
-            hash.sha256(hash.sha512(
-                brain_key + " " + sequence
-            ))
-        )
-
-

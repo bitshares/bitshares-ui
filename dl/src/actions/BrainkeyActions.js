@@ -2,7 +2,7 @@ import alt from "alt-instance"
 
 class BrainkeyActions {
     
-    setBrainKey(brnkey) {
+    setBrainkey(brnkey) {
         this.dispatch(brnkey)
     }
     
