@@ -4,6 +4,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 import {Link} from "react-router";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
+import AccountStore from "stores/AccountStore";
 
 class MobileMenu extends React.Component {
     constructor() {
@@ -16,20 +17,34 @@ class MobileMenu extends React.Component {
 
     render() {
         let {id, isUnlocked} = this.props;
+        let accounts = null;
+        let linkedAccounts = AccountStore.getState().linkedAccounts;
+        if(linkedAccounts.size > 1) {
+            accounts = linkedAccounts.map( a => {
+                return <li key={a} onClick={this.onClick}><Link to="account-overview" params={{account_name: a}}>{a}</Link></li>;
+            });
+        }  else {
+            accounts = <li key="account" onClick={this.onClick}><Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link></li>;
+        }
+
         return (
             <Panel id={id} position="left">
               <div className="grid-content">
               <Trigger close={id}>
                 <a className="close-button">&times;</a>
               </Trigger>
+                  <section style={{marginTop: "3rem"}} className="block-list">
+                      <ul>
+                          <li onClick={this.onClick}><Link to="transfer"><Translate component="span" content="header.payments"/></Link></li>
+                      </ul>
+                  </section>
 
               <section style={{marginTop: "3rem"}} className="block-list">
+                <header>Accounts</header>
                 <ul>
-                    <li onClick={this.onClick}><Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link></li>
-                    <li onClick={this.onClick}><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
-                    <li onClick={this.onClick}><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>
-                    <li onClick={this.onClick}><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
-                    {isUnlocked ? <li onClick={this.onClick}><Link to="settings">Settings</Link></li> : null}
+                    {accounts}
+                    {/*<li onClick={this.onClick}><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
+                    <li onClick={this.onClick}><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>*/}
                 </ul>
                 </section>
                 </div>

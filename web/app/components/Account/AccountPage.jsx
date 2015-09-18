@@ -24,7 +24,7 @@ class AccountPage extends React.Component {
     render() {
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block medium-2 left-column no-padding">
+                <div className="show-for-medium grid-block medium-2 left-column no-padding">
                     <AltContainer
                         stores={[AccountStore]}
                         inject={{
@@ -38,7 +38,7 @@ class AccountPage extends React.Component {
                         <AccountLeftPanel account={this.props.account}/>
                     </AltContainer>
                 </div>
-                <div className="grid-block medium-10 main-content">
+                <div className="grid-block small-12 medium-10 main-content">
                     <AltContainer
                         stores={[AccountStore, SettingsStore, WalletUnlockStore]}
                         inject={{

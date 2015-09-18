@@ -1,6 +1,8 @@
 import React from "react";
 import {PropTypes} from "react";
 import {Link} from "react-router";
+import counterpart from "counterpart";
+import Icon from "../Icon/Icon";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
@@ -22,13 +24,13 @@ class AccountLeftPanel extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if(this.context.router) {
+        if (this.context.router) {
             const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
             this.pureComponentLastPath = this.context.router.getCurrentPath();
-            if(changed) return true;
+            if (changed) return true;
         }
         return this.props.account !== nextProps.account ||
-               this.props.linkedAccounts !== nextProps.linkedAccounts 
+            this.props.linkedAccounts !== nextProps.linkedAccounts
     }
 
     onLinkAccount(e) {
@@ -54,40 +56,55 @@ class AccountLeftPanel extends React.Component {
         let linkBtn = null;
         if (!is_my_account) {
             linkBtn = linkedAccounts.has(account_name) ?
-                        <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate content="account.unlink"/></a> :
-                        <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate content="account.link"/></a>;
+                <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
+                    content="account.unlink"/></a> :
+                <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate
+                    content="account.link"/></a>;
         }
+        let settings       = counterpart.translate("header.settings");
 
         return (
-            <div className="grid-content account-left-panel no-padding">
-                <ConfirmModal
-                    modalId="confirm_modal"
-                    ref="confirmModal"
-                />
-                <div className="regular-padding">
-                    <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
-                    {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
-                        (<div className="grid-container" style={{marginBottom: "1rem"}}>
-                            <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate content="account.upgrade" /></a>
-                        </div>)
-                        : null
-                    }
-                    <div className="grid-container no-margin">
-                        { linkBtn }
-                        <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay" /></Link>
+            <div className="grid-block vertical account-left-panel no-padding no-overflow">
+                <div className="grid-block">
+                    <div className="grid-content no-padding">
+                        <ConfirmModal
+                            modalId="confirm_modal"
+                            ref="confirmModal"
+                            />
+
+                        <div className="regular-padding">
+                            <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
+                            {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
+                                (<div className="grid-container" style={{marginBottom: "1rem"}}>
+                                    <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate
+                                        content="account.upgrade"/></a>
+                                </div>)
+                                : null
+                            }
+                            <div className="grid-container no-margin">
+                                { linkBtn }
+                                <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay"/></Link>
+                            </div>
+                        </div>
+                        <section className="block-list">
+                            <ul className="account-left-menu">
+                                <li><Link to="account-overview" params={{account_name}}><Translate content="account.overview"/></Link></li>
+                                <li><Link to="account-assets" params={{account_name}}><Translate content="explorer.assets.title"/></Link></li>
+                                <li><Link to="account-member-stats" params={{account_name}}><Translate content="account.member.stats"/></Link></li>
+                                <li><Link to="account-payees" params={{account_name}}><Translate content="account.payees"/></Link></li>
+                                <li><Link to="account-permissions" params={{account_name}}><Translate content="account.permissions"/></Link></li>
+                                <li><Link to="account-voting" params={{account_name}}><Translate content="account.voting"/></Link></li>
+                                <li><Link to="account-orders" params={{account_name}}><Translate content="account.orders"/></Link></li>
+                            </ul>
+                        </section>
                     </div>
                 </div>
-                <section className="block-list">
-                    <ul className="account-left-menu">
-                        <li><Link to="account-overview" params={{account_name}}><Translate content="account.overview" /></Link></li>
-                        <li><Link to="account-assets" params={{account_name}}><Translate content="explorer.assets.title" /></Link></li>
-                        <li><Link to="account-member-stats" params={{account_name}}><Translate content="account.member.stats" /></Link></li>
-                        <li><Link to="account-payees" params={{account_name}}><Translate content="account.payees" /></Link></li>
-                        <li><Link to="account-permissions" params={{account_name}}><Translate content="account.permissions" /></Link></li>
-                        <li><Link to="account-voting" params={{account_name}}><Translate content="account.voting" /></Link></li>
-                        <li><Link to="account-orders" params={{account_name}}><Translate content="account.orders" /></Link></li>
-                    </ul>
-                </section>
+                <div className="grid-block shrink bottom">
+                    <div className="center">
+                        <Link to="settings" data-tip={settings} data-place="top"><Icon name="cog"/></Link> &nbsp;
+                        <Link to="create-account" data-tip="Create New Account" data-place="top"><Icon name="plus-circle"/></Link>
+                    </div>
+                </div>
             </div>
         );
     }
