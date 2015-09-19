@@ -125,7 +125,7 @@ class Header extends React.Component {
                         <li>{linkedAccounts.size > 1 ? <Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link>
                         : <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>}</li>
                         <li><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
-                        <li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>
+                        {/*<li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>*/}
                         <li><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                     </ul>
                 </div>

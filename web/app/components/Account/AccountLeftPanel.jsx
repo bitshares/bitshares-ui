@@ -95,6 +95,7 @@ class AccountLeftPanel extends React.Component {
                                 <li><Link to="account-permissions" params={{account_name}}><Translate content="account.permissions"/></Link></li>
                                 <li><Link to="account-voting" params={{account_name}}><Translate content="account.voting"/></Link></li>
                                 <li><Link to="account-orders" params={{account_name}}><Translate content="account.orders"/></Link></li>
+                                <li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>
                             </ul>
                         </section>
                     </div>

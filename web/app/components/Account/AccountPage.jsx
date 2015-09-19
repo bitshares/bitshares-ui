@@ -22,7 +22,9 @@ class AccountPage extends React.Component {
     }
 
     componentWillMount() {
-        AccountActions.setCurrentAccount(this.props.params.account_name);
+        let account = this.props.params.account_name;
+        if(account && AccountStore.getState().linkedAccounts.get(account))
+            AccountActions.setCurrentAccount(this.props.params.account_name);
     }
 
     render() {
