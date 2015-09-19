@@ -1,5 +1,3 @@
-// TODO: get rid of witnesses and witness_id_to_name
-
 import React from "react";
 import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -7,8 +5,6 @@ import {Link} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-// import AssetActions from "actions/AssetActions";
-// import WitnessActions from "actions/WitnessActions";
 import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
@@ -58,8 +54,8 @@ class Row extends React.Component {
         fee.amount = parseInt(fee.amount, 10);
         return (
                 <tr key={key}>
-                    {!hideDate ? <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td> : null}
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
+                    <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td>
                     <td>{this.props.info} {hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
                 </tr>
             );

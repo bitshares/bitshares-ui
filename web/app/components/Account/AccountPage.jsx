@@ -21,6 +21,10 @@ class AccountPage extends React.Component {
         account: "props.params.account_name"
     }
 
+    componentWillMount() {
+        AccountActions.setCurrentAccount(this.props.params.account_name);
+    }
+
     render() {
         return (
             <div className="grid-block page-layout">
