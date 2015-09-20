@@ -55,7 +55,7 @@ class ViewBrainkey extends BrainkeyBaseComponent {
     }
 }
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class BrainkeyAccounts {
 
     static propTypes = {
