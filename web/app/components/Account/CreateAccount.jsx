@@ -17,12 +17,17 @@ import WalletActions from "actions/WalletActions"
 
 @connectToStores
 class CreateAccount extends React.Component {
+
     static getStores() {
         return [AccountStore]
     }
+
     static getPropsFromStores() {
         return {}
     }
+
+    static contextTypes = {router: React.PropTypes.func.isRequired};
+
     constructor() {
         super();
         this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null, loading: false};
@@ -164,7 +169,5 @@ class CreateAccount extends React.Component {
         );
     }
 }
-
-CreateAccount.contextTypes = {router: React.PropTypes.func.isRequired};
 
 export default CreateAccount;
