@@ -7,34 +7,23 @@ class Apis {
        this.rpc_password = "";
     }
 
-    connect(hostname="localhost", port=8091) {
+    connect(hostname="localhost", port=8090) {
         console.log( "Connecting..." );
-        let protocol = "ws:";
         try {
-           console.log( "Location: ", window.location );
-
            let args     = window.location.hash.split("/");
-           console.log( "args: ", args );
            let parts    = args[2].split(":");
-           console.log( "parts: ", parts );
            this.rpc_user = parts[0];
            this.rpc_pass = parts[1];
            this.rpc_ip   = parts[2];
            this.rpc_port = parts[3];
-
-           if( !this.rpc_ip )
-              hostname = window.location.hostname? window.location.hostname : "localhost";
-           protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
-        if(this.ws_rpc) return
-
-        if( this.rpc_ip && this.rpc_ip != "0.0.0.0" )
-           hostname = this.rpc_ip;
-        if( this.rpc_port )
-           port = this.rpc_port;
-
-        console.log( "connecting to ", hostname, ":", port );
-        this.ws_rpc = new WebSocketRpc(protocol + "localhost:8090");
+        if (this.ws_rpc) return; // already connected
+        if (this.rpc_ip) hostname = this.rpc_ip;
+        else hostname = window.location.hostname ? window.location.hostname : "localhost";
+        if (this.rpc_port ) port = this.rpc_port;
+        let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        console.log(`connecting to ${protocol}${hostname}:${port}`);
+        this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}`);
         this.init_promise = this.ws_rpc.login(this.rpc_user, this.rpc_password).then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");
