@@ -17,7 +17,8 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
-import TimeAgo from "react-timeago"
+import {FormattedRelative} from "react-intl";
+
 
 require("./operations.scss");
 
