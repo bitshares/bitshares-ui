@@ -41,6 +41,7 @@ class ChainStore
    constructor() {
       /** tracks everyone who wants to receive updates when the cache changes */
       this.subscribers = new Set()
+      this.subscribed = false
       this.clearCache()
    }
 
@@ -59,11 +60,11 @@ class ChainStore
       this.witness_by_account_id    = new Map()
       this.committee_by_account_id  = new Map()
       this.objects_by_vote_id       = new Map()
-      this.subscribed = undefined
       this.fetching_get_full_accounts = new Set()
    }
 
    resetCache() {
+       this.subscribed = false
        this.clearCache()
        this.init()
    }
@@ -283,9 +284,8 @@ class ChainStore
          return result
       }
 
-      //console.log( "fetchObject: ", id )
-      if( this.subscribed  !== true ) 
-         return undefined
+      //console.log( "fetchObject: ", id, this.subscribed )
+      if( !this.subscribed ) return undefined
 
       if(DEBUG) console.log( "maybe fetch object: ", id )
       if( !utils.is_object_id(id) ) 
