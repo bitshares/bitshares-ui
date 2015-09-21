@@ -25,6 +25,7 @@ class DelegateStore {
     onGetDelegates(delegates) {
         delegates.forEach(delegate => {
             this.account_id_to_delegate_id[delegate.committee_member_account] = delegate.id;
+            delegate.total_votes = parseInt(delegate.total_votes, 10);
             this.delegates = this.delegates.set(
                 delegate.id,
                 Delegate(delegate)
