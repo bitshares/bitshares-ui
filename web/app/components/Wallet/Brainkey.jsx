@@ -48,13 +48,15 @@ class ViewBrainkey extends BrainkeyBaseComponent {
         console.log("this.props.account_ids.toArray()", this.props.account_ids.toArray())
         return <span>
             <div><span className="">{short_brnkey}</span>&hellip;</div>
-
-            <h5>Accounts</h5>
-            <BrainkeyAccounts accounts={Immutable.List(this.props.account_ids.toArray())}/>
+            <p></p>
+            {this.props.account_ids.size?
+            <BrainkeyAccounts accounts={Immutable.List(this.props.account_ids.toArray())}/>:
+            <h5>No Accounts</h5>}
         </span>
     }
 }
 
+import AccountCard from "components/Dashboard/AccountCard"
 @BindToChainState({keep_updating: true})
 class BrainkeyAccounts {
 
@@ -63,15 +65,11 @@ class BrainkeyAccounts {
     }
     
     render() {
-        var names = []
-        console.log("this.props.accounts", this.props.accounts)
-        this.props.accounts.forEach( (account, i) => {
-            console.log("account", account)
-            if(! account) return
-            names.push(<div key={i}>{account.get("id")} {account.get("name")}</div>)
-        })
+        var rows = this.props.accounts.filter( account => !!account )
+            .map( account => account.get("name") ).sort()
+            .map( name => <AccountCard key={name} account={name}/> )
         return <span>
-            {names.sort()}
+            {rows}
         </span>
     }
 
