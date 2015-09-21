@@ -50,7 +50,6 @@ class BrainkeyStoreImpl extends BaseStore {
     constructor() {
         super()
         this.clearCache()
-        
         this.bindListeners({
             onSetBrainkey: BrainkeyActions.setBrainkey
         })

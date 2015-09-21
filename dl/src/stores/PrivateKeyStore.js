@@ -6,6 +6,7 @@ import idb_helper from "../idb-helper";
 import chain_store from "api/ChainStore"
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
+import PrivateKeyActions from "actions/PrivateKeyActions"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 
@@ -22,11 +23,10 @@ class PrivateKeyStore extends BaseStore {
         super()
         this.state = this._getInitialState()
         this.pending_operation_count = 0
-        
-        /*this.bindListeners({
-            onAddKey: PrivateKeyActions.addKey
-        });*/
-        this._export("loadDbData","onAddKey", "hasKey",
+        // this.bindListeners({
+        //     onAddKey: PrivateKeyActions.addKey
+        // })
+        this._export("loadDbData", "hasKey", "onAddKey",
             "getPubkeys", "getTcomb_byPubkey",
             "getPubkeys_having_PrivateKey");
     }
@@ -75,7 +75,6 @@ class PrivateKeyStore extends BaseStore {
             var private_key_tcomb = PrivateKeyTcomb(cursor.value)
             map.set(private_key_tcomb.id, private_key_tcomb)
             map.set(private_key_tcomb.pubkey, private_key_tcomb)
-            this.newPublicKey(private_key_tcomb.pubkey)
             cursor.continue()
         }).then(()=>{
             this.pendingOperationDone()
@@ -116,7 +115,6 @@ class PrivateKeyStore extends BaseStore {
                 PrivateKeyTcomb(private_key_object)
             )
         })
-        this.newPublicKey(private_key_object.pubkey)
         
         return new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)

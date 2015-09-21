@@ -17,12 +17,23 @@ import notify from "actions/NotificationActions";
 import cname from "classnames";
 import lookup from "chain/lookup";
 import v from "chain/serializer_validation";
-
+import ChainTypes from "components/Utility/ChainTypes"
 
 var TRACE = false
 
-class BalanceClaim extends Component {
+//BindToChainState({keep_updating: true})
+export default class BalanceClaim extends Component{
+    // static propTypes = {
+    //     balances: ChainTypes.ChainAddressBalances
+    // }
+    render() {
+        return <BalanceClaimImpl/>
+    }
+}
 
+@connectToStores
+class BalanceClaimImpl extends Component {
+    static contextTypes = {router: React.PropTypes.func.isRequired}
     constructor() {
         super();
         this.state = this._getInitialState();
@@ -316,7 +327,3 @@ class BalanceClaim extends Component {
         return wif_to_balances
     }
 }
-
-BalanceClaim.contextTypes = {router: React.PropTypes.func.isRequired};
-
-export default connectToStores(BalanceClaim)

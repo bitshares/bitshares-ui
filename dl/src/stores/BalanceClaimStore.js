@@ -305,7 +305,10 @@ class BalanceClaimStore {
             
             var pubkey = balance_claim.pubkey
             var private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(pubkey)
-            
+            if(! private_key_tcomb) {
+                console.error("balance claim has no coresponding private key")
+                continue
+            }
             var import_account_names =
                 private_key_tcomb.import_account_names
             

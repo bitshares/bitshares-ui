@@ -11,6 +11,7 @@ import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
+import PrivateKeyActions from "actions/PrivateKeyActions"
 import chain_config from "chain/config"
 import key_utils from "common/key_utils"
 //import WalletActions from "actions/WalletActions"
