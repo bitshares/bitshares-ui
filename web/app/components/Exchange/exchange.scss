@@ -299,3 +299,15 @@ a.order-cancel {
     padding: 0 0 0 5px;
     min-width: 5rem;
 }
+
+#account_drop_down {
+  margin-right: 4rem;
+  a.button {
+    background-color: transparent;
+    text-transform: none;
+    font-family: 'Roboto-Regular', arial, sans-serif;
+  }
+  a:active.button, a:hover.button {
+    background-color: transparent !important;
+  }
+}

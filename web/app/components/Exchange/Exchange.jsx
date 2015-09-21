@@ -18,10 +18,15 @@ import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import ChainStore from "api/ChainStore";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import AccountActions from "actions/AccountActions";
+import ActionSheet from "react-foundation-apps/src/action-sheet";
+import Icon from "../Icon/Icon";
 
 require("./exchange.scss");
 
-@BindToChainState({keep_updating: false})
+@BindToChainState({keep_updating: true})
 class Exchange extends React.Component {
     constructor() {
         super();
@@ -77,6 +82,8 @@ class Exchange extends React.Component {
         priceData: [],
         volumeData: []
     }
+
+    static contextTypes = {router: React.PropTypes.func.isRequired};
 
     componentDidMount() {
         this._subToMarket(this.props);
@@ -324,8 +331,20 @@ class Exchange extends React.Component {
         this.refs.borrowBase.show();
     }
 
+    _accountClickHandler(account_name, e) {
+        e.preventDefault();
+        ZfApi.publish("account_drop_down", "close");
+        let router = this.context.router;
+        AccountActions.setCurrentAccount(account_name);
+        let current_account_name = router.getCurrentParams()["account_name"];
+        if(current_account_name && current_account_name !== account_name) {
+            let routes = router.getCurrentRoutes();
+            this.context.router.transitionTo(routes[routes.length - 1].name, {account_name: account_name});
+        }
+    }
+
     render() {
-        let { currentAccount, limit_orders,
+        let { currentAccount, linkedAccounts, limit_orders,
             totalBids, flat_asks, flat_bids, bids, asks, account, quoteAsset, baseAsset } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         
@@ -365,6 +384,34 @@ class Exchange extends React.Component {
         let lowestAsk = asks[0] ? asks[0].price_full : 0;
         let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
 
+        let accountsDropDown = null;
+        if (currentAccount) {
+
+            let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
+
+            if(linkedAccounts.size > 1) {
+                let accountsList = linkedAccounts
+                    .sort()
+                    .map(name => {
+                        return <li key={name}><a href onClick={this._accountClickHandler.bind(this, name)}>{name}</a></li>;
+                    });
+
+                accountsDropDown = (
+                    <ActionSheet id="account_drop_down">
+                        <ActionSheet.Button title="">
+                            <a className="button">
+                                <Icon name="user"/>&nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
+                            </a>
+                        </ActionSheet.Button>
+                        <ActionSheet.Content >
+                            <ul className="no-first-element-top-border">
+                                {accountsList}
+                            </ul>
+                        </ActionSheet.Content>
+                    </ActionSheet>);
+            }
+        }
+
         return (
 
                 <div className="grid-block page-layout market-layout">
@@ -391,31 +438,40 @@ class Exchange extends React.Component {
                     <div className="grid-block main-content vertical small-8 medium-9 large-8 ps-container" ref="center">
 
                         {/* Top bar with info */}
-                        <div className="grid-block no-padding shrink" style={{paddingTop: 0}}>
-                            <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${baseSymbol} / ${quoteSymbol}`}</span></Link>
-                            <ul className="market-stats stats">
-                                <li className="stat">
-                                    <span>
-                                        <Translate component="span" content="exchange.latest" /><br/>
-                                        <b className="value stat-primary">{utils.format_number(290, Math.max(5, quote ? quote.precision : 0))}</b><br/>
-                                        <em>{baseSymbol}/{quoteSymbol}</em>
-                                    </span>
-                                </li>
-                                <li className="stat">
-                                    <span>
-                                        <Translate component="span" content="exchange.call" /><br/>
-                                        <b className="value stat-primary">{utils.format_number(312, Math.max(5, quote ? quote.precision : 0))}</b><br/>
-                                        <em>{baseSymbol}/{quoteSymbol}</em>
-                                    </span>
-                                </li>
-                                <li className="stat">
-                                    <span>
-                                        <Translate component="span" content="exchange.volume" /><br/>
-                                        <b className="value stat-primary">{utils.format_number(23122, quote ? quote.precision : 2)}</b><br/>
-                                        <em>{quoteSymbol}</em>
-                                    </span>
-                                </li>
-                            </ul>
+                        <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
+                            <div className="grid-block overflow-visible">
+                                <div className="grid-block shrink">
+                                    <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${baseSymbol} / ${quoteSymbol}`}</span></Link>
+                                </div>
+                                <div className="grid-block">
+                                    <ul className="market-stats stats">
+                                        <li className="stat">
+                                            <span>
+                                                <Translate component="span" content="exchange.latest" /><br/>
+                                                <b className="value stat-primary">{utils.format_number(290, Math.max(5, quote ? quote.precision : 0))}</b><br/>
+                                                <em>{baseSymbol}/{quoteSymbol}</em>
+                                            </span>
+                                        </li>
+                                        <li className="stat">
+                                            <span>
+                                                <Translate component="span" content="exchange.call" /><br/>
+                                                <b className="value stat-primary">{utils.format_number(312, Math.max(5, quote ? quote.precision : 0))}</b><br/>
+                                                <em>{baseSymbol}/{quoteSymbol}</em>
+                                            </span>
+                                        </li>
+                                        <li className="stat">
+                                            <span>
+                                                <Translate component="span" content="exchange.volume" /><br/>
+                                                <b className="value stat-primary">{utils.format_number(23122, quote ? quote.precision : 2)}</b><br/>
+                                                <em>{quoteSymbol}</em>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="grid-block shrink overflow-visible">
+                                    {accountsDropDown}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="grid-block no-overflow no-padding shrink">
