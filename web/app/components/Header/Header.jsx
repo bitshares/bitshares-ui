@@ -114,7 +114,7 @@ class Header extends React.Component {
         let linkToAccountOrDashboard;
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link>;
         else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>;
-        else linkToAccountOrDashboard = <Link to="create-account" data-tip="Create Account" data-place="top">Create Account</Link>;
+        else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
 
         return (
             <div>
@@ -128,6 +128,7 @@ class Header extends React.Component {
                 <div className="show-for-medium medium-8">
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
+                        <li><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
                         {/*<li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>*/}
                         <li><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                     </ul>
