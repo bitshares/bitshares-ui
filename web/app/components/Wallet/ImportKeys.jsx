@@ -24,7 +24,7 @@ import BalanceClaimActions from "actions/BalanceClaimActions"
 import BalanceClaimStore from "stores/BalanceClaimStore"
 import WalletCreate from "components/Wallet/WalletCreate"
 import BalanceClaim from "components/Wallet/BalanceClaim"
-
+import LoadingIndicator from "components/LoadingIndicator"
 import chain_api from "api/ChainStore"
 
 require("./ImportKeys.scss");
@@ -56,7 +56,6 @@ export default class ImportKeys extends Component {
             password_checksum: null,
             import_password_message: null,
             imported_keys_public: {},
-            import_complete: false,
             wif_text_message: null,
             wif_textarea_private_keys_message: null,
             wif_textarea_private_keys: ""
@@ -71,6 +70,16 @@ export default class ImportKeys extends Component {
     }
     
     render() {
+        
+        if(this.state.save_import_loading) {
+            return <div>
+                <h3>Import Keys</h3>
+                <div className="center-content">
+                    <LoadingIndicator type="circle"/>
+                </div>
+            </div>
+        }
+        
         var has_keys = this.state.wif_count !== 0;
         var import_ready = has_keys &&
             this.state.balances_known;
@@ -198,10 +207,6 @@ export default class ImportKeys extends Component {
                             </div>
                         </div>
                     </div>) : null}
-                {this.state.import_complete ? <span>
-                    <div className="button success"
-                        onClick={this.onBack.bind(this)}>Claim Balance</div>
-                </span>:null}
                 </WalletCreate>
             </div>
         );
@@ -598,7 +603,9 @@ export default class ImportKeys extends Component {
             }
         }
         WalletUnlockActions.unlock().then(()=> {
-            this.saveImport()
+            this.setState({save_import_loading: true})
+            // show the loading indicator
+            setTimeout(()=> this.saveImport(), 200)
         })
     }
     
@@ -676,9 +683,9 @@ export default class ImportKeys extends Component {
             if (import_count) {
                 addAccountPromise.then(()=> {
                     ImportKeysActions.setStatus("saveDone")
-                    this.setState({import_complete: true})
                     BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
                     BalanceClaimActions.loadMyAccounts()
+                    this.onBack() // back to claim balances
                 })
             }
         }).catch( error => {
