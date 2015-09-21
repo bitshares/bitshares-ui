@@ -35,9 +35,14 @@ class WitnessCard extends React.Component {
         }
         let total_votes = witness_data.get( "total_votes" );
 
+        let color = {};
+        if( this.props.most_recent - witness_data.get('last_aslot') > 100 ) {
+           color = {color: "red"};
+        }
+
         return (
             <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
-                <div className="card">
+                <div className="card" style={color}>
                     <h4 className="text-center">{this.props.witness.get('name')}</h4>
                     <div className="card-content">
                         <div className="text-center">
@@ -45,6 +50,12 @@ class WitnessCard extends React.Component {
                         </div>
                         <div className="text-center">
                         Votes:  <FormattedAsset amount={total_votes} asset="1.3.0" />
+                        </div>
+                        <div className="text-center">
+                        Last Produced Slot:  {witness_data.get('last_aslot')} 
+                        </div>
+                        <div className="text-center">
+                        Total Missed:  {witness_data.get('total_missed')} 
                         </div>
                     </div>
                 </div>
@@ -55,17 +66,16 @@ class WitnessCard extends React.Component {
 
 class WitnessList extends React.Component {
 
-    shouldComponentUpdate(nextProps) {
-        return (
-                !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-                !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
-                nextProps.filter !== this.props.filter
-            );
-    }
-
     render() {
 
         let {witness_id_to_name, witnesses} = this.props;
+        let most_recent_aslot = 0
+        witnesses.forEach( w => { console.log( "w: ", w ); 
+                                  let s = w.last_aslot; 
+                                  if( most_recent_aslot  < s ) most_recent_aslot = s; } );
+
+        console.log( "most_recent_aslot: ", most_recent_aslot );
+
         let itemRows = null;
         if (witnesses.size > 0) {
             itemRows = witnesses
@@ -83,7 +93,7 @@ class WitnessList extends React.Component {
                 })
                 .map((a) => {
                     return (
-                        <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)} />
+                        <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)} most_recent={this.props.current_aslot} />
                     );
                 }).toArray();
         } 
@@ -162,6 +172,7 @@ class Witnesses extends React.Component {
         let activeWitnesses = [];
         dynGlobalObject = dynGlobalObject.toJS();
         globalObject = globalObject.toJS();
+        console.log( "global object: ", globalObject );
 
         for (let key in globalObject.active_witnesses) {
             if (globalObject.active_witnesses.hasOwnProperty(key)) {
@@ -179,6 +190,10 @@ class Witnesses extends React.Component {
                             <h4>Currently active witness:</h4>
                             <h3>{witness_id_to_name.get(dynGlobalObject.current_witness)}</h3>
                             <h5>Total number of witnesses active: {Object.keys(globalObject.active_witnesses).length}</h5>
+                            <h6>Current Slot #:  {dynGlobalObject.current_aslot} </h6>
+                            <h6>Participation Rate:  {dynGlobalObject.participation}%</h6>
+                            <h6>Pay-per-Block:  <FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></h6>
+                            <h6>Remaining Daily Budget:  <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></h6>
                             <br/>
                         </div>
                     </div>
@@ -189,6 +204,7 @@ class Witnesses extends React.Component {
                                     <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} />
                                 </div>
                                 <WitnessList
+                                    current_aslot={dynGlobalObject.current_aslot}
                                     witnesses={witnesses}
                                     witness_id_to_name={witness_id_to_name}
                                     filter={this.state.filterWitness}

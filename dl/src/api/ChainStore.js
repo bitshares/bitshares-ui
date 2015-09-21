@@ -3,6 +3,8 @@ import utils from "../common/utils"
 import Apis from "../rpc_api/ApiInstances.js"
 import {object_type,impl_object_type} from "../chain/chain_types";
 import validation from "common/validation"
+import BigInteger from "bigi"
+
 
 let op_history   = parseInt(object_type.operation_history, 10);
 let limit_order  = parseInt(object_type.limit_order, 10);
@@ -811,6 +813,9 @@ class ChainStore
    _updateObject( object, notify_subscribers )
    {
 //      console.log( "update: ", object )
+      if( object.id == "2.1.0" ) {
+         object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
+      }
 
       let current = this.objects_by_id.get( object.id )
       if( !current ) 
