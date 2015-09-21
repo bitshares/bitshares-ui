@@ -7,6 +7,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
+import TimeAgo from "react-timeago"
 
 @BindToChainState({keep_updating: true})
 class WitnessCard extends React.Component {
@@ -182,6 +183,8 @@ class Witnesses extends React.Component {
 
         this._fetchWitnesses(activeWitnesses, witnesses, witness_id_to_name);
        
+        let time_ago = React.TimeAgo;
+        console.log( "time_ago: ", time_ago );
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
@@ -194,6 +197,7 @@ class Witnesses extends React.Component {
                             <h6>Participation Rate:  {dynGlobalObject.participation}%</h6>
                             <h6>Pay-per-Block:  <FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></h6>
                             <h6>Remaining Daily Budget:  <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></h6>
+                            <h6>Next Vote Update: <TimeAgo date={dynGlobalObject.next_maintenance_time} /> </h6>
                             <br/>
                         </div>
                     </div>
