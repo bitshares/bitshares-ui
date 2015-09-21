@@ -33,18 +33,21 @@ class MarketCard extends React.Component {
                         </div>
                         <div className="card-section">
                             <ul >
-                                <li><Translate content="markets.core_rate" />: <FormattedPrice
-                                                    style={{fontWeight: "bold"}}
-                                                    quote_amount={quote.getIn(["options", "core_exchange_rate", "quote", "amount"])}
-                                                    quote_asset={quote.get("id")}
-                                                    base_amount={quote.get(["options", "core_exchange_rate", "base", "amount"])}
-                                                    base_asset={base.get("id")} />
+                                <li><Translate content="markets.core_rate" />:
+                                        <FormattedPrice
+                                            style={{fontWeight: "bold"}}
+                                            quote_amount={quote.getIn(["options", "core_exchange_rate", "quote", "amount"])}
+                                            quote_asset={quote.getIn(["options", "core_exchange_rate", "quote", "asset_id"])}
+                                            base_amount={quote.get(["options", "core_exchange_rate", "base", "amount"])}
+                                            base_asset={quote.get(["options", "core_exchange_rate", "base", "asset_id"])}
+                                        />
                                 </li>
-                                <li><Translate content="markets.supply" />: <FormattedAsset
-                                                    style={{fontWeight: "bold"}}
-                                                    amount={dynamic_data.get("current_supply")}
-                                                    asset={quote.get("id")}
-                                                    />
+                                <li><Translate content="markets.supply" />:
+                                    <FormattedAsset
+                                        style={{fontWeight: "bold"}}
+                                        amount={dynamic_data.get("current_supply")}
+                                        asset={quote.get("id")}
+                                    />
                                 </li>
                             </ul>
                         </div>
