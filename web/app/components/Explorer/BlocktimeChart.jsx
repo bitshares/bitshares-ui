@@ -23,6 +23,10 @@ class BlocktimeChart extends React.Component {
 
         let {blockTimes} = this.props;
 
+        blockTimes.filter(a => {
+            return a[0] >= (this.props.head_block_number - 30)
+        });
+
         if (blockTimes && blockTimes.length) {
             blockTimes = _.takeRight(blockTimes, 30);
         }

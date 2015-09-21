@@ -282,7 +282,7 @@ class Blocks extends React.Component {
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
                         <div className="text-left txtlabel">Block times</div>
-                            <BlocktimeChart blockTimes={blockTimes} />
+                            <BlocktimeChart blockTimes={blockTimes} head_block_number={dynGlobalObject.get("head_block_number")} />
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
@@ -305,10 +305,9 @@ class Blocks extends React.Component {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th><Translate content="explorer.block.date" /></th>
                                         <th><Translate content="explorer.block.op" /></th>
                                         <th><Translate content="account.votes.info" /></th>
-                                        <th style={{paddingRight: "1.5rem", textAlign: "right"}}><Translate content="transfer.fee" /></th>
+                                        <th><Translate content="explorer.block.date" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
