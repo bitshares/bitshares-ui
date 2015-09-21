@@ -328,7 +328,6 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, limit_orders,
             totalBids, flat_asks, flat_bids, bids, asks, account, quoteAsset, baseAsset } = this.props;
-        
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
@@ -437,49 +436,53 @@ class Exchange extends React.Component {
                         </div>
 
                         {/* Buy/Sell forms */}
-                        <div className="grid-block small-vertical medium-horizontal shrink no-padding" style={{ flexGrow: "0" }} >
-                            {false ? <div><button onClick={this._borrowQuote.bind(this)} className="button success">Borrow {quoteAsset.get("symbol")}</button></div> : null}
-                            {quote && base ?
-                            <BuySell
-                                className="small-12 medium-6"
-                                type="buy"
-                                amount={buyAmount}
-                                price={buyPrice}
-                                total={buyTotal}
-                                quoteSymbol={quoteSymbol}
-                                baseSymbol={baseSymbol}
-                                amountChange={this._buyAmountChanged.bind(this, base, quote)}
-                                priceChange={this._buyPriceChanged.bind(this, base)}
-                                totalChange={this._buyTotalChanged.bind(this, base, quote)}
-                                balance={baseBalance}
-                                onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
-                                balancePrecision={base.precision}
-                                quotePrecision={quote.precision}
-                                totalPrecision={base.precision}
-                                currentPrice={lowestAsk}
-                                account={account.get("name")}
-                            /> : null}
-                            {false ? <div><button onClick={this._borrowBase.bind(this)} className="button success">Borrow {baseAsset.get("symbol")}</button></div> : null}
-                            {quote && base ?
-                            <BuySell
-                                className="small-12 medium-6"
-                                type="sell"
-                                amount={sellAmount}
-                                price={sellPrice}
-                                total={sellTotal}
-                                quoteSymbol={quoteSymbol}
-                                baseSymbol={baseSymbol}
-                                amountChange={this._sellAmountChanged.bind(this, base, quote)}
-                                priceChange={this._sellPriceChanged.bind(this, base)}
-                                totalChange={this._sellTotalChanged.bind(this, base, quote)}
-                                balance={quoteBalance}
-                                onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
-                                balancePrecision={quote.precision}
-                                quotePrecision={quote.precision}
-                                totalPrecision={base.precision}
-                                currentPrice={highestBid}
-                                account={account.get("name")}
-                            /> : null}
+                        <div className="grid-block vertical shrink">
+                            <div className="grid-block shrink">
+                                {quoteIsBitAsset ? <div className="small-12 medium-6 buy-form"><div className="float-right"><button onClick={this._borrowQuote.bind(this)} className="button success">Borrow {quoteAsset.get("symbol")}</button></div></div> : null}
+                                {baseIsBitAsset ? <div className="small-12 medium-6"><div className="float-right"><button onClick={this._borrowBase.bind(this)} className="button success">Borrow {baseAsset.get("symbol")}</button></div></div> : null}
+                            </div>
+                            <div className="grid-block small-vertical medium-horizontal shrink no-padding" style={{ flexGrow: "0" }} >
+                                {quote && base ?
+                                <BuySell
+                                    className="small-12 medium-6"
+                                    type="buy"
+                                    amount={buyAmount}
+                                    price={buyPrice}
+                                    total={buyTotal}
+                                    quoteSymbol={quoteSymbol}
+                                    baseSymbol={baseSymbol}
+                                    amountChange={this._buyAmountChanged.bind(this, base, quote)}
+                                    priceChange={this._buyPriceChanged.bind(this, base)}
+                                    totalChange={this._buyTotalChanged.bind(this, base, quote)}
+                                    balance={baseBalance}
+                                    onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
+                                    balancePrecision={base.precision}
+                                    quotePrecision={quote.precision}
+                                    totalPrecision={base.precision}
+                                    currentPrice={lowestAsk}
+                                    account={account.get("name")}
+                                /> : null}                                
+                                {quote && base ?
+                                <BuySell
+                                    className="small-12 medium-6"
+                                    type="sell"
+                                    amount={sellAmount}
+                                    price={sellPrice}
+                                    total={sellTotal}
+                                    quoteSymbol={quoteSymbol}
+                                    baseSymbol={baseSymbol}
+                                    amountChange={this._sellAmountChanged.bind(this, base, quote)}
+                                    priceChange={this._sellPriceChanged.bind(this, base)}
+                                    totalChange={this._sellTotalChanged.bind(this, base, quote)}
+                                    balance={quoteBalance}
+                                    onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}
+                                    balancePrecision={quote.precision}
+                                    quotePrecision={quote.precision}
+                                    totalPrecision={base.precision}
+                                    currentPrice={highestBid}
+                                    account={account.get("name")}
+                                /> : null}
+                            </div>
                         </div>
 
 
@@ -545,6 +548,7 @@ class Exchange extends React.Component {
                             backing_asset={"1.3.0"}
                             backing_balance={coreBalance}
                             account={account.get("id")}
+                            call_orders={account.get("call_orders")}
                          /> : null}
                     {baseIsBitAsset ?
                         <BorrowModal
@@ -556,6 +560,7 @@ class Exchange extends React.Component {
                             backing_asset={"1.3.0"}
                             backing_balance={coreBalance}
                             account={account.get("id")}
+                            call_orders={account.get("call_orders")}
                         /> : null}
                 {/* End of Second Vertical Block */}
                 </div>

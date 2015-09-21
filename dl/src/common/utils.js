@@ -20,6 +20,9 @@ var Utils = {
     },
 
     get_asset_amount: function(amount, asset) {
+        if (asset.toJS) {
+            asset = asset.toJS();
+        }
         return amount / this.get_asset_precision(asset.precision);
     },
 

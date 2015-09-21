@@ -1,9 +1,7 @@
 import React from "react";
-import {PropTypes} from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
-import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -14,9 +12,10 @@ import AmountSelector from "../Utility/AmountSelector";
 import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
+import FormattedPrice from "../Utility/FormattedPrice";
 let wallet_api = new WalletApi();
 
-@BindToChainState()
+@BindToChainState({keep_updating: true})
 class BorrowModalContent extends React.Component {
 
     static propTypes = {
@@ -24,7 +23,8 @@ class BorrowModalContent extends React.Component {
         bitasset_data: ChainTypes.ChainObject.isRequired,
         bitasset_balance: ChainTypes.ChainObject,
         backing_asset: ChainTypes.ChainAsset.isRequired,
-        backing_balance: ChainTypes.ChainObject
+        backing_balance: ChainTypes.ChainObject,
+        call_orders: ChainTypes.ChainObjectsList
     }
 
     constructor() {
@@ -33,10 +33,16 @@ class BorrowModalContent extends React.Component {
             short_amount: 0,
             collateral: 0,
             collateral_ratio: 0,
-            feed_price: 0.005, // USD / CORE for example..
             errors: this._getInitialErrors(),
             isValid: false
         };
+    }
+
+    componentDidMount() {
+        let currentPosition = this._getCurrentPosition();
+        let debt = utils.get_asset_amount(currentPosition.debt, this.props.asset);
+        let collateral = utils.get_asset_amount(currentPosition.collateral, this.props.backing_asset);
+        this.setState({short_amount: debt.toString(), collateral: collateral.toString(), collateral_ratio: this._getCollateralRatio(debt, collateral)});
     }
 
     _getInitialErrors() {
@@ -53,7 +59,7 @@ class BorrowModalContent extends React.Component {
     }
 
     _onBorrowChange(e) {
-        let {feed_price} = this.state;
+        let feed_price = this._getFeedPrice();
         let amount = e.amount.replace( /,/g, "" );
         let newState = {
             short_amount: amount,
@@ -68,7 +74,8 @@ class BorrowModalContent extends React.Component {
     _onCollateralChange(e) {
         let amount = e.amount.replace( /,/g, "" );
 
-        let {feed_price} = this.state; 
+        let feed_price = this._getFeedPrice();
+
         let newState = {
             short_amount: this.state.short_amount,
             collateral: amount,
@@ -80,11 +87,11 @@ class BorrowModalContent extends React.Component {
     }
 
     _onRatioChange(e) {
-        let {feed_price} = this.state; 
+        let feed_price = this._getFeedPrice();
+
         let ratio = e.target.value;
 
         // let short_amount = this.state.short_amount.replace( /,/g, "" );
-        console.log("this.state.collateral:", this.state.short_amount);
         // let collateral = this.state.collateral.replace( /,/g, "" );
 
         let newState = {
@@ -116,6 +123,7 @@ class BorrowModalContent extends React.Component {
         
         let quotePrecision = utils.get_asset_precision(this.props.asset.get("precision"));
         let backingPrecision = utils.get_asset_precision(this.props.backing_asset.get("precision"));
+        let currentPosition = this._getCurrentPosition();
 
         var tr = wallet_api.new_transaction();
         console.log("tr object:", {
@@ -125,11 +133,11 @@ class BorrowModalContent extends React.Component {
             },
             "funding_account": this.props.account,
             "delta_collateral": {
-                "amount": parseInt(this.state.collateral * backingPrecision, 10),
+                "amount": parseInt(this.state.collateral * backingPrecision - currentPosition.collateral, 10),
                 "asset_id": this.props.backing_asset.get("id")
             },
             "delta_debt": {
-                "amount": parseInt(this.state.short_amount * quotePrecision, 10),
+                "amount": parseInt(this.state.short_amount * quotePrecision - currentPosition.debt, 10),
                 "asset_id": this.props.asset.get("id")
             }});
         tr.add_type_operation("call_order_update", {
@@ -139,21 +147,55 @@ class BorrowModalContent extends React.Component {
             },
             "funding_account": this.props.account,
             "delta_collateral": {
-                "amount": parseInt(this.state.collateral * backingPrecision, 10),
+                "amount": parseInt(this.state.collateral * backingPrecision - currentPosition.collateral, 10),
                 "asset_id": this.props.backing_asset.get("id")
             },
             "delta_debt": {
-                "amount": parseInt(this.state.short_amount * quotePrecision, 10),
+                "amount": parseInt(this.state.short_amount * quotePrecision - currentPosition.debt, 10),
                 "asset_id": this.props.asset.get("id")
             }});
         WalletDb.process_transaction(tr, null, true);
+
+        ZfApi.publish(this.props.modalId, "close"); 
+    }
+
+    _getCurrentPosition() {
+        let currentPosition = {
+            collateral: 0,
+            debt: 0
+        };
+
+        for (let key in this.props.call_orders) {
+            if (this.props.call_orders.hasOwnProperty(key)) {
+                if (this.props.asset.get("id") === this.props.call_orders[key].getIn(["call_price", "quote", "asset_id"])) {
+                    currentPosition = this.props.call_orders[key].toJS();
+                }
+            }
+        }
+
+        return currentPosition;
+    }
+
+    _getFeedPrice() {
+        return utils.get_asset_price(
+            this.props.bitasset_data.getIn(["current_feed", "settlement_price", "quote", "amount"]),
+            this.props.backing_asset,
+            this.props.bitasset_data.getIn(["current_feed", "settlement_price", "base", "amount"]),
+            this.props.asset
+        );
+    }
+
+    _getCollateralRatio(debt, collateral) {
+        return collateral / (debt / this._getFeedPrice());
     }
 
     render() {
         let {asset, bitasset_data, bitasset_balance, backing_asset, backing_balance} = this.props;
-        let {short_amount, collateral, collateral_ratio, feed_price, errors, isValid} = this.state;
-        // console.log("asset:", asset.toJS(), "bitasset_data:", bitasset_data.toJS(), "bitasset_balance:", bitasset_balance);
+        let {short_amount, collateral, collateral_ratio, errors, isValid} = this.state;
 
+        // console.log("asset:", asset.toJS(), "bitasset_data:", bitasset_data.toJS(), "bitasset_balance:", bitasset_balance);
+        
+        // let currentPosition = this._getCurrentPosition();
         bitasset_balance = !bitasset_balance ? {balance: 0, id: null} : bitasset_balance.toJS();
         backing_balance = !backing_balance ? {balance: 0, id: null} : backing_balance.toJS();
 
@@ -163,12 +205,29 @@ class BorrowModalContent extends React.Component {
         let bitAssetBalanceText = <span><Translate component="span" content="transfer.available"/>: {bitasset_balance.id ? <BalanceComponent balance={bitasset_balance.id}/> : <FormattedAsset amount={0} asset={asset.get("id")} />}</span>;
         let backingBalanceText = <span><Translate component="span" content="transfer.available"/>: {backing_balance.id ? <BalanceComponent balance={backing_balance.id}/> : <FormattedAsset amount={0} asset={backing_asset.get("id")} />}</span>;
         
+        let feed_price = this._getFeedPrice();
+
+        if (isNaN(feed_price)) {
+            return (
+                <div>
+                    <h3>No valid feeds for {asset.get("symbol")}</h3>
+                </div>)
+        }
+
         return (
             <div>
                 <h3>Borrow {asset.get("symbol")}</h3>
                 <form className="grid-container no-overflow" noValidate>
                     <div style={{paddingBottom: "1rem"}}>
-                        <div>Feed price: {feed_price}&nbsp;{asset.get("symbol") + "/" + backing_asset.get("symbol")}</div>
+                        <div>Feed price:&nbsp;
+                            <FormattedPrice
+                                style={{fontWeight: "bold"}}
+                                quote_amount={bitasset_data.getIn(["current_feed", "settlement_price", "quote", "amount"])}
+                                quote_asset={bitasset_data.getIn(["current_feed", "settlement_price", "quote", "asset_id"])}
+                                base_asset={bitasset_data.getIn(["current_feed", "settlement_price", "base", "asset_id"])}
+                                base_amount={bitasset_data.getIn(["current_feed", "settlement_price", "base", "amount"])}
+                            />
+                        </div>
                     </div>
                     <div style={{width: "75%"}} className="form-group">
                         <AmountSelector label="transaction.borrow_amount"
@@ -209,7 +268,7 @@ class BorrowModalContent extends React.Component {
 /* This wrapper class is necessary because the decorator hides the show method from refs */
 export default class ModalWrapper extends React.Component {
 
-    show(callback) {
+    show() {
         ZfApi.publish(this.props.modalId, "open");
     }
 
