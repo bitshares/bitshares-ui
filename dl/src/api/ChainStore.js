@@ -942,9 +942,12 @@ export function FetchChainObjects(method, object_ids, timeout) {
 
     return new Promise((resolve, reject) => {
 
+        let timeout_handle = null;
+
         function onUpdate(not_subscribed_yet = false) {
             let res = object_ids.map(id => get_object(id));
             if (res.findIndex(o => o === undefined) === -1) {
+                if(timeout_handle) clearTimeout(timeout_handle);
                 if(!not_subscribed_yet) chain_store.unsubscribe(onUpdate);
                 resolve(res);
                 return true;
@@ -955,7 +958,7 @@ export function FetchChainObjects(method, object_ids, timeout) {
         let resolved = onUpdate(true);
         if(!resolved) chain_store.subscribe(onUpdate);
 
-        if(timeout && !resolved) setTimeout(() => {
+        if(timeout && !resolved) timeout_handle = setTimeout(() => {
             chain_store.unsubscribe(onUpdate);
             reject("timeout");
         }, timeout);
