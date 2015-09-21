@@ -18,7 +18,6 @@ import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import ChainStore from "api/ChainStore";
 
 require("./exchange.scss");
 
@@ -540,27 +539,15 @@ class Exchange extends React.Component {
                     </div>
                     {quoteIsBitAsset ?
                         <BorrowModal
-                            modalId="quote_modal"
                             ref="borrowQuote"
-                            asset={quoteAsset.get("id")}
-                            bitasset_data={quoteAsset.get("bitasset_data_id")}
-                            bitasset_balance={quoteBalance}
-                            backing_asset={"1.3.0"}
-                            backing_balance={coreBalance}
-                            account={account.get("id")}
-                            call_orders={account.get("call_orders")}
+                            quote_asset={quoteAsset.get("id")}
+                            account={account}
                          /> : null}
                     {baseIsBitAsset ?
                         <BorrowModal
-                            modalId="base_modal"
                             ref="borrowBase"
-                            asset={baseAsset.get("id")}
-                            bitasset_data={baseAsset.get("bitasset_data_id")}
-                            bitasset_balance={baseBalance}
-                            backing_asset={"1.3.0"}
-                            backing_balance={coreBalance}
-                            account={account.get("id")}
-                            call_orders={account.get("call_orders")}
+                            quote_asset={baseAsset.get("id")}
+                            account={account}
                         /> : null}
                 {/* End of Second Vertical Block */}
                 </div>

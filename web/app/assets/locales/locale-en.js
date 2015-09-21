@@ -159,7 +159,7 @@ module.exports = {
         min_receive: "Minimum amount to receive",
         seller: "Seller",
         collateral: "Collateral",
-        coll_ratio: "Initial collateral ratio",
+        coll_ratio: "Initial collateral ratio",        
         coll_maint: "Collateral maintenance ratio",
         "create_key": "Created a public key",
         reg_account: "Registered the account",
@@ -181,6 +181,7 @@ module.exports = {
         update_asset: "Updated the asset",
         update_feed_producers: "Updated the feed producers of asset",
         feed_producer: "Became a feed producer for the asset",
+        feed_price: "Feed price",
         asset_issue: "Issued",
         was_issued: "Was issued",
         by: "by",
@@ -384,5 +385,15 @@ module.exports = {
         title: "Wallet",
         confirm: "Confirm Password",
         password: "Password"
+    },
+    borrow: {
+        title: "Collateral position for %(asset_symbol)s",
+        no_valid: "No valid feeds for %(asset_symbol)s",
+        coll_ratio: "Collateral ratio",
+        adjust: "Adjust position",
+        errors: {
+            below: "Collateral ratio below maintenance level",
+            collateral: "Insufficient collateral balance"
+        }
     }
 };
