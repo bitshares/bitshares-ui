@@ -6,6 +6,7 @@ import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import BlockchainStore from "stores/BlockchainStore";
+import TimeAgo from "react-timeago"
 
 @BindToChainState({keep_updating: true})
 class Footer extends React.Component {
@@ -60,6 +61,9 @@ class Footer extends React.Component {
 
     render() {
         let block_height = this.props.dynGlobalObject.get("head_block_number");
+        let block_time = this.props.dynGlobalObject.get("time");
+        let bt = new Date(block_time).getTime() / 1000;
+        let now = new Date().getTime() / 1000
         return (
             <div className="show-for-medium grid-block shrink footer">
                 <div className="align-justify grid-block">
@@ -72,7 +76,8 @@ class Footer extends React.Component {
                     {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
-                            <pre>#{block_height}</pre>
+                            <pre>#{block_height} </pre>
+                            { now - bt > 5 ? <TimeAgo date={block_time} /> : "Synchronized" }
                         </div>) :
                         <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                 </div>

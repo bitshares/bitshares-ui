@@ -85,8 +85,8 @@ class AccountOverview extends React.Component {
                         <thead>
                             <tr>
                                 <th><Translate content="explorer.block.op" /></th>
-                                <th><Translate content="explorer.block.date" /></th>
                                 <th><Translate content="account.votes.info" /></th>
+                                <th><Translate content="explorer.block.date" /></th>
                             </tr>
                         </thead>
                         <tbody>

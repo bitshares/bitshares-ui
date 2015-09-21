@@ -17,6 +17,7 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
+import TimeAgo from "react-timeago"
 
 require("./operations.scss");
 
@@ -55,8 +56,8 @@ class Row extends React.Component {
         return (
                 <tr key={key}>
                     <td className="left-td"><TransactionLabel color={color} type={type} /></td>
-                    <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td>
                     <td>{this.props.info} {hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
+                    <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td>
                 </tr>
             );
     }

@@ -196,7 +196,7 @@ class Witnesses extends React.Component {
                             <h6>Current Slot #:  {dynGlobalObject.current_aslot} </h6>
                             <h6>Participation Rate:  {dynGlobalObject.participation}%</h6>
                             <h6>Pay-per-Block:  <FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></h6>
-                            <h6>Remaining Daily Budget:  <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></h6>
+                            <h6>Remaining Budget:  <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></h6>
                             <h6>Next Vote Update: <TimeAgo date={dynGlobalObject.next_maintenance_time} /> </h6>
                             <br/>
                         </div>
