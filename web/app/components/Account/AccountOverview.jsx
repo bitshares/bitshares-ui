@@ -72,10 +72,11 @@ class AccountOverview extends React.Component {
                             <th>Debt</th>
                             <th>Collateral</th>
                             <th>Call Price</th>
+                            <th>Update position</th>
                         </tr>
                         </thead>
                         <tbody>
-                        { call_orders.map(id =><CollateralPosition object={id}/>) }
+                        { call_orders.map(id =><CollateralPosition object={id} account={account}/>) }
                         </tbody>
                     </table>
                 </div> : null}
