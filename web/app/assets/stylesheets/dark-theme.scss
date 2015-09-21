@@ -107,19 +107,19 @@ label, label > span {
   }
 }
 
-.reactTooltip.type-dark {
-  @include color($light-text-color, $super-light-panel-bg-color);
+.__react_component_tooltip.type-light {
+  @include color($light-text-color, $super-light-panel-bg-color, true);
   &.place-bottom:after {
-    border-bottom-color: $super-light-panel-bg-color;
+    border-bottom-color: $super-light-panel-bg-color !important;
   }
   &.place-top:after {
-    border-top-color: $super-light-panel-bg-color;
+    border-top-color: $super-light-panel-bg-color !important;
   }
   &.place-right:after {
-    border-right-color: $super-light-panel-bg-color;
+    border-right-color: $super-light-panel-bg-color !important;
   }
   &.place-left:after {
-    border-left-color: $super-light-panel-bg-color;
+    border-left-color: $super-light-panel-bg-color !important;
   }
 }
 

@@ -134,7 +134,7 @@ class App extends React.Component {
                         <RouteHandler />
                     </div>
                     <Footer/>
-                    <ReactTooltip type="dark" effect="solid"/>
+                    <ReactTooltip place="top" type="dark" effect="solid"/>
                 </div>
             );
         }
