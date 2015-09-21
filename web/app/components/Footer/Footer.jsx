@@ -7,6 +7,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import BlockchainStore from "stores/BlockchainStore";
 import {FormattedRelative} from "react-intl";
+import Icon from "../Icon/Icon";
 
 @BindToChainState({keep_updating: true})
 class Footer extends React.Component {
@@ -76,8 +77,8 @@ class Footer extends React.Component {
                     {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
-                            <pre>#{block_height} </pre>
-                            { now - bt > 5 ? <FormattedRelative value={block_time} /> : "Synchronized" }
+                            <pre>#{block_height} </pre> &nbsp;
+                            { now - bt > 5 ? <FormattedRelative value={block_time} /> : <span data-tip="Synchronized" data-place="left"><Icon name="checkmark-circle" /></span> }
                         </div>) :
                         <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                 </div>
