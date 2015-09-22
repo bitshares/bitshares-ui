@@ -379,10 +379,19 @@ class Exchange extends React.Component {
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
+        let lowestAsk = asks.length > 0 ? asks.reduce((a, b) => {
+            if (a.price_full) {
+                return a.price_full <= b.price_full ? a.price_full : b.price_full; 
+           } else {
+                return a <= b.price_full ? a : b.price_full; 
+           }
+        }) : 0;
 
-        // console.log("quoteIsBitAsset:", quoteIsBitAsset, "baseIsBitAsset:", baseIsBitAsset);
-        let lowestAsk = asks[0] ? asks[0].price_full : 0;
-        let highestBid = bids[bids.length - 1] ? bids[bids.length - 1].price_full : 0;
+        let highestBid = bids.length > 0 ? bids.reduce((a, b) => {
+            return a >= b.price_full ? a : b.price_full;
+        }, 0) : 0;
+
+        let spread = lowestAsk - highestBid;
 
         let accountsDropDown = null;
         if (currentAccount) {
@@ -419,8 +428,7 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-4 medium-3 large-2" style={{overflowY: "auto", justifyContent: "center"}}>
-                        <div className="grid-block no-padding">
+                    <div className="grid-block left-column small-4 medium-3 large-2">
                             <OrderBook
                                 orders={limit_orders}
                                 bids={bids}
@@ -431,7 +439,6 @@ class Exchange extends React.Component {
                                 quoteSymbol={quoteSymbol}
                                 onClick={this._orderbookClick.bind(this, base, quote)}
                             />
-                        </div>
                     </div>
 
                     {/* Center Column */}
@@ -487,6 +494,7 @@ class Exchange extends React.Component {
                                 height={300}
                                 onClick={this._depthChartClick.bind(this, base, quote)}
                                 plotLine={this.state.depthLine}
+                                spread={spread}
                             />
                         </div>
 
