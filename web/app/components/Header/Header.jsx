@@ -117,7 +117,6 @@ class Header extends React.Component {
         else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
 
         return (
-            <div>
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
                     <ul className="primary menu-bar title">
@@ -154,7 +153,6 @@ class Header extends React.Component {
 
                     </div>
                 </div>
-            </div>
             </div>
         );
     }
