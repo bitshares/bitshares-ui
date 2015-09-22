@@ -23,3 +23,12 @@
   background-color: #f5f5f5;
   cursor: pointer;
 }
+
+.key-value-table {
+  tr > td:first-child {
+    font-family: 'Roboto-Light', arial, sans-serif;
+  }
+  tr > td:last-child {
+    text-align: right;
+  }
+}
