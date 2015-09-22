@@ -25,7 +25,7 @@ class DepthHighChart extends React.Component {
 
 
     render() {
-        let {flat_bids, flat_asks, quoteSymbol, baseSymbol, totalBids} = this.props;
+        let {flat_bids, flat_asks, quoteSymbol, baseSymbol, totalBids, spread} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
@@ -120,8 +120,15 @@ class DepthHighChart extends React.Component {
         if (flat_bids.length > 0 && flat_asks.length > 0) {
             let middleValue = (flat_asks[0][0] + flat_bids[flat_bids.length - 1][0]) / 2;
             config.xAxis.min = middleValue * 0.25;
-            config.xAxis.max = middleValue * 1.75;
+            config.xAxis.max = middleValue * 1.75;  
+            if (spread > 0 && spread > middleValue) {
+                config.xAxis.min = Math.max(0, middleValue - 1.5 * spread);
+                config.xAxis.max = middleValue + 1.5 * spread;  
+            }          
         }
+
+
+
 
         // Add plotline if defined
         if (this.props.plotLine) {

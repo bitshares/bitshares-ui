@@ -62,7 +62,9 @@ class OrderBook extends React.Component {
 
             let totalBidAmount = 0;
 
-            bidRows = bids.reverse().map(order => {
+                        bidRows = bids.sort((a, b) => {
+                return b.price_full - a.price_full;
+            }).map(order => {
                 totalBidAmount += order.amount;
                 return (
                      <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}>
@@ -84,7 +86,9 @@ class OrderBook extends React.Component {
             low = asks.length > 0 ? asks[0].price_full : 0;
 
             let totalAskAmount = 0;
-            askRows = asks.map(order => {
+            askRows = asks.sort((a, b) => {
+                return a.price_full - b.price_full;
+            }).map(order => {
                 totalAskAmount += order.amount;
                 return (
                      <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}>
@@ -112,9 +116,9 @@ class OrderBook extends React.Component {
                             <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                                 {bidRows}
                                 <tr key="top-header" className="top-header">
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /> <small>({baseSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><small>({quoteSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /> <small>({baseSymbol}/{quoteSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
                                 <tr key="spread">
                                     <td colSpan="3" className="text-center spread">
@@ -122,9 +126,9 @@ class OrderBook extends React.Component {
                                     </td>
                                 </tr>
                                 <tr key="bottom-header" className="bottom-header">
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /> <small>({baseSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /> <small>({quoteSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /> <small>({baseSymbol}/{quoteSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
+                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
                                 {askRows}
                             </tbody>
