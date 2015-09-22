@@ -10,6 +10,7 @@ import BrainkeyActions from "actions/BrainkeyActions"
 import BrainkeyStoreFactory from "stores/BrainkeyStore"
 import BindToChainState from "components/Utility/BindToChainState"
 import ChainTypes from "components/Utility/ChainTypes"
+import _ from "lodash"
 
 var dictionary_set = new Set(dictionary.split(','))
 
@@ -65,8 +66,8 @@ class BrainkeyAccounts {
     }
     
     render() {
-        var rows = this.props.accounts.filter( account => !!account )
-            .map( account => account.get("name") ).sort()
+        var rows = _.pairs(this.props.accounts).filter( account => !!account[1] )
+            .map( account => account[1].get("name") ).sort()
             .map( name => <AccountCard key={name} account={name}/> )
         return <span>
             {rows}
