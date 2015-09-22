@@ -5,6 +5,45 @@ import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 
+class OrderBookRow extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            hasChanged: false
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.order.amount !== this.props.order.amount || nextProps.order.price_full !== this.props.order.price_full) {
+            this.setState({hasChanged: true});
+        } else {
+            this.setState({hasChanged: false});
+        }
+    }
+
+    render() {
+
+        let {order, quote, base, type} = this.props;
+        let changeClass = null;
+        if (this.state.hasChanged) {
+            changeClass = "order-change";
+        }
+        let integerClass = type === "bid" ? "orderHistoryBid" : "orderHistoryAsk";
+
+        return (
+            <tr key={order.price_full} onClick={this.props.onClick} className={changeClass}>
+                <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
+                <td>{utils.format_number(order.amount, quote.precision)}</td>
+                <td className={integerClass}>
+                    <span className="price-integer">{order.price_int}</span>
+                    .
+                    <span className="price-decimal">{order.price_dec}</span>
+                </td>
+            </tr>
+        )
+    }
+}
+
 class OrderBook extends React.Component {
     constructor() {
         super();
@@ -32,7 +71,7 @@ class OrderBook extends React.Component {
         //}
     }
 
-    componentWillReceiveProps() {
+    componentWillReceiveProps(nextProps) {
         //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
         //this.setState({shouldScrollBottom: Math.round(bidContainer.scrollTop + bidContainer.offsetHeight) === bidContainer.scrollHeight});
     }
@@ -67,16 +106,15 @@ class OrderBook extends React.Component {
             }).map(order => {
                 totalBidAmount += order.amount;
                 return (
-                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}>
-                        <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
-                        <td>{utils.format_number(order.amount, quote.precision)}</td>
-                        <td className="orderHistoryBid">
-                            <span className="price-integer">{order.price_int}</span>
-                            .
-                            <span className="price-decimal">{order.price_dec}</span>
-                        </td>
-                    </tr>
-                    );
+                    <OrderBookRow
+                        key={order.price_full}
+                        order={order}
+                        onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}
+                        base={base}
+                        quote={quote}
+                        type="bid"
+                    />
+                )
             }).reverse();
 
             // console.log("time to process bids in orderbook:", new Date() - start, "ms");
@@ -91,16 +129,14 @@ class OrderBook extends React.Component {
             }).map(order => {
                 totalAskAmount += order.amount;
                 return (
-                     <tr key={order.price_full} onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}>
-                        <td className="show-for-medium">{utils.format_number(order.value, base.precision)}</td>
-                        <td >{utils.format_number(order.amount, quote.precision)}</td>
-                        <td className="orderHistoryAsk">
-                            <span className="price-integer">{order.price_int}</span>
-                            .
-                            <span className="price-decimal">{order.price_dec}</span>
-                        </td>
-
-                    </tr>
+                    <OrderBookRow
+                            key={order.price_full}
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}
+                            base={base}
+                            quote={quote}
+                            type="ask"
+                        />
                     );
             });
 

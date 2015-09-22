@@ -311,3 +311,8 @@ a.order-cancel {
     background-color: transparent !important;
   }
 }
+
+.order-change {
+  transition: all 3s ease;
+  background: #343434;
+}
