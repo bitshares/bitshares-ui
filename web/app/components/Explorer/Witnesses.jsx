@@ -50,15 +50,21 @@ class WitnessCard extends React.Component {
                         <div className="text-center">
                             <AccountImage account={this.props.witness.get('name')} size={{height: 64, width: 64}}/>
                         </div>
-                        <div className="text-center">
-                        Votes:  <FormattedAsset amount={total_votes} asset="1.3.0" />
-                        </div>
-                        <div className="text-center">
-                        Last Produced Slot:  {witness_data.get('last_aslot')} 
-                        </div>
-                        <div className="text-center">
-                        Total Missed:  {witness_data.get('total_missed')} 
-                        </div>
+                        <br/>
+                        <table className="table key-value-table">
+                            <tr>
+                                <td>Votes</td>
+                                <td><FormattedAsset amount={total_votes} asset="1.3.0" /></td>
+                            </tr>
+                            <tr>
+                                <td>Last&nbsp;Slot</td>
+                                <td>{witness_data.get('last_aslot')}</td>
+                            </tr>
+                            <tr>
+                                <td>Missed</td>
+                                <td>{witness_data.get('total_missed')}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -189,15 +195,37 @@ class Witnesses extends React.Component {
                 <div className="grid-block page-layout">
                     <div className="grid-block small-5 medium-3">
                         <div className="grid-content">
-                            <h4>Currently active witness:</h4>
-                            <h3>{witness_id_to_name.get(dynGlobalObject.current_witness)}</h3>
-                            <h5>Total number of witnesses active: {Object.keys(globalObject.active_witnesses).length}</h5>
-                            <h6>Current Slot #:  {dynGlobalObject.current_aslot} </h6>
-                            <h6>Participation Rate:  {dynGlobalObject.participation}%</h6>
-                            <h6>Pay-per-Block:  <FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></h6>
-                            <h6>Remaining Budget:  <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></h6>
-                            <h6>Next Vote Update: <FormattedRelative value={dynGlobalObject.next_maintenance_time} /> </h6>
                             <br/>
+                            <table className="table key-value-table">
+                                <tr>
+                                    <td>Current witness</td>
+                                    <td>{witness_id_to_name.get(dynGlobalObject.current_witness)}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active witnesses</td>
+                                    <td>{Object.keys(globalObject.active_witnesses).length}</td>
+                                </tr>
+                                <tr>
+                                    <td>Current Slot #</td>
+                                    <td>{dynGlobalObject.current_aslot}</td>
+                                </tr>
+                                <tr>
+                                    <td>Participation Rate</td>
+                                    <td>{dynGlobalObject.participation}%</td>
+                                </tr>
+                                <tr>
+                                    <td>Pay-per-Block</td>
+                                    <td><FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Remaining Budget</td>
+                                    <td> <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Next Vote Update</td>
+                                    <td> <FormattedRelative value={dynGlobalObject.next_maintenance_time} /></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                     <div className="grid-block">
