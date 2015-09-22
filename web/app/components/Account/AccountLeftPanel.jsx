@@ -52,7 +52,7 @@ class AccountLeftPanel extends React.Component {
         let {account, linkedAccounts} = this.props;
         let account_name = account.get("name");
 
-        let is_my_account = false; // TODO: use new API from wallet to determine if we have keys.
+        let is_my_account = AccountStore.isMyAccount(account);
         let linkBtn = null;
         if (!is_my_account) {
             linkBtn = linkedAccounts.has(account_name) ?
@@ -99,12 +99,12 @@ class AccountLeftPanel extends React.Component {
                         </section>
                     </div>
                 </div>
+                {is_my_account ?
                 <div className="grid-block shrink bottom">
                     <div className="center">
-                        <Link to="settings" data-tip={settings} data-place="top"><Icon name="cog"/></Link> &nbsp;
-                        <Link to="create-account" data-tip="Create New Account" data-place="top"><Icon name="plus-circle"/></Link>
+                        <Link to="create-account"><span data-tip="Create New Account" data-place="top"><Icon name="plus-circle"/></span></Link>
                     </div>
-                </div>
+                </div> : null}
             </div>
         );
     }

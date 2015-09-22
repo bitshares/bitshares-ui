@@ -29,7 +29,7 @@ class AccountStore extends BaseStore {
             onAccountSearch: AccountActions.accountSearch,
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
         });
-        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount", "getMyAccounts");
+        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount", "getMyAccounts", "isMyAccount");
     }
     
     clearCache() {
@@ -93,6 +93,11 @@ class AccountStore extends BaseStore {
         if(owner == 2 || active == 2) return "partial"
         
         return "none"
+    }
+
+    isMyAccount(account) {
+        let authority = this.getMyAuthorityForAccount(account);
+        return authority === "partial" || authority === "full";
     }
     
     onAccountSearch(accounts) {
