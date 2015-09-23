@@ -17,6 +17,26 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
 
+import ChainTypes from "components/Utility/ChainTypes"
+import AccountSelect from "components/Forms/AccountSelect"
+import BindToChainState from "components/Utility/BindToChainState"
+@BindToChainState({keep_updating: true})
+class MyAccounts extends Component {
+
+    static propTypes = {
+        accounts: ChainTypes.ChainAccountsList.isRequired
+    }
+    
+    render() {
+        var account_names = this.props.accounts.filter( account => !!account )
+            .map( account => account.get("name") ).sort()
+        return <span>
+            <AccountSelect account_names={account_names}/>
+        </span>
+    }
+
+}
+
 @connectToStores
 export default class BalanceClaimActive extends Component {
     
@@ -37,11 +57,12 @@ export default class BalanceClaimActive extends Component {
     }
     
     static getStores() {
-        return [BalanceClaimActiveStore]
+        return [BalanceClaimActiveStore, PrivateKeyStore]
     }
     
     static getPropsFromStores() {
         var props = BalanceClaimActiveStore.getState()
+        props.account_refs = PrivateKeyStore.getState().account_refs
         return props
     }
     
@@ -62,6 +83,7 @@ export default class BalanceClaimActive extends Component {
                 <div>
                     <div className="center-content">
                         <div className="center-content">
+                            <MyAccounts accounts={Immutable.List(this.props.account_refs)}/>
                             {/*<MyAccountsSelect
                                 account_names={this.props.my_accounts}
                                 onChange={this._claimAccountSelect.bind(this)}
