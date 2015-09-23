@@ -21,19 +21,9 @@ import ChainTypes from "components/Utility/ChainTypes"
 
 var TRACE = false
 
-//BindToChainState({keep_updating: true})
-export default class BalanceClaim extends Component{
-    // static propTypes = {
-    //     balances: ChainTypes.ChainAddressBalances
-    // }
-    render() {
-        return <BalanceClaimImpl/>
-    }
-}
-
 @connectToStores
-class BalanceClaimImpl extends Component {
-    static contextTypes = {router: React.PropTypes.func.isRequired}
+export default class BalanceClaim extends Component {
+    
     constructor() {
         super();
         this.state = this._getInitialState();
@@ -64,6 +54,7 @@ class BalanceClaimImpl extends Component {
     
     componentWillMount() {
         //DEBUG console.log('... BalanceClaim componentWillMount')
+        
         BalanceClaimActions.willMount()
         BalanceClaimActions.refreshBalanceClaims()
         BalanceClaimActions.loadMyAccounts()
