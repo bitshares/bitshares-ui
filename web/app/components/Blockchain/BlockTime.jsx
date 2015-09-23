@@ -11,7 +11,7 @@ import ChainTypes from "../Utility/ChainTypes";
  * Note, it doesn't fetch block, just calculates time based on number alone.
  **/
 
-@BindToChainState()
+@BindToChainState({keep_updating:true})
 class BlockTime extends React.Component {
 
     static propTypes = {
@@ -49,9 +49,11 @@ class BlockTime extends React.Component {
         }
     }
 
+    /*
     shouldComponentUpdate(next_props, next_state) {
         return next_props.block_number !== this.props.block_number || next_state.time !== this.state.time;
     }
+    */
 
                 //{this.state.time ?  <FormattedDate value={this.state.time} formats={intlData.formats} format="short"/> : null}
     render() {
