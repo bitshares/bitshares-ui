@@ -37,10 +37,12 @@ class WitnessCard extends React.Component {
         }
         let total_votes = witness_data.get( "total_votes" );
 
+        let witness_aslot = witness_data.get('last_aslot')
         let color = {};
-        if( this.props.most_recent - witness_data.get('last_aslot') > 100 ) {
+        if( this.props.most_recent - witness_aslot > 100 ) {
            color = {color: "red"};
         }
+        let last_aslot_time = new Date(Date.now() - ((this.props.most_recent - witness_aslot ) * ChainStore.getObject( "2.0.0" ).getIn( ["parameters","block_interval"] )*1000));
 
         return (
             <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
@@ -54,11 +56,11 @@ class WitnessCard extends React.Component {
                         <table className="table key-value-table">
                             <tr>
                                 <td>Votes</td>
-                                <td><FormattedAsset amount={total_votes} asset="1.3.0" /></td>
+                                <td><FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset="5" /></td>
                             </tr>
                             <tr>
-                                <td>Last&nbsp;Slot</td>
-                                <td>{witness_data.get('last_aslot')}</td>
+                                <td>Last&nbsp;Block</td>
+                                <td><FormattedRelative value={last_aslot_time.toString()} /></td>
                             </tr>
                             <tr>
                                 <td>Missed</td>
@@ -78,11 +80,9 @@ class WitnessList extends React.Component {
 
         let {witness_id_to_name, witnesses} = this.props;
         let most_recent_aslot = 0
-        witnesses.forEach( w => { console.log( "w: ", w ); 
-                                  let s = w.last_aslot; 
+        witnesses.forEach( w => { let s = w.last_aslot; 
                                   if( most_recent_aslot  < s ) most_recent_aslot = s; } );
 
-        console.log( "most_recent_aslot: ", most_recent_aslot );
 
         let itemRows = null;
         if (witnesses.size > 0) {
@@ -135,15 +135,6 @@ class Witnesses extends React.Component {
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-            !Immutable.is(nextProps.witnesses, this.props.witnesses) ||
-            !Immutable.is(nextProps.witness_id_to_name, this.props.witness_id_to_name) ||
-            !Immutable.is(nextProps.dynGlobalObject, this.props.dynGlobalObject) ||
-            nextState.filterWitness !== this.state.filterWitness
-        );
-    }
-
     _fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
         if (!Array.isArray(witnessIds)) {
             witnessIds = [witnessIds];
@@ -180,7 +171,6 @@ class Witnesses extends React.Component {
         let activeWitnesses = [];
         dynGlobalObject = dynGlobalObject.toJS();
         globalObject = globalObject.toJS();
-        console.log( "global object: ", globalObject );
 
         for (let key in globalObject.active_witnesses) {
             if (globalObject.active_witnesses.hasOwnProperty(key)) {
@@ -188,12 +178,14 @@ class Witnesses extends React.Component {
             }
         }
 
+     //   witnesses = witnesses.sort( (a,b)=> { console.log( "a: ", a ); return a.get("total_votes") - b.get("total_votes") } );
+
         this._fetchWitnesses(activeWitnesses, witnesses, witness_id_to_name);
        
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
-                    <div className="grid-block small-5 medium-3">
+                    <div className="grid-block vertical small-5 medium-3">
                         <div className="grid-content">
                             <br/>
                             <table className="table key-value-table">
@@ -204,10 +196,6 @@ class Witnesses extends React.Component {
                                 <tr>
                                     <td>Active witnesses</td>
                                     <td>{Object.keys(globalObject.active_witnesses).length}</td>
-                                </tr>
-                                <tr>
-                                    <td>Current Slot #</td>
-                                    <td>{dynGlobalObject.current_aslot}</td>
                                 </tr>
                                 <tr>
                                     <td>Participation Rate</td>
@@ -225,15 +213,15 @@ class Witnesses extends React.Component {
                                     <td>Next Vote Update</td>
                                     <td> <FormattedRelative value={dynGlobalObject.next_maintenance_time} /></td>
                                 </tr>
+                                <tr>
+                                   <td>  <Translate component="h4" content="markets.filter" /> </td>
+                                   <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
+                                </tr>
                             </table>
                         </div>
                     </div>
                     <div className="grid-block">
-                            <div className="grid-content">
-                                <div className="grid-block small-12 medium-6">
-                                    <Translate component="h3" content="markets.filter" />
-                                    <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} />
-                                </div>
+                            <div className="grid-content ">
                                 <WitnessList
                                     current_aslot={dynGlobalObject.current_aslot}
                                     witnesses={witnesses}
