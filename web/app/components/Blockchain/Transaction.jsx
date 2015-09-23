@@ -607,7 +607,16 @@ class Transaction extends React.Component {
 
                 case "asset_publish_feed":
                     color = "warning";                    
-                    let feed = op[1].feed;
+                    let {feed} = op[1];
+                    console.log("op:", op, feed);
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.publisher" /></td>
+                            <td>{this.linkToAccount(op[1].publisher)}</td>
+                        </tr>
+                    );
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.asset.title" /></td>
@@ -617,48 +626,27 @@ class Transaction extends React.Component {
 
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="explorer.block.max_margin_period_sec" /></td>
-                            <td>{feed.max_margin_period_sec.toString()}</td>
-                        </tr>
-                    );
-
-                    rows.push(
-                        <tr>
                             <td><Translate component="span" content="transaction.coll_ratio" /></td>
-                            <td>{feed.required_initial_collateral.toString()}</td>
+                            <td>{(feed.maximum_short_squeeze_ratio / 1000).toFixed(2)}</td>
                         </tr>
                     );
 
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.coll_maint" /></td>
-                            <td>{feed.required_maintenance_collateral.toString()}</td>
+                            <td>{(feed.maintenance_collateral_ratio / 1000).toFixed(2)}</td>
                         </tr>
                     );
 
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="explorer.block.call_limit" /></td>
+                            <td><Translate component="span" content="markets.core_rate" /></td>
                             <td>
                                 <FormattedPrice
-                                    base_asset={feed.call_limit.base.asset_id}
-                                    quote_asset={feed.call_limit.quote.asset_id}
-                                    base_amount={feed.call_limit.base.amount}
-                                    quote_amount={feed.call_limit.quote.amount} 
-                                />
-                            </td>
-                        </tr>
-                    );
-
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="explorer.block.short_limit" /></td>
-                            <td>
-                                <FormattedPrice
-                                    base_asset={feed.short_limit.base.asset_id}
-                                    quote_asset={feed.short_limit.quote.asset_id}
-                                    base_amount={feed.short_limit.base.amount}
-                                    quote_amount={feed.short_limit.quote.amount} 
+                                    base_asset={feed.core_exchange_rate.base.asset_id}
+                                    quote_asset={feed.core_exchange_rate.quote.asset_id}
+                                    base_amount={feed.core_exchange_rate.base.amount}
+                                    quote_amount={feed.core_exchange_rate.quote.amount} 
                                 />  
                             </td>
                         </tr>
@@ -680,7 +668,7 @@ class Transaction extends React.Component {
 
                     break;
 
-                case "delegate_create":                    
+                case "committee_member_create":                    
 
                     rows.push(
                         <tr>
