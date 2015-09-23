@@ -300,9 +300,9 @@ function BindToChainState(options) {
 @BindToChainState({all_props: true, require_all_props: true})
 class Wrapper extends React.Component {
     render() {
-        return <div className="wrapper">
+        return <span className="wrapper">
             {this.props.children(this.props)}
-        </div>;
+        </span>;
     }
 }
 

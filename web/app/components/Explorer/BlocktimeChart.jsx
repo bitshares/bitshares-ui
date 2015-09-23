@@ -60,9 +60,10 @@ class BlocktimeChart extends React.Component {
                 enabled: false
             },
             tooltip: {
-                formatter: function() {
-                    return this.point.y + "s";
-                }
+                valueSuffix: "s"
+            //     formatter: function() {
+            //         return this.point.y + "s";
+            //     }
             },
             series: [
                 {

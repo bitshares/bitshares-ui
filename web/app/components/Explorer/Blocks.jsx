@@ -15,6 +15,7 @@ import TransactionChart from "./TransactionChart";
 import BlocktimeChart from "./BlocktimeChart";
 import classNames from "classnames";
 import utils from "common/utils";
+import Immutable from "immutable";
 
 class BlockTimeAgo extends React.Component {
     
@@ -108,6 +109,10 @@ class Blocks extends React.Component {
         this._getInitialBlocks();
     }
 
+    shouldComponentUpdate(nextProps) {
+        return !Immutable.is(nextProps.latestBlocks, this.props.latestBlocks);
+    }
+
     _getInitialBlocks() {
         let maxBlock = parseInt(this.props.dynGlobalObject.get("head_block_number"), 10);
         if (maxBlock) {
@@ -176,7 +181,6 @@ class Blocks extends React.Component {
                         </tr>
                     );
             }).toArray();
-
             let trxIndex = 0;
             transactions = latestTransactions.take(15)
             .map((trx) => {

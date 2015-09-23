@@ -12,14 +12,14 @@ class TransactionChart extends React.Component {
     }
 
     render() {
-
+        console.log("update trx chart");
         let {blocks} = this.props;
 
         let trxData = [];
         let max = 0;
         trxData = blocks.sort((a, b) => {
             return a.id - b.id;
-        }).take(30).map(block => {
+        }).takeLast(30).map(block => {
             max = Math.max(block.transactions.length, max);
             return [block.id, block.transactions.length];
         }).toArray();
@@ -53,14 +53,14 @@ class TransactionChart extends React.Component {
             legend: {
                 enabled: false
             },
-            tooltip: {
+            // tooltip: {
                 // positioner: function(w, h, point) {
                 //     return {x: point.plotX, y: point.plotY - 30};
                 // }
-                formatter: function() {
-                    return this.point.y;
-                }
-            },
+                // formatter: function() {
+                //     return this.point.y;
+                // }
+            // },
             series: [
                 {
                     name: "Transactions",
