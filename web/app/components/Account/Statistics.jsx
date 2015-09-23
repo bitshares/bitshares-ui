@@ -28,10 +28,6 @@ class Statistics extends React.Component {
                     <td><Translate content="account.member.fees_vested"/> </td>
                     <td><FormattedAsset amount={parseFloat(stat_object.pending_vested_fees)} asset="1.3.0" /></td>
                 </tr>
-                <tr>
-                    <td><Translate content="account.member.in_orders"/> </td>
-                    <td><FormattedAsset amount={parseFloat(stat_object.total_core_in_orders)} asset="1.3.0" /></td>
-                </tr>
             </table>
         );
     }
