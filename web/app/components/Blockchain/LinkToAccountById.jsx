@@ -11,6 +11,8 @@ class LinkToAccountById extends React.Component {
     render() {
         let account_name = this.props.account.get("name");
         if (!account_name) {
+            console.log( "account: ", account_name.toJS() );
+            return <span>NULL</span>;
             return null;
         }
         return <Link to="account-overview" params={{account_name}}>{account_name}</Link>
