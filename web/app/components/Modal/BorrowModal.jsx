@@ -195,7 +195,7 @@ class BorrowModalContent extends React.Component {
     }
 
     _getFeedPrice() {
-        return utils.get_asset_price(
+        return 1 / utils.get_asset_price(
             this.props.bitasset_data.getIn(["current_feed", "settlement_price", "quote", "amount"]),
             this.props.backing_asset,
             this.props.bitasset_data.getIn(["current_feed", "settlement_price", "base", "amount"]),

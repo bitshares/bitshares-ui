@@ -235,11 +235,11 @@ class Operation extends React.Component {
 
             case "call_order_update":
                 color = "warning";        
-
                 column = (
                     <span>
                         {this.linkToAccount(op[1].funding_account)}&nbsp;
                         <Translate component="span" content="transaction.call_order_update" />
+                        &nbsp;{this.linkToAsset(op[1].delta_debt.asset_id)}
                     </span>
                 );
                 break;
