@@ -1,8 +1,16 @@
 import React from "react";
 import counterpart from "counterpart";
 
-class AccountSelect extends React.Component {
+export default class AccountSelect extends React.Component {
 
+    static propTypes = {
+        account_names: React.PropTypes.array,
+        list_size: React.PropTypes.number,
+        onChange: React.PropTypes.func,
+        placeholder: React.PropTypes.string
+        //defaultAccount: React.PropTypes.string
+    }
+    
     constructor(props) {
         super(props);
         this.state = {selected: null};
@@ -77,13 +85,3 @@ class AccountSelect extends React.Component {
     }
     
 }
-
-AccountSelect.propTypes = {
-    account_names: React.PropTypes.array,
-    list_size: React.PropTypes.number,
-    onChange: React.PropTypes.func,
-    placeholder: React.PropTypes.string
-    //defaultAccount: React.PropTypes.string
-};
-
-export default AccountSelect;
