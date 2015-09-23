@@ -151,9 +151,10 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getObject(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
+                        else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
-                        if(new_obj !== undefined) ++resolved_objects_counter;
+                        if (new_obj !== undefined) ++resolved_objects_counter;
                     } else {
                         if(this.state[key]) new_state[key] = null;
                     }
@@ -165,9 +166,10 @@ function BindToChainState(options) {
                         if(prop[0] === "#" && Number.parseInt(prop.substring(1)))
                             prop = "1.2." + prop.substring(1);
                         let new_obj = ChainStore.getAccount(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
+                        else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
-                        if(new_obj !== undefined) ++resolved_objects_counter;
+                        if (new_obj !== undefined) ++resolved_objects_counter;
                     } else {
                         if(this.state[key]) new_state[key] = null;
                     }
@@ -177,9 +179,10 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_prop[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getAccountRefsOfKey(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
+                        else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
-                        if(new_obj !== undefined) ++resolved_objects_counter;
+                        if (new_obj !== undefined) ++resolved_objects_counter;
                     } else {
                         if(this.state[key]) new_state[key] = null;
                     }
@@ -189,9 +192,10 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getBalanceObjects(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
+                        else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
-                        if(new_obj !== undefined) ++resolved_objects_counter;
+                        if (new_obj !== undefined) ++resolved_objects_counter;
                     } else {
                         if(this.state[key]) new_state[key] = null;
                     }
@@ -201,9 +205,10 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let new_obj = ChainStore.getAsset(prop);
-                        if(new_obj !== this.state[key]) new_state[key] = new_obj;
+                        if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
+                        else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                         ++all_objects_counter;
-                        if(new_obj !== undefined) ++resolved_objects_counter;
+                        if (new_obj !== undefined) ++resolved_objects_counter;
                     } else {
                         if(this.state[key]) new_state[key] = null;
                     }
