@@ -44,7 +44,6 @@ class BalanceClaimActiveStore extends BaseStore {
                 this.indexPubkey(pubkey)
             
             return this.lookupBalanceObjects().then( balances => {
-                console.log("balances", balances)
                 this.setState({ balances, loading: false }) })
             
         }).catch( error => console.error( error ))
