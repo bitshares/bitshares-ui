@@ -178,7 +178,7 @@ class Blocks extends React.Component {
             }).toArray();
 
             let trxIndex = 0;
-            transactions = latestTransactions
+            transactions = latestTransactions.take(15)
             .map((trx) => {
 
                 let opIndex = 0;
@@ -241,7 +241,7 @@ class Blocks extends React.Component {
                 <div className="grid-block shrink" style={{paddingBottom: "1rem"}}>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Active delegates:</span>
+                            <span className="txtlabel float-left">Active Witnesses:</span>
                             <span className="txtlabel success float-right">
                                 {globalObject.get("active_witnesses").size}
                             </span>
