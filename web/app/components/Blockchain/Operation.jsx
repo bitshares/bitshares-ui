@@ -52,11 +52,11 @@ class Row extends React.Component {
     }
 
     render() {
-        let {block, fee, color, type, key, hideDate, hideFee} = this.props;
+        let {block, fee, color, type, key, hideDate, hideFee, hideOpLabel} = this.props;
         fee.amount = parseInt(fee.amount, 10);
         return (
                 <tr key={key}>
-                    <td className="left-td"><TransactionLabel color={color} type={type} /></td>
+                    {hideOpLabel ? null : <td className="left-td"><TransactionLabel color={color} type={type} /></td>}
                     <td>{this.props.info} {hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
                     <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td>
                 </tr>
@@ -76,7 +76,7 @@ class Operation extends React.Component {
 
     static propTypes = {
         op: PropTypes.array.isRequired,
-        current: PropTypes.string.isRequired,
+        current: PropTypes.string,
         block: PropTypes.number,
         hideDate: PropTypes.bool,
         hideFee: PropTypes.bool
@@ -746,6 +746,7 @@ class Operation extends React.Component {
                 fee={op[1].fee}
                 hideDate={this.props.hideDate}
                 hideFee={this.props.hideFee}
+                hideOpLabel={this.props.hideOpLabel}
                 info={column}
             >
             </Row>
