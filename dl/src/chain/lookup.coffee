@@ -79,7 +79,7 @@ class Lookup
         ret = resolve: undefined
         ((ret)->
             _private.deferred_lookup index_name, name_key_or_id, (account)->
-                # DEBUG console.log('... account.options.memo_key',index_name,name_key_or_id,account.options)    
+                # console.log('... account.options.memo_key',index_name,name_key_or_id,account.options)    
                 ret.resolve = PublicKey.fromPublicKeyString account.options.memo_key
         )(ret)
         ret

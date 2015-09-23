@@ -86,7 +86,8 @@ class ApplicationApi {
         sign = true
     ) {
         var memo_from_public, memo_to_public
-        if(encrypt_memo || memo_message) {
+
+        if( memo_message && encrypt_memo  ) {
             memo_from_public = lookup.memo_public_key(from_account_id)
             memo_to_public = lookup.memo_public_key(to_account_id)
         }
@@ -97,7 +98,7 @@ class ApplicationApi {
             var asset_id = asset_id_lookup.resolve
             
             var memo_from_privkey
-            if(encrypt_memo) {
+            if(encrypt_memo && memo_message ) {
                 var from_public = memo_from_public.resolve
                 memo_from_privkey =
                     WalletDb.getPrivateKey(from_public)
@@ -107,7 +108,7 @@ class ApplicationApi {
                         from_account_id)
             }
             var memo
-            if(memo_message) {
+            if(memo_message && memo_to_public.resolve && memo_from_public.resolve) {
                 var nonce = optional_nonce == null ?
                     helper.unique_nonce_uint64() :
                     optional_nonce
@@ -116,7 +117,7 @@ class ApplicationApi {
                     from: memo_from_public.resolve,
                     to: memo_to_public.resolve,
                     nonce,
-                    message: encrypt_memo ?
+                    message: (encrypt_memo) ?
                         Aes.encrypt_with_checksum(
                             memo_from_privkey,
                             memo_to_public.resolve,
