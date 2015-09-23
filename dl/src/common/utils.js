@@ -36,6 +36,7 @@ var Utils = {
     },
 
     format_number: (number, decimals, trailing_zeros = true) => {
+        if(isNaN(number) || number === undefined || number === null) return "";
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
             zeros += "0";     

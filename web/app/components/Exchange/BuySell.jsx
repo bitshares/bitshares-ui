@@ -45,10 +45,14 @@ class BuySell extends React.Component {
     }
 
     render() {
-        let {type, quoteSymbol, baseSymbol, amount, price, amountChange,
-            priceChange, onSubmit, balance, totalPrecision, total, totalChange,
+        let {type, quoteSymbol, baseSymbol, amountChange,
+            priceChange, onSubmit, balance, totalPrecision, totalChange,
             balancePrecision, quotePrecision, currentPrice} = this.props;
-        
+        let amount, price, total;
+        if (this.props.amount) amount = this.props.amount;
+        if (this.props.price) price = this.props.price;
+        if (this.props.total) total = this.props.total;
+
         let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")}`;
         let buttonClass = classNames("button buySellButton", type, {disabled: !(balance && balance.get("balance") > 0 && amount > 0 && price > 0)});
         let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
@@ -66,7 +70,7 @@ class BuySell extends React.Component {
                                     {buttonText}:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="text" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off"/>
+                                    <input type="text" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {quoteSymbol}
@@ -78,7 +82,7 @@ class BuySell extends React.Component {
                                     <Translate content="exchange.price" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="text" id="buyPrice" value={price} onChange={priceChange} autoComplete="off"/>
+                                    <input type="text" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {baseSymbol}/{quoteSymbol}
@@ -90,7 +94,7 @@ class BuySell extends React.Component {
                                     <Translate content="exchange.total" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="text" id="buyAmount" value={total} onChange={totalChange} autoComplete="off"/>
+                                    <input type="text" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {baseSymbol}
