@@ -406,7 +406,7 @@ class Exchange extends React.Component {
                     });
 
                 accountsDropDown = (
-                    <ActionSheet id="account_drop_down">
+                    <ActionSheet>
                         <ActionSheet.Button title="">
                             <a className="button">
                                 <Icon name="user"/>&nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
@@ -475,8 +475,12 @@ class Exchange extends React.Component {
                                         </li>
                                     </ul>
                                 </div>
-                                <div className="grid-block shrink overflow-visible">
+                                <div className="grid-block shrink overflow-visible account-drop-down">
                                     {accountsDropDown}
+                                </div>
+                                <div className="grid-block shrink">
+                                    {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
+                                    {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borroww&nbsp;{baseAsset.get("symbol")}</button></div> : null}
                                 </div>
                             </div>
                         </div>
@@ -501,9 +505,7 @@ class Exchange extends React.Component {
                         {/* Buy/Sell forms */}
                         <div className="grid-block vertical shrink">
                             <div className="grid-block shrink">
-                                {quoteIsBitAsset ? <div className="small-12 medium-6 buy-form"><div className="float-right"><button onClick={this._borrowQuote.bind(this)} className="button success">Borrow {quoteAsset.get("symbol")}</button></div></div> : null}
-                                {baseIsBitAsset ? <div className="small-12 medium-6"><div className="float-right"><button onClick={this._borrowBase.bind(this)} className="button success">Borrow {baseAsset.get("symbol")}</button></div></div> : null}
-                            </div>
+                               </div>
                             <div className="grid-block small-vertical medium-horizontal shrink no-padding" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell

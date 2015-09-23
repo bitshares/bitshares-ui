@@ -300,8 +300,7 @@ a.order-cancel {
     min-width: 5rem;
 }
 
-#account_drop_down {
-  margin-right: 4rem;
+.account-drop-down {
   a.button {
     background-color: transparent;
     text-transform: none;
@@ -310,6 +309,10 @@ a.order-cancel {
   a:active.button, a:hover.button {
     background-color: transparent !important;
   }
+}
+
+.borrow-button {
+  margin-top: 0.5rem;
 }
 
 .order-change {
