@@ -60,6 +60,11 @@ class AccountSelector extends React.Component {
         if (event.keyCode === 13) this.onAction(e);
     }
 
+    componentDidMount() {
+        if(this.props.onAccountChanged && this.props.account)
+            this.props.onAccountChanged(this.props.account);
+    }
+
     componentWillReceiveProps(newProps) {
         if(this.props.onAccountChanged && newProps.account !== this.props.account)
             this.props.onAccountChanged(newProps.account);
@@ -92,7 +97,7 @@ class AccountSelector extends React.Component {
 
                 <div className="content-area">
                     <div className="header-area">
-                        <div className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></div>
+                        {error ? null : <div className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></div>}
                         <Translate component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
