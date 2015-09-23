@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {RouteHandler, Link} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletManagerStore from "stores/WalletManagerStore"
-import BalanceClaim from "components/Wallet/BalanceClaim"
+import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
 
 class ExistingAccountBaseComponent extends Component {
     static getStores() {
@@ -55,7 +55,7 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                 {/*<Link to="welcome-provide-brainkey">
                 <div className="button success">Provide Brainkey</div></Link>*/}
                 
-                <BalanceClaim/>
+                <BalanceClaimActive/>
                 
                 {!has_wallet ? <p>
                     <h5>Import your BTS 2.0+ BACKUP first<br/>(if you have one)</h5>
