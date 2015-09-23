@@ -40,6 +40,8 @@ class PrivateKeyStore extends BaseStore {
             account_refs: Immutable.Set(),
             // loading_account_refs: false,
             addy_to_pubkey: new Map(),
+            account_refs: Immutable.Set(),
+            // loading_account_refs: false,
             catastrophic_error: false,
             pending_operation_count: 0,
             catastrophic_error_add_key: null,
@@ -54,6 +56,23 @@ class PrivateKeyStore extends BaseStore {
     
     getPubkeys() {
         return this.state.keys.valueSeq().map( value => value.pubkey).toArray()
+    }
+    
+    getPubkeys_having_PrivateKey(pubkeys, addys = null) {
+        var return_pubkeys = []
+        for(let pubkey of pubkeys) {
+            if(this.hasKey(pubkey)) {
+                return_pubkeys.push(pubkey)
+            }
+        }
+        if(addys) {
+            for (let addy of addys) {
+                var pubkey = this.state.addy_to_pubkey.get(addy)
+                if(this.hasKey(pubkey))
+                    return_pubkeys.push(pubkey)
+            }
+        }
+        return return_pubkeys
     }
     
     getTcomb_byPubkey(public_key) {
@@ -159,9 +178,10 @@ class PrivateKeyStore extends BaseStore {
             PrivateKeyTcomb(private_key_object)
         )
         this.setState({keys: this.state.keys})
+
+        updateAddyMap(this.state.addy_to_pubkey, private_key_object.pubkey)
         ChainStore.getAccountRefsOfKey(private_key_object.pubkey)
         this.chainStoreUpdate()
-        updateAddyMap(this.state.addy_to_pubkey, private_key_object.pubkey)
         
         var p = new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
@@ -202,24 +222,6 @@ class PrivateKeyStore extends BaseStore {
             resolve(p)
         })
         resolve(p)
-    }
-
-    
-    getPubkeys_having_PrivateKey(pubkeys, addys = null) {
-        var return_pubkeys = []
-        for(let pubkey of pubkeys) {
-            if(this.hasKey(pubkey)) {
-                return_pubkeys.push(pubkey)
-            }
-        }
-        if(addys) {
-            for (let addy of addys) {
-                var pubkey = this.state.addy_to_pubkey.get(addy)
-                if(this.hasKey(pubkey))
-                    return_pubkeys.push(pubkey)
-            }
-        }
-        return return_pubkeys
     }
     
 }
