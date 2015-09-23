@@ -49,7 +49,7 @@ import ExistingAccount,{ExistingAccountOptions} from "components/Wallet/Existing
 import WalletCreate from "components/Wallet/WalletCreate";
 import ImportKeys from "components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
@@ -164,7 +164,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
         return Promise.all([chain, db]).then(() => {
             return Promise.all([
-                PrivateKeyStore.loadDbData(),
+                PrivateKeyActions.loadDbData(),
                 WalletDb.loadDbData().then(() => {
                     if (!WalletDb.getWallet() && transition.path !== "/create-account") {
                         transition.redirect("/create-account");
