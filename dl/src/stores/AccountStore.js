@@ -8,7 +8,6 @@ import {
 from "./tcomb_structs";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
-import PrivateKeyActions from "actions/PrivateKeyActions"
 import validation from "common/validation"
 import ChainStore from "api/ChainStore"
 
