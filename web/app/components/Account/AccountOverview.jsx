@@ -1,11 +1,13 @@
 import React from "react";
 import {Link} from "react-router";
+import Immutable from "immutable";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
+import RecentTransactions from "./RecentTransactions";
 
 class AccountOverview extends React.Component {
 
@@ -22,7 +24,7 @@ class AccountOverview extends React.Component {
         let call_orders = account.get("call_orders") ? account.get("call_orders").toJS() : [];
         let balances = {};
         let account_balances = account.get("balances");
-        if(account_balances) {
+        if (account_balances) {
             account_balances.forEach( balance => {
                 balances[balance] = (
                     <tr key={balance}>
@@ -30,24 +32,6 @@ class AccountOverview extends React.Component {
                     </tr>
                 );
             })
-        }
-        let history = {};
-        let account_history = account.get("history");
-        if(account_history) {
-            account_history.take(100).forEach( t => {
-                let trx = t.toJS();
-                history[trx.id] = (
-                    <Operation
-                        key={trx.id}
-                        op={trx.op}
-                        result={trx.result}
-                        block={trx.block_num}
-                        current={account.get("id")}
-                        inverted={this.props.settings.get("inverseMarket")}
-                        hideFee={false}
-                        />
-                );
-            });
         }
         return (
             <div className="grid-content">
@@ -81,19 +65,8 @@ class AccountOverview extends React.Component {
                     </table>
                 </div> : null}
                 <div className="content-block">
-                <h3><Translate content="account.recent" /></h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th><Translate content="explorer.block.op" /></th>
-                                <th><Translate content="account.votes.info" /></th>
-                                <th><Translate content="explorer.block.date" /></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {React.addons.createFragment(history)}
-                        </tbody>
-                    </table>
+                    <h3><Translate content="account.recent" /></h3>
+                    <RecentTransactions accountsList={Immutable.fromJS([account.get("id")])} limit={1000} compactView={false}/>
                 </div>
             </div>
 
