@@ -33,7 +33,7 @@ export var BalanceClaimTcomb = t.struct({
     vested_balance: t.maybe(AssetTypeTcomb)
 }, 'BalanceClaimTcomb')
 
-var TRACE = true
+var TRACE = false
 
 class BalanceClaimStore {
     
@@ -265,7 +265,7 @@ class BalanceClaimStore {
             for(let obj of account_names) {
                 if( ! obj) {
                     if(TRACE) console.log('... BalanceClaimStore NOT my account2',
-                        obj.account_name,error)
+                        obj,error)
                     continue
                 }
                 if(TRACE) console.log('... BalanceClaimStore my account')
