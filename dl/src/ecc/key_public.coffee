@@ -55,17 +55,21 @@ class PublicKey
     {return} PublicKey
     ###
     PublicKey.fromPublicKeyString = (public_key) ->
-        prefix = public_key.slice 0, config.address_prefix.length
-        assert.equal config.address_prefix, prefix, "Expecting key to begin with #{config.address_prefix}, instead got #{prefix}"
-        public_key = public_key.slice config.address_prefix.length
+        try 
+           prefix = public_key.slice 0, config.address_prefix.length
+           assert.equal config.address_prefix, prefix, "Expecting key to begin with #{config.address_prefix}, instead got #{prefix}"
+           public_key = public_key.slice config.address_prefix.length
+           
+           public_key = new Buffer(base58.decode(public_key), 'binary')
+           checksum = public_key.slice -4
+           public_key = public_key.slice 0, -4
+           new_checksum = hash.ripemd160 public_key
+           new_checksum = new_checksum.slice 0, 4
+           assert.deepEqual checksum, new_checksum, 'Checksum did not match'
+           PublicKey.fromBuffer public_key
+        catch  e  
+           null
         
-        public_key = new Buffer(base58.decode(public_key), 'binary')
-        checksum = public_key.slice -4
-        public_key = public_key.slice 0, -4
-        new_checksum = hash.ripemd160 public_key
-        new_checksum = new_checksum.slice 0, 4
-        assert.deepEqual checksum, new_checksum, 'Checksum did not match'
-        PublicKey.fromBuffer public_key
     
     toAddressString: ->
         pub_buf = @toBuffer()
