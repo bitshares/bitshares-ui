@@ -7,8 +7,9 @@ module.exports = {
         de: "Deutsch"
     },
     header: {
-        title: "그래핀 UI",
-        dashboard: "대시보드",
+        title: "비트쉐어 2.0",
+        account: "계정",
+        dashboard: "전체보기",
         explorer: "탐색기",
         exchange: "거래소",
         payments: "전송",
@@ -30,14 +31,14 @@ module.exports = {
         member: {
             stats: "회원정보",
             join: "가입일",
-            reg: "등록인",
-            ref: "추천인",
-            ref_percentage: "추천인 수수료 비율",
-            network_percentage: "네트워크 수수료 비율",
+            registrar: "등록인",
+            referrer: "추천인",
+            lifetime_referrer: "평생회원 추천인",
+            network_percentage: "네트워크",
+            membership: "멤버쉽",
             fees_paid: "지불된 평생회원 수수료",
             fees_pending: "보류중인 수수료",
             fees_vested: "보류중인 확정 수수료",
-            in_orders: "주문중인 총 %(core_asset)s",
             referrals: "피추천인",
             rewards: "캐쉬백 리워드",
             cashback: "캐쉬백",
@@ -98,7 +99,7 @@ module.exports = {
         upgrade: "계정 업그레이드",
         unlink: "연결해제",
         link: "연결",
-        pay: "지불",
+        pay: "전송",
         overview: "개요",
         history: "거래기록",
         payees: "수취인",
@@ -119,6 +120,7 @@ module.exports = {
     },
     transfer: {
         from: "보내는 사람",
+        pay_from: "전송받음",
         amount: "금액",
         to: "받는 사람",
         memo: "메모",
@@ -142,14 +144,14 @@ module.exports = {
         close: "닫기"
     },
     transaction: {
-        confirm: "거래를 승인하세요",
+        confirm: "거래 확인",
         broadcast_success: "거래가 처리되었습니다",
         broadcast_fail: "거래를 처리할 수 없음: %(message)s",
-        broadcasting: "Broadcasting transaction..",
-        broadcasting_short: "Broadcasting..",
-        sent: "전송됨",
+        broadcasting: "처리중..",
+        broadcasting_short: "처리중..",
+        sent: "전송",
         to: "받는 사람",
-        received: "수신됨",
+        received: "수신",
         from: "보낸 사람",
         amount_sell: "판매 금액",
         expiration: "만기",
@@ -163,8 +165,8 @@ module.exports = {
         reg_account: "계정 등록",
         was_reg_account: "다음 계정에 의해 등록됨",
         create_asset: "자산 생성",
-        limit_order_sell: "Placed order #%(num)s to sell %(sell_amount)s at ",
-        limit_order_buy: "Placed order #%(num)s to buy %(buy_amount)s at ",
+        limit_order_sell: "주문번호 #%(num)s %(sell_amount)s 를 다음 가격에 매도 ",
+        limit_order_buy: "주문번호 #%(num)s %(buy_amount)s 를 다음 가격에 매수 ",
         limit_order_cancel: "주문 취소",
         short_order: "공매도주문 요청",
         short_order_cancel: "공매도 취소",
@@ -179,6 +181,7 @@ module.exports = {
         update_asset: "자산 업데이트",
         update_feed_producers: "자산의 가격정보 제공자를 업데이트함",
         feed_producer: "자산에 대한 가격정보 제공자로 추가됨",
+        feed_price: "가격정보",
         asset_issue: "발행",
         was_issued: "발행됨",
         by: "by",
@@ -187,8 +190,9 @@ module.exports = {
         asset_settle: "다음 자산에 대한 강제청산을 요청",
         asset_global_settle: "전체 자산 강제청산을 요청",
         publish_feed: "자산에 대한 가격정보를 발행",
-        delegate_create: "대표자 생성",
+        committee_member_create: "위원 생성",
         witness_create: "증인 생성",
+        witness_update: "증인 업데이트",
         witness_pay: "증인 봉급을 다음 계정으로 인출",
         witness_receive: "Received witness from witness",
         proposal_create: "제안서를 생성",
@@ -203,7 +207,7 @@ module.exports = {
         global_parameters_update: "전체 매개변수를 업데이트",
         file_write: "파일 쓰기",
         vesting_balance_create: "created vesting balance of",
-        "for": "for",
+        for: "for",
         vesting_balance_withdraw: "Withdrew vesting balance of",
         bond_create_offer: "Created bond offer",
         bond_cancel_offer: "Cancelled bond offer",
@@ -221,7 +225,9 @@ module.exports = {
         borrow_amount: "대출 금액",
         funding_account: "Funding account",
         delta_collateral: "담보금 변경",
-        delta_debt: "대출액 변경",        
+        delta_debt: "대출액 변경",
+        new_url: "웹사이트",
+        publisher: "가격정보 제공자",
         trxTypes: {
             transfer: "전송",
             limit_order_create: "주문",
@@ -242,8 +248,9 @@ module.exports = {
             asset_settle: "자산 강제청산",
             asset_global_settle: "자산 전체 강제청산",
             asset_publish_feed: "자산 가격정보 발행",
-            delegate_create: "대표자 생성",
+            committee_member_create: "위원 생성",
             witness_create: "증인 생성",
+            witness_update: "증인 업데이트",
             witness_withdraw_pay: "증인 봉급 인출",
             proposal_create: "제안서 생성",
             proposal_update: "제안서 업데이트",
@@ -319,10 +326,10 @@ module.exports = {
             title: "증인"
         },
         delegates: {
-            title: "대표자"
+            title: "위원"
         },
         delegate: {
-            title: "대표자"
+            title: "위원"
         },
         workers: {
             title: "예산 항목"
@@ -355,8 +362,8 @@ module.exports = {
         balance: "잔고",
         lowest_ask: "매도 호가",
         highest_bid: "매수 호가",
-        total: "총",
-        value: "시가총액",
+        total: "총액",
+        value: "총액",
         price: "가격",
         latest: "최종 가격",
         call: "콜 가격",
@@ -379,5 +386,15 @@ module.exports = {
         title: "지갑",
         confirm: "비밀번호 확인",
         password: "비밀번호"
+    },
+    borrow: {
+        title: "Collateral position for %(asset_symbol)s",
+        no_valid: "%(asset_symbol)s 에 대한 유효한 가격정보가 없음",
+        coll_ratio: "담보 비율",
+        adjust: "포지션 조정",
+        errors: {
+            below: "Collateral ratio below maintenance level",
+            collateral: "Insufficient collateral balance"
+        }
     }
 };
