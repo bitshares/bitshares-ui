@@ -330,7 +330,6 @@ class WalletDb {
                     this.saveKey(
                         private_key,
                         private_key_obj.import_account_names,
-                        private_key_obj.import_balances,
                         null,//brainkey_pos
                         transaction,
                         private_key_obj.public_key_string
@@ -371,7 +370,6 @@ class WalletDb {
             promises.push( this.saveKey(
                 private_key_record.private_key,
                 null, //import_account_names
-                null, //import_balances
                 private_key_record.sequence,
                 transaction,
                 public_key_string
@@ -383,7 +381,6 @@ class WalletDb {
     saveKey(
         private_key,
         import_account_names,
-        import_balances,
         brainkey_pos,
         transaction,
         public_key_string
@@ -413,32 +410,13 @@ class WalletDb {
             pubkey: public_key_string
         }
         
-        var p1 = PrivateKeyStore.onAddKey(
+        var p1 = PrivateKeyActions.addKey(
             private_key_object, transaction
         ).then((ret)=> {
             if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
             return ret
         })
-        
-        var p2
-        if( ! import_balances)
-            p2 = Promise.resolve()
-        else {
-            if(TRACE) console.log('... WalletDb saveKey import_balances')
-            var ps = []
-            for(let chain_balance_record of import_balances) {
-                var p = BalanceClaimActions.add({
-                    balance_claim: {
-                        chain_balance_record,
-                        pubkey: public_key_string,
-                    }, transaction
-                })
-                ps.push(p)
-            }
-            p2 = Promise.all(ps)
-        }
-        
-        return p2.then(()=>p1)//save the results from p1
+        return p1
     }
     
     incrementBrainKeySequence(transaction) {
