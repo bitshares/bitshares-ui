@@ -38,7 +38,7 @@ class AssetSelector extends React.Component {
     render() {
         if(this.props.assets.length === 0) return null;
         var options = this.props.assets.map(function (value) {
-            return <AssetOption asset={value} asset_id={value}/>
+            return <AssetOption key={value} asset={value} asset_id={value}/>
         });
         return (
             <select defaultValue={this.props.value} className="form-control" onChange={this.onChange.bind(this)}>
@@ -61,20 +61,6 @@ class AssetSelector extends React.Component {
         display_balance: React.PropTypes.object,
         tabIndex: React.PropTypes.number
     }
-
-    // constructor(props) {
-    //     super(props)
-    //     this.state = {
-    //         amount: "",
-    //         selected_asset: props.asset
-    //     }
-    // }
-
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.asset && nextProps.asset != this.props.asset && !this.state.asset) {
-    //         this.props.onChange({amount: this.state.amount, asset: nextProps.asset});
-    //     }
-    // }
 
     formatAmount(v) {
         // TODO: use asset's precision to format the number

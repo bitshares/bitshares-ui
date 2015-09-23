@@ -58,7 +58,6 @@ class Transfer extends React.Component {
     }
 
     onAmountChanged({amount, asset}) {
-        console.log( "onAmountChanged: ", amount, asset );
         this.setState({amount, asset})
     }
 
@@ -93,19 +92,16 @@ class Transfer extends React.Component {
 
     render() {
         let from_error = null;
-        if(this.state.from_account && !AccountStore.getState().linkedAccounts.contains(this.state.from_name) )
+        if(this.state.from_account && !AccountStore.isMyAccount(this.state.from_account) )
             from_error = counterpart.translate("account.errors.not_yours");
 
         let asset_types = [];
         let balance = null;
-   //     console.log( "state.from_account: ", this.state.from_account ? this.state.from_account.toJS() : null, "from_error: ", from_error );
         if (this.state.from_account && !from_error) {
             let account_balances = this.state.from_account.get("balances").toJS();
-            console.log( "account_balances: ", account_balances );
             asset_types = Object.keys(account_balances);
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
-    //            console.log( "account_balances[current_asset_id]: ", account_balances[current_asset_id], "  current_asset_id: ", current_asset_id );
                 balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
             } else {
                 balance = "No funds";
@@ -113,7 +109,7 @@ class Transfer extends React.Component {
         }
 
         let submitButtonClass = "button";
-        if(!this.state.from_account || !this.state.to_account || !this.state.amount || !this.state.asset || from_error)
+        if(!this.state.from_account || !this.state.to_account || !this.state.amount || this.state.amount === "0" || !this.state.asset || from_error)
             submitButtonClass += " disabled";
 
         return (
