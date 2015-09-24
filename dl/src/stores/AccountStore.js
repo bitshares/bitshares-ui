@@ -28,7 +28,8 @@ class AccountStore extends BaseStore {
             onAccountSearch: AccountActions.accountSearch,
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
         });
-        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount", "getMyAccounts", "isMyAccount");
+        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
+            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
     }
     
     clearCache() {
