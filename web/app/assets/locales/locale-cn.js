@@ -67,7 +67,7 @@ module.exports = {
         },
         perm: {
             active: "活跃权限",
-            owner: "所有人权限",
+            owner: "拥有人权限",
             publish: "保存修改",
             reset: "重置修改",
             add: "增加权限",
@@ -93,7 +93,9 @@ module.exports = {
             remove_committee: "移除",
             add_committee: "添加",
             add_committee_label: "受托人",
-            add_witness_label: "见证人"
+            add_witness_label: "见证人",
+            approve_worker: "赞成",
+            reject_worker: "反对"
         },
         options: {
             num_witnesses: "信任见证人",
