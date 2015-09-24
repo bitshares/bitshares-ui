@@ -21,10 +21,10 @@ class BlocktimeChart extends React.Component {
 
     render() {
 
-        let {blockTimes} = this.props;
+        let {blockTimes, head_block} = this.props;
 
         blockTimes.filter(a => {
-            return a[0] >= (this.props.head_block_number - 30)
+            return a[0] >= (head_block - 30);
         });
 
         if (blockTimes && blockTimes.length) {
