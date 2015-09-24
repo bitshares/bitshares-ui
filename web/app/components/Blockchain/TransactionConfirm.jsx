@@ -37,7 +37,6 @@ class TransactionConfirm extends BaseComponent {
     }
 
     render() {
-        console.log("-- TransactionConfirm.render -->", this.state);
         if ( !this.state.transaction || this.state.closed ) {return null; }
 
         let button_group, header;
@@ -68,7 +67,7 @@ class TransactionConfirm extends BaseComponent {
             );
             button_group = (
                 <div className="button-group">
-                    <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a>
+                    <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a> &nbsp; <LoadingIndicator type="circle"/>
                 </div>
             );
         } else if (this.state.broadcasting) {

@@ -45,13 +45,14 @@ class CreateAccount extends React.Component {
     }
 
     onFinishConfirm(confirm_store_state) {
-        if(confirm_store_state.included && confirm_store_state.closed && confirm_store_state.broadcasted_transaction) {
+        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
             let trx_obj = confirm_store_state.broadcasted_transaction.toObject();
             let op0 = trx_obj.operations[0];
+            TransactionConfirmStore.unlisten(this.onFinishConfirm);
+            TransactionConfirmStore.reset();
             if(op0[0] === 5 && op0[1].name === this.state.accountName) {
                 this.context.router.transitionTo("account-overview", {account_name: this.state.accountName});
             }
-            TransactionConfirmStore.unlisten(this.onFinishConfirm);
         }
     }
 

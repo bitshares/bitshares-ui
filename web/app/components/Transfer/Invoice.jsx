@@ -74,13 +74,14 @@ class Invoice extends React.Component {
     }
 
     onBroadcastAndConfirm(confirm_store_state) {
-        if(confirm_store_state.included && confirm_store_state.closed && confirm_store_state.broadcasted_transaction) {
+        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
+            TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
+            TransactionConfirmStore.reset();
             if(this.state.invoice.callback) {
                 let trx =  confirm_store_state.broadcasted_transaction;
                 let url = `${this.state.invoice.callback}?block=${trx.ref_block_num}&trx=${trx.id()}`;
                 window.location.href = url;
             }
-            TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
         }
     }
 

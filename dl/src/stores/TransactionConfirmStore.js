@@ -6,6 +6,7 @@ class TransactionConfirmStore {
     constructor() {
         this.bindActions(TransactionConfirmActions);
         this.state = this.getInitialState();
+        this.exportPublicMethods({reset: this.reset.bind(this)});
     }
 
     getInitialState() {
@@ -28,7 +29,7 @@ class TransactionConfirmStore {
     }
 
     onClose() {
-        this.setState({closed: true, transaction: null});
+        this.setState({closed: true});
     }
 
     onBroadcast() {
@@ -40,8 +41,8 @@ class TransactionConfirmStore {
     }
 
     onWasIncluded(res) {
-        console.log("-- TransactionConfirmStore.onIncluded -->");
         this.setState({
+            error: null,
             broadcasting: false,
             broadcast: true,
             included: true,
@@ -50,9 +51,12 @@ class TransactionConfirmStore {
             broadcasted_transaction: this.state.transaction});
     }
 
-
     onError(error) {
         this.setState({broadcast: false, broadcasting: false, error});
+    }
+
+    reset() {
+        this.state = this.getInitialState();
     }
 
 }

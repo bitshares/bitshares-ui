@@ -158,11 +158,11 @@ _my.signed_transaction = ->
             api.network_api().exec(
                 "broadcast_transaction_with_callback",
                 [ (res) ->
-                    console.log('... broadcast_transaction_with_callback !!!')
+                    #console.log('... broadcast_transaction_with_callback !!!')
                     resolve(res)
                 ,tr_object]
             ).then ()->
-                console.log('... broadcast success, waiting for callback')
+                #console.log('... broadcast success, waiting for callback')
                 was_broadcast_callback()
                 return
             .catch (error)=>
