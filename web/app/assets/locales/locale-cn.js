@@ -18,7 +18,8 @@ module.exports = {
         create_account: "创建账户",
         create_asset: "创建资产",
         lock: "锁定钱包",
-        unlock: "解锁"
+        unlock: "解锁",
+        account: "账户"
     },
     account: {
         assets: "资产",
@@ -57,7 +58,7 @@ module.exports = {
         asset: "资产",
         more: "查看更多",
         user_issued_assets: {
-            symbol: "符号",
+            symbol: "资产代码",
             name: "资产名称",
             description: "描述",
             max_supply: "最大供给量",
@@ -142,7 +143,8 @@ module.exports = {
         see: "查看我的转账记录",
         available: "可用余额: ",
         broadcasting: "交易广播中...",
-        close: "关闭"
+        close: "关闭",
+        pay_from: "支付自"
     },
     transaction: {
         sent: "发送",
@@ -265,9 +267,14 @@ module.exports = {
         broadcasting: "交易广播中..",
         broadcasting_short: "交易广播中..",
         borrow_amount: "借入金额",
-        funding_account: "Funding account",
-        delta_collateral: "抵押变化",
-        delta_debt: "债务变化"
+        funding_account: "出资账户",
+        delta_collateral: "保证金变化",
+        delta_debt: "债务变化",
+        feed_price: "喂价",
+        committee_member_create: "受托人以创建",
+        witness_update: "见证人已更新",
+        new_url: "网站",
+        publisher: "发布人"
     },
     explorer: {
         accounts: {
