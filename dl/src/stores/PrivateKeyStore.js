@@ -24,12 +24,8 @@ class PrivateKeyStore extends BaseStore {
         this.state = this._getInitialState()
         this.pending_operation_count = 0
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
-        this.bindListeners({
-            onLoadDbData: PrivateKeyActions.loadDbData,
-            onAddKey: PrivateKeyActions.addKey
-        })
         this._export("hasKey", "getPubkeys", "getTcomb_byPubkey",
-            "getPubkeys_having_PrivateKey");
+            "getPubkeys_having_PrivateKey", "loadDbData", "onAddKey");
     }
     
     _getInitialState() {
@@ -67,8 +63,8 @@ class PrivateKeyStore extends BaseStore {
         }
         if(addys) {
             for (let addy of addys) {
-                var private_key_object = this.state.addresses.get(addy)
-                return_pubkeys.push(private_key_object.pubkey)
+                var pubkey = this.state.addresses.get(addy)
+                return_pubkeys.push(pubkey)
             }
         }
         return return_pubkeys
@@ -138,39 +134,43 @@ class PrivateKeyStore extends BaseStore {
     }
 
     /** This method may be called again should the main database change */
-    onLoadDbData(resolve) {//resolve is deprecated
+    loadDbData() {//resolve is deprecated
         this.setState(this._getInitialState())
         var keys = Immutable.Map().asMutable()
         var addresses = Immutable.Map().asMutable()
         this.pendingOperation() 
-        var p = idb_helper.cursor("private_keys", cursor => {
-            if( ! cursor) {
-                this.setState({
-                    keys: keys.asImmutable(),
-                    addresses: addresses.asImmutable()
-                })
-                return
-            }
-            var private_key_tcomb = PrivateKeyTcomb(cursor.value)
-            ChainStore.getAccountRefsOfKey(private_key_tcomb.pubkey)
-            keys.set(private_key_tcomb.pubkey, private_key_tcomb)
-            updateAddressMap(addresses, private_key_tcomb)
-            cursor.continue()
-        }).then(()=>{
-            this.pendingOperationDone()
-            this.chainStoreUpdate()
-        }).catch( error => {
-            this.setState(this._getInitialState())
-            this.catastrophicError('loading', error)
+        var p = loadAddyMap().then( addresses => {
+            var emtpy_addresses = addresses.size === 0
+            if(emtpy_addresses) addresses = addresses.asMutable()
+            return idb_helper.cursor("private_keys", cursor => {
+                if( ! cursor) {
+                    this.setState({
+                        keys: keys.asImmutable(),
+                        addresses: addresses.asImmutable()
+                    })
+                    if(emtpy_addresses) saveAddyMap(addresses)
+                    this.chainStoreUpdate()
+                    return
+                }
+                var private_key_tcomb = PrivateKeyTcomb(cursor.value)
+                ChainStore.getAccountRefsOfKey(private_key_tcomb.pubkey)
+                keys.set(private_key_tcomb.pubkey, private_key_tcomb)
+                if(emtpy_addresses) updateAddressMap(addresses, private_key_tcomb.pubkey)
+                cursor.continue()
+            }).then(()=>{
+                this.pendingOperationDone()
+                this.chainStoreUpdate()
+            }).catch( error => {
+                this.setState(this._getInitialState())
+                this.catastrophicError('loading', error)
+            })
         })
-        this.chainStoreUpdate()
-        resolve(this.loadNoAccountRefs().then(()=>p))
+        return this.loadNoAccountRefs().then(()=>p)
     }
     
-    onAddKey({private_key_object, transaction, resolve}) {// resolve is deprecated
+    onAddKey(private_key_object, transaction) {// resolve is deprecated
         if(this.state.keys.has(private_key_object.pubkey)) {
-            resolve({result:"duplicate",id:null})
-            return
+            return Promise.resolve({result:"duplicate",id:null})
         }
         
         this.pendingOperation()
@@ -180,8 +180,10 @@ class PrivateKeyStore extends BaseStore {
             private_key_object.pubkey,
             PrivateKeyTcomb(private_key_object)
         )
-        this.state.addresses = this.state.addresses.withMutations( addresses =>
-            updateAddressMap(addresses, private_key_object))
+        this.state.addresses = this.state.addresses.withMutations( addresses => {
+            updateAddressMap(addresses, private_key_object.pubkey)
+            saveAddyMap(addresses)
+        })
         this.setState({keys: this.state.keys, addresses: this.state.addresses})
 
         if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
@@ -225,15 +227,20 @@ class PrivateKeyStore extends BaseStore {
             })
             resolve(p)
         })
-        resolve(p)
+        return p
     }
     
 }
 
 module.exports = alt.createStore(PrivateKeyStore, "PrivateKeyStore");
 
-function updateAddressMap(addresses, private_key_object) {
-    var pubkey = private_key_object.pubkey
+function loadAddyMap() {
+    return iDB.root.getProperty("PrivateKeyStore_addresses").then( map =>
+        map ? Immutable.Map(map) : Immutable.Map())
+}
+
+function updateAddressMap(addresses, pubkey) {
+    console.log("updateAddressMap", updateAddressMap)
     var public_key = PublicKey.fromPublicKeyString(pubkey)
     var address_strings = [
         //legacy formats
@@ -244,6 +251,10 @@ function updateAddressMap(addresses, private_key_object) {
         public_key.toAddressString() //bts_short, most recent format
     ]
     for(let address of address_strings) {
-        addresses.set(address, private_key_object)
+        addresses.set(address, pubkey)
     }
+}
+
+function saveAddyMap(map) {
+    return iDB.root.setProperty("PrivateKeyStore_addresses", map.toObject())
 }
