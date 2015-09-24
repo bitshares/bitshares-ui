@@ -134,7 +134,7 @@ class MyOpenOrders extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-                nextProps.currentAccount.id !== this.props.currentAccount.id ||
+                nextProps.currentAccount !== this.props.currentAccount ||
                 !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
@@ -147,7 +147,6 @@ class MyOpenOrders extends React.Component {
     render() {
         let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
         let bids = null, asks = null;
-
         if(orders.size > 0 && base && quote) {
             let cancel = counterpart.translate("account.perm.cancel");
 

@@ -11,14 +11,12 @@ import DepthHighChart from "./DepthHighChart";
 import {debounce} from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import ChainStore from "api/ChainStore";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
@@ -49,7 +47,7 @@ class Exchange extends React.Component {
     }
 
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired,
+        currentAccount: ChainTypes.ChainAccount.isRequired,
         quoteAsset: ChainTypes.ChainAsset.isRequired,
         baseAsset: ChainTypes.ChainAsset.isRequired,
         quote: PropTypes.string.isRequired,
@@ -68,7 +66,6 @@ class Exchange extends React.Component {
     }
 
     static defaultProps = {
-        account: "props.currentAccount",
         limit_orders: [],
         balances: [],
         totalBids: 0,
@@ -115,7 +112,7 @@ class Exchange extends React.Component {
         // TODO: Add selector for expiry
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
-            this.props.account.get("id"),
+            this.props.currentAccount.get("id"),
             parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.precision), 10),
             sellAsset.id,
             parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
@@ -154,9 +151,9 @@ class Exchange extends React.Component {
     _cancelLimitOrder(orderID, e) {
         e.preventDefault();
         console.log("canceling limit order:", orderID);
-        let {account} = this.props;
+        let {currentAccount} = this.props;
         MarketsActions.cancelLimitOrder(
-            account.get("id"),
+            currentAccount.get("id"),
             orderID // order id to cancel
         ).then(result => {
             if (!result) {
@@ -345,19 +342,19 @@ class Exchange extends React.Component {
 
     render() {
         let { currentAccount, linkedAccounts, limit_orders,
-            totalBids, flat_asks, flat_bids, bids, asks, account, quoteAsset, baseAsset } = this.props;
+            totalBids, flat_asks, flat_bids, bids, asks, quoteAsset, baseAsset } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
         
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            coreBalance = null, quoteSymbol, baseSymbol;
+            quoteSymbol, baseSymbol;
 
-        if (quoteAsset.size && baseAsset.size && account.size) {
+        if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset.toJS();
             quote = quoteAsset.toJS();
             baseSymbol = base.symbol;
             quoteSymbol = quote.symbol;
 
-            accountBalance = account.get("balances").toJS();
+            accountBalance = currentAccount.get("balances").toJS();
             
             if (accountBalance) {
                 for (var id in accountBalance) {
@@ -366,10 +363,6 @@ class Exchange extends React.Component {
                     }
                     if (id === base.id) {
                         baseBalance = accountBalance[id];
-                    }
-
-                    if (id === "1.3.0") {
-                        coreBalance = accountBalance[id];
                     }
                 }
             } 
@@ -396,7 +389,7 @@ class Exchange extends React.Component {
         let accountsDropDown = null;
         if (currentAccount) {
 
-            let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
+            let account_display_name = currentAccount.get("name").length > 20 ? `${currentAccount.get("name").slice(0, 20)}..` : currentAccount.get("name");
 
             if(linkedAccounts.size > 1) {
                 let accountsList = linkedAccounts
@@ -480,7 +473,7 @@ class Exchange extends React.Component {
                                 </div>
                                 <div className="grid-block shrink">
                                     {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
-                                    {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borroww&nbsp;{baseAsset.get("symbol")}</button></div> : null}
+                                    {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
                                 </div>
                             </div>
                         </div>
@@ -525,7 +518,7 @@ class Exchange extends React.Component {
                                     quotePrecision={quote.precision}
                                     totalPrecision={base.precision}
                                     currentPrice={lowestAsk}
-                                    account={account.get("name")}
+                                    account={currentAccount.get("name")}
                                 /> : null}                                
                                 {quote && base ?
                                 <BuySell
@@ -545,7 +538,7 @@ class Exchange extends React.Component {
                                     quotePrecision={quote.precision}
                                     totalPrecision={base.precision}
                                     currentPrice={highestBid}
-                                    account={account.get("name")}
+                                    account={currentAccount.get("name")}
                                 /> : null}
                             </div>
                         </div>
@@ -556,7 +549,7 @@ class Exchange extends React.Component {
                             {limit_orders.size > 0 && base && quote ? <MyOpenOrders
                                 key="open_orders"
                                 orders={limit_orders}
-                                currentAccount={account.get("id")}
+                                currentAccount={currentAccount.get("id")}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
@@ -607,13 +600,13 @@ class Exchange extends React.Component {
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
-                            account={account}
+                            account={currentAccount}
                          /> : null}
                     {baseIsBitAsset ?
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}
-                            account={account}
+                            account={currentAccount}
                         /> : null}
                 {/* End of Second Vertical Block */}
                 </div>
