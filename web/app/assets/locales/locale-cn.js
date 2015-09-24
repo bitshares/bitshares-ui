@@ -27,7 +27,7 @@ module.exports = {
         recent: "近期活动",
         name: "账户名",
         member: {
-            stats: "会员数据",
+            stats: "资料",
             join: "加入于",
             reg: "注册人",
             ref: "推荐人",
@@ -37,14 +37,18 @@ module.exports = {
             vested: "既得",
             ref_percentage: "手续费比例：推荐人奖励",
             network_percentage: "手续费比例：网络收取",
-            fees_paid: "已支付终身会员费",
-            fees_pending: "待付金额",
+            fees_paid: "手续费总支出",
+            fees_pending: "待付费用",
             fees_vested: "待解冻金额",
             in_orders: "委单冻结金额 %(core_asset)s ",
             unknown: "未知的会员",
             lifetime: "终身会员",
             basic: "普通会员",
-            annual: "年度订阅者"
+            annual: "年度订阅者",
+            registrar: "注册人",
+            referrer: "推荐人",
+            lifetime_referrer: "终身会员推荐人",
+            membership: "会籍"
         },
         connections: {
             known: "识别为",
