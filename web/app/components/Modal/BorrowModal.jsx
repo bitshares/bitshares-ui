@@ -123,9 +123,13 @@ class BorrowModalContent extends React.Component {
         let errors = this._getInitialErrors();
         let {original_position} = this.state;
         let backing_balance = !this.props.backing_balance ? {balance: 0} : this.props.backing_balance.toJS();
-        if (parseFloat(newState.collateral) > utils.get_asset_amount(backing_balance.balance, this.props.backing_asset.toJS())) {
+
+
+        if ( (parseFloat(newState.collateral)-original_position.collateral) > utils.get_asset_amount(backing_balance.balance, this.props.backing_asset.toJS())) {
+            console.log( "newState.collateral: ", newState.collateral,  backing_balance.balance );
             errors.collateral_balance = counterpart.translate("borrow.errors.collateral");
         }
+
         let isValid = (newState.short_amount > 0 && newState.collateral > 0) && (newState.short_amount != original_position.debt || newState.collateral != original_position.collateral);
 
         if (parseFloat(newState.collateral_ratio) < (this.props.bitasset_data.getIn(["current_feed", "maintenance_collateral_ratio"]) / 1000)) {
