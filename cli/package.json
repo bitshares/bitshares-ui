@@ -16,7 +16,7 @@
   "scripts": {
     "postinstall": "",
     "test": "",
-    "start": "webpack; node ./bundle.js"
+    "start": "webpack; node ./bundle/bundle.js"
   },
   "dependencies": {
     "babel-core": "~5.1.11",

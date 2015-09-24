@@ -2,7 +2,7 @@
 .idea
 */node_modules
 */npm-debug.log
-cli/bundle.js*
+cli/bundle
 *.map
 *.log
 cli/examples.txt

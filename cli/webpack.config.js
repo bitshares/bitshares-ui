@@ -5,7 +5,7 @@ var config = {
     entry: path.resolve(__dirname, "app.js"),
     target: "node",
     output: {
-        path: path.resolve(__dirname),
+        path: path.join(path.resolve(__dirname), "bundle"),
         filename: "bundle.js"
     },
     module: {
