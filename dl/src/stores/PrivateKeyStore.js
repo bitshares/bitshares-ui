@@ -3,7 +3,6 @@ import alt from "../alt-instance";
 import BaseStore from "./BaseStore";
 import iDB from "../idb-instance";
 import idb_helper from "../idb-helper";
-import ChainStore from "api/ChainStore"
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
@@ -23,26 +22,24 @@ class PrivateKeyStore extends BaseStore {
         super()
         this.state = this._getInitialState()
         this.pending_operation_count = 0
-        ChainStore.subscribe(this.chainStoreUpdate.bind(this))
+        this.bindListeners({
+            onLoadDbData: PrivateKeyActions.loadDbData,
+            onAddKey: PrivateKeyActions.addKey
+        })
         this._export("hasKey", "getPubkeys", "getTcomb_byPubkey",
-            "getPubkeys_having_PrivateKey", "loadDbData", "onAddKey");
+            "getPubkeys_having_PrivateKey");
     }
     
     _getInitialState() {
-        this.chainstore_account_ids_by_key = null
-        this.no_account_refs = Immutable.Set() // Set of account ids
         return {
             keys: Immutable.Map(),
             addresses: Immutable.Map(),
-            account_refs: Immutable.Set(),
-            // loading_account_refs: false,
             catastrophic_error: false,
             pending_operation_count: 0,
             catastrophic_error_add_key: null,
             catastrophic_error_loading: null
         }
     }
-
     
     hasKey(pubkey) {
         return this.state.keys.has(pubkey)
@@ -77,42 +74,6 @@ class PrivateKeyStore extends BaseStore {
         return this.state.keys.get(public_key)
     }
     
-    chainStoreUpdate() {
-        if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key) return
-        this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
-        var norefs = Immutable.Set()
-        var account_refs = Immutable.Set()
-        this.state.keys.keySeq().forEach( pubkey => {
-            var refs = ChainStore.getAccountRefsOfKey(pubkey)
-            if(refs === null) norefs = norefs.add(pubkey)
-            else if(refs === undefined) {
-                // this.setState({loading_account_refs: true})
-                return
-            }
-            account_refs = account_refs.add(refs.valueSeq())
-        })
-        account_refs = account_refs.flatten()
-        console.log("account_refs", account_refs)
-        if(!this.state.account_refs.equals(account_refs))
-            this.setState({account_refs})
-        if(!this.no_account_refs.equals(norefs))
-            this.saveNoAccountRefs(norefs)
-    }
-    
-    loadNoAccountRefs() {
-        if(this.no_account_refs.size) return Promise.resolve()
-        return iDB.root.getProperty("no_account_refs", [])
-            .then( array => this.no_balance_address = new Set(array) )
-    }
-    
-    saveNoAccountRefs(no_account_refs) {
-        var array = []
-        this.no_account_refs = no_account_refs
-        for(let pubkey of this.no_account_refs) array.push(pubkey)
-        console.log("saveNoAccountRefs", array.length)
-        return iDB.root.setProperty("no_account_refs", pubkey)
-    }
-    
     pendingOperation() {
         this.pending_operation_count++
         this.setState({pending_operation_count: this.pending_operation_count})
@@ -134,13 +95,15 @@ class PrivateKeyStore extends BaseStore {
     }
 
     /** This method may be called again should the main database change */
-    loadDbData() {//resolve is deprecated
+    onLoadDbData(resolve) {//resolve is deprecated
+        this.pendingOperation() 
         this.setState(this._getInitialState())
         var keys = Immutable.Map().asMutable()
         var addresses = Immutable.Map().asMutable()
-        this.pendingOperation() 
         var p = loadAddyMap().then( addresses => {
             var emtpy_addresses = addresses.size === 0
+            // Updating addresses is slow, so addresses is created once
+            // and then maintained.
             if(emtpy_addresses) addresses = addresses.asMutable()
             return idb_helper.cursor("private_keys", cursor => {
                 if( ! cursor) {
@@ -149,28 +112,26 @@ class PrivateKeyStore extends BaseStore {
                         addresses: addresses.asImmutable()
                     })
                     if(emtpy_addresses) saveAddyMap(addresses)
-                    this.chainStoreUpdate()
                     return
                 }
                 var private_key_tcomb = PrivateKeyTcomb(cursor.value)
-                ChainStore.getAccountRefsOfKey(private_key_tcomb.pubkey)
                 keys.set(private_key_tcomb.pubkey, private_key_tcomb)
                 if(emtpy_addresses) updateAddressMap(addresses, private_key_tcomb.pubkey)
                 cursor.continue()
             }).then(()=>{
                 this.pendingOperationDone()
-                this.chainStoreUpdate()
             }).catch( error => {
                 this.setState(this._getInitialState())
                 this.catastrophicError('loading', error)
             })
         })
-        return this.loadNoAccountRefs().then(()=>p)
+        resolve( p )
     }
     
-    onAddKey(private_key_object, transaction) {// resolve is deprecated
+    onAddKey({private_key_object, transaction, resolve}) {// resolve is deprecated
         if(this.state.keys.has(private_key_object.pubkey)) {
-            return Promise.resolve({result:"duplicate",id:null})
+            resolve({result:"duplicate",id:null})
+            return
         }
         
         this.pendingOperation()
@@ -186,9 +147,6 @@ class PrivateKeyStore extends BaseStore {
         })
         this.setState({keys: this.state.keys, addresses: this.state.addresses})
 
-        if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
-            this.chainStoreUpdate()
-        
         var p = new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
             var duplicate = false
@@ -196,11 +154,9 @@ class PrivateKeyStore extends BaseStore {
                 transaction.objectStore("private_keys"),
                 private_key_object
             ).catch( event => {
-                
                 // ignore_duplicates
                 var error = event.target.error
-                //DEBUG
-                console.log('... error',error)
+                console.log('... error',error,event)
                 if( error.name != 'ConstraintError' ||
                     error.message.indexOf('by_encrypted_key') == -1
                 ) {
@@ -211,15 +167,9 @@ class PrivateKeyStore extends BaseStore {
                 event.preventDefault()
             }).then( ()=> {
                 this.pendingOperationDone()
-                
-                if(duplicate)
-                    return {result:"duplicate",id:null}
-                
+                if(duplicate) return {result:"duplicate",id:null}
                 idb_helper.on_transaction_end(transaction).then(
-                    () => {
-                        this.setState({ keys: this.state.keys })
-                    }
-                )
+                    () => { this.setState({ keys: this.state.keys }) } )
                 return {
                     result: "added", 
                     id: private_key_object.id
@@ -227,7 +177,7 @@ class PrivateKeyStore extends BaseStore {
             })
             resolve(p)
         })
-        return p
+        resolve(p)
     }
     
 }
