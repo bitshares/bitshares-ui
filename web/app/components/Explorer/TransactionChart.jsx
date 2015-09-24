@@ -15,7 +15,6 @@ class TransactionChart extends React.Component {
     }
 
     render() {
-        console.log("update trx chart");
         let {blocks, head_block} = this.props;
 
         let trxData = [];
