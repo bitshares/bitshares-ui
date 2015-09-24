@@ -1,4 +1,5 @@
-import alt from "alt-instance"
+import alt from "alt-instance";
+import config from "../chain/config.coffee";
 
 class TransactionConfirmActions {
 
@@ -10,8 +11,8 @@ class TransactionConfirmActions {
         this.dispatch();
 
         let broadcast_timeout = setTimeout(() => {
-            this.actions.error("Your transaction wasn't confirmed in a timely manner, please try again later.");
-        }, 12000);
+            this.actions.error("Your transaction has expired without being confirmed, please try again later.");
+        }, config.expire_in_secs * 1000);
 
         setTimeout(()=>{//timeout necessary to see the UI loading indicator
             transaction.broadcast(() => this.actions.wasBroadcast()).then( (res)=> {

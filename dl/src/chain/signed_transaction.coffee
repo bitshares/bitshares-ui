@@ -82,7 +82,7 @@ _my.signed_transaction = ->
         new Promise (resolve, reject)=>
             throw new Error "already finalized" if @tr_buffer
             if(@expiration == 0)
-                @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
+                @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_secs)
         
             resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
                 @ref_block_num = r[0].head_block_number & 0xFFFF

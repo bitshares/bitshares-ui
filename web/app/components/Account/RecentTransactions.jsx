@@ -41,12 +41,13 @@ class RecentTransactions extends React.Component {
         let history = [];
         let current_account = null, current_account_id = null;
         let accounts_counter = 0;
+        var seen_ops = new Set();
         for(let account of accountsList) {
             accounts_counter += 1;
             if(account) {
                 current_account = account;
                 let h = account.get("history");
-                if (h) history = history.concat(h.toJS());
+                if (h) history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
             }
         }
         if(accounts_counter === 1 && current_account) current_account_id = current_account.get("id");
