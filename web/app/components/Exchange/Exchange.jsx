@@ -444,7 +444,7 @@ class Exchange extends React.Component {
                                     <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${baseSymbol} / ${quoteSymbol}`}</span></Link>
                                 </div>
                                 <div className="grid-block">
-                                    <ul className="market-stats stats">
+                                    {/*<ul className="market-stats stats">
                                         <li className="stat">
                                             <span>
                                                 <Translate component="span" content="exchange.latest" /><br/>
@@ -467,11 +467,12 @@ class Exchange extends React.Component {
                                             </span>
                                         </li>
                                     </ul>
+                                */}
                                 </div>
                                 <div className="grid-block shrink overflow-visible account-drop-down">
                                     {accountsDropDown}
                                 </div>
-                                <div className="grid-block shrink">
+                                <div className="grid-block shrink borrow-button-container">
                                     {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
                                     {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
                                 </div>
