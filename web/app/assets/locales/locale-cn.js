@@ -18,7 +18,8 @@ module.exports = {
         create_account: "创建账户",
         create_asset: "创建资产",
         lock: "锁定钱包",
-        unlock: "解锁"
+        unlock: "解锁",
+        account: "账户"
     },
     account: {
         assets: "资产",
@@ -27,7 +28,7 @@ module.exports = {
         recent: "近期活动",
         name: "账户名",
         member: {
-            stats: "会员数据",
+            stats: "资料",
             join: "加入于",
             reg: "注册人",
             ref: "推荐人",
@@ -37,14 +38,18 @@ module.exports = {
             vested: "既得",
             ref_percentage: "手续费比例：推荐人奖励",
             network_percentage: "手续费比例：网络收取",
-            fees_paid: "已支付终身会员费",
-            fees_pending: "待付金额",
+            fees_paid: "手续费总支出",
+            fees_pending: "待付费用",
             fees_vested: "待解冻金额",
             in_orders: "委单冻结金额 %(core_asset)s ",
             unknown: "未知的会员",
             lifetime: "终身会员",
             basic: "普通会员",
-            annual: "年度订阅者"
+            annual: "年度订阅者",
+            registrar: "注册人",
+            referrer: "推荐人",
+            lifetime_referrer: "终身会员推荐人",
+            membership: "会籍"
         },
         connections: {
             known: "识别为",
@@ -53,7 +58,7 @@ module.exports = {
         asset: "资产",
         more: "查看更多",
         user_issued_assets: {
-            symbol: "符号",
+            symbol: "资产代码",
             name: "资产名称",
             description: "描述",
             max_supply: "最大供给量",
@@ -63,7 +68,7 @@ module.exports = {
         },
         perm: {
             active: "活跃权限",
-            owner: "所有人权限",
+            owner: "拥有人权限",
             publish: "保存修改",
             reset: "重置修改",
             add: "增加权限",
@@ -89,7 +94,9 @@ module.exports = {
             remove_committee: "移除",
             add_committee: "添加",
             add_committee_label: "受托人",
-            add_witness_label: "见证人"
+            add_witness_label: "见证人",
+            approve_worker: "赞成",
+            reject_worker: "反对"
         },
         options: {
             num_witnesses: "信任见证人",
@@ -136,10 +143,11 @@ module.exports = {
         see: "查看我的转账记录",
         available: "可用余额: ",
         broadcasting: "交易广播中...",
-        close: "关闭"
+        close: "关闭",
+        pay_from: "支付自"
     },
     transaction: {
-        sent: "已发送",
+        sent: "发送",
         to: "发往",
         received: "已接收",
         from: "来自",
@@ -148,9 +156,9 @@ module.exports = {
         fill_or: "成交或取消",
         min_receive: "接收的最小数量",
         seller: "卖家",
-        collateral: "抵押",
-        coll_ratio: "初始抵押率",
-        coll_maint: "Collateral maintenance ratio",
+        collateral: "保证金",
+        coll_ratio: "原始保证金率",
+        coll_maint: "维持保证金率",
         create_key: "创建一个公钥",
         reg_account: "注册账户",
         was_reg_account: "注册人",
@@ -158,24 +166,24 @@ module.exports = {
         limit_order: "限价单",
         limit_order_buy: "提交限价买单 #%(num)s, 买入数量: %(buy_amount)s, 价格: ",
         limit_order_sell: "提交限价卖单 #%(num)s, 卖出数量: %(sell_amount)s, 价格: ",
-        limit_order_cancel: "已取消的限价单",
+        limit_order_cancel: "取消限价单",
         short_order: "空单",
-        short_order_cancel: "已取消的空单",
+        short_order_cancel: "取消空单",
         at: "at",
-        coll_of: "抵押为",
-        call_order_update: "Updated call order",
+        coll_of: "保证金为",
+        call_order_update: "更新订单",
         upgrade_account: "升级到终身会员账户",
         update_account: "更新账户",
         whitelist_account: "加入白名单",
-        whitelisted_by: "已由该账户加入白名单",
+        whitelisted_by: "加入到账户白名单",
         transfer_account: "转移账户",
         update_asset: "更新资产",
         update_feed_producers: "更新资产喂价人",
         feed_producer: "成为资产喂价人",
-        asset_issue: "Issued",
+        asset_issue: "发行",
         was_issued: "收到资产",
         by: "由",
-        burn_asset: "已销毁",
+        burn_asset: "销毁",
         fund_pool: "转入资产资金池",
         asset_settle: "请求资产清算",
         asset_global_settle: "请求全局资产清算",
@@ -202,7 +210,7 @@ module.exports = {
         bond_cancel_offer: "取消债券要约",
         bond_accept_offer: "接受债券要约",
         bond_claim_collateral: "索取抵押物",
-        bond_pay_collateral: "支付抵押金",
+        bond_pay_collateral: "支付保证金",
         create_worker: "创建雇员，要求报酬为",
         custom: "创建自定义操作",
         order_id: "订单ID",
@@ -210,7 +218,7 @@ module.exports = {
             transfer: "转账",
             limit_order_create: "限价单",
             limit_order_cancel: "取消限价单",
-            call_order_update: "Update call order",
+            call_order_update: "更新订单",
             account_create: "创建账户",
             account_update: "更新账户",
             account_whitelist: "账户白名单",
@@ -244,7 +252,9 @@ module.exports = {
             custom: "自定义",
             assert: "断言操作",
             balance_claim: "领取余额",
-            override_transfer: "优先覆盖转账"
+            override_transfer: "优先覆盖转账",
+            committee_member_create: "创建受托人",
+            witness_update: "更新见证人"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播 and included into blockchain",
@@ -257,9 +267,14 @@ module.exports = {
         broadcasting: "交易广播中..",
         broadcasting_short: "交易广播中..",
         borrow_amount: "借入金额",
-        funding_account: "Funding account",
-        delta_collateral: "抵押变化",
-        delta_debt: "债务变化"
+        funding_account: "出资账户",
+        delta_collateral: "保证金变化",
+        delta_debt: "债务变化",
+        feed_price: "喂价",
+        committee_member_create: "受托人以创建",
+        witness_update: "见证人已更新",
+        new_url: "网站",
+        publisher: "发布人"
     },
     explorer: {
         accounts: {
@@ -381,5 +396,15 @@ module.exports = {
         title: "钱包",
         confirm: "确认密码",
         password: "密码"
+    },
+    borrow: {
+        title: "%(asset_symbol)s 保证金头寸",
+        no_valid: "无有效喂价 %(asset_symbol)s",
+        coll_ratio: "保证金率",
+        adjust: "调整头寸",
+        errors: {
+            below: "保证金率低于维持保证金要求",
+            collateral: "可用保证金不足"
+        }
     }
 };
