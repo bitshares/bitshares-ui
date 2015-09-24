@@ -219,10 +219,10 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let prop_prev_state = this.state[key];
-                        let prop_new_state = {};
+                        let prop_new_state = [];
                         let changes = false;
                         if(!prop_prev_state || prop_prev_state.length !== prop.size) {
-                            prop_prev_state = {};
+                            prop_prev_state = [];
                             changes = true;
                         }
                         let index = 0;
@@ -254,10 +254,10 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let prop_prev_state = this.state[key];
-                        let prop_new_state = {};
+                        let prop_new_state = [];
                         let changes = false;
                         if(!prop_prev_state || prop_prev_state.length !== prop.size) {
-                            prop_prev_state = {};
+                            prop_prev_state = [];
                             changes = true;
                         }
                         let index = 0;
