@@ -94,7 +94,6 @@ class PrivateKeyStore extends BaseStore {
             */
         })
         account_refs = account_refs.flatten()
-        console.log("account_refs", account_refs)
         if(!this.state.account_refs.equals(account_refs))
             this.setState({account_refs})
         if(!this.no_account_refs.equals(norefs))
@@ -244,7 +243,6 @@ function loadAddyMap() {
 }
 
 function updateAddressMap(addresses, pubkey) {
-    console.log("updateAddressMap", updateAddressMap)
     var public_key = PublicKey.fromPublicKeyString(pubkey)
     var address_strings = [
         //legacy formats
