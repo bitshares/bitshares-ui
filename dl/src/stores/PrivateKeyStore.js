@@ -10,7 +10,7 @@ import PrivateKeyActions from "actions/PrivateKeyActions"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 
-import hash from "../common/hash"
+import hash from "common/hash"
 
 /** No need to wait on the promises returned by this store as long as
     this.state.catastrophic_error == false and
@@ -34,7 +34,7 @@ class PrivateKeyStore extends BaseStore {
     _getInitialState() {
         return {
             keys: Immutable.Map(),
-            pubkey_to_addresses: new Map(),
+            addy_to_pubkey: new Map(),
             catastrophic_error: false,
             pending_operation_count: 0,
             catastrophic_error_add_key: null,
@@ -75,6 +75,7 @@ class PrivateKeyStore extends BaseStore {
             var private_key_tcomb = PrivateKeyTcomb(cursor.value)
             map.set(private_key_tcomb.id, private_key_tcomb)
             map.set(private_key_tcomb.pubkey, private_key_tcomb)
+            updateAddyMap(this.state.addy_to_pubkey, private_key_tcomb.pubkey)
             cursor.continue()
         }).then(()=>{
             this.pendingOperationDone()
@@ -115,6 +116,7 @@ class PrivateKeyStore extends BaseStore {
                 PrivateKeyTcomb(private_key_object)
             )
         })
+        updateAddyMap(this.state.addy_to_pubkey, private_key_object.pubkey)
         
         return new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
@@ -171,14 +173,21 @@ class PrivateKeyStore extends BaseStore {
         return this.state.keys.valueSeq().map( value => value.pubkey).toArray()
     }
     
-    getPubkeys_having_PrivateKey(public_keys) {
-        var return_public_keys = []
-        for(let public_key of public_keys) {
-            if(this.hasKey(public_key)) {
-                return_public_keys.push(public_key)
+    getPubkeys_having_PrivateKey(pubkeys, addys = null) {
+        var return_pubkeys = []
+        for(let pubkey of pubkeys) {
+            if(this.hasKey(pubkey)) {
+                return_pubkeys.push(pubkey)
             }
         }
-        return return_public_keys
+        if(addys) {
+            for (let addy of addys) {
+                var pubkey = this.state.addy_to_pubkey.get(addy)
+                if(this.hasKey(pubkey))
+                    return_pubkeys.push(pubkey)
+            }
+        }
+        return return_pubkeys
     }
     
     getTcomb_byPubkey(public_key) {
@@ -188,7 +197,21 @@ class PrivateKeyStore extends BaseStore {
         return this.state.keys.get(public_key)
     }
 
-
 }
 
 module.exports = alt.createStore(PrivateKeyStore, "PrivateKeyStore");
+
+function updateAddyMap(addy_to_pubkey, pubkey) {
+    var public_key = PublicKey.fromPublicKeyString(pubkey)
+    var addresses = [
+        //legacy formats
+        Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
+        Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
+        Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
+        Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
+        public_key.toAddressString() //bts_short, most recent format
+    ]
+    for(let address of addresses) {
+        addy_to_pubkey.set(address, pubkey)
+    }
+}

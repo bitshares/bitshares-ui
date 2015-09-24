@@ -98,12 +98,11 @@ _my.signed_transaction = ->
     
     get_potential_signatures:()->
         tr_object = type.signed_transaction.toObject @
-        api.db_api().exec(
-            "get_potential_signatures",
-            [tr_object]
-        ).then (potential_signatures)->
-            #DEBUG  console.log('... get_potential_signatures',potential_signatures,tr_object)
-            potential_signatures
+        Promise.all([
+            api.db_api().exec( "get_potential_signatures", [tr_object] )
+            api.db_api().exec( "get_potential_address_signatures", [tr_object] )
+        ]).then (results)->
+            {pubkeys: results[0], addys: results[1]}
     
     get_required_signatures:(available_keys)->
         return Promise.resolve([]) unless available_keys.length
