@@ -11,14 +11,14 @@ class PasswordInput extends Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.state = {error: null, wrong: false, doesnt_match: false};
     }
-
+    
     value() {
         return React.findDOMNode(this.refs.password).value;
     }
 
     clear() {
-        React.findDOMNode(this.password.input).value = "";
-        if(this.props.confirmation) React.findDOMNode(this.confirm_password.input).value = "";
+        React.findDOMNode(this.refs.password).value = "";
+        if(this.props.confirmation) React.findDOMNode(this.refs.confirm_password).value = "";
     }
 
     focus() {

@@ -28,7 +28,7 @@ class RecentTransactions extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if(!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
-        for(let key in nextProps.accountsList) {
+        for(let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
             if(npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
@@ -41,9 +41,8 @@ class RecentTransactions extends React.Component {
         let history = [];
         let current_account = null, current_account_id = null;
         let accounts_counter = 0;
-        for(let key in accountsList) {
+        for(let account of accountsList) {
             accounts_counter += 1;
-            let account = accountsList[key];
             if(account) {
                 current_account = account;
                 let h = account.get("history");

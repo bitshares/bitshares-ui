@@ -219,13 +219,15 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let prop_prev_state = this.state[key];
-                        let prop_new_state = {};
+                        let prop_new_state = [];
                         let changes = false;
                         if(!prop_prev_state || prop_prev_state.length !== prop.size) {
-                            prop_prev_state = {};
+                            prop_prev_state = [];
                             changes = true;
                         }
-                        prop.forEach( (obj_id, index) => {
+                        let index = 0;
+                        prop.forEach( obj_id => {
+                            ++index;
                             //console.log("-- Wrapper.chain_objects_list item -->", obj_id, index);
                             if(obj_id) {
                                 let new_obj = ChainStore.getObject(obj_id);
@@ -252,13 +254,15 @@ function BindToChainState(options) {
                     let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                     if(prop) {
                         let prop_prev_state = this.state[key];
-                        let prop_new_state = {};
+                        let prop_new_state = [];
                         let changes = false;
                         if(!prop_prev_state || prop_prev_state.length !== prop.size) {
-                            prop_prev_state = {};
+                            prop_prev_state = [];
                             changes = true;
                         }
-                        prop.forEach( (obj_id, index) => {
+                        let index = 0;
+                        prop.forEach( obj_id => {
+                            ++index;
                             //console.log("-- Wrapper.chain_accounts_list item -->", obj_id, index);
                             if(obj_id) {
                                 let new_obj = ChainStore.getAccount(obj_id);
