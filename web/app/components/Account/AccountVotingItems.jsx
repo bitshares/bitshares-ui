@@ -89,12 +89,13 @@ class AccountVotingItems extends React.Component {
 
     render() {
         if(!this.props.items) return null;
-        let item_rows = this.props.items.filter(i => i).sort((a,b) => a.get("name") > b.get("name")).map(i => {
-            return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem} vote_id={"1"}/>)
+        let items_pairs = _.pairs(this.props.items);
+        let item_rows = items_pairs.filter(i => i[1]).sort((a,b) => a[1].get("name") > b[1].get("name")).map(i => {
+            return (<AccountItemRow account={i[1]} onRemoveItem={this.props.onRemoveItem} vote_id={"1"}/>)
         });
 
         let error = this.state.error;
-        if(!error && this.state.selected_item && this.props.items.includes(this.state.selected_item))
+        if(!error && this.state.selected_item && items_pairs.findIndex(i => i[1] === this.state.selected_item) > -1)
             error = "Account is already in the list";
 
         //if(!error && this.state.selected_item && this.props.validateAccount)
