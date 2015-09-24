@@ -14,9 +14,11 @@ import React, {Component, PropTypes} from "react";
 import connectToStores from "alt/utils/connectToStores"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
 
+import AccountStore from "stores/AccountStore"
 import ChainTypes from "components/Utility/ChainTypes"
 import AccountSelect from "components/Forms/AccountSelect"
 import BindToChainState from "components/Utility/BindToChainState"
@@ -28,8 +30,11 @@ class MyAccounts extends Component {
     }
     
     render() {
-        var account_names = this.props.accounts.filter( account => !!account )
+        var account_names = this.props.accounts
+            .filter( account => !!account )
+            .filter( account => AccountStore.getMyAuthorityForAccount(account) === "full" )
             .map( account => account.get("name") ).sort()
+        
         return <span>
             <AccountSelect account_names={account_names}/>
         </span>
@@ -62,7 +67,7 @@ export default class BalanceClaimActive extends Component {
     
     static getPropsFromStores() {
         var props = BalanceClaimActiveStore.getState()
-        props.account_refs = PrivateKeyStore.getState().account_refs
+        props.account_refs = AccountRefsStore.getState().account_refs
         return props
     }
     
