@@ -147,19 +147,18 @@ class WalletDb {
                         }
                     }
                     
-                    return tr.get_potential_signatures().then( public_keys => {
-                        var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
+                    return tr.get_potential_signatures().then( ({pubkeys, addys})=> {
+                        var my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(pubkeys, addys)
                         
                         //{//Testing only, don't send All public keys!
                         //    var pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
                         //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
                         //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
-                        //    tr.get_required_signatures(pubkeys).then( required_pubkey_strings =>
+                        //    tr.get_required_signatures(my_pubkeys).then( required_pubkey_strings =>
                         //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
                         //}
                         
-                        return tr.get_required_signatures(pubkeys).then(
-                            required_pubkeys => {
+                        return tr.get_required_signatures(my_pubkeys).then( required_pubkeys => {
                             for(let pubkey_string of required_pubkeys) {
                                 if(signer_pubkeys_added[pubkey_string]) continue
                                 var private_key = this.getPrivateKey(pubkey_string)

@@ -33,7 +33,7 @@ export var BalanceClaimTcomb = t.struct({
     vested_balance: t.maybe(AssetTypeTcomb)
 }, 'BalanceClaimTcomb')
 
-var TRACE = true
+var TRACE = false
 
 class BalanceClaimStore {
     
@@ -224,13 +224,13 @@ class BalanceClaimStore {
                     amount: { amount: 1, asset_id: 0},
                     null//memo
                 })
-                return tr.get_potential_signatures().then((public_keys)=>{
-                    //var pubkeys = PrivateKeyStore.getPubkeys()
-                    var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(public_keys)
-                    if( ! pubkeys.length)
+                return tr.get_potential_signatures().then( ({pubkeys, addys})=>{
+                    //var my_pubkeys = PrivateKeyStore.getPubkeys()
+                    var my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(pubkeys, addys)
+                    if( ! my_pubkeys.length)
                         return {account_name:null, private_key_tcombs: []}
                     
-                    return tr.get_required_signatures(pubkeys).then(
+                    return tr.get_required_signatures(my_pubkeys).then(
                         pubkey_strings => {
                         //DEBUG console.log('... get_required_signatures',pubkey_strings)//,tr.serialize())
                         var private_key_tcombs = []
@@ -265,7 +265,7 @@ class BalanceClaimStore {
             for(let obj of account_names) {
                 if( ! obj) {
                     if(TRACE) console.log('... BalanceClaimStore NOT my account2',
-                        obj.account_name,error)
+                        obj,error)
                     continue
                 }
                 if(TRACE) console.log('... BalanceClaimStore my account')

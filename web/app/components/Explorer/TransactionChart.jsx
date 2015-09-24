@@ -8,16 +8,21 @@ class TransactionChart extends React.Component {
         if (nextProps.blocks.size < 20) {
             return false;
         }
-        return nextProps.blocks !== this.props.blocks;
+        return (
+            nextProps.blocks !== this.props.blocks ||
+            nextProps.head_block !== this.props.head_block
+        );
     }
 
     render() {
-        console.log("update trx chart");
-        let {blocks} = this.props;
+        let {blocks, head_block} = this.props;
 
         let trxData = [];
         let max = 0;
-        trxData = blocks.sort((a, b) => {
+        trxData = blocks
+        .filter(a => {
+            return a.id >= head_block - 30;
+        }).sort((a, b) => {
             return a.id - b.id;
         }).takeLast(30).map(block => {
             max = Math.max(block.transactions.length, max);

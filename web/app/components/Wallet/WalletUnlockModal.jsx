@@ -32,7 +32,7 @@ class WalletUnlockModal extends React.Component {
             if(name !== this.props.modalId)
                 return
             if(msg === "close") {
-                this.props.reject()
+                if(this.props.reject) this.props.reject()
                 WalletUnlockActions.cancel()
             } else if (msg === "open") {
                 if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {

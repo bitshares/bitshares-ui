@@ -306,6 +306,7 @@ a.order-cancel {
     background-color: transparent;
     text-transform: none;
     font-family: 'Roboto-Regular', arial, sans-serif;
+
   }
   a:active.button, a:hover.button {
     background-color: transparent !important;
@@ -314,6 +315,10 @@ a.order-cancel {
 
 .borrow-button {
   margin-top: 0.5rem;
+}
+
+.borrow-button-container {
+  padding-right: 1rem;
 }
 
 .order-change {
