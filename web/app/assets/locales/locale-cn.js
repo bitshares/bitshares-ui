@@ -389,5 +389,15 @@ module.exports = {
         title: "钱包",
         confirm: "确认密码",
         password: "密码"
+    },
+    borrow: {
+        title: "%(asset_symbol)s 保证金头寸",
+        no_valid: "无有效喂价 %(asset_symbol)s",
+        coll_ratio: "保证金率",
+        adjust: "调整头寸",
+        errors: {
+            below: "保证金率低于维持保证金要求",
+            collateral: "可用保证金不足"
+        }
     }
 };
