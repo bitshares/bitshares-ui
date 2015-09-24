@@ -33,6 +33,7 @@ class WalletUnlockModal extends React.Component {
                 return
             if(msg === "close") {
                 if(this.props.reject) this.props.reject()
+                this.refs.password_input.clear()
                 WalletUnlockActions.cancel()
             } else if (msg === "open") {
                 if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
@@ -61,9 +62,12 @@ class WalletUnlockModal extends React.Component {
         //DEBUG console.log('... U N L O C K',this.props)
         var unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
         
+        // Modal overlayClose must be false pending a fix that allows us to detect
+        // this event and clear the password (via this.refs.password_input.clear())
+        // https://github.com/akiran/react-foundation-apps/issues/34
         return ( 
             // U N L O C K
-            <Modal id={this.props.modalId} ref="modal" overlay={true}>
+            <Modal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
