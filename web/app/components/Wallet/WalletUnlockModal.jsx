@@ -68,13 +68,14 @@ class WalletUnlockModal extends React.Component {
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <h3><Translate content="header.unlock" /> {unlock_what}</h3>
-                <form onSubmit={this._passSubmit.bind(this)}>
-                        <PasswordInput onChange={this._passChange.bind(this)}
-                            key={this.state.password_input_reset}
-                            wrongPassword={this.state.password_error}/>
+                <form>
+                    <PasswordInput ref="password_input"
+                        onEnter={this.onPasswordEnter.bind(this)}
+                        key={this.state.password_input_reset}
+                        wrongPassword={this.state.password_error}/>
                     <div className="button-group">
                         <a className="button" href
-                            onClick={this._passSubmit.bind(this)}>
+                            onClick={this.onPasswordEnter.bind(this)}>
                             <Translate content="header.unlock" /> {unlock_what}</a>
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
@@ -85,15 +86,12 @@ class WalletUnlockModal extends React.Component {
         )
     }
     
-    _passChange(e) {
-        this.password_ui = e.value
-        this.setState({password_error: null})
-    }
-
-    _passSubmit(e) {
+    onPasswordEnter(e) {
         e.preventDefault()
+        var password = this.refs.password_input.value()
+        this.setState({password_error: null})
         WalletDb.validatePassword(
-            this.password_ui || "",
+            password || "",
             true //unlock
         )
         if (WalletDb.isLocked()) {
