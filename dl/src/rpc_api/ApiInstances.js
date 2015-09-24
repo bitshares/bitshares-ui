@@ -22,6 +22,7 @@ class Apis {
         else hostname = window.location.hostname ? window.location.hostname : "localhost";
         if (this.rpc_port ) port = this.rpc_port;
         let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        //hostname = "graphene.bitshares.org"; protocol = "wss://";
         console.log(`connecting to ${protocol}${hostname}:${port}`);
         this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}`);
         this.init_promise = this.ws_rpc.login(this.rpc_user, this.rpc_password).then(() => {

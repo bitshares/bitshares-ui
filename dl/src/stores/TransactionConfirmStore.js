@@ -10,10 +10,11 @@ class TransactionConfirmStore {
 
     getInitialState() {
         return {
-            transaction: null,
+            transaction: true,
             error: null,
-            broadcast: false,
             broadcasting: false,
+            broadcast: false,
+            included: false,
             trx_id: null,
             trx_block_num: null,
             closed: true,
@@ -35,13 +36,20 @@ class TransactionConfirmStore {
     }
 
     onWasBroadcast(res) {
+        this.setState({broadcasting: false, broadcast: true});
+    }
+
+    onWasIncluded(res) {
+        console.log("-- TransactionConfirmStore.onIncluded -->");
         this.setState({
-            broadcast: true,
             broadcasting: false,
+            broadcast: true,
+            included: true,
             trx_id: res[0].id,
             trx_block_num: res[0].block_num,
             broadcasted_transaction: this.state.transaction});
     }
+
 
     onError(error) {
         this.setState({broadcast: false, broadcasting: false, error});

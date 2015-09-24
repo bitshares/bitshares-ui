@@ -138,7 +138,7 @@ module.exports = {
     },
     transaction: {
         confirm: "Veuillez confirmer la transaction",
-        broadcast_success: "La transaction a été diffusée ",
+        broadcast_success: "La transaction a été diffusée TODO: add 'and included into blockchain' ",
         broadcast_fail: "La diffusion de la transaction a échoué: %(message)s",
         broadcasting: "Diffusion de la transaction en cours..",
         broadcasting_short: "Diffusion en cours..",
