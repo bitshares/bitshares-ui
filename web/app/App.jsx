@@ -72,7 +72,7 @@ class App extends React.Component {
 
     constructor() {
         super();
-        this.state = {loading: true};
+        this.state = {loading: true, synced: false};
     }
 
     componentWillUnmount() {
@@ -91,16 +91,19 @@ class App extends React.Component {
         }
         // Switch locale if the user has already set a different locale than en
         let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
-
         Promise.all([
             localePromise, // Non API
-            AccountStore.loadDbData()
+            AccountStore.loadDbData()            
         ]).then(() => {
             AccountStore.tryToSetCurrentAccount();
             this.setState({loading: false});
         }).catch(error => {
             console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
             this.setState({loading: false});
+        });
+
+        ChainStore.init().then(() => {
+            this.setState({synced: true});
         });
     }
 
@@ -131,6 +134,7 @@ class App extends React.Component {
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
 
                     <div className="grid-block vertical">
+                        {!this.state.synced ? <div className="grid-container txtlabel cancel" style={{fontSize: "2rem"}}>Blockchain is out of sync, please wait until sync is done..</div> : null}
                         <RouteHandler />
                     </div>
                     <Footer/>
@@ -154,15 +158,18 @@ class Auth extends React.Component {
     render() {return null; }
 }
 
+console.log("App:", App);
+
 App.willTransitionTo = (transition, params, query, callback) => {
     console.log( "here: ", transition );
     if (transition.path.indexOf("/auth/") === 0) {
     }
     //API is used to read the chain_id .. The chain_id defines the database name
     Apis.instance().init_promise.then(() => {
-        var chain = ChainStore.init()
+        
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
-        return Promise.all([chain, db]).then(() => {
+        return Promise.all([db]).then(() => {
+            console.log("db init done");
             return Promise.all([
                 PrivateKeyActions.loadDbData(),
                 WalletDb.loadDbData().then(() => {

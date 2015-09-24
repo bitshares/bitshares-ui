@@ -28,7 +28,6 @@ let asset_prefix = "1." + asset_object_type + "."
 let account_prefix = "1." + account_object_type + "."
 
 const DEBUG = false
-
 /**
  *  @brief maintains a local cache of blockchain state 
  *  
@@ -67,46 +66,65 @@ class ChainStore
    resetCache() {
        this.subscribed = false
        this.clearCache()
-       this.init()
+       this.init().then(result => {
+        console.log("resetCache init success");
+       }).catch(err => {
+        console.log("resetCache init error:", err);
+       });
    }
 
    init() {
       console.log( "ChainStore Init" );
-      Apis.instance().db_api().exec( "get_objects", [ ["2.1.0"] ] ).then( optional_objects => {
-                    //if(DEBUG) console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
-                   for(let i = 0; i < optional_objects.length; i++) {
-                       let optional_object = optional_objects[i]
-                       if( optional_object )
-                       {
-                          this._updateObject( optional_object, true ) 
 
-                          let head_time = new Date(optional_object.time).getTime();
-                          let now = Date.now()
-                          let delta = (now - head_time)/1000
-                          let start = Date.parse('Sep 1, 2015');
-                          let progress_delta = head_time - start
-                          this.progress = progress_delta / (now-start);
+      var _init = (resolve, reject) => {
+        return Apis.instance().db_api().exec( "get_objects", [ ["2.1.0"] ] ).then( optional_objects => {
+            //if(DEBUG) console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
+           for(let i = 0; i < optional_objects.length; i++) {
+               let optional_object = optional_objects[i]
+               if( optional_object ) {
 
-                          if( delta < 60  ) {
-                              console.log( "synced, now subscribing..." );
-                              Apis.instance().db_api().exec( "set_subscribe_callback", [ this.onUpdate.bind(this), true ] )
-                                  .then( v => { this.subscribed = true })
-                                  .catch( error => {
-                                    console.log( "Error: ", error )
-                                   } )
-                          }
-                          else {
-                              setTimeout( this.init.bind(this), 1000 );
-                          }
-                       }
-                       else 
-                          setTimeout( this.init.bind(this), 1000 );
-                   }
-               }).catch( error => { // in the event of an error clear the pending state for id
-                   console.log('!!! Chain API error',error)
-                   this.objects_by_id = this.objects_by_id.delete(id)
-               });
+                  this._updateObject( optional_object, true )
+
+                  let head_time = new Date(optional_object.time+"+00:00").getTime();
+                  let now = Date.now();
+                  let delta = (now - head_time)/1000
+                  let start = Date.parse('Sep 1, 2015');
+                  let progress_delta = head_time - start
+                  this.progress = progress_delta / (now-start);
+
+                  if( delta < 60  ) {
+                      Apis.instance().db_api().exec( "set_subscribe_callback", [ this.onUpdate.bind(this), true ] )
+                          .then( v => {
+                            console.log("synced and subscribed, chainstore ready");
+                            this.subscribed = true;
+                             resolve();
+                          })
+                          .catch( error => {
+                            reject();
+                            console.log( "Error: ", error )
+                           } )
+                  } else {
+                      console.log("not yet synced, retrying in 1s");
+                      setTimeout( _init.bind(this, resolve, reject), 1000 );
+                  }
+               } else {
+                  setTimeout( _init.bind(this, resolve, reject), 1000 );
+               }
+           }
+       }).catch( error => { // in the event of an error clear the pending state for id
+           console.log('!!! Chain API error',error)
+           this.objects_by_id = this.objects_by_id.delete(id)
+           reject();
+       });
+     };
+     _init.bind(this);
+
+     return new Promise((resolve, reject) => {
+        _init(resolve, reject);
+      })
    }
+
+   _init
 
    onUpdate( updated_objects ) /// map from account id to objects
    {

@@ -240,7 +240,6 @@ function loadAddyMap() {
 }
 
 function updateAddressMap(addresses, pubkey) {
-    console.log("updateAddressMap", updateAddressMap)
     var public_key = PublicKey.fromPublicKeyString(pubkey)
     var address_strings = [
         //legacy formats
