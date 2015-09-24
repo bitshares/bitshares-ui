@@ -89,9 +89,15 @@ class AccountVotingItems extends React.Component {
 
     render() {
         if(!this.props.items) return null;
-        let item_rows = this.props.items.filter(i => i).sort((a,b) => a.get("name") > b.get("name")).map(i => {
+        let item_rows = this.props.items.filter(i => i)
+           .sort((a,b) =>{
+                 if( a.get("name") > b.get("name") ) return 1;
+                 else if( a.get("name") < b.get("name") ) return -1;
+                 return 0;
+                 })
+           .map(i => {
             return (<AccountItemRow account={i} onRemoveItem={this.props.onRemoveItem} vote_id={"1"}/>)
-        });
+           });
 
         let error = this.state.error;
         if(!error && this.state.selected_item && this.props.items.includes(this.state.selected_item))
