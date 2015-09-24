@@ -147,7 +147,10 @@ class Blocks extends React.Component {
             let lastBlock, firstBlock;
 
             // Map out the block times for the latest blocks and count the number of transactions
-            latestBlocks.sort((a, b) => {
+            latestBlocks.filter((a, index) => {
+                // Only use consecutive blocks counting back from head block
+                return a.id === (dynGlobalObject.get("head_block_number") - index)}) 
+            .sort((a, b) => {
                 return a.id - b.id;
             }).forEach((block, index) => {
                 trxCount += block.transactions.length;
@@ -182,7 +185,7 @@ class Blocks extends React.Component {
                     );
             }).toArray();
             let trxIndex = 0;
-            transactions = latestTransactions.take(15)
+            transactions = latestTransactions.take(20)
             .map((trx) => {
 
                 let opIndex = 0;
@@ -292,7 +295,7 @@ class Blocks extends React.Component {
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
                             <div className="text-left txtlabel">Transactions</div>
-                            <TransactionChart blocks={latestBlocks} />
+                            <TransactionChart blocks={latestBlocks} head_block={dynGlobalObject.get("head_block_number")}/>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
