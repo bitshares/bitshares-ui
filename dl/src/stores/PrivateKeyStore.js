@@ -37,9 +37,7 @@ class PrivateKeyStore extends BaseStore {
         this.no_account_refs = Immutable.Set() // Set of account ids
         return {
             keys: Immutable.Map(),
-            account_refs: Immutable.Set(),
-            // loading_account_refs: false,
-            addy_to_pubkey: new Map(),
+            addresses: Immutable.Map(),
             account_refs: Immutable.Set(),
             // loading_account_refs: false,
             catastrophic_error: false,
@@ -60,16 +58,17 @@ class PrivateKeyStore extends BaseStore {
     
     getPubkeys_having_PrivateKey(pubkeys, addys = null) {
         var return_pubkeys = []
-        for(let pubkey of pubkeys) {
-            if(this.hasKey(pubkey)) {
-                return_pubkeys.push(pubkey)
+        if(pubkeys) {
+            for(let pubkey of pubkeys) {
+                if(this.hasKey(pubkey)) {
+                    return_pubkeys.push(pubkey)
+                }
             }
         }
         if(addys) {
             for (let addy of addys) {
-                var pubkey = this.state.addy_to_pubkey.get(addy)
-                if(this.hasKey(pubkey))
-                    return_pubkeys.push(pubkey)
+                var private_key_object = this.state.addresses.get(addy)
+                return_pubkeys.push(private_key_object.pubkey)
             }
         }
         return return_pubkeys
@@ -141,18 +140,21 @@ class PrivateKeyStore extends BaseStore {
     /** This method may be called again should the main database change */
     onLoadDbData(resolve) {//resolve is deprecated
         this.setState(this._getInitialState())
-        var map = Immutable.Map().asMutable()
+        var keys = Immutable.Map().asMutable()
+        var addresses = Immutable.Map().asMutable()
         this.pendingOperation() 
         var p = idb_helper.cursor("private_keys", cursor => {
             if( ! cursor) {
-                this.state.keys = map.asImmutable()
-                this.setState({keys: this.state.keys})
+                this.setState({
+                    keys: keys.asImmutable(),
+                    addresses: addresses.asImmutable()
+                })
                 return
             }
             var private_key_tcomb = PrivateKeyTcomb(cursor.value)
             ChainStore.getAccountRefsOfKey(private_key_tcomb.pubkey)
-            map.set(private_key_tcomb.pubkey, private_key_tcomb)
-            updateAddyMap(this.state.addy_to_pubkey, private_key_tcomb.pubkey)
+            keys.set(private_key_tcomb.pubkey, private_key_tcomb)
+            updateAddressMap(addresses, private_key_tcomb)
             cursor.continue()
         }).then(()=>{
             this.pendingOperationDone()
@@ -161,6 +163,7 @@ class PrivateKeyStore extends BaseStore {
             this.setState(this._getInitialState())
             this.catastrophicError('loading', error)
         })
+        this.chainStoreUpdate()
         resolve(this.loadNoAccountRefs().then(()=>p))
     }
     
@@ -177,11 +180,12 @@ class PrivateKeyStore extends BaseStore {
             private_key_object.pubkey,
             PrivateKeyTcomb(private_key_object)
         )
-        this.setState({keys: this.state.keys})
+        this.state.addresses = this.state.addresses.withMutations( addresses =>
+            updateAddressMap(addresses, private_key_object))
+        this.setState({keys: this.state.keys, addresses: this.state.addresses})
 
-        updateAddyMap(this.state.addy_to_pubkey, private_key_object.pubkey)
-        ChainStore.getAccountRefsOfKey(private_key_object.pubkey)
-        this.chainStoreUpdate()
+        if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
+            this.chainStoreUpdate()
         
         var p = new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
@@ -228,9 +232,10 @@ class PrivateKeyStore extends BaseStore {
 
 module.exports = alt.createStore(PrivateKeyStore, "PrivateKeyStore");
 
-function updateAddyMap(addy_to_pubkey, pubkey) {
+function updateAddressMap(addresses, private_key_object) {
+    var pubkey = private_key_object.pubkey
     var public_key = PublicKey.fromPublicKeyString(pubkey)
-    var addresses = [
+    var address_strings = [
         //legacy formats
         Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
         Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
@@ -238,7 +243,7 @@ function updateAddyMap(addy_to_pubkey, pubkey) {
         Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
         public_key.toAddressString() //bts_short, most recent format
     ]
-    for(let address of addresses) {
-        addy_to_pubkey.set(address, pubkey)
+    for(let address of address_strings) {
+        addresses.set(address, private_key_object)
     }
 }
