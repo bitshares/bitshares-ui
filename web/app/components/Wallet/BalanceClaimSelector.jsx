@@ -74,9 +74,9 @@ export default class BalanceClaimSelector extends Component {
                 <thead>
                 <tr>
                     <th>{ /* C H E C K B O X */ }</th>
-                    <th style={{textAlign: "center"}}>Account</th>
                     <th style={{textAlign: "center"}}>Unclaimed</th>
                     <th style={{textAlign: "center"}}>Unclaimed (vesting)</th>
+                    <th style={{textAlign: "center"}}>Account</th>
                 </tr></thead>
                 <tbody>
                 {total_by_account_asset.map( (r, name_asset) =>
@@ -86,16 +86,15 @@ export default class BalanceClaimSelector extends Component {
                                 checked={!!this.state.checked.get(index)}
                                 onChange={this.onCheckbox.bind(this, index, r.balances)} />
                         </td>
-                        <td> {name_asset.get(0)} </td>
                         <td style={{textAlign: "right"}}> 
-                        {!r.vesting.total ?
+                        {r.unclaimed ?
                             <FormattedAsset color="info"
                                 amount={r.unclaimed}
                                 asset={name_asset.get(1)}/>
                         :null}
                         </td>
                         <td style={{textAlign: "right"}}>
-                        {r.vesting.total ? <div>
+                        {r.vesting.unclaimed ? <div>
                             <FormattedAsset color="info"
                                 amount={r.vesting.unclaimed}
                                 hide_asset={true}
@@ -106,6 +105,7 @@ export default class BalanceClaimSelector extends Component {
                                 asset={name_asset.get(1)}/>
                         </div>:null}
                         </td>
+                        <td> {name_asset.get(0)} </td>
                     </tr>
                 ).toArray()}
                 </tbody>
