@@ -95,7 +95,7 @@ class TransactionChart extends React.Component {
             plotOptions: {
                 column: {
                     animation: false,
-                    minPointLength: 3,
+                    minPointLength: 10,
                     colorByPoint: true,
                     colors: colors,
                     borderWidth: 0
