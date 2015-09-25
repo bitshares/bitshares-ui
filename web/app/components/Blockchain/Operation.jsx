@@ -272,8 +272,8 @@ class Operation extends React.Component {
             case "account_update":
                 column = (
                     <span>
+                        {this.linkToAccount(op[1].account)}&nbsp;
                         <Translate component="span" content="transaction.update_account" /> 
-                        &nbsp;{this.linkToAccount(op[1].account)}
                     </span>
                 );
                 break;
@@ -297,11 +297,22 @@ class Operation extends React.Component {
                 break;
 
             case "account_upgrade":
-                column = (
-                    <span>
-                        <Translate component="span" content="transaction.upgrade_account" />
-                    </span>
-                );
+                if( op[1].upgrade_to_lifetime_member ) {
+                   column = (
+                       <span>
+                       {this.linkToAccount(op[1].account_to_upgrade) } &nbsp; 
+                           <Translate component="span" content="transaction.lifetime_upgrade_account" />
+                       </span>
+                   );
+                } else {
+                   column = (
+                       <span>
+                       {this.linkToAccount(op[1].account_to_upgrade) } &nbsp; 
+                           <Translate component="span" content="transaction.annual_upgrade_account" />
+                       </span>
+                   );
+
+                }
                 break;
 
             case "account_transfer":
