@@ -65,6 +65,9 @@ class BlockchainStore extends BaseStore{
 
     onGetLatest(payload) {
         let {block, maxBlock} = payload;
+        if (typeof block.timestamp === "string") {
+            block.timestamp += "+00:00";
+        }
         block.timestamp = new Date(block.timestamp);
         if (block.id > maxBlock - this.maxBlocks) {
             this.latestBlocks = this.latestBlocks.unshift(Block(block));

@@ -1,12 +1,10 @@
 import React from "react/addons";
 let Perf = React.addons.Perf;
-import {Link} from "react-router";
-import connectToStores from "alt/utils/connectToStores";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import BlockchainStore from "stores/BlockchainStore";
-import {FormattedRelative} from "react-intl";
+import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
 
 @BindToChainState({keep_updating: true})
@@ -39,9 +37,11 @@ class Footer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-       return true
-        //return nextProps.dynGlobalObject !== this.props.dynGlobalObject
-        //    || nextState.rpc_connection_status !== this.state.rpc_connection_status;
+       // return true
+        return (
+            nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
+            nextState.rpc_connection_status !== this.state.rpc_connection_status
+        );
     }
 
     _triggerPerf() {
@@ -62,7 +62,7 @@ class Footer extends React.Component {
 
     render() {
         let block_height = this.props.dynGlobalObject.get("head_block_number");
-        let block_time = this.props.dynGlobalObject.get("time");
+        let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
         let bt = new Date(block_time).getTime() / 1000;
         let now = new Date().getTime() / 1000
         return (
@@ -78,7 +78,7 @@ class Footer extends React.Component {
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
                             <pre>#{block_height} </pre> &nbsp;
-                            { now - bt > 5 ? <FormattedRelative value={block_time} /> : <span data-tip="Synchronized" data-place="left"><Icon name="checkmark-circle" /></span> }
+                            { now - bt > 5 ? <TimeAgo ref="footer_head_timeago" time={block_time} /> : <span data-tip="Synchronized" data-place="left"><Icon name="checkmark-circle" /></span> }
                         </div>) :
                         <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                 </div>

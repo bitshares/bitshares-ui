@@ -16,44 +16,19 @@ import BlocktimeChart from "./BlocktimeChart";
 import classNames from "classnames";
 import utils from "common/utils";
 import Immutable from "immutable";
+import TimeAgo from "../Utility/TimeAgo";
 
 class BlockTimeAgo extends React.Component {
     
-    constructor(props) {
-        super(props);
-
-        this.interval = null;
-    }
-
     shouldComponentUpdate(nextProps) {
         return nextProps.blockTime !== this.props.blockTime;
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.blockTime !== this.props.blockTime) {
-            this._setInterval();
-        }
-    }
-
-    _setInterval() {
-        this._clearInterval();
-        this.interval = setInterval(() => {this.forceUpdate(); }, 1000);
-    }
-
-    _clearInterval() {
-        if (this.interval) {
-            clearInterval(this.interval);
-        }
-    }
-
-    componentWillUnmount() {
-        this._clearInterval();
     }
 
     render() {
         let {blockTime} = this.props;
 
-        let timePassed = Date.now() - blockTime;
+        // let timePassed = Date.now() - blockTime;
+        let timePassed = (new Date()).getTime() - (new Date(blockTime)).getTime();
 
         let textClass = classNames("txtlabel",
             {"success": timePassed <= 6000},
@@ -63,7 +38,7 @@ class BlockTimeAgo extends React.Component {
         );
 
         return (
-            blockTime ? <h3 className={textClass} ><FormattedRelative value={blockTime} /></h3> : null
+            blockTime ? <h3 className={textClass} ><TimeAgo time={blockTime} /></h3> : null
         );
 
     }
