@@ -133,6 +133,7 @@ export default class BalanceClaimSelector extends Component {
         // A U T O  S E L E C T  A C C O U N T S
         // only if nothing is selected (play it safe)
         if(this.state.checked.size) return
+        
         var checked = Immutable.Map()
         var index = -1
         this.props.total_by_account_asset.forEach( (v,k) => {
@@ -143,8 +144,10 @@ export default class BalanceClaimSelector extends Component {
                     checked = checked.set(index, v.balances)
             }
         })
-        this.setState({checked})
-        this.updateSelectedBalanceClaims(checked)
+        if(this.state.checked.size) {
+            this.setState({checked})
+            this.updateSelectedBalanceClaims(checked)
+        }
     }
     
     updateSelectedBalanceClaims(checked) {

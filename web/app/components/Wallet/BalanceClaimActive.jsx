@@ -18,6 +18,7 @@ import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
 import WalletActions from "actions/WalletActions"
+import MyAccounts from "components/Forms/MyAccounts"
 
 @connectToStores
 export default class BalanceClaimActive extends Component {
@@ -43,6 +44,7 @@ export default class BalanceClaimActive extends Component {
     }
     
     static getPropsFromStores() {
+        console.log("bca props");
         var props = BalanceClaimActiveStore.getState()
         props.account_refs = AccountRefsStore.getState().account_refs
         return props
@@ -55,12 +57,14 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillUnmount() {
-        // console.log("bal componentWillUnmount");
-        BalanceClaimActiveStore.clearCache()// TODO does not rerender
+        this.reset()
     }
     
     render() {
-        if( ! this.props.balances.size) return <div></div>
+        if( ! this.props.balances.size) return <div>
+            <hr/>
+            <h4>No Balances</h4>
+        </div>
         var import_ready = this.props.selected_balances.size && this.props.claim_account_name
         var claim_balance_label = import_ready ?
                 `Claim Balance to account: ${this.props.claim_account_name}` :
@@ -82,7 +86,7 @@ export default class BalanceClaimActive extends Component {
                         import_keys_loading ? 
                         <LoadingIndicator type="circle"/> : <div/>}*/}
                         <br></br>
-                        <div className="button-group">
+                        <div>
                             <div className={ cname("button success", {disabled: !import_ready}) }
                                 onClick={this.onClaimBalance.bind(this)}>
                                 {claim_balance_label}
@@ -116,33 +120,3 @@ export default class BalanceClaimActive extends Component {
     
 }
 
-import AccountStore from "stores/AccountStore"
-import ChainTypes from "components/Utility/ChainTypes"
-import AccountSelect from "components/Forms/AccountSelect"
-import BindToChainState from "components/Utility/BindToChainState"
-
-@BindToChainState({keep_updating: true})
-class MyAccounts extends Component {
-
-    static propTypes = {
-        accounts: ChainTypes.ChainAccountsList.isRequired,
-        onChange: React.PropTypes.func.isRequired
-    }
-    
-    render() {
-        var account_names = this.props.accounts
-            .filter( account => !!account )
-            .filter( account => AccountStore.getMyAuthorityForAccount(account) === "full" )
-            .map( account => account.get("name") ).sort()
-        
-        return <span>
-            <AccountSelect onChange={this.onAccountSelect.bind(this)}
-                account_names={account_names} center={true}/>
-        </span>
-    }
-    
-    onAccountSelect(account_name) {
-        this.props.onChange(account_name)
-    }
-
-}

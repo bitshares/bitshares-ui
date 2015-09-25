@@ -60,7 +60,8 @@ class AccountRefsStore extends BaseStore {
         return null
     }
     
-    onAddPrivateKey() {
+    onAddPrivateKey({private_key_object}) {
+        console.log("add")
         if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
             this.chainStoreUpdate()
     }
