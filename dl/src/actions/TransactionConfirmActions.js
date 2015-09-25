@@ -14,16 +14,14 @@ class TransactionConfirmActions {
             this.actions.error("Your transaction has expired without being confirmed, please try again later.");
         }, config.expire_in_secs * 1000);
 
-        setTimeout(()=>{//timeout necessary to see the UI loading indicator
-            transaction.broadcast(() => this.actions.wasBroadcast()).then( (res)=> {
-                clearTimeout(broadcast_timeout);
-                this.actions.wasIncluded(res);
-            }).catch( error => {
-                clearTimeout(broadcast_timeout);
-                let message = error.message.split( '\n' )[1];
-                this.actions.error(message);
-            });
-        }, 100)
+        transaction.broadcast(() => this.actions.wasBroadcast()).then( (res)=> {
+            clearTimeout(broadcast_timeout);
+            this.actions.wasIncluded(res);
+        }).catch( error => {
+            clearTimeout(broadcast_timeout);
+            let message = error.message.split( '\n' )[1];
+            this.actions.error(message);
+        });
     }
 
     wasBroadcast(res){

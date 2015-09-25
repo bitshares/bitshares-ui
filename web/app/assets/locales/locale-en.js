@@ -150,7 +150,8 @@ module.exports = {
     },
     transaction: {
         confirm: "Please confirm the transaction",
-        broadcast_success: "Transaction has been broadcast and included into blockchain",
+        broadcast_success: "Transaction has been broadcast",
+        transaction_confirmed: "Transaction confirmed",
         broadcast_fail: "Failed to broadcast the transaction: %(message)s",
         broadcasting: "Broadcasting transaction..",
         broadcasting_short: "Broadcasting..",
