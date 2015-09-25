@@ -29,12 +29,13 @@ module.exports = {
         name: "Account name",
         more: "see more",
         member: {
-            stats: "Member stats",
+            stats: "Membership",
             join: "Joined on",
             registrar: "Registrar",
-            referrer: "Referrer",
+            referrer: "Affiliate Referrer",
             lifetime_referrer: "Lifetime Referrer",
             network_percentage: "Network",
+            fee_allocation: "Fee Allocaiton",
             membership: "Membership",
             fees_paid: "Lifetime fees paid",
             fees_pending: "Pending fees",
@@ -46,7 +47,11 @@ module.exports = {
             unknown: "Unknown member",
             lifetime: "Lifetime member",
             basic: "Basic member",
-            annual: "Annual subscriber"
+            annual: "Annual subscriber",
+            upgrade_lifetime: "Buy Lifetime Subscribtion",
+            subscribe: "Buy Annual Subscription",
+            expires: "expires",
+            membership_expiration: "Membership Expiration"
         },
         user_issued_assets: {
             symbol: "Symbol",
