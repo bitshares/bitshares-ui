@@ -1,8 +1,7 @@
 import React from "react";
-import {FormattedDate, FormattedRelative} from "react-intl";
-import intlData from "../Utility/intlData";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import TimeAgo from "../Utility/TimeAgo";
 
 /**
  * @brief displays block's date and time based on block number
@@ -37,7 +36,7 @@ class BlockTime extends React.Component {
     calcTime(block_number) {
         let block_interval = this.props.globalObject.get("parameters").get("block_interval");
         let head_block = this.props.dynGlobalObject.get("head_block_number");
-        let head_block_time = new Date(this.props.dynGlobalObject.get("time"));
+        let head_block_time = new Date(this.props.dynGlobalObject.get("time") + "+00:00");
         let seconds_below = (head_block - block_number) * block_interval;
         let time = new Date(head_block_time - seconds_below * 1000);
         this.setState({time});
@@ -59,7 +58,7 @@ class BlockTime extends React.Component {
     render() {
         return (
             <span className="time" key={this.props.block_number}>
-                {this.state.time ?  <FormattedRelative value={this.state.time} /> : null  }
+                {this.state.time ? <TimeAgo time={this.state.time} /> : null }
             </span>
         );
     }

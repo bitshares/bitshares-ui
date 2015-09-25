@@ -103,6 +103,7 @@ class WalletUnlockModal extends React.Component {
             return
         }
         else {
+            this.refs.password_input.clear()
             this.setState({password_input_reset: Date.now()})
             this.setState({password_error: false})
             ZfApi.publish(this.props.modalId, "close")

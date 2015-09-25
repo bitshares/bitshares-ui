@@ -82,7 +82,7 @@ _my.signed_transaction = ->
         new Promise (resolve, reject)=>
             throw new Error "already finalized" if @tr_buffer
             if(@expiration == 0)
-                @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_min * 60)
+                @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_secs)
         
             resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
                 @ref_block_num = r[0].head_block_number & 0xFFFF
@@ -148,7 +148,7 @@ _my.signed_transaction = ->
     toObject:()->
         type.signed_transaction.toObject @
 
-    broadcast:()->
+    broadcast:(was_broadcast_callback)->
         new Promise (resolve, reject)=>
             @sign() if not @signed
             throw new Error "not finalized" unless @tr_buffer
@@ -158,11 +158,12 @@ _my.signed_transaction = ->
             api.network_api().exec(
                 "broadcast_transaction_with_callback",
                 [ (res) ->
-                    #DEBUG console.log('... broadcast_transaction_with_callback !!!')
+                    #console.log('... broadcast_transaction_with_callback !!!')
                     resolve(res)
                 ,tr_object]
             ).then ()->
-                #DEBUG console.log('... broadcast success, waiting for callback')
+                #console.log('... broadcast success, waiting for callback')
+                was_broadcast_callback()
                 return
             .catch (error)=>
                 #DEBUG console.log error # logged in GrapheneApi

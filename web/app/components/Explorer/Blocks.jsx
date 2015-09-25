@@ -16,44 +16,19 @@ import BlocktimeChart from "./BlocktimeChart";
 import classNames from "classnames";
 import utils from "common/utils";
 import Immutable from "immutable";
+import TimeAgo from "../Utility/TimeAgo";
 
 class BlockTimeAgo extends React.Component {
     
-    constructor(props) {
-        super(props);
-
-        this.interval = null;
-    }
-
     shouldComponentUpdate(nextProps) {
         return nextProps.blockTime !== this.props.blockTime;
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.blockTime !== this.props.blockTime) {
-            this._setInterval();
-        }
-    }
-
-    _setInterval() {
-        this._clearInterval();
-        this.interval = setInterval(() => {this.forceUpdate(); }, 1000);
-    }
-
-    _clearInterval() {
-        if (this.interval) {
-            clearInterval(this.interval);
-        }
-    }
-
-    componentWillUnmount() {
-        this._clearInterval();
     }
 
     render() {
         let {blockTime} = this.props;
 
-        let timePassed = Date.now() - blockTime;
+        // let timePassed = Date.now() - blockTime;
+        let timePassed = (new Date()).getTime() - (new Date(blockTime)).getTime();
 
         let textClass = classNames("txtlabel",
             {"success": timePassed <= 6000},
@@ -63,7 +38,7 @@ class BlockTimeAgo extends React.Component {
         );
 
         return (
-            blockTime ? <h3 className={textClass} ><FormattedRelative value={blockTime} /></h3> : null
+            blockTime ? <h3 className={textClass} ><TimeAgo time={blockTime} /></h3> : null
         );
 
     }
@@ -173,14 +148,14 @@ class Blocks extends React.Component {
 
                 return (
                         <tr key={block.id}>
-                            <td><Link to="block" params={{height: block.id}}>#{block.id}</Link></td>
+                            <td><Link to="block" params={{height: block.id}}>#{utils.format_number(block.id, 0)}</Link></td>
                             <td><FormattedDate
                                 value={block.timestamp}
                                 formats={intlData.formats}
                                 format="short"
                             /></td>
                             <td><LinkToWitnessById witness={block.witness} /></td>
-                            <td>{block.transactions.length}</td>
+                            <td>{utils.format_number(block.transactions.length, 0)}</td>
                         </tr>
                     );
             }).toArray();
@@ -232,14 +207,14 @@ class Blocks extends React.Component {
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Trx/block</span>
-                            <h3>{utils.format_number(trxCount / blockCount || 0, 2)}/block</h3>
+                            <span className="txtlabel subheader">Trx/s</span>
+                            <h3>{utils.format_number(trxPerSec, 2)}</h3>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Avg block time</span>
-                            <h3>{utils.format_number(avgTime, 2)}s</h3>
+                            <span className="txtlabel subheader">Avg confirmation time</span>
+                            <h3>{utils.format_number(avgTime / 2, 2)}s</h3>
                         </div>
                     </div>
                 </div>
@@ -264,9 +239,9 @@ class Blocks extends React.Component {
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Transactions per second:</span>
+                            <span className="txtlabel float-left">Transactions per block:</span>
                             <span className="success float-right">
-                                <span className="txtlabel">{utils.format_number(trxPerSec, 2)}</span><span>/s</span>
+                                <span className="txtlabel">{utils.format_number(trxCount / blockCount || 0, 2)}</span>
                             </span>
                         </div>
                     </div>

@@ -40,7 +40,7 @@ class TransactionConfirm extends BaseComponent {
         if ( !this.state.transaction || this.state.closed ) {return null; }
 
         let button_group, header;
-        if(this.state.error || this.state.broadcast) {
+        if(this.state.error || this.state.included) {
             header = this.state.error ? (
                 <div className="modal-header has-error">
                     <Translate component="h3" content="transaction.broadcast_fail" />
@@ -57,6 +57,17 @@ class TransactionConfirm extends BaseComponent {
             button_group = (
                 <div className="button-group">
                     <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a>
+                </div>
+            );
+        } else if (this.state.broadcast) {
+            header = (
+                <div className="shrink grid-block">
+                    <h3>Transaction was broadcast. Waiting for confirmation..</h3>
+                </div>
+            );
+            button_group = (
+                <div className="button-group">
+                    <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a> &nbsp; <LoadingIndicator type="circle"/>
                 </div>
             );
         } else if (this.state.broadcasting) {

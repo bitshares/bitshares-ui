@@ -8,13 +8,18 @@ module.exports = {
     },
     header: {
         title: "Graphene UI",
-        dashboard: "Hauptseite",
+        account: "Konto",
+        dashboard: "Übersicht",
         explorer: "Explorer",
         exchange: "Börse",
-        payments: "Transaktionen",
+        payments: "Transaktionen", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Abmeldung",
         settings: "Einstellungen",
-        current: "Aktives Konto"
+        current: "Aktives Konto",
+        create_account: "Konto erstellen",
+        create_asset: "Asset erstellen",
+        lock: "Sperren",
+        unlock: "Entsperren"
     },
     account: {
         asset: "Asset",
@@ -26,18 +31,22 @@ module.exports = {
         member: {
             stats: "Mitgliederstatistiken",
             join: "Beitritt am",
-            reg: "Registriert von",
-            ref: "Empfohlen von",
-            ref_percentage: "Prozent für Werbenden",
+            registrar: "Registriert von",
+            referrer: "Empfohlen von",
+            lifetime_referrer: "Lifetime Referrer",
             network_percentage: "Prozent für Netzwerk",
+            membership: "Mitgliedschaft",
             fees_paid: "Ingesamt bezahlte Gebühren",
             fees_pending: "Anstehende Gebühren",
             fees_vested: "Anstehnde Gebühren in Sperrfristguthaben",
-            in_orders: "Insgesamt %(core_asset)s in Anweisungen",
             referrals: "Empfehlungen",
             rewards: "Belohnungen",
             cashback: "Skonto",
-            vested: "Zugesichert"
+            vested: "Zugesichert",
+            unknown: "unbekanntes Mitglied",
+            lifetime: "Lifetime Mitglied",
+            basic: "Grundmitglied",
+            annual: "Jahresabonent"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -99,7 +108,10 @@ module.exports = {
         orders: "Anweisungen",
         select_placeholder: "Konto auswählen...",
         errors: {
-            not_found: "Das Konto %(name)s existiert nicht. Bitte prüfgen Sie die Schreibweise!"
+            not_found: "Das Konto %(name)s existiert nicht. Bitte prüfgen Sie die Schreibweise!",
+            invalid: "Üngültiger Kontoname",
+            unknown: "Unbekannter Kontoname",
+            not_yours: "Nicht Ihr Konto"
         }
     },
     pagination: {
@@ -110,6 +122,7 @@ module.exports = {
         from: "Von",
         amount: "Betrag",
         to: "Zu",
+        to: "An",
         memo: "Memo",
         fee: "Gebühr",
         send: "Senden",
@@ -126,12 +139,16 @@ module.exports = {
         confirm: "BESTÄTIGEN",
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
-        see: "ÜBERWEISUNGSÜBERSICHT"
+        see: "ÜBERWEISUNGSÜBERSICHT",
+        see: "MEINE TRANSAKTIONEN ANZEIGEN",
+        close: "SCHLIEßEN"
     },
     transaction: {
         confirm: "Bitte bestätigen Sie die Transaktion",
-        broadcast_success: "Transaktion wurde übermittelt",
+        broadcast_success: "Transaktion wurde übermittelt TODO: add 'and included into blockchain'",
         broadcast_fail: "Bei der Übermittlung der Transaction ist ein Fehler aufgetreten: %(message)s",
+        broadcasting: "Übermittle Transaction..",
+        broadcasting_short: "Übermittle..",
         sent: "Gesendet",
         to: "an",
         received: "Empfangen",
@@ -164,6 +181,7 @@ module.exports = {
         update_asset: "Das Asset wurde aktualisiert",
         update_feed_producers: "Die Liste der Feed-Erzeuger wurde aktualisiert",
         feed_producer: "Werde Feed-Erzeuger für ein Asset",
+        feed_price: "Feed Preis",
         asset_issue: "Emittiert",
         was_issued: "Wurde emittiert",
         by: "von",
@@ -172,10 +190,11 @@ module.exports = {
         asset_settle: "Settlement erbeten für",
         asset_global_settle: "Globales Settlement erbeten für",
         publish_feed: "Neuer Feed wurde publiziert für Asset",
-        delegate_create: "Neuer Delegate wurde angelegt",
+        committee_member_create: "Komitee Mitglied erstellen",
         witness_create: "Neuer Witness wurde angelegt",
+        witness_update: "Witness wurde aktualisiert",
         witness_pay: "Witnesslohn ausgezahlt an Konto",
-        witness_receive: "Received witness from witness",
+        witness_receive: "Received witness from witness", // FIXME: what?
         proposal_create: "Ein Vorschlag wurde erzeugt",
         proposal_update: "Ein Vorschlag wurde aktualisiert",
         proposal_delete: "Ein Vorschlag wurde gelöscht",
@@ -203,6 +222,12 @@ module.exports = {
         balance_id: "Guthabenskennung (ID)",
         deposit_to: "Dem Konto gutgeschrieben",
         claimed: "Ingesamt beantsprucht",
+        borrow_amount: "Leihbetrag",
+        funding_account: "Finanzierendes Konto",
+        delta_collateral: "Kollateral Änderungen",
+        delta_debt: "Schulden Änderungen",
+        new_url: "Webseite",
+        publisher: "Publisher",
         trxTypes: {
             transfer: "Überweisung",
             limit_order_create: "Limit-Order",
@@ -223,8 +248,9 @@ module.exports = {
             asset_settle: "Asset Settlement",
             asset_global_settle: "Globales Asset Settlement",
             asset_publish_feed: "Asset Feed publiszieren",
-            delegate_create: "Delegate erstellen",
+            committee_member_create: "Komiteemitglied erstellen",
             witness_create: "Witness erstellen",
+            witness_update: "Witness ändern",
             witness_withdraw_pay: "Witnesslohn ausbezahlen",
             proposal_create: "Proposal erstellen",
             proposal_update: "Proposal aktualisieren",
@@ -334,7 +360,9 @@ module.exports = {
         order_depth: "Ordertiefe",
         market_history: "Marktverlauf",
         balance: "Guthaben",
-        total: "Ingesammt",
+        lowest_ask: "Günstigstes Ask",
+        highest_bid: "Höchstes Bid",
+        total: "Gesamt",
         value: "Wert",
         price: "Preis",
         latest: "Letzer Preis",
@@ -353,5 +381,20 @@ module.exports = {
         core_rate: "Kernrate:",
         supply: "Verfügbarkeit",
         search: "Suche"
+    },
+    wallet: {
+        title: "Geldbörse",
+        confirm: "Passwort bestätigen",
+        password: "Passwort"
+    },
+    borrow: {
+        title: "Kollateral Position für %(asset_symbol)s",
+        no_valid: "Kein Gültiger Feed Preis für %(asset_symbol)s",
+        coll_ratio: "Kollateral Ratio",
+        adjust: "Position anpassen",
+        errors: {
+            below: "Kollateral Ratio unter Aufrechterhaltungslevel",
+            collateral: "Unzureichendes Kollateral"
+        }
     }
 };
