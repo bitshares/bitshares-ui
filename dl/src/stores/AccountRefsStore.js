@@ -43,9 +43,12 @@ class AccountRefsStore extends BaseStore {
         PrivateKeyStore.getState().keys.keySeq().forEach( pubkey => {
             if(no_account_refs.has(pubkey)) return
             var refs = ChainStore.getAccountRefsOfKey(pubkey)
-            if(refs === null) no_account_refs = no_account_refs.add(pubkey)
-            else if(refs === undefined) {
+            if(refs === undefined) {
                 // this.setState({loading_account_refs: true})
+                return
+            }
+            if( ! refs.size) {
+                no_account_refs = no_account_refs.add(pubkey)
                 return
             }
             account_refs = account_refs.add(refs.valueSeq())
@@ -61,7 +64,6 @@ class AccountRefsStore extends BaseStore {
     }
     
     onAddPrivateKey({private_key_object}) {
-        console.log("add")
         if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
             this.chainStoreUpdate()
     }
@@ -77,7 +79,7 @@ function loadNoAccountRefs() {
 
 function saveNoAccountRefs(no_account_refs) {
     var array = []
-    for(let pubkey of this.no_account_refs) array.push(pubkey)
-    iDB.root.setProperty("no_account_refs", pubkey)
+    for(let pubkey of no_account_refs) array.push(pubkey)
+    iDB.root.setProperty("no_account_refs", array)
         .catch( error => console.error(error) )
 }

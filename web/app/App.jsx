@@ -79,7 +79,7 @@ class App extends React.Component {
         // TransactionConfirmStore.unlisten(this._onTransactionConfirm);
     }
 
-    componentDidMount() {
+    componentDidMount() { try {
         NotificationStore.listen(this._onNotificationChange.bind(this));
         // TransactionConfirmStore.listen(this._onTransactionConfirm.bind(this));
 
@@ -104,7 +104,7 @@ class App extends React.Component {
         ChainStore.init().then(() => {
             this.setState({synced: true});
         });
-    }
+    } catch(e) { console.error(e) }}
 
     /** Usage: NotificationActions.[success,error,warning,info] */
     _onNotificationChange() {
@@ -170,7 +170,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
         return Promise.all([db]).then(() => {
             console.log("db init done");
             return Promise.all([
-                PrivateKeyActions.loadDbData(),
+                PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
                     if (!WalletDb.getWallet() && transition.path !== "/create-account") {
                         transition.redirect("/create-account");
@@ -182,8 +182,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
                 }).catch((error) => {
                     console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
                 }),
-                WalletManagerStore.init(),
-                AccountRefsStore.loadDbData()
+                WalletManagerStore.init()
             ]).then(()=> {
                 callback();
             })

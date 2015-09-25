@@ -187,40 +187,6 @@ class AccountStore extends BaseStore {
             });
         });
     }
-    
-    // onNewPrivateKeys() {
-    //     this.setState({accountsByKeyLoading: true})
-    //     PrivateKeyStore.getState().keys.forEach( key => {
-    //         ChainStore.getAccountRefsOfKey(key.pubkey)
-    //     })
-    // }
-    
-    // TODO move to worker thread
-    // chainStoreUpdate_accountsByKey() {
-    //     if(this.previous_account_ids_by_key === ChainStore.account_ids_by_key ||
-    //         this.previous_objects_by_id === ChainStore.objects_by_id)
-    //         return
-    //     
-    //     this.setState({accountsByKeyLoading: false})
-    //     this.previous_account_ids_by_key = ChainStore.account_ids_by_key
-    //     this.previous_objects_by_id = ChainStore.objects_by_id
-    //     var refAccounts = this.state.refAccounts
-    //     PrivateKeyStore.getState().keys.forEach( key => {
-    //         if(ChainStore.getAccountRefsOfKey(key.pubkey) === undefined)
-    //             this.setState({accountsByKeyLoading: true})
-    //     })
-    //     for(let acccount_id_set of ChainStore.account_ids_by_key.values()) {
-    //         acccount_id_set.forEach( account_id => {
-    //             var account = ChainStore.getAccount(account_id)
-    //             if(account === undefined)
-    //                 this.setState({accountsByKeyLoading: true})
-    //             if( ! account) return
-    //             if( refAccounts.has(account.name)) return
-    //             refAccounts = refAccounts.set(account.name, account)
-    //             this.setState({refAccounts})
-    //         })
-    //     }
-    // }
 
 }
 

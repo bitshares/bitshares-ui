@@ -248,7 +248,7 @@ class ChainStore
     *  @param the public key to find accounts that reference it
     *
     *  @return Set of account ids that reference the given key
-    *  @return null if no accounts reference the given key
+    *  @return a empty Set if no items are found
     *  @return undefined if the result is unknown
     *
     *  If this method returns undefined, then it will send a request to
