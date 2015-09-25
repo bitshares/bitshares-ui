@@ -158,8 +158,6 @@ class Auth extends React.Component {
     render() {return null; }
 }
 
-console.log("App:", App);
-
 App.willTransitionTo = (transition, params, query, callback) => {
     //if (transition.path.indexOf("/auth/") === 0) {
     //}

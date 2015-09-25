@@ -21,6 +21,10 @@ a {
   transition: all 0.3s ease 0s;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
 // border is needed when centering
 // input[type="file"] did not work
 input[type="file"] {
@@ -105,6 +109,10 @@ button, .button {
     background: none;
     border: 1px solid #555;
   }
+}
+
+td > button, td > .button {
+  margin-left: 0;
 }
 
 .notification {

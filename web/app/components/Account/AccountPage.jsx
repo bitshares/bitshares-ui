@@ -28,6 +28,7 @@ class AccountPage extends React.Component {
     }
 
     render() {
+        let isMyAccount = AccountStore.isMyAccount(this.props.account);
         return (
             <div className="grid-block page-layout">
                 <div className="show-for-medium grid-block medium-2 left-column no-padding">
@@ -41,7 +42,7 @@ class AccountPage extends React.Component {
                                 return AccountStore.getState().myAccounts;
                             }
                         }}>
-                        <AccountLeftPanel account={this.props.account}/>
+                        <AccountLeftPanel account={this.props.account} isMyAccount={isMyAccount}/>
                     </AltContainer>
                 </div>
                 <div className="grid-block small-12 medium-10 main-content">
@@ -65,7 +66,7 @@ class AccountPage extends React.Component {
                             }
                           }}
                         >
-                        <RouteHandler account={this.props.account}/>
+                        <RouteHandler account={this.props.account} isMyAccount={isMyAccount}/>
                     </AltContainer>
                 </div>
             </div>

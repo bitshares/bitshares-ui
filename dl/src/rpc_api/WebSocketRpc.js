@@ -34,8 +34,7 @@ class WebSocketRpc {
     }
 
     call(params) {
-//        if(NODE_DEBUG)
-            console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
+        //console.log("[websocketrpc] ----- call -----> id:",this.current_callback_id+1, params);
         this.current_callback_id += 1;
         var self = this;
 

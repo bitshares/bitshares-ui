@@ -13,7 +13,6 @@ class Statistics extends React.Component {
 
     render() {
         let stat_object = this.props.stat_object.toJS();
-        console.log("-- Statistics.render -->", stat_object);
         return (
             <table className="table striped">
                 <tr>

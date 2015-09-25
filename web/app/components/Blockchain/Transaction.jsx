@@ -773,7 +773,7 @@ class Transaction extends React.Component {
         });
 
         return (
-            <div className="grid-content">
+            <div>
             {/*     <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5> */ }
                 {info}
             </div>

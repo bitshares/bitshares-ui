@@ -43,18 +43,11 @@ class AccountLeftPanel extends React.Component {
         AccountActions.unlinkAccount(this.props.account.get("name"));
     }
 
-    onUpgradeAccount(id, e) {
-        e.preventDefault();
-        AccountActions.upgradeAccount(id);
-    }
-
     render() {
-        let {account, linkedAccounts} = this.props;
+        let {account, linkedAccounts, isMyAccount} = this.props;
         let account_name = account.get("name");
-
-        let is_my_account = AccountStore.isMyAccount(account);
         let linkBtn = null;
-        if (!is_my_account) {
+        if (!isMyAccount) {
             linkBtn = linkedAccounts.has(account_name) ?
                 <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
                     content="account.unlink"/></a> :
@@ -62,7 +55,6 @@ class AccountLeftPanel extends React.Component {
                     content="account.link"/></a>;
         }
         let settings       = counterpart.translate("header.settings");
-
         return (
             <div className="grid-block vertical account-left-panel no-padding no-overflow">
                 <div className="grid-block">
@@ -73,14 +65,7 @@ class AccountLeftPanel extends React.Component {
                             />
 
                         <div className="regular-padding">
-                            <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={is_my_account}/>
-                            {linkedAccounts.has(account_name) && account.lifetime_referrer !== account.id ?
-                                (<div className="grid-container" style={{marginBottom: "1rem"}}>
-                                    <a href className="button outline block-button" onClick={this.onUpgradeAccount.bind(this, account.id)}><Translate
-                                        content="account.upgrade"/></a>
-                                </div>)
-                                : null
-                            }
+                            <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={isMyAccount}/>
                             <div className="grid-container no-margin">
                                 { linkBtn }
                                 <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay"/></Link>
@@ -99,7 +84,7 @@ class AccountLeftPanel extends React.Component {
                         </section>
                     </div>
                 </div>
-                {is_my_account ?
+                {isMyAccount ?
                 <div className="grid-block shrink bottom">
                     <div className="center">
                         <Link to="create-account"><span data-tip="Create New Account" data-place="top"><Icon name="plus-circle"/></span></Link>

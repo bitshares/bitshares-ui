@@ -93,7 +93,7 @@ class AccountActions {
      *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions, the account should already
      *  be linked.  
      */
-    upgradeAccount(account_id) {
+    upgradeAccount(account_id, lifetime) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_upgrade", {
             "fee": {
@@ -101,7 +101,7 @@ class AccountActions {
                 asset_id: 0
             },
             "account_to_upgrade": account_id,
-            "upgrade_to_lifetime_member": true
+            "upgrade_to_lifetime_member": lifetime
         });
         return WalletDb.process_transaction(tr, null, true);
     }
