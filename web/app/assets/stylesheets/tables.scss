@@ -26,6 +26,7 @@
 
 .key-value-table {
   tr > td:first-child {
+    padding-left: 0 !important;
     font-family: 'Roboto-Light', arial, sans-serif;
   }
   tr > td:last-child {
