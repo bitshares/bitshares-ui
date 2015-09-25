@@ -7,7 +7,8 @@ export default class AccountSelect extends React.Component {
         account_names: React.PropTypes.array,
         list_size: React.PropTypes.number,
         onChange: React.PropTypes.func,
-        placeholder: React.PropTypes.string
+        placeholder: React.PropTypes.string,
+        center: React.PropTypes.bool
         //defaultAccount: React.PropTypes.string
     }
     
@@ -54,6 +55,7 @@ export default class AccountSelect extends React.Component {
                 defaultValue={selected_account}
                 className="form-control account-select"
                 onChange={this._onAccountChange.bind(this)}
+                style={this.props.center?{margin: '0 auto'}:null}
             >
                 {placeholder}
                 {account_names

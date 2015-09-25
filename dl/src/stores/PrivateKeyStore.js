@@ -10,6 +10,7 @@ import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 
 import hash from "common/hash"
+import key from "common/key_utils"
 
 /** No need to wait on the promises returned by this store as long as
     this.state.catastrophic_error == false and
@@ -46,7 +47,8 @@ class PrivateKeyStore extends BaseStore {
     }
     
     getPubkeys() {
-        return this.state.keys.valueSeq().map( value => value.pubkey).toArray()
+        console.log("getPubkeys", this.state.keys.keySeq().toArray())
+        return this.state.keys.keySeq().toArray()
     }
     
     getPubkeys_having_PrivateKey(pubkeys, addys = null) {
@@ -190,15 +192,7 @@ function loadAddyMap() {
 }
 
 function updateAddressMap(addresses, pubkey) {
-    var public_key = PublicKey.fromPublicKeyString(pubkey)
-    var address_strings = [
-        //legacy formats
-        Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
-        Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
-        Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
-        Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
-        public_key.toAddressString() //bts_short, most recent format
-    ]
+    var address_strings = key.addresses(pubkey)
     for(let address of address_strings) {
         addresses.set(address, pubkey)
     }

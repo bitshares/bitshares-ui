@@ -140,7 +140,10 @@ class WalletActions {
         //return db.exec("get_key_references", public_keyaddress_params).then( result => {
     }
     
-    importBalance( account_name_or_id, wifs_to_balances, broadcast, private_key_tcombs) {
+    /** @parm balances is an array of balance objects with two
+        additional values: {vested_balance, public_key_string}
+    */
+    importBalance( account_name_or_id, balances, broadcast) {
         return new Promise((resolve, reject) => {
             
             var db = api.db_api()
@@ -158,39 +161,38 @@ class WalletActions {
                 
                 var balance_claims = []
                 var signer_pubkeys = {}
-                for(let wif of Object.keys(wifs_to_balances)) {
-                    var {balances, public_key_string} = wifs_to_balances[wif]
-                    for(let {chain_balance_record, vested_balance} of balances) {
-                        //DEBUG console.log('... balance',b)
-                        var total_claimed
-                        if( vested_balance ) {
-                            if(vested_balance.amount == 0)
-                                // recently claimed 
-                                continue
-                            
-                            total_claimed = vested_balance.amount
-                        } else
-                            total_claimed = chain_balance_record.balance.amount
+                for(let balance of balances) {
+                    var {vested_balance, public_key_string} = balance
+                    
+                    //DEBUG console.log('... balance',b)
+                    var total_claimed
+                    if( vested_balance ) {
+                        if(vested_balance.amount == 0)
+                            // recently claimed 
+                            continue
                         
-                        //assert
-                        if(vested_balance && vested_balance.asset_id != chain_balance_record.balance.asset_id)
-                            throw new Error("Vested balance record and balance record asset_id missmatch",
-                                vested_balance.asset_id,
-                                chain_balance_record.balance.asset_id
-                            )
-                        
-                        signer_pubkeys[public_key_string] = true
-                        balance_claims.push({
-                            fee: { amount: "0", asset_id: "1.3.0"},
-                            deposit_to_account: account,
-                            balance_to_claim: chain_balance_record.id,
-                            balance_owner_key: public_key_string,
-                            total_claimed: {
-                                amount: total_claimed,
-                                asset_id: chain_balance_record.balance.asset_id
-                            }
-                        })
-                    }
+                        total_claimed = vested_balance.amount
+                    } else
+                        total_claimed = balance.balance.amount
+                    
+                    //assert
+                    if(vested_balance && vested_balance.asset_id != balance.balance.asset_id)
+                        throw new Error("Vested balance record and balance record asset_id missmatch",
+                            vested_balance.asset_id,
+                            balance.balance.asset_id
+                        )
+                    
+                    signer_pubkeys[public_key_string] = true
+                    balance_claims.push({
+                        fee: { amount: "0", asset_id: "1.3.0"},
+                        deposit_to_account: account,
+                        balance_to_claim: balance.id,
+                        balance_owner_key: public_key_string,
+                        total_claimed: {
+                            amount: total_claimed,
+                            asset_id: balance.balance.asset_id
+                        }
+                    })
                 }
                 if( ! balance_claims.length) {
                     throw new Error("No balances to claim")

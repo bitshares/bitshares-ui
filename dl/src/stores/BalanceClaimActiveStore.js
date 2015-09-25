@@ -2,6 +2,7 @@ import alt from "alt-instance"
 import Immutable from "immutable"
 import Address from "ecc/address"
 import PublicKey from "ecc/key_public"
+import key from "common/key_utils"
 import BaseStore from "stores/BaseStore"
 import Apis from "rpc_api/ApiInstances"
 import iDB from "idb-instance"
@@ -17,7 +18,8 @@ class BalanceClaimActiveStore extends BaseStore {
         this._export("clearCache")
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
-            onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims
+            onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims,
+            onClaimAccountChange: BalanceClaimActiveActions.claimAccountChange
         })
     }
     
@@ -25,8 +27,9 @@ class BalanceClaimActiveStore extends BaseStore {
         this.state = {
             balances: new Immutable.List(),
             selected_balances: Immutable.Seq(),
-            address_to_pubkey: new Map(),
-            loading: undefined
+            claim_account_name: undefined,
+            address_to_pubkey: new Map()
+            // loading: undefined
         }
         this.no_balance_address = new Set()
         this.addresses = new Set()
@@ -53,6 +56,10 @@ class BalanceClaimActiveStore extends BaseStore {
         this.setState({selected_balances})
     }
     
+    onClaimAccountChange(claim_account_name) {
+        this.setState({claim_account_name})
+    }
+    
     loadNoBalanceAddresses() {
         if(this.no_balance_address.size) return Promise.resolve()
         return iDB.root.getProperty("no_balance_address", [])
@@ -63,14 +70,7 @@ class BalanceClaimActiveStore extends BaseStore {
     }
     
     indexPubkey(pubkey) {
-        var public_key = PublicKey.fromPublicKeyString(pubkey)
-        for(let address_string of [
-            Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
-            Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
-            Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
-            Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
-            public_key.toAddressString() //bts_short, most recent format
-        ]) {
+        for(let address_string of key.addresses(pubkey)) {
             if( ! this.no_balance_address.has(address_string)) {
                 this.state.address_to_pubkey.set(address_string, pubkey)
                 this.setState({address_to_pubkey: this.state.address_to_pubkey})

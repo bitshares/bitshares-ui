@@ -57,7 +57,7 @@ import ChainStore from "api/ChainStore";
 import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
-import BalanceClaim from "components/Wallet/BalanceClaim"
+import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
 import Brainkey from "components/Wallet/Brainkey"
 import AccountRefsStore from "stores/AccountRefsStore"
 
@@ -236,7 +236,7 @@ let routes = (
             <Route name="welcome-import-backup" path="import-backup" handler={BackupRestore}/>
             <Route name="welcome-import-keys" path="import-keys" handler={ImportKeys}/>
             <Route name="welcome-brainkey" path="brainkey" handler={Brainkey}/>
-            <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaim}/>
+            <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaimActive}/>
         </Route>
         
         <Route name="account" path="/account/:account_name" handler={AccountPage}>

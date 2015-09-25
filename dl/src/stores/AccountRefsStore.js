@@ -12,10 +12,8 @@ class AccountRefsStore extends BaseStore {
         super()
         this._export("loadDbData", "reset")
         this.state = this._getInitialState()
+        this.bindListeners({ onAddPrivateKey: PrivateKeyActions.addKey })
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
-        this.bindListeners({
-            onAddPrivateKey: PrivateKeyActions.addKey
-        })
     }
     
     _getInitialState() {
@@ -29,7 +27,7 @@ class AccountRefsStore extends BaseStore {
     
     loadDbData() {
         return loadNoAccountRefs()
-            .then( no_balance_address => this.no_balance_address = no_balance_address)
+            .then( no_account_refs => this.no_account_refs = no_account_refs )
             .then( ()=> this.chainStoreUpdate() )
     }
 
@@ -73,7 +71,7 @@ module.exports = alt.createStore(AccountRefsStore, "AccountRefsStore")
 
 function loadNoAccountRefs() {
     return iDB.root.getProperty("no_account_refs", [])
-        .then( array => new Set(array) )
+        .then( array => Immutable.Set(array) )
 }
 
 function saveNoAccountRefs(no_account_refs) {

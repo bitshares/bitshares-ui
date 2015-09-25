@@ -26,13 +26,14 @@ export default class BalanceClaimSelector extends Component {
     
     _getInitialState() {
         return {
-            checked: new Immutable.Map()
+            checked: Immutable.Map()
         }
     }
     
-    // reset() {
-    //     this.setState(this._getInitialState())
-    // }
+    componentWillReceiveProps(nextProps) {
+        if(! this.state.checked.size && nextProps.claim_account_name)
+            this.onClaimAccountChange(nextProps.claim_account_name)
+    }
     
     static getStores() {
         return [BalanceClaimActiveStore]
@@ -40,24 +41,23 @@ export default class BalanceClaimSelector extends Component {
     
     static getPropsFromStores() {
         var props = BalanceClaimActiveStore.getState()
-        
-        return props
-    }
-    
-    render() {
-        if( ! this.props.balances.size) return <div></div>
+        var { balances, address_to_pubkey } = props
         var private_keys = PrivateKeyStore.getState().keys
-        var total_by_account_asset = this.props.balances
+        props.total_by_account_asset = balances
             .groupBy( v => {
+                // K E Y S
                 var names = ""
-                var pubkey = this.props.address_to_pubkey.get(v.owner)
+                var pubkey = address_to_pubkey.get(v.owner)
                 var private_key_object = private_keys.get(pubkey)
                 if(private_key_object && private_key_object.import_account_names)
+                    // Imported Account Names (just a visual aid, helps to auto select a real account)
                     names = private_key_object.import_account_names.join(', ')
                 var name_asset_key = Immutable.List([names, v.balance.asset_id])
                 return name_asset_key
             })
             .map( l => l.reduce( (r,v) => {
+                // V A L U E S
+                v.public_key_string = address_to_pubkey.get(v.owner)
                 r.balances = r.balances.add(v)
                 if(v.vested_balance != undefined) {
                     r.vesting.unclaimed += Number(v.vested_balance.amount)
@@ -68,6 +68,11 @@ export default class BalanceClaimSelector extends Component {
                 return r
             }, {unclaimed:0, vesting: {unclaimed:0, total:0}, balances: Immutable.Set() }))
             .sortBy( k => k )
+        return props
+    }
+    
+    render() {
+        if( ! this.props.total_by_account_asset.size) return <div></div>
         var index = -1
         return <div>
             <table className="table">
@@ -79,7 +84,7 @@ export default class BalanceClaimSelector extends Component {
                     <th style={{textAlign: "center"}}>Account</th>
                 </tr></thead>
                 <tbody>
-                {total_by_account_asset.map( (r, name_asset) =>
+                {this.props.total_by_account_asset.map( (r, name_asset) =>
                     <tr key={++index}>
                         <td>
                             <input type="checkbox"
@@ -121,8 +126,30 @@ export default class BalanceClaimSelector extends Component {
             checked = checked.set(index, balances)
         
         this.setState({checked})
+        this.updateSelectedBalanceClaims(checked)
+    }
+    
+    onClaimAccountChange(claim_account_name) {
+        // A U T O  S E L E C T  A C C O U N T S
+        // only if nothing is selected (play it safe)
+        if(this.state.checked.size) return
+        var checked = Immutable.Map()
+        var index = -1
+        this.props.total_by_account_asset.forEach( (v,k) => {
+            index++
+            var name = k.get(0)
+            if(name === claim_account_name) {
+                if(v.unclaimed || v.vesting.unclaimed)
+                    checked = checked.set(index, v.balances)
+            }
+        })
+        this.setState({checked})
+        this.updateSelectedBalanceClaims(checked)
+    }
+    
+    updateSelectedBalanceClaims(checked) {
         BalanceClaimActiveActions.setSelectedBalanceClaims(
-            checked.valueSeq().flatten())
+            checked.valueSeq().flatten().toSet())
     }
     
 }

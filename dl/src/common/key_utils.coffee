@@ -1,5 +1,7 @@
 
 PrivateKey = require '../ecc/key_private'
+PublicKey = require '../ecc/key_public'
+Address = require '../ecc/address'
 Aes = require '../ecc/aes'
 
 hash = require './hash'
@@ -172,3 +174,20 @@ module.exports = key =
             (new Date()).toString()
         # DEBUG console.log('... entropyStr',entropyStr)
         entropyStr
+
+    # @return array of 5 legacy addresses for a pubkey string parameter.
+    addresses: (pubkey) ->
+        addresses = address_cache[pubkey]
+        return addresses if addresses
+        public_key = PublicKey.fromPublicKeyString(pubkey)
+        address_string = [# S L O W
+            Address.fromPublic(public_key, false, 0).toString(), # btc_uncompressed
+            Address.fromPublic(public_key, true, 0).toString(),  # btc_compressed
+            Address.fromPublic(public_key, false, 56).toString(),# pts_uncompressed
+            Address.fromPublic(public_key, true, 56).toString(), # pts_compressed
+            public_key.toAddressString() # bts_short, most recent format
+        ]
+        address_cache[pubkey] = address_string
+        address_string
+
+address_cache = {}

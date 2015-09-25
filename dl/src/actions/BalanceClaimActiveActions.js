@@ -9,6 +9,10 @@ class BalanceClaimActiveActions {
     setSelectedBalanceClaims(selected_balances) {
         this.dispatch(selected_balances)
     }
+    
+    claimAccountChange(claim_account_name) {
+        this.dispatch(claim_account_name)
+    }
 
 }
 
