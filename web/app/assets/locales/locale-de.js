@@ -122,7 +122,6 @@ module.exports = {
         from: "Von",
         amount: "Betrag",
         to: "Zu",
-        to: "An",
         memo: "Memo",
         fee: "Gebühr",
         send: "Senden",
@@ -140,7 +139,6 @@ module.exports = {
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
         see: "ÜBERWEISUNGSÜBERSICHT",
-        see: "MEINE TRANSAKTIONEN ANZEIGEN",
         close: "SCHLIEßEN"
     },
     transaction: {
