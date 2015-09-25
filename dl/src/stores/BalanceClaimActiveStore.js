@@ -27,7 +27,7 @@ class BalanceClaimActiveStore extends BaseStore {
     
     chainStoreUpdate() {
         if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
-            console.log("ChainStore.balance_objects_by_address",
+            console.log("ChainStore.balance_objects_by_address")
             this.balance_objects_by_address = ChainStore.balance_objects_by_address
         }
     }
@@ -37,8 +37,8 @@ class BalanceClaimActiveStore extends BaseStore {
             balances: new Immutable.List(),
             selected_balances: Immutable.Seq(),
             claim_account_name: undefined,
-            address_to_pubkey: new Map()
-            // loading: undefined
+            address_to_pubkey: new Map(),
+            loading: true
         }
         this.no_balance_address = new Set()
         this.addresses = new Set()

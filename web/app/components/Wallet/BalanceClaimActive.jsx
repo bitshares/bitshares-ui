@@ -1,6 +1,5 @@
 import WalletDb from "stores/WalletDb";
 import FormattedAsset from "components/Utility/FormattedAsset";
-import LoadingIndicator from "components/LoadingIndicator";
 import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect";
 import lookup from "chain/lookup";
 import v from "chain/serializer_validation";
@@ -12,6 +11,7 @@ import Immutable from "immutable"
 import alt from "alt-instance"
 import React, {Component, PropTypes} from "react";
 import connectToStores from "alt/utils/connectToStores"
+import LoadingIndicator from "components/LoadingIndicator";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import AccountRefsStore from "stores/AccountRefsStore"
@@ -44,7 +44,6 @@ export default class BalanceClaimActive extends Component {
     }
     
     static getPropsFromStores() {
-        console.log("bca props");
         var props = BalanceClaimActiveStore.getState()
         props.account_refs = AccountRefsStore.getState().account_refs
         return props
@@ -61,10 +60,17 @@ export default class BalanceClaimActive extends Component {
     }
     
     render() {
+        if( this.props.loading) return <div className="center-content">
+            <p></p>
+            <h5>Loading balance claims&hellip;</h5>
+            <LoadingIndicator type="circle"/>
+        </div>
+        
         if( ! this.props.balances.size) return <div>
             <hr/>
-            <h4>No Balances</h4>
+            <h5>No Balances</h5>
         </div>
+        
         var import_ready = this.props.selected_balances.size && this.props.claim_account_name
         var claim_balance_label = import_ready ?
                 `Claim Balance to account: ${this.props.claim_account_name}` :
@@ -77,14 +83,10 @@ export default class BalanceClaimActive extends Component {
                 </div>
                 <div className="grid-block vertical">
                     <div className="grid-content">
-                        <div className="full-width-content center-content">{/* TODO fix center */}
+                        <div className="full-width-content center-content">
                             <MyAccounts accounts={Immutable.List(this.props.account_refs)}
                                 onChange={this.onClaimAccountChange.bind(this)}/>
-                        </div>{/*{
-                        this.props.my_accounts_loading ||
-                        this.props.balances_loading ||
-                        import_keys_loading ? 
-                        <LoadingIndicator type="circle"/> : <div/>}*/}
+                        </div>
                         <br></br>
                         <div>
                             <div className={ cname("button success", {disabled: !import_ready}) }
