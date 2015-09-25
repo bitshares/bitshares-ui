@@ -150,7 +150,7 @@ class AccountMemberStats extends React.Component {
 
 
                 </div>
-                <div className="grid-content small-6">
+                <div className="small-6">
                    <h3>Fee Division</h3>
                    <p>
                    Every time <Link to="account" params={{account_name:account_name}}> {account_name} </Link> pays a transaction fee, that fee is divided among several different accounts.  The network takes

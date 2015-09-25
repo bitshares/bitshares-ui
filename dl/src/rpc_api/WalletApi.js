@@ -19,11 +19,8 @@ class WalletApi {
         this.application_api = new ApplicationApi()
     }
     
-    new_transaction(expire_minutes = 10) {
-        //var expire_minutes = 10
-        var tr = new ops.signed_transaction()
-        tr.set_expire_minutes(expire_minutes)
-        return tr
+    new_transaction() {
+        return new ops.signed_transaction()
     }
     
     sign_and_broadcast( tr, broadcast = true ) {

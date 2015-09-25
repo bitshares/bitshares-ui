@@ -129,44 +129,41 @@ class WalletDb {
         
         return WalletUnlockActions.unlock().then( () => {
             return tr.set_required_fees().then(()=> {
-                return tr.finalize().then(()=> {
-                    
-                    var signer_pubkeys_added = {}
-                    if(signer_pubkeys) {
-                        // Balance claims are by address, only the private
-                        // key holder can know about these additional 
-                        // potential keys.
-                        var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(signer_pubkeys)
-                        if( ! pubkeys.length)
-                            throw new Error("Missing signing key")
-                        
-                        for(let pubkey_string of pubkeys) {
-                            var private_key = this.getPrivateKey(pubkey_string)
-                            tr.add_signer(private_key, pubkey_string)
-                            signer_pubkeys_added[pubkey_string] = true
-                        }
+                var signer_pubkeys_added = {}
+                if(signer_pubkeys) {
+                    // Balance claims are by address, only the private
+                    // key holder can know about these additional
+                    // potential keys.
+                    var pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(signer_pubkeys)
+                    if( ! pubkeys.length)
+                        throw new Error("Missing signing key")
+
+                    for(let pubkey_string of pubkeys) {
+                        var private_key = this.getPrivateKey(pubkey_string)
+                        tr.add_signer(private_key, pubkey_string)
+                        signer_pubkeys_added[pubkey_string] = true
                     }
-                    
-                    return tr.get_potential_signatures().then( ({pubkeys, addys})=> {
-                        var my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(pubkeys, addys)
-                        
-                        //{//Testing only, don't send All public keys!
-                        //    var pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
-                        //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
-                        //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
-                        //    tr.get_required_signatures(my_pubkeys).then( required_pubkey_strings =>
-                        //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
-                        //}
-                        
-                        return tr.get_required_signatures(my_pubkeys).then( required_pubkeys => {
-                            for(let pubkey_string of required_pubkeys) {
-                                if(signer_pubkeys_added[pubkey_string]) continue
-                                var private_key = this.getPrivateKey(pubkey_string)
-                                if( ! private_key)
-                                    throw new Error("Missing signing key for " + pubkey_string)
-                                tr.add_signer(private_key, pubkey_string)
-                            }
-                        })
+                }
+
+                return tr.get_potential_signatures().then( ({pubkeys, addys})=> {
+                    var my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(pubkeys, addys)
+
+                    //{//Testing only, don't send All public keys!
+                    //    var pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
+                    //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
+                    //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
+                    //    tr.get_required_signatures(my_pubkeys).then( required_pubkey_strings =>
+                    //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
+                    //}
+
+                    return tr.get_required_signatures(my_pubkeys).then( required_pubkeys => {
+                        for(let pubkey_string of required_pubkeys) {
+                            if(signer_pubkeys_added[pubkey_string]) continue
+                            var private_key = this.getPrivateKey(pubkey_string)
+                            if( ! private_key)
+                                throw new Error("Missing signing key for " + pubkey_string)
+                            tr.add_signer(private_key, pubkey_string)
+                        }
                     })
                 }).then(()=> {
                     if(broadcast) {
