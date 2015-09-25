@@ -9,6 +9,7 @@ import iDB from "idb-instance"
 import config from "chain/config"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
+import ChainStore from "api/ChainStore"
 
 class BalanceClaimActiveStore extends BaseStore {
     
@@ -16,11 +17,19 @@ class BalanceClaimActiveStore extends BaseStore {
         super()
         this.clearCache()
         this._export("clearCache")
+        ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
             onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims,
             onClaimAccountChange: BalanceClaimActiveActions.claimAccountChange
         })
+    }
+    
+    chainStoreUpdate() {
+        if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
+            console.log("ChainStore.balance_objects_by_address",
+            this.balance_objects_by_address = ChainStore.balance_objects_by_address
+        }
     }
     
     clearCache() {
@@ -85,6 +94,7 @@ class BalanceClaimActiveStore extends BaseStore {
         var no_balance_address = new Set(this.no_balance_address)
         var no_bal_size = no_balance_address.size
         for(let addy of this.addresses) no_balance_address.add(addy)
+        // for(let addy of this.addresses) ChainStore.getBalanceObjects(addy) // Test with ChainStore
         return db.exec("get_balance_objects", [this.addresses]).then( result => {
             var balance_ids = []
             for(let balance of result) balance_ids.push(balance.id)
