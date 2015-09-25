@@ -5,7 +5,7 @@ import intlData from "../Utility/intlData";
 // import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
-import {FormattedDate, FormattedRelative} from "react-intl";
+import {FormattedDate, FormattedRelative,FormattedTime} from "react-intl";
 import Operation from "../Blockchain/Operation";
 import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
 require("../Blockchain/json-inspector.scss");
@@ -152,7 +152,7 @@ class Blocks extends React.Component {
                             <td><FormattedDate
                                 value={block.timestamp}
                                 formats={intlData.formats}
-                                format="short"
+                                format="time"
                             /></td>
                             <td><LinkToWitnessById witness={block.witness} /></td>
                             <td>{utils.format_number(block.transactions.length, 0)}</td>
@@ -166,11 +166,13 @@ class Blocks extends React.Component {
                 let opIndex = 0;
                 return trx.operations.map(op => {
                     return (
-                        <Operation
+                     <Operation
                             key={trxIndex++}
                             op={op}
                             result={trx.operation_results[opIndex++]}
                             block={trx.block_num}
+                            hideFee={true}
+                            hideOpLabel={true}
                             current={"1.2.0"}
                         />
                     );
@@ -287,9 +289,8 @@ class Blocks extends React.Component {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th><Translate content="explorer.block.op" /></th>
                                         <th><Translate content="account.votes.info" /></th>
-                                        <th><Translate content="explorer.block.date" /></th>
+                                        <th><Translate content="explorer.block.time" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
