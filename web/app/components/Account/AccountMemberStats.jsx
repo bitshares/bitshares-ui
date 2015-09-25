@@ -65,7 +65,9 @@ class AccountMemberStats extends React.Component {
            expiration = (<span>(<Translate content="account.member.expires"/> <TimeAgo time={account.membership_expiration_date} />)</span>)
         let expiration_date = account.membership_expiration_date;
         if( expiration_date === "1969-12-31T23:59:59" )
-           expiration_date = "None"
+           expiration_date = "Never"
+        else if( expiration_date === "1970-01-01T00:00:00" )
+           expiration_date = "N/A"
 
         return (
             <div className="grid-content">
