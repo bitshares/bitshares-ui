@@ -106,7 +106,7 @@ module.exports = function(options) {
         "react", "react-highcharts/stocks.js", "classnames", "react-router", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
         "whatwg-fetch", "alt", "react-json-inspector",
-        "immutable", "lzma", "bytebuffer_3.5.4.js", "intl", "lodash"
+        "immutable", "lzma", "bytebuffer_3.5.4.js", "lodash"
     ];
 
     return config;
