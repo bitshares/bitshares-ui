@@ -2,14 +2,12 @@ import BaseStore from "./BaseStore";
 import Immutable from "immutable";
 import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
-import {
-    Account
-}
-from "./tcomb_structs";
+import { Account } from "./tcomb_structs";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
 import validation from "common/validation"
 import ChainStore from "api/ChainStore"
+import AccountRefsStore from "stores/AccountRefsStore"
 
 /**
  *  This Store holds information about accounts in this wallet
@@ -33,6 +31,7 @@ class AccountStore extends BaseStore {
     }
     
     clearCache() {
+        this.initial_account_refs_load = true // true until all undefined accounts are found
         this.state = { update: false }
         this.state.currentAccount = null;
         this.state.linkedAccounts = Immutable.Set();
@@ -45,6 +44,24 @@ class AccountStore extends BaseStore {
             // console.log("Account chainStoreUpdate, notify listners");
             this.setState({update: false})
         }
+        this.addAccountRefs()
+    }
+    
+    addAccountRefs() {
+        //  Simply add them to the linkedAccounts list (no need to persist them)
+        var account_refs = AccountRefsStore.getState().account_refs
+        if(!this.initial_account_refs_load && this.account_refs === account_refs) return
+        var pending = false
+        account_refs.forEach( id => {
+            var account = ChainStore.getAccount(id)
+            if(account === undefined) {
+                pending = true
+                return
+            }
+            if(account != null) this.setState({
+                linkedAccounts: this.state.linkedAccounts.add(account.get("name")) })
+        })
+        if(!pending) this.initial_account_refs_load = false
     }
     
     getMyAccounts() {

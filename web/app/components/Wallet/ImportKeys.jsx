@@ -36,7 +36,7 @@ require("./ImportKeys.scss");
 var api = Apis.instance();
 var import_keys_assert_checking = false
 
-var TRACE = true
+var TRACE = false
 
 export default class ImportKeys extends Component {
     
@@ -517,31 +517,8 @@ export default class ImportKeys extends Component {
         var imported_keys_public = this.state.imported_keys_public
         var db = api.db_api()
         
-        if(TRACE) console.log('... ImportKeys._saveImport get_key_references START')
+        if(TRACE) console.log('... ImportKeys._saveImport START')
         ImportKeysActions.setStatus("saving")
-    
-        var addAccountPromise = db.exec("get_key_references",
-            [Object.keys(imported_keys_public)]).then(
-            results => {
-            var account_ids = {}
-            for(let result of results)
-                for(let account_id of result)
-                    account_ids[account_id] = true
-            
-            //results = chain_api.fetchObject(Object.keys(account_ids))
-            return db.exec("get_objects", [Object.keys(account_ids)]).then( results => {
-                var p = []
-                for(let account of results) {
-                    //DEBUG console.log('... get_key_references object lookup',account?account.name:null)
-                    if(account)
-                        p.push(AccountStore.onCreateAccount(account).catch( error => {
-                            console.log("ImportKeys save import account error",account,error)
-                        }))
-                }
-                if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
-                return Promise.all(p)
-            })
-        })
         
         var wifs_to_account = this.state.wifs_to_account
         var private_key_objs = []
@@ -579,12 +556,8 @@ export default class ImportKeys extends Component {
                 notify.success(message)
             
             if (import_count) {
-                addAccountPromise.then(()=> {
-                    ImportKeysActions.setStatus("saveDone")
-                    BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
-                    BalanceClaimActions.loadMyAccounts()
-                    this.onBack() // back to claim balances
-                })
+                ImportKeysActions.setStatus("saveDone")
+                this.onBack() // back to claim balances
             }
         }).catch( error => {
             ImportKeysActions.setStatus("saveError")
