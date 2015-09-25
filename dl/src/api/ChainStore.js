@@ -20,6 +20,7 @@ let order_prefix = "1." + limit_order + "."
 let balance_prefix = "2." + parseInt(impl_object_type.account_balance,10) + "."
 let account_stats_prefix = "2." + parseInt(impl_object_type.account_statistics,10) + "."
 let asset_dynamic_data_prefix = "2." + parseInt(impl_object_type.asset_dynamic_data,10) + "."
+let bitasset_data_prefix = "2." + parseInt(impl_object_type.asset_bitasset_data,10) + "."
 let vesting_balance_prefix = "1." + vesting_balance_type + "."
 let witness_prefix = "1." + witness_object_type + "."
 let worker_prefix = "1." + worker_object_type + "."
@@ -931,6 +932,20 @@ class ChainStore
          let dynamic = current.get( 'dynamic' );
          if( !dynamic )
             this.getObject( object.dynamic_asset_data_id );
+         let bitasset = current.get( 'bitasset' );
+         if( !bitasset && object.bitasset_data_id ) {
+            let bad = this.getObject( object.bitasset_data_id );
+            if( !bad ) 
+               bad = Immutable.Map()
+
+            if( !bad.get( 'asset_id' ) ) {
+               bad = bad.set( 'asset_id', object.id );
+            }
+            this.objects_by_id = this.objects_by_id.set( object.bitasset_data_id, bad );
+
+            current = current.set( 'bitasset', bad );
+            this.objects_by_id = this.objects_by_id.set( object.id, current );
+         }
       }
       else if( object.id.substring(0,asset_dynamic_data_prefix.length) == asset_dynamic_data_prefix )
       {
@@ -943,6 +958,17 @@ class ChainStore
       {
         this.objects_by_vote_id.set( object.vote_for, object.id );
         this.objects_by_vote_id.set( object.vote_against, object.id );
+      }
+      else if( object.id.substring(0,bitasset_data_prefix.length) == bitasset_data_prefix )
+      {
+          let asset_id = current.get( "asset_id" );
+          if( asset_id ) {
+             let asset = this.getObject( asset_id );
+             if( asset ) {
+                asset = asset.set( "bitasset", current );
+                this.objects_by_id = this.objects_by_id.set( asset_id, asset );
+             }
+          }
       }
 
       if( notify_subscribers )
