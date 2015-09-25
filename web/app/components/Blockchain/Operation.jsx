@@ -69,7 +69,8 @@ class Operation extends React.Component {
         current: "",
         block: false,
         hideDate: false,
-        hideFee: false
+        hideFee: false,
+        hideOpLabel: false
     }
 
     static propTypes = {
@@ -448,8 +449,6 @@ class Operation extends React.Component {
                     <span>
                         {this.linkToAccount(op[1].publisher)}&nbsp;
                         <Translate component="span" content="transaction.publish_feed" />
-                        &nbsp;{this.linkToAsset(op[1].asset_id)}
-                        &nbsp;<Translate component="span" content="transaction.at" />
                         &nbsp;<FormattedPrice
                             base_asset={op[1].feed.settlement_price.base.asset_id}
                             quote_asset={op[1].feed.settlement_price.quote.asset_id}

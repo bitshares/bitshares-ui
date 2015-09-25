@@ -16,6 +16,11 @@ module.exports = {
                 day: "numeric",
                 month: "numeric",
                 year: "numeric"
+            },
+            time: {
+                second: "numeric",
+                minute: "numeric",
+                hour: "numeric"
             }
         }
     }
