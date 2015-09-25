@@ -64,7 +64,11 @@ input[type="file"] {
 }
 
 .monospace {
-    font-family: "Courier New", Courier, monospace
+  font-family: "Courier New", Courier, monospace
+}
+
+.flex-start {
+  align-items: flex-start;
 }
 
 label, label > span {

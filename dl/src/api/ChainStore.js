@@ -146,13 +146,14 @@ class ChainStore
 
    notifySubscribers()
    {
-      if( !this.dispatched ) {
-         this.dispatched = true;
-         setTimeout( ()=>{
-          this.dispatched = false;
-          this.subscribers.forEach( (callback) => { callback() } )
-         }, 100 );
-      }
+      this.subscribers.forEach( (callback) => { callback() } )
+      //if( !this.dispatched ) {
+      //   this.dispatched = true;
+      //   setTimeout( ()=>{
+      //    this.dispatched = false;
+      //    this.subscribers.forEach( (callback) => { callback() } )
+      //   }, 100 );
+      //}
    }
 
    /**
