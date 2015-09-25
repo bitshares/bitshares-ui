@@ -29,7 +29,8 @@ body {
 }
 
 hr {
-  border-color: $light-panel-bg-color;
+  border-color: $dark-text-color;
+  background-color: $dark-text-color !important;
 }
 
 a {
