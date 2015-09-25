@@ -22,7 +22,7 @@ class Explorer extends React.Component {
     render() {
 
         return (
-            <div className="grid-block page-layout" style={{alignItems: "flex-start"}}>
+            <div className="grid-block page-layout flex-start">
                 <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-3">
                         <ExplorerCard>
                             <Link to="blocks">

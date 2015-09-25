@@ -161,9 +161,8 @@ class Auth extends React.Component {
 console.log("App:", App);
 
 App.willTransitionTo = (transition, params, query, callback) => {
-    console.log( "here: ", transition );
-    if (transition.path.indexOf("/auth/") === 0) {
-    }
+    //if (transition.path.indexOf("/auth/") === 0) {
+    //}
     //API is used to read the chain_id .. The chain_id defines the database name
     Apis.instance().init_promise.then(() => {
         

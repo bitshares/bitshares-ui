@@ -88,7 +88,9 @@ class WitnessList extends React.Component {
         if (witnesses.size > 0) {
             itemRows = witnesses
                 .filter(a => {
-                    return witness_id_to_name.get(a.id).indexOf(this.props.filter) !== -1;
+                    let name = witness_id_to_name.get(a.id);
+                    if(!name) return false;
+                    return name.indexOf(this.props.filter) !== -1;
                 })
                 .sort((a, b) => {
                     if (witness_id_to_name.get(a.id) > witness_id_to_name.get(b.id)) {

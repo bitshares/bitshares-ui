@@ -186,7 +186,7 @@ class Markets extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="grid-block small-7 medium-9" style={{overflowY: "auto", zIndex: 1, alignItems: "flex-start"}}>
+                <div className="grid-block small-7 medium-9 flex-start" style={{overflowY: "auto", zIndex: 1}}>
                     <div className="grid-block vertical">
                         <h2>My Preferred Markets:</h2>
                         <div className="small-12 medium-5">

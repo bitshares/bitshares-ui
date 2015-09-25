@@ -61,7 +61,7 @@ class TimeAgo extends React.Component {
             return null;
         }
         
-        if (typeof time === "string") {
+        if (typeof time === "string" && time.indexOf("+") === -1) {
             time += "+00:00";
         }
 
@@ -69,8 +69,6 @@ class TimeAgo extends React.Component {
 
         let timeAgo = <FormattedRelative value={time} />
         return React.createElement(component, {className: this.props.className}, timeAgo);
-        
-
     }
 }
 
