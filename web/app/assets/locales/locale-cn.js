@@ -257,7 +257,8 @@ module.exports = {
             witness_update: "更新见证人"
         },
         confirm: "请确认交易",
-        broadcast_success: "交易已向网络广播 and included into blockchain",
+        broadcast_success: "交易已向网络广播",
+        transaction_confirmed: "Transaction confirmed",
         broadcast_fail: "交易广播失败: %(message)s",
         balance_claim: "从余额ID #%(balance_id)s 中领取金额 %(balance_amount)s ",
         balance_owner: "余额所有者公钥",

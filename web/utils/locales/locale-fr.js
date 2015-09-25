@@ -236,7 +236,8 @@ module.exports = {
             override_transfer: "Forcing de transfert"
         },
         confirm: "Please confirm the transaction",
-        broadcast_success: "Transaction has been broadcast TODO: add 'and included into blockchain'",
+        broadcast_success: "Transaction has been broadcast",
+        transaction_confirmed: "Transaction confirmed",
         broadcast_fail: "Failed to broadcast the transaction: %(message)s",
         limit_order_sell: "Placed order #%(num)s to sell %(sell_amount)s at %(sell_price)s",
         short_order_cancel: "Cancelled short ",

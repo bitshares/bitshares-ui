@@ -11,7 +11,7 @@ class TransactionConfirmStore {
 
     getInitialState() {
         return {
-            transaction: true,
+            transaction: null,
             error: null,
             broadcasting: false,
             broadcast: false,

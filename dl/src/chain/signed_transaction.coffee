@@ -53,9 +53,9 @@ _my.signed_transaction = ->
         @operations.push [operation_id, operation_instance]
         return
     
-    set_expire_minutes:(min)->
+    set_expire_seconds:(sec)->
         throw new Error "already finalized" if @tr_buffer
-        @expiration = Math.round(Date.now()/1000) + (min*60)
+        @expiration = Math.round(Date.now()/1000) + sec
     
     set_required_fees:(asset_id)->
         throw new Error "already finalized" if @tr_buffer
@@ -81,9 +81,8 @@ _my.signed_transaction = ->
     finalize:()->
         new Promise (resolve, reject)=>
             throw new Error "already finalized" if @tr_buffer
-            if(@expiration == 0)
-                @expiration = Math.round(Date.now()/1000) + (chain_config.expire_in_secs)
-        
+            @expiration ||= Math.round(Date.now()/1000) + (chain_config.expire_in_secs)
+
             resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
                 @ref_block_num = r[0].head_block_number & 0xFFFF
                 @ref_block_prefix =  new Buffer(r[0].head_block_id, 'hex').readUInt32LE(4)
@@ -148,7 +147,7 @@ _my.signed_transaction = ->
     toObject:()->
         type.signed_transaction.toObject @
 
-    broadcast:(was_broadcast_callback)->
+    _broadcast:(was_broadcast_callback)->
         new Promise (resolve, reject)=>
             @sign() if not @signed
             throw new Error "not finalized" unless @tr_buffer
@@ -178,3 +177,10 @@ _my.signed_transaction = ->
                 )
                 return
             return
+
+    broadcast:(was_broadcast_callback)->
+        if (@tr_buffer)
+            return @_broadcast(was_broadcast_callback)
+        else
+            @finalize().then =>
+                @_broadcast(was_broadcast_callback)

@@ -145,7 +145,8 @@ module.exports = {
     },
     transaction: {
         confirm: "거래 확인",
-        broadcast_success: "거래가 처리되었습니다 TODO: add 'and included into blockchain'",
+        broadcast_success: "거래가 처리되었습니다",
+        transaction_confirmed: "Transaction confirmed",
         broadcast_fail: "거래를 처리할 수 없음: %(message)s",
         broadcasting: "처리중..",
         broadcasting_short: "처리중..",
