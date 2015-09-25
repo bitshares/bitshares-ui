@@ -277,7 +277,6 @@ class ChainStore
                 error => {
                   this.account_ids_by_key             = this.account_ids_by_key.delete( key )
                   this.get_account_refs_of_keys_calls = this.get_account_refs_of_keys_calls.delete(key)
-                  this.notifySubscribers()
                 })
          return undefined
       }
@@ -314,7 +313,6 @@ class ChainStore
                      },
                      error => {
                          this.balance_objects_by_address = this.balance_objects_by_address.delete( address )
-                         this.notifySubscribers()
                      } )
       }
       return this.balance_objects_by_address.get( address )
