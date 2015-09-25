@@ -73,6 +73,8 @@ class AccountPermissions extends React.Component {
 
     render() {
         let account = this.props.account.toJS();
+        console.log( "account.owner: ", account.owner );
+        console.log( "account.active: ", account.active );
 
         let all_accounts = [];
         let action_buttons_class = "button" + (this.isStateChanged() ? "" : " disabled");

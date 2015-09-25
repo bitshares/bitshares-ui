@@ -3,15 +3,31 @@ import {PropTypes} from "react";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
+import ChainStore from "api/ChainStore";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
 
+
+
+/**
+ *  Displays a permissions table and allows the user to make changes.
+ */
+@BindToChainState({keep_updating: true})
 class PermissionsTable extends React.Component {
 
-    constructor() {
-        super();
-        this.state = {add_mode: false};
+    static propTypes = {
+      authority: React.PropTypes.object, /// { items : [ ["name|key", weight], threshold: t }
+      onChange: React.PropTypes.func /// called any time authority changes
+    }
+
+    constructor( props ) {
+        super( props );
+        this.state = {
+          authority : props.authority
+        };
+
         this.onAdd = this.onAdd.bind(this);
-        this.onSave = this.onSave.bind(this);
-        this.onCancel = this.onCancel.bind(this);
+        this.onRemove = this.onRemove.bind(this);
         this.onThresholdChanged = this.onThresholdChanged.bind(this);
     }
 
@@ -19,33 +35,19 @@ class PermissionsTable extends React.Component {
         if(this.refs.select_account) this.refs.select_account.focus();
     }
 
-    onAdd(e) {
-        e.preventDefault();
-        this.setState({add_mode: true});
+    onAdd() {
+        let new_items = this.state.authority.items.slice(0);
+        new_items.push( ["",1] );
+        this.setState({ authority:{ items: new_items } });
     }
 
-    onCancel(e) {
-        e.preventDefault();
-        this.setState({add_mode: false});
-    }
-
-    onSave(e) {
-        e.preventDefault();
-        let name = this.refs.select_account.value();
-        if (!name) return;
-        let weight = React.findDOMNode(this.refs.weight).value;
-        if (!weight) return;
-        this.props.onAddRow(name, weight);
-        this.setState({add_mode: false});
-    }
-
-    onRemove(name, e) {
-        e.preventDefault();
-        this.props.onRemoveRow(name);
+    onRemove(row) {
+        let new_items = this.state.authority.items.slice(0);
+        new_items.splice(row,1);
+        this.setState({ authority:{ items: new_items } });
     }
 
     onThresholdChanged(e) {
-        let threshold = React.findDOMNode(this.refs.threshold).value;
         this.props.onThresholdChanged(threshold);
     }
 
@@ -54,7 +56,6 @@ class PermissionsTable extends React.Component {
         let rows = this.props.permissions.map(p => {
             return (
                 <tr key={p.name}>
-                    <td style={{width: cw[0]}}>{p.type === "account" ? <Icon name="user"/> : <Icon name="key"/>}</td>
                     <td style={{width: cw[1]}}>{p.name}</td>
                     <td style={{width: cw[2]}}>{p.weight}</td>
                     <td style={{width: cw[3]}}>
@@ -105,23 +106,5 @@ class PermissionsTable extends React.Component {
         );
     }
 }
-
-PermissionsTable.defaultProps = {
-    permissions: [],
-    accounts: [],
-    threshold: 90,
-    onAddRow: function() {},
-    onRemoveRow: function() {},
-    onThresholdChanged: function() {}
-};
-
-PermissionsTable.propTypes = {
-    permissions: PropTypes.object.isRequired,
-    accounts: PropTypes.array.isRequired,
-    threshold: PropTypes.number.isRequired,
-    onAddRow: PropTypes.func.isRequired,
-    onRemoveRow: PropTypes.func.isRequired,
-    onThresholdChanged: PropTypes.func.isRequired
-};
 
 export default PermissionsTable;
