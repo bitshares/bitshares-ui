@@ -17,6 +17,8 @@ class PrivateKey
     constructor: (@d) ->
 
     PrivateKey.fromBuffer = (buf) ->
+        if not Buffer.isBuffer buf
+            throw new Error "Expecting paramter to be a Buffer type"
         if 32 isnt buf.length
             console.log("WARN: Expecting 32 bytes, instead got #{buf.length}")
         new PrivateKey BigInteger.fromBuffer(buf)
