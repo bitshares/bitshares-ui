@@ -4,168 +4,171 @@ import {Link} from "react-router";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
 import Translate from "react-translate-component";
+import LinkToAccountById from "./LinkToAccountById";
 import LoadingIndicator from "../LoadingIndicator";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import LinkToAccountById from "./LinkToAccountById";
 import FormattedAsset from "../Utility/FormattedAsset";
-import Inspector from "react-json-inspector";
 import FormattedPrice from "../Utility/FormattedPrice";
+import Inspector from "react-json-inspector";
+import Box from "./../Utility/Box";
 require("./json-inspector.scss");
 
 @BindToChainState({keep_updating: true})
 class Asset extends React.Component {
 
-    static defaultProps = {
-        asset: "props.symbol"
-    }
-
     static propTypes = {
         asset: ChainTypes.ChainAsset.isRequired
-    }
+    };
 
-    static exampleData = {
-        name: "BitUSD",
-        subtitle: "A Smartcoin pegged to the value of One United States Dollar.",
-        header_image: "assets/USD/header.png"
-    }
+    static defaultProps = {
+        asset: "props.symbol"
+    };
 
     constructor( props ) {
-       super(props);
-       this.state = Asset.exampleData;
+        super(props);
+
+        //this.state = Asset.exampleData;
+        this.header_image = "http://theeconomiccollapseblog.com/wp-content/uploads/2012/03/10-Reasons-Why-The-Reign-Of-The-Dollar-As-The-World-Reserve-Currency-Is-About-To-Come-To-An-End.jpg";
     }
 
-    render() {
-        var core_exchange = this.props.asset.getIn(["options","core_exchange_rate"]);
-        console.log( "Assets: ", this.props.asset.toJS() )
-        return <div>Hello World, {this.props.asset.get('symbol')}, 
-                I am: <LinkToAccountById account={this.props.asset.get('issuer')} />
-                   <p/>
-                   <FormattedAsset amount={this.props.asset.getIn(["options","max_supply"])}
-                                   asset={this.props.asset.get('id')}
-                                   />
-                   <p/>
-                   <FormattedPrice base_asset={core_exchange.getIn(["base","asset_id"])}
-                                   quote_asset={core_exchange.getIn(["quote","asset_id"])}
-                                   base_amount={core_exchange.getIn(["base","amount"])}
-                                   quote_amount={core_exchange.getIn(["quote","amount"])}
-                                   />
-                </div>
-
-        let {assets, accounts, asset_symbol_to_id, symbol} = this.props;
-        let assetID = asset_symbol_to_id[symbol];
-        let asset = assets.get(assetID);
-
-        console.log(asset);
-
-        let assetExists = true;
-        if (!asset) {
-            asset = assets.get(symbol);
-            if (!asset) {
-                return <LoadingIndicator type="circle"/>;
-            } else if (asset.notFound) {
-                assetExists = false;
-            }
-        } else if (asset.notFound) {
-            assetExists = false;
-        }
-        if (!assetExists) {
-            return <div className="grid-container"><h5><Translate component="h5" content="explorer.asset.not_found" name={symbol} /></h5></div>;
-        }
-
-        let authorityWhitelist = asset.options.whitelist_authorities.map(authority => {
-            return (
-                <li>{authority} <button className="button">Remove</button></li>
-            );
-        });
-
-        let marketWhitelist = asset.options.whitelist_markets.map(market => {
-            return (
-                <li>{market} <button className="button">Remove</button></li>
-            );
-        });
-
-
+    renderHeader() {
         return (
-           <div className="grid-block page-layout">
-                <div className="grid-block vertical medium-6 medium-offset-3">
-                /// PAGE HEADER
-                  <div className="grid-block medium-6 medium-offset-3" style="background-color: #cccccc;">
-                    <div className="grid-content shrink">
-                        <h3>{this.state.symbol}</h3>
-                        <h6>{this.props.tag_line}</h6>
-                        <h3>{this.props.symbol}</h3>
+            <div className="grid-block small-10 small-offset-1">
+                <div className="grid-content"
+                     style={{
+                           opacity: '0.5',
+                               backgroundColor: '#FFF',
+                               backgroundImage: 'url(' + this.header_image + ')',
+                               backgroundSize: 'cover'
+                             }}
+                    >
+                    <div style={{ overflow:"visible" }}>
+                        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
                     </div>
-                    <div className="grid-content">
-                        {asset ? (
-                        <div>
-                            <p>{asset.options.description}</p>
-                            <div>
-                                <h3>Feed Producers</h3>
-                                <p>TODO: list of authorized feed producer accounts.</p>
-                                <p>TODO: account picker. <button className="button">Authorize as Feed Producer</button></p>
-                            </div>
-
-                            <div>
-                                <h3>Fee pool</h3>
-                                <p>
-                                    Transaction fees can be paid at a rate of {asset.options.core_exchange_rate.quote.amount} {this.props.symbol} per {asset.options.core_exchange_rate.base.amount} CORE.
-                                    <button className="button">Adjust Exchange Rate</button>
-                                </p>
-                                <p>
-                                    This asset has X CORE available to pay fees.
-                                    <button className="button">Add to Fee Pool</button>
-                                </p>
-                            </div>
-                            <div>
-                                <h3>Whitelisted Accounts</h3>
-                                <ul>
-                                    {asset.options.whitelist_authorities.length > 0 ? authorityWhitelist : "Account whitelist not in use."}
-
-                                </ul>
-                                <form>
-                                    <input type="text" style={{width: '100px'}} /> {/* TODO: use an account picker instead of an <input>. */}
-                                    <button className="button">Add to Account Whitelist</button>
-                                </form>
-                            </div>
-                            <div>
-                                <h3>Whitelisted Markets</h3>
-                                <ul>
-                                    {asset.options.whitelist_markets.length > 0 ? marketWhitelist : "Market whitelist not in use."}
-                                </ul>
-                                <form>
-                                    <input type="text" style={{width: '100px'}} />{/*TODO: use an asset picker instead of an <input>. Exchange/Markets.jsx contains one that could be its own reusable component*/}
-                                    <button className="button">Add to Market Whitelist</button>
-                                </form>
-                            </div>
-                            <div>
-                                {/*TODO: show actual permissions from server, and make them editable */}
-                                <h3>Permissions</h3>
-                                <ul>
-                                    <li><input type="checkbox" disabled />Permission #1</li>
-                                    <li><input type="checkbox" disabled />Permission #2</li>
-                                    <li><input type="checkbox" disabled />Permission #3</li>
-                                    <li><input type="checkbox" disabled />Permission #4</li>
-                                </ul>
-                                <button className="button">Edit Permissions</button>
-                            </div>
-                            <div>
-                                <ul>
-                                    <li><Translate component="span" content="explorer.assets.id" />: {asset.id}</li>
-                                    {/*<li><Translate component="span" content="explorer.assets.issuer" />: {accounts[asset.issuer] ?
-                                        <Link to="account" params={{account_name: accounts[asset.issuer]}}>{accounts[asset.issuer]}</Link> :
-                                        null}</li>*/}
-                                    <li><Translate component="span" content="explorer.assets.precision" />: {asset.precision}</li>
-                                    <li><Translate component="span" content="explorer.block.common_options" />:
-                                    <Inspector data={ asset.options } search={false}/></li>
-                                </ul>
-                            </div>
-                        </div>
-                        ) : <p>Asset {assetID} not found.</p>}
-                    </div>
-                  </div>
                 </div>
             </div>
+        );
+    }
+
+    assetSummary() {
+        //var asset = this.props.asset.toJS();
+        var asset = this.props.asset;
+        var core_exchange = asset.getIn(["options", "core_exchange_rate"]);
+        console.log("core_exchange: ", core_exchange);
+        return (
+            <div>
+            <ul>
+                <li>
+                    Symbol: {asset.get('symbol')}
+                </li>
+
+                <li>
+                    Issuer: <LinkToAccountById account={asset.get('issuer')}/>
+                </li>
+
+                <li>
+                    Formatted Asset: <FormattedAsset
+                        amount={asset.getIn(["options", "max_supply"])}
+                        asset={asset.get('id')}
+                    />
+                </li>
+
+                <li>
+                    Formatted Price: <FormattedPrice
+                        base_asset={core_exchange.getIn(["base","asset_id"])}
+                        base_amount={core_exchange.getIn(["base","amount"])}
+                        quote_asset={core_exchange.getIn(["quote","asset_id"])}
+                        quote_amount={core_exchange.getIn(["quote","amount"])}
+                    />
+                </li>
+
+            </ul>
+            </div>
+        );
+    }
+
+    dynamicData(dynamic) {
+        return (
+            <p>
+                      acummulated_fees: {dynamic.accumulated_fees}
+                <br/> confidential_supply: {dynamic.confidential_supply}
+                <br/> current_supply: {dynamic.confidential_supply}
+                <br/> fee_pool: {dynamic.fee_pool}
+            </p>
+        );
+    }
+
+    optionsData(options) {
+        return (
+            <p>
+                      blacklist_authorities: {options.blacklist_authorities}
+                <br/> blacklist_markets: {options.blacklist_markets}
+                <br/> whitelist_authorities: {options.whitelist_authorities}
+                <br/> whitelist_markets: {options.whitelist_markets}
+                <br/> description: {options.description}
+                <br/> flags: {options.flags}
+                <br/> issuer_permissions: {options.issuer_permissions}
+                <br/> market_fee_percent: {options.market_fee_percent}
+                <br/> max_market_fee: {options.max_market_fee}
+                <br/> - core_exchange_rate: {options.core_exchange_rate}
+                <br/> - max_supply: {options.max_supply}
+            </p>
+        );
+    }
+
+    /*   enum asset_issuer_permission_flags
+     {
+     charge_market_fee    = 0x01, //< an issuer-specified percentage of all market trades in this asset is paid to the issuer
+    white_list           = 0x02, //< accounts must be whitelisted in order to hold this asset
+    override_authority   = 0x04, //< issuer may transfer asset back to himself
+    transfer_restricted  = 0x08, //< require the issuer to be one party to every transfer
+    disable_force_settle = 0x10, //< disable force settling
+    global_settle        = 0x20, //< allow the bitasset issuer to force a global settling -- this may be set in permissions, but not flags
+    disable_confidential = 0x40  //< allow the asset to be used with confidential transactions
+    };*/
+
+    render() {
+        console.log("This: ", this);
+        console.log("Asset: ", this.props.asset.toJS());
+
+        var asset = this.props.asset.toJS();
+        var dynamic = asset.dynamic;
+        var options = asset.options;
+
+        return (
+        <div>
+            <div className="grid-block page-layout">
+                <div className="grid-block vertical">
+
+                    {this.renderHeader()}
+
+                    <div className="grid-block small-10 small-offset-1">
+
+                        <div className="grid-block vertical" style={{overflow:"visible"}}>
+                            <Box>
+                                {this.assetSummary()}
+                            </Box>
+                            <Box header='Markets'>
+                                <ul>
+                                    <li>BTS / USD</li>
+                                    <li>Gold / USD</li>
+                                </ul>
+                            </Box>
+                        </div>
+
+                        <div className="grid-block vertical" style={{overflow:"visible"}}>
+                            <Box header='Fee Pool'>
+                                {dynamic ? this.dynamicData(dynamic) : ''}
+                            </Box>
+                            <Box footer='Permissions'>
+                                {options ? this.optionsData(options) : ''}
+                            </Box>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         );
     }
 }
