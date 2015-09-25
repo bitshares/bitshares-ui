@@ -379,6 +379,13 @@ class ChainStore
     *  @return the account object if it does exist
     */
    getAccount( name_or_id ) {
+      if( typeof name_or_id === 'object' )
+      {
+         if( name_or_id.id ) return this.getAccount( name_or_id.id );
+         else if( name_or_id.get ) return this.getAccount( name_or_id.get('id') );
+         else return undefined;
+      }
+
       if( utils.is_object_id(name_or_id) )
       {
          let account = this.getObject( name_or_id )
