@@ -75,104 +75,96 @@ class AccountMemberStats extends React.Component {
                     <h3><Translate content={membership}/> {expiration}</h3>
                     { member_status=== "lifetime" ? null : (
                        <div>
-                       <h3> Get {100-network_fee}% Cashback on Fees </h3>
-                       <p>
-                          Lifetime Members get {100-network_fee}% cashback on every transaction fee they pay and
-                          qualify to earn referral income from users they register with or referr to the network. A
-                          Lifetime membership is just <FormattedAsset amount={gprops.parameters.current_fees.parameters[8][1].membership_lifetime_fee*gprops.parameters.current_fees.scale/10000} asset="1.3.0"/>.
-                       </p>
-                       { member_status === "annual" ? null : (
-                          <p>
-                             If a lifetime membership is too much you can still get {100-network_fee-lifetime_fee}% cashback for the next year by becoming an
-                             annual subscriber for just <FormattedAsset amount={gprops.parameters.current_fees.parameters[8][1].membership_annual_fee*gprops.parameters.current_fees.scale/10000} asset="1.3.0"/> per
-                             year.
-                          </p>
-                       )}
+                           <div className="large-6 medium-8">
+                               <h3> Get {100-network_fee}% Cashback on Fees </h3>
+                               <p>
+                                  Lifetime Members get {100-network_fee}% cashback on every transaction fee they pay and
+                                  qualify to earn referral income from users they register with or referr to the network. A
+                                  Lifetime membership is just <FormattedAsset amount={gprops.parameters.current_fees.parameters[8][1].membership_lifetime_fee*gprops.parameters.current_fees.scale/10000} asset="1.3.0"/>.
+                               </p>
+                               { member_status === "annual" ? null : (
+                                  <p>
+                                     If a lifetime membership is too much you can still get {100-network_fee-lifetime_fee}% cashback for the next year by becoming an
+                                     annual subscriber for just <FormattedAsset amount={gprops.parameters.current_fees.parameters[8][1].membership_annual_fee*gprops.parameters.current_fees.scale/10000} asset="1.3.0"/> per
+                                     year.
+                                  </p>
+                               )}
 
-                       <table>
-                           <tr>
-                               <td>
-                                   <a href className="button" onClick={this.upgradeAccount.bind(this, account.id, true)}>
-                                       <Translate content="account.member.upgrade_lifetime"/>
-                                   </a>
-                               </td>
-                               <td width="15%"></td>
-                               <td>
-                                   {member_status === "annual" ? null :
-                                   <a href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
-                                       <Translate content="account.member.subscribe"/>
-                                   </a>}
-                               </td>
-                           </tr>
-                       </table>
-                       <br/>
-                       <hr/>
-                       <br/>
+                               <a href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
+                                   <Translate content="account.member.upgrade_lifetime"/>
+                               </a> &nbsp; &nbsp;
+                               {member_status === "annual" ? null :
+                               <a href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
+                                   <Translate content="account.member.subscribe"/>
+                               </a>}
+                            </div>
+                       <br/><hr/>
                        </div>
                     )}
-
-
-                    <h4><Translate content="account.member.fee_allocation"/></h4>
-                    <div className="small-6">
-                        <table className="table striped">
-                            <tr>
-                                <td><Translate content="account.member.network_percentage"/></td>
-                                <td>{network_fee}%</td>
-                            </tr>
-                            <tr>
-                                <td><Translate content="account.member.lifetime_referrer"/>  &nbsp;
-                                (<Link to="account" params={{account_name: account.lifetime_referrer}}>{account.lifetime_referrer_name}</Link>)
-                                </td>
-                                <td>{lifetime_fee}%</td>
-                            </tr>
-                            <tr>
-                                <td><Translate content="account.member.registrar"/>  &nbsp;
-                                (<Link to="account" params={{account_name: account.registrar_name}}>{account.registrar_name}</Link>)
-                                </td>
-                                <td>{registrar_fee}%</td>
-                            </tr>
-                            <tr>
-                                <td><Translate content="account.member.referrer"/>  &nbsp;
-                                (<Link to="account" params={{account_name: account.referrer}}>{account.referrer_name }</Link>)
-                                </td>
-                                <td>{referrer_fee}%</td>
-                            </tr>
-                        </table>
-                        <br/>
-                        <Statistics stat_object={account.statistics}/>
-                        <table className="table striped">
-                            <tr>
-                                <td><Translate content="account.member.membership_expiration"/> </td>
-                                <td>{expiration_date}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-
                 </div>
-                <div className="small-6">
-                   <h3>Fee Division</h3>
-                   <p>
-                   Every time <Link to="account" params={{account_name:account_name}}> {account_name} </Link> pays a transaction fee, that fee is divided among several different accounts.  The network takes
-                   a {network_fee}% cut, and the Lifetime Member who referred <Link to="account" params={{account_name:account_name}}> {account_name} </Link> gets a {lifetime_fee}% cut.  
-                   </p>
-                   <p>
-                   The <i>registrar</i> is the account that paid the transaction fee to register {account_name} with the network.  The registrar gets to decide how to 
-                   divide the remaining {referrer_total_fee}% between themselves and their own <i>Affiliate Referrer</i> program.  
-                   </p>
-                   <p><Link to="account" params={{account_name:account_name}}>{account_name}</Link>'s registrar chose to share  &nbsp;
-                   {referrer_fee}% of the total fee with the <i>Affiliate Referrer</i> and keep  &nbsp;
-                   {registrar_fee}% of the total fee for themeselves.
-                   </p>
-                   <h3>Pending Fees</h3>
-                   <p>
-                   Fees paid by {account_name} are only divided among the network, referrers, and registrars once every maintenance interval ({gprops.parameters.maintenance_interval} seconds). The
-                   next maintenance time is <TimeAgo time={dprops.next_maintenance_time} />.
-                   </p>
-                   <h3>Vesting Fees</h3>
-                   <p>
-                   Most fees are made available immediately, but fees over <FormattedAsset amount={gprops.parameters.cashback_vesting_threshold} asset="1.3.0" /> (such as those paid to upgrade your membership or register a premium account name) must vest for a total of {gprops.parameters.cashback_vesting_period_seconds/60/60/24} days.
-                   </p>
+
+                <div className="grid-block vertical large-horizontal">
+                    <div className="grid-block large-4">
+                        <div className="grid-content regular-padding">
+                            <h4><Translate content="account.member.fee_allocation"/></h4>
+                            <table className="table key-value-table">
+                                <tr>
+                                    <td><Translate content="account.member.network_percentage"/></td>
+                                    <td>{network_fee}%</td>
+                                </tr>
+                                <tr>
+                                    <td><Translate content="account.member.lifetime_referrer"/>  &nbsp;
+                                    (<Link to="account" params={{account_name: account.lifetime_referrer}}>{account.lifetime_referrer_name}</Link>)
+                                    </td>
+                                    <td>{lifetime_fee}%</td>
+                                </tr>
+                                <tr>
+                                    <td><Translate content="account.member.registrar"/>  &nbsp;
+                                    (<Link to="account" params={{account_name: account.registrar_name}}>{account.registrar_name}</Link>)
+                                    </td>
+                                    <td>{registrar_fee}%</td>
+                                </tr>
+                                <tr>
+                                    <td><Translate content="account.member.referrer"/>  &nbsp;
+                                    (<Link to="account" params={{account_name: account.referrer}}>{account.referrer_name }</Link>)
+                                    </td>
+                                    <td>{referrer_fee}%</td>
+                                </tr>
+                                <Statistics stat_object={account.statistics}/>
+                                <tr>
+                                    <td><Translate content="account.member.membership_expiration"/> </td>
+                                    <td>{expiration_date}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="grid-block large-1">&nbsp;</div>
+                    <div className="grid-block large-7">
+                        <div className="grid-content regular-padding">
+                            <h4>Fee Division</h4>
+                            <p>
+                                Every time <Link to="account" params={{account_name:account_name}}> {account_name} </Link> pays a transaction fee, that fee is divided among several different accounts.  The network takes
+                                a {network_fee}% cut, and the Lifetime Member who referred <Link to="account" params={{account_name:account_name}}> {account_name} </Link> gets a {lifetime_fee}% cut.
+                            </p>
+                            <p>
+                                The <i>registrar</i> is the account that paid the transaction fee to register {account_name} with the network.  The registrar gets to decide how to
+                                divide the remaining {referrer_total_fee}% between themselves and their own <i>Affiliate Referrer</i> program.
+                            </p>
+                            <p><Link to="account" params={{account_name:account_name}}>{account_name}</Link>'s registrar chose to share  &nbsp;
+                                {referrer_fee}% of the total fee with the <i>Affiliate Referrer</i> and keep  &nbsp;
+                                {registrar_fee}% of the total fee for themeselves.
+                            </p>
+                            <h4>Pending Fees</h4>
+                            <p>
+                                Fees paid by {account_name} are only divided among the network, referrers, and registrars once every maintenance interval ({gprops.parameters.maintenance_interval} seconds). The
+                                next maintenance time is <TimeAgo time={dprops.next_maintenance_time}/>.
+                            </p>
+                            <h4>Vesting Fees</h4>
+                            <p>
+                                Most fees are made available immediately, but fees over <FormattedAsset amount={gprops.parameters.cashback_vesting_threshold} asset="1.3.0" /> (such as those paid to upgrade your membership or register a premium account name) must vest for a total of {gprops.parameters.cashback_vesting_period_seconds/60/60/24} days.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
