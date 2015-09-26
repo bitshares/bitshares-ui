@@ -36,10 +36,10 @@ module.exports = {
             rewards: "返现奖励",
             cashback: "返现",
             vested: "既得",
-            ref_percentage: "手续费比例：推荐人奖励",
-            network_percentage: "手续费比例：网络收取",
+            ref_percentage: "推荐人奖励",
+            network_percentage: "网络收取",
             fees_paid: "手续费总支出",
-            fees_pending: "待付费用",
+            fees_pending: "待结费用",
             fees_vested: "待解冻金额",
             in_orders: "委单冻结金额 %(core_asset)s ",
             unknown: "未知的会员",
@@ -49,7 +49,12 @@ module.exports = {
             registrar: "注册人",
             referrer: "推荐人",
             lifetime_referrer: "终身会员推荐人",
-            membership: "会籍"
+            membership: "会籍",
+            fee_allocation: "手续费分配",
+            upgrade_lifetime: "购买终身会籍",
+            subscribe: "购买1年会籍",
+            expires: "过期",
+            membership_expiration: "会籍过期时间"
         },
         connections: {
             known: "识别为",
@@ -104,8 +109,8 @@ module.exports = {
             memo_key: "备注公钥"
         },
         upgrade: "升级账户",
-        unlink: "取消关联",
-        link: "关联",
+        unlink: "取消关注",
+        link: "关注",
         pay: "向他付款",
         overview: "概述",
         history: "交易历史",
@@ -258,7 +263,7 @@ module.exports = {
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
-        transaction_confirmed: "Transaction confirmed",
+        transaction_confirmed: "交易已确认Transaction",
         broadcast_fail: "交易广播失败: %(message)s",
         balance_claim: "从余额ID #%(balance_id)s 中领取金额 %(balance_amount)s ",
         balance_owner: "余额所有者公钥",
@@ -275,7 +280,9 @@ module.exports = {
         committee_member_create: "创建受托人账户",
         witness_update: "更新见证人账户",
         new_url: "网站",
-        publisher: "发布人"
+        publisher: "发布人",
+        lifetime_upgrade_account: "升级到终生会员",
+        annual_upgrade_account: "升级到年度会员"
     },
     explorer: {
         accounts: {
@@ -314,7 +321,8 @@ module.exports = {
             max_margin_period_sec: "Max margin period (s)",
             call_limit: "Call limit",
             short_limit: "Short limit",
-            settlement_price: "结算价格"
+            settlement_price: "结算价格",
+            time: "时间"
         },
         assets: {
             title: "资产",
