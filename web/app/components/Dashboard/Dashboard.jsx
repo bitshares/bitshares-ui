@@ -6,6 +6,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import RecentTransactions from "../Account/RecentTransactions";
 import HelpContent from "../Utility/HelpContent";
+import Translate from "react-translate-component";
 
 @BindToChainState()
 class Dashboard extends Component {
@@ -29,7 +30,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="grid-block medium-4 right-column">
                     <div className="grid-content">
-                        <h4>Recent Transactions</h4>
+                        <h4><Translate content="account.recent" /></h4>
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={20} compactView={true}/>
                     </div>
                 </div>
