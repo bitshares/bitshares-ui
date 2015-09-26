@@ -11,6 +11,7 @@ import BrainkeyStoreFactory from "stores/BrainkeyStore"
 import BindToChainState from "components/Utility/BindToChainState"
 import ChainTypes from "components/Utility/ChainTypes"
 import _ from "lodash"
+import Translate from "react-translate-component";
 
 var dictionary_set = new Set(dictionary.split(','))
 
@@ -33,7 +34,7 @@ export default class Brainkey extends BrainkeyBaseComponent {
     render() {
         return (
             <span>
-                <h3>Brainkey</h3>
+                <h3><Translate content="wallet.brainkey" /></h3>
                 <BrainkeyInput>
                     <ViewBrainkey/>
                 </BrainkeyInput>
@@ -109,18 +110,18 @@ class BrainkeyInput extends Component {
                     <div>{ checked_words }</div>
                     <p>{ word_count_label }</p>
                     <div className={cname("button success", {disabled: ! ready})}
-                        onClick={this.onAccept.bind(this)}>Accept</div>
+                        onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
                 </div>
             </span>
         )
-        
+
     }
-    
+
     onAccept() {
         this.setState({accept: true})
         BrainkeyActions.setBrainkey(this.state.brnkey)
     }
-    
+
     formChange(event) {
         var {id, value} = event.target
         var state = {}

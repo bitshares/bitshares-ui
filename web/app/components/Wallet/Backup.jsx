@@ -12,6 +12,7 @@ import notify from "actions/NotificationActions"
 import {saveAs} from "filesaver.js"
 import cname from "classnames"
 import hash from "common/hash"
+import Translate from "react-translate-component";
 
 class BackupBaseComponent extends Component {
     
@@ -33,9 +34,9 @@ class BackupBaseComponent extends Component {
 export class BackupCreate extends BackupBaseComponent {
     render() {
         return <span>
-                
-            <h3>Create Backup</h3>
-            
+
+            <h3><Translate content="wallet.create_backup" /></h3>
+
             <Create>
                 <NameSizeModified/>
                 <DecryptBackup>
@@ -52,13 +53,13 @@ export class BackupCreate extends BackupBaseComponent {
 export class BackupVerify extends BackupBaseComponent {
     render() {
         return <span>
-                
-            <h3>Verify Prior Backup</h3>
-            
+
+            <h3><Translate content="wallet.verify_prior_backup" /></h3>
+
             <Upload>
                 <NameSizeModified/>
                 <DecryptBackup saveWalletObject={true}>
-                    <h4>Verified</h4>
+                    <h4><Translate content="wallet.verified" /></h4>
                     <WalletObjectInspector
                         walletObject={this.props.backup.wallet_object}/>
                 </DecryptBackup>
@@ -96,9 +97,9 @@ export class BackupRestore extends BackupBaseComponent {
         var restored = has_new_wallet
         
         return <span>
-            
-            <h3>Import Backup</h3>
-            
+
+            <h3><Translate content="wallet.import_backup" /></h3>
+
             <Upload>
                 <NameSizeModified/>
                 <DecryptBackup saveWalletObject={true}>
@@ -106,7 +107,7 @@ export class BackupRestore extends BackupBaseComponent {
                         <Restore/>
                     </NewWalletName>
                 </DecryptBackup>
-                <Reset label={restored ? "done" : "reset"}/>
+                <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
             </Upload>
         </span>
     }
@@ -133,14 +134,14 @@ class Restore extends BackupBaseComponent {
         
         if(has_new_wallet)
             return <span>
-                <h5>Successfully restored <b>{new_wallet.toUpperCase()}</b> wallet</h5>
+                <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
                 <div>{this.props.children}</div>
             </span>
         
         return <span>
-            <h3>Ready to Restore</h3>
-            <div className="button success" 
-                onClick={this.onRestore.bind(this)}>Restore ({new_wallet} Wallet)</div>
+            <h3><Translate content="wallet.ready_to_restore" /></h3>
+            <div className="button success"
+                onClick={this.onRestore.bind(this)}><Translate content="wallet.restore_wallet_of" name={new_wallet} /></div>
         </span>
     }
     
@@ -188,13 +189,13 @@ class NewWalletName extends BackupBaseComponent {
         var name_ready = ! has_wallet_name_conflict && has_wallet_name
         
         return <span>
-            <h5>New Wallet Name</h5>
+            <h5><Translate content="wallet.new_wallet_name" /></h5>
             <input type="text" id="new_wallet"
                 onChange={this.formChange.bind(this)}
                 value={this.state.new_wallet} />
-            <p>{ has_wallet_name_conflict ? "Wallet exists, choose a new name" : null}</p>
+            <p>{ has_wallet_name_conflict ? <Translate content="wallet.wallet_exist" /> : null}</p>
             <div className={cname("button success", {disabled: ! name_ready})}
-                onClick={this.onAccept.bind(this)}>Accept</div>
+                onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
         </span>
     }
     
@@ -233,7 +234,7 @@ class Download extends BackupBaseComponent {
     
     render() {
         return <span className="button success"
-            onClick={this.onDownload.bind(this)}>Download</span>
+            onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></span>
     }
     
     onDownload() {
@@ -258,7 +259,7 @@ class Create extends BackupBaseComponent {
         
         return <div onClick={this.onCreateBackup.bind(this)}
             className={cname("button success", {disabled: !ready})}>
-            Create Backup ({this.props.wallet.current_wallet} Wallet)</div>
+            <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
     }
     
     onCreateBackup() {
@@ -288,7 +289,7 @@ class Upload extends BackupBaseComponent {
         return <span>
             <input type="file" id="backup_input_file" style={{ border: 'solid' }}
                 onChange={this.onFileUpload.bind(this)} />
-            { is_invalid ? <h5>Invalid Format</h5> : null }
+            { is_invalid ? <h5><Translate content="wallet.invalid_format" /></h5> : null }
         </span>
     }
     
@@ -334,13 +335,13 @@ class DecryptBackup extends BackupBaseComponent {
     render() {
         if(this.state.verified) return <span>{this.props.children}</span>
         return <span>
-            <label>Enter Password</label>
+            <label><Translate content="wallet.enter_password" /></label>
             <input type="password" id="backup_password"
                 onChange={this.formChange.bind(this)}
                 value={this.state.backup_password}/>
             <Sha1/>
             <span className="button success"
-                onClick={this.onPassword.bind(this)}>Verify</span>
+                onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>
         </span>
     }
     
@@ -386,7 +387,7 @@ class Reset extends BackupBaseComponent {
     static contextTypes = {router: React.PropTypes.func.isRequired}
     
     render() {
-        var label = this.props.label || "reset"
+        var label = this.props.label || <Translate content="wallet.reset" />
         //TODO internationalize label
         return  <span className="button cancel"
             onClick={this.onReset.bind(this)}>{label}</span>

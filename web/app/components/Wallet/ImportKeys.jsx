@@ -26,6 +26,7 @@ import WalletCreate from "components/Wallet/WalletCreate"
 import BalanceClaim from "components/Wallet/BalanceClaim"
 import LoadingIndicator from "components/LoadingIndicator"
 import chain_api from "api/ChainStore"
+import Translate from "react-translate-component";
 
 require("./ImportKeys.scss");
 
@@ -73,7 +74,7 @@ export default class ImportKeys extends Component {
         
         if(this.state.save_import_loading) {
             return <div>
-                <h3>Import Keys</h3>
+                <h3><Translate content="wallet.import_keys" /></h3>
                 <div className="center-content">
                     <LoadingIndicator type="circle"/>
                 </div>
@@ -118,7 +119,7 @@ export default class ImportKeys extends Component {
         return (
             <div>
                 <WalletCreate hideTitle={true}>
-                <h3>Import Keys</h3>
+                <h3><Translate content="wallet.import_keys" /></h3>
                 {/* Key file upload */}
                 <div>
                     <KeyCount wif_count={this.state.wif_count}/>
@@ -529,8 +530,8 @@ export default class ImportKeys extends Component {
                         var addy = pub.toAddressString()
                         var pubby = pub.toPublicKeyString()
                         var error = ""
-                        
-                        let address_string = account.addresses ? 
+
+                        let address_string = account.addresses ?
                             account.addresses[i] : null // assert checking
                         
                         if(address_string && addy.substring(3) != address_string.substring(3))

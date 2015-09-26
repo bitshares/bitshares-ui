@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 
+import Translate from "react-translate-component";
 import {BackupRestore} from "components/Wallet/Backup"
 import WalletDb from "stores/WalletDb"
 import WalletManagerStore from "stores/WalletManagerStore"
@@ -69,29 +70,29 @@ class CreateNewWallet extends Component {
         if(this.state.create_submitted &&
             this.state.wallet_public_name === this.props.current_wallet) {
             return <div>
-                <h4>Wallet Created</h4>
+                <h4><Translate content="wallet.wallet_created" /></h4>
                 <span onClick={this.onDone.bind(this)}
-                    className="button success">Done</span>
+                    className="button success"><Translate content="wallet.done" /></span>
             </div>
         }
         
         return (<span>
-            {this.props.hideTitle ? null:<h3>Create Wallet</h3>}
+            {this.props.hideTitle ? null:<h3><Translate content="wallet.create_wallet" /></h3>}
             <form
                 className="name-form"
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
                 <div className={cname("grid-content", "no-overflow", {"has-error": errors.password_match || errors.password_length})}>
-                    <label>Password</label>
+                    <label><Translate content="wallet.password" /></label>
                     <input type="password" id="password" value={this.state.password} autoComplete="off" />
 
-                    <label>Password (confirm)</label>
+                    <label><Translate content="wallet.confirm" /></label>
                     <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
                     <div>{errors.password_match || errors.password_length}</div>
                     <br/>
                     { has_wallet ? <div>
-                        <label>Wallet Name</label>
+                        <label><Translate content="wallet.name" /></label>
                         <input type="text" id="wallet_public_name"
                             value={this.state.wallet_public_name}
                         />
@@ -101,7 +102,7 @@ class CreateNewWallet extends Component {
                 </div>
 
                 <div className="grid-content no-overflow">
-                    <button className={cname("button",{disabled: !(this.state.password && this.state.isValid)})}>Create</button>
+                    <button className={cname("button",{disabled: !(this.state.password && this.state.isValid)})}><Translate content="wallet.create" /></button>
                 </div>
             </form>
         </span>)
@@ -119,9 +120,9 @@ class CreateNewWallet extends Component {
         let errors = state.errors
         let wallet_names = WalletManagerStore.getState().wallet_names
         errors.password_length = state.password.length === 0 || state.password.length > 7 ? null : "Password must be longer than 7 characters";
-        
-        errors.wallet_public_name = 
-            !wallet_names.has(state.wallet_public_name) ? 
+
+        errors.wallet_public_name =
+            !wallet_names.has(state.wallet_public_name) ?
             null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
         
         errors.password_match = null
