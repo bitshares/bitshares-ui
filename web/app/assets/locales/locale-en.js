@@ -359,7 +359,8 @@ module.exports = {
         locale: "Switch language",
         confirm_yes: "Always",
         confirm_no: "Never",
-        always_confirm: "Always ask for confirmation"
+        always_confirm: "Always ask for confirmation",
+        wallets: "Wallets"
     },
     footer: {
         title: "Graphene",

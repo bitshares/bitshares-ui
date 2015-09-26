@@ -363,7 +363,8 @@ module.exports = {
         locale: "语言选择",
         confirm_yes: "总是",
         confirm_no: "从不",
-        always_confirm: "总是要求确认"
+        always_confirm: "总是要求确认",
+        wallets: "钱包管理"
     },
     pagination: {
         newer: "更近",
