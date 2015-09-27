@@ -23,7 +23,6 @@ class TimeAgo extends React.Component {
         if (typeof time === "string") {
             time += "+00:00";
         }
-        let now = (new Date()).toString();
         let timePassed = Math.round((new Date()).getTime() - (new Date(time)).getTime()) / 1000;
         let interval;
         if (timePassed < 60) { // 60s
@@ -67,7 +66,7 @@ class TimeAgo extends React.Component {
 
         component = component ? component : "span";
 
-        let timeAgo = <FormattedRelative value={time} />
+        let timeAgo = <span ref={"timeago_ttip_" + time} data-tip={new Date(time)} data-place="top" data-type="light"><FormattedRelative value={time}/></span>
         return React.createElement(component, {className: this.props.className}, timeAgo);
     }
 }
