@@ -102,13 +102,13 @@ let Witness = t.struct({
     witness_account: t.Str
 }, "Witness");
 
-let Delegate = t.struct({
+let CommitteeMember = t.struct({
     id: t.Str,
     url: t.Str,
     committee_member_account: t.Str,
     vote_id: t.Str,
     total_votes: t.Num
-}, "Delegate");
+}, "CommitteeMember");
 
 let GlobalObject = t.struct({
     active_committee_members: t.Arr,
@@ -183,7 +183,7 @@ module.exports = {
     //PublicKeyTcomb: PublicKeyTcomb,
     PrivateKeyTcomb: PrivateKeyTcomb,
     Witness: Witness,
-    Delegate: Delegate,
+    CommitteeMember: CommitteeMember,
     GlobalObject: GlobalObject,
     DynGlobalObject: DynGlobalObject,
     LimitTrx: LimitTrx,

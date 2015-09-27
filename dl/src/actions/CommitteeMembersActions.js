@@ -4,18 +4,18 @@ import Apis from "rpc_api/ApiInstances";
 import witnessApi from "api/witnessApi";
 import utils from "common/utils";
 
-let delegate_in_prog = {};
+let committee_member_in_prog = {};
 let account_in_prog = {};
 
 let subs = {};
 
-class DelegateActions {
+class CommitteeMembersActions {
 
-    getDelegate(id_or_name) {
+    getCommitteeMember(id_or_name) {
         let id;
-        let idPromise = !utils.is_object_id(id_or_name) ? witnessApi.lookupDelegates(id_or_name, 1) : null;
-        if (!delegate_in_prog[id_or_name]) {
-            delegate_in_prog[id_or_name] = true;
+        let idPromise = !utils.is_object_id(id_or_name) ? witnessApi.lookupCommitteeMembers(id_or_name, 1) : null;
+        if (!committee_member_in_prog[id_or_name]) {
+            committee_member_in_prog[id_or_name] = true;
             Promise.all([
                 idPromise
             ]).then(result => { 
@@ -24,46 +24,46 @@ class DelegateActions {
                 } else {
                     id = id_or_name;
                 }
-                witnessApi.getDelegates(id).then(delegate => {
-                    api.getObjects(delegate[0].committee_member_account).then(account => {
-                        delegate_in_prog[id_or_name] = false;
+                witnessApi.getCommitteeMembers(id).then(committee_member => {
+                    api.getObjects(committee_member[0].committee_member_account).then(account => {
+                        committee_member_in_prog[id_or_name] = false;
                         this.dispatch({
-                            delegate: delegate[0],
+                            committee_member: committee_member[0],
                             account: account[0]
                         })
                     }).catch(err => {
-                        delegate_in_prog[id_or_name] = false;
+                        committee_member_in_prog[id_or_name] = false;
                     })
                 }).catch(err => {
-                        delegate_in_prog[id_or_name] = false;
+                        committee_member_in_prog[id_or_name] = false;
                 })
             }) 
         }
     }
 
-    getDelegates(ids) {
+    getCommitteeMembers(ids) {
         let uid = ids.toString();
-        if (!delegate_in_prog[uid]) {
-            console.log("fetching delegates:", ids);
-            delegate_in_prog[uid] = true;
+        if (!committee_member_in_prog[uid]) {
+            console.log("fetching committee members:", ids);
+            committee_member_in_prog[uid] = true;
             if (!Array.isArray(ids)) {
                 ids = [ids];
             }
             Apis.instance().db_api().exec("get_objects", [ids])
                 .then((result) => {
-                    delegate_in_prog[uid] = false;
+                    committee_member_in_prog[uid] = false;
                     this.dispatch(result);
                 }).catch((error) => {
-                    delegate_in_prog[uid] = false;
-                    console.log("Error in DelegateActions.getDelegates: ", error);
+                    committee_member_in_prog[uid] = false;
+                    console.log("Error in CommitteeMembersActions.getCommitteeMembers: ", error);
                 });
         }
     }
 
-    getDelegateAccounts(ids) {
+    getCommitteeMemberAccounts(ids) {
         let uid = ids.toString();
         if (!account_in_prog[uid]) {
-            console.log("fetching delegate accounts:", ids);
+            console.log("fetching committee member accounts:", ids);
             account_in_prog[uid] = true;
             if (!Array.isArray(ids)) {
                 ids = [ids];
@@ -74,7 +74,7 @@ class DelegateActions {
                     this.dispatch(result);
                 }).catch((error) => {
                     account_in_prog[uid] = false;
-                    console.log("Error in DelegateActions.getDelegateAccounts: ", error);
+                    console.log("Error in CommitteeMembersActions.getCommitteeMemberAccounts: ", error);
                 });
         }
     }
@@ -82,7 +82,7 @@ class DelegateActions {
     subscribe(id, statObject) {
 
         let subscription = (result) => {
-            console.log("delegate sub result:", result);
+            console.log("committee member sub result:", result);
         };
 
         if (!subs[id]) {
@@ -90,11 +90,11 @@ class DelegateActions {
             api.subscribeAccount(subscription, statObject)
                 .then(subResult => {
                     if (subResult) {
-                        console.log("subscribed to delegate", id, ":", subResult);
+                        console.log("subscribed to committee member", id, ":", subResult);
                     }
                 })
                 .catch(error => {
-                    console.log("delegate sub error:", error);
+                    console.log("committee member sub error:", error);
                     delete subs[id];
                 });
         }
@@ -103,11 +103,11 @@ class DelegateActions {
     unSubscribe(id) {
         api.unSubscribeAccount(subs[id]).then(unSubResult => {
             if (unSubResult) {
-                console.log("unSubscribe from delegate:", id);
+                console.log("unSubscribe from committee member:", id);
                 delete subs[id];
             }
         });
     }
 }
 
-module.exports = alt.createActions(DelegateActions);
+module.exports = alt.createActions(CommitteeMembersActions);

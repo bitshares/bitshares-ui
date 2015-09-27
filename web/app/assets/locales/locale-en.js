@@ -97,9 +97,9 @@ module.exports = {
             add_witness_label: "Witness"
         },
         options: {
-            num_witnesses : "Desired Witnesses",
-            num_committee : "Desired Committee Members",
-            memo_key : "Memo Key",
+            num_witnesses: "Desired Witnesses",
+            num_committee: "Desired Committee Members",
+            memo_key: "Memo Key"
         },
         upgrade: "Upgrade account",
         unlink: "Unlink",
@@ -267,7 +267,7 @@ module.exports = {
             withdraw_permission_claim: "Claim withdrawal permission",
             withdraw_permission_delete: "Delete withdrawal permission",
             fill_order: "Fill order",
-            delegate_update_global_parameters: "Global parameters update",
+            committee_member_update_global_parameters: "Global parameters update",
             vesting_balance_create: "Create vesting balance",
             vesting_balance_withdraw: "Withdraw vesting balance",
             worker_create: "Create budget item",
@@ -333,10 +333,11 @@ module.exports = {
         witnesses: {
             title: "Witnesses"
         },
-        delegates: {
-            title: "Committee members"
+        committee_members: {
+            title: "Committee members",
+            active: "Total number of active committee members"
         },
-        delegate: {
+        committee_member: {
             title: "Committee member"
         },
         workers: {

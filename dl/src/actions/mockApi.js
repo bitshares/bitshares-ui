@@ -173,7 +173,7 @@ let blockExample = {
       ]
     }
   ],
-  "delegate_signature": "2019d8cd00455afd029e1c65e578a84472178330a92265659271cd104626179eef3f0b2897c6fc228c26e8d8bce78eed922ef9d61cbc48a35c5b3c5c9a7d5ca5d8"
+  "committee_member_signature": "2019d8cd00455afd029e1c65e578a84472178330a92265659271cd104626179eef3f0b2897c6fc228c26e8d8bce78eed922ef9d61cbc48a35c5b3c5c9a7d5ca5d8"
 }
 
 module.exports = {

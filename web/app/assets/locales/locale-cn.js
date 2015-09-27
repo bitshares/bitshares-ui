@@ -188,7 +188,7 @@ module.exports = {
         asset_settle: "请求资产清算",
         asset_global_settle: "请求全局资产清算",
         publish_feed: "资产喂价",
-        delegate_create: "创建受托人",
+        committee_member_create: "创建受托人",
         witness_create: "创建见证人",
         witness_pay: "提取见证人收入到账户",
         witness_receive: "Received witness from witness",
@@ -234,7 +234,7 @@ module.exports = {
             asset_settle: "资产结算",
             asset_global_settle: "全局资产清算",
             asset_publish_feed: "发布资产喂价",
-            delegate_create: "创建受托人",
+            committee_member_create: "创建受托人",
             witness_create: "创建见证人",
             witness_withdraw_pay: "见证人取回报酬",
             proposal_create: "创建提案",
@@ -245,7 +245,7 @@ module.exports = {
             withdraw_permission_claim: "主张提取权限",
             withdraw_permission_delete: "删除提取权限",
             fill_order: "撮合订单",
-            delegate_update_global_parameters: "全局参数更新",
+            committee_member_update_global_parameters: "全局参数更新",
             vesting_balance_create: "创建冻结账目余额",
             vesting_balance_withdraw: "提取解冻账户余额",
             worker_create: "创建雇员",
@@ -332,10 +332,10 @@ module.exports = {
         witnesses: {
             title: "见证人"
         },
-        delegates: {
+        committee_members: {
             title: "受托人"
         },
-        delegate: {
+        committee_member: {
             title: "受托人"
         },
         workers: {

@@ -10,9 +10,9 @@ import AccountsContainer from "./components/Explorer/AccountsContainer";
 import WitnessesContainer from "./components/Explorer/WitnessesContainer";
 import Witnesses from "./components/Explorer/Witnesses";
 import Witness from "./components/Explorer/Witness";
-import DelegatesContainer from "./components/Explorer/DelegatesContainer";
-import Delegates from "./components/Explorer/Delegates";
-import Delegate from "./components/Explorer/Delegate";
+import CommitteeMembersContainer from "./components/Explorer/CommitteeMembersContainer";
+import CommitteeMembers from "./components/Explorer/CommitteeMembers";
+import CommitteeMember from "./components/Explorer/CommitteeMember";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Footer from "./components/Footer/Footer";
 import AccountPage from "./components/Account/AccountPage";
@@ -187,7 +187,9 @@ App.willTransitionTo = (transition, params, query, callback) => {
         });
     }).catch( error => {
         console.error("[App.jsx] ----- App.willTransitionTo error ----->", error);
-        if(error.name === "InvalidStateError") alert("Can't access local storage.\nPlease make sure you are not running your browser in private/incognito mode.");
+        if(error.name === "InvalidStateError") {
+            alert("Can't access local storage.\nPlease make sure you are not running your browser in private/incognito mode.");
+        }
     })
 };
 
@@ -204,9 +206,9 @@ let routes = (
             <DefaultRoute handler={Witnesses}/>
             <Route name="witness" path=":name" handler={Witness}/>
         </Route>
-        <Route name="delegates" path="/explorer/delegates" handler={DelegatesContainer}>
-            <DefaultRoute handler={Delegates}/>
-            <Route name="delegate" path=":name" handler={Delegate}/>
+        <Route name="committee-members" path="/explorer/committee-members" handler={CommitteeMembersContainer}>
+            <DefaultRoute handler={CommitteeMembers}/>
+            <Route name="committee-member" path=":name" handler={CommitteeMember}/>
         </Route>
         <Route name="wallet" path="wallet" handler={WalletManager}>
             {/* wallet management console */}
