@@ -41,12 +41,12 @@ export default class AccountSelect extends React.Component {
         var placeholder = this.props.placeholder || this.default_placeholder;
         var ikey
         if (this.props.list_size > 1) {
-            placeholder = <option key={ikey++} value="" disabled>{placeholder}</option>;
+            placeholder = <option value="" disabled>{placeholder}</option>;
         }
         else {
             //When disabled and list_size was 1, chrome was skipping the 
             //placeholder and selecting the 1st item automatically (not shown)
-            placeholder = <option key={ikey++} value="">{placeholder}</option>;
+            placeholder = <option value="">{placeholder}</option>;
         }
         return (
             <select
@@ -62,7 +62,7 @@ export default class AccountSelect extends React.Component {
                     .sort()
                     .map((account_name) => {
                         if (!account_name || account_name === "") {return null; }
-                        return <option key={ikey++} value={account_name}>{account_name}</option>;
+                        return <option value={account_name}>{account_name}</option>;
                     })}
             </select>
         );
