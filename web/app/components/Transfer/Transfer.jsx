@@ -23,7 +23,7 @@ class Transfer extends React.Component {
         if(props.query.amount) this.state.amount = props.query.amount;
         if(props.query.asset) this.state.asset_id = props.query.asset;
         if(props.query.memo) this.state.memo = props.query.memo;
-        this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
+        this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
     static getInitialState(){
@@ -65,10 +65,11 @@ class Transfer extends React.Component {
         this.setState({memo: e.target.value});
     }
 
-    onBroadcastAndConfirm(confirm_store_state) {
-        if(confirm_store_state.broadcast && confirm_store_state.closed && confirm_store_state.broadcasted_transaction) {
+    onTrxIncluded(confirm_store_state) {
+        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
             this.setState(Transfer.getInitialState());
-            TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
         }
     }
 
@@ -84,7 +85,7 @@ class Transfer extends React.Component {
             asset.get("id"),
             this.state.memo
         ).then( () => {
-            TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
+            TransactionConfirmStore.listen(this.onTrxIncluded);
         }).catch( e => {
             console.log( "error: ",e)
         } );

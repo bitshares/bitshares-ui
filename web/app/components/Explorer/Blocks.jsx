@@ -173,14 +173,14 @@ class Blocks extends React.Component {
 
                 return (
                         <tr key={block.id}>
-                            <td><Link to="block" params={{height: block.id}}>#{block.id}</Link></td>
+                            <td><Link to="block" params={{height: block.id}}>#{utils.format_number(block.id, 0)}</Link></td>
                             <td><FormattedDate
                                 value={block.timestamp}
                                 formats={intlData.formats}
                                 format="short"
                             /></td>
                             <td><LinkToWitnessById witness={block.witness} /></td>
-                            <td>{block.transactions.length}</td>
+                            <td>{utils.format_number(block.transactions.length, 0)}</td>
                         </tr>
                     );
             }).toArray();
@@ -232,14 +232,14 @@ class Blocks extends React.Component {
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Trx/block</span>
-                            <h3>{utils.format_number(trxCount / blockCount || 0, 2)}/block</h3>
+                            <span className="txtlabel subheader">Trx/s</span>
+                            <h3>{utils.format_number(trxPerSec, 2)}</h3>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Avg block time</span>
-                            <h3>{utils.format_number(avgTime, 2)}s</h3>
+                            <span className="txtlabel subheader">Avg confirmation time</span>
+                            <h3>{utils.format_number(avgTime / 2, 2)}s</h3>
                         </div>
                     </div>
                 </div>
@@ -264,9 +264,9 @@ class Blocks extends React.Component {
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Transactions per second:</span>
+                            <span className="txtlabel float-left">Transactions per block:</span>
                             <span className="success float-right">
-                                <span className="txtlabel">{utils.format_number(trxPerSec, 2)}</span><span>/s</span>
+                                <span className="txtlabel">{utils.format_number(trxCount / blockCount || 0, 2)}</span>
                             </span>
                         </div>
                     </div>

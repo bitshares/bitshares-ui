@@ -130,7 +130,7 @@ module.exports = {
     },
     transaction: {
         confirm: "Bitte bestätigen Sie die Transaktion",
-        broadcast_success: "Transaktion wurde übermittelt",
+        broadcast_success: "Transaktion wurde übermittelt TODO: add 'and included into blockchain'",
         broadcast_fail: "Bei der Übermittlung der Transaction ist ein Fehler aufgetreten: %(message)s",
         sent: "Gesendet",
         to: "an",

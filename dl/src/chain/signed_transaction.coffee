@@ -148,7 +148,7 @@ _my.signed_transaction = ->
     toObject:()->
         type.signed_transaction.toObject @
 
-    broadcast:()->
+    broadcast:(was_broadcast_callback)->
         new Promise (resolve, reject)=>
             @sign() if not @signed
             throw new Error "not finalized" unless @tr_buffer
@@ -158,11 +158,12 @@ _my.signed_transaction = ->
             api.network_api().exec(
                 "broadcast_transaction_with_callback",
                 [ (res) ->
-                    #DEBUG console.log('... broadcast_transaction_with_callback !!!')
+                    #console.log('... broadcast_transaction_with_callback !!!')
                     resolve(res)
                 ,tr_object]
             ).then ()->
-                #DEBUG console.log('... broadcast success, waiting for callback')
+                #console.log('... broadcast success, waiting for callback')
+                was_broadcast_callback()
                 return
             .catch (error)=>
                 #DEBUG console.log error # logged in GrapheneApi
