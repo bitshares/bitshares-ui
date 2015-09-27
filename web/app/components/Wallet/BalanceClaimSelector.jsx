@@ -21,18 +21,12 @@ export default class BalanceClaimSelector extends Component {
     
     constructor() {
         super()
-        this.state = this._getInitialState()
-    }
-    
-    _getInitialState() {
-        return {
-            checked: Immutable.Map()
-        }
     }
     
     componentWillReceiveProps(nextProps) {
-        if(! this.state.checked.size && nextProps.claim_account_name)
-            this.onClaimAccountChange(nextProps.claim_account_name)
+        console.log("componentWillReceiveProps");
+        if(nextProps.claim_account_name)
+            this.onClaimAccount(nextProps.claim_account_name, nextProps.checked)
     }
     
     static getStores() {
@@ -40,6 +34,7 @@ export default class BalanceClaimSelector extends Component {
     }
     
     static getPropsFromStores() {
+        console.log("getPropsFromStores");
         var props = BalanceClaimActiveStore.getState()
         var { balances, address_to_pubkey } = props
         var private_keys = PrivateKeyStore.getState().keys
@@ -88,7 +83,7 @@ export default class BalanceClaimSelector extends Component {
                     <tr key={++index}>
                         <td>
                             <input type="checkbox"
-                                checked={!!this.state.checked.get(index)}
+                                checked={!!this.props.checked.get(index)}
                                 onChange={this.onCheckbox.bind(this, index, r.balances)} />
                         </td>
                         <td style={{textAlign: "right"}}> 
@@ -119,22 +114,19 @@ export default class BalanceClaimSelector extends Component {
     }
     
     onCheckbox(index, balances) {
-        var checked = this.state.checked
-        if(this.state.checked.get(index))
+        var checked = this.props.checked
+        if(checked.get(index))
             checked = checked.delete(index)
         else
             checked = checked.set(index, balances)
         
-        this.setState({checked})
-        this.updateSelectedBalanceClaims(checked)
+        BalanceClaimActiveActions.setSelectedBalanceClaims(checked)
     }
     
-    onClaimAccountChange(claim_account_name) {
+    onClaimAccount(claim_account_name, checked) {
         // A U T O  S E L E C T  A C C O U N T S
         // only if nothing is selected (play it safe)
-        if(this.state.checked.size) return
-        
-        var checked = Immutable.Map()
+        if(checked.size) return
         var index = -1
         this.props.total_by_account_asset.forEach( (v,k) => {
             index++
@@ -144,15 +136,7 @@ export default class BalanceClaimSelector extends Component {
                     checked = checked.set(index, v.balances)
             }
         })
-        if(this.state.checked.size) {
-            this.setState({checked})
-            this.updateSelectedBalanceClaims(checked)
-        }
-    }
-    
-    updateSelectedBalanceClaims(checked) {
-        BalanceClaimActiveActions.setSelectedBalanceClaims(
-            checked.valueSeq().flatten().toSet())
+        if(checked.size) BalanceClaimActiveActions.setSelectedBalanceClaims(checked)
     }
     
 }

@@ -9,6 +9,7 @@ import iDB from "idb-instance"
 import config from "chain/config"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
+import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import ChainStore from "api/ChainStore"
 
 class BalanceClaimActiveStore extends BaseStore {
@@ -17,24 +18,33 @@ class BalanceClaimActiveStore extends BaseStore {
         super()
         this.clearCache()
         this._export("clearCache")
-        ChainStore.subscribe(this.chainStoreUpdate.bind(this))
+        // ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
             onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims,
-            onClaimAccountChange: BalanceClaimActiveActions.claimAccountChange
+            onClaimAccountChange: BalanceClaimActiveActions.claimAccountChange,
+            onTransactionConfirm: TransactionConfirmActions.wasBroadcast
         })
     }
     
-    chainStoreUpdate() {
-        if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
-            console.log("ChainStore.balance_objects_by_address")
-            this.balance_objects_by_address = ChainStore.balance_objects_by_address
-        }
+    // chainStoreUpdate() {
+    //     if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
+    //         console.log("ChainStore.balance_objects_by_address")
+    //         this.balance_objects_by_address = ChainStore.balance_objects_by_address
+    //     }
+    // }
+    
+    onTransactionConfirm() {
+        // chainStoreUpdate did not include removal of balance claim objects
+        // This is a hack to refresh balance claims after a transaction.
+        this.setState({ checked: Immutable.Map() })
+        this.lookupBalanceObjects()
     }
     
     clearCache() {
         this.state = {
             balances: new Immutable.List(),
+            checked: Immutable.Map(),
             selected_balances: Immutable.Seq(),
             claim_account_name: undefined,
             address_to_pubkey: new Map(),
@@ -55,14 +65,15 @@ class BalanceClaimActiveStore extends BaseStore {
             for(let pubkey of pubkeys)
                 this.indexPubkey(pubkey)
             
-            return this.lookupBalanceObjects().then( balances => {
-                this.setState({ balances, loading: false }) })
+            return this.lookupBalanceObjects()
+                
             
         }).catch( error => console.error( error ))
     }
     
-    onSetSelectedBalanceClaims(selected_balances) {
-        this.setState({selected_balances})
+    onSetSelectedBalanceClaims(checked) {
+        var selected_balances = checked.valueSeq().flatten().toSet()
+        this.setState({ checked, selected_balances })
     }
     
     onClaimAccountChange(claim_account_name) {
@@ -89,7 +100,7 @@ class BalanceClaimActiveStore extends BaseStore {
     }
     
     lookupBalanceObjects() {
-        console.log("lookupBalanceObjects")
+        console.log("BalanceClaimActiveStore.lookupBalanceObjects")
         var db = Apis.instance().db_api()
         var no_balance_address = new Set(this.no_balance_address)
         var no_bal_size = no_balance_address.size
@@ -99,7 +110,7 @@ class BalanceClaimActiveStore extends BaseStore {
             var balance_ids = []
             for(let balance of result) balance_ids.push(balance.id)
             return db.exec("get_vested_balances", [balance_ids]).then( vested_balances => {
-                return Immutable.List().withMutations( balance_list => {
+                var balances = Immutable.List().withMutations( balance_list => {
                     for(let i = 0; i < result.length; i++) {
                         var balance = result[i]
                         no_balance_address.delete(balance.owner)
@@ -111,6 +122,7 @@ class BalanceClaimActiveStore extends BaseStore {
                         this.saveNoBalanceAddresses(no_balance_address)
                             .catch( error => console.error( error ) ) 
                 })
+                this.setState({ balances, loading: false })
             })
         })
     }

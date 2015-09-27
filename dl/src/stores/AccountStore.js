@@ -31,12 +31,12 @@ class AccountStore extends BaseStore {
     }
     
     clearCache() {
-        this.initial_account_refs_load = true // true until all undefined accounts are found
         this.state = { update: false }
         this.state.currentAccount = null;
         this.state.linkedAccounts = Immutable.Set();
         this.state.searchAccounts = Immutable.Map();
-        // this.refAccounts = Immutable.Map()
+        this.initial_account_refs_load = true // true until all undefined accounts are found
+        this.account_refs = null
     }
     
     chainStoreUpdate() {
@@ -51,6 +51,7 @@ class AccountStore extends BaseStore {
         //  Simply add them to the linkedAccounts list (no need to persist them)
         var account_refs = AccountRefsStore.getState().account_refs
         if(!this.initial_account_refs_load && this.account_refs === account_refs) return
+        this.account_refs = account_refs
         var pending = false
         account_refs.forEach( id => {
             var account = ChainStore.getAccount(id)

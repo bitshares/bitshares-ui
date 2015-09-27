@@ -23,24 +23,8 @@ import MyAccounts from "components/Forms/MyAccounts"
 @connectToStores
 export default class BalanceClaimActive extends Component {
     
-    constructor() {
-        super();
-        this.state = this._getInitialState();
-    }
-    
-    _getInitialState() {
-        return {
-            claim_account_name: null
-        };
-    }
-    
-    reset() {
-        this.setState(this._getInitialState())
-        BalanceClaimActiveStore.clearCache()
-    }
-    
     static getStores() {
-        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore]
+        return [BalanceClaimActiveStore, AccountRefsStore] //PrivateKeyStore
     }
     
     static getPropsFromStores() {
@@ -56,7 +40,7 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillUnmount() {
-        this.reset()
+        BalanceClaimActiveStore.clearCache()
     }
     
     render() {

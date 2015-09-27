@@ -38,13 +38,13 @@ var TRACE = false
 class BalanceClaimStore {
     
     constructor() {
-        this.bindActions(BalanceClaimActions)
-        this.bindListeners({
-            onRefreshBalanceClaims: TransactionConfirmActions.wasBroadcast,
-            onLoadMyAccounts: [
-                WalletUnlockActions.change//, ImportKeysActions.saved
-            ]
-        })
+        // this.bindActions(BalanceClaimActions)
+        // this.bindListeners({
+        //     onRefreshBalanceClaims: TransactionConfirmActions.wasBroadcast,
+        //     onLoadMyAccounts: [
+        //         WalletUnlockActions.change//, ImportKeysActions.saved
+        //     ]
+        // })
         this.balances_saving = 0
         this.pending_add_promises = []
         this.state = {
