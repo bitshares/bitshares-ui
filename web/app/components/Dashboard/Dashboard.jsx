@@ -5,6 +5,7 @@ import AccountCard from "./AccountCard";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import RecentTransactions from "../Account/RecentTransactions";
+import HelpContent from "../Utility/HelpContent";
 
 @BindToChainState()
 class Dashboard extends Component {

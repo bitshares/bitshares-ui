@@ -84,7 +84,8 @@ module.exports = function(options) {
                     loader: scssLoaders
                 },
                 { test: /fonts.*\.(eot|ttf|woff|svg)$/, loader: "file?name=fonts/[name].[ext]?[hash]" },
-                { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] }
+                { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
+                { test: /\.md/, loader: 'html!remarkable' }
             ]
         },
         resolve: {
@@ -99,7 +100,11 @@ module.exports = function(options) {
             fallback: [path.resolve(root_dir, "./node_modules")]
         },
         plugins: plugins,
-        root: outputPath
+        root: outputPath,
+        remarkable: {
+            preset: "full",
+            typographer: true
+        }
     };
 
     if(options.prod) config.entry.vendors = [
