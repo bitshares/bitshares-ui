@@ -259,7 +259,7 @@ module.exports = {
             withdraw_permission_claim: "Einzugsermächtigung eingefordert",
             withdraw_permission_delete: "Einzugsermächtigung aufgehoben",
             fill_order: "Order ausgeführt",
-            delegate_update_global_parameters: "Globale Parameters aktualisiert",
+            committee_member_update_global_parameters: "Globale Parameters aktualisiert",
             vesting_balance_create: "Sperrfristguthaben erstellt",
             vesting_balance_withdraw: "Sperrfristguthaben eingefordert",
             worker_create: "Budgetpunkt erstellt",
@@ -324,11 +324,11 @@ module.exports = {
         witnesses: {
             title: "Witnesses"
         },
-        delegates: {
-            title: "Delegates"
+        committee_members: {
+            title: "Committee members"
         },
-        delegate: {
-            title: "Delegate"
+        committee_member: {
+            title: "Committee member"
         },
         workers: {
             title: "Budgetpunkte"

@@ -672,8 +672,8 @@ class Transaction extends React.Component {
 
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="explorer.delegate.title" /></td>
-                            <td>{this.linkToAccount(op[1].delegate_account)}</td>
+                            <td><Translate component="span" content="explorer.committee_member.title" /></td>
+                            <td>{this.linkToAccount(op[1].committee_member_account)}</td>
                         </tr>
                     );
 

@@ -261,7 +261,7 @@ module.exports = {
             withdraw_permission_claim: "출금권한 요청",
             withdraw_permission_delete: "출금권한 삭제",
             fill_order: "매매 체결",
-            delegate_update_global_parameters: "전체 매개변수 업데이트",
+            committee_member_update_global_parameters: "전체 매개변수 업데이트",
             vesting_balance_create: "확정 잔고 생성",
             vesting_balance_withdraw: "확정 잔고 출금",
             worker_create: "직원 생성",
@@ -326,10 +326,10 @@ module.exports = {
         witnesses: {
             title: "증인"
         },
-        delegates: {
+        committee_members: {
             title: "위원"
         },
-        delegate: {
+        committee_member: {
             title: "위원"
         },
         workers: {

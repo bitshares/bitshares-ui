@@ -6,7 +6,7 @@ var AccountActions = require("../actions/AccountActions");
 var AccountStore = require("../stores/AccountStore");
 var Utils = require("common/utils");
 
-const DELEGATE = 0;
+const COMMITTEE_MEMBER = 0;
 const WITNESS = 1;
 const BUDGET_ITEM = 2;
 
@@ -15,11 +15,11 @@ class VoteStore extends BaseStore {
     constructor() {
         super();
         this.i_proxies = {};
-        this.i_delegates = {};
+        this.i_committee_member = {};
         this.i_witnesses = {};
         this.i_budget_items = {};
         this.c_proxies = {};
-        this.c_delegates = {};
+        this.c_committee_members = {};
         this.c_witnesses = {};
         this.c_budget_items = {};
         this.cachedAccountsJson = {};
@@ -55,7 +55,7 @@ class VoteStore extends BaseStore {
     }
 
     hasChanges(account_name) {
-        return this.i_delegates[account_name] !== this.c_delegates[account_name] ||
+        return this.i_committee_member[account_name] !== this.c_committee_members[account_name] ||
             this.i_witnesses[account_name] !== this.c_witnesses[account_name] ||
             this.i_budget_items[account_name] !== this.c_budget_items[account_name] ||
             this.i_proxies[account_name] !== this.c_proxies[account_name];
@@ -64,7 +64,7 @@ class VoteStore extends BaseStore {
     getAccountJsonWithChanges(account_name) {
         let account_name_to_id = AccountStore.getState().account_name_to_id;
         let votes = []
-            .concat(this.listToVoteOptions(DELEGATE, this.c_delegates[account_name], account_name_to_id))
+            .concat(this.listToVoteOptions(COMMITTEE_MEMBER, this.c_committee_members[account_name], account_name_to_id))
             .concat(this.listToVoteOptions(WITNESS, this.c_witnesses[account_name], account_name_to_id))
             .concat(this.listToVoteOptions(BUDGET_ITEM, this.c_budget_items[account_name], account_name_to_id));
         //let account_store_data = AccountStore.getState();
@@ -101,7 +101,7 @@ class VoteStore extends BaseStore {
 
     onCancelChanges(account_name) {
         console.log("[VoteStore.js:34] ----- onCancelChanges ----->");
-        this.c_delegates[account_name] = this.i_delegates[account_name];
+        this.c_committee_members[account_name] = this.i_committee_member[account_name];
         this.c_witnesses[account_name] = this.i_witnesses[account_name];
         this.c_budget_items[account_name] = this.i_budget_items[account_name];
         this.c_proxies[account_name] = this.i_proxies[account_name];
@@ -113,7 +113,7 @@ class VoteStore extends BaseStore {
         let account_id_to_name = AccountStore.getState().account_id_to_name;
         let account = result.fullAccount.account;
         this.cachedAccountsJson[account.name] = account;
-        this.initContainer(this.i_delegates, this.c_delegates, account.name);
+        this.initContainer(this.i_committee_member, this.c_committee_members, account.name);
         this.initContainer(this.i_witnesses, this.c_witnesses, account.name);
         this.initContainer(this.i_budget_items, this.c_budget_items, account.name);
         for (let v of account.options.votes) {
@@ -121,7 +121,7 @@ class VoteStore extends BaseStore {
             let account_id = "1.2." + vk;
             let account_name = account_id_to_name[account_id];
             let account_obj = {id: account_id, name: account_name};
-            if (vt == DELEGATE) this.storeItem(this.i_delegates, this.c_delegates, account.name, account_obj);
+            if (vt == COMMITTEE_MEMBER) this.storeItem(this.i_committee_member, this.c_committee_members, account.name, account_obj);
             if (vt == WITNESS) this.storeItem(this.i_witnesses, this.c_witnesses, account.name, account_obj);
             if (vt == BUDGET_ITEM) this.storeItem(this.i_budget_items, this.c_budget_items, account.name, account_obj);
         }
@@ -138,7 +138,7 @@ class VoteStore extends BaseStore {
 
     onPublishChanges(account_name) {
         console.log("[VoteStore.js] ----- onTransactUpdateAccount ----->", account_name);
-        this.i_delegates[account_name] = this.c_delegates[account_name];
+        this.i_committee_member[account_name] = this.c_committee_members[account_name];
         this.i_witnesses[account_name] = this.c_witnesses[account_name];
         this.i_budget_items[account_name] = this.c_budget_items[account_name];
         this.i_proxies[account_name] = this.c_proxies[account_name];

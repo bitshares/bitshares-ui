@@ -65,12 +65,12 @@ class Explorer extends React.Component {
                             </Link>
                         </ExplorerCard>
                         <ExplorerCard>
-                            <Link to="delegates">
+                            <Link to="committee-members">
                                 <div>
-                                    <Icon name="delegates" size="5x" fillClass="fill-black"/>
+                                    <Icon name="committee_members" size="5x" fillClass="fill-black"/>
                                 </div>
                                 <div className="card-divider text-center">
-                                    <Translate component="span" content="explorer.delegates.title" />
+                                    <Translate component="span" content="explorer.committee_members.title" />
                                 </div>
                             </Link>
                         </ExplorerCard>

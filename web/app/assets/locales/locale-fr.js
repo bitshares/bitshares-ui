@@ -182,7 +182,7 @@ module.exports = {
         asset_settle: "Requested settlement of",
         asset_global_settle: "Requested global settlement of",
         publish_feed: "A publié un nouveau flux pour l'actif",
-        delegate_create: "A créé le délégué",
+        committee_member_create: "A créé le délégué",
         witness_create: "A créé le témoin",
         witness_pay: "A retiré",
         proposal_create: "A créé une proposition",
@@ -232,7 +232,7 @@ module.exports = {
             asset_settle: "Couvrement d'actif",
             asset_global_settle: "Couvrement global d'actif",
             asset_publish_feed: "Publication de flux",
-            delegate_create: "Création de délégué",
+            committee_member_create: "Création de délégué",
             witness_create: "Création de témoin",
             witness_withdraw_pay: "Retrait de salaire de témoin",
             proposal_create: "Création d'une proposition",
@@ -243,7 +243,7 @@ module.exports = {
             withdraw_permission_claim: "Prise de permissions de retrait",
             withdraw_permission_delete: "Suppresion des permissions de retrait",
             fill_order: "Remplissage d'ordre",
-            delegate_update_global_parameters: "Mise à jour des parametres globaux",
+            committee_member_update_global_parameters: "Mise à jour des parametres globaux",
             vesting_balance_create: "Création de solde bloqué",
             vesting_balance_withdraw: "Retrait de solde bloqué",
             worker_create: "Création d'ouvrier",
@@ -308,11 +308,11 @@ module.exports = {
         witnesses: {
             title: "Témoins"
         },
-        delegates: {
+        committee_members: {
             title: "Délégués"
         },
-        delegate: {
-            title: "Delegate"
+        committee_member: {
+            title: "CommitteeMember"
         },
         workers: {
             title: "Ouvriers"
