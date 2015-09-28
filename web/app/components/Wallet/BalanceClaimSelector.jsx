@@ -1,20 +1,12 @@
-import WalletDb from "stores/WalletDb";
-import FormattedAsset from "components/Utility/FormattedAsset";
-import LoadingIndicator from "components/LoadingIndicator";
-import ExistingAccountsAccountSelect from "components/Forms/ExistingAccountsAccountSelect";
-import notify from "actions/NotificationActions";
-import cname from "classnames";
-import lookup from "chain/lookup";
-import v from "chain/serializer_validation";
-import BalanceClaimActions from "actions/BalanceClaimActions"
-
 import alt from "alt-instance"
 import React, {Component, PropTypes} from "react";
 import connectToStores from "alt/utils/connectToStores"
-import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
-import PrivateKeyStore from "stores/PrivateKeyStore";
-import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import Immutable from "immutable"
+
+import PrivateKeyStore from "stores/PrivateKeyStore";
+import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
+import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
+import FormattedAsset from "components/Utility/FormattedAsset";
 
 @connectToStores
 export default class BalanceClaimSelector extends Component {

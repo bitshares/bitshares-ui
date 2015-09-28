@@ -3,34 +3,23 @@ import PrivateKey from "ecc/key_private";
 import Address from "ecc/address"
 import Aes from "ecc/aes";
 import alt from "alt-instance"
-
-import WalletDb from "stores/WalletDb";
-import PublicKey from "ecc/key_public";
-import FormattedAsset from "components/Utility/FormattedAsset";
-
+import cname from "classnames"
 import config from "chain/config";
 import notify from "actions/NotificationActions";
 import hash from "common/hash";
-import Apis from "rpc_api/ApiInstances";
-import v from "chain/serializer_validation";
-// import lookup from "chain/lookup";
-import cname from "classnames";
-import AccountStore from "stores/AccountStore";
+
+import Apis from "rpc_api/ApiInstances"
 import PrivateKeyStore from "stores/PrivateKeyStore"
-import AccountActions from "actions/AccountActions";
 import ImportKeysActions from "actions/ImportKeysActions";
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletCreate from "components/Wallet/WalletCreate"
 import LoadingIndicator from "components/LoadingIndicator"
-import chain_api from "api/ChainStore"
 import Translate from "react-translate-component";
 
-import BalanceClaim from "components/Wallet/BalanceClaim"
-import BalanceClaimStore from "stores/BalanceClaimStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
-import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
-import BalanceClaimActions from "actions/BalanceClaimActions"
+import WalletDb from "stores/WalletDb";
+import PublicKey from "ecc/key_public";
 
 require("./ImportKeys.scss");
 

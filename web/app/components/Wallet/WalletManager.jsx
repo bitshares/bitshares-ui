@@ -2,11 +2,9 @@ import React, {Component} from "react";
 import {Link, RouteHandler} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
-import WalletCreate from "components/Wallet/WalletCreate";
 import WalletManagerStore from "stores/WalletManagerStore"
-import BalanceClaim from "components/Wallet/BalanceClaim"
-import Translate from "react-translate-component";
 import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
+import Translate from "react-translate-component";
 
 class WalletBaseComponent extends Component {
 

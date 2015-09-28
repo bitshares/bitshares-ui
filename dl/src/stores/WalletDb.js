@@ -6,7 +6,6 @@ import _ from "lodash";
 import Immutable from "immutable";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
-import BalanceClaimActions from "actions/BalanceClaimActions"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
@@ -14,7 +13,6 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import chain_config from "chain/config"
 import key_utils from "common/key_utils"
-//import WalletActions from "actions/WalletActions"
 
 //TODO delete wallet_public_name, this is managed in WalletManagerStore
 var wallet_public_name = "default"
@@ -343,9 +341,6 @@ class WalletDb {
                 )
             }
             if(TRACE) console.log('... importKeys save key loop done')
-            BalanceClaimActions.refreshBalanceClaims()
-            BalanceClaimActions.loadMyAccounts()
-            if(TRACE) console.log('... importKeys setWalletModified')
             return this.setWalletModified(transaction).then( ()=> {
                 return Promise.all(promises).catch( error => {
                     //DEBUG

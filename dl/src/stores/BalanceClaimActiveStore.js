@@ -1,5 +1,7 @@
 import alt from "alt-instance"
 import Immutable from "immutable"
+import cname from "classnames"
+
 import Address from "ecc/address"
 import PublicKey from "ecc/key_public"
 import key from "common/key_utils"
