@@ -159,7 +159,7 @@ class Header extends React.Component {
                             <Link to="settings" className="button" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>
                         <div className="grp-menu-item" >
-                            <Link to="help">Help</Link>
+                            <Link to="help"><Translate component="span" content="header.help"/></Link>
                         </div>
                         <div className="grp-menu-item" >
                             <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? <Translate component="span" content="header.unlock" /> : <Translate component="span" content="header.lock" /> }</a>

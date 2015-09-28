@@ -19,7 +19,8 @@ module.exports = {
         create_account: "Create Account",
         create_asset: "Create Asset",
         lock: "Lock",
-        unlock: "Unlock"
+        unlock: "Unlock",
+        help: "Help"
     },
     account: {
         asset: "Asset",

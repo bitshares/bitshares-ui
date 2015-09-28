@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import counterpart from "counterpart";
 import utils from "common/utils";
 
 let req = require.context("../../../../help", true, /\.md/);
@@ -61,8 +62,13 @@ class HelpContent extends React.Component {
         });
     }
     render() {
-        let value = HelpData[this.props.locale || "en"][this.props.path];
-        if (!value) throw new Error(`help file not found ${this.props.path}`);
+        let locale = this.props.locale || counterpart.getLocale() || "en";
+        if (!HelpData[locale]) {
+            console.error(`missing locale '${locale}' help files, rolling back to 'en'`);
+            locale = "en";
+        }
+        let value = HelpData[locale][this.props.path];
+        if (!value) throw new Error(`help file not found '${this.props.path}' for locale '${locale}'`);
         if (this.props.section) value = value[this.props.section];
         if (!value) throw new Error(`help section not found ${this.props.path}#${this.props.section}`);
         return <div className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value)}}/>;
