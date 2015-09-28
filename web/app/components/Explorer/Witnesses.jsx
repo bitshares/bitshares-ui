@@ -7,7 +7,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
-import {FormattedRelative} from "react-intl";
+import TimeAgo from "../Utility/TimeAgo";
 
 
 @BindToChainState({keep_updating: true})
@@ -60,7 +60,7 @@ class WitnessCard extends React.Component {
                             </tr>
                             <tr>
                                 <td>Last&nbsp;Block</td>
-                                <td><FormattedRelative value={last_aslot_time.toString()} /></td>
+                                <td><TimeAgo time={last_aslot_time.toString()} /></td>
                             </tr>
                             <tr>
                                 <td>Missed</td>
@@ -74,28 +74,48 @@ class WitnessCard extends React.Component {
     }
 }
 
+@BindToChainState({keep_updating: true})
 class WitnessList extends React.Component {
+
+    static propTypes = {
+        witnesses: ChainTypes.ChainObjectsList.isRequired
+    }
 
     render() {
 
-        let {witness_id_to_name, witnesses} = this.props;
-        let most_recent_aslot = 0
-        witnesses.forEach( w => { let s = w.last_aslot; 
-                                  if( most_recent_aslot  < s ) most_recent_aslot = s; } );
+        let {witnesses} = this.props;
+        let most_recent_aslot = 0;
+        witnesses.forEach( w => {
+            if (w) {
+                let s = w.get("last_aslot"); 
+                if( most_recent_aslot < s ) {
+                    most_recent_aslot = s;
+                }
+            }
+        });
 
 
         let itemRows = null;
-        if (witnesses.size > 0) {
+        if (witnesses.length > 0 && witnesses[1]) {
             itemRows = witnesses
                 .filter(a => {
-                    let name = witness_id_to_name.get(a.id);
-                    if(!name) return false;
-                    return name.indexOf(this.props.filter) !== -1;
+                    if (!a) { return false; }
+                    let account = ChainStore.getObject(a.get("witness_account"));
+                    if(!account) {return false; }
+                    
+                    return account.get("name").indexOf(this.props.filter) !== -1;
                 })
                 .sort((a, b) => {
-                    if (witness_id_to_name.get(a.id) > witness_id_to_name.get(b.id)) {
+                    let a_account = ChainStore.getObject(a.get("witness_account"));
+                    let b_account = ChainStore.getObject(b.get("witness_account"));
+
+                    if (!a_account || !b_account) {
+                        return 0;
+                    }
+
+                    if (a_account.get("name") > b_account.get("name")) {
                         return 1;
-                    } else if (witness_id_to_name.get(a.id) < witness_id_to_name.get(b.id)) {
+                    } else if (a_account.get("name") < b_account.get("name")) {
                         return -1;
                     } else {
                         return 0;
@@ -103,9 +123,9 @@ class WitnessList extends React.Component {
                 })
                 .map((a) => {
                     return (
-                        <WitnessCard key={a.id} witness={witness_id_to_name.get(a.id)} most_recent={this.props.current_aslot} />
+                        <WitnessCard key={a.id} witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
                     );
-                }).toArray();
+                });
         } 
 
         return (
@@ -137,53 +157,22 @@ class Witnesses extends React.Component {
         };
     }
 
-    _fetchWitnesses(witnessIds, witnesses, witness_id_to_name) {
-        if (!Array.isArray(witnessIds)) {
-            witnessIds = [witnessIds];
-        }
-
-        let missing = [];
-        let missingAccounts = [];
-        witnessIds.forEach(id => {
-            // Check for missing witness data
-            if (!witnesses.get(id)) {
-                missing.push(id);
-            // Check for missing witness account data
-            } else if (!witness_id_to_name.get(id)) {
-                missingAccounts.push(witnesses.get(id).witness_account);
-            }
-        });
-
-        if (missing.length > 0) {
-            WitnessActions.getWitnesses(missing);
-        } 
-
-        if (missingAccounts.length > 0) {
-            WitnessActions.getWitnessAccounts(missingAccounts);
-        }
-    }
-
     _onFilter(e) {
         e.preventDefault();
         this.setState({filterWitness: e.target.value});
     }
 
     render() {
-        let {witness_id_to_name, witnesses, dynGlobalObject, globalObject} = this.props;
-        let activeWitnesses = [];
+        let { dynGlobalObject, globalObject} = this.props;
         dynGlobalObject = dynGlobalObject.toJS();
         globalObject = globalObject.toJS();
 
-        for (let key in globalObject.active_witnesses) {
-            if (globalObject.active_witnesses.hasOwnProperty(key)) {
-                activeWitnesses.push(globalObject.active_witnesses[key]);
-            }
+        let current = ChainStore.getObject(dynGlobalObject.current_witness),
+            currentAccount = null;
+        if (current) {
+            currentAccount = ChainStore.getObject(current.get("witness_account"));
         }
 
-     //   witnesses = witnesses.sort( (a,b)=> { console.log( "a: ", a ); return a.get("total_votes") - b.get("total_votes") } );
-
-        this._fetchWitnesses(activeWitnesses, witnesses, witness_id_to_name);
-       
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
@@ -193,7 +182,7 @@ class Witnesses extends React.Component {
                             <table className="table key-value-table">
                                 <tr>
                                     <td>Current witness</td>
-                                    <td>{witness_id_to_name.get(dynGlobalObject.current_witness)}</td>
+                                    <td>{currentAccount ? currentAccount.get("name") : null}</td>
                                 </tr>
                                 <tr>
                                     <td>Active witnesses</td>
@@ -213,10 +202,10 @@ class Witnesses extends React.Component {
                                 </tr>
                                 <tr>
                                     <td>Next Vote Update</td>
-                                    <td> <FormattedRelative value={dynGlobalObject.next_maintenance_time} /></td>
+                                    <td> <TimeAgo time={dynGlobalObject.next_maintenance_time} /></td>
                                 </tr>
                                 <tr>
-                                   <td>  <Translate component="h4" content="markets.filter" /> </td>
+                                   <td> <Translate component="h4" content="markets.filter" /> </td>
                                    <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
                                 </tr>
                             </table>
@@ -226,8 +215,7 @@ class Witnesses extends React.Component {
                             <div className="grid-content ">
                                 <WitnessList
                                     current_aslot={dynGlobalObject.current_aslot}
-                                    witnesses={witnesses}
-                                    witness_id_to_name={witness_id_to_name}
+                                    witnesses={Immutable.List(globalObject.active_witnesses)}
                                     filter={this.state.filterWitness}
                                 />
                             </div>
