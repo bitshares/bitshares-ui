@@ -160,7 +160,7 @@ class Settings extends React.Component {
                 </div>
                 <div className="grid-block medium-3 right-column">
                     <div className="grid-content">
-                        <div><label><h5><Link to="wallet">Wallets</Link></h5></label></div>
+                        <div><label><h5><Link to="wallet"><Translate content="settings.wallets" /></Link></h5></label></div>
                     </div>
                 </div>
             </div>
