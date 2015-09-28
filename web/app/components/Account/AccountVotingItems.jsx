@@ -89,8 +89,11 @@ class AccountVotingItems extends React.Component {
 
     render() {
         if(!this.props.items) return null;
-        let item_rows = this.props.items.filter(i => i)
-           .sort((a,b) =>{
+        let item_rows = this.props.items.filter(i => {
+            if (!i) return false;
+            if (this.state.item_name_input) return i.get("name").indexOf(this.state.item_name_input) !== -1;
+            return true;
+        }).sort((a,b) =>{
                  if( a.get("name") > b.get("name") ) return 1;
                  else if( a.get("name") < b.get("name") ) return -1;
                  return 0;
