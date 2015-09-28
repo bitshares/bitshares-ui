@@ -11,7 +11,7 @@ import Icon from "../Icon/Icon";
 import TimeAgo from "../Utility/TimeAgo";
 
 @BindToChainState({keep_updating:true})
-class AccountMemberStats extends React.Component {
+class AccountMembership extends React.Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
@@ -171,4 +171,4 @@ class AccountMemberStats extends React.Component {
     }
 }
 
-export default AccountMemberStats;
+export default AccountMembership;

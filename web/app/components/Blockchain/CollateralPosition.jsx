@@ -36,7 +36,7 @@ class CollateralPosition extends React.Component {
                 </td>
 
                 <td>
-                    <button onClick={this._onUpdatePosition.bind(this)} className="button success">Update</button>
+                    <button onClick={this._onUpdatePosition.bind(this)} className="button outline">Update</button>
                     <BorrowModal                
                         ref={"cp_modal_" + co.call_price.quote.asset_id}
                         quote_asset={co.call_price.quote.asset_id}
