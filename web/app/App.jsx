@@ -55,9 +55,10 @@ import ChainStore from "api/ChainStore";
 import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
-import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
-import Brainkey from "components/Wallet/Brainkey"
-import AccountRefsStore from "stores/AccountRefsStore"
+import BalanceClaimActive from "components/Wallet/BalanceClaimActive";
+import Brainkey from "components/Wallet/Brainkey";
+import AccountRefsStore from "stores/AccountRefsStore";
+import Help from "./Help";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -234,7 +235,6 @@ let routes = (
             <Route name="welcome-brainkey" path="brainkey" handler={Brainkey}/>
             <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaimActive}/>
         </Route>
-        
         <Route name="account" path="/account/:account_name" handler={AccountPage}>
             <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
@@ -245,7 +245,13 @@ let routes = (
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
-        
+        <Route name="help" path="/help" handler={Help}>
+            <Route name="path1" path=":path1" handler={Help}>
+                <Route name="path2" path=":path2" handler={Help}>
+                    <Route name="path3" path=":path3" handler={Help}/>
+                </Route>
+            </Route>
+        </Route>
     </Route>
 );
 

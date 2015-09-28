@@ -77,9 +77,9 @@ class AccountMembership extends React.Component {
                     { member_status=== "lifetime" ? null : (
                        <div>
                            <div className="large-6 medium-8">
-                               <HelpContent file="components/AccountMembership" section="lifetime" feesCashback={100 - network_fee} price={{amount: lifetime_cost, asset: core_asset}}/>
+                               <HelpContent path="components/AccountMembership" section="lifetime" feesCashback={100 - network_fee} price={{amount: lifetime_cost, asset: core_asset}}/>
                                { member_status === "annual" ? null : (
-                                  <HelpContent file="components/AccountMembership" section="annual" feesCashback={100 - network_fee - lifetime_fee} price={{amount: annual_cost, asset: core_asset}}/>
+                                  <HelpContent path="components/AccountMembership" section="annual" feesCashback={100 - network_fee - lifetime_fee} price={{amount: annual_cost, asset: core_asset}}/>
                                )}
                                <a href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
                                    <Translate content="account.member.upgrade_lifetime"/>
@@ -132,7 +132,7 @@ class AccountMembership extends React.Component {
                     <div className="grid-block large-1">&nbsp;</div>
                     <div className="grid-block large-7">
                         <div className="grid-content regular-padding">
-                            <HelpContent file="components/AccountMembership"
+                            <HelpContent path="components/AccountMembership"
                                          section="fee-division"
                                          account={account_name}
                                          networkFee={network_fee}

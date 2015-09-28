@@ -21,6 +21,10 @@ class AccountPage extends React.Component {
         account: "props.params.account_name"
     }
 
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    }
+
     componentWillMount() {
         let account = this.props.params.account_name;
         if(account && AccountStore.getState().linkedAccounts.get(account))
@@ -73,7 +77,5 @@ class AccountPage extends React.Component {
         );
     }
 }
-
-AccountPage.contextTypes = {router: React.PropTypes.func.isRequired};
 
 export default AccountPage;

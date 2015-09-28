@@ -5,7 +5,6 @@ import AccountCard from "./AccountCard";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import RecentTransactions from "../Account/RecentTransactions";
-import HelpContent from "../Utility/HelpContent";
 import Translate from "react-translate-component";
 
 @BindToChainState()
