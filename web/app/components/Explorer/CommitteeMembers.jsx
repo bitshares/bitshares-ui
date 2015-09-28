@@ -49,32 +49,41 @@ class CommitteeMemberCard extends React.Component {
     }
 }
 
+@BindToChainState({keep_updating: true})
 class CommitteeMemberList extends React.Component {
+    static propTypes = {
+        committee_members: ChainTypes.ChainObjectsList.isRequired
+    }
 
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.committee_members, this.props.committee_members) ||
-                !Immutable.is(nextProps.committee_member_id_to_name, this.props.committee_member_id_to_name) ||
                 nextProps.filter !== this.props.filter
             );
     }
 
     render() {
-
-        let {committee_member_id_to_name, committee_members} = this.props;
+        let {committee_members} = this.props;
         let itemRows = null;
-        if (committee_members.size > 0) {
+
+        if (committee_members.length > 0 && committee_members[1]) {
             itemRows = committee_members
                 .filter(a => {
-                    if (committee_member_id_to_name.get(a.id)) {
-                        return committee_member_id_to_name.get(a.id).indexOf(this.props.filter) !== -1;
+                    let account = ChainStore.getObject(a.get("committee_member_account"));
+                    if (account) {
+                        return account.get("name").indexOf(this.props.filter) !== -1;
                     }
                     return true;
                 })
                 .sort((a, b) => {
-                    if (committee_member_id_to_name.get(a.id) > committee_member_id_to_name.get(b.id)) {
+                    let a_account = ChainStore.getObject(a.get("committee_member_account"));
+                    let b_account = ChainStore.getObject(b.get("committee_member_account"));
+                    if (!a_account || !b_account) {
+                        return 0;
+                    }
+                    if (a_account.get("name") > b_account.get("name")) {
                         return 1;
-                    } else if (committee_member_id_to_name.get(a.id) < committee_member_id_to_name.get(b.id)) {
+                    } else if (a_account.get("name") < b_account.get("name")) {
                         return -1;
                     } else {
                         return 0;
@@ -82,9 +91,9 @@ class CommitteeMemberList extends React.Component {
                 })
                 .map((a) => {
                     return (
-                        <CommitteeMemberCard key={a.id} committee_member={committee_member_id_to_name.get(a.id)} />
+                        <CommitteeMemberCard key={a.get("id")} committee_member={a.get("committee_member_account")} />
                     );
-                }).toArray();
+                });
         } 
 
         return (
@@ -115,37 +124,9 @@ class CommitteeMembers extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            !Immutable.is(nextProps.committee_members, this.props.committee_members) ||
-            !Immutable.is(nextProps.committee_member_id_to_name, this.props.committee_member_id_to_name) ||
             !Immutable.is(nextProps.globalObject, this.props.globalObject) ||
             nextState.filterCommitteeMember !== this.state.filterCommitteeMember
         );
-    }
-
-    _fetchCommitteeMembers(committeeMembersIds, committee_members, committee_member_id_to_name) {
-        if (!Array.isArray(committeeMembersIds)) {
-            committeeMembersIds = [committeeMembersIds];
-        }
-
-        let missing = [];
-        let missingAccounts = [];
-        committeeMembersIds.forEach(id => {
-            // Check for missing witness data
-            if (!committee_members.get(id)) {
-                missing.push(id);
-            // Check for missing witness account data
-            } else if (!committee_member_id_to_name.get(id)) {
-                missingAccounts.push(committee_members.get(id).committee_member_account);
-            }
-        });
-
-        if (missing.length > 0) {
-            CommitteeMembersActions.getCommitteeMembers(missing);
-        } 
-
-        if (missingAccounts.length > 0) {
-            CommitteeMembersActions.getCommitteeMemberAccounts(missingAccounts);
-        }
     }
 
     _onFilter(e) {
@@ -154,7 +135,7 @@ class CommitteeMembers extends React.Component {
     }
 
     render() {
-        let {committee_member_id_to_name, committee_members, globalObject} = this.props;
+        let {globalObject} = this.props;
         globalObject = globalObject.toJS();
 
         let activeCommitteeMembers = [];
@@ -163,9 +144,7 @@ class CommitteeMembers extends React.Component {
                 activeCommitteeMembers.push(globalObject.active_committee_members[key]);
             }
         }
-
-        this._fetchCommitteeMembers(activeCommitteeMembers, committee_members, committee_member_id_to_name);
-       
+      
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
@@ -181,7 +160,10 @@ class CommitteeMembers extends React.Component {
                                 <Translate component="h3" content="markets.filter" />
                                 <input type="text" value={this.state.filterCommitteeMember} onChange={this._onFilter.bind(this)} />
                             </div>
-                            <CommitteeMemberList committee_members={committee_members} committee_member_id_to_name={committee_member_id_to_name} filter={this.state.filterCommitteeMember}/>
+                            <CommitteeMemberList
+                                committee_members={Immutable.List(globalObject.active_committee_members)}
+                                filter={this.state.filterCommitteeMember}
+                            />
                         </div>
                     </div>
                 </div>
