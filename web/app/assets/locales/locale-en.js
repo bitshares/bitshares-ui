@@ -94,7 +94,9 @@ module.exports = {
             remove_committee: "Remove",
             add_committee: "Add",
             add_committee_label: "Committee Member",
-            add_witness_label: "Witness"
+            add_witness_label: "Witness",
+            approve_worker: "Approve worker proposal",
+            reject_worker: "Reject worker proposal"
         },
         options: {
             num_witnesses: "Desired Witnesses",
