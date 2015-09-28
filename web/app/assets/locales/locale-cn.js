@@ -258,7 +258,6 @@ module.exports = {
             assert: "断言操作",
             balance_claim: "领取余额",
             override_transfer: "优先覆盖转账",
-            committee_member_create: "创建受托人",
             witness_update: "更新见证人"
         },
         confirm: "请确认交易",
@@ -277,7 +276,6 @@ module.exports = {
         delta_collateral: "保证金变化",
         delta_debt: "债务变化",
         feed_price: "喂价",
-        committee_member_create: "创建受托人账户",
         witness_update: "更新见证人账户",
         new_url: "网站",
         publisher: "发布人",
