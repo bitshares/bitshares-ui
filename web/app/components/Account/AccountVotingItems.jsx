@@ -100,11 +100,8 @@ class AccountVotingItems extends React.Component {
            });
 
         let error = this.state.error;
-        if(!error && this.state.selected_item && items_pairs.findIndex(i => i[1] === this.state.selected_item) > -1)
+        if(!error && this.state.selected_item && this.props.items.indexOf(this.state.selected_item) !== -1)
             error = "Account is already in the list";
-
-        //if(!error && this.state.selected_item && this.props.validateAccount)
-        //    error = this.props.validateAccount(this.state.selected_item);
 
         let cw = ["10%", "20%", "60%", "10%"];
 

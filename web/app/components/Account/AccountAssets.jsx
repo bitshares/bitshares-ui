@@ -22,7 +22,6 @@ import validation from "common/validation";
 import classnames from "classnames";
 import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";
-import HelpContent from "../Utility/HelpContent";
 
 class AccountAssets extends React.Component {
 
@@ -265,8 +264,6 @@ class AccountAssets extends React.Component {
 
         return (    
             <div className="grid-content">
-                <HelpContent path="assets/usd"/>
-
                     <div className="content-block">
                         <h3>Issued Assets</h3>
 
