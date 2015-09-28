@@ -31,7 +31,7 @@ class AccountActions {
             return api.lookupAccounts(start_symbol, limit)
                 .then(result => {
                     accountSearch[uid] = false;
-                    this.dispatch(result);
+                    this.dispatch({accounts: result, searchTerm: start_symbol});
                 });
         }
     }

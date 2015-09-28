@@ -35,6 +35,7 @@ class AccountStore extends BaseStore {
         this.state.currentAccount = null;
         this.state.linkedAccounts = Immutable.Set();
         this.state.searchAccounts = Immutable.Map();
+        this.state.searchTerm = "";
         this.initial_account_refs_load = true // true until all undefined accounts are found
         this.account_refs = null
     }
@@ -118,9 +119,10 @@ class AccountStore extends BaseStore {
         return authority === "partial" || authority === "full";
     }
     
-    onAccountSearch(accounts) {
+    onAccountSearch(payload) {
+        this.state.searchTerm = payload.searchTerm;
         this.state.searchAccounts = this.state.searchAccounts.clear();
-        accounts.forEach(account => {
+        payload.accounts.forEach(account => {
             this.state.searchAccounts = this.state.searchAccounts.withMutations(map => {
                 map.set(account[1], account[0]);
             });

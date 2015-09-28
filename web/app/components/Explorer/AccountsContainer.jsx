@@ -12,6 +12,9 @@ class AccountsContainer extends React.Component {
                   inject={{
                     searchAccounts: () => {
                         return AccountStore.getState().searchAccounts;
+                    },
+                    searchTerm: () => {
+                        return AccountStore.getState().searchTerm;
                     }
                   }} 
                   >

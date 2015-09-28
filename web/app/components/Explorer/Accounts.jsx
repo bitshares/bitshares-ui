@@ -8,10 +8,10 @@ import {debounce} from "lodash";
 
 class Accounts extends React.Component {
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
-            searchTerm: ""
+            searchTerm: props.searchTerm
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
