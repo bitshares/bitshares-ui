@@ -55,13 +55,6 @@ class CommitteeMemberList extends React.Component {
         committee_members: ChainTypes.ChainObjectsList.isRequired
     }
 
-    shouldComponentUpdate(nextProps) {
-        return (
-                !Immutable.is(nextProps.committee_members, this.props.committee_members) ||
-                nextProps.filter !== this.props.filter
-            );
-    }
-
     render() {
         let {committee_members} = this.props;
         let itemRows = null;
@@ -69,11 +62,12 @@ class CommitteeMemberList extends React.Component {
         if (committee_members.length > 0 && committee_members[1]) {
             itemRows = committee_members
                 .filter(a => {
+                    if (!a) {return false; }
                     let account = ChainStore.getObject(a.get("committee_member_account"));
-                    if (account) {
-                        return account.get("name").indexOf(this.props.filter) !== -1;
-                    }
-                    return true;
+                    if (!account) { return false; }
+                    
+                    return account.get("name").indexOf(this.props.filter) !== -1;
+                    
                 })
                 .sort((a, b) => {
                     let a_account = ChainStore.getObject(a.get("committee_member_account"));

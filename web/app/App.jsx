@@ -7,11 +7,10 @@ import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
 import Assets from "./components/Explorer/AssetsContainer";
 import AccountsContainer from "./components/Explorer/AccountsContainer";
-import WitnessesContainer from "./components/Explorer/WitnessesContainer";
 import Witnesses from "./components/Explorer/Witnesses";
-import Witness from "./components/Explorer/Witness";
+// import Witness from "./components/Explorer/Witness";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
-import CommitteeMember from "./components/Explorer/CommitteeMember";
+// import CommitteeMember from "./components/Explorer/CommitteeMember";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Footer from "./components/Footer/Footer";
 import AccountPage from "./components/Account/AccountPage";
@@ -31,9 +30,9 @@ import Asset from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
-import AccountActions from "actions/AccountActions";
-import AssetActions from "actions/AssetActions";
-import BlockchainActions from "actions/BlockchainActions";
+// import AccountActions from "actions/AccountActions";
+// import AssetActions from "actions/AssetActions";
+// import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
@@ -44,7 +43,7 @@ import NotificationStore from "stores/NotificationStore";
 // import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
-import ExistingAccount,{ExistingAccountOptions} from "components/Wallet/ExistingAccount";
+import ExistingAccount, {ExistingAccountOptions} from "components/Wallet/ExistingAccount";
 import WalletCreate from "components/Wallet/WalletCreate";
 import ImportKeys from "components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
@@ -200,7 +199,7 @@ let routes = (
         <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
         <Route name="assets" path="/explorer/assets" handler={Assets}/>
         <Route name="accounts" path="/explorer/accounts" handler={AccountsContainer}/>
-        <Route name="witnesses" path="/explorer/witnesses" handler={WitnessesContainer}>
+        <Route name="witnesses" path="/explorer/witnesses" handler={Witnesses}>
             <DefaultRoute handler={Witnesses}/>
             {/* Deprecated <Route name="witness" path=":name" handler={Witness}/> */}
         </Route>
