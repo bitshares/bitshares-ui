@@ -90,13 +90,14 @@ class BalanceClaimActiveStore extends BaseStore {
     }
     
     indexPubkey(pubkey) {
-        for(let address_string of key.addresses(pubkey)) {
-            if( ! this.no_balance_address.has(address_string)) {
-                this.state.address_to_pubkey.set(address_string, pubkey)
-                this.setState({address_to_pubkey: this.state.address_to_pubkey})
-                this.addresses.add(address_string)
-            }
-        }
+        // Pending performance updates 
+        // for(let address_string of key.addresses(pubkey)) {
+        //     if( ! this.no_balance_address.has(address_string)) {
+        //         this.state.address_to_pubkey.set(address_string, pubkey)
+        //         this.setState({address_to_pubkey: this.state.address_to_pubkey})
+        //         this.addresses.add(address_string)
+        //     }
+        // }
     }
     
     lookupBalanceObjects() {

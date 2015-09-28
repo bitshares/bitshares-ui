@@ -192,10 +192,11 @@ function loadAddyMap() {
 }
 
 function updateAddressMap(addresses, pubkey) {
-    var address_strings = key.addresses(pubkey)
-    for(let address of address_strings) {
-        addresses.set(address, pubkey)
-    }
+    // Pending performance updates
+    // var address_strings = key.addresses(pubkey)
+    // for(let address of address_strings) {
+    //     addresses.set(address, pubkey)
+    // }
 }
 
 function saveAddyMap(map) {
