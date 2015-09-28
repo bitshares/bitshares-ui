@@ -34,8 +34,8 @@ class HelpContent extends React.Component {
     setVars(str) {
         return str.replace(/(\{.+?\})/gi, (match, text) => {
             let key = text.substr(1, text.length - 2);
-            let value = this.props[key] ? this.props[key] : text;
-            if (value.amount && value.asset) value = utils.format_asset(value.amount, value.asset);
+            let value = this.props[key] !== undefined ? this.props[key] : text;
+            if (value.amount && value.asset) value = utils.format_asset(value.amount, value.asset, false, false);
             if (value.date) value = utils.format_date(value.date);
             if (value.time) value = utils.format_time(value.time);
             //console.log("-- var -->", key, value);
