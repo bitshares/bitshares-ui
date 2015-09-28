@@ -3,12 +3,14 @@ import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import LoadingIndicator from "../LoadingIndicator";
+import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Statistics from "./Statistics";
 import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
 import TimeAgo from "../Utility/TimeAgo";
+import HelpContent from "../Utility/HelpContent";
 
 @BindToChainState({keep_updating:true})
 class AccountMembership extends React.Component {
@@ -30,7 +32,6 @@ class AccountMembership extends React.Component {
 
 
     render() {
-        console.log( this.props );
         let gprops = this.props.gprops;
         let dprops = this.props.dprops;
 
@@ -45,8 +46,6 @@ class AccountMembership extends React.Component {
 
         let account_name = account.name;
 
-        console.log( "account: ", account );
-
         let network_fee  = account.network_fee_percentage/100;
         let lifetime_fee = account.lifetime_referrer_fee_percentage/100;
         let referrer_total_fee = 100 - network_fee - lifetime_fee;
@@ -55,8 +54,6 @@ class AccountMembership extends React.Component {
 
         gprops = gprops.toJS();
         dprops = dprops.toJS();
-        console.log( "gprops: ", gprops );
-        console.log( "dprops: ", dprops );
 
         let member_status = ChainStore.getAccountMemberStatus(this.props.account);
         let membership = "account.member." + member_status;
@@ -69,6 +66,10 @@ class AccountMembership extends React.Component {
         else if( expiration_date === "1970-01-01T00:00:00" )
            expiration_date = "N/A"
 
+        let core_asset = ChainStore.getAsset("1.3.0");
+        let lifetime_cost = gprops.parameters.current_fees.parameters[8][1].membership_lifetime_fee*gprops.parameters.current_fees.scale/10000;
+        let annual_cost = gprops.parameters.current_fees.parameters[8][1].membership_annual_fee*gprops.parameters.current_fees.scale/10000;
+
         return (
             <div className="grid-content">
                 <div className="content-block">
@@ -76,20 +77,10 @@ class AccountMembership extends React.Component {
                     { member_status=== "lifetime" ? null : (
                        <div>
                            <div className="large-6 medium-8">
-                               <h3> Get {100-network_fee}% Cashback on Fees </h3>
-                               <p>
-                                  Lifetime Members get {100-network_fee}% cashback on every transaction fee they pay and
-                                  qualify to earn referral income from users they register with or referr to the network. A
-                                  Lifetime membership is just <FormattedAsset amount={gprops.parameters.current_fees.parameters[8][1].membership_lifetime_fee*gprops.parameters.current_fees.scale/10000} asset="1.3.0"/>.
-                               </p>
+                               <HelpContent file="components/AccountMembership" section="lifetime" feesCashback={100 - network_fee} price={{amount: lifetime_cost, asset: core_asset}}/>
                                { member_status === "annual" ? null : (
-                                  <p>
-                                     If a lifetime membership is too much you can still get {100-network_fee-lifetime_fee}% cashback for the next year by becoming an
-                                     annual subscriber for just <FormattedAsset amount={gprops.parameters.current_fees.parameters[8][1].membership_annual_fee*gprops.parameters.current_fees.scale/10000} asset="1.3.0"/> per
-                                     year.
-                                  </p>
+                                  <HelpContent file="components/AccountMembership" section="annual" feesCashback={100 - network_fee - lifetime_fee} price={{amount: annual_cost, asset: core_asset}}/>
                                )}
-
                                <a href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
                                    <Translate content="account.member.upgrade_lifetime"/>
                                </a> &nbsp; &nbsp;
@@ -141,28 +132,18 @@ class AccountMembership extends React.Component {
                     <div className="grid-block large-1">&nbsp;</div>
                     <div className="grid-block large-7">
                         <div className="grid-content regular-padding">
-                            <h4>Fee Division</h4>
-                            <p>
-                                Every time <Link to="account" params={{account_name:account_name}}> {account_name} </Link> pays a transaction fee, that fee is divided among several different accounts.  The network takes
-                                a {network_fee}% cut, and the Lifetime Member who referred <Link to="account" params={{account_name:account_name}}> {account_name} </Link> gets a {lifetime_fee}% cut.
-                            </p>
-                            <p>
-                                The <i>registrar</i> is the account that paid the transaction fee to register {account_name} with the network.  The registrar gets to decide how to
-                                divide the remaining {referrer_total_fee}% between themselves and their own <i>Affiliate Referrer</i> program.
-                            </p>
-                            <p><Link to="account" params={{account_name:account_name}}>{account_name}</Link>'s registrar chose to share  &nbsp;
-                                {referrer_fee}% of the total fee with the <i>Affiliate Referrer</i> and keep  &nbsp;
-                                {registrar_fee}% of the total fee for themeselves.
-                            </p>
-                            <h4>Pending Fees</h4>
-                            <p>
-                                Fees paid by {account_name} are only divided among the network, referrers, and registrars once every maintenance interval ({gprops.parameters.maintenance_interval} seconds). The
-                                next maintenance time is <TimeAgo time={dprops.next_maintenance_time}/>.
-                            </p>
-                            <h4>Vesting Fees</h4>
-                            <p>
-                                Most fees are made available immediately, but fees over <FormattedAsset amount={gprops.parameters.cashback_vesting_threshold} asset="1.3.0" /> (such as those paid to upgrade your membership or register a premium account name) must vest for a total of {gprops.parameters.cashback_vesting_period_seconds/60/60/24} days.
-                            </p>
+                            <HelpContent file="components/AccountMembership"
+                                         section="fee-division"
+                                         account={account_name}
+                                         networkFee={network_fee}
+                                         referrerFee={referrer_fee}
+                                         registrarFee={registrar_fee}
+                                         lifetimeFee={lifetime_fee}
+                                         referrerTotalFee={referrer_total_fee}
+                                         maintenanceInterval={gprops.parameters.maintenance_interval}
+                                         nextMaintenanceTime={{time: dprops.next_maintenance_time}}
+                                         vestingThreshold={{amount: gprops.parameters.cashback_vesting_threshold, asset: core_asset}}
+                                         vestingPeriod={gprops.parameters.cashback_vesting_period_seconds/60/60/24}/>
                         </div>
                     </div>
                 </div>

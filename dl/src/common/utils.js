@@ -150,7 +150,18 @@ var Utils = {
             }
         }
         return true;
+    },
+
+    format_date: function(date_str) {
+        let date = new Date(date_str);
+        return date.toLocaleDateString();
+    },
+
+    format_time: function(time_str) {
+        let date = new Date(time_str);
+        return date.toLocaleString();
     }
+
 };
 
 module.exports = Utils;
