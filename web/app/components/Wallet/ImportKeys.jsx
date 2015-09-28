@@ -20,21 +20,24 @@ import PrivateKeyStore from "stores/PrivateKeyStore"
 import AccountActions from "actions/AccountActions";
 import ImportKeysActions from "actions/ImportKeysActions";
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import BalanceClaimActions from "actions/BalanceClaimActions"
-import BalanceClaimStore from "stores/BalanceClaimStore"
 import WalletCreate from "components/Wallet/WalletCreate"
-import BalanceClaim from "components/Wallet/BalanceClaim"
 import LoadingIndicator from "components/LoadingIndicator"
 import chain_api from "api/ChainStore"
 import Translate from "react-translate-component";
 
-require("./ImportKeys.scss");
+import BalanceClaim from "components/Wallet/BalanceClaim"
+import BalanceClaimStore from "stores/BalanceClaimStore"
+import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
+import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
+import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
+import BalanceClaimActions from "actions/BalanceClaimActions"
 
+require("./ImportKeys.scss");
 
 var api = Apis.instance();
 var import_keys_assert_checking = false
 
-var TRACE = true
+var TRACE = false
 
 export default class ImportKeys extends Component {
     
@@ -45,8 +48,8 @@ export default class ImportKeys extends Component {
     
     _getInitialState() {
         return {
+            pubkeys: new Set(),
             wifs_to_account: { },
-            wif_to_balances: null,
             wif_count: 0,
             no_file: true,
             account_keys: [],
@@ -82,27 +85,12 @@ export default class ImportKeys extends Component {
         }
         
         var has_keys = this.state.wif_count !== 0;
-        var import_ready = has_keys &&
-            this.state.balances_known;
+        var import_ready = has_keys
         var password_placeholder = "Enter import file password";
         if (this.state.wif_count) {
             password_placeholder = "";
         }
 
-        var balance_rows = null;
-        if(this.state.balance_by_asset) {
-            balance_rows = [];
-            this.state.balance_by_asset.forEach((asset_balance, index) => {
-                balance_rows.push(
-                    <div key={index} className="asset-list">
-                        <FormattedAsset color="info"
-                            amount={asset_balance.balance}
-                            asset={asset_balance.asset_id}
-                            />
-                    </div>
-                );
-            });
-        }
         var account_rows = null;
         if(this.state.account_keycount) {
             account_rows = [];
@@ -182,15 +170,13 @@ export default class ImportKeys extends Component {
                         </div>) : null}
                         <br/>
 
-                        <h3 className="center-content">Unclaimed balances belonging to these keys:</h3>
-                        {balance_rows ?
+                        <h4 className="center-content">Unclaimed balances belonging to these keys:</h4>
+                        {this.state.wif_count ?
                             (<div>
                                 <div className="grid-block center-content">
                                     <div className="grid-content no-overflow">
                                         <label>Asset Totals</label>
-                                        <div>
-                                            {balance_rows.length ? balance_rows : "No Balances"}
-                                        </div>
+                                        <BalanceClaimAssetTotal />
                                     </div>
                                 </div>
                             </div>) : null}
@@ -221,96 +207,13 @@ export default class ImportKeys extends Component {
         var wif_count = Object.keys(wifs_to_account).length
         this.setState({wif_count})
         this._importKeysChange(wifs_to_account)
+        BalanceClaimActiveActions.setPubkeys(Object.keys(this.state.imported_keys_public))
     }
 
     _importKeysChange(wifs_to_account) {
-        this.lookupBalances(wifs_to_account).then( wif_to_balances => {
-            var assetid_balance = this.balanceByAsset(wif_to_balances);
-            var asset_ids = Object.keys(assetid_balance);
-            var balance_by_asset = [];
-            for(let i = 0; i < asset_ids.length; i++) {
-                var asset_id = asset_ids[i];
-                var balance = assetid_balance[asset_id];
-                balance_by_asset.push({balance, asset_id});
-            }
-            this.setState({
-                wif_to_balances,
-                balance_by_asset,
-                balances_known: true,
-                account_keycount:
-                    this.getImportAccountKeyCount(wifs_to_account)
-            });
+        this.setState({
+            account_keycount: this.getImportAccountKeyCount(wifs_to_account)
         });
-    }
-
-    lookupBalances(wifs_to_account) {
-        return new Promise((resolve, reject)=> {
-            var wifs = Object.keys(wifs_to_account);
-            if( ! wifs.length) {
-                resolve()
-                return
-            }
-            var address_params = [], wif_owner = {};
-            for(let wif of wifs) {
-                try {
-                    var {public_key} = wifs_to_account[wif]
-                    var previous_address_prefix = config.address_prefix
-                    try {
-                        config.address_prefix = "BTS"
-                        var addresses = [
-                            //legacy formats
-                            Address.fromPublic(public_key, false, 0).toString(), //btc_uncompressed
-                            Address.fromPublic(public_key, true, 0).toString(),  //btc_compressed
-                            Address.fromPublic(public_key, false, 56).toString(),//pts_uncompressed
-                            Address.fromPublic(public_key, true, 56).toString(), //pts_compressed
-                            public_key.toAddressString() //bts_short, most recent format
-                        ]
-                        for(let address of addresses) {
-                            address = previous_address_prefix + address.substring(3)
-                            address_params.push( address )
-                            wif_owner[address] = wif
-                        }
-                    } finally {
-                        config.address_prefix = previous_address_prefix
-                    }
-                } catch(e) {
-                    console.error("ImportKeys: Invalid private key error",e)
-                }
-            }
-            
-            var db = api.db_api();
-            //DEBUG console.log('... get_balance_objects',address_params)
-            var p = db.exec("get_balance_objects", [address_params]).then( result => {
-                //DEBUG  console.log("... get_balance_objects",result)
-                var wif_to_balances = {};
-                for(let i = 0; i < result.length; i++) {
-                    var balance = result[i];
-                    //DEBUG  if( ! balance.vesting_policy) continue
-                    var wif = wif_owner[balance.owner];
-                    var balances = wif_to_balances[wif] || [];
-                    balances.push(balance);
-                    wif_to_balances[wif] = balances;
-                }
-                //DEBUG console.log("... wif_to_balances",wif_to_balances)
-                this.setState({wif_to_balances});
-                return wif_to_balances;
-
-            });
-            resolve(p);
-        });
-    }
-
-    balanceByAsset(wif_to_balances) {
-        var asset_balance = {}
-        if( ! wif_to_balances)
-            return asset_balance
-        for(let wif of Object.keys(wif_to_balances))
-        for(let b of wif_to_balances[wif]) {
-            var total = asset_balance[b.balance.asset_id] || 0
-            total += v.to_number(b.balance.amount)
-            asset_balance[b.balance.asset_id] = total 
-        }
-        return asset_balance
     }
 
     getImportAccountKeyCount(wifs_to_account) {
@@ -352,7 +255,6 @@ export default class ImportKeys extends Component {
         }
         reader.readAsText(file);
         this.setState({import_password_message: null, no_file: false});
-
     }
     
     /** BTS 1.0 client wallet_export_keys format. */
@@ -616,46 +518,19 @@ export default class ImportKeys extends Component {
         var imported_keys_public = this.state.imported_keys_public
         var db = api.db_api()
         
-        if(TRACE) console.log('... ImportKeys._saveImport get_key_references START')
+        if(TRACE) console.log('... ImportKeys._saveImport START')
         ImportKeysActions.setStatus("saving")
-    
-        var addAccountPromise = db.exec("get_key_references",
-            [Object.keys(imported_keys_public)]).then(
-            results => {
-            var account_ids = {}
-            for(let result of results)
-                for(let account_id of result)
-                    account_ids[account_id] = true
-            
-            //results = chain_api.fetchObject(Object.keys(account_ids))
-            return db.exec("get_objects", [Object.keys(account_ids)]).then( results => {
-                var p = []
-                for(let account of results) {
-                    //DEBUG console.log('... get_key_references object lookup',account?account.name:null)
-                    if(account)
-                        p.push(AccountStore.onCreateAccount(account).catch( error => {
-                            console.log("ImportKeys save import account error",account,error)
-                        }))
-                }
-                if(TRACE) console.log('... ImportKeys.saveImport get_key_references DONE')
-                return Promise.all(p)
-            })
-        })
         
         var wifs_to_account = this.state.wifs_to_account
-        var wif_to_balances = this.state.wif_to_balances
         var private_key_objs = []
         for(let wif of Object.keys(wifs_to_account)) {
             var {account_names, public_key_string} = wifs_to_account[wif]
-            var import_balances = wif_to_balances[wif]
             //DEBUG console.log('... account_names',account_names,public_key_string)
             private_key_objs.push({
                 wif,
                 import_account_names: account_names,
-                import_balances,
                 public_key_string
             })
-            //DEBUG if(import_account_names.join('')=="") console.log('... import_balances empty account',import_balances)
         }
         
         this.reset()
@@ -682,12 +557,8 @@ export default class ImportKeys extends Component {
                 notify.success(message)
             
             if (import_count) {
-                addAccountPromise.then(()=> {
-                    ImportKeysActions.setStatus("saveDone")
-                    BalanceClaimActions.refreshBalanceClaims({vesting_only:true})
-                    BalanceClaimActions.loadMyAccounts()
-                    this.onBack() // back to claim balances
-                })
+                ImportKeysActions.setStatus("saveDone")
+                this.onBack() // back to claim balances
             }
         }).catch( error => {
             ImportKeysActions.setStatus("saveError")

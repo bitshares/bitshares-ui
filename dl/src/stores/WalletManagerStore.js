@@ -1,6 +1,7 @@
 import alt from "alt-instance"
 import WalletDb from "stores/WalletDb"
 import PrivateKeyStore from "stores/PrivateKeyStore"
+import PrivateKeyActions from "actions/PrivateKeyActions"
 import WalletActions from "actions/WalletActions"
 import ChainStore from "api/ChainStore"
 import BaseStore from "stores/BaseStore"
@@ -70,7 +71,7 @@ class WalletManagerStore extends BaseStore {
                 return iDB.init_instance().init_promise.then(()=>{ 
                     return Promise.all([
                         WalletDb.loadDbData(),
-                        PrivateKeyStore.loadDbData(),
+                        PrivateKeyActions.loadDbData(),
                         AccountStore.loadDbData()
                     ]).then(()=>{
                         // Update state here again to make sure listeners re-render

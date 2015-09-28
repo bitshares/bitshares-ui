@@ -249,7 +249,7 @@ class ChainStore
     *  @param the public key to find accounts that reference it
     *
     *  @return Set of account ids that reference the given key
-    *  @return null if no accounts reference the given key
+    *  @return a empty Set if no items are found
     *  @return undefined if the result is unknown
     *
     *  If this method returns undefined, then it will send a request to
@@ -278,7 +278,6 @@ class ChainStore
                 error => {
                   this.account_ids_by_key             = this.account_ids_by_key.delete( key )
                   this.get_account_refs_of_keys_calls = this.get_account_refs_of_keys_calls.delete(key)
-                  this.notifySubscribers()
                 })
          return undefined
       }
@@ -315,7 +314,6 @@ class ChainStore
                      },
                      error => {
                          this.balance_objects_by_address = this.balance_objects_by_address.delete( address )
-                         this.notifySubscribers()
                      } )
       }
       return this.balance_objects_by_address.get( address )

@@ -1,7 +1,9 @@
 import React from "react";
 import {Link} from "react-router";
+import connectToStores from "alt/utils/connectToStores";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
+import AccountStore from "stores/AccountStore";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
@@ -9,7 +11,16 @@ import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 
+@connectToStores
 class Header extends React.Component {
+
+    static getStores() {
+        return [AccountStore]
+    }
+
+    static getPropsFromStores() {
+        return {}
+    }
 
     shouldComponentUpdate(nextProps, nextState) {
         // return nextState.currentAccount !== this.state.currentAccount;

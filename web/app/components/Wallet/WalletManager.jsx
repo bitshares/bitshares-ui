@@ -6,6 +6,7 @@ import WalletCreate from "components/Wallet/WalletCreate";
 import WalletManagerStore from "stores/WalletManagerStore"
 import BalanceClaim from "components/Wallet/BalanceClaim"
 import Translate from "react-translate-component";
+import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
 
 class WalletBaseComponent extends Component {
 
@@ -70,8 +71,8 @@ export class WalletOptions extends WalletBaseComponent {
             <Link to="wmc-wallet-create">
             <div className="button success"><Translate content="wallet.new_wallet" /></div></Link>
 
-            <BalanceClaim/>
-
+            <BalanceClaimActive/>
+            
         </span>
     }
 

@@ -1,8 +1,17 @@
 import React from "react";
 import counterpart from "counterpart";
 
-class AccountSelect extends React.Component {
+export default class AccountSelect extends React.Component {
 
+    static propTypes = {
+        account_names: React.PropTypes.array,
+        list_size: React.PropTypes.number,
+        onChange: React.PropTypes.func,
+        placeholder: React.PropTypes.string,
+        center: React.PropTypes.bool
+        //defaultAccount: React.PropTypes.string
+    }
+    
     constructor(props) {
         super(props);
         this.state = {selected: null};
@@ -30,6 +39,7 @@ class AccountSelect extends React.Component {
         var account_names = this.props.account_names;
         var selected_account = this.props.selected;
         var placeholder = this.props.placeholder || this.default_placeholder;
+        var ikey
         if (this.props.list_size > 1) {
             placeholder = <option value="" disabled>{placeholder}</option>;
         }
@@ -38,7 +48,6 @@ class AccountSelect extends React.Component {
             //placeholder and selecting the 1st item automatically (not shown)
             placeholder = <option value="">{placeholder}</option>;
         }
-
         return (
             <select
                 ref='account-selector'
@@ -46,6 +55,7 @@ class AccountSelect extends React.Component {
                 defaultValue={selected_account}
                 className="form-control account-select"
                 onChange={this._onAccountChange.bind(this)}
+                style={this.props.center?{margin: '0 auto'}:null}
             >
                 {placeholder}
                 {account_names
@@ -77,13 +87,3 @@ class AccountSelect extends React.Component {
     }
     
 }
-
-AccountSelect.propTypes = {
-    account_names: React.PropTypes.array,
-    list_size: React.PropTypes.number,
-    onChange: React.PropTypes.func,
-    placeholder: React.PropTypes.string
-    //defaultAccount: React.PropTypes.string
-};
-
-export default AccountSelect;

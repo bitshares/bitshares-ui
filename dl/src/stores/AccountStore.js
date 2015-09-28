@@ -2,15 +2,12 @@ import BaseStore from "./BaseStore";
 import Immutable from "immutable";
 import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
-import {
-    Account
-}
-from "./tcomb_structs";
+import { Account } from "./tcomb_structs";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
-import PrivateKeyActions from "actions/PrivateKeyActions"
 import validation from "common/validation"
 import ChainStore from "api/ChainStore"
+import AccountRefsStore from "stores/AccountRefsStore"
 
 /**
  *  This Store holds information about accounts in this wallet
@@ -29,7 +26,8 @@ class AccountStore extends BaseStore {
             onAccountSearch: AccountActions.accountSearch,
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
         });
-        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount", "getMyAccounts", "isMyAccount");
+        this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
+            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
     }
     
     clearCache() {
@@ -37,7 +35,8 @@ class AccountStore extends BaseStore {
         this.state.currentAccount = null;
         this.state.linkedAccounts = Immutable.Set();
         this.state.searchAccounts = Immutable.Map();
-        // this.refAccounts = Immutable.Map()
+        this.initial_account_refs_load = true // true until all undefined accounts are found
+        this.account_refs = null
     }
     
     chainStoreUpdate() {
@@ -45,6 +44,25 @@ class AccountStore extends BaseStore {
             // console.log("Account chainStoreUpdate, notify listners");
             this.setState({update: false})
         }
+        this.addAccountRefs()
+    }
+    
+    addAccountRefs() {
+        //  Simply add them to the linkedAccounts list (no need to persist them)
+        var account_refs = AccountRefsStore.getState().account_refs
+        if(!this.initial_account_refs_load && this.account_refs === account_refs) return
+        this.account_refs = account_refs
+        var pending = false
+        account_refs.forEach( id => {
+            var account = ChainStore.getAccount(id)
+            if(account === undefined) {
+                pending = true
+                return
+            }
+            if(account != null) this.setState({
+                linkedAccounts: this.state.linkedAccounts.add(account.get("name")) })
+        })
+        if(!pending) this.initial_account_refs_load = false
     }
     
     getMyAccounts() {
@@ -187,40 +205,6 @@ class AccountStore extends BaseStore {
             });
         });
     }
-    
-    // onNewPrivateKeys() {
-    //     this.setState({accountsByKeyLoading: true})
-    //     PrivateKeyStore.getState().keys.forEach( key => {
-    //         ChainStore.getAccountRefsOfKey(key.pubkey)
-    //     })
-    // }
-    
-    // TODO move to worker thread
-    // chainStoreUpdate_accountsByKey() {
-    //     if(this.previous_account_ids_by_key === ChainStore.account_ids_by_key ||
-    //         this.previous_objects_by_id === ChainStore.objects_by_id)
-    //         return
-    //     
-    //     this.setState({accountsByKeyLoading: false})
-    //     this.previous_account_ids_by_key = ChainStore.account_ids_by_key
-    //     this.previous_objects_by_id = ChainStore.objects_by_id
-    //     var refAccounts = this.state.refAccounts
-    //     PrivateKeyStore.getState().keys.forEach( key => {
-    //         if(ChainStore.getAccountRefsOfKey(key.pubkey) === undefined)
-    //             this.setState({accountsByKeyLoading: true})
-    //     })
-    //     for(let acccount_id_set of ChainStore.account_ids_by_key.values()) {
-    //         acccount_id_set.forEach( account_id => {
-    //             var account = ChainStore.getAccount(account_id)
-    //             if(account === undefined)
-    //                 this.setState({accountsByKeyLoading: true})
-    //             if( ! account) return
-    //             if( refAccounts.has(account.name)) return
-    //             refAccounts = refAccounts.set(account.name, account)
-    //             this.setState({refAccounts})
-    //         })
-    //     }
-    // }
 
 }
 

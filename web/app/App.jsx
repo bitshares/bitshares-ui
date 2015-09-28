@@ -48,7 +48,7 @@ import ExistingAccount,{ExistingAccountOptions} from "components/Wallet/Existing
 import WalletCreate from "components/Wallet/WalletCreate";
 import ImportKeys from "components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
@@ -56,10 +56,9 @@ import ChainStore from "api/ChainStore";
 import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
-import BalanceClaim from "components/Wallet/BalanceClaim"
+import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
 import Brainkey from "components/Wallet/Brainkey"
-import ComponentTest from "components/Utility/ComponentTest"
-
+import AccountRefsStore from "stores/AccountRefsStore"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -79,7 +78,7 @@ class App extends React.Component {
         // TransactionConfirmStore.unlisten(this._onTransactionConfirm);
     }
 
-    componentDidMount() {
+    componentDidMount() { try {
         NotificationStore.listen(this._onNotificationChange.bind(this));
         // TransactionConfirmStore.listen(this._onTransactionConfirm.bind(this));
 
@@ -104,7 +103,7 @@ class App extends React.Component {
         ChainStore.init().then(() => {
             this.setState({synced: true});
         });
-    }
+    } catch(e) { console.error(e) }}
 
     /** Usage: NotificationActions.[success,error,warning,info] */
     _onNotificationChange() {
@@ -167,7 +166,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
         return Promise.all([db]).then(() => {
             console.log("db init done");
             return Promise.all([
-                PrivateKeyStore.loadDbData(),
+                PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
                     if (!WalletDb.getWallet() && transition.path !== "/create-account") {
                         transition.redirect("/create-account");
@@ -234,7 +233,7 @@ let routes = (
             <Route name="welcome-import-backup" path="import-backup" handler={BackupRestore}/>
             <Route name="welcome-import-keys" path="import-keys" handler={ImportKeys}/>
             <Route name="welcome-brainkey" path="brainkey" handler={Brainkey}/>
-            <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaim}/>
+            <Route name="welcome-balance-claim" path="balance-claim" handler={BalanceClaimActive}/>
         </Route>
         
         <Route name="account" path="/account/:account_name" handler={AccountPage}>
@@ -247,7 +246,6 @@ let routes = (
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
-        <Route name="test" path="/test" handler={ComponentTest}/>
         
     </Route>
 );
