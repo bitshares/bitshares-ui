@@ -10,7 +10,6 @@ import AccountsContainer from "./components/Explorer/AccountsContainer";
 import WitnessesContainer from "./components/Explorer/WitnessesContainer";
 import Witnesses from "./components/Explorer/Witnesses";
 import Witness from "./components/Explorer/Witness";
-import CommitteeMembersContainer from "./components/Explorer/CommitteeMembersContainer";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
 import CommitteeMember from "./components/Explorer/CommitteeMember";
 import HeaderContainer from "./components/Header/HeaderContainer";
@@ -204,11 +203,11 @@ let routes = (
         <Route name="accounts" path="/explorer/accounts" handler={AccountsContainer}/>
         <Route name="witnesses" path="/explorer/witnesses" handler={WitnessesContainer}>
             <DefaultRoute handler={Witnesses}/>
-            <Route name="witness" path=":name" handler={Witness}/>
+            {/* Deprecated <Route name="witness" path=":name" handler={Witness}/> */}
         </Route>
-        <Route name="committee-members" path="/explorer/committee-members" handler={CommitteeMembersContainer}>
+        <Route name="committee-members" path="/explorer/committee-members" handler={CommitteeMembers}>
             <DefaultRoute handler={CommitteeMembers}/>
-            <Route name="committee-member" path=":name" handler={CommitteeMember}/>
+            {/* Deprecated <Route name="committee-member" path=":name" handler={CommitteeMember}/> */ }
         </Route>
         <Route name="wallet" path="wallet" handler={WalletManager}>
             {/* wallet management console */}

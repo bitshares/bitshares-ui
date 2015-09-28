@@ -51,6 +51,7 @@ class CommitteeMembersActions {
             }
             Apis.instance().db_api().exec("get_objects", [ids])
                 .then((result) => {
+                    console.log("cm results:", result);
                     committee_member_in_prog[uid] = false;
                     this.dispatch(result);
                 }).catch((error) => {
