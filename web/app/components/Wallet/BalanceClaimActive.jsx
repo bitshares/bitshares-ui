@@ -18,7 +18,7 @@ import MyAccounts from "components/Forms/MyAccounts"
 export default class BalanceClaimActive extends Component {
     
     static getStores() {
-        return [BalanceClaimActiveStore, AccountRefsStore] //PrivateKeyStore
+        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore]
     }
     
     static getPropsFromStores() {
@@ -28,13 +28,20 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillMount() {
-        BalanceClaimActiveActions.setPubkeys(
-            PrivateKeyStore.getState().keys.keySeq().toArray()
-        )
+        this.existing_keys = PrivateKeyStore.getState().keys
+        BalanceClaimActiveActions.setPubkeys( this.existing_keys.keySeq().toArray() )
     }
     
     componentWillUnmount() {
         BalanceClaimActiveStore.clearCache()
+    }
+    
+    componentWillReceiveProps(nextProps) {
+        var keys = PrivateKeyStore.getState().keys
+        if( ! keys.equals(this.existing_keys)) {
+            this.existing_keys = keys
+            BalanceClaimActiveActions.setPubkeys( keys.keySeq().toArray() )
+        }
     }
     
     render() {
