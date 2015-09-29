@@ -9,19 +9,21 @@ class Apis {
 
     connect(hostname="localhost", port=8090) {
         console.log( "Connecting..." );
-        try {
+        let protocol = "ws://"
+        try { // For command-line support, all references to "window" go in the try catch
            let args     = window.location.hash.split("/");
            let parts    = args[2].split(":");
            this.rpc_user = parts[0];
            this.rpc_pass = parts[1];
            this.rpc_ip   = parts[2];
            this.rpc_port = parts[3];
+        
+            if (this.ws_rpc) return; // already connected
+            if (this.rpc_ip) hostname = this.rpc_ip;
+            else hostname = window.location.hostname ? window.location.hostname : "localhost";
+            if (this.rpc_port ) port = this.rpc_port;
+            protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
-        if (this.ws_rpc) return; // already connected
-        if (this.rpc_ip) hostname = this.rpc_ip;
-        else hostname = window.location.hostname ? window.location.hostname : "localhost";
-        if (this.rpc_port ) port = this.rpc_port;
-        let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         //hostname = "graphene.bitshares.org"; protocol = "wss://"; port = "8090";
         console.log(`connecting to ${protocol}${hostname}:${port}`);
         this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}`);
