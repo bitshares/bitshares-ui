@@ -21,8 +21,8 @@ import AccountPayees from "./components/Account/AccountPayees";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
-import Exchange from "components/Exchange/ExchangeContainer";
-import Markets from "components/Exchange/MarketsContainer";
+import Exchange from "./components/Exchange/ExchangeContainer";
+import Markets from "./components/Exchange/MarketsContainer";
 import Transfer from "./components/Transfer/Transfer";
 import Settings from "./components/Settings/SettingsContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
@@ -37,27 +37,27 @@ import IntlActions from "actions/IntlActions";
 import MobileMenu from "./components/Header/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
-import WalletUnlockModal from "components/Wallet/WalletUnlockModal"
+import WalletUnlockModal from "./components/Wallet/WalletUnlockModal"
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
 // import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
-import ExistingAccount, {ExistingAccountOptions} from "components/Wallet/ExistingAccount";
-import WalletCreate from "components/Wallet/WalletCreate";
-import ImportKeys from "components/Wallet/ImportKeys";
+import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
+import WalletCreate from "./components/Wallet/WalletCreate";
+import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
-import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
-import WalletChangePassword from "components/Wallet/WalletChangePassword"
+import Backup, {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
+import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManagerStore from "stores/WalletManagerStore";
-import WalletManager, {WalletOptions, ChangeActiveWallet} from "components/Wallet/WalletManager";
-import BalanceClaimActive from "components/Wallet/BalanceClaimActive";
-import Brainkey from "components/Wallet/Brainkey";
+import WalletManager, {WalletOptions, ChangeActiveWallet} from "./components/Wallet/WalletManager";
+import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
+import Brainkey from "./components/Wallet/Brainkey";
 import AccountRefsStore from "stores/AccountRefsStore";
 import Help from "./Help";
 
