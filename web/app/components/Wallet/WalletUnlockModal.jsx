@@ -19,10 +19,18 @@ class WalletUnlockModal extends React.Component {
 
     constructor() {
         super()
-        this.state = {
+        this.state = this._getInitialState()
+    }
+    
+    _getInitialState() {
+        return {
             password_error: null,
             password_input_reset: Date.now()
         }
+    }
+    
+    reset() {
+        this.setState(this._getInitialState())
     }
 
     componentDidMount() {
@@ -34,6 +42,7 @@ class WalletUnlockModal extends React.Component {
             if(msg === "close") {
                 if(this.props.reject) this.props.reject()
                 this.refs.password_input.clear()
+                this.reset()
                 WalletUnlockActions.cancel()
             } else if (msg === "open") {
                 if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
