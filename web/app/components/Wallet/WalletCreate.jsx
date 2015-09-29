@@ -159,7 +159,7 @@ class CreateNewWallet extends Component {
         // Set state is done directly because validate is going to 
         // require a merge of new and old state
         this.state[key_id] = value
-        this.validate()
+        
     }
     
     onDone() {

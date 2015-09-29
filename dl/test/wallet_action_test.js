@@ -105,7 +105,6 @@ describe( "wallet_actions", ()=> {
             WalletDb.onLock()
             assert( WalletDb.isLocked(), "isLocked" )
             assert( WalletDb.getWallet() != null )
-            assert( WalletDb.getCurrentWalletName() == public_name )
             WalletDb.validatePassword( "password", true )
             assert( ! WalletDb.isLocked() )
             assert( WalletDb.getBrainKey() == "brainkey" + suffix )

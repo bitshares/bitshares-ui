@@ -70,16 +70,17 @@ export class BackupVerify extends BackupBaseComponent {
     }
 }
 
-class WalletObjectInspector extends Component {
-    static propTypes={ walletObject: PropTypes.object }
-    render() {
-        return <div style={{overflowY:'auto'}}>
-            <Inspector
-                data={ this.props.walletObject || {} }
-                search={false}/>
-        </div>
-    }
-}
+// layout is a small project
+// class WalletObjectInspector extends Component {
+//     static propTypes={ walletObject: PropTypes.object }
+//     render() {
+//         return <div style={{overflowY:'auto'}}>
+//             <Inspector
+//                 data={ this.props.walletObject || {} }
+//                 search={false}/>
+//         </div>
+//     }
+// }
 
 @connectToStores
 export class BackupRestore extends BackupBaseComponent {
@@ -384,11 +385,10 @@ export class Sha1 extends BackupBaseComponent {
 @connectToStores
 class Reset extends BackupBaseComponent {
     
-    static contextTypes = {router: React.PropTypes.func.isRequired}
+    // static contextTypes = {router: React.PropTypes.func.isRequired}
     
     render() {
         var label = this.props.label || <Translate content="wallet.reset" />
-        //TODO internationalize label
         return  <span className="button cancel"
             onClick={this.onReset.bind(this)}>{label}</span>
     }

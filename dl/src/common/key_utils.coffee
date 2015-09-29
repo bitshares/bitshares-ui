@@ -89,7 +89,7 @@ module.exports = key =
         hash.sha256 Buffer.concat(hash_array)
     
     ###* @param1 string entropy of at least 32 bytes ###
-    suggest_brain_key:(entropy) ->
+    suggest_brain_key:(entropy = @browserEntropy()) ->
         randomBuffer = @random32ByteBuffer entropy
         
         word_count = 16
@@ -115,16 +115,16 @@ module.exports = key =
         PrivateKey.fromBuffer @random32ByteBuffer entropy
     
     get_owner_private: (brain_key, sequence = 0)->
-            unless sequence >= 0
-                throw new Error "invalid sequence"
-            
-            brain_key = key.normalize_brain_key brain_key
-            
-            PrivateKey.fromBuffer(
-                hash.sha256(hash.sha512(
-                    brain_key + " " + sequence
-                ))
-            )
+        unless sequence >= 0
+            throw new Error "invalid sequence"
+        
+        brain_key = key.normalize_brain_key brain_key
+        
+        PrivateKey.fromBuffer(
+            hash.sha256(hash.sha512(
+                brain_key + " " + sequence
+            ))
+        )
 
     get_active_private: (owner_private, sequence = 0)->
         unless sequence >= 0

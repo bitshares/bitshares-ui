@@ -404,6 +404,8 @@ module.exports = {
         title: "钱包",
         confirm: "确认密码",
         password: "密码",
+        existing_password: "Existing Password",
+        change_password: "Change Password",
         wallet_created: "钱包已创建",
         create_wallet: "创建新钱包",
         name: "钱包名字",

@@ -66,12 +66,12 @@ let Block = t.struct({
 
 let WalletTcomb = t.struct({
     public_name: t.Str,
-    password_checksum: t.Str,
-    encrypted_brainkey: t.maybe(t.Str),
-    brainkey_checksum: t.maybe(t.Str),
-    brainkey_sequence: t.Num,
-    brainkey_pubkey: t.Str,
     password_pubkey: t.Str,
+    encryption_key: t.Str,
+    encrypted_brainkey: t.maybe(t.Str),
+    brainkey_pubkey: t.Str,
+    brainkey_sequence: t.Num,
+    // password_checksum: t.Str,
     created: t.Dat,
     last_modified: t.Dat,
     last_backup: t.maybe(t.Dat),

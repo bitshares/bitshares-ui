@@ -399,6 +399,8 @@ module.exports = {
         title: "Wallet",
         confirm: "Password (confirm)",
         password: "Password",
+        existing_password: "Existing Password",
+        change_password: "Change Password",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
         name: "Wallet Name",

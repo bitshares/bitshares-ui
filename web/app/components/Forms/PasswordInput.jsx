@@ -4,7 +4,14 @@ import classNames from "classnames";
 import Translate from "react-translate-component";
 
 class PasswordInput extends Component {
-
+    
+    static propTypes = {
+        onChange: PropTypes.func,
+        onEnter: PropTypes.func,
+        confirmation: PropTypes.bool,
+        wrongPassword: PropTypes.bool
+    }
+    
     constructor() {
         super();
         this.handleChange = this.handleChange.bind(this);
@@ -80,12 +87,5 @@ class PasswordInput extends Component {
         );
     }
 }
-
-PasswordInput.propTypes = {
-    onChange: PropTypes.func,
-    onEnter: PropTypes.func,
-    confirmation: PropTypes.bool,
-    wrongPassword: PropTypes.bool
-};
 
 export default PasswordInput;

@@ -44,29 +44,6 @@ class WalletDb {
         wallet_public_name = public_name
     }
     
-    getBrainKey() {
-        var wallet = this.wallet.get(wallet_public_name)
-        if ( ! wallet)
-            throw new Error("missing wallet " + wallet_public_name)
-        
-        var aes_private = aes_private_map[wallet_public_name]
-        if ( ! aes_private)
-            throw new Error("wallet locked " + wallet_public_name)
-        
-        if ( ! wallet.encrypted_brainkey)
-            throw new Error("missing brainkey")
-        
-        var brainkey_plaintext = aes_private.decryptHexToText(
-            wallet.encrypted_brainkey
-        )
-        try {
-            key.aes_private( brainkey_plaintext, wallet.brainkey_checksum )
-        } catch(e) {
-            throw new Error('Brainkey checksum mis-match')
-        }
-        return brainkey_plaintext
-    }
-    
     onLock() {
         delete aes_private_map[wallet_public_name]
     }
@@ -75,28 +52,9 @@ class WalletDb {
         return aes_private_map[wallet_public_name] ? false : true
     }
     
-    validatePassword( password, unlock = false ) {
-        var wallet = this.wallet.get(wallet_public_name)
-        if ( ! wallet)
-            return false
-        
-        try {
-            var aes_private = key.aes_private( password,
-                wallet.password_checksum )
-            
-            if(unlock) {
-                aes_private_map[wallet_public_name] = aes_private
-            }
-        } catch(e) {
-            if(! e.message == 'wrong password')
-                console.log(e)
-        }
-    }
-    
     //rename to decryptTcomb_PrivateKey
     decryptTcomb_PrivateKey(private_key_tcomb) {
-        if( ! private_key_tcomb)
-            return null
+        if( ! private_key_tcomb) return null
         var aes_private = aes_private_map[ wallet_public_name ] 
         if ( ! aes_private)
             throw new Error("wallet locked " + wallet_public_name)
@@ -109,12 +67,8 @@ class WalletDb {
     getPrivateKey(public_key) {
         if(! public_key) return null
         if(public_key.Q) public_key = public_key.toPublicKeyString()
-        var private_key_tcomb =
-            PrivateKeyStore.getTcomb_byPubkey(public_key)
-        
-        if(! private_key_tcomb)
-            return null
-        
+        var private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(public_key)
+        if(! private_key_tcomb) return null
         return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
     
@@ -193,12 +147,18 @@ class WalletDb {
         return transaction
     }
     
-    getBrainKey_PrivateKey(brainkey_plaintext = this.getBrainKey()) {
-        if( ! brainkey_plaintext)
-            throw new Error("Missing brainkey")
-        
-        return PrivateKey.fromSeed(
-            key_utils.normalize_brain_key(brainkey_plaintext) )
+    getBrainKey() {
+        var wallet = this.wallet.get(wallet_public_name)
+        var aes_private = aes_private_map[wallet_public_name]
+        if ( ! aes_private) throw new Error("wallet locked " + wallet_public_name)
+        if ( ! wallet.encrypted_brainkey) throw new Error("missing brainkey")
+        var brainkey_plaintext = aes_private.decryptHexToText( wallet.encrypted_brainkey )
+        return brainkey_plaintext
+    }
+    
+    getBrainKeyPrivate(brainkey_plaintext = this.getBrainKey()) {
+        if( ! brainkey_plaintext) throw new Error("Missing brainkey")
+        return PrivateKey.fromSeed( key_utils.normalize_brain_key(brainkey_plaintext) )
     }
     
     onCreateWallet(
@@ -211,86 +171,100 @@ class WalletDb {
                 reject("wallet exists")
                 return
             }
+            if( typeof password_plaintext !== 'string')
+                throw new Error("password string is required")
             
-            var password = key.aes_checksum( password_plaintext )
+            var password_aes = Aes.fromSeed( password_plaintext )
             
-            if( ! brainkey_plaintext) {
-                brainkey_plaintext = key.suggest_brain_key(
-                    key.browserEntropy() )
-            }
+            var encryption_buffer = key.get_random_key().toBuffer()
+            // encryption_key is the global encryption key (does not change even if the passsword changes)
+            var encryption_key = password_aes.encryptToHex( encryption_buffer )
+            // aes_private is the global aes encrypt / decrypt object
+            var aes_private = Aes.fromSeed( encryption_buffer )
             
-            var {brainkey_checksum, brainkey_cipherhex} =
-                this.encrypteBrainKey(password, brainkey_plaintext)
+            if( ! brainkey_plaintext) brainkey_plaintext = key.suggest_brain_key()
+            var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )
+            var brainkey_pubkey = brainkey_private.toPublicKey().toPublicKeyString()
+            var encrypted_brainkey = aes_private.encryptToHex( brainkey_plaintext )
             
-            // Create public keys that may be used to encrypt backups
-            
-            var brainkey_private_key = this.getBrainKey_PrivateKey(brainkey_plaintext)
-            var brainkey_pubkey = brainkey_private_key.toPublicKey().toPublicKeyString()
-            
-            var password_private_key = PrivateKey.fromSeed( password_plaintext )
-            var password_pubkey = password_private_key.toPublicKey().toPublicKeyString()
+            var password_private = PrivateKey.fromSeed( password_plaintext )
+            var password_pubkey = password_private.toPublicKey().toPublicKeyString()
             
             let wallet = {
                 public_name: wallet_public_name,
-                password_checksum: password.checksum,
-                encrypted_brainkey: brainkey_cipherhex,
-                brainkey_checksum,
-                brainkey_sequence: 0,
-                brainkey_pubkey,
                 password_pubkey,
+                encryption_key,
+                encrypted_brainkey,
+                brainkey_pubkey,
+                brainkey_sequence: 0,
                 created: new Date(),
                 last_modified: new Date(),
                 chain_id: Apis.instance().chain_id
             }
             WalletTcomb(wallet)
             var transaction = this.transaction_update()
-            var add = idb_helper.add(
-                transaction.objectStore("wallet"),
-                wallet
-            )
+            var add = idb_helper.add( transaction.objectStore("wallet"), wallet )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
                 this.wallet = this.wallet.set(
                     wallet_public_name,
                     wallet//WalletTcomb(wallet)
                 )
-                if(unlock) {
-                    aes_private_map[wallet_public_name] =
-                        password.aes_private
-                }
+                if(unlock) aes_private_map[wallet_public_name] = aes_private
             })
             resolve( Promise.all([ add, end ]) )
         })
     }
     
-    /** @return {brainkey_checksum, brainkey_cipherhex}
-    brainkey_checksum used when deleting then re-adding a brainkey
-    */
-    encrypteBrainKey(password, brainkey_plaintext){
-        var brainkey_checksum=null, brainkey_cipherhex=null
-        if(brainkey_plaintext) {
-            brainkey_checksum = key.aes_checksum( brainkey_plaintext ).checksum
-        
-            brainkey_cipherhex = password.aes_private.encryptToHex(
-                brainkey_plaintext
-            )
+    /** This also serves as 'unlock' */
+    validatePassword( password, unlock = false ) {
+        var wallet = this.wallet.get(wallet_public_name)
+        try {
+            var password_private = PrivateKey.fromSeed( password )
+            var password_pubkey = password_private.toPublicKey().toPublicKeyString()
+            if(wallet.password_pubkey !== password_pubkey) return false
+            if( unlock ) {
+                var password_aes = Aes.fromSeed( password )
+                var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
+                var aes_private = Aes.fromSeed( encryption_plainbuffer )
+                aes_private_map[wallet_public_name] = aes_private
+            }                 
+            return true
+        } catch(e) {
+            console.error(e)
+            return false
         }
-        return {brainkey_checksum, brainkey_cipherhex}
+    }
+    
+    changePassword( old_password, new_password, unlock = false ) {
+        return new Promise( resolve => {
+            var wallet = this.wallet.get(wallet_public_name)
+            if( ! this.validatePassword( old_password ))
+                throw new Error("wrong password")
+            
+            var old_password_aes = Aes.fromSeed( old_password )
+            var new_password_aes = Aes.fromSeed( new_password )
+            
+            var encryption_plainbuffer = old_password_aes.decryptHexToBuffer( wallet.encryption_key )
+            wallet.encryption_key = new_password_aes.encryptToHex( encryption_plainbuffer )
+            
+            var new_password_private = PrivateKey.fromSeed( new_password )
+            wallet.password_pubkey = new_password_private.toPublicKey().toPublicKeyString()
+            
+            if( unlock ) {
+                var aes_private = Aes.fromSeed( encryption_plainbuffer )
+                aes_private_map[wallet_public_name] = aes_private
+            }
+            resolve( this.setWalletModified() )
+        })
     }
     
     generateKeys() {
         var wallet = this.wallet.get(wallet_public_name)
-        if( ! wallet)
-            throw new Error("missing wallet " + wallet_public_name)
-        
         var brainkey = this.getBrainKey()
-        if( ! brainkey)
-            throw new Error("missing brainkey")
-        
+        if( ! brainkey) throw new Error("missing brainkey")
         var owner_privkey = key.get_owner_private(
-            brainkey, wallet.brainkey_sequence
-        )
+            brainkey, wallet.brainkey_sequence )
         var active_privkey = key.get_active_private(owner_privkey)
-
         return [
             {
                 private_key: owner_privkey,
@@ -355,7 +329,6 @@ class WalletDb {
     }
     
     saveKeys(private_keys, transaction, public_key_string) {
-        //private_keys = [{private_key, sequence}]
         var promises = []
         for(let private_key_record of private_keys) {
             promises.push( this.saveKey(
@@ -416,7 +389,7 @@ class WalletDb {
         })
     }
     
-    setWalletModified(transaction) {
+    setWalletModified(transaction = this.transaction_update()) {
         return this._updateWallet( transaction )
     }
     
@@ -434,13 +407,11 @@ class WalletDb {
         if(update_callback)
             update_callback(wallet_clone)
         
-        WalletTcomb(wallet_clone)
+        WalletTcomb(wallet_clone) // validate
         //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
         
         var wallet_store = transaction.objectStore("wallet")
-        var p = idb_helper.on_request_end(
-            wallet_store.put(wallet_clone)
-        )
+        var p = idb_helper.on_request_end( wallet_store.put(wallet_clone) )
         var p2 = idb_helper.on_transaction_end( transaction  ).then(
             () => {
                 // Update RAM
@@ -471,5 +442,4 @@ module.exports = new WalletDb()
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)
     throw new Error(error)
-}   
-
+}

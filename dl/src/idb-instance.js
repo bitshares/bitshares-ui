@@ -3,7 +3,7 @@ import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
 
 const DB_VERSION = 1
-const DB_PREFIX = "graphene_db"
+const DB_PREFIX = "graphene_v2"
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
