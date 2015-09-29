@@ -17,17 +17,18 @@ class Box extends React.Component {
         padding: '10px',
         color: '#50D2C2', //blue
         border: 'solid 2px',
-        borderColor: '#444 #444 #666 #666', // T R B L
-        borderRadius: '8px 8px 8px 8px',
+        borderColor: '#888',  //'#444 #444 #666 #666', // T R B L
+        borderRadius: '12px', //'8px 8px 8px 8px',
+        borderStyle: 'inset',
         backgroundColor: '#333',
 
         headerTextAlign: 'center',
         headerColor: '#FCAB53', //orange
-        headerBackgroundColor: '#3C3C3C',
+        headerBackgroundColor: '#383838',
 
         footerTextAlign: 'center',
         footerColor: '#FCAB53', //orange
-        footerBackgroundColor: '#3C3C3C',
+        footerBackgroundColor: '#383838',
     };
 
 
@@ -43,6 +44,7 @@ class Box extends React.Component {
             border: props.border,
             borderColor: props.borderColor,
             borderRadius: props.borderRadius,
+            borderStyle: props.borderStyle,
         };
 
         this.bodyStyle = {
@@ -63,22 +65,14 @@ class Box extends React.Component {
         };
         this.headerTextStyle = {
             color: props.headerColor,
+            fontWeight: 'bold',
         };
         this.footerTextStyle = {
             color: props.footerColor,
+            fontWeight: 'bold',
         };
     }
 
-
-    render3() {
-        return (
-            <div style={this.style}>
-                {(this.props.header) ? (<h4 style={this.headerStyle}>{this.props.header}<br/></h4>) : ''}
-                {this.props.children}
-                {(this.props.footer) ? (<h4 style={this.footerStyle}>{this.props.footer}</h4>) : ''}
-            </div>
-        );
-    }
 
     render() {
         return (
