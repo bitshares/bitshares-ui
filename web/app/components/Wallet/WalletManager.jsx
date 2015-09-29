@@ -48,12 +48,15 @@ export class WalletOptions extends WalletBaseComponent {
         var has_wallets = this.props.wallet_names.count() != 0
         return <span>
 
-            {has_wallets ? <span>
+            <span>
             <h5><Translate content="wallet.active_wallet" /></h5>
-            <ChangeActiveWallet/>
+            <label>{this.props.current_wallet}</label>
             <br/>
-            </span>:null}
+            </span>
 
+            {has_wallets ? <Link to="wmc-change-wallet">
+            <div className="button success"><Translate content="wallet.change_wallet" /></div></Link>:null}
+                
             {has_wallet ? <Link to="wmc-backup-create">
             <div className="button success"><Translate content="wallet.create_backup" /></div></Link>:null}
 
@@ -104,17 +107,20 @@ export class ChangeActiveWallet extends WalletBaseComponent {
 
         var is_dirty = this.state.current_wallet !== this.props.current_wallet
 
-        return <span>
-            <select value={this.state.current_wallet} onChange={this.onChange.bind(this)}>
-                { options }
-            </select>
+        return <div className="">
+            <select value={this.state.current_wallet}
+                className="form-control account-select"
+                style={{margin: '0 auto'}}
+                onChange={this.onChange.bind(this)}>{ options }</select>
             { is_dirty ? <div className="button success"
                 onClick={this.onConfirm.bind(this)}><Translate content="wallet.change" name={this.state.current_wallet} /></div> :null}
-        </span>
+            <Cancel/>
+        </div>
     }
 
     onConfirm() {
         WalletActions.setWallet(this.state.current_wallet)
+        window.history.back()
     }
 
     onChange(event) {
@@ -122,4 +128,17 @@ export class ChangeActiveWallet extends WalletBaseComponent {
         this.setState({current_wallet})
     }
 
+}
+
+class Cancel extends Component {
+    
+    render() {
+        var label = <Translate content="wallet.cancel" />
+        return  <span className="button cancel"
+            onClick={this.onReset.bind(this)}>{label}</span>
+    }
+    
+    onReset() {
+        window.history.back()
+    }
 }

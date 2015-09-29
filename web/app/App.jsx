@@ -55,7 +55,7 @@ import ChainStore from "api/ChainStore";
 import Backup, {BackupCreate, BackupVerify, BackupRestore} from "components/Wallet/Backup";
 import WalletChangePassword from "components/Wallet/WalletChangePassword"
 import WalletManagerStore from "stores/WalletManagerStore";
-import WalletManager, {WalletOptions} from "components/Wallet/WalletManager";
+import WalletManager, {WalletOptions, ChangeActiveWallet} from "components/Wallet/WalletManager";
 import BalanceClaimActive from "components/Wallet/BalanceClaimActive";
 import Brainkey from "components/Wallet/Brainkey";
 import AccountRefsStore from "stores/AccountRefsStore";
@@ -213,6 +213,7 @@ let routes = (
             {/* wallet management console */}
             <DefaultRoute handler={WalletOptions}/>
             <Route name="wmc-backup-verify-restore" path="backup/restore" handler={BackupRestore}/>
+            <Route name="wmc-change-wallet" path="change" handler={ChangeActiveWallet}/>
             <Route name="wmc-change-password" path="change-password" handler={WalletChangePassword}/>
             <Route name="wmc-import-keys" path="import-keys" handler={ImportKeys}/>
             <Route name="wmc-brainkey" path="brainkey" handler={Brainkey}/>
