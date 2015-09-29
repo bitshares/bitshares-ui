@@ -17,7 +17,7 @@ import WorkerApproval from "./WorkerApproval";
 import {FetchChainObjects} from "api/ChainStore";
 
 import AccountVotingProxy from "./AccountVotingProxy";
-import AccountVotingItems from "./AccountVotingItems";
+import AccountsList from "./AccountsList";
 
 let wallet_api = new WalletApi()
 
@@ -177,7 +177,7 @@ class AccountVoting extends React.Component {
 
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Witnesses</h3>
-                    <AccountVotingItems
+                    <AccountsList
                         label="account.votes.add_witness_label"
                         items={this.state.witnesses}
                         validateAccount={this.validateAccount.bind(this, "witnesses")}
@@ -188,7 +188,7 @@ class AccountVoting extends React.Component {
 
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Committee</h3>
-                    <AccountVotingItems
+                    <AccountsList
                         label="account.votes.add_committee_label"
                         items={this.state.committee}
                         validateAccount={this.validateAccount.bind(this, "committee")}

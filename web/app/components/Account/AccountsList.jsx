@@ -38,7 +38,7 @@ class AccountItemRow extends React.Component {
 }
 
 @BindToChainState({keep_updating: true})
-class AccountVotingItems extends React.Component {
+class AccountsList extends React.Component {
 
     static propTypes = {
         items: ChainTypes.ChainObjectsList,
@@ -139,4 +139,4 @@ class AccountVotingItems extends React.Component {
 
 }
 
-export default AccountVotingItems;
+export default AccountsList;
