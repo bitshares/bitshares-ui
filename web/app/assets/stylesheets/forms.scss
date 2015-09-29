@@ -36,9 +36,16 @@ td > input, td > .autocomplete input {
 }
 
 .account-selector {
+  input {
+    display: block;
+    flex: auto;
+  }
   > .account-image {
     float: left;
     width: 80px;
+    > .icon > svg path {
+      fill: rgba(255, 255, 255, 0.2);
+    }
   }
   > .content-area {
     //width: 100%;

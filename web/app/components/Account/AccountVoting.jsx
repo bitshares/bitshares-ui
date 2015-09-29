@@ -129,7 +129,6 @@ class AccountVoting extends React.Component {
     }
 
     onRemoveItem(collection, item_id){
-       console.log( "item_id: ", item_id );
         let state = {};
         state[collection] = this.state[collection].filter(i => i !== item_id);
         this.setState(state);
@@ -150,7 +149,6 @@ class AccountVoting extends React.Component {
     }
 
     validateAccount(collection, account) {
-        console.log("-- AccountVoting.validateAccount -->", collection, account);
         if(!account) return null;
         if(collection === "witnesses") {
             return FetchChainObjects(ChainStore.getWitnessById, [account.get("id")], 3000).then(res => {

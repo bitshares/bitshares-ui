@@ -78,7 +78,9 @@ module.exports = {
             weight: "Weight",
             threshold: "Threshold",
             confirm_add: "Add",
-            cancel: "Cancel"
+            cancel: "Cancel",
+            add_permission_label: "Enter account name/key and threshold",
+            account_name_or_key: "Account name or key"
         },
         votes: {
             proxy: "Proxy Voting Account",
