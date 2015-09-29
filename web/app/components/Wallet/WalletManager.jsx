@@ -51,7 +51,7 @@ export class WalletOptions extends WalletBaseComponent {
             {has_wallets ? <span>
             <h5><Translate content="wallet.active_wallet" /></h5>
             <ChangeActiveWallet/>
-            <hr/>
+            <br/>
             </span>:null}
 
             {has_wallet ? <Link to="wmc-backup-create">

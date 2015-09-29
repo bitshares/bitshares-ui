@@ -403,6 +403,7 @@ module.exports = {
         change_password: "Change Password",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
+        download: "Download",
         name: "Wallet Name",
         create: "Create",
         console: "Wallet Management Console",

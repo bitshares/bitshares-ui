@@ -2,6 +2,7 @@ import React, {Component} from "react"
 
 import Translate from "react-translate-component";
 import {BackupRestore} from "components/Wallet/Backup"
+import PasswordConfirm from "components/Wallet/PasswordConfirm"
 import WalletDb from "stores/WalletDb"
 import WalletManagerStore from "stores/WalletManagerStore"
 import WalletActions from "actions/WalletActions"
@@ -53,13 +54,11 @@ class CreateNewWallet extends Component {
         super()
         this.state = { 
             wallet_public_name: "default",
-            password: "",
-            password_confirm: "",
+            valid_password: null,
             errors: {},
             isValid: false,
             create_submitted: false
         }
-        this.validate()
     }
     
     render() {
@@ -77,67 +76,43 @@ class CreateNewWallet extends Component {
         }
         
         return (<span>
-            {this.props.hideTitle ? null:<h3><Translate content="wallet.create_wallet" /></h3>}
+            {this.props.hideTitle ? null:
+                <h3><Translate content="wallet.create_wallet" /></h3>}
             <form
                 className="name-form"
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <div className={cname("grid-content", "no-overflow", {"has-error": errors.password_match || errors.password_length})}>
-                    <label><Translate content="wallet.password" /></label>
-                    <input type="password" id="password" value={this.state.password} autoComplete="off" />
-
-                    <label><Translate content="wallet.confirm" /></label>
-                    <input type="password" id="password_confirm" value={this.state.password_confirm} autoComplete="off"/>
-                    <div>{errors.password_match || errors.password_length}</div>
-                    <br/>
-                    { has_wallet ? <div>
-                        <label><Translate content="wallet.name" /></label>
-                        <input type="text" id="wallet_public_name"
-                            value={this.state.wallet_public_name}
-                        />
+                <PasswordConfirm onValid={this.onPassword.bind(this)}/>
+                <br/>
+                { has_wallet ? <div className="grid-content no-overflow">
+                    <label><Translate content="wallet.name" /></label>
+                    <input type="text" id="wallet_public_name"
+                        value={this.state.wallet_public_name}
+                    />
                     <div className="has-error">{errors.wallet_public_name}</div>
-                        <br/>
-                    </div>:null}
-                </div>
-
+                    <br/>
+                </div>:null}
+                
                 <div className="grid-content no-overflow">
-                    <button className={cname("button",{disabled: !(this.state.password && this.state.isValid)})}><Translate content="wallet.create" /></button>
+                    <button className={cname("button",{disabled: !(this.state.isValid)})}>
+                        <Translate content="wallet.create" /></button>
                 </div>
             </form>
         </span>)
+    }
+    
+    onPassword(valid_password) {
+        this.state.valid_password = valid_password
+        this.setState({ valid_password })
+        this.validate()
     }
 
     onSubmit(e) {
         e.preventDefault()
         var wallet_name = this.state.wallet_public_name
-        WalletActions.setWallet(wallet_name, this.state.password)
+        WalletActions.setWallet(wallet_name, this.state.valid_password)
         this.setState({create_submitted: true})
-    }
-    
-    validate() {
-        let state = this.state
-        let errors = state.errors
-        let wallet_names = WalletManagerStore.getState().wallet_names
-        errors.password_length = state.password.length === 0 || state.password.length > 7 ? null : "Password must be longer than 7 characters";
-
-        errors.wallet_public_name =
-            !wallet_names.has(state.wallet_public_name) ?
-            null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
-        
-        errors.password_match = null
-        errors.password_match =
-            state.password === state.password_confirm ||
-            //don't report it until the confirm is populated
-            (state.password === "" || state.password_confirm === "")
-        ? null :
-            "Passwords do not match"
-        
-        let password_unmatch =
-            state.password !== state.password_confirm
-        
-        var isValid = !(errors.wallet_public_name || password_unmatch || errors.password_length)
-        this.setState({isValid})
     }
     
     formChange(event) {
@@ -159,7 +134,20 @@ class CreateNewWallet extends Component {
         // Set state is done directly because validate is going to 
         // require a merge of new and old state
         this.state[key_id] = value
+        this.setState(this.state)
+        this.validate()
+    }
+    
+    validate() {
+        let state = this.state
+        let errors = state.errors
+        let wallet_names = WalletManagerStore.getState().wallet_names
+        errors.wallet_public_name =
+            !wallet_names.has(state.wallet_public_name) ?
+            null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
         
+        var isValid = errors.wallet_public_name === null && state.valid_password !== null
+        this.setState({ isValid, errors })
     }
     
     onDone() {
