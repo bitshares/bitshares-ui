@@ -235,6 +235,7 @@ class WalletDb {
         }
     }
     
+    /** This may lock the wallet unless <b>unlock</b> is used. */
     changePassword( old_password, new_password, unlock = false ) {
         return new Promise( resolve => {
             var wallet = this.wallet.get(wallet_public_name)
@@ -253,6 +254,9 @@ class WalletDb {
             if( unlock ) {
                 var aes_private = Aes.fromSeed( encryption_plainbuffer )
                 aes_private_map[wallet_public_name] = aes_private
+            } else {
+                // new password, make sure the wallet gets locked
+                delete aes_private_map[wallet_public_name]
             }
             resolve( this.setWalletModified() )
         })
