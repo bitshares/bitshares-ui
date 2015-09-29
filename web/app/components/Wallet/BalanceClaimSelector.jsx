@@ -26,7 +26,6 @@ export default class BalanceClaimSelector extends Component {
     }
     
     static getPropsFromStores() {
-        console.log("getPropsFromStores");
         var props = BalanceClaimActiveStore.getState()
         var { balances, address_to_pubkey } = props
         var private_keys = PrivateKeyStore.getState().keys

@@ -6,11 +6,12 @@ import idb_helper from "../idb-helper";
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
+import AddressIndex from "stores/AddressIndex"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 
 import hash from "common/hash"
-import key from "common/key_utils"
+
 
 /** No need to wait on the promises returned by this store as long as
     this.state.catastrophic_error == false and
@@ -34,7 +35,6 @@ class PrivateKeyStore extends BaseStore {
     _getInitialState() {
         return {
             keys: Immutable.Map(),
-            addresses: Immutable.Map(),
             catastrophic_error: false,
             pending_operation_count: 0,
             catastrophic_error_add_key: null,
@@ -61,8 +61,9 @@ class PrivateKeyStore extends BaseStore {
             }
         }
         if(addys) {
+            var addresses = AddressIndex.getState().addresses
             for (let addy of addys) {
-                var pubkey = this.state.addresses.get(addy)
+                var pubkey = addresses.get(addy)
                 return_pubkeys.push(pubkey)
             }
         }
@@ -101,31 +102,23 @@ class PrivateKeyStore extends BaseStore {
         this.pendingOperation() 
         this.setState(this._getInitialState())
         var keys = Immutable.Map().asMutable()
-        var addresses = Immutable.Map().asMutable()
-        var p = loadAddyMap().then( addresses => {
-            var emtpy_addresses = addresses.size === 0
-            // Updating addresses is slow, so addresses is created once
-            // and then maintained.
-            if(emtpy_addresses) addresses = addresses.asMutable()
-            return idb_helper.cursor("private_keys", cursor => {
-                if( ! cursor) {
-                    this.setState({
-                        keys: keys.asImmutable(),
-                        addresses: addresses.asImmutable()
-                    })
-                    if(emtpy_addresses) saveAddyMap(addresses)
-                    return
-                }
-                var private_key_tcomb = PrivateKeyTcomb(cursor.value)
-                keys.set(private_key_tcomb.pubkey, private_key_tcomb)
-                if(emtpy_addresses) updateAddressMap(addresses, private_key_tcomb.pubkey)
-                cursor.continue()
-            }).then(()=>{
-                this.pendingOperationDone()
-            }).catch( error => {
-                this.setState(this._getInitialState())
-                this.catastrophicError('loading', error)
-            })
+        var p = idb_helper.cursor("private_keys", cursor => {
+            if( ! cursor) {
+                this.setState({
+                    keys: keys.asImmutable()
+                })
+                return
+            }
+            var private_key_tcomb = PrivateKeyTcomb(cursor.value)
+            keys.set(private_key_tcomb.pubkey, private_key_tcomb)
+            AddressIndex.add(private_key_tcomb.pubkey)
+            cursor.continue()
+        }).then(()=>{
+            this.pendingOperationDone()
+        }).catch( error => {
+            this.setState(this._getInitialState())
+            this.catastrophicError('loading', error)
+            throw error
         })
         resolve( p )
     }
@@ -143,12 +136,9 @@ class PrivateKeyStore extends BaseStore {
             private_key_object.pubkey,
             PrivateKeyTcomb(private_key_object)
         )
-        this.state.addresses = this.state.addresses.withMutations( addresses => {
-            updateAddressMap(addresses, private_key_object.pubkey)
-            saveAddyMap(addresses)
-        })
-        this.setState({keys: this.state.keys, addresses: this.state.addresses})
-
+        this.setState({keys: this.state.keys})
+        AddressIndex.add(private_key_object.pubkey)
+        
         var p = new Promise((resolve, reject) => {
             PrivateKeyTcomb(private_key_object)
             var duplicate = false
@@ -185,20 +175,3 @@ class PrivateKeyStore extends BaseStore {
 }
 
 module.exports = alt.createStore(PrivateKeyStore, "PrivateKeyStore");
-
-function loadAddyMap() {
-    return iDB.root.getProperty("PrivateKeyStore_addresses").then( map =>
-        map ? Immutable.Map(map) : Immutable.Map())
-}
-
-function updateAddressMap(addresses, pubkey) {
-    // Pending performance updates
-    // var address_strings = key.addresses(pubkey)
-    // for(let address of address_strings) {
-    //     addresses.set(address, pubkey)
-    // }
-}
-
-function saveAddyMap(map) {
-    return iDB.root.setProperty("PrivateKeyStore_addresses", map.toObject())
-}

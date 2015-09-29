@@ -177,8 +177,6 @@ module.exports = key =
 
     # @return array of 5 legacy addresses for a pubkey string parameter.
     addresses: (pubkey) ->
-        addresses = address_cache[pubkey]
-        return addresses if addresses
         public_key = PublicKey.fromPublicKeyString(pubkey)
         address_string = [# S L O W
             Address.fromPublic(public_key, false, 0).toString(), # btc_uncompressed

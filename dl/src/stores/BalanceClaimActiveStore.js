@@ -64,6 +64,7 @@ class BalanceClaimActiveStore extends BaseStore {
         if(Array.isArray(this.pubkeys) && this.pubkeys.length === 0) return
         this.setState({ loading: true })
         this.loadNoBalanceAddresses().then( () => {
+            
             for(let pubkey of pubkeys)
                 this.indexPubkey(pubkey)
             
@@ -86,7 +87,7 @@ class BalanceClaimActiveStore extends BaseStore {
         if(this.no_balance_address.size) return Promise.resolve()
         return iDB.root.getProperty("no_balance_address", [])
             .then( array => {
-                console.log("loadNoBalanceAddresses", array.length)
+                // console.log("loadNoBalanceAddresses", array.length)
                 this.no_balance_address = new Set(array)
             })
     }
@@ -102,7 +103,7 @@ class BalanceClaimActiveStore extends BaseStore {
     }
     
     lookupBalanceObjects() {
-        console.log("BalanceClaimActiveStore.lookupBalanceObjects")
+        // console.log("BalanceClaimActiveStore.lookupBalanceObjects")
         var db = Apis.instance().db_api()
         var no_balance_address = new Set(this.no_balance_address)
         var no_bal_size = no_balance_address.size
@@ -133,7 +134,7 @@ class BalanceClaimActiveStore extends BaseStore {
         this.no_balance_address = no_balance_address
         var array = []
         for(let addy of this.no_balance_address) array.push(addy)
-        console.log("saveNoBalanceAddresses", array.length)
+        // console.log("saveNoBalanceAddresses", array.length)
         return iDB.root.setProperty("no_balance_address", array)
     }
     
