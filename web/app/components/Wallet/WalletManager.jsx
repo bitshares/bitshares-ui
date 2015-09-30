@@ -45,12 +45,13 @@ export class WalletOptions extends WalletBaseComponent {
 
     render() {
         var has_wallet = !!this.props.current_wallet
-        var has_wallets = this.props.wallet_names.count() != 0
+        var has_wallets = this.props.wallet_names.size > 1
+        var current_wallet = this.props.current_wallet ? this.props.current_wallet.toUpperCase() : ""
         return <span>
 
             <span>
             <h5><Translate content="wallet.active_wallet" /></h5>
-            <label>{this.props.current_wallet}</label>
+            <div>{current_wallet}</div>
             <br/>
             </span>
 
@@ -75,6 +76,7 @@ export class WalletOptions extends WalletBaseComponent {
             <Link to="wmc-wallet-create">
             <div className="button success"><Translate content="wallet.new_wallet" /></div></Link>
 
+            <hr/>
             <BalanceClaimActive/>
             
         </span>
@@ -112,6 +114,7 @@ export class ChangeActiveWallet extends WalletBaseComponent {
                 className="form-control account-select"
                 style={{margin: '0 auto'}}
                 onChange={this.onChange.bind(this)}>{ options }</select>
+            <br/>
             { is_dirty ? <div className="button success"
                 onClick={this.onConfirm.bind(this)}><Translate content="wallet.change" name={this.state.current_wallet} /></div> :null}
             <Cancel/>

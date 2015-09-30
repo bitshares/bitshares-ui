@@ -3,6 +3,7 @@ import {RouteHandler, Link} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletManagerStore from "stores/WalletManagerStore"
 import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
+import Translate from "react-translate-component";
 
 class ExistingAccountBaseComponent extends Component {
     static getStores() {
@@ -46,11 +47,15 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
         var has_wallet = this.props.wallet.wallet_names.count() != 0
         return (
             <span>
-                {!has_wallet ? <Link to="welcome-import-backup">
-                <div className="button success">Import Backup</div></Link>:null}
-                
-                <Link to="welcome-import-keys">
-                <div className="button success">Import Keys</div></Link>
+                {!has_wallet ? <span>
+                    <Link to="welcome-import-backup">
+                    <div className="button success">Import Backup</div></Link>
+                    
+                    <Link to="welcome-import-keys">
+                    <div className="button success">Import Keys</div></Link>
+                    
+                    <hr/>
+                </span>:null}
                 
                 {/*<Link to="welcome-provide-brainkey">
                 <div className="button success">Provide Brainkey</div></Link>*/}
@@ -60,6 +65,14 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                 {!has_wallet ? <p>
                     <h5>Import your BTS 2.0+ BACKUP first<br/>(if you have one)</h5>
                 </p>:null}
+                
+                {has_wallet ? <span>
+                    <p>&nbsp;</p>
+                    <Link to="dashboard"><div className="button success">
+                        <Translate component="span" content="header.dashboard" /></div></Link>
+                    <Link to="wallet"><div className="button success">
+                        <Translate content="settings.wallets" /></div></Link>
+                </span>:null}
             </span>
         )
     }

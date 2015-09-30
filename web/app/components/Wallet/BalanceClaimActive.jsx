@@ -52,7 +52,6 @@ export default class BalanceClaimActive extends Component {
         </div>
         
         if( ! this.props.balances.size) return <div>
-            <hr/>
             <h5>No Balances</h5>
         </div>
         
@@ -62,7 +61,6 @@ export default class BalanceClaimActive extends Component {
                 "Claim Balance"
         return (
             <div>
-                <hr/>
                 <div className="content-block center-content">
                     <h3 className="no-border-bottom">Claim balances</h3>
                 </div>
