@@ -4,7 +4,8 @@ import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
 import WalletManagerStore from "stores/WalletManagerStore"
 import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
-import Translate from "react-translate-component";
+import Translate from "react-translate-component"
+import cname from "classnames"
 
 class WalletBaseComponent extends Component {
 
@@ -13,8 +14,8 @@ class WalletBaseComponent extends Component {
     }
 
     static getPropsFromStores() {
-        var wallet = WalletManagerStore.getState()
-        return wallet
+        var props = WalletManagerStore.getState()
+        return props
     }
 
 }
@@ -64,20 +65,22 @@ export class WalletOptions extends WalletBaseComponent {
             <Link to="wmc-backup-verify-restore">
             <div className="button success"><Translate content="wallet.restore_backup" /></div></Link>
             
-            <Link to="wmc-change-password">
-            <div className="button success"><Translate content="wallet.change_password" /></div></Link>
+            {has_wallet ? <Link to="wmc-change-password">
+            <div className="button success"><Translate content="wallet.change_password" /></div></Link>:null}
 
-            {has_wallet ? <Link to="wmc-import-keys">
-            <div className="button success"><Translate content="wallet.import_keys" /></div></Link>:null}
-
-            <Link to="wmc-brainkey">
-            <div className="button success"><Translate content="wallet.brainkey" /></div></Link>
+            <Link to="wmc-import-keys">
+            <div className="button success"><Translate content="wallet.import_keys" /></div></Link>
 
             <Link to="wmc-wallet-create">
             <div className="button success"><Translate content="wallet.new_wallet" /></div></Link>
+            
+            {has_wallet ? <Link to="wmc-wallet-delete">
+            <div className="button success"><Translate content="wallet.delete_wallet" /></div></Link>:null}
 
+            {has_wallet ? <span>
             <hr/>
             <BalanceClaimActive/>
+            </span>:null}
             
         </span>
     }
@@ -129,6 +132,78 @@ export class ChangeActiveWallet extends WalletBaseComponent {
     onChange(event) {
         var current_wallet = event.target.value
         this.setState({current_wallet})
+    }
+
+}
+
+@connectToStores
+export class WalletDelete extends WalletBaseComponent {
+
+    constructor() {
+        super()
+        this.state = {
+            selected_wallet: null,
+            confirm: 0
+        }
+    }
+    
+    render() {
+        if(this.state.confirm === 1) {
+            return <div>
+                <h4><Translate content="wallet.delete_confirm_line1"/></h4>
+                <p><Translate content="wallet.delete_confirm_line2"/>
+                <br/><Translate content="wallet.delete_confirm_line3"/></p>
+                <br/>
+                <div className="button success" onClick={this.onConfirm2.bind(this)}>
+                    <Translate content="wallet.delete_wallet_name" name={this.state.selected_wallet} /></div>
+                <Cancel/>
+            </div>
+        }
+        
+        
+        // this.props.current_wallet
+        var placeholder
+        if (this.props.wallet_names.size > 1) {
+            placeholder = <option value="" disabled>{placeholder}</option>;
+        }
+        else {
+            //When disabled and list_size was 1, chrome was skipping the 
+            //placeholder and selecting the 1st item automatically (not shown)
+            placeholder = <option value="">{placeholder}</option>;
+        }
+        var options = []
+        options.push(<option value="">Select Wallet&hellip;</option>)
+        this.props.wallet_names.forEach( wallet_name => {
+            options.push(<option value={wallet_name}>{wallet_name.toUpperCase()}</option>)
+        })
+
+        var is_dirty = !!this.state.selected_wallet
+
+        return <div className="">
+            <select value={this.state.selected_wallet}
+                className="form-control  account-select"
+                style={{margin: '0 auto'}}
+                onChange={this.onChange.bind(this)}>
+                { placeholder} { options }</select>
+            <br/>
+            <div className={ cname("button success", {disabled: !is_dirty}) } onClick={this.onConfirm.bind(this)}>
+                <Translate content="wallet.delete_wallet" /></div>
+            <Cancel/>
+        </div>
+    }
+    
+    onConfirm() {
+        this.setState({ confirm: 1 })
+    }
+    
+    onConfirm2() {
+        WalletManagerStore.onDeleteWallet(this.state.selected_wallet)
+        window.history.back()
+    }
+
+    onChange(event) {
+        var selected_wallet = event.target.value
+        this.setState({selected_wallet})
     }
 
 }

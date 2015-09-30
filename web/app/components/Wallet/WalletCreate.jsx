@@ -96,7 +96,7 @@ class CreateNewWallet extends Component {
                 
                 <div className="grid-content no-overflow">
                     <button className={cname("button",{disabled: !(this.state.isValid)})}>
-                        <Translate content="wallet.create" /></button>
+                        <Translate content="wallet.create_wallet" /></button>
                 </div>
             </form>
         </span>)

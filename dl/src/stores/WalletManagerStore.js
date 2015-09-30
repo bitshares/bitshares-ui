@@ -19,7 +19,7 @@ class WalletManagerStore extends BaseStore {
             onRestore: WalletActions.restore,
             onSetWallet: WalletActions.setWallet
         })
-        super._export("init", "setNewWallet", "onDeleteAllWallets")
+        super._export("init", "setNewWallet", "onDeleteWallet", "onDeleteAllWallets")
     }
     
     _getInitialState() {
@@ -57,8 +57,8 @@ class WalletManagerStore extends BaseStore {
             var add
             if( ! this.state.wallet_names.has(wallet_name) ) {
                 var wallet_names = this.state.wallet_names.add(wallet_name)
-                this.setState({wallet_names})
                 add = iDB.root.setProperty("wallet_names", wallet_names)
+                this.setState({wallet_names})
             }
             
             var current = iDB.root.setProperty("current_wallet", wallet_name)
@@ -129,8 +129,10 @@ class WalletManagerStore extends BaseStore {
                 throw new Error("Can't delete wallet, does not exist in index")
             }
             wallet_names = wallet_names.delete(delete_wallet_name)
-            if(current_wallet == delete_wallet_name) {
-                current_wallet = undefined
+            iDB.root.setProperty("wallet_names", wallet_names)
+            if(current_wallet === delete_wallet_name) {
+                current_wallet = wallet_names.size ? wallet_names.first() : undefined
+                iDB.root.setProperty("current_wallet", current_wallet)
             }
             this.setState({current_wallet, wallet_names})
             var database_name = iDB.getDatabaseName(delete_wallet_name)
