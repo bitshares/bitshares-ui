@@ -14,7 +14,7 @@ class AccountPermissionRow extends React.Component {
         account: React.PropTypes.object,
         pubkey: React.PropTypes.string,
         onRemoveItem: React.PropTypes.func.isRequired,
-        thresholds: React.PropTypes.object
+        weights: React.PropTypes.object
     }
     onRemoveItem(item_id){
         this.props.onRemoveItem(item_id);
@@ -36,7 +36,7 @@ class AccountPermissionRow extends React.Component {
                     }
                 </td>
                 <td>{name}</td>
-                <td>{this.props.thresholds[item_id]}</td>
+                <td>{this.props.weights[item_id]}</td>
                 <td>
                     <button className="button outline" onClick={this.onRemoveItem.bind(this, item_id)}>
                         <Translate content="account.votes.remove_witness"/></button>
@@ -57,7 +57,7 @@ class AccountPermissionsList extends React.Component {
         label: React.PropTypes.string.isRequired, // a translation key for the label,
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        thresholds: React.PropTypes.object // thresholds: hash of {account id -> threshold}
+        weights: React.PropTypes.object // weights: hash of {account id -> weight}
     }
 
     constructor(props) {
@@ -65,7 +65,7 @@ class AccountPermissionsList extends React.Component {
         this.state = {
             selected_item: null,
             item_name_input: "",
-            threshold_input: "",
+            weight_input: "",
             error: null
         }
         this.onItemChange = this.onItemChange.bind(this);
@@ -87,9 +87,9 @@ class AccountPermissionsList extends React.Component {
         }
     }
 
-    onThresholdChanged(event) {
+    onWeightChanged(event) {
         let value = event.target.value.trim();
-        this.setState({threshold_input: value});
+        this.setState({weight_input: value});
     }
 
     onAddItem(item) {
@@ -97,16 +97,16 @@ class AccountPermissionsList extends React.Component {
         let next_state = {
             selected_item: null,
             item_name_input: "",
-            threshold_input: "",
+            weight_input: "",
             error: null
         };
         this.setState(next_state);
         let item_value = typeof(item) === "string" ? item : item.get("id");
-        this.props.onAddItem(item_value, this.state.threshold_input);
+        this.props.onAddItem(item_value, this.state.weight_input);
     }
 
-    onThresholdKeyDown(event) {
-        if (event.keyCode === 13 && this.state.threshold_input && this.state.selected_item)
+    onWeightKeyDown(event) {
+        if (event.keyCode === 13 && this.state.weight_input && this.state.selected_item)
             this.onAddItem(this.state.selected_item);
     }
 
@@ -121,11 +121,11 @@ class AccountPermissionsList extends React.Component {
                  return 0;
                  })
            .map(i => {
-            return (<AccountPermissionRow account={i} thresholds={this.props.thresholds} onRemoveItem={this.props.onRemoveItem}/>)
+            return (<AccountPermissionRow account={i} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
            });
 
         let key_rows = this.props.keys.map(k => {
-            return (<AccountPermissionRow pubkey={k} thresholds={this.props.thresholds} onRemoveItem={this.props.onRemoveItem}/>)
+            return (<AccountPermissionRow pubkey={k} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
         });
 
         let error = this.state.error;
@@ -149,13 +149,13 @@ class AccountPermissionsList extends React.Component {
                                  action_label="account.votes.add_witness"
                                  tabIndex={this.props.tabIndex}
                                  allowPubKey={true}
-                                 disableActionButton={!this.state.threshold_input}>
-                    <input value={this.state.threshold_input}
-                           onChange={this.onThresholdChanged.bind(this)}
-                           className="threshold-input"
+                                 disableActionButton={!this.state.weight_input}>
+                    <input value={this.state.weight_input}
+                           onChange={this.onWeightChanged.bind(this)}
+                           className="weight-input"
                            type="number"
-                           placeholder="Threshold"
-                           onKeyDown={this.onThresholdKeyDown.bind(this)}
+                           placeholder="Weight"
+                           onKeyDown={this.onWeightKeyDown.bind(this)}
                            tabIndex={this.props.tabIndex + 1}/>
                 </AccountSelector>
                 <table className="table">
@@ -163,7 +163,7 @@ class AccountPermissionsList extends React.Component {
                     <tr>
                         <th style={{width: cw[0]}}></th>
                         <th style={{width: cw[1]}}>Account/Key</th>
-                        <th style={{width: cw[2]}}>Threshold</th>
+                        <th style={{width: cw[2]}}>Weight</th>
                         <th style={{width: cw[3]}}>ACTION</th>
                     </tr>
                     </thead>

@@ -79,7 +79,7 @@ module.exports = {
             threshold: "Threshold",
             confirm_add: "Add",
             cancel: "Cancel",
-            add_permission_label: "Enter account name/key and threshold",
+            add_permission_label: "Enter account name/key and weight",
             account_name_or_key: "Account name or key"
         },
         votes: {

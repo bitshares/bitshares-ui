@@ -33,8 +33,8 @@ class AccountPermissions extends React.Component {
             active_keys: new Immutable.List(),
             owner_accounts: new Immutable.List(),
             owner_keys: new Immutable.List(),
-            active_thresholds: {},
-            owner_thresholds: {}
+            active_weights: {},
+            owner_weights: {}
         };
         this.onPublish = this.onPublish.bind(this);
     }
@@ -122,12 +122,12 @@ class AccountPermissions extends React.Component {
         //});
     }
 
-    onAddItem(collection, item_value, threshold){
-        console.log( "onAddItem: ", item_value, threshold );
+    onAddItem(collection, item_value, weight){
+        console.log( "onAddItem: ", item_value, weight );
         let state = {};
         let list = collection + (utils.is_object_id(item_value) ? "_accounts" : "_keys");
         state[list] = this.state[list].push(item_value);
-        this.state[collection + "_thresholds"][item_value] = threshold;
+        this.state[collection + "_weights"][item_value] = weight;
         console.log("-- AccountPermissions.onAddItem -->", state);
         this.setState(state);
     }
@@ -155,7 +155,7 @@ class AccountPermissions extends React.Component {
                         label="account.perm.add_permission_label"
                         accounts={this.state.active_accounts}
                         keys={this.state.active_keys}
-                        thresholds={this.state.active_thresholds}
+                        weights={this.state.active_weights}
                         validateAccount={this.validateAccount.bind(this, "active")}
                         onAddItem={this.onAddItem.bind(this, "active")}
                         onRemoveItem={this.onRemoveItem.bind(this, "active")}
@@ -169,7 +169,7 @@ class AccountPermissions extends React.Component {
                         label="account.perm.add_permission_label"
                         accounts={this.state.owner_accounts}
                         keys={this.state.owner_keys}
-                        thresholds={this.state.owner_thresholds}
+                        weights={this.state.owner_weights}
                         validateAccount={this.validateAccount.bind(this, "owner")}
                         onAddItem={this.onAddItem.bind(this, "owner")}
                         onRemoveItem={this.onRemoveItem.bind(this, "owner")}
