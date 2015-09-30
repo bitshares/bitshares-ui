@@ -4,6 +4,7 @@ import alt from "alt-instance"
 import connectToStores from "alt/utils/connectToStores"
 import Immutable from "immutable"
 import cname from "classnames"
+import notify from "actions/NotificationActions"
 
 import LoadingIndicator from "components/LoadingIndicator";
 import PrivateKeyStore from "stores/PrivateKeyStore";
@@ -60,28 +61,26 @@ export default class BalanceClaimActive extends Component {
                 `Claim Balance to account: ${this.props.claim_account_name}` :
                 "Claim Balance"
         return (
-            <div>
+            <span>
                 <div className="content-block center-content">
                     <h3 className="no-border-bottom">Claim balances</h3>
                 </div>
                 <div className="grid-block vertical">
-                    <div className="grid-content">
+                    <div className="grid-content" style={{overflowY:'hidden !important'}}>
                         <div className="full-width-content center-content">
                             <MyAccounts accounts={Immutable.List(this.props.account_refs)}
                                 onChange={this.onClaimAccountChange.bind(this)}/>
                         </div>
                         <br></br>
-                        <div>
-                            <div className={ cname("button success", {disabled: !import_ready}) }
-                                onClick={this.onClaimBalance.bind(this)}>
-                                {claim_balance_label}
-                            </div>
-                        </div>
                     </div>
                     <br/>
                     <BalanceClaimSelector/>
                 </div>
-            </div>
+                <br/><br/>
+                <div className={ cname("button success", {disabled: !import_ready}) }
+                    onClick={this.onClaimBalance.bind(this)}>
+                    {claim_balance_label}</div>
+            </span>
         )
     }
     

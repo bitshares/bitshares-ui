@@ -67,7 +67,6 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                 </p>:null}
                 
                 {has_wallet ? <span>
-                    <p>&nbsp;</p>
                     <Link to="dashboard"><div className="button success">
                         <Translate component="span" content="header.dashboard" /></div></Link>
                     <Link to="wallet"><div className="button success">
