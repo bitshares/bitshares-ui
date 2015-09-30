@@ -18,8 +18,9 @@ class BalanceClaimActiveStore extends BaseStore {
     
     constructor() {
         super()
-        this.clearCache()
-        this._export("clearCache")
+        this.state = this._getInitialState()
+        this.no_balance_address = new Set()
+        this._export("reset")
         // ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
@@ -27,6 +28,23 @@ class BalanceClaimActiveStore extends BaseStore {
             onClaimAccountChange: BalanceClaimActiveActions.claimAccountChange,
             onTransactionConfirm: TransactionConfirmActions.wasBroadcast
         })
+    }
+    
+    _getInitialState() {
+        this.pubkeys = null
+        this.addresses = new Set()
+        return {
+            balances: new Immutable.List(),
+            checked: Immutable.Map(),
+            selected_balances: Immutable.Seq(),
+            claim_account_name: undefined,
+            address_to_pubkey: new Map(),
+            loading: false
+        }
+    }
+    
+    reset() {
+        this.setState(this._getInitialState())
     }
     
     // chainStoreUpdate() {
@@ -43,34 +61,15 @@ class BalanceClaimActiveStore extends BaseStore {
         this.lookupBalanceObjects()
     }
     
-    clearCache() {
-        this.state = {
-            balances: new Immutable.List(),
-            checked: Immutable.Map(),
-            selected_balances: Immutable.Seq(),
-            claim_account_name: undefined,
-            address_to_pubkey: new Map(),
-            loading: true
-        }
-        this.no_balance_address = new Set()
-        this.addresses = new Set()
-        this.pubkeys = null
-    }
-    
     onSetPubkeys(pubkeys) {
         if(this.pubkeys === pubkeys) return
+        this.reset()
         this.pubkeys = pubkeys
-        this.clearCache()
         if(Array.isArray(this.pubkeys) && this.pubkeys.length === 0) return
         this.setState({ loading: true })
         this.loadNoBalanceAddresses().then( () => {
-            
-            for(let pubkey of pubkeys)
-                this.indexPubkey(pubkey)
-            
+            for(let pubkey of pubkeys) this.indexPubkey(pubkey)
             return this.lookupBalanceObjects()
-                
-            
         }).catch( error => console.error( error ))
     }
     

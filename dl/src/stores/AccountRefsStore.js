@@ -10,14 +10,14 @@ class AccountRefsStore extends BaseStore {
     
     constructor() {
         super()
-        this._export("loadDbData", "reset")
+        this._export("loadDbData")
         this.state = this._getInitialState()
         this.bindListeners({ onAddPrivateKey: PrivateKeyActions.addKey })
+        this.no_account_refs = Immutable.Set() // Set of account ids
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
     }
     
     _getInitialState() {
-        this.no_account_refs = Immutable.Set() // Set of account ids
         this.chainstore_account_ids_by_key = null
         return {
             account_refs: Immutable.Set()
@@ -26,13 +26,10 @@ class AccountRefsStore extends BaseStore {
     }
     
     loadDbData() {
+        this.setState(this._getInitialState())
         return loadNoAccountRefs()
             .then( no_account_refs => this.no_account_refs = no_account_refs )
             .then( ()=> this.chainStoreUpdate() )
-    }
-
-    reset() {
-        this.setState(this._getInitialState())
     }
 
     chainStoreUpdate() {
@@ -54,8 +51,10 @@ class AccountRefsStore extends BaseStore {
             account_refs = account_refs.add(refs.valueSeq())
         })
         account_refs = account_refs.flatten()
-        if(!this.state.account_refs.equals(account_refs))
+        if( ! this.state.account_refs.equals(account_refs)) {
+            // console.log("AccountRefsStore account_refs",account_refs.size);
             this.setState({account_refs})
+        }
         if(!this.no_account_refs.equals(no_account_refs)) {
             this.no_account_refs = no_account_refs
             saveNoAccountRefs(no_account_refs)
@@ -72,6 +71,7 @@ class AccountRefsStore extends BaseStore {
     
 module.exports = alt.createStore(AccountRefsStore, "AccountRefsStore")
 
+// Performance optimization for large wallets
 function loadNoAccountRefs() {
     return iDB.root.getProperty("no_account_refs", [])
         .then( array => Immutable.Set(array) )
@@ -81,5 +81,4 @@ function saveNoAccountRefs(no_account_refs) {
     var array = []
     for(let pubkey of no_account_refs) array.push(pubkey)
     iDB.root.setProperty("no_account_refs", array)
-        .catch( error => console.error(error) )
 }

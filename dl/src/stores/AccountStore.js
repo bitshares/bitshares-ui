@@ -16,7 +16,7 @@ import AccountRefsStore from "stores/AccountRefsStore"
 class AccountStore extends BaseStore {
     constructor() {
         super();
-        this.clearCache()
+        this.state = this._getInitialState()
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetCurrentAccount: AccountActions.setCurrentAccount,
@@ -30,14 +30,24 @@ class AccountStore extends BaseStore {
             "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
     }
     
-    clearCache() {
-        this.state = { update: false }
-        this.state.currentAccount = null;
-        this.state.linkedAccounts = Immutable.Set();
-        this.state.searchAccounts = Immutable.Map();
-        this.state.searchTerm = "";
-        this.initial_account_refs_load = true // true until all undefined accounts are found
+    _getInitialState() {
         this.account_refs = null
+        this.initial_account_refs_load = true // true until all undefined accounts are found
+        return { 
+            update: false,
+            currentAccount: null,
+            linkedAccounts: Immutable.Set(),
+            searchAccounts: Immutable.Map(),
+            searchTerm: ""
+        }
+    }
+    
+    loadDbData() {
+        var linkedAccounts = Immutable.Set().asMutable()
+        return iDB.load_data("linked_accounts").then(data => {
+            for (let a of data) { linkedAccounts.add(a.name); }
+            this.setState({ linkedAccounts: linkedAccounts.asImmutable() })
+        })
     }
     
     chainStoreUpdate() {
@@ -54,7 +64,6 @@ class AccountStore extends BaseStore {
         if( ! this.initial_account_refs_load && this.account_refs === account_refs) return
         this.account_refs = account_refs
         var pending = false
-        
         this.state.linkedAccounts = this.state.linkedAccounts.withMutations(linkedAccounts => {
             account_refs.forEach(id => {
                 var account = ChainStore.getAccount(id)
@@ -65,7 +74,7 @@ class AccountStore extends BaseStore {
                 if (account) linkedAccounts.add(account.get("name"))
             })
         })
-        console.log("AccountStore addAccountRefs linkedAccounts");
+        // console.log("AccountStore addAccountRefs linkedAccounts",this.state.linkedAccounts.size);
         this.setState({ linkedAccounts: this.state.linkedAccounts })
         this.initial_account_refs_load = pending
     }
@@ -201,17 +210,6 @@ class AccountStore extends BaseStore {
         }
     }
     
-    loadDbData() {
-        this.state.linkedAccounts = Immutable.Set();
-        return iDB.load_data("linked_accounts").then(data => {
-            this.state.linkedAccounts = this.state.linkedAccounts.withMutations(set => {
-                for (let a of data) {
-                    set.add(a.name);
-                }
-            });
-        });
-    }
-
 }
 
 module.exports = alt.createStore(AccountStore, "AccountStore");

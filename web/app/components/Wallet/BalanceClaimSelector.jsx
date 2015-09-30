@@ -16,7 +16,6 @@ export default class BalanceClaimSelector extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
-        console.log("componentWillReceiveProps");
         if(nextProps.claim_account_name)
             this.onClaimAccount(nextProps.claim_account_name, nextProps.checked)
     }

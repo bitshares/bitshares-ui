@@ -34,7 +34,7 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillUnmount() {
-        BalanceClaimActiveStore.clearCache()
+        BalanceClaimActiveStore.reset()
     }
     
     componentWillReceiveProps(nextProps) {

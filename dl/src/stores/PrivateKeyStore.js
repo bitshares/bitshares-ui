@@ -42,6 +42,30 @@ class PrivateKeyStore extends BaseStore {
         }
     }
     
+    /** This method may be called again should the main database change */
+    onLoadDbData(resolve) {//resolve is deprecated
+        this.pendingOperation() 
+        this.setState(this._getInitialState())
+        var keys = Immutable.Map().asMutable()
+        var p = idb_helper.cursor("private_keys", cursor => {
+            if( ! cursor) {
+                this.setState({ keys: keys.asImmutable() })
+                return
+            }
+            var private_key_tcomb = PrivateKeyTcomb(cursor.value)
+            keys.set(private_key_tcomb.pubkey, private_key_tcomb)
+            AddressIndex.add(private_key_tcomb.pubkey)
+            cursor.continue()
+        }).then(()=>{
+            this.pendingOperationDone()
+        }).catch( error => {
+            this.setState(this._getInitialState())
+            this.catastrophicError('loading', error)
+            throw error
+        })
+        resolve( p )
+    }
+    
     hasKey(pubkey) {
         return this.state.keys.has(pubkey)
     }
@@ -75,52 +99,6 @@ class PrivateKeyStore extends BaseStore {
         if(public_key.Q)
             public_key = public_key.toPublicKeyString()
         return this.state.keys.get(public_key)
-    }
-    
-    pendingOperation() {
-        this.pending_operation_count++
-        this.setState({pending_operation_count: this.pending_operation_count})
-    }
-    
-    pendingOperationDone() {
-        if(this.pending_operation_count == 0)
-            throw new Error("Pending operation done called too many times")
-        this.pending_operation_count--
-        this.setState({pending_operation_count: this.pending_operation_count})
-    }
-    
-    catastrophicError(property, error) {
-        this.pendingOperationDone()
-        var state = { catastrophic_error: true }
-        state["catastrophic_error_" + property] = error
-        console.log("catastrophic_error_" + property, error)
-        this.setState(state)
-    }
-
-    /** This method may be called again should the main database change */
-    onLoadDbData(resolve) {//resolve is deprecated
-        this.pendingOperation() 
-        this.setState(this._getInitialState())
-        var keys = Immutable.Map().asMutable()
-        var p = idb_helper.cursor("private_keys", cursor => {
-            if( ! cursor) {
-                this.setState({
-                    keys: keys.asImmutable()
-                })
-                return
-            }
-            var private_key_tcomb = PrivateKeyTcomb(cursor.value)
-            keys.set(private_key_tcomb.pubkey, private_key_tcomb)
-            AddressIndex.add(private_key_tcomb.pubkey)
-            cursor.continue()
-        }).then(()=>{
-            this.pendingOperationDone()
-        }).catch( error => {
-            this.setState(this._getInitialState())
-            this.catastrophicError('loading', error)
-            throw error
-        })
-        resolve( p )
     }
     
     onAddKey({private_key_object, transaction, resolve}) {// resolve is deprecated
@@ -170,6 +148,26 @@ class PrivateKeyStore extends BaseStore {
             resolve(p)
         })
         resolve(p)
+    }
+    
+    pendingOperation() {
+        this.pending_operation_count++
+        this.setState({pending_operation_count: this.pending_operation_count})
+    }
+    
+    pendingOperationDone() {
+        if(this.pending_operation_count == 0)
+            throw new Error("Pending operation done called too many times")
+        this.pending_operation_count--
+        this.setState({pending_operation_count: this.pending_operation_count})
+    }
+    
+    catastrophicError(property, error) {
+        this.pendingOperationDone()
+        var state = { catastrophic_error: true }
+        state["catastrophic_error_" + property] = error
+        console.log("catastrophic_error_" + property, error)
+        this.setState(state)
     }
     
 }
