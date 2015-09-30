@@ -41,7 +41,7 @@ export default class iDBRoot {
                 var result = event.target.result
                 return result ? result.value : default_value
             })
-        })
+        }).catch( error => { console.error(error); throw error })
     }
     
     /** @return promise */
@@ -51,7 +51,7 @@ export default class iDBRoot {
             var store = transaction.objectStore("properties")
             if(value && value["toJS"]) value = value.toJS() //Immutable-js
             return idb_helper.on_request_end( store.put({name, value}) )
-        })
+        }).catch( error => { console.error(error); throw error })
     }
     
     deleteDatabase(are_you_sure = false) {
