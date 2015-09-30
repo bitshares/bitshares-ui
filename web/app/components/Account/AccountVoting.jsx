@@ -37,6 +37,7 @@ class AccountVoting extends React.Component {
         };
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
+        this.onReset = this.onReset.bind(this);
     }
 
     updateAccountData(account) {
@@ -48,7 +49,7 @@ class AccountVoting extends React.Component {
         let vids = Immutable.Set( vote_ids );
         ChainStore.getObjectsByVoteIds(vote_ids);
         FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000).then(vote_objs => {
-            console.log( "Vote Objs: ", vote_objs );
+            //console.log( "Vote Objs: ", vote_objs );
             let witnesses = new Immutable.List();
             let committee = new Immutable.List();
             let workers = new Immutable.Set();
@@ -81,8 +82,6 @@ class AccountVoting extends React.Component {
 
     isChanged() {
         let s = this.state;
-        if( s.vote_ids ) console.log( "VoteIDs: ", s.vote_ids.toJS() )
-        if( s.prev_vote_ids ) console.log( "Prev VoteIDs: ", s.prev_vote_ids.toJS() )
         return s.proxy_account_id !== s.prev_proxy_account_id ||
                s.witnesses !== s.prev_witnesses ||
                s.committee !== s.prev_committee ||
@@ -121,8 +120,18 @@ class AccountVoting extends React.Component {
         });
     }
 
+    onReset() {
+        let s = this.state;
+        this.setState({
+            proxy_account_id: s.prev_proxy_account_id,
+            witnesses: s.prev_witnesses,
+            committee: s.prev_committee,
+            workers: s.prev_workers,
+            vote_ids: s.prev_vote_ids
+        });
+    }
+
     onAddItem(collection, item_id){
-       console.log( "item_id: ", item_id );
         let state = {};
         state[collection] = this.state[collection].push(item_id);
         this.setState(state);
@@ -203,7 +212,11 @@ class AccountVoting extends React.Component {
 
                 <div className="content-block">
                     <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={4}>
-                        <Translate content="account.votes.publish"/></button>
+                        <Translate content="account.votes.publish"/>
+                    </button>
+                    <button className={"outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
+                        <Translate content="account.perm.reset"/>
+                    </button>
                 </div>
             </div>
         )

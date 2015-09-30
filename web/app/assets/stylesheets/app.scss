@@ -117,7 +117,7 @@ button, .button {
   }
 }
 
-td > button, td > .button, div > button, div > .button {
+td > button:first-child, td > .button:first-child, div > button:first-child, div > .button:first-child {
   margin-left: 0;
 }
 

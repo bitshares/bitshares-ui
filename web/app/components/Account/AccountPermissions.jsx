@@ -30,6 +30,7 @@ class AccountPermissions extends React.Component {
         super(props);
         this.state = {};
         this.onPublish = this.onPublish.bind(this);
+        this.onReset = this.onReset.bind(this);
     }
 
     componentWillMount() {
@@ -109,6 +110,20 @@ class AccountPermissions extends React.Component {
         WalletDb.process_transaction(tr, null, true);
     }
 
+    onReset() {
+        let s = this.state;
+        this.setState({
+            active_accounts: s.prev_active_accounts,
+            active_keys: s.prev_active_keys,
+            owner_accounts: s.prev_owner_accounts,
+            owner_keys: s.prev_owner_keys,
+            active_weights: s.prev_active_weights,
+            owner_weights: s.prev_owner_weights,
+            active_threshold: s.prev_active_threshold,
+            owner_threshold: s.prev_owner_threshold
+        });
+    }
+
     onAddItem(collection, item_value, weight){
         let state = {};
         let list = collection + (utils.is_object_id(item_value) ? "_accounts" : "_keys");
@@ -142,13 +157,20 @@ class AccountPermissions extends React.Component {
 
     render() {
         let error1, error2;
-        let weights_total = this.sumUpWeights(this.state.active_accounts, this.state.active_keys, this.state.active_weights)
-        if (weights_total > this.state.active_threshold)
-            error1 = `Active permissions weights total of ${weights_total} shouldn't exceed threshold of ${this.state.active_threshold}`;
-        weights_total = this.sumUpWeights(this.state.owner_accounts, this.state.owner_keys, this.state.owner_weights)
-        if (weights_total > this.state.owner_threshold)
-            error2 = `Owner permissions weights total of ${weights_total} shouldn't exceed threshold of ${this.state.owner_threshold}`;
+
+        let threshold = this.state.active_threshold > 0 ? this.state.active_threshold : 0;
+        let weights_total = this.sumUpWeights(this.state.active_accounts, this.state.active_keys, this.state.active_weights);
+        if (weights_total > threshold)
+            error1 = `Active permissions weights total of ${weights_total} shouldn't exceed threshold of ${threshold}`;
+
+        threshold = this.state.owner_threshold > 0 ? this.state.owner_threshold : 0;
+        weights_total = this.sumUpWeights(this.state.owner_accounts, this.state.owner_keys, this.state.owner_weights);
+        if (weights_total > threshold)
+            error2 = `Owner permissions weights total of ${weights_total} shouldn't exceed threshold of ${threshold}`;
+
         let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() ? "" : " disabled");
+        let reset_buttons_class = "button outline" + (this.isChanged() ? "" : " disabled");
+
         return (
             <div className="grid-content">
 
@@ -201,7 +223,11 @@ class AccountPermissions extends React.Component {
                 {error1 || error2 ? <div className="content-block has-error">{error1}<br/>{error2}</div> : null}
                 <div className="content-block">
                     <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={7}>
-                        <Translate content="account.votes.publish"/></button>
+                        <Translate content="account.perm.publish"/>
+                    </button>
+                    <button className={reset_buttons_class} onClick={this.onReset} tabIndex={8}>
+                        <Translate content="account.perm.reset"/>
+                    </button>
                 </div>
             </div>
         )
