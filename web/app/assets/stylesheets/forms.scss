@@ -1,3 +1,10 @@
+label.horizontal {
+  > input {
+    display: inline;
+    width: auto;
+  }
+}
+
 .form-label.select {
   padding: 0;
   border: none;
@@ -36,6 +43,7 @@ td > input, td > .autocomplete input {
 }
 
 .account-selector {
+  clear: right;
   input {
     display: block;
     flex: auto;

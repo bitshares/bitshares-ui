@@ -94,7 +94,7 @@ class AccountVoting extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.account !== this.props.account) this.updateAccountData(this.props.account);
+        if (nextProps.account !== this.props.account) this.updateAccountData(nextProps.account);
     }
 
     onPublish() {

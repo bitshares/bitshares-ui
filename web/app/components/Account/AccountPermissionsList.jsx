@@ -89,7 +89,7 @@ class AccountPermissionsList extends React.Component {
 
     onWeightChanged(event) {
         let value = event.target.value.trim();
-        this.setState({weight_input: value});
+        this.setState({weight_input: parseInt(value)});
     }
 
     onAddItem(item) {
@@ -154,6 +154,7 @@ class AccountPermissionsList extends React.Component {
                            onChange={this.onWeightChanged.bind(this)}
                            className="weight-input"
                            type="number"
+                           autoComplete="off"
                            placeholder="Weight"
                            onKeyDown={this.onWeightKeyDown.bind(this)}
                            tabIndex={this.props.tabIndex + 1}/>

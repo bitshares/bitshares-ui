@@ -28,66 +28,8 @@ class AccountPermissions extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            active_accounts: new Immutable.List(),
-            active_keys: new Immutable.List(),
-            owner_accounts: new Immutable.List(),
-            owner_keys: new Immutable.List(),
-            active_weights: {},
-            owner_weights: {}
-        };
+        this.state = {};
         this.onPublish = this.onPublish.bind(this);
-    }
-
-    updateAccountData(account) {
-        //let options = account.get('options');
-        //let proxy_account_id = options.get('voting_account');
-        //if(proxy_account_id === "1.2.5" ) proxy_account_id = "";
-        //let votes = options.get('votes');
-        //let vote_ids = votes.toArray();
-        //let vids = Immutable.Set( vote_ids );
-        //ChainStore.getObjectsByVoteIds(vote_ids);
-        //FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000).then(vote_objs => {
-        //    console.log( "Vote Objs: ", vote_objs );
-        //    let witnesses = new Immutable.List();
-        //    let committee = new Immutable.List();
-        //    let workers = new Immutable.Set();
-        //    vote_objs.forEach( obj => {
-        //        let account_id = obj.get("committee_member_account");
-        //        if (account_id) {
-        //            committee = committee.push(account_id);
-        //        } else if( account_id = obj.get( "worker_account" ) ) {
-        //            console.log( "worker: ", obj );
-        //            //     workers = workers.add(obj.get("id"));
-        //        } else if( account_id = obj.get("witness_account") ) {
-        //            witnesses = witnesses.push(account_id);
-        //        }
-        //    });
-        //    let state = {
-        //        proxy_account_id: proxy_account_id,
-        //        witnesses: witnesses,
-        //        committee: committee,
-        //        workers: workers,
-        //        vote_ids: vids,
-        //        prev_proxy_account_id: proxy_account_id,
-        //        prev_witnesses: witnesses,
-        //        prev_committee: committee,
-        //        prev_workers: workers,
-        //        prev_vote_ids : vids
-        //    };
-        //    this.setState(state);
-        //});
-    }
-
-    isChanged() {
-        return false;
-        //let s = this.state;
-        //if( s.vote_ids ) console.log( "VoteIDs: ", s.vote_ids.toJS() )
-        //if( s.prev_vote_ids ) console.log( "Prev VoteIDs: ", s.prev_vote_ids.toJS() )
-        //return s.proxy_account_id !== s.prev_proxy_account_id ||
-        //    s.witnesses !== s.prev_witnesses ||
-        //    s.committee !== s.prev_committee ||
-        //    !Immutable.is(s.vote_ids, s.prev_vote_ids);
     }
 
     componentWillMount() {
@@ -95,48 +37,97 @@ class AccountPermissions extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.account !== this.props.account) this.updateAccountData(this.props.account);
+        if (nextProps.account !== this.props.account) this.updateAccountData(nextProps.account);
+    }
+
+    permissionsFromImmutableObj(auths) {
+        let threshold = auths.get("weight_threshold");
+        let account_auths = auths.get("account_auths");
+        let key_auths = auths.get("key_auths");
+        let accounts = account_auths.map(a => a.get(0));
+        let keys = key_auths.map(a => a.get(0));
+        let weights = account_auths.reduce( (res, a) => { res[a.get(0)] = a.get(1); return res;}, {});
+        weights = key_auths.reduce( (res, a) => { res[a.get(0)] = a.get(1); return res;}, weights);
+        return {threshold, accounts, keys, weights};
+    }
+
+    permissionsToJson(threshold, accounts, keys, weights) {
+        let res = {weight_threshold: threshold};
+        res["account_auths"] = accounts.map(a => [a, weights[a]]).toJS();
+        res["key_auths"] = keys.map(a => [a, weights[a]]).toJS();
+        res["address_auths"] = [];
+        return res;
+    }
+
+    updateAccountData(account) {
+        let active = this.permissionsFromImmutableObj(account.get("active"));
+        let owner = this.permissionsFromImmutableObj(account.get("owner"));
+        let state = {
+            active_accounts: active.accounts,
+            active_keys: active.keys,
+            owner_accounts: owner.accounts,
+            owner_keys: owner.keys,
+            active_weights: active.weights,
+            owner_weights: owner.weights,
+            active_threshold: active.threshold,
+            owner_threshold: owner.threshold,
+            prev_active_accounts: active.accounts,
+            prev_active_keys: active.keys,
+            prev_owner_accounts: owner.accounts,
+            prev_owner_keys: owner.keys,
+            prev_active_weights: active.weights,
+            prev_owner_weights: owner.weights,
+            prev_active_threshold: active.threshold,
+            prev_owner_threshold: owner.threshold
+        };
+        this.setState(state);
+    }
+
+    isChanged() {
+        let s = this.state;
+        return s.active_accounts !== s.prev_active_accounts ||
+            s.active_keys !== s.prev_active_keys ||
+            s.owner_accounts !== s.prev_owner_accounts ||
+            s.owner_keys !== s.prev_owner_keys ||
+            s.active_threshold !== s.prev_active_threshold ||
+            s.owner_threshold !== s.prev_owner_threshold;
     }
 
     onPublish() {
-        //let updated_account = this.props.account.toJS();
-        //updated_account.account = updated_account.id;
-        //updated_account.new_options = updated_account.options
-        //let new_proxy_id = this.state.proxy_account_id;
-        //updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
-        //updated_account.new_options.num_witness = this.state.witnesses.size;
-        //updated_account.new_options.num_committee = this.state.committee.size;
-        //console.log( "vote_ids: ", this.state.vote_ids.toJS() );
-        //FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
-        //    let witnesses_vote_ids = res.map(o => o.get("vote_id"));
-        //    return Promise.all([Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)]);
-        //}).then( res => {
-        //    updated_account.new_options.votes = res[0]
-        //        .concat(res[1].map(o => o.get("vote_id")))
-        //        .concat(this.state.vote_ids.filter( id => id.split(":")[0] === "2" ).toArray() )
-        //        .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
-        //    console.log("updated_account: ", updated_account);
-        //    var tr = wallet_api.new_transaction();
-        //    tr.add_type_operation("account_update", updated_account);
-        //    WalletDb.process_transaction(tr, null, true);
-        //});
+        let s = this.state;
+        let updated_account = this.props.account.toJS();
+        updated_account.new_options = updated_account.options;
+        delete updated_account.active;
+        delete updated_account.owner;
+        delete updated_account.options;
+        updated_account.account = updated_account.id;
+        updated_account.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_weights);
+        updated_account.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_weights);
+        //console.log("-- AccountPermissions.onPublish -->", updated_account);
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("account_update", updated_account);
+        WalletDb.process_transaction(tr, null, true);
     }
 
     onAddItem(collection, item_value, weight){
-        console.log( "onAddItem: ", item_value, weight );
         let state = {};
         let list = collection + (utils.is_object_id(item_value) ? "_accounts" : "_keys");
         state[list] = this.state[list].push(item_value);
         this.state[collection + "_weights"][item_value] = weight;
-        console.log("-- AccountPermissions.onAddItem -->", state);
         this.setState(state);
     }
 
     onRemoveItem(collection, item_value){
-        console.log( "item_value: ", item_value );
         let state = {};
         let list = collection + (utils.is_object_id(item_value) ? "_accounts" : "_keys");
         state[list] = this.state[list].filter(i => i !== item_value);
+        this.setState(state);
+    }
+
+    onThresholdChanged(var_name, event) {
+        let value = parseInt(event.target.value.trim());
+        let state = {};
+        state[var_name] = value;
         this.setState(state);
     }
 
@@ -144,12 +135,33 @@ class AccountPermissions extends React.Component {
         return null;
     }
 
+    sumUpWeights(accounts, keys, weights) {
+        let sum = accounts.reduce( (sum, a) => sum + weights[a], 0);
+        return keys.reduce( (sum, a) => sum + weights[a], sum);
+    }
+
     render() {
-        let publish_buttons_class = "button" + (this.isChanged() ? "" : " disabled");
+        let error1, error2;
+        let weights_total = this.sumUpWeights(this.state.active_accounts, this.state.active_keys, this.state.active_weights)
+        if (weights_total > this.state.active_threshold)
+            error1 = `Active permissions weights total of ${weights_total} shouldn't exceed threshold of ${this.state.active_threshold}`;
+        weights_total = this.sumUpWeights(this.state.owner_accounts, this.state.owner_keys, this.state.owner_weights)
+        if (weights_total > this.state.owner_threshold)
+            error2 = `Owner permissions weights total of ${weights_total} shouldn't exceed threshold of ${this.state.owner_threshold}`;
+        let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() ? "" : " disabled");
         return (
             <div className="grid-content">
 
                 <div className="content-block">
+                    <form className="float-right threshold">
+                        <label className="horizontal">Threshold &nbsp; &nbsp;
+                            <input type="number" placeholder="0" size="5"
+                                value={this.state.active_threshold}
+                                onChange={this.onThresholdChanged.bind(this, "active_threshold")}
+                                autoComplete="off"
+                                tabIndex={1}/>
+                        </label>
+                    </form>
                     <h3>Active Permissions</h3>
                     <AccountPermissionsList
                         label="account.perm.add_permission_label"
@@ -160,10 +172,19 @@ class AccountPermissions extends React.Component {
                         onAddItem={this.onAddItem.bind(this, "active")}
                         onRemoveItem={this.onRemoveItem.bind(this, "active")}
                         placeholder={counterpart.translate("account.perm.account_name_or_key")}
-                        tabIndex={1}/>
+                        tabIndex={2}/>
                 </div>
 
                 <div className="content-block">
+                    <form className="float-right threshold">
+                        <label className="horizontal">Threshold &nbsp; &nbsp;
+                            <input type="number" placeholder="0" size="5"
+                                   value={this.state.owner_threshold}
+                                   onChange={this.onThresholdChanged.bind(this, "owner_threshold")}
+                                   autoComplete="off"
+                                   tabIndex={4}/>
+                        </label>
+                    </form>
                     <h3>Owner Permissions</h3>
                     <AccountPermissionsList
                         label="account.perm.add_permission_label"
@@ -174,11 +195,12 @@ class AccountPermissions extends React.Component {
                         onAddItem={this.onAddItem.bind(this, "owner")}
                         onRemoveItem={this.onRemoveItem.bind(this, "owner")}
                         placeholder={counterpart.translate("account.perm.account_name_or_key")}
-                        tabIndex={3}/>
+                        tabIndex={5}/>
                 </div>
 
+                {error1 || error2 ? <div className="content-block has-error">{error1}<br/>{error2}</div> : null}
                 <div className="content-block">
-                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={4}>
+                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={7}>
                         <Translate content="account.votes.publish"/></button>
                 </div>
             </div>
