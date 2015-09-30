@@ -245,6 +245,9 @@ class WalletDb {
             var old_password_aes = Aes.fromSeed( old_password )
             var new_password_aes = Aes.fromSeed( new_password )
             
+            if( ! wallet.encryption_key)
+                // This change pre-dates the live chain..
+                throw new Error("This wallet does not support the change password feature.")
             var encryption_plainbuffer = old_password_aes.decryptHexToBuffer( wallet.encryption_key )
             wallet.encryption_key = new_password_aes.encryptToHex( encryption_plainbuffer )
             
