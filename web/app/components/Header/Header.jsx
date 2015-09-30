@@ -9,46 +9,28 @@ import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
+import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 
 @connectToStores
 class Header extends React.Component {
 
     static getStores() {
-        return [AccountStore]
+        return [AccountStore, WalletUnlockStore, WalletManagerStore]
     }
 
     static getPropsFromStores() {
-        return {}
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        // return nextState.currentAccount !== this.state.currentAccount;
-        return true;
-    }
-
-    closeDropDowns() {
-        ZfApi.publish("account_drop_down", "close");
-        ZfApi.publish("plus_drop_down", "close");
-    }
-
-    accountClickHandler(account_name, e) {
-        e.preventDefault();
-        this.closeDropDowns();
-        let router = this.context.router;
-        AccountActions.setCurrentAccount(account_name);
-        let current_account_name = router.getCurrentParams()["account_name"];
-        if(current_account_name && current_account_name !== account_name) {
-            let routes = router.getCurrentRoutes();
-            this.context.router.transitionTo(routes[routes.length - 1].name, {account_name: account_name});
+        return {
+            linkedAccounts: AccountStore.getState().linkedAccounts,
+            locked: WalletUnlockStore.getState().locked,
+            current_wallet: WalletManagerStore.getState().current_wallet
         }
     }
 
-    transitionTo(to, params, query, e) {
-        e.preventDefault();
-        this.closeDropDowns();
-        this.context.router.transitionTo(to, params, query);
-        return false;
+    shouldComponentUpdate(nextProps) {
+        return nextProps.linkedAccounts !== this.props.linkedAccounts
+               || nextProps.locked !== this.props.locked
+               || nextProps.current_wallet !== this.props.current_wallet;
     }
 
     _triggerMenu(e) {
@@ -63,70 +45,13 @@ class Header extends React.Component {
     }
 
     render() {
-        if(!WalletDb.getWallet()) return null;
-        //DEBUG console.log('... render WalletDb.isLocked()',WalletDb.isLocked())
-
-        let {currentAccount, linkedAccounts} = this.props, accountsDropDown = null, plusDropDown = null;
-
-        let settings       = counterpart.translate("header.settings");
-        //let current        = counterpart.translate("header.current");
-        //let create_account = counterpart.translate("header.create_account");
-        //let create_asset   = counterpart.translate("header.create_asset");
-
-        //if (currentAccount) {
-        //
-        //    let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
-        //
-        //    if(linkedAccounts.size > 1) {
-        //        let accountsList = linkedAccounts
-        //            .sort()
-        //            .map(name => {
-        //                return <li key={name}><a href onClick={this.accountClickHandler.bind(this, name)}>{name}</a></li>;
-        //            });
-        //
-        //        accountsDropDown = (
-        //            <ActionSheet id="account_drop_down">
-        //                <ActionSheet.Button title="">
-        //                    <a className="button">
-        //                        &nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
-        //                    </a>
-        //                </ActionSheet.Button>
-        //                <ActionSheet.Content >
-        //                    <ul className="no-first-element-top-border">
-        //                        {accountsList}
-        //                    </ul>
-        //                </ActionSheet.Content>
-        //            </ActionSheet>);
-        //    }
-        //    else {
-        //        accountsDropDown = (
-        //            <Link to="account-overview" params={{account_name: currentAccount}}><Icon name="user"/> {account_display_name}</Link>
-        //        );
-        //    }
-        //
-        //}
-
-        //plusDropDown = (
-        //    <ActionSheet id="plus_drop_down">
-        //        <ActionSheet.Button title="">
-        //            <a className="button">
-        //                <Icon name="plus-circle"/>
-        //            </a>
-        //        </ActionSheet.Button>
-        //        <ActionSheet.Content >
-        //            <ul className="no-first-element-top-border">
-        //                <li><a href onClick={this.transitionTo.bind(this, "create-account", null, null)}>{create_account}</a></li>
-        //                {currentAccount ? <li><a href onClick={this.transitionTo.bind(this, "account-assets", {account_name: currentAccount}, {create_asset: true})}>{create_asset}</a></li> : null}
-        //            </ul>
-        //        </ActionSheet.Content>
-        //    </ActionSheet>
-        //);
-
+        if(!this.props.current_wallet) return null;
+        let linkedAccounts = this.props.linkedAccounts;
+        let settings = counterpart.translate("header.settings");
         let linkToAccountOrDashboard;
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link>;
         else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>;
         else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
-
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -145,16 +70,6 @@ class Header extends React.Component {
                 </div>
                 <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group">
-                        {/*
-                        <div className="grp-menu-item user-icon">
-                            {currentAccount && linkedAccounts.size > 1 ? <Link to="account-overview" data-tip={current} data-place="bottom" params={{account_name: currentAccount}}><Icon name="user"/></Link> : null}
-                        </div>
-                        <div className="grp-menu-item">
-                            {accountsDropDown}
-                        </div>
-                        <div className="grp-menu-item">
-                            {plusDropDown}
-                        </div>*/}
                         <div className="grp-menu-item" >
                             <Link to="settings" className="button" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>
@@ -162,7 +77,7 @@ class Header extends React.Component {
                             <Link to="help"><Translate component="span" content="header.help"/></Link>
                         </div>
                         <div className="grp-menu-item" >
-                            <a href onClick={this._toggleLock.bind(this)}>{ WalletDb.isLocked() ? <Translate component="span" content="header.unlock" /> : <Translate component="span" content="header.lock" /> }</a>
+                            <a href onClick={this._toggleLock.bind(this)}>{ this.props.locked ? <Translate component="span" content="header.unlock" /> : <Translate component="span" content="header.lock" /> }</a>
                         </div>
 
                     </div>
@@ -170,10 +85,6 @@ class Header extends React.Component {
             </div>
         );
     }
-
-
 }
-
-Header.contextTypes = {router: React.PropTypes.func.isRequired};
 
 export default Header;

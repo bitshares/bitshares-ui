@@ -54,14 +54,18 @@ class AccountStore extends BaseStore {
         if(!this.initial_account_refs_load && this.account_refs === account_refs) return
         this.account_refs = account_refs
         var pending = false
-        account_refs.forEach( id => {
-            var account = ChainStore.getAccount(id)
-            if(account === undefined) {
-                pending = true
-                return
-            }
-            if(account != null) this.setState({
-                linkedAccounts: this.state.linkedAccounts.add(account.get("name")) })
+        this.state.linkedAccounts = this.state.linkedAccounts.withMutations(linkedAccounts => {
+            account_refs.forEach(id => {
+                var account = ChainStore.getAccount(id)
+                if (account === undefined) {
+                    pending = true
+                    return
+                }
+                if (account) linkedAccounts.add(account.get("name"))
+            })
+        })
+        this.setState({
+            linkedAccounts: this.state.linkedAccounts
         })
         if(!pending) this.initial_account_refs_load = false
     }

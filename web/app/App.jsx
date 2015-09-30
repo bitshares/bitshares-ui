@@ -11,7 +11,7 @@ import Witnesses from "./components/Explorer/Witnesses";
 // import Witness from "./components/Explorer/Witness";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
 // import CommitteeMember from "./components/Explorer/CommitteeMember";
-import HeaderContainer from "./components/Header/HeaderContainer";
+import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
@@ -129,7 +129,7 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <HeaderContainer isUnlocked={this.state.isUnlocked}/>
+                    <Header/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
 
                     <div className="grid-block vertical">
