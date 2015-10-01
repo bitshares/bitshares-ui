@@ -136,12 +136,12 @@ module.exports = key =
             ))
         )
     
+    # Turn invisible space like characters into a single space
     normalize_brain_key: (brain_key)->
         unless typeof brain_key is 'string'
             throw new Error "string required for brain_key"
         
         brain_key = brain_key.trim()
-        brain_key = brain_key.toUpperCase()
         brain_key.split(/[\t\n\v\f\r ]+/).join ' '
     
     browserEntropy: ->
