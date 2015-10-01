@@ -92,7 +92,6 @@ export default class BalanceClaimActive extends Component {
     onClaimBalance() {
         WalletActions.importBalance( this.props.claim_account_name,
             this.props.selected_balances, true //broadcast
-        // ).then(()=> BalanceClaimActiveStore.refreshBalances()
         ).catch((error)=> {
             console.error("claimBalance", error)
             var message = error

@@ -21,7 +21,7 @@ class BalanceClaimActiveStore extends BaseStore {
         super()
         this.state = this._getInitialState()
         this.no_balance_address = new Set() // per chain
-        this._export("reset", "refreshBalances")
+        this._export("reset")
         // ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
@@ -56,10 +56,10 @@ class BalanceClaimActiveStore extends BaseStore {
         this.setState(this._getInitialState())
     }
     
-    onImportBalance() {
-        // Imorted balance just ran, not included in the blockchain yet
-        this.setState(this.getInitialViewState())
-    }
+    // onImportBalance() {
+    //     // Imorted balance just ran, not included in the blockchain yet
+    //     this.setState(this.getInitialViewState())
+    // }
     
     onTransactionBroadcasted() {
         // Balance claims are included in a block...
@@ -82,7 +82,10 @@ class BalanceClaimActiveStore extends BaseStore {
         if(this.pubkeys && this.pubkeys.equals( pubkeys )) return
         this.reset()
         this.pubkeys = pubkeys
-        if( pubkeys.size === 0) return
+        if( pubkeys.size === 0) {
+            this.setState({ loading: false })
+            return
+        }
         this.setState({ loading: true })
         this.loadNoBalanceAddresses().then( () => {
             for(let pubkey of pubkeys) this.indexPubkey(pubkey)
@@ -123,6 +126,7 @@ class BalanceClaimActiveStore extends BaseStore {
         return this.lookupBalanceObjects().then( balances => {
             var state = this.getInitialViewState()
             state.balances = balances
+            state.loading = false
             this.setState(state)
         })
     }
