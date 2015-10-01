@@ -95,7 +95,7 @@ module.exports = {
             remove_committee: "제거",
             add_committee: "추가",
             add_committee_label: "위원",
-            add_witness_label: "증인"
+            add_witness_label: "증인",
             approve_worker: "Approve worker proposal",
             reject_worker: "Reject worker proposal"            
         },
@@ -337,7 +337,7 @@ module.exports = {
             title: "증인"
         },
         committee_members: {
-            title: "위원"
+            title: "위원",
             active: "활동중인 위원 수"
         },
         committee_member: {
@@ -360,7 +360,7 @@ module.exports = {
         locale: "언어 전환",
         confirm_yes: "항상",
         confirm_no: "사용안함",
-        always_confirm: "항상 확인을 함"
+        always_confirm: "항상 확인을 함",
         wallets: "지갑"
     },
     footer: {
@@ -398,7 +398,7 @@ module.exports = {
     wallet: {
         title: "지갑",
         confirm: "비밀번호 확인",
-        password: "비밀번호"
+        password: "비밀번호",
         wallet_created: "지갑이 생성됨",
         create_wallet: "지갑 생성",
         name: "지갑 이름",
