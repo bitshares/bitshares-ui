@@ -51,27 +51,6 @@ class WalletApi {
         return object
     }
 
-    create_account_with_brain_key(
-        brainkey,
-        new_account_name,
-        registrar_id,
-        referrer_id = 0,
-        referrer_percent = 100,
-        broadcast = true
-    ) {
-        var owner_privkey = key.get_owner_private( brainkey, "0" )
-        var active_privkey = key.get_active_private( owner_privkey )
-        return this.application_api.create_account_with_brain_key(
-            owner_privkey.toPublicKey().toPublicKeyString(),
-            active_privkey.toPublicKey().toPublicKeyString(),
-            new_account_name,
-            registrar_id,
-            referrer_id,
-            referrer_percent,
-            broadcast
-        )
-    }
-    
     transfer(
         from_account_id,
         to_account_id,

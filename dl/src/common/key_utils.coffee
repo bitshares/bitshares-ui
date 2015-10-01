@@ -114,28 +114,13 @@ module.exports = key =
     get_random_key: (entropy) ->
         PrivateKey.fromBuffer @random32ByteBuffer entropy
     
-    get_owner_private: (brain_key, sequence = 0)->
-        unless sequence >= 0
-            throw new Error "invalid sequence"
-        
+    get_brainkey_private: (brain_key, sequence = 0)->
+        throw new Error "invalid sequence" if sequence < 0
         brain_key = key.normalize_brain_key brain_key
-        
-        PrivateKey.fromBuffer(
-            hash.sha256(hash.sha512(
-                brain_key + " " + sequence
-            ))
-        )
+        PrivateKey.fromBuffer( hash.sha256(hash.sha512(
+            brain_key + " " + sequence
+        )) )
 
-    get_active_private: (owner_private, sequence = 0)->
-        unless sequence >= 0
-            throw new Error "invalid sequence"
-        
-        PrivateKey.fromBuffer(
-            hash.sha256(hash.sha512(
-                owner_private.toWif() + " " + sequence
-            ))
-        )
-    
     # Turn invisible space like characters into a single space
     normalize_brain_key: (brain_key)->
         unless typeof brain_key is 'string'

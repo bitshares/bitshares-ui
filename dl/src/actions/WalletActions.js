@@ -45,21 +45,19 @@ class WalletActions {
             //this.actions.brainKeyAccountCreateError( error )
             return Promise.reject( error )
         }
-        
-        var [owner_private, active_private] = WalletDb.generateKeys();
-
+        var owner_private = WalletDb.generateNextKey()
+        var active_private = WalletDb.generateNextKey()
         var updateWallet = ()=> {
             var transaction = WalletDb.transaction_update_keys()
             var p = WalletDb.saveKeys(
                 [ owner_private, active_private ],
                 transaction
             )
-            var p2 = WalletDb.incrementBrainKeySequence(transaction)
-            return Promise.all([p,p2]).catch( error => transaction.abort() )
+            return p.catch( error => transaction.abort() )
         };
 
-        let create_account_with_brain_key = () => {
-            return application_api.create_account_with_brain_key(
+        let create_account = () => {
+            return application_api.create_account(
                 owner_private.private_key.toPublicKey().toPublicKeyString(),
                 active_private.private_key.toPublicKey().toPublicKeyString(),
                 account_name,
@@ -80,7 +78,7 @@ class WalletActions {
 
         if(registrar) {
             // using another user's account as registrar
-            return create_account_with_brain_key();
+            return create_account();
         } else {
             // using faucet
           /*
@@ -118,26 +116,13 @@ class WalletActions {
                     error instanceof TypeError ||
                     error.toString().indexOf('ECONNREFUSED') != -1
                 ) {
-                    console.log("Warning! faucet registration failed, falling back to direct application_api.create_account_with_brain_key..");
-                    return create_account_with_brain_key();
+                    console.log("Warning! faucet registration failed, falling back to direct application_api.create_account..");
+                    return create_account();
                 }
                 //this.actions.brainKeyAccountCreateError(error);
                 throw error;
             })
         }
-    }
-    
-    findAccountsByBrainKey(brainkey) {
-        var privates = []
-        for(let sequence = 0; sequence < 10; sequence++) {
-            var owner_privkey = key.get_owner_private(
-                this.state.brainkey, sequence
-            )
-            //var active_privkey = key.get_active_private(owner_privkey)
-            privates.push([owner_privkey, sequence])
-        }
-        //var db = api.db_api()
-        //return db.exec("get_key_references", public_keyaddress_params).then( result => {
     }
     
     /** @parm balances is an array of balance objects with two

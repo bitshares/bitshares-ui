@@ -43,7 +43,7 @@ class Api {
     }
 
     createAccount(name) {
-        return Apis.instance().app_api().create_account_with_brain_key(
+        return Apis.instance().app_api().create_account(
             PrivateKey.fromSeed("owner").toPublicKey().toPublicKeyString(),
             PrivateKey.fromSeed("active").toPublicKey().toPublicKeyString(), 
             name, 11, 0, 0, true //broadcast
