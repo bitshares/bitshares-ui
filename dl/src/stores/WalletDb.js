@@ -305,7 +305,7 @@ class WalletDb {
                     this.saveKey(
                         private_key,
                         private_key_obj.import_account_names,
-                        null,//brainkey_pos
+                        null,//brainkey_sequence
                         transaction,
                         private_key_obj.public_key_string
                     ).then(
@@ -352,7 +352,7 @@ class WalletDb {
     saveKey(
         private_key,
         import_account_names,
-        brainkey_pos,
+        brainkey_sequence,
         transaction,
         public_key_string
     ) {
@@ -372,7 +372,7 @@ class WalletDb {
             import_account_names,
             encrypted_key: private_cipherhex,
             pubkey: public_key_string,
-            brainkey_pos
+            brainkey_sequence
         }
         var p1 = PrivateKeyActions.addKey(
             private_key_object, transaction

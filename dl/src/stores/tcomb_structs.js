@@ -82,7 +82,7 @@ let PrivateKeyTcomb = t.struct({
     pubkey: t.Str,
     label: t.maybe(t.Str),
     import_account_names: t.maybe(t.Arr),
-    brainkey_pos: t.maybe(t.Num),
+    brainkey_sequence: t.maybe(t.Num),
     encrypted_key: t.Str
 }, "PrivateKeyTcomb");
 
