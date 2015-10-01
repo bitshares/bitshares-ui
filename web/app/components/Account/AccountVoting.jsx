@@ -99,7 +99,7 @@ class AccountVoting extends React.Component {
     onPublish() {
         let updated_account = this.props.account.toJS();
         updated_account.account = updated_account.id;
-        updated_account.new_options = updated_account.options
+        updated_account.new_options = updated_account.options;
         let new_proxy_id = this.state.proxy_account_id;
         updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         updated_account.new_options.num_witness = this.state.witnesses.size;
