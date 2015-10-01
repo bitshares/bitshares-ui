@@ -25,7 +25,7 @@ class AssetActions {
                 "max_supply": createObject.max_supply,
                 "market_fee_percent": 0,
                 "max_market_fee": "0",
-                "issuer_permissions": 1,
+                "issuer_permissions": 79,
                 "flags": 0,
                 "core_exchange_rate": {
                     "base": {

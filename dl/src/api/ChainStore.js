@@ -61,7 +61,7 @@ class ChainStore
       this.witness_by_account_id    = new Map()
       this.committee_by_account_id  = new Map()
       this.objects_by_vote_id       = new Map()
-      this.fetching_get_full_accounts = new Set()
+      this.fetching_get_full_accounts = new Map()
    }
 
    resetCache() {
@@ -600,7 +600,7 @@ class ChainStore
       let fetch_account = false
       if( utils.is_object_id(name_or_id) ) 
       {
-         let current = this.objects_by_id.get( name_or_id )
+          let current = this.objects_by_id.get( name_or_id )
           fetch_account = current === undefined
           if( !fetch_account ) return current;
       }
@@ -610,19 +610,18 @@ class ChainStore
             throw Error( "argument is not an account name: " + name_or_id )
 
          let account_id = this.accounts_by_name.get( name_or_id )
-         if( account_id === null ) return null
-         else if( utils.is_object_id( account_id ) )
+         if( utils.is_object_id( account_id ) )
             return this.getAccount(account_id);
       }
       
 
-      if( ! this.fetching_get_full_accounts.has(name_or_id) ) {
-          this.fetching_get_full_accounts.add(name_or_id)
+      /// only fetch once every 5 seconds if it wasn't found
+      if( !this.fetching_get_full_accounts.has(name_or_id) || (Date.now() - this.fetching_get_full_accounts.get(name_or_id)) > 5000  ) {
+          this.fetching_get_full_accounts.set(name_or_id, Date.now() )
           //console.log( "FETCHING FULL ACCOUNT: ", name_or_id )
           Apis.instance().db_api().exec("get_full_accounts", [[name_or_id],true])
               .then( results => {
-                 this.fetching_get_full_accounts.delete(name_or_id)
-                 if(results.length === 0) {
+                 if(results.length === 0 && utils.is_object_id(name_or_id) ) {
                      this.objects_by_id = this.objects_by_id.set( name_or_id, null );
                      return;
                  }
@@ -684,6 +683,7 @@ class ChainStore
                this.accounts_by_name = this.accounts_by_name.delete( name_or_id )
          })
       }
+      return undefined;
    }
 
    getAccountMemberStatus( account ) {
