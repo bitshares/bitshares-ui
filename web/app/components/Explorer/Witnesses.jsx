@@ -60,7 +60,7 @@ class WitnessCard extends React.Component {
                             </tr>
                             <tr>
                                 <td>Last&nbsp;Block</td>
-                                <td><TimeAgo time={last_aslot_time.toString()} /></td>
+                                <td><TimeAgo time={last_aslot_time} /></td>
                             </tr>
                             <tr>
                                 <td>Missed</td>
