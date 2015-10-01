@@ -68,7 +68,9 @@ export default class BalanceClaimActive extends Component {
                 <div className="grid-block vertical">
                     <div className="grid-content" style={{overflowY:'hidden !important'}}>
                         <div className="full-width-content center-content">
-                            <MyAccounts accounts={Immutable.List(this.props.account_refs)}
+                            <MyAccounts 
+                                key={this.props.balances}
+                                accounts={Immutable.List(this.props.account_refs)}
                                 onChange={this.onClaimAccountChange.bind(this)}/>
                         </div>
                         <br></br>
@@ -89,10 +91,9 @@ export default class BalanceClaimActive extends Component {
     }
     
     onClaimBalance() {
-        WalletActions.importBalance(
-            this.props.claim_account_name,
-            this.props.selected_balances,
-            true //broadcast
+        WalletActions.importBalance( this.props.claim_account_name,
+            this.props.selected_balances, true //broadcast
+        // ).then(()=> BalanceClaimActiveStore.refreshBalances()
         ).catch((error)=> {
             console.error("claimBalance", error)
             var message = error

@@ -12,6 +12,7 @@ import config from "chain/config"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
+import WalletActions from "actions/WalletActions"
 import ChainStore from "api/ChainStore"
 
 class BalanceClaimActiveStore extends BaseStore {
@@ -19,47 +20,61 @@ class BalanceClaimActiveStore extends BaseStore {
     constructor() {
         super()
         this.state = this._getInitialState()
-        this.no_balance_address = new Set()
-        this._export("reset")
+        this.no_balance_address = new Set() // per chain
+        this._export("reset", "refreshBalances")
         // ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
             onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims,
             onClaimAccountChange: BalanceClaimActiveActions.claimAccountChange,
-            onTransactionConfirm: TransactionConfirmActions.wasBroadcast
+            onTransactionBroadcasted: TransactionConfirmActions.wasBroadcast
         })
     }
     
     _getInitialState() {
+        // reset for each wallet
         this.pubkeys = null
         this.addresses = new Set()
+        var state = this.getInitialViewState()
+        state.address_to_pubkey = new Map()
+        return state
+    }
+    
+    getInitialViewState() {
+        // reset in-between balance claims
         return {
-            balances: new Immutable.List(),
             checked: Immutable.Map(),
+            balances: new Immutable.List(),
             selected_balances: Immutable.Seq(),
             claim_account_name: undefined,
-            address_to_pubkey: new Map(),
             loading: false
         }
     }
     
+    /** Reset for each wallet load or change */
     reset() {
         this.setState(this._getInitialState())
     }
     
+    onImportBalance() {
+        // Imorted balance just ran, not included in the blockchain yet
+        this.setState(this.getInitialViewState())
+    }
+    
+    onTransactionBroadcasted() {
+        // Balance claims are included in a block...
+        // chainStoreUpdate did not include removal of balance claim objects
+        // This is a hack to refresh balance claims after a transaction.
+        this.refreshBalances()
+    }
+    
+    // chainStoreUpdate did not include removal of balance claim objects
     // chainStoreUpdate() {
     //     if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
     //         console.log("ChainStore.balance_objects_by_address")
     //         this.balance_objects_by_address = ChainStore.balance_objects_by_address
     //     }
     // }
-    
-    onTransactionConfirm() {
-        // chainStoreUpdate did not include removal of balance claim objects
-        // This is a hack to refresh balance claims after a transaction.
-        this.setState({ checked: Immutable.Map() })
-        this.lookupBalanceObjects()
-    }
     
     onSetPubkeys(pubkeys) {
         if(this.pubkeys === pubkeys) return
@@ -69,7 +84,7 @@ class BalanceClaimActiveStore extends BaseStore {
         this.setState({ loading: true })
         this.loadNoBalanceAddresses().then( () => {
             for(let pubkey of pubkeys) this.indexPubkey(pubkey)
-            return this.lookupBalanceObjects()
+            return this.refreshBalances()
         }).catch( error => console.error( error ))
     }
     
@@ -94,13 +109,23 @@ class BalanceClaimActiveStore extends BaseStore {
     indexPubkey(pubkey) {
         for(let address_string of key.addresses(pubkey)) {
             if( ! this.no_balance_address.has(address_string)) {
+                // AddressIndex indexes all addresses .. Here only 1 address is involved
                 this.state.address_to_pubkey.set(address_string, pubkey)
-                this.setState({address_to_pubkey: this.state.address_to_pubkey})
                 this.addresses.add(address_string)
             }
         }
+        this.setState({address_to_pubkey: this.state.address_to_pubkey})
     }
     
+    refreshBalances() {
+        return this.lookupBalanceObjects().then( balances => {
+            var state = this.getInitialViewState()
+            state.balances = balances
+            this.setState(state)
+        })
+    }
+    
+    /** @return Promise.resolve(balances) */
     lookupBalanceObjects() {
         // console.log("BalanceClaimActiveStore.lookupBalanceObjects")
         var db = Apis.instance().db_api()
@@ -124,7 +149,7 @@ class BalanceClaimActiveStore extends BaseStore {
                         this.saveNoBalanceAddresses(no_balance_address)
                             .catch( error => console.error( error ) ) 
                 })
-                this.setState({ balances, loading: false })
+                return balances
             })
         })
     }

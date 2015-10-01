@@ -165,7 +165,8 @@ _my.signed_transaction = ->
                 was_broadcast_callback()
                 return
             .catch (error)=>
-                #DEBUG console.log error # logged in GrapheneApi
+                # console.log may be redundant for network errors, other errors could occur
+                console.log error
                 message = error.message
                 message = "" unless message
                 reject( new Error (

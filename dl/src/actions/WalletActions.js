@@ -190,7 +190,8 @@ class WalletActions {
                     tr.add_type_operation("balance_claim", balance_claim)
                 }
                 return WalletDb.process_transaction(
-                    tr, Object.keys(signer_pubkeys), broadcast )
+                    tr, Object.keys(signer_pubkeys), broadcast ).then(
+                        result=> { this.dispatch(); return result })
             })
             resolve(p)
         })
