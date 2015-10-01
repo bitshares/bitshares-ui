@@ -4,7 +4,8 @@ module.exports = {
         cn: "简体中文",
         fr: "Francais",
         ko: "한국어",
-        de: "Deutsch"
+        de: "Deutsch",
+        es: "Español"
     },
     header: {
         title: "비트쉐어 2.0",
