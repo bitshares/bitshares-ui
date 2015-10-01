@@ -59,7 +59,7 @@ class Transfer extends React.Component {
     }
 
     onAmountChanged({amount, asset}) {
-        this.setState({amount, asse, error: nullt})
+        this.setState({amount, asset, error: null})
     }
 
     onMemoChanged(e) {
