@@ -81,7 +81,8 @@ module.exports = {
             confirm_add: "Add",
             cancel: "Cancel",
             add_permission_label: "Enter account name/key and weight",
-            account_name_or_key: "Account name or key"
+            account_name_or_key: "Account name or key",
+            memo_public_key: "Memo Public Key"
         },
         votes: {
             proxy: "Proxy Voting Account",

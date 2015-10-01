@@ -8,6 +8,7 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
+import PublicKey from "ecc/key_public";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
 import ChainStore from "api/ChainStore";
@@ -15,8 +16,8 @@ import validation from "common/validation"
 import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
 import {FetchChainObjects} from "api/ChainStore";
-
 import AccountPermissionsList from "./AccountPermissionsList";
+import PubKeyInput from "../Forms/PubKeyInput";
 
 let wallet_api = new WalletApi()
 
@@ -63,6 +64,7 @@ class AccountPermissions extends React.Component {
     updateAccountData(account) {
         let active = this.permissionsFromImmutableObj(account.get("active"));
         let owner = this.permissionsFromImmutableObj(account.get("owner"));
+        let memo_key = account.get("options").get("memo_key");
         let state = {
             active_accounts: active.accounts,
             active_keys: active.keys,
@@ -72,6 +74,7 @@ class AccountPermissions extends React.Component {
             owner_weights: owner.weights,
             active_threshold: active.threshold,
             owner_threshold: owner.threshold,
+            memo_key: memo_key,
             prev_active_accounts: active.accounts,
             prev_active_keys: active.keys,
             prev_owner_accounts: owner.accounts,
@@ -79,7 +82,8 @@ class AccountPermissions extends React.Component {
             prev_active_weights: active.weights,
             prev_owner_weights: owner.weights,
             prev_active_threshold: active.threshold,
-            prev_owner_threshold: owner.threshold
+            prev_owner_threshold: owner.threshold,
+            prev_memo_key: memo_key
         };
         this.setState(state);
     }
@@ -91,19 +95,24 @@ class AccountPermissions extends React.Component {
             s.owner_accounts !== s.prev_owner_accounts ||
             s.owner_keys !== s.prev_owner_keys ||
             s.active_threshold !== s.prev_active_threshold ||
-            s.owner_threshold !== s.prev_owner_threshold;
+            s.owner_threshold !== s.prev_owner_threshold ||
+            s.memo_key !== s.prev_memo_key;
     }
 
     onPublish() {
         let s = this.state;
         let updated_account = this.props.account.toJS();
         updated_account.new_options = updated_account.options;
-        delete updated_account.active;
-        delete updated_account.owner;
-        delete updated_account.options;
         updated_account.account = updated_account.id;
         updated_account.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_weights);
         updated_account.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_weights);
+        if (s.memo_key && s.memo_key !== s.prev_memo_key && this.refs.memo_key.isValidPubKey(s.memo_key)) {
+            updated_account.new_options = updated_account.options;
+            updated_account.new_options.memo_key = s.memo_key;
+        }
+        delete updated_account.active;
+        delete updated_account.owner;
+        delete updated_account.options;
         //console.log("-- AccountPermissions.onPublish -->", updated_account);
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_update", updated_account);
@@ -120,7 +129,8 @@ class AccountPermissions extends React.Component {
             active_weights: s.prev_active_weights,
             owner_weights: s.prev_owner_weights,
             active_threshold: s.prev_active_threshold,
-            owner_threshold: s.prev_owner_threshold
+            owner_threshold: s.prev_owner_threshold,
+            memo_key: s.prev_memo_key
         });
     }
 
@@ -155,6 +165,10 @@ class AccountPermissions extends React.Component {
         return keys.reduce( (sum, a) => sum + weights[a], sum);
     }
 
+    onMemoKeyChanged(memo_key) {
+        this.setState({memo_key});
+    }
+
     render() {
         let error1, error2;
 
@@ -168,7 +182,7 @@ class AccountPermissions extends React.Component {
         if (weights_total > threshold)
             error2 = `Owner permissions weights total of ${weights_total} shouldn't exceed threshold of ${threshold}`;
 
-        let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() ? "" : " disabled");
+        let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() && this.refs.memo_key.isValidPubKey(this.state.memo_key) ? "" : " disabled");
         let reset_buttons_class = "button outline" + (this.isChanged() ? "" : " disabled");
 
         return (
@@ -219,13 +233,21 @@ class AccountPermissions extends React.Component {
                         placeholder={counterpart.translate("account.perm.account_name_or_key")}
                         tabIndex={5}/>
                 </div>
+                <div className="content-block">
+                    <h3>Memo Key</h3>
+                    <PubKeyInput ref="memo_key" value={this.state.memo_key}
+                        label="account.perm.memo_public_key"
+                        placeholder="Public Key"
+                        onChange={this.onMemoKeyChanged.bind(this)}
+                        tabIndex={7}/>
+                </div>
 
                 {error1 || error2 ? <div className="content-block has-error">{error1}<br/>{error2}</div> : null}
                 <div className="content-block">
-                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={7}>
+                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={8}>
                         <Translate content="account.perm.publish"/>
                     </button>
-                    <button className={reset_buttons_class} onClick={this.onReset} tabIndex={8}>
+                    <button className={reset_buttons_class} onClick={this.onReset} tabIndex={9}>
                         <Translate content="account.perm.reset"/>
                     </button>
                 </div>
