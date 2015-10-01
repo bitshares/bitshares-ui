@@ -486,3 +486,11 @@ td.orderHistoryBid {
 .memo {
   color: $secondary-text-color;
 }
+
+.help-content {
+  code {
+    color: $primary-text-color;
+    background-color: transparent;
+    border-color: $dark-text-color;
+  }
+}
