@@ -452,5 +452,12 @@ module.exports = {
             below: "Collateral ratio below maintenance level",
             collateral: "Insufficient collateral balance"
         }
+    },
+    modal : {
+      issue : {
+        to: "Issue To",
+        amount: "Amount to Issue",
+        submit: "Issue Asset"
+      }
     }
 };

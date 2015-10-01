@@ -66,6 +66,7 @@ class AssetActions {
     }
 
     issueAsset(account_id, issueObject) {
+       console.log( "account_id: ", account_id, issueObject );
         // Create asset action here...
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("asset_issue", {

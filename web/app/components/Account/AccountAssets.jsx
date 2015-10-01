@@ -22,6 +22,7 @@ import validation from "common/validation";
 import classnames from "classnames";
 import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import IssueModal from "../Modal/IssueModal"
 
 class AccountAssets extends React.Component {
 
@@ -226,6 +227,7 @@ class AccountAssets extends React.Component {
         }
 
 
+       
         let isMyAccount = PrivateKeyStore.hasKey(account.getIn(["owner", "key_auths", "0", "0"]));
         // console.log("account:", account, "id:", account.get("id"));
         let myAssets = assets.filter(asset => {
@@ -237,23 +239,15 @@ class AccountAssets extends React.Component {
         .map(asset => {
             return (
                     <tr>
-                        <td>{asset.id}</td>
-                        <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
-                        <td>{asset.options.description}</td>
-                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
-                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
-{/*
-                            The precision is not important enough for this screen real estate. It is removed to make more room for Description.
-                        <td>{asset.precision}</td>
-                    */}
-                        {isMyAccount ?
-                            (<td>
-                                <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button"><Translate content="transaction.trxTypes.asset_issue" /></button>
-                            </td>) : null}
-                        {isMyAccount ?
-                        (<td>
-                            <Link to="asset" className="button" params={{symbol: asset.symbol}}><Translate content="account.user_issued_assets.details" /></Link>
-                        </td>) : null}
+                       <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
+                       <td>{asset.options.description}</td>
+                       <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
+                       <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
+                       <td>
+                          <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">
+                                <Translate content="transaction.trxTypes.asset_issue" />
+                          </button>
+                      </td>
                     </tr>
                 );
         }).toArray();
@@ -271,14 +265,12 @@ class AccountAssets extends React.Component {
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Symbol</th>
                                     <th>Description</th>
                                     {/* <th>Public Data</th> FIXME: this column is hidden because its purpose overlaps with Description */}
                                     <Translate component="th" content="markets.supply" />
                                     <th>Max Supply</th>
-                                    {isMyAccount ? <th>{/* Issue asset button */}</th> : null}
-                                    {isMyAccount ? <th>{/* Details button*/}</th> : null}
+                                    <th>Issue</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -288,14 +280,13 @@ class AccountAssets extends React.Component {
                         </div>
                     </div>
 
-                    {isMyAccount ?
-                        (<div className="content-block">
-                            <div className="actions clearfix">
-                                <Trigger open="create_asset">
-                                    <button className="button">Create New Asset</button>
-                                </Trigger>
-                            </div>
-                        </div>) : null}
+                    <div className="content-block">
+                        <div className="actions clearfix">
+                            <Trigger open="create_asset">
+                                <button className="button">Create New Asset</button>
+                            </Trigger>
+                        </div>
+                    </div>
 
                     <Modal id="create_asset" overlay={true}>
                         <Trigger close="create_asset">
@@ -336,37 +327,7 @@ class AccountAssets extends React.Component {
                         </Trigger>
                         <br/>
                         <div className="grid-block vertical">
-                            <form onSubmit={this._issueAsset.bind(this, account.get("id"))} noValidate>
-                                <div className="shrink grid-content">
-                                    <label><Translate content="explorer.block.asset_issue" /><span>&nbsp;({issue.symbol})</span>
-                                    <input type="number" value={issue.amount} onChange={this._onIssueInput.bind(this, "amount")} /></label>
-                                    <div>
-                                        <label>
-                                        <Translate component="span" content="account.user_issued_assets.to" />
-                                        </label>
-                                        <AutocompleteInput
-                                            id="to"
-                                            options={autoCompleteAccounts}
-                                            initial_value={issue.to}
-                                            onChange={this._onIssueInput.bind(this, "amount")}
-                                        />
-                                    </div>
-                                </div>
-                                { issue.to_id ?
-                                    <AccountInfo account={issue.to_id} image_size={{height: 100, width: 100}}/> :
-                                    <span>
-                                        <div style={{height: 105, width: 100}} width={100 * 2} height={100 * 2}/>
-                                        <br/>
-                                        <br/>
-                                    </span>
-                                 }
-                                <div className="grid-content button-group">
-                                    <input type="submit" className="button" onClick={this._issueAsset.bind(this, account.get("id"))} value={counterpart.translate("transaction.trxTypes.asset_issue")} />
-                                    <Trigger close="issue_asset">
-                                        <a href className="secondary button">Cancel</a>
-                                    </Trigger>
-                                </div>
-                            </form>
+                            <IssueModal asset_to_issue={this.state.issue.asset_id} />
                         </div>
                     </Modal>
             </div>
