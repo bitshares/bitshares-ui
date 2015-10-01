@@ -12,7 +12,6 @@ import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import chain_config from "chain/config"
-import key_utils from "common/key_utils"
 
 //TODO delete wallet_public_name, this is managed in WalletManagerStore
 var wallet_public_name = "default"
@@ -142,7 +141,7 @@ class WalletDb {
     
     transaction_update_keys() {
         var transaction = iDB.instance().db().transaction(
-            ["wallet", "private_keys", "balance_claims"], "readwrite"
+            ["wallet", "private_keys"], "readwrite"
         )
         return transaction
     }
@@ -158,7 +157,7 @@ class WalletDb {
     
     getBrainKeyPrivate(brainkey_plaintext = this.getBrainKey()) {
         if( ! brainkey_plaintext) throw new Error("Missing brainkey")
-        return PrivateKey.fromSeed( key_utils.normalize_brain_key(brainkey_plaintext) )
+        return PrivateKey.fromSeed( key.normalize_brain_key(brainkey_plaintext) )
     }
     
     onCreateWallet(
@@ -182,7 +181,10 @@ class WalletDb {
             // aes_private is the global aes encrypt / decrypt object
             var aes_private = Aes.fromSeed( encryption_buffer )
             
-            if( ! brainkey_plaintext) brainkey_plaintext = key.suggest_brain_key()
+            if( ! brainkey_plaintext)
+                brainkey_plaintext = key.suggest_brain_key()
+            else
+                brainkey_plaintext = key.normalize_brain_key(brainkey_plaintext)
             var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )
             var brainkey_pubkey = brainkey_private.toPublicKey().toPublicKeyString()
             var encrypted_brainkey = aes_private.encryptToHex( brainkey_plaintext )
@@ -265,24 +267,27 @@ class WalletDb {
         })
     }
     
-    generateKeys() {
-        var wallet = this.wallet.get(wallet_public_name)
+    /** @return { private_key, sequence } */
+    generateNextKey() {
         var brainkey = this.getBrainKey()
         if( ! brainkey) throw new Error("missing brainkey")
-        var owner_privkey = key.get_owner_private(
-            brainkey, wallet.brainkey_sequence )
-        var active_privkey = key.get_active_private(owner_privkey)
-        return [
-            {
-                private_key: owner_privkey,
-                sequence: wallet.brainkey_sequence + ""
-            },{
-                private_key: active_privkey,
-                sequence: wallet.brainkey_sequence + ".0"
-            }
-        ]
+        var wallet = this.wallet.get(wallet_public_name)
+        var sequence = wallet.brainkey_sequence
+        var private_key = key.get_brainkey_private( brainkey, sequence )
+        // save deterministic private keys ( the user can delete the brainkey )
+        this.saveKey( private_key, sequence )
+        //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
+        this.incrementBrainKeySequence()
+        return { private_key, sequence }
     }
     
+    incrementBrainKeySequence( transaction ) {
+        var wallet = this.wallet.get(wallet_public_name)
+        // increment in RAM so this can't be out-of-sync
+        wallet.brainkey_sequence ++
+        return this._updateWallet( transaction )
+        //TODO .error( error => ErrorStore.onAdd( "wallet", "incrementBrainKeySequence", error ))
+    }
     
     /** WIF format
     */
@@ -304,10 +309,10 @@ class WalletDb {
                 promises.push(
                     this.saveKey(
                         private_key,
+                        null,//brainkey_sequence
                         private_key_obj.import_account_names,
-                        null,//brainkey_pos
-                        transaction,
-                        private_key_obj.public_key_string
+                        private_key_obj.public_key_string,
+                        transaction
                     ).then(
                         ret => {
                             if(ret.result == "duplicate") {
@@ -340,10 +345,10 @@ class WalletDb {
         for(let private_key_record of private_keys) {
             promises.push( this.saveKey(
                 private_key_record.private_key,
-                null, //import_account_names
                 private_key_record.sequence,
-                transaction,
-                public_key_string
+                null, //import_account_names
+                public_key_string,
+                transaction
             ))
         }
         return Promise.all(promises)
@@ -351,20 +356,14 @@ class WalletDb {
     
     saveKey(
         private_key,
+        brainkey_sequence,
         import_account_names,
-        brainkey_pos,
-        transaction,
-        public_key_string
+        public_key_string,
+        transaction = this.transaction_update_keys()
     ) {
-        var password_aes_private = aes_private_map[
-            wallet_public_name
-        ]
-        var private_cipherhex =
-            password_aes_private.encryptToHex(
-                private_key.toBuffer()
-            )
+        var password_aes_private = aes_private_map[ wallet_public_name ]
+        var private_cipherhex = password_aes_private.encryptToHex( private_key.toBuffer() )
         var wallet = this.getWallet()
-        
         if( ! public_key_string) {
             //S L O W
             // console.log('WARN: public key was not provided, this may incur slow performance')
@@ -377,10 +376,9 @@ class WalletDb {
         var private_key_object = {
             import_account_names,
             encrypted_key: private_cipherhex,
-            brainkey_pos: brainkey_pos,
-            pubkey: public_key_string
+            pubkey: public_key_string,
+            brainkey_sequence
         }
-        
         var p1 = PrivateKeyActions.addKey(
             private_key_object, transaction
         ).then((ret)=> {
@@ -390,19 +388,13 @@ class WalletDb {
         return p1
     }
     
-    incrementBrainKeySequence(transaction) {
-        return this._updateWallet( transaction, wallet => {
-            wallet.brainkey_sequence = wallet.brainkey_sequence + 1
-        })
-    }
-    
-    setWalletModified(transaction = this.transaction_update()) {
+    setWalletModified(transaction) {
         return this._updateWallet( transaction )
     }
     
     /** This method can not unlock the wallet.  Unlocking a wallet is
     not compatible with transactions. */
-    _updateWallet(transaction, update_callback) {
+    _updateWallet(transaction = this.transaction_update()) {
         var wallet = this.wallet.get(wallet_public_name)
         if ( ! wallet) {
             reject("missing wallet " + wallet_public_name)
@@ -411,20 +403,16 @@ class WalletDb {
         //DEBUG console.log('... wallet',wallet)
         var wallet_clone = _.cloneDeep( wallet )
         wallet_clone.last_modified = new Date()
-        if(update_callback)
-            update_callback(wallet_clone)
+        // if(update_callback)
+        //     update_callback(wallet_clone)
         
         WalletTcomb(wallet_clone) // validate
         //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
         
         var wallet_store = transaction.objectStore("wallet")
         var p = idb_helper.on_request_end( wallet_store.put(wallet_clone) )
-        var p2 = idb_helper.on_transaction_end( transaction  ).then(
-            () => {
-                // Update RAM
-                this.wallet = this.wallet.set( wallet_public_name, wallet_clone )
-            }
-        )
+        var p2 = idb_helper.on_transaction_end( transaction  ).then( () =>
+            this.wallet = this.wallet.set( wallet_public_name, wallet_clone ) )
         return Promise.all([p,p2])
     }
 

@@ -89,8 +89,7 @@ class BrainkeyStoreImpl extends BaseStore {
     */
     inSync() {
         this.derived_keys.forEach( derived_key => {
-            if( isPendingFromChain(derived_key.owner) ||
-                isPendingFromChain(derived_key.active))
+            if( isPendingFromChain(derived_key) )
                 return false
         })
         return true
@@ -105,11 +104,8 @@ class BrainkeyStoreImpl extends BaseStore {
     
     deriveKeys(brnkey = this.state.brnkey) {
         var sequence = this.derived_keys.length // next sequence (starting with 0)
-        var owner_private = key.get_owner_private(brnkey, sequence)
-        var derived_key = {
-            owner: this.createDerivedKey(owner_private),
-            active: this.createDerivedKey(key.get_active_private(owner_private))
-        }
+        var private_key = key.get_brainkey_private(brnkey, sequence)
+        var derived_key = this.derivedKeyStruct(private_key)
         this.derived_keys.push(derived_key)
         if(this.derived_keys.length < MAX_DERIVIED_BRAINKEY_ACCOUNTS)
             this.deriveKeys(brnkey)
@@ -123,10 +119,8 @@ class BrainkeyStoreImpl extends BaseStore {
                     new_ids.add(chain_account_id)
                 })
             }
-            this.derived_keys.forEach( derived_key => {
-                updatePubkey(derived_key.owner.public_string)
-                updatePubkey(derived_key.active.public_string)
-            })
+            this.derived_keys.forEach( derived_key =>
+                updatePubkey(derived_key.public_string) )
         })
         if( ! new_account_ids.equals(this.state.account_ids)) {
             this.state.account_ids = new_account_ids
@@ -134,7 +128,7 @@ class BrainkeyStoreImpl extends BaseStore {
         }
     }
     
-    createDerivedKey(private_key) {
+    derivedKeyStruct(private_key) {
         var public_string = private_key.toPublicKey().toPublicKeyString()
         var derived_key = {private_key, public_string}
         return derived_key

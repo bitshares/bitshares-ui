@@ -38,7 +38,6 @@ fakeIndexedDB = require "fake-indexeddb"
 
 ###
 import_key "1.2.15" "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-create_account_with_brain_key "brainkey" "newaccountname" "1.2.15" "1.2.14" 0 true
 ###
 describe "tr_tests", ->
 
@@ -62,25 +61,6 @@ describe "tr_tests", ->
         fakeIndexedDB.deleteDatabase("graphene_db")
         api.close()
         done()
-    
-    it "wallet.account_create", (done)->
-        suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
-        account_name = "account-z"+suffix
-        # DEBUG console.log '... account_name',account_name
-        helper.test_wallet().then ()=>
-            tr = wallet.create_account_with_brain_key(
-                "brainkey"
-                account_name
-                registrar = 15
-                referrer = 0
-                referrer_percent = 0
-                broadcast
-            ).then (result)->
-                #th.print_result result
-                #th.print_hex ""
-                done()
-            .catch th.log_error
-        return
     
     #it "update account transaction", ->
     it "wallet.transfer nomemo", (done)->

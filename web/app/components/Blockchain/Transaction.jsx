@@ -714,7 +714,7 @@ class Transaction extends React.Component {
                     color = "success";
 
                     let bal_id = op[1].balance_to_claim.substring(5);
-                    console.log( "bal_id: ", bal_id, op[1].balance_to_claim );
+                    // console.log( "bal_id: ", bal_id, op[1].balance_to_claim );
 
                     rows.push(
                         <tr>

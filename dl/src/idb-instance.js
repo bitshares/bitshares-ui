@@ -14,7 +14,6 @@ var upgrade = function(db, oldVersion) {
         db.createObjectStore("wallet", { keyPath: "public_name" })
         idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
         db.createObjectStore("linked_accounts", { keyPath: "name" })
-        db.createObjectStore("balance_claims", { keyPath: "chain_balance_record.id" })
     }
     // if (oldVersion < 2) {
     //     

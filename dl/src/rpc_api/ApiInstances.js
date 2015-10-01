@@ -12,12 +12,13 @@ class Apis {
         let protocol = "ws://"
         try { // For command-line support, all references to "window" go in the try catch
            let args     = window.location.hash.split("/");
-           let parts    = args[2].split(":");
-           this.rpc_user = parts[0];
-           this.rpc_pass = parts[1];
-           this.rpc_ip   = parts[2];
-           this.rpc_port = parts[3];
-        
+            if (args.length > 2) {
+                let parts = args[2].split(":");
+                this.rpc_user = parts[0];
+                this.rpc_pass = parts[1];
+                this.rpc_ip = parts[2];
+                this.rpc_port = parts[3];
+            }
             if (this.ws_rpc) return; // already connected
             if (this.rpc_ip) hostname = this.rpc_ip;
             else hostname = window.location.hostname ? window.location.hostname : "localhost";

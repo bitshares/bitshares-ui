@@ -18,7 +18,7 @@ import lookup from "chain/lookup"
 
 class ApplicationApi {
     
-    create_account_with_brain_key(
+    create_account(
         owner_pubkey,
         active_pubkey,
         new_account_name,

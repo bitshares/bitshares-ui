@@ -35,30 +35,31 @@ class Transfer extends React.Component {
             amount: "",
             asset_id: null,
             asset: null,
-            memo: ""
+            memo: "",
+            error: null
         };
     }
 
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
-        this.setState({from_name,asset,amount})
+        this.setState({from_name,asset,amount, error: null})
     }
 
     toChanged(to_name) {
-        this.setState({to_name})
+        this.setState({to_name, error: null})
     }
 
     onFromAccountChanged(from_account) {
-        this.setState({from_account})
+        this.setState({from_account, error: null})
     }
 
     onToAccountChanged(to_account) {
-        this.setState({to_account})
+        this.setState({to_account, error: null})
     }
 
     onAmountChanged({amount, asset}) {
-        this.setState({amount, asset})
+        this.setState({amount, asse, error: nullt})
     }
 
     onMemoChanged(e) {
@@ -75,6 +76,7 @@ class Transfer extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
+        this.setState({error: null});
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.amount.replace( /,/g, "" )
@@ -87,7 +89,9 @@ class Transfer extends React.Component {
         ).then( () => {
             TransactionConfirmStore.listen(this.onTrxIncluded);
         }).catch( e => {
-            console.log( "error: ",e)
+            let msg = e.message ? e.message.split( '\n' )[1] : null;
+            console.log( "error: ", e, msg)
+            this.setState({error: msg})
         } );
     }
 
@@ -153,6 +157,7 @@ class Transfer extends React.Component {
                     </div>
 
                     {/*  S E N D  B U T T O N  */}
+                    {this.state.error ? <div className="content-block has-error">{this.state.error}</div> : null}
                     <div>
                         <button className={submitButtonClass} type="submit" value="Submit" tabIndex="5">
                             <Translate component="span" content="transfer.send" />

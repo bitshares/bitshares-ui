@@ -113,7 +113,7 @@ describe( "wallet_actions", ()=> {
         }).catch(_catch)
     })
     
-    it( "create_account_with_brain_key", done => {
+    it( "create_account", done => {
         var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
         helper.test_wallet( suffix ).then(()=>{
             return WalletActions.createAccount(
