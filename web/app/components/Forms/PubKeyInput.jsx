@@ -19,7 +19,7 @@ class PubKeyInput extends React.Component {
         onChange: React.PropTypes.func, // a method to be called any time user input changes
         onAction: React.PropTypes.func, // a method called when Add button is clicked
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        disableActionButton: React.PropTypes.string // use it if you need to disable action button
+        disableActionButton: React.PropTypes.bool // use it if you need to disable action button
     }
 
     constructor(props) {
