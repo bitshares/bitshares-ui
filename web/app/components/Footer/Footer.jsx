@@ -11,7 +11,8 @@ import Icon from "../Icon/Icon";
 class Footer extends React.Component {
 
     static propTypes = {
-        dynGlobalObject: ChainTypes.ChainObject.isRequired
+        dynGlobalObject: ChainTypes.ChainObject.isRequired,
+        synced: React.PropTypes.bool.isRequired
     }
 
     static defaultProps = {
@@ -37,11 +38,9 @@ class Footer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-       // return true
-        return (
-            nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
-            nextState.rpc_connection_status !== this.state.rpc_connection_status
-        );
+        return nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
+               nextState.rpc_connection_status !== this.state.rpc_connection_status ||
+               nextProps.synced !== this.props.synced;
     }
 
     _triggerPerf() {
@@ -73,6 +72,7 @@ class Footer extends React.Component {
                             <Translate content="footer.title" />
                         </div>
                     </div>
+                    {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
                     {this.state.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     {block_height ?
                         (<div className="grid-block shrink">

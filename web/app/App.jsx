@@ -133,10 +133,9 @@ class App extends React.Component {
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
 
                     <div className="grid-block vertical">
-                        {!this.state.synced ? <div className="grid-container txtlabel cancel" style={{fontSize: "2rem"}}>Blockchain is out of sync, please wait until sync is done..</div> : null}
                         <RouteHandler />
                     </div>
-                    <Footer/>
+                    <Footer synced={this.state.synced}/>
                     <ReactTooltip place="top" type="dark" effect="solid"/>
                 </div>
             );
