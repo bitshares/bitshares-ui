@@ -76,11 +76,13 @@ class BalanceClaimActiveStore extends BaseStore {
     //     }
     // }
     
+    // param: Immutable Seq or array
     onSetPubkeys(pubkeys) {
-        if(this.pubkeys === pubkeys) return
+        if( Array.isArray( pubkeys )) pubkeys = Immutable.Seq( pubkeys )
+        if(this.pubkeys && this.pubkeys.equals( pubkeys )) return
         this.reset()
         this.pubkeys = pubkeys
-        if(Array.isArray(this.pubkeys) && this.pubkeys.length === 0) return
+        if( pubkeys.size === 0) return
         this.setState({ loading: true })
         this.loadNoBalanceAddresses().then( () => {
             for(let pubkey of pubkeys) this.indexPubkey(pubkey)

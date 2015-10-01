@@ -29,19 +29,18 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillMount() {
-        this.existing_keys = PrivateKeyStore.getState().keys
-        BalanceClaimActiveActions.setPubkeys( this.existing_keys.keySeq().toArray() )
-    }
-    
-    componentWillUnmount() {
-        BalanceClaimActiveStore.reset()
+        var keys = PrivateKeyStore.getState().keys
+        var keySeq = keys.keySeq()
+        BalanceClaimActiveActions.setPubkeys( keySeq )
+        this.existing_keys = keySeq
     }
     
     componentWillReceiveProps(nextProps) {
         var keys = PrivateKeyStore.getState().keys
-        if( ! keys.equals(this.existing_keys)) {
-            this.existing_keys = keys
-            BalanceClaimActiveActions.setPubkeys( keys.keySeq().toArray() )
+        var keySeq = keys.keySeq()
+        if( ! keySeq.equals(this.existing_keys)) {
+            this.existing_keys = keySeq
+            BalanceClaimActiveActions.setPubkeys( keySeq )
         }
     }
     
