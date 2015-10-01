@@ -58,7 +58,7 @@ export default class BalanceClaimActive extends Component {
         
         var import_ready = this.props.selected_balances.size && this.props.claim_account_name
         var claim_balance_label = import_ready ?
-                `Claim Balance to account: ${this.props.claim_account_name}` :
+                `Claim Balance (${this.props.claim_account_name})` :
                 "Claim Balance"
         return (
             <span>

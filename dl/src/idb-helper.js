@@ -111,7 +111,8 @@ module.exports = idb_helper = {
 class ChainEvent {
     constructor(existing_on_event, callback, request) {
         this.event = (event)=> {
-           //DEBUG if(event.target.error) { console.log("---- transaction error ---->", event) }
+           if(event.target.error)
+                console.error("---- transaction error ---->", event.target.error)
            //event.request = request
            callback(event)
            if(existing_on_event)

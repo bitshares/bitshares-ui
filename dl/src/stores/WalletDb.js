@@ -141,7 +141,7 @@ class WalletDb {
     
     transaction_update_keys() {
         var transaction = iDB.instance().db().transaction(
-            ["wallet", "private_keys", "balance_claims"], "readwrite"
+            ["wallet", "private_keys"], "readwrite"
         )
         return transaction
     }
@@ -274,14 +274,19 @@ class WalletDb {
         var wallet = this.wallet.get(wallet_public_name)
         var sequence = wallet.brainkey_sequence
         var private_key = key.get_brainkey_private( brainkey, sequence )
+        // save deterministic private keys ( the user can delete the brainkey )
+        this.saveKey( private_key, sequence )
+        //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
         this.incrementBrainKeySequence()
         return { private_key, sequence }
     }
     
     incrementBrainKeySequence( transaction ) {
         var wallet = this.wallet.get(wallet_public_name)
+        // increment in RAM so this can't be out-of-sync
         wallet.brainkey_sequence ++
         return this._updateWallet( transaction )
+        //TODO .error( error => ErrorStore.onAdd( "wallet", "incrementBrainKeySequence", error ))
     }
     
     /** WIF format
@@ -304,10 +309,10 @@ class WalletDb {
                 promises.push(
                     this.saveKey(
                         private_key,
-                        private_key_obj.import_account_names,
                         null,//brainkey_sequence
-                        transaction,
-                        private_key_obj.public_key_string
+                        private_key_obj.import_account_names,
+                        private_key_obj.public_key_string,
+                        transaction
                     ).then(
                         ret => {
                             if(ret.result == "duplicate") {
@@ -340,10 +345,10 @@ class WalletDb {
         for(let private_key_record of private_keys) {
             promises.push( this.saveKey(
                 private_key_record.private_key,
-                null, //import_account_names
                 private_key_record.sequence,
-                transaction,
-                public_key_string
+                null, //import_account_names
+                public_key_string,
+                transaction
             ))
         }
         return Promise.all(promises)
@@ -351,10 +356,10 @@ class WalletDb {
     
     saveKey(
         private_key,
-        import_account_names,
         brainkey_sequence,
-        transaction,
-        public_key_string
+        import_account_names,
+        public_key_string,
+        transaction = this.transaction_update_keys()
     ) {
         var password_aes_private = aes_private_map[ wallet_public_name ]
         var private_cipherhex = password_aes_private.encryptToHex( private_key.toBuffer() )
