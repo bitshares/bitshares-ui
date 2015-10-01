@@ -19,7 +19,8 @@ module.exports = {
         create_account: "계정 생성",
         create_asset: "자산 생성",
         lock: "잠금",
-        unlock: "잠금해제"
+        unlock: "잠금해제",
+        help: "도움말"
     },
     account: {
         asset: "자산",
@@ -35,6 +36,7 @@ module.exports = {
             referrer: "추천인",
             lifetime_referrer: "평생회원 추천인",
             network_percentage: "네트워크",
+            fee_allocation: "수수료 분배",
             membership: "멤버쉽",
             fees_paid: "지불된 평생회원 수수료",
             fees_pending: "보류중인 수수료",
@@ -46,7 +48,11 @@ module.exports = {
             unknown: "잘못된 계정",
             lifetime: "평생회원",
             basic: "기본회원",
-            annual: "연간회원"
+            annual: "연간회원",
+            upgrade_lifetime: "평생회원권 구입",
+            subscribe: "연간회원권 구입",
+            expires: "만료됨",
+            membership_expiration: "멤버쉽 만료일"
         },
         user_issued_assets: {
             symbol: "약자",
@@ -59,7 +65,7 @@ module.exports = {
         },
         connections: {
             known: "나와 연결됨",
-            black: "나를 차단함"
+            "black": "나를 차단함"
         },
         perm: {
             active: "활성화된 사용권한",
@@ -90,6 +96,8 @@ module.exports = {
             add_committee: "추가",
             add_committee_label: "위원",
             add_witness_label: "증인"
+            approve_worker: "Approve worker proposal",
+            reject_worker: "Reject worker proposal"            
         },
         options: {
             num_witnesses: "선호 증인 수",
@@ -174,7 +182,8 @@ module.exports = {
         at: "at",
         coll_of: "with collateral of",
         call_order_update: "콜 주문 업데이트",
-        upgrade_account: "평생회원으로 업그레이드",
+        lifetime_upgrade_account: "평생회원으로 업그레이드",
+        annual_upgrade_account: "연간회원으로 업그레이드",
         update_account: "계정 업데이트",
         whitelist_account: "계정을 화이트리스트에 추가",
         whitelisted_by: "화이트리스트에 추가됨",
@@ -264,7 +273,7 @@ module.exports = {
             committee_member_update_global_parameters: "전체 매개변수 업데이트",
             vesting_balance_create: "확정 잔고 생성",
             vesting_balance_withdraw: "확정 잔고 출금",
-            worker_create: "직원 생성",
+            worker_create: "예산 항목 생성",
             custom: "사용자 정의",
             assert: "Assert operation",
             balance_claim: "잔고 청구",
@@ -285,7 +294,8 @@ module.exports = {
             id: "블록 ID",
             witness: "증인",
             count: "거래 수",
-            date: "일시",
+            date: "날짜",
+            time: "시간",
             previous: "이전",
             previous_secret: "이전 비밀해쉬",
             next_secret: "다음 비밀해쉬",
@@ -328,6 +338,7 @@ module.exports = {
         },
         committee_members: {
             title: "위원"
+            active: "활동중인 위원 수"
         },
         committee_member: {
             title: "위원"
@@ -350,6 +361,7 @@ module.exports = {
         confirm_yes: "항상",
         confirm_no: "사용안함",
         always_confirm: "항상 확인을 함"
+        wallets: "지갑"
     },
     footer: {
         title: "그래핀",
@@ -387,6 +399,35 @@ module.exports = {
         title: "지갑",
         confirm: "비밀번호 확인",
         password: "비밀번호"
+        wallet_created: "지갑이 생성됨",
+        create_wallet: "지갑 생성",
+        name: "지갑 이름",
+        create: "생성",
+        console: "지갑 관리 콘솔",
+        create_backup: "백업 생성",
+        create_backup_of: "(%(name)s 지갑의 백업을 생성)",
+        import_backup: "백업파일 불러오기",
+        restore_backup: "백업파일 복구",
+        import_keys: "키 불러오기",
+        brainkey: "브레인키",
+        new_wallet: "새 지갑",
+        active_wallet: "현재 지갑",
+        verified: "확인됨",
+        verify_prior_backup: "이전 백업 확인",
+        reset: "재설정",
+        done: "완료",
+        verify: "확인",
+        invalid_format: "잘못된 포맷",
+        enter_password: "비밀번호를 입력하세요",
+        downoad: "다운로드",
+        new_wallet_name: "새 지갑 이름",
+        wallet_exist: "지갑이 이미 존재합니다. 새로운 이름을 선택하세요",
+        wallet_exist_with_name: "(%(name)s) 지갑이 이미 존재합니다. 다른 이름을 선택하세요",
+        accept: "Accept",
+        ready_to_restore: "Ready to Restore",
+        restore_wallet_of: "Restore (%(name)s Wallet)",
+        restore_success: "Successfully restored (%(name)s) wallet",
+        change: "Change (%(name)s Wallet)"
     },
     borrow: {
         title: "Collateral position for %(asset_symbol)s",
