@@ -25,7 +25,8 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        if (text.indexOf("http") ===0) return `<a href="${text}" target="_blank"`;
+        if (text.indexOf("#/") === 0) return `<a href="${text}"`;
+        if (text.indexOf("http") === 0) return `<a href="${text}" target="_blank"`;
         let page = endsWith(text, ".md") ? text.substr(0, text.length - 3) : text;
         let res = `<a href="/#/help/${page}"`;
         return res;
