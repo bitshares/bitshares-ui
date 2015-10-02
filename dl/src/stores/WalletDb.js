@@ -12,6 +12,7 @@ import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import chain_config from "chain/config"
+import ChainStore from "api/ChainStore"
 
 //TODO delete wallet_public_name, this is managed in WalletManagerStore
 var wallet_public_name = "default"
@@ -28,6 +29,21 @@ class WalletDb {
         this.wallet = Immutable.Map();
         // Confirm only works when there is a UI
         this.confirm_transactions = true
+        ChainStore.subscribe(this.checkNextGeneratedKey.bind(this))
+        this.generateNextKey_pubcache = []
+    }
+    
+    /** Discover any used keys that are not in this wallet */
+    checkNextGeneratedKey() {
+        if( ! aes_private_map[wallet_public_name]) return // locked
+        if( ! this.getWallet().encrypted_brainkey) return // no brainkey
+        if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key)
+            return // no change
+        this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
+        // Helps to ensure we are looking at an un-used key
+        // Adversly affected by https://github.com/cryptonomex/graphene/issues/324
+        try { this.generateNextKey( false /*save*/ ) } catch(e) {
+            console.error(e) }
     }
     
     getWallet() {
@@ -56,7 +72,7 @@ class WalletDb {
         if( ! private_key_tcomb) return null
         var aes_private = aes_private_map[ wallet_public_name ] 
         if ( ! aes_private)
-            throw new Error("wallet locked " + wallet_public_name)
+            throw new Error("wallet locked")
         var private_key_hex = aes_private.decryptHex(
                 private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
@@ -71,7 +87,6 @@ class WalletDb {
         return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
     
-    // todo -> wallet actions
     process_transaction(tr, signer_pubkeys, broadcast) {
         if(Apis.instance().chain_id !== this.getWallet().chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
@@ -148,15 +163,15 @@ class WalletDb {
     
     getBrainKey() {
         var wallet = this.wallet.get(wallet_public_name)
-        var aes_private = aes_private_map[wallet_public_name]
-        if ( ! aes_private) throw new Error("wallet locked " + wallet_public_name)
         if ( ! wallet.encrypted_brainkey) throw new Error("missing brainkey")
+        var aes_private = aes_private_map[wallet_public_name]
+        if ( ! aes_private) throw new Error("wallet locked")
         var brainkey_plaintext = aes_private.decryptHexToText( wallet.encrypted_brainkey )
         return brainkey_plaintext
     }
     
     getBrainKeyPrivate(brainkey_plaintext = this.getBrainKey()) {
-        if( ! brainkey_plaintext) throw new Error("Missing brainkey")
+        if( ! brainkey_plaintext) throw new Error("missing brainkey")
         return PrivateKey.fromSeed( key.normalize_brain_key(brainkey_plaintext) )
     }
     
@@ -229,6 +244,7 @@ class WalletDb {
                 var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
                 var aes_private = Aes.fromSeed( encryption_plainbuffer )
                 aes_private_map[wallet_public_name] = aes_private
+                this.checkNextGeneratedKey()
             }                 
             return true
         } catch(e) {
@@ -267,17 +283,44 @@ class WalletDb {
         })
     }
     
-    /** @return { private_key, sequence } */
-    generateNextKey() {
+    /** @throws "missing brainkey", "wallet locked"
+        @return { private_key, sequence }
+    */
+    generateNextKey(save = true) {
         var brainkey = this.getBrainKey()
-        if( ! brainkey) throw new Error("missing brainkey")
         var wallet = this.wallet.get(wallet_public_name)
         var sequence = wallet.brainkey_sequence
+        var used_sequence = null
+        // Skip ahead in the sequence if any keys are found in use
+        for (var i = sequence; i < sequence + 10; i++) {
+            var private_key = key.get_brainkey_private( brainkey, i )
+            var pubkey =
+                this.generateNextKey_pubcache[i] ?
+                this.generateNextKey_pubcache[i] :
+                this.generateNextKey_pubcache[i] =
+                private_key.toPublicKey().toPublicKeyString()
+            
+            var next_key = ChainStore.getAccountRefsOfKey( pubkey )
+            // TODO if ( next_key === undefined ) return undefined
+            if(next_key && next_key.size) {
+                used_sequence = i
+                console.log("WARN: Private key sequence " + used_sequence + " in-use. " + 
+                    "I am saving the private key and will go onto the next one.")
+                this.saveKey( private_key, used_sequence )
+            }
+        }
+        if(used_sequence !== null) {
+            wallet.brainkey_sequence = used_sequence + 1
+            this._updateWallet()
+        }
+        sequence = wallet.brainkey_sequence
         var private_key = key.get_brainkey_private( brainkey, sequence )
-        // save deterministic private keys ( the user can delete the brainkey )
-        this.saveKey( private_key, sequence )
-        //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
-        this.incrementBrainKeySequence()
+        if( save ) {
+            // save deterministic private keys ( the user can delete the brainkey )
+            this.saveKey( private_key, sequence )
+            //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
+            this.incrementBrainKeySequence()
+        }
         return { private_key, sequence }
     }
     
@@ -285,6 +328,7 @@ class WalletDb {
         var wallet = this.wallet.get(wallet_public_name)
         // increment in RAM so this can't be out-of-sync
         wallet.brainkey_sequence ++
+        // update last modified
         return this._updateWallet( transaction )
         //TODO .error( error => ErrorStore.onAdd( "wallet", "incrementBrainKeySequence", error ))
     }
@@ -392,8 +436,7 @@ class WalletDb {
         return this._updateWallet( transaction )
     }
     
-    /** This method can not unlock the wallet.  Unlocking a wallet is
-    not compatible with transactions. */
+    /** Saves wallet object to disk.  Always updates the last_modified date. */
     _updateWallet(transaction = this.transaction_update()) {
         var wallet = this.wallet.get(wallet_public_name)
         if ( ! wallet) {
@@ -406,6 +449,7 @@ class WalletDb {
         // if(update_callback)
         //     update_callback(wallet_clone)
         
+        console.log("JSON.stringify(wallet_clone,null,1)", JSON.stringify(wallet_clone,null,1))
         WalletTcomb(wallet_clone) // validate
         //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
         
@@ -424,7 +468,13 @@ class WalletDb {
                 this.wallet = map.asImmutable()
                 return
             }
-            var wallet = cursor.value//WalletTcomb(cursor.value)
+            var wallet = cursor.value
+            // Convert anything other than a string or number back into its proper type
+            wallet.created = new Date(wallet.created)
+            wallet.last_modified = new Date(wallet.last_modified)
+            wallet.last_backup = wallet.last_backup ? new Date(wallet.last_backup):null
+            try { WalletTcomb(wallet) } catch(e) {
+                console.log("WalletDb format error", e); }
             map.set(wallet_public_name, wallet)
             cursor.continue()
         });
