@@ -34,12 +34,7 @@ class WalletActions {
         })
     }
     
-    createAccount(
-        account_name,
-        registrar,
-        referrer,
-        referrer_percent = 100
-    ) {
+    createAccount( account_name, registrar, referrer, referrer_percent = 100 ) {
         if( WalletDb.isLocked()) {
             var error = "wallet locked"
             //this.actions.brainKeyAccountCreateError( error )
@@ -66,14 +61,6 @@ class WalletActions {
                 referrer_percent, //referrer_percent,
                 true //broadcast
             ).then( () => updateWallet() )
-            // {
-            //     return updateWallet().then(()=> {
-            //         //this.actions.brainKeyAccountCreated())
-            //     }).catch(  error => {
-            //         //this.actions.brainKeyAccountCreateError(error);
-            //         throw error;
-            //     });
-            // })
         };
 
         if(registrar) {
@@ -107,10 +94,9 @@ class WalletActions {
 
             return create_account_promise.then(result => {
                 if (result.error) {
-                    //this.actions.brainKeyAccountCreateError(result.error);
                     throw result.error;
                 }
-                return updateWallet()//.then(() => this.actions.brainKeyAccountCreated());
+                return updateWallet()
             }).catch(error => {
                 if (
                     error instanceof TypeError ||
@@ -119,7 +105,6 @@ class WalletActions {
                     console.log("Warning! faucet registration failed, falling back to direct application_api.create_account..");
                     return create_account();
                 }
-                //this.actions.brainKeyAccountCreateError(error);
                 throw error;
             })
         }
