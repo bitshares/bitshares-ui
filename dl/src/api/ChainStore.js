@@ -387,10 +387,10 @@ class ChainStore
       if( utils.is_object_id(name_or_id) )
       {
          let account = this.getObject( name_or_id )
-         if( account === undefined ) {
+         if( account === undefined || account.get('name') === undefined ) {
             return this.fetchFullAccount( name_or_id )
-        }
-        return account
+         }
+         return account
       }
       else if( validation.is_account_name( name_or_id ) )
       {
@@ -602,7 +602,7 @@ class ChainStore
       {
           let current = this.objects_by_id.get( name_or_id )
           fetch_account = current === undefined
-          if( !fetch_account ) return current;
+          if( !fetch_account && fetch_account.get('name') ) return current;
       }
       else
       {
