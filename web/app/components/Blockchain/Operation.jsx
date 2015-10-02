@@ -17,6 +17,8 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
+import ChainTypes from "../Utility/ChainTypes";
+import ChainStore from "api/ChainStore";
 
 require("./operations.scss");
 
@@ -40,9 +42,18 @@ class TransactionLabel extends React.Component {
     }
 }
 
+@BindToChainState({keep_updating:true})
 class Row extends React.Component {
     static contextTypes = {
         router: React.PropTypes.func.isRequired
+    }
+
+    static propTypes = {
+        dynGlobalObject: ChainTypes.ChainObject.isRequired,
+    }
+
+    static defaultProps = {
+        dynGlobalObject: "2.1.0"
     }
 
     _onTimeClick() {
@@ -51,11 +62,17 @@ class Row extends React.Component {
 
     render() {
         let {block, fee, color, type, key, hideDate, hideFee, hideOpLabel} = this.props;
+
+        let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
+        let pending = null;
+        if( block > last_irreversible_block_num )
+           pending = <span>(<Translate content="operation.pending" /> &nbsp; {block - last_irreversible_block_num} &nbsp; <Translate content="operation.block" />) </span>
+
         fee.amount = parseInt(fee.amount, 10);
         return (
                 <tr key={key}>
                     {hideOpLabel ? null : <td className="left-td"><TransactionLabel color={color} type={type} /></td>}
-                    <td>{this.props.info} {hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
+                    <td>{this.props.info}&nbsp;{pending}&nbsp;{hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
                     <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td>
                 </tr>
             );

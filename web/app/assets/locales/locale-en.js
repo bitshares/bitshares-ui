@@ -23,6 +23,7 @@ module.exports = {
         unlock: "Unlock",
         help: "Help"
     },
+    operation : { pending: "pending", blocks: "blocks" },
     account: {
         asset: "Asset",
         market_value: "Market Value",
