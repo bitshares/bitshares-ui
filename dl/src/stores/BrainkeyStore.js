@@ -6,10 +6,7 @@ import ChainStore from "api/ChainStore"
 import BaseStore from "stores/BaseStore"
 import BrainkeyActions from "actions/BrainkeyActions"
 
-/** Each instance supports a single brainkey.  This allows the wallet to keep
-    one main brainkey while the Wallet Management Console can allow the user
-    to inspect a different brainkey.
-*/
+/** Each instance supports a single brainkey. */
 export default class BrainkeyStoreFactory {
     static instances = new Map()
     /** This may be called multiple times for the same <b>name</b>.  When done, 
@@ -43,7 +40,7 @@ export default class BrainkeyStoreFactory {
 /** Derived keys may be unassigned from accounts therefore we must define a
     fixed block of derivied keys then monitor the entire block.
 */
-var MAX_DERIVIED_BRAINKEY_ACCOUNTS = 10
+var DERIVIED_BRAINKEY_POOL_SIZE = 10
 
 class BrainkeyStoreImpl extends BaseStore {
     
@@ -105,9 +102,9 @@ class BrainkeyStoreImpl extends BaseStore {
     deriveKeys(brnkey = this.state.brnkey) {
         var sequence = this.derived_keys.length // next sequence (starting with 0)
         var private_key = key.get_brainkey_private(brnkey, sequence)
-        var derived_key = this.derivedKeyStruct(private_key)
+        var derived_key = derivedKeyStruct(private_key)
         this.derived_keys.push(derived_key)
-        if(this.derived_keys.length < MAX_DERIVIED_BRAINKEY_ACCOUNTS)
+        if(this.derived_keys.length < DERIVIED_BRAINKEY_POOL_SIZE)
             this.deriveKeys(brnkey)
     }
     
@@ -128,15 +125,13 @@ class BrainkeyStoreImpl extends BaseStore {
         }
     }
     
-    derivedKeyStruct(private_key) {
-        var public_string = private_key.toPublicKey().toPublicKeyString()
-        var derived_key = {private_key, public_string}
-        return derived_key
-    }
-    
 }
 
-function updateFromChain(public_string) {
-    return ChainStore.getAccountRefsOfKey( public_string )
+function derivedKeyStruct(private_key) {
+    var public_string = private_key.toPublicKey().toPublicKeyString()
+    var derived_key = {private_key, public_string}
+    return derived_key
 }
-var isPendingFromChain = derived_key => updateFromChain(derived_key) === undefined
+
+var isPendingFromChain = derived_key =>
+    ChainStore.getAccountRefsOfKey( derived_key.public_string ) === undefined
