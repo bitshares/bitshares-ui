@@ -446,12 +446,8 @@ class WalletDb {
         //DEBUG console.log('... wallet',wallet)
         var wallet_clone = _.cloneDeep( wallet )
         wallet_clone.last_modified = new Date()
-        // if(update_callback)
-        //     update_callback(wallet_clone)
         
-        console.log("JSON.stringify(wallet_clone,null,1)", JSON.stringify(wallet_clone,null,1))
         WalletTcomb(wallet_clone) // validate
-        //TypeError: Invalid argument `value` = `2015-07-14T14:49:59.417Z` supplied to irreducible type `Dat`
         
         var wallet_store = transaction.objectStore("wallet")
         var p = idb_helper.on_request_end( wallet_store.put(wallet_clone) )
