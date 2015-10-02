@@ -110,8 +110,8 @@ module.exports = {
             memo_key: "备注公钥"
         },
         upgrade: "升级账户",
-        unlink: "取消关注",
-        link: "关注",
+        unfollow: "Unfollow",
+        follow: "Follow",
         pay: "向他付款",
         overview: "概述",
         history: "交易历史",

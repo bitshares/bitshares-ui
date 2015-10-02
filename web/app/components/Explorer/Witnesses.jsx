@@ -28,13 +28,7 @@ class WitnessCard extends React.Component {
 
     render() {
         let witness_data = ChainStore.getWitnessById( this.props.witness.get('id') )
-        if( witness_data ) {
-           // console.log( "Witness Data: ", witness_data.toJS() )
-        }
-        else {
-           // console.log( "Witness Data: ", witness_data )
-           return null
-        }
+        if ( !witness_data ) return null;
         let total_votes = witness_data.get( "total_votes" );
 
         let witness_aslot = witness_data.get('last_aslot')
@@ -56,7 +50,7 @@ class WitnessCard extends React.Component {
                         <table className="table key-value-table">
                             <tr>
                                 <td>Votes</td>
-                                <td><FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset="5" /></td>
+                                <td><FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5} /></td>
                             </tr>
                             <tr>
                                 <td>Last&nbsp;Block</td>

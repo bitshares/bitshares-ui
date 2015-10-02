@@ -30,6 +30,7 @@ class Apis {
         this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}`);
         this.init_promise = this.ws_rpc.login(this.rpc_user, this.rpc_password).then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
+            if (window) window.$db_api = this._db_api;
             this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");
             this._history_api = new GrapheneApi(this.ws_rpc, "history");
             var db_promise = this._db_api.init().then( ()=> {

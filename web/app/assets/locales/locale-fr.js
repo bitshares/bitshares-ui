@@ -96,8 +96,8 @@ module.exports = {
             memo_key: "Memo Key"
         },
         upgrade: "Mettre à niveau",
-        unlink: "Délier",
-        link: "Lier",
+        unfollow: "Unfollow",
+        follow: "Follow",
         pay: "Payer",
         overview: "Sommaire",
         history: "Historique",

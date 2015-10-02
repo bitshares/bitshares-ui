@@ -28,7 +28,7 @@ class Asset extends React.Component {
     constructor( props ) {
         super(props);
 
-        this.header_image = "http://theeconomiccollapseblog.com/wp-content/uploads/2012/03/10-Reasons-Why-The-Reign-Of-The-Dollar-As-The-World-Reserve-Currency-Is-About-To-Come-To-An-End.jpg";
+        //this.header_image = "http://theeconomiccollapseblog.com/wp-content/uploads/2012/03/10-Reasons-Why-The-Reign-Of-The-Dollar-As-The-World-Reserve-Currency-Is-About-To-Come-To-An-End.jpg";
     }
 
     flag(value, permission) {
@@ -63,11 +63,12 @@ class Asset extends React.Component {
     }
 
     assetHeader() {
+        // TODO: use images from the bundle
         return (
             <div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>
-                <div className="grid-content">
+                {/*<div className="grid-content">
                      <img src={this.header_image} style={{maxWidth:"1000px", width:"100%", height:"auto"}}/>
-                </div>
+                </div>*/}
                 {/*
                 <div className="grid-content"
                      style={{

@@ -8,11 +8,9 @@ import Blocks from "./components/Explorer/BlocksContainer";
 import Assets from "./components/Explorer/AssetsContainer";
 import AccountsContainer from "./components/Explorer/AccountsContainer";
 import Witnesses from "./components/Explorer/Witnesses";
-// import Witness from "./components/Explorer/Witness";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
-// import CommitteeMember from "./components/Explorer/CommitteeMember";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import Header from "components/Layout/Header";
+import Footer from "./components/Layout/Footer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
@@ -26,21 +24,17 @@ import Markets from "./components/Exchange/MarketsContainer";
 import Transfer from "./components/Transfer/Transfer";
 import Settings from "./components/Settings/SettingsContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
-import Asset from "./components/Blockchain/AssetContainer";
+import AssetContainer from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
-// import AccountActions from "actions/AccountActions";
-// import AssetActions from "actions/AssetActions";
-// import BlockchainActions from "actions/BlockchainActions";
 import IntlActions from "actions/IntlActions";
-import MobileMenu from "./components/Header/MobileMenu";
+import MobileMenu from "components/Layout/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal"
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
-// import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import cookies from "cookies-js";
 import iDB from "idb-instance";
 import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
@@ -76,12 +70,10 @@ class App extends React.Component {
 
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
-        // TransactionConfirmStore.unlisten(this._onTransactionConfirm);
     }
 
     componentDidMount() { try {
         NotificationStore.listen(this._onNotificationChange.bind(this));
-        // TransactionConfirmStore.listen(this._onTransactionConfirm.bind(this));
 
         // Try to retrieve locale from cookies
         let locale;
@@ -114,7 +106,6 @@ class App extends React.Component {
         }
         this.refs.notificationSystem.addNotification(notification);
     }
-
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
@@ -202,11 +193,9 @@ let routes = (
         <Route name="accounts" path="/explorer/accounts" handler={AccountsContainer}/>
         <Route name="witnesses" path="/explorer/witnesses" handler={Witnesses}>
             <DefaultRoute handler={Witnesses}/>
-            {/* Deprecated <Route name="witness" path=":name" handler={Witness}/> */}
         </Route>
         <Route name="committee-members" path="/explorer/committee-members" handler={CommitteeMembers}>
             <DefaultRoute handler={CommitteeMembers}/>
-            {/* Deprecated <Route name="committee-member" path=":name" handler={CommitteeMember}/> */ }
         </Route>
         <Route name="wallet" path="wallet" handler={WalletManager}>
             {/* wallet management console */}
@@ -228,7 +217,7 @@ let routes = (
         <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
         <Route name="block" path="block/:height" handler={BlockContainer}/>
-        <Route name="asset" path="asset/:symbol" handler={Asset}/>
+        <Route name="asset" path="asset/:symbol" handler={AssetContainer}/>
         <Route name="tx" path="tx" handler={Transaction}/>
         <Route name="create-account" path="create-account" handler={CreateAccount}/>
         <Route name="existing-account" path="existing-account" handler={ExistingAccount}>
