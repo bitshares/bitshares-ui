@@ -1,0 +1,6 @@
+build/*
+!build/electron.js
+!build/package.json
+!build/vendor
+releases
+

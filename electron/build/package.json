@@ -1,0 +1,14 @@
+{
+  "name": "BitShares",
+  "productName": "BitShares",
+  "identifier": "org.bitshares.graphene",
+  "description": "BitShares - cryptocurrency and decentralized exchange",
+  "version": "2.0.0",
+  "author": "cryptonomex.com",
+  "main": "electron.js",
+  "config": {
+    "target": "development"
+  },
+  "dependencies": {
+  }
+}
