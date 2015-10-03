@@ -144,8 +144,11 @@ class AccountStore extends BaseStore {
     }
 
     tryToSetCurrentAccount() {
+        if (localStorage.currentAccount) {
+            return this.setCurrentAccount(localStorage.currentAccount);
+        }
         if (this.state.linkedAccounts.size > 0) {
-            this.setCurrentAccount(this.state.linkedAccounts.first());
+            return this.setCurrentAccount(this.state.linkedAccounts.first());
         }  
     }
 
@@ -155,6 +158,8 @@ class AccountStore extends BaseStore {
         } else {
             this.state.currentAccount = name
         }
+
+        localStorage.currentAccount = this.state.currentAccount;
     }
 
     onSetCurrentAccount(name) {
