@@ -77,6 +77,7 @@ class AccountStore extends BaseStore {
         // console.log("AccountStore addAccountRefs linkedAccounts",this.state.linkedAccounts.size);
         this.setState({ linkedAccounts: this.state.linkedAccounts })
         this.initial_account_refs_load = pending
+        this.tryToSetCurrentAccount();
     }
     
     getMyAccounts() {

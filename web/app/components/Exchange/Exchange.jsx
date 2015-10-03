@@ -82,8 +82,11 @@ class Exchange extends React.Component {
 
     static contextTypes = {router: React.PropTypes.func.isRequired};
 
-    componentDidMount() {
+    componentWillMount() {
         this._subToMarket(this.props);
+    }
+
+    componentDidMount() {
         let centerContainer = React.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
     }
