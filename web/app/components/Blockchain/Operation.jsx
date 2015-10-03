@@ -66,7 +66,7 @@ class Row extends React.Component {
         let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
         let pending = null;
         if( block > last_irreversible_block_num )
-           pending = <span>(<Translate content="operation.pending" /> &nbsp; {block - last_irreversible_block_num} &nbsp; <Translate content="operation.block" />) </span>
+           pending = <span>(<Translate content="operation.pending" blocks={block - last_irreversible_block_num} />)</span>
 
         fee.amount = parseInt(fee.amount, 10);
         return (
