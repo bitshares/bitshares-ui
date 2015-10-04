@@ -44,17 +44,44 @@ class Asset extends React.Component {
            };
         */
         return (
-            <div>
-                <br/>
-                                       (Set          Permission)        <br/>
-                charge_market_fee      ({value&0x01>0} {permission&0x01>0}) <br/>
-                white_list             ({value&0x02>0} {permission&0x02>0}) <br/>
-                override_authority     ({value&0x04>0} {permission&0x04>0}) <br/>
-                transfer_restricted    ({value&0x08>0} {permission&0x08>0}) <br/>
-                disable_force_settle   ({value&0x10>0} {permission&0x10>0}) <br/>
-                global_settle          ({value&0x20>0} {permission&0x20>0}) <br/>
-                disable_confidential   ({value&0x40>0} {permission&0x40>0}) <br/>
-            </div>
+
+                <table className="table key-value-table">
+                  <thead>
+                  <tr>
+                      <th><h4>Set Permission</h4></th>
+                      <th></th>
+                  </tr>
+                  </thead>
+                <tr>
+                  <td><Translate content="explorer.asset.charge_market_fee"/></td>
+                  <td>({value&0x01>0} {permission&0x01>0})</td>
+                </tr>
+                <tr>
+                  <td><Translate content="explorer.asset.white_list"/></td>
+                  <td>({value&0x02>0} {permission&0x02>0})</td>
+                </tr>
+                <tr>
+                  <td><Translate content="explorer.asset.override_authority"/></td>
+                  <td>({value&0x04>0} {permission&0x04>0})</td>
+                </tr>
+                <tr>
+                  <td><Translate content="explorer.asset.transfer_restricted"/></td>
+                  <td>({value&0x08>0} {permission&0x08>0})</td>
+                </tr>
+                <tr>
+                  <td><Translate content="explorer.asset.disable_force_settle"/></td>
+                  <td>({value&0x10>0} {permission&0x10>0})</td>
+                </tr>
+                <tr>
+                  <td><Translate content="explorer.asset.global_settle"/></td>
+                  <td>({value&0x20>0} {permission&0x20>0})</td>
+                </tr>
+                <tr>
+                  <td><Translate content="explorer.asset.disable_confidential"/></td>
+                  <td>({value&0x40>0} {permission&0x40>0})</td>
+                </tr>
+              </table>
+
         );
     }
 
@@ -65,11 +92,11 @@ class Asset extends React.Component {
     assetHeader() {
         // TODO: use images from the bundle
         return (
-            <div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>
-                {/*<div className="grid-content">
+            <div className="grid-block small-12 medium-10 medium-offset-2" style={{overflow:"visible"}}>
+                {<div className="grid-content">
                      <img src={this.header_image} style={{maxWidth:"1000px", width:"100%", height:"auto"}}/>
-                </div>*/}
-                {/*
+                </div>}
+                {
                 <div className="grid-content"
                      style={{
                                backgroundImage: 'url(' + this.header_image + ')',
@@ -78,7 +105,7 @@ class Asset extends React.Component {
                     >
                     <div style={{ overflow:"visible" }}> <br/> <br/> <br/> </div>
                 </div>
-                 */}
+                 }
             </div>
         );
     }
@@ -88,13 +115,31 @@ class Asset extends React.Component {
         var options = asset.options;
         return (
             <Box header= {asset.symbol}>
-                {/*this.display('symbol', asset.symbol)*/}
-                      description: {options.description}
-                <br/> current_supply: {dynamic ? <FormattedAsset amount={dynamic.current_supply} asset={asset.id} /> : ''}
-                <br/> confidential_supply: {dynamic ? <FormattedAsset amount={dynamic.confidential_supply} asset={asset.id} /> : ''}
-                <br/> market_fee_percent: {options.market_fee_percent}
-                <br/> issuer: <LinkToAccountById account={asset.issuer}/>
-                {this.flag(options.flags, options.issuer_permissions)}
+                <table className="table key-value-table">
+
+                  <tr>
+                    <td><Translate content="explorer.asset.description"/></td>
+                    <td>{options.description}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.current_supply"/></td>
+                    <td>{dynamic ? <FormattedAsset amount={dynamic.current_supply} asset={asset.id} /> : ''}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.confidential_supply"/></td>
+                    <td>{dynamic ? <FormattedAsset amount={dynamic.confidential_supply} asset={asset.id} /> : ''}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.market_fee_percent"/></td>
+                    <td>{options.market_fee_percent}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.issuer"/></td>
+                    <td><LinkToAccountById account={asset.issuer}/></td>
+                  </tr>
+
+              </table>
+              {this.flag(options.flags, options.issuer_permissions)}
             </Box>
         );
     }
@@ -117,18 +162,40 @@ class Asset extends React.Component {
         var quote = options.core_exchange_rate.quote;
         return (
             <Box header='Fee Pool'>
-                      blacklist_authorities: {options.blacklist_authorities}
-                <br/> blacklist_markets:     {options.blacklist_markets}
-                <br/> whitelist_authorities: {options.whitelist_authorities}
-                <br/> whitelist_markets:     {options.whitelist_markets}
-                <br/>
-                <br/> acummulated_fees: {dynamic ? dynamic.accumulated_fees : ''}
-                <br/> fee_pool: {dynamic ? dynamic.fee_pool : ''}
-                <br/> Formatted Price: <FormattedPrice
-                        base_asset={base.asset_id}
-                        base_amount={base.amount}
-                        quote_asset={quote.asset_id}
-                        quote_amount={quote.amount} />
+              <table className="table key-value-table">
+                <tr>
+                    <td><Translate content="explorer.asset.blacklist_authorities"/></td>
+                    <td>{options.blacklist_authorities}</td>
+                </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.blacklist_markets"/></td>
+                    <td>{options.blacklist_markets}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.whitelist_authorities"/></td>
+                    <td>{options.whitelist_authorities}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.whitelist_markets"/></td>
+                    <td>{options.whitelist_markets}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.acummulated_fees"/></td>
+                    <td>{dynamic ? dynamic.accumulated_fees : ''}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.fee_pool"/></td>
+                    <td>{dynamic ? dynamic.fee_pool : ''}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.formatted_price"/></td>
+                    <td><FormattedPrice
+                            base_asset={base.asset_id}
+                            base_amount={base.amount}
+                            quote_asset={quote.asset_id}
+                            quote_amount={quote.amount} /></td>
+                  </tr>
+              </table>
             </Box>
         );
     }
@@ -138,8 +205,16 @@ class Asset extends React.Component {
         var options = asset.options;
         return (
             <Box header='Permissions'>
-                      max_market_fee: {options.max_market_fee}
-                <br/> max_supply: <FormattedAsset amount={options.max_supply} asset={asset.id} />
+                <table className="table key-value-table">
+                  <tr>
+                    <td><Translate content="explorer.asset.max_market_fee"/></td>
+                    <td>{options.max_market_fee}</td>
+                  </tr>
+                  <tr>
+                    <td><Translate content="explorer.asset.max_supply"/></td>
+                    <td><FormattedAsset amount={options.max_supply} asset={asset.id} /></td>
+                  </tr>
+                </table>
             </Box>
         );
     }
@@ -151,12 +226,12 @@ class Asset extends React.Component {
 
         return (
             <div>
-                <div className="grid-block page-layout">
+                <div className="grid-block page-layout vertical medium-horizontal">
                     <div className="grid-block vertical" style={{overflow:"visible"}}>
 
                         {this.assetHeader()}
 
-                        <div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>
+                        <div className="grid-block small-12 medium-10  medium-offset-2" style={{overflow:"visible"}}>
 
                             <div className="grid-block vertical" style={{overflow:"visible"}}>
                                 {this.assetSummary(asset)}
