@@ -70,7 +70,7 @@ class OrderRow extends React.Component {
         let priceSymbol = showSymbols ? <span>{` ${base.symbol}/${quote.symbol}`}</span> : null;
         let valueSymbol = showSymbols ? " " + quote.symbol : null;
         let amountSymbol = showSymbols ? " " + base.symbol : null;
-        
+
         if (!isAskOrder && !invert) {
 
             return (
@@ -131,7 +131,6 @@ OrderRow.defaultProps = {
 
 
 class MyOpenOrders extends React.Component {
-<<<<<<< HEAD
 
     shouldComponentUpdate(nextProps) {
         return (
@@ -139,109 +138,36 @@ class MyOpenOrders extends React.Component {
                 !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
-=======
-    shouldComponentUpdate(nextProps) {
-        return (
-                nextProps.currentAccount.id !== this.props.currentAccount.id ||
-                !Immutable.is(nextProps.orders, this.props.orders)
-            );
-    }
->>>>>>> origin/master
 
-    componentDidMount() {
-        let orderContainer = React.findDOMNode(this.refs.orders);
-        Ps.initialize(orderContainer);
-    }
+    componentDidMount() {
+        let orderContainer = React.findDOMNode(this.refs.orders);
+        Ps.initialize(orderContainer);
+    }
 
-<<<<<<< HEAD
     render() {
         let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
         let bids = null, asks = null;
         if(orders.size > 0 && base && quote) {
             let cancel = counterpart.translate("account.perm.cancel");
-=======
-    render() {
-        let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
-        let bids = null, asks = null;
 
-        if(orders.size > 0 && base && quote) {
->>>>>>> origin/master
+            bids = orders.filter(a => {
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id);
+            }).sort((a, b) => {
+                let {price: a_price} = market_utils.parseOrder(a, base, quote);
+                let {price: b_price} = market_utils.parseOrder(b, base, quote);
 
-            bids = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id);
-            }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, base, quote);
-                let {price: b_price} = market_utils.parseOrder(b, base, quote);
-
-<<<<<<< HEAD
                 return b_price.full - a_price.full;
             }).map(order => {
 
                 return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
-=======
-                return b_price.full - a_price.full;
-            }).map(order => {
-                let {value, price, amount} = market_utils.parseOrder(order, base, quote);
-                let isAskOrder = market_utils.isAsk(order, base);
-                let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
-                return (
-                     <tr key={order.id}>
-                       <td className={tdClass}>
-                           <span className="price-integer">{price.int}</span>
-                           .
-                           <span className="price-decimal">{price.dec}</span>
-                       </td>
-                       <td>{(amount).toFixed(3)}</td>
-                        <td><FormattedDate
-                            value={order.expiration}
-                            formats={intlData.formats}
-                            format="short"
-                            />
-                        </td>
-                        <td className="text-right">
-                           <a style={{marginLeft: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
-                             CANCEL
-                           </a>
-                       </td>
 
-                    </tr>
-                    );
-            }).toArray();
+            asks = orders.filter(a => {
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.id);
+            }).sort((a, b) => {
+                let {price: a_price} = market_utils.parseOrder(a, base, quote);
+                let {price: b_price} = market_utils.parseOrder(b, base, quote);
 
-            asks = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.id);
-            }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, base, quote);
-                let {price: b_price} = market_utils.parseOrder(b, base, quote);
->>>>>>> origin/master
-
-                return a_price.full - b_price.full;
-            }).map(order => {
-                let {value, price, amount} = market_utils.parseOrder(order, base, quote);
-                let isAskOrder = market_utils.isAsk(order, base);
-                let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
-                return (
-                     <tr key={order.id}>
-                        <td className={tdClass}>
-                            <span className="price-integer">{price.int}</span>
-                            .
-                            <span className="price-decimal">{price.dec}</span>
-                        </td>
-                        <td>{(amount).toFixed(3)}</td>
-                        <td><FormattedDate
-                            value={order.expiration}
-                            formats={intlData.formats}
-                            format="short"
-                            />
-                        </td>
-                        <td className="text-right">
-                            <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel.bind(this, order.id)}>
-                            CANCEL
-                            </a>
-                        </td>
-
-<<<<<<< HEAD
                 return a_price.full - b_price.full;
             }).map(order => {
                 return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
@@ -281,44 +207,6 @@ class MyOpenOrders extends React.Component {
             </div>
         );
     }
-=======
-                    </tr>
-                    );
-            }).toArray();
-        }
-        return (
-            <div className="grid-content text-center ps-container" ref="orders">
-                <table className="table order-table my-orders text-left table-hover">
-                    <thead>
-                    <tr>
-                        <th>Price</th>
-                        <th>Amount</th>
-                        <th>Expiration</th>
-                        <th style={{textAlign: "right"}}>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {bids}
-                    </tbody>
-                </table>
-
-                <table className="table order-table my-orders text-left table-hover">
-                    <thead>
-                    <tr>
-                        <th>Price</th>
-                        <th>Amount</th>
-                        <th>Expiration</th>
-                        <th style={{textAlign: "right"}}>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {asks}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
->>>>>>> origin/master
 }
 
 MyOpenOrders.defaultProps = {
@@ -340,4 +228,3 @@ MyOpenOrders.propTypes = {
 exports.OrderRow = OrderRow;
 exports.TableHeader = TableHeader;
 exports.MyOpenOrders = MyOpenOrders;
-
