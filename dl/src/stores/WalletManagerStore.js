@@ -48,9 +48,6 @@ class WalletManagerStore extends BaseStore {
     onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
         var p = new Promise( resolve => {
             
-            if(brnkey != null && brnkey.trim().equals(""))
-                throw new Error("Brainkey can not be an empty string")
-            
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
                 throw new Error("Invalid wallet name")
             
