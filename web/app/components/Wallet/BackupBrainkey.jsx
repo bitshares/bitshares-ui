@@ -27,6 +27,10 @@ export default class BackupBrainkey extends Component {
                     <h5>{this.state.brainkey}</h5></div></div>
                 <br/>
                 <div className="button" onClick={this.reset.bind(this)}>hide</div>
+                <hr/>
+                WARNING: Print this out, or write it down.<br/>
+                Anyone with access to your recovery key will<br/>
+                have access to funds within this wallet.
             </span>
         }
         
@@ -46,12 +50,12 @@ export default class BackupBrainkey extends Component {
                 </form>
             </span>
         }
-        return <span className="grid-content">
-            <h3>Backup Brainkey</h3>
-            {content}
-            <hr/>
-            WARNING: It is not possible to recover a lost recovery key. Make a backup, print it out, or write it down. Anyone with access to your recovery key will have access to keys and accounts created with this wallet.
-        </span>
+        return <div className="grid-block vertical" style={{overflowY: 'hidden'}}>
+            <div class="grid-container">
+                <h3>Backup Brainkey</h3>
+                {content}
+            </div>
+        </div>
     }
     
     reset() {
