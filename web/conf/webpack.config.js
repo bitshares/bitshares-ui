@@ -83,7 +83,7 @@ module.exports = function(options) {
                     //loader: "style!css!sass?outputStyle=expanded&includePaths[]=" + (path.resolve(root_dir, "./node_modules"))
                     loader: scssLoaders
                 },
-                { test: /fonts.*\.(eot|ttf|woff|svg)$/, loader: "file?name=fonts/[name].[ext]?[hash]" },
+                { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
                 { test: /\.md/, loader: 'html!remarkable' }
             ]
