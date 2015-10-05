@@ -2,6 +2,7 @@ import React, {Component} from "react"
 
 import Translate from "react-translate-component";
 import {BackupRestore} from "components/Wallet/Backup"
+import {BrainkeyInput} from "components/Wallet/Brainkey"
 import PasswordConfirm from "components/Wallet/PasswordConfirm"
 import WalletDb from "stores/WalletDb"
 import WalletManagerStore from "stores/WalletManagerStore"
@@ -57,7 +58,9 @@ class CreateNewWallet extends Component {
             valid_password: null,
             errors: {},
             isValid: false,
-            create_submitted: false
+            create_submitted: false,
+            custom_brainkey: false,
+            brnkey: ""
         }
     }
     
@@ -84,8 +87,8 @@ class CreateNewWallet extends Component {
                 onChange={this.formChange.bind(this)} noValidate
             >
                 <PasswordConfirm onValid={this.onPassword.bind(this)}/>
-                <br/>
                 { has_wallet ? <div className="grid-content no-overflow">
+                    <br/>
                     <label><Translate content="wallet.name" /></label>
                     <input type="text" id="wallet_public_name"
                         value={this.state.wallet_public_name}
@@ -93,18 +96,43 @@ class CreateNewWallet extends Component {
                     <div className="has-error">{errors.wallet_public_name}</div>
                     <br/>
                 </div>:null}
-                
                 <div className="grid-content no-overflow">
+                    { this.state.custom_brainkey ? <span>
+                    <label>Brainkey</label>
+                    <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
+                    </span>:null}
                     <button className={cname("button",{disabled: !(this.state.isValid)})}>
                         <Translate content="wallet.create_wallet" /></button>
+                    <button className="button secondary" onClick={this.onBack.bind(this)}>
+                        Cancel </button>
                 </div>
+                <br/>
+                { ! this.state.custom_brainkey ? <span>
+                <label><a onClick={this.onCustomBrainkey.bind(this)}>
+                    Custom Brainkey (advanced)</a></label>
+                </span>:null}
             </form>
         </span>)
+    }
+    
+    onBack(e) {
+        e.preventDefault()
+        window.history.back()
     }
     
     onPassword(valid_password) {
         this.state.valid_password = valid_password
         this.setState({ valid_password })
+        this.validate()
+    }
+    
+    onCustomBrainkey() {
+        this.setState({ custom_brainkey: true })
+    }
+    
+    onBrainkey(brnkey) {
+        this.state.brnkey = brnkey
+        this.setState({ brnkey })
         this.validate()
     }
 
@@ -147,6 +175,8 @@ class CreateNewWallet extends Component {
             null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
         
         var isValid = errors.wallet_public_name === null && state.valid_password !== null
+        if(this.state.custom_brainkey && isValid)
+            isValid = this.state.brnkey !== ""
         this.setState({ isValid, errors })
     }
     

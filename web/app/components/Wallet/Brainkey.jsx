@@ -35,9 +35,9 @@ export default class Brainkey extends BrainkeyBaseComponent {
         return (
             <span>
                 <h3><Translate content="wallet.brainkey" /></h3>
-                <BrainkeyInput>
+                <BrainkeyInputAccept>
                     <ViewBrainkey/>
-                </BrainkeyInput>
+                </BrainkeyInputAccept>
             </span>
         )
     }
@@ -77,7 +77,69 @@ class BrainkeyAccounts {
 
 }
 
-class BrainkeyInput extends Component {
+export class BrainkeyInput extends Component {
+    
+    static propTypes = {
+        onChange: React.PropTypes.func.isRequired
+    }
+    
+    constructor() {
+        super()
+        this.state = { brnkey: "" }
+    }
+    
+    render() {
+        var spellcheck_words = this.state.brnkey.split(" ")
+        var checked_words = []
+        spellcheck_words.forEach( (word, i) => {
+            if(word === "") return
+            var spellcheckword = word.toLowerCase()
+            spellcheckword = spellcheckword.match(/[a-z]+/) //just spellcheck letters
+            if(spellcheckword === null || dictionary_set.has(spellcheckword[0]))
+                checked_words.push(<span key={i} style={{padding: '1px', margin: '1px'}}>{word}</span>)
+            else 
+                checked_words.push(<MissspelledWord key={i}>{word}</MissspelledWord>)
+        })
+        // this.ready = checked_words.length > 0
+        var word_count_label
+        var warn = true
+        if(checked_words.length > 0) {
+            if(this.state.brnkey.length < 50)
+                word_count_label = this.state.brnkey.length + " characters (50 minimum)"
+            else {
+                if(checked_words.length < 17)
+                    word_count_label = checked_words.length + " words (17 recommended)"
+                else {
+                    word_count_label = checked_words.length + " words"
+                    warn = false
+                }
+            }
+        }
+        return (
+            <span className="">
+                <div style={{width: '400px'}}>
+                    <textarea onChange={this.formChange.bind(this)}
+                        value={this.state.brnkey} id="brnkey"
+                        style={{width: '400px', height:'80px'}} />
+                    <div className="grid-block">{ checked_words }</div>
+                    <br/>
+                    <p><i className={cname({error: warn})}>{ word_count_label }</i></p>
+                </div>
+            </span>
+        )
+
+    }
+
+    formChange(event) {
+        var {id, value} = event.target
+        var state = {}
+        state[id] = value // id === "brnkey"
+        this.props.onChange(key.normalize_brain_key(value))
+        this.setState(state)
+    }
+}
+
+class BrainkeyInputAccept extends Component {
     
     constructor() {
         super()
@@ -87,34 +149,20 @@ class BrainkeyInput extends Component {
     render() {
         if(this.state.accept)
             return <span>{this.props.children}</span>
-        
-        var spellcheck_words = this.state.brnkey.split(" ")
-        var checked_words = []
-        spellcheck_words.forEach( (word, i) => {
-            if(word === "") return
-            if(dictionary_set.has(word.toLowerCase()))
-                checked_words.push(<span key={i}>{word} </span>)
-            else 
-                checked_words.push(<MissspelledWord key={i}>{word}</MissspelledWord>)
-        })
-        var ready = checked_words.length > 0
-        var word_count_label
-        if(checked_words.length > 3)
-            word_count_label = "(" + checked_words.length + " words)"
+        var ready = this.state.brnkey && this.state.brnkey !== ""
         return (
             <span className="grid-container">
                 <div style={{width: '400px'}}>
-                    <textarea onChange={this.formChange.bind(this)}
-                        value={this.state.brnkey} id="brnkey"
-                        style={{width: '400px', height:'80px'}} />
-                    <div>{ checked_words }</div>
-                    <p>{ word_count_label }</p>
+                    <BrainkeyInput onChange={this.onBrainkeyChange.bind(this)}/>
                     <div className={cname("button success", {disabled: ! ready})}
                         onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
                 </div>
             </span>
         )
-
+    }
+    
+    onBrainkeyChange(brnkey) {
+        this.setState({ brnkey })
     }
 
     onAccept() {
@@ -122,12 +170,6 @@ class BrainkeyInput extends Component {
         BrainkeyActions.setBrainkey(this.state.brnkey)
     }
 
-    formChange(event) {
-        var {id, value} = event.target
-        var state = {}
-        state[id] = value // id === "brnkey"
-        this.setState(state)
-    }
 }
 
 class MissspelledWord extends Component {
