@@ -896,9 +896,12 @@ class ChainStore
          let owner = this.objects_by_id.get( object.owner )
          if( owner === undefined || owner === null ) 
          {
+            return;
+            /*  This prevents the full account from being looked up later
             owner = {id:object.owner, balances:{ } }
             owner.balances[object.asset_type] = object.id
             owner = Immutable.fromJS( owner )
+            */
          }
          else
          {
