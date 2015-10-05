@@ -175,7 +175,7 @@ module.exports = {
         min_receive: "Minimum amount to receive",
         seller: "Seller",
         collateral: "Collateral",
-        coll_ratio: "Initial collateral ratio",        
+        coll_ratio: "Initial collateral ratio",
         coll_maint: "Collateral maintenance ratio",
         "create_key": "Created a public key",
         reg_account: "Registered the account",
@@ -338,7 +338,28 @@ module.exports = {
         },
         asset: {
             title: "Asset",
-            not_found: "The asset %(name)s does not exist"
+            description: "Description",
+            issuer: "Issuer",
+            not_found: "The asset %(name)s does not exist",
+            current_supply: "Current supply",
+            max_supply: "Max supply",
+            max_market_fee: "Max market fee",
+            confidential_supply: "Confidential supply",
+            market_fee_percent: "Market fee percent",
+            charge_market_fee: "Charge market fee",
+            white_list: "White list",
+            override_authority: "Override authority",
+            transfer_restricted: "Transfer restricted",
+            disable_force_settle: "Disable force settle",
+            global_settle: "Global settle",
+            disable_confidential: "Disable confidential",
+            blacklist_authorities: "Blacklist authorities",
+            blacklist_markets: "Blacklist markets",
+            whitelist_authorities: "Whitelist authorities",
+            whitelist_markets: "Whitelist Markets",
+            acummulated_fees: "Acummulated fees",
+            fee_pool: "Fee pool",
+            formatted_price: "Formatted price"
         },
         witnesses: {
             title: "Witnesses"

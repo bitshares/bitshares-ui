@@ -70,7 +70,7 @@ class OrderRow extends React.Component {
         let priceSymbol = showSymbols ? <span>{` ${base.symbol}/${quote.symbol}`}</span> : null;
         let valueSymbol = showSymbols ? " " + quote.symbol : null;
         let amountSymbol = showSymbols ? " " + base.symbol : null;
-        
+
         if (!isAskOrder && !invert) {
 
             return (
@@ -228,4 +228,3 @@ MyOpenOrders.propTypes = {
 exports.OrderRow = OrderRow;
 exports.TableHeader = TableHeader;
 exports.MyOpenOrders = MyOpenOrders;
-

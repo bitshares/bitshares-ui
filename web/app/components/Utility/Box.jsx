@@ -15,20 +15,8 @@ class Box extends React.Component {
     static defaultProps = {
         margin: '10px',
         padding: '10px',
-        color: '#50D2C2', //blue
-        border: 'solid 2px',
-        borderColor: '#888',  //'#444 #444 #666 #666', // T R B L
-        borderRadius: '12px', //'8px 8px 8px 8px',
-        borderStyle: 'inset',
-        backgroundColor: '#333',
-
-        headerTextAlign: 'center',
-        headerColor: '#FCAB53', //orange
+        backgroundColor: '#3f3f3f',
         headerBackgroundColor: '#383838',
-
-        footerTextAlign: 'center',
-        footerColor: '#FCAB53', //orange
-        footerBackgroundColor: '#383838',
     };
 
 
@@ -38,13 +26,8 @@ class Box extends React.Component {
 
         this.style = {
             margin: props.margin,
-            padding: 0, //props.padding,
-            color: props.color,
             backgroundColor: props.backgroundColor,
             border: props.border,
-            borderColor: props.borderColor,
-            borderRadius: props.borderRadius,
-            borderStyle: props.borderStyle,
         };
 
         this.bodyStyle = {
@@ -65,11 +48,11 @@ class Box extends React.Component {
         };
         this.headerTextStyle = {
             color: props.headerColor,
-            fontWeight: 'bold',
+            fontWeight: 'normal',
         };
         this.footerTextStyle = {
             color: props.footerColor,
-            fontWeight: 'bold',
+            fontWeight: 'normal',
         };
     }
 
@@ -80,7 +63,7 @@ class Box extends React.Component {
 
                 {(this.props.header) ? (
                     <div style={this.headerStyle}>
-                        <h4 style={this.headerTextStyle}>{this.props.header}</h4>
+                        <h4>{this.props.header}</h4>
                     </div>
                 ) : ''}
 
@@ -90,7 +73,7 @@ class Box extends React.Component {
 
                 {(this.props.footer) ? (
                     <div style={this.footerStyle}>
-                        <h4 style={this.footerTextStyle}>{this.props.footer}</h4>
+                        <h4>{this.props.footer}</h4>
                     </div>
                 ) : ''}
 
