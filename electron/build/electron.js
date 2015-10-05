@@ -29,10 +29,10 @@
 
         mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
-        if (env.name !== 'production') {
-            devHelper.setDevMenu();
-            mainWindow.openDevTools();
-        }
+        //if (env.name !== 'production') {
+        //    devHelper.setDevMenu();
+        //    mainWindow.openDevTools();
+        //}
 
         mainWindow.on('close', function () {
             mainWindowState.saveState(mainWindow);
