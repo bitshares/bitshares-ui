@@ -60,7 +60,7 @@ class CreateNewWallet extends Component {
             isValid: false,
             create_submitted: false,
             custom_brainkey: false,
-            brnkey: ""
+            brnkey: null
         }
     }
     
@@ -139,7 +139,7 @@ class CreateNewWallet extends Component {
     onSubmit(e) {
         e.preventDefault()
         var wallet_name = this.state.wallet_public_name
-        WalletActions.setWallet(wallet_name, this.state.valid_password)
+        WalletActions.setWallet(wallet_name, this.state.valid_password, this.state.brnkey)
         this.setState({create_submitted: true})
     }
     
@@ -176,7 +176,7 @@ class CreateNewWallet extends Component {
         
         var isValid = errors.wallet_public_name === null && state.valid_password !== null
         if(this.state.custom_brainkey && isValid)
-            isValid = this.state.brnkey !== ""
+            isValid = this.state.brnkey !== null
         this.setState({ isValid, errors })
     }
     

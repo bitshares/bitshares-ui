@@ -23,6 +23,8 @@ class Transfer extends React.Component {
         if(props.query.amount) this.state.amount = props.query.amount;
         if(props.query.asset) this.state.asset_id = props.query.asset;
         if(props.query.memo) this.state.memo = props.query.memo;
+        let currentAccount = AccountStore.getState().currentAccount;
+        if (!this.state.from_name) this.state.from_name = currentAccount;
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
@@ -67,6 +69,7 @@ class Transfer extends React.Component {
     }
 
     onTrxIncluded(confirm_store_state) {
+        console.log("-- Transfer.onTrxIncluded -->", confirm_store_state);
         if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
             this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);

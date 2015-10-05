@@ -188,6 +188,16 @@ class WalletDb {
             if( typeof password_plaintext !== 'string')
                 throw new Error("password string is required")
             
+            if(brainkey_plaintext) {
+                if(typeof brainkey_plaintext !== "string")
+                    throw new Error("Brainkey must be a string")
+                
+                if(brainkey_plaintext.trim() === "")
+                    throw new Error("Brainkey can not be an empty string")
+            
+                if(brainkey_plaintext.length < 50)
+                    throw new Error("Brainkey must be at least 50 characters long")
+            }
             var password_aes = Aes.fromSeed( password_plaintext )
             
             var encryption_buffer = key.get_random_key().toBuffer()
