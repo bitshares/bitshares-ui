@@ -1,32 +1,23 @@
 @mixin font-face($font-family, $file-path, $font-weight, $font-style) {
   @font-face {
     font-family: $font-family;
-    src: url('#{$file-path}.eot');
-    src: url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
-    url('#{$file-path}.woff') format('woff'),
-    url('#{$file-path}.ttf') format('truetype'),
-    url('#{$file-path}.svg##{$font-family}') format('svg');
+    src: url('#{$file-path}.woff') format('woff');
     font-weight: $font-weight;
     font-style: $font-style;
   }
 }
 
-@include font-face(Roboto-Bold, '/fonts/Roboto-Bold', 300, normal);
-@mixin Roboto-Bold {
-  font-family: 'Roboto-Bold', arial, sans-serif;
-  font-weight: bold; font-style: normal; }
-
-@include font-face(Roboto-Light, '/fonts/Roboto-Light', 300, normal);
+@include font-face(Roboto-Light, './Roboto-Light', 300, normal);
 @mixin Roboto-Light {
   font-family: 'Roboto-Light', arial, sans-serif;;
   font-weight: lighter; font-style: normal; }
 
-@include font-face(Roboto-Regular, '/fonts/Roboto-Regular', normal, normal);
+@include font-face(Roboto-Regular, './Roboto-Regular', normal, normal);
 @mixin Roboto-Regular {
   font-family: 'Roboto-Regular', arial, sans-serif;
   font-weight: normal; font-style: normal; }
 
-@include font-face(RobotoCondensed-Regular, '/fonts/RobotoCondensed-Regular', normal, normal);
+@include font-face(RobotoCondensed-Regular, './RobotoCondensed-Regular', normal, normal);
 @mixin RobotoCondensed-Regular {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;;
   font-weight: normal; font-style: normal; }

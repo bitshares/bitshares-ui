@@ -34,6 +34,14 @@ class CreateAccount extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this)
     }
 
+    isValid() {
+        let first_account = AccountStore.getMyAccounts().length === 0;
+        let valid = this.state.validAccountName;
+        if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
+        if (!first_account) valid = valid && this.state.registrar_account;
+        return valid;
+    }
+
     onAccountNameChange(e) {
         let state = {validAccountName: e.valid};
         if(e.value || e.value === "") state.accountName = e.value;
@@ -97,6 +105,7 @@ class CreateAccount extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
+        if (!this.isValid()) return;
         let account_name = this.refs.account_name.value();
         if (WalletDb.getWallet()) {
             this.createAccount(account_name);
@@ -116,9 +125,7 @@ class CreateAccount extends React.Component {
         // let my_accounts = account_store_state.myAccounts ? account_store_state.myAccounts.map(name => name).toJS() : [];
         let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
-        let valid = this.state.validAccountName;
-        if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
-        if (!first_account) valid = valid && this.state.registrar_account;
+        let valid = this.isValid();
         let buttonClass = classNames("button", {disabled: !valid});
         return (
             <div className="grid-block vertical">

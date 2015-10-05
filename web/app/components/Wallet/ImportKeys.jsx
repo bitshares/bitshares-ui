@@ -107,10 +107,14 @@ export default class ImportKeys extends Component {
                 </div>
                 <br/>
                 <div className="center-content">
-                    {!this.state.wif_count ?
+                    { ! this.state.wif_count ?
                         (<div>
                             <div>
                                 <div>
+                                    <label>BTS 1.0 key export file
+                                    {this.state.no_file ? null : <span>&nbsp;
+                                        (<a onClick={this.reset.bind(this)}>Reset</a>)</span>}
+                                    </label>
                                     <input
                                         type="file" id="file_input"
                                         style={{ border: 'solid' }}
@@ -118,10 +122,17 @@ export default class ImportKeys extends Component {
                                         onChange={this.upload.bind(this)}
                                     />
                                 </div>
+                                { this.state.no_file ? <span>
+                                <br/><br/>
+                                <div>
+                                    <label>Paste Private keys (Wallet Import Format - WIF)</label>
+                                    <input type="password" onChange={this.onWif.bind(this)} id="wif" />
+                                </div>
+                                </span>:null}
                             </div>
                             <br/>
 
-                            {!this.state.no_file ?
+                            { ! this.state.no_file ?
                                 (<div>
                                     <input
                                         type="password" ref="password" autoComplete="off"
@@ -133,6 +144,8 @@ export default class ImportKeys extends Component {
                                     <div>{this.state.wif_text_message}</div>
                                 </div>) : null}
 
+                            <a href className="button success" onClick={this.onBack.bind(this)}>
+                                Done </a>
                         </div>) : null}
                     
                 </div>
@@ -186,6 +199,11 @@ export default class ImportKeys extends Component {
                 </WalletCreate>
             </div>
         );
+    }
+    
+    onWif(event) {
+        var value = event.target.value
+        this.addByPattern(value)
     }
     
     onBack() {
@@ -525,6 +543,7 @@ export default class ImportKeys extends Component {
         this.reset()
         
         WalletDb.importKeys( private_key_objs ).then( result => {
+            this.setState({save_import_loading: false})
             var {import_count, duplicate_count, private_key_ids} = result
             if( ! import_count && ! duplicate_count) {
                 notify.warning(`There where no keys to import`)

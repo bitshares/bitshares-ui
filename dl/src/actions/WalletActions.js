@@ -11,6 +11,7 @@ import Address from "ecc/address"
 import alt from "alt-instance"
 import iDB from "idb-instance"
 import Immutable from "immutable"
+import config from "chain/config"
 
 var application_api = new ApplicationApi()
 var api = Apis.instance()
@@ -27,10 +28,10 @@ class WalletActions {
     /** Make an existing wallet active or create a wallet (and make it active).
         If <b>wallet_name</b> does not exist, provide a <b>create_wallet_password</b>.
     */
-    setWallet(wallet_name, create_wallet_password) {
+    setWallet(wallet_name, create_wallet_password, brnkey) {
         if( ! wallet_name) wallet_name = "default"
         return new Promise( resolve => {
-            this.dispatch({wallet_name, create_wallet_password, resolve})
+            this.dispatch({wallet_name, create_wallet_password, brnkey, resolve})
         })
     }
     
@@ -174,6 +175,10 @@ class WalletActions {
                 for(let balance_claim of balance_claims) {
                     tr.add_type_operation("balance_claim", balance_claim)
                 }
+                // With a lot of balance claims the signing can take so Long
+                // the transaction will expire.  This will increase the timeout...
+                tr.set_expire_seconds(config.expire_in_secs + balance_claims.length)
+                
                 return WalletDb.process_transaction(
                     tr, Object.keys(signer_pubkeys), broadcast ).then(
                         result=> { this.dispatch(); return result })

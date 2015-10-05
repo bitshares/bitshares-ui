@@ -1,4 +1,4 @@
-module.exports = {
+ module.exports = {
     languages: {
         en: "English",
         cn: "简体中文",
@@ -337,29 +337,43 @@ module.exports = {
             precision: "Precision"
         },
         asset: {
-            title: "Asset",
-            description: "Description",
-            issuer: "Issuer",
             not_found: "The asset %(name)s does not exist",
-            current_supply: "Current supply",
-            max_supply: "Max supply",
-            max_market_fee: "Max market fee",
-            confidential_supply: "Confidential supply",
-            market_fee_percent: "Market fee percent",
-            charge_market_fee: "Charge market fee",
-            white_list: "White list",
-            override_authority: "Override authority",
-            transfer_restricted: "Transfer restricted",
-            disable_force_settle: "Disable force settle",
-            global_settle: "Global settle",
-            disable_confidential: "Disable confidential",
-            blacklist_authorities: "Blacklist authorities",
-            blacklist_markets: "Blacklist markets",
-            whitelist_authorities: "Whitelist authorities",
-            whitelist_markets: "Whitelist Markets",
-            acummulated_fees: "Acummulated fees",
-            fee_pool: "Fee pool",
-            formatted_price: "Formatted price"
+            summary: {
+                asset_type: "Asset type",
+                issuer: "Issuer",
+                current_supply: "Current supply",
+                stealth_supply: "Stealth supply",
+                market_fee: "Market fee",
+                max_market_fee: "Max market fee"
+            },
+            price_feed: {
+                price_feed: "Price fee",
+                settlement_price: "Settlement price",
+                maintenance_collateral_ratio: "Maintenance collateral ratio",
+                maximum_short_squeeze_ratio: "Maximum short squeeze ratio"
+            },
+            fee_pool: {
+                fee_pool: "Fee pool",
+                core_exchange_rate: "Core exchange rate",
+                pool_balance: "Pool balance",
+                unclaimed_issuer_income: "Unclaimed issuer income"
+            },
+            permissions: {
+                permissions: "Permissions",
+                max_market_fee: "Max market fee",
+                max_supply: "Max supply",
+                chargeMarketFee: "Charge market fee",
+                allowWhiteList: "Allow white list",
+                allowIssuerOverride: "Allow issuer override",
+                restrictTransfers: "Restrict transfers",
+                allowForceSettle: "Allow force settle",
+                allowGlobalSettle: "Allow global settle",
+                allowStealthTransfer: "Allow stealth transfers",
+                blacklist_authorities: "Blacklist authorities",
+                blacklist_markets: "Blacklist markets",
+                whitelist_authorities: "Whitelist authorities",
+                whitelist_markets: "Whitelist markets"
+            }
         },
         witnesses: {
             title: "Witnesses"
@@ -442,6 +456,7 @@ module.exports = {
         create: "Create",
         console: "Wallet Management Console",
         create_backup: "Create Backup",
+        backup_brainkey: "Backup Brainkey",
         create_backup_of: "Create Backup (%(name)s Wallet)",
         import_backup: "Import Backup",
         restore_backup: "Restore Backup",

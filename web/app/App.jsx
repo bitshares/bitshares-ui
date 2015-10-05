@@ -51,6 +51,7 @@ import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
+import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
 import AccountRefsStore from "stores/AccountRefsStore";
 import Help from "./Help";
@@ -200,14 +201,15 @@ let routes = (
         <Route name="wallet" path="wallet" handler={WalletManager}>
             {/* wallet management console */}
             <DefaultRoute handler={WalletOptions}/>
-            <Route name="wmc-backup-verify-restore" path="backup/restore" handler={BackupRestore}/>
             <Route name="wmc-change-wallet" path="change" handler={ChangeActiveWallet}/>
             <Route name="wmc-change-password" path="change-password" handler={WalletChangePassword}/>
             <Route name="wmc-import-keys" path="import-keys" handler={ImportKeys}/>
             <Route name="wmc-brainkey" path="brainkey" handler={Brainkey}/>
             <Route name="wmc-wallet-create" path="create" handler={WalletCreate}/>
             <Route name="wmc-wallet-delete" path="delete" handler={WalletDelete}/>
+            <Route name="wmc-backup-verify-restore" path="backup/restore" handler={BackupRestore}/>
             <Route name="wmc-backup-create" path="backup/create" handler={BackupCreate}/>
+            <Route name="wmc-backup-brainkey" path="backup/brainkey" handler={BackupBrainkey}/>
         </Route>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>

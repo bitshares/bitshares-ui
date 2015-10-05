@@ -45,7 +45,7 @@ class WalletManagerStore extends BaseStore {
     /** This may result in a new wallet name being added, only in this case
         should a <b>create_wallet_password</b> be provided.
     */
-    onSetWallet({wallet_name = "default", create_wallet_password, resolve}) {
+    onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
         var p = new Promise( resolve => {
             
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
@@ -86,7 +86,7 @@ class WalletManagerStore extends BaseStore {
                         
                         return WalletDb.onCreateWallet(
                             create_wallet_password,
-                            null, //brainkey,
+                            brnkey, //brainkey,
                             true //unlock
                         ).then(()=>
                             this.setState({current_wallet: wallet_name}))

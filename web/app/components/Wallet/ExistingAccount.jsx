@@ -52,7 +52,7 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                     <div className="button success">Import Backup</div></Link>
                     
                     <Link to="welcome-import-keys">
-                    <div className="button success">Import Keys</div></Link>
+                    <div className="button success">Create Wallet</div></Link>
                     
                     <hr/>
                 </span>:null}
