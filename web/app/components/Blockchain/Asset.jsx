@@ -92,13 +92,13 @@ class Asset extends React.Component {
          */
         var perms = {
             // TODO Refactor out asset.permisions
-            chargeMarketFee:      this.pfactory(<Translate content="asset.permissions.chargeMarketFee"/> ,      0x01, valueMask, permissionMask),
-            allowWhiteList:       this.pfactory(<Translate content="asset.permissions.allowWhiteList"/> ,       0x02, valueMask, permissionMask),
-            allowIssuerOverride:  this.pfactory(<Translate content="asset.permissions.allowIssuerOverride"/> ,  0x04, valueMask, permissionMask),
-            restrictTransfers:    this.pfactory(<Translate content="asset.permissions.restrictTransfers"/> ,    0x08, valueMask, permissionMask),
-            allowForceSettle:     this.pfactory(<Translate content="asset.permissions.allowForceSettle"/> ,     0x10, ~valueMask, permissionMask),
-            allowGlobalSettle:    this.pfactory(<Translate content="asset.permissions.allowGlobalSettle"/> ,    0x20, valueMask, permissionMask),
-            allowStealthTransfer: this.pfactory(<Translate content="asset.permissions.allowStealthTransfer"/> , 0x40, ~valueMask, permissionMask),
+            chargeMarketFee:      this.pfactory(<Translate content="explorer.asset.permissions.chargeMarketFee"/> ,      0x01, valueMask, permissionMask),
+            allowWhiteList:       this.pfactory(<Translate content="explorer.asset.permissions.allowWhiteList"/> ,       0x02, valueMask, permissionMask),
+            allowIssuerOverride:  this.pfactory(<Translate content="explorer.asset.permissions.allowIssuerOverride"/> ,  0x04, valueMask, permissionMask),
+            restrictTransfers:    this.pfactory(<Translate content="explorer.asset.permissions.restrictTransfers"/> ,    0x08, valueMask, permissionMask),
+            allowForceSettle:     this.pfactory(<Translate content="explorer.asset.permissions.allowForceSettle"/> ,     0x10, ~valueMask, permissionMask),
+            allowGlobalSettle:    this.pfactory(<Translate content="explorer.asset.permissions.allowGlobalSettle"/> ,    0x20, valueMask, permissionMask),
+            allowStealthTransfer: this.pfactory(<Translate content="explorer.asset.permissions.allowStealthTransfer"/> , 0x40, ~valueMask, permissionMask),
         }
 
         // FIXME: Remove
@@ -247,14 +247,14 @@ class Asset extends React.Component {
 
         var currentSupply = (dynamic) ? (
             <tr>
-                <td> <Translate content="asset.summary.current_supply"/> </td>
+                <td> <Translate content="explorer.asset.summary.current_supply"/> </td>
                 <td> <FormattedAsset amount={dynamic.current_supply} asset={asset.id}/> </td>
             </tr>
         ) : '';
 
         var stealthSupply = (dynamic) ? (
             <tr>
-                <td> <Translate content="asset.summary.stealth_supply"/> </td>
+                <td> <Translate content="explorer.asset.summary.stealth_supply"/> </td>
                 <td> <FormattedAsset amount={dynamic.confidential_supply} asset={asset.id}/> </td>
             </tr>
         ) : '';
@@ -262,14 +262,14 @@ class Asset extends React.Component {
 
         var marketFee = (perms.chargeMarketFee.value) ? (
             <tr>
-                <td> <Translate content="asset.summary.market_fee"/> </td>
+                <td> <Translate content="explorer.asset.summary.market_fee"/> </td>
                 <td> {options.market_fee_percent / 100.0} % </td>
             </tr>
         ) : '';
 
         var maxMarketFee = (perms.chargeMarketFee.value) ? (
             <tr>
-                <td> <Translate content="asset.summary.max_market_fee"/> </td>
+                <td> <Translate content="explorer.asset.summary.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={options.max_market_fee} asset={asset.id} /> </td>
             </tr>
         ) : '';
@@ -280,11 +280,11 @@ class Asset extends React.Component {
 
                 <table className="table key-value-table">
                     <tr>
-                        <td> <Translate content="asset.summary.asset_type"/> </td>
+                        <td> <Translate content="explorer.asset.summary.asset_type"/> </td>
                         <td> {this._assetType(asset)} </td>
                     </tr>
                     <tr>
-                        <td> <Translate content="asset.summary.issuer"/> </td>
+                        <td> <Translate content="explorer.asset.summary.issuer"/> </td>
                         <td> <LinkToAccountById account={asset.issuer}/> </td>
                     </tr>
                     {currentSupply}
@@ -335,18 +335,18 @@ class Asset extends React.Component {
         var dynamic = asset.dynamic;
         var options = asset.options;
         return (
-            <Box header= {(<Translate content="asset.fee_pool.fee_pool"/>)} >
+            <Box header= {(<Translate content="explorer.asset.fee_pool.fee_pool"/>)} >
                 <table className="table key-value-table">
                     <tr>
-                        <td> <Translate content="asset.fee_pool.core_exchange_rate"/> </td>
+                        <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
                         <td> {this.formattedPrice(options.core_exchange_rate)} </td>
                     </tr>
                     <tr>
-                        <td> <Translate content="asset.fee_pool.pool_balance"/> </td>
+                        <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
                         <td> {dynamic ? dynamic.fee_pool : ''} </td>
                     </tr>
                     <tr>
-                        <td> <Translate content="asset.fee_pool.unclaimed_issuer_income"/> </td>
+                        <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
                         <td> {dynamic ? dynamic.accumulated_fees : ''} </td>
                     </tr>
                 </table>
@@ -366,29 +366,29 @@ class Asset extends React.Component {
 
         var maxMarketFee = (perms.chargeMarketFee.value) ? (
             <tr>
-                <td> <Translate content="asset.permissions.max_market_fee"/> </td>
+                <td> <Translate content="explorer.asset.permissions.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={options.max_market_fee} asset={asset.id} /> </td>
             </tr>
         ) : '';
 
         var maxSupply = (
             <tr>
-                <td> <Translate content="asset.permissions.max_supply"/> </td>
+                <td> <Translate content="explorer.asset.permissions.max_supply"/> </td>
                 <td> <FormattedAsset amount={options.max_supply} asset={asset.id} /> </td>
             </tr>
         );
 
         var whiteLists = perms.allowWhiteList.value ? (
             <span>
-                <br/> <Translate content="asset.permissions.blacklist_authorities"/>: {options.blacklist_authorities}
-                <br/> <Translate content="asset.permissions.blacklist_markets"/>:     {options.blacklist_markets}
-                <br/> <Translate content="asset.permissions.whitelist_authorities"/>: {options.whitelist_authorities}
-                <br/> <Translate content="asset.permissions.whitelist_markets"/>:     {options.whitelist_markets}
+                <br/> <Translate content="explorer.asset.permissions.blacklist_authorities"/>: {options.blacklist_authorities}
+                <br/> <Translate content="explorer.asset.permissions.blacklist_markets"/>:     {options.blacklist_markets}
+                <br/> <Translate content="explorer.asset.permissions.whitelist_authorities"/>: {options.whitelist_authorities}
+                <br/> <Translate content="explorer.asset.permissions.whitelist_markets"/>:     {options.whitelist_markets}
             </span>
         ) : '';
 
         return (
-            <Box header= {(<Translate content="asset.permissions.permissions"/>)} >
+            <Box header= {(<Translate content="explorer.asset.permissions.permissions"/>)} >
                 <table className="table key-value-table">
                     {maxMarketFee}
                     {maxSupply}
@@ -409,20 +409,20 @@ class Asset extends React.Component {
         if (!('current_feed' in bitAsset)) return (<span>NO CURRENT_FEED</span>);
         var currentFeed = bitAsset.current_feed;
         return (
-            <Box header= {(<Translate content="asset.price_feed.price_feed"/>)} >
+            <Box header= {(<Translate content="explorer.asset.price_feed.price_feed"/>)} >
                 <table className="table key-value-table">
                     <tr>
-                        <td> <Translate content="asset.price_feed.settlement_price"/> </td>
+                        <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
                         <td> {this.formattedPrice(currentFeed.settlement_price)} </td>
                     </tr>
 
                     <tr>
-                        <td> <Translate content="asset.price_feed.maintenance_collateral_ratio"/> </td>
+                        <td> <Translate content="explorer.asset.price_feed.maintenance_collateral_ratio"/> </td>
                         <td> {currentFeed.maintenance_collateral_ratio/10}% </td>
                     </tr>
 
                     <tr>
-                        <td> <Translate content="asset.price_feed.maximum_short_squeeze_ratio"/> </td>
+                        <td> <Translate content="explorer.asset.price_feed.maximum_short_squeeze_ratio"/> </td>
                         <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
                     </tr>
                 </table>
