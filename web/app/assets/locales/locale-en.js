@@ -442,6 +442,7 @@ module.exports = {
         create: "Create",
         console: "Wallet Management Console",
         create_backup: "Create Backup",
+        backup_brainkey: "Backup Brainkey",
         create_backup_of: "Create Backup (%(name)s Wallet)",
         import_backup: "Import Backup",
         restore_backup: "Restore Backup",

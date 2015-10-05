@@ -20,8 +20,8 @@ class BrainkeyBaseComponent extends Component {
         return [BrainkeyStoreFactory.getInstance("wmc")]
     }
     static getPropsFromStores() {
-        var brnkey = BrainkeyStoreFactory.getInstance("wmc").getState()
-        return brnkey
+        var props = BrainkeyStoreFactory.getInstance("wmc").getState()
+        return props
     }
 }
 
@@ -107,8 +107,8 @@ export class BrainkeyInput extends Component {
             if(this.state.brnkey.length < 50)
                 word_count_label = this.state.brnkey.length + " characters (50 minimum)"
             else {
-                if(checked_words.length < 17)
-                    word_count_label = checked_words.length + " words (17 recommended)"
+                if(checked_words.length < 16)
+                    word_count_label = checked_words.length + " words (16 recommended)"
                 else {
                     word_count_label = checked_words.length + " words"
                     warn = false

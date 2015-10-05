@@ -139,7 +139,7 @@ class CreateNewWallet extends Component {
     onSubmit(e) {
         e.preventDefault()
         var wallet_name = this.state.wallet_public_name
-        WalletActions.setWallet(wallet_name, this.state.valid_password)
+        WalletActions.setWallet(wallet_name, this.state.valid_password, this.state.brnkey)
         this.setState({create_submitted: true})
     }
     
