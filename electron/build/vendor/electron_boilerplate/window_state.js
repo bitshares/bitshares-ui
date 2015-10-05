@@ -8,13 +8,13 @@ var app = require('app');
 var fs = require('fs');
 
 module.exports = function (name, defaults) {
-
     var stateStoreFile = 'window-state-' + name + '.json';
     var state_file_name = app.getPath('userData') + "/" + stateStoreFile;
-    //var state_file_data = fs.readFileSync(state_file_name);
+    var state_file_data = null;
+    try { state_file_data = fs.readFileSync(state_file_name); }
+    catch(error) {}
 
-    //var state = state_file_data ? JSON.parse(state_file_data) : {width: defaults.width, height: defaults.height};
-    var state = {width: defaults.width, height: defaults.height};
+    var state = state_file_data ? JSON.parse(state_file_data) : {width: defaults.width, height: defaults.height};
 
     var saveState = function (win) {
         if (!win.isMaximized() && !win.isMinimized()) {
@@ -26,7 +26,7 @@ module.exports = function (name, defaults) {
             state.height = size[1];
         }
         state.isMaximized = win.isMaximized();
-        //fs.writeFileSync(state_file_name, state);
+        fs.writeFileSync(state_file_name, JSON.stringify(state));
     };
 
     return {
