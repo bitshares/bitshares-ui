@@ -1,4 +1,4 @@
-module.exports = {
+ module.exports = {
     languages: {
         en: "English",
         cn: "简体中文",
@@ -128,6 +128,44 @@ module.exports = {
             unknown: "Unknown account",
             not_yours: "Not your account"
         }
+    },
+    asset: {
+        summary: {
+            asset_type: "Asset Type",
+            issuer: "Issuer",
+            current_supply: "Current Supply",
+            stealth_supply: "Stealth Supply",
+            market_fee: "Market Fee",
+            max_market_fee: "Max Market Fee",
+        },
+        price_feed: {
+            price_feed: "Price Fee",
+            settlement_price: "Settlement Price",
+            maintenance_collateral_ratio: "Maintenance Collateral Ratio",
+            maximum_short_squeeze_ratio: "Maximum Short Squeeze Ratio",
+        },
+        fee_pool: {
+            fee_pool: "Fee Pool",
+            core_exchange_rate: "Core Exchange Rate",
+            pool_balance: "Pool Balance",
+            unclaimed_issuer_income: "Unclaimed Issuer Income",
+        },
+        permissions: {
+            permissions: "Permissions",
+            max_market_fee: "Max Market Fee",
+            max_supply: "Max Supply",
+            chargeMarketFee: "Charge Market Fee",
+            allowWhiteList: "Allow White List",
+            allowIssuerOverride: "Allow Issuer Override",
+            restrictTransfers: "Restrict Transfers",
+            allowForceSettle: "Allow Force Settle",
+            allowGlobalSettle: "Allow Global Settle",
+            allowStealthTransfer: "Allow Stealth Transfers",
+            blacklist_authorities: "Blacklist Authorities",
+            blacklist_markets: "Blacklist Markets",
+            whitelist_authorities: "Whitelist Authorities",
+            whitelist_markets: "Whitelist Markets",
+        },
     },
     pagination: {
         newer: "Newer",

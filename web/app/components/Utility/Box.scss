@@ -1,0 +1,40 @@
+.Box {
+  margin: 10px;
+  padding: 0;
+
+  background-color: #333;
+
+  border: 2px;
+  border-color: #888;
+  border-radius: 12px;
+  border-style: inset;
+}
+
+.BoxBody {
+  color: #50D2C2; /* blue */
+
+  margin: 0;
+  padding: 10px;
+}
+
+.BoxHeader {
+  text-align: center;
+  background-color: #383838;
+}
+
+.BoxFooter {
+  text-align: center;
+  background-color: #383838;
+}
+
+.BoxHeader h4 {
+  color: #FCAB53; /* orange */
+
+  font-weight: bold;
+}
+
+.BoxFooter h4 {
+  color: #FCAB53; /* orange */
+
+  font-weight: bold;
+}
