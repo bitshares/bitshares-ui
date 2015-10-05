@@ -139,8 +139,8 @@ function BindToChainState(options) {
 
             update(next_props = null)
             {
-                let keep_updating = (options && options.keep_updating) || this.props.keep_updating;
-                if(!next_props && !keep_updating && this.state.resolved) return;
+                //let keep_updating = (options && options.keep_updating) || this.props.keep_updating;
+                //if(!next_props && !keep_updating && this.state.resolved) return;
 
                 let props = next_props || this.props;
                 let new_state = {};

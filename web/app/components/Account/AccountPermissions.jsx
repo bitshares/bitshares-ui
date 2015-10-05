@@ -174,13 +174,13 @@ class AccountPermissions extends React.Component {
 
         let threshold = this.state.active_threshold > 0 ? this.state.active_threshold : 0;
         let weights_total = this.sumUpWeights(this.state.active_accounts, this.state.active_keys, this.state.active_weights);
-        if (weights_total > threshold)
-            error1 = `Active permissions weights total of ${weights_total} shouldn't exceed threshold of ${threshold}`;
+        if (weights_total < threshold)
+            error1 = `Active permissions weights total of ${weights_total} should be equal or exceed threshold of ${threshold}`;
 
         threshold = this.state.owner_threshold > 0 ? this.state.owner_threshold : 0;
         weights_total = this.sumUpWeights(this.state.owner_accounts, this.state.owner_keys, this.state.owner_weights);
-        if (weights_total > threshold)
-            error2 = `Owner permissions weights total of ${weights_total} shouldn't exceed threshold of ${threshold}`;
+        if (weights_total < threshold)
+            error2 = `Owner permissions weights total of ${weights_total} should be equal or exceed threshold of ${threshold}`;
 
         let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() && this.refs.memo_key.isValidPubKey(this.state.memo_key) ? "" : " disabled");
         let reset_buttons_class = "button outline" + (this.isChanged() ? "" : " disabled");
