@@ -133,8 +133,11 @@ export class BrainkeyInput extends Component {
     formChange(event) {
         var {id, value} = event.target
         var state = {}
-        state[id] = value // id === "brnkey"
-        this.props.onChange(key.normalize_brain_key(value))
+        state[id] = value
+        if(id === "brnkey") {
+            var brnkey = key.normalize_brain_key(value)
+            this.props.onChange( brnkey.length < 50 ? null : brnkey )
+        }
         this.setState(state)
     }
 }
