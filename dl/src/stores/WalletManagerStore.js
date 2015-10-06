@@ -19,7 +19,9 @@ class WalletManagerStore extends BaseStore {
         this.state = this._getInitialState()
         this.bindListeners({
             onRestore: WalletActions.restore,
-            onSetWallet: WalletActions.setWallet
+            onSetWallet: WalletActions.setWallet,
+            onSetBackupDate: WalletActions.setBackupDate,
+            onSetBrainkeyBackupDate: WalletActions.setBrainkeyBackupDate
         })
         super._export("init", "setNewWallet", "onDeleteWallet", "onDeleteAllWallets")
     }
@@ -142,6 +144,14 @@ class WalletManagerStore extends BaseStore {
             var req = iDB.impl.deleteDatabase(database_name)
             resolve( database_name )
         })
+    }
+    
+    onSetBackupDate() {
+        WalletDb.setBackupDate()
+    }
+    
+    onSetBrainkeyBackupDate() {
+        WalletDb.setBrainkeyBackupDate()
     }
     
 }

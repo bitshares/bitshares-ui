@@ -446,6 +446,18 @@ class WalletDb {
         return this._updateWallet( transaction )
     }
     
+    setBackupDate() {
+        var wallet = this.wallet.get(wallet_public_name)
+        wallet.backup_date = new Date()
+        return this._updateWallet()
+    }
+    
+    setBrainkeyBackupDate() {
+        var wallet = this.wallet.get(wallet_public_name)
+        wallet.brainkey_backup_date = new Date()
+        return this._updateWallet()
+    }
+    
     /** Saves wallet object to disk.  Always updates the last_modified date. */
     _updateWallet(transaction = this.transaction_update()) {
         var wallet = this.wallet.get(wallet_public_name)
@@ -478,7 +490,8 @@ class WalletDb {
             // Convert anything other than a string or number back into its proper type
             wallet.created = new Date(wallet.created)
             wallet.last_modified = new Date(wallet.last_modified)
-            wallet.last_backup = wallet.last_backup ? new Date(wallet.last_backup):null
+            wallet.backup_date = wallet.backup_date ? new Date(wallet.backup_date):null
+            wallet.brainkey_backup_date = wallet.brainkey_backup_date ? new Date(wallet.brainkey_backup_date):null
             try { WalletTcomb(wallet) } catch(e) {
                 console.log("WalletDb format error", e); }
             map.set(wallet_public_name, wallet)
