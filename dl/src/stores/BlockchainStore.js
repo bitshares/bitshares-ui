@@ -21,7 +21,8 @@ class BlockchainStore extends BaseStore{
         this.latestTransactions = Immutable.List();
         this.dynGlobalObject = {};
         this.globalObject = {};
-        this.rpc_connection_status = "open";
+        this.rpc_connection_status = null;
+        this.no_ws_connection = false;
 
         this.bindListeners({
             onGetBlock: BlockchainActions.getBlock,
@@ -103,8 +104,13 @@ class BlockchainStore extends BaseStore{
     }
 
     onUpdateRpcConnectionStatus(status){
+        let prev_status = this.rpc_connection_status;
         if(status === "reconnect")  ChainStore.resetCache();
         else this.rpc_connection_status = status;
+        if (prev_status === null && status === "error")
+            this.no_ws_connection = true;
+        if (this.no_ws_connection && status === "open")
+            this.no_ws_connection = false;
     }
 
 }
