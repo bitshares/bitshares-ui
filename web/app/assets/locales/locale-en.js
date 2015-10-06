@@ -294,7 +294,18 @@
         blocks: {
             title: "Blockchain",
             globals: "Global parameters",
-            recent: "Recent blocks"
+            recent: "Recent blocks",
+            trx: "Transaction",
+            block_times: "Block times",
+            recently_missed_blocks: "Recently missed blocks",
+            trx_per_block: "Trx/block",
+            active_committee_members: "Active committee members",
+            active_witnesses: "Active Witnesses",
+            avg_conf_time: "Avg conf. time",
+            trx_per_sec: "Trx/s",
+            last_block: "Last block",
+            current_block: "Current Block"
+
         },
         block: {
             title: "Block",
