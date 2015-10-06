@@ -10,23 +10,23 @@ class WalletUnlockStore {
     }
     
     onUnlock({resolve, reject}) {
-        //DEBUG console.log('... onUnlock setState')
+        //DEBUG console.log('... onUnlock setState', WalletDb.isLocked())
         if( ! WalletDb.isLocked()) {
             resolve(false)
             return
         }
-        this.setState({resolve, reject, locked: false})
+        this.setState({resolve, reject, locked: WalletDb.isLocked()})
     }
     
     onLock({resolve}) {
-        //DEBUG console.log('... WalletUnlockStore\tprogramatic lock')
+        //DEBUG console.log('... WalletUnlockStore\tprogramatic lock', WalletDb.isLocked())
         if(WalletDb.isLocked()) {
             resolve(false)
             return
         }
         WalletDb.onLock()
         resolve(true)
-        this.setState({resolve:null, reject:null, locked: true})
+        this.setState({resolve:null, reject:null, locked: WalletDb.isLocked()})
     }
     
     onCancel() {
@@ -34,6 +34,7 @@ class WalletUnlockStore {
     }
     
     onChange() {
+        this.setState({locked: WalletDb.isLocked()})
     }
 }
 
