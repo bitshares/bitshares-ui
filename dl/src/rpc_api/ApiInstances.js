@@ -9,7 +9,7 @@ class Apis {
 
     connect(hostname="localhost", port=8090) {
         console.log( "Connecting..." );
-        let protocol = "ws://"
+        let protocol = "ws://", path = "";
         try { // For command-line support, all references to "window" go in the try catch
            let args     = window.location.hash.split("/");
             if (args.length > 2) {
@@ -25,9 +25,9 @@ class Apis {
             if (this.rpc_port ) port = this.rpc_port;
             protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
         } catch(e) {}
-        //hostname = "graphene.bitshares.org"; protocol = "wss://"; port = "8090";
-        console.log(`connecting to ${protocol}${hostname}:${port}`);
-        this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}`);
+        //hostname = "graphene.bitshares.org"; protocol = "wss://"; port = "443"; path = "/ws/";
+        console.log(`connecting to ${protocol}${hostname}:${port}${path}`);
+        this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}${path}`);
         this.init_promise = this.ws_rpc.login(this.rpc_user, this.rpc_password).then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             if (window) window.$db_api = this._db_api;
