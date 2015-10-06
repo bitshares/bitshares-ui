@@ -20,7 +20,9 @@ class PrivateKey
         if not Buffer.isBuffer buf
             throw new Error "Expecting paramter to be a Buffer type"
         if 32 isnt buf.length
-            console.log("WARN: Expecting 32 bytes, instead got #{buf.length}")
+            console.log("WARN: Expecting 32 bytes, instead got #{buf.length}, stack trace:", new Error().stack)
+        if buf.length is 0
+            throw new Error "Empty buffer"
         new PrivateKey BigInteger.fromBuffer(buf)
     
     PrivateKey.fromSeed = (seed) -> # generate_private_key
