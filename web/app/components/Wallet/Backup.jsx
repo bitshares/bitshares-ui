@@ -246,6 +246,7 @@ class Download extends BackupBaseComponent {
             throw new Error("Invalid backup to download conversion")
         
         saveAs(blob, this.props.backup.name);
+        WalletActions.setBackupDate()
     }
 }
 

@@ -35,6 +35,14 @@ class WalletActions {
         })
     }
     
+    setBackupDate() {
+        this.dispatch()
+    }
+    
+    setBrainkeyBackupDate() {
+        this.dispatch()
+    }
+    
     createAccount( account_name, registrar, referrer, referrer_percent = 100 ) {
         if( WalletDb.isLocked()) {
             var error = "wallet locked"

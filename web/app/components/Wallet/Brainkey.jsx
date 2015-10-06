@@ -142,7 +142,7 @@ export class BrainkeyInput extends Component {
     }
 }
 
-class BrainkeyInputAccept extends Component {
+export class BrainkeyInputAccept extends Component {
     
     constructor() {
         super()
@@ -157,9 +157,9 @@ class BrainkeyInputAccept extends Component {
             <span className="grid-container">
                 <div style={{width: '400px'}}>
                     <BrainkeyInput onChange={this.onBrainkeyChange.bind(this)}/>
-                    <div className={cname("button success", {disabled: ! ready})}
-                        onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
                 </div>
+                <div className={cname("button success", {disabled: ! ready})}
+                    onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
             </span>
         )
     }
