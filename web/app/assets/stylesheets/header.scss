@@ -3,11 +3,15 @@
 }
 
 .icon > svg {
-  position: relative;
-  top: 3px;
   > path {
     fill : #fff;
   }
+}
+
+.icon.locked > svg {
+  width: 1.15rem;
+  height: 1.15rem;
+
 }
 
 .header {

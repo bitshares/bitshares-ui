@@ -255,6 +255,13 @@ h1, h2, h3, h4, h5, h6 {
   color: $secondary-text-color;
 }
 
+.header-right-menu {
+  a > span { color: $secondary-text-color; }
+  svg > path { fill: $secondary-text-color; }
+  a:hover > span { color: $primary-text-color; }
+  svg:hover > path { fill: $primary-text-color; }
+}
+
 // cards
 
 
