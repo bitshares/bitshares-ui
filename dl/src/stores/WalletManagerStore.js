@@ -1,6 +1,5 @@
 import alt from "alt-instance"
 import WalletDb from "stores/WalletDb"
-import PrivateKeyStore from "stores/PrivateKeyStore"
 import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
 import PrivateKeyActions from "actions/PrivateKeyActions"
