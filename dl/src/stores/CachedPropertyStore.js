@@ -1,23 +1,29 @@
 import alt from "alt-instance"
 import Immutable from "immutable"
 import iDB from "idb-instance"
+import BaseStore from "stores/BaseStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 
-class CachedPropertyStore {
+class CachedPropertyStore extends BaseStore {
     
     constructor() {
-        // super()
+        super()
         this.state = this._getInitialState()
         this.bindListeners({
             onSet: CachedPropertyActions.set,
             onGet: CachedPropertyActions.get
         })
+        this._export("get", "reset")
     }
 
     _getInitialState() {
         return {
             props: Immutable.Map()
         }
+    }
+    
+    get(name) {
+        return this.onGet({ name })
     }
     
     onSet({ name, value }) {
@@ -30,12 +36,19 @@ class CachedPropertyStore {
     
     onGet({ name }) {
         var value = this.state.props.get(name)
-        if(value !== undefined) return
+        console.log("name", name, value)
+        if(value !== undefined) return value
         iDB.getCachedProperty(name).then( value => {
             var props = this.state.props.set(name, value)
             this.state.props = props
             this.setState({ props })
         })
+    }
+    
+    reset() {
+        console.log("reset");
+        this.state = this._getInitialState()
+        this.setState(this.state)
     }
 }
 

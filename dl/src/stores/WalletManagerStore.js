@@ -2,6 +2,7 @@ import alt from "alt-instance"
 import WalletDb from "stores/WalletDb"
 import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
+import CachedPropertyStore from "stores/CachedPropertyStore"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import WalletActions from "actions/WalletActions"
 import ChainStore from "api/ChainStore"
@@ -73,7 +74,9 @@ class WalletManagerStore extends BaseStore {
                 ChainStore.clearCache()
                 BalanceClaimActiveStore.reset()
                 // Stores may reset when loadDbData is called
-                return iDB.init_instance().init_promise.then(()=>{ 
+                return iDB.init_instance().init_promise.then(()=>{
+                    // Make sure the database is ready when calling CachedPropertyStore.reset() 
+                    CachedPropertyStore.reset() 
                     return Promise.all([
                         WalletDb.loadDbData().then(()=>AccountStore.loadDbData()),
                         PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData())

@@ -10,6 +10,10 @@ class CachedPropertyActions {
         this.dispatch({ name })
     }
     
+    reset() {
+        this.dispatch()
+    }
+    
 }
 
 var CachedPropertyActionsWrapped = alt.createActions(CachedPropertyActions)

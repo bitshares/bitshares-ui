@@ -88,15 +88,11 @@ class Footer extends React.Component {
 
 class AltFooter extends Component {
     
-    componentWillMount() {
-        CachedPropertyActions.get("backup_recommended");
-    }
-    
     render() {
         return <AltContainer
             stores={[CachedPropertyStore, BlockchainStore]}
             inject ={{
-                backup_recommended: ()=> CachedPropertyStore.getState().props.get("backup_recommended"),
+                backup_recommended: ()=> CachedPropertyStore.get("backup_recommended"),
                 rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
             }}
             ><Footer {...this.props}/>
