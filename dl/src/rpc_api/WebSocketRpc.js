@@ -17,7 +17,7 @@ class WebSocketRpc {
                 resolve();
             }
             this.web_socket.onerror = (error) => {
-                console.log("!!! WebSocket Error ", ws_server);
+                if(this.update_rpc_connection_status_callback) this.update_rpc_connection_status_callback("error");
                 if (this.current_reject) {
                     this.current_reject(error);
                 }

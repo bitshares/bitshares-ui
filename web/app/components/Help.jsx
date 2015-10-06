@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteHandler } from "react-router";
-import HelpContent from "./components/Utility/HelpContent";
+import HelpContent from "./Utility/HelpContent";
 import _ from "lodash";
 
 class Help extends React.Component {
