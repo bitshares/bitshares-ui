@@ -96,7 +96,7 @@ module.exports = iDB = (function () {
     return {
         WALLET_BACKUP_STORES,
         getDatabaseName: getDatabaseName,
-        // getCurrentWalletName: ()=> current_wallet_name,
+        getCurrentWalletName: ()=> current_wallet_name,
         deleteDatabase: function(are_you_sure = false) {
             if( ! are_you_sure) return "Are you sure?"
             console.log("deleting", this.database_name)
