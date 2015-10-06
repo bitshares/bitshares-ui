@@ -6,6 +6,7 @@ import idb_helper from "../idb-helper";
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import AddressIndex from "stores/AddressIndex"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
@@ -138,6 +139,8 @@ class PrivateKeyStore extends BaseStore {
             }).then( ()=> {
                 this.pendingOperationDone()
                 if(duplicate) return {result:"duplicate",id:null}
+                if( private_key_object.brainkey_sequence == null)
+                    this.binaryBackupRecommended() // non-deterministic
                 idb_helper.on_transaction_end(transaction).then(
                     () => { this.setState({ keys: this.state.keys }) } )
                 return {
@@ -148,6 +151,10 @@ class PrivateKeyStore extends BaseStore {
             resolve(p)
         })
         resolve(p)
+    }
+    
+    binaryBackupRecommended() {
+        CachedPropertyActions.set("backup_recommended", true)
     }
     
     pendingOperation() {
