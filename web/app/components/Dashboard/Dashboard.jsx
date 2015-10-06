@@ -11,14 +11,14 @@ import Translate from "react-translate-component";
 class Dashboard extends Component {
 
     static propTypes = {
-      linkedAccounts: PropTypes.object.isRequired,
+      linkedAccounts: PropTypes.object.isRequired
     }
 
     render() {
-        let names = this.props.linkedAccounts.toArray().sort()
-        let itemRows = []
+        let names = this.props.linkedAccounts.toArray().sort();
+        let itemRows = [];
         for(let a of names)
-            itemRows.push(<AccountCard key={a} account={a}/>)
+            itemRows.push(<AccountCard key={a} account={a}/>);
 
         return (
             <div className="grid-block page-layout vertical medium-horizontal">

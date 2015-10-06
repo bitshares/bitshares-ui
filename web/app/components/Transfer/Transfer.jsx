@@ -69,7 +69,6 @@ class Transfer extends React.Component {
     }
 
     onTrxIncluded(confirm_store_state) {
-        console.log("-- Transfer.onTrxIncluded -->", confirm_store_state);
         if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
             this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);

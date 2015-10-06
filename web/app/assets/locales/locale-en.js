@@ -21,7 +21,9 @@
         create_asset: "Create Asset",
         lock: "Lock",
         unlock: "Unlock",
-        help: "Help"
+        help: "Help",
+        locked_tip: "Wallet is locked. Click to unlock.",
+        unlocked_tip: "Wallet is unlocked. Click to lock."
     },
     operation : {
         pending: "pending %(blocks)s blocks"
