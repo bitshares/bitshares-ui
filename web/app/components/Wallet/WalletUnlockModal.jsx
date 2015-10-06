@@ -20,6 +20,7 @@ class WalletUnlockModal extends React.Component {
     constructor() {
         super()
         this.state = this._getInitialState()
+        this.onPasswordEnter = this.onPasswordEnter.bind(this)
     }
     
     _getInitialState() {
@@ -41,10 +42,9 @@ class WalletUnlockModal extends React.Component {
                 return
             if(msg === "close") {
                 if(this.props.reject) this.props.reject()
-                this.refs.password_input.clear()
-                this.reset()
                 WalletUnlockActions.cancel()
             } else if (msg === "open") {
+                this.refs.password_input.clear()
                 if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
                     notify.error("This wallet was intended for a different block-chain; expecting " +
                         WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
@@ -66,6 +66,29 @@ class WalletUnlockModal extends React.Component {
                 this.props.resolve(false)
         }
     }
+
+    onPasswordEnter(e) {
+        e.preventDefault()
+        var password = this.refs.password_input.value()
+        this.setState({password_error: null})
+        WalletDb.validatePassword(
+            password || "",
+            true //unlock
+        )
+        if (WalletDb.isLocked()) {
+            this.setState({password_error: true})
+            return false
+        }
+        else {
+            this.refs.password_input.clear()
+            this.setState({password_input_reset: Date.now()})
+            this.setState({password_error: false})
+            ZfApi.publish(this.props.modalId, "close")
+            this.props.resolve(true)
+            SessionActions.onUnlock()
+        }
+        return false
+    }
     
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
@@ -81,15 +104,13 @@ class WalletUnlockModal extends React.Component {
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <h3><Translate content="header.unlock" /> {unlock_what}</h3>
-                <form>
+                <form onSubmit={this.onPasswordEnter} noValidate>
                     <PasswordInput ref="password_input"
-                        onEnter={this.onPasswordEnter.bind(this)}
+                        onEnter={this.onPasswordEnter}
                         key={this.state.password_input_reset}
                         wrongPassword={this.state.password_error}/>
                     <div className="button-group">
-                        <a className="button" href
-                            onClick={this.onPasswordEnter.bind(this)}>
-                            <Translate content="header.unlock" /> {unlock_what}</a>
+                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
@@ -99,28 +120,6 @@ class WalletUnlockModal extends React.Component {
         )
     }
     
-    onPasswordEnter(e) {
-        e.preventDefault()
-        var password = this.refs.password_input.value()
-        this.setState({password_error: null})
-        WalletDb.validatePassword(
-            password || "",
-            true //unlock
-        )
-        if (WalletDb.isLocked()) {
-            this.setState({password_error: true})
-            return
-        }
-        else {
-            this.refs.password_input.clear()
-            this.setState({password_input_reset: Date.now()})
-            this.setState({password_error: false})
-            ZfApi.publish(this.props.modalId, "close")
-            this.props.resolve(true)
-            SessionActions.onUnlock()
-        }
-    }
-
 }
 
 WalletUnlockModal.defaultProps = {
