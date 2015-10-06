@@ -2,7 +2,7 @@ import alt from "alt-instance"
 import iDB from "idb-instance"
 
 import lzma from "lzma"
-import {saveAs} from "filesaver.js"
+import {saveAs} from "common/filesaver.js"
 
 import PrivateKey from 'ecc/key_private'
 import PublicKey from 'ecc/key_public'
