@@ -281,11 +281,19 @@ class Create extends BackupBaseComponent {
 class LastBackupDate extends Component {
     render() {
         var backup_date = WalletDb.getWallet().backup_date
+        var last_modified = WalletDb.getWallet().last_modified
         var backup_time = backup_date ?
-            <h3>Last backup <FormattedDate value={backup_date}/></h3>:
-            <h3>This Wallet is not backed up</h3>
+            <h4>Last backup <FormattedDate value={backup_date}/></h4>:
+            <h4>This Wallet has never been backed up</h4>
+        var needs_backup = null
+        if( backup_date ) {
+            needs_backup = last_modified.getTime() > backup_date.getTime() ?
+                <h4>This Wallet needs a backup</h4>:
+                <h4 className="success">No backup is needed</h4>
+        }
         return <span>
-            <p> {backup_time} </p>
+            <p>{backup_time}</p>
+            <p>{needs_backup}</p>
         </span>
     }
 }
