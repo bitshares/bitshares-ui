@@ -1,4 +1,5 @@
 import React, {PropTypes, Component} from "react"
+import {FormattedDate} from "react-intl"
 import {Link} from "react-router";
 import Inspector from "react-json-inspector";
 import connectToStores from "alt/utils/connectToStores"
@@ -259,9 +260,12 @@ class Create extends BackupBaseComponent {
         
         var ready = WalletDb.getWallet() != null
         
-        return <div onClick={this.onCreateBackup.bind(this)}
-            className={cname("button success", {disabled: !ready})}>
-            <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
+        return <div>
+            <div onClick={this.onCreateBackup.bind(this)}
+                className={cname("button success", {disabled: !ready})}>
+                <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
+            <LastBackupDate/>
+        </div>
     }
     
     onCreateBackup() {
@@ -272,6 +276,18 @@ class Create extends BackupBaseComponent {
         })
     }
     
+}
+
+class LastBackupDate extends Component {
+    render() {
+        var backup_date = WalletDb.getWallet().backup_date
+        var backup_time = backup_date ?
+            <h3>Last backup <FormattedDate value={backup_date}/></h3>:
+            <h3>This Wallet is not backed up</h3>
+        return <span>
+            <p> {backup_time} </p>
+        </span>
+    }
 }
 
 @connectToStores
