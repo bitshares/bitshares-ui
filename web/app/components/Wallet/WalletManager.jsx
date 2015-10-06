@@ -59,7 +59,7 @@ export class WalletOptions extends WalletBaseComponent {
                                 <div>{current_wallet}</div>
                                 <br/>
                                 {has_wallets ? 
-                                    <div className="button success">
+                                    <div className="button outline success">
                                         <Translate content="wallet.change_wallet" /></div>
                                 :null}
                             </Link></span>
@@ -71,7 +71,7 @@ export class WalletOptions extends WalletBaseComponent {
                     <Link to="wmc-balance-claims">
                     <BalanceClaimByAsset>
                         <br/>
-                        <div className="button success">
+                        <div className="button outline success">
                             <Translate content="wallet.balance_claims" /></div>
                     </BalanceClaimByAsset>
                     </Link>
@@ -80,28 +80,28 @@ export class WalletOptions extends WalletBaseComponent {
             </div>
             
             {has_wallet ? <Link to="wmc-backup-create">
-            <div className="button success"><Translate content="wallet.create_backup" /></div></Link>:null}
+            <div className="button outline success"><Translate content="wallet.create_backup" /></div></Link>:null}
                 
             {has_wallet ? <Link to="wmc-backup-brainkey">
-            <div className="button success"><Translate content="wallet.backup_brainkey" /></div></Link>:null}
+            <div className="button outline success"><Translate content="wallet.backup_brainkey" /></div></Link>:null}
 
 
             <Link to="wmc-backup-verify-restore">
-            <div className="button success"><Translate content="wallet.restore_backup" /></div></Link>
+            <div className="button outline success"><Translate content="wallet.restore_backup" /></div></Link>
 
             <Link to="wmc-import-keys">
-            <div className="button success"><Translate content="wallet.import_keys" /></div></Link>
+            <div className="button outline success"><Translate content="wallet.import_keys" /></div></Link>
             
             {has_wallet ? <br/> : null}
             
             {has_wallet ? <Link to="wmc-change-password">
-            <div className="button success"><Translate content="wallet.change_password" /></div></Link>:null}
+            <div className="button outline success"><Translate content="wallet.change_password" /></div></Link>:null}
 
             <Link to="wmc-wallet-create">
-            <div className="button success"><Translate content="wallet.new_wallet" /></div></Link>
+            <div className="button outline success"><Translate content="wallet.new_wallet" /></div></Link>
             
             {has_wallet ? <Link to="wmc-wallet-delete">
-            <div className="button success"><Translate content="wallet.delete_wallet" /></div></Link>:null}
+            <div className="button outline success"><Translate content="wallet.delete_wallet" /></div></Link>:null}
 
             <p></p>
             
