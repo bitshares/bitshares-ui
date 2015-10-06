@@ -60,7 +60,6 @@ class AccountRefsStore extends BaseStore {
                     // account references may be pending.
                     var private_key_object = PrivateKeyStore.getState().keys.get(pubkey)
                     if( typeof private_key_object.brainkey_sequence === 'number' ) {
-                        console.log("private_key_object.brainkey_sequence", private_key_object.brainkey_sequence)
                         return
                     }
                 }
