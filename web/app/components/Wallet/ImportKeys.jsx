@@ -143,7 +143,7 @@ export default class ImportKeys extends Component {
                                     <div>{this.state.import_password_message}</div>
                                     <div>{this.state.wif_text_message}</div>
                                 </div>) : null}
-
+                            <br/>
                             <a href className="button success" onClick={this.onBack.bind(this)}>
                                 Done </a>
                         </div>) : null}

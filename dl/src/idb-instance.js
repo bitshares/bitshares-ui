@@ -97,7 +97,6 @@ module.exports = iDB = (function () {
         WALLET_BACKUP_STORES,
         getDatabaseName: getDatabaseName,
         // getCurrentWalletName: ()=> current_wallet_name,
-        properties_cache: {},
         deleteDatabase: function(are_you_sure = false) {
             if( ! are_you_sure) return "Are you sure?"
             console.log("deleting", this.database_name)
@@ -133,7 +132,6 @@ module.exports = iDB = (function () {
         },
         
         close: function () {
-            this.properties_cache = {}
             if (_instance) _instance.db().close()
             idb_helper.set_graphene_db(null)
             _instance = undefined
@@ -190,10 +188,6 @@ module.exports = iDB = (function () {
             @return promise
         */
         getCachedProperty: function(name, default_value) {
-            var value = this.properties_cache[name]
-            if(value !== undefined)
-                return Promise.resolve(value == null ? default_value : value)
-            
             var db = this.instance().db()
             var transaction = db.transaction(["cached_properties"], "readonly")
             var store = transaction.objectStore("cached_properties")
@@ -203,11 +197,8 @@ module.exports = iDB = (function () {
             }).catch( error => { console.error(error); throw error })
         },
         
-        /** Persisted to disk but not backed up.
-            @return promise
-        */
+        /** Persisted to disk but not backed up. */
         setCachedProperty: function(name, value) {
-            this.properties_cache[name] = value
             var db = this.instance().db()
             var transaction = db.transaction(["cached_properties"], "readwrite")
             var store = transaction.objectStore("cached_properties")
