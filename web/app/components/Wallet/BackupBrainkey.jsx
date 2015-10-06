@@ -26,7 +26,7 @@ export default class BackupBrainkey extends Component {
         var content
         var brainkey_backup_date = WalletDb.getWallet().brainkey_backup_date
         var brainkey_backup_time = brainkey_backup_date ?
-            <h3>Last verified <FormattedDate value={brainkey_backup_date}/></h3>:
+            <h3>Verified <FormattedDate value={brainkey_backup_date}/></h3>:
             <h3>This Brainkey is not verified</h3>
         
         if(this.state.verified) {
