@@ -210,6 +210,7 @@ let routes = (
             <Route name="wmc-backup-verify-restore" path="backup/restore" handler={BackupRestore}/>
             <Route name="wmc-backup-create" path="backup/create" handler={BackupCreate}/>
             <Route name="wmc-backup-brainkey" path="backup/brainkey" handler={BackupBrainkey}/>
+            <Route name="wmc-balance-claims" path="balance-claims" handler={BalanceClaimActive}/>
         </Route>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>

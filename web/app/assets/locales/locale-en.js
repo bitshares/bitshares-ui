@@ -451,6 +451,7 @@
         delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
         delete_confirm_line3: "This action CANNOT be undone.",
         delete_wallet_name: "Delete Wallet (%(name)s)",
+        balance_claims: "Balance Claims",
         download: "Download",
         name: "Wallet Name",
         create: "Create",
