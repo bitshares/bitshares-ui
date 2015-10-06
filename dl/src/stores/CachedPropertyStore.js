@@ -31,10 +31,11 @@ class CachedPropertyStore {
     onGet({ name }) {
         var value = this.state.props.get(name)
         if(value !== undefined) return
-        var props = this.state.props.set(name, value)
-        this.state.props = props
-        iDB.getCachedProperty(name).then( value =>
-            this.setState({ props }))
+        iDB.getCachedProperty(name).then( value => {
+            var props = this.state.props.set(name, value)
+            this.state.props = props
+            this.setState({ props })
+        })
     }
 }
 
