@@ -19,7 +19,6 @@ of this application.
 ## Accounts
  * [Introduction](accounts/general.md)
  * [Permissions](accounts/permissions.md)
- * [Authorities](accounts/authorities.md)
  * [Memberships](accounts/membership.md)
 
 ## Assets

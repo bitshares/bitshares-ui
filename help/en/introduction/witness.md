@@ -1,6 +1,9 @@
 # Witness
 
-## Overview
+Witnesses are entities that work for the blockchain by constructing new blocks.
+Each witness is approved by the shareholders and constructs and signs blocks
+from validated transactions. Every transaction made in the network is required
+to be validated by all witnesses eventually.
 
 ## Consensus Mechanism
 

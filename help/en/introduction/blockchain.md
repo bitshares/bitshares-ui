@@ -17,3 +17,11 @@ consensus mechanism called *Delegated Proof of Stake*. In essence, the
 shareholders of BitShares (holders of the BTS token) can cast a vote for their
 preferred block producers on the blockchain. Those so called *witnesses* with
 the most votes are allowed to produce blocks.
+
+## Transactions
+
+The Graphene blockchain technology offers a variety of transaction types. Users
+are not only able to simply transfer assets between each other, but there are
+also transactions to interact with the decentralized exchange. Most of these
+transaction types are labeled with a self-explaining tag, others require more
+knowledge about the inner workings of the company.
