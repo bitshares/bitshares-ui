@@ -10,7 +10,7 @@ import BackupStore from "stores/BackupStore"
 import WalletDb from "stores/WalletDb"
 import BackupActions, {backup, restore, decryptWalletBackup} from "actions/BackupActions"
 import notify from "actions/NotificationActions"
-import {saveAs} from "filesaver.js"
+import {saveAs} from "common/filesaver.js"
 import cname from "classnames"
 import hash from "common/hash"
 import Translate from "react-translate-component";
