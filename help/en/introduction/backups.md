@@ -21,7 +21,7 @@ If you never manually imported an account key into your wallet, you can
 alternatively backup your accounts and their funds by exporting the *brainkey*,
 a string of words from which your keys are derived deterministically.
 
-## Hierarchical Authorities (advanced uses ONLY)
+## Remark: Hierarchical Authorities (advanced uses ONLY)
 
 If you are using hierarchical authorities (account and/or active permissions),
 backing up your keys alone may not be sufficient to regain access to your funds!
