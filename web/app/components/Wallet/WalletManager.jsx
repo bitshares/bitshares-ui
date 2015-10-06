@@ -3,7 +3,7 @@ import {Link, RouteHandler} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
 import WalletManagerStore from "stores/WalletManagerStore"
-import BalanceClaimActive from "components/Wallet/BalanceClaimActive"
+import BalanceClaimByAsset from "components/Wallet/BalanceClaimByAsset"
 import Translate from "react-translate-component"
 import cname from "classnames"
 
@@ -49,16 +49,36 @@ export class WalletOptions extends WalletBaseComponent {
         var has_wallets = this.props.wallet_names.size > 1
         var current_wallet = this.props.current_wallet ? this.props.current_wallet.toUpperCase() : ""
         return <span>
-
-            <span>
-            <h5><Translate content="wallet.active_wallet" /></h5>
-            <div>{current_wallet}</div>
-            <br/>
-            </span>
-
-            {has_wallets ? <Link to="wmc-change-wallet">
-            <div className="button success"><Translate content="wallet.change_wallet" /></div></Link>:null}
+            <div className="grid-block">
                 
+                <div className="grid-content">
+                    <div className="card">
+                        <div className="card-content">
+                            <span><Link to="wmc-change-wallet">
+                                <label><Translate content="wallet.active_wallet" /></label>
+                                <div>{current_wallet}</div>
+                                <br/>
+                                {has_wallets ? 
+                                    <div className="button success">
+                                        <Translate content="wallet.change_wallet" /></div>
+                                :null}
+                            </Link></span>
+                        </div>
+                    </div>
+                </div>
+                
+                {has_wallet ? <div className="grid-content">
+                    <Link to="wmc-balance-claims">
+                    <BalanceClaimByAsset>
+                        <br/>
+                        <div className="button success">
+                            <Translate content="wallet.balance_claims" /></div>
+                    </BalanceClaimByAsset>
+                    </Link>
+                </div>:null}
+            
+            </div>
+            
             {has_wallet ? <Link to="wmc-backup-create">
             <div className="button success"><Translate content="wallet.create_backup" /></div></Link>:null}
                 
@@ -68,12 +88,14 @@ export class WalletOptions extends WalletBaseComponent {
 
             <Link to="wmc-backup-verify-restore">
             <div className="button success"><Translate content="wallet.restore_backup" /></div></Link>
-            
-            {has_wallet ? <Link to="wmc-change-password">
-            <div className="button success"><Translate content="wallet.change_password" /></div></Link>:null}
 
             <Link to="wmc-import-keys">
             <div className="button success"><Translate content="wallet.import_keys" /></div></Link>
+            
+            {has_wallet ? <br/> : null}
+            
+            {has_wallet ? <Link to="wmc-change-password">
+            <div className="button success"><Translate content="wallet.change_password" /></div></Link>:null}
 
             <Link to="wmc-wallet-create">
             <div className="button success"><Translate content="wallet.new_wallet" /></div></Link>
@@ -81,10 +103,9 @@ export class WalletOptions extends WalletBaseComponent {
             {has_wallet ? <Link to="wmc-wallet-delete">
             <div className="button success"><Translate content="wallet.delete_wallet" /></div></Link>:null}
 
-            {has_wallet ? <span>
-            <hr/>
-            <BalanceClaimActive/>
-            </span>:null}
+            <p></p>
+            
+
             
         </span>
     }

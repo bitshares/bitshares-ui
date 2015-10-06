@@ -81,8 +81,14 @@ export default class BalanceClaimActive extends Component {
                 <div className={ cname("button success", {disabled: !import_ready}) }
                     onClick={this.onClaimBalance.bind(this)}>
                     {claim_balance_label}</div>
+                <div className="button cancel" onClick={this.onBack.bind(this)}>Cancel</div>
             </span>
         )
+    }
+    
+    onBack(e) {
+        e.preventDefault()
+        window.history.back()
     }
     
     onClaimAccountChange(claim_account_name) {
