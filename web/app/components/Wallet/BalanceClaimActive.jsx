@@ -52,7 +52,7 @@ export default class BalanceClaimActive extends Component {
         </div>
         
         if( ! this.props.balances.size) return <div>
-            <h5>No Balances</h5>
+            <h5>No balance claims</h5>
         </div>
         
         var import_ready = this.props.selected_balances.size && this.props.claim_account_name
