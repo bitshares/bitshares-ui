@@ -22,8 +22,12 @@ class InitError extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-block medium-5">
                     <div className="grid-content">
-                        <h3>Application initialization error</h3>
+                        <h3>Application initialization issues</h3>
+                        <br/>
                         {this.props.rpc_connection_status === "error" ? <HelpContent path="components/InitError" section="connection-error"/> : null}
+                        <br/>
+                        <h5>Websocket Connection Status: {this.props.rpc_connection_status === "open" ? <span className="txtlabel success">Connected</span> : <span className="txtlabel warning">Not connected</span>}</h5>
+                        <br/>
                         <a href="/">Retry</a>
                     </div>
                 </div>
