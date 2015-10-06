@@ -17,6 +17,98 @@ import Icon from "../Icon/Icon";
 require("./json-inspector.scss");
 
 
+//-------------------------------------------------------------
+var chargeMarketFeeBit =      0x01;
+var allowWhiteListBit =       0x02;
+var allowIssuerOverrideBit =  0x04;
+var restrictTransfersBit =    0x08;
+var allowForceSettleBit =     0x10;
+var allowGlobalSettleBit =    0x20;
+var allowStealthTransferBit = 0x40;
+
+
+function permissionName(bit) {
+    /* enum asset_issuer_permission_flags
+     {
+     charge_market_fee    = 0x01, //< an issuer-specified percentage of all market trades in this asset is paid to the issuer
+     white_list           = 0x02, //< accounts must be whitelisted in order to hold this asset
+     override_authority   = 0x04, //< issuer may transfer asset back to himself
+     transfer_restricted  = 0x08, //< require the issuer to be one party to every transfer
+     disable_force_settle = 0x10, //< disable force settling
+     global_settle        = 0x20, //< allow the bitasset issuer to force a global settling -- this may be set in permissions, but not flags
+     disable_confidential = 0x40  //< allow the asset to be used with confidential transactions
+     };
+     */
+    var name = {
+        0x01 : "chargeMarketFee",
+        0x02 : "allowWhiteList",
+        0x04 : "allowIssuerOverride",
+        0x08 : "restrictTransfers",
+        0x10 : "allowForceSettle",
+        0x20 : "allowGlobalSettle",
+        0x40 : "allowStealthTransfer",
+    };
+    //FIXME if bit not in name
+    return (<Translate content={"explorer.asset.permissions." + name[bit]}/>);
+}
+
+
+function permissionSet(asset, bit) {
+    var inverted = [allowForceSettleBit, allowGlobalSettleBit]; // 'disable' settings that values are inverted
+    var mask = asset.options.flags;
+    var value = mask & bit > 0;
+    if ([chargeMarketFeeBit, allowWhiteListBit].indexOf(bit) > -1) return true; // FIXME: Remove hardcoded
+    if (inverted.indexOf(bit) > -1)
+        return  !value;
+    return value;
+}
+
+
+function permissionAllowed(asset, bit) {
+    var mask = asset.options.issuer_permissions;
+    return mask & bit > 0;
+}
+
+
+class AssetFlag extends React.Component {
+    render()
+    {
+        if (!permissionSet(this.props.asset, this.props.bit)) {
+            return ( <span></span> );
+        }
+
+        return (
+            <span>
+                <span className="label success">
+                    {permissionName(this.props.bit)}
+                </span>
+                {' '}
+            </span>
+        );
+    }
+}
+
+
+//-------------------------------------------------------------
+class AssetPermission extends React.Component {
+    render()
+    {
+        if (!permissionAllowed(this.props.asset, this.props.bit)) {
+            return ( <span></span> );
+        }
+
+        return (
+            <span>
+                <span className="label info">
+                    {permissionName(this.props.bit)}
+                </span>
+                {' '}
+            </span>
+        );
+    }
+}
+
+
 @BindToChainState({keep_updating: true})
 class Asset extends React.Component {
 
@@ -33,83 +125,7 @@ class Asset extends React.Component {
     }
 
 
-    //-------------------------------------------------------------
-    pfactory(name, bit, valueMask, permissionMask) {
-        return {
-            name: name,
-            value: valueMask & bit > 0,
-            disable: permissionMask & bit > 0,
-        };
-    }
-
-
-    flagIndicator(permission) {
-        if (!permission.value) {
-            return ( <span></span> );
-        }
-
-        return (
-            <span>
-                <span className="label success">
-                    {permission.name}
-                </span>
-                {' '}
-            </span>
-        );
-    }
-
-
-    permissionIndicator(permission) {
-        if (permission.disabled) {
-            return ( <span></span> );
-        }
-
-        return (
-            <span>
-                <span className="label info">
-                    {permission.name}
-                </span>
-                {' '}
-            </span>
-        );
-    }
-
-
-    assetPermissions(asset)
-    {
-        var valueMask = asset.options.flags;
-        var permissionMask = asset.options.issuer_permissions;
-        /* enum asset_issuer_permission_flags
-         {
-         charge_market_fee    = 0x01, //< an issuer-specified percentage of all market trades in this asset is paid to the issuer
-         white_list           = 0x02, //< accounts must be whitelisted in order to hold this asset
-         override_authority   = 0x04, //< issuer may transfer asset back to himself
-         transfer_restricted  = 0x08, //< require the issuer to be one party to every transfer
-         disable_force_settle = 0x10, //< disable force settling
-         global_settle        = 0x20, //< allow the bitasset issuer to force a global settling -- this may be set in permissions, but not flags
-         disable_confidential = 0x40  //< allow the asset to be used with confidential transactions
-         };
-         */
-        var perms = {
-            // TODO Refactor out asset.permisions
-            chargeMarketFee:      this.pfactory(<Translate content="explorer.asset.permissions.chargeMarketFee"/> ,      0x01, valueMask, permissionMask),
-            allowWhiteList:       this.pfactory(<Translate content="explorer.asset.permissions.allowWhiteList"/> ,       0x02, valueMask, permissionMask),
-            allowIssuerOverride:  this.pfactory(<Translate content="explorer.asset.permissions.allowIssuerOverride"/> ,  0x04, valueMask, permissionMask),
-            restrictTransfers:    this.pfactory(<Translate content="explorer.asset.permissions.restrictTransfers"/> ,    0x08, valueMask, permissionMask),
-            allowForceSettle:     this.pfactory(<Translate content="explorer.asset.permissions.allowForceSettle"/> ,     0x10, ~valueMask, permissionMask),
-            allowGlobalSettle:    this.pfactory(<Translate content="explorer.asset.permissions.allowGlobalSettle"/> ,    0x20, valueMask, permissionMask),
-            allowStealthTransfer: this.pfactory(<Translate content="explorer.asset.permissions.allowStealthTransfer"/> , 0x40, ~valueMask, permissionMask),
-        }
-
-        // FIXME: Remove
-        perms.chargeMarketFee.value = true;
-        perms.allowWhiteList.value = true;
-
-        return perms;
-    }
-
-
-    /*
+/*
     onCheckbox(name, e)
     {
         alert('set ' + name + ' to ' + e.target.checked);
@@ -131,93 +147,7 @@ class Asset extends React.Component {
             </span>
         );
     }
-
-
-    renderPermissionSettings(perms)
-    {
-        return (
-            <div>
-                <table className="table key-value-table">
-                  <thead>
-                  <tr>
-                      <th><h4>Set Permission</h4></th>
-                      <th></th>
-                  </tr>
-                  </thead>
-                <tr>
-                  <td><Translate content="explorer.asset.charge_market_fee"/></td>
-                  <td>({value&0x01>0} {permission&0x01>0})</td>
-                </tr>
-                <tr>
-                  <td><Translate content="explorer.asset.white_list"/></td>
-                  <td>({value&0x02>0} {permission&0x02>0})</td>
-                </tr>
-                <tr>
-                  <td><Translate content="explorer.asset.override_authority"/></td>
-                  <td>({value&0x04>0} {permission&0x04>0})</td>
-                </tr>
-                <tr>
-                  <td><Translate content="explorer.asset.transfer_restricted"/></td>
-                  <td>({value&0x08>0} {permission&0x08>0})</td>
-                </tr>
-                <tr>
-                  <td><Translate content="explorer.asset.disable_force_settle"/></td>
-                  <td>({value&0x10>0} {permission&0x10>0})</td>
-                </tr>
-                <tr>
-                  <td><Translate content="explorer.asset.global_settle"/></td>
-                  <td>({value&0x20>0} {permission&0x20>0})</td>
-                </tr>
-                <tr>
-                  <td><Translate content="explorer.asset.disable_confidential"/></td>
-                  <td>({value&0x40>0} {permission&0x40>0})</td>
-                </tr>
-
-                {this.setting(perms.chargeMarketFee)}
-                {this.setting(perms.allowWhiteList)}
-                {this.setting(perms.allowIssuerOverride)}
-                {this.setting(perms.restrictTransfers)}
-                {this.setting(perms.allowForceSettle)}
-                {this.setting(perms.allowGlobalSettle)}
-                {this.setting(perms.allowStealthTransfer)}
-            </table>
-            </div>
-        );
-    }
 */
-
-
-    renderFlagIndicators(perms)
-    {
-        return (
-            <div>
-                {this.flagIndicator(perms.chargeMarketFee)}
-                {this.flagIndicator(perms.allowWhiteList)}
-                {this.flagIndicator(perms.allowIssuerOverride)}
-                {this.flagIndicator(perms.restrictTransfers)}
-                {this.flagIndicator(perms.allowForceSettle)}
-                {this.flagIndicator(perms.allowGlobalSettle)}
-                {this.flagIndicator(perms.allowStealthTransfer)}
-            </div>
-        );
-    }
-
-
-    renderPermissionIndicators(perms)
-    {
-        return (
-            <div>
-                {this.permissionIndicator(perms.chargeMarketFee)}
-                {this.permissionIndicator(perms.allowWhiteList)}
-                {this.permissionIndicator(perms.allowIssuerOverride)}
-                {this.permissionIndicator(perms.restrictTransfers)}
-                {this.permissionIndicator(perms.allowForceSettle)}
-                {this.permissionIndicator(perms.allowGlobalSettle)}
-                {this.permissionIndicator(perms.allowStealthTransfer)}
-            </div>
-        );
-    }
-    //-------------------------------------------------------------
 
 
 /*
@@ -240,7 +170,39 @@ class Asset extends React.Component {
     }
 
 
-    renderSummary(asset, perms) {
+    renderFlagIndicators(asset)
+    {
+        return (
+            <div>
+                <AssetFlag asset={asset} bit={chargeMarketFeeBit}/>
+                <AssetFlag asset={asset} bit={allowWhiteListBit}/>
+                <AssetFlag asset={asset} bit={allowIssuerOverrideBit}/>
+                <AssetFlag asset={asset} bit={restrictTransfersBit}/>
+                <AssetFlag asset={asset} bit={allowForceSettleBit}/>
+                <AssetFlag asset={asset} bit={allowGlobalSettleBit}/>
+                <AssetFlag asset={asset} bit={allowStealthTransferBit}/>
+            </div>
+        );
+    }
+
+
+    renderPermissionIndicators(asset)
+    {
+        return (
+            <div>
+                <AssetPermission asset={asset} bit={chargeMarketFeeBit}/>
+                <AssetPermission asset={asset} bit={allowWhiteListBit}/>
+                <AssetPermission asset={asset} bit={allowIssuerOverrideBit}/>
+                <AssetPermission asset={asset} bit={restrictTransfersBit}/>
+                <AssetPermission asset={asset} bit={allowForceSettleBit}/>
+                <AssetPermission asset={asset} bit={allowGlobalSettleBit}/>
+                <AssetPermission asset={asset} bit={allowStealthTransferBit}/>
+            </div>
+        );
+    }
+
+
+    renderSummary(asset) {
         // TODO: confidential_supply: 0 USD   [IF NOT ZERO OR NOT DISABLE CONFIDENTIAL]
         var dynamic = asset.dynamic;
         var options = asset.options;
@@ -260,14 +222,14 @@ class Asset extends React.Component {
         ) : '';
 
 
-        var marketFee = (perms.chargeMarketFee.value) ? (
+        var marketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.market_fee"/> </td>
                 <td> {options.market_fee_percent / 100.0} % </td>
             </tr>
         ) : '';
 
-        var maxMarketFee = (perms.chargeMarketFee.value) ? (
+        var maxMarketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={options.max_market_fee} asset={asset.id} /> </td>
@@ -294,7 +256,7 @@ class Asset extends React.Component {
                 </table>
 
                 <br/>
-                {this.renderFlagIndicators(perms)}
+                {this.renderFlagIndicators(asset)}
             </Box>
         );
     }
@@ -357,14 +319,12 @@ class Asset extends React.Component {
 
      // TODO: Blacklist Authorities: <Account list like Voting>
      // TODO: Blacklist Market: Base/Market, Base/Market
-    renderPermissions(asset, perms) {
+    renderPermissions(asset) {
         //var dynamic = asset.dynamic;
-
-
 
         var options = asset.options;
 
-        var maxMarketFee = (perms.chargeMarketFee.value) ? (
+        var maxMarketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
             <tr>
                 <td> <Translate content="explorer.asset.permissions.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={options.max_market_fee} asset={asset.id} /> </td>
@@ -378,7 +338,7 @@ class Asset extends React.Component {
             </tr>
         );
 
-        var whiteLists = perms.allowWhiteList.value ? (
+        var whiteLists = (permissionSet(asset, allowWhiteListBit)) ? (
             <span>
                 <br/> <Translate content="explorer.asset.permissions.blacklist_authorities"/>: {options.blacklist_authorities}
                 <br/> <Translate content="explorer.asset.permissions.blacklist_markets"/>:     {options.blacklist_markets}
@@ -395,7 +355,7 @@ class Asset extends React.Component {
                 </table>
 
                 <br/>
-                {this.renderPermissionIndicators(perms)}
+                {this.renderPermissionIndicators(asset)}
                 <br/>
 
                 {whiteLists}
@@ -431,7 +391,7 @@ class Asset extends React.Component {
     }
 
 
-    assetAboutBox(asset) {
+    renderAboutBox(asset) {
         return (
             <Box>
                 <Icon name="piggy" size="5x" fillClass="fill-black"/>
@@ -449,11 +409,10 @@ class Asset extends React.Component {
 
     render()
     {
-        var asset = this.props.asset.toJS();
-        var perms = this.assetPermissions(asset);
-        console.log("This: ", this);
-        console.log("Asset: ", asset);
+        //console.log("This: ", this);
+        console.log("Asset: ", asset); //TODO Remove
 
+        var asset = this.props.asset.toJS();
         var priceFeed = ('bitasset' in asset) ? this.renderPriceFeed(asset) : '';
         var markets = false ? this.renderMarkets(asset) : '';
 
@@ -462,19 +421,19 @@ class Asset extends React.Component {
                 <div className="grid-block page-layout vertical medium-horizontal">
                     <div className="grid-block vertical" style={{overflow:"visible"}}>
 
-                        {this.assetAboutBox(asset)}
+                        {this.renderAboutBox(asset)}
 
                         {/*<div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>*/}
                         <div className="grid-block" style={{overflow:"visible"}}>
                             <div className="grid-block vertical" style={{overflow:"visible"}}>
-                                {this.renderSummary(asset, perms)}
+                                {this.renderSummary(asset)}
                                 {markets}
                                 {priceFeed}
                             </div>
 
                             <div className="grid-block vertical" style={{overflow:"visible"}}>
                                 {this.renderFeePool(asset)}
-                                {this.renderPermissions(asset, perms)}
+                                {this.renderPermissions(asset)}
                              </div>
                         </div>
                     </div>
