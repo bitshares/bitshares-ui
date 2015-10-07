@@ -111,6 +111,7 @@ class AccountPermissionsList extends React.Component {
     }
 
     render() {
+        var key = 0
         let account_rows = this.props.accounts.filter(i => {
             if (!i) return false;
             //if (this.state.item_name_input) return i.get("name").indexOf(this.state.item_name_input) !== -1;
@@ -121,11 +122,11 @@ class AccountPermissionsList extends React.Component {
                  return 0;
                  })
            .map(i => {
-            return (<AccountPermissionRow account={i} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
+            return (<AccountPermissionRow key={key++} account={i} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
            });
 
         let key_rows = this.props.keys.map(k => {
-            return (<AccountPermissionRow pubkey={k} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
+            return (<AccountPermissionRow key={key++} pubkey={k} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
         });
 
         let error = this.state.error;
