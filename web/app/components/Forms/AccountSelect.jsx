@@ -48,6 +48,7 @@ export default class AccountSelect extends React.Component {
             //placeholder and selecting the 1st item automatically (not shown)
             placeholder = <option value="">{placeholder}</option>;
         }
+        var key = 0
         return (
             <select
                 ref='account-selector'
@@ -62,7 +63,7 @@ export default class AccountSelect extends React.Component {
                     .sort()
                     .map((account_name) => {
                         if (!account_name || account_name === "") {return null; }
-                        return <option value={account_name}>{account_name}</option>;
+                        return <option key={key++} value={account_name}>{account_name}</option>;
                     })}
             </select>
         );
