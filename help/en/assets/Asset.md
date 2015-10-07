@@ -1,9 +1,8 @@
 [# summary]
-### Asset {symbol} is now Free!
+### Asset {symbol}
 
-Issued by {issuer}, {symbol} stands for {description} and that stands for quality and quality is no substitue for quantity.  
-So buy lots of {symbol} now; its Free!
-
+{description}  
+Issued by {issuer}
 
 
 [# annual]
