@@ -142,16 +142,14 @@ class CreateAccount extends React.Component {
                         </div>
                         <div style={{width: '21em'}}>
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
+                                <div className="form-group">
+                                    <label>Identicon</label>
+                                    <AccountImage account={this.state.validAccountName ? this.state.accountName:null} custom_image={null}/>
+                                </div>
                                 <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
-                                {this.state.accountName && this.state.validAccountName ?
-                                    <div className="form-group">
-                                        <label>Identicon</label>
-                                        <AccountImage account={this.state.accountName}/>
-                                    </div> :
-                                    null
-                                }
+                                
                                 {WalletDb.getWallet() ?
                                     null :
                                     <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
