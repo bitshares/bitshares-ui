@@ -82,7 +82,6 @@ class Markets extends React.Component {
     }
 
     render() {
-        // console.log("[Markets.jsx:24] ----- render ----->", this.props);
         let {assets, baseAsset} = this.props;
         let defaultMarkets = this.props.settings.get("defaultMarkets");
         let {searchTerm, filterMarket, } = this.state;
