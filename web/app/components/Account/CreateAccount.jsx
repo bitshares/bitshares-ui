@@ -120,9 +120,6 @@ class CreateAccount extends React.Component {
     }
 
     render() {
-        if(this.state.loading) return <LoadingIndicator/>;
-        // let account_store_state = AccountStore.getState();
-        // let my_accounts = account_store_state.myAccounts ? account_store_state.myAccounts.map(name => name).toJS() : [];
         let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
         let valid = this.isValid();
@@ -167,7 +164,7 @@ class CreateAccount extends React.Component {
                                                 onChange={this.onRegistrarAccountChange.bind(this)}/>
                                         </div>)
                                 }
-                                <button className={buttonClass}>Create Account</button>
+                                {this.state.loading ?  <LoadingIndicator type="circle"/> :<button className={buttonClass}>Create Account</button>}
                                 <br/>
                                 <br/>
                                 <label><Link to="existing-account">Existing Accounts</Link></label>
