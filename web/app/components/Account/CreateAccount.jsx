@@ -120,9 +120,6 @@ class CreateAccount extends React.Component {
     }
 
     render() {
-        if(this.state.loading) return <LoadingIndicator/>;
-        // let account_store_state = AccountStore.getState();
-        // let my_accounts = account_store_state.myAccounts ? account_store_state.myAccounts.map(name => name).toJS() : [];
         let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
         let valid = this.isValid();
@@ -143,34 +140,34 @@ class CreateAccount extends React.Component {
                                 )
                         }
                         </div>
-                        <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
-                            <AccountNameInput ref="account_name"
-                                              onChange={this.onAccountNameChange.bind(this)}
-                                              accountShouldNotExist={true}/>
-                            {this.state.accountName && this.state.validAccountName ?
+                        <div style={{width: '21em'}}>
+                            <form onSubmit={this.onSubmit.bind(this)} noValidate>
                                 <div className="form-group">
                                     <label>Identicon</label>
-                                    <AccountImage account={this.state.accountName}/>
-                                </div> :
-                                null
-                            }
-                            {WalletDb.getWallet() ?
-                                null :
-                                <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
-                            }
-                            {
-                                first_account ? null : (
-                                    <div className="full-width-content form-group">
-                                        <label>Pay From</label>
-                                        <AccountSelect account_names={my_accounts} 
-                                            onChange={this.onRegistrarAccountChange.bind(this)}/>
-                                    </div>)
-                            }
-                            <button className={buttonClass}>Create Account</button>
-                            <br/>
-                            <br/>
-                            <label><Link to="existing-account">Existing Accounts</Link></label>
-                        </form>
+                                    <AccountImage account={this.state.validAccountName ? this.state.accountName:null} custom_image={null}/>
+                                </div>
+                                <AccountNameInput ref="account_name" cheapNameOnly={first_account}
+                                                  onChange={this.onAccountNameChange.bind(this)}
+                                                  accountShouldNotExist={true}/>
+                                
+                                {WalletDb.getWallet() ?
+                                    null :
+                                    <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
+                                }
+                                {
+                                    first_account ? null : (
+                                        <div className="full-width-content form-group">
+                                            <label>Pay From</label>
+                                            <AccountSelect account_names={my_accounts} 
+                                                onChange={this.onRegistrarAccountChange.bind(this)}/>
+                                        </div>)
+                                }
+                                {this.state.loading ?  <LoadingIndicator type="circle"/> :<button className={buttonClass}>Create Account</button>}
+                                <br/>
+                                <br/>
+                                <label><Link to="existing-account">Existing Accounts</Link></label>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

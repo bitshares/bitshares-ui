@@ -43,11 +43,10 @@ class MarketCard extends React.Component {
                                         />
                                 </li>
                                 <li><Translate content="markets.supply" />:
-                                    <FormattedAsset
+                                    {dynamic_data ? <FormattedAsset
                                         style={{fontWeight: "bold"}}
                                         amount={dynamic_data.get("current_supply")}
-                                        asset={quote.get("id")}
-                                    />
+                                        asset={quote.get("id")}/> : null}
                                 </li>
                             </ul>
                         </div>

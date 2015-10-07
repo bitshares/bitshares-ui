@@ -68,11 +68,12 @@ export default class BalanceClaimByAsset extends Component {
         var content
         if( ! this.props.total_by_asset.size)
             content = <h5>No balance claims</h5>
-        else
+        else {
+            var key = 0
             content = <span>
                 <label>Unclaimed Balances</label>
                 {this.props.total_by_asset.map( (r, asset) =>
-                        <div> 
+                        <div key={key++}> 
                             <FormattedAsset color="info"
                                 amount={r.unclaimed + r.vesting.unclaimed}
                                 asset={asset}/>
@@ -80,7 +81,7 @@ export default class BalanceClaimByAsset extends Component {
                 ).toArray()}
                 {this.props.children}
             </span>
-            
+        }
         return <div className="card">
             <div className="card-content">
                 {content}

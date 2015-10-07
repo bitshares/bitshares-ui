@@ -43,7 +43,7 @@
             referrer: "Affiliate Referrer",
             lifetime_referrer: "Lifetime Referrer",
             network_percentage: "Network",
-            fee_allocation: "Fee Allocaiton",
+            fee_allocation: "Fee Allocation",
             membership: "Membership",
             fees_paid: "Lifetime fees paid",
             fees_pending: "Pending fees",
@@ -350,13 +350,13 @@
                 max_market_fee: "Max market fee"
             },
             price_feed: {
-                price_feed: "Price fee",
+                price_feed: "Price Feed",
                 settlement_price: "Settlement price",
                 maintenance_collateral_ratio: "Maintenance collateral ratio",
                 maximum_short_squeeze_ratio: "Maximum short squeeze ratio"
             },
             fee_pool: {
-                fee_pool: "Fee pool",
+                fee_pool: "Fee Pool",
                 core_exchange_rate: "Core exchange rate",
                 pool_balance: "Pool balance",
                 unclaimed_issuer_income: "Unclaimed issuer income"

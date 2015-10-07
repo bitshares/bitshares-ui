@@ -5,9 +5,21 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import {debounce} from "lodash";
 import BaseComponent from "../BaseComponent";
+import validation from "common/validation";
 
 class AccountNameInput extends BaseComponent {
 
+    static propTypes = {
+        id: PropTypes.string,
+        placeholder: PropTypes.string,
+        initial_value: PropTypes.string,
+        onChange: PropTypes.func,
+        onEnter: PropTypes.func,
+        accountShouldExist: PropTypes.bool,
+        accountShouldNotExist: PropTypes.bool,
+        cheapNameOnly: PropTypes.bool
+    };
+    
     constructor(props) {
         super(props, AccountStore);
         this.state.value = null;
@@ -21,6 +33,7 @@ class AccountNameInput extends BaseComponent {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.value !== this.state.value
                || nextState.error !== this.state.error
+               || nextState.account_name !== this.state.account_name
                || nextState.existing_account !== this.state.existing_account
                || nextState.searchAccounts !== this.state.searchAccounts
     }
@@ -38,7 +51,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     clear() {
-        React.findDOMNode(this.refs.input).value = "";
+        this.setState({ account_name: null, error: null, info: null })
     }
 
     focus() {
@@ -67,14 +80,19 @@ class AccountNameInput extends BaseComponent {
     }
 
     validateAccountName(value) {
-        this.state.error = null;
-        if (value && !(/^[a-z]+(?:[a-z0-9\-\.])*$/.test(value) && /[a-z0-9]$/.test(value))) {
-            this.state.error = "Account name can only contain lowercase alphanumeric characters, dots, and dashes.\nMust start with a letter and cannot end with a dash.";
+        this.state.error = value === "" ?
+            "Please enter valid account name" :
+            validation.is_account_name_error(value)
+        
+        this.state.info = null
+        if(this.props.cheapNameOnly) {
+            if( ! this.state.error && ! validation.is_cheap_name( value ))
+                this.state.error = "This faucet accepts names with at least one dash number or dot, or no vowles."
+        } else {
+            if( ! this.state.error && ! validation.is_cheap_name( value ))
+                this.state.info = "This is a premium name.  Cheap names have at least one dash number or dot, or no vowles."
         }
-        if(value === "") {
-            this.state.error = "Please enter valid account name";
-        }
-        this.setState({value: value, error: this.state.error});
+        this.setState({value: value, error: this.state.error, info: this.state.info});
         if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
         if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
     }
@@ -82,7 +100,12 @@ class AccountNameInput extends BaseComponent {
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.validateAccountName(e.target.value);
+        // Simplify the rules (prevent typing of invalid characters)
+        var account_name = e.target.value.toLowerCase()
+        account_name = account_name.match(/[a-z0-9\.-]+/)
+        account_name = account_name ? account_name[0] : null
+        this.setState({ account_name })
+        this.validateAccountName(account_name);
 
     }
 
@@ -91,28 +114,21 @@ class AccountNameInput extends BaseComponent {
     }
 
     render() {
-        let error = this.getError();
-        let class_name = classNames("form-group", "account-name", {"has-error": error});
+        let error = this.getError() || "";
+        let class_name = classNames("form-group", "account-name", {"has-error": false});
+        let info = this.state.info
         return (
             <div className={class_name}>
                 <label>Account Name</label>
                 <input name="value" type="text" id={this.props.id} ref="input" autoComplete="off"
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
-                       onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
-                {error}
+                       onChange={this.handleChange} onKeyDown={this.onKeyDown}
+                       value={this.state.account_name}/>
+                   <div className="facolor-info">{error}</div>
+                   <div className="facolor-fee">{error ? null : info}</div>
             </div>
         );
     }
 }
-
-AccountNameInput.propTypes = {
-    id: PropTypes.string,
-    placeholder: PropTypes.string,
-    initial_value: PropTypes.string,
-    onChange: PropTypes.func,
-    onEnter: PropTypes.func,
-    accountShouldExist: PropTypes.bool,
-    accountShouldNotExist: PropTypes.bool
-};
 
 export default AccountNameInput;

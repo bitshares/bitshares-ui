@@ -20,6 +20,7 @@ var Utils = {
     },
 
     get_asset_amount: function(amount, asset) {
+        if (!amount) return null;
         if (asset.toJS) {
             asset = asset.toJS();
         }

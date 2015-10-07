@@ -40,8 +40,8 @@ class BorrowModalContent extends React.Component {
     constructor() {
         super();
         this.state = {
-            short_amount: 0,
-            collateral: 0,
+            short_amount: null,
+            collateral: null,
             collateral_ratio: 0,
             errors: this._getInitialErrors(),
             isValid: false
@@ -53,8 +53,8 @@ class BorrowModalContent extends React.Component {
         let debt = utils.get_asset_amount(currentPosition.debt, this.props.quote_asset);
         let collateral = utils.get_asset_amount(currentPosition.collateral, this.props.backing_asset);
         this.setState({
-            short_amount: debt.toString(),
-            collateral: collateral.toString(),
+            short_amount: debt ? debt.toString() : null,
+            collateral: collateral ? collateral.toString() : null,
             collateral_ratio: this._getCollateralRatio(debt, collateral),
             original_position: {
                 debt: debt,
@@ -183,8 +183,8 @@ class BorrowModalContent extends React.Component {
 
     _getCurrentPosition() {
         let currentPosition = {
-            collateral: 0,
-            debt: 0
+            collateral: null,
+            debt: null
         };
 
         for (let key in this.props.call_orders) {
@@ -194,7 +194,6 @@ class BorrowModalContent extends React.Component {
                 }
             }
         }
-
         return currentPosition;
     }
 
@@ -214,6 +213,7 @@ class BorrowModalContent extends React.Component {
     render() {
         let {quote_asset, bitasset_balance, backing_asset, backing_balance, bitasset_data} = this.props;
         let {short_amount, collateral, collateral_ratio, errors, isValid} = this.state;
+        if (!collateral_ratio || isNaN(collateral_ratio) || !(collateral_ratio > 0.0 && collateral_ratio < 1000.0)) collateral_ratio = 0;
 
         bitasset_balance = !bitasset_balance ? {balance: 0, id: null} : bitasset_balance.toJS();
         backing_balance = !backing_balance ? {balance: 0, id: null} : backing_balance.toJS();
@@ -253,7 +253,7 @@ class BorrowModalContent extends React.Component {
                                 quote_asset={bitasset_data.getIn(["current_feed", "settlement_price", "quote", "asset_id"])}
                                 base_asset={bitasset_data.getIn(["current_feed", "settlement_price", "base", "asset_id"])}
                                 base_amount={bitasset_data.getIn(["current_feed", "settlement_price", "base", "amount"])}
-                            />
+                                />
                         </div>
                     </div>
                     <div className="form-group">
@@ -263,6 +263,7 @@ class BorrowModalContent extends React.Component {
                                         asset={quote_asset.get("id")}
                                         assets={[quote_asset.get("id")]}
                                         display_balance={bitAssetBalanceText}
+                                        placeholder="0.0"
                                         tabIndex={1}/>
                     </div>
                     <div className={collateralClass}>
@@ -272,14 +273,15 @@ class BorrowModalContent extends React.Component {
                                         asset={backing_asset.get("id")}
                                         assets={[backing_asset.get("id")]}
                                         display_balance={backingBalanceText}
+                                        placeholder="0.0"
                                         tabIndex={1}/>
                         {errors.collateral_balance ? <div style={{paddingTop: "0.5rem"}}>{errors.collateral_balance}</div> : null}
                     </div>
                     <div className={collateralRatioClass}>
                         <Translate component="label" content="borrow.coll_ratio" />
-                        <input min="0" max="6" step="0.05" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range"/>
-                        <span>{utils.format_number(collateral_ratio, 2)}</span>
-                        {errors.below_maintenance ? <div style={{paddingTop: "0.5rem"}}>{errors.below_maintenance}</div> : null}
+                        <input min="0" max="6" step="0.05" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
+                        {errors.below_maintenance ? <div className="float-right">{errors.below_maintenance}</div> : null}
+                        <div>{utils.format_number(collateral_ratio, 2)}</div>
                     </div>
                     <div className="grid-content button-group no-overflow">
                         <a onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></a>

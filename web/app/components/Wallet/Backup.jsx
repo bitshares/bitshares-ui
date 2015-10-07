@@ -5,6 +5,7 @@ import Inspector from "react-json-inspector";
 import connectToStores from "alt/utils/connectToStores"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletActions from "actions/WalletActions"
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletManagerStore from "stores/WalletManagerStore"
 import BackupStore from "stores/BackupStore"
 import WalletDb from "stores/WalletDb"
