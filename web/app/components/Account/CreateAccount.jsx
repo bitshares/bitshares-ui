@@ -142,7 +142,7 @@ class CreateAccount extends React.Component {
                         </div>
                         <div style={{width: '21em'}}>
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
-                                <AccountNameInput ref="account_name" cheapName={first_account}
+                                <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
                                 {this.state.accountName && this.state.validAccountName ?

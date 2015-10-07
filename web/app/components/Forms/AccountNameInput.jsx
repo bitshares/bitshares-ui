@@ -17,7 +17,7 @@ class AccountNameInput extends BaseComponent {
         onEnter: PropTypes.func,
         accountShouldExist: PropTypes.bool,
         accountShouldNotExist: PropTypes.bool,
-        cheapName: PropTypes.bool
+        cheapNameOnly: PropTypes.bool
     };
     
     constructor(props) {
@@ -51,8 +51,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     clear() {
-        console.log("clear");
-        this.setState({ account_name: null })
+        this.setState({ account_name: null, error: null, info: null })
     }
 
     focus() {
@@ -85,11 +84,15 @@ class AccountNameInput extends BaseComponent {
             "Please enter valid account name" :
             validation.is_account_name_error(value)
         
-        if(this.props.cheapName)
+        this.state.info = null
+        if(this.props.cheapNameOnly) {
             if( ! this.state.error && ! validation.is_cheap_name( value ))
                 this.state.error = "This faucet accepts names with at least one dash number or dot, or no vowles."
-        
-        this.setState({value: value, error: this.state.error});
+        } else {
+            if( ! this.state.error && ! validation.is_cheap_name( value ))
+                this.state.info = "This is a premium name.  Cheap names have at least one dash number or dot, or no vowles."
+        }
+        this.setState({value: value, error: this.state.error, info: this.state.info});
         if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
         if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
     }
@@ -113,6 +116,7 @@ class AccountNameInput extends BaseComponent {
     render() {
         let error = this.getError() || "";
         let class_name = classNames("form-group", "account-name", {"has-error": false});
+        let info = this.state.info
         return (
             <div className={class_name}>
                 <label>Account Name</label>
@@ -120,7 +124,8 @@ class AccountNameInput extends BaseComponent {
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}
                        value={this.state.account_name}/>
-                   <div className="warning">{error}</div>
+                   <div className="facolor-info">{error}</div>
+                   <div className="facolor-fee">{error ? null : info}</div>
             </div>
         );
     }
