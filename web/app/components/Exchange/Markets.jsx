@@ -114,13 +114,13 @@ class Markets extends React.Component {
         }
 
         let preferredMarkets = defaultMarkets
-            .filter(a => {
-                let asset = ChainStore.getAsset(a.quote);
-                if (!asset) {
-                    return null;
-                }
-                return asset.get("symbol").indexOf(filterMarket.toUpperCase()) !== -1;
-            }) 
+            //.filter(a => {
+            //    let asset = ChainStore.getAsset(a.quote);
+            //    if (!asset) {
+            //        return null;
+            //    }
+            //    return asset.get("symbol").indexOf(filterMarket.toUpperCase()) !== -1;
+            //})
             .sort((a, b) => {
                 let a_asset = ChainStore.getAsset(a.quote);
                 let b_asset = ChainStore.getAsset(b.quote);
@@ -187,10 +187,11 @@ class Markets extends React.Component {
                 <div className="grid-block small-7 medium-9 flex-start" style={{overflowY: "auto", zIndex: 1}}>
                     <div className="grid-block vertical">
                         <h2>My Preferred Markets:</h2>
-                        <div className="small-12 medium-5">
+                        {/* preferred markets search is temporary disabled
+                         <div className="small-12 medium-5">
                             <h5><Translate content="markets.filter" />:</h5>
                             <input type="text" value={this.state.filterMarket} onChange={this._onFilterInput.bind(this)}></input>
-                        </div>
+                        </div>*/}
                         <div className="grid-block small-up-1 medium-up-2 large-up-3">
                             {preferredMarkets}
                         </div>
