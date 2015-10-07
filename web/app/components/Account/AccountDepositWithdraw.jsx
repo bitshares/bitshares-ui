@@ -1,0 +1,188 @@
+import React from "react";
+import {Link} from "react-router";
+import Translate from "react-translate-component";
+import FormattedAsset from "../Utility/FormattedAsset";
+import LoadingIndicator from "../LoadingIndicator";
+import ChainStore from "api/ChainStore";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import Statistics from "./Statistics";
+import AccountActions from "actions/AccountActions";
+import Icon from "../Icon/Icon";
+import TimeAgo from "../Utility/TimeAgo";
+import HelpContent from "../Utility/HelpContent";
+import WalletDb from "stores/WalletDb";
+import AmountSelector from "../Utility/AmountSelector";
+import WithdrawModal from "../Modal/WithdrawModal";
+import Modal from "react-foundation-apps/src/modal";
+import Trigger from "react-foundation-apps/src/trigger";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import BalanceComponent from "../Utility/BalanceComponent";
+
+
+@BindToChainState({keep_updating:true})
+class BlockTradesDepositRequest extends React.Component {
+   static propTypes = {
+      account: ChainTypes.ChainAccount,
+      issuer_account: ChainTypes.ChainAccount,
+      deposit_asset: React.PropTypes.string,
+      receive_asset: ChainTypes.ChainAsset
+   };
+
+   constructor(props) {
+      super(props);
+      this.state = { receive_address: null };
+   }
+
+   requestDepositAddress() {
+      let body = JSON.stringify({
+                  inputCoinType:this.props.deposit_asset,
+                  outputCoinType:'bts',
+                  outputAddress:this.props.account.get('name')
+              })
+      console.log( "body: ", body );
+
+      fetch( 'https://blocktrades.us:443/api/v2/simple-api/initiate-trade', {
+              method:'post',
+              headers: new Headers( { "Content-Type":"application/json" } ),
+              body: body
+           }).then( reply => { reply.json().then( json => {
+               console.log( "reply: ", json )
+               
+               this.addDepositAddress( json.inputAddress );
+           } )
+           }, error => {
+                    console.log( "error: ",error  );
+           }); 
+
+   }
+
+   addDepositAddress( receive_address ) {
+      let wallet = WalletDb.getWallet();
+
+      if( !wallet.deposit_keys ) wallet.deposit_keys = {}
+      if( !wallet.deposit_keys[this.props.gateway] ) wallet.deposit_keys[this.props.gateway] = {}
+      if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] )
+          wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] = [receive_address]
+      else
+          wallet.deposit_keys[this.props.gateway][this.props.deposit_asset].push( receive_address );
+
+      WalletDb._updateWallet();
+
+      this.setState( {receive_address} );
+   }
+
+
+   onWithdraw() {
+       ZfApi.publish("withdraw_asset", "open");
+   }
+ 
+
+   render() {
+      if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
+         return <tr><td></td><td></td><td></td><td></td></tr>
+
+      let wallet = WalletDb.getWallet();
+      let receive_address = this.state.receive_address;
+      if( !receive_address )  {
+         if( wallet.deposit_keys && wallet.deposit_keys[this.props.gateway] && wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] )
+         {
+            let addresses = wallet.deposit_keys[this.props.gateway][this.props.deposit_asset]
+            receive_address = addresses[addresses.length-1]
+         }
+      }
+      if( !receive_address ) { this.requestDepositAddress(); }
+
+       let account_balances = this.props.account.get("balances").toJS();
+       console.log( "balances: ", account_balances );
+       let asset_types = Object.keys(account_balances);
+
+       let balance = "0 " + this.props.receive_asset.get('symbol');
+       if (asset_types.length > 0) {
+           let current_asset_id = this.props.receive_asset.get('id');
+           if( current_asset_id )
+              balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+       } 
+
+      return <tr>
+                    <td>{this.props.deposit_asset} </td>
+                    <td> {receive_address} &nbsp; <button className={"button"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
+                    <td>{this.props.receive_asset.get('symbol')} </td>
+                    <td> <button className={"button"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
+                          <Modal id="withdraw_asset" overlay={true}>
+                              <Trigger close="withdraw_asset">
+                                  <a href="#" className="close-button">&times;</a>
+                              </Trigger>
+                              <br/>
+                              <div className="grid-block vertical">
+                                   <WithdrawModal account={this.props.account.get('name')}
+                                                  issuer="blocktrades"
+                                                  asset="CORE"
+                                                  receive_asset_name="Bitcoin"
+                                                  receive_asset_symbol="BTC" />
+                              </div>
+                          </Modal>
+                    </td>
+             </tr>
+   }
+}; // BlockTradesDepositRequest
+
+@BindToChainState({keep_updating:true})
+class AccountDepositWithdraw extends React.Component {
+
+   static propTypes = {
+       account: ChainTypes.ChainAccount.isRequired,
+       gprops: ChainTypes.ChainObject.isRequired,
+       dprops: ChainTypes.ChainObject.isRequired
+   }
+   static defaultProps = {
+       gprops: "2.0.0",
+       dprops: "2.1.0"
+   }
+
+   constructor( props ) {
+      super(props);
+   }
+
+   render() {
+      return (
+      <div className="grid-block vertical">
+          <h2>Gateways</h2>
+          <hr/>
+
+          <div className="grid-block vertical">
+             <h3>BlockTrades.us</h3>
+
+               <div>
+                   <table className="table">
+                       <thead>
+                       <tr>
+                           <th>Symbol</th>
+                           <th>Deposit To</th>
+                           <th>Balance</th>
+                           <th>Withdraw</th>
+                       </tr>
+                       </thead>
+                       <tbody>
+                         <BlockTradesDepositRequest 
+                                issuer_account="blocktrades"
+                                account={this.props.account.get('name')} 
+                                deposit_asset="btc"
+                                receive_asset="TRADE.BTC" />
+                       </tbody>
+                   </table>
+               </div>
+
+
+          </div>
+
+          <div className="grid-block vertical">
+             <h3>CCEDK</h3>
+          </div>
+      </div>
+      )
+   }
+};
+
+
+export default AccountDepositWithdraw;

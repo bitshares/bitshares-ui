@@ -74,6 +74,7 @@ let WalletTcomb = t.struct({
     brainkey_pubkey: t.Str,
     brainkey_sequence: t.Num,
     brainkey_backup_date: t.maybe(t.Dat),
+    deposit_keys: t.maybe(t.Obj),
     // password_checksum: t.Str,
     chain_id: t.Str
 }, "WalletTcomb");

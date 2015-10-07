@@ -15,6 +15,7 @@ import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
 import AccountMembership from "./components/Account/AccountMembership";
+import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPayees from "./components/Account/AccountPayees";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountVoting from "./components/Account/AccountVoting";
@@ -237,6 +238,7 @@ let routes = (
             <Route name="account-payees" path="payees" handler={AccountPayees}/>
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>
             <Route name="account-voting" path="voting" handler={AccountVoting}/>
+            <Route name="account-deposit-withdraw" path="deposit-withdraw" handler={AccountDepositWithdraw}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
         <Route name="help" path="/help" handler={Help}>
