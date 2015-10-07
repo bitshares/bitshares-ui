@@ -42,7 +42,7 @@
             referrer: "Affiliate Referrer",
             lifetime_referrer: "Lifetime Referrer",
             network_percentage: "Network",
-            fee_allocation: "Fee Allocaiton",
+            fee_allocation: "Fee Allocation",
             membership: "Membership",
             fees_paid: "Lifetime fees paid",
             fees_pending: "Pending fees",
