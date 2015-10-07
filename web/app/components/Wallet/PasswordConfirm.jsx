@@ -57,7 +57,7 @@ export default class PasswordConfirm extends Component {
         var errors = Immutable.Map()
         // Don't report until typing begins
         if(password.length !== 0 && password.length < 8)
-            errors = errors.set("password_length", "Password must 8 characters or more")
+            errors = errors.set("password_length", "Password must be 8 characters or more")
         
         // Don't report it until the confirm is populated
         if( password !== "" && confirm !== "" && password !== confirm)
