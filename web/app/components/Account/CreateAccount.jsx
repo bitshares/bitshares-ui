@@ -143,34 +143,36 @@ class CreateAccount extends React.Component {
                                 )
                         }
                         </div>
-                        <form className="medium-3" onSubmit={this.onSubmit.bind(this)} noValidate>
-                            <AccountNameInput ref="account_name"
-                                              onChange={this.onAccountNameChange.bind(this)}
-                                              accountShouldNotExist={true}/>
-                            {this.state.accountName && this.state.validAccountName ?
-                                <div className="form-group">
-                                    <label>Identicon</label>
-                                    <AccountImage account={this.state.accountName}/>
-                                </div> :
-                                null
-                            }
-                            {WalletDb.getWallet() ?
-                                null :
-                                <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
-                            }
-                            {
-                                first_account ? null : (
-                                    <div className="full-width-content form-group">
-                                        <label>Pay From</label>
-                                        <AccountSelect account_names={my_accounts} 
-                                            onChange={this.onRegistrarAccountChange.bind(this)}/>
-                                    </div>)
-                            }
-                            <button className={buttonClass}>Create Account</button>
-                            <br/>
-                            <br/>
-                            <label><Link to="existing-account">Existing Accounts</Link></label>
-                        </form>
+                        <div style={{width: '21em'}}>
+                            <form onSubmit={this.onSubmit.bind(this)} noValidate>
+                                <AccountNameInput ref="account_name" cheapName={first_account}
+                                                  onChange={this.onAccountNameChange.bind(this)}
+                                                  accountShouldNotExist={true}/>
+                                {this.state.accountName && this.state.validAccountName ?
+                                    <div className="form-group">
+                                        <label>Identicon</label>
+                                        <AccountImage account={this.state.accountName}/>
+                                    </div> :
+                                    null
+                                }
+                                {WalletDb.getWallet() ?
+                                    null :
+                                    <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
+                                }
+                                {
+                                    first_account ? null : (
+                                        <div className="full-width-content form-group">
+                                            <label>Pay From</label>
+                                            <AccountSelect account_names={my_accounts} 
+                                                onChange={this.onRegistrarAccountChange.bind(this)}/>
+                                        </div>)
+                                }
+                                <button className={buttonClass}>Create Account</button>
+                                <br/>
+                                <br/>
+                                <label><Link to="existing-account">Existing Accounts</Link></label>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
