@@ -4,7 +4,7 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        de: "Deutsch"
+        de: "Deutsch",
         es: "Español"
     },
     header: {
@@ -339,7 +339,7 @@ module.exports = {
             precision: "Genauigkeit"
         },
         asset: {
-            not_found: "Das Asset %(name)s existiert nicht"
+            not_found: "Das Asset %(name)s existiert nicht",
             summary: {
                 asset_type: "Asset Typ",
                 issuer: "herausgeber",
@@ -362,7 +362,7 @@ module.exports = {
             },
             permissions: {
                 permissions: "Befugnisse",
-                max_market_fee: "Maximale Marktgebühr"
+                max_market_fee: "Maximale Marktgebühr",
                 max_supply: "Maximale Verfügbarkeit",
                 chargeMarketFee: "Marktgebühren erheben",
                 allowWhiteList: "Weißlisten zulassen",
@@ -404,7 +404,7 @@ module.exports = {
         locale: "Sprache wechseln",
         confirm_yes: "Immer",
         confirm_no: "Nie",
-        always_confirm: "Für jede Transaction nach Bestätigung fragen"
+        always_confirm: "Für jede Transaction nach Bestätigung fragen",
         wallets: "Geldbörsen"
     },
     footer: {
