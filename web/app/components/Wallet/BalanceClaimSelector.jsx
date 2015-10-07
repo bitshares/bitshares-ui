@@ -28,6 +28,16 @@ export default class BalanceClaimSelector extends Component {
         var props = BalanceClaimActiveStore.getState()
         var { balances, address_to_pubkey } = props
         var private_keys = PrivateKeyStore.getState().keys
+        var groupCountMap = Immutable.Map().asMutable()
+        var groupCount = (group, distinct) => {
+            var set = groupCountMap.get(group)
+            if( ! set) {
+                set = Immutable.Set().asMutable()
+                groupCountMap.set(group, set)
+            }
+            set.add(distinct)
+            return set.size
+        }
         props.total_by_account_asset = balances
             .groupBy( v => {
                 // K E Y S
@@ -37,7 +47,9 @@ export default class BalanceClaimSelector extends Component {
                 if(private_key_object && private_key_object.import_account_names)
                     // Imported Account Names (just a visual aid, helps to auto select a real account)
                     names = private_key_object.import_account_names.join(', ')
-                var name_asset_key = Immutable.List([names, v.balance.asset_id])
+                // Signing is very slow, further devide the groups based on the number of signatures requred
+                var batch_number = Math.ceil( groupCount(Immutable.List([names, v.balance.asset_id]), v.owner) / 60 )
+                var name_asset_key = Immutable.List([names, v.balance.asset_id, batch_number])
                 return name_asset_key
             })
             .map( l => l.reduce( (r,v) => {
