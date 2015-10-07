@@ -15,6 +15,7 @@ lookup = require './lookup'
 api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
 Apis = require('rpc_api/ApiInstances')
+ChainStore = (require 'api/ChainStore').default
 
 module.exports = _my = {}
 
@@ -55,7 +56,7 @@ _my.signed_transaction = ->
     
     set_expire_seconds:(sec)->
         throw new Error "already finalized" if @tr_buffer
-        @expiration = Math.round(Date.now()/1000) + sec
+        @expiration = base_expiration_sec() + sec
     
     set_required_fees:(asset_id)->
         throw new Error "already finalized" if @tr_buffer
@@ -81,8 +82,7 @@ _my.signed_transaction = ->
     finalize:()->
         new Promise (resolve, reject)=>
             throw new Error "already finalized" if @tr_buffer
-            @expiration ||= Math.round(Date.now()/1000) + (chain_config.expire_in_secs)
-
+            @expiration ||= base_expiration_sec() + chain_config.expire_in_secs
             resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
                 @ref_block_num = r[0].head_block_number & 0xFFFF
                 @ref_block_prefix =  new Buffer(r[0].head_block_id, 'hex').readUInt32LE(4)
@@ -186,3 +186,12 @@ _my.signed_transaction = ->
         else
             @finalize().then =>
                 @_broadcast(was_broadcast_callback)
+
+base_expiration_sec = ()=>
+    head_block_sec = Math.ceil(ChainStore.getHeadBlockDate().getTime() / 1000)
+    now_sec = Math.ceil(Date.now() / 1000)
+    # The head block time should be updated every 3 seconds.  If it isn't
+    # then help the transaction to expire (use head_block_sec)
+    return head_block_sec if now_sec - head_block_sec > 30
+    # If the user's clock is very far behind, use the head block time.
+    Math.max now_sec, head_block_sec
