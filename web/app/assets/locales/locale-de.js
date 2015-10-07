@@ -5,6 +5,7 @@ module.exports = {
         fr: "Français",
         ko: "한국어",
         de: "Deutsch"
+        es: "Español"
     },
     header: {
         title: "Graphene UI",
@@ -19,7 +20,13 @@ module.exports = {
         create_account: "Konto erstellen",
         create_asset: "Asset erstellen",
         lock: "Sperren",
-        unlock: "Entsperren"
+        unlock: "Entsperren",
+        help: "Hilfe",
+        locked_tip: "Geldbörse ist gesperrt. Klicken zum Entsperren.",
+        unlocked_tip: "Geldbörse ist entsperrt. Klicken zum Sperren."
+    },
+    operation : {
+        pending: "pending %(blocks)s blocks"
     },
     account: {
         asset: "Asset",
@@ -34,10 +41,11 @@ module.exports = {
             registrar: "Registriert von",
             referrer: "Empfohlen von",
             lifetime_referrer: "Lifetime Referrer",
-            network_percentage: "Prozent für Netzwerk",
+            network_percentage: "Netzwerk",
+            fee_allocation: "Gebührenverteilung",
             membership: "Mitgliedschaft",
-            fees_paid: "Ingesamt bezahlte Gebühren",
-            fees_pending: "Anstehende Gebühren",
+            fees_paid: "Lifetime bazahlte Gebühren",
+            fees_pending: "unbestätigte Gebühren",
             fees_vested: "Anstehnde Gebühren in Sperrfristguthaben",
             referrals: "Empfehlungen",
             rewards: "Belohnungen",
@@ -46,7 +54,11 @@ module.exports = {
             unknown: "unbekanntes Mitglied",
             lifetime: "Lifetime Mitglied",
             basic: "Grundmitglied",
-            annual: "Jahresabonent"
+            annual: "Jahresabonent",
+            upgrade_lifetime: "Lifetime Mietgliedschaft erwerben",
+            subscribe: "Jährliche Mitgliedschaft erwerben",
+            expires: "endet",
+            membership_expiration: "Ablauf der Mitgliedschaft"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -72,7 +84,10 @@ module.exports = {
             weight: "Gewicht",
             threshold: "Schwellwert",
             confirm_add: "Hinzufügen",
-            cancel: "Abbrechen"
+            cancel: "Abbrechen",
+            add_permission_label: "Geben Sie den Kontoname/Schlüssel und eine Gewichtung an",
+            account_name_or_key: "Kontoname oder Schlüssel",
+            memo_public_key: "Öffentlicher Schlüssel für Memos"
         },
         votes: {
             proxy: "Abstimmkonto vermitteln",
@@ -89,7 +104,9 @@ module.exports = {
             remove_committee: "Entfernen",
             add_committee: "Hinzufügen",
             add_committee_label: "Mitglied des Komitees",
-            add_witness_label: "Witness"
+            add_witness_label: "Witness",
+            approve_worker: "Budgetpunkt bestätigen",
+            reject_worker: "Budgetpunkt ablehnen"
         },
         options: {
             num_witnesses : "Gewünschte Anzahl Witnesses",
@@ -120,6 +137,7 @@ module.exports = {
     },
     transfer: {
         from: "Von",
+        pay_from: "Bezahlen von",
         amount: "Betrag",
         to: "Zu",
         memo: "Memo",
@@ -136,6 +154,7 @@ module.exports = {
         },
         back: "ZURÜCK",
         confirm: "BESTÄTIGEN",
+        broadcasting: "Übermittle...",
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
         see: "ÜBERWEISUNGSÜBERSICHT",
@@ -172,7 +191,8 @@ module.exports = {
         at: "für",
         coll_of: "mit einer Sicherheit bestehend aus",
         call_order_update: "Call-Order aktualisiert",
-        upgrade_account: "Kontostatus auf Lifetime Member aktualisiert.",
+        lifetime_upgrade_account: "Kontostatus auf Lifetime Member aktualisiert.",
+        annual_upgrade_account: "Konto aktualisiert",
         update_account: "Konto aktualisiert",
         whitelist_account: "Konto zur Positivliste hinzugefügt",
         whitelisted_by: "Wurde zur Postitivliste hinzugefügt von Konto",
@@ -284,6 +304,7 @@ module.exports = {
             witness: "Witness",
             count: "Transaktionszähler",
             date: "Datum",
+            time: "Zeit",
             previous: "Vorherige",
             previous_secret: "Vorheriges Geheimnis",
             next_secret: "Hash des nächsten Geheimnisses",
@@ -318,14 +339,50 @@ module.exports = {
             precision: "Genauigkeit"
         },
         asset: {
-            title: "Asset",
             not_found: "Das Asset %(name)s existiert nicht"
+            summary: {
+                asset_type: "Asset Typ",
+                issuer: "herausgeber",
+                current_supply: "Aktuelle Verfügbarkeit",
+                stealth_supply: "Versteckte Verfügbarkeit",
+                market_fee: "Marktgebühr",
+                max_market_fee: "Maximale Marktgebühr"
+            },
+            price_feed: {
+                price_feed: "Preis Feed",
+                settlement_price: "Settlement Preis",
+                maintenance_collateral_ratio: "Maintenance Kollateral Verhältnis",
+                maximum_short_squeeze_ratio: "Maximum short squeeze Verhältnis"
+            },
+            fee_pool: {
+                fee_pool: "Gebühren Pool",
+                core_exchange_rate: "Kernhandelsrate",
+                pool_balance: "Pool Guthaben",
+                unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile"
+            },
+            permissions: {
+                permissions: "Befugnisse",
+                max_market_fee: "Maximale Marktgebühr"
+                max_supply: "Maximale Verfügbarkeit",
+                chargeMarketFee: "Marktgebühren erheben",
+                allowWhiteList: "Weißlisten zulassen",
+                allowIssuerOverride: "Überschreiben des Herausgebers zulassen",
+                restrictTransfers: "Transfers beschränken",
+                allowForceSettle: "Force Settlements erlauben",
+                allowGlobalSettle: "Global Settlements erlauben",
+                allowStealthTransfer: "Versteckte Transfers erlauben",
+                blacklist_authorities: "Authoritäten der Schwarzliste",
+                blacklist_markets: "Schwarzgelistete Märkte",
+                whitelist_authorities: "Authoritäten der Weißliste",
+                whitelist_markets: "Weißgelistete Märkte"
+            }
         },
         witnesses: {
             title: "Witnesses"
         },
         committee_members: {
-            title: "Committee members"
+            title: "Committee members",
+            active: "Total number of active committee members"
         },
         committee_member: {
             title: "Committee member"
@@ -348,6 +405,7 @@ module.exports = {
         confirm_yes: "Immer",
         confirm_no: "Nie",
         always_confirm: "Für jede Transaction nach Bestätigung fragen"
+        wallets: "Geldbörsen"
     },
     footer: {
         title: "Graphene",
@@ -384,7 +442,48 @@ module.exports = {
     wallet: {
         title: "Geldbörse",
         confirm: "Passwort bestätigen",
-        password: "Passwort"
+        password: "Passwort",
+        existing_password: "Existierendes Passwort",
+        change_password: "Passwort ändern",
+        change_wallet: "Geldbörse wechseln",
+        wallet_created: "Gerldbörse erstellt",
+        create_wallet: "Gerldbörse erstellen",
+        delete_wallet: "Gerldbörse löschen",
+        delete_confirm_line1: "Sind Sie sich ABSOLUT sicher?",
+        delete_confirm_line2: "Unerwartete schlechte Dinge werden passieren, sollten Sie das hier nicht lesen!",
+        delete_confirm_line3: "Diese Aktion kann NICHT rückgängig gemacht werden.",
+        delete_wallet_name: "Gelbörse (%(name)s) löschen",
+        balance_claims: "Eingeforderte Guthaben",
+        download: "Download",
+        name: "Name der Geldbörse",
+        create: "Erstellen",
+        console: "Geldbörsen Management Konsole",
+        create_backup: "Sicherung erstellen",
+        backup_brainkey: "Brainkey sichern",
+        create_backup_of: "Sichere Geldbörse (%(name)s)",
+        import_backup: "Sicherung Importieren",
+        restore_backup: "Sicherung wiederherstellen",
+        import_keys: "Schlüssel importieren",
+        brainkey: "Brainkey",
+        new_wallet: "Neue Geldbörse",
+        active_wallet: "Active Gelbörse",
+        verified: "Verifiziert",
+        verify_prior_backup: "Prüfe vorherige Sicherung",
+        cancel: "Abbrechen",
+        reset: "Zurücksetzen",
+        done: "Erledigt",
+        verify: "Prüfe",
+        invalid_format: "Ungültiges Format",
+        enter_password: "Passwordeingabe",
+        downoad: "Download",
+        new_wallet_name: "Names der neuen Geldbörse",
+        wallet_exist: "Gelbdörse existiert bereits. Wählen Sie einen anderen Namen.",
+        wallet_exist_with_name: "Geldbörse (%(name)s) existiert bereits. Wählen Sie einen anderen Namen",
+        accept: "Zustimmen",
+        ready_to_restore: "Fertig für Wiederherstellung",
+        restore_wallet_of: "Stelle Gelfbörse (%(name)s) wieder her",
+        restore_success: "Geldbörse (%(name)s) erfolgreich wieder hergestellt",
+        change: "Wechsele Geldbörse (%(name)s)"
     },
     borrow: {
         title: "Kollateral Position für %(asset_symbol)s",
@@ -395,5 +494,12 @@ module.exports = {
             below: "Kollateral Ratio unter Aufrechterhaltungslevel",
             collateral: "Unzureichendes Kollateral"
         }
+    },
+    modal : {
+      issue : {
+        to: "Gerausgeben an",
+        amount: "Menge",
+        submit: "Herausgeben"
+      }
     }
 };
