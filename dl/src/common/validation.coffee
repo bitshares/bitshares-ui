@@ -53,28 +53,18 @@ module.exports =
             throw new Error "value required for #{field_name}: #{value}"
         value
 
-    is_valid_symbol: (value) ->
-        return true unless value
-        return false unless typeof value == 'string'
-        value = value.split '.'
-        scam_pattern = /^BIT/
-        pattern = /^([A-Z]{3,8})$/
-        if value.length == 1
-            return !!value[0].match(pattern) and not !!value[0].match(scam_pattern)
-        else if value.length == 2
-            rest = 12-(value[0].length+1)
-            pattern2 = new RegExp('^([A-Z]{3,'+rest+'})$');
-            return !!value[0].match(pattern) and !!value[1].match(pattern2)
-    
-    # ###* @parm1 string wallet_name can have dashes, numbers, or letters ###
-    # is_wallet_name: (value)->
-    #    /^[-A-Za-z0-9]+$/,test value
-    
-    #required_string: (value, field_name="")->
-    #    if typeof value isnt "string"
-    #        throw new Error "string required #{field_name}: #{value}"
-    #    value
-            
+    is_valid_symbol_error: (value) ->
+        suffix = "Asset name should "
+        return suffix + "not be empty." if is_empty value
+        return suffix + "have only one dot." if value.split('.').length > 2
+        return suffix + "be longer." if value.length < 3
+        return suffix + "be shorter." if value.length > 16
+        return suffix + "start with a letter" unless /^[A-Z]/.test value
+        return suffix + "end with a letter" unless /[A-Z]$/.test value
+        #return "not start with BIT." if /^BIT/.test value # scam_pattern
+        return suffix + "contain only letters numbers and perhaps a dot." if /^[A-Z0-9\.]$/.test value
+        return null
+
 is_empty = (value)->
     return yes if value is null or value is undefined
     return yes if value.length is 0

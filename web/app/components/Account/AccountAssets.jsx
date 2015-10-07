@@ -102,8 +102,7 @@ class AccountAssets extends React.Component {
         let errors = {
             create: null
         };
-
-        errors.create = validation.is_valid_symbol(new_state.symbol) ? null : "Invalid asset symbol";
+        errors.create = validation.is_valid_symbol_error(new_state.symbol);
 
         let isValid = errors.create === null;
 
