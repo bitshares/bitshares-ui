@@ -2,6 +2,7 @@ import alt from "alt-instance"
 import iDB from "idb-instance"
 
 import lzma from "lzma"
+import {saveAs} from "common/filesaver.js"
 
 import PrivateKey from 'ecc/key_private'
 import PublicKey from 'ecc/key_public'
@@ -9,6 +10,7 @@ import Aes from 'ecc/aes'
 import key from "common/key_utils"
 
 import WalletActions from "actions/WalletActions"
+import WalletDb from "stores/WalletDb"
 
 class BackupActions {
     
@@ -42,6 +44,23 @@ export function backup(backup_pubkey) {
             var compression = 1
             return createWalletBackup(backup_pubkey, wallet_object, compression)
         }))
+    })
+}
+
+export function backupToBin(
+    backup_pubkey = WalletDb.getWallet().password_pubkey,
+    saveAsCallback = saveAs
+) {
+    backup(backup_pubkey).then( contents => {
+        var name = iDB.getCurrentWalletName() + ".bin"
+        var blob = new Blob([ contents ], {
+            type: "application/octet-stream; charset=us-ascii"})
+        
+        if(blob.size !== contents.length)
+            throw new Error("Invalid backup to download conversion")
+        
+        saveAsCallback(blob, name);
+        WalletActions.setBackupDate()
     })
 }
 

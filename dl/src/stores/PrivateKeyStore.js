@@ -6,6 +6,7 @@ import idb_helper from "../idb-helper";
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import AddressIndex from "stores/AddressIndex"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
@@ -14,7 +15,7 @@ import hash from "common/hash"
 
 
 /** No need to wait on the promises returned by this store as long as
-    this.state.catastrophic_error == false and
+    this.state.privateKeyStorage_error == false and
     this.state.pending_operation_count == 0 before performing any important
     operations.
 */
@@ -35,10 +36,10 @@ class PrivateKeyStore extends BaseStore {
     _getInitialState() {
         return {
             keys: Immutable.Map(),
-            catastrophic_error: false,
+            privateKeyStorage_error: false,
             pending_operation_count: 0,
-            catastrophic_error_add_key: null,
-            catastrophic_error_loading: null
+            privateKeyStorage_error_add_key: null,
+            privateKeyStorage_error_loading: null
         }
     }
     
@@ -60,7 +61,7 @@ class PrivateKeyStore extends BaseStore {
             this.pendingOperationDone()
         }).catch( error => {
             this.setState(this._getInitialState())
-            this.catastrophicError('loading', error)
+            this.privateKeyStorageError('loading', error)
             throw error
         })
         resolve( p )
@@ -130,7 +131,7 @@ class PrivateKeyStore extends BaseStore {
                 if( error.name != 'ConstraintError' ||
                     error.message.indexOf('by_encrypted_key') == -1
                 ) {
-                    this.catastrophicError('add_key', error)
+                    this.privateKeyStorageError('add_key', error)
                     throw event
                 }
                 duplicate = true
@@ -138,6 +139,8 @@ class PrivateKeyStore extends BaseStore {
             }).then( ()=> {
                 this.pendingOperationDone()
                 if(duplicate) return {result:"duplicate",id:null}
+                if( private_key_object.brainkey_sequence == null)
+                    this.binaryBackupRecommended() // non-deterministic
                 idb_helper.on_transaction_end(transaction).then(
                     () => { this.setState({ keys: this.state.keys }) } )
                 return {
@@ -148,6 +151,10 @@ class PrivateKeyStore extends BaseStore {
             resolve(p)
         })
         resolve(p)
+    }
+    
+    binaryBackupRecommended() {
+        CachedPropertyActions.set("backup_recommended", true)
     }
     
     pendingOperation() {
@@ -162,11 +169,11 @@ class PrivateKeyStore extends BaseStore {
         this.setState({pending_operation_count: this.pending_operation_count})
     }
     
-    catastrophicError(property, error) {
+    privateKeyStorageError(property, error) {
         this.pendingOperationDone()
-        var state = { catastrophic_error: true }
-        state["catastrophic_error_" + property] = error
-        console.log("catastrophic_error_" + property, error)
+        var state = { privateKeyStorage_error: true }
+        state["privateKeyStorage_error_" + property] = error
+        console.error("privateKeyStorage_error_" + property, error)
         this.setState(state)
     }
     

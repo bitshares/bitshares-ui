@@ -95,9 +95,10 @@ class WitnessList extends React.Component {
                 .filter(a => {
                     if (!a) { return false; }
                     let account = ChainStore.getObject(a.get("witness_account"));
-                    if(!account) {return false; }
-                    
-                    return account.get("name").indexOf(this.props.filter) !== -1;
+                    if (!account) return false;
+                    let name = account.get("name");
+                    if (!name) return false;
+                    return name.indexOf(this.props.filter) !== -1;
                 })
                 .sort((a, b) => {
                     let a_account = ChainStore.getObject(a.get("witness_account"));

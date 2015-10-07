@@ -26,7 +26,7 @@ module.exports = {
     ChainStore,
     
     alt, iDB,  Apis,
-    db: Apis.instance().db_api(), // todo, fix db == undefined
+    db: ()=> Apis.instance().db_api(),
     
     resolve: (object, atty = "_") => {
         if( ! object["then"]) {

@@ -21,7 +21,9 @@
         create_asset: "Create Asset",
         lock: "Lock",
         unlock: "Unlock",
-        help: "Help"
+        help: "Help",
+        locked_tip: "Wallet is locked. Click to unlock.",
+        unlocked_tip: "Wallet is unlocked. Click to lock."
     },
     operation : {
         pending: "pending %(blocks)s blocks"
@@ -452,6 +454,7 @@
         delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
         delete_confirm_line3: "This action CANNOT be undone.",
         delete_wallet_name: "Delete Wallet (%(name)s)",
+        balance_claims: "Balance Claims",
         download: "Download",
         name: "Wallet Name",
         create: "Create",

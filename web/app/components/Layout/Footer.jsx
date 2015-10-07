@@ -1,8 +1,12 @@
-import React from "react/addons";
+import React, {Component} from "react/addons";
 let Perf = React.addons.Perf;
+import AltContainer from "alt/AltContainer"
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import CachedPropertyStore from "stores/CachedPropertyStore"
+import CachedPropertyActions from "actions/CachedPropertyActions"
+import {backupToBin} from "actions/BackupActions"
 import BlockchainStore from "stores/BlockchainStore";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
@@ -21,25 +25,13 @@ class Footer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {perf: false, rpc_connection_status: BlockchainStore.getState().rpc_connection_status};
-        this.onChange = this.onChange.bind(this);
-    }
-
-    componentDidMount() {
-        BlockchainStore.listen(this.onChange);
-    }
-
-    componentWillUnmount() {
-        BlockchainStore.unlisten(this.onChange);
-    }
-
-    onChange(state) {
-        this.setState({rpc_connection_status: state.rpc_connection_status});
+        this.state = {perf: false};
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
-               nextState.rpc_connection_status !== this.state.rpc_connection_status ||
+               nextProps.backup_recommended !== this.props.backup_recommended ||
+               nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
                nextProps.synced !== this.props.synced;
     }
 
@@ -73,7 +65,10 @@ class Footer extends React.Component {
                         </div>
                     </div>
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
-                    {this.state.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
+                    {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
+                    { this.props.backup_recommended ? <span>
+                        <div className="grid-block shrink txtlabel success" onClick={this.onBackup.bind(this)}>Backup recommended &nbsp; &nbsp;</div>
+                    </span> : null}
                     {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
@@ -85,6 +80,24 @@ class Footer extends React.Component {
             </div>
         );
     }
+    
+    onBackup() {
+        backupToBin()
+    }
 }
 
-export default Footer;
+class AltFooter extends Component {
+    
+    render() {
+        return <AltContainer
+            stores={[CachedPropertyStore, BlockchainStore]}
+            inject ={{
+                backup_recommended: ()=> CachedPropertyStore.get("backup_recommended"),
+                rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
+            }}
+            ><Footer {...this.props}/>
+        </AltContainer>
+    }
+}
+
+export default AltFooter;

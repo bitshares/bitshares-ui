@@ -2,11 +2,13 @@ import Apis from "rpc_api/ApiInstances"
 import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
 
-const DB_VERSION = 1
+const DB_VERSION = 2 // Initial value was 1
 const DB_PREFIX = "graphene_v2"
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
+
+var current_wallet_name = "default"
 
 var upgrade = function(db, oldVersion) {
     // DEBUG console.log('... upgrade oldVersion',oldVersion)
@@ -15,17 +17,22 @@ var upgrade = function(db, oldVersion) {
         idb_helper.autoIncrement_unique(db, "private_keys", "pubkey")
         db.createObjectStore("linked_accounts", { keyPath: "name" })
     }
-    // if (oldVersion < 2) {
-    //     
-    // }
+    if (oldVersion < 2) {
+        // Cache only, do not backup...
+        db.createObjectStore("cached_properties", { keyPath: "name" })
+    }
 }
 
-var getDatabaseName = function(wallet_name = "default") {
+/**
+    Everything in this class is scopped by the database name.  This separates
+    data per-wallet and per-chain.
+*/
+var getDatabaseName = function(current_wallet = current_wallet_name) {
     var chain_id = Apis.instance().chain_id
     return [
         DB_PREFIX,
         chain_id ? chain_id.substring(0, 6) : "",
-        wallet_name
+        current_wallet
     ].join("_")
 }
 
@@ -56,6 +63,7 @@ var openDatabase = function(database_name = this.getDatabaseName()) {
 }
 
 var iDB
+
 module.exports = iDB = (function () {
 
     var _instance;
@@ -67,6 +75,7 @@ module.exports = iDB = (function () {
     function openIndexedDB() {
         return iDB.root.getProperty("current_wallet", "default").then(
             current_wallet => {
+            current_wallet_name = current_wallet
             var database_name = getDatabaseName(current_wallet)
             return openDatabase(database_name)
         })
@@ -86,6 +95,8 @@ module.exports = iDB = (function () {
 
     return {
         WALLET_BACKUP_STORES,
+        getDatabaseName: getDatabaseName,
+        getCurrentWalletName: ()=> current_wallet_name,
         deleteDatabase: function(are_you_sure = false) {
             if( ! are_you_sure) return "Are you sure?"
             console.log("deleting", this.database_name)
@@ -172,6 +183,30 @@ module.exports = iDB = (function () {
                 };
             });
         },
+        
+        /** Persisted to disk but not backed up.
+            @return promise
+        */
+        getCachedProperty: function(name, default_value) {
+            var db = this.instance().db()
+            var transaction = db.transaction(["cached_properties"], "readonly")
+            var store = transaction.objectStore("cached_properties")
+            return idb_helper.on_request_end( store.get(name) ).then( event => {
+                var result = event.target.result
+                return result ? result.value : default_value
+            }).catch( error => { console.error(error); throw error })
+        },
+        
+        /** Persisted to disk but not backed up. */
+        setCachedProperty: function(name, value) {
+            var db = this.instance().db()
+            var transaction = db.transaction(["cached_properties"], "readwrite")
+            var store = transaction.objectStore("cached_properties")
+            if(value && value["toJS"]) value = value.toJS() //Immutable-js
+            return idb_helper.on_request_end( store.put({name, value}) )
+                .catch( error => { console.error(error); throw error })
+        },
+        
         backup: function (store_names = WALLET_BACKUP_STORES) {
             var promises = []
             for (var store_name of store_names) {
@@ -201,8 +236,7 @@ module.exports = iDB = (function () {
                 }
                 return idb_helper.on_transaction_end(trx)
             })
-        },
-        getDatabaseName: getDatabaseName
+        }
     };
 
 })();

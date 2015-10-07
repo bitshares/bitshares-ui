@@ -55,7 +55,8 @@ import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
 import AccountRefsStore from "stores/AccountRefsStore";
-import Help from "./Help";
+import Help from "./components/Help";
+import InitError from "./components/InitError";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -150,11 +151,14 @@ class Auth extends React.Component {
 }
 
 App.willTransitionTo = (transition, params, query, callback) => {
-    //if (transition.path.indexOf("/auth/") === 0) {
-    //}
-    //API is used to read the chain_id .. The chain_id defines the database name
+    if (transition.path === "/init-error") {
+        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
+        db.then(() => {
+            callback();
+        });
+        return;
+    }
     Apis.instance().init_promise.then(() => {
-        
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
         return Promise.all([db]).then(() => {
             console.log("db init done");
@@ -167,9 +171,8 @@ App.willTransitionTo = (transition, params, query, callback) => {
                     if (transition.path.indexOf("/auth/") === 0) {
                         transition.redirect("/dashboard");
                     }
-
                 }).catch((error) => {
-                    console.error("[App.jsx:172] ----- WalletDb.willTransitionTo error ----->", error);
+                    console.error("----- WalletDb.willTransitionTo error ----->", error);
                 }),
                 WalletManagerStore.init()
             ]).then(()=> {
@@ -177,9 +180,12 @@ App.willTransitionTo = (transition, params, query, callback) => {
             })
         });
     }).catch( error => {
-        console.error("[App.jsx] ----- App.willTransitionTo error ----->", error);
+        console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
         if(error.name === "InvalidStateError") {
-            alert("Can't access local storage.\nPlease make sure you are not running your browser in private/incognito mode.");
+            alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
+        } else {
+            transition.redirect("/init-error");
+            callback();
         }
     })
 };
@@ -211,6 +217,7 @@ let routes = (
             <Route name="wmc-backup-verify-restore" path="backup/restore" handler={BackupRestore}/>
             <Route name="wmc-backup-create" path="backup/create" handler={BackupCreate}/>
             <Route name="wmc-backup-brainkey" path="backup/brainkey" handler={BackupBrainkey}/>
+            <Route name="wmc-balance-claims" path="balance-claims" handler={BalanceClaimActive}/>
         </Route>
         <Route name="create-wallet" path="create-wallet" handler={WalletCreate}/>
         <Route name="console" path="console" handler={Console}/>
@@ -241,6 +248,7 @@ let routes = (
             <Route name="account-deposit-withdraw" path="deposit-withdraw" handler={AccountDepositWithdraw}/>
             <Route name="account-orders" path="orders" handler={AccountOrders}/>
         </Route>
+        <Route name="init-error" path="/init-error" handler={InitError}/>
         <Route name="help" path="/help" handler={Help}>
             <Route name="path1" path=":path1" handler={Help}>
                 <Route name="path2" path=":path2" handler={Help}>

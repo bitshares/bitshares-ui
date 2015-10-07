@@ -1,5 +1,6 @@
 import WalletDb from "stores/WalletDb"
 import WalletUnlockActions from "actions/WalletUnlockActions"
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import ApplicationApi from "../rpc_api/ApplicationApi"
 import PrivateKey from "../ecc/key_private"
 import Apis from "../rpc_api/ApiInstances"
@@ -36,6 +37,7 @@ class WalletActions {
     }
     
     setBackupDate() {
+        CachedPropertyActions.set("backup_recommended", false)
         this.dispatch()
     }
     

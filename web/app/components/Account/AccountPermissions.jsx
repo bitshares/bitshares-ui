@@ -103,16 +103,13 @@ class AccountPermissions extends React.Component {
         let s = this.state;
         let updated_account = this.props.account.toJS();
         updated_account.new_options = updated_account.options;
+        delete updated_account.options;
         updated_account.account = updated_account.id;
         updated_account.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_weights);
         updated_account.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_weights);
         if (s.memo_key && s.memo_key !== s.prev_memo_key && this.refs.memo_key.isValidPubKey(s.memo_key)) {
-            updated_account.new_options = updated_account.options;
             updated_account.new_options.memo_key = s.memo_key;
         }
-        delete updated_account.active;
-        delete updated_account.owner;
-        delete updated_account.options;
         //console.log("-- AccountPermissions.onPublish -->", updated_account);
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_update", updated_account);
