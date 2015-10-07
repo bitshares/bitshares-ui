@@ -214,6 +214,7 @@ class BorrowModalContent extends React.Component {
     render() {
         let {quote_asset, bitasset_balance, backing_asset, backing_balance, bitasset_data} = this.props;
         let {short_amount, collateral, collateral_ratio, errors, isValid} = this.state;
+        if (!collateral_ratio || isNaN(collateral_ratio) || !(collateral_ratio > 0.0 && collateral_ratio < 1000.0)) collateral_ratio = 0;
 
         bitasset_balance = !bitasset_balance ? {balance: 0, id: null} : bitasset_balance.toJS();
         backing_balance = !backing_balance ? {balance: 0, id: null} : backing_balance.toJS();
