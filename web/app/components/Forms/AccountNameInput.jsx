@@ -3,7 +3,6 @@ import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import {debounce} from "lodash";
 import BaseComponent from "../BaseComponent";
 import validation from "common/validation";
 
@@ -27,7 +26,6 @@ class AccountNameInput extends BaseComponent {
         this.state.existing_account = false;
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
-        this.validateAccountName = debounce(this.validateAccountName, 250);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
