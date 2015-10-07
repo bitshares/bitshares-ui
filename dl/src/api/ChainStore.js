@@ -67,6 +67,7 @@ class ChainStore
    resetCache() {
        this.subscribed = false
        this.clearCache()
+       this.head_block_time = null
        this.init().then(result => {
         console.log("resetCache init success");
        }).catch(err => {
@@ -87,6 +88,7 @@ class ChainStore
                   this._updateObject( optional_object, true )
 
                   let head_time = new Date(optional_object.time+"+00:00").getTime();
+                  this.head_block_time = optional_object.time
                   let now = Date.now();
                   let delta = (now - head_time)/1000
                   let start = Date.parse('Sep 1, 2015');
@@ -877,6 +879,7 @@ class ChainStore
 //      console.log( "update: ", object )
       if( object.id == "2.1.0" ) {
          object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
+         this.head_block_time = object.time
       }
 
       let current = this.objects_by_id.get( object.id )
@@ -1025,6 +1028,10 @@ class ChainStore
         let obj_id = this.objects_by_vote_id.get( vote_id )
         if( obj_id ) return this.getObject( obj_id );
         return undefined;
+    }
+    
+    getHeadBlockDate() {
+        return new Date(this.head_block_time ? this.head_block_time : 0)
     }
 }
 
