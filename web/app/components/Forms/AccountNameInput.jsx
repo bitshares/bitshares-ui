@@ -122,8 +122,8 @@ class AccountNameInput extends BaseComponent {
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}
                        value={this.state.account_name}/>
-                   <div className="facolor-info">{error}</div>
-                   <div className="facolor-fee">{error ? null : info}</div>
+                   <div className="facolor-error">{error}</div>
+                   <div className="facolor-info">{error ? null : info}</div>
             </div>
         );
     }
