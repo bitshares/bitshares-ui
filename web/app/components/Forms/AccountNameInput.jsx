@@ -9,6 +9,17 @@ import validation from "common/validation";
 
 class AccountNameInput extends BaseComponent {
 
+    static propTypes = {
+        id: PropTypes.string,
+        placeholder: PropTypes.string,
+        initial_value: PropTypes.string,
+        onChange: PropTypes.func,
+        onEnter: PropTypes.func,
+        accountShouldExist: PropTypes.bool,
+        accountShouldNotExist: PropTypes.bool,
+        cheapName: PropTypes.bool
+    };
+    
     constructor(props) {
         super(props, AccountStore);
         this.state.value = null;
@@ -74,6 +85,10 @@ class AccountNameInput extends BaseComponent {
             "Please enter valid account name" :
             validation.is_account_name_error(value)
         
+        if(this.props.cheapName)
+            if( ! this.state.error && ! validation.is_cheap_name( value ))
+                this.state.error = "This faucet accepts names with at least one dash number or dot, or no vowles."
+        
         this.setState({value: value, error: this.state.error});
         if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
         if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
@@ -105,20 +120,10 @@ class AccountNameInput extends BaseComponent {
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}
                        value={this.state.account_name}/>
-                {error}
+                   <div className="warning">{error}</div>
             </div>
         );
     }
 }
-
-AccountNameInput.propTypes = {
-    id: PropTypes.string,
-    placeholder: PropTypes.string,
-    initial_value: PropTypes.string,
-    onChange: PropTypes.func,
-    onEnter: PropTypes.func,
-    accountShouldExist: PropTypes.bool,
-    accountShouldNotExist: PropTypes.bool
-};
 
 export default AccountNameInput;
