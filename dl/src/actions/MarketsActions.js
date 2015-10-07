@@ -243,7 +243,7 @@ class MarketsActions {
                 //     failedOrder: {expiration: uniqueExpiration}
                 // });
 
-                return false;
+                return {error};
             });
     }
 
