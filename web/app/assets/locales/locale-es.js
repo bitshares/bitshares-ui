@@ -1,4 +1,4 @@
-module.exports = {
+ module.exports = {
     languages: {
         en: "English",
         cn: "简体中文",
@@ -8,25 +8,30 @@ module.exports = {
         es: "Español"
     },
     header: {
-        title: "Graphene UI",
+        title: "Graphene - Interfaz de Usiario",
         account: "Cuenta",
-        dashboard: "Dashboard",
+        dashboard: "Tablero",
         explorer: "Explorer",
         exchange: "Exchange",
-        payments: "Transferir",
+        payments: "Transferir", 
         logout: "Salir",
         settings: "Configuración",
         current: "Cuenta Actual",
         create_account: "Crear Cuenta",
-        create_asset: "Crear Asset",
+        create_asset: "Crear Activo",
         lock: "Bloquear",
         unlock: "Desbloquear",
-        help: "Ayuda"
+        help: "Ayuda",
+        locked_tip: "Billetera bloqueada. Click para desbloquear.",
+        unlocked_tip: "Billetera desbloqueada. Click para bloquear"
+    },
+    operation : {
+        pending: "%(blocks)s bloques pendientes"
     },
     account: {
-        asset: "Asset",
+        asset: "Activo",
         market_value: "Valor de Mercado",
-        hour_24: "Cambio en 24hs",
+        hour_24: "Cambio 24hs",
         recent: "Actividad reciente",
         name: "Nombre de la Cuenta",
         more: "ver más",
@@ -37,9 +42,9 @@ module.exports = {
             referrer: "Afiliado Referente",
             lifetime_referrer: "Referente Vitalicio",
             network_percentage: "Red",
-            fee_allocation: "Comisiones Asignadas",
+            fee_allocation: "Asignación de Tarifas",
             membership: "Membresía",
-            fees_paid: "Membresía vitalicia paga",
+            fees_paid: "Pago por Membresía vitalicia",
             fees_pending: "Comisiones pendientes",
             fees_vested: "Comisiones pendientes de consolidación",
             referrals: "Referidos",
@@ -49,15 +54,15 @@ module.exports = {
             unknown: "Miembro desconocido",
             lifetime: "Miembro vitalicio",
             basic: "Miembro básico",
-            annual: "Annual subscriber",
-            upgrade_lifetime: "Buy Lifetime Subscribtion",
-            subscribe: "Buy Annual Subscription",
-            expires: "expires",
-            membership_expiration: "Membership Expiration"
+            annual: "Suscriptor anual",
+            upgrade_lifetime: "Comprar Suscripción Vitalicia",
+            subscribe: "Comprar Suscripción Anual",
+            expires: "expira",
+            membership_expiration: "Vencimiento de Membresía"
         },
         user_issued_assets: {
             symbol: "Símbolo",
-            name: "Nombre del Asset",
+            name: "Nombre del Activo",
             description: "Descripción",
             max_supply: "Emisión máxima",
             precision: "Precisión",
@@ -81,10 +86,11 @@ module.exports = {
             confirm_add: "Agregar",
             cancel: "Cancelar",
             add_permission_label: "Ingrese nombre de cuenta/llave y su relevancia",
-            account_name_or_key: "Nombre de cuenta o llave"
+            account_name_or_key: "Nombre de cuenta o Llave",
+            memo_public_key: "Llave Pública Memo"
         },
         votes: {
-            proxy: "Cuenta Apoderada de Votos",
+            proxy: "Cuenta Apoderada de sus Votos",
             no_proxy: "Sin Apoderado",
             name: "Nombre",
             info: "Info",
@@ -98,18 +104,18 @@ module.exports = {
             remove_committee: "Remover",
             add_committee: "Agregar",
             add_committee_label: "Miembro del Comité",
-            add_witness_label: "Firmantes",
+            add_witness_label: "Testigos",
             approve_worker: "Aprobar propuesta de trabajo",
             reject_worker: "Rechazar propuesta de trabajo"
         },
         options: {
-            num_witnesses: "Firmantes Deseados",
+            num_witnesses: "Testigos Deseados",
             num_committee: "Miembros del Comité Deseados",
-            memo_key: "Memo Key"
+            memo_key: "Llave Memo"
         },
         upgrade: "Actualizar cuenta",
-        unfollow: "Unfollow",
-        follow: "Follow",
+        unfollow: "Dejar de Seguir",
+        follow: "Seguir",
         pay: "Pagar",
         overview: "Resumen",
         history: "Historial",
@@ -138,7 +144,7 @@ module.exports = {
         fee: "Comisión",
         send: "Enviar",
         final: "Saldo final",
-        balances: "Saldos",
+        balances: "Balances",
         available: "Disponible",
         errors: {
             req: "Campo requerido",
@@ -176,7 +182,7 @@ module.exports = {
         "create_key": "Llave pública creada",
         reg_account: "Registrada la cuenta",
         was_reg_account: "registrada por",
-        create_asset: "creado el asset",
+        create_asset: "creado el activo",
         limit_order_sell: "publicada la orden de venta #%(num)s por %(sell_amount)s a ",
         limit_order_buy: "publicada la orden de compra #%(num)s por %(buy_amount)s a ",
         limit_order_cancel: "orden cancelada",
@@ -184,30 +190,30 @@ module.exports = {
         short_order_cancel: "Orden en corto cancelada ",
         at: "a",
         coll_of: "con un colateral de",
-        call_order_update: "updated margin position for ",
+        call_order_update: "actualizar margin position para ",
         lifetime_upgrade_account: "actualizado a membresía vitalicia",
         annual_upgrade_account: "actualizado a membresía anual",
         update_account: "cuenta actualizada",
         whitelist_account: "Agregada a Lista Blanca la cuenta",
         whitelisted_by: "Fue agregado a la Lista Blanca de la cuenta",
         transfer_account: "Transferida la cuenta",
-        update_asset: "Actualizado el asset",
-        update_feed_producers: "Actualizados los productores de feeds para el asset",
-        feed_producer: "Se convirtió en productor de feeds para el asset",
+        update_asset: "Actualizado el activo",
+        update_feed_producers: "Actualizados los productores de feeds para el activo",
+        feed_producer: "Se convirtió en productor de feeds para el activo",
         feed_price: "Precio del feed",
         asset_issue: "Emitido",
         was_issued: "Ha sido emitido",
         by: "por",
         burn_asset: "Incinerado",
-        fund_pool: "Fondo de Comisiones del asset financiado con",
+        fund_pool: "Fondo de Comisiones del activo financiado con",
         asset_settle: "Solicitada la liquidación de",
         asset_global_settle: "Solicitada la liquidación global de",
         publish_feed: "feed publicado ",
         committee_member_create: "Miembro del Comité creado",
-        witness_create: "Creado el Firmante",
-        witness_update: "Firmante actualizado",
-        witness_pay: "Se retiró el pago del firmante a la cuenta",
-        witness_receive: "Firmante recibido del firmante",
+        witness_create: "Creado el Testigo",
+        witness_update: "Testigo actualizado",
+        witness_pay: "Se retiró el pago del Testigo a la cuenta",
+        witness_receive: "Testigo recibido del Testigo",
         proposal_create: "Ha creado una propuesta",
         proposal_update: "Ha actualizado una propuesta",
         proposal_delete: "Ha eliminado una propuesta",
@@ -232,12 +238,12 @@ module.exports = {
         order_id: "ID de la Orden",
         balance_claim: "solicitado un balance de %(balance_amount)s del balance ID #%(balance_id)s",
         balance_owner: "Llave de propietario de saldo (owner key)",
-        balance_id: "Balance ID",
+        balance_id: "ID del Balance",
         deposit_to: "Depositado a la cuenta",
         claimed: "Total solicitado",
         borrow_amount: "Monto del préstamo",
         funding_account: "Funding account",
-        delta_collateral: "Collateral change",
+        delta_collateral: "Cambio  decolateral",
         delta_debt: "Debt change",
         new_url: "Website",
         publisher: "Publisher",
@@ -251,20 +257,20 @@ module.exports = {
             account_whitelist: "Lista blanca",
             account_upgrade: "Actualizar suscripción de la Cuenta",
             account_transfer: "Transferir Cuenta",
-            asset_create: "Crear asset",
-            asset_update: "Actualizar asset",
+            asset_create: "Crear activo",
+            asset_update: "Actualizar activo",
             asset_update_bitasset: "Actualizar SmartCoin",
-            asset_update_feed_producers: "Actualizar productores de feed de assets",
-            asset_issue: "Emitir asset",
-            asset_reserve: "Incinerar asset",
-            asset_fund_fee_pool: "Financiar Fondo de Comisiones de un asset",
-            asset_settle: "Liquidación de Activos (assets)",
+            asset_update_feed_producers: "Actualizar productores de feed de activo",
+            asset_issue: "Emitir activo",
+            asset_reserve: "Incinerar activo",
+            asset_fund_fee_pool: "Financiar Fondo de Comisiones de un activo",
+            asset_settle: "Liquidación de Activos",
             asset_global_settle: "Liquidación global de Activos (assets)",
             asset_publish_feed: "Publicar feed",
             committee_member_create: "Crear miembro del Comité",
-            witness_create: "Crear Fimante",
-            witness_update: "Actualizar firmante",
-            witness_withdraw_pay: "Retirar pago del firmante",
+            witness_create: "Crear Testigo",
+            witness_update: "Actualizar Testigo",
+            witness_withdraw_pay: "Retirar pago del Testigo",
             proposal_create: "Crear propuesta",
             proposal_update: "Actualizar propuesta",
             proposal_delete: "Eliminar propuesta",
@@ -295,7 +301,7 @@ module.exports = {
         block: {
             title: "Bloque",
             id: "ID de bloque",
-            witness: "Firmante",
+            witness: "Testigo",
             count: "Nro de transacciones",
             date: "Fecha",
             time: "Hora",
@@ -313,7 +319,7 @@ module.exports = {
             authorizing_account: "Cuenta autorizante",
             listed_account: "Listed account",
             new_listing: "New listing",
-            asset_update: "Asset a actualizar",
+            asset_update: "Activo a actualizar",
             common_options: "Opciones comunes",
             new_options: "Nuevas opciones",
             new_producers: "Nuevos productores de feeds",
@@ -324,20 +330,55 @@ module.exports = {
             settlement_price: "Precio de liquidación"
         },
         assets: {
-            title: "Assets",
+            title: "Activos",
             market: "SmartCoins",
-            user: "Assets Emitidos por Usuarios (UIA)",
+            user: "Activos Emitidos por Usuarios (UIA)",
             symbol: "Símbolo",
             id: "ID",
             issuer: "Emisor",
             precision: "Precisión"
         },
         asset: {
-            title: "Asset",
-            not_found: "El asset %(name)s no existe"
+            not_found: "El activo %(name)s no existe",
+            summary: {
+                asset_type: "Tipo de Activo",
+                issuer: "Emisor",
+                current_supply: "Current supply",
+                stealth_supply: "Stealth supply",
+                market_fee: "Market fee",
+                max_market_fee: "Max market fee"
+            },
+            price_feed: {
+                price_feed: "Price fee",
+                settlement_price: "Precio de liquidación",
+                maintenance_collateral_ratio: "Relación colateral de mantenimiento",
+                maximum_short_squeeze_ratio: "Maximum short squeeze ratio"
+            },
+            fee_pool: {
+                fee_pool: "Fee pool",
+                core_exchange_rate: "Core exchange rate",
+                pool_balance: "Pool balance",
+                unclaimed_issuer_income: "Unclaimed issuer income"
+            },
+            permissions: {
+                permissions: "Permisos",
+                max_market_fee: "Max market fee",
+                max_supply: "Max supply",
+                chargeMarketFee: "Charge market fee",
+                allowWhiteList: "Permitir lista blanca",
+                allowIssuerOverride: "Allow issuer override",
+                restrictTransfers: "Restringir transferencias",
+                allowForceSettle: "Permitir liquidación forzosa",
+                allowGlobalSettle: "Permitir liquidación global",
+                allowStealthTransfer: "Permitir transferencias secretas",
+                blacklist_authorities: "Blacklist authorities",
+                blacklist_markets: "Blacklist markets",
+                whitelist_authorities: "Whitelist authorities",
+                whitelist_markets: "Whitelist markets"
+            }
         },
         witnesses: {
-            title: "Firmantes"
+            title: "Testigos"
         },
         committee_members: {
             title: "Miembros del Comité",
@@ -392,7 +433,7 @@ module.exports = {
         confirm_sell: "Confirmar orden: Vender %(sell_amount)s %(sell_symbol)s al precio de %(price_amount)s %(price_symbol)s"
     },
     markets: {
-        choose_base: "Elija el asset base",
+        choose_base: "Elija el activo base",
         filter: "Filtrar",
         core_rate: "Core rate",
         supply: "Supply",
@@ -412,11 +453,13 @@ module.exports = {
         delete_confirm_line2: "Problemas inesperados van a ocurrir si usted no lee esto!",
         delete_confirm_line3: "Esta acción NO PUEDE ser revertida.",
         delete_wallet_name: "Eliminar Billetera (%(name)s)",
+        balance_claims: "Balances Solicitados",
         download: "Descargar",
         name: "Nombre de la Billetera",
         create: "Crear",
         console: "Consola de Administración de la Billetera",
         create_backup: "Crear Backup",
+        backup_brainkey: "Backup Brainkey",
         create_backup_of: "Crear Backup (%(name)s Wallet)",
         import_backup: "Importar Backup",
         restore_backup: "Restaurar Backup",
@@ -451,5 +494,12 @@ module.exports = {
             below: "Relación colateral inferior al nivel de mantenimiento",
             collateral: "Saldo colateral insuficiente"
         }
+    },
+    modal : {
+      issue : {
+        to: "Emitir A",
+        amount: "Cantidad a Emitir",
+        submit: "Emitir Asset"
+      }
     }
 };
