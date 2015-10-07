@@ -132,6 +132,7 @@ _my.signed_transaction = ->
                 private_key
                 public_key
             )
+            console.log "INFO: Signed #{i} of #{@signer_private_keys.length}" if i % 10 == 0
             @signatures.push sig.toBuffer()
         @signer_private_keys = []
         @signed = true
