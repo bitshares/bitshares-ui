@@ -93,7 +93,8 @@ class WalletDb {
                 this.getWallet().chain_id + ", but got " +
                 Apis.instance().chain_id)
         
-        return WalletUnlockActions.unlock().then( () => {
+        return WalletUnlockActions.unlock().then( (unlocked) => {
+            if (!unlocked) return Promise.reject("wallet locked");
             return tr.set_required_fees().then(()=> {
                 var signer_pubkeys_added = {}
                 if(signer_pubkeys) {

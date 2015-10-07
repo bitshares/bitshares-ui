@@ -123,11 +123,12 @@ class Exchange extends React.Component {
             expiration, 
             false // fill or kill TODO: add fill or kill switch
         ).then(result => {
-            if (!result) {
-                notify.addNotification({
-                    message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
-                    level: "error"
-                });
+            if (result.error) {
+                if (result.error !== "wallet locked")
+                    notify.addNotification({
+                        message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
+                        level: "error"
+                    });
             }
         });
     }
