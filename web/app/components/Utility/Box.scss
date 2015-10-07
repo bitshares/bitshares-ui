@@ -6,7 +6,7 @@
 
   border: 2px;
   border-color: #888;
-  border-radius: 12px;
+  /* border-radius: 12px; */
   border-style: inset;
 }
 
@@ -37,4 +37,8 @@
   color: #FCAB53; /* orange */
 
   font-weight: bold;
+}
+
+.BoxBody .icon svg path {
+  fill: #50D2C2; /* blue */
 }
