@@ -43,9 +43,8 @@ class CreateAccount extends React.Component {
     }
 
     onAccountNameChange(e) {
-        let state = {validAccountName: e.valid};
-        if(e.value || e.value === "") state.accountName = e.value;
-        this.setState(state);
+        if(e.valid !== undefined) this.setState({ validAccountName: e.valid })
+        if(e.value !== undefined) this.setState({ accountName: e.value })
     }
 
     onPasswordChange(e) {
@@ -144,7 +143,7 @@ class CreateAccount extends React.Component {
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
                                 <div className="form-group">
                                     <label>Identicon</label>
-                                    <AccountImage account={this.state.validAccountName ? this.state.accountName:null} custom_image={null}/>
+                                    <AccountImage account={this.state.validAccountName ? this.state.accountName:null}/>
                                 </div>
                                 <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
