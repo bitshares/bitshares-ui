@@ -26,16 +26,16 @@ module.exports =
     
     is_account_name_error: (value, allow_too_short = false)->
         suffix = "Account name should "
-        return "not be empty" if is_empty value
+        return suffix + "not be empty." if is_empty value
         length = value.length
-        return "be longer" if ( ! allow_too_short and length < 3)
-        return "be shorter" if length > 63
+        return suffix + "be longer." if ( ! allow_too_short and length < 3)
+        return suffix + "be shorter." if length > 63
         suffix = "Each account segment should " if /\./.test(value)
         for label in value.split('.')
-            return "start with a letter" unless /^[a-z]/.test(label)
-            return "have only letters, digits, or dashes" unless /^[a-z0-9-]*$/.test(label)
-            return "have only one dash in a row" if /--/.test(label)
-            return "end with a letter or digit" unless /[a-z0-9]$/.test(label)
+            return suffix + "start with a letter." unless /^[a-z]/.test(label)
+            return suffix + "have only letters, digits, or dashes." unless /^[a-z0-9-]*$/.test(label)
+            return suffix + "have only one dash in a row." if /--/.test(label)
+            return suffix + "end with a letter or digit." unless /[a-z0-9]$/.test(label)
         return null
     
     is_cheap_name: (account_name)->
