@@ -7,35 +7,23 @@ var Immutable = require("immutable");
 class SettingsStore {
     constructor() {
         this.settings = Immutable.Map({
-            // inverseMarket: true,
-            // unit: 0,
             locale: "en",
-            // confirmMarketOrder: true,
             defaultMarkets: [
-                {quote: "1.3.1", base: "1.3.0"},
-                {quote: "1.3.626", base: "1.3.0"},
-                {quote: "1.3.379", base: "1.3.0"},
-                {quote: "1.3.424", base: "1.3.0"},
-                {quote: "1.3.520", base: "1.3.0"},
-                {quote: "1.3.312", base: "1.3.0"},
-                {quote: "1.3.316", base: "1.3.0"},
-                {quote: "1.3.460", base: "1.3.0"}
+                {"quote":"1.3.536","base":"1.3.0"},
+                {"quote":"1.3.285","base":"1.3.0"},
+                {"quote":"1.3.218","base":"1.3.0"},
+                {"quote":"1.3.366","base":"1.3.0"},
+                {"quote":"1.3.330","base":"1.3.0"},
+                {"quote":"1.3.481","base":"1.3.0"},
+                {"quote":"1.3.427","base":"1.3.0"},
+                {"quote":"1.3.218","base":"1.3.536"},
+                {"quote":"1.3.218","base":"1.3.285"}
             ]
         });
-
-
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
         this.defaults = {
-            // unit: [
-            //     "$",
-            //     "¥",
-            //     "€",
-            //     "£",
-            //     "\u0243",
-            //     "BTS"
-            // ],
             locale: [
                 "en",
                 "cn",
@@ -44,10 +32,6 @@ class SettingsStore {
                 "de",
                 "es"
             ],
-            // inverseMarket: [
-            //     "CORE/USD",
-            //     "USD/CORE"
-            // ],
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
             //     {translate: "confirm_no"}
@@ -60,6 +44,7 @@ class SettingsStore {
             onRemoveMarket: MarketsActions.removeMarket
         });
 
+        console.log("-- SettingsStore.constructor -->", localStorage.settings_v3);
         if (localStorage.settings_v3) {
             let settings = Immutable.Map(JSON.parse(localStorage.settings_v3));
             this.settings = settings;
