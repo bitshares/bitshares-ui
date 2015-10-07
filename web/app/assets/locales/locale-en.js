@@ -35,6 +35,7 @@
         recent: "Recent activity",
         name: "Account name",
         more: "see more",
+        deposit_withdraw: "Deposit/Withdraw",
         member: {
             stats: "Membership",
             join: "Joined on",
@@ -511,6 +512,11 @@
         to: "Issue To",
         amount: "Amount to Issue",
         submit: "Issue Asset"
+      },
+      withdraw : {
+        amount: "Amount to Withdraw",
+        address: "Withdraw to Address",
+        submit: "Withdraw"
       }
     }
 };

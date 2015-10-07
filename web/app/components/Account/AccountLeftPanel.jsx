@@ -80,6 +80,7 @@ class AccountLeftPanel extends React.Component {
                                 <li><Link to="account-permissions" params={{account_name}}><Translate content="account.permissions"/></Link></li>
                                 <li><Link to="account-voting" params={{account_name}}><Translate content="account.voting"/></Link></li>
                                 <li><Link to="account-orders" params={{account_name}}><Translate content="account.orders"/></Link></li>
+                                <li><Link to="account-deposit-withdraw" params={{account_name}}><Translate content="account.deposit_withdraw"/></Link></li>
                             </ul>
                         </section>
                     </div>
