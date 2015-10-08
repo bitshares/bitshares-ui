@@ -20,7 +20,10 @@ module.exports = {
         create_asset: "创建资产",
         lock: "锁定钱包",
         unlock: "解锁",
-        account: "账户"
+        account: "账户",
+        help: "帮助",
+        locked_tip: "钱包已锁定，点击解锁。",
+        unlocked_tip: "钱包已解锁，点击锁定。"
     },
     account: {
         assets: "资产",
@@ -46,7 +49,7 @@ module.exports = {
             unknown: "未知的会员",
             lifetime: "终身会员",
             basic: "普通会员",
-            annual: "年度订阅者",
+            annual: "年度会员",
             registrar: "注册人",
             referrer: "推荐人",
             lifetime_referrer: "终身会员推荐人",
@@ -54,7 +57,7 @@ module.exports = {
             fee_allocation: "手续费分配",
             upgrade_lifetime: "购买终身会籍",
             subscribe: "购买1年会籍",
-            expires: "过期",
+            expires: "过期时间",
             membership_expiration: "会籍过期时间"
         },
         connections: {
@@ -83,14 +86,17 @@ module.exports = {
             weight: "权重",
             threshold: "阈值",
             confirm_add: "增加",
-            cancel: "取消"
+            cancel: "取消",
+            add_permission_label: "输入账户名/公钥以及权重",
+            account_name_or_key: "账户名或公钥",
+            memo_public_key: "备注公钥"
         },
         votes: {
             proxy: "代理投票账户",
             no_proxy: "无代理",
             name: "账户名",
             info: "信息",
-            votes: "votes",
+            votes: "得票",
             url: "主页",
             support: "支持",
             workers: "预算项目",
@@ -110,8 +116,8 @@ module.exports = {
             memo_key: "备注公钥"
         },
         upgrade: "升级账户",
-        unfollow: "Unfollow",
-        follow: "Follow",
+        unfollow: "取消关注",
+        follow: "关注",
         pay: "向他付款",
         overview: "概述",
         history: "交易历史",
@@ -210,7 +216,7 @@ module.exports = {
         global_parameters_update: "更新全局参数",
         file_write: "写入文件",
         vesting_balance_create: "创建待解冻余额",
-        "for": "for",
+        "for": "为",
         vesting_balance_withdraw: "提取解冻资金",
         bond_create_offer: "创建债券要约",
         bond_cancel_offer: "取消债券要约",
@@ -259,11 +265,12 @@ module.exports = {
             assert: "断言操作",
             balance_claim: "领取余额",
             override_transfer: "优先覆盖转账",
-            witness_update: "更新见证人"
+            witness_update: "更新见证人",
+            committee_member_update_global_parameters: "全局参数更新"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
-        transaction_confirmed: "交易已确认Transaction",
+        transaction_confirmed: "交易已确认",
         broadcast_fail: "交易广播失败: %(message)s",
         balance_claim: "从余额ID #%(balance_id)s 中领取金额 %(balance_amount)s ",
         balance_owner: "余额所有者公钥",
@@ -465,7 +472,7 @@ module.exports = {
         active_wallet: "当前钱包使用中",
         verified: "已验证",
         verify_prior_backup: "验证钱包备份文件",
-        cancel: "Cancel",
+        cancel: "取消",
         reset: "重置",
         done: "完成",
         verify: "验证",
