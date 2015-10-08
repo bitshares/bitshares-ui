@@ -66,6 +66,7 @@ module.exports = idb_helper = {
         }(object, event_callback)//copy var references for callbacks
     },
     
+    /** callback may return <b>false</b> to indicate that iteration should stop */
     cursor: (store_name, callback, transaction) => {
         return new Promise((resolve, reject)=>{
             if( ! transaction) {
@@ -83,8 +84,8 @@ module.exports = idb_helper = {
             request.onsuccess = e => {
                 let cursor = e.target.result;
                 var ret = callback(cursor, e)
-                if(!cursor)
-                    resolve(ret)
+                if(ret === false) resolve()
+                if(!cursor) resolve(ret)
             };
             request.onerror = (e) => {
                 var error = {
