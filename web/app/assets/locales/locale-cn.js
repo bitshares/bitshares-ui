@@ -334,7 +334,43 @@ module.exports = {
         },
         asset: {
             title: "资产",
-            not_found: "资产 %(name)s 不存在"
+            not_found: "资产 %(name)s 不存在",
+            summary: {
+                asset_type: "资产类型",
+                issuer: "发行人",
+                current_supply: "当前供给",
+                stealth_supply: "隐私供给",
+                market_fee: "交易市场费率",
+                max_market_fee: "交易市场手续费上限"
+            },
+            price_feed: {
+                price_feed: "喂价",
+                settlement_price: "清算价格",
+                maintenance_collateral_ratio: "维持保证金比例",
+                maximum_short_squeeze_ratio: "强制平仓比例上限"
+            },
+            fee_pool: {
+                fee_pool: "手续费资金池",
+                core_exchange_rate: "汇率",
+                pool_balance: "资金池余额",
+                unclaimed_issuer_income: "发行人未申领收入"
+            },
+            permissions: {
+                permissions: "权限",
+                max_market_fee: "交易市场手续费上限",
+                max_supply: "最大供给",
+                chargeMarketFee: "收取交易手续费",
+                allowWhiteList: "允许持仓账户白名单",
+                allowIssuerOverride: "允许发行人变更",
+                restrictTransfers: "限制资产转账",
+                allowForceSettle: "允许强制清算",
+                allowGlobalSettle: "允许全局清算",
+                allowStealthTransfer: "允许隐私转账",
+                blacklist_authorities: "黑名单管理账户",
+                blacklist_markets: "禁止交易对市场",
+                whitelist_authorities: "白名单管理账户",
+                whitelist_markets: "允许交易对市场"
+            }
         },
         witnesses: {
             title: "见证人"
@@ -459,13 +495,13 @@ module.exports = {
         }
     },
     operation: {
-        pending: "pending %(blocks)s blocks"
+        pending: " %(blocks)s 个区块待定"
     },
     modal: {
         issue: {
-            to: "Issue To",
-            amount: "Amount to Issue",
-            submit: "Issue Asset"
+            to: "发行到",
+            amount: "发行数量",
+            submit: "发行资产"
         }
     }
 };
