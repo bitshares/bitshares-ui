@@ -12,13 +12,14 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import TimeAgo from "../Utility/TimeAgo";
-import Box from "./../Utility/Box";
-import HelpContent from "./../Utility/HelpContent";
+import Box from "../Utility/Box";
+import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 require("./json-inspector.scss");
 
 
 //-------------------------------------------------------------
+// TODO: Capitalize?
 var chargeMarketFeeBit =      0x01;
 var allowWhiteListBit =       0x02;
 var allowIssuerOverrideBit =  0x04;
@@ -202,7 +203,7 @@ class Asset extends React.Component {
     }
 
 
-    formattedPrice(price) {
+    formattedPrice(price, hide_symbols=false, hide_value=false) {
         var base = price.base;
         var quote = price.quote;
         return (
@@ -211,6 +212,8 @@ class Asset extends React.Component {
                 base_asset={base.asset_id}
                 quote_amount={quote.amount}
                 quote_asset={quote.asset_id}
+                hide_value={hide_value}
+                hide_symbols={hide_symbols}
             />
         );
     }
@@ -230,15 +233,21 @@ class Asset extends React.Component {
     }
 
 
-    renderMarketList(markets) {
+    renderMarketList(asset, markets) {
+        var symbol = asset.symbol;
         return markets.map(
             function (market) {
+                if (market == symbol)
+                    return '';
+                var marketID = market + '_' + symbol;
+                var marketName = market + '/' + symbol;
                 return (
                     <span>
-                        {' '} {market}
+                        <Link to="exchange" params={{marketID:marketID}}>{marketName}</Link>
+                        {' '}
                     </span>
                 );
-            }
+            }.bind(this)
         );
     }
 
@@ -246,22 +255,29 @@ class Asset extends React.Component {
     renderAboutBox(asset) {
         var issuer = ChainStore.getObject(asset.issuer);
         var issuerName = issuer ? issuer.get('name') : '';
+
+        var icon = (<Icon name="piggy" className="pig" size="4x"/>);
+        var help = (
+            <HelpContent
+                path = {"assets/" + asset.symbol}
+                alt_path = "assets/Asset"
+                section="summary"
+                symbol= {asset.symbol}
+                description={asset.options.description}
+                issuer= {issuerName}
+            />
+        );
+
         return (
             <Box>
                 <div className="grid-block" style={{overflow:"visible"}}>
                     <div className="grid-block small-1" style={{overflow:"visible"}}>
                         <br/>
                         <br/>
-                        <Icon name="piggy" className="pig" size="4x"/>
+                        {icon}
                     </div>
                     <div className="grid-block small-11" style={{overflow:"visible"}}>
-                        <HelpContent
-                            path="assets/Asset"
-                            section="summary"
-                            symbol= {asset.symbol}
-                            description={asset.options.description}
-                            issuer= {issuerName}
-                            />
+                        {help}
                     </div>
                 </div>
             </Box>
@@ -296,10 +312,11 @@ class Asset extends React.Component {
             </tr>
         ) : '';
 
+        // options.max_market_fee initially a string
         var maxMarketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.max_market_fee"/> </td>
-                <td> <FormattedAsset amount={options.max_market_fee} asset={asset.id} /> </td>
+                <td> <FormattedAsset amount={+options.max_market_fee} asset={asset.id} /> </td>
             </tr>
         ) : '';
 
@@ -331,62 +348,16 @@ class Asset extends React.Component {
     }
 
 
-    renderFeeds(asset) {
-        var bitAsset = asset.bitasset;
-        if (!bitAsset.feeds) {
-            return '';
-        }
-
-        var feeds = [];
-        feeds.push(
-            <tr>
-                <th>Publisher</th>
-                <th>Publish Date</th>
-                <th>Core Exchange Rate</th>
-                <th>Settlement Price</th>
-                <th>Maintenance Collateral Ratio</th>
-                <th>Maximum Short Squeeze Ratio</th>
-            </tr>
-        )
-        for (var i = 0; i < bitAsset.feeds.length; i++) {
-            var feed = bitAsset.feeds[i];
-            var publisher = feed[0];
-            var publishDate = feed[1][0];
-            var core_exchange_rate = feed[1][1].core_exchange_rate;
-            var maintenance_collateral_ratio = feed[1][1].maintenance_collateral_ratio/10;
-            var maximum_short_squeeze_ratio = feed[1][1].maximum_short_squeeze_ratio/10;
-            var settlement_price = feed[1][1].settlement_price;
-            feeds.push(
-                <tr>
-                    <td> <LinkToAccountById account={publisher}/> </td>
-                    <td><TimeAgo time={publishDate}/></td>
-                    <td> {this.formattedPrice(core_exchange_rate)} </td>
-                    <td>{this.formattedPrice(settlement_price)}</td>
-                    <td>{maintenance_collateral_ratio}%</td>
-                    <td>{maximum_short_squeeze_ratio}%</td>
-                </tr>
-            );
-        }
-
-        return (
-            <div>
-                <br/>
-                <table>
-                    {feeds}
-                </table>
-            </div>
-        );
-    }
-
     renderPriceFeed(asset) {
+        var title = (<Translate content="explorer.asset.price_feed.title"/>);
         var bitAsset = asset.bitasset;
 
         if (!('current_feed' in bitAsset))
-            return ( <Box header= {(<Translate content="explorer.asset.price_feed.price_feed"/>)} /> );
+            return ( <Box header= {title} /> );
         var currentFeed = bitAsset.current_feed;
 
         return (
-            <Box header= {(<Translate content="explorer.asset.price_feed.price_feed"/>)} >
+            <Box accordian="true" header= {title} >
                 <table className="table key-value-table">
                     <tr>
                         <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
@@ -403,8 +374,6 @@ class Asset extends React.Component {
                         <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
                     </tr>
                 </table>
-
-                {this.renderFeeds(asset)}
             </Box>
         );
     }
@@ -414,7 +383,7 @@ class Asset extends React.Component {
         var dynamic = asset.dynamic;
         var options = asset.options;
         return (
-            <Box header= {(<Translate content="explorer.asset.fee_pool.fee_pool"/>)} >
+            <Box accordian="true" header= {(<Translate content="explorer.asset.fee_pool.title"/>)} >
                 <table className="table key-value-table">
                     <tr>
                         <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
@@ -446,17 +415,19 @@ class Asset extends React.Component {
         options.blacklist_markets = ["JPY", "RUB"];
         options.whitelist_markets = ["USD", "EUR", "GOLD"];
 
+        // options.max_market_fee initially a string
         var maxMarketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
             <tr>
                 <td> <Translate content="explorer.asset.permissions.max_market_fee"/> </td>
-                <td> <FormattedAsset amount={options.max_market_fee} asset={asset.id} /> </td>
+                <td> <FormattedAsset amount={+options.max_market_fee} asset={asset.id} /> </td>
             </tr>
         ) : '';
 
+        // options.max_supply initially a string
         var maxSupply = (
             <tr>
                 <td> <Translate content="explorer.asset.permissions.max_supply"/> </td>
-                <td> <FormattedAsset amount={options.max_supply} asset={asset.id} /> </td>
+                <td> <FormattedAsset amount={+options.max_supply} asset={asset.id} /> </td>
             </tr>
         );
 
@@ -467,18 +438,18 @@ class Asset extends React.Component {
                     {this.renderAuthorityList(options.blacklist_authorities)}
                 <br/>
                     <Translate content="explorer.asset.permissions.blacklist_markets"/>:
-                    {this.renderMarketList(options.blacklist_markets)}
+                    {this.renderMarketList(asset, options.blacklist_markets)}
                 <br/>
                     <Translate content="explorer.asset.permissions.whitelist_authorities"/>:
                     {this.renderAuthorityList(options.whitelist_authorities)}
                 <br/>
                     <Translate content="explorer.asset.permissions.whitelist_markets"/>:
-                    {this.renderMarketList(options.whitelist_markets)}
+                    {this.renderMarketList(asset, options.whitelist_markets)}
             </span>
         ) : '';
 
         return (
-            <Box header= {(<Translate content="explorer.asset.permissions.permissions"/>)} >
+            <Box accordian="true" header= {(<Translate content="explorer.asset.permissions.title"/>)} >
                 <table className="table key-value-table">
                     {maxMarketFee}
                     {maxSupply}
@@ -494,34 +465,102 @@ class Asset extends React.Component {
     }
 
 
+    renderPriceFeedData(asset) {
+
+        var bitAsset = asset.bitasset;
+        if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0) {
+            return '';
+        }
+
+        // Sort by published date
+        var feeds = bitAsset.feeds;
+        feeds.sort(function(feed1, feed2){
+            if (feed1[1][0] < feed2[1][0]) {
+                return 1;
+            }
+            if (feed1[1][0] > feed2[1][0]) {
+                return -1;
+            }
+            return 0;
+        })
+
+        var rows = [];
+        var settlement_price_header = feeds[0][1][1].settlement_price;
+        var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
+        rows.push(
+            <tr>
+                <th> <Translate content="explorer.asset.price_feed_data.settlement_price"/> <br/>
+                      {this.formattedPrice(settlement_price_header, false, true)}</th>
+                <th> <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/> <br/>
+                     {this.formattedPrice(core_exchange_rate_header, false, true)} </th>
+                <th> <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio"/> </th>
+                <th> <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio"/> </th>
+                <th> <Translate content="explorer.asset.price_feed_data.publisher"/> </th>
+                <th> <Translate content="explorer.asset.price_feed_data.published"/> </th>
+            </tr>
+        )
+        for (var i = 0; i < feeds.length; i++) {
+            var feed = feeds[i];
+            var publisher = feed[0];
+            var publishDate = feed[1][0];
+            var settlement_price = feed[1][1].settlement_price;
+            var core_exchange_rate = feed[1][1].core_exchange_rate;
+            var maintenance_collateral_ratio = '' + feed[1][1].maintenance_collateral_ratio/10 + '%';
+            var maximum_short_squeeze_ratio = '' + feed[1][1].maximum_short_squeeze_ratio/10 + '%';
+            rows.push(
+                <tr>
+                    <td>{this.formattedPrice(settlement_price, true)}</td>
+                    <td> {this.formattedPrice(core_exchange_rate, true)} </td>
+                    <td style={{textAlign:"center"}}> {maintenance_collateral_ratio}</td>
+                    <td style={{textAlign:"center"}}> {maximum_short_squeeze_ratio}</td>
+                    <td> <LinkToAccountById account={publisher}/> </td>
+                    <td><TimeAgo time={publishDate}/></td>
+                </tr>
+            );
+        }
+
+        return (
+            <Box accordian="true" header= {(<Translate content="explorer.asset.price_feed_data.title"/>)}>
+                <table className="table">
+                    {rows}
+                </table>
+            </Box>
+        );
+    }
+
+
     render()
     {
         var asset = this.props.asset.toJS();
         var priceFeed = ('bitasset' in asset) ? this.renderPriceFeed(asset) : '';
+        var priceFeedData = ('bitasset' in asset) ? this.renderPriceFeedData(asset) : '';
 
         //console.log("This: ", this);
         console.log("Asset: ", asset); //TODO Remove
 
+        // <div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>
         return (
-                <div className="grid-block page-layout vertical medium-horizontal">
-                    <div className="grid-block vertical" style={{overflow:"visible"}}>
+            <div className="grid-block page-layout vertical medium-horizontal">
+                <div className="grid-block vertical" style={{overflow:"visible"}}>
 
+                    {this.renderAboutBox(asset)}
 
-                        {this.renderAboutBox(asset)}
-                        {/*<div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>*/}
-                        <div className="grid-block" style={{overflow:"visible"}}>
-                            <div className="grid-block vertical" style={{overflow:"visible"}}>
-                                {this.renderSummary(asset)}
-                                {priceFeed}
-                            </div>
-
-                            <div className="grid-block vertical" style={{overflow:"visible"}}>
-                                {this.renderFeePool(asset)}
-                                {this.renderPermissions(asset)}
-                             </div>
+                    <div className="grid-block" style={{padding:0, overflow:"visible"}}>
+                        <div className="grid-block vertical" style={{overflow:"visible"}}>
+                            {this.renderSummary(asset)}
+                            {priceFeed}
                         </div>
+
+                        <div className="grid-block vertical" style={{overflow:"visible"}}>
+                            {this.renderFeePool(asset)}
+                            {this.renderPermissions(asset)}
+                         </div>
                     </div>
+
+                    {priceFeedData}
+
                 </div>
+            </div>
         );
     }
 }
