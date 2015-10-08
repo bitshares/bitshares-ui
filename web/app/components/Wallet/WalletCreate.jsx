@@ -2,7 +2,7 @@ import React, {Component} from "react"
 
 import Translate from "react-translate-component";
 import {BackupRestore} from "components/Wallet/Backup"
-import {BrainkeyInput} from "components/Wallet/Brainkey"
+import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import PasswordConfirm from "components/Wallet/PasswordConfirm"
 import WalletDb from "stores/WalletDb"
 import WalletManagerStore from "stores/WalletManagerStore"
