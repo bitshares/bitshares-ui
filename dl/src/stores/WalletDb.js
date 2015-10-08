@@ -1,3 +1,6 @@
+import alt from "alt-instance"
+import BaseStore from "stores/BaseStore"
+
 import iDB from "idb-instance";
 import Apis from "rpc_api/ApiInstances"
 import key from "common/key_utils";
@@ -23,14 +26,19 @@ var transaction
 var TRACE = false
 
 /** Represents a single wallet and related indexedDb database operations. */
-class WalletDb {
+class WalletDb extends BaseStore {
     
     constructor() {
+        super()
         this.wallet = Immutable.Map();
         // Confirm only works when there is a UI
         this.confirm_transactions = true
         ChainStore.subscribe(this.checkNextGeneratedKey.bind(this))
         this.generateNextKey_pubcache = []
+        // 
+        this._export(
+            "checkNextGeneratedKey","getWallet","getCurrentWalletName", "setCurrentWalletName","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","importKeys","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData"
+        )
     }
     
     /** Discover any used keys that are not in this wallet */
@@ -94,7 +102,7 @@ class WalletDb {
                 this.getWallet().chain_id + ", but got " +
                 Apis.instance().chain_id)
         
-        return WalletUnlockActions.unlock().then( (unlocked) => {
+        return WalletUnlockActions.unlock().then( () => {
             return tr.set_required_fees().then(()=> {
                 var signer_pubkeys_added = {}
                 if(signer_pubkeys) {
@@ -508,7 +516,8 @@ class WalletDb {
     
 }
 
-module.exports = new WalletDb()
+export var WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
+module.exports = WalletDbWrapped
 
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)
