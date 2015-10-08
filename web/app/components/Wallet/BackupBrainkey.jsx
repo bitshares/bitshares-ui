@@ -1,9 +1,10 @@
 import React, {Component} from "react"
 import {FormattedDate} from "react-intl"
-import {BrainkeyInput} from "components/Wallet/Brainkey"
+import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import Translate from "react-translate-component"
 import WalletActions from "actions/WalletActions"
 import WalletDb from "stores/WalletDb"
+import hash from "common/hash"
 import cname from "classnames"
 
 export default class BackupBrainkey extends Component {
@@ -30,10 +31,13 @@ export default class BackupBrainkey extends Component {
             <h3>This Brainkey is not verified</h3>
         
         if(this.state.verified) {
+            var sha1 = hash.sha1(this.state.brainkey).toString('hex').substring(0,4)
             content = <div>
-                <h3>Verified Brainkey</h3>
+                <h3>Private Brainkey</h3>
                 <div className="card"><div className="card-content">
                     <h5>{this.state.brainkey}</h5></div></div>
+                <br/>
+                <pre className="no-overflow">{sha1} * Check Digits</pre>
                 <br/>
                 {brainkey_backup_time}
                 <br/>
@@ -45,7 +49,7 @@ export default class BackupBrainkey extends Component {
             content = <span>
                 <h3>Backup Brainkey</h3>
                 <label>Re-Enter Brainkey</label>
-                <BrainkeyInput onChange={this.onVerifyBrainkey.bind(this)}/>
+                <BrainkeyInput onChange={this.onVerifyBrainkey.bind(this)} hideCheckDigits/>
                 <div>{this.state.brainkey ? 
                         <span>Brainkey does not match, keep going&hellip;</span>
                 :null}</div>
@@ -55,10 +59,13 @@ export default class BackupBrainkey extends Component {
         }
         
         if(!content && this.state.brainkey) {
+            var sha1 = hash.sha1(this.state.brainkey).toString('hex').substring(0,4)
             content = <span>
-                <h3>Backup Brainkey</h3>
+                <h3>Private Brainkey</h3>
                 <div className="card"><div className="card-content">
                     <h5>{this.state.brainkey}</h5></div></div>
+                <br/>
+                <pre className="no-overflow">{sha1} * Check Digits</pre>
                 <br/>
                 <button className="button success" onClick={this.verify.bind(this)}>Verify</button>
                 <button className="button cancel" onClick={this.onBack.bind(this)}>Cancel</button>
