@@ -8,6 +8,7 @@ import CachedPropertyStore from "stores/CachedPropertyStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import {backupToBin} from "actions/BackupActions"
 import BlockchainStore from "stores/BlockchainStore";
+import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
 
@@ -21,6 +22,10 @@ class Footer extends React.Component {
 
     static defaultProps = {
         dynGlobalObject: "2.1.0"
+    }
+    
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
     }
 
     constructor(props) {
@@ -67,8 +72,11 @@ class Footer extends React.Component {
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     { this.props.backup_recommended ? <span>
-                        <div className="grid-block shrink txtlabel success" onClick={this.onBackup.bind(this)}>Backup recommended &nbsp; &nbsp;</div>
+                        <div className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup recommended &nbsp; &nbsp;</div>
                     </span> : null}
+                    { this.props.backup_brainkey_recommended ? <span>
+                        <div className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}>Backup brainkey recommended &nbsp; &nbsp;</div>
+                    </span>:null}
                     {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
@@ -84,16 +92,24 @@ class Footer extends React.Component {
     onBackup() {
         backupToBin()
     }
+    
+    onBackupBrainkey() {
+        this.context.router.transitionTo("wmc-backup-brainkey")
+    }
 }
 
 class AltFooter extends Component {
     
     render() {
         return <AltContainer
-            stores={[CachedPropertyStore, BlockchainStore]}
+            stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
             inject ={{
                 backup_recommended: ()=> CachedPropertyStore.get("backup_recommended"),
-                rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
+                rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status,
+                backup_brainkey_recommended: ()=> {
+                    var wallet = WalletDb.getWallet()
+                    return wallet.brainkey_sequence !== 0 && wallet.brainkey_backup_date == null
+                }
             }}
             ><Footer {...this.props}/>
         </AltContainer>
