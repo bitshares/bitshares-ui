@@ -91,10 +91,10 @@ class WalletManagerStore extends BaseStore {
                         return WalletDb.onCreateWallet(
                             create_wallet_password,
                             brnkey, //brainkey,
-                            true //unlock
+                            true, //unlock
+                            wallet_name
                         ).then(()=>
                             this.setState({current_wallet: wallet_name}))
-                        
                     })
                 })
             }))

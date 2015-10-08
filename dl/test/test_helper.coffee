@@ -56,11 +56,12 @@ module.exports =
         suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
     ) =>
         #DEBUG console.log('... test_wallet')
-        WalletDb.setCurrentWalletName("default_" + suffix)
+        # Untested: Removed WalletDb.setCurrentWalletName
         WalletDb.onCreateWallet(
             "password",
             "brainkey" + suffix, 
-            true # unlock  
+            true, # unlock
+            "default_" + suffix
         ).then(()=>
             #DEBUG console.log('... test_wallet onCreateWallet')
             WalletDb.importKeys([
