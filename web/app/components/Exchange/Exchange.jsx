@@ -124,7 +124,7 @@ class Exchange extends React.Component {
             false // fill or kill TODO: add fill or kill switch
         ).then(result => {
             if (result.error) {
-                if (result.error !== "wallet locked")
+                if (result.error.message !== "wallet locked")
                     notify.addNotification({
                         message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
                         level: "error"
