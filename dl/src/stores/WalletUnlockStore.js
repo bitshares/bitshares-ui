@@ -10,12 +10,9 @@ class WalletUnlockStore {
     }
     
     onUnlock({resolve, reject}) {
-        //DEBUG console.log('... onUnlock setState', WalletDb.isLocked())
-        if( ! WalletDb.isLocked()) {
-            resolve(false)
-            return
-        }
-        this.setState({resolve, reject, locked: WalletDb.isLocked()})
+        let locked = WalletDb.isLocked()
+        if(!locked) resolve(true)
+        else this.setState({resolve, reject, locked})
     }
     
     onLock({resolve}) {
