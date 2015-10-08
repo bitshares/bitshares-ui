@@ -57,10 +57,7 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                     <hr/>
                 </span>:null}
                 
-                {/*<Link to="welcome-provide-brainkey">
-                <div className="button success">Provide Brainkey</div></Link>*/}
-                
-                <BalanceClaimActive/>
+                { has_wallet ? <BalanceClaimActive/>:null}
                 
                 {!has_wallet ? <p>
                     <h5>Import your BTS 2.0+ BACKUP first<br/>(if you have one)</h5>
