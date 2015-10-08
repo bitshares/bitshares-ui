@@ -89,8 +89,8 @@ export class WalletOptions extends WalletBaseComponent {
             <Link to="wmc-backup-verify-restore">
             <div className="button outline success"><Translate content="wallet.restore_backup" /></div></Link>
 
-            <Link to="wmc-import-keys">
-            <div className="button outline success"><Translate content="wallet.import_keys" /></div></Link>
+            {has_wallet ? <Link to="wmc-import-keys">
+            <div className="button outline success"><Translate content="wallet.import_keys" /></div></Link>:null}
             
             {has_wallet ? <br/> : null}
             
