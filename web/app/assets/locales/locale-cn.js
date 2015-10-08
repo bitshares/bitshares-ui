@@ -99,14 +99,14 @@ module.exports = {
             remove_witness: "移除",
             remove_committee: "移除",
             add_committee: "添加",
-            add_committee_label: "受托人",
+            add_committee_label: "理事会成员",
             add_witness_label: "见证人",
             approve_worker: "赞成",
             reject_worker: "反对"
         },
         options: {
             num_witnesses: "信任见证人",
-            num_committee: "信任受托人",
+            num_committee: "信任理事会成员",
             memo_key: "备注公钥"
         },
         upgrade: "升级账户",
@@ -194,7 +194,7 @@ module.exports = {
         asset_settle: "请求资产清算",
         asset_global_settle: "请求全局资产清算",
         publish_feed: "资产喂价",
-        committee_member_create: "创建受托人",
+        committee_member_create: "创建理事会成员",
         witness_create: "创建见证人",
         witness_pay: "提取见证人收入到账户",
         witness_receive: "Received witness from witness",
@@ -240,7 +240,7 @@ module.exports = {
             asset_settle: "资产结算",
             asset_global_settle: "全局资产清算",
             asset_publish_feed: "发布资产喂价",
-            committee_member_create: "创建受托人",
+            committee_member_create: "创建理事会成员",
             witness_create: "创建见证人",
             witness_withdraw_pay: "见证人取回报酬",
             proposal_create: "创建提案",
@@ -340,10 +340,11 @@ module.exports = {
             title: "见证人"
         },
         committee_members: {
-            title: "受托人"
+            title: "理事会",
+            active: "理事会成员总数"
         },
         committee_member: {
-            title: "受托人"
+            title: "理事会成员"
         },
         workers: {
             title: "雇员"
