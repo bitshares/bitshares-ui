@@ -405,16 +405,16 @@ module.exports = {
         title: "钱包",
         confirm: "确认密码",
         password: "密码",
-        existing_password: "Existing Password",
-        change_password: "Change Password",
-        change_wallet: "Change Wallet",
+        existing_password: "已存在密码",
+        change_password: "修改密码",
+        change_wallet: "切换钱包",
         wallet_created: "钱包已创建",
         create_wallet: "创建新钱包",
-        delete_wallet: "Delete Wallet",
-        delete_confirm_line1: "Are you ABSOLUTELY sure?",
-        delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
-        delete_confirm_line3: "This action CANNOT be undone.",
-        delete_wallet_name: "Delete Wallet (%(name)s)",
+        delete_wallet: "删除钱包",
+        delete_confirm_line1: "你确定么？",
+        delete_confirm_line2: "如果你不仔细阅读以下提示，可能发生无法预料的事情。",
+        delete_confirm_line3: "本操作不可撤销",
+        delete_wallet_name: "删除钱包 (%(name)s)",
         name: "钱包名字",
         create: "创建",
         console: "钱包管理控制台",
@@ -442,7 +442,10 @@ module.exports = {
         ready_to_restore: "准备导入",
         restore_wallet_of: "导入名为 (%(name)s 的钱包)",
         restore_success: "已成功导入钱包 (%(name)s) ",
-        change: "切换到钱包 (%(name)s)"
+        change: "切换到钱包 (%(name)s)",
+        balance_claims: "余额导入",
+        backup_brainkey: "备份脑钱包密钥",
+        downoad: "下载"
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",
@@ -452,6 +455,16 @@ module.exports = {
         errors: {
             below: "保证金率低于维持保证金要求",
             collateral: "可用保证金不足"
+        }
+    },
+    operation: {
+        pending: "pending %(blocks)s blocks"
+    },
+    modal: {
+        issue: {
+            to: "Issue To",
+            amount: "Amount to Issue",
+            submit: "Issue Asset"
         }
     }
 };
