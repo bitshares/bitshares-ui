@@ -41,9 +41,8 @@ export class BackupCreate extends BackupBaseComponent {
 
             <Create>
                 <NameSizeModified/>
-                <DecryptBackup>
-                    <Download/>
-                </DecryptBackup>
+                <Sha1/>
+                <Download/>
                 <Reset/>
             </Create>
             
