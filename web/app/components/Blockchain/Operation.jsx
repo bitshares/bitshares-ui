@@ -56,7 +56,13 @@ class Row extends React.Component {
         dynGlobalObject: "2.1.0"
     }
 
-    _onTimeClick() {
+    constructor(props) {
+        super(props);
+        this.showDetails = this.showDetails.bind(this);
+    }
+
+    showDetails(e) {
+        e.preventDefault();
         this.context.router.transitionTo("block", {height: this.props.block});
     }
 
@@ -71,9 +77,9 @@ class Row extends React.Component {
         fee.amount = parseInt(fee.amount, 10);
         return (
                 <tr key={key}>
-                    {hideOpLabel ? null : <td className="left-td"><TransactionLabel color={color} type={type} /></td>}
+                    {hideOpLabel ? null : <td className="left-td"><a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a></td>}
                     <td>{this.props.info}&nbsp;{pending}&nbsp;{hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
-                    <td style={{cursor: "pointer"}} onClick={this._onTimeClick.bind(this)} ><BlockTime block_number={block}/></td>
+                    <td className="cursor-pointer" onClick={this.showDetails}><BlockTime block_number={block}/></td>
                 </tr>
             );
     }
