@@ -51,15 +51,27 @@ class FormattedPrice extends React.Component {
            quote_amount = tmp_amount;
         }
 
-        let base_precision = utils.get_asset_precision(base_asset.get("precision"));
-        let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
-        let value = base_amount / base_precision / (quote_amount / quote_precision);
-        // console.log(value);
+        let formatted_value = ''
+        if (!this.props.hide_value) {
+            let base_precision = utils.get_asset_precision(base_asset.get("precision"));
+            let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
+            let value = base_amount / base_precision / (quote_amount / quote_precision);
+            // console.log(value);
+            formatted_value = (
+                <FormattedNumber
+                    value={value}
+                    minimumFractionDigits={0}
+                    maximumFractionDigits={base_asset.get("precision") + quote_asset.get("precision")}
+                />
+            );
+        }
+        let symbols = this.props.hide_symbols ? '' :
+                      (<a onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + "/" + quote_asset.get("symbol")}</a>);
         return (
-                <span>
-                   <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={base_asset.get("precision") + quote_asset.get("precision")} />
-                   <a onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + "/" + quote_asset.get("symbol")}</a>
-               </span>
+            <span>
+                {formatted_value}
+                {symbols}
+            </span>
          )
     }
 }
