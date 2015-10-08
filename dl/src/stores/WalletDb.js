@@ -35,6 +35,7 @@ class WalletDb {
     
     /** Discover any used keys that are not in this wallet */
     checkNextGeneratedKey() {
+        if( ! this.getWallet()) return
         if( ! aes_private_map[wallet_public_name]) return // locked
         if( ! this.getWallet().encrypted_brainkey) return // no brainkey
         if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key)
@@ -189,6 +190,7 @@ class WalletDb {
             if( typeof password_plaintext !== 'string')
                 throw new Error("password string is required")
             
+            var brainkey_backup_date
             if(brainkey_plaintext) {
                 if(typeof brainkey_plaintext !== "string")
                     throw new Error("Brainkey must be a string")
@@ -198,6 +200,10 @@ class WalletDb {
             
                 if(brainkey_plaintext.length < 50)
                     throw new Error("Brainkey must be at least 50 characters long")
+
+                // The user just provided the Brainkey so this avoids
+                // bugging them to back it up again.
+                brainkey_backup_date = new Date()
             }
             var password_aes = Aes.fromSeed( password_plaintext )
             
@@ -225,17 +231,18 @@ class WalletDb {
                 encrypted_brainkey,
                 brainkey_pubkey,
                 brainkey_sequence: 0,
+                brainkey_backup_date,
                 created: new Date(),
                 last_modified: new Date(),
                 chain_id: Apis.instance().chain_id
             }
-            WalletTcomb(wallet)
+            WalletTcomb(wallet) // validation
             var transaction = this.transaction_update()
             var add = idb_helper.add( transaction.objectStore("wallet"), wallet )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
                 this.wallet = this.wallet.set(
                     wallet_public_name,
-                    wallet//WalletTcomb(wallet)
+                    wallet
                 )
                 if(unlock) aes_private_map[wallet_public_name] = aes_private
             })
