@@ -6,7 +6,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
-import {backupToBin} from "actions/BackupActions"
 import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
@@ -90,7 +89,7 @@ class Footer extends React.Component {
     }
     
     onBackup() {
-        backupToBin()
+        this.context.router.transitionTo("wmc-backup-create")
     }
     
     onBackupBrainkey() {
@@ -108,6 +107,7 @@ class AltFooter extends Component {
                 rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status,
                 backup_brainkey_recommended: ()=> {
                     var wallet = WalletDb.getWallet()
+                    if( ! wallet ) return undefined
                     return wallet.brainkey_sequence !== 0 && wallet.brainkey_backup_date == null
                 }
             }}

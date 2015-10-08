@@ -47,22 +47,23 @@ export function backup(backup_pubkey) {
     })
 }
 
-export function backupToBin(
-    backup_pubkey = WalletDb.getWallet().password_pubkey,
-    saveAsCallback = saveAs
-) {
-    backup(backup_pubkey).then( contents => {
-        var name = iDB.getCurrentWalletName() + ".bin"
-        var blob = new Blob([ contents ], {
-            type: "application/octet-stream; charset=us-ascii"})
-        
-        if(blob.size !== contents.length)
-            throw new Error("Invalid backup to download conversion")
-        
-        saveAsCallback(blob, name);
-        WalletActions.setBackupDate()
-    })
-}
+/** No click backup.. Works great, but not used (yet?) */
+// export function backupToBin(
+//     backup_pubkey = WalletDb.getWallet().password_pubkey,
+//     saveAsCallback = saveAs
+// ) {
+//     backup(backup_pubkey).then( contents => {
+//         var name = iDB.getCurrentWalletName() + ".bin"
+//         var blob = new Blob([ contents ], {
+//             type: "application/octet-stream; charset=us-ascii"})
+//         
+//         if(blob.size !== contents.length)
+//             throw new Error("Invalid backup to download conversion")
+//         
+//         saveAsCallback(blob, name);
+//         WalletActions.setBackupDate()
+//     })
+// }
 
 export function restore(backup_wif, backup, wallet_name) {
     return new Promise( resolve => {
