@@ -141,10 +141,10 @@ class Markets extends React.Component {
             .map(market => {
                 return (
                     <MarketCard
-                        key={market.quote + "__" + market.base}
+                        key={"pref_" + market.quote + "__" + market.base}
                         quote={market.quote}
                         base={market.base}
-                        removeMarket={this._removeMarket.bind(market)}
+                        removeMarket={this._removeMarket.bind(market, market.quote, market.base)}
                         />
                 );
         });
