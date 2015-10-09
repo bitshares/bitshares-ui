@@ -1,11 +1,11 @@
 var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
-var MarketsActions = require("../actions/MarketsActions");
 
 var Immutable = require("immutable");
 
 class SettingsStore {
     constructor() {
+        this.exportPublicMethods({getSetting: this.getSetting.bind(this)});
         this.settings = Immutable.Map({
             locale: "en",
             defaultMarkets: [
@@ -18,7 +18,8 @@ class SettingsStore {
                 {"quote":"1.3.427","base":"1.3.0"},
                 {"quote":"1.3.218","base":"1.3.536"},
                 {"quote":"1.3.218","base":"1.3.285"}
-            ]
+            ],
+            connection: "wss://graphene.bitshares.org:443/ws/"
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -42,16 +43,16 @@ class SettingsStore {
 
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
-            onAddMarket: MarketsActions.addMarket,
-            onRemoveMarket: MarketsActions.removeMarket
+            onAddMarket: SettingsActions.addMarket,
+            onRemoveMarket: SettingsActions.removeMarket
         });
 
-        console.log("-- SettingsStore.constructor -->", localStorage.settings_v3);
-        if (localStorage.settings_v3) {
-            let settings = Immutable.Map(JSON.parse(localStorage.settings_v3));
-            this.settings = settings;
-        }
+        if (localStorage.settings_v4)
+            this.settings = Immutable.Map(JSON.parse(localStorage.settings_v4));
+    }
 
+    getSetting(setting) {
+        return this.settings.get(setting);
     }
 
     onChangeSetting(payload) {
@@ -60,7 +61,7 @@ class SettingsStore {
             payload.value
         );
 
-        localStorage.settings_v3 = JSON.stringify(this.settings.toJS());
+        localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
     }
 
     onAddMarket(market) {
@@ -77,7 +78,7 @@ class SettingsStore {
             this.settings = this.settings.set(
                 "defaultMarkets",
                 defaultMarkets);
-            localStorage.settings_v3 = JSON.stringify(this.settings.toJS());
+            localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
         } else {
             return false;
         }
@@ -88,7 +89,7 @@ class SettingsStore {
         for (var i = 0; i < defaultMarkets.length; i++) {
             if (defaultMarkets[i].quote === market.quote && defaultMarkets[i].base === market.base) {
                 defaultMarkets.splice(i, 1);
-                localStorage.settings_v3 = JSON.stringify(this.settings.toJS());
+                localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
                 break;
             }
         }

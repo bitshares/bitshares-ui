@@ -23,7 +23,6 @@ import PublicKey from "ecc/key_public";
 
 require("./ImportKeys.scss");
 
-var api = Apis.instance();
 var import_keys_assert_checking = false
 
 var TRACE = false
@@ -523,7 +522,7 @@ export default class ImportKeys extends Component {
         
         // Lookup and add accounts referenced by the wifs
         var imported_keys_public = this.state.imported_keys_public
-        var db = api.db_api()
+        var db = Apis.instance().db_api()
         
         if(TRACE) console.log('... ImportKeys._saveImport START')
         ImportKeysActions.setStatus("saving")

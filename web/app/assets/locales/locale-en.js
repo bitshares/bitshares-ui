@@ -428,7 +428,8 @@
         confirm_yes: "Always",
         confirm_no: "Never",
         always_confirm: "Always ask for confirmation",
-        wallets: "Wallets"
+        wallets: "Wallets",
+        connection: "API Connection"
     },
     footer: {
         title: "Graphene",

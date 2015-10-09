@@ -5,6 +5,7 @@ import MarketsActions from "actions/MarketsActions";
 import Translate from "react-translate-component";
 import {Link} from "react-router";
 import AssetActions from "actions/AssetActions";
+import SettingsActions from "actions/SettingsActions";
 import ChainStore from "api/ChainStore";
 
 class Markets extends React.Component {
@@ -65,10 +66,12 @@ class Markets extends React.Component {
 
     _addMarket(quote, base) {
         MarketsActions.addMarket(quote, base);
+        SettingsActions.addMarket(quote, base); // we can't listen to MarketsActions in SettingsStore due to circular dependencies
     }
 
     _removeMarket(quote, base) {
-        MarketsActions.removeMarket(quote, base);        
+        MarketsActions.removeMarket(quote, base);
+        SettingsActions.removeMarket(quote, base); // we can't listen to MarketsActions in SettingsStore due to circular dependencies
     }
 
     _isPreferred(quote, base) {

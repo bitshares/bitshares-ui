@@ -502,3 +502,12 @@ td.orderHistoryBid {
     border-color: $dark-text-color;
   }
 }
+
+// Block List (section)
+section input[type="text"] {
+  background-color: transparent;
+  &:hover, &:active, &:focus {
+    color: $primary-text-color;
+    background-color: transparent;
+  }
+}

@@ -1,7 +1,6 @@
 
 module.exports = helper = {}
 
-api = require('../rpc_api/ApiInstances').instance()
 secureRandom = require 'secure-random'
 hash = require '../common/hash'
 type = require './serializer_operation_types'
@@ -37,7 +36,7 @@ helper.to_json=( tr, broadcast = false ) ->
     ((tr, broadcast)->
         tr_object = type.signed_transaction.toObject tr
         if broadcast
-            net = api.network_api()
+            net = require('../rpc_api/ApiInstances').instance().network_api()
             console.log '... tr_object', JSON.stringify tr_object
             net.exec "broadcast_transaction", [tr_object]
         else

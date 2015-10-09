@@ -5,12 +5,13 @@ import Translate from "react-translate-component";
 import cookies from "cookies-js";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router";
+import WalletManager from "../Wallet/WalletManager";
 
 class SettingsEntry extends React.Component {
 
     render() {
         let {defaults, setting, settings} = this.props;
-        let options, value = null;
+        let options, value, input;
 
         let myLocale = counterpart.getLocale();
 
@@ -37,7 +38,9 @@ class SettingsEntry extends React.Component {
                 });
                 break;
 
-            case "defaultMarkets": 
+            case "defaultMarkets":
+                options = null;
+                value = null;
                 break;
 
             default: 
@@ -52,35 +55,40 @@ class SettingsEntry extends React.Component {
                         value = defaults[1];
                     }
                 }
+                else if(typeof selected === "string") {
+                    value = selected;
+                }
 
-                options = defaults.map(entry => {
-                    let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
-                    let key = entry.translate ? entry.translate : entry;
-                    return <option key={key}>{option}</option>;
-                });
+                if (defaults) {
+                    options = defaults.map(entry => {
+                        let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
+                        let key = entry.translate ? entry.translate : entry;
+                        return <option key={key}>{option}</option>;
+                    });
+                } else {
+                    input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>
+                }
                 break;
 
         }
 
+        if (!value && !options) return null;
 
         if (value && value.translate) {
             value = counterpart.translate(`settings.${value.translate}`);
         }
 
-        if (!options) {
-            return null;
-        }
-
         return (
             <section className="block-list">
-                <header><Translate component="span" content={`settings.${setting}`} /><span>:</span></header>
-                <ul>
+                <header><Translate component="span" content={`settings.${setting}`} /></header>
+                {options ? <ul>
                     <li className="with-dropdown">
                     <select value={value} onChange={this.props.onChange.bind(this, setting)}>
                         {options}
                     </select>
                     </li>
-                </ul>
+                </ul> : null}
+                {input ? <ul><li>{input}</li></ul> : null}
             </section>
         );
     }
@@ -91,6 +99,7 @@ class Settings extends React.Component {
 
     _onChangeSetting(setting, e) {
         e.preventDefault();
+
         let {defaults} = this.props;
         let value = null;
 
@@ -124,6 +133,10 @@ class Settings extends React.Component {
                 value = findEntry(e.target.value, defaults) === 0; // USD/CORE is true, CORE/USD is false
                 break;
 
+            case "connection":
+                SettingsActions.changeSetting({setting: "connection", value: e.target.value });
+                break;
+
             default:
                 value = findEntry(e.target.value, defaults);
                 break;
@@ -139,10 +152,6 @@ class Settings extends React.Component {
         let {settings, defaults} = this.props;
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block medium-3 left-column">
-                    <div className="grid-content">
-                    </div>
-                </div>
                 <div className="grid-block medium-6 main-content">
                     <div className="grid-content no-overflow">
                         {settings.map((value, setting) => {
@@ -158,7 +167,7 @@ class Settings extends React.Component {
                         }).toArray()}
                     </div>
                 </div>
-                <div className="grid-block medium-3 right-column">
+                <div className="grid-block medium-6 right-column">
                     <div className="grid-content">
                         <div><label><h5><Link to="wallet"><Translate content="settings.wallets" /></Link></h5></label></div>
                     </div>
