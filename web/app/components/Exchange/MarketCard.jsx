@@ -21,7 +21,7 @@ class MarketCard extends React.Component {
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + " vs " + base.get("symbol");
         let dynamic_data = ChainStore.getObject(quote.get("dynamic_asset_data_id"));
-        
+       
         return (
             <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
                 <div className="card">
@@ -33,13 +33,13 @@ class MarketCard extends React.Component {
                         </div>
                         <div className="card-section">
                             <ul >
-                                <li><Translate content="markets.core_rate" />:
+                                <li><Translate content="markets.core_rate" />:&nbsp;
                                         <FormattedPrice
                                             style={{fontWeight: "bold"}}
                                             quote_amount={quote.getIn(["options", "core_exchange_rate", "quote", "amount"])}
                                             quote_asset={quote.getIn(["options", "core_exchange_rate", "quote", "asset_id"])}
-                                            base_amount={quote.get(["options", "core_exchange_rate", "base", "amount"])}
-                                            base_asset={quote.get(["options", "core_exchange_rate", "base", "asset_id"])}
+                                            base_amount={quote.getIn(["options", "core_exchange_rate", "base", "amount"])}
+                                            base_asset={quote.getIn(["options", "core_exchange_rate", "base", "asset_id"])}
                                         />
                                 </li>
                                 <li><Translate content="markets.supply" />:
