@@ -5,7 +5,9 @@
         fr: "Français",
         ko: "한국어",
         de: "Deutsch",
-        es: "Español"
+        es: "Español",
+        tr: "Turkish"
+        
     },
     header: {
         title: "Graphene UI",
