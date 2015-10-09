@@ -75,7 +75,7 @@ class OrderRow extends React.Component {
 
             return (
                 <tr key={order.id}>
-                    <td className="text-right">
+                    <td className="text-right" style={{padding: "2px 5px"}}>
                         <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
@@ -113,7 +113,7 @@ class OrderRow extends React.Component {
                         format="short"
                         />
                     </td>
-                    <td className="text-right">
+                    <td className="text-right" style={{padding: "2px 5px"}}>
                         <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
