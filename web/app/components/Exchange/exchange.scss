@@ -262,9 +262,15 @@ a.order-cancel {
     padding-top: 1.3rem;
 }
 
-.bucket-button {
+.button.bucket-button {
   text-transform: none !important;
   background-color: #616161 !important;
+  font-size: 0.75rem !important;
+}
+
+.active-bucket {
+  text-transform: none !important;
+  background-color: rgb(80, 210, 194) !important;
   font-size: 0.75rem !important;
 }
 

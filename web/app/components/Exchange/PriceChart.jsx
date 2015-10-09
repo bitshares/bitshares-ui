@@ -4,19 +4,23 @@ import Highcharts from "react-highcharts/stocks";
 import utils from "common/utils";
 
 class Chart {
-    shouldComponentUpdate(nextProps) {
-        if (this.props.config.series[0].data.length === 0) {
-            return nextProps.config.series[0].data.length > 0;
-        } else {
-            return (
-                nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
-                nextProps.config.series[0].data[0][1] !== this.props.config.series[0].data[0][1] || 
-                nextProps.quoteSymbol !== this.props.quoteSymbol
-            );
-        }
-    }
+    // shouldComponentUpdate(nextProps) {
+    //     return true;
+    //     if (this.props.config.series[0].data.length === 0) {
+    //         return nextProps.config.series[0].data.length > 0;
+    //     } else {
+    //         console.log("chart else shouldComponentUpdate");
+    //         return (
+    //             true
+    //             // nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
+    //             // nextProps.config.series[0].data[0][1] !== this.props.config.series[0].data[0][1] || 
+    //             // nextProps.quoteSymbol !== this.props.quoteSymbol
+    //         );
+    //     }
+    // }
 
     render() {
+        console.log(this.props.config);
         return <Highcharts config={this.props.config}/>;
     }
 }
@@ -24,15 +28,17 @@ class Chart {
 class PriceChart extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.priceData.length === 0 || nextProps.priceData.length === 0) {
-            return nextProps.priceData.length > 0;
-        } else {
+        // return true;
+        // if (this.props.priceData.length === 0 || nextProps.priceData.length === 0) {
+        //     return nextProps.priceData.length > 0;
+        // } else {
             return (
+                !utils.are_equal_shallow(nextProps.priceData, this.props.priceData) ||
                 nextState.lastPointY !== this.state.lastPointY ||
-                nextProps.baseSymbol !== this.props.baseSymbol ||
-                nextProps.priceData[0][1] !== this.props.priceData[0][1]
+                nextProps.baseSymbol !== this.props.baseSymbol
+                
             );
-        }
+        // }
     }
 
     constructor() {
@@ -110,7 +116,7 @@ class PriceChart extends React.Component {
                 enabled: false
             },
             navigator: {
-                enabled: false
+                enabled: true
             },
             plotOptions: {
                 candlestick: {
@@ -118,7 +124,8 @@ class PriceChart extends React.Component {
                     color: "#E3745B",
                     upColor: "#50D2C2",
                     lineColor: "#000000",
-                    lineWidth: 2
+                    lineWidth: 1,
+                    pointWidth: 4
                 },
                 column: {
                     animation: false,
@@ -266,16 +273,16 @@ class PriceChart extends React.Component {
         }
 
         // Add plotline if defined
-        if (this.props.plotLine) {
-            config.xAxis.plotLines.push({
-                color: "red",
-                id: "plot_line",
-                dashStyle: "longdashdot",
-                value: this.props.plotLine,
-                width: 1,
-                zIndex: 5
-            });
-        }
+        // if (this.props.plotLine) {
+        //     config.xAxis.plotLines.push({
+        //         color: "red",
+        //         id: "plot_line",
+        //         dashStyle: "longdashdot",
+        //         value: this.props.plotLine,
+        //         width: 1,
+        //         zIndex: 5
+        //     });
+        // }
 
         // Fix the height if defined, if not use offsetHeight
         if (this.props.height) {
