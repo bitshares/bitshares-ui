@@ -5,7 +5,8 @@ module.exports = {
         fr: "Français",
         ko: "한국어",
         de: "Deutsch",
-        es: "Español"
+        es: "Español",
+        tr: "Turkish"
     },
     header: {
         title: "比特股 2.0",
