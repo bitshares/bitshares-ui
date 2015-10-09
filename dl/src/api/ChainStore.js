@@ -67,7 +67,7 @@ class ChainStore
    resetCache() {
        this.subscribed = false
        this.clearCache()
-       this.head_block_time = null
+       this.head_block_time_string = null
        this.init().then(result => {
         console.log("resetCache init success");
        }).catch(err => {
@@ -88,7 +88,7 @@ class ChainStore
                   this._updateObject( optional_object, true )
 
                   let head_time = new Date(optional_object.time+"+00:00").getTime();
-                  this.head_block_time = optional_object.time
+                  this.head_block_time_string = optional_object.time
                   let now = Date.now();
                   let delta = (now - head_time)/1000
                   let start = Date.parse('Sep 1, 2015');
@@ -879,7 +879,7 @@ class ChainStore
 //      console.log( "update: ", object )
       if( object.id == "2.1.0" ) {
          object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
-         this.head_block_time = object.time
+         this.head_block_time_string = object.time
       }
 
       let current = this.objects_by_id.get( object.id )
@@ -1031,7 +1031,12 @@ class ChainStore
     }
     
     getHeadBlockDate() {
-        return new Date(this.head_block_time ? this.head_block_time : 0)
+        var head_block_time_string = this.head_block_time_string
+        if( ! head_block_time_string) return new Date("1970-01-01T00:00:00.000Z")
+        if( ! /Z$/.test(head_block_time_string)) //does not end in Z
+            // https://github.com/cryptonomex/graphene/issues/368
+            head_block_time_string = head_block_time_string + "Z"
+        return new Date(head_block_time_string)
     }
 }
 
