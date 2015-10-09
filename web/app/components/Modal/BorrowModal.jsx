@@ -14,6 +14,7 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
+import HelpContent from "../Utility/HelpContent";
 
 let wallet_api = new WalletApi();
 
@@ -245,6 +246,7 @@ class BorrowModalContent extends React.Component {
             <div>
                 <form className="grid-container small-10 small-offset-1 no-overflow" noValidate>
                     <Translate component="h3" content="borrow.title" asset_symbol={quote_asset.get("symbol")} />
+                    <HelpContent path="components/BorrowModal" debt={quote_asset.get('symbol')} collateral={backing_asset.get('symbol')} borrower={this.props.account.get('name')} />
                     <div style={{paddingBottom: "1rem"}}>
                         <div><Translate content="transaction.feed_price" />:&nbsp;
                             <FormattedPrice

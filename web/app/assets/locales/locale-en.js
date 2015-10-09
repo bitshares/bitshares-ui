@@ -242,7 +242,7 @@
         balance_id: "Balance ID",
         deposit_to: "Deposited to account",
         claimed: "Total claimed",
-        borrow_amount: "Amount to borrow",
+        borrow_amount: "Debt",
         funding_account: "Funding account",
         delta_collateral: "Collateral change",
         delta_debt: "Debt change",
@@ -496,10 +496,10 @@
         change: "Change (%(name)s Wallet)"
     },
     borrow: {
-        title: "Collateral position for %(asset_symbol)s",
+        title: "%(asset_symbol)s Margin",
         no_valid: "No valid feeds for %(asset_symbol)s",
         coll_ratio: "Collateral ratio",
-        adjust: "Adjust position",
+        adjust: "Update Position",
         errors: {
             below: "Collateral ratio below maintenance level",
             collateral: "Insufficient collateral balance"
