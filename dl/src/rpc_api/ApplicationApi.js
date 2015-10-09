@@ -8,7 +8,6 @@ var chain_config = require('../chain/config');
 var helper = require('../chain/transaction_helper')
 var ops = require('../chain/signed_transaction');
 var type = require('../chain/serializer_operation_types')
-var api = require('./ApiInstances').instance();
 var key = require('../common/key_utils');
 var v = require('common/validation')
 

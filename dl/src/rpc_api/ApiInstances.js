@@ -1,34 +1,33 @@
 var WebSocketRpc = require("./WebSocketRpc");
 var GrapheneApi = require("./GrapheneApi");
+import SettingsStore from "../stores/SettingsStore";
 
 class Apis {
-    constructor() {
-       this.rpc_user = "";
-       this.rpc_password = "";
-    }
 
-    connect(hostname="localhost", port=8090) {
-        console.log( "Connecting..." );
-        let protocol = "ws://", path = "";
+    connect() {
+        if (this.ws_rpc) return; // already connected
+        let connection_string, rpc_user, rpc_password;
         try { // For command-line support, all references to "window" go in the try catch
-           let args     = window.location.hash.split("/");
+            let rpc_host, rpc_port;
+            let args = window.location.hash.split("/");
             if (args.length > 2) {
                 let parts = args[2].split(":");
-                this.rpc_user = parts[0];
-                this.rpc_pass = parts[1];
-                this.rpc_ip = parts[2];
-                this.rpc_port = parts[3];
+                rpc_user = parts[0];
+                rpc_password = parts[1];
+                rpc_host = parts[2];
+                rpc_port = parts[3];
             }
-            if (this.ws_rpc) return; // already connected
-            if (this.rpc_ip) hostname = this.rpc_ip;
-            else hostname = window.location.hostname ? window.location.hostname : "localhost";
-            if (this.rpc_port ) port = this.rpc_port;
-            protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        } catch(e) {}
-        //hostname = "graphene.bitshares.org"; protocol = "wss://"; port = "443"; path = "/ws/";
-        console.log(`connecting to ${protocol}${hostname}:${port}${path}`);
-        this.ws_rpc = new WebSocketRpc(`${protocol}${hostname}:${port}${path}`);
-        this.init_promise = this.ws_rpc.login(this.rpc_user, this.rpc_password).then(() => {
+            if (rpc_host) {
+                let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+                let port = rpc_port ? `:${rpc_port}` : "";
+                connection_string = `${protocol}${rpc_host}${port}`
+            }
+        } catch (e) {}
+        if (!connection_string) connection_string = SettingsStore.getSetting("connection");
+        //connection_string = "ws://localhost:8090";
+        console.log(`connecting to ${connection_string}`);
+        this.ws_rpc = new WebSocketRpc(connection_string);
+        this.init_promise = this.ws_rpc.login(rpc_user, rpc_password).then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             if (window) window.$db_api = this._db_api;
             this._network_api = new GrapheneApi(this.ws_rpc, "network_broadcast");
@@ -86,10 +85,10 @@ module.exports = {
     setRpcConnectionStatusCallback: function(callback) {
         if(apis_instance) apis_instance.setRpcConnectionStatusCallback(callback);
     },
-    instance: function ( host="localhost", port=8090) {
+    instance: function () {
         if ( !apis_instance ) {
             apis_instance = new Apis();
-            apis_instance.connect(host, port);
+            apis_instance.connect();
         }
         return apis_instance;
     }

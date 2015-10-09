@@ -15,7 +15,6 @@ import Immutable from "immutable"
 import config from "chain/config"
 
 var application_api = new ApplicationApi()
-var api = Apis.instance()
 //var fetch = require('node-fetch')
 
 class WalletActions {
@@ -127,7 +126,7 @@ class WalletActions {
     importBalance( account_name_or_id, balances, broadcast) {
         return new Promise((resolve, reject) => {
             
-            var db = api.db_api()
+            var db = Apis.instance().db_api()
             var address_publickey_map = {}
             
             var account_lookup = lookup.account_id(account_name_or_id)

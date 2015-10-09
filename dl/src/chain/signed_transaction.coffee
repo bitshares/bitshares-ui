@@ -12,7 +12,6 @@ hash = require('../common/hash')
 type = require './serializer_operation_types'
 validation = require('../common/validation')
 lookup = require './lookup'
-api = require('../rpc_api/ApiInstances').instance()
 helper = require('../chain/transaction_helper')
 Apis = require('rpc_api/ApiInstances')
 ChainStore = (require 'api/ChainStore').default
@@ -70,8 +69,8 @@ _my.signed_transaction = ->
                 asset_id = op1_fee.asset_id
             else
                 asset_id = "1.3.0"
-        
-        api.db_api().exec( "get_required_fees",
+
+        Apis.instance().db_api().exec( "get_required_fees",
             [operations, asset_id]
         ).then (assets)=>
             #DEBUG console.log('... get_required_fees',assets)
@@ -83,7 +82,7 @@ _my.signed_transaction = ->
         new Promise (resolve, reject)=>
             throw new Error "already finalized" if @tr_buffer
             @expiration ||= base_expiration_sec() + chain_config.expire_in_secs
-            resolve api.db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
+            resolve Apis.instance().db_api().exec("get_objects", [["2.1.0"]]).then (r) =>
                 @ref_block_num = r[0].head_block_number & 0xFFFF
                 @ref_block_prefix =  new Buffer(r[0].head_block_id, 'hex').readUInt32LE(4)
                 #DEBUG console.log("ref_block",@ref_block_num,@ref_block_prefix,r)
@@ -98,8 +97,8 @@ _my.signed_transaction = ->
     get_potential_signatures:()->
         tr_object = type.signed_transaction.toObject @
         Promise.all([
-            api.db_api().exec( "get_potential_signatures", [tr_object] )
-            api.db_api().exec( "get_potential_address_signatures", [tr_object] )
+            Apis.instance().db_api().exec( "get_potential_signatures", [tr_object] )
+            Apis.instance().db_api().exec( "get_potential_address_signatures", [tr_object] )
         ]).then (results)->
             {pubkeys: results[0], addys: results[1]}
     
@@ -107,7 +106,7 @@ _my.signed_transaction = ->
         return Promise.resolve([]) unless available_keys.length
         tr_object = type.signed_transaction.toObject @
         #DEBUG console.log('... tr_object',tr_object)
-        api.db_api().exec(
+        Apis.instance().db_api().exec(
             "get_required_signatures",
             [tr_object, available_keys]
         ).then (required_public_keys)->
@@ -155,7 +154,7 @@ _my.signed_transaction = ->
             throw new Error "not signed" unless @signatures.length
             throw new Error "no operations" unless @operations.length
             tr_object = type.signed_transaction.toObject @
-            api.network_api().exec(
+            Apis.instance().network_api().exec(
                 "broadcast_transaction_with_callback",
                 [ (res) ->
                     #console.log('... broadcast_transaction_with_callback !!!')
