@@ -97,7 +97,7 @@ class Exchange extends React.Component {
         }
 
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol")) {
-            
+
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
             return this._subToMarket(nextProps);
@@ -120,7 +120,7 @@ class Exchange extends React.Component {
             sellAsset.id,
             parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
             buyAsset.id,
-            expiration, 
+            expiration,
             false // fill or kill TODO: add fill or kill switch
         ).then(result => {
             if (result.error) {
@@ -132,7 +132,7 @@ class Exchange extends React.Component {
             }
         });
     }
-    
+
     _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
         if (sellAssetAmount > balance) {
@@ -171,7 +171,7 @@ class Exchange extends React.Component {
 
     _changeBucketSize(size, e) {
         e.preventDefault();
-        if (size !== this.props.bucketSize) { 
+        if (size !== this.props.bucketSize) {
             MarketsActions.changeBucketSize(size);
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
@@ -197,8 +197,8 @@ class Exchange extends React.Component {
             depthLine: value
         });
 
-        this._buyPriceChanged(base, {target: {value: value}});
-        this._sellPriceChanged(base, {target: {value: value}});
+        this._buyPriceChanged(base, quote, {target: {value: value}});
+        this._sellPriceChanged(base, quote, {target: {value: value}});
     }
 
     _addZero(value) {
@@ -228,12 +228,12 @@ class Exchange extends React.Component {
         return value;
     }
 
-    _buyPriceChanged(base, e) {
+    _buyPriceChanged(base, quote, e) {
         this.setState({
-            buyPrice: this._addZero(e.target.value),
+            buyPrice: this._limitByPrecision(this._addZero(e.target.value), {precision: quote.precision + base.precision}),
             buyTotal: this._limitByPrecision(this.state.buyAmount * e.target.value, base)
         });
-        this._setDepthLine(e.target.value); 
+        this._setDepthLine(e.target.value);
     }
 
     _buyAmountChanged(base, quote, e) {
@@ -244,7 +244,7 @@ class Exchange extends React.Component {
         this.setState({
             buyAmount: this._addZero(value),
             buyTotal: this._limitByPrecision(value * this.state.buyPrice, base)
-        }); 
+        });
     }
 
     _buyTotalChanged(base, quote, e) {
@@ -266,12 +266,12 @@ class Exchange extends React.Component {
         this.setState({
             sellAmount: this._addZero(value),
             sellTotal: this._limitByPrecision(value * this.state.sellPrice, base)
-        }); 
+        });
     }
 
-    _sellPriceChanged(base, e) {
+    _sellPriceChanged(base, quote, e) {
         this.setState({
-            sellPrice: this._addZero(e.target.value),
+            sellPrice: this._limitByPrecision(this._addZero(e.target.value), {precision: quote.precision + base.precision}),
             sellTotal: this._limitByPrecision(this.state.sellAmount * e.target.value, base)
         });
         this._setDepthLine(e.target.value);
@@ -308,7 +308,7 @@ class Exchange extends React.Component {
                 sellAmount: value,
                 sellTotal: this._limitByPrecision(value * price, base)
             });
-            
+
         } else if (type === "ask") {
             let value = amount.toString();
             if (value.indexOf(".") !== value.length -1) {
@@ -348,9 +348,10 @@ class Exchange extends React.Component {
         let { currentAccount, linkedAccounts, limit_orders,
             totalBids, flat_asks, flat_bids, bids, asks, quoteAsset, baseAsset } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
-        
+
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            quoteSymbol, baseSymbol;
+            quoteSymbol, baseSymbol, feedPrice = null, settlementPrice = null, feedQuote, feedBase, settlementQuote, settlementBase,
+            flipped = false;
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset.toJS();
@@ -359,7 +360,7 @@ class Exchange extends React.Component {
             quoteSymbol = quote.symbol;
 
             accountBalance = currentAccount.get("balances").toJS();
-            
+
             if (accountBalance) {
                 for (var id in accountBalance) {
                     if (id === quote.id) {
@@ -369,8 +370,38 @@ class Exchange extends React.Component {
                         baseBalance = accountBalance[id];
                     }
                 }
-            } 
+            }
 
+            var settlement_price, core_rate;
+            if (quote.bitasset && quote.bitasset.current_feed && base.id === "1.3.0") {
+                core_rate = quote.bitasset.current_feed.core_exchange_rate;
+                settlement_price = quote.bitasset.current_feed.settlement_price;
+            } else if (base.bitasset && base.bitasset.current_feed && quote.id === "1.3.0") {
+                core_rate = base.bitasset.current_feed.core_exchange_rate;
+                settlement_price = base.bitasset.current_feed.settlement_price;
+            }
+
+            if (core_rate) {
+                if (core_rate.base.asset_id === quote.id) {
+                    feedBase = {precision: quote.precision, id: quote.id};
+                    feedQuote = {precision: base.precision, id: base.id};
+                } else {
+                    flipped = true;
+                    feedBase = {precision: base.precision, id: base.id};
+                    feedQuote = {precision: quote.precision, id: quote.id};
+                }
+
+                if (settlement_price.base.asset_id === quote.id) {
+                    settlementBase = {precision: quote.precision, id: quote.id};
+                    settlementQuote = {precision: base.precision, id: base.id};
+                } else {
+                    settlementBase = {precision: base.precision, id: base.id};
+                    settlementQuote = {precision: quote.precision, id: quote.id};
+                }
+
+                feedPrice = utils.get_asset_price(core_rate.quote.amount, feedQuote, core_rate.base.amount, feedBase, flipped);
+                settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, !flipped);
+            }
         }
 
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
@@ -378,9 +409,9 @@ class Exchange extends React.Component {
 
         let lowestAsk = asks.length > 0 ? asks.reduce((a, b) => {
             if (a.price_full) {
-                return a.price_full <= b.price_full ? a.price_full : b.price_full; 
+                return a.price_full <= b.price_full ? a.price_full : b.price_full;
            } else {
-                return a <= b.price_full ? a : b.price_full; 
+                return a <= b.price_full ? a : b.price_full;
            }
         }) : 0;
 
@@ -448,30 +479,39 @@ class Exchange extends React.Component {
                                     <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${baseSymbol} / ${quoteSymbol}`}</span></Link>
                                 </div>
                                 <div className="grid-block">
-                                    {/*<ul className="market-stats stats">
-                                        <li className="stat">
+                                    <ul className="market-stats stats">
+                                        {/*<li className="stat">
                                             <span>
                                                 <Translate component="span" content="exchange.latest" /><br/>
                                                 <b className="value stat-primary">{utils.format_number(290, Math.max(5, quote ? quote.precision : 0))}</b><br/>
                                                 <em>{baseSymbol}/{quoteSymbol}</em>
                                             </span>
-                                        </li>
-                                        <li className="stat">
-                                            <span>
-                                                <Translate component="span" content="exchange.call" /><br/>
-                                                <b className="value stat-primary">{utils.format_number(312, Math.max(5, quote ? quote.precision : 0))}</b><br/>
-                                                <em>{baseSymbol}/{quoteSymbol}</em>
-                                            </span>
-                                        </li>
-                                        <li className="stat">
+                                        </li>*/}
+                                        {feedPrice ?
+                                            (<li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="exchange.call" /><br/>
+                                                    <b className="value stat-primary">{utils.format_number(feedPrice, base.precision)}</b><br/>
+                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                </span>
+                                            </li>) : null}
+                                        {settlementPrice ?
+                                            (<li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="exchange.settle" /><br/>
+                                                    <b className="value stat-primary">{utils.format_number(settlementPrice, base.precision)}</b><br/>
+                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                </span>
+                                            </li>) : null}
+                                        {/*<li className="stat">
                                             <span>
                                                 <Translate component="span" content="exchange.volume" /><br/>
                                                 <b className="value stat-primary">{utils.format_number(23122, quote ? quote.precision : 2)}</b><br/>
                                                 <em>{quoteSymbol}</em>
                                             </span>
-                                        </li>
+                                        </li>*/}
                                     </ul>
-                                */}
+
                                 </div>
                                 <div className="grid-block shrink overflow-visible account-drop-down">
                                     {accountsDropDown}
@@ -496,6 +536,8 @@ class Exchange extends React.Component {
                                 height={300}
                                 onClick={this._depthChartClick.bind(this, base, quote)}
                                 plotLine={this.state.depthLine}
+                                feedPrice={feedPrice}
+                                settlementPrice={settlementPrice}
                                 spread={spread}
                             />
                         </div>
@@ -515,7 +557,7 @@ class Exchange extends React.Component {
                                     quoteSymbol={quoteSymbol}
                                     baseSymbol={baseSymbol}
                                     amountChange={this._buyAmountChanged.bind(this, base, quote)}
-                                    priceChange={this._buyPriceChanged.bind(this, base)}
+                                    priceChange={this._buyPriceChanged.bind(this, base, quote)}
                                     totalChange={this._buyTotalChanged.bind(this, base, quote)}
                                     balance={baseBalance}
                                     onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.precision))}
@@ -524,7 +566,7 @@ class Exchange extends React.Component {
                                     totalPrecision={base.precision}
                                     currentPrice={lowestAsk}
                                     account={currentAccount.get("name")}
-                                /> : null}                                
+                                /> : null}
                                 {quote && base ?
                                 <BuySell
                                     className="small-12 medium-6"
@@ -535,7 +577,7 @@ class Exchange extends React.Component {
                                     quoteSymbol={quoteSymbol}
                                     baseSymbol={baseSymbol}
                                     amountChange={this._sellAmountChanged.bind(this, base, quote)}
-                                    priceChange={this._sellPriceChanged.bind(this, base)}
+                                    priceChange={this._sellPriceChanged.bind(this, base, quote)}
                                     totalChange={this._sellTotalChanged.bind(this, base, quote)}
                                     balance={quoteBalance}
                                     onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.precision))}

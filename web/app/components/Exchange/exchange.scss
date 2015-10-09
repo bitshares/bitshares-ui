@@ -160,6 +160,13 @@ p.order-table-title {
   }
 }
 
+tr.top-header, tr.bottom-header, tr.spread-row {
+  &:hover > td {
+    background-color: inherit !important;
+    cursor: auto !important;
+  }
+}
+
 .bid-total {
   font-size: 90%;
   position: absolute;
@@ -324,4 +331,12 @@ a.order-cancel {
 .order-change {
   transition: all 3s ease;
   background: #343434;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }

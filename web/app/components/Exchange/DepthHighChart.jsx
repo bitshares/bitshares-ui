@@ -3,13 +3,16 @@ import {PropTypes} from "react";
 import Immutable from "immutable";
 import Highcharts from "react-highcharts/stocks";
 import utils from "common/utils";
+import counterpart from "counterpart";
 
 class DepthHighChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.orders, this.props.orders) ||
-            nextProps.plotLine !== this.props.plotLine
+            nextProps.plotLine !== this.props.plotLine ||
+            nextProps.feedPrice !== this.props.feedPrice ||
+            nextProps.settlementPrice !== this.props.settlementPrice
             );
     }
 
@@ -127,16 +130,49 @@ class DepthHighChart extends React.Component {
             }          
         }
 
-
-
-
-        // Add plotline if defined
+        // Add plotlines if defined
         if (this.props.plotLine) {
             config.xAxis.plotLines.push({
                 color: "red",
                 id: "plot_line",
                 dashStyle: "longdashdot",
                 value: this.props.plotLine,
+                width: 1,
+                zIndex: 5
+            });
+        }
+
+        if (this.props.feedPrice) {
+            config.xAxis.plotLines.push({
+                color: "#B6B6B6",
+                id: "plot_line",
+                dashStyle: "longdash",
+                value: this.props.feedPrice,
+                label: {
+                    text: counterpart.translate("transaction.feed_price"),
+                    style: {
+                        color: "#888888",
+                        fontWeight: "bold"
+                    }
+                },
+                width: 2,
+                zIndex: 5
+            });
+        }
+
+        if (this.props.settlementPrice) {
+            config.xAxis.plotLines.push({
+                color: "#7B1616",
+                id: "plot_line",
+                dashStyle: "solid",
+                value: this.props.settlementPrice,
+                label: {
+                    text: counterpart.translate("explorer.block.settlement_price"),
+                    style: {
+                        color: "#888888",
+                        fontWeight: "bold"
+                    }
+                },
                 width: 1,
                 zIndex: 5
             });

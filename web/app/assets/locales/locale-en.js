@@ -435,6 +435,7 @@
         price: "Price",
         latest: "Latest Price",
         call: "Call Price",
+        settle: "Settlement Price",
         volume: "Volume",
         spread: "Spread",
         quantity: "Amount",
