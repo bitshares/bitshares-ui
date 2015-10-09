@@ -81,6 +81,14 @@ hr {
   align-items: flex-start;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+a > .label {
+  cursor: pointer;
+}
+
 label, label > span {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   text-transform: uppercase;

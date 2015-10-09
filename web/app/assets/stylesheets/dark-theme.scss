@@ -408,12 +408,13 @@ td.orderHistoryBid {
   h6 {
     color: $secondary-text-color;
   }
-  .my-account h5 {
-    color: $info-color;
-  }
   .bottom {
     border-top-color: $bg-color;
   }
+}
+
+.my-account h5, .my-account h4 {
+  color: $info-color;
 }
 
 .account-left-menu {

@@ -70,6 +70,20 @@ class HelpContent extends React.Component {
             locale = "en";
         }
         let value = HelpData[locale][this.props.path];
+
+        if (!value && locale != 'en') {
+            console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to 'en'`);
+            value = HelpData['en'][this.props.path];
+        }
+        if (!value && this.props.alt_path) {
+            console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to alt_path '${this.props.alt_path}'`);
+            value = HelpData[locale][this.props.alt_path];
+        }
+        if (!value && this.props.alt_path && locale != 'en') {
+            console.warn(`missing alt_path '${this.props.alt_path}' for locale '${locale}' help files, rolling back to 'en'`);
+            value = HelpData['en'][this.props.alt_path];
+        }
+
         if (!value) throw new Error(`help file not found '${this.props.path}' for locale '${locale}'`);
         if (this.props.section) value = value[this.props.section];
         if (!value) throw new Error(`help section not found ${this.props.path}#${this.props.section}`);

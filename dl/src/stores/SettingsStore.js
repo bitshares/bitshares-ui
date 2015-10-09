@@ -62,7 +62,6 @@ class SettingsStore {
     }
 
     onAddMarket(market) {
-        console.log("addMarket:", market);
         let defaultMarkets = this.settings.get("defaultMarkets");
         let exists = false;
         for (var i = 0; i < defaultMarkets.length; i++) {
@@ -71,7 +70,6 @@ class SettingsStore {
                 break;
             }
         }
-
         if (!exists) {
             defaultMarkets.push({quote: market.quote, base: market.base});
             this.settings = this.settings.set(

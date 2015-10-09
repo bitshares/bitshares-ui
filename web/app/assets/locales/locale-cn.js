@@ -20,7 +20,10 @@ module.exports = {
         create_asset: "创建资产",
         lock: "锁定钱包",
         unlock: "解锁",
-        account: "账户"
+        account: "账户",
+        help: "帮助",
+        locked_tip: "钱包已锁定，点击解锁。",
+        unlocked_tip: "钱包已解锁，点击锁定。"
     },
     account: {
         assets: "资产",
@@ -46,7 +49,7 @@ module.exports = {
             unknown: "未知的会员",
             lifetime: "终身会员",
             basic: "普通会员",
-            annual: "年度订阅者",
+            annual: "年度会员",
             registrar: "注册人",
             referrer: "推荐人",
             lifetime_referrer: "终身会员推荐人",
@@ -54,7 +57,7 @@ module.exports = {
             fee_allocation: "手续费分配",
             upgrade_lifetime: "购买终身会籍",
             subscribe: "购买1年会籍",
-            expires: "过期",
+            expires: "过期时间",
             membership_expiration: "会籍过期时间"
         },
         connections: {
@@ -83,14 +86,17 @@ module.exports = {
             weight: "权重",
             threshold: "阈值",
             confirm_add: "增加",
-            cancel: "取消"
+            cancel: "取消",
+            add_permission_label: "输入账户名/公钥以及权重",
+            account_name_or_key: "账户名或公钥",
+            memo_public_key: "备注公钥"
         },
         votes: {
             proxy: "代理投票账户",
             no_proxy: "无代理",
             name: "账户名",
             info: "信息",
-            votes: "votes",
+            votes: "得票",
             url: "主页",
             support: "支持",
             workers: "预算项目",
@@ -99,19 +105,19 @@ module.exports = {
             remove_witness: "移除",
             remove_committee: "移除",
             add_committee: "添加",
-            add_committee_label: "受托人",
+            add_committee_label: "理事会成员",
             add_witness_label: "见证人",
             approve_worker: "赞成",
             reject_worker: "反对"
         },
         options: {
             num_witnesses: "信任见证人",
-            num_committee: "信任受托人",
+            num_committee: "信任理事会成员",
             memo_key: "备注公钥"
         },
         upgrade: "升级账户",
-        unfollow: "Unfollow",
-        follow: "Follow",
+        unfollow: "取消关注",
+        follow: "关注",
         pay: "向他付款",
         overview: "概述",
         history: "交易历史",
@@ -194,7 +200,7 @@ module.exports = {
         asset_settle: "请求资产清算",
         asset_global_settle: "请求全局资产清算",
         publish_feed: "资产喂价",
-        committee_member_create: "创建受托人",
+        committee_member_create: "创建理事会成员",
         witness_create: "创建见证人",
         witness_pay: "提取见证人收入到账户",
         witness_receive: "Received witness from witness",
@@ -210,7 +216,7 @@ module.exports = {
         global_parameters_update: "更新全局参数",
         file_write: "写入文件",
         vesting_balance_create: "创建待解冻余额",
-        "for": "for",
+        "for": "为",
         vesting_balance_withdraw: "提取解冻资金",
         bond_create_offer: "创建债券要约",
         bond_cancel_offer: "取消债券要约",
@@ -240,7 +246,7 @@ module.exports = {
             asset_settle: "资产结算",
             asset_global_settle: "全局资产清算",
             asset_publish_feed: "发布资产喂价",
-            committee_member_create: "创建受托人",
+            committee_member_create: "创建理事会成员",
             witness_create: "创建见证人",
             witness_withdraw_pay: "见证人取回报酬",
             proposal_create: "创建提案",
@@ -259,11 +265,12 @@ module.exports = {
             assert: "断言操作",
             balance_claim: "领取余额",
             override_transfer: "优先覆盖转账",
-            witness_update: "更新见证人"
+            witness_update: "更新见证人",
+            committee_member_update_global_parameters: "全局参数更新"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
-        transaction_confirmed: "交易已确认Transaction",
+        transaction_confirmed: "交易已确认",
         broadcast_fail: "交易广播失败: %(message)s",
         balance_claim: "从余额ID #%(balance_id)s 中领取金额 %(balance_amount)s ",
         balance_owner: "余额所有者公钥",
@@ -334,16 +341,53 @@ module.exports = {
         },
         asset: {
             title: "资产",
-            not_found: "资产 %(name)s 不存在"
+            not_found: "资产 %(name)s 不存在",
+            summary: {
+                asset_type: "资产类型",
+                issuer: "发行人",
+                current_supply: "当前供给",
+                stealth_supply: "隐私供给",
+                market_fee: "交易市场费率",
+                max_market_fee: "交易市场手续费上限"
+            },
+            price_feed: {
+                price_feed: "喂价",
+                settlement_price: "清算价格",
+                maintenance_collateral_ratio: "维持保证金比例",
+                maximum_short_squeeze_ratio: "强制平仓比例上限"
+            },
+            fee_pool: {
+                fee_pool: "手续费资金池",
+                core_exchange_rate: "汇率",
+                pool_balance: "资金池余额",
+                unclaimed_issuer_income: "发行人未申领收入"
+            },
+            permissions: {
+                permissions: "权限",
+                max_market_fee: "交易市场手续费上限",
+                max_supply: "最大供给",
+                chargeMarketFee: "收取交易手续费",
+                allowWhiteList: "允许持仓账户白名单",
+                allowIssuerOverride: "允许发行人变更",
+                restrictTransfers: "限制资产转账",
+                allowForceSettle: "允许强制清算",
+                allowGlobalSettle: "允许全局清算",
+                allowStealthTransfer: "允许隐私转账",
+                blacklist_authorities: "黑名单管理账户",
+                blacklist_markets: "禁止交易对市场",
+                whitelist_authorities: "白名单管理账户",
+                whitelist_markets: "允许交易对市场"
+            }
         },
         witnesses: {
             title: "见证人"
         },
         committee_members: {
-            title: "受托人"
+            title: "理事会",
+            active: "理事会成员总数"
         },
         committee_member: {
-            title: "受托人"
+            title: "理事会成员"
         },
         workers: {
             title: "雇员"
@@ -405,16 +449,16 @@ module.exports = {
         title: "钱包",
         confirm: "确认密码",
         password: "密码",
-        existing_password: "Existing Password",
-        change_password: "Change Password",
-        change_wallet: "Change Wallet",
+        existing_password: "已存在密码",
+        change_password: "修改密码",
+        change_wallet: "切换钱包",
         wallet_created: "钱包已创建",
         create_wallet: "创建新钱包",
-        delete_wallet: "Delete Wallet",
-        delete_confirm_line1: "Are you ABSOLUTELY sure?",
-        delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
-        delete_confirm_line3: "This action CANNOT be undone.",
-        delete_wallet_name: "Delete Wallet (%(name)s)",
+        delete_wallet: "删除钱包",
+        delete_confirm_line1: "你确定么？",
+        delete_confirm_line2: "如果你不仔细阅读以下提示，可能发生无法预料的事情。",
+        delete_confirm_line3: "本操作不可撤销",
+        delete_wallet_name: "删除钱包 (%(name)s)",
         name: "钱包名字",
         create: "创建",
         console: "钱包管理控制台",
@@ -428,7 +472,7 @@ module.exports = {
         active_wallet: "当前钱包使用中",
         verified: "已验证",
         verify_prior_backup: "验证钱包备份文件",
-        cancel: "Cancel",
+        cancel: "取消",
         reset: "重置",
         done: "完成",
         verify: "验证",
@@ -442,7 +486,10 @@ module.exports = {
         ready_to_restore: "准备导入",
         restore_wallet_of: "导入名为 (%(name)s 的钱包)",
         restore_success: "已成功导入钱包 (%(name)s) ",
-        change: "切换到钱包 (%(name)s)"
+        change: "切换到钱包 (%(name)s)",
+        balance_claims: "余额导入",
+        backup_brainkey: "备份脑钱包密钥",
+        downoad: "下载"
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",
@@ -452,6 +499,16 @@ module.exports = {
         errors: {
             below: "保证金率低于维持保证金要求",
             collateral: "可用保证金不足"
+        }
+    },
+    operation: {
+        pending: " %(blocks)s 个区块待定"
+    },
+    modal: {
+        issue: {
+            to: "发行到",
+            amount: "发行数量",
+            submit: "发行资产"
         }
     }
 };

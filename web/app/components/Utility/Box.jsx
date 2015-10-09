@@ -4,6 +4,8 @@ import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import LoadingIndicator from "../LoadingIndicator";
+import Accordion from 'react-foundation-apps/src/accordion';
+
 require("./Box.scss");
 
 class Box extends React.Component {
@@ -20,8 +22,7 @@ class Box extends React.Component {
     }
 */
 
-
-    render() {
+    renderOriginal() {
         return (
             <div className="Box">
 
@@ -44,6 +45,31 @@ class Box extends React.Component {
             </div>
         );
     }
+
+    renderAccordian() {
+        var title = this.props.header ? this.props.header : '';
+        return (
+            <div className="Box">
+
+                <Accordion multiOpen="true">
+                    <Accordion.Item title={title}>
+                        <div className="BoxBody">
+                            {this.props.children}
+                        </div>
+                    </Accordion.Item>
+                </Accordion>
+
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            this.props.accordian ? this.renderAccordian() : this.renderOriginal()
+        );
+    }
+
+
 }
 
 export default Box;

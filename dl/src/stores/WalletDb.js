@@ -1,9 +1,11 @@
+import alt from "alt-instance"
+import BaseStore from "stores/BaseStore"
+
 import iDB from "idb-instance";
 import Apis from "rpc_api/ApiInstances"
 import key from "common/key_utils";
 import idb_helper from "idb-helper";
 import _ from "lodash";
-import Immutable from "immutable";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
@@ -14,29 +16,33 @@ import PrivateKeyActions from "actions/PrivateKeyActions"
 import chain_config from "chain/config"
 import ChainStore from "api/ChainStore"
 
-//TODO delete wallet_public_name, this is managed in WalletManagerStore
-var wallet_public_name = "default"
-
-var aes_private_map = {}
+var aes_private
 var transaction
 
 var TRACE = false
 
 /** Represents a single wallet and related indexedDb database operations. */
-class WalletDb {
+class WalletDb extends BaseStore {
     
     constructor() {
-        this.wallet = Immutable.Map();
-        // Confirm only works when there is a UI
+        super()
+        this.state = { wallet: null }
+        // Confirm only works when there is a UI (this is for mocha unit tests)
         this.confirm_transactions = true
         ChainStore.subscribe(this.checkNextGeneratedKey.bind(this))
         this.generateNextKey_pubcache = []
+        // WalletDb use to be a plan old javascript class (not an Alt store) so
+        // for now many methods need to be exported...
+        this._export(
+            "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","importKeys","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData"
+        )
     }
     
-    /** Discover any used keys that are not in this wallet */
+    /** Discover derived keys that are not in this wallet */
     checkNextGeneratedKey() {
-        if( ! aes_private_map[wallet_public_name]) return // locked
-        if( ! this.getWallet().encrypted_brainkey) return // no brainkey
+        if( ! this.state.wallet) return
+        if( ! aes_private) return // locked
+        if( ! this.state.wallet.encrypted_brainkey) return // no brainkey
         if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key)
             return // no change
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
@@ -47,34 +53,21 @@ class WalletDb {
     }
     
     getWallet() {
-        return this.wallet.get(wallet_public_name)
-    }
-    
-    getCurrentWalletName() {
-        return wallet_public_name
-    }
-    
-    /** for unit testing */
-    setCurrentWalletName(public_name) {
-        wallet_public_name = public_name
+        return this.state.wallet
     }
     
     onLock() {
-        delete aes_private_map[wallet_public_name]
+        aes_private = null
     }
     
     isLocked() {
-        return aes_private_map[wallet_public_name] ? false : true
+        return aes_private ? false : true
     }
     
-    //rename to decryptTcomb_PrivateKey
     decryptTcomb_PrivateKey(private_key_tcomb) {
         if( ! private_key_tcomb) return null
-        var aes_private = aes_private_map[ wallet_public_name ] 
-        if ( ! aes_private)
-            throw new Error("wallet locked")
-        var private_key_hex = aes_private.decryptHex(
-                private_key_tcomb.encrypted_key)
+        if( ! aes_private) throw new Error("wallet locked")
+        var private_key_hex = aes_private.decryptHex(private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
     }
     
@@ -88,9 +81,9 @@ class WalletDb {
     }
     
     process_transaction(tr, signer_pubkeys, broadcast) {
-        if(Apis.instance().chain_id !== this.getWallet().chain_id)
+        if(Apis.instance().chain_id !== this.state.wallet.chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
-                this.getWallet().chain_id + ", but got " +
+                this.state.wallet.chain_id + ", but got " +
                 Apis.instance().chain_id)
         
         return WalletUnlockActions.unlock().then( () => {
@@ -162,9 +155,8 @@ class WalletDb {
     }
     
     getBrainKey() {
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         if ( ! wallet.encrypted_brainkey) throw new Error("missing brainkey")
-        var aes_private = aes_private_map[wallet_public_name]
         if ( ! aes_private) throw new Error("wallet locked")
         var brainkey_plaintext = aes_private.decryptHexToText( wallet.encrypted_brainkey )
         return brainkey_plaintext
@@ -178,16 +170,14 @@ class WalletDb {
     onCreateWallet(
         password_plaintext,
         brainkey_plaintext,
-        unlock = false
+        unlock = false,
+        public_name = "default"
     ) {
         return new Promise( (resolve, reject) => {
-            if(this.wallet.get(wallet_public_name)) {
-                reject("wallet exists")
-                return
-            }
             if( typeof password_plaintext !== 'string')
                 throw new Error("password string is required")
             
+            var brainkey_backup_date
             if(brainkey_plaintext) {
                 if(typeof brainkey_plaintext !== "string")
                     throw new Error("Brainkey must be a string")
@@ -197,14 +187,18 @@ class WalletDb {
             
                 if(brainkey_plaintext.length < 50)
                     throw new Error("Brainkey must be at least 50 characters long")
+
+                // The user just provided the Brainkey so this avoids
+                // bugging them to back it up again.
+                brainkey_backup_date = new Date()
             }
             var password_aes = Aes.fromSeed( password_plaintext )
             
             var encryption_buffer = key.get_random_key().toBuffer()
             // encryption_key is the global encryption key (does not change even if the passsword changes)
             var encryption_key = password_aes.encryptToHex( encryption_buffer )
-            // aes_private is the global aes encrypt / decrypt object
-            var aes_private = Aes.fromSeed( encryption_buffer )
+            // If unlocking, local_aes_private will become the global aes_private object
+            var local_aes_private = Aes.fromSeed( encryption_buffer )
             
             if( ! brainkey_plaintext)
                 brainkey_plaintext = key.suggest_brain_key()
@@ -212,31 +206,30 @@ class WalletDb {
                 brainkey_plaintext = key.normalize_brain_key(brainkey_plaintext)
             var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )
             var brainkey_pubkey = brainkey_private.toPublicKey().toPublicKeyString()
-            var encrypted_brainkey = aes_private.encryptToHex( brainkey_plaintext )
+            var encrypted_brainkey = local_aes_private.encryptToHex( brainkey_plaintext )
             
             var password_private = PrivateKey.fromSeed( password_plaintext )
             var password_pubkey = password_private.toPublicKey().toPublicKeyString()
             
             let wallet = {
-                public_name: wallet_public_name,
+                public_name,
                 password_pubkey,
                 encryption_key,
                 encrypted_brainkey,
                 brainkey_pubkey,
                 brainkey_sequence: 0,
+                brainkey_backup_date,
                 created: new Date(),
                 last_modified: new Date(),
                 chain_id: Apis.instance().chain_id
             }
-            WalletTcomb(wallet)
+            WalletTcomb(wallet) // validation
             var transaction = this.transaction_update()
             var add = idb_helper.add( transaction.objectStore("wallet"), wallet )
             var end = idb_helper.on_transaction_end(transaction).then( () => {
-                this.wallet = this.wallet.set(
-                    wallet_public_name,
-                    wallet//WalletTcomb(wallet)
-                )
-                if(unlock) aes_private_map[wallet_public_name] = aes_private
+                this.state.wallet = wallet
+                this.setState({ wallet })
+                if(unlock) aes_private = local_aes_private
             })
             resolve( Promise.all([ add, end ]) )
         })
@@ -244,7 +237,7 @@ class WalletDb {
     
     /** This also serves as 'unlock' */
     validatePassword( password, unlock = false ) {
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         try {
             var password_private = PrivateKey.fromSeed( password )
             var password_pubkey = password_private.toPublicKey().toPublicKeyString()
@@ -252,8 +245,7 @@ class WalletDb {
             if( unlock ) {
                 var password_aes = Aes.fromSeed( password )
                 var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
-                var aes_private = Aes.fromSeed( encryption_plainbuffer )
-                aes_private_map[wallet_public_name] = aes_private
+                aes_private = Aes.fromSeed( encryption_plainbuffer )
                 this.checkNextGeneratedKey()
             }                 
             return true
@@ -266,7 +258,7 @@ class WalletDb {
     /** This may lock the wallet unless <b>unlock</b> is used. */
     changePassword( old_password, new_password, unlock = false ) {
         return new Promise( resolve => {
-            var wallet = this.wallet.get(wallet_public_name)
+            var wallet = this.state.wallet
             if( ! this.validatePassword( old_password ))
                 throw new Error("wrong password")
             
@@ -283,11 +275,10 @@ class WalletDb {
             wallet.password_pubkey = new_password_private.toPublicKey().toPublicKeyString()
             
             if( unlock ) {
-                var aes_private = Aes.fromSeed( encryption_plainbuffer )
-                aes_private_map[wallet_public_name] = aes_private
+                aes_private = Aes.fromSeed( encryption_plainbuffer )
             } else {
                 // new password, make sure the wallet gets locked
-                delete aes_private_map[wallet_public_name]
+                aes_private = null
             }
             resolve( this.setWalletModified() )
         })
@@ -298,7 +289,7 @@ class WalletDb {
     */
     generateNextKey(save = true) {
         var brainkey = this.getBrainKey()
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         var sequence = wallet.brainkey_sequence
         var used_sequence = null
         // Skip ahead in the sequence if any keys are found in use
@@ -335,7 +326,7 @@ class WalletDb {
     }
     
     incrementBrainKeySequence( transaction ) {
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         // increment in RAM so this can't be out-of-sync
         wallet.brainkey_sequence ++
         // update last modified
@@ -415,9 +406,8 @@ class WalletDb {
         public_key_string,
         transaction = this.transaction_update_keys()
     ) {
-        var password_aes_private = aes_private_map[ wallet_public_name ]
-        var private_cipherhex = password_aes_private.encryptToHex( private_key.toBuffer() )
-        var wallet = this.getWallet()
+        var private_cipherhex = aes_private.encryptToHex( private_key.toBuffer() )
+        var wallet = this.state.wallet
         if( ! public_key_string) {
             //S L O W
             // console.log('WARN: public key was not provided, this may incur slow performance')
@@ -447,22 +437,22 @@ class WalletDb {
     }
     
     setBackupDate() {
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         wallet.backup_date = new Date()
         return this._updateWallet()
     }
     
     setBrainkeyBackupDate() {
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         wallet.brainkey_backup_date = new Date()
         return this._updateWallet()
     }
     
     /** Saves wallet object to disk.  Always updates the last_modified date. */
     _updateWallet(transaction = this.transaction_update()) {
-        var wallet = this.wallet.get(wallet_public_name)
+        var wallet = this.state.wallet
         if ( ! wallet) {
-            reject("missing wallet " + wallet_public_name)
+            reject("missing wallet")
             return
         }
         //DEBUG console.log('... wallet',wallet)
@@ -473,19 +463,17 @@ class WalletDb {
         
         var wallet_store = transaction.objectStore("wallet")
         var p = idb_helper.on_request_end( wallet_store.put(wallet_clone) )
-        var p2 = idb_helper.on_transaction_end( transaction  ).then( () =>
-            this.wallet = this.wallet.set( wallet_public_name, wallet_clone ) )
+        var p2 = idb_helper.on_transaction_end( transaction  ).then( () => {
+            this.state.wallet = wallet_clone
+            this.setState({ wallet: wallet_clone })
+        })
         return Promise.all([p,p2])
     }
 
     /** This method may be called again should the main database change */
     loadDbData() {
-        var map = Immutable.Map().asMutable()
         return idb_helper.cursor("wallet", cursor => {
-            if( ! cursor) {
-                this.wallet = map.asImmutable()
-                return
-            }
+            if( ! cursor) return false
             var wallet = cursor.value
             // Convert anything other than a string or number back into its proper type
             wallet.created = new Date(wallet.created)
@@ -494,14 +482,16 @@ class WalletDb {
             wallet.brainkey_backup_date = wallet.brainkey_backup_date ? new Date(wallet.brainkey_backup_date):null
             try { WalletTcomb(wallet) } catch(e) {
                 console.log("WalletDb format error", e); }
-            map.set(wallet_public_name, wallet)
-            cursor.continue()
+            this.state.wallet = wallet
+            this.setState({ wallet })
+            return false //stop iterating
         });
     }
     
 }
 
-module.exports = new WalletDb()
+export var WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
+module.exports = WalletDbWrapped
 
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)

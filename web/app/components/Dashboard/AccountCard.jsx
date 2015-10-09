@@ -4,6 +4,7 @@ import AccountImage from "../Account/AccountImage";
 import {Link} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import AccountStore from "stores/AccountStore";
 
 /**
  *  @brief displays the summary of a given account in a condenced view (for the dashboard)
@@ -39,6 +40,7 @@ class AccountCard extends React.Component {
     render() {
         let name = null;
         let balances = null;
+        let isMyAccount = false;
         if( this.props.account )
         {
            name = this.props.account.get('name');
@@ -47,11 +49,12 @@ class AccountCard extends React.Component {
            {
               balances = abal.map( x => <li key={x}><BalanceComponent balance={x}/></li>).toArray();
            }
+           isMyAccount = AccountStore.isMyAccount(this.props.account);
         }
 
         return (
             <div className="grid-content account-card" onClick={this.onCardClick.bind(this)}>
-                <div className="card">
+                <div className={"card" + (isMyAccount ? " my-account" : "")}>
                     <h4 className="text-center">{name}</h4>
                     <div className="card-content clearfix">
                         <div className="float-left">

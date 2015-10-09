@@ -350,19 +350,19 @@
                 max_market_fee: "Max market fee"
             },
             price_feed: {
-                price_feed: "Price Feed",
+                title: "Price Feed",
                 settlement_price: "Settlement price",
-                maintenance_collateral_ratio: "Maintenance collateral ratio",
-                maximum_short_squeeze_ratio: "Maximum short squeeze ratio"
+                maintenance_collateral_ratio: "Maintenance collateral ratio (MCR)",
+                maximum_short_squeeze_ratio: "Maximum short squeeze ratio (MSSR)"
             },
             fee_pool: {
-                fee_pool: "Fee Pool",
-                core_exchange_rate: "Core exchange rate",
+                title: "Fee Pool",
+                core_exchange_rate: "Core exchange rate (CER)",
                 pool_balance: "Pool balance",
                 unclaimed_issuer_income: "Unclaimed issuer income"
             },
             permissions: {
-                permissions: "Permissions",
+                title: "Permissions",
                 max_market_fee: "Max market fee",
                 max_supply: "Max supply",
                 chargeMarketFee: "Charge market fee",
@@ -376,6 +376,15 @@
                 blacklist_markets: "Blacklist markets",
                 whitelist_authorities: "Whitelist authorities",
                 whitelist_markets: "Whitelist markets"
+            },
+            price_feed_data: {
+                title: "Price Feed Data",
+                settlement_price: "Settlement price",
+                core_exchange_rate: "CER",
+                maintenance_collateral_ratio: "MCR",
+                maximum_short_squeeze_ratio: "MSSR",
+                publisher: "Publisher",
+                published: "Published"
             }
         },
         witnesses: {
