@@ -21,6 +21,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
+import classnames from "classnames";
 
 require("./exchange.scss");
 
@@ -606,14 +607,14 @@ class Exchange extends React.Component {
                         </div>
 
                         {/* Price history chart and depth chart inside tabs */}
-                        <div className="grid-block shrink no-overflow no-padding" id="market-charts" style={{marginTop: "0.5rem"}}>
+                        <div className="grid-block shrink no-overflow" id="market-charts" style={{marginTop: "0.5rem"}}>
 
                                     <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
-                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
-                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
-                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
-                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 3600)}>1hr</div>
-                                        <div className="button bucket-button" onClick={this._changeBucketSize.bind(this, 86400)}>1d</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 15, "active-bucket": this.props.bucketSize === 15})} onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 60, "active-bucket": this.props.bucketSize === 60})} onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 300, "active-bucket": this.props.bucketSize === 300})} onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 3600, "active-bucket": this.props.bucketSize === 3600})} onClick={this._changeBucketSize.bind(this, 3600)}>1hr</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 86400, "active-bucket": this.props.bucketSize === 86400})} onClick={this._changeBucketSize.bind(this, 86400)}>1d</div>
                                     </div>
                                     <PriceChart
                                         priceData={this.props.priceData}
