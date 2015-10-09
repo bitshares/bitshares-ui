@@ -316,7 +316,9 @@ class PriceChart extends React.Component {
                 <div style={{position: "relative"}}>
                     {currentValue}
                 </div>
-                {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} /> : null}
+                <div style={{paddingTop: "1.5rem", paddingBottom: "0.5rem"}}>
+                    {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} /> : null}
+                </div>
             </div>
         );
     }

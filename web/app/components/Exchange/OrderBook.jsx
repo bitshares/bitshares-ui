@@ -156,7 +156,7 @@ class OrderBook extends React.Component {
                                     <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
-                                <tr key="spread">
+                                <tr key="spread" className="spread-row">
                                     <td colSpan="3" className="text-center spread">
                                         <Translate content="exchange.spread" />: {spread} {baseSymbol}
                                     </td>
