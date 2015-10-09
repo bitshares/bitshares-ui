@@ -5,7 +5,8 @@ module.exports = {
         fr: "Francais",
         ko: "한국어",
         de: "Deutsch",
-        es: "Español"
+        es: "Español",
+        tr: "Turkish"
     },
     header: {
         title: "비트쉐어 2.0",
