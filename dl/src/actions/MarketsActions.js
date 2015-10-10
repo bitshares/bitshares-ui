@@ -44,18 +44,18 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize) {
-        let subID = quote.id + "_" + base.id;
+        let subID = quote.get("id") + "_" + base.get("id");
         // console.log("sub to market:", subID);
 
         let isMarketAsset = false, marketAsset, inverted = false;
 
-        if (quote.bitasset && base.id === "1.3.0") {
+        if (quote.get("bitasset") && base.get("id") === "1.3.0") {
             isMarketAsset = true;
-            marketAsset = {id: quote.id}
-        } else if (base.bitasset && quote.id === "1.3.0") {
+            marketAsset = {id: quote.get("id")}
+        } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
             inverted = true;
             isMarketAsset = true;
-            marketAsset = {id: base.id};
+            marketAsset = {id: base.get("id")};
         }
 
         let subscription = (subResult) => {
@@ -89,12 +89,12 @@ class MarketsActions {
 
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
-                        base.id, quote.id, 100
+                        base.get("id"), quote.get("id"), 100
                     ]),
                     callPromise,
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
-                        base.id, quote.id, bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then(results => {
@@ -132,15 +132,15 @@ class MarketsActions {
             startDate.setDate(startDate.getDate() - 10);
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
-                        subscription, base.id, quote.id
+                        subscription, base.get("id"), quote.get("id")
                     ]),
                     Apis.instance().db_api().exec("get_limit_orders", [
-                        base.id, quote.id, 100
+                        base.get("id"), quote.get("id"), 100
                     ]),
                     callPromise,
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
-                        base.id, quote.id, bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then((results) => {
