@@ -88,8 +88,9 @@ class MarketsStore {
         console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
 
-        this.quoteAsset = result.quote;
-        this.baseAsset = result.base;
+        // Get updated assets every time for updated feed data
+        this.quoteAsset = ChainStore.getAsset(result.quote.get("id"));
+        this.baseAsset = ChainStore.getAsset(result.base.get("id"));
 
         if (result.market && (result.market !== this.activeMarket)) {
             console.log("switch active market from", this.activeMarket, "to", result.market);
