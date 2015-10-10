@@ -47,19 +47,28 @@ class MarketsActions {
         let subID = quote.id + "_" + base.id;
         // console.log("sub to market:", subID);
 
-        let isMarketAsset = quote.market_asset && quote.bitasset_data.options.short_backing_asset === base.id;
+        let isMarketAsset = false, marketAsset, inverted = false;
+
+        if (quote.bitasset && base.id === "1.3.0") {
+            isMarketAsset = true;
+            marketAsset = {id: quote.id}
+        } else if (base.bitasset && quote.id === "1.3.0") {
+            inverted = true;
+            isMarketAsset = true;
+            marketAsset = {id: base.id};
+        }
 
         let subscription = (subResult) => {
-            console.log("markets subscription result:", subResult);
+            // console.log("markets subscription result:", subResult);
             let callPromise = null,
                 settlePromise = null;
 
             if (isMarketAsset) {
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                    quote.id, 100
+                    marketAsset.id, 100
                 ]);
                 settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                    quote.id, 100
+                    marketAsset.id, 100
                 ]);
             }
 
@@ -96,7 +105,8 @@ class MarketsActions {
                         price: results[3],
                         market: subID,
                         base: base,
-                        quote: quote
+                        quote: quote,
+                        inverted: inverted
                     });
                 }).catch((error) => {
                     console.log("Error in MarketsActions.subscribeMarket: ", error);
@@ -110,10 +120,10 @@ class MarketsActions {
 
             if (isMarketAsset) {
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                    quote.id, 100
+                    marketAsset.id, 100
                 ]);
                 settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                    quote.id, 100
+                    marketAsset.id, 100
                 ]);
             }
 
@@ -134,7 +144,7 @@ class MarketsActions {
                     ])
                 ])
                 .then((results) => {
-                    console.log("market subscription success:", results[0], results);
+                    // console.log("market subscription success:", results[0], results);
                     subs[subID] = true;
 
                     this.dispatch({
@@ -144,7 +154,8 @@ class MarketsActions {
                         price: results[4],
                         market: subID,
                         base: base,
-                        quote: quote
+                        quote: quote,
+                        inverted: inverted
                     });
 
                 }).catch((error) => {

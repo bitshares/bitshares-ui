@@ -234,7 +234,7 @@ class ChainStore
 
       Apis.instance().db_api().exec( "lookup_asset_symbols", [ [id_or_symbol] ] )
           .then( asset_objects => {
-                 console.log( "lookup symbol ", id_or_symbol )
+              // console.log( "lookup symbol ", id_or_symbol )
               if( asset_objects.length && asset_objects[0] )
                  this._updateObject( asset_objects[0], true )
               else

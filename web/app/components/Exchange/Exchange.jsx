@@ -346,12 +346,12 @@ class Exchange extends React.Component {
     }
 
     render() {
-        let { currentAccount, linkedAccounts, limit_orders,
-            totalBids, flat_asks, flat_bids, bids, asks, quoteAsset, baseAsset } = this.props;
+        let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls,
+            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, calls, quoteAsset, baseAsset } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            quoteSymbol, baseSymbol, feedPrice = null, settlementPrice = null, feedQuote, feedBase, settlementQuote, settlementBase,
+            quoteSymbol, baseSymbol, coreRate = null, settlementPrice = null, coreQuote, coreBase, settlementQuote, settlementBase,
             flipped = false;
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
@@ -384,12 +384,12 @@ class Exchange extends React.Component {
 
             if (core_rate) {
                 if (core_rate.base.asset_id === quote.id) {
-                    feedBase = {precision: quote.precision, id: quote.id};
-                    feedQuote = {precision: base.precision, id: base.id};
+                    coreBase = {precision: quote.precision, id: quote.id};
+                    coreQuote = {precision: base.precision, id: base.id};
                 } else {
                     flipped = true;
-                    feedBase = {precision: base.precision, id: base.id};
-                    feedQuote = {precision: quote.precision, id: quote.id};
+                    coreBase = {precision: base.precision, id: base.id};
+                    coreQuote = {precision: quote.precision, id: quote.id};
                 }
 
                 if (settlement_price.base.asset_id === quote.id) {
@@ -400,7 +400,7 @@ class Exchange extends React.Component {
                     settlementQuote = {precision: quote.precision, id: quote.id};
                 }
 
-                feedPrice = utils.get_asset_price(core_rate.quote.amount, feedQuote, core_rate.base.amount, feedBase, flipped);
+                coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
                 settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, !flipped);
             }
         }
@@ -460,8 +460,11 @@ class Exchange extends React.Component {
                     <div className="grid-block left-column small-4 medium-3 large-2">
                             <OrderBook
                                 orders={limit_orders}
+                                calls={call_orders}
+                                invertedCalls={invertedCalls}
                                 bids={bids}
                                 asks={asks}
+                                calls={calls}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
@@ -488,11 +491,11 @@ class Exchange extends React.Component {
                                                 <em>{baseSymbol}/{quoteSymbol}</em>
                                             </span>
                                         </li>*/}
-                                        {feedPrice ?
+                                        {coreRate ?
                                             (<li className="stat">
                                                 <span>
-                                                    <Translate component="span" content="exchange.call" /><br/>
-                                                    <b className="value stat-primary">{utils.format_number(feedPrice, base.precision)}</b><br/>
+                                                    <Translate component="span" content="exchange.core_rate" /><br/>
+                                                    <b className="value stat-primary">{utils.format_number(coreRate, base.precision)}</b><br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
@@ -529,7 +532,10 @@ class Exchange extends React.Component {
                                 orders={limit_orders}
                                 flat_asks={flat_asks}
                                 flat_bids={flat_bids}
+                                flat_calls={flat_calls}
+                                invertedCalls={invertedCalls}
                                 totalBids={totalBids}
+                                totalCalls={totalCalls}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
@@ -537,7 +543,7 @@ class Exchange extends React.Component {
                                 height={300}
                                 onClick={this._depthChartClick.bind(this, base, quote)}
                                 plotLine={this.state.depthLine}
-                                feedPrice={feedPrice}
+                                coreRate={coreRate}
                                 settlementPrice={settlementPrice}
                                 spread={spread}
                             />

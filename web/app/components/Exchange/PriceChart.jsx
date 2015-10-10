@@ -4,23 +4,29 @@ import Highcharts from "react-highcharts/stocks";
 import utils from "common/utils";
 
 class Chart {
-    // shouldComponentUpdate(nextProps) {
-    //     return true;
-    //     if (this.props.config.series[0].data.length === 0) {
-    //         return nextProps.config.series[0].data.length > 0;
-    //     } else {
-    //         console.log("chart else shouldComponentUpdate");
-    //         return (
-    //             true
-    //             // nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
-    //             // nextProps.config.series[0].data[0][1] !== this.props.config.series[0].data[0][1] || 
-    //             // nextProps.quoteSymbol !== this.props.quoteSymbol
-    //         );
-    //     }
-    // }
+    shouldComponentUpdate(nextProps) {
+
+        return (
+            nextProps.quoteSymbol !== this.props.quoteSymbol ||
+            !utils.are_equal_shallow(nextProps.config.series[0], this.props.config.series[0]) ||
+            !utils.are_equal_shallow(nextProps.config.series[1], this.props.config.series[1])
+        );
+    
+        // return true;
+        // if (this.props.config.series[0].data.length === 0) {
+        //     return nextProps.config.series[0].data.length > 0;
+        // } else {
+        //     console.log("chart else shouldComponentUpdate");
+        //     return (
+        //         true
+        //         // nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
+        //         // nextProps.config.series[0].data[0][1] !== this.props.config.series[0].data[0][1] || 
+        //         // nextProps.quoteSymbol !== this.props.quoteSymbol
+        //     );
+        // }
+    }
 
     render() {
-        console.log(this.props.config);
         return <Highcharts config={this.props.config}/>;
     }
 }
