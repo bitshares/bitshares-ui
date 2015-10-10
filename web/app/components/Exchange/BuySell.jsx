@@ -70,7 +70,7 @@ class BuySell extends React.Component {
                                     {buttonText}:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
+                                    <input novalidation type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {quoteSymbol}
@@ -82,7 +82,7 @@ class BuySell extends React.Component {
                                     <Translate content="exchange.price" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="number" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
+                                    <input novalidation type="number" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {baseSymbol}/{quoteSymbol}
@@ -94,7 +94,7 @@ class BuySell extends React.Component {
                                     <Translate content="exchange.total" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="number" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
+                                    <input novalidation type="number" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {baseSymbol}
