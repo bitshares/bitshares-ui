@@ -243,17 +243,10 @@ class MarketsActions {
             "fill_or_kill": isFillOrKill
         });
         return WalletDb.process_transaction(tr, null, true).then(result => {
-            // console.log("order result:", result);
             return true;
-                // TODO: update order ID from the server's response, if possible
         })
             .catch(error => {
                 console.log("order error:", error);
-
-                // this.dispatch({
-                //     failedOrder: {expiration: uniqueExpiration}
-                // });
-
                 return {error};
             });
     }
@@ -272,17 +265,17 @@ class MarketsActions {
             "fee_paying_account": accountID,
             "order": orderID
         });
-        return WalletDb.process_transaction(tr, null, true).then(result => {
-            // console.log("cancel result:", result);
-            return true;
-        })
+        return WalletDb.process_transaction(tr, null, true)
         .catch(error => {
             console.log("cancel error:", error);
-            // this.dispatch({
-            //     failedOrderID: orderID
-            // });
-            return false;
         });
+    }
+
+    cancelLimitOrderSuccess(orderID) {
+        // setTimeout to avoid cannot dispatch in middle of dispatch...
+        setTimeout(() => {
+            this.dispatch(orderID);
+        }, 100);
     }
 
     addMarket(quote, base) {

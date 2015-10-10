@@ -40,7 +40,9 @@ class Exchange extends React.Component {
             sellTotal: 0,
             sub: null,
             activeTab: "buy",
-            showBuySell: true
+            showBuySell: true,
+            cancelID: null,
+            cancelSuccess: false
         };
 
         this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
@@ -93,6 +95,18 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("nextProps cancelID:", this.state.cancelID);
+        if (this.state.cancelID) {
+            console.log("nextProps transaction state:", nextProps.transaction.operations[0][1].order, this.state.cancelID.split(".")[2], nextProps.broadcast);
+            if (nextProps.transaction.operations[0][1].order == this.state.cancelID.split(".")[2] && nextProps.broadcast) {
+                MarketsActions.cancelLimitOrderSuccess(this.state.cancelID);
+
+                this.setState({
+                    cancelID: null
+                })
+            }
+        }
+        
         if (!this.state.sub) {
             return this._subToMarket(nextProps);
         }
@@ -160,13 +174,10 @@ class Exchange extends React.Component {
         MarketsActions.cancelLimitOrder(
             currentAccount.get("id"),
             orderID // order id to cancel
-        ).then(result => {
-            if (!result) {
-                notify.addNotification({
-                        message: `Failed to cancel limit order ${orderID}`,
-                        level: "error"
-                    });
-            }
+        );
+
+        this.setState({
+            cancelID: orderID
         });
     }
 
@@ -347,7 +358,8 @@ class Exchange extends React.Component {
 
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls,
-            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, calls, quoteAsset, baseAsset } = this.props;
+            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
+            calls, quoteAsset, baseAsset, transaction, broadcast } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
