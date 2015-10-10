@@ -21,7 +21,7 @@ class AccountOverview extends React.Component {
 
     render() {
         let account = this.props.account;
-        let call_orders = account.get("call_orders") ? account.get("call_orders").toJS() : [];
+        let call_orders = account.toJS ? account.get("call_orders").toJS() : [];
         let balances = {};
         let account_balances = account.get("balances");
         if (account_balances) {
@@ -49,14 +49,14 @@ class AccountOverview extends React.Component {
                     </table>
                 </div>
                 {call_orders.length > 0 ? <div className="content-block">
-                    <h3>Collateral Positions</h3>
+                    <h3><Translate content="account.collaterals" /></h3>
                     <table className="table">
                         <thead>
                         <tr>
-                            <th>Debt</th>
-                            <th>Collateral</th>
-                            <th>Call Price</th>
-                            <th>Update position</th>
+                            <th><Translate content="transaction.borrow_amount" /></th>
+                            <th><Translate content="transaction.collateral" /></th>
+                            <th><Translate content="exchange.call" /></th>
+                            <th><Translate content="borrow.adjust" /></th>
                         </tr>
                         </thead>
                         <tbody>

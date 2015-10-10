@@ -132,7 +132,8 @@
             invalid: "Invalid account name",
             unknown: "Unknown account",
             not_yours: "Not your account"
-        }
+        },
+        collaterals: "Collateral Positions"
     },
     pagination: {
         newer: "Newer",
