@@ -80,7 +80,11 @@ class MarketsActions {
                 }
             }
             if (foundFill) {
-                this.dispatch({fillOrders: fillOrders});
+                this.dispatch({
+                    fillOrders: fillOrders,
+                    base: base,
+                    quote: quote
+                });
             }
 
             let startDate = new Date();
