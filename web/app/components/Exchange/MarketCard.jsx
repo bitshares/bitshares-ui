@@ -18,6 +18,9 @@ class MarketCard extends React.Component {
     render() {
 
         let {quote, base} = this.props;
+        if (!quote || !base) {
+            return null;
+        }
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + " vs " + base.get("symbol");
         let dynamic_data = ChainStore.getObject(quote.get("dynamic_asset_data_id"));

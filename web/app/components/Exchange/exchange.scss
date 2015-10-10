@@ -362,3 +362,17 @@ input[type=number]::-webkit-outer-spin-button {
     appearance: none;
     margin: 0;
 }
+
+.borrow-price-label {
+  display: inline-block;
+  min-width: 40%;
+}
+
+.borrow-price-final {
+  border-top: #A09F9F 1px dotted;
+  padding-top: 5px !important;
+}
+
+.borrow-price-feeds {
+  padding-bottom: 2px;
+}

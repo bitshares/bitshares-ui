@@ -414,7 +414,7 @@ class Exchange extends React.Component {
 
                 coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
                 settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, !flipped);
-                console.log("flipped:", flipped, "short_squeeze:", short_squeeze);
+
                 if (!flipped) {
                     squeezePrice = settlementPrice / short_squeeze;
                 } else {
