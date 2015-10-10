@@ -218,6 +218,7 @@ class ChainStore
 
       if ( utils.is_object_id( id_or_symbol ) ) {
         let asset = this.getObject( id_or_symbol );
+
         if (asset && (asset.get("bitasset") && !asset.getIn(["bitasset", "current_feed"]))) {
           return undefined;
         }
@@ -228,8 +229,14 @@ class ChainStore
 
       let asset_id = this.assets_by_symbol.get( id_or_symbol )
 
-      if( utils.is_object_id( asset_id ) )
-         return this.getObject( asset_id )
+      if( utils.is_object_id(asset_id)) {
+         let asset = this.getObject( asset_id );
+
+        if (asset && (asset.get("bitasset") && !asset.getIn(["bitasset", "current_feed"]))) {
+          return undefined;
+        }
+        return asset;
+      }
 
       if( asset_id === null ) 
          return null
