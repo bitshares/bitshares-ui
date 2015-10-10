@@ -458,6 +458,7 @@
         quantity: "Amount",
         buy: "Buy",
         sell: "Sell",
+        receive: "Receive",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
     },
