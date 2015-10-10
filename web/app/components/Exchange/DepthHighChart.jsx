@@ -175,7 +175,6 @@ class DepthHighChart extends React.Component {
                     data: this.props.flat_calls,
                     color: "#BBBF2B"
                 })
-                console.log("totalCalls:", totalCalls);
                 if (this.props.invertedCalls) {
                     totalAsks += totalCalls;
                 } else {

@@ -95,9 +95,7 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps cancelID:", this.state.cancelID);
         if (this.state.cancelID) {
-            console.log("nextProps transaction state:", nextProps.transaction.operations[0][1].order, this.state.cancelID.split(".")[2], nextProps.broadcast);
             if (nextProps.transaction.operations[0][1].order == this.state.cancelID.split(".")[2] && nextProps.broadcast) {
                 MarketsActions.cancelLimitOrderSuccess(this.state.cancelID);
 
@@ -363,7 +361,7 @@ class Exchange extends React.Component {
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            quoteSymbol, baseSymbol, coreRate = null, settlementPrice = null, coreQuote, coreBase, settlementQuote, settlementBase,
+            quoteSymbol, baseSymbol, coreRate = null, settlementPrice = null, squeezePrice = null, coreQuote, coreBase, settlementQuote, settlementBase,
             flipped = false;
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
@@ -375,7 +373,7 @@ class Exchange extends React.Component {
             accountBalance = currentAccount.get("balances").toJS();
 
             if (accountBalance) {
-                for (var id in accountBalance) {
+                for (let id in accountBalance) {
                     if (id === quote.id) {
                         quoteBalance = accountBalance[id];
                     }
@@ -385,13 +383,15 @@ class Exchange extends React.Component {
                 }
             }
 
-            var settlement_price, core_rate;
+            let settlement_price, core_rate, short_squeeze;
             if (quote.bitasset && quote.bitasset.current_feed && base.id === "1.3.0") {
                 core_rate = quote.bitasset.current_feed.core_exchange_rate;
                 settlement_price = quote.bitasset.current_feed.settlement_price;
+                short_squeeze = quote.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
             } else if (base.bitasset && base.bitasset.current_feed && quote.id === "1.3.0") {
                 core_rate = base.bitasset.current_feed.core_exchange_rate;
                 settlement_price = base.bitasset.current_feed.settlement_price;
+                short_squeeze = base.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
             }
 
             if (core_rate) {
@@ -414,13 +414,32 @@ class Exchange extends React.Component {
 
                 coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
                 settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, !flipped);
+                console.log("flipped:", flipped, "short_squeeze:", short_squeeze);
+                if (!flipped) {
+                    squeezePrice = settlementPrice / short_squeeze;
+                } else {
+                    squeezePrice = settlementPrice * short_squeeze;
+                }
             }
         }
 
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
-        let lowestAsk = asks.length > 0 ? asks.reduce((a, b) => {
+        let combinedAsks, combinedBids;
+
+        if (calls.length && invertedCalls) {
+            combinedAsks = asks.concat(calls);
+            combinedBids = bids;
+        } else if (calls.length && !invertedCalls) {
+            combinedBids = bids.concat(calls);
+            combinedAsks = asks;
+        } else {
+            combinedAsks = asks;
+            combinedBids = bids;
+        }
+
+        let lowestAsk = combinedAsks.length > 0 ? combinedAsks.reduce((a, b) => {
             if (a.price_full) {
                 return a.price_full <= b.price_full ? a.price_full : b.price_full;
            } else {
@@ -428,7 +447,7 @@ class Exchange extends React.Component {
            }
         }) : 0;
 
-        let highestBid = bids.length > 0 ? bids.reduce((a, b) => {
+        let highestBid = combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
             return a >= b.price_full ? a : b.price_full;
         }, 0) : 0;
 
@@ -474,9 +493,8 @@ class Exchange extends React.Component {
                                 orders={limit_orders}
                                 calls={call_orders}
                                 invertedCalls={invertedCalls}
-                                bids={bids}
-                                asks={asks}
-                                calls={calls}
+                                combinedBids={combinedBids}
+                                combinedAsks={combinedAsks}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
@@ -519,13 +537,14 @@ class Exchange extends React.Component {
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
-                                        {/*<li className="stat">
-                                            <span>
-                                                <Translate component="span" content="exchange.volume" /><br/>
-                                                <b className="value stat-primary">{utils.format_number(23122, quote ? quote.precision : 2)}</b><br/>
-                                                <em>{quoteSymbol}</em>
-                                            </span>
-                                        </li>*/}
+                                        {squeezePrice ?
+                                            (<li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="exchange.squeeze" /><br/>
+                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.precision)}</b><br/>
+                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                </span>
+                                            </li>) : null}
                                     </ul>
 
                                 </div>
