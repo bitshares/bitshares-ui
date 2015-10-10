@@ -132,7 +132,8 @@ module.exports = {
             invalid: "非法的账户名",
             unknown: "未知的账户",
             not_yours: "不是你的账户"
-        }
+        },
+        deposit_withdraw: "充值/提现"
     },
     transfer: {
         from: "来自",
@@ -352,19 +353,18 @@ module.exports = {
                 max_market_fee: "交易市场手续费上限"
             },
             price_feed: {
-                price_feed: "喂价",
                 settlement_price: "清算价格",
                 maintenance_collateral_ratio: "维持保证金比例",
-                maximum_short_squeeze_ratio: "强制平仓比例上限"
+                maximum_short_squeeze_ratio: "强制平仓比例上限",
+                title: "喂价"
             },
             fee_pool: {
-                fee_pool: "手续费资金池",
                 core_exchange_rate: "汇率",
                 pool_balance: "资金池余额",
-                unclaimed_issuer_income: "发行人未申领收入"
+                unclaimed_issuer_income: "发行人未申领收入",
+                title: "手续费资金池"
             },
             permissions: {
-                permissions: "权限",
                 max_market_fee: "交易市场手续费上限",
                 max_supply: "最大供给",
                 chargeMarketFee: "收取交易手续费",
@@ -377,7 +377,17 @@ module.exports = {
                 blacklist_authorities: "黑名单管理账户",
                 blacklist_markets: "禁止交易对市场",
                 whitelist_authorities: "白名单管理账户",
-                whitelist_markets: "允许交易对市场"
+                whitelist_markets: "允许交易对市场",
+                title: "权限"
+            },
+            price_feed_data: {
+                title: "喂价数据",
+                settlement_price: "清算价格",
+                core_exchange_rate: "汇率",
+                maintenance_collateral_ratio: "维持保证金比例",
+                maximum_short_squeeze_ratio: "强制平仓比例上限",
+                publisher: "发布人",
+                published: "发布时间"
             }
         },
         witnesses: {
@@ -408,14 +418,15 @@ module.exports = {
         confirm_yes: "总是",
         confirm_no: "从不",
         always_confirm: "总是要求确认",
-        wallets: "钱包管理"
+        wallets: "钱包管理",
+        connection: "API 服务器设定"
     },
     pagination: {
         newer: "更近",
         older: "更早"
     },
     footer: {
-        title: "Graphene 石墨烯",
+        title: "Graphene (石墨烯)",
         block: "最新区块",
         loading: "载入中..."
     },
@@ -432,12 +443,13 @@ module.exports = {
         latest: "最新价格",
         call: "赎回价格",
         volume: "成交量",
-        spread: "价差",
+        spread: "买卖价差",
         quantity: "数量",
         buy: "买入",
         sell: "卖出",
         confirm_buy: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
-        confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s "
+        confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
+        settle: "清算价格"
     },
     markets: {
         choose_base: "选择基准资产",
@@ -495,7 +507,7 @@ module.exports = {
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",
         no_valid: "无有效喂价 %(asset_symbol)s",
-        coll_ratio: "保证金率",
+        coll_ratio: "保证金比例",
         adjust: "调整头寸",
         errors: {
             below: "保证金率低于维持保证金要求",
@@ -510,6 +522,11 @@ module.exports = {
             to: "发行到",
             amount: "发行数量",
             submit: "发行资产"
+        },
+        withdraw: {
+            amount: "提现金额",
+            address: "提现到地址",
+            submit: "提现"
         }
     }
 };
