@@ -372,9 +372,10 @@ class MarketsStore {
         }
 
         // Get feed price if market asset
-        let settlementPrice;
+        let settlementPrice, squeezeRatio
         if (this.activeMarketCalls.size) {
             if (this.invertedCalls) {
+                squeezeRatio = this.baseAsset.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.bitasset.current_feed.settlement_price,
                     this.quoteAsset,
@@ -382,6 +383,7 @@ class MarketsStore {
                     true
                 )
             } else {
+                squeezeRatio = this.quoteAsset.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.bitasset.current_feed.settlement_price,
                     this.baseAsset,
@@ -396,10 +398,10 @@ class MarketsStore {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= settlementPrice;// / 1.2; 
+                    return a_price.full >= settlementPrice / squeezeRatio; 
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset).price;
-                    return a_price.full <= settlementPrice;//  * 1.2; 
+                    return a_price.full <= settlementPrice * squeezeRatio; 
                 }
 
             }).sort((a, b) => {

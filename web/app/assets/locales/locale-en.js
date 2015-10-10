@@ -450,6 +450,7 @@
         call: "Call Price",
         core_rate: "Fee Rate",
         settle: "Settlement Price",
+        squeeze: "Margin Call Price",
         volume: "Volume",
         spread: "Spread",
         quantity: "Amount",

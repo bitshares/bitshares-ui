@@ -56,6 +56,7 @@ class OrderBook extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 !Immutable.is(nextProps.orders, this.props.orders) ||
+                !Immutable.is(nextProps.calls, this.props.calls) ||
                 !Immutable.is(nextProps.calls, this.props.calls)
             );
     }
@@ -90,27 +91,14 @@ class OrderBook extends React.Component {
     }
 
     render() {
-        let {bids, asks, calls, invertedCalls, account, quote, base, quoteSymbol, baseSymbol} = this.props;
+        let {combinedBids, combinedAsks, calls, invertedCalls, account, quote, base, quoteSymbol, baseSymbol} = this.props;
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
-        let combinedBids, combinedAsks;
 
         if(base && quote) {
-            // let start = new Date();
-
-            high = bids.length > 0 ? bids[bids.length - 1].price_full : 0;
-
             let totalBidAmount = 0;
-            if (calls.length && invertedCalls) {
-                combinedAsks = asks.concat(calls);
-                combinedBids = bids;
-            } else if (calls.length && !invertedCalls) {
-                combinedBids = bids.concat(calls);
-                combinedAsks = asks;
-            } else {
-                combinedAsks = asks;
-                combinedBids = bids;
-            }
+
+            high = combinedBids.length > 0 ? combinedBids[combinedBids.length - 1].price_full : 0;
 
             bidRows = combinedBids.sort((a, b) => {
                 return b.price_full - a.price_full;
@@ -128,11 +116,7 @@ class OrderBook extends React.Component {
                 )
             }).reverse();
 
-            // console.log("time to process bids in orderbook:", new Date() - start, "ms");
-
-            // start = new Date();
-
-            low = asks.length > 0 ? asks[0].price_full : 0;
+            low = combinedAsks.length > 0 ? combinedAsks[0].price_full : 0;
 
             let totalAskAmount = 0;
             askRows = combinedAsks.sort((a, b) => {
@@ -150,8 +134,6 @@ class OrderBook extends React.Component {
                         />
                     );
             });
-
-            // console.log("time to process asks in orderbook:", new Date() - start, "ms");
         }
 
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
