@@ -163,7 +163,7 @@ class BorrowModalContent extends React.Component {
             errors.collateral_balance = counterpart.translate("borrow.errors.collateral");
         }
 
-        let isValid = (newState.short_amount > 0 && newState.collateral > 0) && (newState.short_amount != original_position.debt || newState.collateral != original_position.collateral);
+        let isValid = (newState.short_amount >= 0 && newState.collateral >= 0) && (newState.short_amount != original_position.debt || newState.collateral != original_position.collateral);
 
         if (parseFloat(newState.collateral_ratio) < (this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000)) {
             errors.below_maintenance = counterpart.translate("borrow.errors.below");
