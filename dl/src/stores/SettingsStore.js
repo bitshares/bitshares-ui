@@ -31,7 +31,9 @@ class SettingsStore {
                 "fr",
                 "ko",
                 "de",
-                "es"
+                "es",
+                "tr"
+                
             ],
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
