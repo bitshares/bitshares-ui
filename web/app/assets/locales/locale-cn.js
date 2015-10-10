@@ -78,7 +78,7 @@ module.exports = {
         },
         perm: {
             active: "活跃权限",
-            owner: "拥有人权限",
+            owner: "账户权限",
             publish: "保存修改",
             reset: "重置修改",
             add: "增加权限",
@@ -374,9 +374,9 @@ module.exports = {
                 allowForceSettle: "允许强制清算",
                 allowGlobalSettle: "允许全局清算",
                 allowStealthTransfer: "允许隐私转账",
-                blacklist_authorities: "黑名单管理账户",
+                blacklist_authorities: "黑名单职权实体",
                 blacklist_markets: "禁止交易对市场",
-                whitelist_authorities: "白名单管理账户",
+                whitelist_authorities: "白名单职权实体",
                 whitelist_markets: "允许交易对市场",
                 title: "权限"
             },
