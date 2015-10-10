@@ -451,6 +451,8 @@
         core_rate: "Fee Rate",
         settle: "Settlement Price",
         squeeze: "Margin Call Price",
+        maintenance: "Maintenance Call Price",
+        your_price: "Your Call Price",
         volume: "Volume",
         spread: "Spread",
         quantity: "Amount",

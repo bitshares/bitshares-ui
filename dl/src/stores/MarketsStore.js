@@ -87,8 +87,14 @@ class MarketsStore {
     onSubscribeMarket(result) {
         console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
-        this.quoteAsset = ChainStore.getAsset(result.quote.id).toJS();
-        this.baseAsset = ChainStore.getAsset(result.base.id).toJS();
+        let quoteAsset = ChainStore.getAsset(result.quote.id);
+        let baseAsset = ChainStore.getAsset(result.base.id);
+        if (quoteAsset && baseAsset) {
+            this.quoteAsset = quoteAsset.toJS();
+            this.baseAsset = baseAsset.toJS();
+        } else {
+            return false;
+        }
         if (result.market && (result.market !== this.activeMarket)) {
             console.log("switch active market from", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
