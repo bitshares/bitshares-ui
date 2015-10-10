@@ -32,7 +32,6 @@ class MarketsStore {
         this.priceData = [];
         this.volumeData = [];
         this.pendingCreateLimitOrders = [];
-        this.pendingCancelLimitOrders = {};
         this.activeMarket = null;
         this.inverseMarket = true;
         this.quoteAsset = null;
@@ -52,7 +51,8 @@ class MarketsStore {
             onGetMarkets: MarketsActions.getMarkets,
             onChangeBase: MarketsActions.changeBase,
             onInverseMarket: SettingsActions.changeSetting,
-            onChangeBucketSize: MarketsActions.changeBucketSize
+            onChangeBucketSize: MarketsActions.changeBucketSize,
+            onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess
         });
     }
 
@@ -261,28 +261,17 @@ class MarketsStore {
 
     // }
 
-    // onCancelLimitOrder(e) {
-    //     if (e.newOrderID) { // Optimistic update
-    //         this.pendingCancelLimitOrders[e.newOrderID] = this.activeMarketLimits.get(e.newOrderID);
-    //         this.activeMarketLimits = this.activeMarketLimits.delete(e.newOrderID);
-    //     }
+    onCancelLimitOrderSuccess(orderID) {
+        if (orderID) {
+            this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
 
-    //     if (e.failedOrderID) { // Undo removal if cancel failed
-    //         this.activeMarketLimits = this.activeMarketLimits.set(
-    //             e.failedOrderID,
-    //             this.pendingCancelLimitOrders[e.failedOrderID]
-    //         );
+            // Update orderbook
+            this._orderBook();
 
-    //         delete this.pendingCancelLimitOrders[e.failedOrderID];
-    //     }
-
-    //     // Update orderbook
-    //     this._orderBook();
-
-    //     // Update depth chart data
-    //     this._depthChart();
-
-    // }
+            // Update depth chart data
+            this._depthChart();
+        }
+    }
 
     onGetMarkets(markets) {
         markets.forEach(market => {
