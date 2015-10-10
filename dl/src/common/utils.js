@@ -21,10 +21,7 @@ var Utils = {
 
     get_asset_amount: function(amount, asset) {
         if (!amount) return null;
-        if (asset.toJS) {
-            asset = asset.toJS();
-        }
-        return amount / this.get_asset_precision(asset.precision);
+        return amount / this.get_asset_precision(asset.toJS ? asset.get("precision") : asset.precision);
     },
 
     get_asset_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, inverted = false) {

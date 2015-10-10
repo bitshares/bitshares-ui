@@ -81,10 +81,16 @@ class MarketUtils {
     }
 
     static isAsk(order, base) {
+        let baseId;
+        if (base.toJS()) {
+            baseId = base.get("id")
+        } else {
+            baseId = base.id;
+        }
         if (order.sell_price) {
-            return order.sell_price.quote.asset_id === base.id;
+            return order.sell_price.quote.asset_id === baseId;
         } else if (order.call_price) {
-            return order.call_price.quote.asset_id === base.id;
+            return order.call_price.quote.asset_id === baseId;
         }
     }
 
@@ -93,7 +99,8 @@ class MarketUtils {
     }
 
     static limitByPrecision(value, asset) {
-        let precision = utils.get_asset_precision(asset.precision);
+
+        let precision = utils.get_asset_precision(asset.toJS ? asset.get("precision") : asset.precision);
         value = Math.floor(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;
@@ -102,14 +109,10 @@ class MarketUtils {
     }
 
     static getFeedPrice(settlement_price, backing_asset, quote_asset, invert = false) {
-        if ("toJS" in settlement_price) {
-            settlement_price = settlement_price.toJS();
-        }
-
         let price = utils.get_asset_price(
-            settlement_price.quote.amount,
+            settlement_price.getIn(["quote", "amount"]),
             backing_asset,
-            settlement_price.base.amount,
+            settlement_price.getIn(["base", "amount"]),
             quote_asset
         )
 
@@ -122,8 +125,9 @@ class MarketUtils {
 
     static parseOrder(order, base, quote, invert = false) {
         let ask = this.isAsk(order, base);
-        let quotePrecision = utils.get_asset_precision(quote.precision);
-        let basePrecision = utils.get_asset_precision(base.precision);
+        let quotePrecision = utils.get_asset_precision(quote.toJS ? quote.get("precision") : quote.precision);
+        let basePrecision = utils.get_asset_precision(base.toJS ? base.get("precision") : base.precision);
+
         let buy, sell;
         if (order.sell_price) {
             buy = ask ? order.sell_price.base : order.sell_price.quote;
@@ -150,7 +154,7 @@ class MarketUtils {
         let amount, value;
 
         // We need to figure out a better way to set the number of decimals
-        let price_split = utils.format_number(price.full, Math.max(5, quote.precision)).split(".");
+        let price_split = utils.format_number(price.full, Math.max(5, quote.toJS ? quote.get("precision") : quote.precision)).split(".");
         price.int = price_split[0];
         price.dec = price_split[1];
 

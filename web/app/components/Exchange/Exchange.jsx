@@ -195,7 +195,7 @@ class Exchange extends React.Component {
             bucketSize = newBucketSize;
         }
         if (quoteAsset.get("id") && baseAsset.get("id")) {
-            MarketsActions.subscribeMarket(baseAsset.toJS(), quoteAsset.toJS(), bucketSize);
+            MarketsActions.subscribeMarket(baseAsset, quoteAsset, bucketSize);
             this.setState({sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}`});
         }
     }
@@ -413,9 +413,9 @@ class Exchange extends React.Component {
                 }
 
                 coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
-                settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, !flipped);
-
-                if (!flipped) {
+                settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, flipped);
+                
+                if (flipped) {
                     squeezePrice = settlementPrice / short_squeeze;
                 } else {
                     squeezePrice = settlementPrice * short_squeeze;

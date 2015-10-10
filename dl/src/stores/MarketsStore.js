@@ -87,26 +87,13 @@ class MarketsStore {
     onSubscribeMarket(result) {
         console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
-        let quoteAsset = ChainStore.getAsset(result.quote.id);
-        let baseAsset = ChainStore.getAsset(result.base.id);
-        if (quoteAsset && baseAsset) {
-            this.quoteAsset = quoteAsset.toJS();
-            this.baseAsset = baseAsset.toJS();
-        } else {
-            return false;
-        }
+
+        this.quoteAsset = result.quote;
+        this.baseAsset = result.base;
+
         if (result.market && (result.market !== this.activeMarket)) {
             console.log("switch active market from", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
-            // this.quoteAsset = {
-            //     id: result.quote.id,
-            //     precision: result.quote.precision
-            // };
-            // this.baseAsset = {
-            //     id: result.base.id,
-            //     symbol: result.base.symbol,
-            //     precision: result.base.precision
-            // };
             this.activeMarketLimits = this.activeMarketLimits.clear();
             this.activeMarketCalls = this.activeMarketCalls.clear();
             this.activeMarketSettles = this.activeMarketSettles.clear();
@@ -181,7 +168,7 @@ class MarketsStore {
 
         if (result.fillOrders) {
             result.fillOrders.forEach(fill => {
-                console.log("fill:", fill);
+                // console.log("fill:", fill);
                 this.activeMarketHistory = this.activeMarketHistory.set(
                     fill[0][1].order_id,
                     fill[0][1]
@@ -315,7 +302,7 @@ class MarketsStore {
         
         for (var i = 0; i < this.priceHistory.length; i++) {
             let date = new Date(this.priceHistory[i].key.open).getTime();
-            if (this.quoteAsset.id === this.priceHistory[i].key.quote) {
+            if (this.quoteAsset.get("id") === this.priceHistory[i].key.quote) {
                 high = utils.get_asset_price(this.priceHistory[i].high_base, this.baseAsset, this.priceHistory[i].high_quote, this.quoteAsset);
                 low = utils.get_asset_price(this.priceHistory[i].low_base, this.baseAsset, this.priceHistory[i].low_quote, this.quoteAsset);
                 open = utils.get_asset_price(this.priceHistory[i].open_base, this.baseAsset, this.priceHistory[i].open_quote, this.quoteAsset);
@@ -346,7 +333,7 @@ class MarketsStore {
         let constructBids = (orderArray) => {
             let bids = [];
             orderArray.filter(a => {
-                return a.sell_price.base.asset_id === this.baseAsset.id;
+                return a.sell_price.base.asset_id === this.baseAsset.get("id");
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
                 let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
@@ -380,18 +367,19 @@ class MarketsStore {
         // Get feed price if market asset
         let settlementPrice, squeezeRatio
         if (this.activeMarketCalls.size) {
+
             if (this.invertedCalls) {
-                squeezeRatio = this.baseAsset.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
+                squeezeRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
-                    this.baseAsset.bitasset.current_feed.settlement_price,
+                    this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
                     this.quoteAsset,
                     this.baseAsset,
                     true
                 )
             } else {
-                squeezeRatio = this.quoteAsset.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
+                squeezeRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
-                    this.quoteAsset.bitasset.current_feed.settlement_price,
+                    this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
                     this.baseAsset,
                     this.quoteAsset
                 )
@@ -456,7 +444,7 @@ class MarketsStore {
             let asks = [];
 
             orderArray.filter(a => {
-                return a.sell_price.base.asset_id !== this.baseAsset.id;
+                return a.sell_price.base.asset_id !== this.baseAsset.get("id");
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
                 let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
