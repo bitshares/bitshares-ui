@@ -20,11 +20,17 @@ class ExchangeContainer extends React.Component {
                     bids: () => {
                         return MarketsStore.getState().bids;
                     },
+                    calls: () => {
+                        return MarketsStore.getState().calls;
+                    },
                     asks: () => {
                         return MarketsStore.getState().asks;
                     },
                     call_orders: () => {
                         return MarketsStore.getState().activeMarketCalls;
+                    },
+                    invertedCalls: () => {
+                        return MarketsStore.getState().invertedCalls;
                     },
                     settle_orders: () => {
                         return MarketsStore.getState().activeMarketSettles;
@@ -32,9 +38,15 @@ class ExchangeContainer extends React.Component {
                     flat_bids: () => {
                         return MarketsStore.getState().flat_bids;
                     },
+                    flat_calls: () => {
+                        return MarketsStore.getState().flat_calls;
+                    },
                     totalBids: () => {
                         return MarketsStore.getState().totalBids;
                     },
+                    totalCalls: () => {
+                        return MarketsStore.getState().totalCalls;
+                    },                    
                     flat_asks: () => {
                         return MarketsStore.getState().flat_asks;
                     },

@@ -28,7 +28,7 @@ class OrderBookRow extends React.Component {
         if (this.state.hasChanged) {
             changeClass = "order-change";
         }
-        let integerClass = type === "bid" ? "orderHistoryBid" : "orderHistoryAsk";
+        let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
 
         return (
             <tr key={order.price_full} onClick={this.props.onClick} className={changeClass}>
@@ -55,7 +55,8 @@ class OrderBook extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-                !Immutable.is(nextProps.orders, this.props.orders)
+                !Immutable.is(nextProps.orders, this.props.orders) ||
+                !Immutable.is(nextProps.calls, this.props.calls)
             );
     }
 
@@ -89,10 +90,10 @@ class OrderBook extends React.Component {
     }
 
     render() {
-        let {bids, asks, account, quote, base, quoteSymbol, baseSymbol} = this.props;
+        let {bids, asks, calls, invertedCalls, account, quote, base, quoteSymbol, baseSymbol} = this.props;
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
-
+        let combinedBids, combinedAsks;
 
         if(base && quote) {
             // let start = new Date();
@@ -100,8 +101,18 @@ class OrderBook extends React.Component {
             high = bids.length > 0 ? bids[bids.length - 1].price_full : 0;
 
             let totalBidAmount = 0;
+            if (calls.length && invertedCalls) {
+                combinedAsks = asks.concat(calls);
+                combinedBids = bids;
+            } else if (calls.length && !invertedCalls) {
+                combinedBids = bids.concat(calls);
+                combinedAsks = asks;
+            } else {
+                combinedAsks = asks;
+                combinedBids = bids;
+            }
 
-                        bidRows = bids.sort((a, b) => {
+            bidRows = combinedBids.sort((a, b) => {
                 return b.price_full - a.price_full;
             }).map(order => {
                 totalBidAmount += order.amount;
@@ -112,7 +123,7 @@ class OrderBook extends React.Component {
                         onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}
                         base={base}
                         quote={quote}
-                        type="bid"
+                        type={order.type}
                     />
                 )
             }).reverse();
@@ -124,7 +135,7 @@ class OrderBook extends React.Component {
             low = asks.length > 0 ? asks[0].price_full : 0;
 
             let totalAskAmount = 0;
-            askRows = asks.sort((a, b) => {
+            askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
             }).map(order => {
                 totalAskAmount += order.amount;
@@ -135,7 +146,7 @@ class OrderBook extends React.Component {
                             onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}
                             base={base}
                             quote={quote}
-                            type="ask"
+                            type={order.type}
                         />
                     );
             });

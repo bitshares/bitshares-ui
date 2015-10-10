@@ -28,7 +28,7 @@ class DepthHighChart extends React.Component {
 
 
     render() {
-        let {flat_bids, flat_asks, quoteSymbol, baseSymbol, totalBids, spread} = this.props;
+        let {flat_bids, flat_asks, flat_calls, quoteSymbol, baseSymbol, totalBids, totalCalls, spread} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
@@ -38,7 +38,7 @@ class DepthHighChart extends React.Component {
             chart: {
                 type: "area",
                 backgroundColor: "rgba(255, 0, 0, 0)",
-                spacing: [0, 0, 5, 0]
+                spacing: [10, 0, 5, 0]
             },
             title: {
                 text: null
@@ -61,18 +61,7 @@ class DepthHighChart extends React.Component {
                     color: "#FFFFFF"
                 }
             },
-            series: [
-                {
-                    name: `Bid ${quoteSymbol}`,
-                    data: flat_bids,
-                    color: "#50D2C2"
-                },
-                {
-                    name: `Ask ${quoteSymbol}`,
-                    data: flat_asks,
-                    color: "#E3745B"
-                }
-            ],
+            series: [],
             yAxis: {
                 labels: {
                     enabled: false,
@@ -123,11 +112,11 @@ class DepthHighChart extends React.Component {
         if (flat_bids.length > 0 && flat_asks.length > 0) {
             let middleValue = (flat_asks[0][0] + flat_bids[flat_bids.length - 1][0]) / 2;
             config.xAxis.min = middleValue * 0.25;
-            config.xAxis.max = middleValue * 1.75;  
+            config.xAxis.max = middleValue * 1.75;
             if (spread > 0 && spread > middleValue) {
                 config.xAxis.min = Math.max(0, middleValue - 1.5 * spread);
-                config.xAxis.max = middleValue + 1.5 * spread;  
-            }          
+                config.xAxis.max = middleValue + 1.5 * spread;
+            }
         }
 
         // Add plotlines if defined
@@ -142,14 +131,15 @@ class DepthHighChart extends React.Component {
             });
         }
 
-        if (this.props.feedPrice) {
+        // Market asset
+        if (this.props.coreRate) {
             config.xAxis.plotLines.push({
                 color: "#B6B6B6",
                 id: "plot_line",
                 dashStyle: "longdash",
-                value: this.props.feedPrice,
+                value: this.props.coreRate,
                 label: {
-                    text: counterpart.translate("transaction.feed_price"),
+                    text: counterpart.translate("exchange.core_rate"),
                     style: {
                         color: "#888888",
                         fontWeight: "bold"
@@ -173,10 +163,39 @@ class DepthHighChart extends React.Component {
                         fontWeight: "bold"
                     }
                 },
-                width: 1,
+                width: 2,
                 zIndex: 5
             });
+
+
+            // Add calls if present
+            if (this.props.flat_calls && this.props.flat_calls.length) {
+                config.series.push({
+                    name: `Call ${quoteSymbol}`,
+                    data: this.props.flat_calls,
+                    color: "#BBBF2B"
+                })
+                console.log("totalCalls:", totalCalls);
+                if (this.props.invertedCalls) {
+                    totalAsks += totalCalls;
+                } else {
+                    totalBids += totalCalls;
+                }
+            }
         }
+
+        // Push asks and bids
+        config.series.push({
+            name: `Bid ${quoteSymbol}`,
+            data: flat_bids,
+            color: "#50D2C2"
+        })
+
+        config.series.push({
+            name: `Ask ${quoteSymbol}`,
+            data: flat_asks,
+            color: "#E3745B"
+        });
 
         // Fix the height if defined, if not use offsetHeight
         if (this.props.height) {

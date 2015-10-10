@@ -1,5 +1,6 @@
 $bid-color: #50D2C2;
 $ask-color: #E3745B;
+$call-color: #BBBF2B;
 
 .market-layout {
   > .grid-block {
@@ -45,6 +46,19 @@ td.orderHistoryAsk {
   > span.price-integer {
     font-weight: bold;
     color: $ask-color;
+  }
+
+  > span.price-decimal {
+    color: #e0e0e0;
+    font-size: 90%;
+    opacity: 0.6;
+  }
+}
+
+td.orderHistoryCall {
+  > span.price-integer {
+    font-weight: bold;
+    color: $call-color;
   }
 
   > span.price-decimal {
@@ -173,6 +187,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   left: 25px;
   color: $bid-color;
+  z-index: 999;
 }
 
 .ask-total {
@@ -181,6 +196,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   right: 25px;
   color: $ask-color;
+  z-index: 999;
 }
 
 .chart-label {

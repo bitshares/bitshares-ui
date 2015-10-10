@@ -81,7 +81,11 @@ class MarketUtils {
     }
 
     static isAsk(order, base) {
-        return order.sell_price.quote.asset_id === base.id;
+        if (order.sell_price) {
+            return order.sell_price.quote.asset_id === base.id;
+        } else if (order.call_price) {
+            return order.call_price.quote.asset_id === base.id;
+        }
     }
 
     static isAskOp(op) {
@@ -97,14 +101,52 @@ class MarketUtils {
         return value;
     }
 
-    static parseOrder(order, base, quote) {
+    static getFeedPrice(settlement_price, backing_asset, quote_asset, invert = false) {
+        if ("toJS" in settlement_price) {
+            settlement_price = settlement_price.toJS();
+        }
+
+        let price = utils.get_asset_price(
+            settlement_price.quote.amount,
+            backing_asset,
+            settlement_price.base.amount,
+            quote_asset
+        )
+
+        if (invert) {
+            return 1 / price;
+        } else {
+            return price;
+        }
+    }
+
+    static parseOrder(order, base, quote, invert = false) {
         let ask = this.isAsk(order, base);
         let quotePrecision = utils.get_asset_precision(quote.precision);
         let basePrecision = utils.get_asset_precision(base.precision);
-        let buy = ask ? order.sell_price.base : order.sell_price.quote;
-        let sell = ask ? order.sell_price.quote : order.sell_price.base;
+        let buy, sell;
+        if (order.sell_price) {
+            buy = ask ? order.sell_price.base : order.sell_price.quote;
+            sell = ask ? order.sell_price.quote : order.sell_price.base;
+        } else if (order.call_price) {
+            // console.log("order:", order);
+            buy = ask ? order.call_price.base : order.call_price.quote;
+            sell = ask ? order.call_price.quote : order.call_price.base;
+        }
 
-        let price = {full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)};
+        if (typeof sell.amount !== "number") {
+            sell.amount = parseInt(sell.amount, 10);
+        }
+
+        if (typeof buy.amount !== "number") {
+            buy.amount = parseInt(buy.amount, 10);
+        }
+        let price = {
+            full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)
+        };
+        if (invert) {
+            price.full = 1 / price.full;
+        }
         let amount, value;
 
         // We need to figure out a better way to set the number of decimals
@@ -112,10 +154,24 @@ class MarketUtils {
         price.int = price_split[0];
         price.dec = price_split[1];
 
-        if (!ask) {
+        if (order.debt) {
+            if (invert) {
+                // Price in USD/CORE, amount should be in CORE, value should be in USD, debt is in USD
+                // buy is in USD, sell is in CORE
+                // quote is USD, base is CORE
+                value = order.debt / quotePrecision;
+                amount = this.limitByPrecision(value / price.full, base);
+            } else {
+                // Price in CORE/USD, amount should be in USD, value should be in CORE, debt is in USD
+                // buy is in USD, sell is in CORE
+                // quote is USD, base is CORE
+
+                amount = this.limitByPrecision(order.debt / quotePrecision, quote);
+                value = price.full * amount;
+            }
+        } else if (!ask) {
             amount = this.limitByPrecision((buy.amount / sell.amount) * order.for_sale / quotePrecision, quote);
             value = order.for_sale / basePrecision;
-
         } else {
             amount = this.limitByPrecision(order.for_sale / quotePrecision, quote);
             value = price.full * amount;
@@ -123,10 +179,10 @@ class MarketUtils {
 
         value = this.limitByPrecision(value, base);
 
-
-        if (!ask) {
-            let value = this.limitByPrecision(price.full * amount, base);
+        if (!ask && order.for_sale) {
+            value = this.limitByPrecision(price.full * amount, base);
         }
+
         return {
             value: value,
             price: price,
@@ -155,34 +211,58 @@ class MarketUtils {
 
             if (array && arrayLength) {
                 arrayLength = arrayLength - 1;
-                orderBookArray.unshift({x: array[arrayLength].x, y: array[arrayLength].y});
+                orderBookArray.unshift({
+                    x: array[arrayLength].x,
+                    y: array[arrayLength].y
+                });
                 if (array.length > 1) {
                     for (let i = array.length - 2; i >= 0; i--) {
                         maxStep = Math.min((array[i + 1].x - array[i].x) / 2, 0.1 / precision);
-                        orderBookArray.unshift({x: array[i].x + maxStep, y: array[i + 1].y});
+                        orderBookArray.unshift({
+                            x: array[i].x + maxStep,
+                            y: array[i + 1].y
+                        });
                         if (sumBoolean) {
                             array[i].y += array[i + 1].y;
                         }
-                        orderBookArray.unshift({x: array[i].x, y: array[i].y});
+                        orderBookArray.unshift({
+                            x: array[i].x,
+                            y: array[i].y
+                        });
                     }
                 } else {
-                    orderBookArray.unshift({x: 0, y: array[arrayLength].y});
+                    orderBookArray.unshift({
+                        x: 0,
+                        y: array[arrayLength].y
+                    });
                 }
             }
         } else {
             if (array && arrayLength) {
-                orderBookArray.push({x: array[0].x, y: array[0].y});
+                orderBookArray.push({
+                    x: array[0].x,
+                    y: array[0].y
+                });
                 if (array.length > 1) {
                     for (let i = 1; i < array.length; i++) {
                         maxStep = Math.min((array[i].x - array[i - 1].x) / 2, 0.1 / precision);
-                        orderBookArray.push({x: array[i].x - maxStep, y: array[i - 1].y});
+                        orderBookArray.push({
+                            x: array[i].x - maxStep,
+                            y: array[i - 1].y
+                        });
                         if (sumBoolean) {
                             array[i].y += array[i - 1].y;
                         }
-                        orderBookArray.push({x: array[i].x, y: array[i].y});
+                        orderBookArray.push({
+                            x: array[i].x,
+                            y: array[i].y
+                        });
                     }
                 } else {
-                    orderBookArray.push({x: array[0].x * 1.5, y: array[0].y});
+                    orderBookArray.push({
+                        x: array[0].x * 1.5,
+                        y: array[0].y
+                    });
                 }
             }
         }

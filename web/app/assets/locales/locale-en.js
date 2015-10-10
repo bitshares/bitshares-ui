@@ -435,6 +435,7 @@
         price: "Price",
         latest: "Latest Price",
         call: "Call Price",
+        core_rate: "Fee Rate",
         settle: "Settlement Price",
         volume: "Volume",
         spread: "Spread",
