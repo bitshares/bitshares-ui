@@ -216,8 +216,13 @@ class ChainStore
       if( !id_or_symbol )
          return null
 
-      if( utils.is_object_id( id_or_symbol ) )
-         return this.getObject( id_or_symbol )
+      if ( utils.is_object_id( id_or_symbol ) ) {
+        let asset = this.getObject( id_or_symbol );
+        if (asset && (asset.get("bitasset") && !asset.getIn(["bitasset", "current_feed"]))) {
+          return undefined;
+        }
+        return asset;
+      }
 
       /// TODO: verify id_or_symbol is a valid symbol name
 
