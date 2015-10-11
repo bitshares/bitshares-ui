@@ -489,52 +489,18 @@ class MarketsStore {
     _depthChart() {
         // let depthStart = new Date();
 
-        let bids = [], asks = [], calls = [], totalBids = 0, totalCalls = 0;
+        let bids = [], asks = [], calls= [], totalBids = 0, totalCalls = 0;
+        let flat_bids = [], flat_asks = [], flat_calls = [];
         if (this.activeMarketLimits.size) {
 
             this.bids.map(order => {
-
-                // d3 format
-                // bids.push({
-                //     x: order.,
-                //     y: order.amount
-                // });
-
-                // highcharts format
                 bids.push([order.price_full, order.amount]);
                 totalBids += order.value;
             });
 
-            this.calls.map(order => {
-
-                // d3 format
-                // bids.push({
-                //     x: order.,
-                //     y: order.amount
-                // });
-
-                // highcharts format
-                // console.log("flat_calls:", order.price_full, order.amount);
-                calls.push([order.price_full, order.amount]);
-            });
-
-            // console.log("store depth bids time taken:", new Date() - depthStart, "ms");
-
-            // let askStart = new Date();
-
             this.asks.map(order => {
-
-                // d3 format
-                // asks.push({
-                //     x: order.,
-                //     y: order.amount
-                // });
-                // highcharts format
-
                 asks.push([order.price_full, order.amount]);
             });
-
-            // console.log("store depth asks time taken:", new Date() - askStart, "ms");
 
             // Make sure the arrays are sorted properly
             asks.sort((a, b) => {
@@ -545,8 +511,27 @@ class MarketsStore {
                 return a[0] - b[0];
             });
 
-            calls.sort((a, b) => {
-                return a[0] - b[0];
+            // Flatten the arrays to get the step plot look
+            flat_bids = market_utils.flatten_orderbookchart_highcharts(bids, true, true, 1000);
+            if (flat_bids.length > 0) {
+                flat_bids.unshift([0, flat_bids[0][1]]);
+            }
+
+            flat_asks = market_utils.flatten_orderbookchart_highcharts(asks, true, false, 1000);
+            if (flat_asks.length > 0) {
+                flat_asks.push([flat_asks[flat_asks.length - 1][0] * 1.5, flat_asks[flat_asks.length - 1][1]]);
+            }
+
+            // Assign to store variables
+            this.flat_asks = flat_asks;
+            this.flat_bids = flat_bids;
+            this.totalBids = totalBids;
+        }
+
+        if (this.calls.length) {
+
+            this.calls.map(order => {
+                calls.push([order.price_full, order.amount]);
             });
 
             // Calculate total value of call orders
@@ -558,21 +543,15 @@ class MarketsStore {
                 }
             })
 
-            // Flatten the arrays to get the step plot look
-            let flat_bids = market_utils.flatten_orderbookchart_highcharts(bids, true, true, 1000);
-            if (flat_bids.length > 0) {
-                flat_bids.unshift([0, flat_bids[0][1]]);
-            }
+            // Make sure the array is sorted properly            
+            calls.sort((a, b) => {
+                return a[0] - b[0];
+            });
 
-            let flat_asks = market_utils.flatten_orderbookchart_highcharts(asks, true, false, 1000);
-            if (flat_asks.length > 0) {
-                flat_asks.push([flat_asks[flat_asks.length - 1][0] * 1.5, flat_asks[flat_asks.length - 1][1]]);
-            }
-
-            let flat_calls
+            // Flatten the array to get the step plot look
             if (this.invertedCalls) {
                 flat_calls = market_utils.flatten_orderbookchart_highcharts(calls, true, false, 1000);
-                if (flat_calls[flat_calls.length - 1][0] < flat_asks[flat_asks.length - 1][0]) {
+                if (flat_asks && (flat_calls[flat_calls.length - 1][0] < flat_asks[flat_asks.length - 1][0])) {
                     flat_calls.push([flat_asks[flat_asks.length - 1][0], flat_calls[flat_calls.length - 1][1]]);
                 }
             } else {
@@ -581,31 +560,10 @@ class MarketsStore {
                     flat_calls.unshift([0, flat_calls[0][1]]);
                 }
             }
-            // console.log("store flat_calls:", flat_calls);
-
-            // react-d3-components area chart hack
-            // let bidsLength = flat_bids.length;
-            // let asksLength = flat_asks.length;
-
-            // for (let i = 0; i < asksLength; i++) {
-            //     if (i === asksLength - 1) {
-            //         flat_bids.push({x: flat_bids[i].x, y: 0});    
-            //     }
-            //     flat_bids.push({x: flat_asks[i].x, y: 0});
-            // }
-
-            // for (let i = bidsLength; i >= 0; i--) {
-            //     flat_asks.unshift({x: flat_bids[i].x, y: 0});
-            // }
 
             // Assign to store variables
-            this.flat_asks = flat_asks;
-            this.flat_bids = flat_bids;
-            this.flat_calls = flat_calls;
-            this.totalBids = totalBids;
             this.totalCalls = totalCalls;
-
-            // console.log("store depth chart time taken:", new Date() - depthStart, "ms");
+            this.flat_calls = flat_calls;
 
         }
     }

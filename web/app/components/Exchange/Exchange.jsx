@@ -561,6 +561,7 @@ class Exchange extends React.Component {
                         <div className="grid-block no-overflow no-padding shrink">
                             <DepthHighChart
                                 orders={limit_orders}
+                                call_orders={call_orders}
                                 flat_asks={flat_asks}
                                 flat_bids={flat_bids}
                                 flat_calls={flat_calls}
