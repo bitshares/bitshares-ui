@@ -114,8 +114,8 @@ class SettingsEntry extends React.Component {
 
 class Settings extends React.Component {
 
-    triggerModal(type) {
-        this.refs.ws_modal.show(type);
+    triggerModal(e) {
+        this.refs.ws_modal.show(e);
     }
 
     _onChangeSetting(setting, e) {

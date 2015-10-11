@@ -22,8 +22,9 @@ class InitError extends React.Component {
         }
     }
 
-    triggerModal() {
-        this.refs.ws_modal.show("ws_modal_add");
+    triggerModal(e) {
+        console.log("triggerModal:");
+        this.refs.ws_modal.show(e);
     }
 
     onChangeWS(e) {
@@ -51,7 +52,7 @@ class InitError extends React.Component {
                         <header><Translate component="span" content={`settings.connection`} /></header>
                         <ul>
                             <li className="with-dropdown">
-                                <div style={{position: "absolute", right: 0}} onClick={this.triggerModal} id="add" className="button">+</div>
+                                <div id="add" style={{position: "absolute", right: 0}} onClick={this.triggerModal.bind(this)} id="add" className="button">+</div>
                                 <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
                                     {options}
                                 </select>
