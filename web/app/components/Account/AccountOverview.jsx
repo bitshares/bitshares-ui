@@ -16,8 +16,17 @@ class AccountOverview extends React.Component {
         account: React.PropTypes.object.isRequired
     }
 
-    shouldComponentUpdate(nextProps) {
-        return true;
+    constructor() {
+        super();
+        this.state = {
+            limit: 10
+        };
+    }
+
+    _onIncreaseLimit() {
+        this.setState({
+            limit: this.state.limit + 20
+        });
     }
 
     render() {
@@ -73,7 +82,12 @@ class AccountOverview extends React.Component {
                 </div> : null}
                 <div className="content-block">
                     <h3><Translate content="account.recent" /></h3>
-                    <RecentTransactions accountsList={Immutable.fromJS([account.get("id")])} limit={1000} compactView={false}/>
+                    <RecentTransactions accountsList={Immutable.fromJS([account.get("id")])} limit={this.state.limit} compactView={false}/>
+                    <div className="account-info more-button">
+                        <div className="button" onClick={this._onIncreaseLimit.bind(this)}>
+                            <Translate content="account.more" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
