@@ -137,7 +137,7 @@ class BorrowModalContent extends React.Component {
 
         let newState = {
             short_amount: this.state.short_amount,
-            collateral: ((this.state.short_amount / feed_price) * ratio).toString(),
+            collateral: ((this.state.short_amount / feed_price) * ratio).toFixed(this.props.backing_asset.get("precision")).toString(),
             collateral_ratio: ratio
         }
 
