@@ -39,6 +39,8 @@ class MarketsStore {
         this.bucketSize = 60;
         this.priceHistory = [];
 
+        this.marketBase = "CORE";
+
         this.baseAsset = {
             id: "1.3.0",
             symbol: "CORE",
@@ -67,7 +69,7 @@ class MarketsStore {
     }
 
     onChangeBase(market) {
-        this.baseAsset = market;
+        this.marketBase = market;
     }
 
     onChangeBucketSize(size) {

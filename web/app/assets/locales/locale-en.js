@@ -465,11 +465,13 @@
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
     },
     markets: {
-        choose_base: "Choose base asset",
+        base: "Base asset",
+        market_search: "Market Search",
         filter: "Filter",
         core_rate: "Core rate",
         supply: "Supply",
-        search: "Search"
+        search: "Search",
+        preferred: "My Favourite Markets"
     },
     wallet: {
         title: "Wallet",

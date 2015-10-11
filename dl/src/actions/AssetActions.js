@@ -3,6 +3,8 @@ import Apis from "rpc_api/ApiInstances";
 import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
+import ChainStore from "api/ChainStore";
+
 let wallet_api = new WalletApi();
 
 let inProgress = {};
@@ -38,16 +40,16 @@ class AssetActions {
                     }
                 },
                 "whitelist_authorities": [
-                    
+
                 ],
                 "blacklist_authorities": [
-                    
+
                 ],
                 "whitelist_markets": [
-                    
+
                 ],
                 "blacklist_markets": [
-                    
+
                 ],
                 "description": createObject.description,
                 "extensions": null
@@ -66,7 +68,7 @@ class AssetActions {
     }
 
     issueAsset(account_id, issueObject) {
-       console.log( "account_id: ", account_id, issueObject );
+        console.log("account_id: ", account_id, issueObject);
         // Create asset action here...
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("asset_issue", {
@@ -82,7 +84,7 @@ class AssetActions {
             "issue_to_account": issueObject.to_id,
 
             "extensions": [
-                
+
             ]
         });
         return WalletDb.process_transaction(tr, null, true).then(result => {
@@ -188,6 +190,31 @@ class AssetActions {
                 delete inProgress[id];
             });
         }
+    }
+
+    lookupAsset(symbol, searchID) {
+        let asset = ChainStore.getAsset(symbol);
+
+        if (asset) {
+            this.dispatch({
+                assets: [asset],
+                searchID: searchID,
+                symbol: symbol
+            });
+        } else {
+            // Hack to retry once until we replace this method with a new api call to lookup multiple assets
+            setTimeout(() => {
+                let asset = ChainStore.getAsset(symbol);
+                if (asset) {
+                    this.dispatch({
+                        assets: [asset],
+                        searchID: searchID,
+                        symbol: symbol
+                    });
+                }
+            }, 200);
+        }
+
     }
 }
 

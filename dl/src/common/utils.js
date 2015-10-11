@@ -138,6 +138,11 @@ var Utils = {
     },
 
     are_equal_shallow: function(a, b) {
+        if (Array.isArray(a) && Array.isArray(a)) {
+            if (a.length > b.length) {
+                return false;
+            }
+        }
         for(var key in a) {
             if(!(key in b) || a[key] !== b[key]) {
                 return false;

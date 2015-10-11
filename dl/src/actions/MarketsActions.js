@@ -282,13 +282,13 @@ class MarketsActions {
         }, 100);
     }
 
-    addMarket(quote, base) {
-        this.dispatch({quote, base});
-    }
+    // addMarket(quote, base) {
+    //     this.dispatch({quote, base});
+    // }
 
-    removeMarket(quote, base) {
-        this.dispatch({quote, base});
-    }
+    // removeMarket(quote, base) {
+    //     this.dispatch({quote, base});
+    // }
 }
 
 module.exports = alt.createActions(MarketsActions);

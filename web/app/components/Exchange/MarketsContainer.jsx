@@ -11,19 +11,19 @@ class MarketsContainer extends React.Component {
 
         return (
               <AltContainer 
-                  stores={[MarketsStore, AssetStore, SettingsStore]}
+                  stores={[SettingsStore, AssetStore, MarketsStore]}
                   inject={{
-                    markets: () => {
-                        return MarketsStore.getState().markets;
+                    defaultMarkets: () => {
+                        return SettingsStore.getState().defaultMarkets;
                     },
-                    baseAsset: () => {
-                        return MarketsStore.getState().baseAsset;
+                    searchTerms: () => {
+                        return AssetStore.getState().searchTerms;
                     },
-                    assets: () => {
-                        return AssetStore.getState().assets;
+                    lookupResults: () => {
+                        return AssetStore.getState().lookupResults;
                     },
-                    settings: () => {
-                        return SettingsStore.getState().settings;
+                    marketBase: () => {
+                        return MarketsStore.getState().marketBase;
                     }
                   }} 
                   >
