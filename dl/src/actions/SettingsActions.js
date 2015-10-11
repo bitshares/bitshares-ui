@@ -13,6 +13,14 @@ class SettingsActions {
     removeMarket(quote, base) {
         this.dispatch({quote, base});
     }
+
+    addWS(ws) {
+        this.dispatch(ws);
+    }
+
+    removeWS(index) {
+        this.dispatch(index);
+    }
 }
 
 module.exports = alt.createActions(SettingsActions);

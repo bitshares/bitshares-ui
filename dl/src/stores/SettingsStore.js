@@ -36,6 +36,10 @@ class SettingsStore {
                 "de",
                 "es",
                 "tr"
+            ],
+            connection: [
+                "wss://graphene.bitshares.org:443/ws",
+                "ws://localhost:8090"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -46,7 +50,9 @@ class SettingsStore {
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
             onAddMarket: SettingsActions.addMarket,
-            onRemoveMarket: SettingsActions.removeMarket
+            onRemoveMarket: SettingsActions.removeMarket,
+            onAddWS: SettingsActions.addWS,
+            onRemoveWS: SettingsActions.removeWS
         });
 
         if (this._lsGet("settings_v1")) {
@@ -55,6 +61,10 @@ class SettingsStore {
 
         if (this._lsGet("defaultMarkets")) {
             this.defaultMarkets = Immutable.Map(JSON.parse(this._lsGet("defaultMarkets")));
+        }
+
+        if (this._lsGet("defaults")) {
+            this.defaults = JSON.parse(this._lsGet("defaults"));
         }
     }
 
@@ -97,6 +107,16 @@ class SettingsStore {
         this.defaultMarkets = this.defaultMarkets.delete(marketID);
 
         this._lsSet("defaultMarkets", this.defaultMarkets.toJS());
+    }
+
+    onAddWS(ws) {
+        this.defaults.connection.push(ws);
+        this._lsSet("defaults", this.defaults);
+    }
+
+    onRemoveWS(index) {
+        this.defaults.connection.splice(index, 1);
+        this._lsSet("defaults", this.defaults);
     }
 }
 

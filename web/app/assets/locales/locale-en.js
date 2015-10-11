@@ -431,7 +431,9 @@
         confirm_no: "Never",
         always_confirm: "Always ask for confirmation",
         wallets: "Wallets",
-        connection: "API Connection"
+        connection: "API Connection",
+        add_ws: "Add new websocket API",
+        remove_ws: "Remove websocket API"
     },
     footer: {
         title: "Graphene",
@@ -540,5 +542,12 @@
         address: "Withdraw to Address",
         submit: "Withdraw"
       }
+    },
+    init_error: {
+        title: "Application initialization issues",
+        ws_status: "Websocket Connection Status",
+        retry: "Retry",
+        connected: "Connected",
+        not_connected: "Not connected"
     }
 };
