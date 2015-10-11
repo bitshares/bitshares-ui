@@ -73,6 +73,7 @@ class AccountOverview extends React.Component {
                             <th><Translate content="transaction.collateral" /></th>
                             <th><Translate content="exchange.call" /></th>
                             <th><Translate content="borrow.adjust" /></th>
+                            <th><Translate content="borrow.close" /></th>
                         </tr>
                         </thead>
                         <tbody>

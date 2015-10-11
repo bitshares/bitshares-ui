@@ -526,6 +526,8 @@
         no_valid: "No valid feeds for %(asset_symbol)s",
         coll_ratio: "Collateral ratio",
         adjust: "Update Position",
+        close: "Close Position",
+        update: "Update",
         errors: {
             below: "Collateral ratio below maintenance level",
             collateral: "Insufficient collateral balance"
