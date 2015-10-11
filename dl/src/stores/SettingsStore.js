@@ -2,6 +2,7 @@ var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
+const STORAGE_KEY = "graphene_settings_v5";
 
 class SettingsStore {
     constructor() {
@@ -19,7 +20,7 @@ class SettingsStore {
                 {"quote":"1.3.218","base":"1.3.536"},
                 {"quote":"1.3.218","base":"1.3.285"}
             ],
-            connection: "wss://graphene.bitshares.org:443/ws/"
+            connection: "wss://graphene.bitshares.org:443/ws"
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -47,8 +48,9 @@ class SettingsStore {
             onRemoveMarket: SettingsActions.removeMarket
         });
 
-        if (localStorage.settings_v4)
-            this.settings = Immutable.Map(JSON.parse(localStorage.settings_v4));
+        if (this._lsGet()) {
+            this.settings = Immutable.Map(JSON.parse(this._lsGet()));
+        }
     }
 
     getSetting(setting) {
@@ -61,7 +63,15 @@ class SettingsStore {
             payload.value
         );
 
-        localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
+        this._lsSet(this.settings.toJS());
+    }
+
+    _lsGet() {
+        return localStorage.getItem(STORAGE_KEY);
+    }
+
+    _lsSet(settings) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     }
 
     onAddMarket(market) {
@@ -78,7 +88,7 @@ class SettingsStore {
             this.settings = this.settings.set(
                 "defaultMarkets",
                 defaultMarkets);
-            localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
+            this._lsSet(this.settings.toJS());
         } else {
             return false;
         }
@@ -89,7 +99,7 @@ class SettingsStore {
         for (var i = 0; i < defaultMarkets.length; i++) {
             if (defaultMarkets[i].quote === market.quote && defaultMarkets[i].base === market.base) {
                 defaultMarkets.splice(i, 1);
-                localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
+                this._lsSet(this.settings.toJS());
                 break;
             }
         }
