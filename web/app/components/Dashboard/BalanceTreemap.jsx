@@ -3,30 +3,56 @@ import Immutable from "immutable";
 import Highcharts from "react-highcharts/stocks";
 import {PropTypes} from "react";
 import utils from "common/utils";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
 
+
+@BindToChainState({keep_updating: true})
 class BalanceTreemap extends React.Component {
 
-    shouldComponentUpdate(nextProps) {
-
-        return (
-            !Immutable.is(nextProps.assets, this.props.assets) ||
-            !nextProps.balances.equals(this.props.balances)
-        );
+    static propTypes = {
+        assets: ChainTypes.ChainObjectsList,
+        balances: PropTypes.object
     }
 
-    render() {
-        let {assets, balances} = this.props;
-        let accountBalances = null;
+    // shouldComponentUpdate(nextProps) {
 
-        if (balances && balances.length > 0 && assets.size > 0) {
-            accountBalances = balances.map((balance, index) => {
-                let asset = assets.get(balance.asset_id);
+    //     return (
+    //         !Immutable.is(nextProps.assets, this.props.assets) ||
+    //         !nextProps.balances.equals(this.props.balances)
+    //     );
+    // }
+
+    render() {
+        let {assets, balances, resolved} = this.props;
+        if (!resolved) {
+            return null;
+        }
+        let accountBalances = null;
+        let assetsList = {};
+        let balanceList = [];
+        assets.forEach(asset => {
+            assetsList[asset.get("id")] = asset.toJS();
+        })
+
+        let coreAsset = assetsList["1.3.0"];
+
+        balances.forEach(balance => {
+            balanceList.push(balance);
+        })
+
+        if ( balanceList && balanceList.length ) {
+            accountBalances = balanceList.map((balance, index) => {
+                let asset = assetsList[balance.get("asset_type")];
                 if (asset) {
-                    return {
+                    let value = asset.id !== "1.3.0" ? balance.get("balance") * asset.options.core_exchange_rate.quote.amount / asset.options.core_exchange_rate.base.amount : balance.get("balance");
+                    if (value) {
+                        return {
                             name: asset.symbol,
-                            value: utils.get_asset_amount(balance.amount, asset),
+                            value: utils.get_asset_amount(value, coreAsset),
                             colorValue: index
                         };
+                    }
                 }
 
             });
@@ -39,7 +65,7 @@ class BalanceTreemap extends React.Component {
         let config = {
             chart: {
                 backgroundColor: "rgba(255, 0, 0, 0)",
-                height: 125,
+                height: 300,
                 spacingLeft: 0,
                 spacingRight: 0,
                 spacingBottom: 0
@@ -58,7 +84,7 @@ class BalanceTreemap extends React.Component {
                 treemap: {
                     animation: false,
                     tooltip: {
-                        pointFormat: "<b>{point.name}</b>: {point.value:,.0f}"
+                        pointFormat: "<b>{point.name}</b>: {point.value:,.0f} " + coreAsset.symbol
                     }
                 }
             },
@@ -66,7 +92,7 @@ class BalanceTreemap extends React.Component {
                 type: "treemap",
                 levels: [{
                     level: 1,
-                    layoutAlgorithm: "sliceAndDice",
+                    layoutAlgorithm: "stripes",
                     dataLabels: {
                         enabled: true,
                         align: "center",
@@ -90,14 +116,26 @@ class BalanceTreemap extends React.Component {
     }
 }
 
-BalanceTreemap.defaultProps = {
-    assets: {},
-    balances: []
-};
+@BindToChainState({keep_updating: true})
+class BalancesWrapper extends React.Component {
 
-BalanceTreemap.propTypes = {
-    assets: PropTypes.object.isRequired,
-    balances: PropTypes.array.isRequired
-};
+    static propTypes = {
+        balances: ChainTypes.ChainObjectsList
+    }
 
-export default BalanceTreemap;
+    render() {
+        let balanceAssetsList = Immutable.List();
+
+        this.props.balances.forEach(balance => {
+            balanceAssetsList = balanceAssetsList.push(balance.get("asset_type"));
+        })
+
+        if (!balanceAssetsList.has("1.3.0")) {
+            balanceAssetsList = balanceAssetsList.push("1.3.0");
+        }
+
+        return <BalanceTreemap {...this.props} assets={balanceAssetsList} />;
+    }
+}
+
+export default BalancesWrapper;
