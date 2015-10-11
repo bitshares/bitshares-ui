@@ -133,7 +133,8 @@
             unknown: "Unknown account",
             not_yours: "Not your account"
         },
-        collaterals: "Collateral Positions"
+        collaterals: "Collateral Positions",
+        eq_value: "Equivalent Value"
     },
     pagination: {
         newer: "Newer",

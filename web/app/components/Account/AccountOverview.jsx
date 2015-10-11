@@ -6,6 +6,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
+import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
 
@@ -24,29 +25,35 @@ class AccountOverview extends React.Component {
         let call_orders = account.toJS ? account.get("call_orders").toJS() : [];
         let balances = {};
         let account_balances = account.get("balances");
+        let balanceList = Immutable.List();
+
         if (account_balances) {
             account_balances.forEach( balance => {
+                balanceList = balanceList.push(balance);
                 balances[balance] = (
                     <tr key={balance}>
                         <td><BalanceComponent balance={balance}/></td>
+                        <td><BalanceValueComponent balance={balance}/></td>
                     </tr>
                 );
             })
         }
+
         return (
             <div className="grid-content">
                 <div className="content-block">
                     <h3><Translate content="transfer.balances" /></h3>
-                    <table className="table">
-                        {/*<thead>
-                            <tr>
-                                <th><Translate component="span" content="account.asset" /></th>
-                            </tr>
-                        </thead>*/}
-                        <tbody>
-                            {React.addons.createFragment(balances)}
-                        </tbody>
-                    </table>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th><Translate component="span" content="account.asset" /></th>
+                                    <th><Translate component="span" content="account.eq_value" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {React.addons.createFragment(balances)}
+                            </tbody>
+                        </table>
                 </div>
                 {call_orders.length > 0 ? <div className="content-block">
                     <h3><Translate content="account.collaterals" /></h3>
