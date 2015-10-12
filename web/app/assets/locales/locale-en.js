@@ -31,6 +31,7 @@
         pending: "pending %(blocks)s blocks"
     },
     account: {
+        welcome: "Welcome to Graphene",
         asset: "Asset",
         market_value: "Market Value",
         hour_24: "24hr Change",
@@ -134,7 +135,12 @@
             not_yours: "Not your account"
         },
         collaterals: "Collateral Positions",
-        eq_value: "Equivalent Value"
+        eq_value: "Equivalent Value",
+        please_create_account: "Please create an account",
+        create_account: "Create account",
+        identicon: "Identicon",
+        pay_from: "Pay From",
+        existing_accounts: "Existing Accounts"
     },
     pagination: {
         newer: "Newer",
@@ -484,6 +490,7 @@
         change_wallet: "Change Wallet",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
+        setup_wallet: "Setup your wallet",
         delete_wallet: "Delete Wallet",
         delete_confirm_line1: "Are you ABSOLUTELY sure?",
         delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
@@ -519,7 +526,15 @@
         ready_to_restore: "Ready to Restore",
         restore_wallet_of: "Restore (%(name)s Wallet)",
         restore_success: "Successfully restored (%(name)s) wallet",
-        change: "Change (%(name)s Wallet)"
+        change: "Change (%(name)s Wallet)",
+        import_20_notice1: "Import your BTS 2.0+ BACKUP first",
+        import_20_notice2: "(if you have one)",
+        loading_balances: "Loading balance claims",
+        no_balance: "No balance claims",
+        claim_balance: "Claim Balance",
+        claim_balances: "Claim Balances",
+        unclaimed: "Unclaimed",
+        unclaimed_vesting: "Unclaimed (vesting)",
     },
     borrow: {
         title: "%(asset_symbol)s Margin",

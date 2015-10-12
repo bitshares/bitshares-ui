@@ -5,6 +5,7 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import BaseComponent from "../BaseComponent";
 import validation from "common/validation";
+import Translate from "react-translate-component";
 
 class AccountNameInput extends BaseComponent {
 
@@ -117,7 +118,7 @@ class AccountNameInput extends BaseComponent {
         let warning = this.state.warning
         return (
             <div className={class_name}>
-                <label>Account Name</label>
+                <label><Translate content="account.name" /></label>
                 <input name="value" type="text" id={this.props.id} ref="input" autoComplete="off"
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}
