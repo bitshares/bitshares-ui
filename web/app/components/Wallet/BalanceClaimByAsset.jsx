@@ -7,6 +7,8 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import FormattedAsset from "components/Utility/FormattedAsset";
+import Translate from "react-translate-component";
+
 
 @connectToStores
 export default class BalanceClaimByAsset extends Component {
@@ -61,13 +63,14 @@ export default class BalanceClaimByAsset extends Component {
     render() {
         if( this.props.loading) return <div className="center-content">
             <p></p>
-            <h5>Loading balance claims&hellip;</h5>
+            <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
             <LoadingIndicator type="circle"/>
         </div>
         
         var content
         if( ! this.props.total_by_asset.size)
-            content = <h5>No balance claims</h5>
+            content = <h5><Translate content="wallet.no_balance" /></h5>
+
         else {
             var key = 0
             content = <span>
