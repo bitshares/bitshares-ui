@@ -42,14 +42,20 @@ class FormattedAsset extends React.Component {
 
         let decimals = Math.max(0, asset.precision - decimalOffset);
 
+        if (!amount) {
+            colorClass += " no-amount";
+        }
+
         return (
-                <span className={colorClass}>
-                    <FormattedNumber 
-                        value={this.props.exact_amount ? amount : amount / precision}
-                        minimumFractionDigits={0}
-                        maximumFractionDigits={decimals}
+                <span className={colorClass}  >
+                {amount > 0 ?
+                  <FormattedNumber
+                    value={this.props.exact_amount ? amount : amount / precision}
+                    minimumFractionDigits={0}
+                    maximumFractionDigits={decimals}
                     />
-                    {hide_asset ? null : <span className="currency">{"\u00a0" + asset.symbol}</span>}
+                : null}
+                {hide_asset ? null : <span className="currency">{"\u00a0" + asset.symbol}</span>}
                 </span>
         );
     }
