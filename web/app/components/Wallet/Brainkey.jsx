@@ -51,7 +51,7 @@ class ViewBrainkey extends BrainkeyBaseComponent {
             <p></p>
             {this.props.account_ids.size?
             <BrainkeyAccounts accounts={Immutable.List(this.props.account_ids.toArray())}/>:
-            <h5>No Accounts</h5>}
+            <h5><Translate content="wallet.no_accounts" /></h5>}
         </span>
     }
 }

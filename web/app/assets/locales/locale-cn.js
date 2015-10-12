@@ -514,6 +514,7 @@ module.exports = {
         active_wallet: "当前钱包使用中",
         verified: "已验证",
         verify_prior_backup: "验证钱包备份文件",
+        brainkey_not_verified: "脑钱包密钥未验证",
         cancel: "取消",
         reset: "重置",
         done: "完成",
@@ -540,6 +541,15 @@ module.exports = {
         claim_balances: "导入余额",
         unclaimed: "未导入余额",
         unclaimed_vesting: "未导入余额 (解冻中)",
+        no_accounts: "没有账户",
+        brainkey_no_match: "脑钱包密钥不匹配，请重试",
+        reenter_brainkey: "请再输入一遍脑钱包密钥",
+        pwd4brainkey: "输入密码后显示脑钱包密钥",
+        show_brainkey: "显示脑钱包密钥",
+        brainkey_w1: "警告: 将密钥打印出来，或记录在纸上妥善保存。",
+        brainkey_w2: "任何人获得你的脑钱包密钥信息将",
+        brainkey_w3: "获得钱包中资金的使用权限。"
+
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",
