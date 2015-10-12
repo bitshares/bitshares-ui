@@ -70,7 +70,7 @@ class CollateralPosition extends React.Component {
                     />
                 </td>
                 <td>
-                    <button onClick={this._onClosePosition.bind(this)} className="button outline"><Translate content="transfer.close" /></button>
+                    <button onClick={this._onClosePosition.bind(this)} className="button outline"><Translate content="borrow.close" /></button>
                 </td>
             </tr>
         );
