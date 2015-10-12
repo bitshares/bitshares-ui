@@ -52,7 +52,7 @@ class InitError extends React.Component {
                         <header><Translate component="span" content={`settings.connection`} /></header>
                         <ul>
                             <li className="with-dropdown">
-                                <div id="add" style={{position: "absolute", right: 0}} onClick={this.triggerModal.bind(this)} id="add" className="button">+</div>
+                                <div style={{position: "absolute", right: 0}} onClick={this.triggerModal.bind(this)} id="add" className="button">+</div>
                                 <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
                                     {options}
                                 </select>
