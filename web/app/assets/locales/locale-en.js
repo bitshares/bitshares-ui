@@ -31,6 +31,7 @@
         pending: "pending %(blocks)s blocks"
     },
     account: {
+        welcome: "Welcome to Graphene",
         asset: "Asset",
         market_value: "Market Value",
         hour_24: "24hr Change",
@@ -134,7 +135,12 @@
             not_yours: "Not your account"
         },
         collaterals: "Collateral Positions",
-        eq_value: "Equivalent Value"
+        eq_value: "Equivalent Value",
+        please_create_account: "Please create an account",
+        create_account: "Create account",
+        identicon: "Identicon",
+        pay_from: "Pay From",
+        existing_accounts: "Existing Accounts"
     },
     pagination: {
         newer: "Newer",

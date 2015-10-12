@@ -27,6 +27,7 @@ module.exports = {
         unlocked_tip: "钱包已解锁，点击锁定。"
     },
     account: {
+        welcome: "欢迎使用 Graphene (石墨烯)系统",
         assets: "资产",
         market_value: "市值",
         hour_24: "24小时",
@@ -135,7 +136,12 @@ module.exports = {
         },
         deposit_withdraw: "充值/提现",
         collaterals: "抵押债仓",
-        eq_value: "换算值"
+        eq_value: "换算值",
+        please_create_account: "请先创建账户",
+        create_account: "创建账户",
+        identicon: "身份标示图形",
+        pay_from: "注册费支付账户",
+        existing_accounts: "已有账户"
     },
     transfer: {
         from: "来自",

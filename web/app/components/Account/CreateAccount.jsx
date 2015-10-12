@@ -13,7 +13,8 @@ import AccountSelect from "../Forms/AccountSelect";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
-import WalletActions from "actions/WalletActions"
+import WalletActions from "actions/WalletActions";
+import Translate from "react-translate-component";
 
 @connectToStores
 class CreateAccount extends React.Component {
@@ -131,24 +132,24 @@ class CreateAccount extends React.Component {
                         {
                             first_account ?
                                 (<div>
-                                    <h1>Welcome to Graphene</h1>
-                                    <h3>Please create an account</h3>
+                                    <h1><Translate content="account.welcome" /></h1>
+                                    <h3><Translate content="account.please_create_account" /></h3>
                                 </div>) :
                                 (
-                                    <h3>Create account</h3>
+                                    <h3><Translate content="account.create_account" /></h3>
                                 )
                         }
                         </div>
                         <div style={{width: '21em'}}>
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
                                 <div className="form-group">
-                                    <label>Identicon</label>
+                                    <label><Translate content="account.identicon" /></label>
                                     <AccountImage account={this.state.validAccountName ? this.state.accountName:null}/>
                                 </div>
                                 <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
-                                
+
                                 {WalletDb.getWallet() ?
                                     null :
                                     <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
@@ -156,15 +157,15 @@ class CreateAccount extends React.Component {
                                 {
                                     first_account ? null : (
                                         <div className="full-width-content form-group">
-                                            <label>Pay From</label>
-                                            <AccountSelect account_names={my_accounts} 
+                                            <label><Translate content="account.pay_from" /></label>
+                                            <AccountSelect account_names={my_accounts}
                                                 onChange={this.onRegistrarAccountChange.bind(this)}/>
                                         </div>)
                                 }
-                                {this.state.loading ?  <LoadingIndicator type="circle"/> :<button className={buttonClass}>Create Account</button>}
+                                {this.state.loading ?  <LoadingIndicator type="circle"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
                                 <br/>
                                 <br/>
-                                <label><Link to="existing-account">Existing Accounts</Link></label>
+                                <label><Link to="existing-account"><Translate content="account.existing_accounts" /></Link></label>
                             </form>
                         </div>
                     </div>
