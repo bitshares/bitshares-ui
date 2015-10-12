@@ -66,7 +66,7 @@ class Header extends React.Component {
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
                         <li><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
-                        <li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>
+                        {linkedAccounts.size === 0 ? null : <li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>}
                         <li><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                     </ul>
                 </div>
