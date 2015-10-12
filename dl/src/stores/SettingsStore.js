@@ -3,6 +3,7 @@ var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
 const STORAGE_KEY = "__graphene__";
+var ls = typeof localStorage === "undefined" ? null : localStorage;
 
 class SettingsStore {
     constructor() {
@@ -82,11 +83,16 @@ class SettingsStore {
     }
 
     _lsGet(key) {
-        return localStorage.getItem(STORAGE_KEY + key);
+        if (ls) {
+            return ls.getItem(STORAGE_KEY + key);
+        }
     }
 
     _lsSet(key, object) {
-        localStorage.setItem(STORAGE_KEY + key, JSON.stringify(object));
+        if (ls) {
+            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
+        }
+
     }
 
     onAddMarket(market) {
