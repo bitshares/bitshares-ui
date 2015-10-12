@@ -9,7 +9,7 @@ module.exports = {
         tr: "Turkish"
     },
     header: {
-        title: "比特股 2.0",
+        title: "Graphene (石墨烯)钱包",
         dashboard: "概览",
         explorer: "浏览",
         exchange: "交易",
@@ -495,6 +495,7 @@ module.exports = {
         change_wallet: "切换钱包",
         wallet_created: "钱包已创建",
         create_wallet: "创建新钱包",
+        setup_wallet: "设置钱包",
         delete_wallet: "删除钱包",
         delete_confirm_line1: "你确定么？",
         delete_confirm_line2: "如果你不仔细阅读以下提示，可能发生无法预料的事情。",
@@ -530,7 +531,9 @@ module.exports = {
         change: "切换到钱包 (%(name)s)",
         balance_claims: "余额导入",
         backup_brainkey: "备份脑钱包密钥",
-        downoad: "下载"
+        downoad: "下载",
+        import_20_notice1: "请先导入你的BTS 2.0+ 钱包备份文件",
+        import_20_notice2: "(如果你有的话)",
         loading_balances: "余额读取中",
         no_balance: "无余额可导入",
         claim_balance: "导入余额",

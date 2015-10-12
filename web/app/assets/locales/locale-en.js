@@ -490,6 +490,7 @@
         change_wallet: "Change Wallet",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
+        setup_wallet: "Setup your wallet",
         delete_wallet: "Delete Wallet",
         delete_confirm_line1: "Are you ABSOLUTELY sure?",
         delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
@@ -525,7 +526,9 @@
         ready_to_restore: "Ready to Restore",
         restore_wallet_of: "Restore (%(name)s Wallet)",
         restore_success: "Successfully restored (%(name)s) wallet",
-        change: "Change (%(name)s Wallet)"
+        change: "Change (%(name)s Wallet)",
+        import_20_notice1: "Import your BTS 2.0+ BACKUP first",
+        import_20_notice2: "(if you have one)",
         loading_balances: "Loading balance claims",
         no_balance: "No balance claims",
         claim_balance: "Claim Balance",
