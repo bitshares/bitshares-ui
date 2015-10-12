@@ -473,7 +473,7 @@ module.exports = {
         core_rate: "喂价",
         squeeze: "强制平仓价",
         maintenance: "维持保证金价",
-        your_price: "你的平仓价",
+        your_price: "你的强平触发价",
         receive: "获得"
     },
     markets: {
