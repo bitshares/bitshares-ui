@@ -3,6 +3,8 @@ var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
 const STORAGE_KEY = "__graphene__";
+const CORE_ASSET = "BTS";
+
 var ls = typeof localStorage === "undefined" ? null : localStorage;
 
 class SettingsStore {
@@ -15,15 +17,14 @@ class SettingsStore {
         });
 
         this.defaultMarkets = Immutable.Map([
-            ["BTC_CORE", {"quote":"BTC","base":"CORE"}],
-            ["CNY_CORE", {"quote":"CNY","base":"CORE"}],
-            ["EUR_CORE", {"quote":"EUR","base":"CORE"}],
-            ["GOLD_CORE", {"quote":"GOLD","base":"CORE"}],
-            ["NOTE_CORE", {"quote":"NOTE","base":"CORE"}],
-            ["SILVER_CORE", {"quote":"SILVER","base":"CORE"}],
-            ["USD_CORE", {"quote":"USD","base":"CORE"}],
+            ["BTC_CORE", {"quote":"BTC","base":CORE_ASSET}],
+            ["CNY_CORE", {"quote":"CNY","base":CORE_ASSET}],
+            ["EUR_CORE", {"quote":"EUR","base":CORE_ASSET}],
+            ["GOLD_CORE", {"quote":"GOLD","base":CORE_ASSET}],
+            ["SILVER_CORE", {"quote":"SILVER","base":CORE_ASSET}],
+            ["USD_CORE", {"quote":"USD","base":CORE_ASSET}],
             ["BTC_USD", {"quote":"BTC","base":"USD"}],
-            ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
+            ["BTC_CNY", {"quote":"BTC","base":"CNY"}]
         ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
