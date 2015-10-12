@@ -526,6 +526,10 @@
         restore_wallet_of: "Restore (%(name)s Wallet)",
         restore_success: "Successfully restored (%(name)s) wallet",
         change: "Change (%(name)s Wallet)"
+        loading_balances: "Loading balance claims",
+        no_balance: "No balance claims",
+        claim_balance: "Claim Balance",
+        claim_balances: "Claim Balances",
     },
     borrow: {
         title: "%(asset_symbol)s Margin",

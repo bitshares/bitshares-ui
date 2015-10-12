@@ -531,6 +531,10 @@ module.exports = {
         balance_claims: "余额导入",
         backup_brainkey: "备份脑钱包密钥",
         downoad: "下载"
+        loading_balances: "余额读取中",
+        no_balance: "无余额可导入",
+        claim_balance: "导入余额",
+        claim_balances: "导入余额",
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",

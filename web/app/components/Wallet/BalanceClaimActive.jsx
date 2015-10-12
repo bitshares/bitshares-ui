@@ -14,6 +14,7 @@ import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
 import WalletActions from "actions/WalletActions"
 import MyAccounts from "components/Forms/MyAccounts"
+import Translate from "react-translate-component";
 
 @connectToStores
 export default class BalanceClaimActive extends Component {
@@ -47,22 +48,22 @@ export default class BalanceClaimActive extends Component {
     render() {
         if( this.props.loading) return <div className="center-content">
             <p></p>
-            <h5>Loading balance claims&hellip;</h5>
+            <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
             <LoadingIndicator type="circle"/>
         </div>
         
         if( ! this.props.balances.size) return <div>
-            <h5>No balance claims</h5>
+            <h5><Translate content="wallet.no_balance" /></h5>
         </div>
         
         var import_ready = this.props.selected_balances.size && this.props.claim_account_name
         var claim_balance_label = import_ready ?
-                `Claim Balance (${this.props.claim_account_name})` :
-                "Claim Balance"
+                ` (${this.props.claim_account_name})` :
+                ""
         return (
             <span>
                 <div className="content-block center-content">
-                    <h3 className="no-border-bottom">Claim balances</h3>
+                    <h3 className="no-border-bottom"><Translate content="wallet.claim_balances" /></h3>
                 </div>
                 <div className="grid-block vertical">
                     <div className="grid-content" style={{overflowY:'hidden !important'}}>
@@ -80,8 +81,8 @@ export default class BalanceClaimActive extends Component {
                 <br/><br/>
                 <div className={ cname("button success", {disabled: !import_ready}) }
                     onClick={this.onClaimBalance.bind(this)}>
-                    {claim_balance_label}</div>
-                <div className="button cancel" onClick={this.onBack.bind(this)}>Cancel</div>
+                    <Translate content="wallet.claim_balance" />{claim_balance_label}</div>
+                <div className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></div>
             </span>
         )
     }
