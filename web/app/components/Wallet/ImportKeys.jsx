@@ -101,7 +101,7 @@ export default class ImportKeys extends Component {
                     <KeyCount wif_count={this.state.wif_count}/>
                     {!this.state.wif_count ? 
                         null :
-                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
+                        <span> (<a onClick={this.reset.bind(this)}>RESET</a>)</span>
                     }
                 </div>
                 <br/>
@@ -239,11 +239,13 @@ export default class ImportKeys extends Component {
             var contents = evt.target.result
             try {
                 try {
-                    this._parseWalletJson(contents)
+                    // This is the only chance to encounter a large file, 
+                    // try this format first.
+                    this._parseImportKeyUpload(contents, file)
                 } catch(e) {
                     //DEBUG console.log("... _parseWalletJson",e)
                     try {
-                        this._parseImportKeyUpload(contents, file)
+                        this._parseWalletJson(contents)
                     } catch(ee) {
                         if( ! this.addByPattern(contents))
                             throw ee
@@ -417,12 +419,19 @@ export default class ImportKeys extends Component {
     
     _decryptPrivateKeys(password) {
         var password_aes = Aes.fromSeed(password)
+        var format_error1_once = true
         for(let account of this.state.account_keys) {
             if(! account.encrypted_private_keys) {
-                notify.error(`Account ${account.acccount_name} missing encrypted_private_keys`)
+                var error = `Account ${account.acccount_name} missing encrypted_private_keys`
+                console.error(error)
+                if(format_error1_once) {
+                    notify.error(error)
+                    format_error1_once = false
+                }
                 continue
             }
             var account_name = account.account_name.trim()
+            var same_prefix_regex = new RegExp("^" + config.address_prefix)
             for(let i = 0; i < account.encrypted_private_keys.length; i++) {
                 let encrypted_private = account.encrypted_private_keys[i]
                 let public_key_string = account.public_keys ?
@@ -430,9 +439,7 @@ export default class ImportKeys extends Component {
                 
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
-                    var private_key = PrivateKey.fromBuffer(
-                        new Buffer(private_plainhex, "hex"))
-                    
+                    var private_key = PrivateKey.fromBuffer( new Buffer(private_plainhex, "hex"))
                     if(import_keys_assert_checking && public_key_string) {
                         var pub = private_key.toPublicKey()
                         var addy = pub.toAddressString()
@@ -457,19 +464,16 @@ export default class ImportKeys extends Component {
                         public_key = private_key.toPublicKey()// S L O W
                         public_key_string = public_key.toPublicKeyString()
                     } else {
-                        var previous_address_prefix = config.address_prefix
-                        try {
-                            config.address_prefix = "BTS"
-                            public_key = PublicKey.fromPublicKeyString(public_key_string)
-                            public_key_string = previous_address_prefix +
+                        if( ! same_prefix_regex.test(public_key_string))
+                            // This was creating a unresponsive chrome browser 
+                            // but after the results were shown.  It was probably  
+                            // caused by garbage collection.
+                            public_key_string = config.address_prefix +
                                 public_key_string.substring(3)
-                        } finally {
-                            config.address_prefix = previous_address_prefix
-                        }
                     }
                     this.state.imported_keys_public[public_key_string] = true
-                        
                     var private_key_wif = private_key.toWif()
+                    // var private_key_wif = key.buffer_to_wif(new Buffer(private_plainhex, "hex"))
                     var {account_names} = this.state.wifs_to_account[private_key_wif] || 
                         {account_names: []}
                     var dup = false
@@ -479,8 +483,7 @@ export default class ImportKeys extends Component {
                     if(dup) continue
                     account_names.push(account_name)
                     var public_key = 
-                    this.state.wifs_to_account[private_key_wif] = 
-                        {account_names, public_key, public_key_string}
+                    this.state.wifs_to_account[private_key_wif] = {account_names, public_key_string}
                 } catch(e) {
                     console.log(e, e.stack)
                     var message = e.message || e
