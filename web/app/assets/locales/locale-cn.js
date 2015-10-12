@@ -134,7 +134,7 @@ module.exports = {
             not_yours: "不是你的账户"
         },
         deposit_withdraw: "充值/提现",
-        collaterals: "抵押头寸",
+        collaterals: "抵押债仓",
         eq_value: "换算值"
     },
     transfer: {
