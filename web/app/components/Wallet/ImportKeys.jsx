@@ -37,8 +37,8 @@ export default class ImportKeys extends Component {
     _getInitialState() {
         return {
             pubkeys: new Set(),
-            wifs_to_account: { },
-            wif_count: 0,
+            keys_to_account: { },
+            key_count: 0,
             no_file: true,
             account_keys: [],
             //brainkey: null,
@@ -48,9 +48,7 @@ export default class ImportKeys extends Component {
             password_checksum: null,
             import_password_message: null,
             imported_keys_public: {},
-            wif_text_message: null,
-            wif_textarea_private_keys_message: null,
-            wif_textarea_private_keys: ""
+            key_text_message: null
         };
     }
     
@@ -72,10 +70,10 @@ export default class ImportKeys extends Component {
             </div>
         }
         
-        var has_keys = this.state.wif_count !== 0;
+        var has_keys = this.state.key_count !== 0;
         var import_ready = has_keys
         var password_placeholder = "Enter import file password";
-        if (this.state.wif_count) {
+        if (this.state.key_count) {
             password_placeholder = "";
         }
 
@@ -98,15 +96,15 @@ export default class ImportKeys extends Component {
                 <h3><Translate content="wallet.import_keys" /></h3>
                 {/* Key file upload */}
                 <div>
-                    <KeyCount wif_count={this.state.wif_count}/>
-                    {!this.state.wif_count ? 
+                    <KeyCount key_count={this.state.key_count}/>
+                    {!this.state.key_count ? 
                         null :
                         <span> (<a onClick={this.reset.bind(this)}>RESET</a>)</span>
                     }
                 </div>
                 <br/>
                 <div className="center-content">
-                    { ! this.state.wif_count ?
+                    { ! this.state.key_count ?
                         (<div>
                             <div>
                                 <div>
@@ -140,7 +138,7 @@ export default class ImportKeys extends Component {
                                         onChange={this._passwordCheck.bind(this)}
                                     />
                                     <div>{this.state.import_password_message}</div>
-                                    <div>{this.state.wif_text_message}</div>
+                                    <div>{this.state.key_text_message}</div>
                                 </div>) : null}
                             <br/>
                             <a href className="button success" onClick={this.onBack.bind(this)}>
@@ -149,7 +147,7 @@ export default class ImportKeys extends Component {
                     
                 </div>
 
-                {this.state.wif_count ? 
+                {this.state.key_count ? 
                     (<div>
                         {account_rows ? 
                         (<div>
@@ -172,7 +170,7 @@ export default class ImportKeys extends Component {
                         <br/>
 
                         <h4 className="center-content">Unclaimed balances belonging to these keys:</h4>
-                        {this.state.wif_count ?
+                        {this.state.key_count ?
                             (<div>
                                 <div className="grid-block center-content">
                                     <div className="grid-content no-overflow">
@@ -209,23 +207,23 @@ export default class ImportKeys extends Component {
         window.history.back()
     }
     
-    updateOnChange(wifs_to_account = this.state.wifs_to_account) {
-        var wif_count = Object.keys(wifs_to_account).length
-        this.setState({wif_count})
-        this._importKeysChange(wifs_to_account)
+    updateOnChange(keys_to_account = this.state.keys_to_account) {
+        var key_count = Object.keys(keys_to_account).length
+        this.setState({key_count})
+        this._importKeysChange(keys_to_account)
         BalanceClaimActiveActions.setPubkeys(Object.keys(this.state.imported_keys_public))
     }
 
-    _importKeysChange(wifs_to_account) {
+    _importKeysChange(keys_to_account) {
         this.setState({
-            account_keycount: this.getImportAccountKeyCount(wifs_to_account)
+            account_keycount: this.getImportAccountKeyCount(keys_to_account)
         });
     }
 
-    getImportAccountKeyCount(wifs_to_account) {
+    getImportAccountKeyCount(keys_to_account) {
         var account_keycount = {}
-        for(let wif in wifs_to_account)
-        for(let account_name of wifs_to_account[wif].account_names) {
+        for(let key in keys_to_account)
+        for(let account_name of keys_to_account[key].account_names) {
             account_keycount[account_name] =
                 (account_keycount[account_name] || 0) + 1
         }
@@ -439,8 +437,8 @@ export default class ImportKeys extends Component {
                 
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
-                    var private_key = PrivateKey.fromBuffer( new Buffer(private_plainhex, "hex"))
                     if(import_keys_assert_checking && public_key_string) {
+                        var private_key = PrivateKey.fromHex( private_plainhex )
                         var pub = private_key.toPublicKey()
                         var addy = pub.toAddressString()
                         var pubby = pub.toPublicKeyString()
@@ -461,6 +459,7 @@ export default class ImportKeys extends Component {
                     
                     var public_key
                     if( ! public_key_string) {
+                        var private_key = PrivateKey.fromHex( private_plainhex )
                         public_key = private_key.toPublicKey()// S L O W
                         public_key_string = public_key.toPublicKeyString()
                     } else {
@@ -472,9 +471,7 @@ export default class ImportKeys extends Component {
                                 public_key_string.substring(3)
                     }
                     this.state.imported_keys_public[public_key_string] = true
-                    var private_key_wif = private_key.toWif()
-                    // var private_key_wif = key.buffer_to_wif(new Buffer(private_plainhex, "hex"))
-                    var {account_names} = this.state.wifs_to_account[private_key_wif] || 
+                    var {account_names} = this.state.keys_to_account[private_plainhex] || 
                         {account_names: []}
                     var dup = false
                     for(let _name of account_names)
@@ -483,7 +480,7 @@ export default class ImportKeys extends Component {
                     if(dup) continue
                     account_names.push(account_name)
                     var public_key = 
-                    this.state.wifs_to_account[private_key_wif] = {account_names, public_key_string}
+                    this.state.keys_to_account[private_plainhex] = {account_names, public_key_string}
                 } catch(e) {
                     console.log(e, e.stack)
                     var message = e.message || e
@@ -522,21 +519,19 @@ export default class ImportKeys extends Component {
     }
     
     saveImport() {
-        
-        // Lookup and add accounts referenced by the wifs
+        // Lookup and add accounts referenced by the keys
         var imported_keys_public = this.state.imported_keys_public
         var db = Apis.instance().db_api()
         
         if(TRACE) console.log('... ImportKeys._saveImport START')
         ImportKeysActions.setStatus("saving")
         
-        var wifs_to_account = this.state.wifs_to_account
+        var keys_to_account = this.state.keys_to_account
         var private_key_objs = []
-        for(let wif of Object.keys(wifs_to_account)) {
-            var {account_names, public_key_string} = wifs_to_account[wif]
-            //DEBUG console.log('... account_names',account_names,public_key_string)
+        for(let private_plainhex of Object.keys(keys_to_account)) {
+            var {account_names, public_key_string} = keys_to_account[private_plainhex]
             private_key_objs.push({
-                wif,
+                private_key: PrivateKey.fromHex(private_plainhex),
                 import_account_names: account_names,
                 public_key_string
             })
@@ -587,14 +582,15 @@ export default class ImportKeys extends Component {
         var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
         for(let wif of contents.match(wif_regex) || [] ) {
             try { 
-                PrivateKey.fromWif(wif) //could throw and error 
-                this.state.wifs_to_account[wif] = {account_names: []}
+                var private_key = PrivateKey.fromWif(wif) //could throw and error 
+                var private_plainhex = private_key.toBuffer().toString('hex')
+                this.state.keys_to_account[private_plainhex] = {account_names: []}
                 count++
             } catch(e) { invalid_count++ }
         }
         this.updateOnChange()
         this.setState({
-            wif_text_message: 
+            key_text_message: 
                 (!count ? "" : count + " keys found from text.") +
                 (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
         })
@@ -605,8 +601,8 @@ export default class ImportKeys extends Component {
 
 class KeyCount extends Component {
     render() {
-        if( !this.props.wif_count) return <span/>
-        return <span>Found {this.props.wif_count} private keys</span>
+        if( !this.props.key_count) return <span/>
+        return <span>Found {this.props.key_count} private keys</span>
     }
 }
 

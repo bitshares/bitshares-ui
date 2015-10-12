@@ -345,12 +345,14 @@ class WalletDb extends BaseStore {
             if(TRACE) console.log('... importKeys save key loop start')
             for(let private_key_obj of private_key_objs) {
                 
-                var wif = private_key_obj.wif || private_key_obj
-                if( ! wif) {
-                    console.log("ERROR WalletDb importKeys, key object missing WIF")
+                var private_key =
+                    private_key_obj.private_key ||
+                    PrivateKey.fromWif( private_key_obj.wif )
+                    
+                if( ! private_key) {
+                    console.error("ERROR WalletDb importKeys, missing private_key or wif")
                     continue
                 }
-                var private_key = PrivateKey.fromWif(wif)
                 promises.push(
                     this.saveKey(
                         private_key,
