@@ -10,7 +10,7 @@
         
     },
     header: {
-        title: "Graphene UI",
+        title: "BitShares 2.0",
         account: "Account",
         dashboard: "Dashboard",
         explorer: "Explorer",
@@ -31,7 +31,7 @@
         pending: "pending %(blocks)s blocks"
     },
     account: {
-        welcome: "Welcome to Graphene",
+        welcome: "Welcome to BitShares 2.0",
         asset: "Asset",
         market_value: "Market Value",
         hour_24: "24hr Change",
@@ -442,7 +442,7 @@
         remove_ws: "Remove websocket API"
     },
     footer: {
-        title: "Graphene",
+        title: "BitShares 2.0",
         block: "Head block",
         loading: "Loading..."
     },
