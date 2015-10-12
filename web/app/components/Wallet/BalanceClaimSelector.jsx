@@ -7,6 +7,8 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import FormattedAsset from "components/Utility/FormattedAsset";
+import Translate from "react-translate-component";
+
 
 @connectToStores
 export default class BalanceClaimSelector extends Component {
@@ -76,9 +78,9 @@ export default class BalanceClaimSelector extends Component {
                 <thead>
                 <tr>
                     <th>{ /* C H E C K B O X */ }</th>
-                    <th style={{textAlign: "center"}}>Unclaimed</th>
-                    <th style={{textAlign: "center"}}>Unclaimed (vesting)</th>
-                    <th style={{textAlign: "center"}}>Account</th>
+                    <th style={{textAlign: "center"}}><Translate content="wallet.unclaimed" /></th>
+                    <th style={{textAlign: "center"}}><Translate content="wallet.unclaimed_vesting" /></th>
+                    <th style={{textAlign: "center"}}><Translate content="account.name" /></th>
                 </tr></thead>
                 <tbody>
                 {this.props.total_by_account_asset.map( (r, name_asset) =>

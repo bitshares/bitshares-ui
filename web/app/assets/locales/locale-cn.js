@@ -538,6 +538,8 @@ module.exports = {
         no_balance: "无余额可导入",
         claim_balance: "导入余额",
         claim_balances: "导入余额",
+        unclaimed: "未导入余额",
+        unclaimed_vesting: "未导入余额 (解冻中)",
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",

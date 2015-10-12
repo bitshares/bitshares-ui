@@ -533,6 +533,8 @@
         no_balance: "No balance claims",
         claim_balance: "Claim Balance",
         claim_balances: "Claim Balances",
+        unclaimed: "Unclaimed",
+        unclaimed_vesting: "Unclaimed (vesting)",
     },
     borrow: {
         title: "%(asset_symbol)s Margin",
