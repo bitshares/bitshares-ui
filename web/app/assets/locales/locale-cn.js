@@ -119,7 +119,7 @@ module.exports = {
         upgrade: "升级账户",
         unfollow: "取消关注",
         follow: "关注",
-        pay: "向他付款",
+        pay: "支付",
         overview: "概述",
         history: "交易历史",
         payees: "收款人",
@@ -133,7 +133,9 @@ module.exports = {
             unknown: "未知的账户",
             not_yours: "不是你的账户"
         },
-        deposit_withdraw: "充值/提现"
+        deposit_withdraw: "充值/提现",
+        collaterals: "抵押头寸",
+        eq_value: "换算值"
     },
     transfer: {
         from: "来自",
@@ -289,7 +291,7 @@ module.exports = {
         witness_update: "更新见证人账户",
         new_url: "网站",
         publisher: "发布人",
-        lifetime_upgrade_account: "升级到终生会员",
+        lifetime_upgrade_account: "升级到终身会员",
         annual_upgrade_account: "升级到年度会员"
     },
     explorer: {
@@ -299,7 +301,17 @@ module.exports = {
         blocks: {
             title: "区块链",
             globals: "全局参数",
-            recent: "最近区块"
+            recent: "最近区块",
+            trx: "交易",
+            block_times: "区块生成时间",
+            recently_missed_blocks: "最近缺失的区块",
+            trx_per_block: "交易数/区块",
+            active_committee_members: "活跃理事会成员",
+            active_witnesses: "活跃见证人",
+            avg_conf_time: "交易平均确认时间",
+            trx_per_sec: "每秒交易数",
+            last_block: "上一个区块",
+            current_block: "当前区块"
         },
         block: {
             title: "区块",
@@ -307,7 +319,7 @@ module.exports = {
             witness: "见证人",
             count: "交易数",
             date: "日期",
-            previous: "上一个",
+            previous: "上一个区块",
             previous_secret: "上一个密文",
             next_secret: "下一个密文哈希值",
             op: "操作",
@@ -419,7 +431,9 @@ module.exports = {
         confirm_no: "从不",
         always_confirm: "总是要求确认",
         wallets: "钱包管理",
-        connection: "API 服务器设定"
+        connection: "API 服务器设定",
+        add_ws: "添加新的 websocket API",
+        remove_ws: "删除 websocket API"
     },
     pagination: {
         newer: "更近",
@@ -449,14 +463,22 @@ module.exports = {
         sell: "卖出",
         confirm_buy: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
         confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
-        settle: "清算价格"
+        settle: "清算价格",
+        core_rate: "喂价",
+        squeeze: "强制平仓价",
+        maintenance: "维持保证金价",
+        your_price: "你的平仓价",
+        receive: "获得"
     },
     markets: {
         choose_base: "选择基准资产",
         filter: "筛选",
         core_rate: "CORE 汇率",
         supply: "供应量",
-        search: "搜索"
+        search: "搜索",
+        base: "基准资产",
+        market_search: "交易对市场搜索",
+        preferred: "我收藏的市场"
     },
     wallet: {
         title: "钱包",
@@ -512,7 +534,9 @@ module.exports = {
         errors: {
             below: "保证金率低于维持保证金要求",
             collateral: "可用保证金不足"
-        }
+        },
+        close: "平仓",
+        update: "调整"
     },
     operation: {
         pending: " %(blocks)s 个区块待定"
@@ -528,5 +552,12 @@ module.exports = {
             address: "提现到地址",
             submit: "提现"
         }
+    },
+    init_error: {
+        title: "系统初始化错误",
+        ws_status: "Websocket 连接状态",
+        retry: "重试",
+        connected: "已连接",
+        not_connected: "未连接"
     }
 };
