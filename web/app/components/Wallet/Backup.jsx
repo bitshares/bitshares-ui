@@ -284,13 +284,13 @@ class LastBackupDate extends Component {
         var backup_date = WalletDb.getWallet().backup_date
         var last_modified = WalletDb.getWallet().last_modified
         var backup_time = backup_date ?
-            <h4>Last backup <FormattedDate value={backup_date}/></h4>:
-            <h4>This Wallet has never been backed up</h4>
+            <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
+            <h4><Translate content="wallet.never_backed_up" /></h4>
         var needs_backup = null
         if( backup_date ) {
             needs_backup = last_modified.getTime() > backup_date.getTime() ?
-                <h4>This Wallet needs a backup</h4>:
-                <h4 className="success">No backup is needed</h4>
+                <h4><Translate content="wallet.need_backup" /></h4>:
+                <h4 className="success"><Translate content="wallet.noneed_backup" /></h4>
         }
         return <span>
             <p>{backup_time}</p>

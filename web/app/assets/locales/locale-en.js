@@ -543,7 +543,12 @@
         show_brainkey: "Show Brainkey",
         brainkey_w1: "WARNING: Print this out, or write it down.",
         brainkey_w2: "Anyone with access to your recovery key will",
-        brainkey_w3: "have access to funds within this wallet."
+        brainkey_w3: "have access to funds within this wallet.",
+        custom_brainkey: "Custom Brainkey (advanced)",
+        last_backup: "Last backup",
+        never_backed_up: "This Wallet has never been backed up",
+        need_backup: "This Wallet needs a backup",
+        noneed_backup: "No backup is needed"
     },
     borrow: {
         title: "%(asset_symbol)s Margin",

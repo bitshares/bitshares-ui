@@ -509,7 +509,7 @@ module.exports = {
         import_backup: "导入钱包备份文件",
         restore_backup: "从钱包备份恢复",
         import_keys: "导入私钥",
-        brainkey: "从脑钱包密钥恢复",
+        brainkey: "脑钱包密钥",
         new_wallet: "新建钱包",
         active_wallet: "当前钱包使用中",
         verified: "已验证",
@@ -548,7 +548,12 @@ module.exports = {
         show_brainkey: "显示脑钱包密钥",
         brainkey_w1: "警告: 将密钥打印出来，或记录在纸上妥善保存。",
         brainkey_w2: "任何人获得你的脑钱包密钥信息将",
-        brainkey_w3: "获得钱包中资金的使用权限。"
+        brainkey_w3: "获得钱包中资金的使用权限。",
+        custom_brainkey: "自定义脑钱包密钥 (高级)",
+        last_backup: "上次备份",
+        never_backed_up: "钱包尚未进行过备份",
+        need_backup: "钱包需要备份",
+        noneed_backup: "无需备份"
 
     },
     borrow: {
