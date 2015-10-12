@@ -26,7 +26,7 @@ class Apis {
         if (!connection_string) connection_string = SettingsStore.getSetting("connection");
         //connection_string = "ws://localhost:8090";
         console.log(`connecting to ${connection_string}`);
-        this.ws_rpc = new WebSocketRpc(connection_string);
+        this.ws_rpc = new WebSocketRpc(connection_string, this.update_rpc_connection_status_callback);
         this.init_promise = this.ws_rpc.login(rpc_user, rpc_password).then(() => {
             this._db_api = new GrapheneApi(this.ws_rpc, "database");
             if (window) window.$db_api = this._db_api;
@@ -74,7 +74,6 @@ class Apis {
 
     setRpcConnectionStatusCallback(callback) {
         this.update_rpc_connection_status_callback = callback;
-        this.ws_rpc.setRpcConnectionStatusCallback(callback);
     }
     
 }
@@ -83,11 +82,13 @@ var apis_instance;
 
 module.exports = {
     setRpcConnectionStatusCallback: function(callback) {
+        this.update_rpc_connection_status_callback = callback;
         if(apis_instance) apis_instance.setRpcConnectionStatusCallback(callback);
     },
     instance: function () {
         if ( !apis_instance ) {
             apis_instance = new Apis();
+            apis_instance.setRpcConnectionStatusCallback(this.update_rpc_connection_status_callback);
             apis_instance.connect();
         }
         return apis_instance;

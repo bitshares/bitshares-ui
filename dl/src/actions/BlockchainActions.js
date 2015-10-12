@@ -49,7 +49,7 @@ class BlockchainActions {
     }
 }
 
-const BlockchainActionsInstance = alt.createActions(BlockchainActions)
+const BlockchainActionsInstance = alt.createActions(BlockchainActions);
 Apis.setRpcConnectionStatusCallback(BlockchainActionsInstance.updateRpcConnectionStatus);
 
 module.exports = BlockchainActionsInstance;

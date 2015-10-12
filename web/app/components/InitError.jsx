@@ -42,25 +42,28 @@ class InitError extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-container">
                     <div className="grid-content">
+                        <br/>
                         <Translate component="h3" content={`init_error.title`} />
                         <br/>
-                        {this.props.rpc_connection_status === "error" ? <HelpContent path="components/InitError" section="connection-error"/> : null}
-                        <br/>
-                        <h5><Translate content={`init_error.ws_status`} />: {this.props.rpc_connection_status === "open" ? <span className="txtlabel success"><Translate content={`init_error.connected`} /></span> : <span className="txtlabel warning"><Translate content={`init_error.not_connected`} /></span>}</h5>
-                        <br/>
                         <section className="block-list">
-                        <header><Translate component="span" content={`settings.connection`} /></header>
-                        <ul>
-                            <li className="with-dropdown">
-                                <div style={{position: "absolute", right: 0}} onClick={this.triggerModal.bind(this)} id="add" className="button">+</div>
-                                <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
-                                    {options}
-                                </select>
-                            </li>
-                        </ul>
+                            <header><Translate component="span" content={`settings.connection`} /></header>
+                            <ul>
+                                <li className="with-dropdown">
+                                    <div style={{position: "absolute", right: "0.8rem"}} className="button no-margin" onClick={this.triggerModal.bind(this)} id="add">+</div>
+                                    <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
+                                        {options}
+                                    </select>
+                                </li>
+                                <li className="key-value clearfix">
+                                    <div className="float-left">Connection Status</div>
+                                    <div className="float-right">
+                                        {this.props.rpc_connection_status === "open" ? <span className="txtlabel success"><Translate content={`init_error.connected`} /></span> : <span className="txtlabel warning"><Translate content={`init_error.not_connected`} /></span>}
+                                    </div>
+                                </li>
+                            </ul>
                         </section>
                         <br/>
-                        <a className="button" href="/"><Translate content={`init_error.retry`} /></a>
+                        <a className="button no-margin" href="/"><Translate content={`init_error.retry`} /></a>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>
                 </div>
