@@ -4,7 +4,8 @@ var NODE_DEBUG = process.env.NODE_DEBUG
 
 class WebSocketRpc {
 
-    constructor(ws_server) {
+    constructor(ws_server, update_rpc_connection_status_callback) {
+        this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
         this.web_socket = new WebSocketClient(ws_server);
         this.current_reject = null;
@@ -128,10 +129,6 @@ class WebSocketRpc {
 
     close() {
         this.web_socket.close();
-    }
-
-    setRpcConnectionStatusCallback(callback) {
-        this.update_rpc_connection_status_callback = callback;
     }
 
 }
