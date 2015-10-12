@@ -62,36 +62,17 @@ class OrderBook extends React.Component {
     }
 
     componentDidMount() {
-        //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        //let askContainer = React.findDOMNode(this.refs.asksTbody);
-        //bidContainer.scrollTop = bidContainer.scrollHeight;
-        //Ps.initialize(bidContainer);
-        //Ps.initialize(askContainer);
-        //
-        //if (bidContainer.scrollTop !== bidContainer.scrollHeight) {
-        //    this.setState({didScrollOnMount: false});
-        //}
-    }
-
-    componentWillReceiveProps(nextProps) {
-        //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        //this.setState({shouldScrollBottom: Math.round(bidContainer.scrollTop + bidContainer.offsetHeight) === bidContainer.scrollHeight});
+        let orderbookContainer = React.findDOMNode(this.refs.orderbook_container);
+        Ps.initialize(orderbookContainer);
     }
 
     componentDidUpdate() {
-        //let askContainer = React.findDOMNode(this.refs.asksTbody);
-        //let bidContainer = React.findDOMNode(this.refs.bidsTbody);
-        //if (this.state.shouldScrollBottom || !this.state.didScrollOnMount) {
-        //    bidContainer.scrollTop = bidContainer.scrollHeight;
-        //    this.setState({didScrollOnMount: true});
-        //}
-        //
-        //Ps.update(bidContainer);
-        //Ps.update(askContainer);
+        let orderbookContainer = React.findDOMNode(this.refs.orderbook_container);
+        Ps.update(orderbookContainer);
     }
 
     render() {
-        let {combinedBids, combinedAsks, calls, invertedCalls, account, quote, base, quoteSymbol, baseSymbol} = this.props;
+        let {combinedBids, combinedAsks, quote, base, quoteSymbol, baseSymbol} = this.props;
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
 
@@ -139,13 +120,13 @@ class OrderBook extends React.Component {
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
 
         return (
-                <div className="left-order-book no-padding" style={{overflowY: "hidden"}}>
+                <div className="left-order-book no-padding" ref="orderbook_container" style={{overflow: "hidden"}}>
                     <div className="table-container">
                         <table className="table order-table table-hover text-right">
                             <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                                 {bidRows}
                                 <tr key="top-header" className="top-header">
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
+                                    <td className="show-for-medium" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
@@ -155,7 +136,7 @@ class OrderBook extends React.Component {
                                     </td>
                                 </tr>
                                 <tr key="bottom-header" className="bottom-header">
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
+                                    <td className="show-for-medium" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
