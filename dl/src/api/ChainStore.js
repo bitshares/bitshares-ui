@@ -8,6 +8,7 @@ import BigInteger from "bigi"
 
 let op_history   = parseInt(object_type.operation_history, 10);
 let limit_order  = parseInt(object_type.limit_order, 10);
+let call_order  = parseInt(object_type.call_order, 10);
 let balance_type  = parseInt(object_type.balance, 10);
 let vesting_balance_type  = parseInt(object_type.vesting_balance, 10);
 let witness_object_type  = parseInt(object_type.witness, 10);
@@ -17,6 +18,7 @@ let account_object_type  = parseInt(object_type.account, 10);
 let asset_object_type  = parseInt(object_type.asset, 10);
 
 let order_prefix = "1." + limit_order + "."
+let call_order_prefix = "1." + call_order + "."
 let balance_prefix = "2." + parseInt(impl_object_type.account_balance,10) + "."
 let account_stats_prefix = "2." + parseInt(impl_object_type.account_statistics,10) + "."
 let asset_dynamic_data_prefix = "2." + parseInt(impl_object_type.asset_dynamic_data,10) + "."
@@ -30,13 +32,13 @@ let account_prefix = "1." + account_object_type + "."
 
 const DEBUG = false
 /**
- *  @brief maintains a local cache of blockchain state 
- *  
+ *  @brief maintains a local cache of blockchain state
+ *
  *  The ChainStore maintains a local cache of blockchain state and exposes
  *  an API that makes it easy to query objects and receive updates when
- *  objects are available. 
+ *  objects are available.
  */
-class ChainStore 
+class ChainStore
 {
    constructor() {
       /** tracks everyone who wants to receive updates when the cache changes */
@@ -137,8 +139,27 @@ class ChainStore
          {
             let obj = updated_objects[a][i]
 
-            if( utils.is_object_id( obj ) ) /// the object was removed
+            if( utils.is_object_id( obj ) ) { /// the object was removed
+
+               // Update nested call_order inside account object
+               if( obj.search( call_order_prefix ) == 0 ) {
+                let old_obj = this.objects_by_id.get(obj);
+                if (!old_obj) {
+                  return;
+                }
+                let account = this.objects_by_id.get(old_obj.get("borrower"));
+                if (account && account.has("call_orders")) {
+                  let call_orders = account.get("call_orders");
+                  if (account.get("call_orders").has(obj)) {
+                    account = account.set("call_orders", call_orders.delete(obj));
+                    this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
+                  }
+                }
+               }
+
+               // Remove the object
                this.objects_by_id = this.objects_by_id.set( obj, null )
+            }
             else
                this._updateObject( obj, false )
          }
@@ -172,7 +193,7 @@ class ChainStore
    unsubscribe( callback ) {
       if( ! this.subscribers.has(callback))
           console.error("Unsubscribe callback does not exists", callback)
-      this.subscribers.delete( callback ) 
+      this.subscribers.delete( callback )
    }
 
    /** Clear an object from the cache to force it to be fetched again. This may
@@ -200,7 +221,7 @@ class ChainStore
 
       if( result === undefined )
          return this.fetchObject( id )
-      if( result === true ) 
+      if( result === true )
          return undefined
 
       return result
@@ -209,9 +230,9 @@ class ChainStore
    /**
     *  @return undefined if a query is pending
     *  @return null if id_or_symbol has been queired and does not exist
-    *  @return object if the id_or_symbol exists 
+    *  @return object if the id_or_symbol exists
     */
-   getAsset( id_or_symbol ) 
+   getAsset( id_or_symbol )
    {
       if( !id_or_symbol )
          return null
@@ -238,10 +259,10 @@ class ChainStore
         return asset;
       }
 
-      if( asset_id === null ) 
+      if( asset_id === null )
          return null
 
-      if( asset_id === true ) 
+      if( asset_id === true )
          return undefined
 
       Apis.instance().db_api().exec( "lookup_asset_symbols", [ [id_or_symbol] ] )
@@ -283,7 +304,7 @@ class ChainStore
                   vec_account_id = vec_account_id[0]
                   refs = refs.withMutations( r => {
                      for( let i = 0; i < vec_account_id.length; ++i ) {
-                        r.add(vec_account_id[i]) 
+                        r.add(vec_account_id[i])
                      }
                   } )
                   this.account_ids_by_key = this.account_ids_by_key.set( key, refs )
@@ -333,7 +354,7 @@ class ChainStore
       return this.balance_objects_by_address.get( address )
    }
 
-   
+
    /**
     *  If there is not already a pending request to fetch this object, a new
     *  request will be made.
@@ -356,12 +377,12 @@ class ChainStore
       if( !this.subscribed ) return undefined
 
       if(DEBUG) console.log( "maybe fetch object: ", id )
-      if( !utils.is_object_id(id) ) 
+      if( !utils.is_object_id(id) )
          throw Error( "argument is not an object id: " + id )
 
       if( id.substring( 0, 4 ) == "1.2." )
          return this.fetchFullAccount( id )
-      
+
       let result = this.objects_by_id.get( id )
       if( result === undefined ) { // the fetch
          if(DEBUG) console.log( "fetching object: ", id )
@@ -371,8 +392,8 @@ class ChainStore
                    for(let i = 0; i < optional_objects.length; i++) {
                        let optional_object = optional_objects[i]
                        if( optional_object )
-                          this._updateObject( optional_object, true ) 
-                       else 
+                          this._updateObject( optional_object, true )
+                       else
                           this.objects_by_id = this.objects_by_id.set( id, null )
                    }
                }).catch( error => { // in the event of an error clear the pending state for id
@@ -451,7 +472,7 @@ class ChainStore
     * Obsolete! Please use getWitnessById
     * This method will attempt to lookup the account, and then query to see whether or not there is
     * a witness for this account.  If the answer is known, it will return the witness_object, otherwise
-    * it will attempt to look it up and return null.   Once the lookup has completed on_update will 
+    * it will attempt to look it up and return null.   Once the lookup has completed on_update will
     * be called.
     *
     * @param id_or_account may either be an account_id, a witness_id, or an account_name
@@ -460,24 +481,24 @@ class ChainStore
    {
       let account = this.getAccount( id_or_account )
       if( !account ) return null
-      let account_id = account.get('id') 
+      let account_id = account.get('id')
 
       let witness_id = this.witness_by_account_id.get( account_id )
       if( witness_id === undefined )
          this.fetchWitnessByAccount( account_id )
       return this.getObject( witness_id )
-       
+
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
       {
          let account = this.getAccount( id_or_account )
-         if( !account ) 
+         if( !account )
          {
             this.lookupAccountByName( id_or_account ).then ( account => {
                if( !account ) return null
 
-               let account_id = account.get('id') 
+               let account_id = account.get('id')
                let witness_id = this.witness_by_account_id.get( account_id )
-               if( utils.is_object_id( witness_id ) ) 
+               if( utils.is_object_id( witness_id ) )
                    return this.getObject( witness_id, on_update )
 
                if( witness_id == undefined )
@@ -489,11 +510,11 @@ class ChainStore
                let witness_id = this.witness_by_account_id.set( id_or_account, null )
             } )
          }
-         else 
+         else
          {
-            let account_id = account.get('id') 
+            let account_id = account.get('id')
             let witness_id = this.witness_by_account_id.get( account_id )
-            if( utils.is_object_id( witness_id ) ) 
+            if( utils.is_object_id( witness_id ) )
                 return this.getObject( witness_id, on_update )
 
             if( witness_id == undefined )
@@ -513,11 +534,11 @@ class ChainStore
       if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
       {
          let account = this.getAccount( id_or_account )
-         
-         if( !account ) 
+
+         if( !account )
          {
             this.lookupAccountByName( id_or_account ).then( account=>{
-               let account_id = account.get('id') 
+               let account_id = account.get('id')
                let committee_id = this.committee_by_account_id.get( account_id )
                if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
 
@@ -526,15 +547,15 @@ class ChainStore
                   this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
                        this.committee_by_account_id.set( account_id, committee ? committee.get('id') : null )
                        if( on_update && committee) on_update()
-                       } ) 
+                       } )
                }
             }, error => {
                let witness_id = this.committee_by_account_id.set( id_or_account, null )
             })
-         } 
-         else 
+         }
+         else
          {
-               let account_id = account.get('id') 
+               let account_id = account.get('id')
                let committee_id = this.committee_by_account_id.get( account_id )
                if( utils.is_object_id( committee_id ) ) return this.getObject( committee_id, on_update )
 
@@ -543,7 +564,7 @@ class ChainStore
                   this.fetchCommitteeMemberByAccount( account_id ).then( committee => {
                        this.committee_by_account_id.set( account_id, committee ? committee.get('id') : null )
                        if( on_update && committee) on_update()
-                       } ) 
+                       } )
                }
          }
       }
@@ -565,7 +586,7 @@ class ChainStore
                       let witness_object = this._updateObject( optional_witness_object, true )
                       resolve(witness_object)
                    }
-                   else 
+                   else
                    {
                        this.witness_by_account_id = this.witness_by_account_id.set( account_id, null )
                        this.notifySubscribers()
@@ -588,7 +609,7 @@ class ChainStore
                       let committee_object = this._updateObject( optional_committee_object, true )
                       resolve(committee_object)
                    }
-                   else 
+                   else
                    {
                        this.committee_by_account_id = this.committee_by_account_id.set( account_id, null )
                        this.notifySubscribers()
@@ -612,7 +633,7 @@ class ChainStore
       if(DEBUG) console.log( "Fetch full account: ", name_or_id )
 
       let fetch_account = false
-      if( utils.is_object_id(name_or_id) ) 
+      if( utils.is_object_id(name_or_id) )
       {
           let current = this.objects_by_id.get( name_or_id )
           fetch_account = current === undefined
@@ -627,7 +648,7 @@ class ChainStore
          if( utils.is_object_id( account_id ) )
             return this.getAccount(account_id);
       }
-      
+
 
       /// only fetch once every 5 seconds if it wasn't found
       if( !this.fetching_get_full_accounts.has(name_or_id) || (Date.now() - this.fetching_get_full_accounts.get(name_or_id)) > 5000  ) {
@@ -703,20 +724,20 @@ class ChainStore
 
    getAccountMemberStatus( account ) {
       if( account === undefined ) return undefined
-      if( account === null ) return "unknown" 
+      if( account === null ) return "unknown"
       if( account.get( 'lifetime_referrer' ) == account.get( 'id' ) )
          return "lifetime"
       let exp = new Date( account.get('membership_expiration_date') ).getTime()
       let now = new Date().getTime()
       if( exp < now )
          return "basic"
-      return "annual" 
+      return "annual"
    }
 
    getAccountBalance( account, asset_type )
    {
       let balances = account.get( 'balances' )
-      if( !balances ) 
+      if( !balances )
          return 0
 
       let balance_obj_id = balances.get( asset_type )
@@ -743,18 +764,18 @@ class ChainStore
       /// TODO: make sure we do not submit a query if there is already one
       /// in flight...
         let account_id = account;
-        if( !utils.is_object_id(account_id) && account.toJS ) 
+        if( !utils.is_object_id(account_id) && account.toJS )
            account_id = account.get('id')
 
         if( !utils.is_object_id(account_id)  )
            return
-        
+
         account = this.objects_by_id.get(account_id)
         if( !account ) return
-        
+
 
         let pending_request = this.account_history_requests.get(account_id)
-        if( pending_request ) 
+        if( pending_request )
         {
            pending_request.requests++
            return pending_request.promise
@@ -773,7 +794,7 @@ class ChainStore
         let start = "1." + op_history + ".0"
 
         pending_request.promise = new Promise( (resolve, reject) => {
-            Apis.instance().history_api().exec("get_account_history", 
+            Apis.instance().history_api().exec("get_account_history",
                               [ account_id, most_recent, limit, start])
                 .then( operations => {
                        let current_account = this.objects_by_id.get( account_id )
@@ -828,7 +849,6 @@ class ChainStore
    _updateAccount( account_id, payload )
    {
       let updates = payload[0]
-      let acnt = this.objects_by_id.get(account_id)
 
       for( let i = 0; i < updates.length; ++i )
       {
@@ -849,7 +869,6 @@ class ChainStore
          else
          {
             let updated_obj = this._updateObject( update )
-
             if( update.id.search( balance_prefix ) == 0 )
             {
                if( update.owner == account_id )
@@ -869,13 +888,13 @@ class ChainStore
             this.objects_by_id = this.objects_by_id.set( acnt.id, acnt )
          }
       }
-      this.fetchRecentHistory( acnt ) 
+      this.fetchRecentHistory( acnt )
    }
 
 
    /**
     *  Updates the object in place by only merging the set
-    *  properties of object.  
+    *  properties of object.
     *
     *  This method will create an immutable object with the given ID if
     *  it does not already exist.
@@ -888,15 +907,17 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers )
    {
-//      console.log( "update: ", object )
+      // if (!(object.id.split(".")[0] == 2) && !(object.id.split(".")[1] == 6)) {
+      //   console.log( "update: ", object )
+      // }
       if( object.id == "2.1.0" ) {
          object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
          this.head_block_time_string = object.time
       }
 
       let current = this.objects_by_id.get( object.id )
-      if( !current ) 
-         current = Immutable.Map(); 
+      if( !current )
+         current = Immutable.Map();
       let prior   = current
       if( current === undefined || current === true )
          this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
@@ -909,7 +930,7 @@ class ChainStore
       if( object.id.substring(0,balance_prefix.length) == balance_prefix )
       {
          let owner = this.objects_by_id.get( object.owner )
-         if( owner === undefined || owner === null ) 
+         if( owner === undefined || owner === null )
          {
             return;
             /*  This prevents the full account from being looked up later
@@ -921,7 +942,7 @@ class ChainStore
          else
          {
             let balances = owner.get( "balances" );
-            if( !balances ) 
+            if( !balances )
                owner = owner.set( "balances", Immutable.Map() )
             owner = owner.setIn( ['balances',object.asset_type],  object.id )
          }
@@ -959,7 +980,7 @@ class ChainStore
          let bitasset = current.get( 'bitasset' );
          if( !bitasset && object.bitasset_data_id ) {
             let bad = this.getObject( object.bitasset_data_id );
-            if( !bad ) 
+            if( !bad )
                bad = Immutable.Map()
 
             if( !bad.get( 'asset_id' ) ) {
@@ -993,6 +1014,18 @@ class ChainStore
                 this.objects_by_id = this.objects_by_id.set( asset_id, asset );
              }
           }
+      }
+      else if( object.id.substring(0,call_order_prefix.length ) == call_order_prefix )
+      {
+        // Update nested call_orders inside account object
+        let account = this.objects_by_id.get(object.borrower);
+        if (account && account.has("call_orders")) {
+          let call_orders = account.get("call_orders");
+          if (!account.get("call_orders").has(object.id)) {
+            account = account.set("call_orders", call_orders.add(object.id));
+            this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
+          }
+        }
       }
 
       if( notify_subscribers )
@@ -1041,7 +1074,7 @@ class ChainStore
         if( obj_id ) return this.getObject( obj_id );
         return undefined;
     }
-    
+
     getHeadBlockDate() {
         var head_block_time_string = this.head_block_time_string
         if( ! head_block_time_string) return new Date("1970-01-01T00:00:00.000Z")
