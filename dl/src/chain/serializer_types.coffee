@@ -228,7 +228,7 @@ Types.set = (st_operation)->
     validate: (array)->
         dup_map = {}
         for o in array
-            if typeof o is 'string'
+            if typeof o in ['string', 'number']
                 if dup_map[o] isnt undefined
                     throw new Error "duplicate"
                 dup_map[o] = on
@@ -442,7 +442,7 @@ Types.map = (key_st_operation, value_st_operation)->
         for o in array
             unless o.length is 2
                 throw new Error "expecting two elements"
-            if typeof o[0] is 'string'
+            if typeof o[0] in ['number', 'string']
                 if dup_map[o[0]] isnt undefined
                     throw new Error "duplicate"
                 dup_map[o[0]] = on
