@@ -1,10 +1,10 @@
 {
-  "name": "GrapheneOct5-light-wallet",
-  "productName": "GrapheneOct5-light-wallet",
+  "name": "BitShares",
+  "productName": "BitShares2",
   "identifier": "org.bitshares.graphene",
   "description": "BitShares - cryptocurrency and decentralized exchange",
-  "version": "0.0.1",
-  "author": "cryptonomex.com",
+  "version": "2.0.0",
+  "author": "BitShares Community",
   "main": "electron.js",
   "config": {
     "target": "development"

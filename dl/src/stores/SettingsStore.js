@@ -40,8 +40,7 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
-                "wss://graphene.bitshares.org:443/ws",
-                "ws://localhost:8090"
+                "wss://bitshares.openledger.info/ws"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
