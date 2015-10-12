@@ -228,10 +228,10 @@ Types.set = (st_operation)->
     validate: (array)->
         dup_map = {}
         for o in array
-            o_str = JSON.stringify(o)
-            if dup_map[o_str] isnt undefined
-                throw new Error "duplicate"
-            dup_map[o_str] = on
+            if typeof o is 'string'
+                if dup_map[o] isnt undefined
+                    throw new Error "duplicate"
+                dup_map[o] = on
         array.sort(st_operation.compare)
     fromByteBuffer:(b)->
         size = b.readVarint32()
@@ -442,9 +442,10 @@ Types.map = (key_st_operation, value_st_operation)->
         for o in array
             unless o.length is 2
                 throw new Error "expecting two elements"
-            if dup_map[o[0]] isnt undefined
-                throw new Error "duplicate"
-            dup_map[o[0]] = on
+            if typeof o[0] is 'string'
+                if dup_map[o[0]] isnt undefined
+                    throw new Error "duplicate"
+                dup_map[o[0]] = on
         array
     
     fromByteBuffer:(b)->
