@@ -43,7 +43,7 @@ class AssetSelector extends React.Component {
         });
 
         if(this.props.assets.length == 1) {
-           return ( <FormattedAsset asset={this.props.assets[0]}/> )
+           return ( <FormattedAsset asset={this.props.assets[0]} amount={0} hide_amount={true}/> )
 
         } else {
             return (

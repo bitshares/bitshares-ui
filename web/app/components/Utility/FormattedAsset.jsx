@@ -24,15 +24,18 @@ class FormattedAsset extends React.Component {
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
-        hide_asset: PropTypes.bool
+        hide_asset: PropTypes.bool,
+        hide_amount: PropTypes.bool
     };
 
     static defaultProps = {
-        decimalOffset: 0
+        decimalOffset: 0,
+        hide_asset: false,
+        hide_amount: false
     };
 
     render() {
-        let {amount, decimalOffset, color, asset, hide_asset} = this.props;
+        let {amount, decimalOffset, color, asset, hide_asset, hide_amount} = this.props;
 
         if( asset && asset.toJS ) asset = asset.toJS();
 
@@ -42,13 +45,13 @@ class FormattedAsset extends React.Component {
 
         let decimals = Math.max(0, asset.precision - decimalOffset);
 
-        if (!amount) {
+        if (hide_amount) {
             colorClass += " no-amount";
         }
 
         return (
                 <span className={colorClass}  >
-                {amount > 0 ?
+                {!hide_amount ?
                   <FormattedNumber
                     value={this.props.exact_amount ? amount : amount / precision}
                     minimumFractionDigits={0}
