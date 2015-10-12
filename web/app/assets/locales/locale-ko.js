@@ -5,7 +5,8 @@ module.exports = {
         fr: "Francais",
         ko: "한국어",
         de: "Deutsch",
-        es: "Español"
+        es: "Español",
+        tr: "Turkish"
     },
     header: {
         title: "비트쉐어 2.0",
@@ -21,7 +22,12 @@ module.exports = {
         create_asset: "자산 생성",
         lock: "잠금",
         unlock: "잠금해제",
-        help: "도움말"
+        help: "도움말",
+        locked_tip: "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
+        unlocked_tip: "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
+    },
+    operation : {
+        pending: "승인대기 중... %(blocks)s 블록"
     },
     account: {
         asset: "자산",
@@ -79,7 +85,10 @@ module.exports = {
             weight: "가중치",
             threshold: "적용기준치",
             confirm_add: "추가",
-            cancel: "취소"
+            cancel: "취소",
+            add_permission_label: "계정명/키 및 가중치를 입력하세요",
+            account_name_or_key: "계정명 또는 키",
+            memo_public_key: "메모 공개키"
         },
         votes: {
             proxy: "대리투표 계정",
@@ -106,8 +115,8 @@ module.exports = {
             memo_key: "메모 키"
         },
         upgrade: "계정 업그레이드",
-        unlink: "연결해제",
-        link: "연결",
+        unfollow: "친구해제",
+        follow: "친구추가",
         pay: "전송",
         overview: "개요",
         history: "거래기록",
@@ -154,8 +163,8 @@ module.exports = {
     },
     transaction: {
         confirm: "거래 확인",
-        broadcast_success: "거래가 처리되었으며 블록체인에 포함되었습니다",
-        transaction_confirmed: "Transaction confirmed",
+        broadcast_success: "거래가 처리되었습니다",
+        transaction_confirmed: "거래가 승인되었습니다",
         broadcast_fail: "거래를 처리할 수 없음: %(message)s",
         broadcasting: "처리중..",
         broadcasting_short: "처리중..",
@@ -331,8 +340,43 @@ module.exports = {
             precision: "소수 자리수"
         },
         asset: {
-            title: "자산",
-            not_found: "%(name)s 이 존재하지 않음"
+            not_found: "자산 %(name)s이 존재하지 않음",
+            summary: {
+                asset_type: "자산 종류",
+                issuer: "발행자",
+                current_supply: "현재 공급량",
+                stealth_supply: "익명 공급량",
+                market_fee: "거래 수수료",
+                max_market_fee: "최대 거래수수료"
+            },
+            price_feed: {
+                price_feed: "가격정보",
+                settlement_price: "청산 가격",
+                maintenance_collateral_ratio: "Maintenance collateral ratio",
+                maximum_short_squeeze_ratio: "Maximum short squeeze ratio"
+            },
+            fee_pool: {
+                fee_pool: "수수료 풀",
+                core_exchange_rate: "Core exchange rate",
+                pool_balance: "풀 잔고",
+                unclaimed_issuer_income: "Unclaimed issuer income"
+            },
+            permissions: {
+                permissions: "사용권한",
+                max_market_fee: "최대 거래수수료",
+                max_supply: "최대 공급량",
+                chargeMarketFee: "거래수수료 변경",
+                allowWhiteList: "화이트리스트 사용",
+                allowIssuerOverride: "Allow issuer override",
+                restrictTransfers: "전송 제한",
+                allowForceSettle: "강제청산 사용",
+                allowGlobalSettle: "Allow global settle",
+                allowStealthTransfer: "익명전송 사용",
+                blacklist_authorities: "Blacklist authorities",
+                blacklist_markets: "Blacklist markets",
+                whitelist_authorities: "Whitelist authorities",
+                whitelist_markets: "Whitelist markets"
+            }
         },
         witnesses: {
             title: "증인"
@@ -400,12 +444,23 @@ module.exports = {
         title: "지갑",
         confirm: "비밀번호 확인",
         password: "비밀번호",
+        existing_password: "현재 비밀번호",
+        change_password: "비밀번호 변경",
+        change_wallet: "지갑 변경",
         wallet_created: "지갑이 생성됨",
         create_wallet: "지갑 생성",
+        delete_wallet: "지갑 삭제",
+        delete_confirm_line1: "정말로 삭제하시겠습니까?",
+        delete_confirm_line2: "예상치 못한 나쁜 일이 벌어질 수 있습니다!",
+        delete_confirm_line3: "삭제되면 되돌릴 수 없습니다This action CANNOT be undone.",
+        delete_wallet_name: "지갑(%(name)s)을 삭제함",
+        balance_claims: "잔고 청구",
+        download: "다운로드",
         name: "지갑 이름",
         create: "생성",
         console: "지갑 관리 콘솔",
         create_backup: "백업 생성",
+        backup_brainkey: "브레인키 백업",
         create_backup_of: "(%(name)s 지갑의 백업을 생성)",
         import_backup: "백업파일 불러오기",
         restore_backup: "백업파일 복구",
@@ -415,6 +470,7 @@ module.exports = {
         active_wallet: "현재 지갑",
         verified: "확인됨",
         verify_prior_backup: "이전 백업 확인",
+        cancel: "취소",
         reset: "재설정",
         done: "완료",
         verify: "확인",
@@ -439,5 +495,12 @@ module.exports = {
             below: "Collateral ratio below maintenance level",
             collateral: "Insufficient collateral balance"
         }
+    },
+    modal : {
+      issue : {
+        to: "발행할 계정",
+        amount: "발행량",
+        submit: "자산 발행"
+      }
     }
 };

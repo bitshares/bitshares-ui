@@ -11,10 +11,13 @@ class AssetStore extends BaseStore {
         super();
         this.assets = Immutable.Map();
         this.asset_symbol_to_id = {};
+        this.searchTerms = {};
+        this.lookupResults = [];
 
         this.bindListeners({
             onGetAssetList: AssetActions.getAssetList,
-            onGetAsset: AssetActions.getAsset
+            onGetAsset: AssetActions.getAsset,
+            onLookupAsset: AssetActions.lookupAsset
         });
         this._export("getAsset");
     }
@@ -86,6 +89,11 @@ class AssetStore extends BaseStore {
         );
 
         this.asset_symbol_to_id[asset.symbol] = asset.id;
+    }
+
+    onLookupAsset(payload) {
+        this.searchTerms[payload.searchID] = payload.symbol;
+        this.lookupResults = payload.assets;
     }
 }
 

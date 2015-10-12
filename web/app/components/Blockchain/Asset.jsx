@@ -435,16 +435,16 @@ class Asset extends React.Component {
             <span>
                 <br/>
                     <Translate content="explorer.asset.permissions.blacklist_authorities"/>:
-                    {this.renderAuthorityList(options.blacklist_authorities)}
+                    &nbsp;{this.renderAuthorityList(options.blacklist_authorities)}
                 <br/>
                     <Translate content="explorer.asset.permissions.blacklist_markets"/>:
-                    {this.renderMarketList(asset, options.blacklist_markets)}
+                    &nbsp;{this.renderMarketList(asset, options.blacklist_markets)}
                 <br/>
                     <Translate content="explorer.asset.permissions.whitelist_authorities"/>:
-                    {this.renderAuthorityList(options.whitelist_authorities)}
+                    &nbsp;{this.renderAuthorityList(options.whitelist_authorities)}
                 <br/>
                     <Translate content="explorer.asset.permissions.whitelist_markets"/>:
-                    {this.renderMarketList(asset, options.whitelist_markets)}
+                    &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
             </span>
         ) : '';
 

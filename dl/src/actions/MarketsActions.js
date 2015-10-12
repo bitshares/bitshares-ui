@@ -80,7 +80,11 @@ class MarketsActions {
                 }
             }
             if (foundFill) {
-                this.dispatch({fillOrders: fillOrders});
+                this.dispatch({
+                    fillOrders: fillOrders,
+                    base: base,
+                    quote: quote
+                });
             }
 
             let startDate = new Date();
@@ -278,13 +282,13 @@ class MarketsActions {
         }, 100);
     }
 
-    addMarket(quote, base) {
-        this.dispatch({quote, base});
-    }
+    // addMarket(quote, base) {
+    //     this.dispatch({quote, base});
+    // }
 
-    removeMarket(quote, base) {
-        this.dispatch({quote, base});
-    }
+    // removeMarket(quote, base) {
+    //     this.dispatch({quote, base});
+    // }
 }
 
 module.exports = alt.createActions(MarketsActions);

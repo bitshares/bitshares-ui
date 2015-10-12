@@ -98,18 +98,18 @@ class CreateNewWallet extends Component {
                 </div>:null}
                 <div className="grid-content no-overflow">
                     { this.state.custom_brainkey ? <span>
-                    <label>Brainkey</label>
+                    <label><Translate content="wallet.brainkey" /></label>
                     <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
                     </span>:null}
                     <button className={cname("button",{disabled: !(this.state.isValid)})}>
                         <Translate content="wallet.create_wallet" /></button>
                     <button className="button secondary" onClick={this.onBack.bind(this)}>
-                        Cancel </button>
+                        <Translate content="wallet.cancel" /> </button>
                 </div>
                 <br/>
                 { ! this.state.custom_brainkey ? <span>
                 <label><a onClick={this.onCustomBrainkey.bind(this)}>
-                    Custom Brainkey (advanced)</a></label>
+                    <Translate content="wallet.custom_brainkey" /></a></label>
                 </span>:null}
             </form>
         </span>)

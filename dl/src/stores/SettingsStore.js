@@ -2,25 +2,30 @@ var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
+const STORAGE_KEY = "__graphene__";
+const CORE_ASSET = "CORE";
+
+var ls = typeof localStorage === "undefined" ? null : localStorage;
 
 class SettingsStore {
     constructor() {
         this.exportPublicMethods({getSetting: this.getSetting.bind(this)});
+
         this.settings = Immutable.Map({
             locale: "en",
-            defaultMarkets: [
-                {"quote":"1.3.536","base":"1.3.0"},
-                {"quote":"1.3.285","base":"1.3.0"},
-                {"quote":"1.3.218","base":"1.3.0"},
-                {"quote":"1.3.366","base":"1.3.0"},
-                {"quote":"1.3.330","base":"1.3.0"},
-                {"quote":"1.3.481","base":"1.3.0"},
-                {"quote":"1.3.427","base":"1.3.0"},
-                {"quote":"1.3.218","base":"1.3.536"},
-                {"quote":"1.3.218","base":"1.3.285"}
-            ],
-            connection: "wss://graphene.bitshares.org:443/ws/"
+            connection: "wss://graphene.bitshares.org:443/ws"
         });
+
+        this.defaultMarkets = Immutable.Map([
+            ["BTC_CORE", {"quote":"BTC","base":CORE_ASSET}],
+            ["CNY_CORE", {"quote":"CNY","base":CORE_ASSET}],
+            ["EUR_CORE", {"quote":"EUR","base":CORE_ASSET}],
+            ["GOLD_CORE", {"quote":"GOLD","base":CORE_ASSET}],
+            ["SILVER_CORE", {"quote":"SILVER","base":CORE_ASSET}],
+            ["USD_CORE", {"quote":"USD","base":CORE_ASSET}],
+            ["BTC_USD", {"quote":"BTC","base":"USD"}],
+            ["BTC_CNY", {"quote":"BTC","base":"CNY"}]
+        ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
@@ -31,8 +36,13 @@ class SettingsStore {
                 "fr",
                 "ko",
                 "de",
-                "es"
+                "es",
+                "tr"
             ],
+            connection: [
+                "wss://graphene.bitshares.org:443/ws",
+                "ws://localhost:8090"
+            ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
             //     {translate: "confirm_no"}
@@ -42,11 +52,22 @@ class SettingsStore {
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
             onAddMarket: SettingsActions.addMarket,
-            onRemoveMarket: SettingsActions.removeMarket
+            onRemoveMarket: SettingsActions.removeMarket,
+            onAddWS: SettingsActions.addWS,
+            onRemoveWS: SettingsActions.removeWS
         });
 
-        if (localStorage.settings_v4)
-            this.settings = Immutable.Map(JSON.parse(localStorage.settings_v4));
+        if (this._lsGet("settings_v1")) {
+            this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v1")));
+        }
+
+        if (this._lsGet("defaultMarkets")) {
+            this.defaultMarkets = Immutable.Map(JSON.parse(this._lsGet("defaultMarkets")));
+        }
+
+        if (this._lsGet("defaults")) {
+            this.defaults = JSON.parse(this._lsGet("defaults"));
+        }
     }
 
     getSetting(setting) {
@@ -59,43 +80,51 @@ class SettingsStore {
             payload.value
         );
 
-        localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
+        this._lsSet("settings_v1", this.settings.toJS());
+    }
+
+    _lsGet(key) {
+        if (ls) {
+            return ls.getItem(STORAGE_KEY + key);
+        }
+    }
+
+    _lsSet(key, object) {
+        if (ls) {
+            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
+        }
+
     }
 
     onAddMarket(market) {
-        let defaultMarkets = this.settings.get("defaultMarkets");
-        let exists = false;
-        for (var i = 0; i < defaultMarkets.length; i++) {
-            if (defaultMarkets[i].quote === market.quote && defaultMarkets[i].base === market.base) {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            defaultMarkets.push({quote: market.quote, base: market.base});
-            this.settings = this.settings.set(
-                "defaultMarkets",
-                defaultMarkets);
-            localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
+        let marketID = market.quote + "_" + market.base;
+
+        if (!this.defaultMarkets.has(marketID)) {
+            this.defaultMarkets = this.defaultMarkets.set(marketID, {quote: market.quote, base: market.base});
+
+            this._lsSet("defaultMarkets", this.defaultMarkets.toJS());
         } else {
             return false;
         }
     }
 
     onRemoveMarket(market) {
-        let defaultMarkets = this.settings.get("defaultMarkets");
-        for (var i = 0; i < defaultMarkets.length; i++) {
-            if (defaultMarkets[i].quote === market.quote && defaultMarkets[i].base === market.base) {
-                defaultMarkets.splice(i, 1);
-                localStorage.settings_v4 = JSON.stringify(this.settings.toJS());
-                break;
-            }
-        }
+        let marketID = market.quote + "_" + market.base;
 
-        this.settings = this.settings.set(
-                "defaultMarkets",
-                defaultMarkets);
-        }
+        this.defaultMarkets = this.defaultMarkets.delete(marketID);
+
+        this._lsSet("defaultMarkets", this.defaultMarkets.toJS());
+    }
+
+    onAddWS(ws) {
+        this.defaults.connection.push(ws);
+        this._lsSet("defaults", this.defaults);
+    }
+
+    onRemoveWS(index) {
+        this.defaults.connection.splice(index, 1);
+        this._lsSet("defaults", this.defaults);
+    }
 }
 
 module.exports = alt.createStore(SettingsStore, "SettingsStore");

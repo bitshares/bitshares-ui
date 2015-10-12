@@ -17,12 +17,17 @@ import WithdrawModal from "../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import AccountBalance from "../Account/AccountBalance";
 import BalanceComponent from "../Utility/BalanceComponent";
 
 
 @BindToChainState({keep_updating:true})
 class BlockTradesDepositRequest extends React.Component {
    static propTypes = {
+      url:               React.PropTypes.string,
+      deposit_coin_type: React.PropTypes.string,
+      deposit_asset_name: React.PropTypes.string,
+      receive_coin_type: React.PropTypes.string,
       account: ChainTypes.ChainAccount,
       issuer_account: ChainTypes.ChainAccount,
       deposit_asset: React.PropTypes.string,
@@ -36,23 +41,30 @@ class BlockTradesDepositRequest extends React.Component {
 
    requestDepositAddress() {
       let body = JSON.stringify({
-                  inputCoinType:this.props.deposit_asset,
-                  outputCoinType:'bts',
+                  inputCoinType:this.props.deposit_coin_type,
+                  outputCoinType:this.props.receive_coin_type,
                   outputAddress:this.props.account.get('name')
               })
       console.log( "body: ", body );
 
-      fetch( 'https://blocktrades.us:443/api/v2/simple-api/initiate-trade', {
+      fetch( this.props.url + '/initiate-trade', {
               method:'post',
               headers: new Headers( { "Content-Type":"application/json" } ),
               body: body
            }).then( reply => { reply.json().then( json => {
                console.log( "reply: ", json )
-               
-               this.addDepositAddress( json.inputAddress );
-           } )
+               if( json.inputAddress )
+                  this.addDepositAddress( json.inputAddress );
+               else
+                  this.addDepositAddress( "unknown" );
            }, error => {
-                    console.log( "error: ",error  );
+               console.log( "error: ",error  );
+               this.addDepositAddress( "unknown" );
+           }
+           )
+           }, error => {
+               console.log( "error: ",error  );
+               this.addDepositAddress( "unknown" );
            }); 
 
    }
@@ -72,9 +84,14 @@ class BlockTradesDepositRequest extends React.Component {
       this.setState( {receive_address} );
    }
 
+   getWithdrawModalId() {
+      console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
+      console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
+       return "withdraw_asset_"+this.props.issuer_account.get('name') + "_"+this.props.receive_asset.get('symbol');
+   }
 
    onWithdraw() {
-       ZfApi.publish("withdraw_asset", "open");
+       ZfApi.publish(this.getWithdrawModalId(), "open");
    }
  
 
@@ -103,23 +120,25 @@ class BlockTradesDepositRequest extends React.Component {
            if( current_asset_id )
               balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
        } 
+       let withdraw_modal_id = this.getWithdrawModalId();
 
       return <tr>
                     <td>{this.props.deposit_asset} </td>
                     <td> {receive_address} &nbsp; <button className={"button"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
-                    <td>{this.props.receive_asset.get('symbol')} </td>
+                    <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
                     <td> <button className={"button"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
-                          <Modal id="withdraw_asset" overlay={true}>
-                              <Trigger close="withdraw_asset">
+                          <Modal id={withdraw_modal_id} overlay={true}>
+                              <Trigger close={withdraw_modal_id}>
                                   <a href="#" className="close-button">&times;</a>
                               </Trigger>
                               <br/>
                               <div className="grid-block vertical">
-                                   <WithdrawModal account={this.props.account.get('name')}
-                                                  issuer="blocktrades"
-                                                  asset="CORE"
-                                                  receive_asset_name="Bitcoin"
-                                                  receive_asset_symbol="BTC" />
+                                   <WithdrawModal 
+                                                  account={this.props.account.get('name')}
+                                                  issuer={this.props.issuer_account.get('name')} 
+                                                  asset={this.props.receive_asset.get('symbol')}
+                                                  receive_asset_name={this.props.deposit_asset_name}
+                                                  receive_asset_symbol={this.props.deposit_asset} />
                               </div>
                           </Modal>
                     </td>
@@ -165,10 +184,23 @@ class AccountDepositWithdraw extends React.Component {
                        </thead>
                        <tbody>
                          <BlockTradesDepositRequest 
+                                url="https://blocktrades.us:443/api/v2/simple-api"
                                 issuer_account="blocktrades"
                                 account={this.props.account.get('name')} 
-                                deposit_asset="btc"
-                                receive_asset="TRADE.BTC" />
+                                receive_asset="TRADE.BTC"
+                                deposit_asset="BTC"
+                                deposit_coin_type="btc"
+                                deposit_asset_name="Bitcoin"
+                                receive_coin_type="trade.btc" />
+                         <BlockTradesDepositRequest 
+                                url="https://blocktrades.us:443/api/v2/simple-api"
+                                issuer_account="blocktrades"
+                                account={this.props.account.get('name')} 
+                                deposit_coin_type="ltc"
+                                deposit_asset_name="Litecoin"
+                                deposit_asset="LTC"
+                                receive_asset="TRADE.LTC"
+                                receive_coin_type="trade.ltc" />
                        </tbody>
                    </table>
                </div>
@@ -178,6 +210,39 @@ class AccountDepositWithdraw extends React.Component {
 
           <div className="grid-block vertical">
              <h3>CCEDK</h3>
+
+               <div>
+                   <table className="table">
+                       <thead>
+                       <tr>
+                           <th>Symbol</th>
+                           <th>Deposit To</th>
+                           <th>Balance</th>
+                           <th>Withdraw</th>
+                       </tr>
+                       </thead>
+                       <tbody>
+                       {/*
+                         <BlockTradesDepositRequest 
+                                url="https://ccedk.com:443/api/v2/simple-api"
+                                issuer_account="ccedk"
+                                account={this.props.account.get('name')} 
+                                receive_asset="CCEDK.BTC"
+                                deposit_asset="BTC"
+                                deposit_coin_type="btc"
+                                receive_coin_type="ccedk.btc" />
+                         <BlockTradesDepositRequest 
+                                url="https://ccedk.com:443/api/v2/simple-api"
+                                issuer_account="ccedk"
+                                account={this.props.account.get('name')} 
+                                deposit_coin_type="ltc"
+                                deposit_asset="LTC"
+                                receive_asset="CCEDK.LTC"
+                                receive_coin_type="ccedk.ltc" />
+                                */}
+                       </tbody>
+                   </table>
+               </div>
           </div>
       </div>
       )

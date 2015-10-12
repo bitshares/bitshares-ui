@@ -10,10 +10,11 @@ class DepthHighChart extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.orders, this.props.orders) ||
+            !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
             nextProps.plotLine !== this.props.plotLine ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.settlementPrice !== this.props.settlementPrice
-            );
+        );
     }
 
     constructor() {
@@ -169,7 +170,7 @@ class DepthHighChart extends React.Component {
 
 
             // Add calls if present
-            if (this.props.flat_calls && this.props.flat_calls.length) {
+            if (flat_calls && flat_calls.length) {
                 config.series.push({
                     name: `Call ${quoteSymbol}`,
                     data: this.props.flat_calls,
@@ -184,17 +185,21 @@ class DepthHighChart extends React.Component {
         }
 
         // Push asks and bids
-        config.series.push({
-            name: `Bid ${quoteSymbol}`,
-            data: flat_bids,
-            color: "#50D2C2"
-        })
+        if (flat_bids && flat_bids.length) {
+            config.series.push({
+                name: `Bid ${quoteSymbol}`,
+                data: flat_bids,
+                color: "#50D2C2"
+            })
+        }
 
-        config.series.push({
-            name: `Ask ${quoteSymbol}`,
-            data: flat_asks,
-            color: "#E3745B"
-        });
+        if (flat_asks && flat_asks.length) {
+            config.series.push({
+                name: `Ask ${quoteSymbol}`,
+                data: flat_asks,
+                color: "#E3745B"
+            });
+        }
 
         // Fix the height if defined, if not use offsetHeight
         if (this.props.height) {
@@ -214,7 +219,7 @@ class DepthHighChart extends React.Component {
             <div className="grid-content">
                 <p className="bid-total">{utils.format_number(totalBids, 2)} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, 2)} {quoteSymbol}</p>
-                {flat_bids && flat_asks ? <Highcharts config={config}/> : null}
+                {flat_bids && flat_asks && flat_calls ? <Highcharts config={config}/> : null}
             </div>
         );
     }

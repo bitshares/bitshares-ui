@@ -17,9 +17,11 @@ import classNames from "classnames";
 import utils from "common/utils";
 import Immutable from "immutable";
 import TimeAgo from "../Utility/TimeAgo";
+import Icon from "../Icon/Icon";
+
 
 class BlockTimeAgo extends React.Component {
-    
+
     shouldComponentUpdate(nextProps) {
         return nextProps.blockTime !== this.props.blockTime;
     }
@@ -102,7 +104,7 @@ class Blocks extends React.Component {
                     }
                 }
                 if (!exists) {
-                    this._getBlock(maxBlock - i, maxBlock);    
+                    this._getBlock(maxBlock - i, maxBlock);
                 }
             }
         }
@@ -124,7 +126,7 @@ class Blocks extends React.Component {
             // Map out the block times for the latest blocks and count the number of transactions
             latestBlocks.filter((a, index) => {
                 // Only use consecutive blocks counting back from head block
-                return a.id === (dynGlobalObject.get("head_block_number") - index)}) 
+                return a.id === (dynGlobalObject.get("head_block_number") - index)})
             .sort((a, b) => {
                 return a.id - b.id;
             }).forEach((block, index) => {
@@ -177,7 +179,7 @@ class Blocks extends React.Component {
                         />
                     );
                 })
-                
+
             }).toArray();
 
             headBlock = latestBlocks.first().timestamp;
@@ -192,98 +194,93 @@ class Blocks extends React.Component {
             <div className="grid-block vertical page-layout">
 
                 {/* First row of stats */}
-                <div className="grid-block shrink" style={{paddingBottom: "1.5rem"}}>
+                <div className="align-center grid-block shrink small-horizontal" style={{paddingBottom: "1.5rem"}}>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Current Block:</span>
-                            <h3 className="txtlabel success">
-                                #{utils.format_number(dynGlobalObject.get("head_block_number"), 0)}
-                            </h3>
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.current_block" /></span>
+                            <h2>#{utils.format_number(dynGlobalObject.get("head_block_number"), 0)}</h2>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Last block:</span>
-                            <BlockTimeAgo blockTime={headBlock} />
+
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.last_block" /></span>
+                              <BlockTimeAgo blockTime={headBlock} />
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Trx/s</span>
-                            <h3>{utils.format_number(trxPerSec, 2)}</h3>
+
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.trx_per_sec" /></span>
+                            <h2>{utils.format_number(trxPerSec, 2)}</h2>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader">Avg confirmation time</span>
-                            <h3>{utils.format_number(avgTime / 2, 2)}s</h3>
+
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.avg_conf_time" /></span>
+                            <h2>{utils.format_number(avgTime / 2, 2)}s</h2>
                         </div>
                     </div>
                 </div>
 
                 {/* Second row of stats */ }
-                <div className="grid-block shrink" style={{paddingBottom: "1rem"}}>
+                <div className="align-center grid-block shrink small-horizontal" style={{paddingBottom: "1rem"}}>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Active Witnesses:</span>
-                            <span className="txtlabel success float-right">
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.active_witnesses" /></span>
+                            <h2 className="txtlabel success">
                                 {globalObject.get("active_witnesses").size}
-                            </span>
+                            </h2>
                         </div>
                     </div>
+
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Active committee members:</span>
-                            <span className="txtlabel success float-right">
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.active_committee_members" /></span>
+                            <h2 className="txtlabel success">
                                 {globalObject.get("active_committee_members").size}
-                            </span>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div className="grid-block text-center small-6 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.trx_per_block" /></span>
+                            <h2>{utils.format_number(trxCount / blockCount || 0, 2)}</h2>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Transactions per block:</span>
-                            <span className="success float-right">
-                                <span className="txtlabel">{utils.format_number(trxCount / blockCount || 0, 2)}</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div className="grid-block text-center small-6 medium-3">
-                        <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel float-left">Recently missed blocks:</span>
-                            <span className="txtlabel success float-right">
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.recently_missed_blocks" /></span>
+                            <h2 className="txtlabel warning" style={{fontWeight: "100"}}>
                                 {dynGlobalObject.get("recently_missed_count")}
-                            </span>
-                        </div>
-                    </div>                    
-                </div>
-            
-            {/* Third row: graphs */ }
-                <div className="grid-block shrink">
-                    <div className="grid-block text-center small-6 medium-3">
-                        <div className="grid-content no-overflow">
+                            </h2>
                         </div>
                     </div>
-                    <div className="grid-block text-center small-6 medium-3">
+                </div>
+
+            {/* Third row: graphs */ }
+                <div className="align-center grid-block shrink small-vertical medium-horizontal ">
+
+                    <div className="grid-block text-center small-12 medium-6 large-4 ">
                         <div className="grid-content no-overflow">
-                        <div className="text-left txtlabel">Block times</div>
+                        <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.block_times" /></div>
                             <BlocktimeChart blockTimes={blockTimes} head_block_number={dynGlobalObject.get("head_block_number")} />
                         </div>
                     </div>
-                    <div className="grid-block text-center small-6 medium-3">
+                    <div className="grid-block text-center small-12 medium-6 large-4">
                         <div className="grid-content no-overflow">
-                            <div className="text-left txtlabel">Transactions</div>
+                            <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.trx" /></div>
                             <TransactionChart blocks={latestBlocks} head_block={dynGlobalObject.get("head_block_number")}/>
                         </div>
                     </div>
-                    <div className="grid-block text-center small-6 medium-3">
-                        <div className="grid-content no-overflow">
-                        </div>
-                    </div>                                                        
+
                 </div>
-            
+
             {/* Fourth row: transactions and blocks */ }
                 <div className="grid-block">
-                    <div className="grid-block small-6 vertical">
+                    <div className="grid-block small-12 medium-6 vertical">
                         <div className="grid-content">
                             <h3><Translate content="account.recent" /> </h3>
                             <table className="table">
@@ -299,8 +296,8 @@ class Blocks extends React.Component {
                             </table>
                         </div>
                     </div>
-                    <div className="grid-block small-6 vertical">
-                        
+                    <div className="grid-block medium-6 show-for-medium vertical ">
+
                         <div className="grid-content">
                             <h3><Translate component="span" content="explorer.blocks.recent" /></h3>
                             <table className="table">

@@ -154,7 +154,7 @@ App.willTransitionTo = (transition, params, query, callback) => {
     if (transition.path === "/init-error") {
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
         db.then(() => {
-            callback();
+            Apis.instance().init_promise.then(() => callback()).catch(() => callback());
         });
         return;
     }

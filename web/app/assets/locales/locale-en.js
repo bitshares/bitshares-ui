@@ -5,7 +5,9 @@
         fr: "Français",
         ko: "한국어",
         de: "Deutsch",
-        es: "Español"
+        es: "Español",
+        tr: "Turkish"
+        
     },
     header: {
         title: "Graphene UI",
@@ -29,6 +31,7 @@
         pending: "pending %(blocks)s blocks"
     },
     account: {
+        welcome: "Welcome to Graphene",
         asset: "Asset",
         market_value: "Market Value",
         hour_24: "24hr Change",
@@ -130,7 +133,14 @@
             invalid: "Invalid account name",
             unknown: "Unknown account",
             not_yours: "Not your account"
-        }
+        },
+        collaterals: "Collateral Positions",
+        eq_value: "Equivalent Value",
+        please_create_account: "Please create an account",
+        create_account: "Create account",
+        identicon: "Identicon",
+        pay_from: "Pay From",
+        existing_accounts: "Existing Accounts"
     },
     pagination: {
         newer: "Newer",
@@ -297,7 +307,18 @@
         blocks: {
             title: "Blockchain",
             globals: "Global parameters",
-            recent: "Recent blocks"
+            recent: "Recent blocks",
+            trx: "Transaction",
+            block_times: "Block times",
+            recently_missed_blocks: "Recently missed blocks",
+            trx_per_block: "Trx/block",
+            active_committee_members: "Active committee members",
+            active_witnesses: "Active Witnesses",
+            avg_conf_time: "Avg conf. time",
+            trx_per_sec: "Trx/s",
+            last_block: "Last block",
+            current_block: "Current Block"
+
         },
         block: {
             title: "Block",
@@ -416,7 +437,9 @@
         confirm_no: "Never",
         always_confirm: "Always ask for confirmation",
         wallets: "Wallets",
-        connection: "API Connection"
+        connection: "API Connection",
+        add_ws: "Add new websocket API",
+        remove_ws: "Remove websocket API"
     },
     footer: {
         title: "Graphene",
@@ -445,15 +468,18 @@
         quantity: "Amount",
         buy: "Buy",
         sell: "Sell",
+        receive: "Receive",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
     },
     markets: {
-        choose_base: "Choose base asset",
+        base: "Base asset",
+        market_search: "Market Search",
         filter: "Filter",
         core_rate: "Core rate",
         supply: "Supply",
-        search: "Search"
+        search: "Search",
+        preferred: "My Favourite Markets"
     },
     wallet: {
         title: "Wallet",
@@ -464,6 +490,7 @@
         change_wallet: "Change Wallet",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
+        setup_wallet: "Setup your wallet",
         delete_wallet: "Delete Wallet",
         delete_confirm_line1: "Are you ABSOLUTELY sure?",
         delete_confirm_line2: "Unexpected bad things will happen if you don’t read this!",
@@ -485,6 +512,7 @@
         active_wallet: "Active Wallet",
         verified: "Verified",
         verify_prior_backup: "Verify Prior Backup",
+        brainkey_not_verified: "This Brainkey is not verified",
         cancel: "Cancel",
         reset: "Reset",
         done: "Done",
@@ -499,13 +527,36 @@
         ready_to_restore: "Ready to Restore",
         restore_wallet_of: "Restore (%(name)s Wallet)",
         restore_success: "Successfully restored (%(name)s) wallet",
-        change: "Change (%(name)s Wallet)"
+        change: "Change (%(name)s Wallet)",
+        import_20_notice1: "Import your BTS 2.0+ BACKUP first",
+        import_20_notice2: "(if you have one)",
+        loading_balances: "Loading balance claims",
+        no_balance: "No balance claims",
+        claim_balance: "Claim Balance",
+        claim_balances: "Claim Balances",
+        unclaimed: "Unclaimed",
+        unclaimed_vesting: "Unclaimed (vesting)",
+        no_accounts: "No Accounts",
+        brainkey_no_match: "Brainkey does not match, keep going",
+        reenter_brainkey: "Re-Enter Brainkey",
+        pwd4brainkey: "Enter password to show your brainkey",
+        show_brainkey: "Show Brainkey",
+        brainkey_w1: "WARNING: Print this out, or write it down.",
+        brainkey_w2: "Anyone with access to your recovery key will",
+        brainkey_w3: "have access to funds within this wallet.",
+        custom_brainkey: "Custom Brainkey (advanced)",
+        last_backup: "Last backup",
+        never_backed_up: "This Wallet has never been backed up",
+        need_backup: "This Wallet needs a backup",
+        noneed_backup: "No backup is needed"
     },
     borrow: {
         title: "%(asset_symbol)s Margin",
         no_valid: "No valid feeds for %(asset_symbol)s",
         coll_ratio: "Collateral ratio",
         adjust: "Update Position",
+        close: "Close Position",
+        update: "Update",
         errors: {
             below: "Collateral ratio below maintenance level",
             collateral: "Insufficient collateral balance"
@@ -522,5 +573,12 @@
         address: "Withdraw to Address",
         submit: "Withdraw"
       }
+    },
+    init_error: {
+        title: "Application initialization issues",
+        ws_status: "Websocket Connection Status",
+        retry: "Retry",
+        connected: "Connected",
+        not_connected: "Not connected"
     }
 };

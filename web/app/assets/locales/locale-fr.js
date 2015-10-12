@@ -4,7 +4,9 @@ module.exports = {
         cn: "简体中文",
         fr: "Français",
         ko: "한국어",
-        de: "Deutsch"
+        de: "Deutsch",
+        es: "Español",
+        tr: "Turkish"
     },
     header: {
         title: "Graphene",

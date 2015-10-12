@@ -2,7 +2,6 @@ import React from "react";
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import {PropTypes} from "react";
-import {Link} from "react-router";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 
@@ -39,7 +38,6 @@ class FormattedPrice extends React.Component {
 
     render() {
 
-
         let {base_asset, quote_asset, base_amount, quote_amount} = this.props;
 
         if( this.state.flipped ) {
@@ -56,7 +54,7 @@ class FormattedPrice extends React.Component {
             let base_precision = utils.get_asset_precision(base_asset.get("precision"));
             let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
             let value = base_amount / base_precision / (quote_amount / quote_precision);
-            // console.log(value);
+
             formatted_value = (
                 <FormattedNumber
                     value={value}

@@ -71,10 +71,16 @@ class Footer extends React.Component {
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     { this.props.backup_recommended ? <span>
-                        <div className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup recommended &nbsp; &nbsp;</div>
+                        <div className="grid-block">
+                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup recommended</a>
+                            &nbsp;&nbsp;
+                        </div>
                     </span> : null}
                     { this.props.backup_brainkey_recommended ? <span>
-                        <div className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}>Backup brainkey recommended &nbsp; &nbsp;</div>
+                        <div className="grid-block">
+                            <a className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}>Backup brainkey recommended</a>
+                            &nbsp;&nbsp;
+                        </div>
                     </span>:null}
                     {block_height ?
                         (<div className="grid-block shrink">

@@ -280,3 +280,7 @@ span.time {
   white-space: nowrap;
   font-family: 'Roboto-Light', arial, sans-serif;
 }
+
+section > ul > li.key-value {
+  padding: 0.5rem 1rem;
+}

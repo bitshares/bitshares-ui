@@ -488,7 +488,7 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-4 medium-3 large-2">
+                    <div className="grid-block left-column small-4 medium-3 large-2" style={{overflow: "hidden"}}>
                             <OrderBook
                                 orders={limit_orders}
                                 calls={call_orders}
@@ -561,6 +561,7 @@ class Exchange extends React.Component {
                         <div className="grid-block no-overflow no-padding shrink">
                             <DepthHighChart
                                 orders={limit_orders}
+                                call_orders={call_orders}
                                 flat_asks={flat_asks}
                                 flat_bids={flat_bids}
                                 flat_calls={flat_calls}

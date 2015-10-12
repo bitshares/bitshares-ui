@@ -106,6 +106,20 @@ function objectsListChecker(props, propName, componentName, location) {
     return null;
 }
 
+function assetsListChecker(props, propName, componentName, location) {
+    componentName = componentName || "ANONYMOUS";
+    if (props[propName]) {
+        let value = props[propName];
+        if (Immutable.List.isList(value) || Immutable.Set.isSet(value) || value instanceof Object) {
+            return null
+        } else {
+            return new Error(`${propName} in ${componentName} should be Immutable.List`);
+        }
+    }
+    // assume all ok
+    return null;
+}
+
 function accountsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
@@ -127,5 +141,6 @@ let ChainAddressBalances = createChainableTypeChecker(keyChecker);
 let ChainAsset = createChainableTypeChecker(assetChecker);
 let ChainObjectsList = createChainableTypeChecker(objectsListChecker);
 let ChainAccountsList = createChainableTypeChecker(accountsListChecker);
+let ChainAssetsList = createChainableTypeChecker(assetsListChecker);
 
-export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances, ChainAsset, ChainObjectsList, ChainAccountsList};
+export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances, ChainAsset, ChainObjectsList, ChainAccountsList, ChainAssetsList};

@@ -5,10 +5,11 @@ module.exports = {
         fr: "Français",
         ko: "한국어",
         de: "Deutsch",
-        es: "Español"
+        es: "Español",
+        tr: "Turkish"
     },
     header: {
-        title: "比特股 2.0",
+        title: "Graphene (石墨烯)钱包",
         dashboard: "概览",
         explorer: "浏览",
         exchange: "交易",
@@ -26,6 +27,7 @@ module.exports = {
         unlocked_tip: "钱包已解锁，点击锁定。"
     },
     account: {
+        welcome: "欢迎使用 Graphene (石墨烯)系统",
         assets: "资产",
         market_value: "市值",
         hour_24: "24小时",
@@ -77,7 +79,7 @@ module.exports = {
         },
         perm: {
             active: "活跃权限",
-            owner: "拥有人权限",
+            owner: "账户权限",
             publish: "保存修改",
             reset: "重置修改",
             add: "增加权限",
@@ -118,7 +120,7 @@ module.exports = {
         upgrade: "升级账户",
         unfollow: "取消关注",
         follow: "关注",
-        pay: "向他付款",
+        pay: "支付",
         overview: "概述",
         history: "交易历史",
         payees: "收款人",
@@ -131,7 +133,15 @@ module.exports = {
             invalid: "非法的账户名",
             unknown: "未知的账户",
             not_yours: "不是你的账户"
-        }
+        },
+        deposit_withdraw: "充值/提现",
+        collaterals: "抵押债仓",
+        eq_value: "换算值",
+        please_create_account: "请先创建账户",
+        create_account: "创建账户",
+        identicon: "身份标示图形",
+        pay_from: "注册费支付账户",
+        existing_accounts: "已有账户"
     },
     transfer: {
         from: "来自",
@@ -287,7 +297,7 @@ module.exports = {
         witness_update: "更新见证人账户",
         new_url: "网站",
         publisher: "发布人",
-        lifetime_upgrade_account: "升级到终生会员",
+        lifetime_upgrade_account: "升级到终身会员",
         annual_upgrade_account: "升级到年度会员"
     },
     explorer: {
@@ -297,7 +307,17 @@ module.exports = {
         blocks: {
             title: "区块链",
             globals: "全局参数",
-            recent: "最近区块"
+            recent: "最近区块",
+            trx: "交易",
+            block_times: "区块生成时间",
+            recently_missed_blocks: "最近缺失的区块",
+            trx_per_block: "交易数/区块",
+            active_committee_members: "活跃理事会成员",
+            active_witnesses: "活跃见证人",
+            avg_conf_time: "交易平均确认时间",
+            trx_per_sec: "每秒交易数",
+            last_block: "上一个区块",
+            current_block: "当前区块"
         },
         block: {
             title: "区块",
@@ -305,7 +325,7 @@ module.exports = {
             witness: "见证人",
             count: "交易数",
             date: "日期",
-            previous: "上一个",
+            previous: "上一个区块",
             previous_secret: "上一个密文",
             next_secret: "下一个密文哈希值",
             op: "操作",
@@ -351,19 +371,18 @@ module.exports = {
                 max_market_fee: "交易市场手续费上限"
             },
             price_feed: {
-                price_feed: "喂价",
                 settlement_price: "清算价格",
                 maintenance_collateral_ratio: "维持保证金比例",
-                maximum_short_squeeze_ratio: "强制平仓比例上限"
+                maximum_short_squeeze_ratio: "强制平仓比例上限",
+                title: "喂价"
             },
             fee_pool: {
-                fee_pool: "手续费资金池",
                 core_exchange_rate: "汇率",
                 pool_balance: "资金池余额",
-                unclaimed_issuer_income: "发行人未申领收入"
+                unclaimed_issuer_income: "发行人未申领收入",
+                title: "手续费资金池"
             },
             permissions: {
-                permissions: "权限",
                 max_market_fee: "交易市场手续费上限",
                 max_supply: "最大供给",
                 chargeMarketFee: "收取交易手续费",
@@ -373,10 +392,20 @@ module.exports = {
                 allowForceSettle: "允许强制清算",
                 allowGlobalSettle: "允许全局清算",
                 allowStealthTransfer: "允许隐私转账",
-                blacklist_authorities: "黑名单管理账户",
+                blacklist_authorities: "黑名单职权实体",
                 blacklist_markets: "禁止交易对市场",
-                whitelist_authorities: "白名单管理账户",
-                whitelist_markets: "允许交易对市场"
+                whitelist_authorities: "白名单职权实体",
+                whitelist_markets: "允许交易对市场",
+                title: "权限"
+            },
+            price_feed_data: {
+                title: "喂价数据",
+                settlement_price: "清算价格",
+                core_exchange_rate: "汇率",
+                maintenance_collateral_ratio: "维持保证金比例",
+                maximum_short_squeeze_ratio: "强制平仓比例上限",
+                publisher: "发布人",
+                published: "发布时间"
             }
         },
         witnesses: {
@@ -407,14 +436,17 @@ module.exports = {
         confirm_yes: "总是",
         confirm_no: "从不",
         always_confirm: "总是要求确认",
-        wallets: "钱包管理"
+        wallets: "钱包管理",
+        connection: "API 服务器设定",
+        add_ws: "添加新的 websocket API",
+        remove_ws: "删除 websocket API"
     },
     pagination: {
         newer: "更近",
         older: "更早"
     },
     footer: {
-        title: "Graphene 石墨烯",
+        title: "Graphene (石墨烯)",
         block: "最新区块",
         loading: "载入中..."
     },
@@ -431,19 +463,28 @@ module.exports = {
         latest: "最新价格",
         call: "赎回价格",
         volume: "成交量",
-        spread: "价差",
+        spread: "买卖价差",
         quantity: "数量",
         buy: "买入",
         sell: "卖出",
         confirm_buy: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
-        confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s "
+        confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
+        settle: "清算价格",
+        core_rate: "喂价",
+        squeeze: "强制平仓价",
+        maintenance: "维持保证金价",
+        your_price: "你的强平触发价",
+        receive: "获得"
     },
     markets: {
         choose_base: "选择基准资产",
         filter: "筛选",
         core_rate: "CORE 汇率",
         supply: "供应量",
-        search: "搜索"
+        search: "搜索",
+        base: "基准资产",
+        market_search: "交易对市场搜索",
+        preferred: "我收藏的市场"
     },
     wallet: {
         title: "钱包",
@@ -454,6 +495,7 @@ module.exports = {
         change_wallet: "切换钱包",
         wallet_created: "钱包已创建",
         create_wallet: "创建新钱包",
+        setup_wallet: "设置钱包",
         delete_wallet: "删除钱包",
         delete_confirm_line1: "你确定么？",
         delete_confirm_line2: "如果你不仔细阅读以下提示，可能发生无法预料的事情。",
@@ -467,11 +509,12 @@ module.exports = {
         import_backup: "导入钱包备份文件",
         restore_backup: "从钱包备份恢复",
         import_keys: "导入私钥",
-        brainkey: "从脑钱包密钥恢复",
+        brainkey: "脑钱包密钥",
         new_wallet: "新建钱包",
         active_wallet: "当前钱包使用中",
         verified: "已验证",
         verify_prior_backup: "验证钱包备份文件",
+        brainkey_not_verified: "脑钱包密钥未验证",
         cancel: "取消",
         reset: "重置",
         done: "完成",
@@ -489,17 +532,41 @@ module.exports = {
         change: "切换到钱包 (%(name)s)",
         balance_claims: "余额导入",
         backup_brainkey: "备份脑钱包密钥",
-        downoad: "下载"
+        downoad: "下载",
+        import_20_notice1: "请先导入你的BTS 2.0+ 钱包备份文件",
+        import_20_notice2: "(如果你有的话)",
+        loading_balances: "余额读取中",
+        no_balance: "无余额可导入",
+        claim_balance: "导入余额",
+        claim_balances: "导入余额",
+        unclaimed: "未导入余额",
+        unclaimed_vesting: "未导入余额 (解冻中)",
+        no_accounts: "没有账户",
+        brainkey_no_match: "脑钱包密钥不匹配，请重试",
+        reenter_brainkey: "请再输入一遍脑钱包密钥",
+        pwd4brainkey: "输入密码后显示脑钱包密钥",
+        show_brainkey: "显示脑钱包密钥",
+        brainkey_w1: "警告: 将密钥打印出来，或记录在纸上妥善保存。",
+        brainkey_w2: "任何人获得你的脑钱包密钥信息将",
+        brainkey_w3: "获得钱包中资金的使用权限。",
+        custom_brainkey: "自定义脑钱包密钥 (高级)",
+        last_backup: "上次备份",
+        never_backed_up: "钱包尚未进行过备份",
+        need_backup: "钱包需要备份",
+        noneed_backup: "无需备份"
+
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",
         no_valid: "无有效喂价 %(asset_symbol)s",
-        coll_ratio: "保证金率",
+        coll_ratio: "保证金比例",
         adjust: "调整头寸",
         errors: {
             below: "保证金率低于维持保证金要求",
             collateral: "可用保证金不足"
-        }
+        },
+        close: "平仓",
+        update: "调整"
     },
     operation: {
         pending: " %(blocks)s 个区块待定"
@@ -509,6 +576,18 @@ module.exports = {
             to: "发行到",
             amount: "发行数量",
             submit: "发行资产"
+        },
+        withdraw: {
+            amount: "提现金额",
+            address: "提现到地址",
+            submit: "提现"
         }
+    },
+    init_error: {
+        title: "系统初始化错误",
+        ws_status: "Websocket 连接状态",
+        retry: "重试",
+        connected: "已连接",
+        not_connected: "未连接"
     }
 };

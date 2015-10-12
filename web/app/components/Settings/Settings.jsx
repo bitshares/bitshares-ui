@@ -5,13 +5,13 @@ import Translate from "react-translate-component";
 import cookies from "cookies-js";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router";
-import WalletManager from "../Wallet/WalletManager";
+import WebsocketAddModal from "./WebsocketAddModal";
 
 class SettingsEntry extends React.Component {
 
     render() {
         let {defaults, setting, settings} = this.props;
-        let options, value, input;
+        let options, optional, value, input, selected = settings.get(setting);
 
         let myLocale = counterpart.getLocale();
 
@@ -43,8 +43,24 @@ class SettingsEntry extends React.Component {
                 value = null;
                 break;
 
+            case "connection":
+                value = selected;
+                options = defaults.map(entry => {
+                    let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
+                    let key = entry.translate ? entry.translate : entry;
+                    return <option key={key}>{option}</option>;
+                });
+
+                optional = (
+                    <div style={{position: "absolute", right: 0}}>
+                        <div onClick={this.props.triggerModal} id="remove" className="button">-</div>
+                        <div onClick={this.props.triggerModal} id="add" className="button">+</div>
+                    </div>);
+
+                break;
+
             default: 
-                let selected = settings.get(setting);
+                
                 if (typeof selected === "number") {
                     value = defaults[selected];
                 }
@@ -83,9 +99,10 @@ class SettingsEntry extends React.Component {
                 <header><Translate component="span" content={`settings.${setting}`} /></header>
                 {options ? <ul>
                     <li className="with-dropdown">
-                    <select value={value} onChange={this.props.onChange.bind(this, setting)}>
-                        {options}
-                    </select>
+                        {optional}
+                        <select value={value} onChange={this.props.onChange.bind(this, setting)}>
+                            {options}
+                        </select>
                     </li>
                 </ul> : null}
                 {input ? <ul><li>{input}</li></ul> : null}
@@ -96,6 +113,10 @@ class SettingsEntry extends React.Component {
 
 
 class Settings extends React.Component {
+
+    triggerModal(e) {
+        this.refs.ws_modal.show(e);
+    }
 
     _onChangeSetting(setting, e) {
         e.preventDefault();
@@ -163,6 +184,7 @@ class Settings extends React.Component {
                                     defaults={defaults[setting]}
                                     onChange={this._onChangeSetting}
                                     locales={this.props.localesObject}
+                                    triggerModal={this.triggerModal.bind(this)}
                                 />);                   
                         }).toArray()}
                     </div>
@@ -172,6 +194,7 @@ class Settings extends React.Component {
                         <div><label><h5><Link to="wallet"><Translate content="settings.wallets" /></Link></h5></label></div>
                     </div>
                 </div>
+                <WebsocketAddModal ref="ws_modal" apis={defaults["connection"]} />
             </div>
         );
     }

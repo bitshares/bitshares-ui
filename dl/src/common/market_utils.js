@@ -81,12 +81,8 @@ class MarketUtils {
     }
 
     static isAsk(order, base) {
-        let baseId;
-        if (base.toJS()) {
-            baseId = base.get("id")
-        } else {
-            baseId = base.id;
-        }
+        let baseId = base.toJS ? base.get("id") : base.id;;
+
         if (order.sell_price) {
             return order.sell_price.quote.asset_id === baseId;
         } else if (order.call_price) {

@@ -34,7 +34,10 @@ class WitnessCard extends React.Component {
         let witness_aslot = witness_data.get('last_aslot')
         let color = {};
         if( this.props.most_recent - witness_aslot > 100 ) {
-           color = {color: "red"};
+           color = {borderLeft: "1px solid #FCAB53"};
+        }
+        else {
+           color = {borderLeft: "1px solid #50D2C2"};
         }
         let last_aslot_time = new Date(Date.now() - ((this.props.most_recent - witness_aslot ) * ChainStore.getObject( "2.0.0" ).getIn( ["parameters","block_interval"] )*1000));
 
@@ -81,7 +84,7 @@ class WitnessList extends React.Component {
         let most_recent_aslot = 0;
         witnesses.forEach( w => {
             if (w) {
-                let s = w.get("last_aslot"); 
+                let s = w.get("last_aslot");
                 if( most_recent_aslot < s ) {
                     most_recent_aslot = s;
                 }
@@ -121,7 +124,7 @@ class WitnessList extends React.Component {
                         <WitnessCard key={a.id} witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
                     );
                 });
-        } 
+        }
 
         return (
             <div className="grid-block small-up-1 medium-up-2 large-up-3">

@@ -28,6 +28,7 @@ class RecentTransactions extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if(!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
+        if (nextProps.limit !== this.props.limit) return true;
         for(let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
@@ -51,29 +52,37 @@ class RecentTransactions extends React.Component {
             }
         }
         if(accounts_counter === 1 && current_account) current_account_id = current_account.get("id");
-        history = history.sort(compareOps).slice(0, limit).map(o => {
-            return  <Operation
-                key={o.id}
-                op={o.op}
-                result={o.result}
-                block={o.block_num}
-                current={current_account_id}
-                inverted={false}
-                hideFee={true}
-                hideOpLabel={compactView}/>
+        history = history
+            .sort(compareOps)
+            .slice(0, limit)
+            .map(o => {
+                return (
+                    <Operation
+                        key={o.id}
+                        op={o.op}
+                        result={o.result}
+                        block={o.block_num}
+                        current={current_account_id}
+                        inverted={false}
+                        hideFee={true}
+                        hideOpLabel={compactView}
+                    />
+                )
         });
-        return <table className={"table" + (compactView ? " compact" : "")}>
-            <thead>
-            <tr>
-                {compactView ? null : <th><Translate content="explorer.block.op" /></th>}
-                <th><Translate content="account.votes.info" /></th>
-                <th><Translate content="explorer.block.date" /></th>
-            </tr>
-            </thead>
-            <tbody>
-                {history}
-            </tbody>
-        </table>;
+        return (
+            <table className={"table" + (compactView ? " compact" : "")}>
+                <thead>
+                <tr>
+                    {compactView ? null : <th><Translate content="explorer.block.op" /></th>}
+                    <th><Translate content="account.votes.info" /></th>
+                    <th><Translate content="explorer.block.date" /></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {history}
+                </tbody>
+            </table>
+        );
     }
 }
 
