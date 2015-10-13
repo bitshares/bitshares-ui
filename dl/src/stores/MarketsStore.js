@@ -443,10 +443,10 @@ class MarketsStore {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= settlementPrice / squeezeRatio; // TODO verify this
+                    return a_price.full >= settlementPrice; // TODO verify this
                 } else {
-                    a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset).price;
-                    return a_price.full <= settlementPrice * squeezeRatio; // TODO verify this
+                    a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
+                    return a_price.full <= settlementPrice; // TODO verify this
                 }
 
             }).sort((a, b) => {
@@ -455,8 +455,8 @@ class MarketsStore {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
                     b_price = market_utils.parseOrder(b, this.quoteAsset, this.baseAsset, true).price;
                 } else {
-                    a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset).price;
-                    b_price = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset).price;
+                    a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
+                    b_price = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset, false).price;
                 }
                 return a_price.full - b_price.full;
             }).map(order => {
@@ -474,19 +474,21 @@ class MarketsStore {
                         debt: order.debt,
                         collateral: order.collateral
                     }
+                    // priceData = market_utils.parseOrder(order, this.quoteAsset, this.baseAsset, true, squeezeRatio);
                     priceData = market_utils.parseOrder(feed_price_order, this.quoteAsset, this.baseAsset, true);
                 } else {
                     let newQuote = this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS();
                     newQuote.amount *= squeezeRatio;
                     feed_price_order = {
-                        call_price: {
+                        sell_price: {
                             base: this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS(),
                             quote: newQuote
                         },
                         debt: order.debt,
                         collateral: order.collateral
                     }
-                    priceData = market_utils.parseOrder(feed_price_order, this.baseAsset, this.quoteAsset);
+                    // priceData = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset, false, squeezeRatio);
+                    priceData = market_utils.parseOrder(feed_price_order, this.baseAsset, this.quoteAsset, false);
                 }
 
                 let {value, price, amount} = priceData;
