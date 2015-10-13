@@ -54,7 +54,7 @@ class MarketsActions {
             marketAsset = {id: quote.get("id")}
         } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
             inverted = true;
-            isMarketAsset = true;
+            isMarketAsset = false;
             marketAsset = {id: base.get("id")};
         }
 
