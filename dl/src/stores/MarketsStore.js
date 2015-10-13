@@ -54,7 +54,9 @@ class MarketsStore {
             onChangeBase: MarketsActions.changeBase,
             onInverseMarket: SettingsActions.changeSetting,
             onChangeBucketSize: MarketsActions.changeBucketSize,
-            onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess
+            onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
+            onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
+            onCallOrderUpdate: MarketsActions.callOrderUpdate
         });
     }
 
@@ -114,6 +116,7 @@ class MarketsStore {
             let limitStart = new Date();
             this.activeMarketLimits = this.activeMarketLimits.clear();
             result.limits.forEach(order => {
+                ChainStore._updateObject(order, false, false);
                 if (typeof order.for_sale !== "number") {
                     order.for_sale = parseInt(order.for_sale, 10);
                 }
@@ -148,6 +151,7 @@ class MarketsStore {
             this.activeMarketCalls = this.activeMarketCalls.clear();
 
             result.calls.forEach(call => {
+                ChainStore._updateObject(call, false, false);
                 if (typeof call.collateral !== "number") {
                     call.collateral = parseInt(call.collateral, 10);
                 }
@@ -258,7 +262,7 @@ class MarketsStore {
     // }
 
     onCancelLimitOrderSuccess(orderID) {
-        if (orderID) {
+        if (orderID && this.activeMarketLimits.has(orderID)) {
             this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
 
             // Update orderbook
@@ -266,6 +270,39 @@ class MarketsStore {
 
             // Update depth chart data
             this._depthChart();
+        }
+    }
+
+    onCloseCallOrderSuccess(orderID) {
+        if (orderID && this.activeMarketCalls.has(orderID)) {
+            this.activeMarketCalls = this.activeMarketCalls.delete(orderID);
+
+            // Update orderbook
+            this._orderBook();
+
+            // Update depth chart data
+            this._depthChart();
+        }
+    }
+
+    onCallOrderUpdate(call_order) {
+
+        if (call_order) {
+            if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
+                if (typeof call_order.collateral !== "number") {
+                    call_order.collateral = parseInt(call_order.collateral, 10);
+                }
+                this.activeMarketCalls = this.activeMarketCalls.set(
+                    call_order.id,
+                    CallOrder(call_order)
+                );
+                // Update orderbook
+                this._orderBook();
+
+                // Update depth chart data
+                this._depthChart();
+            }
+
         }
     }
 
@@ -302,7 +339,7 @@ class MarketsStore {
         // Real data
         // console.log("priceData:", this.priceHistory);
         let open, high, low, close, volume;
-        
+
         for (var i = 0; i < this.priceHistory.length; i++) {
             let date = new Date(this.priceHistory[i].key.open).getTime();
             if (this.quoteAsset.get("id") === this.priceHistory[i].key.quote) {
@@ -395,10 +432,10 @@ class MarketsStore {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= settlementPrice / squeezeRatio; 
+                    return a_price.full >= settlementPrice / squeezeRatio;
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset).price;
-                    return a_price.full <= settlementPrice * squeezeRatio; 
+                    return a_price.full <= settlementPrice * squeezeRatio;
                 }
 
             }).sort((a, b) => {
@@ -543,7 +580,7 @@ class MarketsStore {
                 }
             })
 
-            // Make sure the array is sorted properly            
+            // Make sure the array is sorted properly
             calls.sort((a, b) => {
                 return a[0] - b[0];
             });
@@ -551,7 +588,7 @@ class MarketsStore {
             // Flatten the array to get the step plot look
             if (this.invertedCalls) {
                 flat_calls = market_utils.flatten_orderbookchart_highcharts(calls, true, false, 1000);
-                if (flat_asks && (flat_calls[flat_calls.length - 1][0] < flat_asks[flat_asks.length - 1][0])) {
+                if (flat_asks.length && (flat_calls[flat_calls.length - 1][0] < flat_asks[flat_asks.length - 1][0])) {
                     flat_calls.push([flat_asks[flat_asks.length - 1][0], flat_calls[flat_calls.length - 1][1]]);
                 }
             } else {
