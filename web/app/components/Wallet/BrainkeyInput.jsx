@@ -51,8 +51,8 @@ export default class BrainkeyInput extends Component {
                         value={this.state.brnkey} id="brnkey"
                         style={{width: '400px', height:'80px'}} />
                     <div className="grid-block">{ checked_words }</div>
-                    <br/>
                     { this.state.check_digits && ! this.props.hideCheckDigits ? <div>
+                        <br/>
                         <pre className="no-overflow">{this.state.check_digits} * Check Digits</pre>
                         <br/>
                     </div>:null}
