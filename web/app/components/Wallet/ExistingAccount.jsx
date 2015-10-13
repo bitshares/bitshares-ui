@@ -52,6 +52,9 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                     <div className="button success"><Translate content="wallet.import_backup" /></div></Link>
 
                     <Link to="welcome-import-keys">
+                    <div className="button success"><Translate content="wallet.import_bts1" /></div></Link>
+
+                    <Link to="welcome-import-keys">
                     <div className="button success"><Translate content="wallet.create_wallet" /></div></Link>
 
                     <hr/>

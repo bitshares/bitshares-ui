@@ -490,6 +490,7 @@
         change_wallet: "Change Wallet",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
+        import_bts1: "Import from BitShares 0.9.3c",
         setup_wallet: "Setup your wallet",
         delete_wallet: "Delete Wallet",
         delete_confirm_line1: "Are you ABSOLUTELY sure?",
