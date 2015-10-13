@@ -97,10 +97,13 @@ class CreateNewWallet extends Component {
                     <br/>
                 </div>:null}
                 <div className="grid-content no-overflow">
-                    { this.state.custom_brainkey ? <span>
-                    <label><Translate content="wallet.brainkey" /></label>
-                    <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
-                    </span>:null}
+                    { this.state.custom_brainkey ? <div>
+                        <label><Translate content="wallet.brainkey" /></label>
+                        <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
+                        This BrainKey is not compatable with BTS 1.0
+                        <br/>(Use a backup file instead)
+                        <br/>&nbsp;
+                    </div>:null}
                     <button className={cname("button",{disabled: !(this.state.isValid)})}>
                         <Translate content="wallet.create_wallet" /></button>
                     <button className="button secondary" onClick={this.onBack.bind(this)}>
