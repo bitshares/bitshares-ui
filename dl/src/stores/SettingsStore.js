@@ -41,7 +41,7 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws",
-                "ws://127.0.0.1:8091"
+                "ws://127.0.0.1:8090"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
