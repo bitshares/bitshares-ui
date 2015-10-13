@@ -104,6 +104,11 @@ class AccountStore extends BaseStore {
         @return string "none", "full", "partial"
     */
     getMyAuthorityForAccount(account) {
+        return "full" // pending support for Addresses and Accounts
+    }
+    
+    // Balance claims will still use this as a security precaution
+    getMyAuthorityForAccount_pubkeyonly(account) {
         if (! account) return undefined
         // @return 3 full, 2 partial, 0 none
         function pubkeyThreshold(authority) {
