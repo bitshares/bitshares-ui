@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import FormattedAsset from "./FormattedAsset";
 
 @BindToChainState()
 class AssetOption extends React.Component {
@@ -40,11 +41,18 @@ class AssetSelector extends React.Component {
         var options = this.props.assets.map(function (value) {
             return <AssetOption key={value} asset={value} asset_id={value}/>
         });
-        return (
-            <select defaultValue={this.props.value} className="form-control" onChange={this.onChange.bind(this)}>
+
+        if(this.props.assets.length == 1) {
+           return ( <FormattedAsset asset={this.props.assets[0]} amount={0} hide_amount={true}/> )
+
+        } else {
+            return (
+                <select defaultValue={this.props.value} className="form-control" onChange={this.onChange.bind(this)}>
                 {options}
-            </select>
-        );
+                </select>
+                );
+        }
+
     }
 
 }

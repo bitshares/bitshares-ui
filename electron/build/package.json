@@ -1,6 +1,6 @@
 {
-  "name": "BitShares",
-  "productName": "BitShares2",
+  "name": "BitShares-light",
+  "productName": "BitShares2-light",
   "identifier": "org.bitshares.graphene",
   "description": "BitShares - cryptocurrency and decentralized exchange",
   "version": "2.0.0",

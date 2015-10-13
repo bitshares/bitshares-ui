@@ -121,14 +121,14 @@ class MarketSelector extends React.Component {
 
         for (let term in this.state.searchTerms) {
             if (term === type) {
-                newState.searchTerms[term] = e.target.value;
+                newState.searchTerms[term] = e.target.value.toUpperCase();
             } else {
                 newState.searchTerms[term] = this.state.searchTerms[term];
             }
         }
 
         this.setState(newState);
-        this._assetLookup(e.target.value, type);
+        this._assetLookup(e.target.value.toUpperCase(), type);
     }
 
     _onChangeBase(base) {
@@ -153,6 +153,9 @@ class MarketSelector extends React.Component {
         if (baseSearch) {
             results = lookupResults
             .filter(result => {
+                if (!searchTerms.baseSearch || searchTerms.baseSearch === "") {
+                    return false;
+                }
                 if (result) {
                     return result.get("symbol").indexOf(searchTerms.baseSearch) !== -1;
                 }
@@ -173,6 +176,9 @@ class MarketSelector extends React.Component {
 
             results = lookupResults
             .filter(result => {
+                if (!searchTerms.quoteSearch || searchTerms.quoteSearch === "") {
+                    return false;
+                }
                 if (result) {
                     return result.get("symbol").indexOf(searchTerms.quoteSearch) !== -1;
                 }
