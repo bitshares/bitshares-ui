@@ -219,7 +219,7 @@ class DepthHighChart extends React.Component {
             <div className="grid-content">
                 <p className="bid-total">{utils.format_number(totalBids, 2)} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, 2)} {quoteSymbol}</p>
-                {flat_bids && flat_asks && flat_calls ? <Highcharts config={config}/> : null}
+                {flat_bids || flat_asks || flat_calls ? <Highcharts config={config}/> : null}
             </div>
         );
     }

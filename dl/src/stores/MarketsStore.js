@@ -105,9 +105,11 @@ class MarketsStore {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             this.bids = [];
             this.asks = [];
+            this.calls = [];
             this.pendingCreateLimitOrders = [];
             this.flat_bids = [];
             this.flat_asks = [];
+            this.flat_calls = [];
             this.priceHistory =[];
         }
 
@@ -441,10 +443,10 @@ class MarketsStore {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= settlementPrice / squeezeRatio;
+                    return a_price.full >= settlementPrice; // / squeezeRatio; TODO figure out how this works
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset).price;
-                    return a_price.full <= settlementPrice * squeezeRatio;
+                    return a_price.full <= settlementPrice; // * squeezeRatio; TODO figure out how this works
                 }
 
             }).sort((a, b) => {
@@ -541,6 +543,7 @@ class MarketsStore {
 
         let bids = [], asks = [], calls= [], totalBids = 0, totalCalls = 0;
         let flat_bids = [], flat_asks = [], flat_calls = [];
+
         if (this.activeMarketLimits.size) {
 
             this.bids.map(order => {
@@ -563,6 +566,7 @@ class MarketsStore {
 
             // Flatten the arrays to get the step plot look
             flat_bids = market_utils.flatten_orderbookchart_highcharts(bids, true, true, 1000);
+
             if (flat_bids.length > 0) {
                 flat_bids.unshift([0, flat_bids[0][1]]);
             }
@@ -571,11 +575,6 @@ class MarketsStore {
             if (flat_asks.length > 0) {
                 flat_asks.push([flat_asks[flat_asks.length - 1][0] * 1.5, flat_asks[flat_asks.length - 1][1]]);
             }
-
-            // Assign to store variables
-            this.flat_asks = flat_asks;
-            this.flat_bids = flat_bids;
-            this.totalBids = totalBids;
         }
 
         if (this.calls.length) {
@@ -610,12 +609,15 @@ class MarketsStore {
                     flat_calls.unshift([0, flat_calls[0][1]]);
                 }
             }
-
-            // Assign to store variables
-            this.totalCalls = totalCalls;
-            this.flat_calls = flat_calls;
-
         }
+
+        // Assign to store variables
+        this.flat_asks = flat_asks;
+        this.flat_bids = flat_bids;
+        this.totalBids = totalBids;
+        this.totalCalls = totalCalls;
+        this.flat_calls = flat_calls;
+
     }
 }
 
