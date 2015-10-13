@@ -409,7 +409,7 @@
         wallets: "Billeteras"
     },
     footer: {
-        title: "Graphene",
+        title: "OpenLedger",
         block: "Bloque de cabecera",
         loading: "Cargando..."
     },

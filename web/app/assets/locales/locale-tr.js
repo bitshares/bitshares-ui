@@ -409,7 +409,7 @@
         wallets: "Cüzdanlar"
     },
     footer: {
-        title: "Graphene",
+        title: "OpenLedger",
         block: "Baş blok",
         loading: "Yüklüyor..."
     },

@@ -9,7 +9,7 @@ module.exports = {
         tr: "Turkish"
     },
     header: {
-        title: "Graphene UI",
+        title: "OpenLedger",
         account: "Konto",
         dashboard: "Übersicht",
         explorer: "Explorer",

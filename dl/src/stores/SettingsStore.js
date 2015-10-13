@@ -2,8 +2,8 @@ var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
-const STORAGE_KEY = "__graphene__";
-const CORE_ASSET = "CORE";
+const STORAGE_KEY = "__openlegder__";
+const CORE_ASSET = "BTS";
 
 var ls = typeof localStorage === "undefined" ? null : localStorage;
 
@@ -13,7 +13,7 @@ class SettingsStore {
 
         this.settings = Immutable.Map({
             locale: "en",
-            connection: "wss://graphene.bitshares.org:443/ws"
+            connection: "wss://bitshares.openledger.info/ws"
         });
 
         this.defaultMarkets = Immutable.Map([
@@ -40,8 +40,7 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
-                "wss://graphene.bitshares.org:443/ws",
-                "ws://localhost:8090"
+                "wss://bitshares.openledger.info/ws"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},

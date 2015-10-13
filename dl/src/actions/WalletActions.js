@@ -86,7 +86,7 @@ class WalletActions {
             } catch(e) {}
             let port = (hostname === "localhost" || hostname.indexOf("192.168.") === 0) ? ":3000" : "";
             */
-            let create_account_promise = fetch("https://graphene.bitshares.org/api/v1/accounts", {
+            let create_account_promise = fetch("https://bitshares.openledger.info/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',
                 headers: {
