@@ -460,12 +460,33 @@ class MarketsStore {
                 }
                 return a_price.full - b_price.full;
             }).map(order => {
-                // let isAskOrder = market_utils.isAsk(order, this.baseAsset);
                 let priceData;
+                let feed_price_order;
                 if (this.invertedCalls) {
-                    priceData = market_utils.parseOrder(order, this.quoteAsset, this.baseAsset, true);
+                    let newQuote = this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS();
+                    newQuote.amount /= squeezeRatio;
+
+                    feed_price_order = {
+                        call_price: {
+                            base: this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS(),
+                            quote: newQuote
+                        },
+                        debt: order.debt,
+                        collateral: order.collateral
+                    }
+                    priceData = market_utils.parseOrder(feed_price_order, this.quoteAsset, this.baseAsset, true);
                 } else {
-                    priceData = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
+                    let newQuote = this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS();
+                    newQuote.amount *= squeezeRatio;
+                    feed_price_order = {
+                        call_price: {
+                            base: this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS(),
+                            quote: newQuote
+                        },
+                        debt: order.debt,
+                        collateral: order.collateral
+                    }
+                    priceData = market_utils.parseOrder(feed_price_order, this.baseAsset, this.quoteAsset);
                 }
 
                 let {value, price, amount} = priceData;
