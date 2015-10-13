@@ -443,10 +443,10 @@ class MarketsStore {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= settlementPrice; // / squeezeRatio; TODO figure out how this works
+                    return a_price.full >= settlementPrice / squeezeRatio; // TODO verify this
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset).price;
-                    return a_price.full <= settlementPrice; // * squeezeRatio; TODO figure out how this works
+                    return a_price.full <= settlementPrice * squeezeRatio; // TODO verify this
                 }
 
             }).sort((a, b) => {
