@@ -1,11 +1,9 @@
-// look for more icons here https://linearicons.com/free or here http://hawcons.com/preview/
-
 import React from "react";
 
 let icons = ["user", "trash", "chevron-down", "menu", "database", "search",
     "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo",
     "accounts", "witnesses", "assets", "proposals", "blocks", "committee_members", "workers", "key",
-    "checkmark-circle", "checkmark", "piggy", "locked", "unlocked"];
+    "checkmark-circle", "checkmark", "locked", "unlocked"];
 
 let icons_map = {};
 for (let i of icons) icons_map[i] = require(`./${i}.svg`);

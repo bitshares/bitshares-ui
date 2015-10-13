@@ -1,62 +1,58 @@
 .Box {
   margin: 10px;
   padding: 0;
-
-  background-color: #333;
-
-  border: 2px;
-  border-color: #888;
-  border-style: inset;
-  /* border-radius: 12px; */
+  background-color: #2C2E37;
 }
 
 .BoxBody {
-  color: #50D2C2; /* blue */
-
+  color: #FFF;
   margin: 0;
   padding: 10px;
 }
 
 
+.asset {
+  margin: 30px 24px 24px 24px;
+
+}
+
+.asset-label {
+  margin:2px;
+}
+
 .BoxHeader {
-  text-align: center;
-  background-color: #383838;
+  text-align: left;
+  background-color: #353742;
+  padding: 3px 12px;
+  font-size: 16px;
+  font-weight: 400;
 }
-.BoxHeader h4 {
-  color: #FCAB53; /* orange */
-  font-weight: bold;
-}
+
+
+
+
 .BoxFooter {
-  text-align: center;
   background-color: #383838;
-}
-.BoxFooter h4 {
-  color: #FCAB53; /* orange */
-  font-weight: bold;
 }
 
 
 .BoxBody .icon svg path {
-  fill: #50D2C2; /* blue */
+  fill: #4A90E2; /* blue */
 }
-
 
 .accordion {
   border: none;
 }
 .accordion-title {
-  text-align: center;
+  text-align: left;
   /*font-family: 'Roboto-Light', arial, sans-serif;
   font-weight: bold;
   */
   color: #AEABFF; /* purple */
-  font-size: 23px;
-  background-color: #333;
+  font-size: 18px;
+
 }
 .is-active > .accordion-title {
-  color: #FCAB53; /* orange */
-  background-color: #383838;
-}
-.accordion-title:hover {
-  background-color: #383838;
+  color: #FFF; /*  */
+  background-color: #353742;
 }

@@ -81,7 +81,7 @@ class AssetFlag extends React.Component {
 
         return (
             <span>
-                <span className="label success">
+                <span className="label success asset-label">
                     {permissionName(this.props.bit)}
                 </span>
                 {' '}
@@ -101,7 +101,7 @@ class AssetPermission extends React.Component {
 
         return (
             <span>
-                <span className="label info">
+                <span className="label info asset-label">
                     {permissionName(this.props.bit)}
                 </span>
                 {' '}
@@ -256,8 +256,9 @@ class Asset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer);
         var issuerName = issuer ? issuer.get('name') : '';
 
-        var icon = (<Icon name="piggy" className="pig" size="4x"/>);
+        var icon = (<Icon name="assets" className="asset" size="3x"/>);
         var help = (
+
             <HelpContent
                 path = {"assets/" + asset.symbol}
                 alt_path = "assets/Asset"
@@ -271,13 +272,12 @@ class Asset extends React.Component {
         return (
             <Box>
                 <div className="grid-block" style={{overflow:"visible"}}>
-                    <div className="grid-block small-1" style={{overflow:"visible"}}>
-                        <br/>
-                        <br/>
-                        {icon}
-                    </div>
+
                     <div className="grid-block small-11" style={{overflow:"visible"}}>
-                        {help}
+                        <span style={{marginLeft:"24px"}}>{help}</span>
+                    </div>
+                    <div className="grid-block small-1" style={{overflow:"visible"}}>
+                        {icon}
                     </div>
                 </div>
             </Box>
