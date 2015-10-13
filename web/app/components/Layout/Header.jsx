@@ -45,7 +45,7 @@ class Header extends React.Component {
     }
 
     render() {
-        if(!this.props.current_wallet) return null;
+      //  if(!this.props.current_wallet) return null;
         let linkedAccounts = this.props.linkedAccounts;
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
