@@ -264,7 +264,12 @@ class MarketsStore {
     onCancelLimitOrderSuccess(orderID) {
         if (orderID && this.activeMarketLimits.has(orderID)) {
             this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
-
+            if (this.activeMarketLimits.size === 0) {
+                this.bids = [];
+                this.flat_bids = [];
+                this.asks = [];
+                this.flat_asks = [];
+            }
             // Update orderbook
             this._orderBook();
 
@@ -276,7 +281,10 @@ class MarketsStore {
     onCloseCallOrderSuccess(orderID) {
         if (orderID && this.activeMarketCalls.has(orderID)) {
             this.activeMarketCalls = this.activeMarketCalls.delete(orderID);
-
+            if (this.activeMarketCalls.size === 0) {
+                this.calls = [];
+                this.flat_calls = [];
+            }
             // Update orderbook
             this._orderBook();
 
@@ -286,7 +294,6 @@ class MarketsStore {
     }
 
     onCallOrderUpdate(call_order) {
-
         if (call_order) {
             if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
                 if (typeof call_order.collateral !== "number") {
@@ -393,11 +400,13 @@ class MarketsStore {
             });
 
             // Sum bids at same price
-            for (let i = bids.length - 2; i >= 0; i--) {
-                if (bids[i].price_full === bids[i + 1].price_full) {
-                    bids[i].amount += bids[i + 1].amount;
-                    bids[i].value += bids[i + 1].value;
-                    bids.splice(i + 1, 1);
+            if (bids.length > 1) {
+                for (let i = bids.length - 2; i >= 0; i--) {
+                    if (bids[i].price_full === bids[i + 1].price_full) {
+                        bids[i].amount += bids[i + 1].amount;
+                        bids[i].value += bids[i + 1].value;
+                        bids.splice(i + 1, 1);
+                    }
                 }
             }
 
@@ -469,11 +478,13 @@ class MarketsStore {
             });
 
             // Sum calls at same price
-            for (let i = calls.length - 2; i >= 0; i--) {
-                if (calls[i].price_full === calls[i + 1].price_full) {
-                    calls[i].amount += calls[i + 1].amount;
-                    calls[i].value += calls[i + 1].value;
-                    calls.splice(i + 1, 1);
+            if (calls.length > 1) {
+                for (let i = calls.length - 2; i >= 0; i--) {
+                    if (calls[i].price_full === calls[i + 1].price_full) {
+                        calls[i].amount += calls[i + 1].amount;
+                        calls[i].value += calls[i + 1].value;
+                        calls.splice(i + 1, 1);
+                    }
                 }
             }
 
@@ -504,11 +515,13 @@ class MarketsStore {
             });
 
             // Sum asks at same price
-            for (let i = asks.length - 2; i >= 0; i--) {
-                if (asks[i].price_full === asks[i + 1].price_full) {
-                    asks[i].amount += asks[i + 1].amount;
-                    asks[i].value += asks[i + 1].value;
-                    asks.splice(i + 1, 1);
+            if (asks.length > 1) {
+                for (let i = asks.length - 2; i >= 0; i--) {
+                    if (asks[i].price_full === asks[i + 1].price_full) {
+                        asks[i].amount += asks[i + 1].amount;
+                        asks[i].value += asks[i + 1].value;
+                        asks.splice(i + 1, 1);
+                    }
                 }
             }
 

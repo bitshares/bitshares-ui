@@ -159,7 +159,6 @@ class ChainStore
                 if (!old_obj) {
                   return;
                 }
-                console.log("delete call order:", old_obj.get("id"));
                 emitter.emit('close-call', old_obj.get("id"));
                 let account = this.objects_by_id.get(old_obj.get("borrower"));
                 if (account && account.has("call_orders")) {
