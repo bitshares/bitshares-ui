@@ -13,7 +13,7 @@ class SettingsStore {
 
         this.settings = Immutable.Map({
             locale: "en",
-            connection: "wss://graphene.bitshares.org:443/ws"
+            connection: "wss://bitshares.openledger.info/ws"
         });
 
         this.defaultMarkets = Immutable.Map([
@@ -40,8 +40,8 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
-                "wss://graphene.bitshares.org:443/ws",
-                "ws://localhost:8090"
+                "wss://bitshares.openledger.info/ws",
+                "ws://127.0.0.1:8090"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
