@@ -302,7 +302,6 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_create":
-                    console.log("op:", op);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.name" /></td>
