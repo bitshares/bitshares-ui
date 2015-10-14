@@ -1,0 +1,14 @@
+.active-witness {
+    > td {
+        background-color: rgba(80, 210, 194, 0.74902);
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.view-switcher {
+    padding-top: 1rem;
+    text-align: right;
+}

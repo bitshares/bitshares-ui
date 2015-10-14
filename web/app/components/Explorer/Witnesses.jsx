@@ -8,7 +8,11 @@ import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
 import TimeAgo from "../Utility/TimeAgo";
+import connectToStores from "alt/utils/connectToStores";
+import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
 
+require("./witnesses.scss");
 
 @BindToChainState({keep_updating: true})
 class WitnessCard extends React.Component {
@@ -44,7 +48,7 @@ class WitnessCard extends React.Component {
         return (
             <div className="grid-content account-card" onClick={this._onCardClick.bind(this)}>
                 <div className="card" style={color}>
-                    <h4 className="text-center">{this.props.witness.get('name')}</h4>
+                    <h4 className="text-center">#{this.props.rank}: {this.props.witness.get('name')}</h4>
                     <div className="card-content">
                         <div className="text-center">
                             <AccountImage account={this.props.witness.get('name')} size={{height: 64, width: 64}}/>
@@ -72,25 +76,95 @@ class WitnessCard extends React.Component {
 }
 
 @BindToChainState({keep_updating: true})
+class WitnessRow extends React.Component {
+
+    static propTypes = {
+        witness: ChainTypes.ChainAccount.isRequired
+    }
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
+
+    _onCardClick(e) {
+        e.preventDefault();
+        this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
+    }
+
+    render() {
+        let {witness, isCurrent, rank} = this.props;
+        let witness_data = ChainStore.getWitnessById( this.props.witness.get('id') );
+        if ( !witness_data ) return null;
+        let total_votes = witness_data.get( "total_votes" );
+
+        let witness_aslot = witness_data.get('last_aslot')
+        let color = {};
+        if( this.props.most_recent - witness_aslot > 100 ) {
+           color = {borderLeft: "1px solid #FCAB53"};
+        }
+        else {
+           color = {borderLeft: "1px solid #50D2C2"};
+        }
+        let last_aslot_time = new Date(Date.now() - ((this.props.most_recent - witness_aslot ) * ChainStore.getObject( "2.0.0" ).getIn( ["parameters","block_interval"] )*1000));
+
+        let currentClass = isCurrent ? "active-witness" : "";
+        return (
+            <tr className={currentClass} >
+                <td>{rank}</td>
+                <td style={color}>{witness.get("name")}</td>
+                <td><TimeAgo time={last_aslot_time} /></td>
+                <td>{witness_data.get('last_confirmed_block_num')}</td>
+                <td>{witness_data.get('total_missed')}</td>
+                <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" /></td>
+            </tr>
+        )
+    }
+}
+
+@BindToChainState({keep_updating: true})
 class WitnessList extends React.Component {
 
     static propTypes = {
         witnesses: ChainTypes.ChainObjectsList.isRequired
     }
 
+    constructor () {
+        super();
+        this.state = {
+          sortBy: 'rank',
+          inverseSort: true
+        };
+    }
+
+    _setSort(field) {
+        this.setState({
+          sortBy: field,
+          inverseSort: field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort
+        });
+      }
+
     render() {
 
-        let {witnesses} = this.props;
+        let {witnesses, current, cardView} = this.props;
+        let {sortBy, inverseSort} = this.state;
         let most_recent_aslot = 0;
-        witnesses.forEach( w => {
+        let ranks = {};
+        witnesses
+        .sort((a, b) => {
+            if (a && b) {
+                return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
+            }
+        })
+        .forEach( (w, index) => {
             if (w) {
                 let s = w.get("last_aslot");
                 if( most_recent_aslot < s ) {
                     most_recent_aslot = s;
                 }
+
+                ranks[w.get("id")] = index + 1;
             }
         });
-
 
         let itemRows = null;
         if (witnesses.length > 0 && witnesses[1]) {
@@ -110,33 +184,79 @@ class WitnessList extends React.Component {
                     if (!a_account || !b_account) {
                         return 0;
                     }
+                    // console.log("a:", a.toJS());
 
-                    if (a_account.get("name") > b_account.get("name")) {
-                        return 1;
-                    } else if (a_account.get("name") < b_account.get("name")) {
-                        return -1;
-                    } else {
-                        return 0;
+                    switch (sortBy) {
+                        case 'name':
+                            if (a_account.get("name") > b_account.get("name")) {
+                                return inverseSort ? 1 : -1;
+                            } else if (a_account.get("name") < b_account.get("name")) {
+                                return inverseSort ? -1 : 1;
+                            } else {
+                                return 0;
+                            }
+                            break;
+
+                        case "rank":
+                            return !inverseSort ? ranks[b.get("id")] - ranks[a.get("id")] : ranks[a.get("id")] - ranks[b.get("id")];
+                            break;
+
+                        default:
+                            return !inverseSort ? parseInt(b.get(sortBy), 10) - parseInt(a.get(sortBy), 10) : parseInt(a.get(sortBy), 10) - parseInt(b.get(sortBy), 10);
                     }
+
+
                 })
                 .map((a) => {
-                    return (
-                        <WitnessCard key={a.id} witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
-                    );
+
+                    if (!cardView) {
+                        return (
+                            <WitnessRow key={a.get("id")} rank={ranks[a.get("id")]} isCurrent={current === a.get("id")}  witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
+                        );
+                    } else {
+                        return (
+                            <WitnessCard key={a.get("id")} rank={ranks[a.get("id")]} witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
+                        );    
+                    }
+
+                    
                 });
         }
 
-        return (
-            <div className="grid-block small-up-1 medium-up-2 large-up-3">
-                {itemRows}
-            </div>
-        );
+        // table view
+        if (!cardView) {
+            return (
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'rank')}>Rank</th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'name')}>Name</th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'last_aslot')}>Last block</th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'last_confirmed_block_num')}>Last confirmed</th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'total_missed')}>Missed</th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}>Votes</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    {itemRows}
+                </tbody>
+
+            </table>
+            )
+        }
+        else {
+            return (
+                <div className="grid-block small-up-1 medium-up-2 large-up-3">
+                    {itemRows}
+                </div>
+            );
+        }
     }
 }
 
-
 @BindToChainState({keep_updating: true})
 class Witnesses extends React.Component {
+
 
     static propTypes = {
         globalObject: ChainTypes.ChainObject.isRequired,
@@ -150,14 +270,28 @@ class Witnesses extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            filterWitness: ""
+            filterWitness: "",
+            cardView: props.cardView
         };
     }
 
     _onFilter(e) {
         e.preventDefault();
         this.setState({filterWitness: e.target.value});
+    }
+
+    _toggleView() {
+        SettingsActions.changeViewSetting({
+            cardView: !this.state.cardView
+        });
+
+        this.setState({
+            cardView: !this.state.cardView
+        });
+
+
     }
 
     render() {
@@ -179,27 +313,27 @@ class Witnesses extends React.Component {
                             <br/>
                             <table className="table key-value-table">
                                 <tr>
-                                    <td>Current witness</td>
+                                    <td><Translate content="explorer.witnesses.current"/></td>
                                     <td>{currentAccount ? currentAccount.get("name") : null}</td>
                                 </tr>
                                 <tr>
-                                    <td>Active witnesses</td>
+                                    <td><Translate content="explorer.witnesses.active"/></td>
                                     <td>{Object.keys(globalObject.active_witnesses).length}</td>
                                 </tr>
                                 <tr>
-                                    <td>Participation Rate</td>
+                                    <td><Translate content="explorer.witnesses.participation"/></td>
                                     <td>{dynGlobalObject.participation}%</td>
                                 </tr>
                                 <tr>
-                                    <td>Pay-per-Block</td>
+                                    <td><Translate content="explorer.witnesses.pay"/></td>
                                     <td><FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></td>
                                 </tr>
                                 <tr>
-                                    <td>Remaining Budget</td>
+                                    <td><Translate content="explorer.witnesses.budget"/></td>
                                     <td> <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></td>
                                 </tr>
                                 <tr>
-                                    <td>Next Vote Update</td>
+                                    <td><Translate content="explorer.witnesses.next_vote"/></td>
                                     <td> <TimeAgo time={dynGlobalObject.next_maintenance_time} /></td>
                                 </tr>
                                 <tr>
@@ -207,14 +341,19 @@ class Witnesses extends React.Component {
                                    <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
                                 </tr>
                             </table>
+                            <div className="view-switcher">
+                                <span className="button outline" onClick={this._toggleView.bind(this)}>{!this.state.cardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="grid-block">
                             <div className="grid-content ">
                                 <WitnessList
                                     current_aslot={dynGlobalObject.current_aslot}
+                                    current={current ? current.get("id") : null}
                                     witnesses={Immutable.List(globalObject.active_witnesses)}
                                     filter={this.state.filterWitness}
+                                    cardView={this.state.cardView}
                                 />
                             </div>
                     </div>
@@ -224,4 +363,19 @@ class Witnesses extends React.Component {
     }
 }
 
-export default Witnesses;
+@connectToStores
+class WitnessStoreWrapper extends React.Component {
+    static getStores() {
+        return [SettingsStore]
+    }
+
+    static getPropsFromStores() {
+        return {cardView: SettingsStore.getState().viewSettings.get("cardView")}
+    }
+
+    render () {
+        return <Witnesses cardView={this.props.cardView}/>
+    }
+}
+
+export default WitnessStoreWrapper;
