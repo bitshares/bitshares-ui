@@ -236,7 +236,6 @@ function getMyAuthorityForAccount(account, recursion_count = 1) {
     return threshold
 }
 
-/** @return sum available threshold  >= 0 */
 function accountThreshold(authority, recursion_count) {
     var account_auths = authority.get("account_auths")
     if( ! account_auths.size ) return 0
@@ -256,7 +255,6 @@ function accountThreshold(authority, recursion_count) {
     return available
 }
 
-/** @return 1 full, .n partial, 0 none */
 function pubkeyThreshold(authority) {
     var available = 0
     var key_auths = authority.get("key_auths")
@@ -268,7 +266,6 @@ function pubkeyThreshold(authority) {
     return available
 }
 
-/** @return 1 full, .n partial, 0 none */
 function addressThreshold(authority) {
     var available = 0
     var address_auths = authority.get("address_auths")
