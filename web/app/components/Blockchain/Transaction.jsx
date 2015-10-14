@@ -607,7 +607,6 @@ class Transaction extends React.Component {
                 case "asset_publish_feed":
                     color = "warning";                    
                     let {feed} = op[1];
-                    console.log("op:", op, feed);
 
                     rows.push(
                         <tr>
