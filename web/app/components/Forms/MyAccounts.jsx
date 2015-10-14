@@ -15,7 +15,7 @@ export default class MyAccounts extends Component {
     render() {
         var account_names = this.props.accounts
             .filter( account => !!account )
-            .filter( account => AccountStore.getMyAuthorityForAccount(account) === "full" )
+            .filter( account => AccountStore.getMyAuthorityForAccount_pubkeyonly(account) === "full" )
             .map( account => account.get("name") ).sort()
         
         return <span>
