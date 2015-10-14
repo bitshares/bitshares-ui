@@ -409,7 +409,15 @@
             }
         },
         witnesses: {
-            title: "Witnesses"
+            title: "Witnesses",
+            current: "Current witness",
+            active: "Active witnesses",
+            participation: "Participation rate",
+            pay: "Pay-per-block",
+            budget: "Remaining budget",
+            next_vote: "Next vote update",
+            card: "Card view",
+            table: "Table view"
         },
         committee_members: {
             title: "Committee members",
