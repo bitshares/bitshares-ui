@@ -11,7 +11,7 @@ module.exports =
     is_account_name: (value)->
         return no if is_empty value
         length = value.length
-        return no if length < 3 or length > 63
+        return no if length < 2 or length > 63
         for label in value.split('.')
             if !(
                 # Starts with a letter, has only letters, digits, and dashes
