@@ -20,7 +20,7 @@ var init = function () {
     tmpDir = projectDir.dir('./tmp', { empty: true });
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('build/package.json', 'json');
-    packName = manifest.name + '_' + manifest.version;
+    packName = manifest.name.toLowerCase() + '_' + manifest.version;
     packDir = tmpDir.dir(packName);
     readyAppDir = packDir.cwd('opt', manifest.name);
 

@@ -86,7 +86,7 @@ class AccountNameInput extends BaseComponent {
         this.state.warning = null
         if(this.props.cheapNameOnly) {
             if( ! this.state.error && ! validation.is_cheap_name( value ))
-                this.state.error = "This faucet accepts names with at least one dash number or dot, or no vowles."
+                this.state.error = "This faucet accepts names with at least one dash number or dot, or no vowels."
         } else {
             if( ! this.state.error && ! validation.is_cheap_name( value ))
                 this.state.warning = "This is a premium name.  Cheap names have at least one dash number or dot, or no vowles."
