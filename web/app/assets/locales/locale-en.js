@@ -361,6 +361,7 @@
             precision: "Precision"
         },
         asset: {
+            title: "Asset",
             not_found: "The asset %(name)s does not exist",
             summary: {
                 asset_type: "Asset type",
