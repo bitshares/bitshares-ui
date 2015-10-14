@@ -1,6 +1,7 @@
 .active-witness {
     > td {
-        background-color: rgba(80, 210, 194, 0.74902);
+        background-color: rgba(80, 210, 194, 0.4);
+        transition: background-color 0.6s ease;
     }
 }
 
