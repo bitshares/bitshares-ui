@@ -982,6 +982,14 @@ class ChainStore
       }
       else if( object.id.substring(0,account_prefix.length) == account_prefix )
       {
+         current = current.set( 'active', Immutable.fromJS( object.active ) );
+         current = current.set( 'owner', Immutable.fromJS( object.owner ) );
+         current = current.set( 'options', Immutable.fromJS( object.options ) );
+         current = current.set( 'whitelisting_accounts', Immutable.fromJS( object.whitelisting_accounts ) );
+         current = current.set( 'blacklisting_accounts', Immutable.fromJS( object.whitelisting_accounts ) );
+         current = current.set( 'whitelisted_accounts', Immutable.fromJS( object.whitelisted_accounts ) );
+         current = current.set( 'blacklisted_accounts', Immutable.fromJS( object.blacklisted_accounts ) );
+         this.objects_by_id = this.objects_by_id.set( object.id, current );
          this.accounts_by_name = this.accounts_by_name.set( object.name, object.id )
       }
       else if( object.id.substring(0,asset_prefix.length) == asset_prefix )

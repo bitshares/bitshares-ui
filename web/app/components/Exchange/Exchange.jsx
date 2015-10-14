@@ -505,7 +505,7 @@ class Exchange extends React.Component {
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
                             <div className="grid-block overflow-visible">
                                 <div className="grid-block shrink">
-                                    <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${baseSymbol} / ${quoteSymbol}`}</span></Link>
+                                    <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
                                 <div className="grid-block">
                                     <ul className="market-stats stats">
