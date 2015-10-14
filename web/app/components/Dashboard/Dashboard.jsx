@@ -30,7 +30,7 @@ class Dashboard extends Component {
                 <div className="grid-block medium-4 right-column">
                     <div className="grid-content">
                         <h4><Translate content="account.recent" /></h4>
-                        <RecentTransactions accountsList={this.props.linkedAccounts} limit={20} compactView={true}/>
+                        <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
                     </div>
                 </div>
             </div>
