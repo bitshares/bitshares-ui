@@ -8,6 +8,7 @@ import PrivateKeyStore from "./PrivateKeyStore"
 import validation from "common/validation"
 import ChainStore from "api/ChainStore"
 import AccountRefsStore from "stores/AccountRefsStore"
+import AddressIndex from "stores/AddressIndex"
 
 /**
  *  This Store holds information about accounts in this wallet
@@ -89,10 +90,15 @@ class AccountStore extends BaseStore {
                 continue
             }
             if(account == null) {
-                console.log("... ChainStore.getAccount("+account_name+") == null")
+                console.log("WARN: non-chain account name in linkedAccounts", account_name)
                 continue
             }
-            if(this.getMyAuthorityForAccount(account) === "full") {
+            var auth = this.getMyAuthorityForAccount(account)
+            if(auth === undefined) {
+                this.state.update = true
+                continue
+            } 
+            if(auth === "full") {
                 accounts.push(account_name)
             }
         }
@@ -101,40 +107,58 @@ class AccountStore extends BaseStore {
     
     /**
         @todo "partial"
-        @return string "none", "full", "partial"
+        @return string "none", "full", "partial" or undefined (pending a chain store lookup)
     */
-    getMyAuthorityForAccount(account) {
-        return "full" // pending support for Addresses and Accounts
-    }
-    
-    // Balance claims will still use this as a security precaution
-    getMyAuthorityForAccount_pubkeyonly(account) {
+    getMyAuthorityForAccount(account, recursion_count = 1) {
         if (! account) return undefined
-        // @return 3 full, 2 partial, 0 none
-        function pubkeyThreshold(authority) {
-            var available = 0
-            var required = authority.get("weight_threshold")
-            for (let k of authority.get("key_auths")) {
-                if (PrivateKeyStore.hasKey(k.get(0))) {
-                    available += k.get(1)
-                }
-                if(available >= required) break
-            }
-            return available >= required ? 3 : available > 0 ? 2 : 0
+        
+        var owner_authority = account.get("owner")
+        var active_authority = account.get("active")
+        
+        var owner_pubkey_threshold = pubkeyThreshold(owner_authority)
+        if(owner_pubkey_threshold == "full") return "full"
+        var active_pubkey_threshold = pubkeyThreshold(active_authority)
+        if(active_pubkey_threshold == "full") return "full"
+        
+        var owner_address_threshold = addressThreshold(owner_authority)
+        if(owner_address_threshold == "full") return "full"
+        var active_address_threshold = addressThreshold(active_authority)
+        if(active_address_threshold == "full") return "full"
+        
+        var owner_account_threshold, active_account_threshold
+        if(recursion_count < 3) {
+            owner_account_threshold = this._accountThreshold(owner_authority, recursion_count)
+            if ( owner_account_threshold === undefined ) return undefined
+            if(owner_account_threshold == "full") return "full"
+            active_account_threshold = this._accountThreshold(active_authority, recursion_count)
+            if ( active_account_threshold === undefined ) return undefined
+            if(active_account_threshold == "full") return "full"
         }
-        var owner = pubkeyThreshold(account.get("owner"))
-        if(owner == 3) return "full"
-        
-        var active = pubkeyThreshold(account.get("active"))
-        if(active == 3) return "full"
-        
-        if(owner == 2 || active == 2) return "partial"
-        
+        if(
+            owner_pubkey_threshold === "partial" || active_pubkey_threshold === "partial" ||
+            owner_address_threshold === "partial" || owner_address_threshold === "partial" ||
+            owner_account_threshold === "parital" || active_account_threshold === "partial"
+        ) return "partial"
         return "none"
+    }
+
+    _accountThreshold(authority, recursion_count) {
+        var account_auths = authority.get("account_auths")
+        if( ! account_auths.size ) return "none"
+        for (let a of account_auths)
+            // get all accounts in the queue for fetching
+            ChainStore.getAccount(a)
+        
+        for (let a of account_auths) {
+            var account = ChainStore.getAccount(a)
+            if(account === undefined) return undefined
+            return this.getMyAuthorityForAccount(account, ++recursion_count)
+        }
     }
 
     isMyAccount(account) {
         let authority = this.getMyAuthorityForAccount(account);
+        if( authority === undefined ) return undefined
         return authority === "partial" || authority === "full";
     }
     
@@ -224,3 +248,35 @@ class AccountStore extends BaseStore {
 }
 
 module.exports = alt.createStore(AccountStore, "AccountStore");
+
+// @return 3 full, 2 partial, 0 none
+function pubkeyThreshold(authority) {
+    var available = 0
+    var required = authority.get("weight_threshold")
+    var key_auths = authority.get("key_auths")
+    for (let k of key_auths) {
+        if (PrivateKeyStore.hasKey(k.get(0))) {
+            available += k.get(1)
+        }
+        if(available >= required) break
+    }
+    return available >= required ? "full" : available > 0 ? "partial" : "none"
+}
+
+// @return 3 full, 2 partial, 0 none
+function addressThreshold(authority) {
+    var available = 0
+    var required = authority.get("weight_threshold")
+    var address_auths = authority.get("address_auths")
+    if( ! address_auths.size) return "none"
+    var addresses = AddressIndex.getState().addresses
+    for (let k of address_auths) {
+        var address = k.get(0)
+        var pubkey = addresses.get(address)
+        if (PrivateKeyStore.hasKey(pubkey)) {
+            available += k.get(1)
+        }
+        if(available >= required) break
+    }
+    return available >= required ? "full" : available > 0 ? "partial" : "none"
+}
