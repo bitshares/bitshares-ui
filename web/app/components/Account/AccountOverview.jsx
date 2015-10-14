@@ -19,7 +19,7 @@ class AccountOverview extends React.Component {
     constructor() {
         super();
         this.state = {
-            limit: 10
+            limit: 1000
         };
     }
 
@@ -34,7 +34,8 @@ class AccountOverview extends React.Component {
         if (!account) {
             return null;
         }
-        let call_orders = account.toJS ? account.get("call_orders").toJS() : [];
+        let call_orders = [];
+        if (account.toJS && account.has("call_orders")) call_orders = account.get("call_orders").toJS();
         let balances = {};
         let account_balances = account.get("balances");
         let balanceList = Immutable.List();
@@ -87,11 +88,12 @@ class AccountOverview extends React.Component {
                 <div className="content-block">
                     <h3><Translate content="account.recent" /></h3>
                     <RecentTransactions accountsList={Immutable.fromJS([account.get("id")])} limit={this.state.limit} compactView={false}/>
+                    {/* valzav: temporary disabled - fetching extended history is not yet supported by ChainStore
                     <div className="account-info more-button">
                         <div className="button" onClick={this._onIncreaseLimit.bind(this)}>
                             <Translate content="account.more" />
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
             </div>
 

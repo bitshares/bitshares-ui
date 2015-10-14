@@ -45,7 +45,7 @@ class Header extends React.Component {
     }
 
     render() {
-        if(!this.props.current_wallet) return null;
+        //if(!this.props.current_wallet) return null;
         let linkedAccounts = this.props.linkedAccounts;
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
@@ -54,6 +54,13 @@ class Header extends React.Component {
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <Link to="dashboard"><Translate component="span" content="header.dashboard" /></Link>;
         else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>;
         else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
+        let lock_unlock = null;
+        if (this.props.current_wallet) lock_unlock = (
+            <div className="grp-menu-item" >
+            { this.props.locked ?
+                <a href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light"><Icon name="locked"/></a>
+                : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light"><Icon name="unlocked"/></a> }
+            </div>);
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -75,11 +82,7 @@ class Header extends React.Component {
                         <div className="grp-menu-item" >
                             <Link to="settings" className="button" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>
-                        <div className="grp-menu-item" >
-                                { this.props.locked ?
-                                    <a href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light"><Icon name="locked"/></a>
-                                    : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light"><Icon name="unlocked"/></a> }
-                        </div>
+                        {lock_unlock}
                         <div className="grp-menu-item" >
                             <Link to="help"><Translate component="span" content="header.help"/></Link>
                         </div>

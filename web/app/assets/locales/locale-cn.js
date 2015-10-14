@@ -9,7 +9,7 @@ module.exports = {
         tr: "Turkish"
     },
     header: {
-        title: "Graphene (石墨烯)钱包",
+        title: "OpenLedger (石墨烯)钱包",
         dashboard: "概览",
         explorer: "浏览",
         exchange: "交易",
@@ -446,7 +446,7 @@ module.exports = {
         older: "更早"
     },
     footer: {
-        title: "Graphene (石墨烯)",
+        title: "OpenLedger (石墨烯)",
         block: "最新区块",
         loading: "载入中..."
     },

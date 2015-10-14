@@ -10,7 +10,7 @@
         
     },
     header: {
-        title: "Graphene UI",
+        title: "OpenLedger",
         account: "Account",
         dashboard: "Dashboard",
         explorer: "Explorer",
@@ -31,7 +31,7 @@
         pending: "pending %(blocks)s blocks"
     },
     account: {
-        welcome: "Welcome to Graphene",
+        welcome: "Welcome to OpenLedger",
         asset: "Asset",
         market_value: "Market Value",
         hour_24: "24hr Change",
@@ -442,7 +442,7 @@
         remove_ws: "Remove websocket API"
     },
     footer: {
-        title: "Graphene",
+        title: "OpenLedger",
         block: "Head block",
         loading: "Loading..."
     },
@@ -490,6 +490,7 @@
         change_wallet: "Change Wallet",
         wallet_created: "Wallet Created",
         create_wallet: "Create Wallet",
+        import_bts1: "Import from BitShares 0.9.3c",
         setup_wallet: "Setup your wallet",
         delete_wallet: "Delete Wallet",
         delete_confirm_line1: "Are you ABSOLUTELY sure?",

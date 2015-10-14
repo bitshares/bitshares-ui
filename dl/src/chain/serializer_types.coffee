@@ -501,7 +501,7 @@ Types.public_key =
         PublicKey.fromPublicKeyString object
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
-            return "GPHXyz...public_key"
+            return "BTSXyz...public_key"
         v.required object
         Types.public_key._to_public(object).toPublicKeyString()
 
@@ -519,5 +519,5 @@ Types.address =
         Types.address._to_address(object)
     toObject:(object, debug = {})->
         if debug.use_default and object is undefined
-            return "GPHXyz...address"
+            return "BTSXyz...address"
         Types.address._to_address(object).toString()

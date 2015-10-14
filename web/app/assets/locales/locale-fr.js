@@ -336,7 +336,7 @@ module.exports = {
         always_confirm: "Toujours demander une confirmation"
     },
     footer: {
-        title: "Graphene",
+        title: "OpenLedger",
         block: "Bloc courant"
     },
     exchange: {
