@@ -6,6 +6,10 @@ class SettingsActions {
         this.dispatch(value);        
     }
 
+    changeViewSetting(value) {
+        this.dispatch(value);
+    }
+
     addMarket(quote, base) {
         this.dispatch({quote, base});
     }
