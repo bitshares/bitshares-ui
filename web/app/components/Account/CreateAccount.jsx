@@ -76,7 +76,8 @@ class CreateAccount extends React.Component {
                 }
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
-                const error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
+                let error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
+                if (error.remote_ip) error_msg = error.remote_ip[0];
                 notify.addNotification({
                     message: `Failed to create account: ${name} - ${error_msg}`,
                     level: "error",

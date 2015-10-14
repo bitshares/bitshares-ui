@@ -125,13 +125,24 @@ class MarketUtils {
         let basePrecision = utils.get_asset_precision(base.toJS ? base.get("precision") : base.precision);
 
         let buy, sell;
+        let callPrice;
         if (order.sell_price) {
             buy = ask ? order.sell_price.base : order.sell_price.quote;
             sell = ask ? order.sell_price.quote : order.sell_price.base;
         } else if (order.call_price) {
-            // console.log("order:", order);
-            buy = ask ? order.call_price.base : order.call_price.quote;
-            sell = ask ? order.call_price.quote : order.call_price.base;
+            // if (order.id === "1.8.986") console.log("order:", order, "quote:", quote.get("symbol"), "base:", base.get("symbol"));
+            buy = order.call_price.base;
+            sell = order.call_price.quote;
+
+            // let BLACK_SWAN2 = (order.debt / quotePrecision) / (order.collateral / basePrecision);
+            let marginPrice = (buy.amount / basePrecision) / (sell.amount / quotePrecision);
+            if (!invert) {
+                // if (order.id === "1.8.986") console.log("!invert: marginPrice:", marginPrice, 1 / (BLACK_SWAN2 * 1.75));
+                callPrice = marginPrice;
+            } else {
+                // if (order.id === "1.8.986") console.log("invert: marginPrice:", 1 / marginPrice, (BLACK_SWAN2 * 1.75));
+                callPrice = 1 / (marginPrice);
+            }
         }
 
         if (typeof sell.amount !== "number") {
@@ -141,12 +152,12 @@ class MarketUtils {
         if (typeof buy.amount !== "number") {
             buy.amount = parseInt(buy.amount, 10);
         }
-        let price = {
+        let price = callPrice ? {full: callPrice} : {
             full: (sell.amount / basePrecision) / (buy.amount / quotePrecision)
         };
-        if (invert) {
-            price.full = 1 / price.full;
-        }
+        // if (invert) {
+        //     price.full = 1 / price.full;
+        // }
         let amount, value;
 
         // We need to figure out a better way to set the number of decimals

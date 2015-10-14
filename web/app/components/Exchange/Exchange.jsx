@@ -22,8 +22,12 @@ import AccountActions from "actions/AccountActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
+import ee from "emitter-instance";
 
 require("./exchange.scss");
+
+let emitter = ee.emitter();
+let callListener, limitListener, newCallListener;
 
 @BindToChainState({keep_updating: true})
 class Exchange extends React.Component {
@@ -40,9 +44,7 @@ class Exchange extends React.Component {
             sellTotal: 0,
             sub: null,
             activeTab: "buy",
-            showBuySell: true,
-            cancelID: null,
-            cancelSuccess: false
+            showBuySell: true
         };
 
         this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
@@ -87,6 +89,9 @@ class Exchange extends React.Component {
 
     componentWillMount() {
         this._subToMarket(this.props);
+        emitter.on('cancel-order', limitListener = MarketsActions.cancelLimitOrderSuccess);
+        emitter.on('close-call', callListener = MarketsActions.closeCallOrderSuccess);
+        emitter.on('call-order-update', newCallListener = MarketsActions.callOrderUpdate);
     }
 
     componentDidMount() {
@@ -95,15 +100,6 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.cancelID) {
-            if (nextProps.transaction.operations[0][1].order == this.state.cancelID.split(".")[2] && nextProps.broadcast) {
-                MarketsActions.cancelLimitOrderSuccess(this.state.cancelID);
-
-                this.setState({
-                    cancelID: null
-                })
-            }
-        }
         
         if (!this.state.sub) {
             return this._subToMarket(nextProps);
@@ -120,6 +116,9 @@ class Exchange extends React.Component {
     componentWillUnmount() {
         let {quoteAsset, baseAsset} = this.props;
         MarketsActions.unSubscribeMarket(quoteAsset.get("id"), baseAsset.get("id"));
+        emitter.off('cancel-order', limitListener);   
+        emitter.off('close-call', callListener);
+        emitter.off('call-order-update', newCallListener);
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount) {
@@ -173,10 +172,6 @@ class Exchange extends React.Component {
             currentAccount.get("id"),
             orderID // order id to cancel
         );
-
-        this.setState({
-            cancelID: orderID
-        });
     }
 
     _changeBucketSize(size, e) {

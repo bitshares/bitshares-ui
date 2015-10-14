@@ -276,10 +276,15 @@ class MarketsActions {
     }
 
     cancelLimitOrderSuccess(orderID) {
-        // setTimeout to avoid cannot dispatch in middle of dispatch...
-        setTimeout(() => {
-            this.dispatch(orderID);
-        }, 100);
+        this.dispatch(orderID);
+    }
+
+    closeCallOrderSuccess(orderID) {
+        this.dispatch(orderID);
+    }
+
+    callOrderUpdate(order) {
+        this.dispatch(order);
     }
 
     // addMarket(quote, base) {

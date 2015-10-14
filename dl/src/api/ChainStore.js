@@ -4,7 +4,9 @@ import Apis from "../rpc_api/ApiInstances.js"
 import {object_type,impl_object_type} from "../chain/chain_types";
 import validation from "common/validation"
 import BigInteger from "bigi"
+import ee from "emitter-instance";
 
+let emitter = ee.emitter();
 
 let op_history   = parseInt(object_type.operation_history, 10);
 let limit_order  = parseInt(object_type.limit_order, 10);
@@ -141,12 +143,23 @@ class ChainStore
 
             if( utils.is_object_id( obj ) ) { /// the object was removed
 
-               // Update nested call_order inside account object
-               if( obj.search( call_order_prefix ) == 0 ) {
+              // Cancelled limit order, emit event for MarketStore to update it's state
+              if( obj.search( order_prefix ) == 0 ) {
                 let old_obj = this.objects_by_id.get(obj);
                 if (!old_obj) {
                   return;
                 }
+                emitter.emit('cancel-order', old_obj.get("id"));
+              }
+
+               // Update nested call_order inside account object
+               if( obj.search( call_order_prefix ) == 0 ) {
+
+                let old_obj = this.objects_by_id.get(obj);
+                if (!old_obj) {
+                  return;
+                }
+                emitter.emit('close-call', old_obj.get("id"));
                 let account = this.objects_by_id.get(old_obj.get("borrower"));
                 if (account && account.has("call_orders")) {
                   let call_orders = account.get("call_orders");
@@ -905,7 +918,7 @@ class ChainStore
     *  @pre object.id must be a valid object ID
     *  @return an Immutable constructed from object and deep merged with the current state
     */
-   _updateObject( object, notify_subscribers )
+   _updateObject( object, notify_subscribers, emit = true )
    {
       // if (!(object.id.split(".")[0] == 2) && !(object.id.split(".")[1] == 6)) {
       //   console.log( "update: ", object )
@@ -1018,6 +1031,9 @@ class ChainStore
       else if( object.id.substring(0,call_order_prefix.length ) == call_order_prefix )
       {
         // Update nested call_orders inside account object
+        if (emit) {
+          emitter.emit("call-order-update", object);
+        }
         let account = this.objects_by_id.get(object.borrower);
         if (account && account.has("call_orders")) {
           let call_orders = account.get("call_orders");
@@ -1083,6 +1099,7 @@ class ChainStore
             head_block_time_string = head_block_time_string + "Z"
         return new Date(head_block_time_string)
     }
+
 }
 
 let chain_store = new ChainStore();
