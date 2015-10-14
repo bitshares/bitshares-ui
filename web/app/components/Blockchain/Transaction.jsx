@@ -302,7 +302,7 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_create":
-
+                    console.log("op:", op);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.name" /></td>
@@ -311,13 +311,13 @@ class Transaction extends React.Component {
                     );
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="account.member.reg" /></td>
+                            <td><Translate component="span" content="account.member.registrar" /></td>
                             <td>{this.linkToAccount(op[1].registrar)}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="account.member.ref" /></td>
+                            <td><Translate component="span" content="account.member.lifetime_referrer" /></td>
                             <td>{this.linkToAccount(op[1].referrer)}</td>
                         </tr>
                     );
