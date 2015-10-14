@@ -1,10 +1,10 @@
 {
-  "name": "BitShares-light",
-  "productName": "BitShares2-light",
+  "name": "BitShares_light",
+  "productName": "BitShares2_light",
   "identifier": "org.bitshares.graphene",
   "description": "BitShares - cryptocurrency and decentralized exchange",
   "version": "2.0.0",
-  "author": "BitShares Community",
+  "author": "community@bitshares.org",
   "main": "electron.js",
   "config": {
     "target": "development"
