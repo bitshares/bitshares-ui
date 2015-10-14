@@ -14,6 +14,7 @@ var v = require('common/validation')
 import WalletUnlockActions from "../actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
 import lookup from "chain/lookup"
+import ChainStore from "api/ChainStore";
 
 class ApplicationApi {
     
@@ -126,11 +127,16 @@ class ApplicationApi {
                         memo_message
                 }
             }
+            let transfer_asset = ChainStore.getAsset( asset_id ).toJS();
+            let fee_asset_id = asset_id;
+            if( transfer_asset.options.core_exchange_rate.base.asset_id == "1.3.0" )
+               fee_asset_id = "1.3.0";
+
             var tr = new ops.signed_transaction()
             tr.add_type_operation("transfer", {
                 fee: {
                     amount: 0,
-                    asset_id
+                    asset_id: fee_asset_id
                 },
                 from: lookup.account_id(from_account_id),
                 to: lookup.account_id(to_account_id),
