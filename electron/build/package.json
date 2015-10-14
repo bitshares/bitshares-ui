@@ -1,10 +1,10 @@
 {
-  "name": "GrapheneOct5-light-wallet",
-  "productName": "GrapheneOct5-light-wallet",
-  "identifier": "org.bitshares.graphene",
-  "description": "BitShares - cryptocurrency and decentralized exchange",
+  "name": "Graphene_light",
+  "productName": "Graphene_light",
+  "identifier": "com.cryptonomex.graphene",
+  "description": "Graphene - financial smart contracts platform",
   "version": "0.0.1",
-  "author": "cryptonomex.com",
+  "author": "contact@cryptonomex.com",
   "main": "electron.js",
   "config": {
     "target": "development"
