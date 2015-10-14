@@ -75,7 +75,7 @@ class Block extends BaseComponent {
             !Immutable.is(nextProps.blocks, this.props.blocks) ||
             nextProps.height !== this.props.height ||
             nextProps.dynGlobalObject !== this.props.dynGlobalObject
-            );
+        );
     }
 
     _getBlock(height) {
@@ -117,30 +117,29 @@ class Block extends BaseComponent {
         let height = parseInt(this.props.height, 10);
         let block = blocks.get(height);
 
-        if (!block) {
-            return null;
-        }
-
         return (
             <div className="grid-block">
-                <div className="grid-container">
-                    <div className="grid-content">
-                        
-                        <h4><Translate style={{textTransform: "uppercase"}} component="span" content="explorer.block.title" /> #{height}</h4>
+                <div className="grid-content">
+                        <div className="grid-content no-overflow medium-offset-2 medium-8 large-offset-3 large-6 small-12">
+                        <h4 className="text-center"><Translate style={{textTransform: "uppercase"}} component="span" content="explorer.block.title" /> #{height}</h4>
                         <ul>
-                            <li><Translate component="span" content="explorer.block.date" />: <FormattedDate
+                           <li><Translate component="span" content="explorer.block.date" />:  {block ? <FormattedDate
                                 value={block.timestamp}
                                 formats={intlData.formats}
                                 format="full"
-                                />
+                                /> : null}
                             </li>
-                            <li><Translate component="span" content="explorer.block.witness" />: <LinkToWitnessById witness={block.witness} /></li>
-                            <li><Translate component="span" content="explorer.block.previous" />: {block.previous}</li>
-                            <li><Translate component="span" content="explorer.block.transactions" />: {block.transactions.length}</li>
+                            <li><Translate component="span" content="explorer.block.witness" />:  {block ? <LinkToWitnessById witness={block.witness} /> : null}</li>
+                            <li><Translate component="span" content="explorer.block.previous" />: {block ? block.previous : null}</li>
+                            <li><Translate component="span" content="explorer.block.transactions" />: {block ? block.transactions.length : null}</li>
                         </ul>
-                        <TransactionList
+                        <div className="clearfix" style={{marginBottom: "1rem"}}>
+                            <div className="button float-left outline" onClick={this._previousBlock.bind(this)}>&#8592;</div>
+                            <div className="button float-right outline" onClick={this._nextBlock.bind(this)}>&#8594;</div>
+                        </div> 
+                        {block ? <TransactionList
                             block={block} 
-                        /> 
+                        /> : null}
                     </div>
                 </div>
             </div>
