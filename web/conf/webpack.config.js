@@ -37,7 +37,7 @@ module.exports = function(options) {
         // PROD PLUGINS
         plugins.push(new webpack.PrefetchPlugin("react"));
         plugins.push(new ExtractTextPlugin("app.css"));
-        plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false}));
+        plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false, compress: true, output: {screw_ie8: true}}));
         plugins.push(new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"));
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
@@ -85,7 +85,7 @@ module.exports = function(options) {
                 },
                 { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
-                { test: /\.md/, loader: 'html!remarkable' }
+                { test: /\.md/, loader: 'html?removeAttributeQuotes=false!remarkable' }
             ]
         },
         resolve: {
