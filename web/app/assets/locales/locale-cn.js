@@ -470,7 +470,7 @@ module.exports = {
         confirm_buy: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
         confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
         settle: "清算价格",
-        core_rate: "喂价",
+        core_rate: "转账手续费汇率",
         squeeze: "强制平仓价",
         maintenance: "维持保证金价",
         your_price: "你的强平触发价",
