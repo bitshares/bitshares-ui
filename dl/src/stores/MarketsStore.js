@@ -9,7 +9,8 @@ import utils from "common/utils";
 import {
     LimitOrder,
     ShortOrder,
-    CallOrder
+    CallOrder,
+    SettleOrder
 }
 from "./tcomb_structs";
 
@@ -167,10 +168,10 @@ class MarketsStore {
 
         if (result.settles) {
             result.settles.forEach(settle => {
-                settle.expiration = new Date(settle.expiration);
+                settle.settlement_date = new Date(settle.settlement_date);
                 this.activeMarketSettles = this.activeMarketSettles.set(
                     settle.id,
-                    ShortOrder(settle)
+                    SettleOrder(settle)
                 );
             });
         }
