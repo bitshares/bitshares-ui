@@ -310,6 +310,8 @@
             recent: "Recent blocks",
             trx: "Transaction",
             block_times: "Block times",
+            block_time: "Block time",
+            transactions: "# of transactions",
             recently_missed_blocks: "Recently missed blocks",
             trx_per_block: "Trx/block",
             active_committee_members: "Active committee members",
