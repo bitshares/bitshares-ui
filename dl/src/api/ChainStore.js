@@ -83,7 +83,12 @@ class ChainStore
       console.log( "ChainStore Init" );
 
       var _init = (resolve, reject) => {
-        return Apis.instance().db_api().exec( "get_objects", [ ["2.1.0"] ] ).then( optional_objects => {
+        let db_api = Apis.instance().db_api();
+        if (!db_api) {
+            setTimeout( _init.bind(this, resolve, reject), 1000 );
+            return;
+        }
+        return db_api.exec( "get_objects", [ ["2.1.0"] ] ).then( optional_objects => {
             //if(DEBUG) console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
            for(let i = 0; i < optional_objects.length; i++) {
                let optional_object = optional_objects[i]
@@ -107,7 +112,7 @@ class ChainStore
                              resolve();
                           })
                           .catch( error => {
-                            reject();
+                            reject(error);
                             console.log( "Error: ", error )
                            } )
                   } else {
@@ -124,14 +129,9 @@ class ChainStore
            reject();
        });
      };
-     _init.bind(this);
 
-     return new Promise((resolve, reject) => {
-        _init(resolve, reject);
-      })
+     return new Promise((resolve, reject) => _init(resolve, reject));
    }
-
-   _init
 
    onUpdate( updated_objects ) /// map from account id to objects
    {
