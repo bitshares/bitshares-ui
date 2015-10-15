@@ -66,6 +66,8 @@ const { Route, RouteHandler, DefaultRoute } = Router;
 
 class App extends React.Component {
 
+    static contextTypes = { router: React.PropTypes.func.isRequired }
+
     constructor() {
         super();
         this.state = {loading: true, synced: false};
@@ -98,6 +100,9 @@ class App extends React.Component {
 
         ChainStore.init().then(() => {
             this.setState({synced: true});
+        }).catch(error => {
+            console.log("[App.jsx] ----- ChainStore.init error ----->", error, error.stack);
+            this.setState({loading: false});
         });
     } catch(e) { console.error(e) }}
 
@@ -117,6 +122,15 @@ class App extends React.Component {
     // }
 
     render() {
+        if (this.context.router.getCurrentPath() === "/init-error") { // temporary, until we implement right offline mode
+            return (
+                <div className="grid-frame vertical">
+                    <div className="grid-block vertical">
+                        <InitError />
+                    </div>
+                </div>
+            );
+        }
         let content = null;
         if (this.state.loading) {
             content = <LoadingIndicator />;
