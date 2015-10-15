@@ -44,6 +44,7 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
+                "wss://bitshares.openledger.info/ws",
                 "ws://127.0.0.1:8090"
             ]
             // confirmMarketOrder: [
