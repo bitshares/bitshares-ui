@@ -570,7 +570,6 @@ class Exchange extends React.Component {
                                 height={300}
                                 onClick={this._depthChartClick.bind(this, base, quote)}
                                 plotLine={this.state.depthLine}
-                                coreRate={coreRate}
                                 settlementPrice={settlementPrice}
                                 spread={spread}
                             />
