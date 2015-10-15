@@ -8,6 +8,7 @@ import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
+import PrivateKeyView from "components/PrivateKeyView"
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
@@ -20,22 +21,27 @@ class AccountPermissionRow extends React.Component {
         this.props.onRemoveItem(item_id);
     }
     render() {
-        let name, item_id;
+        let name, item_id, name_or_key;
         if (this.props.account) {
             name = this.props.account.get("name");
             item_id = this.props.account.get("id");
+            name_or_key = name;
         } else {
             name = item_id = this.props.pubkey;
+            name_or_key = <PrivateKeyView pubkey={this.props.pubkey}>{this.props.pubkey}</PrivateKeyView>
         }
         return (
             <tr key={name}>
                 <td>
                     { this.props.account ?
                     <AccountImage size={{height: 30, width: 30}} account={name}/>
-                    : <div className="account-image"><Icon name="key" size="1x"/></div>
+                    : <div className="account-image">
+                        <PrivateKeyView pubkey={this.props.pubkey}>
+                            <Icon name="key" size="1x"/>
+                        </PrivateKeyView></div>
                     }
                 </td>
-                <td>{name}</td>
+                <td>{name_or_key}</td>
                 <td>{this.props.weights[item_id]}</td>
                 <td>
                     <button className="button outline" onClick={this.onRemoveItem.bind(this, item_id)}>
