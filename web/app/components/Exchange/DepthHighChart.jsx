@@ -175,7 +175,7 @@ class DepthHighChart extends React.Component {
                 label: {
                     text: counterpart.translate("explorer.block.settlement_price"),
                     style: {
-                        color: "#888888",
+                        color: "#DADADA",
                         fontWeight: "bold"
                     }
                 },
