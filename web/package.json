@@ -46,7 +46,7 @@
     "perfect-scrollbar": "^0.6.2",
     "react": "0.13.3",
     "react-foundation-apps": "git+http://github.com/valzav/react-foundation-apps.git",
-    "react-highcharts": "git+https://github.com/svk31/react-highcharts.git",
+    "react-highcharts": "^2.1.0",
     "react-hot-loader": "~1.2.7",
     "react-interpolate-component": "^0.7.1",
     "react-intl": "^1.2.0",
