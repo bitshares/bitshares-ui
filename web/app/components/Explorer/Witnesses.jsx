@@ -300,8 +300,6 @@ class Witnesses extends React.Component {
         this.setState({
             cardView: !this.state.cardView
         });
-
-
     }
 
     render() {
