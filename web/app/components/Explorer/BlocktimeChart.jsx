@@ -1,7 +1,8 @@
 
 import React from "react";
-import Highcharts from "react-highcharts/stocks";
+import Highcharts from "react-highcharts/highstock";
 import _ from "lodash";
+import counterpart from "counterpart";
 
 class BlocktimeChart extends React.Component {
 
@@ -43,6 +44,8 @@ class BlocktimeChart extends React.Component {
             }
         })
 
+        let tooltipLabel = counterpart.translate("explorer.blocks.block_time");
+
         let config = {
             chart: {
                 type: "column",
@@ -59,11 +62,20 @@ class BlocktimeChart extends React.Component {
             legend: {
                 enabled: false
             },
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+            scrollbar: {
+                enabled: false
+            },
             tooltip: {
-                valueSuffix: "s"
-            //     formatter: function() {
-            //         return this.point.y + "s";
-            //     }
+                shared: false,
+                formatter: function() {
+                    return tooltipLabel + ": " + this.point.y + "s";
+                }
             },
             series: [
                 {

@@ -310,6 +310,8 @@
             recent: "Recent blocks",
             trx: "Transaction",
             block_times: "Block times",
+            block_time: "Block time",
+            transactions: "# of transactions",
             recently_missed_blocks: "Recently missed blocks",
             trx_per_block: "Trx/block",
             active_committee_members: "Active committee members",
@@ -412,13 +414,16 @@
         witnesses: {
             title: "Witnesses",
             current: "Current witness",
-            active: "Active witnesses",
             participation: "Participation rate",
             pay: "Pay-per-block",
             budget: "Remaining budget",
             next_vote: "Next vote update",
             card: "Card view",
-            table: "Table view"
+            table: "Table view",
+            rank: "Rank",
+            last_confirmed: "Last confirmed",
+            missed: "Blocks missed"
+
         },
         committee_members: {
             title: "Committee members",

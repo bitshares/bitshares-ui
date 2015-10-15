@@ -66,9 +66,9 @@ class PreferredMarketsList extends React.Component {
                         quote={market.quote}
                         base={market.base}
                         removeMarket={this.props.removeMarket.bind(market, market.quote, market.base)}
-                        />
+                    />
                 );
-        });
+            }).toArray();
 
         return (
             <div className="grid-block vertical">

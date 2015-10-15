@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highcharts from "react-highcharts/stocks";
+import Highstock from "react-highcharts/highstock";
 import utils from "common/utils";
 import counterpart from "counterpart";
 
@@ -50,13 +50,26 @@ class DepthHighChart extends React.Component {
             legend: {
                 enabled: false
             },
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+            scrollbar: {
+                enabled: false
+            },
+            dataGrouping: {
+                enabled: false
+            },
             tooltip: {
+                shared: false,
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${Highcharts.Highcharts.numberFormat(this.x, 2)} ${priceSymbol}</span><br/>
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x, 2)} ${priceSymbol}</span><br/>
                         <span style="color:${this.series.color}">\u25CF</span>
-                        ${name}: <b>${Highcharts.Highcharts.numberFormat(this.y, 2)} ${quoteSymbol}</b>`;
+                        ${name}: <b>${utils.format_number(this.y, 2)} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"
@@ -82,8 +95,10 @@ class DepthHighChart extends React.Component {
                 labels: {
                     style: {
                         color: "#FFFFFF"
-                    }
+                    },
+                    formatter: function () {return this.value; }
                 },
+                ordinal: false,
                 lineColor: "#000000",
                 title: {
                     text: null
@@ -160,7 +175,7 @@ class DepthHighChart extends React.Component {
                 label: {
                     text: counterpart.translate("explorer.block.settlement_price"),
                     style: {
-                        color: "#888888",
+                        color: "#DADADA",
                         fontWeight: "bold"
                     }
                 },
@@ -219,7 +234,7 @@ class DepthHighChart extends React.Component {
             <div className="grid-content">
                 <p className="bid-total">{utils.format_number(totalBids, 2)} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, 2)} {quoteSymbol}</p>
-                {flat_bids || flat_asks || flat_calls ? <Highcharts config={config}/> : null}
+                {flat_bids || flat_asks || flat_calls ? <Highstock config={config}/> : null}
             </div>
         );
     }

@@ -25,10 +25,10 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        if (text.indexOf("#/") === 0) return `<a href="${text}"`;
+        if (text.indexOf("#/") === 0) return `<a href="${text}" onclick="_onClickLink(event)"`;
         if (text.indexOf("http") === 0) return `<a href="${text}" target="_blank"`;
         let page = endsWith(text, ".md") ? text.substr(0, text.length - 3) : text;
-        let res = `<a href="/#/help/${page}"`;
+        let res = `<a href="/#/help/${page}" onclick="_onClickLink(event)"`;
         return res;
     });
 }
@@ -50,6 +50,25 @@ class HelpContent extends React.Component {
     static propTypes = {
         path: React.PropTypes.string.isRequired,
         section: React.PropTypes.string
+    }
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    }
+
+    constructor(props) {
+        super(props);
+        window._onClickLink = this.onClickLink.bind(this);
+    }
+
+    onClickLink(e) {
+        e.preventDefault();
+        console.dir(e.target);
+        let path = e.target.hash.split("/").filter(p => p && p !== "#");
+        if (path.length === 0) return false;
+        let route = "/" + path.join("/");
+        this.context.router.transitionTo(route);
+        return false;
     }
 
     setVars(str) {
