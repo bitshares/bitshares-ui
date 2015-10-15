@@ -90,7 +90,7 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
-        console.log("onSubscribeMarket:", result, this.activeMarket);
+        // console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
 
         // Get updated assets every time for updated feed data
@@ -98,7 +98,7 @@ class MarketsStore {
         this.baseAsset = ChainStore.getAsset(result.base.get("id"));
 
         if (result.market && (result.market !== this.activeMarket)) {
-            console.log("switch active market from", this.activeMarket, "to", result.market);
+            // console.log("switch active market from", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
             this.activeMarketLimits = this.activeMarketLimits.clear();
             this.activeMarketCalls = this.activeMarketCalls.clear();
