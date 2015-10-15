@@ -31,6 +31,15 @@ class InitError extends React.Component {
         SettingsActions.changeSetting({setting: "connection", value: e.target.value });
     }
 
+    onReloadClick(e) {
+        e.preventDefault();
+        if (window.electron) {
+            window.location.hash = "";
+            window.remote.getCurrentWindow().reload();
+        }
+        else window.location.href = "/";
+    }
+
     render() {
         console.log("-- InitError.render -->", this.props);
 
@@ -63,7 +72,7 @@ class InitError extends React.Component {
                             </ul>
                         </section>
                         <br/>
-                        <a className="button no-margin" href="/"><Translate content={`init_error.retry`} /></a>
+                        <a className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></a>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>
                 </div>
