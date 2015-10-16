@@ -18,7 +18,7 @@ import Icon from "../Icon/Icon";
 require("./json-inspector.scss");
 
 var artist = '';
-import Artist from "./Artist"; artist = <Artist/>;
+//import Artist from "./Artist"; artist = <Artist/>;
 
 //-------------------------------------------------------------
 // TODO: Capitalize?
