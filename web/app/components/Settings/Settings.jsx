@@ -52,9 +52,9 @@ class SettingsEntry extends React.Component {
                 });
 
                 optional = (
-                    <div style={{position: "absolute", right: 0}}>
-                        <div onClick={this.props.triggerModal} id="remove" className="button">-</div>
-                        <div onClick={this.props.triggerModal} id="add" className="button">+</div>
+                    <div style={{position: "absolute", right: 0, top: "0.2rem"}}>
+                        <div onClick={this.props.triggerModal} id="remove" className="button outline" data-tip="Add connection string" data-type="light">-</div>
+                        <div onClick={this.props.triggerModal} id="add" className="button outline" data-tip="Remove connection string" data-type="light">+</div>
                     </div>);
 
                 break;
