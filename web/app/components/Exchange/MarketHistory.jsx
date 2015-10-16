@@ -13,6 +13,13 @@ class MarketHistory extends React.Component {
             );
     }
 
+    constructor(props) {
+        super();
+        this.state = {
+            flipped: true
+        };
+    }
+
     componentDidMount() {
         let historyContainer = React.findDOMNode(this.refs.history);
         Ps.initialize(historyContainer);
@@ -38,6 +45,10 @@ class MarketHistory extends React.Component {
                     pays = utils.format_asset(order.pays.amount, paysAsset, true);
                     price = utils.format_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, true);
                 }
+
+                if (this.state.flipped) {
+                    price = 1 / price;
+                }
                 
                 return (
                     <tr key={order.order_id}>
@@ -57,7 +68,7 @@ class MarketHistory extends React.Component {
                     <tr>
                         <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
                         <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
+                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>{this.state.flipped ? baseSymbol + "/" + quoteSymbol : quoteSymbol + "/" + baseSymbol}</small></th>
                     </tr>
                     </thead>
                     <tbody>

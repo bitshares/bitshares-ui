@@ -352,7 +352,7 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
-            calls, quoteAsset, baseAsset, transaction, broadcast } = this.props;
+            calls, quoteAsset, baseAsset, transaction, broadcast, CALL_PRICE } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
@@ -572,6 +572,8 @@ class Exchange extends React.Component {
                                 plotLine={this.state.depthLine}
                                 settlementPrice={settlementPrice}
                                 spread={spread}
+                                CALL_PRICE={CALL_PRICE}
+                                SQP={squeezePrice}
                             />
                         </div>
 

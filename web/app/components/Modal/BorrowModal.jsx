@@ -16,6 +16,9 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
+import MarketsActions from "actions/MarketsActions";
+import connectToStores from "alt/utils/connectToStores";
+import MarketsStore from "stores/MarketsStore";
 
 let wallet_api = new WalletApi();
 
@@ -74,6 +77,7 @@ class BorrowModalContent extends React.Component {
             this._setUpdatedPosition(newState);
         }
     }
+
 
     shouldComponentUpdate(nextProps, nextState) {
         // console.log("nextProps:", nextProps);
@@ -242,6 +246,13 @@ class BorrowModalContent extends React.Component {
         return collateral / (debt / this._getFeedPrice());
     }
 
+
+    _calculateSWAN() {
+        console.log("calc swan state:", this.state, this.props);
+        let SWAN = 1 / utils.get_asset_price(this.state.totalDebt, this.quote_asset, this.state.totalCollateral, {id: "1.3.0", symbol: "CORE", precision: 5});
+        return SWAN;
+    }
+
     render() {
         let {quote_asset, bitasset_balance, backing_asset, backing_balance} = this.props;
         let {short_amount, collateral, collateral_ratio, errors, isValid} = this.state;
@@ -263,6 +274,9 @@ class BorrowModalContent extends React.Component {
 
         let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
         let squeezeRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+
+        let SWAN = this._calculateSWAN();
+        console.log("swan:", SWAN, SWAN / maintenanceRatio);
 
         if (isNaN(feed_price)) {
             return (
@@ -306,8 +320,8 @@ class BorrowModalContent extends React.Component {
                                 base_amount={squeezeRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                 />
                         </div>
-                        <div className="borrow-price-feeds">
-                            <span className="borrow-price-label"><Translate content="exchange.maintenance" />:&nbsp;</span>
+                        {/*<div className="borrow-price-feeds">
+                            <span className="borrow-price-label"><Translate content="explorer.blocks.call_limit" />:&nbsp;</span>
                             <FormattedPrice
                                 style={{fontWeight: "bold"}}
                                 quote_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
@@ -327,7 +341,7 @@ class BorrowModalContent extends React.Component {
                                 base_asset={backing_asset.get("id")}
                                 base_amount={this.state.collateral * backingPrecision}
                                 /> : null}
-                        </div>
+                        </div>*/}
                     </div>
                     <div className="form-group">
                         <AmountSelector label="transaction.borrow_amount"
@@ -387,7 +401,29 @@ class BorrowModalContent extends React.Component {
 // }
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
+@connectToStores
+class MarketStoreWrapper extends React.Component {
+    static getStores() {
+        return [MarketsStore]
+    }
+
+    static getPropsFromStores() {
+        return {marketState: MarketsStore.getState().borrowMarketState}
+    }
+
+    componentDidMount() {
+        if (this.props.quote_asset) {
+            MarketsActions.getCollateralPositions(this.props.quote_asset)
+        }
+    }
+
+    render () {
+        return this.props.children;
+    }
+}
+
 export default class ModalWrapper extends React.Component {
+
 
     show() {
         let modalId = "borrow_modal_" + this.props.quote_asset;
@@ -419,15 +455,18 @@ export default class ModalWrapper extends React.Component {
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <div className="grid-block vertical">
-                        <BorrowModalContent
-                            {...this.props}
-                            quote_asset={this.props.quote_asset}
-                            call_orders={this.props.account.get("call_orders")}
-                            modalId={modalId}
-                            bitasset_balance={bitAssetBalance}
-                            backing_balance={coreBalance}
-                            backing_asset={"1.3.0"}
-                        />
+                        <MarketStoreWrapper quote_asset={this.props.quote_asset}>
+                            <BorrowModalContent
+                                {...this.props}
+                                quote_asset={this.props.quote_asset}
+                                call_orders={this.props.account.get("call_orders")}
+                                modalId={modalId}
+                                bitasset_balance={bitAssetBalance}
+                                backing_balance={coreBalance}
+                                backing_asset={"1.3.0"}
+                                marketState={this.props.marketState}
+                            />
+                        </MarketStoreWrapper>
                 </div>
             </Modal>
             );
