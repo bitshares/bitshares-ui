@@ -7,6 +7,7 @@ module.exports = {
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
+        
     },
     header: {
         title: "비트쉐어 2.0",
@@ -30,12 +31,14 @@ module.exports = {
         pending: "승인대기 중... %(blocks)s 블록"
     },
     account: {
+        welcome: "비트쉐어 2.0 이용을 환영합니다",
         asset: "자산",
         market_value: "시장가치",
         hour_24: "24시간 변동액",
         recent: "최근 활동",
         name: "계정명",
         more: "더 보기",
+        deposit_withdraw: "입출금",
         member: {
             stats: "회원정보",
             join: "가입일",
@@ -130,7 +133,14 @@ module.exports = {
             invalid: "잘못된 계정이름",
             unknown: "알 수 없는 계정",
             not_yours: "소유 계정이 아님"
-        }
+        },
+        collaterals: "보증금 포지션",
+        eq_value: "Equivalent Value",
+        please_create_account: "계정을 생성해주세요",
+        create_account: "계정 생성",
+        identicon: "아이덴티콘",
+        pay_from: "Pay From",
+        existing_accounts: "기존 계정"
     },
     pagination: {
         newer: "이전",
@@ -297,7 +307,20 @@ module.exports = {
         blocks: {
             title: "블록체인",
             globals: "전체 매개변수",
-            recent: "최근 블록"
+            recent: "최근 블록",
+            trx: "거래",
+            block_times: "블록 타임",
+            block_time: "블록 타임",
+            transactions: "거래 수",
+            recently_missed_blocks: "최근 미생성된 블럭 수",
+            trx_per_block: "블록당 거래",
+            active_committee_members: "활동중인 위원",
+            active_witnesses: "활동중인 증인",
+            avg_conf_time: "평균 승인시간",
+            trx_per_sec: "초당 거래",
+            last_block: "마지막 블록",
+            current_block: "현재 블록"
+
         },
         block: {
             title: "블록",
@@ -340,6 +363,7 @@ module.exports = {
             precision: "소수 자리수"
         },
         asset: {
+            title: "자산",
             not_found: "자산 %(name)s이 존재하지 않음",
             summary: {
                 asset_type: "자산 종류",
@@ -376,10 +400,30 @@ module.exports = {
                 blacklist_markets: "Blacklist markets",
                 whitelist_authorities: "Whitelist authorities",
                 whitelist_markets: "Whitelist markets"
+            },
+            price_feed_data: {
+                title: "가격정보 데이터",
+                settlement_price: "청산 가격",
+                core_exchange_rate: "CER",
+                maintenance_collateral_ratio: "MCR",
+                maximum_short_squeeze_ratio: "MSSR",
+                publisher: "Publisher",
+                published: "Published"
             }
         },
         witnesses: {
-            title: "증인"
+            title: "증인",
+            current: "현재 증인",
+            participation: "참여율",
+            pay: "초당 지불액",
+            budget: "남은 예산",
+            next_vote: "다음 투표 업데이트",
+            card: "카드뷰",
+            table: "테이블뷰",
+            rank: "순위",
+            last_confirmed: "마지막 승인블럭",
+            missed: "미생성 블럭수"
+            
         },
         committee_members: {
             title: "위원",
@@ -406,10 +450,13 @@ module.exports = {
         confirm_yes: "항상",
         confirm_no: "사용안함",
         always_confirm: "항상 확인을 함",
-        wallets: "지갑"
+        wallets: "지갑",
+        connection: "API 연결",
+        add_ws: "새로운 웹소켓 API 추가",
+        remove_ws: "웹소켓 API 제거"
     },
     footer: {
-        title: "그래핀",
+        title: "비트쉐어 2.0",
         block: "최근 블록",
         loading: "가져오는 중..."
     },
@@ -425,20 +472,28 @@ module.exports = {
         price: "가격",
         latest: "최종 가격",
         call: "콜 가격",
+        core_rate: "Fee Rate",
+        settle: "청산 가격",
+        squeeze: "마진콜 가격",
+        maintenance: "Maintenance Call Price",
+        your_price: "내 콜 가격",
         volume: "거래량",
         spread: "스프레드",
         quantity: "총량",
         buy: "매수",
         sell: "매도",
+        receive: "Receive",
         confirm_buy: "주문 확인: %(buy_amount)s %(buy_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매수",
         confirm_sell: "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도"
     },
     markets: {
-        choose_base: "기초 자산 선택",
+        base: "기초 자산",
+        market_search: "종목 찾기",
         filter: "필터",
         core_rate: "Core rate",
         supply: "공급량",
-        search: "찾기"
+        search: "찾기",
+        preferred: "즐겨찾는 종목"
     },
     wallet: {
         title: "지갑",
@@ -449,6 +504,8 @@ module.exports = {
         change_wallet: "지갑 변경",
         wallet_created: "지갑이 생성됨",
         create_wallet: "지갑 생성",
+        import_bts1: "비트쉐어 0.9.3c에서 가져오기",
+        setup_wallet: "지갑을 설정하세요",
         delete_wallet: "지갑 삭제",
         delete_confirm_line1: "정말로 삭제하시겠습니까?",
         delete_confirm_line2: "예상치 못한 나쁜 일이 벌어질 수 있습니다!",
@@ -470,6 +527,7 @@ module.exports = {
         active_wallet: "현재 지갑",
         verified: "확인됨",
         verify_prior_backup: "이전 백업 확인",
+        brainkey_not_verified: "브레인키가 확인되지 않았습니다",
         cancel: "취소",
         reset: "재설정",
         done: "완료",
@@ -481,16 +539,39 @@ module.exports = {
         wallet_exist: "지갑이 이미 존재합니다. 새로운 이름을 선택하세요",
         wallet_exist_with_name: "(%(name)s) 지갑이 이미 존재합니다. 다른 이름을 선택하세요",
         accept: "Accept",
-        ready_to_restore: "Ready to Restore",
-        restore_wallet_of: "Restore (%(name)s Wallet)",
-        restore_success: "Successfully restored (%(name)s) wallet",
-        change: "Change (%(name)s Wallet)"
+        ready_to_restore: "복원할 준비가 되었습니다",
+        restore_wallet_of: "(%(name)s 지갑 복원)",
+        restore_success: "성공적으로 (%(name)s) 지갑을 복원했습니다",
+        change: "(%(name)s 지갑 변경)",
+        import_20_notice1: "비트쉐어 2.0백업을 먼저 가져오세요",
+        import_20_notice2: "(만약 가지고 있으시다면)",
+        loading_balances: "청구가능 잔고를 가져오는 중",
+        no_balance: "청구가능 잔고 없음",
+        claim_balance: "잔고 청구",
+        claim_balances: "잔고 청구",
+        unclaimed: "미청구액",
+        unclaimed_vesting: "미청구액 (확정금)",
+        no_accounts: "계정이 없음",
+        brainkey_no_match: "브레인키가 일치하지 않습니다",
+        reenter_brainkey: "브레인키를 다시 입력하세요",
+        pwd4brainkey: "브레인키를 확인하시려면 비밀번호를 입력하세요",
+        show_brainkey: "브레인키 확인",
+        brainkey_w1: "WARNING: Print this out, or write it down.",
+        brainkey_w2: "Anyone with access to your recovery key will",
+        brainkey_w3: "have access to funds within this wallet.",
+        custom_brainkey: "Custom Brainkey (advanced)",
+        last_backup: "Last backup",
+        never_backed_up: "This Wallet has never been backed up",
+        need_backup: "This Wallet needs a backup",
+        noneed_backup: "No backup is needed"
     },
     borrow: {
         title: "Collateral position for %(asset_symbol)s",
         no_valid: "%(asset_symbol)s 에 대한 유효한 가격정보가 없음",
         coll_ratio: "담보 비율",
         adjust: "포지션 조정",
+        close: "Close Position",
+        update: "Update",
         errors: {
             below: "Collateral ratio below maintenance level",
             collateral: "Insufficient collateral balance"
@@ -501,6 +582,18 @@ module.exports = {
         to: "발행할 계정",
         amount: "발행량",
         submit: "자산 발행"
+      },
+      withdraw : {
+        amount: "Amount to Withdraw",
+        address: "Withdraw to Address",
+        submit: "Withdraw"
       }
+    },
+    init_error: {
+        title: "Application initialization issues",
+        ws_status: "웹소켓 연결 상태",
+        retry: "다시 시도",
+        connected: "연결됨",
+        not_connected: "연결안됨"
     }
 };
