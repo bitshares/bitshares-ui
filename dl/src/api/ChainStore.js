@@ -83,7 +83,12 @@ class ChainStore
       console.log( "ChainStore Init" );
 
       var _init = (resolve, reject) => {
-        return Apis.instance().db_api().exec( "get_objects", [ ["2.1.0"] ] ).then( optional_objects => {
+        let db_api = Apis.instance().db_api();
+        if (!db_api) {
+            setTimeout( _init.bind(this, resolve, reject), 1000 );
+            return;
+        }
+        return db_api.exec( "get_objects", [ ["2.1.0"] ] ).then( optional_objects => {
             //if(DEBUG) console.log('... optional_objects',optional_objects ? optional_objects[0].id : null)
            for(let i = 0; i < optional_objects.length; i++) {
                let optional_object = optional_objects[i]
@@ -107,7 +112,7 @@ class ChainStore
                              resolve();
                           })
                           .catch( error => {
-                            reject();
+                            reject(error);
                             console.log( "Error: ", error )
                            } )
                   } else {
@@ -124,14 +129,9 @@ class ChainStore
            reject();
        });
      };
-     _init.bind(this);
 
-     return new Promise((resolve, reject) => {
-        _init(resolve, reject);
-      })
+     return new Promise((resolve, reject) => _init(resolve, reject));
    }
-
-   _init
 
    onUpdate( updated_objects ) /// map from account id to objects
    {
@@ -440,7 +440,7 @@ class ChainStore
          }
          return account
       }
-      else if( validation.is_account_name( name_or_id ) )
+      else if( validation.is_account_name( name_or_id, true ) )
       {
          let account_id = this.accounts_by_name.get( name_or_id )
          if(account_id === null) return null; // already fetched and it wasn't found
@@ -501,7 +501,7 @@ class ChainStore
          this.fetchWitnessByAccount( account_id )
       return this.getObject( witness_id )
 
-      if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
+      if( validation.is_account_name(id_or_account, true) || (id_or_account.substring(0,4) == "1.2."))
       {
          let account = this.getAccount( id_or_account )
          if( !account )
@@ -544,7 +544,7 @@ class ChainStore
     // Obsolete! Please use getCommitteeMemberById
    getCommitteeMember( id_or_account, on_update = null )
    {
-      if( validation.is_account_name(id_or_account) || (id_or_account.substring(0,4) == "1.2."))
+      if( validation.is_account_name(id_or_account, true) || (id_or_account.substring(0,4) == "1.2."))
       {
          let account = this.getAccount( id_or_account )
 
@@ -654,7 +654,7 @@ class ChainStore
       }
       else
       {
-         if( !validation.is_account_name( name_or_id ) )
+         if( !validation.is_account_name( name_or_id, true ) )
             throw Error( "argument is not an account name: " + name_or_id )
 
          let account_id = this.accounts_by_name.get( name_or_id )

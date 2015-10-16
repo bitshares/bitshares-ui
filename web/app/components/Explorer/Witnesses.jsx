@@ -11,6 +11,10 @@ import TimeAgo from "../Utility/TimeAgo";
 import connectToStores from "alt/utils/connectToStores";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
+<<<<<<< HEAD
+=======
+import classNames from "classnames";
+>>>>>>> upstream/master
 
 require("./witnesses.scss");
 
@@ -108,13 +112,29 @@ class WitnessRow extends React.Component {
         let last_aslot_time = new Date(Date.now() - ((this.props.most_recent - witness_aslot ) * ChainStore.getObject( "2.0.0" ).getIn( ["parameters","block_interval"] )*1000));
 
         let currentClass = isCurrent ? "active-witness" : "";
+<<<<<<< HEAD
+=======
+
+        let missed = witness_data.get('total_missed');
+        let missedClass = classNames("txtlabel",
+            {"success": missed <= 25 },
+            {"info": missed > 25 && missed <= 50},
+            {"warning": missed > 50 && missed <= 150},
+            {"error": missed >= 150}
+        );
+
+>>>>>>> upstream/master
         return (
             <tr className={currentClass} >
                 <td>{rank}</td>
                 <td style={color}>{witness.get("name")}</td>
                 <td><TimeAgo time={last_aslot_time} /></td>
                 <td>{witness_data.get('last_confirmed_block_num')}</td>
+<<<<<<< HEAD
                 <td>{witness_data.get('total_missed')}</td>
+=======
+                <td className={missedClass}>{missed}</td>
+>>>>>>> upstream/master
                 <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" /></td>
             </tr>
         )
@@ -216,10 +236,17 @@ class WitnessList extends React.Component {
                     } else {
                         return (
                             <WitnessCard key={a.get("id")} rank={ranks[a.get("id")]} witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
+<<<<<<< HEAD
                         );    
                     }
 
                     
+=======
+                        );
+                    }
+
+
+>>>>>>> upstream/master
                 });
         }
 
@@ -229,12 +256,21 @@ class WitnessList extends React.Component {
                 <table className="table">
                     <thead>
                         <tr>
+<<<<<<< HEAD
                             <th className="clickable" onClick={this._setSort.bind(this, 'rank')}>Rank</th>
                             <th className="clickable" onClick={this._setSort.bind(this, 'name')}>Name</th>
                             <th className="clickable" onClick={this._setSort.bind(this, 'last_aslot')}>Last block</th>
                             <th className="clickable" onClick={this._setSort.bind(this, 'last_confirmed_block_num')}>Last confirmed</th>
                             <th className="clickable" onClick={this._setSort.bind(this, 'total_missed')}>Missed</th>
                             <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}>Votes</th>
+=======
+                            <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'name')}><Translate content="account.votes.name" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'last_aslot')}><Translate content="explorer.blocks.last_block" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'last_confirmed_block_num')}><Translate content="explorer.witnesses.last_confirmed" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'total_missed')}><Translate content="explorer.witnesses.missed" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}><Translate content="account.votes.votes" /></th>
+>>>>>>> upstream/master
                         </tr>
                     </thead>
                 <tbody>
@@ -290,8 +326,11 @@ class Witnesses extends React.Component {
         this.setState({
             cardView: !this.state.cardView
         });
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> upstream/master
     }
 
     render() {
@@ -317,7 +356,11 @@ class Witnesses extends React.Component {
                                     <td>{currentAccount ? currentAccount.get("name") : null}</td>
                                 </tr>
                                 <tr>
+<<<<<<< HEAD
                                     <td><Translate content="explorer.witnesses.active"/></td>
+=======
+                                    <td><Translate content="explorer.blocks.active_witnesses"/></td>
+>>>>>>> upstream/master
                                     <td>{Object.keys(globalObject.active_witnesses).length}</td>
                                 </tr>
                                 <tr>

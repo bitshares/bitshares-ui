@@ -317,14 +317,16 @@ module.exports = {
             avg_conf_time: "交易平均确认时间",
             trx_per_sec: "每秒交易数",
             last_block: "上一个区块",
-            current_block: "当前区块"
+            current_block: "当前区块",
+            block_time: "区块生成时间",
+            transactions: "交易数"
         },
         block: {
             title: "区块",
             id: "区块 ID",
             witness: "见证人",
             count: "交易数",
-            date: "日期",
+            date: "区块生成时间",
             previous: "上一个区块",
             previous_secret: "上一个密文",
             next_secret: "下一个密文哈希值",
@@ -409,7 +411,17 @@ module.exports = {
             }
         },
         witnesses: {
-            title: "见证人"
+            title: "见证人",
+            current: "当前见证人",
+            participation: "参与率",
+            pay: "每块奖励",
+            budget: "剩余预算",
+            next_vote: "投票更新时间",
+            card: "卡片视图",
+            table: "表格视图",
+            rank: "排名",
+            last_confirmed: "上次生成块",
+            missed: "缺失块数"
         },
         committee_members: {
             title: "理事会",
@@ -553,8 +565,8 @@ module.exports = {
         last_backup: "上次备份",
         never_backed_up: "钱包尚未进行过备份",
         need_backup: "钱包需要备份",
-        noneed_backup: "无需备份"
-
+        noneed_backup: "无需备份",
+        import_bts1: "从BitShares 0.9.3c导入"
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",

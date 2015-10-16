@@ -20,6 +20,12 @@
         }
     </style>
     <link rel="stylesheet" href="app.css">
+    <script>
+        if (window.process && window.process.versions && window.process.versions['electron']) {
+            window.electron = window.process.versions['electron'];
+            window.remote = require('remote');
+        }
+    </script>
 </head>
 <body>
 <main id="content">

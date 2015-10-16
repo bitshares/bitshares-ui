@@ -66,7 +66,6 @@ class RecentTransactions extends React.Component {
             }
         }
         let historyCount = history.length;
-        console.log("limit:", limit, "historyCount:", historyCount);
 
         if(accounts_counter === 1 && current_account) current_account_id = current_account.get("id");
         history = history

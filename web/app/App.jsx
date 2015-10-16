@@ -14,6 +14,7 @@ import Footer from "./components/Layout/Footer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
+import AccountAssetCreate from "./components/Account/AccountAssetCreate";
 import AccountMembership from "./components/Account/AccountMembership";
 import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPayees from "./components/Account/AccountPayees";
@@ -66,6 +67,8 @@ const { Route, RouteHandler, DefaultRoute } = Router;
 
 class App extends React.Component {
 
+    static contextTypes = { router: React.PropTypes.func.isRequired }
+
     constructor() {
         super();
         this.state = {loading: true, synced: false};
@@ -98,6 +101,9 @@ class App extends React.Component {
 
         ChainStore.init().then(() => {
             this.setState({synced: true});
+        }).catch(error => {
+            console.log("[App.jsx] ----- ChainStore.init error ----->", error, error.stack);
+            this.setState({loading: false});
         });
     } catch(e) { console.error(e) }}
 
@@ -117,6 +123,15 @@ class App extends React.Component {
     // }
 
     render() {
+        if (this.context.router.getCurrentPath() === "/init-error") { // temporary, until we implement right offline mode
+            return (
+                <div className="grid-frame vertical">
+                    <div className="grid-block vertical">
+                        <InitError />
+                    </div>
+                </div>
+            );
+        }
         let content = null;
         if (this.state.loading) {
             content = <LoadingIndicator />;
@@ -241,6 +256,7 @@ let routes = (
             <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-assets" path="assets" handler={AccountAssets}/>
+            {<Route name="account-create-asset" path="create-asset" handler={AccountAssetCreate}/>}
             <Route name="account-member-stats" path="member-stats" handler={AccountMembership}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>

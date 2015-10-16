@@ -9,7 +9,8 @@ import utils from "common/utils";
 import {
     LimitOrder,
     ShortOrder,
-    CallOrder
+    CallOrder,
+    SettleOrder
 }
 from "./tcomb_structs";
 
@@ -38,12 +39,19 @@ class MarketsStore {
         this.pendingCounter = 0;
         this.bucketSize = 60;
         this.priceHistory = [];
-
+        this.lowestCallPrice = null;
         this.marketBase = "BTS";
+        this.marketBase = "CORE";
 
         this.baseAsset = {
             id: "1.3.0",
             symbol: "BTS",
+            precision: 5
+        };
+
+        this.coreAsset = {
+            id: "1.3.0",
+            symbol: "CORE",
             precision: 5
         };
 
@@ -58,6 +66,13 @@ class MarketsStore {
             onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
             onCallOrderUpdate: MarketsActions.callOrderUpdate
         });
+    }
+
+    onGetCollateralPositions(payload) {
+        this.borrowMarketState = {
+            totalDebt: payload.totalDebt,
+            totalCollateral: payload.totalCollateral
+        };
     }
 
     onInverseMarket(payload) {
@@ -89,7 +104,7 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
-        console.log("onSubscribeMarket:", result, this.activeMarket);
+        // console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
 
         // Get updated assets every time for updated feed data
@@ -97,7 +112,7 @@ class MarketsStore {
         this.baseAsset = ChainStore.getAsset(result.base.get("id"));
 
         if (result.market && (result.market !== this.activeMarket)) {
-            console.log("switch active market from", this.activeMarket, "to", result.market);
+            // console.log("switch active market from", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
             this.activeMarketLimits = this.activeMarketLimits.clear();
             this.activeMarketCalls = this.activeMarketCalls.clear();
@@ -157,20 +172,23 @@ class MarketsStore {
                 if (typeof call.collateral !== "number") {
                     call.collateral = parseInt(call.collateral, 10);
                 }
+                if (typeof call.debt !== "number") {
+                    call.debt = parseInt(call.debt, 10);
+                }
                 this.activeMarketCalls = this.activeMarketCalls.set(
                     call.id,
                     CallOrder(call)
                 );
-
             });
+
         }
 
         if (result.settles) {
             result.settles.forEach(settle => {
-                settle.expiration = new Date(settle.expiration);
+                settle.settlement_date = new Date(settle.settlement_date);
                 this.activeMarketSettles = this.activeMarketSettles.set(
                     settle.id,
-                    ShortOrder(settle)
+                    SettleOrder(settle)
                 );
             });
         }
@@ -416,39 +434,45 @@ class MarketsStore {
         }
 
         // Get feed price if market asset
-        let settlementPrice, squeezeRatio
+        let settlementPrice, squeezeRatio, maintenanceRatio;
         if (this.activeMarketCalls.size) {
 
             if (this.invertedCalls) {
                 squeezeRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+                maintenanceRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
                     this.quoteAsset,
                     this.baseAsset,
                     true
                 )
+                 this.lowestCallPrice = settlementPrice / 5;
             } else {
                 squeezeRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+                maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
                     this.baseAsset,
                     this.quoteAsset
                 )
+                this.lowestCallPrice = settlementPrice * 5;
             }
         }
 
         let constructCalls = (callsArray) => {
             let calls = [];
+            
             callsArray.filter(a => {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= settlementPrice; // TODO verify this
+                    this.lowestCallPrice = Math.max(this.lowestCallPrice, a_price.full);                    
+                    return a_price.full >= settlementPrice / squeezeRatio; // TODO verify this
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
-                    return a_price.full <= settlementPrice; // TODO verify this
+                    this.lowestCallPrice = Math.min(this.lowestCallPrice, a_price.full);
+                    return a_price.full <= settlementPrice * squeezeRatio; // TODO verify this
                 }
-
             }).sort((a, b) => {
                 let a_price, b_price;
                 if (this.invertedCalls) {

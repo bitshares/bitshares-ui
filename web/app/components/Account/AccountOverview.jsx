@@ -6,6 +6,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
+import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
@@ -34,6 +35,7 @@ class AccountOverview extends React.Component {
                     <tr key={balance}>
                         <td><BalanceComponent balance={balance}/></td>
                         <td><BalanceValueComponent balance={balance}/></td>
+                        <td><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
                     </tr>
                 );
             })
@@ -48,6 +50,7 @@ class AccountOverview extends React.Component {
                                 <tr>
                                     <th><Translate component="span" content="account.asset" /></th>
                                     <th><Translate component="span" content="account.eq_value" /></th>
+                                    <th><Translate component="span" content="account.bts_market" /></th>
                                 </tr>
                             </thead>
                             <tbody>
