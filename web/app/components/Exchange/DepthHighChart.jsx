@@ -96,7 +96,7 @@ class DepthHighChart extends React.Component {
                     style: {
                         color: "#FFFFFF"
                     },
-                    formatter: function () {return this.value; }
+                    formatter: function () {console.log("this:", this); return this.value; }
                 },
                 ordinal: false,
                 lineColor: "#000000",
@@ -148,16 +148,34 @@ class DepthHighChart extends React.Component {
         }
 
         // Market asset
-        if (this.props.coreRate) {
+        if (this.props.CALL_PRICE) {
             config.xAxis.plotLines.push({
                 color: "#B6B6B6",
                 id: "plot_line",
                 dashStyle: "longdash",
-                value: this.props.coreRate,
+                value: this.props.CALL_PRICE,
                 label: {
-                    text: counterpart.translate("exchange.core_rate"),
+                    text: counterpart.translate("explorer.block.call_limit"),
                     style: {
-                        color: "#888888",
+                        color: "#DADADA",
+                        fontWeight: "bold"
+                    }
+                },
+                width: 2,
+                zIndex: 5
+            });
+        }
+
+        if (this.props.SQP) {
+            config.xAxis.plotLines.push({
+                color: "#B6B6B6",
+                id: "plot_line",
+                dashStyle: "longdash",
+                value: this.props.SQP,
+                label: {
+                    text: counterpart.translate("exchange.squeeze"),
+                    style: {
+                        color: "#DADADA",
                         fontWeight: "bold"
                     }
                 },

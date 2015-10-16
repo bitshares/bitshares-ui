@@ -14,6 +14,7 @@ import Footer from "./components/Layout/Footer";
 import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
+import AccountAssetCreate from "./components/Account/AccountAssetCreate";
 import AccountMembership from "./components/Account/AccountMembership";
 import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPayees from "./components/Account/AccountPayees";
@@ -255,6 +256,7 @@ let routes = (
             <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-assets" path="assets" handler={AccountAssets}/>
+            <Route name="account-create-asset" path="create-asset" handler={AccountAssetCreate}/>
             <Route name="account-member-stats" path="member-stats" handler={AccountMembership}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>
