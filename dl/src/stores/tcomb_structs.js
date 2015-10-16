@@ -140,6 +140,12 @@ let LimitOrder = t.struct({
     seller: t.Str
 }, "LimitOrder");
 
+let SettleOrder = t.struct({
+    settlement_date: t.Dat,
+    balance: t.Obj,
+    owner: t.Str
+}, "SettleOrder");
+
 let ShortOrder = t.struct({
     expiration: t.Dat,
     for_sale: t.Num,
@@ -190,5 +196,6 @@ module.exports = {
     ShortTrx: ShortTrx,
     LimitOrder: LimitOrder,
     ShortOrder: ShortOrder,
-    CallOrder: CallOrder
+    CallOrder: CallOrder,
+    SettleOrder: SettleOrder
 };

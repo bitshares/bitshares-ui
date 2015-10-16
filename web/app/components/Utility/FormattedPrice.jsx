@@ -23,13 +23,19 @@ class FormattedPrice extends React.Component {
         base_asset: ChainTypes.ChainAsset.isRequired,
         quote_asset: ChainTypes.ChainAsset.isRequired,
         base_amount: React.PropTypes.number,
-        quote_amount: React.PropTypes.number
+        quote_amount: React.PropTypes.number,
+        invert: React.PropTypes.bool,
+        decimals: React.PropTypes.number
     };  
+
+    static defaultProps = {
+      invert: false
+    };
 
     constructor( props )
     {
        super(props)
-       this.state = { flipped: false }
+       this.state = { flipped: props.invert }
     }
 
     onFlip() {
@@ -55,11 +61,13 @@ class FormattedPrice extends React.Component {
             let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
             let value = base_amount / base_precision / (quote_amount / quote_precision);
 
+            let decimals = this.props.decimals ? this.props.decimals : base_asset.get("precision") + quote_asset.get("precision");
+
             formatted_value = (
                 <FormattedNumber
                     value={value}
                     minimumFractionDigits={0}
-                    maximumFractionDigits={base_asset.get("precision") + quote_asset.get("precision")}
+                    maximumFractionDigits={decimals}
                 />
             );
         }

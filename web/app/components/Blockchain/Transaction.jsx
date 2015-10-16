@@ -96,7 +96,7 @@ class Transaction extends React.Component {
     render() {
         let {trx} = this.props;
         let info = null;
-
+        console.log("trx:", trx);
         info = [];
 
         let opCount = trx.operations.length;
@@ -607,7 +607,6 @@ class Transaction extends React.Component {
                 case "asset_publish_feed":
                     color = "warning";                    
                     let {feed} = op[1];
-                    console.log("op:", op, feed);
 
                     rows.push(
                         <tr>
