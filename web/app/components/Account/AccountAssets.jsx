@@ -281,9 +281,7 @@ class AccountAssets extends React.Component {
 
                     <div className="content-block">
                         <div className="actions clearfix">
-                            <Trigger open="create_asset">
-                                <button className="button">Create New Asset</button>
-                            </Trigger>
+                            <button className="button"><Link to="account-create-asset" params={{account_name}}>Create New Asset</Link></button>
                         </div>
                     </div>
 

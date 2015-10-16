@@ -75,6 +75,7 @@ class BorrowModalContent extends React.Component {
         }
     }
 
+
     shouldComponentUpdate(nextProps, nextState) {
         // console.log("nextProps:", nextProps);
         // console.log("state not equal:", !utils.are_equal_shallow(nextState, this.state));
@@ -105,8 +106,8 @@ class BorrowModalContent extends React.Component {
         let amount = e.amount.replace( /,/g, "" );
         let newState = {
             short_amount: amount,
-            collateral: this.state.collateral,
-            collateral_ratio: this.state.collateral / (amount / feed_price)
+            collateral: (this.state.collateral_ratio * (amount / feed_price)).toFixed(this.props.backing_asset.get("precision")),
+            collateral_ratio: this.state.collateral_ratio
         }
 
         this.setState(newState);
@@ -137,7 +138,7 @@ class BorrowModalContent extends React.Component {
 
         let newState = {
             short_amount: this.state.short_amount,
-            collateral: ((this.state.short_amount / feed_price) * ratio).toFixed(this.props.backing_asset.get("precision")).toString(),
+            collateral: ((this.state.short_amount / feed_price) * ratio).toFixed(this.props.backing_asset.get("precision")),
             collateral_ratio: ratio
         }
 
@@ -162,11 +163,14 @@ class BorrowModalContent extends React.Component {
         if ( (parseFloat(newState.collateral)-original_position.collateral) > utils.get_asset_amount(backing_balance.balance, this.props.backing_asset.toJS())) {
             errors.collateral_balance = counterpart.translate("borrow.errors.collateral");
         }
-
+        debugger;
         let isValid = (newState.short_amount >= 0 && newState.collateral >= 0) && (newState.short_amount != original_position.debt || newState.collateral != original_position.collateral);
 
-        if (parseFloat(newState.collateral_ratio) < (this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000)) {
+        let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+        let mcr = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000
+        if (parseFloat(newState.collateral_ratio) < (sqp * mcr)) {
             errors.below_maintenance = counterpart.translate("borrow.errors.below");
+            isValid = false;
         }
 
         this.setState({errors, isValid});
@@ -242,6 +246,16 @@ class BorrowModalContent extends React.Component {
         return collateral / (debt / this._getFeedPrice());
     }
 
+
+    _calculateCallPrice() {
+        let CALL_PRICE = 0;
+        let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
+        if (this.props.quote_asset) {
+             CALL_PRICE = (1 / maintenanceRatio) * (1 / utils.get_asset_price(this.props.short_amount, this.props.quote_asset, this.props.collateral, this.props.backing_asset));
+        }
+        return CALL_PRICE;
+    }
+
     render() {
         let {quote_asset, bitasset_balance, backing_asset, backing_balance} = this.props;
         let {short_amount, collateral, collateral_ratio, errors, isValid} = this.state;
@@ -263,6 +277,8 @@ class BorrowModalContent extends React.Component {
 
         let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
         let squeezeRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+
+        let CALL_PRICE = this._calculateCallPrice();
 
         if (isNaN(feed_price)) {
             return (
@@ -306,26 +322,16 @@ class BorrowModalContent extends React.Component {
                                 base_amount={squeezeRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                 />
                         </div>
-                        <div className="borrow-price-feeds">
-                            <span className="borrow-price-label"><Translate content="exchange.maintenance" />:&nbsp;</span>
-                            <FormattedPrice
-                                style={{fontWeight: "bold"}}
-                                quote_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
-                                quote_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "asset_id"])}
-                                base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
-                                base_amount={maintenanceRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
-                                />
-                        </div>
                         <b/>
                         <div className="borrow-price-final">
                             <span className="borrow-price-label"><Translate content="exchange.your_price" />:&nbsp;</span>
                             {this.state.newPosition ?
                                 <FormattedPrice
-                                style={{fontWeight: "bold"}}
-                                quote_amount={this.state.short_amount * quotePrecision}
-                                quote_asset={quote_asset.get("id")}
-                                base_asset={backing_asset.get("id")}
-                                base_amount={this.state.collateral * backingPrecision}
+                                    style={{fontWeight: "bold"}}
+                                    quote_amount={maintenanceRatio * this.state.short_amount * quotePrecision} 
+                                    quote_asset={quote_asset.get("id")}
+                                    base_asset={backing_asset.get("id")}
+                                    base_amount={this.state.collateral * backingPrecision}
                                 /> : null}
                         </div>
                     </div>
@@ -389,6 +395,7 @@ class BorrowModalContent extends React.Component {
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {
 
+
     show() {
         let modalId = "borrow_modal_" + this.props.quote_asset;
         ZfApi.publish(modalId, "open");
@@ -419,15 +426,15 @@ export default class ModalWrapper extends React.Component {
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <div className="grid-block vertical">
-                        <BorrowModalContent
-                            {...this.props}
-                            quote_asset={this.props.quote_asset}
-                            call_orders={this.props.account.get("call_orders")}
-                            modalId={modalId}
-                            bitasset_balance={bitAssetBalance}
-                            backing_balance={coreBalance}
-                            backing_asset={"1.3.0"}
-                        />
+                            <BorrowModalContent
+                                {...this.props}
+                                quote_asset={this.props.quote_asset}
+                                call_orders={this.props.account.get("call_orders")}
+                                modalId={modalId}
+                                bitasset_balance={bitAssetBalance}
+                                backing_balance={coreBalance}
+                                backing_asset={"1.3.0"}
+                            />
                 </div>
             </Modal>
             );
