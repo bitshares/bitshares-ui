@@ -59,6 +59,9 @@ class BuySell extends React.Component {
         let divClass = classNames(this.props.className, `${type}-form`);
 
         let balanceAmount = balance ? utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision}) : 0;
+        if (!balanceAmount) {
+            balanceAmount = 0;
+        }
 
         return (
             <div className={divClass}>

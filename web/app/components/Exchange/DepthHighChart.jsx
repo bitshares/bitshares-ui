@@ -29,7 +29,7 @@ class DepthHighChart extends React.Component {
 
 
     render() {
-        let {flat_bids, flat_asks, flat_calls, quoteSymbol, baseSymbol, totalBids, totalCalls, spread} = this.props;
+        let {flat_bids, flat_asks, flat_calls, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
@@ -67,9 +67,9 @@ class DepthHighChart extends React.Component {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x, 2)} ${priceSymbol}</span><br/>
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x, quote.precision)} ${priceSymbol}</span><br/>
                         <span style="color:${this.series.color}">\u25CF</span>
-                        ${name}: <b>${utils.format_number(this.y, 2)} ${quoteSymbol}</b>`;
+                        ${name}: <b>${utils.format_number(this.y, base.precision)} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"
@@ -148,16 +148,34 @@ class DepthHighChart extends React.Component {
         }
 
         // Market asset
-        if (this.props.coreRate) {
+        if (this.props.LCP) {
             config.xAxis.plotLines.push({
                 color: "#B6B6B6",
                 id: "plot_line",
                 dashStyle: "longdash",
-                value: this.props.coreRate,
+                value: this.props.LCP,
                 label: {
-                    text: counterpart.translate("exchange.core_rate"),
+                    text: counterpart.translate("explorer.block.call_limit"),
                     style: {
-                        color: "#888888",
+                        color: "#DADADA",
+                        fontWeight: "bold"
+                    }
+                },
+                width: 2,
+                zIndex: 5
+            });
+        }
+
+        if (this.props.SQP) {
+            config.xAxis.plotLines.push({
+                color: "#B6B6B6",
+                id: "plot_line",
+                dashStyle: "longdash",
+                value: this.props.SQP,
+                label: {
+                    text: counterpart.translate("exchange.squeeze"),
+                    style: {
+                        color: "#DADADA",
                         fontWeight: "bold"
                     }
                 },
@@ -232,8 +250,8 @@ class DepthHighChart extends React.Component {
 
         return (
             <div className="grid-content">
-                <p className="bid-total">{utils.format_number(totalBids, 2)} {baseSymbol}</p>
-                <p className="ask-total">{utils.format_number(totalAsks, 2)} {quoteSymbol}</p>
+                <p className="bid-total">{utils.format_number(totalBids, base.precision)} {baseSymbol}</p>
+                <p className="ask-total">{utils.format_number(totalAsks, quote.precision)} {quoteSymbol}</p>
                 {flat_bids || flat_asks || flat_calls ? <Highstock config={config}/> : null}
             </div>
         );

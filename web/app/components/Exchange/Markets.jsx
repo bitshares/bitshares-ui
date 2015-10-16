@@ -189,7 +189,7 @@ class MarketSelector extends React.Component {
                 }
                 if (a.get("symbol") !== marketBase) {
                     let marketID = a.get("symbol") + "_" + marketBase;
-                    let marketName = a.get("symbol") + "/" + marketBase;
+                    let marketName = a.get("symbol") + " : " + marketBase;
                     let isPreferred = this._isPreferred(a.get("symbol"), marketBase);
                     return (
                         <tr key={marketID + "_search"}>

@@ -27,7 +27,7 @@
         locked_tip: "Wallet is locked. Click to unlock.",
         unlocked_tip: "Wallet is unlocked. Click to lock."
     },
-    operation : {
+    operation: {
         pending: "pending %(blocks)s blocks"
     },
     account: {
@@ -122,6 +122,7 @@
         follow: "Follow",
         pay: "Pay",
         overview: "Overview",
+        bts_market: "Market",
         history: "History",
         payees: "Payees",
         permissions: "Permissions",
@@ -569,11 +570,12 @@
         title: "%(asset_symbol)s Margin",
         no_valid: "No valid feeds for %(asset_symbol)s",
         coll_ratio: "Collateral ratio",
+        call_limit: "Market Call Limit",
         adjust: "Update Position",
         close: "Close Position",
         update: "Update",
         errors: {
-            below: "Collateral ratio below maintenance level",
+            below: "Collateral ratio is too low, this position will be margin called instantly",
             collateral: "Insufficient collateral balance"
         }
     },
