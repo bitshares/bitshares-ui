@@ -26,6 +26,9 @@ class MarketLink extends React.Component {
 
     render() {
         let {base, quote} = this.props;
+        if (base.get("id") === quote.get("id")) {
+            return null;
+        }
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + " : " + base.get("symbol");
         return (

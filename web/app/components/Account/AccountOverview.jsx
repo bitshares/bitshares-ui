@@ -35,7 +35,7 @@ class AccountOverview extends React.Component {
                     <tr key={balance}>
                         <td><BalanceComponent balance={balance}/></td>
                         <td><BalanceValueComponent balance={balance}/></td>
-                        <td>{balance !== "1.3.0" ? <MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper> : null}</td>
+                        <td><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
                     </tr>
                 );
             })
