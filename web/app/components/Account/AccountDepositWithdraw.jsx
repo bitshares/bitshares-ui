@@ -49,7 +49,7 @@ class BlockTradesDepositRequest extends React.Component {
 
       fetch( this.props.url + '/initiate-trade', {
               method:'post',
-              headers: new Headers( { "Content-Type":"application/json" } ),
+              headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
               body: body
            }).then( reply => { reply.json().then( json => {
                console.log( "reply: ", json )
