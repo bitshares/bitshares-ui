@@ -540,6 +540,14 @@ class Exchange extends React.Component {
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
+                                        {CALL_PRICE ?
+                                            (<li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="explorer.block.call_limit" /><br/>
+                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(CALL_PRICE, base.precision)}</b><br/>
+                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                </span>
+                                            </li>) : null}
                                     </ul>
 
                                 </div>

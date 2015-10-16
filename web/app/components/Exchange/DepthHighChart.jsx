@@ -96,7 +96,7 @@ class DepthHighChart extends React.Component {
                     style: {
                         color: "#FFFFFF"
                     },
-                    formatter: function () {console.log("this:", this); return this.value; }
+                    formatter: function () {return this.value; }
                 },
                 ordinal: false,
                 lineColor: "#000000",
