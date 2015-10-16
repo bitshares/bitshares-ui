@@ -540,7 +540,7 @@ class Exchange extends React.Component {
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
-                                        {CALL_PRICE ?
+                                        {false ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="explorer.block.call_limit" /><br/>
@@ -580,7 +580,6 @@ class Exchange extends React.Component {
                                 plotLine={this.state.depthLine}
                                 settlementPrice={settlementPrice}
                                 spread={spread}
-                                CALL_PRICE={CALL_PRICE}
                                 SQP={squeezePrice}
                             />
                         </div>
