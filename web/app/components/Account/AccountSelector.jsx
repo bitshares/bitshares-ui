@@ -50,7 +50,7 @@ class AccountSelector extends React.Component {
     getNameType(value) {
         if(!value) return null;
         if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
-        if(validation.is_account_name(value)) return "name";
+        if(validation.is_account_name(value, true)) return "name";
         if(this.props.allowPubKey && PublicKey.fromPublicKeyString(value)) return "pubkey";
         return null;
     }

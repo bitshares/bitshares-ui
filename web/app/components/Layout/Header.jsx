@@ -80,7 +80,7 @@ class Header extends React.Component {
                 <div className="show-for-medium medium-4">
                     <div className="grp-menu-items-group header-right-menu">
                         <div className="grp-menu-item" >
-                            <Link to="settings" className="button" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
+                            <Link to="settings" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>
                         {lock_unlock}
                         <div className="grp-menu-item" >
