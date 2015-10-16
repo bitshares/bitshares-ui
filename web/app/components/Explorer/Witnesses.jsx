@@ -11,10 +11,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import connectToStores from "alt/utils/connectToStores";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-<<<<<<< HEAD
-=======
 import classNames from "classnames";
->>>>>>> upstream/master
 
 require("./witnesses.scss");
 
@@ -42,10 +39,10 @@ class WitnessCard extends React.Component {
         let witness_aslot = witness_data.get('last_aslot')
         let color = {};
         if( this.props.most_recent - witness_aslot > 100 ) {
-           color = {borderLeft: "1px solid #FCAB53"};
+            color = {borderLeft: "1px solid #FCAB53"};
         }
         else {
-           color = {borderLeft: "1px solid #50D2C2"};
+            color = {borderLeft: "1px solid #50D2C2"};
         }
         let last_aslot_time = new Date(Date.now() - ((this.props.most_recent - witness_aslot ) * ChainStore.getObject( "2.0.0" ).getIn( ["parameters","block_interval"] )*1000));
 
@@ -104,16 +101,14 @@ class WitnessRow extends React.Component {
         let witness_aslot = witness_data.get('last_aslot')
         let color = {};
         if( this.props.most_recent - witness_aslot > 100 ) {
-           color = {borderLeft: "1px solid #FCAB53"};
+            color = {borderLeft: "1px solid #FCAB53"};
         }
         else {
-           color = {borderLeft: "1px solid #50D2C2"};
+            color = {borderLeft: "1px solid #50D2C2"};
         }
         let last_aslot_time = new Date(Date.now() - ((this.props.most_recent - witness_aslot ) * ChainStore.getObject( "2.0.0" ).getIn( ["parameters","block_interval"] )*1000));
 
         let currentClass = isCurrent ? "active-witness" : "";
-<<<<<<< HEAD
-=======
 
         let missed = witness_data.get('total_missed');
         let missedClass = classNames("txtlabel",
@@ -123,18 +118,13 @@ class WitnessRow extends React.Component {
             {"error": missed >= 150}
         );
 
->>>>>>> upstream/master
         return (
             <tr className={currentClass} >
                 <td>{rank}</td>
                 <td style={color}>{witness.get("name")}</td>
                 <td><TimeAgo time={last_aslot_time} /></td>
                 <td>{witness_data.get('last_confirmed_block_num')}</td>
-<<<<<<< HEAD
-                <td>{witness_data.get('total_missed')}</td>
-=======
                 <td className={missedClass}>{missed}</td>
->>>>>>> upstream/master
                 <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" /></td>
             </tr>
         )
@@ -151,17 +141,17 @@ class WitnessList extends React.Component {
     constructor () {
         super();
         this.state = {
-          sortBy: 'rank',
-          inverseSort: true
+            sortBy: 'rank',
+            inverseSort: true
         };
     }
 
     _setSort(field) {
         this.setState({
-          sortBy: field,
-          inverseSort: field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort
+            sortBy: field,
+            inverseSort: field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort
         });
-      }
+    }
 
     render() {
 
@@ -170,21 +160,21 @@ class WitnessList extends React.Component {
         let most_recent_aslot = 0;
         let ranks = {};
         witnesses
-        .sort((a, b) => {
-            if (a && b) {
-                return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
-            }
-        })
-        .forEach( (w, index) => {
-            if (w) {
-                let s = w.get("last_aslot");
-                if( most_recent_aslot < s ) {
-                    most_recent_aslot = s;
+            .sort((a, b) => {
+                if (a && b) {
+                    return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
                 }
+            })
+            .forEach( (w, index) => {
+                if (w) {
+                    let s = w.get("last_aslot");
+                    if( most_recent_aslot < s ) {
+                        most_recent_aslot = s;
+                    }
 
-                ranks[w.get("id")] = index + 1;
-            }
-        });
+                    ranks[w.get("id")] = index + 1;
+                }
+            });
 
         let itemRows = null;
         if (witnesses.length > 0 && witnesses[1]) {
@@ -236,17 +226,10 @@ class WitnessList extends React.Component {
                     } else {
                         return (
                             <WitnessCard key={a.get("id")} rank={ranks[a.get("id")]} witness={a.get("witness_account")} most_recent={this.props.current_aslot} />
-<<<<<<< HEAD
-                        );    
-                    }
-
-                    
-=======
                         );
                     }
 
 
->>>>>>> upstream/master
                 });
         }
 
@@ -255,29 +238,20 @@ class WitnessList extends React.Component {
             return (
                 <table className="table">
                     <thead>
-                        <tr>
-<<<<<<< HEAD
-                            <th className="clickable" onClick={this._setSort.bind(this, 'rank')}>Rank</th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'name')}>Name</th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'last_aslot')}>Last block</th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'last_confirmed_block_num')}>Last confirmed</th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'total_missed')}>Missed</th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}>Votes</th>
-=======
-                            <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'name')}><Translate content="account.votes.name" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'last_aslot')}><Translate content="explorer.blocks.last_block" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'last_confirmed_block_num')}><Translate content="explorer.witnesses.last_confirmed" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'total_missed')}><Translate content="explorer.witnesses.missed" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}><Translate content="account.votes.votes" /></th>
->>>>>>> upstream/master
-                        </tr>
+                    <tr>
+                        <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
+                        <th className="clickable" onClick={this._setSort.bind(this, 'name')}><Translate content="account.votes.name" /></th>
+                        <th className="clickable" onClick={this._setSort.bind(this, 'last_aslot')}><Translate content="explorer.blocks.last_block" /></th>
+                        <th className="clickable" onClick={this._setSort.bind(this, 'last_confirmed_block_num')}><Translate content="explorer.witnesses.last_confirmed" /></th>
+                        <th className="clickable" onClick={this._setSort.bind(this, 'total_missed')}><Translate content="explorer.witnesses.missed" /></th>
+                        <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}><Translate content="account.votes.votes" /></th>
+                    </tr>
                     </thead>
-                <tbody>
+                    <tbody>
                     {itemRows}
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
             )
         }
         else {
@@ -326,11 +300,6 @@ class Witnesses extends React.Component {
         this.setState({
             cardView: !this.state.cardView
         });
-<<<<<<< HEAD
-
-
-=======
->>>>>>> upstream/master
     }
 
     render() {
@@ -356,11 +325,7 @@ class Witnesses extends React.Component {
                                     <td>{currentAccount ? currentAccount.get("name") : null}</td>
                                 </tr>
                                 <tr>
-<<<<<<< HEAD
-                                    <td><Translate content="explorer.witnesses.active"/></td>
-=======
                                     <td><Translate content="explorer.blocks.active_witnesses"/></td>
->>>>>>> upstream/master
                                     <td>{Object.keys(globalObject.active_witnesses).length}</td>
                                 </tr>
                                 <tr>
@@ -380,8 +345,8 @@ class Witnesses extends React.Component {
                                     <td> <TimeAgo time={dynGlobalObject.next_maintenance_time} /></td>
                                 </tr>
                                 <tr>
-                                   <td> <Translate component="h4" content="markets.filter" /> </td>
-                                   <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
+                                    <td> <Translate component="h4" content="markets.filter" /> </td>
+                                    <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
                                 </tr>
                             </table>
                             <div className="view-switcher">
@@ -390,15 +355,15 @@ class Witnesses extends React.Component {
                         </div>
                     </div>
                     <div className="grid-block">
-                            <div className="grid-content ">
-                                <WitnessList
-                                    current_aslot={dynGlobalObject.current_aslot}
-                                    current={current ? current.get("id") : null}
-                                    witnesses={Immutable.List(globalObject.active_witnesses)}
-                                    filter={this.state.filterWitness}
-                                    cardView={this.state.cardView}
+                        <div className="grid-content ">
+                            <WitnessList
+                                current_aslot={dynGlobalObject.current_aslot}
+                                current={current ? current.get("id") : null}
+                                witnesses={Immutable.List(globalObject.active_witnesses)}
+                                filter={this.state.filterWitness}
+                                cardView={this.state.cardView}
                                 />
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

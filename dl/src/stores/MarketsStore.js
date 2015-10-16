@@ -41,7 +41,6 @@ class MarketsStore {
         this.priceHistory = [];
         this.lowestCallPrice = null;
         this.marketBase = "BTS";
-        this.marketBase = "CORE";
 
         this.baseAsset = {
             id: "1.3.0",

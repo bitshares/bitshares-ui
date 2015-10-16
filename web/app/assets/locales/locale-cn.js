@@ -491,7 +491,7 @@ module.exports = {
     markets: {
         choose_base: "选择基准资产",
         filter: "筛选",
-        core_rate: "CORE 汇率",
+        core_rate: "BTS 汇率",
         supply: "供应量",
         search: "搜索",
         base: "基准资产",
