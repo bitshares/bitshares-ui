@@ -3,6 +3,7 @@ import Apis from "rpc_api/ApiInstances";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
+import ChainStore from "api/ChainStore";
 let ops = Object.keys(operations);
 
 let subs = {};
@@ -229,10 +230,16 @@ class MarketsActions {
         // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
 
+        let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
+        console.log( "sell asset: ", sell_asset, sellAssetID );
+        let fee_asset_id = sellAssetID;
+        if( sell_asset.options.core_exchange_rate.base.asset_id == "1.3.0" && sell_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
+           fee_asset_id = "1.3.0";
+
         tr.add_type_operation("limit_order_create", {
             fee: {
                 amount: 0,
-                asset_id: 0
+                asset_id: fee_asset_id
             },
             "seller": account,
             "amount_to_sell": {
