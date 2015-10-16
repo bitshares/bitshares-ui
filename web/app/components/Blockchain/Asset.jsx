@@ -17,6 +17,8 @@ import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 require("./json-inspector.scss");
 
+var artist = '';
+import Artist from "./Artist"; artist = <Artist/>;
 
 //-------------------------------------------------------------
 // TODO: Capitalize?
@@ -295,14 +297,14 @@ class Asset extends React.Component {
                 <td> <Translate content="explorer.asset.summary.current_supply"/> </td>
                 <td> <FormattedAsset amount={dynamic.current_supply} asset={asset.id}/> </td>
             </tr>
-        ) : '';
+        ) : (<tr> </tr>)
 
         var stealthSupply = (dynamic) ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.stealth_supply"/> </td>
                 <td> <FormattedAsset amount={dynamic.confidential_supply} asset={asset.id}/> </td>
             </tr>
-        ) : '';
+        ) : (<tr> </tr>)
 
 
         var marketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
@@ -404,7 +406,7 @@ class Asset extends React.Component {
 
 
     // TODO: Blacklist Authorities: <Account list like Voting>
-     // TODO: Blacklist Market: Base/Market, Base/Market
+    // TODO: Blacklist Market: Base/Market, Base/Market
     renderPermissions(asset) {
         //var dynamic = asset.dynamic;
 
@@ -544,6 +546,8 @@ class Asset extends React.Component {
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
 
                     {this.renderAboutBox(asset)}
+
+                    {artist}
 
                     <div className="grid-block" style={{padding:0, overflow:"visible"}}>
                         <div className="grid-block vertical" style={{overflow:"visible"}}>
