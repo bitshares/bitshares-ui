@@ -106,8 +106,8 @@ class BorrowModalContent extends React.Component {
         let amount = e.amount.replace( /,/g, "" );
         let newState = {
             short_amount: amount,
-            collateral: this.state.collateral,
-            collateral_ratio: this.state.collateral / (amount / feed_price)
+            collateral: (this.state.collateral_ratio * (amount / feed_price)).toFixed(this.props.backing_asset.get("precision")),
+            collateral_ratio: this.state.collateral_ratio
         }
 
         this.setState(newState);
@@ -138,7 +138,7 @@ class BorrowModalContent extends React.Component {
 
         let newState = {
             short_amount: this.state.short_amount,
-            collateral: ((this.state.short_amount / feed_price) * ratio).toFixed(this.props.backing_asset.get("precision")).toString(),
+            collateral: ((this.state.short_amount / feed_price) * ratio).toFixed(this.props.backing_asset.get("precision")),
             collateral_ratio: ratio
         }
 
@@ -163,11 +163,14 @@ class BorrowModalContent extends React.Component {
         if ( (parseFloat(newState.collateral)-original_position.collateral) > utils.get_asset_amount(backing_balance.balance, this.props.backing_asset.toJS())) {
             errors.collateral_balance = counterpart.translate("borrow.errors.collateral");
         }
-
+        debugger;
         let isValid = (newState.short_amount >= 0 && newState.collateral >= 0) && (newState.short_amount != original_position.debt || newState.collateral != original_position.collateral);
 
-        if (parseFloat(newState.collateral_ratio) < (this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000)) {
+        let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+        let mcr = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000
+        if (parseFloat(newState.collateral_ratio) < (sqp * mcr)) {
             errors.below_maintenance = counterpart.translate("borrow.errors.below");
+            isValid = false;
         }
 
         this.setState({errors, isValid});
@@ -245,14 +248,10 @@ class BorrowModalContent extends React.Component {
 
 
     _calculateCallPrice() {
-        // console.log("calc CALL_PRICE state:", this.state, this.props);
         let CALL_PRICE = 0;
-        let debtChange = this.state.short_amount - this.state.original_position.debt;
-        let collateralChange = this.state.collateral - this.state.original_position.collateral;
-        console.log("debtChange:", debtChange, "collateralChange:", collateralChange);
         let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
         if (this.props.quote_asset) {
-             CALL_PRICE = (1 / 1.75) * (1 / utils.get_asset_price(this.props.short_amount, this.props.quote_asset, this.props.collateral, this.props.backing_asset));
+             CALL_PRICE = (1 / maintenanceRatio) * (1 / utils.get_asset_price(this.props.short_amount, this.props.quote_asset, this.props.collateral, this.props.backing_asset));
         }
         return CALL_PRICE;
     }
@@ -280,7 +279,6 @@ class BorrowModalContent extends React.Component {
         let squeezeRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
 
         let CALL_PRICE = this._calculateCallPrice();
-        console.log("CALL_PRICE:", CALL_PRICE);
 
         if (isNaN(feed_price)) {
             return (

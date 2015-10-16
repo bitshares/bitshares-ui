@@ -352,7 +352,7 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
-            calls, quoteAsset, baseAsset, transaction, broadcast, CALL_PRICE } = this.props;
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
@@ -532,19 +532,19 @@ class Exchange extends React.Component {
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
+                                        {lowestCallPrice ?
+                                            (<li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="explorer.block.call_limit" /><br/>
+                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.precision)}</b><br/>
+                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                </span>
+                                            </li>) : null}
                                         {squeezePrice ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="exchange.squeeze" /><br/>
                                                     <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.precision)}</b><br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null}
-                                        {false ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="explorer.block.call_limit" /><br/>
-                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(CALL_PRICE, base.precision)}</b><br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
@@ -581,6 +581,7 @@ class Exchange extends React.Component {
                                 settlementPrice={settlementPrice}
                                 spread={spread}
                                 SQP={squeezePrice}
+                                LCP={lowestCallPrice}
                             />
                         </div>
 
