@@ -76,7 +76,7 @@ class WithdrawModal extends React.Component {
 
 
        return (<form className="grid-block vertical full-width-content">
-                 <div className="grid-container " style={{paddingTop: "2rem"}}>
+                 <div className="grid-container">
                    <div className="content-block">
                       <h3>Withdraw {this.props.receive_asset_name}({this.props.receive_asset_symbol})</h3>
                    </div>
@@ -92,7 +92,7 @@ class WithdrawModal extends React.Component {
                    </div>
                    <div className="content-block full-width-content">
                        <label><Translate component="span" content="modal.withdraw.address"/></label>
-                       <input rows="1" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)}/>
+                       <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
                        {/*<div>{memo_error}</div>*/}
                    </div>
                                   
@@ -100,6 +100,9 @@ class WithdrawModal extends React.Component {
                      <input type="submit" className="button" 
                             onClick={this.onSubmit.bind(this)} 
                             value={counterpart.translate("modal.withdraw.submit")} />
+                       <Trigger close={this.props.modal_id}>
+                           <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                       </Trigger>
                    </div>
                  </div> 
                </form>)

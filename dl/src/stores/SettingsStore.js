@@ -28,7 +28,8 @@ class SettingsStore {
             ["SILVER_CORE", {"quote":"SILVER","base":CORE_ASSET}],
             ["USD_CORE", {"quote":"USD","base":CORE_ASSET}],
             ["BTC_USD", {"quote":"BTC","base":"USD"}],
-            ["BTC_CNY", {"quote":"BTC","base":"CNY"}]
+            ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
+            ["TRADE.BTC_CORE", {"quote":"TRADE.BTC","base":CORE_ASSET} ]
         ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
