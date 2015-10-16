@@ -58,7 +58,10 @@ class InitError extends React.Component {
                             <header><Translate component="span" content={`settings.connection`} /></header>
                             <ul>
                                 <li className="with-dropdown">
-                                    <div style={{position: "absolute", right: "0.8rem"}} className="button no-margin" onClick={this.triggerModal.bind(this)} id="add">+</div>
+                                    <div style={{position: "absolute", right: "0.8rem", top: "0.2rem"}}
+                                         className="button no-margin outline"
+                                         onClick={this.triggerModal.bind(this)} id="add"
+                                         data-tip="Add connection string" data-type="light">+</div>
                                     <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
                                         {options}
                                     </select>
