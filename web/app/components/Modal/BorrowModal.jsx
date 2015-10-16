@@ -88,7 +88,8 @@ class BorrowModalContent extends React.Component {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
             !Immutable.is(nextProps.quote_asset.get("bitasset"), this.props.quote_asset.get("bitasset")) ||
-            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol")
+            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol") ||
+            !utils.are_equal_shallow(nextProps.marketState, this.props.marketState)
         );
     }
 
@@ -247,10 +248,17 @@ class BorrowModalContent extends React.Component {
     }
 
 
-    _calculateSWAN() {
-        console.log("calc swan state:", this.state, this.props);
-        let SWAN = 1 / utils.get_asset_price(this.state.totalDebt, this.quote_asset, this.state.totalCollateral, {id: "1.3.0", symbol: "CORE", precision: 5});
-        return SWAN;
+    _calculateCallPrice() {
+        // console.log("calc CALL_PRICE state:", this.state, this.props);
+        let CALL_PRICE = 0;
+        let debtChange = this.state.short_amount - this.state.original_position.debt;
+        let collateralChange = this.state.collateral - this.state.original_position.collateral;
+        console.log("debtChange:", debtChange, "collateralChange:", collateralChange);
+        let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
+        if (this.props.quote_asset) {
+             CALL_PRICE = 1 / maintenanceRatio / utils.get_asset_price(this.props.marketState.totalDebt + debtChange, this.props.quote_asset, this.props.marketState.totalCollateral + collateralChange, this.props.backing_asset);
+        }
+        return CALL_PRICE;
     }
 
     render() {
@@ -275,8 +283,8 @@ class BorrowModalContent extends React.Component {
         let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
         let squeezeRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
 
-        let SWAN = this._calculateSWAN();
-        console.log("swan:", SWAN, SWAN / maintenanceRatio);
+        let CALL_PRICE = this._calculateCallPrice();
+        console.log("CALL_PRICE:", CALL_PRICE);
 
         if (isNaN(feed_price)) {
             return (
@@ -310,7 +318,7 @@ class BorrowModalContent extends React.Component {
                                 base_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                 />
                         </div>
-                        <div className="borrow-price-feeds">
+                        {/*<div className="borrow-price-feeds">
                             <span className="borrow-price-label"><Translate content="exchange.squeeze" />:&nbsp;</span>
                             <FormattedPrice
                                 style={{fontWeight: "bold"}}
@@ -319,29 +327,30 @@ class BorrowModalContent extends React.Component {
                                 base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
                                 base_amount={squeezeRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                 />
-                        </div>
-                        {/*<div className="borrow-price-feeds">
-                            <span className="borrow-price-label"><Translate content="explorer.blocks.call_limit" />:&nbsp;</span>
+                        </div>*/}
+                        <div className="borrow-price-feeds">
+                            <span className="borrow-price-label"><Translate content="borrow.call_limit" />:&nbsp;</span>
                             <FormattedPrice
                                 style={{fontWeight: "bold"}}
-                                quote_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
+                                quote_amount={utils.get_asset_precision(quote_asset.get("precision")) * 1}
                                 quote_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "asset_id"])}
                                 base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
-                                base_amount={maintenanceRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
+                                base_amount={utils.get_asset_precision(backing_asset.get("precision")) * CALL_PRICE}
                                 />
                         </div>
+                        
                         <b/>
                         <div className="borrow-price-final">
                             <span className="borrow-price-label"><Translate content="exchange.your_price" />:&nbsp;</span>
                             {this.state.newPosition ?
                                 <FormattedPrice
-                                style={{fontWeight: "bold"}}
-                                quote_amount={this.state.short_amount * quotePrecision}
-                                quote_asset={quote_asset.get("id")}
-                                base_asset={backing_asset.get("id")}
-                                base_amount={this.state.collateral * backingPrecision}
+                                    style={{fontWeight: "bold"}}
+                                    quote_amount={this.state.short_amount * quotePrecision} 
+                                    quote_asset={quote_asset.get("id")}
+                                    base_asset={backing_asset.get("id")}
+                                    base_amount={this.state.collateral * backingPrecision}
                                 /> : null}
-                        </div>*/}
+                        </div>
                     </div>
                     <div className="form-group">
                         <AmountSelector label="transaction.borrow_amount"
@@ -408,6 +417,7 @@ class MarketStoreWrapper extends React.Component {
     }
 
     static getPropsFromStores() {
+        console.log("MarketsStore.getState():", MarketsStore.getState());
         return {marketState: MarketsStore.getState().borrowMarketState}
     }
 
@@ -418,7 +428,7 @@ class MarketStoreWrapper extends React.Component {
     }
 
     render () {
-        return this.props.children;
+        return React.cloneElement(this.props.children, {marketState: this.props.marketState});
     }
 }
 

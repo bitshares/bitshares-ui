@@ -27,7 +27,7 @@
         locked_tip: "Wallet is locked. Click to unlock.",
         unlocked_tip: "Wallet is unlocked. Click to lock."
     },
-    operation : {
+    operation: {
         pending: "pending %(blocks)s blocks"
     },
     account: {
@@ -569,6 +569,7 @@
         title: "%(asset_symbol)s Margin",
         no_valid: "No valid feeds for %(asset_symbol)s",
         coll_ratio: "Collateral ratio",
+        call_limit: "Market Call Limit",
         adjust: "Update Position",
         close: "Close Position",
         update: "Update",

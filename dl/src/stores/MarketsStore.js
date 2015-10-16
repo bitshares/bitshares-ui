@@ -182,6 +182,7 @@ class MarketsStore {
 
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
+                console.log("call:", call);
                 if (typeof call.collateral !== "number") {
                     call.collateral = parseInt(call.collateral, 10);
                 }

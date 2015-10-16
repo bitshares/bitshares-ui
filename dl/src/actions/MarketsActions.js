@@ -205,7 +205,6 @@ class MarketsActions {
         return Apis.instance().db_api().exec("get_call_orders", [
             quote, 100
         ]).then(positions => {
-            console.log("got positions:", positions);
             let totalDebt = 0, totalCollateral = 0;
             positions.forEach(position => {
                 totalDebt += parseInt(position.debt, 10);
