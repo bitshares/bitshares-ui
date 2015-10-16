@@ -8,10 +8,10 @@ module.exports =
     
     @see graphene/libraries/chain/protocol/account.cpp is_valid_name
     ###
-    is_account_name: (value)->
+    is_account_name: (value, allow_too_short = false)->
         return no if is_empty value
         length = value.length
-        return no if length < 2 or length > 63
+        return no if (!allow_too_short and length < 3) or length > 63
         for label in value.split('.')
             if !(
                 # Starts with a letter, has only letters, digits, and dashes
@@ -36,6 +36,7 @@ module.exports =
             return suffix + "have only letters, digits, or dashes." unless /^[a-z0-9-]*$/.test(label)
             return suffix + "have only one dash in a row." if /--/.test(label)
             return suffix + "end with a letter or digit." unless /[a-z0-9]$/.test(label)
+            return suffix + "be longer" unless label.length >= 3
         return null
     
     is_cheap_name: (account_name)->
