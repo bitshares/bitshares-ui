@@ -217,7 +217,7 @@
         was_issued: "Was issued",
         by: "by",
         burn_asset: "Burnt",
-        fund_pool: "Funded asset fee pool with",
+        fund_pool: "funded %(asset)s fee pool with",
         asset_settle: "Requested settlement of",
         asset_global_settle: "Requested global settlement of",
         publish_feed: "published feed ",
