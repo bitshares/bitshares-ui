@@ -65,6 +65,9 @@ class ExchangeContainer extends React.Component {
                     CALL_PRICE: () => {
                         return MarketsStore.getState().CALL_PRICE;
                     },
+                    lowestCallPrice: () => {
+                        return MarketsStore.getState().lowestCallPrice;
+                    },
                     currentAccount: () => {
                         return AccountStore.getState().currentAccount;
                     },

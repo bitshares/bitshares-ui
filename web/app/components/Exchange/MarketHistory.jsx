@@ -47,7 +47,7 @@ class MarketHistory extends React.Component {
                 }
 
                 if (this.state.flipped) {
-                    price = 1 / price;
+                    price = utils.format_number(1 / price, paysAsset.get("precision"));
                 }
                 
                 return (

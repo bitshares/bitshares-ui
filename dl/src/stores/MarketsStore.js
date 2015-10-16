@@ -39,10 +39,7 @@ class MarketsStore {
         this.pendingCounter = 0;
         this.bucketSize = 60;
         this.priceHistory = [];
-        this.borrowMarketState = {
-            totalDebt: 0,
-            collateral: 0
-        };
+        this.lowestCallPrice = null;
         this.marketBase = "CORE";
 
         this.baseAsset = {
@@ -171,7 +168,6 @@ class MarketsStore {
 
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
-                console.log("call:", call);
                 if (typeof call.collateral !== "number") {
                     call.collateral = parseInt(call.collateral, 10);
                 }
@@ -449,7 +445,7 @@ class MarketsStore {
                     this.baseAsset,
                     true
                 )
-                this.SWAN = utils.get_asset_price(this.totalDebt, this.baseAsset, this.totalCollateral, this.coreAsset);
+                 this.lowestCallPrice = settlementPrice / 5;
             } else {
                 squeezeRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
                 maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
@@ -458,23 +454,24 @@ class MarketsStore {
                     this.baseAsset,
                     this.quoteAsset
                 )
+                this.lowestCallPrice = settlementPrice * 5;
             }
         }
 
         let constructCalls = (callsArray) => {
             let calls = [];
-
+            
             callsArray.filter(a => {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
+                    this.lowestCallPrice = Math.max(this.lowestCallPrice, a_price.full);                    
                     return a_price.full >= settlementPrice / squeezeRatio; // TODO verify this
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
-                    // console.log("price:", a_price.full, settlementPrice * squeezeRatio);
+                    this.lowestCallPrice = Math.min(this.lowestCallPrice, a_price.full);
                     return a_price.full <= settlementPrice * squeezeRatio; // TODO verify this
                 }
-
             }).sort((a, b) => {
                 let a_price, b_price;
                 if (this.invertedCalls) {

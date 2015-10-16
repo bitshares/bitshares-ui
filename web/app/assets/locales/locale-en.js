@@ -574,7 +574,7 @@
         close: "Close Position",
         update: "Update",
         errors: {
-            below: "Collateral ratio below maintenance level",
+            below: "Collateral ratio is too low, this position will be margin called instantly",
             collateral: "Insufficient collateral balance"
         }
     },
