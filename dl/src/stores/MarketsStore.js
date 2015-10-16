@@ -39,10 +39,6 @@ class MarketsStore {
         this.pendingCounter = 0;
         this.bucketSize = 60;
         this.priceHistory = [];
-        this.SWAN = 0;
-        this.CALL_PRICE = 0;
-        this.totalDebt = 0;
-        this.totalCollateral = 0;
         this.borrowMarketState = {
             totalDebt: 0,
             collateral: 0
@@ -70,8 +66,7 @@ class MarketsStore {
             onChangeBucketSize: MarketsActions.changeBucketSize,
             onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
             onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
-            onCallOrderUpdate: MarketsActions.callOrderUpdate,
-            onGetCollateralPositions: MarketsActions.getCollateralPositions
+            onCallOrderUpdate: MarketsActions.callOrderUpdate
         });
     }
 
@@ -125,10 +120,6 @@ class MarketsStore {
             this.activeMarketCalls = this.activeMarketCalls.clear();
             this.activeMarketSettles = this.activeMarketSettles.clear();
             this.activeMarketHistory = this.activeMarketHistory.clear();
-            this.SWAN = 0;
-            this.CALL_PRICE = 0;
-            this.totalDebt = 0;
-            this.totalCollateral = 0;            
             this.bids = [];
             this.asks = [];
             this.calls = [];
@@ -178,8 +169,6 @@ class MarketsStore {
         if (result.calls) {
             this.activeMarketCalls = this.activeMarketCalls.clear();
 
-            let debt, collateral = 0;
-
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
                 console.log("call:", call);
@@ -189,15 +178,12 @@ class MarketsStore {
                 if (typeof call.debt !== "number") {
                     call.debt = parseInt(call.debt, 10);
                 }
-                this.totalDebt += call.debt; 
-                this.totalCollateral += call.collateral;
                 this.activeMarketCalls = this.activeMarketCalls.set(
                     call.id,
                     CallOrder(call)
                 );
             });
 
-            console.log("total debt:", this.totalDebt, "total collateral:", this.totalCollateral);
         }
 
         if (result.settles) {
@@ -464,7 +450,6 @@ class MarketsStore {
                     true
                 )
                 this.SWAN = utils.get_asset_price(this.totalDebt, this.baseAsset, this.totalCollateral, this.coreAsset);
-                this.CALL_PRICE = this.SWAN * maintenanceRatio;
             } else {
                 squeezeRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
                 maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
@@ -473,13 +458,7 @@ class MarketsStore {
                     this.baseAsset,
                     this.quoteAsset
                 )
-                this.SWAN = 1 / utils.get_asset_price(this.totalDebt, this.quoteAsset, this.totalCollateral, this.coreAsset);
-                this.CALL_PRICE = this.SWAN / maintenanceRatio;
             }
-            console.log("quote asset:", this.quoteAsset.get("symbol"), "quote asset:", this.baseAsset.get("symbol") );
-            console.log("inverted:", this.invertedCalls, "SWAN:", this.SWAN, "squeezeRatio:", squeezeRatio, "maintenanceRatio", maintenanceRatio);
-            console.log("CALL PRICE:", this.CALL_PRICE, "quote asset:", this.quoteAsset.toJS());
-
         }
 
         let constructCalls = (callsArray) => {
@@ -489,11 +468,11 @@ class MarketsStore {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    return a_price.full >= this.CALL_PRICE; // TODO verify this
+                    return a_price.full >= settlementPrice / squeezeRatio; // TODO verify this
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
-                    // console.log("price:", a_price.full, "this.CALL_PRICE:", this.CALL_PRICE);
-                    return a_price.full <= this.CALL_PRICE; // TODO verify this
+                    // console.log("price:", a_price.full, settlementPrice * squeezeRatio);
+                    return a_price.full <= settlementPrice * squeezeRatio; // TODO verify this
                 }
 
             }).sort((a, b) => {

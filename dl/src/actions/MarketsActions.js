@@ -200,20 +200,6 @@ class MarketsActions {
         // });
     }
 
-    // Hopefully temporary until this gets included in bitasset_data
-    getCollateralPositions(quote) {
-        return Apis.instance().db_api().exec("get_call_orders", [
-            quote, 100
-        ]).then(positions => {
-            let totalDebt = 0, totalCollateral = 0;
-            positions.forEach(position => {
-                totalDebt += parseInt(position.debt, 10);
-                totalCollateral += parseInt(position.collateral, 10);
-            });
-            this.dispatch({totalDebt: totalDebt, totalCollateral: totalCollateral});
-        });
-    }
-
     createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
         // let uniqueExpiration = addSeconds(expiration);
         // console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);

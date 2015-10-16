@@ -16,9 +16,6 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
-import MarketsActions from "actions/MarketsActions";
-import connectToStores from "alt/utils/connectToStores";
-import MarketsStore from "stores/MarketsStore";
 
 let wallet_api = new WalletApi();
 
@@ -88,8 +85,7 @@ class BorrowModalContent extends React.Component {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
             !Immutable.is(nextProps.quote_asset.get("bitasset"), this.props.quote_asset.get("bitasset")) ||
-            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol") ||
-            !utils.are_equal_shallow(nextProps.marketState, this.props.marketState)
+            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol")
         );
     }
 
@@ -256,7 +252,7 @@ class BorrowModalContent extends React.Component {
         console.log("debtChange:", debtChange, "collateralChange:", collateralChange);
         let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
         if (this.props.quote_asset) {
-             CALL_PRICE = 1 / maintenanceRatio / utils.get_asset_price(this.props.marketState.totalDebt + debtChange, this.props.quote_asset, this.props.marketState.totalCollateral + collateralChange, this.props.backing_asset);
+             CALL_PRICE = (1 / 1.75) * (1 / utils.get_asset_price(this.props.short_amount, this.props.quote_asset, this.props.collateral, this.props.backing_asset));
         }
         return CALL_PRICE;
     }
@@ -318,7 +314,7 @@ class BorrowModalContent extends React.Component {
                                 base_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                 />
                         </div>
-                        {/*<div className="borrow-price-feeds">
+                        <div className="borrow-price-feeds">
                             <span className="borrow-price-label"><Translate content="exchange.squeeze" />:&nbsp;</span>
                             <FormattedPrice
                                 style={{fontWeight: "bold"}}
@@ -327,25 +323,14 @@ class BorrowModalContent extends React.Component {
                                 base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
                                 base_amount={squeezeRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                 />
-                        </div>*/}
-                        <div className="borrow-price-feeds">
-                            <span className="borrow-price-label"><Translate content="borrow.call_limit" />:&nbsp;</span>
-                            <FormattedPrice
-                                style={{fontWeight: "bold"}}
-                                quote_amount={utils.get_asset_precision(quote_asset.get("precision")) * 1}
-                                quote_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "asset_id"])}
-                                base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
-                                base_amount={utils.get_asset_precision(backing_asset.get("precision")) * CALL_PRICE}
-                                />
                         </div>
-                        
                         <b/>
                         <div className="borrow-price-final">
                             <span className="borrow-price-label"><Translate content="exchange.your_price" />:&nbsp;</span>
                             {this.state.newPosition ?
                                 <FormattedPrice
                                     style={{fontWeight: "bold"}}
-                                    quote_amount={this.state.short_amount * quotePrecision} 
+                                    quote_amount={maintenanceRatio * this.state.short_amount * quotePrecision} 
                                     quote_asset={quote_asset.get("id")}
                                     base_asset={backing_asset.get("id")}
                                     base_amount={this.state.collateral * backingPrecision}
@@ -410,28 +395,6 @@ class BorrowModalContent extends React.Component {
 // }
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
-@connectToStores
-class MarketStoreWrapper extends React.Component {
-    static getStores() {
-        return [MarketsStore]
-    }
-
-    static getPropsFromStores() {
-        console.log("MarketsStore.getState():", MarketsStore.getState());
-        return {marketState: MarketsStore.getState().borrowMarketState}
-    }
-
-    componentDidMount() {
-        if (this.props.quote_asset) {
-            MarketsActions.getCollateralPositions(this.props.quote_asset)
-        }
-    }
-
-    render () {
-        return React.cloneElement(this.props.children, {marketState: this.props.marketState});
-    }
-}
-
 export default class ModalWrapper extends React.Component {
 
 
@@ -465,7 +428,6 @@ export default class ModalWrapper extends React.Component {
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
                 <div className="grid-block vertical">
-                        <MarketStoreWrapper quote_asset={this.props.quote_asset}>
                             <BorrowModalContent
                                 {...this.props}
                                 quote_asset={this.props.quote_asset}
@@ -474,9 +436,7 @@ export default class ModalWrapper extends React.Component {
                                 bitasset_balance={bitAssetBalance}
                                 backing_balance={coreBalance}
                                 backing_asset={"1.3.0"}
-                                marketState={this.props.marketState}
                             />
-                        </MarketStoreWrapper>
                 </div>
             </Modal>
             );
