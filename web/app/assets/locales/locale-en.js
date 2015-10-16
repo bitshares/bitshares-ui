@@ -122,7 +122,7 @@
         follow: "Follow",
         pay: "Pay",
         overview: "Overview",
-        bts_market: "BTS market",
+        bts_market: "Market",
         history: "History",
         payees: "Payees",
         permissions: "Permissions",
