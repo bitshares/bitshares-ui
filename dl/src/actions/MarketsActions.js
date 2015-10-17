@@ -172,15 +172,13 @@ class MarketsActions {
 
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
-        // console.log("unSubscribeMarket:", subID);
-        delete subs[subID];
-        this.dispatch({unSub: true});
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
                     quote, base
                 ])
                 .then((unSubResult) => {
-                    // console.log(subID, "market unsubscription success:", unSubResult);
+                    this.dispatch({unSub: true});
+                    delete subs[subID];
                     
                 }).catch((error) => {
                     subs[subID] = true;
