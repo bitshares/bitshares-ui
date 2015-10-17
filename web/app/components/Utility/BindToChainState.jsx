@@ -3,6 +3,7 @@ import _ from "lodash";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
+import LoadingIndicator from "../LoadingIndicator";
 
 /**
  * @brief provides automatic fetching and updating of chain data
@@ -64,7 +65,7 @@ function BindToChainState(options) {
                 super(props);
                 let prop_types_array = _.pairs(Component.propTypes);
                 if(options && options.all_props) {
-                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children" || e === "keep_updating");
+                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children" || e === "keep_updating" || e === "show_loader");
                     this.chain_accounts = [];
                     this.chain_key_refs = [];
                     this.chain_address_balances = [];
@@ -123,7 +124,7 @@ function BindToChainState(options) {
 
             componentWillReceiveProps(next_props) {
                 if(options && options.all_props) {
-                    this.chain_objects = _.reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating");
+                    this.chain_objects = _.reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating" || e === "show_loader");
                     this.all_chain_props = this.chain_objects;
                     this.state = _.pick(this.state, this.chain_objects);
                 }
@@ -335,7 +336,13 @@ function BindToChainState(options) {
             render() {
                 const props = _.omit(this.props, this.all_chain_props);
                 //console.log("----- Wrapper render ----->", this.componentName(), this.props, this.state);
-                for(let prop of this.required_props) if(!this.state[prop]) return null;
+                for(let prop of this.required_props) if(!this.state[prop]) {
+                    if (typeof options !== "undefined" && options.show_loader) {
+                        return <LoadingIndicator />
+                    } else {
+                        return null;
+                    }
+                }
                 //return <span className={this.state.resolved ? "resolved":"notresolved"}><Component {...props} {...this.state}/></span>;
                 return <Component {...props} {...this.state}/>;
             }

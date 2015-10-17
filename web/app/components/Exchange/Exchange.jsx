@@ -30,7 +30,7 @@ require("./exchange.scss");
 let emitter = ee.emitter();
 let callListener, limitListener, newCallListener;
 
-@BindToChainState({keep_updating: true})
+@BindToChainState({keep_updating: true, show_loader: true})
 class Exchange extends React.Component {
     constructor() {
         super();
@@ -104,7 +104,6 @@ class Exchange extends React.Component {
     }
 
     _addMarket(quote, base) {
-        console.log("add market");
         SettingsActions.addMarket(quote, base);
     }
 
