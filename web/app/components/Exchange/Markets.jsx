@@ -77,7 +77,7 @@ class PreferredMarketsList extends React.Component {
                     <h5><Translate content="markets.filter" />:</h5>
                     <input type="text" value={this.state.filter} onChange={this._onFilterMarkets.bind(this)}></input>
                 </div>
-                <div className="grid-block small-up-1 medium-up-2 large-up-3">
+                <div className="grid-block small-up-1 medium-up-2 large-up-3" style={{minHeight: "20rem"}}>
                     {preferredMarkets}
                 </div>
             </div>

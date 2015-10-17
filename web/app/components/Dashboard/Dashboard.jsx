@@ -2,12 +2,9 @@ import React from "react";
 import {PropTypes, Component} from "react";
 import Immutable from "immutable";
 import AccountCard from "./AccountCard";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
 import RecentTransactions from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
 
-@BindToChainState()
 class Dashboard extends Component {
 
     static propTypes = {
