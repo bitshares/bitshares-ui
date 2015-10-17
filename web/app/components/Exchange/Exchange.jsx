@@ -45,7 +45,8 @@ class Exchange extends React.Component {
             sellTotal: 0,
             sub: null,
             activeTab: "buy",
-            showBuySell: true
+            showBuySell: true,
+            favorite: false
         };
 
         this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
@@ -89,29 +90,39 @@ class Exchange extends React.Component {
     static contextTypes = {router: React.PropTypes.func.isRequired};
 
     componentWillMount() {
-        this._subToMarket(this.props);
+        if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
+            this._subToMarket(this.props);
+            this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
+        }
+
         emitter.on('cancel-order', limitListener = MarketsActions.cancelLimitOrderSuccess);
         emitter.on('close-call', callListener = MarketsActions.closeCallOrderSuccess);
-        emitter.on('call-order-update', newCallListener = MarketsActions.callOrderUpdate);
+        emitter.on('call-order-update', newCallListener = MarketsActions.callOrderUpdate);     
     }
 
     componentDidMount() {
         let centerContainer = React.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
-        if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
-            this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
-        }
     }
 
     _addMarket(quote, base) {
-        SettingsActions.addMarket(quote, base);
+        if (!this.state.favorite) {
+            SettingsActions.addMarket(quote, base);
+            this.setState({
+                favorite: true
+            });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        
-        if (!this.state.sub) {
-            return this._subToMarket(nextProps);
+        if (nextProps.quoteAsset.toJS && nextProps.baseAsset.toJS) {
+            this._addMarket(nextProps.quoteAsset.get("symbol"), nextProps.baseAsset.get("symbol"));
+            if (!this.state.sub) {
+                return this._subToMarket(nextProps);
+            }
         }
+
+
 
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol")) {
 
@@ -364,8 +375,8 @@ class Exchange extends React.Component {
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            quoteSymbol, baseSymbol, coreRate = null, settlementPrice = null, squeezePrice = null, coreQuote, coreBase, settlementQuote, settlementBase,
-            flipped = false;
+            quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null, coreQuote, coreBase, settlementQuote, settlementBase,
+            flipped = false, showCallLimit = false;
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset.toJS();
@@ -391,6 +402,7 @@ class Exchange extends React.Component {
                 core_rate = quote.bitasset.current_feed.core_exchange_rate;
                 settlement_price = quote.bitasset.current_feed.settlement_price;
                 short_squeeze = quote.bitasset.current_feed.maximum_short_squeeze_ratio / 1000;
+
             } else if (base.bitasset && base.bitasset.current_feed && quote.id === "1.3.0") {
                 core_rate = base.bitasset.current_feed.core_exchange_rate;
                 settlement_price = base.bitasset.current_feed.settlement_price;
@@ -415,13 +427,15 @@ class Exchange extends React.Component {
                     settlementQuote = {precision: quote.precision, id: quote.id};
                 }
 
-                coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
+                // coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
                 settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, flipped);
                 
                 if (flipped) {
                     squeezePrice = settlementPrice / short_squeeze;
+                    showCallLimit = lowestCallPrice > settlementPrice;
                 } else {
                     squeezePrice = settlementPrice * short_squeeze;
+                    showCallLimit = lowestCallPrice < settlementPrice;
                 }
             }
         }
@@ -524,14 +538,14 @@ class Exchange extends React.Component {
                                                 <em>{baseSymbol}/{quoteSymbol}</em>
                                             </span>
                                         </li>*/}
-                                        {coreRate ?
+                                        {/*coreRate ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="exchange.core_rate" /><br/>
                                                     <b className="value stat-primary">{utils.format_number(coreRate, base.precision)}</b><br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
-                                            </li>) : null}
+                                            </li>) : null*/}
                                         {settlementPrice ?
                                             (<li className="stat">
                                                 <span>
@@ -540,7 +554,7 @@ class Exchange extends React.Component {
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null}
-                                        {lowestCallPrice ?
+                                        {lowestCallPrice && showCallLimit ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="explorer.block.call_limit" /><br/>
@@ -589,7 +603,7 @@ class Exchange extends React.Component {
                                 settlementPrice={settlementPrice}
                                 spread={spread}
                                 SQP={squeezePrice}
-                                LCP={lowestCallPrice}
+                                LCP={showCallLimit ? lowestCallPrice : null}
                             />
                         </div>
 
