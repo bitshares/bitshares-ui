@@ -19,6 +19,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
+import SettingsActions from "actions/SettingsActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
@@ -97,6 +98,14 @@ class Exchange extends React.Component {
     componentDidMount() {
         let centerContainer = React.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
+        if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
+            this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
+        }
+    }
+
+    _addMarket(quote, base) {
+        console.log("add market");
+        SettingsActions.addMarket(quote, base);
     }
 
     componentWillReceiveProps(nextProps) {
