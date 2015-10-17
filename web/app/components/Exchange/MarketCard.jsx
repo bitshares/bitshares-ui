@@ -7,7 +7,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 
 
-@BindToChainState()
+@BindToChainState({show_loader: true})
 class MarketCard extends React.Component {
 
     static propTypes = {
