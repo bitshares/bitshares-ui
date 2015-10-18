@@ -37,7 +37,7 @@ class MarketsStore {
         this.inverseMarket = true;
         this.quoteAsset = null;
         this.pendingCounter = 0;
-        this.bucketSize = 60;
+        this.bucketSize = 300;
         this.priceHistory = [];
         this.lowestCallPrice = null;
         this.marketBase = "CORE";

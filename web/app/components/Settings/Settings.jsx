@@ -151,7 +151,7 @@ class Settings extends React.Component {
 
             case "inverseMarket":
             case "confirmMarketOrder":
-                value = findEntry(e.target.value, defaults) === 0; // USD/CORE is true, CORE/USD is false
+                value = findEntry(e.target.value, defaults) === 0; // USD/BTS is true, BTS/USD is false
                 break;
 
             case "connection":

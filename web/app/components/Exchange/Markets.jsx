@@ -6,7 +6,6 @@ import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
-import ChainStore from "api/ChainStore";
 import _ from "lodash";
 
 class PreferredMarketsList extends React.Component {
@@ -15,45 +14,31 @@ class PreferredMarketsList extends React.Component {
         super();
 
         this.state = {
-            filter: null
+            filter: props.viewSettings.get("favMarketFilter"),
         };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
+            true ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
             nextState.filter !== this.state.filter
         );
     }
 
     _onFilterMarkets(e) {
-        this.setState({filter: e.target.value});
+        SettingsActions.changeViewSetting({favMarketFilter: e.target.value.toUpperCase()});
+        this.setState({filter: e.target.value.toUpperCase()});
     }
 
     render() {
         let {  markets } = this.props;
         let { filter } = this.state;
-
         let preferredMarkets = markets
-            .filter(a => {
-                if (!filter) {
-                    return true;
-                }
-                let asset = ChainStore.getAsset(a.quote);
-                if (!asset) {
-                    return null;
-                }
-               return asset.get("symbol").indexOf(filter.toUpperCase()) !== -1;
-            })
             .sort((a, b) => {
-                let a_asset = ChainStore.getAsset(a.quote);
-                let b_asset = ChainStore.getAsset(b.quote);
-                if (!a_asset || !b_asset) {
-                    return 0;
-                }
-                if (a_asset.get("symbol") > b_asset.get("symbol")) {
+                if (a.quote > b.quote) {
                     return 1;
-                } else if (a_asset.get("symbol") < b_asset.get("symbol")) {
+                } else if (a.quote < b.quote) {
                     return -1;
                 } else {
                     return 0;
@@ -62,13 +47,20 @@ class PreferredMarketsList extends React.Component {
             .map(market => {
                 return (
                     <MarketCard
-                        key={"pref_" + market.quote + "__" + market.base}
+                        key={market.quote + "_" + market.base}
                         quote={market.quote}
                         base={market.base}
                         removeMarket={this.props.removeMarket.bind(market, market.quote, market.base)}
                     />
                 );
-            }).toArray();
+            })
+            .filter((a) => {
+                if (!filter) {
+                    return true;
+                }
+                return a.key.indexOf(filter.toUpperCase()) !== -1;
+            })
+            .toArray();
 
         return (
             <div className="grid-block vertical">
@@ -88,14 +80,15 @@ class PreferredMarketsList extends React.Component {
 class MarketSelector extends React.Component {
     constructor(props) {
         super();
-
         this.state = {
             searchTerms: {
-                baseSearch: props.searchTerms["baseSearch"],
-                quoteSearch: props.searchTerms["quoteSearch"]
+                baseSearch: props.viewSettings.get("baseSearch"),
+                quoteSearch: props.viewSettings.get("quoteSearch")
             },
-            baseSearch: false,
-            quoteSearch: false
+            showSearch: {
+                baseSearch: props.viewSettings.get("showSearch_baseSearch"),
+                quoteSearch: props.viewSettings.get("showSearch_quoteSearch")
+            }
         }
 
         this._assetLookup = _.debounce(this._assetLookup, 150);
@@ -104,12 +97,14 @@ class MarketSelector extends React.Component {
     _assetLookup(symbol, type) {
 
         AssetActions.lookupAsset(symbol, type);
-        let newState = {};
+        let newState = {showSearch: {}};
         for (let term in this.state.searchTerms) {
             if (term === type) {
-                newState[term] = true;
+                newState.showSearch[term] = true;
+                SettingsActions.changeViewSetting({["showSearch_" + term]: true});
             } else {
-                newState[term] = false;
+                SettingsActions.changeViewSetting({["showSearch_" + term]: false});
+                newState.showSearch[term] = false;
             }
         }
 
@@ -122,6 +117,7 @@ class MarketSelector extends React.Component {
         for (let term in this.state.searchTerms) {
             if (term === type) {
                 newState.searchTerms[term] = e.target.value.toUpperCase();
+                SettingsActions.changeViewSetting({[term]: e.target.value.toUpperCase()});
             } else {
                 newState.searchTerms[term] = this.state.searchTerms[term];
             }
@@ -147,10 +143,9 @@ class MarketSelector extends React.Component {
     render() {
 
         let { lookupResults, marketBase } = this.props;
-        let { baseSearch, quoteSearch, searchTerms } = this.state;
+        let { showSearch, searchTerms } = this.state;
         let results;
-
-        if (baseSearch) {
+        if (showSearch.baseSearch) {
             results = lookupResults
             .filter(result => {
                 if (!searchTerms.baseSearch || searchTerms.baseSearch === "") {
@@ -172,7 +167,7 @@ class MarketSelector extends React.Component {
         }
 
 
-        if (quoteSearch) {
+        if (showSearch.quoteSearch) {
 
             results = lookupResults
             .filter(result => {
@@ -214,7 +209,7 @@ class MarketSelector extends React.Component {
                     onChange={this._onLookupAsset.bind(this, "baseSearch")}
                     onClick={this._assetLookup.bind(this, searchTerms.baseSearch, "baseSearch")}
                 />
-                {baseSearch ?
+                {showSearch.baseSearch ?
                     (<table className="table table-hover">
                         <tbody>
                             {results}
@@ -227,7 +222,7 @@ class MarketSelector extends React.Component {
                     onChange={this._onLookupAsset.bind(this, "quoteSearch")}
                     onClick={this._assetLookup.bind(this, searchTerms.quoteSearch, "quoteSearch")}
                 />
-                {quoteSearch ?
+                {showSearch.quoteSearch ?
                     (<table className="table table-hover">
                         <tbody>
                             {results}
@@ -251,7 +246,7 @@ class Markets extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-block left-column-2 small-5 medium-3" style={{minWidth: "20rem"}}>
                     <MarketSelector
-                        searchTerms={this.props.searchTerms}
+                        viewSettings={this.props.viewSettings}
                         lookupResults={this.props.lookupResults}
                         marketBase={this.props.marketBase}
                         removeMarket={this._removeMarket}
@@ -260,6 +255,7 @@ class Markets extends React.Component {
                 </div>
                 <div className="grid-block small-7 medium-9 flex-start" style={{overflowY: "auto", zIndex: 1}}>
                     <PreferredMarketsList
+                        viewSettings={this.props.viewSettings}
                         markets={defaultMarkets}
                         removeMarket={this._removeMarket}
                     />

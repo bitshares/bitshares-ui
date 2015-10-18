@@ -189,6 +189,10 @@ class MyOpenOrders extends React.Component {
             );
         }
 
+        if (bids.length === 0 && asks.length ===0) {
+            return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
+        }
+
         return (
             <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders">
                 <table className="table order-table my-orders text-right table-hover">

@@ -32,7 +32,7 @@ let callListener, limitListener, newCallListener;
 
 @BindToChainState({keep_updating: true, show_loader: true})
 class Exchange extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
 
         this.state = {
@@ -45,8 +45,10 @@ class Exchange extends React.Component {
             sellTotal: 0,
             sub: null,
             activeTab: "buy",
-            showBuySell: true,
-            favorite: false
+            flipBuySell: props.viewSettings.get("flipBuySell"),
+            favorite: false,
+            showDepthChart: props.viewSettings.get("showDepthChart"),
+            leftOrderBook: props.viewSettings.get("leftOrderBook")
         };
 
         this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
@@ -67,7 +69,7 @@ class Exchange extends React.Component {
         bids: PropTypes.array.isRequired,
         asks: PropTypes.array.isRequired,
         activeMarketHistory: PropTypes.object.isRequired,
-        settings: PropTypes.object.isRequired,
+        viewSettings: PropTypes.object.isRequired,
         priceData: PropTypes.array.isRequired,
         volumeData: PropTypes.array.isRequired
     }
@@ -82,7 +84,7 @@ class Exchange extends React.Component {
         asks: [],
         setting: null,
         activeMarketHistory: {},
-        settings: {},
+        viewSettings: {},
         priceData: [],
         volumeData: []
     }
@@ -316,17 +318,41 @@ class Exchange extends React.Component {
         this.setState({activeTab: value});
     }
 
-    _toggleBuySell() {
-        this.setState({showBuySell: !this.state.showBuySell});
+    _flipBuySell() {
+        SettingsActions.changeViewSetting({
+            flipBuySell: !this.state.flipBuySell
+        });
+
+        this.setState({flipBuySell: !this.state.flipBuySell});
+    }
+
+    _toggleCharts() {
+        SettingsActions.changeViewSetting({
+            showDepthChart: !this.state.showDepthChart
+        });
+
+        this.setState({showDepthChart: !this.state.showDepthChart});
+    }
+
+    _moveOrderBook() {
+        SettingsActions.changeViewSetting({
+            leftOrderBook: !this.state.leftOrderBook
+        });
+
+        this.setState({leftOrderBook: !this.state.leftOrderBook});
     }
 
     _orderbookClick(base, quote, price, amount, type) {
+
+        let precision = utils.get_asset_precision(quote.precision + base.precision);
+
         if (type === "bid") {
 
             let value = amount.toString();
             if (value.indexOf(".") !== value.length -1) {
                 value = this._limitByPrecision(amount, quote);
             }
+            // price = Math.round(price * precision) / 
             this.setState({
                 sellPrice: price,
                 sellAmount: value,
@@ -372,7 +398,7 @@ class Exchange extends React.Component {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
             calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice } = this.props;
-        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal} = this.state;
+        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
             quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null, coreQuote, coreBase, settlementQuote, settlementBase,
@@ -505,7 +531,7 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    <div className="grid-block left-column small-4 medium-3 large-2" style={{overflow: "hidden"}}>
+                    {leftOrderBook ? <div className="grid-block left-column small-4 medium-3 large-2" style={{overflow: "hidden"}}>
                             <OrderBook
                                 orders={limit_orders}
                                 calls={call_orders}
@@ -517,11 +543,14 @@ class Exchange extends React.Component {
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                                 onClick={this._orderbookClick.bind(this, base, quote)}
+                                horizontal={!leftOrderBook}
+                                moveOrderBook={this._moveOrderBook.bind(this)}
+                                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
                             />
-                    </div>
+                    </div> : null}
 
                     {/* Center Column */}
-                    <div className="grid-block main-content vertical small-8 medium-9 large-8 ps-container" ref="center">
+                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8" : "small-12 large-10")} ref="center">
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
@@ -579,42 +608,65 @@ class Exchange extends React.Component {
                                 <div className="grid-block shrink borrow-button-container">
                                     {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
                                     {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
+                                    <div><button onClick={this._toggleCharts.bind(this)} className="button outline borrow-button">{!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}&nbsp;</button></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid-block no-overflow no-padding shrink">
-                            <DepthHighChart
-                                orders={limit_orders}
-                                call_orders={call_orders}
-                                flat_asks={flat_asks}
-                                flat_bids={flat_bids}
-                                flat_calls={flat_calls}
-                                invertedCalls={invertedCalls}
-                                totalBids={totalBids}
-                                totalCalls={totalCalls}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                height={300}
-                                onClick={this._depthChartClick.bind(this, base, quote)}
-                                plotLine={this.state.depthLine}
-                                settlementPrice={settlementPrice}
-                                spread={spread}
-                                SQP={squeezePrice}
-                                LCP={showCallLimit ? lowestCallPrice : null}
-                            />
-                        </div>
+                        {!this.state.showDepthChart ? (
+                            <div className="grid-block shrink no-overflow" id="market-charts" style={{marginTop: "0.5rem"}}>
+                            {/* Price history chart */}
+                                    <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 15, "active-bucket": this.props.bucketSize === 15})} onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 60, "active-bucket": this.props.bucketSize === 60})} onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 300, "active-bucket": this.props.bucketSize === 300})} onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 3600, "active-bucket": this.props.bucketSize === 3600})} onClick={this._changeBucketSize.bind(this, 3600)}>1hr</div>
+                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 86400, "active-bucket": this.props.bucketSize === 86400})} onClick={this._changeBucketSize.bind(this, 86400)}>1d</div>
+                                    </div>
+                                    <PriceChart
+                                        priceData={this.props.priceData}
+                                        volumeData={this.props.volumeData}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        height={400}
+                                        leftOrderBook={leftOrderBook}
+                                    />
+                        </div>) : (
+                            <div className="grid-block no-overflow no-padding shrink">
+                                <DepthHighChart
+                                    orders={limit_orders}
+                                    call_orders={call_orders}
+                                    flat_asks={flat_asks}
+                                    flat_bids={flat_bids}
+                                    flat_calls={flat_calls}
+                                    invertedCalls={invertedCalls}
+                                    totalBids={totalBids}
+                                    totalCalls={totalCalls}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    height={470}
+                                    onClick={this._depthChartClick.bind(this, base, quote)}
+                                    plotLine={this.state.depthLine}
+                                    settlementPrice={settlementPrice}
+                                    spread={spread}
+                                    SQP={squeezePrice}
+                                    LCP={showCallLimit ? lowestCallPrice : null}
+                                    leftOrderBook={leftOrderBook}
+                                />
+                            </div>)}
+
 
                         {/* Buy/Sell forms */}
-                        <div className="grid-block vertical shrink">
-                            <div className="grid-block shrink">
-                               </div>
-                            <div className="grid-block small-vertical medium-horizontal shrink no-padding" style={{ flexGrow: "0" }} >
+
+                        <div className="grid-block vertical shrink no-padding">
+                            <div className="grid-block small-vertical medium-horizontal no-padding align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
-                                    className="small-12 medium-6"
+                                    className={classnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
                                     type="buy"
                                     amount={buyAmount}
                                     price={buyPrice}
@@ -632,9 +684,12 @@ class Exchange extends React.Component {
                                     currentPrice={lowestAsk}
                                     account={currentAccount.get("name")}
                                 /> : null}
+                                <div onClick={this._flipBuySell.bind(this)} className="grid-block vertical align-center text-center no-padding shrink order-2" style={{cursor: "pointer"}}>
+                                    <span style={{fontSize: "2rem"}}>&#8646;</span>
+                                </div>
                                 {quote && base ?
                                 <BuySell
-                                    className="small-12 medium-6"
+                                    className={classnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-3 sell-form")}
                                     type="sell"
                                     amount={sellAmount}
                                     price={sellPrice}
@@ -655,7 +710,23 @@ class Exchange extends React.Component {
                             </div>
                         </div>
 
-
+                        {!leftOrderBook ? <div className="grid-block small-12" style={{overflow: "hidden"}}>
+                            <OrderBook
+                                orders={limit_orders}
+                                calls={call_orders}
+                                invertedCalls={invertedCalls}
+                                combinedBids={combinedBids}
+                                combinedAsks={combinedAsks}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                                onClick={this._orderbookClick.bind(this, base, quote)}
+                                horizontal={!leftOrderBook}
+                                moveOrderBook={this._moveOrderBook.bind(this)}
+                                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
+                            />
+                    </div> : null}
 
                         <div className="grid-content no-overflow shrink no-padding">
                             {limit_orders.size > 0 && base && quote ? <MyOpenOrders
@@ -670,29 +741,6 @@ class Exchange extends React.Component {
                             /> : null}
                         </div>
 
-                        {/* Price history chart and depth chart inside tabs */}
-                        <div className="grid-block shrink no-overflow" id="market-charts" style={{marginTop: "0.5rem"}}>
-
-                                    <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 15, "active-bucket": this.props.bucketSize === 15})} onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 60, "active-bucket": this.props.bucketSize === 60})} onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 300, "active-bucket": this.props.bucketSize === 300})} onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 3600, "active-bucket": this.props.bucketSize === 3600})} onClick={this._changeBucketSize.bind(this, 3600)}>1hr</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 86400, "active-bucket": this.props.bucketSize === 86400})} onClick={this._changeBucketSize.bind(this, 86400)}>1d</div>
-                                    </div>
-                                    <PriceChart
-                                        priceData={this.props.priceData}
-                                        volumeData={this.props.volumeData}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        height={300}
-                                    />
-
-
-
-                        </div>
 
 
                     {/* End of Main Content Column */}
