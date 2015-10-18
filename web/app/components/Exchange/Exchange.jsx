@@ -531,7 +531,8 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    {leftOrderBook ? <div className="grid-block left-column small-4 medium-3 large-2" style={{overflow: "hidden"}}>
+                    {leftOrderBook ? (
+                        <div className="grid-block left-column shrink" style={{overflow: "hidden"}}>
                             <OrderBook
                                 orders={limit_orders}
                                 calls={call_orders}
@@ -547,10 +548,10 @@ class Exchange extends React.Component {
                                 moveOrderBook={this._moveOrderBook.bind(this)}
                                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
                             />
-                    </div> : null}
+                    </div>) : null}
 
                     {/* Center Column */}
-                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8" : "small-12 large-10")} ref="center">
+                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8" : "small-12 large-10")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
@@ -612,7 +613,7 @@ class Exchange extends React.Component {
                                 </div>
                             </div>
                         </div>
-
+                        <div ref="center">
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink no-overflow" id="market-charts" style={{marginTop: "0.5rem"}}>
                             {/* Price history chart */}
@@ -742,7 +743,7 @@ class Exchange extends React.Component {
                         </div>
 
 
-
+                    </div>
                     {/* End of Main Content Column */}
                     </div>
 

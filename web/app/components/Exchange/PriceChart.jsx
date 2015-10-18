@@ -5,25 +5,11 @@ import utils from "common/utils";
 
 class Chart {
     shouldComponentUpdate(nextProps) {
-
         return (
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             !utils.are_equal_shallow(nextProps.config.series[0], this.props.config.series[0]) ||
             !utils.are_equal_shallow(nextProps.config.series[1], this.props.config.series[1])
         );
-    
-        // return true;
-        // if (this.props.config.series[0].data.length === 0) {
-        //     return nextProps.config.series[0].data.length > 0;
-        // } else {
-        //     console.log("chart else shouldComponentUpdate");
-        //     return (
-        //         true
-        //         // nextProps.config.series[0].data[nextProps.config.series[0].data.length - 1][0] !== this.props.config.series[0].data[this.props.config.series[0].data.length - 1][0] ||
-        //         // nextProps.config.series[0].data[0][1] !== this.props.config.series[0].data[0][1] || 
-        //         // nextProps.quoteSymbol !== this.props.quoteSymbol
-        //     );
-        // }
     }
 
     render() {
@@ -34,18 +20,13 @@ class Chart {
 class PriceChart extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
-        // return true;
-        // if (this.props.priceData.length === 0 || nextProps.priceData.length === 0) {
-        //     return nextProps.priceData.length > 0;
-        // } else {
-            return (
-                !utils.are_equal_shallow(nextProps.priceData, this.props.priceData) ||
-                nextState.lastPointY !== this.state.lastPointY ||
-                nextProps.baseSymbol !== this.props.baseSymbol ||
-                nextProps.leftOrderBook !== this.props.leftOrderBook
-                
-            );
-        // }
+        return (
+            !utils.are_equal_shallow(nextProps.priceData, this.props.priceData) ||
+            nextState.lastPointY !== this.state.lastPointY ||
+            nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.leftOrderBook !== this.props.leftOrderBook
+            
+        );
     }
 
     constructor() {
@@ -58,8 +39,6 @@ class PriceChart extends React.Component {
 
     componentWillReceiveProps() {
         let height = React.findDOMNode(this).offsetHeight;
-        // console.log("componentWillReceiveProps PriceChart offsetHeight:", height);
-        // console.log("componentWillReceiveProps PriceChart clientHeight:", clientHeight);
         this.setState({offsetHeight: height - 10});
     }
 
@@ -151,7 +130,6 @@ class PriceChart extends React.Component {
             tooltip: {
                 shared: true,
                 backgroundColor: "rgba(255, 0, 0, 0)",
-                crosshairs: true,
                 borderWidth: 0,
                 shadow: false,
                 useHTML: true,
