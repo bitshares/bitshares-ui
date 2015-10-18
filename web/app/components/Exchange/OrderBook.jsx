@@ -135,7 +135,9 @@ class OrderBook extends React.Component {
         if(base && quote) {
             let totalBidAmount = 0;
             let totalBidValue = 0;
-            high = combinedBids.length > 0 ? combinedBids[combinedBids.length - 1].price_full : 0;
+            high = combinedBids.length > 0 ? combinedBids.reduce((total, a) => {
+                return total < a.price_full ? a.price_full : total;
+            }, 0) : 0;
 
             bidRows = combinedBids.sort((a, b) => {
                 return b.price_full - a.price_full;
@@ -143,6 +145,9 @@ class OrderBook extends React.Component {
                 totalBidAmount += order.amount;
                 totalBidValue += order.value;
                 order.total = totalBidValue;
+                if (order.price_full < high / 5) {
+                    return null;
+                }
                 return (horizontal ? 
                     <OrderBookRowHorizontal
                         key={order.price_full}
@@ -161,11 +166,19 @@ class OrderBook extends React.Component {
                         type={order.type}
                     />
                 )
-            }).sort((a,b) => {
+            }).filter(a => {
+                return a !== null;
+            })
+            .sort((a, b) => {
                 return parseFloat(b.key) - parseFloat(a.key);
             });
 
-            low = combinedAsks.length > 0 ? combinedAsks[0].price_full : 0;
+            low = combinedAsks.length > 0 ? combinedAsks.reduce((total, a) => {
+                if (!total) {
+                    return a.price_full;
+                }
+                return total > a.price_full ? a.price_full : total;
+            }, null) : 0;
 
             let totalAskAmount = 0;
             let totalAskValue = 0;
@@ -175,6 +188,9 @@ class OrderBook extends React.Component {
                 totalAskAmount += order.amount;
                 totalAskValue += order.value;
                 order.total = totalAskValue;
+                if (order.price_full > low * 5) {
+                    return null;
+                }
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
@@ -194,6 +210,8 @@ class OrderBook extends React.Component {
                         type={order.type}
                     />
                     );
+            }).filter(a => {
+                return a !== null;
             }).sort((a, b) => {
                 if (horizontal) {
                     return parseFloat(a.key) - parseFloat(b.key);
@@ -247,7 +265,7 @@ class OrderBook extends React.Component {
         } else {
             return (
                 <div className="left-order-book no-padding no-overflow">
-                    <div className="table-container grid-content" ref="orderbook_container" style={{overflow: "hidden"}}>
+                    <div className="table-container grid-content no-padding" ref="orderbook_container" style={{overflow: "hidden"}}>
                         <table className="table order-table table-hover text-right">
                             <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
                                 {askRows}
