@@ -41,7 +41,8 @@ class PriceChart extends React.Component {
             return (
                 !utils.are_equal_shallow(nextProps.priceData, this.props.priceData) ||
                 nextState.lastPointY !== this.state.lastPointY ||
-                nextProps.baseSymbol !== this.props.baseSymbol
+                nextProps.baseSymbol !== this.props.baseSymbol ||
+                nextProps.leftOrderBook !== this.props.leftOrderBook
                 
             );
         // }
@@ -64,7 +65,7 @@ class PriceChart extends React.Component {
 
 
     render() {
-        let {priceData, volumeData, quoteSymbol, baseSymbol} = this.props;
+        let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote} = this.props;
         let {open, close, lastPointY} = this.state;
 
         let maxVolume = 0;
@@ -87,7 +88,7 @@ class PriceChart extends React.Component {
                     enabled: false
                 },
                 pinchType: "x",
-                spacing: [10, 0, 5, 0],
+                spacing: [10, 20, 5, 0],
                 events: {
                     redraw: (e) => {
                         if (e.target.series[0].points.length > 0) {
@@ -155,10 +156,11 @@ class PriceChart extends React.Component {
                 shadow: false,
                 useHTML: true,
                 padding: 0,
+                crosshairs: [true, true],
                 // pointFormat: " O: {point.open:.4f} H: {point.high:.4f} L: {point.low:.4f} C: {point.close:.4f}"
                 formatter: function () {
-                    let price_dec = 3;
-                    let vol_dec = 0;
+                    let price_dec = base.precision;
+                    let vol_dec = quote.precision;
                     let time = new Date(this.x).toLocaleString() + "  ";
                     let TA = "";
                     if (this.points.length === 0) {
@@ -206,8 +208,8 @@ class PriceChart extends React.Component {
                             color: "#FFFFFF"
                         },
                         align: "right",
-                        x: -3,
-                        format: "{value:,.2f}"
+                        x: 10,
+                        format: "{value:,." + (base.precision) + "f}"
                     },
                     opposite: true,
                     title: {
@@ -228,7 +230,7 @@ class PriceChart extends React.Component {
                             color: "#FFFFFF"
                         },
                         align: "right",
-                        x: -3,
+                        x: 10,
                         formatter: function() {
                             if (this.value !== 0) {
                                 if ( this.value > 1000000 ) {
@@ -312,15 +314,15 @@ class PriceChart extends React.Component {
         let currentValue = open <= close ?
             (<div
                 className="chart-label"
-                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", top: lastPointY - 2 + boxHeight / 2}}
+                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", right: "-10px", top: lastPointY - 2 + boxHeight / 2}}
             >
-                {utils.format_number(close, 4)}
+                {utils.format_number(close, base.precision)}
             </div>) :
             (<div
                 className="chart-label"
-                style={{height: boxHeight, backgroundColor: "#E3745B", top: lastPointY - 2 + boxHeight / 2}}
+                style={{height: boxHeight, backgroundColor: "#E3745B", right: "-10px",  top: lastPointY - 2 + boxHeight / 2}}
             >
-                {utils.format_number(close, 4)}
+                {utils.format_number(close, base.precision)}
             </div>);
 
         // let addLine = function(yPos, color) {

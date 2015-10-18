@@ -13,7 +13,8 @@ class DepthHighChart extends React.Component {
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
             nextProps.plotLine !== this.props.plotLine ||
             nextProps.feedPrice !== this.props.feedPrice ||
-            nextProps.settlementPrice !== this.props.settlementPrice
+            nextProps.settlementPrice !== this.props.settlementPrice ||
+            nextProps.leftOrderBook !== this.props.leftOrderBook
         );
     }
 
@@ -64,6 +65,7 @@ class DepthHighChart extends React.Component {
             },
             tooltip: {
                 shared: false,
+                crosshairs: [true, true],
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
@@ -249,7 +251,7 @@ class DepthHighChart extends React.Component {
         }
 
         return (
-            <div className="grid-content">
+            <div className="grid-content no-overflow">
                 <p className="bid-total">{utils.format_number(totalBids, base.precision)} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, quote.precision)} {quoteSymbol}</p>
                 {flat_bids || flat_asks || flat_calls ? <Highstock config={config}/> : null}

@@ -7,6 +7,7 @@ import ChainStore from "api/ChainStore";
 let ops = Object.keys(operations);
 
 let subs = {};
+let currentBucketSize;
 let wallet_api = new WalletApi();
 let orderCounter = -1;
 let lastExpiration;
@@ -45,7 +46,9 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize) {
+
         let subID = quote.get("id") + "_" + base.get("id");
+
         // console.log("sub to market:", subID);
 
         let isMarketAsset = false, marketAsset, inverted = false;
@@ -118,8 +121,8 @@ class MarketsActions {
                 });
         };
 
-        if (!subs[subID]) {
-
+        if (!subs[subID] || currentBucketSize !== bucketSize) {
+            currentBucketSize = bucketSize;
             let callPromise = null,
                 settlePromise = null;
 
