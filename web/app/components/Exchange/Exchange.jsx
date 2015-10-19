@@ -458,10 +458,10 @@ class Exchange extends React.Component {
                 
                 if (flipped) {
                     squeezePrice = settlementPrice / short_squeeze;
-                    showCallLimit = lowestCallPrice > settlementPrice;
+                    showCallLimit = lowestCallPrice > squeezePrice;
                 } else {
                     squeezePrice = settlementPrice * short_squeeze;
-                    showCallLimit = lowestCallPrice < settlementPrice;
+                    showCallLimit = lowestCallPrice < squeezePrice;
                 }
             }
         }
