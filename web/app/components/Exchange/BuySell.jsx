@@ -65,7 +65,7 @@ class BuySell extends React.Component {
         }
 
         return (
-            <div className={this.props.className}>
+            <div className={this.props.className + " middle-content"}>
                 <form className="order-form" onSubmit={onSubmit} noValidate>
                     <div className="grid-block vertical no-overflow no-padding">
 

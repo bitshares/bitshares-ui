@@ -251,7 +251,7 @@ class DepthHighChart extends React.Component {
         }
 
         return (
-            <div className="grid-content no-overflow">
+            <div className="grid-content no-overflow middle-content">
                 <p className="bid-total">{utils.format_number(totalBids, base.precision)} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, quote.precision)} {quoteSymbol}</p>
                 {flat_bids || flat_asks || flat_calls ? <Highstock config={config}/> : null}

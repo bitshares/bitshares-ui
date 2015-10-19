@@ -207,7 +207,7 @@ class MyOpenOrders extends React.Component {
         }
 
         return (
-            <div key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container" style={{marginBottom: "1rem", maxHeight: "400px"}} ref="orders">
+            <div key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
