@@ -13,7 +13,8 @@ class DepthHighChart extends React.Component {
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
             nextProps.plotLine !== this.props.plotLine ||
             nextProps.feedPrice !== this.props.feedPrice ||
-            nextProps.settlementPrice !== this.props.settlementPrice
+            nextProps.settlementPrice !== this.props.settlementPrice ||
+            nextProps.leftOrderBook !== this.props.leftOrderBook
         );
     }
 
@@ -34,6 +35,44 @@ class DepthHighChart extends React.Component {
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
         let totalAsks = 0;
+
+        let power = 1;
+
+        if (flat_bids.length) {
+            while ((flat_bids[flat_bids.length -1][0] * power) < 1) {
+                power *= 10;
+            }
+        } else if (flat_asks.length) {
+            while ((flat_asks[0][0] * power) < 1) {
+                power *= 10;
+            }
+        } else if (flat_calls && flat_calls.length) {
+            while ((flat_calls[flat_calls.length -1][0] * power) < 1) {
+                power *= 10;
+            }
+        }
+
+        power *= 10;
+
+        if (power !== 1) {
+            if (flat_asks.length) {
+                flat_bids.forEach(bid => {
+                    bid[0] *= power;
+                })
+            }
+
+            if (flat_asks.length) {
+                flat_asks.forEach(ask => {
+                    ask[0] *= power;
+                })
+            }
+
+            if (flat_calls && flat_calls.length) {
+                flat_calls.forEach(call => {
+                    call[0] *= power;
+                })
+            }
+        }
 
         let config = {
             chart: {
@@ -64,10 +103,11 @@ class DepthHighChart extends React.Component {
             },
             tooltip: {
                 shared: false,
+                crosshairs: [true, true],
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x, quote.precision)} ${priceSymbol}</span><br/>
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.precision)} ${priceSymbol}</span><br/>
                         <span style="color:${this.series.color}">\u25CF</span>
                         ${name}: <b>${utils.format_number(this.y, base.precision)} ${quoteSymbol}</b>`;
                 },
@@ -96,7 +136,7 @@ class DepthHighChart extends React.Component {
                     style: {
                         color: "#FFFFFF"
                     },
-                    formatter: function () {return this.value; }
+                    formatter: function () {return this.value / power; }
                 },
                 ordinal: false,
                 lineColor: "#000000",
@@ -141,7 +181,7 @@ class DepthHighChart extends React.Component {
                 color: "red",
                 id: "plot_line",
                 dashStyle: "longdashdot",
-                value: this.props.plotLine,
+                value: this.props.plotLine * power,
                 width: 1,
                 zIndex: 5
             });
@@ -153,7 +193,7 @@ class DepthHighChart extends React.Component {
                 color: "#B6B6B6",
                 id: "plot_line",
                 dashStyle: "longdash",
-                value: this.props.LCP,
+                value: this.props.LCP * power,
                 label: {
                     text: counterpart.translate("explorer.block.call_limit"),
                     style: {
@@ -171,7 +211,7 @@ class DepthHighChart extends React.Component {
                 color: "#B6B6B6",
                 id: "plot_line",
                 dashStyle: "longdash",
-                value: this.props.SQP,
+                value: this.props.SQP * power,
                 label: {
                     text: counterpart.translate("exchange.squeeze"),
                     style: {
@@ -189,7 +229,7 @@ class DepthHighChart extends React.Component {
                 color: "#7B1616",
                 id: "plot_line",
                 dashStyle: "solid",
-                value: this.props.settlementPrice,
+                value: this.props.settlementPrice * power,
                 label: {
                     text: counterpart.translate("explorer.block.settlement_price"),
                     style: {
@@ -249,7 +289,7 @@ class DepthHighChart extends React.Component {
         }
 
         return (
-            <div className="grid-content">
+            <div className="grid-content no-overflow middle-content">
                 <p className="bid-total">{utils.format_number(totalBids, base.precision)} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, quote.precision)} {quoteSymbol}</p>
                 {flat_bids || flat_asks || flat_calls ? <Highstock config={config}/> : null}

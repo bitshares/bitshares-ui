@@ -46,7 +46,7 @@ class BlockTimeAgo extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
+@BindToChainState({keep_updating: true, show_loader: true})
 class Blocks extends React.Component {
 
     static propTypes = {

@@ -16,8 +16,8 @@ class MarketsContainer extends React.Component {
                     defaultMarkets: () => {
                         return SettingsStore.getState().defaultMarkets;
                     },
-                    searchTerms: () => {
-                        return AssetStore.getState().searchTerms;
+                    viewSettings: () => {
+                        return SettingsStore.getState().viewSettings;
                     },
                     lookupResults: () => {
                         return AssetStore.getState().lookupResults;

@@ -26,16 +26,18 @@ module.exports = {
         locked_tip: "Geldbörse ist gesperrt. Klicken zum Entsperren.",
         unlocked_tip: "Geldbörse ist entsperrt. Klicken zum Sperren."
     },
-    operation : {
+    operation: {
         pending: "pending %(blocks)s blocks"
     },
     account: {
+        welcome: "Willkommen",
         asset: "Asset",
         market_value: "Marktwert",
         hour_24: "24hr Wechsel",
         recent: "Letzte Aktivität",
         name: "Konto Name",
         more: "mehr",
+        deposit_withdraw: "Aufladen/Abheben",
         member: {
             stats: "Mitgliederstatistiken",
             join: "Beitritt am",
@@ -119,6 +121,7 @@ module.exports = {
         follow: "Follow",
         pay: "Bezahlen",
         overview: "Übersicht",
+        bts_market: "Markt",
         history: "Historie",
         payees: "Empfänger",
         permissions: "Berechitigungen",
@@ -130,7 +133,14 @@ module.exports = {
             invalid: "Üngültiger Kontoname",
             unknown: "Unbekannter Kontoname",
             not_yours: "Nicht Ihr Konto"
-        }
+        },
+        collaterals: "Kollateral Positionen",
+        eq_value: "entspricht",
+        please_create_account: "Bitte erstellen Sie ein Konto",
+        create_account: "Konto erstellen",
+        identicon: "Identicon",
+        pay_from: "Bezahlen von",
+        existing_accounts: "Existierendes Konto"
     },
     pagination: {
         newer: "Jüngere",
@@ -297,7 +307,19 @@ module.exports = {
         blocks: {
             title: "Blockchain",
             globals: "Globale Einstellungen",
-            recent: "Letzte Blöcke"
+            recent: "Letzte Blöcke",
+            trx: "Transaktion",
+            block_times: "Block Zeiten",
+            block_time: "Block Zeit",
+            transactions: "# an Transaktionen",
+            recently_missed_blocks: "kürzlich verpasste Transaktionen",
+            trx_per_block: "Trx/block",
+            active_committee_members: "Aktive Kommittee Mitglieder",
+            active_witnesses: "Aktive Witnesses",
+            avg_conf_time: "mittlere Bestätigungszeit",
+            trx_per_sec: "Trx/s",
+            last_block: "Letzter Block",
+            current_block: "Aktueller Block"
         },
         block: {
             title: "Block",
@@ -340,6 +362,7 @@ module.exports = {
             precision: "Genauigkeit"
         },
         asset: {
+            title: "Asset",
             not_found: "Das Asset %(name)s existiert nicht",
             summary: {
                 asset_type: "Asset Typ",
@@ -376,17 +399,37 @@ module.exports = {
                 blacklist_markets: "Schwarzgelistete Märkte",
                 whitelist_authorities: "Authoritäten der Weißliste",
                 whitelist_markets: "Weißgelistete Märkte"
+            },
+            price_feed_data: {
+                title: "Price Feed Daten",
+                settlement_price: "Settlement Preis",
+                core_exchange_rate: "CER",
+                maintenance_collateral_ratio: "MCR",
+                maximum_short_squeeze_ratio: "MSSR",
+                publisher: "Publisher",
+                published: "Published"
             }
         },
         witnesses: {
-            title: "Witnesses"
+            title: "Witnesses",
+            current: "Aktueller Witness",
+            participation: "Beteiligungs Rate",
+            pay: "Bezahlung pro Block",
+            budget: "Übriges Budget",
+            next_vote: "Aktualisierung der Stimmen",
+            card: "Kartenansicht",
+            table: "Tabellenansicht",
+            rank: "Rang",
+            last_confirmed: "Zuletzt bestätigt",
+            missed: "verpasste Blöcke"
+
         },
         committee_members: {
-            title: "Committee members",
-            active: "Total number of active committee members"
+            title: "Kommitteemitglied",
+            active: "Gesamtzahl aktiver Kommitteemitglieder"
         },
         committee_member: {
-            title: "Committee member"
+            title: "Kommitteemitglied"
         },
         workers: {
             title: "Budgetpunkte"
@@ -406,7 +449,10 @@ module.exports = {
         confirm_yes: "Immer",
         confirm_no: "Nie",
         always_confirm: "Für jede Transaction nach Bestätigung fragen",
-        wallets: "Geldbörsen"
+        wallets: "Geldbörsen",
+        connection: "API Anbindung",
+        add_ws: "Websocket API hinzufügen",
+        remove_ws: "Websocket API entfernen"
     },
     footer: {
         title: "Graphene",
@@ -426,19 +472,29 @@ module.exports = {
         latest: "Letzer Preis",
         call: "Call Preis",
         volume: "Volumen",
+        settle: "Settlement Preis",
+        squeeze: "Margin Call Preis",
+        maintenance: "Maintenance Call Preis",
+        your_price: "Ihr Call Preis",
+        volume: "Volumen",
         spread: "Spread",
         quantity: "Quantität",
         buy: "Kaufen",
         sell: "Verkaufen",
+        receive: "Empfangen",
+        vertical: "Vertical",
+        horizontal: "Horizontal",
         confirm_buy: "Bestätigen Sie die Anweisung: Kauf von %(buy_amount)s %(buy_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
         confirm_sell: "Bestätigen Sie die Anweisung: Verkauf von %(sell_amount)s %(sell_symbol)s zum Preis von %(price_amount)s %(price_symbol)s"
     },
     markets: {
         choose_base: "Wählen Sie Ihre Grundwährung (base)",
+        market_search: "Markt Suche",
         filter: "Filter",
         core_rate: "Kernrate:",
         supply: "Verfügbarkeit",
-        search: "Suche"
+        search: "Suche",
+        preferred: "Bevorzugte Märkte"
     },
     wallet: {
         title: "Geldbörse",
@@ -454,6 +510,8 @@ module.exports = {
         delete_confirm_line2: "Unerwartete schlechte Dinge werden passieren, sollten Sie das hier nicht lesen!",
         delete_confirm_line3: "Diese Aktion kann NICHT rückgängig gemacht werden.",
         delete_wallet_name: "Gelbörse (%(name)s) löschen",
+        delete_confirm_line3: "Diese Aktion kan NICHT rückgängig gemacht werden!",
+        delete_wallet_name: "Lösche Geldbörse (%(name)s)",
         balance_claims: "Eingeforderte Guthaben",
         download: "Download",
         name: "Name der Geldbörse",
@@ -470,6 +528,7 @@ module.exports = {
         active_wallet: "Active Gelbörse",
         verified: "Verifiziert",
         verify_prior_backup: "Prüfe vorherige Sicherung",
+        brainkey_not_verified: "Dieser Gedächtnisschlüssel ist nicht verifiziert",
         cancel: "Abbrechen",
         reset: "Zurücksetzen",
         done: "Erledigt",
@@ -484,13 +543,37 @@ module.exports = {
         ready_to_restore: "Fertig für Wiederherstellung",
         restore_wallet_of: "Stelle Gelfbörse (%(name)s) wieder her",
         restore_success: "Geldbörse (%(name)s) erfolgreich wieder hergestellt",
-        change: "Wechsele Geldbörse (%(name)s)"
+        change: "Wechsele Geldbörse (%(name)s)",
+        import_20_notice1: "Importiere dein BTS 2.0+ BACKUP zuerst",
+        import_20_notice2: "(falls vorhanden)",
+        loading_balances: "Bestehende Kontostände werden geladen",
+        no_balance: "keine Kontostände bekannt",
+        claim_balance: "Kontostand einfordern",
+        claim_balances: "Kontostände einfordern",
+        unclaimed: "nicht eingefordert",
+        unclaimed_vesting: "nicht eingefordert (vesting)",
+        no_accounts: "Keine Konten",
+        brainkey_no_match: "Brainkey stimmt (noch) nicht überein.",
+        reenter_brainkey: "Brainkey bestätigen",
+        pwd4brainkey: "Passwort eingeben um Brainkey anzuzeigen",
+        show_brainkey: "Brainkey anzeigen",
+        brainkey_w1: "WARNUNG: Bitte ausdrucken oder aufschreiben",
+        brainkey_w2: "Jeder mit Zugang zu diesem Schlüssel wird",
+        brainkey_w3: "Zugang zu ihren Finanzen in dieser Geldbörse erhalten",
+        custom_brainkey: "Individueller Brainkey (Fortgeschritten)",
+        last_backup: "letzte Sicherung",
+        never_backed_up: "Diese Geldbörse wurde noch nie gesichert!",
+        need_backup: "Diese Gelbörse sollte neu gesichert werden!",
+        noneed_backup: "Keine Sicherung nötig!"
     },
     borrow: {
         title: "Kollateral Position für %(asset_symbol)s",
         no_valid: "Kein Gültiger Feed Preis für %(asset_symbol)s",
         coll_ratio: "Kollateral Ratio",
+        call_limit: "Markt Call Limit",
         adjust: "Position anpassen",
+        close: "Position schlißen",
+        update: "Aktualisieren",
         errors: {
             below: "Kollateral Ratio unter Aufrechterhaltungslevel",
             collateral: "Unzureichendes Kollateral"
@@ -501,6 +584,18 @@ module.exports = {
         to: "Gerausgeben an",
         amount: "Menge",
         submit: "Herausgeben"
+      },
+      withdraw : {
+        amount: "Abzuhebender Betrag",
+        address: "Abheben zu Adresse",
+        submit: "Abheben"
       }
+    },
+    init_error: {
+        title: "Initialisierungsfehler",
+        ws_status: "Websocket Verbindungsstatus",
+        retry: "nocheinmal versuchen",
+        connected: "verbunden",
+        not_connected: "Nicht verbunden"
     }
 };

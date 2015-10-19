@@ -107,14 +107,12 @@ p.order-table-title {
 
 .buy-form {
   padding-top: 0.25rem !important;
-  padding-left: 1rem !important;
-  padding-right: 0.5rem !important;
+  padding-bottom: 0.25rem !important;
 }
 
 .sell-form {
   padding-top: 0.25rem !important;
-  padding-left: 0.5rem !important;
-  padding-right: 1rem !important;
+  padding-bottom: 0.25rem !important;
 }
 
 .buySellButton {
@@ -375,4 +373,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 .borrow-price-feeds {
   padding-bottom: 2px;
+}
+
+.middle-content {
+  margin-bottom: 1rem;
 }
