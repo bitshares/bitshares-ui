@@ -10,12 +10,12 @@ import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
 import PrivateKeyStore from 'stores/PrivateKeyStore'
 import ChainStore from "api/ChainStore"
+import config from "chain/config"
 
 import BackupActions from "actions/BackupActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
-
 
 module.exports = {
     
@@ -27,6 +27,7 @@ module.exports = {
     
     alt, iDB,  Apis,
     db: ()=> Apis.instance().db_api(),
+    config,
     
     resolve: (object, atty = "_") => {
         if( ! object["then"]) {
@@ -54,4 +55,5 @@ module.exports = {
         }
     }
     
+    //DEBUG AddressIndex: require('stores/AddressIndex')
 }
