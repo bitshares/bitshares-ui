@@ -225,7 +225,7 @@ class OrderBook extends React.Component {
 
         if (this.props.horizontal) {
             return (
-                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow" style={{maxHeight: "400px", marginBottom: "1rem"}}>
+                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                             <table className="table order-table table-hover text-right">
                                 <thead>
