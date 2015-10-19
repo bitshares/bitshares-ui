@@ -27,7 +27,7 @@
         locked_tip: "Wallet is locked. Click to unlock.",
         unlocked_tip: "Wallet is unlocked. Click to lock."
     },
-    operation : {
+    operation: {
         pending: "pending %(blocks)s blocks"
     },
     account: {
@@ -122,6 +122,7 @@
         follow: "Follow",
         pay: "Pay",
         overview: "Overview",
+        bts_market: "Market",
         history: "History",
         payees: "Payees",
         permissions: "Permissions",
@@ -310,6 +311,8 @@
             recent: "Recent blocks",
             trx: "Transaction",
             block_times: "Block times",
+            block_time: "Block time",
+            transactions: "# of transactions",
             recently_missed_blocks: "Recently missed blocks",
             trx_per_block: "Trx/block",
             active_committee_members: "Active committee members",
@@ -361,6 +364,7 @@
             precision: "Precision"
         },
         asset: {
+            title: "Asset",
             not_found: "The asset %(name)s does not exist",
             summary: {
                 asset_type: "Asset type",
@@ -409,7 +413,18 @@
             }
         },
         witnesses: {
-            title: "Witnesses"
+            title: "Witnesses",
+            current: "Current witness",
+            participation: "Participation rate",
+            pay: "Pay-per-block",
+            budget: "Remaining budget",
+            next_vote: "Next vote update",
+            card: "Card view",
+            table: "Table view",
+            rank: "Rank",
+            last_confirmed: "Last confirmed",
+            missed: "Blocks missed"
+
         },
         committee_members: {
             title: "Committee members",
@@ -555,11 +570,12 @@
         title: "%(asset_symbol)s Margin",
         no_valid: "No valid feeds for %(asset_symbol)s",
         coll_ratio: "Collateral ratio",
+        call_limit: "Market Call Limit",
         adjust: "Update Position",
         close: "Close Position",
         update: "Update",
         errors: {
-            below: "Collateral ratio below maintenance level",
+            below: "Collateral ratio is too low, this position will be margin called instantly",
             collateral: "Insufficient collateral balance"
         }
     },

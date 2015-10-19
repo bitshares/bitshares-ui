@@ -31,6 +31,15 @@ class InitError extends React.Component {
         SettingsActions.changeSetting({setting: "connection", value: e.target.value });
     }
 
+    onReloadClick(e) {
+        e.preventDefault();
+        if (window.electron) {
+            window.location.hash = "";
+            window.remote.getCurrentWindow().reload();
+        }
+        else window.location.href = "/";
+    }
+
     render() {
         console.log("-- InitError.render -->", this.props);
 
@@ -49,7 +58,10 @@ class InitError extends React.Component {
                             <header><Translate component="span" content={`settings.connection`} /></header>
                             <ul>
                                 <li className="with-dropdown">
-                                    <div style={{position: "absolute", right: "0.8rem"}} className="button no-margin" onClick={this.triggerModal.bind(this)} id="add">+</div>
+                                    <div style={{position: "absolute", right: "0.8rem", top: "0.2rem"}}
+                                         className="button no-margin outline"
+                                         onClick={this.triggerModal.bind(this)} id="add"
+                                         data-tip="Add connection string" data-type="light">+</div>
                                     <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
                                         {options}
                                     </select>
@@ -63,7 +75,7 @@ class InitError extends React.Component {
                             </ul>
                         </section>
                         <br/>
-                        <a className="button no-margin" href="/"><Translate content={`init_error.retry`} /></a>
+                        <a className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></a>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>
                 </div>

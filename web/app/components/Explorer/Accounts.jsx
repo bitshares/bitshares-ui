@@ -38,7 +38,7 @@ class Accounts extends React.Component {
         let {searchTerm} = this.state;
         let accountRows = null;
 
-        if (searchAccounts.size > 0 && searchTerm.length > 0) {
+        if (searchAccounts.size > 0 && searchTerm &&searchTerm.length > 0) {
             accountRows = searchAccounts.filter(a => {
                 return a.indexOf(searchTerm) !== -1;
             })

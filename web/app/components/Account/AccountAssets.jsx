@@ -86,29 +86,6 @@ class AccountAssets extends React.Component {
         AssetStore.unlisten(this.onAssetsChange);
     }
 
-    _onCreateInput(value, e) {
-        let {create} = this.state;
-        if (value === "symbol") {
-            e.target.value = e.target.value.toUpperCase();
-            // console.log(e.target.value, "is valid symbol", validation.is_valid_symbol(e.target.value));
-        }
-        create[value] = e.target.value;
-        this.setState({create: create});
-        this._validateCreateFields(create);
-    }
-
-    _validateCreateFields( new_state ) {
-
-        let errors = {
-            create: null
-        };
-        errors.create = validation.is_valid_symbol_error(new_state.symbol);
-
-        let isValid = errors.create === null;
-
-        this.setState({isValid: isValid, errors: errors});
-    }
-
     _onIssueInput(value, e) {
         let key = e.target.id;
         let {issue} = this.state;
@@ -128,29 +105,7 @@ class AccountAssets extends React.Component {
         this.setState({issue: issue});
     }
 
-    _createAsset(account_id, e) {
-        console.log("account_id:", account_id);
-        e.preventDefault();
-        ZfApi.publish("create_asset", "close");
-        let {create} = this.state;
-        AssetActions.createAsset(account_id, create).then(result => {
-            console.log("... AssetActions.createAsset(account_id, create)", account_id, create)
-            // Notify 'Successfully created the asset' was running before transaction dialog confirm
-            // if (result) {
-            //     notify.addNotification({
-            //         message: `Successfully created the asset ${create.symbol}`,//: ${this.state.wallet_public_name}
-            //         level: "success",
-            //         autoDismiss: 10
-            //     });
-            // } else {
-            //     notify.addNotification({
-            //         message: `Failed to create the asset`,//: ${this.state.wallet_public_name}
-            //         level: "error",
-            //         autoDismiss: 10
-            //     });
-            // }
-        });
-    }
+
 
     _searchAccounts(searchTerm) {
         AccountActions.accountSearch(searchTerm);
@@ -280,11 +235,7 @@ class AccountAssets extends React.Component {
                     </div>
 
                     <div className="content-block">
-                        <div className="actions clearfix">
-                            <Trigger open="create_asset">
-                                <button className="button">Create New Asset</button>
-                            </Trigger>
-                        </div>
+                        <Link to="account-create-asset" params={{account_name}}><button className="button">Create New Asset</button></Link>
                     </div>
 
                     <Modal id="create_asset" overlay={true}>
@@ -293,30 +244,7 @@ class AccountAssets extends React.Component {
                         </Trigger>
                         <br/>
                         <div className="grid-block vertical">
-                            <form onSubmit={this._createAsset.bind(this, account.get("id"))} noValidate>
-                                <div className="shrink grid-content">
-                                    <label><Translate content="account.user_issued_assets.symbol" />
-                                        <input type="text" value={create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
-                                    </label>
-                                    { errors.create ? <p className="grid-content has-error">{errors.create}</p> : null}
 
-                                    <label><Translate content="account.user_issued_assets.description" />
-                                    <input type="text" value={create.description} onChange={this._onCreateInput.bind(this, "description")} /></label>
-
-                                    <label><Translate content="account.user_issued_assets.max_supply" />
-                                    <input type="number" value={create.max_supply} onChange={this._onCreateInput.bind(this, "max_supply")} /></label>
-
-                                    <label><Translate content="account.user_issued_assets.precision" />
-                                    <input type="number" value={create.precision} onChange={this._onCreateInput.bind(this, "precision")} /></label>
-
-                                </div>
-                                <div className="grid-content button-group">
-                                    <input type="submit" className={classnames("button", {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.get("id"))} value="Create Asset" />
-                                    <Trigger close="create_asset">
-                                        <a href className="secondary button">Cancel</a>
-                                    </Trigger>
-                                </div>
-                            </form>
                         </div>
                     </Modal>
 

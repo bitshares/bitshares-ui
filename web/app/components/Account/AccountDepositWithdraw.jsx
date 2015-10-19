@@ -124,9 +124,9 @@ class BlockTradesDepositRequest extends React.Component {
 
       return <tr>
                     <td>{this.props.deposit_asset} </td>
-                    <td> {receive_address} &nbsp; <button className={"button"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
+                    <td> {receive_address} &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
                     <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
-                    <td> <button className={"button"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
+                    <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
                           <Modal id={withdraw_modal_id} overlay={true}>
                               <Trigger close={withdraw_modal_id}>
                                   <a href="#" className="close-button">&times;</a>
@@ -138,7 +138,8 @@ class BlockTradesDepositRequest extends React.Component {
                                                   issuer={this.props.issuer_account.get('name')} 
                                                   asset={this.props.receive_asset.get('symbol')}
                                                   receive_asset_name={this.props.deposit_asset_name}
-                                                  receive_asset_symbol={this.props.deposit_asset} />
+                                                  receive_asset_symbol={this.props.deposit_asset}
+                                                  modal_id={withdraw_modal_id} />
                               </div>
                           </Modal>
                     </td>

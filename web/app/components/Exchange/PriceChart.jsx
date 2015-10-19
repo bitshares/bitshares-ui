@@ -1,6 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
-import Highcharts from "react-highcharts/stocks";
+import Highcharts from "react-highcharts/highstock";
 import utils from "common/utils";
 
 class Chart {
@@ -123,6 +123,9 @@ class PriceChart extends React.Component {
             },
             navigator: {
                 enabled: true
+            },
+            rangeSelector: {
+                enabled: false
             },
             plotOptions: {
                 candlestick: {
@@ -309,13 +312,13 @@ class PriceChart extends React.Component {
         let currentValue = open <= close ?
             (<div
                 className="chart-label"
-                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", top: lastPointY - 2 - boxHeight / 2}}
+                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", top: lastPointY - 2 + boxHeight / 2}}
             >
                 {utils.format_number(close, 4)}
             </div>) :
             (<div
                 className="chart-label"
-                style={{height: boxHeight, backgroundColor: "#E3745B", top: lastPointY - 2 - boxHeight / 2}}
+                style={{height: boxHeight, backgroundColor: "#E3745B", top: lastPointY - 2 + boxHeight / 2}}
             >
                 {utils.format_number(close, 4)}
             </div>);

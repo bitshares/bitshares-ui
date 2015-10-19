@@ -15,7 +15,7 @@ import BackupActions from "actions/BackupActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
-
+import chain_config from "chain/config"
 
 module.exports = {
     
@@ -24,6 +24,7 @@ module.exports = {
     AccountStore, 
     BackupActions,
     ChainStore,
+    chain_config,
     
     alt, iDB,  Apis,
     db: ()=> Apis.instance().db_api(),

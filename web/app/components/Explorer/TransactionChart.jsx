@@ -1,6 +1,7 @@
 
 import React from "react";
-import Highcharts from "react-highcharts/stocks";
+import Highcharts from "react-highcharts/highstock";
+import counterpart from "counterpart";
 
 class TransactionChart extends React.Component {
 
@@ -42,6 +43,8 @@ class TransactionChart extends React.Component {
             }
         })
 
+        let tooltipLabel = counterpart.translate("explorer.blocks.transactions");
+
         let config = {
             chart: {
                 type: "column",
@@ -58,14 +61,21 @@ class TransactionChart extends React.Component {
             legend: {
                 enabled: false
             },
-            // tooltip: {
-                // positioner: function(w, h, point) {
-                //     return {x: point.plotX, y: point.plotY - 30};
-                // }
-                // formatter: function() {
-                //     return this.point.y;
-                // }
-            // },
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+            scrollbar: {
+                enabled: false
+            },
+            tooltip: {
+                shared: false,
+                formatter: function() {
+                    return tooltipLabel + ": " + this.point.y;
+                }
+            },
             series: [
                 {
                     name: "Transactions",
@@ -95,7 +105,7 @@ class TransactionChart extends React.Component {
             plotOptions: {
                 column: {
                     animation: false,
-                    minPointLength: 10,
+                    minPointLength: 5,
                     colorByPoint: true,
                     colors: colors,
                     borderWidth: 0

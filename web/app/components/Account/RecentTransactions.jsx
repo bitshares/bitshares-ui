@@ -23,12 +23,19 @@ class RecentTransactions extends React.Component {
     static propTypes = {
         accountsList: ChainTypes.ChainAccountsList.isRequired,
         compactView: React.PropTypes.bool,
-        limit: React.PropTypes.number.isRequired
+        limit: React.PropTypes.number
+    }
+
+    constructor(props) {
+        super();
+        this.state = {
+            limit: props.limit ? Math.max(20, props.limit) : 20
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if(!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
-        if (nextProps.limit !== this.props.limit) return true;
+        if (nextState.limit !== this.state.limit) return true;
         for(let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
@@ -37,8 +44,15 @@ class RecentTransactions extends React.Component {
         return false;
     }
 
+    _onIncreaseLimit() {
+        this.setState({
+            limit: this.state.limit + 30
+        });
+    }
+
     render() {
-        let {accountsList, compactView, limit} = this.props;
+        let {accountsList, compactView} = this.props;
+        let {limit} = this.state;
         let history = [];
         let current_account = null, current_account_id = null;
         let accounts_counter = 0;
@@ -51,6 +65,8 @@ class RecentTransactions extends React.Component {
                 if (h) history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
             }
         }
+        let historyCount = history.length;
+
         if(accounts_counter === 1 && current_account) current_account_id = current_account.get("id");
         history = history
             .sort(compareOps)
@@ -70,18 +86,27 @@ class RecentTransactions extends React.Component {
                 )
         });
         return (
-            <table className={"table" + (compactView ? " compact" : "")}>
-                <thead>
-                <tr>
-                    {compactView ? null : <th><Translate content="explorer.block.op" /></th>}
-                    <th><Translate content="account.votes.info" /></th>
-                    <th><Translate content="explorer.block.date" /></th>
-                </tr>
-                </thead>
-                <tbody>
-                    {history}
-                </tbody>
-            </table>
+            <div>
+                <table className={"table" + (compactView ? " compact" : "")}>
+                    <thead>
+                    <tr>
+                        {compactView ? null : <th><Translate content="explorer.block.op" /></th>}
+                        <th><Translate content="account.votes.info" /></th>
+                        <th><Translate content="explorer.block.date" /></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {history}
+                    </tbody>
+                </table>
+                {this.props.showMore && historyCount > 20 && limit < historyCount ? (
+                    <div className="account-info more-button">
+                        <div className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
+                            <Translate content="account.more" />
+                        </div>
+                    </div>
+                    ) : null}
+            </div>
         );
     }
 }

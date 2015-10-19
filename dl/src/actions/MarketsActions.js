@@ -171,7 +171,7 @@ class MarketsActions {
 
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
-        console.log("unSubscribeMarket:", subID);
+        // console.log("unSubscribeMarket:", subID);
         delete subs[subID];
         this.dispatch({unSub: true});
         if (subs[subID]) {
@@ -179,7 +179,7 @@ class MarketsActions {
                     quote, base
                 ])
                 .then((unSubResult) => {
-                    console.log(subID, "market unsubscription success:", unSubResult);
+                    // console.log(subID, "market unsubscription success:", unSubResult);
                     
                 }).catch((error) => {
                     subs[subID] = true;

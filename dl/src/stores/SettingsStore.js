@@ -16,6 +16,10 @@ class SettingsStore {
             connection: "wss://bitshares.openledger.info/ws"
         });
 
+        this.viewSettings =  Immutable.Map({
+            cardView: true
+        });
+
         this.defaultMarkets = Immutable.Map([
             ["BTC_CORE", {"quote":"BTC","base":CORE_ASSET}],
             ["CNY_CORE", {"quote":"CNY","base":CORE_ASSET}],
@@ -24,7 +28,8 @@ class SettingsStore {
             ["SILVER_CORE", {"quote":"SILVER","base":CORE_ASSET}],
             ["USD_CORE", {"quote":"USD","base":CORE_ASSET}],
             ["BTC_USD", {"quote":"BTC","base":"USD"}],
-            ["BTC_CNY", {"quote":"BTC","base":"CNY"}]
+            ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
+            ["TRADE.BTC_CORE", {"quote":"TRADE.BTC","base":CORE_ASSET} ]
         ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -41,7 +46,7 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws",
-                "ws://127.0.0.1:8091"
+                "ws://127.0.0.1:8090"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -51,6 +56,7 @@ class SettingsStore {
 
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
+            onChangeViewSetting: SettingsActions.changeViewSetting,
             onAddMarket: SettingsActions.addMarket,
             onRemoveMarket: SettingsActions.removeMarket,
             onAddWS: SettingsActions.addWS,
@@ -68,6 +74,10 @@ class SettingsStore {
         if (this._lsGet("defaults")) {
             this.defaults = JSON.parse(this._lsGet("defaults"));
         }
+
+        if (this._lsGet("viewSettings_v1")) {
+            this.viewSettings = Immutable.Map(JSON.parse(this._lsGet("viewSettings_v1")));
+        }
     }
 
     getSetting(setting) {
@@ -81,6 +91,14 @@ class SettingsStore {
         );
 
         this._lsSet("settings_v1", this.settings.toJS());
+    }
+
+    onChangeViewSetting(payload) {
+        for (key in payload) {
+            this.viewSettings = this.viewSettings.set(key, payload[key]);
+        }
+
+        this._lsSet("viewSettings_v1", this.viewSettings.toJS());
     }
 
     _lsGet(key) {

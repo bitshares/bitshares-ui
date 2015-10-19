@@ -96,7 +96,7 @@ class Transaction extends React.Component {
     render() {
         let {trx} = this.props;
         let info = null;
-
+        console.log("trx:", trx);
         info = [];
 
         let opCount = trx.operations.length;
@@ -302,7 +302,6 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_create":
-
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.name" /></td>
@@ -311,13 +310,13 @@ class Transaction extends React.Component {
                     );
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="account.member.reg" /></td>
+                            <td><Translate component="span" content="account.member.registrar" /></td>
                             <td>{this.linkToAccount(op[1].registrar)}</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="account.member.ref" /></td>
+                            <td><Translate component="span" content="account.member.lifetime_referrer" /></td>
                             <td>{this.linkToAccount(op[1].referrer)}</td>
                         </tr>
                     );
@@ -608,7 +607,6 @@ class Transaction extends React.Component {
                 case "asset_publish_feed":
                     color = "warning";                    
                     let {feed} = op[1];
-                    console.log("op:", op, feed);
 
                     rows.push(
                         <tr>
