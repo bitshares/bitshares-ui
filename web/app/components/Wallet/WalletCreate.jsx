@@ -152,14 +152,8 @@ class CreateNewWallet extends Component {
             // Allow only valid file name characters
             if( /[^a-z0-9_-]/.test(value) ) return
         }
-        //TODO BrainKeyCreate.jsx
-        //key.suggest_brain_key(key.browserEntropy())
-        //if(key_id === "brainkey") {
-        //    value = value.toUpperCase()
-        //    value = value.split(/[\t\n\v\f\r ]+/).join(" ")
-        //}
         
-        // Set state is done directly because validate is going to 
+        // Set state is updated directly because validate is going to 
         // require a merge of new and old state
         this.state[key_id] = value
         this.setState(this.state)
