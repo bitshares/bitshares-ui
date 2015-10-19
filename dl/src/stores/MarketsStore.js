@@ -313,7 +313,7 @@ class MarketsStore {
     }
 
     onCallOrderUpdate(call_order) {
-        if (call_order) {
+        if (call_order && this.quoteAsset && this.baseAsset) {
             if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
                 if (typeof call_order.collateral !== "number") {
                     call_order.collateral = parseInt(call_order.collateral, 10);

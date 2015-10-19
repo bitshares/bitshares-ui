@@ -543,7 +543,7 @@ module.exports = {
         ready_to_restore: "Fertig für Wiederherstellung",
         restore_wallet_of: "Stelle Gelfbörse (%(name)s) wieder her",
         restore_success: "Geldbörse (%(name)s) erfolgreich wieder hergestellt",
-        change: "Wechsele Geldbörse (%(name)s)"
+        change: "Wechsele Geldbörse (%(name)s)",
         import_20_notice1: "Importiere dein BTS 2.0+ BACKUP zuerst",
         import_20_notice2: "(falls vorhanden)",
         loading_balances: "Bestehende Kontostände werden geladen",
