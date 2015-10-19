@@ -76,7 +76,8 @@
     "eslint": "^0.20.0",
     "eslint-plugin-react": "^2.2.0",
     "jest-cli": "~0.4.1",
-    "script-loader": "^0.6.1"
+    "script-loader": "^0.6.1",
+    "worker-loader": "^0.6.0"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",
