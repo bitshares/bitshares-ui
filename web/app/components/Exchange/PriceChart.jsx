@@ -141,7 +141,7 @@ class PriceChart extends React.Component {
                     let vol_dec = quote.precision;
                     let time = new Date(this.x).toLocaleString() + "  ";
                     let TA = "";
-                    if (this.points.length === 0) {
+                    if (!this.points || this.points.length === 0) {
                         return "";
                     }
                     // if ((this.points[0].point && this.points[0].point.open) && (this.points[1].point && this.points[1].point.y)) {
