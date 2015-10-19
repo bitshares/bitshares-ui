@@ -30,7 +30,7 @@ class PrivateKeyStore extends BaseStore {
             onAddKey: PrivateKeyActions.addKey
         })
         this._export("hasKey", "getPubkeys", "getTcomb_byPubkey",
-            "getPubkeys_having_PrivateKey");
+            "getPubkeys_having_PrivateKey", "addPrivateKeys_noindex");
     }
     
     _getInitialState() {
@@ -151,6 +151,28 @@ class PrivateKeyStore extends BaseStore {
             resolve(p)
         })
         resolve(p)
+    }
+    
+    
+    /** WARN: does not update AddressIndex.  This is designed for bulk importing.
+        @return duplicate_count
+    */
+    addPrivateKeys_noindex(private_key_objects, transaction) {
+        var store = transaction.objectStore("private_keys")
+        var duplicate_count = 0
+        var keys = this.state.keys.withMutations( keys => {
+            for(let private_key_object of private_key_objects) {
+                if(this.state.keys.has(private_key_object.pubkey)) {
+                    duplicate_count++
+                    continue
+                }
+                var private_tcomb = PrivateKeyTcomb(private_key_object)
+                store.add( private_key_object )
+                keys.set( private_key_object.pubkey, private_tcomb )
+            }
+        })
+        this.setState({ keys })
+        return duplicate_count
     }
     
     binaryBackupRecommended() {
