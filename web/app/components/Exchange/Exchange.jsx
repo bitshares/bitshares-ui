@@ -729,17 +729,19 @@ class Exchange extends React.Component {
                             />
                     </div> : null}
 
-                        <div className="grid-content no-overflow shrink no-padding">
-                            {limit_orders.size > 0 && base && quote ? <MyOpenOrders
-                                key="open_orders"
-                                orders={limit_orders}
-                                currentAccount={currentAccount.get("id")}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                onCancel={this._cancelLimitOrder.bind(this)}
-                            /> : null}
+                        <div className="grid-block no-overflow shrink no-padding">
+                            {limit_orders.size > 0 && base && quote ? (
+                                <MyOpenOrders
+                                    key="open_orders"
+                                    orders={limit_orders}
+                                    currentAccount={currentAccount.get("id")}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    onCancel={this._cancelLimitOrder.bind(this)}
+                                    flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
+                                />) : null}
                         </div>
 
 
