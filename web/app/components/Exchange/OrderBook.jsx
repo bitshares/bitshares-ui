@@ -105,19 +105,19 @@ class OrderBook extends React.Component {
             );
     }
 
-    componentDidMount() {
-        if (!this.props.horizontal) {
-            let orderbookContainer = React.findDOMNode(this.refs.orderbook_container);
-            Ps.initialize(orderbookContainer);
-        }
-    }
+    // componentDidMount() {
+    //     if (!this.props.horizontal) {
+    //         let bidsContainer = React.findDOMNode(this.refs.bidsTbody);
+    //         Ps.initialize(bidsContainer);
+    //     }
+    // }
 
-    componentDidUpdate() {
-        if (!this.props.horizontal) {
-            let orderbookContainer = React.findDOMNode(this.refs.orderbook_container);
-            Ps.update(orderbookContainer);
-        }
-    }
+    // componentDidUpdate() {
+    //     if (!this.props.horizontal) {
+    //         let bidsContainer = React.findDOMNode(this.refs.bidsTbody);
+    //         Ps.initialize(bidsContainer);
+    //     }
+    // }
 
     _flipBuySell() {
         SettingsActions.changeViewSetting({
@@ -225,7 +225,7 @@ class OrderBook extends React.Component {
 
         if (this.props.horizontal) {
             return (
-                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced" ref="orderbook_container" style={{overflow: "hidden"}}>
+                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow" style={{maxHeight: "400px", marginBottom: "1rem"}}>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                             <table className="table order-table table-hover text-right">
                                 <thead>
@@ -236,13 +236,13 @@ class OrderBook extends React.Component {
                                         <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><small>({baseSymbol})</small></th>
                                     </tr>
                                 </thead>
-                                <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
+                                <tbody id="test" className="orderbook orderbook-top">
                                     {askRows}
                                 </tbody>
                             </table>
                         </div>
-                        <div onClick={this._flipBuySell.bind(this)} className="grid-block vertical align-center text-center no-padding shrink order-2" style={{cursor: "pointer"}}>
-                            <span style={{fontSize: "2rem", paddingBottom: "1rem"}}>&#8646;</span>
+                        <div className="grid-block vertical align-center text-center no-padding shrink order-2">
+                            <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem", paddingBottom: "1rem"}}>&#8646;</span>
                             <button onClick={this.props.moveOrderBook} className="button outline"><Translate content="exchange.vertical" /></button>
                         </div>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
@@ -255,7 +255,7 @@ class OrderBook extends React.Component {
                                         <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><small>({baseSymbol})</small></th>
                                     </tr>
                                 </thead>
-                                <tbody ref="asksTbody" className="orderbook ps-container orderbook-bottom">
+                                <tbody className="orderbook ps-container orderbook-bottom">
                                     {bidRows}
                                 </tbody>
                             </table>
