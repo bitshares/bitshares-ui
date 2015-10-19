@@ -7,6 +7,7 @@ import ChainStore from "api/ChainStore";
 let ops = Object.keys(operations);
 
 let subs = {};
+let currentBucketSize;
 let wallet_api = new WalletApi();
 let orderCounter = -1;
 let lastExpiration;
@@ -45,7 +46,9 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize) {
+
         let subID = quote.get("id") + "_" + base.get("id");
+
         // console.log("sub to market:", subID);
 
         let isMarketAsset = false, marketAsset, inverted = false;
@@ -118,8 +121,8 @@ class MarketsActions {
                 });
         };
 
-        if (!subs[subID]) {
-
+        if (!subs[subID] || currentBucketSize !== bucketSize) {
+            currentBucketSize = bucketSize;
             let callPromise = null,
                 settlePromise = null;
 
@@ -172,15 +175,13 @@ class MarketsActions {
 
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
-        // console.log("unSubscribeMarket:", subID);
-        delete subs[subID];
-        this.dispatch({unSub: true});
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
                     quote, base
                 ])
                 .then((unSubResult) => {
-                    // console.log(subID, "market unsubscription success:", unSubResult);
+                    this.dispatch({unSub: true});
+                    delete subs[subID];
                     
                 }).catch((error) => {
                     subs[subID] = true;

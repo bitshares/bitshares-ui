@@ -131,7 +131,7 @@ class WitnessRow extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
+@BindToChainState({keep_updating: true, show_loader: true})
 class WitnessList extends React.Component {
 
     static propTypes = {

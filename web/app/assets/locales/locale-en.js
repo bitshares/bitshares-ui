@@ -462,8 +462,8 @@
         loading: "Loading..."
     },
     exchange: {
-        price_history: "Price History",
-        order_depth: "Order Depth",
+        price_history: "Price Chart",
+        order_depth: "Market Depth",
         market_history: "Market History",
         balance: "Your balance",
         lowest_ask: "Lowest ask",
@@ -484,6 +484,8 @@
         buy: "Buy",
         sell: "Sell",
         receive: "Receive",
+        vertical: "Vertical",
+        horizontal: "Horizontal",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
     },

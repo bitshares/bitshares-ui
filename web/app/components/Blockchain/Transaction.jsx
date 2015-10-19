@@ -624,14 +624,14 @@ class Transaction extends React.Component {
 
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="transaction.coll_ratio" /></td>
+                            <td><Translate component="span" content="explorer.asset.price_feed.maximum_short_squeeze_ratio" /></td>
                             <td>{(feed.maximum_short_squeeze_ratio / 1000).toFixed(2)}</td>
                         </tr>
                     );
 
                     rows.push(
                         <tr>
-                            <td><Translate component="span" content="transaction.coll_maint" /></td>
+                            <td><Translate component="span" content="explorer.asset.price_feed.maintenance_collateral_ratio" /></td>
                             <td>{(feed.maintenance_collateral_ratio / 1000).toFixed(2)}</td>
                         </tr>
                     );

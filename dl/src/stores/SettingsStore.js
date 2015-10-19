@@ -21,15 +21,15 @@ class SettingsStore {
         });
 
         this.defaultMarkets = Immutable.Map([
-            ["BTC_CORE", {"quote":"BTC","base":CORE_ASSET}],
-            ["CNY_CORE", {"quote":"CNY","base":CORE_ASSET}],
-            ["EUR_CORE", {"quote":"EUR","base":CORE_ASSET}],
-            ["GOLD_CORE", {"quote":"GOLD","base":CORE_ASSET}],
-            ["SILVER_CORE", {"quote":"SILVER","base":CORE_ASSET}],
-            ["USD_CORE", {"quote":"USD","base":CORE_ASSET}],
+            ["BTC_" + CORE_ASSET, {"quote":"BTC","base":CORE_ASSET}],
+            ["CNY_" + CORE_ASSET, {"quote":"CNY","base":CORE_ASSET}],
+            ["EUR_" + CORE_ASSET, {"quote":"EUR","base":CORE_ASSET}],
+            ["GOLD_" + CORE_ASSET, {"quote":"GOLD","base":CORE_ASSET}],
+            ["SILVER_" + CORE_ASSET, {"quote":"SILVER","base":CORE_ASSET}],
+            ["USD_" + CORE_ASSET, {"quote":"USD","base":CORE_ASSET}],
             ["BTC_USD", {"quote":"BTC","base":"USD"}],
             ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
-            ["TRADE.BTC_CORE", {"quote":"TRADE.BTC","base":CORE_ASSET} ]
+            ["TRADE.BTC_" + CORE_ASSET, {"quote":"TRADE.BTC","base":CORE_ASSET} ]
         ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js

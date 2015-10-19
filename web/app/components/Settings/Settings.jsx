@@ -53,8 +53,8 @@ class SettingsEntry extends React.Component {
 
                 optional = (
                     <div style={{position: "absolute", right: 0, top: "0.2rem"}}>
-                        <div onClick={this.props.triggerModal} id="remove" className="button outline" data-tip="Add connection string" data-type="light">-</div>
-                        <div onClick={this.props.triggerModal} id="add" className="button outline" data-tip="Remove connection string" data-type="light">+</div>
+                        <div onClick={this.props.triggerModal} id="remove" className="button outline" data-tip="Remove connection string" data-type="light">-</div>
+                        <div onClick={this.props.triggerModal} id="add" className="button outline" data-tip="Add connection string" data-type="light">+</div>
                     </div>);
 
                 break;
@@ -151,7 +151,7 @@ class Settings extends React.Component {
 
             case "inverseMarket":
             case "confirmMarketOrder":
-                value = findEntry(e.target.value, defaults) === 0; // USD/CORE is true, CORE/USD is false
+                value = findEntry(e.target.value, defaults) === 0; // USD/BTS is true, BTS/USD is false
                 break;
 
             case "connection":

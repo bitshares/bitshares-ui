@@ -225,15 +225,14 @@ class ChainStore
     * 4. null            - query return null
     *
     */
-   getObject( id )
+   getObject( id, force = false )
    {
       if( !utils.is_object_id(id) )
          throw Error( "argument is not an object id: " + id )
 
       let result = this.objects_by_id.get( id )
-
-      if( result === undefined )
-         return this.fetchObject( id )
+      if( result === undefined || force )
+         return this.fetchObject( id, force )
       if( result === true )
          return undefined
 
@@ -376,7 +375,7 @@ class ChainStore
     *  @return undefined if the object might exist but is not in cache
     *  @return the object if it does exist and is in our cache
     */
-   fetchObject( id )
+   fetchObject( id, force = false )
    {
       if( typeof id !== 'string' )
       {
@@ -387,7 +386,7 @@ class ChainStore
       }
 
       //console.log( "fetchObject: ", id, this.subscribed )
-      if( !this.subscribed ) return undefined
+      if( !this.subscribed && !force ) return undefined
 
       if(DEBUG) console.log( "maybe fetch object: ", id )
       if( !utils.is_object_id(id) )
@@ -996,11 +995,22 @@ class ChainStore
       {
          this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
          let dynamic = current.get( 'dynamic' );
-         if( !dynamic )
-            this.getObject( object.dynamic_asset_data_id );
+         if( !dynamic ) {
+           let dad = this.getObject( object.dynamic_asset_data_id, true );
+            if( !dad )
+               dad = Immutable.Map()
+            if( !dad.get( 'asset_id' ) ) {
+               dad = dad.set( 'asset_id', object.id );
+            }
+            this.objects_by_id = this.objects_by_id.set( object.dynamic_asset_data_id, dad );
+
+            current = current.set( 'dynamic', dad );
+            this.objects_by_id = this.objects_by_id.set( object.id, current );
+          }
+
          let bitasset = current.get( 'bitasset' );
          if( !bitasset && object.bitasset_data_id ) {
-            let bad = this.getObject( object.bitasset_data_id );
+            let bad = this.getObject( object.bitasset_data_id, true );
             if( !bad )
                bad = Immutable.Map()
 
@@ -1015,10 +1025,16 @@ class ChainStore
       }
       else if( object.id.substring(0,asset_dynamic_data_prefix.length) == asset_dynamic_data_prefix )
       {
-         let asset_id = asset_prefix + object.id.substring( asset_dynamic_data_prefix.length )
-         let asset_obj = this.objects_by_id.get( asset_id );
-         if(asset_obj && asset_obj.set) asset_obj = asset_obj.set( 'dynamic', current );
-         this.objects_by_id = this.objects_by_id.set( asset_id, asset_obj );
+         // let asset_id = asset_prefix + object.id.substring( asset_dynamic_data_prefix.length )
+         let asset_id = current.get( "asset_id" );
+         if (asset_id) {
+            let asset_obj = this.getObject( asset_id );
+            if(asset_obj && asset_obj.set) {
+              asset_obj = asset_obj.set( 'dynamic', current );
+              this.objects_by_id = this.objects_by_id.set( asset_id, asset_obj );
+            }
+         }
+
       }
       else if( object.id.substring(0,worker_prefix.length ) == worker_prefix )
       {

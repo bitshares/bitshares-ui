@@ -121,26 +121,25 @@ class MarketUtils {
 
     static parseOrder(order, base, quote, invert = false) {
         let ask = this.isAsk(order, base);
+
         let quotePrecision = utils.get_asset_precision(quote.toJS ? quote.get("precision") : quote.precision);
         let basePrecision = utils.get_asset_precision(base.toJS ? base.get("precision") : base.precision);
-
+        let pricePrecision = order.call_price ?
+            (quote.toJS ? quote.get("precision") : quote.precision) :
+            (base.toJS ? base.get("precision") : base.precision);
+        
         let buy, sell;
         let callPrice;
         if (order.sell_price) {
             buy = ask ? order.sell_price.base : order.sell_price.quote;
             sell = ask ? order.sell_price.quote : order.sell_price.base;
         } else if (order.call_price) {
-            // if (order.id === "1.8.986") console.log("order:", order, "quote:", quote.get("symbol"), "base:", base.get("symbol"));
             buy = order.call_price.base;
             sell = order.call_price.quote;
-
-            // let BLACK_SWAN2 = (order.debt / quotePrecision) / (order.collateral / basePrecision);
             let marginPrice = (buy.amount / basePrecision) / (sell.amount / quotePrecision);
             if (!invert) {
-                // if (order.id === "1.8.986") console.log("!invert: marginPrice:", marginPrice, 1 / (BLACK_SWAN2 * 1.75));
                 callPrice = marginPrice;
             } else {
-                // if (order.id === "1.8.986") console.log("invert: marginPrice:", 1 / marginPrice, (BLACK_SWAN2 * 1.75));
                 callPrice = 1 / (marginPrice);
             }
         }
@@ -161,21 +160,21 @@ class MarketUtils {
         let amount, value;
 
         // We need to figure out a better way to set the number of decimals
-        let price_split = utils.format_number(price.full, Math.max(5, quote.toJS ? quote.get("precision") : quote.precision)).split(".");
+        let price_split = utils.format_number(price.full, Math.max(5, pricePrecision)).split(".");
         price.int = price_split[0];
         price.dec = price_split[1];
 
         if (order.debt) {
             if (invert) {
-                // Price in USD/CORE, amount should be in CORE, value should be in USD, debt is in USD
-                // buy is in USD, sell is in CORE
-                // quote is USD, base is CORE
+                // Price in USD/BTS, amount should be in BTS, value should be in USD, debt is in USD
+                // buy is in USD, sell is in BTS
+                // quote is USD, base is BTS
                 value = order.debt / quotePrecision;
                 amount = this.limitByPrecision(value / price.full, base);
             } else {
-                // Price in CORE/USD, amount should be in USD, value should be in CORE, debt is in USD
-                // buy is in USD, sell is in CORE
-                // quote is USD, base is CORE
+                // Price in BTS/USD, amount should be in USD, value should be in BTS, debt is in USD
+                // buy is in USD, sell is in BTS
+                // quote is USD, base is BTS
 
                 amount = this.limitByPrecision(order.debt / quotePrecision, quote);
                 value = price.full * amount;

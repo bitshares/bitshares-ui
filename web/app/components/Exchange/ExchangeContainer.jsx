@@ -74,8 +74,8 @@ class ExchangeContainer extends React.Component {
                     linkedAccounts: () => {
                         return AccountStore.getState().linkedAccounts;
                     },
-                    settings: () => {
-                        return SettingsStore.getState().settings;
+                    viewSettings: () => {
+                        return SettingsStore.getState().viewSettings;
                     }
                   }} 
                   >
