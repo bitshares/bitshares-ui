@@ -633,6 +633,7 @@ class Exchange extends React.Component {
                                         quoteSymbol={quoteSymbol}
                                         height={400}
                                         leftOrderBook={leftOrderBook}
+
                                     />
                         </div>) : (
                             <div className="grid-block no-overflow no-padding shrink">
@@ -649,7 +650,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={470}
+                                    height={445}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     plotLine={this.state.depthLine}
                                     settlementPrice={settlementPrice}
@@ -757,7 +758,9 @@ class Exchange extends React.Component {
                             history={this.props.activeMarketHistory}
                             base={base}
                             baseSymbol={baseSymbol}
-                            quoteSymbol={quoteSymbol}/>
+                            quoteSymbol={quoteSymbol}
+                        />
+                        
                     </div>
                     {quoteIsBitAsset ?
                         <BorrowModal
