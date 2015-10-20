@@ -28,7 +28,8 @@ class BuySell extends React.Component {
                 nextProps.currentPrice !== this.props.currentPrice ||
                 nextProps.price !== this.props.price ||
                 nextProps.balance !== this.props.balance ||
-                nextProps.account !== this.props.account
+                nextProps.account !== this.props.account ||
+                nextProps.className !== this.props.className
             );
     }
 
@@ -56,7 +57,7 @@ class BuySell extends React.Component {
         let buttonText = `${type === "buy" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")}`;
         let buttonClass = classNames("button buySellButton", type, {disabled: !(balance && balance.get("balance") > 0 && amount > 0 && price > 0)});
         let balanceSymbol = type === "buy" ? baseSymbol : quoteSymbol;
-        let divClass = classNames(this.props.className, `${type}-form`);
+        // let divClass = classNames(this.props.className, `${type}-form`);
 
         let balanceAmount = balance ? utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision}) : 0;
         if (!balanceAmount) {
@@ -64,21 +65,9 @@ class BuySell extends React.Component {
         }
 
         return (
-            <div className={divClass}>
+            <div className={this.props.className + " middle-content"}>
                 <form className="order-form" onSubmit={onSubmit} noValidate>
                     <div className="grid-block vertical no-overflow no-padding">
-
-                            <div className="grid-block no-padding buy-sell-row">
-                                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                                    {buttonText}:
-                                </div>
-                                <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                    <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
-                                </div>
-                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
-                                    {quoteSymbol}
-                                </div>
-                            </div>
 
                             <div className="grid-block no-padding buy-sell-row">
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
@@ -89,6 +78,18 @@ class BuySell extends React.Component {
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
                                     {baseSymbol}/{quoteSymbol}
+                                </div>
+                            </div>
+                            
+                            <div className="grid-block no-padding buy-sell-row">
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                                    {buttonText}:
+                                </div>
+                                <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
+                                </div>
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    {quoteSymbol}
                                 </div>
                             </div>
 
