@@ -484,6 +484,8 @@ module.exports = {
         buy: "매수",
         sell: "매도",
         receive: "Receive",
+        vertical: "수직시세",
+        horizontal: "수평시세",
         confirm_buy: "주문 확인: %(buy_amount)s %(buy_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매수",
         confirm_sell: "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도"
     },
