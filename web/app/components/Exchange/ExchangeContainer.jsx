@@ -62,6 +62,9 @@ class ExchangeContainer extends React.Component {
                     bucketSize: () => {
                         return MarketsStore.getState().bucketSize;
                     },
+                    buckets: () => {
+                        return MarketsStore.getState().buckets;
+                    },
                     CALL_PRICE: () => {
                         return MarketsStore.getState().CALL_PRICE;
                     },
