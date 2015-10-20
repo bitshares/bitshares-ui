@@ -93,8 +93,8 @@ class MarketsActions {
 
             let startDate = new Date();
             let endDate = new Date();
-            startDate.setDate(startDate.getDate() - 10);
-
+            startDate.setDate(startDate.getDate() - 300);
+            endDate.setDate(endDate.getDate() + 1);
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.get("id"), quote.get("id"), 100
@@ -137,7 +137,8 @@ class MarketsActions {
 
             let startDate = new Date();
             let endDate = new Date();
-            startDate.setDate(startDate.getDate() - 10);
+            startDate.setDate(startDate.getDate() - 300);
+            endDate.setDate(endDate.getDate() + 1);
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, base.get("id"), quote.get("id")
