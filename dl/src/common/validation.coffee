@@ -42,7 +42,7 @@ module.exports =
     is_cheap_name: (account_name)->
         /[0-9]/.test(account_name) or
         not /[aeiouy]/.test(account_name) or
-        /[\.-]/.test(account_name)
+        /-/.test(account_name)
     
     is_empty_user_input: (value)->
         return yes if is_empty value
