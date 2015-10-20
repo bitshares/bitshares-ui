@@ -3,6 +3,7 @@ import PrivateKey from "ecc/key_private";
 import Address from "ecc/address"
 import Aes from "ecc/aes";
 import alt from "alt-instance"
+import connectToStores from "alt/utils/connectToStores"
 import cname from "classnames"
 import config from "chain/config";
 import notify from "actions/NotificationActions";
@@ -18,6 +19,7 @@ import Translate from "react-translate-component";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
 import WalletDb from "stores/WalletDb";
+import ImportKeysStore from "stores/ImportKeysStore"
 import PublicKey from "ecc/key_public";
 import AddressIndex from "stores/AddressIndex"
 
@@ -27,11 +29,22 @@ var import_keys_assert_checking = false
 
 var TRACE = false
 
+@connectToStores
 export default class ImportKeys extends Component {
     
     constructor() {
         super();
         this.state = this._getInitialState();
+    }
+    
+    static getStores() {
+        return [ImportKeysStore]
+    }
+    
+    static getPropsFromStores() {
+        return {
+            importing: ImportKeysStore.getState().importing
+        }
     }
     
     _getInitialState() {
@@ -63,7 +76,7 @@ export default class ImportKeys extends Component {
     render() {
         // console.log("ImportKeys render")
         if( ! WalletDb.getWallet()) return <WalletCreate hideTitle={true}/>
-        if( this.state.save_import_loading) {
+        if( this.props.importing) {
             return <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
                 <div className="center-content">
@@ -515,7 +528,7 @@ export default class ImportKeys extends Component {
             }
         }
         WalletUnlockActions.unlock().then(()=> {
-            this.setState({save_import_loading: true})
+            ImportKeysStore.importing(true)
             // show the loading indicator
             setTimeout(()=> this.saveImport(), 200)
         })
@@ -540,13 +553,13 @@ export default class ImportKeys extends Component {
         }
         this.reset()
         WalletDb.importKeysWorker( private_key_objs ).then( result => {
-            this.setState({save_import_loading: false})
+            ImportKeysStore.importing(false)
             var import_count = private_key_objs.length
             notify.success(`Successfully imported ${import_count} keys.`)
             this.onBack() // back to claim balances
         }).catch( error => {
             console.log("error:", error)
-            this.setState({save_import_loading: false})
+            ImportKeysStore.importing(false)
             var message = error
             try { message = error.target.error.message } catch (e){}
             notify.error(`Key import error: ${message}`)
