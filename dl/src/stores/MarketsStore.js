@@ -37,6 +37,7 @@ class MarketsStore {
         this.inverseMarket = true;
         this.quoteAsset = null;
         this.pendingCounter = 0;
+        this.buckets = [15,60,300,3600,86400];
         this.bucketSize = 300;
         this.priceHistory = [];
         this.lowestCallPrice = null;
@@ -125,6 +126,10 @@ class MarketsStore {
             this.flat_asks = [];
             this.flat_calls = [];
             this.priceHistory =[];
+        }
+
+        if (result.buckets) {
+            this.buckets = result.buckets;
         }
 
         if (result.limits) {
