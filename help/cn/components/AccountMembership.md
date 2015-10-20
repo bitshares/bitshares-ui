@@ -5,7 +5,7 @@
 
 [# annual]
 
-如果你暂时不想成为终身会员，那么你还可以升级到年度会员，可获得 {feesCashback}% 的手续费返现。升级为年度会员，每年只需花费 {price}。
+如果你暂时不想成为终身会员，那么你还可以选择升级到年度会员，可获得 {feesCashback}% 的手续费返现。升级为年度会员，每年只需花费 {price}。
 
 [# fee-division]
 #### 手续费分配
@@ -17,7 +17,7 @@ _注册人账户_ 是在 {account} 注册时代其支付注册费的账户。注
                             
                             
 #### 待结费用
-{account} 支付的手续费每个维护周期 ({maintenanceInterval} 秒)在网络、推荐人和结算人之间结算一次。下一个维护时间在 {nextMaintenanceTime}。
+{account} 支付的手续费每个维护周期 ({maintenanceInterval} 秒)在网络、推荐人和注册人之间结算一次。下一个维护时间在 {nextMaintenanceTime}。
                  
 #### 待解冻金额
 
