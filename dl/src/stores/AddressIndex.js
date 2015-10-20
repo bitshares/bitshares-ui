@@ -47,39 +47,39 @@ class AddressIndex extends BaseStore {
     
     /** Worker thread implementation (for more than 10K keys) */
     addAll(pubkeys) {
-        console.log("addAll");
-        this.saving()
-        this.loadAddyMap().then( () => {
-            var AddressIndexWorker = require("worker!workers/AddressIndexWorker")
-            var worker = new AddressIndexWorker
-            worker.postMessage({ pubkeys })
-            var _this = this
-            worker.onmessage = event => { try {
-                console.log("addAll onmessage");
-                var key_addresses = event.data
-                var dirty = false
-                var addresses = _this.state.addresses.withMutations( addresses => {
-                    for(let i = 0; i < pubkeys.length; i++) {
-                        var pubkey = pubkeys[i]
-                        if(_this.pubkeys.has(pubkey)) continue
-                        _this.pubkeys.add(pubkey)
-                        // Gather all 5 legacy address formats (see key.addresses)
-                        var address_strings = key_addresses[i]
-                        for(let address of address_strings) {
-                            addresses.set(address, pubkey)
-                            dirty = true
+        return new Promise( (resolve, reject) => {
+            this.saving()
+            this.loadAddyMap().then( () => {
+                var AddressIndexWorker = require("worker!workers/AddressIndexWorker")
+                var worker = new AddressIndexWorker
+                worker.postMessage({ pubkeys })
+                var _this = this
+                worker.onmessage = event => { try {
+                    var key_addresses = event.data
+                    var dirty = false
+                    var addresses = _this.state.addresses.withMutations( addresses => {
+                        for(let i = 0; i < pubkeys.length; i++) {
+                            var pubkey = pubkeys[i]
+                            if(_this.pubkeys.has(pubkey)) continue
+                            _this.pubkeys.add(pubkey)
+                            // Gather all 5 legacy address formats (see key.addresses)
+                            var address_strings = key_addresses[i]
+                            for(let address of address_strings) {
+                                addresses.set(address, pubkey)
+                                dirty = true
+                            }
                         }
+                    })
+                    if( dirty ) {
+                        _this.setState({ addresses })
+                        _this.saveAddyMap()
+                    } else {
+                        _this.setState({ saving: false })
                     }
-                })
-                if( dirty ) {
-                    _this.setState({ addresses })
-                    _this.saveAddyMap()
-                } else {
-                    _this.setState({ saving: false })
-                }
-                console.log("addAll onmessage done");
-            } catch( e ) { console.error('AddressIndex.addAll', e) }}
-        }).catch ( e => { throw e })
+                    resolve()
+                } catch( e ) { console.error('AddressIndex.addAll', e); reject(e) }}
+            }).catch ( e => { throw e })
+        })
     }
     
     loadAddyMap() {

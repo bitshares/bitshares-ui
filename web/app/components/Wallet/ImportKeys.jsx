@@ -10,7 +10,6 @@ import hash from "common/hash";
 
 import Apis from "rpc_api/ApiInstances"
 import PrivateKeyStore from "stores/PrivateKeyStore"
-import ImportKeysActions from "actions/ImportKeysActions";
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletCreate from "components/Wallet/WalletCreate"
 import LoadingIndicator from "components/LoadingIndicator"
@@ -20,6 +19,7 @@ import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
 import WalletDb from "stores/WalletDb";
 import PublicKey from "ecc/key_public";
+import AddressIndex from "stores/AddressIndex"
 
 require("./ImportKeys.scss");
 
@@ -53,6 +53,7 @@ export default class ImportKeys extends Component {
     }
     
     reset(e) {
+        console.log("imp reset");
         if(e) e.preventDefault()
         var state = this._getInitialState();
         this.setState(state);
@@ -60,8 +61,9 @@ export default class ImportKeys extends Component {
     }
     
     render() {
-        
-        if(this.state.save_import_loading) {
+        // console.log("ImportKeys render")
+        if( ! WalletDb.getWallet()) return <WalletCreate hideTitle={true}/>
+        if( this.state.save_import_loading) {
             return <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
                 <div className="center-content">
@@ -69,7 +71,6 @@ export default class ImportKeys extends Component {
                 </div>
             </div>
         }
-        
         var has_keys = this.state.key_count !== 0;
         var import_ready = has_keys
         var password_placeholder = "Enter import file password";
@@ -92,11 +93,13 @@ export default class ImportKeys extends Component {
         // Create wallet prior to the import keys (helps keep the layout clean)
         return (
             <div>
-                <WalletCreate hideTitle={true}>
                 <h3><Translate content="wallet.import_keys" /></h3>
                 {/* Key file upload */}
                 <div>
-                    <KeyCount key_count={this.state.key_count}/>
+                    <span>{this.state.key_text_message ?
+                        this.state.key_text_message :
+                        <KeyCount key_count={this.state.key_count}/>
+                    }</span>
                     {!this.state.key_count ? 
                         null :
                         <span> (<a onClick={this.reset.bind(this)}>RESET</a>)</span>
@@ -138,7 +141,6 @@ export default class ImportKeys extends Component {
                                         onChange={this._passwordCheck.bind(this)}
                                     />
                                     <div>{this.state.import_password_message}</div>
-                                    <div>{this.state.key_text_message}</div>
                                 </div>) : null}
                             <br/>
                             <a href className="button success" onClick={this.onBack.bind(this)}>
@@ -193,7 +195,6 @@ export default class ImportKeys extends Component {
                             </div>
                         </div>
                     </div>) : null}
-                </WalletCreate>
             </div>
         );
     }
@@ -236,21 +237,23 @@ export default class ImportKeys extends Component {
         reader.onload = evt => {
             var contents = evt.target.result
             try {
+                var json_contents
                 try {
+                    json_contents = JSON.parse(contents)
                     // This is the only chance to encounter a large file, 
                     // try this format first.
-                    this._parseImportKeyUpload(contents, file)
+                    this._parseImportKeyUpload(json_contents)
                 } catch(e) {
-                    //DEBUG console.log("... _parseWalletJson",e)
+                    //DEBUG console.log("... _parseImportKeyUpload",e)
                     try {
-                        this._parseWalletJson(contents)
+                        if( ! json_contents) file.name + " is an unrecognized format"
+                        this._parseWalletJson(json_contents)
                     } catch(ee) {
                         if( ! this.addByPattern(contents))
                             throw ee
                     }
                 }
-                var pwNode = React.findDOMNode(this.refs.password)
-                if(pwNode) pwNode.focus()
+                this._passwordFocus()
                 // try empty password, also display "Enter import file password"
                 this._passwordCheck()
                 
@@ -264,21 +267,19 @@ export default class ImportKeys extends Component {
     }
     
     /** BTS 1.0 client wallet_export_keys format. */
-    _parseImportKeyUpload(contents, file) {
+    _parseImportKeyUpload(json_contents, file) {
         var password_checksum, account_keys
         try {
-            var import_keys = JSON.parse(contents)
-            password_checksum = import_keys.password_checksum
+            password_checksum = json_contents.password_checksum
             if( ! password_checksum)
                 throw file.name + " is an unrecognized format"
             
-            if( ! Array.isArray(import_keys.account_keys))
+            if( ! Array.isArray(json_contents.account_keys))
                 throw file.name + " is an unrecognized format"
             
-            account_keys = import_keys.account_keys
+            account_keys = json_contents.account_keys
 
         } catch(e) { throw e.message || e }
-        
         this.setState({
             password_checksum,
             account_keys
@@ -296,7 +297,7 @@ export default class ImportKeys extends Component {
     keys.
     
     */
-    _parseWalletJson(contents) {
+    _parseWalletJson(json_contents) {
         var password_checksum
         var encrypted_brainkey
         var address_to_enckeys = {}
@@ -314,12 +315,11 @@ export default class ImportKeys extends Component {
         }
         
         try {
-            var wallet_json = JSON.parse(contents)
-            if(! Array.isArray(wallet_json)) {
-                //DEBUG console.log('... wallet_json',wallet_json)
+            if(! Array.isArray(json_contents)) {
+                //DEBUG console.log('... json_contents',json_contents)
                 throw new Error("Invalid wallet format")
             }
-            for(let element of wallet_json) {
+            for(let element of json_contents) {
                 
                 if( "key_record_type" == element.type &&
                     element.data.account_address &&
@@ -394,6 +394,11 @@ export default class ImportKeys extends Component {
             //encrypted_brainkey
         })
     }
+    
+    _passwordFocus() {
+        var pwNode = React.findDOMNode(this.refs.password)
+        if(pwNode) pwNode.focus()
+    }
    
     _passwordCheck(evt) {
         if( ! this.state.account_keys.length)
@@ -439,7 +444,7 @@ export default class ImportKeys extends Component {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
                     if(import_keys_assert_checking && public_key_string) {
                         var private_key = PrivateKey.fromHex( private_plainhex )
-                        var pub = private_key.toPublicKey()
+                        var pub = private_key.toPublicKey() // S L O W
                         var addy = pub.toAddressString()
                         var pubby = pub.toPublicKeyString()
                         var error = ""
@@ -457,10 +462,9 @@ export default class ImportKeys extends Component {
                             console.log("ERROR Miss-match key",error)
                     }
                     
-                    var public_key
                     if( ! public_key_string) {
                         var private_key = PrivateKey.fromHex( private_plainhex )
-                        public_key = private_key.toPublicKey()// S L O W
+                        var public_key = private_key.toPublicKey()// S L O W
                         public_key_string = public_key.toPublicKeyString()
                     } else {
                         if( ! same_prefix_regex.test(public_key_string))
@@ -479,7 +483,6 @@ export default class ImportKeys extends Component {
                             dup = true
                     if(dup) continue
                     account_names.push(account_name)
-                    var public_key = 
                     this.state.keys_to_account[private_plainhex] = {account_names, public_key_string}
                 } catch(e) {
                     console.log(e, e.stack)
@@ -520,54 +523,30 @@ export default class ImportKeys extends Component {
     
     saveImport() {
         // Lookup and add accounts referenced by the keys
-        var imported_keys_public = this.state.imported_keys_public
-        var db = Apis.instance().db_api()
+        // var imported_keys_public = this.state.imported_keys_public
+        // var db = Apis.instance().db_api()
         
         if(TRACE) console.log('... ImportKeys._saveImport START')
-        ImportKeysActions.setStatus("saving")
         
         var keys_to_account = this.state.keys_to_account
         var private_key_objs = []
         for(let private_plainhex of Object.keys(keys_to_account)) {
             var {account_names, public_key_string} = keys_to_account[private_plainhex]
             private_key_objs.push({
-                private_key: PrivateKey.fromHex(private_plainhex),
+                private_plainhex,
                 import_account_names: account_names,
                 public_key_string
             })
         }
-        
         this.reset()
-        
-        WalletDb.importKeys( private_key_objs ).then( result => {
+        WalletDb.importKeysWorker( private_key_objs ).then( result => {
             this.setState({save_import_loading: false})
-            var {import_count, duplicate_count, private_key_ids} = result
-            if( ! import_count && ! duplicate_count) {
-                notify.warning(`There where no keys to import`)
-                return
-            }
-            if( ! import_count && duplicate_count) {
-                notify.warning(`${duplicate_count} duplicates (Not Imported)`)
-                return
-            }
-            var message = ""
-            if (import_count)
-                message = `Successfully imported ${import_count} keys.`
-            if (duplicate_count)
-                message += `  ${duplicate_count} duplicates (Not Imported)`
-            
-            if(duplicate_count)
-                notify.warning(message)
-            else
-                notify.success(message)
-            
-            if (import_count) {
-                ImportKeysActions.setStatus("saveDone")
-                this.onBack() // back to claim balances
-            }
+            var import_count = private_key_objs.length
+            notify.success(`Successfully imported ${import_count} keys.`)
+            this.onBack() // back to claim balances
         }).catch( error => {
-            ImportKeysActions.setStatus("saveError")
             console.log("error:", error)
+            this.setState({save_import_loading: false})
             var message = error
             try { message = error.target.error.message } catch (e){}
             notify.error(`Key import error: ${message}`)
@@ -584,16 +563,24 @@ export default class ImportKeys extends Component {
             try { 
                 var private_key = PrivateKey.fromWif(wif) //could throw and error 
                 var private_plainhex = private_key.toBuffer().toString('hex')
-                this.state.keys_to_account[private_plainhex] = {account_names: []}
+                var public_key = private_key.toPublicKey() // S L O W
+                var public_key_string = public_key.toPublicKeyString()
+                this.state.imported_keys_public[public_key_string] = true
+                this.state.keys_to_account[private_plainhex] = {
+                    account_names: [], public_key_string}
                 count++
             } catch(e) { invalid_count++ }
         }
         this.updateOnChange()
         this.setState({
-            key_text_message: 
-                (!count ? "" : count + " keys found from text.") +
-                (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
+            imported_keys_public: this.state.imported_keys_public,
+            keys_to_account: this.state.keys_to_account,
+            key_text_message: 'Found ' +
+                (!count ? "" : count + " valid") +
+                (!invalid_count ? "" : " and " + invalid_count + " invalid") + 
+                " key" + ( count > 1 || invalid_count > 1 ? "s" : "") + "."
         })
+        this.state.key_text_message = null
         return count
     }
 

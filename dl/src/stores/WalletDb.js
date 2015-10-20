@@ -35,7 +35,7 @@ class WalletDb extends BaseStore {
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
         this._export(
-            "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","importKeys","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData",
+            "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData",
             "importKeysWorker"
         )
     }
@@ -337,11 +337,11 @@ class WalletDb extends BaseStore {
     }
     
     importKeysWorker(private_key_objs) {
-        WalletUnlockActions.unlock().then( () => {
+        return new Promise( (resolve, reject) => {
             var pubkeys = []
             for(let private_key_obj of private_key_objs)
                 pubkeys.push( private_key_obj.public_key_string )
-            AddressIndex.addAll(pubkeys)
+            var addyIndexPromise = AddressIndex.addAll(pubkeys)
             
             var private_plainhex_array = []
             for(let private_key_obj of private_key_objs)
@@ -379,71 +379,25 @@ class WalletDb extends BaseStore {
                     }
                     enc_private_key_objs.push(private_key_object)
                 }
-                console.log("Ready to save private keys");
+                console.log("Saving private keys", new Date().toString());
                 var transaction = _this.transaction_update_keys()
+                var insertKeysPromise = idb_helper.on_transaction_end(transaction)
                 try {
-                    var duplicate_count = PrivateKeyStore.
-                        addPrivateKeys_noindex(enc_private_key_objs, transaction )
+                    var duplicate_count = PrivateKeyStore
+                        .addPrivateKeys_noindex(enc_private_key_objs, transaction )
                     if( private_key_objs.length != duplicate_count )
                         _this.setWalletModified(transaction)
                     _this.setState({saving_keys: false})
+                    resolve(Promise.all([ insertKeysPromise, addyIndexPromise ]).then( ()=> {
+                        console.log("Done saving keys", new Date().toString())
+                        // return { duplicate_count }
+                    }))
                 } catch(e) {
                     transaction.abort()
                     console.error(e)
+                    reject(e)
                 }
-                console.log("Done saving keys");
             } catch( e ) { console.error('AesWorker.encrypt', e) }}
-        })
-    }
-    
-    importKeys(private_key_objs) {
-        if(TRACE) console.log('... WalletDb.importKeys START')
-        return WalletUnlockActions.unlock().then( () => {
-            var transaction = this.transaction_update_keys()
-            var promises = []
-            var import_count = 0, duplicate_count = 0
-            if(TRACE) console.log('... importKeys save key loop start')
-            for(let private_key_obj of private_key_objs) {
-                
-                var private_key =
-                    private_key_obj.private_key ||
-                    PrivateKey.fromWif( private_key_obj.wif )
-                    
-                if( ! private_key) {
-                    console.error("ERROR WalletDb importKeys, missing private_key or wif")
-                    continue
-                }
-                promises.push(
-                    this.saveKey(
-                        private_key,
-                        null,//brainkey_sequence
-                        private_key_obj.import_account_names,
-                        private_key_obj.public_key_string,
-                        transaction
-                    ).then(
-                        ret => {
-                            if(ret.result == "duplicate") {
-                                duplicate_count++
-                            } else if(ret.result == "added") {
-                                import_count++
-                            } else
-                                throw new Error('unknown return',ret)
-                            return ret.id
-                        }
-                    )
-                )
-            }
-            if(TRACE) console.log('... importKeys save key loop done')
-            return this.setWalletModified(transaction).then( ()=> {
-                return Promise.all(promises).catch( error => {
-                    //DEBUG
-                    console.log('importKeys transaction.abort', error)    
-                    throw error
-                }).then( private_key_ids => {
-                    if(TRACE) console.log('... WalletDb.importKeys done')
-                    return {import_count, duplicate_count, private_key_ids}
-                })
-            })
         })
     }
     

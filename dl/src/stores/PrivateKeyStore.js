@@ -8,6 +8,7 @@ import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import AddressIndex from "stores/AddressIndex"
+import ChainStore from "api/ChainStore"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 
@@ -169,9 +170,11 @@ class PrivateKeyStore extends BaseStore {
                 var private_tcomb = PrivateKeyTcomb(private_key_object)
                 store.add( private_key_object )
                 keys.set( private_key_object.pubkey, private_tcomb )
+                ChainStore.getAccountRefsOfKey(private_key_object.pubkey)
             }
         })
         this.setState({ keys })
+        this.binaryBackupRecommended()
         return duplicate_count
     }
     
