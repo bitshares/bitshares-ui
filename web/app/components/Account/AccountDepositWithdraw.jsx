@@ -135,7 +135,7 @@ class BlockTradesDepositRequest extends React.Component {
 
       return <tr>
                     <td>{this.props.deposit_asset} </td>
-                    <td> {receive_address} &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
+                    <td><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
                     <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
                     <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
                           <Modal id={withdraw_modal_id} overlay={true}>
