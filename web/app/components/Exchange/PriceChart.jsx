@@ -67,7 +67,7 @@ class PriceChart extends React.Component {
                     enabled: false
                 },
                 pinchType: "x",
-                spacing: [10, 20, 5, 0],
+                spacing: [10, 10, 5, 10],
                 events: {
                     redraw: (e) => {
                         if (e.target.series[0].points.length > 0) {
