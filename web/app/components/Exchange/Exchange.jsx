@@ -397,7 +397,7 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
-            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice } = this.props;
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook} = this.state;
 
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
@@ -524,6 +524,21 @@ class Exchange extends React.Component {
             }
         }
 
+        let bucketTexts = {
+            "15": "15s",
+            "60": "1min",
+            "300": "5min",
+            "900": "15min",
+            "1800": "30min",
+            "3600": "1hr",
+            "14400": "4hrs",
+            "86400": "1d"
+        }
+
+        let bucketOptions = buckets.map(bucket => {
+            return <div className={classnames("button", {"bucket-button": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+        }).reverse();
+
         return (
 
                 <div className="grid-block page-layout market-layout">
@@ -618,11 +633,7 @@ class Exchange extends React.Component {
                             <div className="grid-block shrink no-overflow" id="market-charts" style={{marginTop: "0.5rem"}}>
                             {/* Price history chart */}
                                     <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 15, "active-bucket": this.props.bucketSize === 15})} onClick={this._changeBucketSize.bind(this, 15)}>15s</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 60, "active-bucket": this.props.bucketSize === 60})} onClick={this._changeBucketSize.bind(this, 60)}>60s</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 300, "active-bucket": this.props.bucketSize === 300})} onClick={this._changeBucketSize.bind(this, 300)}>5min</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 3600, "active-bucket": this.props.bucketSize === 3600})} onClick={this._changeBucketSize.bind(this, 3600)}>1hr</div>
-                                        <div className={classnames("button", {"bucket-button": this.props.bucketSize !== 86400, "active-bucket": this.props.bucketSize === 86400})} onClick={this._changeBucketSize.bind(this, 86400)}>1d</div>
+                                        {bucketOptions}
                                     </div>
                                     <PriceChart
                                         priceData={this.props.priceData}

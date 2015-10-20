@@ -194,7 +194,7 @@ class Blocks extends React.Component {
             <div className="grid-block vertical page-layout">
 
                 {/* First row of stats */}
-                <div className="align-center grid-block shrink small-horizontal" style={{paddingBottom: "1.5rem"}}>
+                <div className="align-center grid-block shrink small-horizontal">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
                             <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.current_block" /></span>
@@ -225,7 +225,7 @@ class Blocks extends React.Component {
                 </div>
 
                 {/* Second row of stats */ }
-                <div className="align-center grid-block shrink small-horizontal" style={{paddingBottom: "1rem"}}>
+                <div className="align-center grid-block shrink small-horizontal">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
                             <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.active_witnesses" /></span>
@@ -279,7 +279,7 @@ class Blocks extends React.Component {
                 </div>
 
             {/* Fourth row: transactions and blocks */ }
-                <div className="grid-block">
+                <div className="grid-block" style={{minHeight: "400px"}}>
                     <div className="grid-block small-12 medium-6 vertical">
                         <div className="grid-content">
                             <h3><Translate content="account.recent" /> </h3>
