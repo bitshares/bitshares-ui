@@ -56,15 +56,13 @@ class DepthHighChart extends React.Component {
         }
 
         power *= 10;
-        console.log("power:", power, flat_bids.length);
+
         if (power !== 1) {
             if (flatBids.length) {
                 flatBids.forEach(bid => {
                     bid[0] *= power;
                 })
             }
-
-            console.log("power:", power, flatBids.length);
 
             if (flatAsks.length) {
                 flatAsks.forEach(ask => {
@@ -292,8 +290,6 @@ class DepthHighChart extends React.Component {
                 click: this.props.onClick
             };
         }
-
-        console.log("flatBids:", flatBids.length, "flatAsks:", flatAsks.length, config);
 
         return (
             <div className="grid-content no-overflow middle-content">
