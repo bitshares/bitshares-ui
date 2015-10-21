@@ -3,9 +3,11 @@ import Apis from "rpc_api/ApiInstances";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
+import ChainStore from "api/ChainStore";
 let ops = Object.keys(operations);
 
 let subs = {};
+let currentBucketSize;
 let wallet_api = new WalletApi();
 let orderCounter = -1;
 let lastExpiration;
@@ -30,7 +32,7 @@ let addSeconds = (expiration) => {
     }
 
     lastExpiration = expiration;
-    return newExpiration; 
+    return newExpiration;
 };
 
 class MarketsActions {
@@ -44,7 +46,9 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize) {
+
         let subID = quote.get("id") + "_" + base.get("id");
+
         // console.log("sub to market:", subID);
 
         let isMarketAsset = false, marketAsset, inverted = false;
@@ -58,6 +62,9 @@ class MarketsActions {
             marketAsset = {id: base.get("id")};
         }
 
+        // 2hours, 4hours, 6hours 12hours
+        // 1w  |  3d  1d  | 4h 1h  |  30m  15m  5m 1m
+        // [60, 300, 900, 1800, 3600, 14400, 86400]
         let subscription = (subResult) => {
             // console.log("markets subscription result:", subResult);
             let callPromise = null,
@@ -89,8 +96,8 @@ class MarketsActions {
 
             let startDate = new Date();
             let endDate = new Date();
-            startDate.setDate(startDate.getDate() - 10);
-
+            startDate.setDate(startDate.getDate() - 300);
+            endDate.setDate(endDate.getDate() + 1);
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.get("id"), quote.get("id"), 100
@@ -99,7 +106,9 @@ class MarketsActions {
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ])
+                    ]),
+                    Apis.instance().history_api().exec("get_market_history_buckets", [])
+
                 ])
                 .then(results => {
                     this.dispatch({
@@ -107,6 +116,7 @@ class MarketsActions {
                         calls: results[1],
                         settles: results[2],
                         price: results[3],
+                        buckets: results[4],
                         market: subID,
                         base: base,
                         quote: quote,
@@ -117,8 +127,8 @@ class MarketsActions {
                 });
         };
 
-        if (!subs[subID]) {
-
+        if (!subs[subID] || currentBucketSize !== bucketSize) {
+            currentBucketSize = bucketSize;
             let callPromise = null,
                 settlePromise = null;
 
@@ -133,7 +143,8 @@ class MarketsActions {
 
             let startDate = new Date();
             let endDate = new Date();
-            startDate.setDate(startDate.getDate() - 10);
+            startDate.setDate(startDate.getDate() - 300);
+            endDate.setDate(endDate.getDate() + 1);
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, base.get("id"), quote.get("id")
@@ -145,7 +156,8 @@ class MarketsActions {
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ])
+                    ]),
+                    Apis.instance().history_api().exec("get_market_history_buckets", [])
                 ])
                 .then((results) => {
                     // console.log("market subscription success:", results[0], results);
@@ -156,6 +168,7 @@ class MarketsActions {
                         calls: results[2],
                         settles: results[3],
                         price: results[4],
+                        buckets: results[5],
                         market: subID,
                         base: base,
                         quote: quote,
@@ -171,16 +184,14 @@ class MarketsActions {
 
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
-        // console.log("unSubscribeMarket:", subID);
-        delete subs[subID];
-        this.dispatch({unSub: true});
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
                     quote, base
                 ])
                 .then((unSubResult) => {
-                    // console.log(subID, "market unsubscription success:", unSubResult);
-                    
+                    this.dispatch({unSub: true});
+                    delete subs[subID];
+
                 }).catch((error) => {
                     subs[subID] = true;
                     this.dispatch({unSub: false, market: subID});
@@ -229,10 +240,16 @@ class MarketsActions {
         // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
 
+        let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
+        console.log( "sell asset: ", sell_asset, sellAssetID );
+        let fee_asset_id = sellAssetID;
+        if( sell_asset.options.core_exchange_rate.base.asset_id == "1.3.0" && sell_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
+           fee_asset_id = "1.3.0";
+
         tr.add_type_operation("limit_order_create", {
             fee: {
                 amount: 0,
-                asset_id: 0
+                asset_id: fee_asset_id
             },
             "seller": account,
             "amount_to_sell": {

@@ -95,7 +95,7 @@ class CommitteeMemberRow extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
+@BindToChainState({keep_updating: true, show_loader: true})
 class CommitteeMemberList extends React.Component {
     static propTypes = {
         committee_members: ChainTypes.ChainObjectsList.isRequired

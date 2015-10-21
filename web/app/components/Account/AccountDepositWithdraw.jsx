@@ -25,6 +25,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 class BlockTradesDepositRequest extends React.Component {
    static propTypes = {
       url:               React.PropTypes.string,
+      gateway:           React.PropTypes.string,
       deposit_coin_type: React.PropTypes.string,
       deposit_asset_name: React.PropTypes.string,
       receive_coin_type: React.PropTypes.string,
@@ -71,13 +72,19 @@ class BlockTradesDepositRequest extends React.Component {
 
    addDepositAddress( receive_address ) {
       let wallet = WalletDb.getWallet();
+      let name = this.props.account.get('name');
+      console.log( "this.props.gateway: ", this.props.gateway );
+      console.log( "this.props.deposit_asset: ", this.props.deposit_asset );
 
       if( !wallet.deposit_keys ) wallet.deposit_keys = {}
-      if( !wallet.deposit_keys[this.props.gateway] ) wallet.deposit_keys[this.props.gateway] = {}
-      if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] )
-          wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] = [receive_address]
+      if( !wallet.deposit_keys[this.props.gateway] ) 
+         wallet.deposit_keys[this.props.gateway] = {}
+      if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] ) 
+         wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] = {}
+      if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name] )
+          wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name] = [receive_address]
       else
-          wallet.deposit_keys[this.props.gateway][this.props.deposit_asset].push( receive_address );
+          wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name].push( receive_address );
 
       WalletDb._updateWallet();
 
@@ -102,9 +109,13 @@ class BlockTradesDepositRequest extends React.Component {
       let wallet = WalletDb.getWallet();
       let receive_address = this.state.receive_address;
       if( !receive_address )  {
-         if( wallet.deposit_keys && wallet.deposit_keys[this.props.gateway] && wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] )
+         if( wallet.deposit_keys && 
+             wallet.deposit_keys[this.props.gateway] && 
+             wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] &&
+             wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')] 
+             )
          {
-            let addresses = wallet.deposit_keys[this.props.gateway][this.props.deposit_asset]
+            let addresses = wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')]
             receive_address = addresses[addresses.length-1]
          }
       }
@@ -124,7 +135,7 @@ class BlockTradesDepositRequest extends React.Component {
 
       return <tr>
                     <td>{this.props.deposit_asset} </td>
-                    <td> {receive_address} &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
+                    <td><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
                     <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
                     <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
                           <Modal id={withdraw_modal_id} overlay={true}>
@@ -185,6 +196,7 @@ class AccountDepositWithdraw extends React.Component {
                        </thead>
                        <tbody>
                          <BlockTradesDepositRequest 
+                                gateway="blocktrades"
                                 url="https://blocktrades.us:443/api/v2/simple-api"
                                 issuer_account="blocktrades"
                                 account={this.props.account.get('name')} 
@@ -194,6 +206,7 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset_name="Bitcoin"
                                 receive_coin_type="trade.btc" />
                          <BlockTradesDepositRequest 
+                                gateway="blocktrades"
                                 url="https://blocktrades.us:443/api/v2/simple-api"
                                 issuer_account="blocktrades"
                                 account={this.props.account.get('name')} 

@@ -141,7 +141,8 @@ module.exports = {
         create_account: "创建账户",
         identicon: "身份标示图形",
         pay_from: "注册费支付账户",
-        existing_accounts: "已有账户"
+        existing_accounts: "已有账户",
+        bts_market: "交易市场"
     },
     transfer: {
         from: "来自",
@@ -349,7 +350,7 @@ module.exports = {
             max_margin_period_sec: "Max margin period (s)",
             call_limit: "Call limit",
             short_limit: "Short limit",
-            settlement_price: "结算价格",
+            settlement_price: "喂价",
             time: "时间"
         },
         assets: {
@@ -373,7 +374,7 @@ module.exports = {
                 max_market_fee: "交易市场手续费上限"
             },
             price_feed: {
-                settlement_price: "清算价格",
+                settlement_price: "喂价",
                 maintenance_collateral_ratio: "维持保证金比例",
                 maximum_short_squeeze_ratio: "强制平仓比例上限",
                 title: "喂价"
@@ -402,7 +403,7 @@ module.exports = {
             },
             price_feed_data: {
                 title: "喂价数据",
-                settlement_price: "清算价格",
+                settlement_price: "喂价",
                 core_exchange_rate: "汇率",
                 maintenance_collateral_ratio: "维持保证金比例",
                 maximum_short_squeeze_ratio: "强制平仓比例上限",
@@ -464,7 +465,7 @@ module.exports = {
     },
     exchange: {
         price_history: "价格历史",
-        order_depth: "订单深度",
+        order_depth: "市场深度",
         market_history: "市场历史",
         balance: "我的余额",
         lowest_ask: "最低卖单",
@@ -481,12 +482,14 @@ module.exports = {
         sell: "卖出",
         confirm_buy: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
         confirm_sell: "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
-        settle: "清算价格",
+        settle: "喂价",
         core_rate: "转账手续费汇率",
         squeeze: "强制平仓价",
         maintenance: "维持保证金价",
         your_price: "你的强平触发价",
-        receive: "获得"
+        receive: "获得",
+        vertical: "垂直布局",
+        horizontal: "水平布局"
     },
     markets: {
         choose_base: "选择基准资产",
@@ -578,7 +581,8 @@ module.exports = {
             collateral: "可用保证金不足"
         },
         close: "平仓",
-        update: "调整"
+        update: "调整",
+        call_limit: "Market Call Limit"
     },
     operation: {
         pending: " %(blocks)s 个区块待定"

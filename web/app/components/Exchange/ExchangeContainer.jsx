@@ -62,6 +62,9 @@ class ExchangeContainer extends React.Component {
                     bucketSize: () => {
                         return MarketsStore.getState().bucketSize;
                     },
+                    buckets: () => {
+                        return MarketsStore.getState().buckets;
+                    },
                     CALL_PRICE: () => {
                         return MarketsStore.getState().CALL_PRICE;
                     },
@@ -74,8 +77,8 @@ class ExchangeContainer extends React.Component {
                     linkedAccounts: () => {
                         return AccountStore.getState().linkedAccounts;
                     },
-                    settings: () => {
-                        return SettingsStore.getState().settings;
+                    viewSettings: () => {
+                        return SettingsStore.getState().viewSettings;
                     }
                   }} 
                   >

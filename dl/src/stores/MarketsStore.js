@@ -37,7 +37,8 @@ class MarketsStore {
         this.inverseMarket = true;
         this.quoteAsset = null;
         this.pendingCounter = 0;
-        this.bucketSize = 60;
+        this.buckets = [15,60,300,3600,86400];
+        this.bucketSize = 300;
         this.priceHistory = [];
         this.lowestCallPrice = null;
         this.marketBase = "BTS";
@@ -125,6 +126,10 @@ class MarketsStore {
             this.flat_asks = [];
             this.flat_calls = [];
             this.priceHistory =[];
+        }
+
+        if (result.buckets) {
+            this.buckets = result.buckets;
         }
 
         if (result.limits) {
@@ -313,7 +318,7 @@ class MarketsStore {
     }
 
     onCallOrderUpdate(call_order) {
-        if (call_order) {
+        if (call_order && this.quoteAsset && this.baseAsset) {
             if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
                 if (typeof call_order.collateral !== "number") {
                     call_order.collateral = parseInt(call_order.collateral, 10);

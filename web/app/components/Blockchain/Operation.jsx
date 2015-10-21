@@ -430,10 +430,15 @@ class Operation extends React.Component {
 
             case "asset_fund_fee_pool":
                 color = "warning";
+                let asset = ChainStore.getAsset( op[1].asset_id );
+                if( asset ) asset = asset.get( "symbol" );
+                else asset = op[1].asset_id;
+                console.log( "asset: ", asset );
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.fund_pool" />
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={op[1].asset_id} />
+                        {this.linkToAccount(op[1].from_account)} &nbsp; 
+                        <Translate component="span" content="transaction.fund_pool"  asset={asset} />
+                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset="1.3.0" />
                     </span>
                 );
                 break;  
