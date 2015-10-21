@@ -566,7 +566,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8" : "small-12 large-10")} >
+                    <div className="grid-block main-content vertical ps-container">
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
@@ -763,7 +763,7 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block right-column show-for-large large-2" style={{overflowY: "auto"}}>
+                    <div className="grid-block right-column show-for-large shrink" style={{overflowY: "auto"}}>
                         {/* Market History */}
                         <MarketHistory
                             history={this.props.activeMarketHistory}

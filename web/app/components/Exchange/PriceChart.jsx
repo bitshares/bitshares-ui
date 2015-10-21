@@ -292,13 +292,13 @@ class PriceChart extends React.Component {
         let currentValue = open <= close ?
             (<div
                 className="chart-label"
-                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", right: "25px", top: lastPointY - 2 + boxHeight / 2}}
+                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", right: "5px", top: lastPointY - 2 + boxHeight / 2}}
             >
                 {utils.format_number(close, 1 + quote.precision)}
             </div>) :
             (<div
                 className="chart-label"
-                style={{height: boxHeight, backgroundColor: "#E3745B", right: "25px",  top: lastPointY - 2 + boxHeight / 2}}
+                style={{height: boxHeight, backgroundColor: "#E3745B", right: "5px",  top: lastPointY - 2 + boxHeight / 2}}
             >
                 {utils.format_number(close, 1 + quote.precision)}
             </div>);
