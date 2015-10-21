@@ -6,7 +6,7 @@
         ko: "한국어",
         de: "Deutsch",
         es: "Español",
-        tr: "Turkish"
+        tr: "Türkçe"
         
     },
     header: {
@@ -27,7 +27,7 @@
         locked_tip: "Billetera bloqueada. Click para desbloquear.",
         unlocked_tip: "Billetera desbloqueada. Click para bloquear"
     },
-    operation : {
+    operation: {
         pending: "%(blocks)s bloques pendientes"
     },
     account: {
@@ -122,6 +122,7 @@
         follow: "Seguir",
         pay: "Pagar",
         overview: "Resumen",
+        bts_market: "Mercado",
         history: "Historial",
         payees: "Beneficiarios",
         permissions: "Permisos",
@@ -216,7 +217,7 @@
         was_issued: "Ha sido emitido",
         by: "por",
         burn_asset: "Incinerado",
-        fund_pool: "El Fondo de Comisiones del activo ha sido financiado con",
+        fund_pool: "Pool de comisiones  para %(asset)s financiado con",
         asset_settle: "Ha solicitado la liquidación de",
         asset_global_settle: "Ha solicitado la liquidación global de",
         publish_feed: "ha publicado el feed ",
@@ -310,6 +311,8 @@
             recent: "Bloques recientes",
             trx: "Transacción",
             block_times: "Tiempo entre bloques",
+            block_time: "Tiempo entre bloques",
+            transactions: "# de transacciones",
             recently_missed_blocks: "Bloques perdidos recientemente",
             trx_per_block: "Trx/bloque",
             active_committee_members: "Mienbros del Comité activos",
@@ -361,6 +364,7 @@
             precision: "Precisión"
         },
         asset: {
+            title: "Activo",
             not_found: "El activo %(name)s no existe",
             summary: {
                 asset_type: "Tipo de Activo",
@@ -409,7 +413,18 @@
             }
         },
         witnesses: {
-            title: "Testigos"
+            title: "Testigos",
+            current: "Testigo actual",
+            participation: "Grado de participación",
+            pay: "Pago por bloque",
+            budget: "Presupuesto restante",
+            next_vote: "Próximo recuento de votos",
+            card: "Ver tarjetas",
+            table: "Ver tabla",
+            rank: "Puesto",
+            last_confirmed: "Ultimo confirmado",
+            missed: "Bloques perdidos"
+
         },
         committee_members: {
             title: "Miembros del Comité",
@@ -447,8 +462,8 @@
         loading: "Cargando..."
     },
     exchange: {
-        price_history: "Historial de Precios",
-        order_depth: "Profundidad del Mercado",
+        price_history: "Gráfico de Precios",
+        order_depth: "Profundidad de Mercado",
         market_history: "Historial de Mercado",
         balance: "Su balance",
         lowest_ask: "Pedido más bajo",
@@ -469,6 +484,8 @@
         buy: "Comprar",
         sell: "Vender",
         receive: "Recibir",
+        vertical: "Vertical",
+        horizontal: "Horizontal",
         confirm_buy: "Confimar orden: Comprar %(buy_amount)s %(buy_symbol)s al precio de %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirmar orden: Vender %(sell_amount)s %(sell_symbol)s al precio de %(price_amount)s %(price_symbol)s"
     },
@@ -490,6 +507,7 @@
         change_wallet: "Cambiar Billetera",
         wallet_created: "Billetera Creada",
         create_wallet: "Crear Billetera",
+        import_bts1: "Importar desde BitShares 0.9.3c",
         setup_wallet: "Configurar su Billetera",
         delete_wallet: "Eliminar Billetera",
         delete_confirm_line1: "Está usted ABSOLUTAMENTE seguro?",
@@ -554,11 +572,12 @@
         title: "%(asset_symbol)s Margin",
         no_valid: "No hay feeds válidos para %(asset_symbol)s",
         coll_ratio: "Relación colateral",
+        call_limit: "Market Call Limit",
         adjust: "Ajustar Posición",
         close: "Cerrar Posición",
         update: "Actualizar",
         errors: {
-            below: "Relación colateral inferior al nivel de mantenimiento",
+            below: "Collateral ratio is too low, this position will be margin called instantly",
             collateral: "Balance colateral insuficiente"
         }
     },
