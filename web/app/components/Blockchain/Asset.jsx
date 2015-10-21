@@ -17,8 +17,6 @@ import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 require("./json-inspector.scss");
 
-var artist = '';
-//import Artist from "./Artist"; artist = <Artist/>;
 
 //-------------------------------------------------------------
 // TODO: Capitalize?
@@ -461,7 +459,7 @@ class Asset extends React.Component {
                 {this.renderPermissionIndicators(asset)}
                 <br/>
 
-                {whiteLists}
+                {/*whiteLists*/}
             </Box>
         );
     }
@@ -540,22 +538,22 @@ class Asset extends React.Component {
         //console.log("This: ", this);
         console.log("Asset: ", asset); //TODO Remove
 
-        // <div className="grid-block small-10 small-offset-1" style={{overflow:"visible"}}>
         return (
             <div className="grid-block page-layout vertical medium-horizontal">
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
 
                     {this.renderAboutBox(asset)}
 
-                    {artist}
 
                     <div className="grid-block" style={{padding:0, overflow:"visible"}}>
                         <div className="grid-block vertical" style={{overflow:"visible"}}>
+                            {/* COLUMN 1 */}
                             {this.renderSummary(asset)}
                             {priceFeed}
                         </div>
 
                         <div className="grid-block vertical" style={{overflow:"visible"}}>
+                            {/* COLUMN 2 */}
                             {this.renderFeePool(asset)}
                             {this.renderPermissions(asset)}
                          </div>
