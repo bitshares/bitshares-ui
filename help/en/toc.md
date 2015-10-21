@@ -1,6 +1,19 @@
 #### Table of Contents
 
-- [Introduction](index.md)
-- [Glossary](glossary.md)
-- Assets
-  * [USD](assets/usd.md)
+ * [Introduction](index.md)
+ * [Glossary](glossary.md)
+ * [BitShares](introduction/bitshares.md)
+ * [Wallet](introduction/wallets.md)
+ * [Backups](introduction/backups.md)
+ * [Blockchain](introduction/blockchain.md)
+ * [Witness](introduction/witness.md)
+ * [Committe Member](introduction/committee.md)
+ * [Accounts](accounts/general.md)
+ * [Permissions](accounts/permissions.md)
+ * [Memberships](accounts/membership.md)
+ * [Market Pegged Assets](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
+ * [User Issued Assets](assets/uia.md)
+ * [Privatized BitAssets](assets/privbitassets.md)
+ * [Decentralized Exchange](dex/introduction.md)
+ * [Trading](dex/trading.md)
+ * [Short Selling BitAssets](dex/shorting.md)
