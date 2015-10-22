@@ -40,7 +40,7 @@ export default class BalanceClaimSelector extends Component {
             set.add(distinct)
             return set.size
         }
-        props.total_by_account_asset = balances
+        if ( balances ) props.total_by_account_asset = balances
             .groupBy( v => {
                 // K E Y S
                 var names = ""
@@ -71,7 +71,9 @@ export default class BalanceClaimSelector extends Component {
     }
     
     render() {
-        if( ! this.props.total_by_account_asset.size) return <div></div>
+        if( this.props.balances === undefined || ! this.props.total_by_account_asset.size)
+            return <div></div>
+        
         var index = -1
         return <div>
             <table className="table">

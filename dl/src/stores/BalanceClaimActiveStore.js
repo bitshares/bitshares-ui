@@ -42,8 +42,8 @@ class BalanceClaimActiveStore extends BaseStore {
     getInitialViewState() {
         // reset in-between balance claims
         return {
+            balances: undefined,
             checked: Immutable.Map(),
-            balances: new Immutable.List(),
             selected_balances: Immutable.Seq(),
             claim_account_name: undefined,
             loading: false
