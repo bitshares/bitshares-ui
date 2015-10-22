@@ -86,6 +86,7 @@ export default class ImportKeys extends Component {
         }
         var has_keys = this.state.key_count !== 0;
         var import_ready = has_keys
+        var show_chain_summary = !!this.state.key_count
         var password_placeholder = "Enter import file password";
         if (this.state.key_count) {
             password_placeholder = "";
@@ -120,7 +121,7 @@ export default class ImportKeys extends Component {
                 </div>
                 <br/>
                 <div className="center-content">
-                    { ! this.state.key_count ?
+                    { ! show_chain_summary ?
                         (<div>
                             <div>
                                 <div>
@@ -162,7 +163,7 @@ export default class ImportKeys extends Component {
                     
                 </div>
 
-                {this.state.key_count ? 
+                { show_chain_summary ? 
                     (<div>
                         {account_rows ? 
                         (<div>
@@ -185,15 +186,12 @@ export default class ImportKeys extends Component {
                         <br/>
 
                         <h4 className="center-content">Unclaimed balances belonging to these keys:</h4>
-                        {this.state.key_count ?
-                            (<div>
-                                <div className="grid-block center-content">
-                                    <div className="grid-content no-overflow">
-                                        <label>Asset Totals</label>
-                                        <BalanceClaimAssetTotal />
-                                    </div>
-                                </div>
-                            </div>) : null}
+                        <div className="grid-block center-content">
+                            <div className="grid-content no-overflow">
+                                <label>Asset Totals</label>
+                                <BalanceClaimAssetTotal />
+                            </div>
+                        </div>
                         <br/>
 
                         <div className="center-content" style={{width: "100%"}}>
