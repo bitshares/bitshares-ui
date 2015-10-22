@@ -46,12 +46,13 @@ export default class BalanceClaimActive extends Component {
     }
     
     render() {
-        if( this.props.loading) return <div className="center-content">
-            <p></p>
-            <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
-            <LoadingIndicator type="circle"/>
-        </div>
-        
+        if( this.props.loading || this.props.balances === undefined)
+            return <div className="center-content">
+                <p></p>
+                <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
+                <LoadingIndicator type="circle"/>
+            </div>
+            
         if( ! this.props.balances.size) return <div>
             <h5><Translate content="wallet.no_balance" /></h5>
         </div>
