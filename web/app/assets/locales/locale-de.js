@@ -476,7 +476,6 @@ module.exports = {
         squeeze: "Margin Call Preis",
         maintenance: "Maintenance Call Preis",
         your_price: "Ihr Call Preis",
-        volume: "Volumen",
         spread: "Spread",
         quantity: "Quantität",
         buy: "Kaufen",

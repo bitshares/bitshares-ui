@@ -569,7 +569,9 @@ module.exports = {
         never_backed_up: "钱包尚未进行过备份",
         need_backup: "钱包需要备份",
         noneed_backup: "无需备份",
-        import_bts1: "从BitShares 0.9.3c导入"
+        import_bts1: "从BitShares 0.9.3c导入",
+        import_keys_tool: "私钥导入工具",
+        balance_claim_lookup: "查询余额"
     },
     borrow: {
         title: "%(asset_symbol)s 保证金头寸",
