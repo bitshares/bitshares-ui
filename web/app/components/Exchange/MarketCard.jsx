@@ -93,7 +93,7 @@ class MarketCard extends React.Component {
                                 </ul>
                             </div>
                         </div>
-                    <span style={{marginBottom: "6px", marginRight: "6px", zIndex:999,  }} onClick={this.props.removeMarket} className="text alert float-right remove">–</span>
+                    <span style={{marginBottom: "6px", marginRight: "6px", zIndex:999,  }} onClick={this.props.removeMarket} className="text float-right remove">–</span>
                 </div>
             </div>
         );
