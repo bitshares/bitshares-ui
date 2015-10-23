@@ -489,7 +489,10 @@ module.exports = {
         your_price: "你的强平触发价",
         receive: "获得",
         vertical: "垂直布局",
-        horizontal: "水平布局"
+        horizontal: "水平布局",
+        market_name: "市场名称",
+        quote_supply: "报价资产供给量",
+        base_supply: "基础资产供给量"
     },
     markets: {
         choose_base: "选择基准资产",
