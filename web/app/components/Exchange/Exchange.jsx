@@ -551,20 +551,11 @@ class Exchange extends React.Component {
             "86400": "1d"
         }
 
-<<<<<<< HEAD
-        let bucketOptions = buckets.map(bucket => {
-            return <div className={classnames("button", {"bucket-button": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
-        }).reverse();
-
-=======
-
 
         let bucketOptions = buckets.map(bucket => {
             return <div className={classnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
 
-
->>>>>>> upstream/master
         return (
 
                 <div className="grid-block page-layout market-layout">
@@ -658,11 +649,6 @@ class Exchange extends React.Component {
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink" id="market-charts" style={{marginTop: "0.5rem"}}>
                             {/* Price history chart */}
-<<<<<<< HEAD
-                                    <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
-                                        {bucketOptions}
-                                    </div>
-=======
                             <div className="chart-zoom-dropdown no-overflow" style={{position: "absolute", top: "24px", left: "24px", zIndex: 999}} >
                               <Icon className="grid-block" name="cog"/>
 
@@ -672,7 +658,6 @@ class Exchange extends React.Component {
                                   </div>
                                 </div>
                               </div>
->>>>>>> upstream/master
                                     <PriceChart
                                         priceData={this.props.priceData}
                                         volumeData={this.props.volumeData}
