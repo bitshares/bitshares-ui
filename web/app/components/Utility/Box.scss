@@ -18,21 +18,18 @@
 }
 
 
-.BoxHeader {
-  text-align: center;
-  background-color: #383838;
-}
-.BoxHeader h4 {
-  color: #FCAB53; /* orange */
-  font-weight: bold;
-}
+.BoxHeader,
 .BoxFooter {
   text-align: center;
   background-color: #383838;
+  padding: 16px;
 }
+
+.BoxHeader h4,
 .BoxFooter h4 {
   color: #FCAB53; /* orange */
   font-weight: bold;
+  margin: 0;
 }
 
 
@@ -46,6 +43,7 @@
 }
 .accordion-title {
   text-align: center;
+  line-height: 32px;
   /*font-family: 'Roboto-Light', arial, sans-serif;
   font-weight: bold;
   */

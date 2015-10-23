@@ -54,27 +54,58 @@ export class WalletOptions extends WalletBaseComponent {
                 <div className="grid-content">
                     <div className="card">
                         <div className="card-content">
-                            <span><Link to="wmc-change-wallet">
-                                <label><Translate content="wallet.active_wallet" /></label>
+                                <label><Translate content="wallet.active_wallet" />:</label>
                                 <div>{current_wallet}</div>
                                 <br/>
-                                {has_wallets ? 
-                                    <div className="button outline success">
-                                        <Translate content="wallet.change_wallet" /></div>
+                                {has_wallets ? (
+                                    <Link to="wmc-change-wallet">
+                                        <div className="button outline success">
+                                            <Translate content="wallet.change_wallet" />
+                                        </div>
+                                    </Link>
+                                )
                                 :null}
-                            </Link></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid-content">
+                    <div className="card">
+                        <div className="card-content">
+                                <label><Translate content="wallet.import_keys_tool" /></label>
+                                <div style={{visibility: "hidden"}}>Dummy</div>
+                                <br/>
+                                {has_wallet ? (
+                                    <Link to="wmc-import-keys">
+                                        <div className="button outline success">
+                                            <Translate content="wallet.import_keys" />
+                                        </div>
+                                    </Link>
+                                )
+                                :null}
                         </div>
                     </div>
                 </div>
                 
                 {has_wallet ? <div className="grid-content">
-                    <Link to="wmc-balance-claims">
-                    <BalanceClaimByAsset>
-                        <br/>
-                        <div className="button outline success">
-                            <Translate content="wallet.balance_claims" /></div>
-                    </BalanceClaimByAsset>
-                    </Link>
+                    <div className="card">
+                        <div className="card-content">
+                            <label><Translate content="wallet.balance_claims" /></label>
+                            <div style={{visibility: "hidden"}}>Dummy</div>
+                            <br/>
+                            <Link to="wmc-balance-claims">
+                                <div className="button outline success">
+                                    <Translate content="wallet.balance_claim_lookup" />
+                                </div>
+                            </Link>
+                        {/*<BalanceClaimByAsset>
+                            <br/>
+                            <div className="button outline success">
+                                <Translate content="wallet.balance_claims" /></div>
+                        </BalanceClaimByAsset>
+                        */}
+                        </div>
+                    </div>
                 </div>:null}
             
             </div>
@@ -89,23 +120,18 @@ export class WalletOptions extends WalletBaseComponent {
             <Link to="wmc-backup-verify-restore">
             <div className="button outline success"><Translate content="wallet.restore_backup" /></div></Link>
 
-            {has_wallet ? <Link to="wmc-import-keys">
-            <div className="button outline success"><Translate content="wallet.import_keys" /></div></Link>:null}
-            
+            <br/>
+
             {has_wallet ? <br/> : null}
             
-            {has_wallet ? <Link to="wmc-change-password">
-            <div className="button outline success"><Translate content="wallet.change_password" /></div></Link>:null}
-
             <Link to="wmc-wallet-create">
             <div className="button outline success"><Translate content="wallet.new_wallet" /></div></Link>
             
             {has_wallet ? <Link to="wmc-wallet-delete">
             <div className="button outline success"><Translate content="wallet.delete_wallet" /></div></Link>:null}
 
-            <p></p>
-            
-
+            {has_wallet ? <Link to="wmc-change-password">
+            <div className="button outline success"><Translate content="wallet.change_password" /></div></Link>:null}
             
         </span>
     }

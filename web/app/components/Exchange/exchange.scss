@@ -1,6 +1,7 @@
 $bid-color: #50D2C2;
 $ask-color: #E3745B;
 $call-color: #BBBF2B;
+$light-panel-bg-color: #353742;
 
 .market-layout {
   > .grid-block {
@@ -175,7 +176,7 @@ p.order-table-title {
 tr.top-header, tr.bottom-header, tr.spread-row {
   &:hover > td {
     background-color: inherit !important;
-    cursor: auto !important;
+    cursor: pointer !important;
   }
 }
 
@@ -283,9 +284,13 @@ a.order-cancel {
 }
 
 .active-bucket {
-  text-transform: none !important;
-  background-color: rgb(80, 210, 194) !important;
   font-size: 0.75rem !important;
+  background-color: lighten($light-panel-bg-color, 12%);
+  text-transform: uppercase;
+}
+
+.bucket-option {
+  cursor: pointer;
 }
 
 .buy-sell-row {
@@ -319,7 +324,6 @@ a.order-cancel {
 
 .buy-sell-box {
     text-align: center;
-    background: grey;
     height: 1.75rem;
     line-height: 1.75rem;
     font-weight: 700;

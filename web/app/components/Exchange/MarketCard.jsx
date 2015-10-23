@@ -5,7 +5,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-
+import ChainStore from "api/ChainStore";
 
 @BindToChainState({show_loader: true})
 class MarketCard extends React.Component {
@@ -35,6 +35,7 @@ class MarketCard extends React.Component {
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + " : " + base.get("symbol");
         let dynamic_data = quote.get("dynamic");
+        let base_dynamic_data = base.get("dynamic");
 
         let rate, convert = {}, invert, decimals, basePrice, quotePrice;
         if (quote.get("id") !== "1.3.0" && base.get("id") !== "1.3.0") {
@@ -66,7 +67,7 @@ class MarketCard extends React.Component {
                         <div onClick={this._onClick.bind(this, marketID)}>
                             <div style={{padding: "5px"}}>
                             </div>
-                            <div style={{color: "black"}} className="card-divider text-center">
+                            <div className="card-divider text-center info">
                                 <span>{marketName}</span>
                             </div>
                             <div className="card-section">
@@ -90,10 +91,16 @@ class MarketCard extends React.Component {
                                             amount={parseInt(dynamic_data.get("current_supply"), 10)}
                                             asset={quote.get("id")}/> : null}
                                     </li>
+                                    <li><Translate content="markets.supply" />:&nbsp;
+                                        {base_dynamic_data ? <FormattedAsset
+                                            style={{fontWeight: "bold"}}
+                                            amount={parseInt(base_dynamic_data.get("current_supply"), 10)}
+                                            asset={base.get("id")}/> : null}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
-                    <span style={{marginBottom: "5px", marginRight: "5px",zIndex:999, backgroundColor: "#6A6A6A"}} onClick={this.props.removeMarket} className="badge float-right">-</span>
+                    <span style={{marginBottom: "6px", marginRight: "6px", zIndex:999,  }} onClick={this.props.removeMarket} className="text float-right remove">–</span>
                 </div>
             </div>
         );

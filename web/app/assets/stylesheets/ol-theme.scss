@@ -6,19 +6,19 @@ $light-text-color: #fff;
 $dark-text-color: #444;
 $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
-$link-text-color: #aeabff;
+$link-text-color: #4A90E2;
 $error-text-color: #E3745B;
 
-$bg-color: #2a2a2a;
-$panel-bg-color: #3f3f3f;
-$light-panel-bg-color: #6a6a6a;
+$bg-color: #191A1F;
+$panel-bg-color: #2C2E37;
+$light-panel-bg-color: #353742;
 $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
-$button-bg-color: #8c88ff;
-$secondary-button-bg-color: #999999;
+$button-bg-color: #4A90E2;
+$secondary-button-bg-color: #546979;
 
 $alert-color: $error-text-color;
-$info-color: #A0D3E8;
-$success-color: #50D2C2;
+$info-color: #4A90E2;
+$success-color: #18BC9C;
 $warning-color: #FCAB53;
 $fee-color: $secondary-text-color;
 
@@ -133,7 +133,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal {
-  @include color($light-text-color, $light-panel-bg-color);
+  @include color($light-text-color, $bg-color);
   .close-button {
     color: $secondary-text-color;
     &:hover {
@@ -161,7 +161,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .footer {
-  @include color($secondary-text-color, $panel-bg-color);
+  @include color($secondary-text-color, lighten($panel-bg-color, 8%));
   svg > path {
     fill: $secondary-text-color;
   }
@@ -219,6 +219,11 @@ h1, h2, h3, h4, h5, h6 {
 
 // buttons
 
+.button.bucket-button {
+  text-transform: none !important;
+  font-size: 0.75rem !important;
+}
+
 .button {
   background-color: $button-bg-color;
   &:hover, &:focus, &:active {
@@ -241,19 +246,34 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.header .button,  header .button:active {
-  background-color: $panel-bg-color !important;
+.header .button,  .header .button:active {
+background-color: #3E414D !important;
+&:hover, &:focus, &:active {
+  background-color: #3E414D !important;
 }
+}
+
+
 
 .grp-menu-item button {
   &:hover, &:focus, &:active {
-    background-color: #4c4c4c !important;
+    background-color: #3E414D !important;
   }
+}
+
+.header {
+  @include color($secondary-text-color, $panel-bg-color);
 }
 
 .header .logo {
   color: $secondary-text-color;
+
 }
+
+.menu-group.primary .menu-bar {
+
+}
+
 
 .header-right-menu {
   a > span { color: $secondary-text-color; }
@@ -266,7 +286,6 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .card-section {
-  color: black;
   padding-left: 0.5rem;
   > ul {
     color: #FFF;
@@ -278,24 +297,26 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .card {
-  @include color($primary-text-color, $panel-bg-color);
+  @include color($primary-text-color, $bg-color);
   background-color: $panel-bg-color;
   &:hover {
     background-color: lighten($panel-bg-color, 4%);
     > h4 {
       background-color: lighten($light-panel-bg-color, 4%);
+      color: $link-text-color
     }
   }
   a {
     color: $primary-text-color;
   }
   .card-divider {
-    @include color($primary-text-color, $light-panel-bg-color);
+    @include color($primary-text-color, lighten($bg-color, 12%) );
   }
   > h4 {
-    background-color: $light-panel-bg-color;
+    background-color: lighten($bg-color, 24%);
   }
 }
+
 
 // tables
 .table {
@@ -349,12 +370,17 @@ div.has-error > input, div.has-error > input:hover, div.has-error > input:focus 
 }
 
 input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
-  background-color: #ddd;
+  color: $primary-text-color;
+  background-color: $panel-bg-color;
+  border: none;
   &:hover, &:focus, &:active {
-    background-color: #ddd;
+    color: $primary-text-color;
+    background-color: darken($panel-bg-color, 2%);
+    border: none;
   }
   &:focus {
-    border-color: #aaa;
+    color: $primary-text-color;
+    border: none;
   }
 }
 
@@ -399,6 +425,21 @@ td.orderHistoryBid {
   font-weight: bold;
 }
 
+.buy-sell-box {
+  background-color: lighten($light-panel-bg-color, 12%);
+}
+
+.active-bucket {
+  text-transform: none !important;
+  font-size: 0.75rem !important;
+  background-color: lighten($light-panel-bg-color, 12%);
+  text-transform: uppercase;
+}
+
+
+.market-top-bar {
+  border-bottom: 1px solid $panel-bg-color;
+}
 
 // Account page
 .account-left-panel {
@@ -552,23 +593,5 @@ section input[type="text"] {
   &:hover, &:active, &:focus {
     color: $primary-text-color;
     background-color: transparent;
-  }
-}
-
-.remove {
-  color: $alert-color;
-  border: none;
-  padding: 2px 4px;
-  font-size: 120%;
-  background-color: transparent;
-  border-radius: 0;
-  -webkit-transition: all .5s ease;
-  -moz-transition: all .5s ease;
-  transition: all .5s ease;
-  &:hover, &:active, &:focus {
-    color: $light-text-color;
-    background-color: $alert-color;
-    font-size: 120%;
-    border-radius: 2px;
   }
 }
