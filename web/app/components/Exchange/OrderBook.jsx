@@ -89,8 +89,7 @@ class OrderBook extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            shouldScrollBottom: false,
-            didScrollOnMount: true,
+            hasCentered: false,
             flip: props.flipOrderBook
         };
     }
@@ -105,19 +104,33 @@ class OrderBook extends React.Component {
             );
     }
 
-    // componentDidMount() {
-    //     if (!this.props.horizontal) {
-    //         let bidsContainer = React.findDOMNode(this.refs.bidsTbody);
-    //         Ps.initialize(bidsContainer);
-    //     }
-    // }
+    componentDidMount() {
+        if (!this.props.horizontal) {
+            let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
+            Ps.initialize(bidsContainer);
+        }
+    }
 
-    // componentDidUpdate() {
-    //     if (!this.props.horizontal) {
-    //         let bidsContainer = React.findDOMNode(this.refs.bidsTbody);
-    //         Ps.initialize(bidsContainer);
-    //     }
-    // }
+    componentDidUpdate() {
+        if (!this.props.horizontal) {
+            let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
+            let centerRow = React.findDOMNode(this.refs.centerRow);
+            if (!this.state.hasCentered) {
+                this._centerView();
+                this.setState({hasCentered: true});
+            }
+            Ps.update(bidsContainer);
+        }
+    }
+
+    _centerView() {
+        let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
+        let centerRow = React.findDOMNode(this.refs.centerRow);
+        let outer = bidsContainer.getBoundingClientRect();
+        let center = centerRow.getBoundingClientRect();
+        bidsContainer.scrollTop = (center.top + center.height / 2) - (outer.height / 2);
+        Ps.update(bidsContainer);
+    }
 
     _flipBuySell() {
         SettingsActions.changeViewSetting({
@@ -266,15 +279,15 @@ class OrderBook extends React.Component {
             return (
                 <div className="left-order-book no-padding no-overflow">
                     <div className="table-container grid-content no-padding" ref="orderbook_container" style={{overflow: "hidden"}}>
-                        <table className="table order-table table-hover text-right">
-                            <tbody id="test" ref="bidsTbody" className="orderbook ps-container orderbook-top">
+                        <table ref="tableContainer" className="table order-table table-hover text-right">
+                            <tbody id="test" className="orderbook ps-container orderbook-top">
                                 {askRows}
                                 <tr key="top-header" className="top-header">
                                     <td className="show-for-large" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
                                     <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
-                                <tr key="spread" className="spread-row">
+                                <tr onClick={this._centerView.bind(this)} key="spread" className="spread-row" ref="centerRow">
                                     <td colSpan="3" className="text-center spread">
                                         <Translate content="exchange.spread" />: {spread} {baseSymbol}
                                     </td>

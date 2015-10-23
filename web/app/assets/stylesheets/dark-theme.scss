@@ -554,3 +554,21 @@ section input[type="text"] {
     background-color: transparent;
   }
 }
+
+.remove {
+  color: $alert-color;
+  border: none;
+  padding: 2px 4px;
+  font-size: 120%;
+  background-color: transparent;
+  border-radius: 0;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+  &:hover, &:active, &:focus {
+    color: $light-text-color;
+    background-color: $alert-color;
+    font-size: 120%;
+    border-radius: 2px;
+  }
+}

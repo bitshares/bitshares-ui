@@ -15,7 +15,9 @@ class DepthHighChart extends React.Component {
             nextProps.plotLine !== this.props.plotLine ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.settlementPrice !== this.props.settlementPrice ||
-            nextProps.leftOrderBook !== this.props.leftOrderBook
+            nextProps.leftOrderBook !== this.props.leftOrderBook ||
+            nextProps.SQP !== this.props.SQP ||
+            nextProps.LCP !== this.props.LCP 
         );
     }
 

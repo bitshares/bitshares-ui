@@ -179,6 +179,10 @@ class MarketsActions {
         return Promise.resolve(true);
     }
 
+    clearMarket() {
+        this.dipatch();
+    }
+
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
         if (subs[subID]) {

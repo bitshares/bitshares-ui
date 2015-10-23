@@ -14,6 +14,8 @@ import {
 }
 from "./tcomb_structs";
 
+var ls = typeof localStorage === "undefined" ? null : localStorage;
+
 class MarketsStore {
     constructor() {
         this.markets = Immutable.Map();
@@ -38,11 +40,10 @@ class MarketsStore {
         this.quoteAsset = null;
         this.pendingCounter = 0;
         this.buckets = [15,60,300,3600,86400];
-        this.bucketSize = 300;
+        this.bucketSize = this._getBucketSize();
         this.priceHistory = [];
         this.lowestCallPrice = null;
         this.marketBase = "CORE";
-
         this.baseAsset = {
             id: "1.3.0",
             symbol: "CORE",
@@ -64,7 +65,8 @@ class MarketsStore {
             onChangeBucketSize: MarketsActions.changeBucketSize,
             onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
             onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
-            onCallOrderUpdate: MarketsActions.callOrderUpdate
+            onCallOrderUpdate: MarketsActions.callOrderUpdate,
+            onClearMarket: MarketsActions.clearMarket
         });
     }
 
@@ -73,6 +75,18 @@ class MarketsStore {
             totalDebt: payload.totalDebt,
             totalCollateral: payload.totalCollateral
         };
+    }
+
+    _getBucketSize() {
+        let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
+        return bs ? parseInt(bs) : 300;
+    }
+
+    _setBucketSize(size) {
+        this.bucketSize = size;
+        if (ls) {
+            ls.setItem("__graphene___bucketSize", size);
+        }
     }
 
     onInverseMarket(payload) {
@@ -90,7 +104,7 @@ class MarketsStore {
     }
 
     onChangeBucketSize(size) {
-        this.bucketSize = size;
+        this._setBucketSize(size);
     }
 
     onUnSubscribeMarket(payload) {
@@ -101,6 +115,21 @@ class MarketsStore {
         } else { // Unsub failed, restore activeMarket
             this.activeMarket = payload.market;
         }
+    }
+
+    onClearMarket() {
+        this.activeMarketLimits = this.activeMarketLimits.clear();
+        this.activeMarketCalls = this.activeMarketCalls.clear();
+        this.activeMarketSettles = this.activeMarketSettles.clear();
+        this.activeMarketHistory = this.activeMarketHistory.clear();
+        this.bids = [];
+        this.asks = [];
+        this.calls = [];
+        this.pendingCreateLimitOrders = [];
+        this.flat_bids = [];
+        this.flat_asks = [];
+        this.flat_calls = [];
+        this.priceHistory =[];
     }
 
     onSubscribeMarket(result) {
@@ -114,18 +143,7 @@ class MarketsStore {
         if (result.market && (result.market !== this.activeMarket)) {
             // console.log("switch active market from", this.activeMarket, "to", result.market);
             this.activeMarket = result.market;
-            this.activeMarketLimits = this.activeMarketLimits.clear();
-            this.activeMarketCalls = this.activeMarketCalls.clear();
-            this.activeMarketSettles = this.activeMarketSettles.clear();
-            this.activeMarketHistory = this.activeMarketHistory.clear();
-            this.bids = [];
-            this.asks = [];
-            this.calls = [];
-            this.pendingCreateLimitOrders = [];
-            this.flat_bids = [];
-            this.flat_asks = [];
-            this.flat_calls = [];
-            this.priceHistory =[];
+            this.onClearMarket();
         }
 
         if (result.buckets) {
