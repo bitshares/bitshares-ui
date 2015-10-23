@@ -491,6 +491,49 @@ td.orderHistoryBid {
 
 // Misc
 
+.chart-zoom-dropdown {
+  width:24px;
+  height: 28px;
+  padding: 4px;
+  opacity: 0.5;
+  overflow: hidden;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+
+  &:hover, &:active, &:focus {
+    background-color: $bg-color;
+    padding: 4px;
+    opacity: 0.85;
+    border-radius: 2px;
+    color: $light-text-color;
+    font-size: 60%;
+    width:348px;
+    height: 48px;
+  }
+}
+
+
+
+
+.remove {
+  color: $alert-color;
+  border: none;
+  padding: 2px 4px;
+  font-size: 120%;
+  background-color: transparent;
+  border-radius: 0;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+  &:hover, &:active, &:focus {
+    color: $light-text-color;
+    background-color: $alert-color;
+    font-size: 120%;
+    border-radius: 2px;
+  }
+}
+
 .memo {
   color: $secondary-text-color;
 }
