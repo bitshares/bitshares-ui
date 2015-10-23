@@ -178,7 +178,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tabs {
-@include color($secondary-text-color, $bg-color);
+  @include color($secondary-text-color, $bg-color);
 }
 
 
@@ -219,6 +219,11 @@ h1, h2, h3, h4, h5, h6 {
 
 // buttons
 
+.button.bucket-button {
+  text-transform: none !important;
+  font-size: 0.75rem !important;
+}
+
 .button {
   background-color: $button-bg-color;
   &:hover, &:focus, &:active {
@@ -242,10 +247,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .header .button,  .header .button:active {
-background-color: #3E414D !important;
-&:hover, &:focus, &:active {
   background-color: #3E414D !important;
-}
+  &:hover, &:focus, &:active {
+    background-color: #3E414D !important;
+  }
 }
 
 
@@ -281,7 +286,6 @@ background-color: #3E414D !important;
 
 
 .card-section {
-  color: black;
   padding-left: 0.5rem;
   > ul {
     color: #FFF;
@@ -299,6 +303,7 @@ background-color: #3E414D !important;
     background-color: lighten($panel-bg-color, 4%);
     > h4 {
       background-color: lighten($light-panel-bg-color, 4%);
+      color: $link-text-color
     }
   }
   a {
@@ -311,6 +316,7 @@ background-color: #3E414D !important;
     background-color: lighten($bg-color, 24%);
   }
 }
+
 
 // tables
 .table {
@@ -364,12 +370,17 @@ div.has-error > input, div.has-error > input:hover, div.has-error > input:focus 
 }
 
 input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
-  background-color: #ddd;
+  color: $primary-text-color;
+  background-color: $panel-bg-color;
+  border: none;
   &:hover, &:focus, &:active {
-    background-color: #ddd;
+    color: $primary-text-color;
+    background-color: darken($panel-bg-color, 2%);
+    border: none;
   }
   &:focus {
-    border-color: #aaa;
+    color: $primary-text-color;
+    border: none;
   }
 }
 
@@ -397,7 +408,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 .depthchart {
   background-color: $bg-color;
   &:hover {
-  background-color: $bg-color;
+    background-color: $bg-color;
   }
   &.area {
     color: #FFF;
@@ -405,8 +416,8 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 }
 
 td.orderHistoryAsk {
- color: $alert-color;
- font-weight: bold;
+  color: $alert-color;
+  font-weight: bold;
 }
 
 td.orderHistoryBid {
@@ -414,6 +425,21 @@ td.orderHistoryBid {
   font-weight: bold;
 }
 
+.buy-sell-box {
+  background-color: lighten($light-panel-bg-color, 12%);
+}
+
+.active-bucket {
+  text-transform: none !important;
+  font-size: 0.75rem !important;
+  background-color: lighten($light-panel-bg-color, 12%);
+  text-transform: uppercase;
+}
+
+
+.market-top-bar {
+  border-bottom: 1px solid $panel-bg-color;
+}
 
 // Account page
 .account-left-panel {
@@ -446,7 +472,7 @@ td.orderHistoryBid {
 
 
 .pagination {
-    background-color: $panel-bg-color;
+  background-color: $panel-bg-color;
 }
 
 .invoice {
@@ -499,12 +525,55 @@ td.orderHistoryBid {
 }
 
 .circle-wrapper {
-   .circle:before {
-     background-color: $secondary-text-color;
-   }
+  .circle:before {
+    background-color: $secondary-text-color;
+  }
 }
 
 // Misc
+
+.chart-zoom-dropdown {
+  width:24px;
+  height: 28px;
+  padding: 4px;
+  opacity: 0.5;
+  overflow: hidden;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+
+  &:hover, &:active, &:focus {
+    background-color: $bg-color;
+    padding: 4px;
+    opacity: 0.85;
+    border-radius: 2px;
+    color: $light-text-color;
+    font-size: 60%;
+    width:348px;
+    height: 48px;
+  }
+}
+
+
+
+
+.remove {
+  color: $alert-color;
+  border: none;
+  padding: 2px 4px;
+  font-size: 120%;
+  background-color: transparent;
+  border-radius: 0;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+  &:hover, &:active, &:focus {
+    color: $light-text-color;
+    background-color: $alert-color;
+    font-size: 120%;
+    border-radius: 2px;
+  }
+}
 
 .memo {
   color: $secondary-text-color;

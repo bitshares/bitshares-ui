@@ -99,7 +99,7 @@ class Exchange extends React.Component {
 
         emitter.on('cancel-order', limitListener = MarketsActions.cancelLimitOrderSuccess);
         emitter.on('close-call', callListener = MarketsActions.closeCallOrderSuccess);
-        emitter.on('call-order-update', newCallListener = MarketsActions.callOrderUpdate);     
+        emitter.on('call-order-update', newCallListener = MarketsActions.callOrderUpdate);
     }
 
     componentDidMount() {
@@ -137,7 +137,7 @@ class Exchange extends React.Component {
     componentWillUnmount() {
         let {quoteAsset, baseAsset} = this.props;
         MarketsActions.unSubscribeMarket(quoteAsset.get("id"), baseAsset.get("id"));
-        emitter.off('cancel-order', limitListener);   
+        emitter.off('cancel-order', limitListener);
         emitter.off('close-call', callListener);
         emitter.off('call-order-update', newCallListener);
     }
@@ -352,7 +352,7 @@ class Exchange extends React.Component {
             if (value.indexOf(".") !== value.length -1) {
                 value = this._limitByPrecision(amount, quote);
             }
-            // price = Math.round(price * precision) / 
+            // price = Math.round(price * precision) /
             this.setState({
                 sellPrice: price,
                 sellAmount: value,
@@ -455,7 +455,7 @@ class Exchange extends React.Component {
 
                 // coreRate = utils.get_asset_price(core_rate.quote.amount, coreQuote, core_rate.base.amount, coreBase, flipped);
                 settlementPrice = utils.get_asset_price(settlement_price.quote.amount, settlementQuote, settlement_price.base.amount, settlementBase, flipped);
-                
+
                 if (flipped) {
                     squeezePrice = settlementPrice / short_squeeze;
                     showCallLimit = lowestCallPrice > squeezePrice;
@@ -535,9 +535,12 @@ class Exchange extends React.Component {
             "86400": "1d"
         }
 
+
+
         let bucketOptions = buckets.map(bucket => {
-            return <div className={classnames("button", {"bucket-button": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div className={classnames("label", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
+
 
         return (
 
@@ -547,7 +550,7 @@ class Exchange extends React.Component {
 
                     {/* Left Column - Open Orders */}
                     {leftOrderBook ? (
-                        <div className="grid-block left-column shrink" style={{overflow: "hidden"}}>
+                        <div className="grid-block left-column large-2 " style={{overflow: "hidden"}}>
                             <OrderBook
                                 orders={limit_orders}
                                 calls={call_orders}
@@ -566,7 +569,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className="grid-block main-content vertical ps-container">
+                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8 " : "small-12 large-10 ")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
@@ -632,9 +635,15 @@ class Exchange extends React.Component {
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink no-overflow" id="market-charts" style={{marginTop: "0.5rem"}}>
                             {/* Price history chart */}
-                                    <div style={{position: "absolute", top: "-5px", right: "20px", zIndex: 999}}>
-                                        {bucketOptions}
-                                    </div>
+                            <div className="chart-zoom-dropdown" style={{position: "absolute", top: "24px", left: "24px", zIndex: 999}} >
+                              <Icon className="grid-block" name="cog"/>
+
+                                  <div className="grid-block float-right" >
+                                    <div className="grid-content float-right">
+                                   {bucketOptions}
+                                  </div>
+                                </div>
+                              </div>
                                     <PriceChart
                                         priceData={this.props.priceData}
                                         volumeData={this.props.volumeData}
@@ -646,8 +655,9 @@ class Exchange extends React.Component {
                                         leftOrderBook={leftOrderBook}
 
                                     />
+
                         </div>) : (
-                            <div className="grid-block no-overflow no-padding shrink">
+                            <div className="grid-block no-overflow no-padding shrink" >
                                 <DepthHighChart
                                     orders={limit_orders}
                                     call_orders={call_orders}
@@ -762,7 +772,7 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block right-column show-for-large shrink" style={{overflowY: "auto"}}>
+                    <div className="grid-block right-column show-for-large large-2" style={{overflowY: "auto"}}>
                         {/* Market History */}
                         <MarketHistory
                             history={this.props.activeMarketHistory}
@@ -770,7 +780,7 @@ class Exchange extends React.Component {
                             baseSymbol={baseSymbol}
                             quoteSymbol={quoteSymbol}
                         />
-                        
+
                     </div>
                     {quoteIsBitAsset ?
                         <BorrowModal
