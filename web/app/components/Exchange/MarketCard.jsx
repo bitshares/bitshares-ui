@@ -35,7 +35,7 @@ class MarketCard extends React.Component {
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + " : " + base.get("symbol");
         let dynamic_data = quote.get("dynamic");
-        let base_dynamic_data = base.get("dynamic");
+
         let rate, convert = {}, invert, decimals, basePrice, quotePrice;
         if (quote.get("id") !== "1.3.0" && base.get("id") !== "1.3.0") {
             rate = quote.getIn(["options", "core_exchange_rate"]);
@@ -66,10 +66,10 @@ class MarketCard extends React.Component {
                         <div onClick={this._onClick.bind(this, marketID)}>
                             <div style={{padding: "5px"}}>
                             </div>
-                            <div style={{color: "black"}} className="card-divider text-center">
+                            <div className="card-divider text-center info">
                                 <span>{marketName}</span>
                             </div>
-                            <div className="card-section" style={{paddingBottom: 0}}>
+                            <div className="card-section">
                                 <ul >
                                     <li>
                                         <Translate content="markets.core_rate" />:&nbsp;
@@ -90,16 +90,10 @@ class MarketCard extends React.Component {
                                             amount={parseInt(dynamic_data.get("current_supply"), 10)}
                                             asset={quote.get("id")}/> : null}
                                     </li>
-                                    <li><Translate content="markets.supply" />:&nbsp;
-                                        {base_dynamic_data ? <FormattedAsset
-                                            style={{fontWeight: "bold"}}
-                                            amount={parseInt(base_dynamic_data.get("current_supply"), 10)}
-                                            asset={base.get("id")}/> : null}
-                                    </li>
                                 </ul>
                             </div>
                         </div>
-                    <span style={{marginBottom: "5px", marginRight: "5px",zIndex:999, backgroundColor: "#6A6A6A"}} onClick={this.props.removeMarket} className="badge float-right">-</span>
+                    <span style={{marginBottom: "6px", marginRight: "6px", zIndex:999,  }} onClick={this.props.removeMarket} className="text alert float-right remove">–</span>
                 </div>
             </div>
         );
