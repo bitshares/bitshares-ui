@@ -13,8 +13,8 @@
         title: "Graphene UI",
         account: "Account",
         dashboard: "Dashboard",
-        explorer: "Explorer",
-        exchange: "Exchange",
+        explorer: "Explore",
+        exchange: "Trade",
         payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
@@ -487,7 +487,10 @@
         vertical: "Vertical",
         horizontal: "Horizontal",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-        confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s"
+        confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
+        market_name: "Market name",
+        quote_supply: "Quote supply",
+        base_supply: "Base supply"
     },
     markets: {
         base: "Base asset",

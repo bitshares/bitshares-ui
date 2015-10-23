@@ -1,5 +1,6 @@
 import React from "react";
 import MarketCard from "./MarketCard";
+import MarketRow from "./MarketRow";
 import Translate from "react-translate-component";
 import {Link} from "react-router";
 import SettingsActions from "actions/SettingsActions";
@@ -7,22 +8,34 @@ import MarketsActions from "actions/MarketsActions";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
 import _ from "lodash";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import LoadingIndicator from "../LoadingIndicator";
 
+@BindToChainState()
 class PreferredMarketsList extends React.Component {
+
+    static propTypes = {
+        assets: ChainTypes.ChainAssetsList.isRequired
+    }
 
     constructor(props) {
         super();
 
         this.state = {
             filter: props.viewSettings.get("favMarketFilter"),
+            marketsCardView: props.viewSettings.get("marketsCardView"),
+            sortBy: props.viewSettings.get("marketsSortBy")
         };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            true ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
-            nextState.filter !== this.state.filter
+            !Immutable.is(nextProps.assets, this.props.assets) ||
+            nextState.filter !== this.state.filter ||
+            nextState.marketsCardView !== this.state.marketsCardView ||
+            nextState.sortBy !== this.state.sortBy
         );
     }
 
@@ -31,30 +44,85 @@ class PreferredMarketsList extends React.Component {
         this.setState({filter: e.target.value.toUpperCase()});
     }
 
+    _toggleView() {
+        SettingsActions.changeViewSetting({
+            marketsCardView: !this.state.marketsCardView
+        });
+
+        this.setState({
+            marketsCardView: !this.state.marketsCardView
+        });
+    }
+
+    _setSort(field) {
+        SettingsActions.changeViewSetting({marketsSortBy: field});
+        this.setState({
+          sortBy: field,
+          inverseSort: field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort
+        });
+    }
+
     render() {
+        let {sortBy, inverseSort} = this.state;
+        let assets = {};
+        let resolvedCount = 0;
+        this.props.assets.forEach(asset => {
+            if (asset && asset.toJS()) {
+                assets[asset.get("symbol")] = asset;
+                resolvedCount++;
+            }
+        });
+
         let {  markets } = this.props;
-        let { filter } = this.state;
+        let { filter, marketsCardView } = this.state;
         let preferredMarkets = markets
             .sort((a, b) => {
-                if (a.quote > b.quote) {
-                    return 1;
-                } else if (a.quote < b.quote) {
-                    return -1;
-                } else {
-                    return 0;
+
+                switch (sortBy) {
+                    case 'name':
+                        if (a.quote > b.quote) {
+                            return inverseSort ? 1 : -1;
+                        } else if (a.quote < b.quote) {
+                            return inverseSort ? -1 : 1;
+                        } else {
+                            return 0;
+                        }
+                        break;
+
+                    default:
+                        return 0;
                 }
+
             })
             .map(market => {
-                return (
-                    <MarketCard
-                        key={market.quote + "_" + market.base}
-                        quote={market.quote}
-                        base={market.base}
-                        removeMarket={this.props.removeMarket.bind(market, market.quote, market.base)}
-                    />
-                );
+                if (marketsCardView) {
+                    return (
+                        <MarketCard
+                            key={market.quote + "_" + market.base}
+                            quote={market.quote}
+                            base={market.base}
+                            removeMarket={this.props.removeMarket.bind(market, market.quote, market.base)}
+                        />
+                    );
+            } else {
+                if (assets[market.quote] && assets[market.base]) {
+                    return (
+                            <MarketRow
+                                key={market.quote + "_" + market.base}
+                                quote={market.quote}
+                                base={market.base}
+                                removeMarket={this.props.removeMarket.bind(market, market.quote, market.base)}
+                            />
+                        );
+                    } else {
+                        return null;
+                }
+            }
             })
             .filter((a) => {
+                if (!a || !a.key) {
+                    return false;
+                }
                 if (!filter) {
                     return true;
                 }
@@ -62,18 +130,55 @@ class PreferredMarketsList extends React.Component {
             })
             .toArray();
 
-        return (
-            <div className="grid-block vertical">
-                <h2><Translate content="markets.preferred" />:</h2>
-                <div className="small-12 medium-5">
-                    <h5><Translate content="markets.filter" />:</h5>
-                    <input type="text" value={this.state.filter} onChange={this._onFilterMarkets.bind(this)}></input>
+        if (!marketsCardView) {
+            return (
+                <div className="grid-block vertical">
+                    <h2><Translate content="markets.preferred" />:</h2>
+                    <div className="grid-block">
+                        <div className="small-12 medium-6">
+                            <h5><Translate content="markets.filter" />:</h5>
+                            <input type="text" value={this.state.filter} onChange={this._onFilterMarkets.bind(this)}></input>
+                        </div>
+                        <span className="view-switcher small-12 medium-6 no-padding">
+                            <span className="button outline" onClick={this._toggleView.bind(this)}>{!marketsCardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}</span>
+                        </span>
+                    </div>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th className="clickable" onClick={this._setSort.bind(this, 'name')}><Translate content="exchange.market_name" /></th>
+                                <th><Translate content="exchange.price" /></th>
+                                <th><Translate content="exchange.quote_supply" /></th>
+                                <th><Translate content="exchange.base_supply" /></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {preferredMarkets}
+                        </tbody>
+                    </table>
+                    {resolvedCount !== this.props.assets.length - 1 ? <LoadingIndicator /> : null}
                 </div>
-                <div className="grid-block small-up-1 medium-up-2 large-up-3" style={{minHeight: "20rem"}}>
-                    {preferredMarkets}
+            );
+        } else {
+            return (
+                <div className="grid-block vertical">
+                    <h2><Translate content="markets.preferred" />:</h2>
+                    <div className="grid-block">
+                        <div className="small-12 medium-6">
+                            <h5><Translate content="markets.filter" />:</h5>
+                            <input type="text" value={this.state.filter} onChange={this._onFilterMarkets.bind(this)}></input>
+                        </div>
+                        <div className="view-switcher small-12 medium-6 no-padding">
+                            <span className="button outline" onClick={this._toggleView.bind(this)}>{!marketsCardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}</span>
+                        </div>
+                    </div>
+                    <div className="grid-block small-up-1 medium-up-2 large-up-3" style={{minHeight: "20rem"}}>
+                        {preferredMarkets}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
@@ -241,6 +346,16 @@ class Markets extends React.Component {
 
     render() {
         let {defaultMarkets} = this.props;
+        let assets = [];
+
+        defaultMarkets.forEach(market => {
+            if (assets.indexOf(market.quote) === -1) {
+                assets.push(market.quote);
+            }
+            if (assets.indexOf(market.base) === -1) {
+                assets.push(market.base);
+            }
+        });
 
         return (
             <div className="grid-block page-layout">
@@ -257,6 +372,7 @@ class Markets extends React.Component {
                     <PreferredMarketsList
                         viewSettings={this.props.viewSettings}
                         markets={defaultMarkets}
+                        assets={assets}
                         removeMarket={this._removeMarket}
                     />
                 </div>
