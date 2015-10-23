@@ -554,7 +554,7 @@ class Exchange extends React.Component {
 
 
         let bucketOptions = buckets.map(bucket => {
-            return <div className={classnames("label", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div className={classnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
 
 
