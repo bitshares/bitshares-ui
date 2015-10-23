@@ -35,7 +35,8 @@ class PreferredMarketsList extends React.Component {
             !Immutable.is(nextProps.assets, this.props.assets) ||
             nextState.filter !== this.state.filter ||
             nextState.marketsCardView !== this.state.marketsCardView ||
-            nextState.sortBy !== this.state.sortBy
+            nextState.sortBy !== this.state.sortBy ||
+            nextState.inverseSort !== this.state.inverseSort
         );
     }
 
