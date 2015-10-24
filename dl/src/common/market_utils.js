@@ -200,6 +200,37 @@ class MarketUtils {
         };
     }
 
+    static parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped) {
+        let isCall = order.order_id.split(".")[1] == object_type.limit_order ? false : true;
+        let receivePrecision = utils.get_asset_precision(receivesAsset.get("precision"));
+        let payPrecision = utils.get_asset_precision(paysAsset.get("precision"));
+
+        let receives = order.receives.amount / receivePrecision;
+        receives = utils.format_number(receives, receivesAsset.get("precision") - 1);
+        let pays = order.pays.amount / payPrecision;
+        pays = utils.format_number(pays, paysAsset.get("precision") - 1);
+        let price_full = utils.format_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, true);
+        price_full = !flipped ? (1 / price_full) : price_full;
+        let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
+        let className = isCall ? "orderHistoryCall" : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
+        return {
+            receives: isAsk ? receives : pays,
+            pays : isAsk ? pays : receives,
+            price_full: price_full,
+            int : int,
+            dec: dec,
+            className: className
+        };
+    }
+
+    static split_price(price, pricePrecision) {
+        // We need to figure out a better way to set the number of decimals
+        let price_split = utils.format_number(price, Math.max(5, pricePrecision)).split(".");
+        let int = price_split[0];
+        let dec = price_split[1];
+        return {int: int, dec: dec};
+    }
+
     static flatten_orderbookchart(array, sumBoolean, inverse, precision) {
         inverse = inverse === undefined ? false : inverse;
         let orderBookArray = [];
