@@ -33,8 +33,8 @@ class OrderBookRowVertical extends React.Component {
         let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
         return (
             <tr key={order.price_full} onClick={this.props.onClick} className={changeClass}>
-                <td className={classnames({"show-for-large": !this.props.horizontal})}>{utils.format_number(order.value, base.precision - 2)}</td>
-                <td>{utils.format_number(order.amount, quote.precision - 2)}</td>
+                <td className={classnames({"show-for-large": !this.props.horizontal})}>{utils.format_number(order.value, base.get("precision") - 1)}</td>
+                <td>{utils.format_number(order.amount, quote.get("precision") - 1)}</td>
                 <td className={integerClass}>
                     <span className="price-integer">{order.price_int}</span>
                     .
@@ -76,9 +76,9 @@ class OrderBookRowHorizontal extends React.Component {
                     .
                     <span className="price-decimal">{order.price_dec}</span>
                 </td>
-                <td>{utils.format_number(order.amount, quote.precision - 2)}</td>
-                <td>{utils.format_number(order.value, base.precision - 2)}</td>
-                <td>{utils.format_number(order.total, base.precision - 2)}</td>
+                <td>{utils.format_number(order.amount, quote.get("precision") - 2)}</td>
+                <td>{utils.format_number(order.value, base.get("precision") - 2)}</td>
+                <td>{utils.format_number(order.total, base.get("precision") - 2)}</td>
 
             </tr>
         )
@@ -100,7 +100,8 @@ class OrderBook extends React.Component {
                 !Immutable.is(nextProps.calls, this.props.calls) ||
                 !Immutable.is(nextProps.calls, this.props.calls) ||
                 nextProps.horizontal !== this.props.horizontal ||
-                nextState.flip !== this.state.flip
+                nextState.flip !== this.state.flip ||
+                nextState.latest !== this.state.latest
             );
     }
 
@@ -234,7 +235,7 @@ class OrderBook extends React.Component {
             });
         }
 
-        let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.precision) : "0";
+        let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.get("precision")) : "0";
 
         if (this.props.horizontal) {
             return (
@@ -243,10 +244,10 @@ class OrderBook extends React.Component {
                             <table className="table order-table table-hover text-right">
                                 <thead>
                                     <tr key="top-header" className="top-header">
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
-                                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><small>({baseSymbol})</small></th>
+                                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
+                                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
+                                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                        <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody id="test" className="orderbook orderbook-top">
@@ -262,10 +263,10 @@ class OrderBook extends React.Component {
                             <table className="table order-table table-hover text-right">
                                 <thead>
                                     <tr key="top-header" className="top-header">
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></th>
-                                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><small>({baseSymbol})</small></th>
+                                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
+                                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
+                                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                        <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody className="orderbook ps-container orderbook-bottom">
@@ -278,30 +279,35 @@ class OrderBook extends React.Component {
         } else {
             return (
                 <div className="left-order-book no-padding no-overflow">
-                    <div className="table-container grid-content no-padding" ref="orderbook_container" style={{overflow: "hidden"}}>
-                        <table ref="tableContainer" className="table order-table table-hover text-right">
+                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                        <table className="table expand order-table table-hover text-right">
+                            <thead>
+                                <tr>
+                                    <th className="show-for-large" style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                    <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
+                                    <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div className="table-container grid-content market-right-padding-only" ref="orderbook_container" style={{overflow: "hidden"}}>
+                        <table className="table order-table table-hover text-right">
                             <tbody id="test" className="orderbook ps-container orderbook-top">
                                 {askRows}
-                                <tr onClick={this._centerView.bind(this)} key="top-header" className="top-header">
-                                    <td className="show-for-large" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
-                                </tr>
-                                <tr onClick={this._centerView.bind(this)} key="spread" className="spread-row" ref="centerRow">
+                                <tr onClick={this._centerView.bind(this)} key="spread" className="orderbook-latest-price" ref="centerRow">
                                     <td colSpan="3" className="text-center spread">
-                                        <Translate content="exchange.spread" />: {spread} {baseSymbol}
+                                        <Translate content="exchange.latest" />: {this.props.latest ? <span>{utils.format_number(this.props.latest.price_full, Math.max(5, quote ? quote.get("precision") : 0))} {baseSymbol}/{quoteSymbol}</span> : null}
                                     </td>
-                                </tr>
-                                <tr onClick={this._centerView.bind(this)} key="bottom-header" className="bottom-header">
-                                    <td className="show-for-large" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><small>({baseSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><small>({quoteSymbol})</small></td>
-                                    <td style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><small>({baseSymbol}/{quoteSymbol})</small></td>
                                 </tr>
                                 {bidRows}
                             </tbody>
                         </table>
                     </div>
-                    <div className="text-center grid-block footer shrink" ><button onClick={this.props.moveOrderBook} className="button outline"><Translate content="exchange.horizontal" /></button></div>
+                    <div style={{width: "100%"}} className="align-center grid-block footer shrink bottom-header">
+                        <div onClick={this.props.moveOrderBook} className="button outline">
+                            <Translate content="exchange.horizontal" />
+                        </div>
+                    </div>
                 </div>
             );
         }
