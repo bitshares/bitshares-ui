@@ -71,7 +71,7 @@ class AccountMembership extends React.Component {
         let annual_cost = gprops.parameters.current_fees.parameters[8][1].membership_annual_fee*gprops.parameters.current_fees.scale/10000;
 
         return (
-            <div className="grid-content">
+            <div className="grid-content" style={{overflowX: "hidden"}}>
                 <div className="content-block">
                     <h3><Translate content={membership}/> {expiration}</h3>
                     { member_status=== "lifetime" ? null : (
