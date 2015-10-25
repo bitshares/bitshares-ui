@@ -259,6 +259,8 @@
         delta_debt: "Debt change",
         new_url: "Website",
         publisher: "Publisher",
+        market_fee: "Market fee",
+        max_market_fee: "Maximum market fee",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",

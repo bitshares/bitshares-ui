@@ -433,7 +433,6 @@ class Operation extends React.Component {
                 let asset = ChainStore.getAsset( op[1].asset_id );
                 if( asset ) asset = asset.get( "symbol" );
                 else asset = op[1].asset_id;
-                console.log( "asset: ", asset );
                 column = (
                     <span>
                         {this.linkToAccount(op[1].from_account)} &nbsp; 
