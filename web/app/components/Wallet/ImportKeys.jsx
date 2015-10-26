@@ -79,8 +79,7 @@ export default class ImportKeys extends Component {
     render() {
         // Create wallet prior to the import keys (keeps layout clean)
         if( ! WalletDb.getWallet()) return <WalletCreate hideTitle={true}/>
-        
-        if( this.props.importing) {
+        if( this.props.importing || this.state.genesis_filter_initalizing ) {
             return <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
                 <div className="center-content">
