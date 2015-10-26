@@ -299,7 +299,9 @@ module.exports = {
         new_url: "网站",
         publisher: "发布人",
         lifetime_upgrade_account: "升级到终身会员",
-        annual_upgrade_account: "升级到年度会员"
+        annual_upgrade_account: "升级到年度会员",
+        market_fee: "市场手续费",
+        max_market_fee: "最大市场手续费"
     },
     explorer: {
         accounts: {
@@ -343,9 +345,9 @@ module.exports = {
             listed_account: "Listed account",
             new_listing: "New listing",
             asset_update: "可更新资产",
-            common_options: "Common options",
-            new_options: "New options",
-            new_producers: "New feed producers",
+            common_options: "参数设定",
+            new_options: "新的设定",
+            new_producers: "新的喂价提供者",
             asset_issue: "发行数量",
             max_margin_period_sec: "Max margin period (s)",
             call_limit: "Call limit",
