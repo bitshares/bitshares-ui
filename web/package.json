@@ -75,6 +75,7 @@
     "coffee-loader": "^0.7.2",
     "eslint": "^0.20.0",
     "eslint-plugin-react": "^2.2.0",
+    "file-loader": "^0.8.4",
     "jest-cli": "~0.4.1",
     "script-loader": "^0.6.1",
     "worker-loader": "^0.6.0"
