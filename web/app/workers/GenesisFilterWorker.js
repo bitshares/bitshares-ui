@@ -65,16 +65,21 @@ var filter = function( account_keys, status ) {
                         delete keys.public_keys[k]
                         removed_count++
                     }
+                    // An account with an owner/active key but no balance
+                    if( count === 2 && removed_count === 2) {
+                        status({ importing: false, account_name: keys.account_name, count, total })
+                        continue // keep it
+                    }
                     var encrypted_private_keys = [], public_keys = []
                     for(var k = keys.encrypted_private_keys.length - 1; k >= 0; k--) {
                         if( ! keys.encrypted_private_keys[k]) continue
                         encrypted_private_keys.push( keys.encrypted_private_keys[k] )
                         public_keys.push( keys.public_keys[k] )
                     }
+                    keys.public_keys = public_keys
                     keys.encrypted_private_keys = encrypted_private_keys
                     status({ importing: false, account_name: keys.account_name,
                         count: count - removed_count, total })
-                    keys.public_keys = public_keys
                 }
                 status({ success: true })
             } finally { config.address_prefix = previous_address_prefix }
