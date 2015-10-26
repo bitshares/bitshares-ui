@@ -15,5 +15,5 @@
  * [Kullanıcı İhracı Varlıklar](assets/uia.md)
  * [Özelleştirilmiş BitVarlıklar](assets/privbitassets.md)
  * [Merkezsiz Borsa](dex/introduction.md)
- * [Trading](dex/trading.md)
+ * [Alış-Satış](dex/trading.md)
  * [Short Selling BitAssets](dex/shorting.md)
