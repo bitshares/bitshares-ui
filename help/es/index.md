@@ -1,4 +1,4 @@
-# Documentos de ayuda de Graphene
+# Documentación de ayuda de Graphene
 
 BitShares 2.0 es una plataforma financiara de  Contratos Inteligentes basada en la tecnología
 [Graphene](https://github.com/cryptonomex/graphene) desarrollada por
