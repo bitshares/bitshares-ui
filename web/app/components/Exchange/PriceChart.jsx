@@ -137,8 +137,8 @@ class PriceChart extends React.Component {
                 crosshairs: [true, true],
                 // pointFormat: " O: {point.open:.4f} H: {point.high:.4f} L: {point.low:.4f} C: {point.close:.4f}"
                 formatter: function () {
-                    let price_dec = base.precision;
-                    let vol_dec = quote.precision;
+                    let price_dec = base.get("precision");
+                    let vol_dec = quote.get("precision");
                     let time = new Date(this.x).toLocaleString() + "  ";
                     let TA = "";
                     if (!this.points || this.points.length === 0) {
@@ -187,7 +187,7 @@ class PriceChart extends React.Component {
                         },
                         align: "left",
                         x: 10,
-                        format: "{value:,." + (base.precision) + "f}"
+                        format: "{value:,." + (base.get("precision")) + "f}"
                     },
                     opposite: true,
                     title: {
@@ -294,13 +294,13 @@ class PriceChart extends React.Component {
                 className="chart-label"
                 style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", right: "5px", top: lastPointY - 2 + boxHeight / 2}}
             >
-                {utils.format_number(close, 1 + quote.precision)}
+                {utils.format_number(close, 1 + quote.get("precision"))}
             </div>) :
             (<div
                 className="chart-label"
                 style={{height: boxHeight, backgroundColor: "#E3745B", right: "5px",  top: lastPointY - 2 + boxHeight / 2}}
             >
-                {utils.format_number(close, 1 + quote.precision)}
+                {utils.format_number(close, 1 + quote.get("precision"))}
             </div>);
 
         // let addLine = function(yPos, color) {

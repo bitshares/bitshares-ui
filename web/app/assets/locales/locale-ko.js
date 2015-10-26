@@ -313,7 +313,7 @@ module.exports = {
             block_times: "블록 타임",
             block_time: "블록 타임",
             transactions: "거래 수",
-            recently_missed_blocks: "최근 미생성된 블럭 수",
+            recently_missed_blocks: "최근 누락 블록 수",
             trx_per_block: "블록당 거래",
             active_committee_members: "활동중인 위원",
             active_witnesses: "활동중인 증인",
@@ -422,8 +422,8 @@ module.exports = {
             card: "카드뷰",
             table: "테이블뷰",
             rank: "순위",
-            last_confirmed: "마지막 승인블럭",
-            missed: "미생성 블럭수"
+            last_confirmed: "마지막 승인블록",
+            missed: "누락 블록수"
             
         },
         committee_members: {
@@ -487,7 +487,10 @@ module.exports = {
         vertical: "수직시세",
         horizontal: "수평시세",
         confirm_buy: "주문 확인: %(buy_amount)s %(buy_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매수",
-        confirm_sell: "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도"
+        confirm_sell: "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도",
+        market_name: "종목명",
+        quote_supply: "유통량",
+        base_supply: "유통량"
     },
     markets: {
         base: "기초 자산",
