@@ -259,6 +259,8 @@ module.exports = {
         delta_debt: "대출액 변경",
         new_url: "웹사이트",
         publisher: "가격정보 제공자",
+        market_fee: "종목 수수료",
+        max_market_fee: "최대 종목 수수료",
         trxTypes: {
             transfer: "전송",
             limit_order_create: "주문",
