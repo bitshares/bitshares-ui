@@ -47,5 +47,8 @@ It can be a little annoying but worth it for the continuous integration.
 * To preserve markdown syntax all symbols must remain where they are.
 Here again, when markdown formating is present, using the [**Copy source string button**](http://docs.transifex.com/tutorials/txeditor/#4-translation-time) helpful.
 
-* Link names can be translated buy we have to preserve paths and filenames. Links looks like:
-[translatable link name](non-translatable/path-to/filename.md).
+* Link names can be translated but we have to preserve paths and filenames. Links looks like:
+ ```
+ [translatable link name](non-translatable/path-to/filename.md)
+ ```
+* 100% translated and reviewed pages are instantly available at **https://github.com/rngl4b/graphene-ui/tree/transifex/help**
