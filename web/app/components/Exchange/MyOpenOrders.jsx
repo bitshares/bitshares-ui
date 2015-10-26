@@ -164,7 +164,7 @@ class MyOpenOrders extends React.Component {
             let cancel = counterpart.translate("account.perm.cancel");
 
             bids = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.id);
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.get("id"));
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
@@ -176,7 +176,7 @@ class MyOpenOrders extends React.Component {
             }).toArray();
 
             asks = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.id);
+                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.get("id"));
             }).sort((a, b) => {
                 let {price: a_price} = market_utils.parseOrder(a, base, quote);
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
