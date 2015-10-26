@@ -112,9 +112,9 @@ class DepthHighChart extends React.Component {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.precision)} ${priceSymbol}</span><br/>
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/>
                         <span style="color:${this.series.color}">\u25CF</span>
-                        ${name}: <b>${utils.format_number(this.y, base.precision)} ${quoteSymbol}</b>`;
+                        ${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"
@@ -295,8 +295,8 @@ class DepthHighChart extends React.Component {
 
         return (
             <div className="grid-content no-overflow middle-content">
-                <p className="bid-total">{utils.format_number(totalBids, base.precision)} {baseSymbol}</p>
-                <p className="ask-total">{utils.format_number(totalAsks, quote.precision)} {quoteSymbol}</p>
+                <p className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</p>
+                <p className="ask-total">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</p>
                 {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}
             </div>
         );
