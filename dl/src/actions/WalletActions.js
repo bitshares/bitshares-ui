@@ -53,11 +53,12 @@ class WalletActions {
         }
         var owner_private = WalletDb.generateNextKey()
         var active_private = WalletDb.generateNextKey()
-        var memo_private = WalletDb.generateNextKey()
+        //var memo_private = WalletDb.generateNextKey()
         var updateWallet = ()=> {
             var transaction = WalletDb.transaction_update_keys()
             var p = WalletDb.saveKeys(
-                [ owner_private, active_private, memo_private ],
+                [ owner_private, active_private],
+                //[ owner_private, active_private, memo_private ],
                 transaction
             )
             return p.catch( error => transaction.abort() )
@@ -99,9 +100,9 @@ class WalletActions {
                     "account": {
                         "name": account_name,
                         "owner_key": owner_private.private_key.toPublicKey().toPublicKeyString(),
-                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString(),
-                        "memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
-                        "refcode": refcode
+                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString()//,
+                        //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
+                        //"refcode": refcode
                     }
                 })
             }).then(r => r.json());

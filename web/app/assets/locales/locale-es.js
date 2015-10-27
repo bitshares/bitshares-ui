@@ -454,7 +454,8 @@
         wallets: "Billeteras",
         connection: "Conexión API",
         add_ws: "Agregar nueva API websocket",
-        remove_ws: "Remover API websocket"
+        remove_ws: "Remover API websocket",
+        faucet_address: "Faucet Address"
     },
     footer: {
         title: "Graphene",
@@ -599,5 +600,11 @@
         retry: "Volver a intentar",
         connected: "Connectado",
         not_connected: "No conectado"
-    }
+    },
+     refcode: {
+         claim: "Claim",
+         claim_refcode: "Claim Referral Code",
+         refcode_optional: "Referral Code (optional)",
+         enter_refcode: "Enter referral code"
+     }
 };
