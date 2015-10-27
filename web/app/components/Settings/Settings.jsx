@@ -125,6 +125,7 @@ class Settings extends React.Component {
         let value = null;
 
         function findEntry(targetValue, targetDefaults) {
+            if (!targetDefaults) return targetValue;
             if (targetDefaults[0].translate) {
                 for (var i = 0; i < targetDefaults.length; i++) {
                     if (counterpart.translate(`settings.${targetDefaults[i].translate}`) === targetValue) {
