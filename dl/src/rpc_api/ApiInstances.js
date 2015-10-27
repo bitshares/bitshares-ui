@@ -1,6 +1,7 @@
 var WebSocketRpc = require("./WebSocketRpc");
 var GrapheneApi = require("./GrapheneApi");
 import SettingsStore from "../stores/SettingsStore";
+import chain_config from "chain/config"
 
 class Apis {
 
@@ -36,6 +37,7 @@ class Apis {
                 //https://github.com/cryptonomex/graphene/wiki/chain-locked-tx
                 return this._db_api.exec("get_chain_id",[]).then( _chain_id => {
                     this.chain_id = _chain_id
+                    chain_config.setChainId( _chain_id )
                     //DEBUG console.log("chain_id1",this.chain_id)
                 });
             });

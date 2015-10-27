@@ -259,6 +259,8 @@
         delta_debt: "Debt change",
         new_url: "Website",
         publisher: "Publisher",
+        market_fee: "Market fee",
+        max_market_fee: "Maximum market fee",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -454,7 +456,8 @@
         wallets: "Wallets",
         connection: "API Connection",
         add_ws: "Add new websocket API",
-        remove_ws: "Remove websocket API"
+        remove_ws: "Remove websocket API",
+        faucet_address: "Faucet Address"
     },
     footer: {
         title: "OpenLedger",
@@ -604,5 +607,11 @@
         retry: "Retry",
         connected: "Connected",
         not_connected: "Not connected"
+    },
+    refcode: {
+        claim: "Claim",
+        claim_refcode: "Claim Referral Code",
+        refcode_optional: "Referral Code (optional)",
+        enter_refcode: "Enter referral code"
     }
 };

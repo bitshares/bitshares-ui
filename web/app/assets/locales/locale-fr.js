@@ -370,5 +370,11 @@ module.exports = {
         title: "Portefeuille",
         confirm: "Confirmer le mot de passe",
         password: "Mot de passe"
+    },
+    refcode: {
+        claim: "Claim",
+        claim_refcode: "Claim Referral Code",
+        refcode_optional: "Referral Code (optional)",
+        enter_refcode: "Enter referral code"
     }
 };

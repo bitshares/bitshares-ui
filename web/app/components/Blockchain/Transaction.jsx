@@ -96,7 +96,6 @@ class Transaction extends React.Component {
     render() {
         let {trx} = this.props;
         let info = null;
-        console.log("trx:", trx);
         info = [];
 
         let opCount = trx.operations.length;
@@ -136,15 +135,20 @@ class Transaction extends React.Component {
                     color = "warning";
                     // missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
                     // let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
-                    
                     rows.push(
                         <tr key="1">
-                            <td><Translate component="span" content="transaction.amount_sell" /></td>
+                            <td><Translate component="span" content="exchange.sell" /></td>
                             <td><FormattedAsset amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} /></td>
                         </tr>
                     );
                     rows.push(
                         <tr key="2">
+                            <td><Translate component="span" content="exchange.buy" /></td>
+                            <td><FormattedAsset amount={op[1].min_to_receive.amount} asset={op[1].min_to_receive.asset_id} /></td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key="3">
                             <td><Translate component="span" content="exchange.price" /></td>
                             <td>
                                 <FormattedPrice
@@ -162,61 +166,13 @@ class Transaction extends React.Component {
                     //     </tr>
                     // );
                     rows.push(
-                        <tr key="3">
-                            <td><Translate component="span" content="transaction.seller" /></td>
-                            <td>{this.linkToAccount(op[1].seller)}</td>
-                        </tr>
-                    );
-                    rows.push(
                         <tr key="4">
-                            <td><Translate component="span" content="transaction.expiration" /></td>
-                            <td>
-                                <FormattedDate
-                                    value={op[1].expiration}
-                                    formats={intlData.formats}
-                                    format="full"
-                                />
-                            </td>
-                        </tr>
-                    );
-
-                    break;
-
-                case "short_order_create":
-                    color = "short";
-                    // this.getAssets([op[1].amount_to_sell.asset_id, op[1].collateral.asset_id]);
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="transaction.amount_sell" /></td>
-                            <td><FormattedAsset amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} />}</td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="transaction.collateral" /></td>
-                            <td>{<FormattedAsset amount={op[1].collateral.amount} asset={op[1].collateral.asset_id} />}</td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="transaction.coll_ratio" /></td>
-                            <td>{op[1].initial_collateral_ratio}</td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="transaction.coll_maint" /></td>
-                            <td>{op[1].maintenance_collateral_ratio}</td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr>
                             <td><Translate component="span" content="transaction.seller" /></td>
                             <td>{this.linkToAccount(op[1].seller)}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="5">
                             <td><Translate component="span" content="transaction.expiration" /></td>
                             <td>
                                 <FormattedDate
@@ -451,8 +407,32 @@ class Transaction extends React.Component {
                     );
                     rows.push(
                         <tr>
+                            <td><Translate component="span" content="account.user_issued_assets.max_supply" /></td>
+                            <td><FormattedAsset amount={op[1].common_options.max_supply} asset={op[1].symbol} /></td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="account.user_issued_assets.description" /></td>
+                            <td>{op[1].common_options.description}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.market_fee" /></td>
+                            <td>{op[1].common_options.market_fee_percent / 1000}%</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.max_market_fee" /></td>
+                            <td>{op[1].common_options.max_market_fee / 1000}%</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr>
                             <td><Translate component="span" content="explorer.block.common_options" /></td>
-                            <td><Inspector data={ op[1].common_options } search={false}/></td>
+                            <td><Inspector data={ op[1].common_options } search={false} /></td>
                         </tr>
                     );
 

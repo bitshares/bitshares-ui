@@ -178,7 +178,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tabs {
-  @include color($secondary-text-color, $bg-color);
+@include color($secondary-text-color, $bg-color);
 }
 
 
@@ -247,10 +247,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .header .button,  .header .button:active {
+background-color: #3E414D !important;
+&:hover, &:focus, &:active {
   background-color: #3E414D !important;
-  &:hover, &:focus, &:active {
-    background-color: #3E414D !important;
-  }
+}
 }
 
 
@@ -408,7 +408,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 .depthchart {
   background-color: $bg-color;
   &:hover {
-    background-color: $bg-color;
+  background-color: $bg-color;
   }
   &.area {
     color: #FFF;
@@ -416,8 +416,8 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 }
 
 td.orderHistoryAsk {
-  color: $alert-color;
-  font-weight: bold;
+ color: $alert-color;
+ font-weight: bold;
 }
 
 td.orderHistoryBid {
@@ -472,7 +472,7 @@ td.orderHistoryBid {
 
 
 .pagination {
-  background-color: $panel-bg-color;
+    background-color: $panel-bg-color;
 }
 
 .invoice {
@@ -525,9 +525,9 @@ td.orderHistoryBid {
 }
 
 .circle-wrapper {
-  .circle:before {
-    background-color: $secondary-text-color;
-  }
+   .circle:before {
+     background-color: $secondary-text-color;
+   }
 }
 
 // Misc

@@ -165,12 +165,31 @@ p.order-table-title {
     border-top: 1px solid #777;
     border-bottom: 1px solid #777;
   }
-  .top-header {
-    border-top: 1px solid #777;
-  }
-  .bottom-header {
-    border-bottom: 1px solid #777;
-  }
+  // .top-header {
+  //   border-top: 1px solid #777;
+  // }
+  // .bottom-header {
+  //   border-bottom: 1px solid #777;
+  // }
+}
+
+.orderbook-latest-price {
+  border-bottom: 1px solid #777;
+  border-top: 1px solid #777;
+}
+
+.left-orderbook-header {
+  width: 100%;
+  font-size: 0.75rem;
+}
+
+.top-header {
+  border-bottom: 1px solid #777;
+  padding-bottom: 0.25rem;
+}
+.bottom-header {
+  border-top: 1px solid #777;
+  padding-top: 0.25rem;
 }
 
 tr.top-header, tr.bottom-header, tr.spread-row {
@@ -381,4 +400,21 @@ input[type=number]::-webkit-outer-spin-button {
 
 .middle-content {
   margin-bottom: 1rem;
+}
+
+.header-sub-title {
+  font-size: 80%;
+  color: white;
+}
+
+.market-right-padding-only {
+  padding: 0 0.6rem 0 0 !important;
+}
+
+.change-up {
+  color: $bid-color !important;
+}
+
+.change-down {
+color: $ask-color !important;
 }
