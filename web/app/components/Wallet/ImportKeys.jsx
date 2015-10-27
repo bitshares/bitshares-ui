@@ -21,7 +21,6 @@ import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
 import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore"
 import PublicKey from "ecc/key_public";
-import AddressIndex from "stores/AddressIndex"
 
 require("./ImportKeys.scss");
 
@@ -46,7 +45,6 @@ export default class ImportKeys extends Component {
     }
     
     _getInitialState(keep_file_name = false) {
-        console.log("keep_file_name", keep_file_name)
         return {
             keys_to_account: { },
             no_file: true,
@@ -131,7 +129,7 @@ export default class ImportKeys extends Component {
                     }</span>
                     { ! import_ready ? 
                         null :
-                        <span> (<a onClick={this.reset.bind(this, null, false)}>reset</a>)</span>
+                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
                     }
                 </div>
                 
@@ -162,7 +160,7 @@ export default class ImportKeys extends Component {
                             <div>
                                 <label>BTS 0.9.x key export file
                                 {this.state.no_file ? null : <span>&nbsp;
-                                    (<a onClick={this.reset.bind(this, null, false)}>Reset</a>)</span>}
+                                    (<a onClick={this.reset.bind(this)}>Reset</a>)</span>}
                                 </label>
                                 <input
                                     type="file" id="file_input"
@@ -220,7 +218,7 @@ export default class ImportKeys extends Component {
                                onClick={this._saveImport.bind(this)} >
                                 Import
                             </a>
-                            <a href className="button secondary" onClick={this.reset.bind(this, null, false)}>
+                            <a href className="button secondary" onClick={this.reset.bind(this)}>
                                 Cancel
                             </a>
                         </div>
@@ -235,7 +233,8 @@ export default class ImportKeys extends Component {
         this.addByPattern(value)
     }
     
-    onBack() {
+    onBack(e) {
+        if(e) e.preventDefault()
         window.history.back()
     }
     
