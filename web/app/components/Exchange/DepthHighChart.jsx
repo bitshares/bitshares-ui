@@ -289,7 +289,7 @@ class DepthHighChart extends React.Component {
         // Add onClick event listener if defined
         if (this.props.onClick) {
             config.chart.events = {
-                click: this.props.onClick
+                click: this.props.onClick.bind(this, power)
             };
         }
 

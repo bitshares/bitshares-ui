@@ -416,5 +416,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .change-down {
-color: $ask-color !important;
+  color: $ask-color !important;
+}
+
+table thead tr th.mymarkets-header {
+  padding-bottom: 9px !important;
 }
