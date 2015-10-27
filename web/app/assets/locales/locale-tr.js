@@ -454,7 +454,8 @@
         wallets: "Cüzdanlar",
         connection: "API Bağlantısı",
         add_ws: "Yeni websocket API ekle",
-        remove_ws: "Websocket API kaldır"
+        remove_ws: "Websocket API kaldır",
+        faucet_address: "Faucet Address"
     },
     footer: {
         title: "Graphene",
@@ -599,5 +600,11 @@
         retry: "Yeniden dene",
         connected: "Bağlandı",
         not_connected: "Bağlanmadı"
-    }
+    },
+     refcode: {
+         claim: "Claim",
+         claim_refcode: "Claim Referral Code",
+         refcode_optional: "Referral Code (optional)",
+         enter_refcode: "Enter referral code"
+     }
 };

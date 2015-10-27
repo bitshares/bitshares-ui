@@ -452,7 +452,8 @@ module.exports = {
         wallets: "钱包管理",
         connection: "API 服务器设定",
         add_ws: "添加新的 websocket API",
-        remove_ws: "删除 websocket API"
+        remove_ws: "删除 websocket API",
+        faucet_address: "Faucet Address"
     },
     pagination: {
         newer: "更近",
@@ -610,5 +611,11 @@ module.exports = {
         retry: "重试",
         connected: "已连接",
         not_connected: "未连接"
+    },
+    refcode: {
+        claim: "Claim",
+        claim_refcode: "Claim Referral Code",
+        refcode_optional: "Referral Code (optional)",
+        enter_refcode: "Enter referral code"
     }
 };
