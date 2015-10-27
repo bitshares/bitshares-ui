@@ -27,8 +27,6 @@ require("./ImportKeys.scss");
 
 var import_keys_assert_checking = false
 
-var TRACE = false
-
 @connectToStores
 export default class ImportKeys extends Component {
     
@@ -47,39 +45,41 @@ export default class ImportKeys extends Component {
         }
     }
     
-    _getInitialState() {
+    _getInitialState(keep_file_name = false) {
+        console.log("keep_file_name", keep_file_name)
         return {
-            pubkeys: new Set(),
             keys_to_account: { },
-            key_count: 0,
             no_file: true,
             account_keys: [],
             //brainkey: null,
             //encrypted_brainkey: null,
-            reset_file_name: Date.now(),
+            reset_file_name: keep_file_name ? this.state.reset_file_name : Date.now(),
             reset_password: Date.now(),
             password_checksum: null,
+            import_file_message: null,
             import_password_message: null,
             imported_keys_public: {},
             key_text_message: null,
+            genesis_filtering: false,
             genesis_filter_status: [],
-            genesis_filter_finished: undefined,
-            account_keycount: null
+            genesis_filter_finished: undefined
         };
     }
     
-    reset(e) {
-        console.log("imp reset");
+    reset(e, keep_file_name) {
         if(e) e.preventDefault()
-        var state = this._getInitialState();
-        this.setState(state);
-        this.updateOnChange({});
+        var state = this._getInitialState(keep_file_name);
+        this.setState(state, ()=> this.updateOnChange());
     }
     
     render() {
+        var keys_to_account = this.state.keys_to_account
+        var key_count = Object.keys(keys_to_account).length
+        var account_keycount = this.getImportAccountKeyCount(keys_to_account)
+        
         // Create wallet prior to the import keys (keeps layout clean)
         if( ! WalletDb.getWallet()) return <WalletCreate hideTitle={true}/>
-        if( this.props.importing || this.state.genesis_filter_initalizing ) {
+        if( this.props.importing ) {
             return <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
                 <div className="center-content">
@@ -88,11 +88,11 @@ export default class ImportKeys extends Component {
             </div>
         }
         
-        var was_filtered = this.state.genesis_filter_finished
-        var filtering = this.state.genesis_filter_status.length && ! was_filtered
+        var filtering = this.state.genesis_filtering
+        var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
         var account_rows = null
         if(this.state.genesis_filter_status.length) {
-            var account_rows = []
+            account_rows = []
             for(let status of this.state.genesis_filter_status) {
                 account_rows.push(
                     <tr key={status.account_name}>
@@ -106,19 +106,12 @@ export default class ImportKeys extends Component {
             }
         }
         
-        var has_keys = this.state.key_count !== 0
-        var import_ready = has_keys
-        // Help show_chain_summary get truthy after filtering (was_filtered),
-        // there was a delay until key_count was avalble
-        var show_chain_summary = !!this.state.key_count || was_filtered
-        var password_placeholder = "Enter import file password";
-        if (this.state.key_count) {
-            password_placeholder = "";
-        }
+        var import_ready = key_count !== 0
+        var password_placeholder = "Enter import file password"
+        if (import_ready) password_placeholder = ""
 
-        if( ! account_rows && this.state.account_keycount) {
+        if( ! account_rows && account_keycount) {
             account_rows = [];
-            var account_keycount = this.state.account_keycount;
             for (let account_name in account_keycount) {
                 account_rows.push(
                     <tr key={account_name}>
@@ -127,7 +120,6 @@ export default class ImportKeys extends Component {
                     </tr>);
             }
         }
-        
         return (
             <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
@@ -135,29 +127,49 @@ export default class ImportKeys extends Component {
                 <div>
                     <span>{this.state.key_text_message ?
                         this.state.key_text_message :
-                        <KeyCount key_count={this.state.key_count}/>
+                        <KeyCount key_count={key_count}/>
                     }</span>
-                    {!this.state.key_count ? 
+                    { ! import_ready ? 
                         null :
-                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
+                        <span> (<a onClick={this.reset.bind(this, null, false)}>reset</a>)</span>
                     }
                 </div>
+                
+                { account_rows ? 
+                <div>
+                    { ! account_rows.length ? "No Accounts" :
+                    <div>
+                        <table className="table center-content">
+                            <thead>
+                                <tr>
+                                    <th style={{textAlign: "center"}}>Account</th>
+                                    <th style={{textAlign: "center"}}># of keys</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {account_rows}
+                            </tbody>
+                        </table>
+                        <br/>
+                    </div>}
+                </div> : null}
                 <br/>
-                { ! show_chain_summary && ! filtering ?
+                    
+                { ! import_ready ?
                 <div>
                     <div className="center-content">
                         <div>
                             <div>
-                                <label>BTS 1.0 key export file
+                                <label>BTS 0.9.x key export file
                                 {this.state.no_file ? null : <span>&nbsp;
-                                    (<a onClick={this.reset.bind(this)}>Reset</a>)</span>}
+                                    (<a onClick={this.reset.bind(this, null, false)}>Reset</a>)</span>}
                                 </label>
                                 <input
                                     type="file" id="file_input"
                                     style={{ border: 'solid' }}
                                     key={this.state.reset_file_name}
-                                    onChange={this.upload.bind(this)}
-                                />
+                                    onChange={this.upload.bind(this)} />
+                                <div>{this.state.import_file_message}</div>
                             </div>
                             { this.state.no_file ? <span>
                             <br/><br/>
@@ -181,29 +193,17 @@ export default class ImportKeys extends Component {
                             </div>) : null}
                         <br/>
                         <a href className="button success" onClick={this.onBack.bind(this)}>
-                            Done </a>
+                            Cancel </a>
                     </div>
                 </div> : null}
+                
+                { this.state.genesis_filter_initalizing ? <div>
+                    <div className="center-content">
+                        <LoadingIndicator type="circle"/>
+                    </div>
+                </div>:null}
 
-                { account_rows ? 
-                <div>
-                    { ! account_rows.length ? "No Accounts" :
-                    <div>
-                        <table className="table center-content">
-                            <thead>
-                                <tr>
-                                    <th style={{textAlign: "center"}}>Account</th>
-                                    <th style={{textAlign: "center"}}># of keys</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {account_rows}
-                            </tbody>
-                        </table>
-                    </div>}
-                </div> : null}
-                <br/>
-                { show_chain_summary ? 
+                { import_ready ?
                 <div>
                     <h4 className="center-content">Unclaimed balances belonging to these keys:</h4>
                     <div className="grid-block center-content">
@@ -220,7 +220,7 @@ export default class ImportKeys extends Component {
                                onClick={this._saveImport.bind(this)} >
                                 Import
                             </a>
-                            <a href className="button secondary" onClick={this.reset.bind(this)}>
+                            <a href className="button secondary" onClick={this.reset.bind(this, null, false)}>
                                 Cancel
                             </a>
                         </div>
@@ -239,17 +239,8 @@ export default class ImportKeys extends Component {
         window.history.back()
     }
     
-    updateOnChange(keys_to_account = this.state.keys_to_account) {
-        var key_count = Object.keys(keys_to_account).length
-        this.setState({key_count})
-        this._importKeysChange(keys_to_account)
+    updateOnChange() {
         BalanceClaimActiveActions.setPubkeys(Object.keys(this.state.imported_keys_public))
-    }
-
-    _importKeysChange(keys_to_account) {
-        this.setState({
-            account_keycount: this.getImportAccountKeyCount(keys_to_account)
-        });
     }
 
     getImportAccountKeyCount(keys_to_account) {
@@ -265,7 +256,7 @@ export default class ImportKeys extends Component {
     }
     
     upload(evt) {
-        this.setState({ genesis_filter_status: [] })
+        this.reset(null, true)
         var file = evt.target.files[0]
         var reader = new FileReader()
         reader.onload = evt => {
@@ -277,6 +268,7 @@ export default class ImportKeys extends Component {
                     // This is the only chance to encounter a large file, 
                     // try this format first.
                     this._parseImportKeyUpload(json_contents, file.name, update_state => {
+                        // console.log("update_state", update_state)
                         this.setState(update_state, ()=> {
                             if( update_state.genesis_filter_finished ) {
                                 // try empty password, also display "Enter import file password"
@@ -297,12 +289,11 @@ export default class ImportKeys extends Component {
                     this._passwordCheck()
                 }
             } catch(message) {
-                console.log("... ImportKeys upload error", message)
-                this.setState({import_password_message: message})
+                console.error("... ImportKeys upload error", message)
+                this.setState({import_file_message: message})
             }
         }
-        reader.readAsText(file);
-        this.setState({import_password_message: null, no_file: false});
+        reader.readAsText(file)
     }
     
     /** BTS 1.0 client wallet_export_keys format. */
@@ -328,19 +319,20 @@ export default class ImportKeys extends Component {
         worker.postMessage({ account_keys: unfiltered_account_keys })
         worker.onmessage = event => { try {
             var { account_keys, status } = event.data
-            // missing_public_keys  = un-released format, just for testing
             if( status.error === "missing_public_keys" || status.error === "missing_bloom" ) {
+                if( status.error === "missing_public_keys" )
+                    console.error("un-released format, just for testing")
                 update_state({ password_checksum, account_keys: unfiltered_account_keys,
-                    genesis_filter_finished: true })
+                    genesis_filter_finished: true, genesis_filtering: false })
                 return
             }
             if( status.success ) {
                 update_state({ password_checksum, account_keys,
-                    genesis_filter_finished: true })
+                    genesis_filter_finished: true, genesis_filtering: false })
                 return
             }
             if( status.initalizing !== undefined ) {
-                update_state({ genesis_filter_initalizing: status.initalizing })
+                update_state({ genesis_filter_initalizing: status.initalizing, genesis_filtering: true })
                 return
             }
             if( status.importing === undefined ) {
@@ -480,18 +472,19 @@ export default class ImportKeys extends Component {
         if(pwNode) pwNode.focus()
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum
-        this.setState({import_password_message: "Enter import file password"})
         var new_checksum = hash.sha512(hash.sha512(password)).toString("hex")
         if(checksum != new_checksum) {
-            if(password != "")
-                this.setState({import_password_message: "Enter import file password (keep going)"})
+            this.setState({no_file: false, 
+                import_password_message: "Enter import file password" 
+                    + (password != "" ? " (keep going)":"") })
             return
         }
         this.setState({
+            no_file: false,
             reset_password: Date.now(),
             import_password_message: "Password matches. Loading..."
-        })
-        setTimeout(()=> this._decryptPrivateKeys(password), 250)
+        }, ()=> this._decryptPrivateKeys(password))
+        // setTimeout(, 250)
     }
     
     _decryptPrivateKeys(password) {
@@ -571,12 +564,11 @@ export default class ImportKeys extends Component {
         //        brainkey: password_aes.decryptHexToText(enc_brainkey)
         //    })
         //}
-        this.updateOnChange()
         this.setState({
+            import_file_message: null,
             import_password_message: null,
             password_checksum: null
-        })
-        //})
+        }, ()=> this.updateOnChange())
     }
 
     _saveImport(e) {
@@ -596,12 +588,6 @@ export default class ImportKeys extends Component {
     }
     
     saveImport() {
-        // Lookup and add accounts referenced by the keys
-        // var imported_keys_public = this.state.imported_keys_public
-        // var db = Apis.instance().db_api()
-        
-        if(TRACE) console.log('... ImportKeys._saveImport START')
-        
         var keys_to_account = this.state.keys_to_account
         var private_key_objs = []
         for(let private_plainhex of Object.keys(keys_to_account)) {
@@ -645,15 +631,13 @@ export default class ImportKeys extends Component {
                 count++
             } catch(e) { invalid_count++ }
         }
-        this.updateOnChange()
         this.setState({
-            imported_keys_public: this.state.imported_keys_public,
-            keys_to_account: this.state.keys_to_account,
             key_text_message: 'Found ' +
                 (!count ? "" : count + " valid") +
                 (!invalid_count ? "" : " and " + invalid_count + " invalid") + 
                 " key" + ( count > 1 || invalid_count > 1 ? "s" : "") + "."
-        })
+        }, ()=> this.updateOnChange())
+        // removes the message on the next render
         this.state.key_text_message = null
         return count
     }
