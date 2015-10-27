@@ -201,10 +201,10 @@ class Exchange extends React.Component {
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
             this.props.currentAccount.get("id"),
-            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.precision), 10),
-            sellAsset.id,
-            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
-            buyAsset.id,
+            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.get("precision")), 10),
+            sellAsset,
+            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.get("precision")), 10),
+            buyAsset,
             expiration,
             false // fill or kill TODO: add fill or kill switch
         ).then(result => {
@@ -268,9 +268,9 @@ class Exchange extends React.Component {
         }
     }
 
-    _depthChartClick(base, quote, e) {
+    _depthChartClick(base, quote, power, e) {
         e.preventDefault();
-        let value = this._limitByPrecision(e.xAxis[0].value, quote);
+        let value = this._limitByPrecision(e.xAxis[0].value / power, quote);
         this.setState({
             depthLine: value
         });
@@ -293,12 +293,13 @@ class Exchange extends React.Component {
     _setDepthLine(value) { this.setState({depthLine: value}); }
 
     _limitByPrecision(value, asset) {
+        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
         let valueString = value.toString();
         let splitString = valueString.split(".");
-        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= asset.precision) {
+        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
             return value;
         }
-        let precision = utils.get_asset_precision(asset.precision);
+        let precision = utils.get_asset_precision(assetPrecision);
         value = Math.floor(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;

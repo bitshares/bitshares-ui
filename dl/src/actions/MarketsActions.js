@@ -216,7 +216,7 @@ class MarketsActions {
         // });
     }
 
-    createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
+    createLimitOrder(account, sellAmount, sellAsset, buyAmount, buyAsset, expiration, isFillOrKill) {
         // let uniqueExpiration = addSeconds(expiration);
         // console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
 
@@ -245,11 +245,12 @@ class MarketsActions {
         // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
 
-        let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
-        console.log( "sell asset: ", sell_asset, sellAssetID );
-        let fee_asset_id = sellAssetID;
-        if( sell_asset.options.core_exchange_rate.base.asset_id == "1.3.0" && sell_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
+        // let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
+        // console.log( "sell asset: ", sell_asset, sellAssetID );
+        let fee_asset_id = sellAsset.get("id");
+        if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
            fee_asset_id = "1.3.0";
+        }
 
         tr.add_type_operation("limit_order_create", {
             fee: {
@@ -259,11 +260,11 @@ class MarketsActions {
             "seller": account,
             "amount_to_sell": {
                 "amount": sellAmount,
-                "asset_id": sellAssetID
+                "asset_id": sellAsset.get("id")
             },
             "min_to_receive": {
                 "amount": buyAmount,
-                "asset_id": buyAssetID
+                "asset_id": buyAsset.get("id")
             },
             "expiration": expiration,
             "fill_or_kill": isFillOrKill
