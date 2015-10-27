@@ -76,6 +76,15 @@ class PreferredMarketsList extends React.Component {
 
         let {  markets } = this.props;
         let { filter, marketsCardView } = this.state;
+
+        let columns = [
+            {name: "marketName", index: 0},
+            {name: "price", index: 1},
+            {name: "quoteSupply", index: 2},
+            {name: "baseSupply", index: 3},
+            {name: "remove", index: 4}
+        ]
+
         let preferredMarkets = markets
             .sort((a, b) => {
 
@@ -113,6 +122,7 @@ class PreferredMarketsList extends React.Component {
                                 quote={market.quote}
                                 base={market.base}
                                 removeMarket={this.props.removeMarket.bind(market, market.quote, market.base)}
+                                columns={columns}
                             />
                         );
                     } else {
