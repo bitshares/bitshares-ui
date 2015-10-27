@@ -63,7 +63,7 @@ class WalletUnlockModal extends React.Component {
             if (WalletDb.isLocked())
                 ZfApi.publish(this.props.modalId, "open")
             else 
-                this.props.resolve(false)
+                this.props.resolve()
         }
     }
 
@@ -82,7 +82,7 @@ class WalletUnlockModal extends React.Component {
         else {
             this.refs.password_input.clear()
             ZfApi.publish(this.props.modalId, "close")
-            this.props.resolve(true)
+            this.props.resolve()
             SessionActions.onUnlock()
             WalletUnlockActions.change()
             this.setState({password_input_reset: Date.now(), password_error: false})
