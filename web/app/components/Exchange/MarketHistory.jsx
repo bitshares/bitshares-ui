@@ -29,15 +29,17 @@ class MarketHistory extends React.Component {
         let {history, base, quote, baseSymbol, quoteSymbol, flipped} = this.props;
         let historyRows = null;
         if (history.size > 0) {
-            let index = 1;
+            let index = 0;
+            let keyIndex = -1;
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             historyRows = this.props.history
             .filter(a => {
                 index++;
                 return index % 2 === 0;
             })
-            .takeLast(50).reverse()
+            .take(50)
             .map(order => {
+                keyIndex++;
                 let paysAsset, receivesAsset, isAsk = false;
                 if (order.pays.asset_id === base.get("id")) {
                     paysAsset = base;
@@ -51,7 +53,8 @@ class MarketHistory extends React.Component {
                 let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
                
                 return (
-                    <tr key={order.order_id + "_" + parsed_order.pays + "_" + parsed_order.price_full}>
+                    <tr key={keyIndex}>
+                        <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
                         <td>{parsed_order.receives}</td>
                         <td>{parsed_order.pays}</td>
                         <td className={parsed_order.className}><span className="price-integer">{parsed_order.int}</span>.<span className="price-decimal">{parsed_order.dec}</span></td>
@@ -66,6 +69,7 @@ class MarketHistory extends React.Component {
                     <table className="table expand order-table text-right market-right-padding">
                         <thead>
                             <tr>
+                                <th style={{textAlign: "right"}}><Translate content="explorer.block.date" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">({quoteSymbol})</span></th>
                                 <th className="show-for-large" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
                                 <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
                                 <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>

@@ -4,6 +4,7 @@ import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
+import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
 import PriceChart from "./PriceChart";
@@ -30,6 +31,12 @@ require("./exchange.scss");
 
 let emitter = ee.emitter();
 let callListener, limitListener, newCallListener;
+
+Highcharts.setOptions({
+    global: {
+        useUTC: false
+    }
+});
 
 class PriceStat extends React.Component {
 
@@ -651,7 +658,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8 " : "small-12 large-10 ")} >
+                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
@@ -854,16 +861,20 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block show-for-large large-2 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
+                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <MarketHistory
-                            history={activeMarketHistory}
-                            base={base}
-                            quote={quote}
-                            baseSymbol={baseSymbol}
-                            quoteSymbol={quoteSymbol}
-                        />
-
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
+                            <MarketHistory
+                                history={activeMarketHistory}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                            />
+                        </div>
+                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
+                            <MyMarkets />
+                        </div>
                     </div>
                     {quoteIsBitAsset ?
                         <BorrowModal
