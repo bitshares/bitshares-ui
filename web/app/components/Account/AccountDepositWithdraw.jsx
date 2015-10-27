@@ -181,6 +181,55 @@ class AccountDepositWithdraw extends React.Component {
           <h2>Gateways</h2>
           <hr/>
 
+
+          <div className="grid-block vertical">
+             <h3>Open Ledger (CCEDK)</h3>
+
+               <div>
+                   <table className="table">
+                       <thead>
+                       <tr>
+                           <th>Symbol</th>
+                           <th>Deposit To</th>
+                           <th>Balance</th>
+                           <th>Withdraw</th>
+                       </tr>
+                       </thead>
+                       <tbody>
+                       {
+                         <BlockTradesDepositRequest 
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account.get('name')} 
+                                receive_asset="OPENBTC"
+                                deposit_asset="BTC"
+                                deposit_coin_type="btc"
+                                deposit_asset_name="Bitcoin"
+                                receive_coin_type="openbtc" />
+                          
+                          /*
+                         <BlockTradesDepositRequest 
+                                url="https://ccedk.com:443/api/v2/simple-api"
+                                issuer_account="ccedk"
+                                account={this.props.account.get('name')} 
+                                receive_asset="CCEDK.BTC"
+                                deposit_asset="BTC"
+                                deposit_coin_type="btc"
+                                receive_coin_type="ccedk.btc" />
+                         <BlockTradesDepositRequest 
+                                url="https://ccedk.com:443/api/v2/simple-api"
+                                issuer_account="ccedk"
+                                account={this.props.account.get('name')} 
+                                deposit_coin_type="ltc"
+                                deposit_asset="LTC"
+                                receive_asset="CCEDK.LTC"
+                                receive_coin_type="ccedk.ltc" />
+                                */}
+                       </tbody>
+                   </table>
+               </div>
+          </div>
           <div className="grid-block vertical">
              <h3>BlockTrades.us</h3>
 
@@ -220,43 +269,6 @@ class AccountDepositWithdraw extends React.Component {
                </div>
 
 
-          </div>
-
-          <div className="grid-block vertical">
-             <h3>CCEDK</h3>
-
-               <div>
-                   <table className="table">
-                       <thead>
-                       <tr>
-                           <th>Symbol</th>
-                           <th>Deposit To</th>
-                           <th>Balance</th>
-                           <th>Withdraw</th>
-                       </tr>
-                       </thead>
-                       <tbody>
-                       {/*
-                         <BlockTradesDepositRequest 
-                                url="https://ccedk.com:443/api/v2/simple-api"
-                                issuer_account="ccedk"
-                                account={this.props.account.get('name')} 
-                                receive_asset="CCEDK.BTC"
-                                deposit_asset="BTC"
-                                deposit_coin_type="btc"
-                                receive_coin_type="ccedk.btc" />
-                         <BlockTradesDepositRequest 
-                                url="https://ccedk.com:443/api/v2/simple-api"
-                                issuer_account="ccedk"
-                                account={this.props.account.get('name')} 
-                                deposit_coin_type="ltc"
-                                deposit_asset="LTC"
-                                receive_asset="CCEDK.LTC"
-                                receive_coin_type="ccedk.ltc" />
-                                */}
-                       </tbody>
-                   </table>
-               </div>
           </div>
       </div>
       )
