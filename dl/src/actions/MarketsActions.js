@@ -79,24 +79,24 @@ class MarketsActions {
                 ]);
             }
 
-            let foundFill = false, fillOrders = [];
-            for (var i = 0; i < subResult[0].length; i++) {
-                if (ops[subResult[0][i][0][0]] === "fill_order") {
-                    foundFill = true;
-                    fillOrders.push(subResult[0][i]);
-                }
-            }
-            if (foundFill) {
-                this.dispatch({
-                    fillOrders: fillOrders,
-                    base: base,
-                    quote: quote
-                });
-            }
+            // let foundFill = false, fillOrders = [];
+            // for (var i = 0; i < subResult[0].length; i++) {
+            //     if (ops[subResult[0][i][0][0]] === "fill_order") {
+            //         foundFill = true;
+            //         fillOrders.push(subResult[0][i]);
+            //     }
+            // }
+            // if (foundFill) {
+            //     this.dispatch({
+            //         fillOrders: fillOrders,
+            //         base: base,
+            //         quote: quote
+            //     });
+            // }
 
             let startDate = new Date();
             let endDate = new Date();
-            startDate.setDate(startDate.getDate() - 300);
+            startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
             endDate.setDate(endDate.getDate() + 1);
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
@@ -106,7 +106,8 @@ class MarketsActions {
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ])
+                    ]),
+                    Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100])
                 ])
                 .then(results => {
                     this.dispatch({
@@ -114,6 +115,7 @@ class MarketsActions {
                         calls: results[1],
                         settles: results[2],
                         price: results[3],
+                        history: results[4],
                         market: subID,
                         base: base,
                         quote: quote,
@@ -140,7 +142,7 @@ class MarketsActions {
 
             let startDate = new Date();
             let endDate = new Date();
-            startDate = new Date(startDate.getTime() - bucketSize * 500 * 1000);
+            startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
             endDate.setDate(endDate.getDate() + 1);
             return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
@@ -214,7 +216,7 @@ class MarketsActions {
         // });
     }
 
-    createLimitOrder(account, sellAmount, sellAssetID, buyAmount, buyAssetID, expiration, isFillOrKill) {
+    createLimitOrder(account, sellAmount, sellAsset, buyAmount, buyAsset, expiration, isFillOrKill) {
         // let uniqueExpiration = addSeconds(expiration);
         // console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
 
@@ -243,11 +245,12 @@ class MarketsActions {
         // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
 
-        let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
-        console.log( "sell asset: ", sell_asset, sellAssetID );
-        let fee_asset_id = sellAssetID;
-        if( sell_asset.options.core_exchange_rate.base.asset_id == "1.3.0" && sell_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
+        // let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
+        // console.log( "sell asset: ", sell_asset, sellAssetID );
+        let fee_asset_id = sellAsset.get("id");
+        if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
            fee_asset_id = "1.3.0";
+        }
 
         tr.add_type_operation("limit_order_create", {
             fee: {
@@ -257,11 +260,11 @@ class MarketsActions {
             "seller": account,
             "amount_to_sell": {
                 "amount": sellAmount,
-                "asset_id": sellAssetID
+                "asset_id": sellAsset.get("id")
             },
             "min_to_receive": {
                 "amount": buyAmount,
-                "asset_id": buyAssetID
+                "asset_id": buyAsset.get("id")
             },
             "expiration": expiration,
             "fill_or_kill": isFillOrKill
