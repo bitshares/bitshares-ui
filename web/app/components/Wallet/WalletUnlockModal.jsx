@@ -37,7 +37,6 @@ class WalletUnlockModal extends React.Component {
     componentDidMount() {
         let modal = React.findDOMNode(this.refs.modal)
         ZfApi.subscribe(this.props.modalId, (name, msg) => {
-            //DEBUG console.log('... name, msg',name, msg)
             if(name !== this.props.modalId)
                 return
             if(msg === "close") {
