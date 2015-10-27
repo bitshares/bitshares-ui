@@ -54,10 +54,10 @@ class MarketHistory extends React.Component {
                
                 return (
                     <tr key={keyIndex}>
-                        <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
-                        <td>{parsed_order.receives}</td>
-                        <td>{parsed_order.pays}</td>
                         <td className={parsed_order.className}><span className="price-integer">{parsed_order.int}</span>.<span className="price-decimal">{parsed_order.dec}</span></td>
+                        <td>{parsed_order.pays}</td>
+                        <td>{parsed_order.receives}</td>
+                        <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
                     </tr>
                 );
             }).toArray();
@@ -69,10 +69,10 @@ class MarketHistory extends React.Component {
                     <table className="table expand order-table text-right market-right-padding">
                         <thead>
                             <tr>
-                                <th style={{textAlign: "right"}}><Translate content="explorer.block.date" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">({quoteSymbol})</span></th>
-                                <th className="show-for-large" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
                                 <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
+                                <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
+                                <th className="show-for-large" style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                <th style={{textAlign: "right"}}><Translate content="explorer.block.date" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">({quoteSymbol})</span></th>
                             </tr>
                         </thead>
                     </table>

@@ -79,20 +79,20 @@ class MarketsActions {
                 ]);
             }
 
-            let foundFill = false, fillOrders = [];
-            for (var i = 0; i < subResult[0].length; i++) {
-                if (ops[subResult[0][i][0][0]] === "fill_order") {
-                    foundFill = true;
-                    fillOrders.push(subResult[0][i]);
-                }
-            }
-            if (foundFill) {
-                this.dispatch({
-                    fillOrders: fillOrders,
-                    base: base,
-                    quote: quote
-                });
-            }
+            // let foundFill = false, fillOrders = [];
+            // for (var i = 0; i < subResult[0].length; i++) {
+            //     if (ops[subResult[0][i][0][0]] === "fill_order") {
+            //         foundFill = true;
+            //         fillOrders.push(subResult[0][i]);
+            //     }
+            // }
+            // if (foundFill) {
+            //     this.dispatch({
+            //         fillOrders: fillOrders,
+            //         base: base,
+            //         quote: quote
+            //     });
+            // }
 
             let startDate = new Date();
             let endDate = new Date();
@@ -106,7 +106,8 @@ class MarketsActions {
                     settlePromise,
                     Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ])
+                    ]),
+                    Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100])
                 ])
                 .then(results => {
                     this.dispatch({
@@ -114,6 +115,7 @@ class MarketsActions {
                         calls: results[1],
                         settles: results[2],
                         price: results[3],
+                        history: results[4],
                         market: subID,
                         base: base,
                         quote: quote,
