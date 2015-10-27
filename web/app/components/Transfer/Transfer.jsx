@@ -73,6 +73,9 @@ class Transfer extends React.Component {
             this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
+        } else if (confirm_store_state.closed) {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
         }
     }
 
@@ -89,6 +92,7 @@ class Transfer extends React.Component {
             asset.get("id"),
             this.state.memo
         ).then( () => {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.listen(this.onTrxIncluded);
         }).catch( e => {
             let msg = e.message ? e.message.split( '\n' )[1] : null;

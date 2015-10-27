@@ -13,7 +13,8 @@ class SettingsStore {
 
         this.settings = Immutable.Map({
             locale: "en",
-            connection: "wss://bitshares.openledger.info/ws"
+            connection: "wss://bitshares.openledger.info/ws",
+            faucet_address: "https://bitshares.openledger.info"
         });
 
         this.viewSettings =  Immutable.Map({
@@ -64,8 +65,8 @@ class SettingsStore {
             onRemoveWS: SettingsActions.removeWS
         });
 
-        if (this._lsGet("settings_v1")) {
-            this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v1")));
+        if (this._lsGet("settings_v2")) {
+            this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v2")));
         }
 
         if (this._lsGet("defaultMarkets")) {
@@ -91,7 +92,7 @@ class SettingsStore {
             payload.value
         );
 
-        this._lsSet("settings_v1", this.settings.toJS());
+        this._lsSet("settings_v2", this.settings.toJS());
     }
 
     onChangeViewSetting(payload) {

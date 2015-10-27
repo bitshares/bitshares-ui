@@ -456,7 +456,8 @@
         wallets: "Wallets",
         connection: "API Connection",
         add_ws: "Add new websocket API",
-        remove_ws: "Remove websocket API"
+        remove_ws: "Remove websocket API",
+        faucet_address: "Faucet Address"
     },
     footer: {
         title: "BitShares 2.0",
@@ -606,5 +607,11 @@
         retry: "Retry",
         connected: "Connected",
         not_connected: "Not connected"
+    },
+    refcode: {
+        claim: "Claim",
+        claim_refcode: "Claim Referral Code",
+        refcode_optional: "Referral Code (optional)",
+        enter_refcode: "Enter referral code"
     }
 };

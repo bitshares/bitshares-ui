@@ -76,13 +76,15 @@ class AccountActions {
         account_name,
         registrar,
         referrer,
-        referrer_percent = 100
+        referrer_percent,
+        refcode
     ) {
         return WalletActions.createAccount(
             account_name,
             registrar,
             referrer,
-            referrer_percent
+            referrer_percent,
+            refcode
         ).then( () => {
             this.dispatch(account_name);
             return account_name;

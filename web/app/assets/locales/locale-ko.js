@@ -454,7 +454,8 @@ module.exports = {
         wallets: "지갑",
         connection: "API 연결",
         add_ws: "새로운 웹소켓 API 추가",
-        remove_ws: "웹소켓 API 제거"
+        remove_ws: "웹소켓 API 제거",
+        faucet_address: "Faucet Address"
     },
     footer: {
         title: "비트쉐어 2.0",

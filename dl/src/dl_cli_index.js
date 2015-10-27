@@ -12,6 +12,7 @@ import PrivateKeyStore from 'stores/PrivateKeyStore'
 import ChainStore from "api/ChainStore"
 
 import BackupActions from "actions/BackupActions"
+import WalletActions from "actions/WalletActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
@@ -23,6 +24,7 @@ module.exports = {
     WalletDb, WalletManagerStore, PrivateKeyStore,
     AccountStore, 
     BackupActions,
+    WalletActions,
     ChainStore,
     chain_config,
     

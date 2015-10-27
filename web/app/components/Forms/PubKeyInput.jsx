@@ -41,7 +41,7 @@ class PubKeyInput extends React.Component {
     }
 
     onAction(event) {
-        e.preventDefault();
+        event.preventDefault();
         if(this.props.onAction && this.state.valid && !this.props.disableActionButton) {
             this.props.onAction(event);
         }

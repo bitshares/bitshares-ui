@@ -15,6 +15,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletActions from "actions/WalletActions";
 import Translate from "react-translate-component";
+import RefcodeInput from "../Forms/RefcodeInput";
 
 @connectToStores
 class CreateAccount extends React.Component {
@@ -31,12 +32,12 @@ class CreateAccount extends React.Component {
 
     constructor() {
         super();
-        this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null, loading: false};
-        this.onFinishConfirm = this.onFinishConfirm.bind(this)
+        this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null, loading: false, hide_refcode: true};
+        this.onFinishConfirm = this.onFinishConfirm.bind(this);
     }
 
     isValid() {
-        let first_account = AccountStore.getMyAccounts().length === 0;
+        let first_account = true; //AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
         if (!first_account) valid = valid && this.state.registrar_account;
@@ -65,9 +66,10 @@ class CreateAccount extends React.Component {
     }
 
     createAccount(name) {
+        let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
-            AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account).then(() => {
+            AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account, 0, refcode).then(() => {
                 if(this.state.registrar_account) {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
@@ -120,9 +122,14 @@ class CreateAccount extends React.Component {
         this.setState({registrar_account});
     }
 
+    showRefcodeInput(e) {
+        e.preventDefault();
+        this.setState({hide_refcode: false});
+    }
+
     render() {
         let my_accounts = AccountStore.getMyAccounts()
-        let first_account = my_accounts.length === 0;
+        let first_account = true; //my_accounts.length === 0;
         let valid = this.isValid();
         let buttonClass = classNames("button", {disabled: !valid});
         return (
@@ -163,10 +170,19 @@ class CreateAccount extends React.Component {
                                                 onChange={this.onRegistrarAccountChange.bind(this)}/>
                                         </div>)
                                 }
+                                {this.state.hide_refcode ? null :
+                                    <div>
+                                        <RefcodeInput ref="refcode" label="refcode.refcode_optional" expandable={true}/>
+                                        <br/>
+                                    </div>
+                                }
                                 {this.state.loading ?  <LoadingIndicator type="circle"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
                                 <br/>
                                 <br/>
-                                <label><Link to="existing-account"><Translate content="account.existing_accounts" /></Link></label>
+                                <label className="inline"><Link to="existing-account"><Translate content="account.existing_accounts" /></Link></label>
+                                {this.state.hide_refcode ? <span>&nbsp; &bull; &nbsp;
+                                    <label className="inline"><a href onClick={this.showRefcodeInput.bind(this)}><Translate content="refcode.enter_refcode"/></a></label>
+                                </span> : null}
                             </form>
                         </div>
                     </div>
