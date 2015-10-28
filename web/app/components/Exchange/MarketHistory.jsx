@@ -56,8 +56,8 @@ class MarketHistory extends React.Component {
                 return (
                     <tr key={keyIndex}>
                         <td className={parsed_order.className}><span className="price-integer">{parsed_order.int}</span>.<span className="price-decimal">{parsed_order.dec}</span></td>
-                        <td>{parsed_order.pays}</td>
                         <td>{parsed_order.receives}</td>
+                        <td>{parsed_order.pays}</td>
                         <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
                     </tr>
                 );
