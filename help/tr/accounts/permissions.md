@@ -5,7 +5,7 @@ BitShares'de , her hesap ikiye ayrılır
 * **Etkin  Yetki**: fonların yönetimi 
 * **Sahip Yetkisi**: hesap yönetimi.
 
-Her ikisi de hesabınızın 'Yetkiler' sekmesi içinde *merciler* (aşağıda)
+Her ikisi de hesabınızın 'Yetkiler' sekmesi içinde *yetkililer* (aşağıda)
   ve bir işlemin geçerli sayılabilmesi için aşılması gerekli  olan *eşik*  kullanılarak 
 belirtilebilir.
 
