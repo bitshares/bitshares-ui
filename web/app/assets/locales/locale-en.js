@@ -110,7 +110,19 @@
             add_committee_label: "Committee Member",
             add_witness_label: "Witness",
             approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal"
+            reject_worker: "Reject worker proposal",
+            worker_account: "Worker account",
+            total_votes: "Total votes",
+            votes_against: "Votes against",
+            daily_pay: "Daily pay",
+            max_pay: "Maximum total pay",
+            unclaimed: "Unclaimed pay",
+            status: {
+                title: "Status",
+                supported: "Supported",
+                rejected: "Rejected",
+                neutral: "Neutral"
+            }
         },
         options: {
             num_witnesses: "Desired Witnesses",
