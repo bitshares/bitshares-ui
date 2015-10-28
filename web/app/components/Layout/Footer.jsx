@@ -72,7 +72,7 @@ class Footer extends React.Component {
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     { this.props.backup_recommended ? <span>
                         <div className="grid-block">
-                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup recommended</a>
+                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup Required</a>
                             &nbsp;&nbsp;
                         </div>
                     </span> : null}
