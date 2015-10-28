@@ -452,7 +452,8 @@ module.exports = {
         wallets: "Geldbörsen",
         connection: "API Anbindung",
         add_ws: "Websocket API hinzufügen",
-        remove_ws: "Websocket API entfernen"
+        remove_ws: "Websocket API entfernen",
+        faucet_address: "Faucet Address"
     },
     footer: {
         title: "Graphene",
@@ -594,5 +595,11 @@ module.exports = {
         retry: "nocheinmal versuchen",
         connected: "verbunden",
         not_connected: "Nicht verbunden"
+    },
+    refcode: {
+        claim: "Claim",
+        claim_refcode: "Claim Referral Code",
+        refcode_optional: "Referral Code (optional)",
+        enter_refcode: "Enter referral code"
     }
 };

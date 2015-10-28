@@ -213,13 +213,30 @@ class MarketUtils {
         price_full = !flipped ? (1 / price_full) : price_full;
         let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
         let className = isCall ? "orderHistoryCall" : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
+
+        let time = order.time.split("T")[1];
+        let now = new Date();
+        let offset = now.getTimezoneOffset() / 60;
+        let hour = time.substr(0, 2);
+        let hourNumber = parseInt(hour, 10);
+        let localHour = hourNumber - offset
+        if (localHour >= 24) {
+            localHour -= 24;            
+        }
+        let hourString = localHour.toString();
+        if (hour < 10) {
+            hourString = "0" + hourString;
+        }
+        time = time.replace(hour, hourString);
+
         return {
             receives: isAsk ? receives : pays,
             pays : isAsk ? pays : receives,
             price_full: price_full,
             int : int,
             dec: dec,
-            className: className
+            className: className,
+            time: time
         };
     }
 

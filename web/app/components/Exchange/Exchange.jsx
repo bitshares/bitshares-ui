@@ -4,6 +4,7 @@ import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
+import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
 import PriceChart from "./PriceChart";
@@ -30,6 +31,12 @@ require("./exchange.scss");
 
 let emitter = ee.emitter();
 let callListener, limitListener, newCallListener;
+
+Highcharts.setOptions({
+    global: {
+        useUTC: false
+    }
+});
 
 class PriceStat extends React.Component {
 
@@ -194,10 +201,10 @@ class Exchange extends React.Component {
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
             this.props.currentAccount.get("id"),
-            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.precision), 10),
-            sellAsset.id,
-            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.precision), 10),
-            buyAsset.id,
+            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.get("precision")), 10),
+            sellAsset,
+            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.get("precision")), 10),
+            buyAsset,
             expiration,
             false // fill or kill TODO: add fill or kill switch
         ).then(result => {
@@ -261,9 +268,9 @@ class Exchange extends React.Component {
         }
     }
 
-    _depthChartClick(base, quote, e) {
+    _depthChartClick(base, quote, power, e) {
         e.preventDefault();
-        let value = this._limitByPrecision(e.xAxis[0].value, quote);
+        let value = this._limitByPrecision(e.xAxis[0].value / power, quote);
         this.setState({
             depthLine: value
         });
@@ -286,12 +293,13 @@ class Exchange extends React.Component {
     _setDepthLine(value) { this.setState({depthLine: value}); }
 
     _limitByPrecision(value, asset) {
+        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
         let valueString = value.toString();
         let splitString = valueString.split(".");
-        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= asset.precision) {
+        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
             return value;
         }
-        let precision = utils.get_asset_precision(asset.precision);
+        let precision = utils.get_asset_precision(assetPrecision);
         value = Math.floor(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;
@@ -550,9 +558,10 @@ class Exchange extends React.Component {
 
         // Latest price
         if (activeMarketHistory.size) {
-            let latest_two = activeMarketHistory.takeLast(3);
-            let latest = latest_two.last();
-            let second_latest = latest_two.first();
+            // Orders come in pairs, first is driver. Third entry is first of second pair.
+            let latest_two = activeMarketHistory.take(3);
+            let latest = latest_two.first();
+            let second_latest = latest_two.last();
             let paysAsset, receivesAsset, isAsk = false;
             if (latest.pays.asset_id === base.get("id")) {
                 paysAsset = base;
@@ -651,7 +660,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-8 " : "small-12 large-10 ")} >
+                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
@@ -854,16 +863,20 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block show-for-large large-2 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
+                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <MarketHistory
-                            history={activeMarketHistory}
-                            base={base}
-                            quote={quote}
-                            baseSymbol={baseSymbol}
-                            quoteSymbol={quoteSymbol}
-                        />
-
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
+                            <MarketHistory
+                                history={activeMarketHistory}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                            />
+                        </div>
+                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
+                            <MyMarkets />
+                        </div>
                     </div>
                     {quoteIsBitAsset ?
                         <BorrowModal

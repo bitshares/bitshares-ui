@@ -584,17 +584,18 @@ export default class ImportKeys extends Component {
         var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
         for(let wif of contents.match(wif_regex) || [] ) {
             try { 
-                PrivateKey.fromWif(wif) //could throw and error 
+                var private_key = PrivateKey.fromWif(wif) //could throw and error 
                 this.state.wifs_to_account[wif] = {account_names: []}
+                var public_key_string = private_key.toPublicKey().toPublicKeyString()
+                this.state.imported_keys_public[public_key_string] = true
                 count++
             } catch(e) { invalid_count++ }
         }
-        this.updateOnChange()
         this.setState({
             wif_text_message: 
                 (!count ? "" : count + " keys found from text.") +
                 (!invalid_count ? "" : "  " + invalid_count + " invalid keys.")
-        })
+        }, ()=> this.updateOnChange())
         return count
     }
 
