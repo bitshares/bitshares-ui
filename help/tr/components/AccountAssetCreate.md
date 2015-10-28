@@ -1,0 +1,1 @@
+Varlık oluşturma çalışıyor fakat hala yapım aşamasındadır.
