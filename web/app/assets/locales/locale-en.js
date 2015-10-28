@@ -213,7 +213,7 @@
         update_feed_producers: "pdated the feed producers of asset",
         feed_producer: "Became a feed producer for the asset",
         feed_price: "Feed price",
-        asset_issue: "Issued",
+        asset_issue: "issued",
         was_issued: "Was issued",
         by: "by",
         burn_asset: "Burnt",
@@ -261,6 +261,8 @@
         publisher: "Publisher",
         market_fee: "Market fee",
         max_market_fee: "Maximum market fee",
+        blinding_factor: "Blinding factor",
+        outputs: "Outputs",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -300,7 +302,10 @@
             custom: "Custom",
             assert: "Assert operation",
             balance_claim: "Claim balance",
-            override_transfer: "Override transfer"
+            override_transfer: "Override transfer",
+            transfer_to_blind: "Transfer to blinded account",
+            blind_transfer: "Blinded transfer",
+            transfer_from_blind: "Transfer from blinded account"
         }
     },
     explorer: {
