@@ -558,9 +558,10 @@ class Exchange extends React.Component {
 
         // Latest price
         if (activeMarketHistory.size) {
-            let latest_two = activeMarketHistory.takeLast(3);
-            let latest = latest_two.last();
-            let second_latest = latest_two.first();
+            // Orders come in pairs, first is driver. Third entry is first of second pair.
+            let latest_two = activeMarketHistory.take(3);
+            let latest = latest_two.first();
+            let second_latest = latest_two.last();
             let paysAsset, receivesAsset, isAsk = false;
             if (latest.pays.asset_id === base.get("id")) {
                 paysAsset = base;
