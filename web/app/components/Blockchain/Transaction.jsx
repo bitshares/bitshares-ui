@@ -760,15 +760,60 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr key="4">
                             <td><Translate component="span" content="transaction.outputs" /></td>
-                            <td><Inspector data={ op[1].outputs } search={false} /></td>
+                            <td><Inspector data={ op[1].outputs[0] } search={false} /></td>
                         </tr>
                     );
                     break;
 
+                case "transfer_from_blind":
+                    rows.push(
+                        <tr  key="1">
+                            <td><Translate component="span" content="transfer.to" /></td>
+                            <td>{this.linkToAccount(op[1].to)}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr  key="2">
+                            <td><Translate component="span" content="transfer.amount" /></td>
+                            <td><FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /></td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key="3">
+                            <td><Translate component="span" content="transaction.blinding_factor" /></td>
+                            <td style={{fontSize: "80%"}}>{op[1].blinding_factor}</td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key="4">
+                            <td><Translate component="span" content="transaction.inputs" /></td>
+                            <td><Inspector data={ op[1].inputs[0] } search={false} /></td>
+                        </tr>
+                    );
+                    break;
+
+                case "blind_transfer":
+                    rows.push(
+                        <tr key="1">
+                            <td><Translate component="span" content="transaction.inputs" /></td>
+                            <td><Inspector data={ op[1].inputs[0] } search={false} /></td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key="2">
+                            <td><Translate component="span" content="transaction.outputs" /></td>
+                            <td><Inspector data={ op[1].outputs[0]} search={false} /></td>
+                        </tr>
+                    );
+                    break;
+
+
+
                 default:
+                    console.log("unimplemented op:", op);
                     rows.push(
                         <tr >
-                            <td><Translate component="span" content="explorer.block.operation" /></td>
+                            <td><Translate component="span" content="explorer.block.op" /></td>
                             <td><Inspector data={ op } search={false} /></td>
                         </tr>
                     );

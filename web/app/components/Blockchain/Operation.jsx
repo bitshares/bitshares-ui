@@ -753,6 +753,16 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "transfer_from_blind":
+                column = (
+                    <span>
+                        {this.linkToAccount(op[1].to)}
+                        &nbsp;<Translate component="span" content="transaction.received"/>
+                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
+                    </span>
+                );
+                break;
+
 
             case "custom":
                 column = (
@@ -763,7 +773,7 @@ class Operation extends React.Component {
                 break;
 
             default:
-                console.log("unhandled op:", op);
+                console.log("unimplemented op:", op);
                 column = (
                     <span>
                         <Link to="block" params={{height: block}}>#{block}</Link>

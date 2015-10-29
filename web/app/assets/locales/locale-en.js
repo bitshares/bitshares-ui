@@ -275,6 +275,7 @@
         max_market_fee: "Maximum market fee",
         blinding_factor: "Blinding factor",
         outputs: "Outputs",
+        inputs: "Inputs",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
