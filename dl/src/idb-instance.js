@@ -217,6 +217,12 @@ module.exports = iDB = (function () {
                 var obj = {}
                 for (let i = 0; i < store_names.length; i++) {
                     var store_name = store_names[i]
+                    if( store_name === "wallet" ) {
+                        var wallet_array = results[i]
+                        // their should be only 1 wallet per database
+                        for(let wallet of wallet_array)
+                            wallet.backup_date = new Date().toISOString()
+                    }
                     obj[store_name] = results[i]
                 }
                 return obj
