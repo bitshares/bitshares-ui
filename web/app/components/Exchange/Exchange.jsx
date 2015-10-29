@@ -564,10 +564,10 @@ class Exchange extends React.Component {
             if (latest.pays.asset_id === base.get("id")) {
                 paysAsset = base;
                 receivesAsset = quote;                    
+                isAsk = true;                    
             } else {
                 paysAsset = quote;
                 receivesAsset = base;
-                isAsk = true;                    
             }
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             latestPrice = market_utils.parse_order_history(latest, paysAsset, receivesAsset, isAsk, flipped);
@@ -702,7 +702,7 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.latest" />
                                                     <br/>
-                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.price_full, Math.max(5, quote ? quote.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>                                                    
+                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.price_full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>                                                    
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
