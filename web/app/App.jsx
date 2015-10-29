@@ -124,12 +124,16 @@ class App extends React.Component {
     // }
 
     render() {
-        setTimeout(()=> {
-            if( ! this.backup_recommended_warned && CachedPropertyStore.get("backup_recommended") ) {
-                alert("Please understand that you are responsible for making your own backup...")
-                this.backup_recommended_warned = true
-            }
-        }, 2500)
+        if( ! this.backup_recommended_warned ) {
+            this.backup_recommended_warned = true
+            setTimeout(()=> {
+                if( CachedPropertyStore.get("backup_recommended") ||
+                    ! WalletDb.getWallet().backup_date ) {
+                    alert("Please understand that you are responsible for making your own backup...")
+                    
+                }
+            }, 2500)
+        }
         if (this.context.router.getCurrentPath() === "/init-error") { // temporary, until we implement right offline mode
             return (
                 <div className="grid-frame vertical">
