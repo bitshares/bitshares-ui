@@ -118,7 +118,7 @@ module.exports = {
             max_pay: "最大预算",
             unclaimed: "未发放预算",
             status: {
-                title: "状态",
+                title: "我的立场",
                 supported: "已支持",
                 rejected: "已反对",
                 neutral: "中立"
