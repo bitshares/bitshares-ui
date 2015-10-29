@@ -22,6 +22,8 @@ import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore"
 import PublicKey from "ecc/key_public";
 
+import GenesisFilter from "chain/GenesisFilter"
+
 require("./ImportKeys.scss");
 
 var import_keys_assert_checking = false
@@ -312,49 +314,67 @@ export default class ImportKeys extends Component {
         
         // BTS 1.0 wallets may have a lot of generated but unused keys or spent TITAN addresses making
         // wallets so large it is was not possible to use the JavaScript wallets with them.
-        var GenesisFilterWorker = require("worker!workers/GenesisFilterWorker")
-        var worker = new GenesisFilterWorker
-        var filter_status = this.state.genesis_filter_status
-        worker.postMessage({ account_keys: unfiltered_account_keys })
-        worker.onmessage = event => { try {
-            var { account_keys, status } = event.data
-            if( status.error === "missing_public_keys" || status.error === "missing_bloom" ) {
-                if( status.error === "missing_public_keys" )
+        
+        var genesis_filter = new GenesisFilter
+        if( ! genesis_filter.isAvailable() ) {
+            update_state({ password_checksum, account_keys: unfiltered_account_keys,
+                genesis_filter_finished: true, genesis_filtering: false })
+            return
+        }
+        genesis_filter.init(()=> {
+            var filter_status = this.state.genesis_filter_status
+            
+            // FF < version 41 does not support worker threads internals (like blob urls)
+            // var GenesisFilterWorker = require("worker!workers/GenesisFilterWorker")
+            // var worker = new GenesisFilterWorker
+            // worker.postMessage({
+            //     account_keys: unfiltered_account_keys,
+            //     bloom_filter: genesis_filter.bloom_filter
+            // })
+            // worker.onmessage = event => { try {
+            //     var { status, account_keys } = event.data
+            //     // ...
+            // } catch( e ) { console.error('GenesisFilterWorker', e) }}
+            
+            var account_keys = unfiltered_account_keys
+            genesis_filter.filter( account_keys, status => {
+                console.log("import filter", status)
+                if( status.error === "missing_public_keys" ) {
                     console.error("un-released format, just for testing")
-                update_state({ password_checksum, account_keys: unfiltered_account_keys,
-                    genesis_filter_finished: true, genesis_filtering: false })
-                return
-            }
-            if( status.success ) {
-                update_state({ password_checksum, account_keys,
-                    genesis_filter_finished: true, genesis_filtering: false })
-                return
-            }
-            if( status.initalizing !== undefined ) {
-                update_state({ genesis_filter_initalizing: status.initalizing, genesis_filtering: true })
-                return
-            }
-            if( status.importing === undefined ) {
-                // programmer error
-                console.error('unknown status', status)
-                return
-            }
-            
-            if( ! filter_status.length )
-                // first account
-                filter_status.push( status )
-            else {
-                var last_account_name = filter_status[filter_status.length - 1].account_name
-                if( last_account_name === status.account_name )
-                    // update same account
-                    filter_status[filter_status.length - 1] = status
-                else
-                    // new account
+                    update_state({ password_checksum, account_keys: unfiltered_account_keys,
+                        genesis_filter_finished: true, genesis_filtering: false })
+                    return
+                }
+                if( status.success ) {
+                    // var { account_keys } = event.data // if using worker thread
+                    update_state({ password_checksum, account_keys,
+                        genesis_filter_finished: true, genesis_filtering: false })
+                    return
+                }
+                if( status.initalizing !== undefined ) {
+                    update_state({ genesis_filter_initalizing: status.initalizing, genesis_filtering: true })
+                    return
+                }
+                if( status.importing === undefined ) {
+                    // programmer error
+                    console.error('unknown status', status)
+                    return
+                }
+                if( ! filter_status.length )
+                    // first account
                     filter_status.push( status )
-            }
-            update_state({ genesis_filter_status: filter_status })
-            
-        } catch( e ) { console.error('GenesisFilterWorker', e) }}
+                else {
+                    var last_account_name = filter_status[filter_status.length - 1].account_name
+                    if( last_account_name === status.account_name )
+                        // update same account
+                        filter_status[filter_status.length - 1] = status
+                    else
+                        // new account
+                        filter_status.push( status )
+                }
+                update_state({ genesis_filter_status: filter_status }) 
+            })
+        })
     }
     
     /**

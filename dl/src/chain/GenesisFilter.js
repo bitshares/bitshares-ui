@@ -1,4 +1,6 @@
 import h from "common/hash"
+import config from "chain/config"
+import key_utils from "common/key_utils"
 
 var bts_genesiskeys_bloom_url = undefined
 try {
@@ -20,6 +22,13 @@ try {
 */
 export default class GenesisFilter {
     
+    /** or call this.init */
+    constructor(bloom_buffer) {
+        if( ! bloom_buffer ) return
+        this.bloom_buffer = bloom_buffer
+        this.bits_in_filter = bloom_buffer.length * 8 // 8388608 (test data)
+    }
+    
     /** Was a bloom file deployed?  This does not try to load it from the server. */
     isAvailable() { return bts_genesiskeys_bloom_url !== undefined }
     
@@ -29,6 +38,7 @@ export default class GenesisFilter {
             throw new Error("Genesis bloom file was not deployed")
         
         var xhr = new XMLHttpRequest
+        // firefox 40 did not allow the blob url but ff 41.0.2 did
         xhr.responseType = "blob"
         xhr.onload = ()=> {
             if (xhr.status === 404) return
@@ -63,6 +73,75 @@ export default class GenesisFilter {
             if( (byte & mask) === 0 ) return false
         }
         return true
+    }
+    
+    filter( account_keys, status ) {
+        if( ! this.isAvailable() ) {
+            console.log("WARN: Missing bloom filter for BTS 0.9.x wallets")
+            status({ error: "missing_bloom" })
+            return
+        }
+        var initalizing = true
+        status({ initalizing })
+        this.init(()=> {
+            var previous_address_prefix = config.address_prefix
+            config.address_prefix = "BTS"
+            try {
+                initalizing = false
+                status({ initalizing })
+                var running_count_progress = 1
+                for(var a = 0; a < account_keys.length; a++) {
+                    var removed_count = 0, count = 0
+                    var keys = account_keys[a]
+                    var total = keys.encrypted_private_keys.length
+                    status({ importing: true, account_name: keys.account_name, count, total })
+                    for(var k = keys.encrypted_private_keys.length - 1; k >= 0; k--) {
+                        count++
+                        if( count % running_count_progress === 0 ) {
+                            running_count_progress = 47
+                            status({ importing: true, account_name: keys.account_name, count, total })
+                        }
+                        if( ! keys.public_keys) {
+                            // un-released format, just for testing
+                            status({ error: "missing_public_keys" })
+                            return
+                        }
+                        var key = keys.public_keys[k]
+                        if( /^GPH/.test(key) ) key = "BTS" + key.substring(3)
+                        if(this.inGenesis( key )) continue
+                        var addresses = key_utils.addresses(key)
+                        var addy_found = false
+                        for(var i = 0; i < addresses.length; i++) {
+                            if(this.inGenesis( addresses[i] )) {
+                                addy_found = true
+                                break
+                            }
+                        }
+                        if( addy_found ) continue
+                        delete keys.encrypted_private_keys[k]
+                        delete keys.public_keys[k]
+                        removed_count++
+                    }
+                    var encrypted_private_keys = [], public_keys = []
+                    for(var k = keys.encrypted_private_keys.length - 1; k >= 0; k--) {
+                        if( ! keys.encrypted_private_keys[k]) continue
+                        encrypted_private_keys.push( keys.encrypted_private_keys[k] )
+                        public_keys.push( keys.public_keys[k] )
+                    }
+                    keys.encrypted_private_keys = encrypted_private_keys
+                    status({ importing: false, account_name: keys.account_name,
+                        count: count - removed_count, total })
+                    keys.public_keys = public_keys
+                }
+                status({ success: true,  })
+            } finally {
+                config.address_prefix = previous_address_prefix
+                if( initalizing ) {
+                    initalizing = false
+                    status({ initalizing })
+                }
+            }
+        })
     }
     
 }
