@@ -110,7 +110,19 @@ module.exports = {
             add_committee_label: "理事会成员",
             add_witness_label: "见证人",
             approve_worker: "赞成",
-            reject_worker: "反对"
+            reject_worker: "反对",
+            worker_account: "申请账户",
+            total_votes: "赞成票数",
+            votes_against: "反对票数",
+            daily_pay: "每日预算",
+            max_pay: "最大预算",
+            unclaimed: "未发放预算",
+            status: {
+                title: "状态",
+                supported: "已支持",
+                rejected: "已反对",
+                neutral: "中立"
+            }
         },
         options: {
             num_witnesses: "信任见证人",
@@ -277,7 +289,17 @@ module.exports = {
             balance_claim: "领取余额",
             override_transfer: "优先覆盖转账",
             witness_update: "更新见证人",
-            committee_member_update_global_parameters: "全局参数更新"
+            committee_member_update_global_parameters: "全局参数更新",
+            vesting_balance_create: "创建冻结余额",
+            vesting_balance_withdraw: "提取解冻余额",
+            worker_create: "创建预算项目",
+            custom: "自定义",
+            assert: "断言操作",
+            balance_claim: "领取余额",
+            override_transfer: "覆盖转账",
+            transfer_to_blind: "向隐私账户转账",
+            blind_transfer: "隐私转账",
+            transfer_from_blind: "从隐私账户转出"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
@@ -301,7 +323,10 @@ module.exports = {
         lifetime_upgrade_account: "升级到终身会员",
         annual_upgrade_account: "升级到年度会员",
         market_fee: "市场手续费",
-        max_market_fee: "最大市场手续费"
+        max_market_fee: "最大市场手续费",
+        blinding_factor: "隐私因子",
+        outputs: "输出",
+        inputs: "输入",
     },
     explorer: {
         accounts: {
