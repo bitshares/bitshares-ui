@@ -30,28 +30,25 @@ $light-panel-bg-color: #353742;
 }
 
 td.orderHistoryBid {
-  > span.price-integer {
+  > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $bid-color;
   }
 
-  > span.price-decimal {
+  > span.price-decimal, > span > span.price-decimal {
     color: #e0e0e0;
-    font-size: 90%;
     opacity: 0.6;
-
   }
 }
 
 td.orderHistoryAsk {
-  > span.price-integer {
+  > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $ask-color;
   }
 
-  > span.price-decimal {
+  > span.price-decimal, > span >span.price-decimal {
     color: #e0e0e0;
-    font-size: 90%;
     opacity: 0.6;
   }
 }

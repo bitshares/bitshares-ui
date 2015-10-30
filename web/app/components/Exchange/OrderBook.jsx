@@ -6,6 +6,7 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
+import PriceText from "../Utility/PriceText";
 
 class OrderBookRowVertical extends React.Component {
     constructor() {
@@ -36,9 +37,7 @@ class OrderBookRowVertical extends React.Component {
                 <td className={classnames({"show-for-large": !this.props.horizontal})}>{utils.format_number(order.value, base.get("precision") - 1)}</td>
                 <td>{utils.format_number(order.amount, quote.get("precision") - 1)}</td>
                 <td className={integerClass}>
-                    <span className="price-integer">{order.price_int}</span>
-                    .
-                    <span className="price-decimal">{order.price_dec}</span>
+                    <PriceText preFormattedPrice={order.price} />
                 </td>
             </tr>
         )
@@ -72,9 +71,7 @@ class OrderBookRowHorizontal extends React.Component {
         return (
             <tr key={order.price_full} onClick={this.props.onClick} className={changeClass}>
                 <td className={integerClass}>
-                    <span className="price-integer">{order.price_int}</span>
-                    .
-                    <span className="price-decimal">{order.price_dec}</span>
+                    <PriceText preFormattedPrice={order.price} />
                 </td>
                 <td>{utils.format_number(order.amount, quote.get("precision") - 2)}</td>
                 <td>{utils.format_number(order.value, base.get("precision") - 2)}</td>
@@ -296,7 +293,7 @@ class OrderBook extends React.Component {
                                 {askRows}
                                 <tr onClick={this._centerView.bind(this)} key="spread" className="orderbook-latest-price" ref="centerRow">
                                     <td colSpan="3" className="text-center spread">
-                                        <Translate content="exchange.latest" />: {this.props.latest ? <span>{utils.format_number(this.props.latest.price_full, Math.max(5, base ? base.get("precision") : 0))} {baseSymbol}/{quoteSymbol}</span> : null}
+                                        <Translate content="exchange.latest" />: {this.props.latest ? <span><PriceText preFormattedPrice={this.props.latest} /> {baseSymbol}/{quoteSymbol}</span> : null}
                                     </td>
                                 </tr>
                                 {bidRows}

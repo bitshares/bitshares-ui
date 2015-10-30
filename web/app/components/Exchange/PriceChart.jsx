@@ -250,7 +250,7 @@ class PriceChart extends React.Component {
                     opposite: true,
                     top: "77%",
                     height: "23%",
-                    offset: 23,
+                    offset: 5,
                     gridLineWidth: 0,
                     title: {
                         text: null,
