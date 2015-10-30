@@ -106,10 +106,12 @@ class Footer extends React.Component {
 class AltFooter extends Component {
     
     render() {
+        var wallet = WalletDb.getWallet()
         return <AltContainer
             stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
             inject ={{
-                backup_recommended: ()=> ! !!WalletDb.getWallet().backup_date || CachedPropertyStore.get("backup_recommended"),
+                backup_recommended: ()=> 
+                    (wallet && ( ! wallet.backup_date || CachedPropertyStore.get("backup_recommended"))),
                 rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
                 // Disable notice for separate brainkey backup for now to keep things simple.  The binary wallet backup includes the brainkey...
                 // backup_brainkey_recommended: ()=> {

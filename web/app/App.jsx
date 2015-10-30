@@ -126,9 +126,10 @@ class App extends React.Component {
     render() {
         if( ! this.backup_recommended_warned ) {
             this.backup_recommended_warned = true
-            setTimeout(()=> {
+            var wallet = WalletDb.getWallet()
+            if( wallet ) setTimeout(()=> {
                 if( CachedPropertyStore.get("backup_recommended") ||
-                    ! WalletDb.getWallet().backup_date ) {
+                    ! wallet.backup_date ) {
                     alert("Please understand that you are responsible for making your own backup...")
                     
                 }
