@@ -2,3 +2,4 @@
 node_modules
 bower_components
 bundle
+app/assets/bts_genesiskeys_bloom.dat

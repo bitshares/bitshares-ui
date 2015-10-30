@@ -15,7 +15,6 @@ import validation from "common/validation"
 import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
 import {FetchChainObjects} from "api/ChainStore";
-
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";
 
@@ -175,6 +174,20 @@ class AccountVoting extends React.Component {
     render() {
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = "button" + (this.isChanged() ? "" : " disabled");
+
+        let workers = [];
+        for (var i = 0; i < 50; i++) {
+            let worker = ChainStore.getObject("1.14." + i);
+            if (worker === null) {
+                break;
+            }
+            workers.push(
+                <WorkerApproval worker={"1.14." + i} vote_ids={this.state.vote_ids} 
+                    onAddVote={this.onAddVoteID.bind(this)}
+                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                />
+            )
+        };
         return (
             <div className="grid-content">
                 <AccountVotingProxy
@@ -205,9 +218,9 @@ class AccountVoting extends React.Component {
                 </div>
                 <div className={"content-block" + (proxy_is_set ? " disabled" : "")}>
                     <h3>Workers</h3>
-                    <WorkerApproval worker="1.14.0" vote_ids={this.state.vote_ids} 
-                        onAddVote={this.onAddVoteID.bind(this)}
-                        onRemoveVote={this.onRemoveVoteID.bind(this)} />
+                    <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">                    
+                        {workers}
+                    </div>
                 </div>
 
                 <div className="content-block">

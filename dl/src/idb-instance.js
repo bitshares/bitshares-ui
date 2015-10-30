@@ -27,8 +27,9 @@ var upgrade = function(db, oldVersion) {
     Everything in this class is scopped by the database name.  This separates
     data per-wallet and per-chain.
 */
-var getDatabaseName = function(current_wallet = current_wallet_name) {
-    var chain_id = Apis.instance().chain_id
+var getDatabaseName = function(
+    current_wallet = current_wallet_name,
+    chain_id = Apis.instance().chain_id) {
     return [
         DB_PREFIX,
         chain_id ? chain_id.substring(0, 6) : "",
@@ -72,18 +73,18 @@ module.exports = iDB = (function () {
     /** Be carefull not to call twice especially for a new database
        needing an upgrade...
     */
-    function openIndexedDB() {
+    function openIndexedDB(chain_id) {
         return iDB.root.getProperty("current_wallet", "default").then(
             current_wallet => {
             current_wallet_name = current_wallet
-            var database_name = getDatabaseName(current_wallet)
+            var database_name = getDatabaseName(current_wallet, chain_id)
             return openDatabase(database_name)
         })
     }
 
-    function init() {
+    function init(chain_id) {
         let instance;
-        let promise = openIndexedDB();
+        let promise = openIndexedDB(chain_id);
         promise.then(db => {
             idb = db;
         });
@@ -106,12 +107,19 @@ module.exports = iDB = (function () {
         
         set_impl: function(impl) {
             this.impl = impl
-            var chain_id = Apis.instance().chain_id
-            var chain_substring = chain_id ? chain_id.substring(0, 6) : ""
-            this.root = new iDBRoot(this.impl, "_" + chain_substring)
+            this.root = new iDBRoot(this.impl)
         },
         
-        init_instance: function (indexedDBimpl) {
+        set_chain_id: function(chain_id) {
+            this.chain_id = chain_id
+            var chain_substring = chain_id ? chain_id.substring(0, 6) : ""
+            this.root.setDbSuffix("_" + chain_substring)
+        },
+        
+        init_instance: function (
+            indexedDBimpl,
+            chain_id = Apis.instance().chain_id
+        ) {
             if (!_instance) {
                 if(indexedDBimpl) {
                     this.set_impl( indexedDBimpl )
@@ -119,7 +127,8 @@ module.exports = iDB = (function () {
                         this.impl.__useShim() //always use shim
                     }
                 }
-                _instance = init()
+                this.set_chain_id(chain_id)
+                _instance = init(chain_id)
             }
             return _instance;
         },
@@ -217,6 +226,12 @@ module.exports = iDB = (function () {
                 var obj = {}
                 for (let i = 0; i < store_names.length; i++) {
                     var store_name = store_names[i]
+                    if( store_name === "wallet" ) {
+                        var wallet_array = results[i]
+                        // their should be only 1 wallet per database
+                        for(let wallet of wallet_array)
+                            wallet.backup_date = new Date().toISOString()
+                    }
                     obj[store_name] = results[i]
                 }
                 return obj

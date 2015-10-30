@@ -7,8 +7,11 @@ const DB_PREFIX = "graphene_db"
 /** Usage: openIndexDB.then( db => ... */
 export default class iDBRoot {
     
-    constructor(impl, db_suffix) {
+    constructor(impl) {
         this.impl = impl
+    }
+    
+    setDbSuffix(db_suffix) {
         // "graphene_db_06f667"
         this.database_name = DB_PREFIX + db_suffix
     }

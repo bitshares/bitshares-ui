@@ -117,7 +117,6 @@ class AccountAssetCreate extends React.Component {
 
                     <div className="grid-content button-group">
                         <input type="submit" className={classnames("button", {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.get("id"))} value="Create Asset" />
-                        <a href className="secondary button">Cancel</a>
                     </div>
                 </form>
             </div>

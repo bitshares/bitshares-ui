@@ -14,7 +14,7 @@ class WalletUnlockActions {
             //DEBUG  console.log('... WalletUnlockStore\tmodal unlock')
             if(was_unlocked)
                 WrappedWalletUnlockActions.change()
-        }).catch ( ()=>{})
+        })
     }
     
     lock() {

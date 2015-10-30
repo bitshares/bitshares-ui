@@ -67,8 +67,9 @@ class PublicKey
            new_checksum = new_checksum.slice 0, 4
            assert.deepEqual checksum, new_checksum, 'Checksum did not match'
            PublicKey.fromBuffer public_key
-        catch  e  
-           null
+        catch e
+            console.error 'PublicKey.fromPublicKeyString', e
+            null
         
     
     toAddressString: ->
