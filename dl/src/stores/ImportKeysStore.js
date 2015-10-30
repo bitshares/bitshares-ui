@@ -1,18 +1,23 @@
 import alt from "alt-instance"
+import BaseStore from "stores/BaseStore"
 
-import ImportKeysActions from "actions/ImportKeysActions"
-
-class ImportKeysStore {
+class ImportKeysStore extends BaseStore {
     
     constructor() {
-        this.bindActions(ImportKeysActions)
+        super()
+        this.state = this._getInitialState()
+        this._export("importing")
+    }
+
+    _getInitialState() {
+        return { importing: false }
     }
     
-    onSetStatus(status) {
-        this.setState({status})
+    importing(importing) {
+        this.setState({ importing })
     }
-
+    
 }
 
-export var ImportKeysStoreWrapped = alt.createStore(ImportKeysStore, "ImportKeysStore");
+export var ImportKeysStoreWrapped = alt.createStore(ImportKeysStore, "ImportKeysStore")
 export default ImportKeysStoreWrapped

@@ -91,6 +91,74 @@ var Utils = {
         }
     },
 
+    price_to_text(price, base, quote, forcePrecision = null) {
+        if (typeof price !== "number" || !base || !quote) {
+            return;
+        }
+        let precision;
+        let priceText;
+        let satoshi = 8;
+
+        if (forcePrecision) {
+            priceText = this.format_number(price, forcePrecision);
+        } else {
+            let quoteID = quote.toJS ? quote.get("id") : quote.id;
+            let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
+            let baseID = base.toJS ? base.get("id") : base.id;
+            let basePrecision  = base.toJS ? base.get("precision") : base.precision;
+            if (quoteID === "1.3.0") {
+                priceText = this.format_number(price, quotePrecision - 1);
+            } else if (baseID === "1.3.0") {
+                priceText = this.format_number(price, Math.min(satoshi, quotePrecision + 1));
+            } else {
+                priceText = this.format_number(price, Math.min(satoshi, quotePrecision + basePrecision));
+            }
+        }
+        let price_split = priceText.split(".");
+        let int = price_split[0], intClass;
+        let dec = price_split[1], decClass = "major-int";
+        let i;
+
+        let zeros = 0;
+        if (price > 1) {
+            for (i = dec.length - 1; i >= 0; i--) {
+                if (dec[i] !== "0") {
+                    break;
+                }
+                zeros++;
+            };
+        } else {
+            for (i = 0; i < dec.length; i++) {
+                if (dec[i] !== "0") {
+                    i--;
+                    break;
+                }
+                zeros++;
+            };
+        }
+        let trailing = zeros ? dec.substr(Math.max(0, i + 1), dec.length) : null;
+
+        if (trailing) {
+            if (trailing.length === dec.length) {
+                dec = null;
+            } else  if (trailing.length) {
+                dec = dec.substr(0, i + 1);
+            }
+        }
+
+        intClass = price < 1 ? "minor price-integer" : "price-integer";
+
+        return {
+            text: priceText,
+            int: int,
+            intClass: intClass,
+            dec: dec,
+            decClass: decClass,
+            trailing: trailing,
+            full: price
+        };
+    },
+
     get_op_type: function(object) {
         let type = parseInt(object.split(".")[1], 10);
 

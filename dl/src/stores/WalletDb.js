@@ -15,6 +15,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import chain_config from "chain/config"
 import ChainStore from "api/ChainStore"
+import AddressIndex from "stores/AddressIndex"
 
 var aes_private
 var transaction
@@ -26,7 +27,7 @@ class WalletDb extends BaseStore {
     
     constructor() {
         super()
-        this.state = { wallet: null }
+        this.state = { wallet: null, saving_keys: false }
         // Confirm only works when there is a UI (this is for mocha unit tests)
         this.confirm_transactions = true
         ChainStore.subscribe(this.checkNextGeneratedKey.bind(this))
@@ -34,7 +35,8 @@ class WalletDb extends BaseStore {
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
         this._export(
-            "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","importKeys","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData"
+            "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData",
+            "importKeysWorker"
         )
     }
     
@@ -334,54 +336,68 @@ class WalletDb extends BaseStore {
         //TODO .error( error => ErrorStore.onAdd( "wallet", "incrementBrainKeySequence", error ))
     }
     
-    /** WIF format
-    */
-    importKeys(private_key_objs) {
-        if(TRACE) console.log('... WalletDb.importKeys START')
-        return WalletUnlockActions.unlock().then( () => {
-            var transaction = this.transaction_update_keys()
-            var promises = []
-            var import_count = 0, duplicate_count = 0
-            if(TRACE) console.log('... importKeys save key loop start')
-            for(let private_key_obj of private_key_objs) {
-                
-                var wif = private_key_obj.wif || private_key_obj
-                if( ! wif) {
-                    console.log("ERROR WalletDb importKeys, key object missing WIF")
-                    continue
-                }
-                var private_key = PrivateKey.fromWif(wif)
-                promises.push(
-                    this.saveKey(
-                        private_key,
-                        null,//brainkey_sequence
-                        private_key_obj.import_account_names,
-                        private_key_obj.public_key_string,
-                        transaction
-                    ).then(
-                        ret => {
-                            if(ret.result == "duplicate") {
-                                duplicate_count++
-                            } else if(ret.result == "added") {
-                                import_count++
-                            } else
-                                throw new Error('unknown return',ret)
-                            return ret.id
-                        }
-                    )
-                )
-            }
-            if(TRACE) console.log('... importKeys save key loop done')
-            return this.setWalletModified(transaction).then( ()=> {
-                return Promise.all(promises).catch( error => {
-                    //DEBUG
-                    console.log('importKeys transaction.abort', error)    
-                    throw error
-                }).then( private_key_ids => {
-                    if(TRACE) console.log('... WalletDb.importKeys done')
-                    return {import_count, duplicate_count, private_key_ids}
-                })
+    importKeysWorker(private_key_objs) {
+        return new Promise( (resolve, reject) => {
+            var pubkeys = []
+            for(let private_key_obj of private_key_objs)
+                pubkeys.push( private_key_obj.public_key_string )
+            var addyIndexPromise = AddressIndex.addAll(pubkeys)
+            
+            var private_plainhex_array = []
+            for(let private_key_obj of private_key_objs)
+                private_plainhex_array.push( private_key_obj.private_plainhex )
+            var AesWorker = require("worker!workers/AesWorker")
+            var worker = new AesWorker
+            worker.postMessage({
+                private_plainhex_array,
+                key: aes_private.key, iv: aes_private.iv
             })
+            var _this = this
+            this.setState({ saving_keys: true })
+            worker.onmessage = event => { try {
+                console.log("Preparing for private keys save");
+                var private_cipherhex_array = event.data
+                var enc_private_key_objs = []
+                for(let i = 0; i < private_key_objs.length; i++) {
+                    var private_key_obj = private_key_objs[i]
+                    var {import_account_names, public_key_string, private_plainhex} = private_key_obj
+                    var private_cipherhex = private_cipherhex_array[i]
+                    if( ! public_key_string) {
+                        // console.log('WARN: public key was not provided, this will incur slow performance')
+                        var private_key = PrivateKey.fromHex(private_plainhex)
+                        var public_key = private_key.toPublicKey() // S L O W
+                        public_key_string = public_key.toPublicKeyString()
+                    } else
+                        if(public_key_string.indexOf(chain_config.address_prefix) != 0)
+                            throw new Error("Public Key should start with " + chain_config.address_prefix)
+                    
+                    var private_key_object = {
+                        import_account_names,
+                        encrypted_key: private_cipherhex,
+                        pubkey: public_key_string
+                        // null brainkey_sequence
+                    }
+                    enc_private_key_objs.push(private_key_object)
+                }
+                console.log("Saving private keys", new Date().toString());
+                var transaction = _this.transaction_update_keys()
+                var insertKeysPromise = idb_helper.on_transaction_end(transaction)
+                try {
+                    var duplicate_count = PrivateKeyStore
+                        .addPrivateKeys_noindex(enc_private_key_objs, transaction )
+                    if( private_key_objs.length != duplicate_count )
+                        _this.setWalletModified(transaction)
+                    _this.setState({saving_keys: false})
+                    resolve(Promise.all([ insertKeysPromise, addyIndexPromise ]).then( ()=> {
+                        console.log("Done saving keys", new Date().toString())
+                        // return { duplicate_count }
+                    }))
+                } catch(e) {
+                    transaction.abort()
+                    console.error(e)
+                    reject(e)
+                }
+            } catch( e ) { console.error('AesWorker.encrypt', e) }}
         })
     }
     

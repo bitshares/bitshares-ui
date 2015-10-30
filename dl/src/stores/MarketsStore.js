@@ -220,6 +220,7 @@ class MarketsStore {
         }
 
         if (result.history) {
+            this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
                 // console.log("order:", order);
                 order.op.time = order.time;
@@ -463,6 +464,7 @@ class MarketsStore {
                 let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
                 bids.push({
                     value: value,
+                    price: price,
                     price_full: price.full,
                     price_dec: price.dec,
                     price_int: price.int,
@@ -570,6 +572,7 @@ class MarketsStore {
                 let {value, price, amount} = priceData;
                 calls.push({
                     value: value,
+                    price: price,
                     price_full: price.full,
                     price_dec: price.dec,
                     price_int: price.int,
@@ -607,6 +610,7 @@ class MarketsStore {
                 let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
                 asks.push({
                     value: value,
+                    price: price,
                     price_full: price.full,
                     price_dec: price.dec,
                     price_int: price.int,

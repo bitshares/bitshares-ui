@@ -48,6 +48,11 @@ cd ../ios; npm install
 cd ../web; npm install
 ```
 
+There is optional bloom filter that will greatly reduce the size of BTS 0.9.x wallet imports.  Go to the ./web folder and run:
+```
+wget https://github.com/bitshares/bitshares-js/releases/download/vBTS2_bloom_filter/bts_genesiskeys_bloom.dat -O app/assets/bts_genesiskeys_bloom.dat
+```
+
 ## Run it
 
 Once all the packages have been installed you can launch the web gui by going to the ./web folder and running::

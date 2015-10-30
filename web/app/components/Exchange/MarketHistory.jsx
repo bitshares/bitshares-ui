@@ -5,6 +5,7 @@ import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import market_utils from "common/market_utils";
+import PriceText from "../Utility/PriceText";
 
 class MarketHistory extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -52,10 +53,12 @@ class MarketHistory extends React.Component {
                 }
 
                 let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
-
+                debugger;
                 return (
                     <tr key={keyIndex}>
-                        <td className={parsed_order.className}><span className="price-integer">{parsed_order.int}</span>.<span className="price-decimal">{parsed_order.dec}</span></td>
+                        <td className={parsed_order.className}>
+                            <PriceText preFormattedPrice={parsed_order} />
+                        </td>
                         <td>{parsed_order.receives}</td>
                         <td>{parsed_order.pays}</td>
                         <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
