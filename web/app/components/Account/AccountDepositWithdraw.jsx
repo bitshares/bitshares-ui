@@ -203,7 +203,6 @@ class AccountDepositWithdraw extends React.Component {
                        </tr>
                        </thead>
                        <tbody>
-                       {
                          <BlockTradesDepositRequest 
                                 gateway="openledger"
                                 url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
@@ -214,25 +213,27 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="btc"
                                 deposit_asset_name="Bitcoin"
                                 receive_coin_type="openbtc" />
-                          
-                          /*
                          <BlockTradesDepositRequest 
-                                url="https://ccedk.com:443/api/v2/simple-api"
-                                issuer_account="ccedk"
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                issuer_account="openledger-wallet"
                                 account={this.props.account.get('name')} 
-                                receive_asset="CCEDK.BTC"
-                                deposit_asset="BTC"
-                                deposit_coin_type="btc"
-                                receive_coin_type="ccedk.btc" />
-                         <BlockTradesDepositRequest 
-                                url="https://ccedk.com:443/api/v2/simple-api"
-                                issuer_account="ccedk"
-                                account={this.props.account.get('name')} 
-                                deposit_coin_type="ltc"
+                                receive_asset="OPENLTC"
                                 deposit_asset="LTC"
-                                receive_asset="CCEDK.LTC"
-                                receive_coin_type="ccedk.ltc" />
-                                */}
+                                deposit_coin_type="ltc"
+                                deposit_asset_name="Litecoin"
+                                receive_coin_type="openltc" />
+                         <BlockTradesDepositRequest 
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account.get('name')} 
+                                receive_asset="OPENDOGE"
+                                deposit_asset="DOGE"
+                                deposit_coin_type="doge"
+                                deposit_asset_name="Dogecoin"
+                                receive_coin_type="opendoge" />
+                          
                        </tbody>
                    </table>
                </div>
