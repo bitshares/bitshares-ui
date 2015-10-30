@@ -3,6 +3,8 @@ import {PropTypes} from "react";
 import Highcharts from "react-highcharts/highstock";
 import utils from "common/utils";
 
+require("./highstock-current-price-indicator.js")
+
 class Chart {
     shouldComponentUpdate(nextProps) {
         return (
@@ -45,7 +47,7 @@ class PriceChart extends React.Component {
 
     render() {
         let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote} = this.props;
-        let {open, close, lastPointY} = this.state;
+        // let {open, close, lastPointY} = this.state;
 
         let maxVolume = 0;
         let volumeColors = [], colorByPoint = false;
@@ -147,12 +149,12 @@ class PriceChart extends React.Component {
                         return "";
                     }
                     // if ((this.points[0].point && this.points[0].point.open) && (this.points[1].point && this.points[1].point.y)) {
-                    return ("<span style='color: white;fill: white'>T:" + time +
-                            "&nbsp;&nbsp;&nbsp;O:" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;H:" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;L:" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;C:" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;V:" + Highcharts.Highcharts.numberFormat(this.points[1].point.y, vol_dec, ".", ",") + " " +
+                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time +
+                            "&nbsp;&nbsp;&nbsp;<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>C:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1].point.y, vol_dec, ".", ",") + " " +
                             quoteSymbol + TA + "</span>");
                     // }
                     // else if this.points.length == 1 && this.points[0] && this.points[0].point.open
@@ -164,7 +166,7 @@ class PriceChart extends React.Component {
                     // }
                 },
                 positioner: function () {
-                    return { x: 200, y: -5 };
+                    return { x: 250, y: -5 };
                 }
             },
             series: [
@@ -200,11 +202,28 @@ class PriceChart extends React.Component {
                     },
                     top: "0%",
                     height: "70%",
-                    offset: 23,
+                    offset: 5,
                     gridLineWidth: 0,
                     plotLines: [],
                     crosshair: {
                         snap: false
+                    },
+                    currentPriceIndicator: {
+                        precision: base.get("precision"),
+                        backgroundColor: '#000000',
+                        borderColor: '#000000',
+                        lineColor: '#000000',
+                        lineDashStyle: 'Solid',
+                        lineOpacity: 0.6,
+                        enabled: true,
+                        style: {
+                            color: '#ffffff',
+                            fontSize: '12px'
+                        },
+                        x: -30,
+                        y: 0,
+                        zIndex: 7,
+                        width: 80
                     }
                 },
                 {

@@ -296,12 +296,6 @@ a.order-cancel {
     padding-top: 1.3rem;
 }
 
-.button.bucket-button {
-  text-transform: none !important;
-  background-color: #616161 !important;
-  font-size: 0.75rem !important;
-}
-
 .active-bucket {
   font-size: 0.75rem !important;
   background-color: lighten($light-panel-bg-color, 12%);
@@ -310,6 +304,7 @@ a.order-cancel {
 
 .bucket-option {
   cursor: pointer;
+  text-transform: none !important;
 }
 
 .buy-sell-row {
