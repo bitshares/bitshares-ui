@@ -540,7 +540,9 @@ class Exchange extends React.Component {
             combinedBids = bids;
         }
 
-        lowestAsk = combinedAsks.length > 0 ? combinedAsks.reduce((a, b) => {
+        lowestAsk = combinedAsks.length === 1 ?
+            combinedAsks[0].price_full : combinedAsks.length > 1 ?
+            combinedAsks.reduce((a, b) => {
             if (a.price_full) {
                 return a.price_full <= b.price_full ? a.price_full : b.price_full;
            } else {
@@ -548,7 +550,9 @@ class Exchange extends React.Component {
            }
         }) : 0;
 
-        highestBid = combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
+        highestBid = combinedBids.length === 1 ?
+        combinedBids[0].price_full :
+        combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
             return a >= b.price_full ? a : b.price_full;
         }, 0) : 0;
 
