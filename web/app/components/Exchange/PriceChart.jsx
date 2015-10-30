@@ -68,26 +68,29 @@ class PriceChart extends React.Component {
                 },
                 pinchType: "x",
                 spacing: [10, 10, 5, 10],
-                events: {
-                    redraw: (e) => {
-                        if (e.target.series[0].points.length > 0) {
-                            let point = e.target.series[0].points[e.target.series[0].points.length - 1];
-                            this.setState({lastPointY: e.target.plotTop + e.target.yAxis[0].toPixels(point.close, true),
-                                        close: point.close,
-                                        open: point.open
-                                    });
-                        }
-                    },
-                    load: (e) => {
-                        if (e.target.series[0].points.length > 0) {
-                            let point = e.target.series[0].points[e.target.series[0].points.length - 1];
-                            this.setState({lastPointY: e.target.plotTop + e.target.yAxis[0].toPixels(point.close, true),
-                                        close: point.close,
-                                        open: point.open
-                                    });
-                        }
-                    }
-                }
+                // events: {
+                    // redraw: (e) => {
+                    //     debugger;
+                    //     console.log("e:", e.target.series);
+                    //     if (e.target.series[0] && e.target.series[0].points.length > 0) {
+                    //         let point = e.target.series[0].points[e.target.series[0].points.length - 1];
+                    //         this.setState({
+                    //             lastPointY: e.target.plotTop + e.target.yAxis[0].toPixels(point.close, true),
+                    //             close: point.close,
+                    //             open: point.open
+                    //         });
+                    //     }
+                    // }
+                    // load: (e) => {
+                    //     if (e.target.series[0].points.length > 0) {
+                    //         let point = e.target.series[0].points[e.target.series[0].points.length - 1];
+                    //         this.setState({lastPointY: e.target.plotTop + e.target.yAxis[0].toPixels(point.close, true),
+                    //                     close: point.close,
+                    //                     open: point.open
+                    //                 });
+                    //     }
+                    // }
+                // }
             },
             title: {
                 text: null
@@ -134,7 +137,6 @@ class PriceChart extends React.Component {
                 shadow: false,
                 useHTML: true,
                 padding: 0,
-                crosshairs: [true, true],
                 // pointFormat: " O: {point.open:.4f} H: {point.high:.4f} L: {point.low:.4f} C: {point.close:.4f}"
                 formatter: function () {
                     let price_dec = base.get("precision");
@@ -200,7 +202,10 @@ class PriceChart extends React.Component {
                     height: "70%",
                     offset: 23,
                     gridLineWidth: 0,
-                    plotLines: []
+                    plotLines: [],
+                    crosshair: {
+                        snap: false
+                    }
                 },
                 {
                     labels: {
@@ -289,19 +294,19 @@ class PriceChart extends React.Component {
 
         let boxHeight = 20;
         
-        let currentValue = open <= close ?
-            (<div
-                className="chart-label"
-                style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", right: "5px", top: lastPointY - 2 + boxHeight / 2}}
-            >
-                {utils.format_number(close, 1 + quote.get("precision"))}
-            </div>) :
-            (<div
-                className="chart-label"
-                style={{height: boxHeight, backgroundColor: "#E3745B", right: "5px",  top: lastPointY - 2 + boxHeight / 2}}
-            >
-                {utils.format_number(close, 1 + quote.get("precision"))}
-            </div>);
+        // let currentValue = open <= close ?
+        //     (<div
+        //         className="chart-label"
+        //         style={{height: boxHeight, color: "#000000", backgroundColor: "#50D2C2", right: "5px", top: lastPointY - 2 + boxHeight / 2}}
+        //     >
+        //         {utils.format_number(close, 1 + quote.get("precision"))}
+        //     </div>) :
+        //     (<div
+        //         className="chart-label"
+        //         style={{height: boxHeight, backgroundColor: "#E3745B", right: "5px",  top: lastPointY - 2 + boxHeight / 2}}
+        //     >
+        //         {utils.format_number(close, 1 + quote.get("precision"))}
+        //     </div>);
 
         // let addLine = function(yPos, color) {
         //     return <span style={{position: "absolute", top: yPos, border: "solid 1px " + color, width: "500px", borderBottom: "0"}}></span>;
@@ -309,9 +314,6 @@ class PriceChart extends React.Component {
 
         return (
             <div className="grid-content no-padding no-overflow middle-content">
-                <div style={{position: "relative"}}>
-                    {currentValue}
-                </div>
                 <div style={{paddingTop: "1.5rem", paddingBottom: "0.5rem"}}>
                     {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} /> : null}
                 </div>

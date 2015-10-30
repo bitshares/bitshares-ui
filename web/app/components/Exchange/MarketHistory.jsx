@@ -11,7 +11,7 @@ class MarketHistory extends React.Component {
         return (
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
-            nextProps.quoteSymbol !== this.props.quoteSymbol 
+            nextProps.quoteSymbol !== this.props.quoteSymbol
         );
     }
 
@@ -43,20 +43,21 @@ class MarketHistory extends React.Component {
                 let paysAsset, receivesAsset, isAsk = false;
                 if (order.pays.asset_id === base.get("id")) {
                     paysAsset = base;
-                    receivesAsset = quote;                    
+                    receivesAsset = quote;
+                    isAsk = true;
+
                 } else {
                     paysAsset = quote;
                     receivesAsset = base;
-                    isAsk = true;                    
                 }
 
                 let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
-               
+
                 return (
                     <tr key={keyIndex}>
                         <td className={parsed_order.className}><span className="price-integer">{parsed_order.int}</span>.<span className="price-decimal">{parsed_order.dec}</span></td>
-                        <td>{parsed_order.pays}</td>
                         <td>{parsed_order.receives}</td>
+                        <td>{parsed_order.pays}</td>
                         <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
                     </tr>
                 );

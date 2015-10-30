@@ -43,6 +43,7 @@ import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/Exist
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
+import CachedPropertyStore from "stores/CachedPropertyStore"
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
@@ -123,6 +124,16 @@ class App extends React.Component {
     // }
 
     render() {
+        if( ! this.backup_recommended_warned ) {
+            this.backup_recommended_warned = true
+            setTimeout(()=> {
+                if( CachedPropertyStore.get("backup_recommended") ||
+                    ! WalletDb.getWallet().backup_date ) {
+                    alert("Please understand that you are responsible for making your own backup...")
+                    
+                }
+            }, 2500)
+        }
         if (this.context.router.getCurrentPath() === "/init-error") { // temporary, until we implement right offline mode
             return (
                 <div className="grid-frame vertical">

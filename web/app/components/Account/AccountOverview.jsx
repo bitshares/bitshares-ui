@@ -43,6 +43,10 @@ class AccountOverview extends React.Component {
 
         if (account_balances) {
             account_balances.forEach( balance => {
+                let balanceAmount = ChainStore.getObject(balance);
+                if (!balanceAmount.get("balance")) {
+                    return null;
+                }
                 balanceList = balanceList.push(balance);
                 balances[balance] = (
                     <tr key={balance}>

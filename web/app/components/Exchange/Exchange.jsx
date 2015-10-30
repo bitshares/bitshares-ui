@@ -176,9 +176,7 @@ class Exchange extends React.Component {
             }
         }
 
-
-
-        if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol")) {
+        if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
 
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
@@ -558,17 +556,18 @@ class Exchange extends React.Component {
 
         // Latest price
         if (activeMarketHistory.size) {
-            let latest_two = activeMarketHistory.takeLast(3);
-            let latest = latest_two.last();
-            let second_latest = latest_two.first();
+            // Orders come in pairs, first is driver. Third entry is first of second pair.
+            let latest_two = activeMarketHistory.take(3);
+            let latest = latest_two.first();
+            let second_latest = latest_two.last();
             let paysAsset, receivesAsset, isAsk = false;
             if (latest.pays.asset_id === base.get("id")) {
                 paysAsset = base;
                 receivesAsset = quote;                    
+                isAsk = true;                    
             } else {
                 paysAsset = quote;
                 receivesAsset = base;
-                isAsk = true;                    
             }
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             latestPrice = market_utils.parse_order_history(latest, paysAsset, receivesAsset, isAsk, flipped);
@@ -702,7 +701,7 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.latest" />
                                                     <br/>
-                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.price_full, Math.max(5, quote ? quote.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>                                                    
+                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.price_full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>                                                    
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>

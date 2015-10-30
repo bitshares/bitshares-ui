@@ -4,6 +4,7 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
+import {operations} from "chain/chain_types";
 
 function compareOps(b, a) {
     if(a.block_num < b.block_num) return -1;
@@ -51,7 +52,7 @@ class RecentTransactions extends React.Component {
     }
 
     render() {
-        let {accountsList, compactView} = this.props;
+        let {accountsList, compactView, filter} = this.props;
         let {limit} = this.state;
         let history = [];
         let current_account = null, current_account_id = null;
@@ -66,6 +67,12 @@ class RecentTransactions extends React.Component {
             }
         }
         let historyCount = history.length;
+
+        if (filter) {
+            history = history.filter(a => {
+                return a.op[0] === operations[filter];
+            });
+        }
 
         if(accounts_counter === 1 && current_account) current_account_id = current_account.get("id");
         history = history

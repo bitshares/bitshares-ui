@@ -72,7 +72,7 @@ class Footer extends React.Component {
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     { this.props.backup_recommended ? <span>
                         <div className="grid-block">
-                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup recommended</a>
+                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup Required</a>
                             &nbsp;&nbsp;
                         </div>
                     </span> : null}
@@ -109,13 +109,14 @@ class AltFooter extends Component {
         return <AltContainer
             stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
             inject ={{
-                backup_recommended: ()=> CachedPropertyStore.get("backup_recommended"),
-                rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status,
-                backup_brainkey_recommended: ()=> {
-                    var wallet = WalletDb.getWallet()
-                    if( ! wallet ) return undefined
-                    return wallet.brainkey_sequence !== 0 && wallet.brainkey_backup_date == null
-                }
+                backup_recommended: ()=> ! !!WalletDb.getWallet().backup_date || CachedPropertyStore.get("backup_recommended"),
+                rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
+                // Disable notice for separate brainkey backup for now to keep things simple.  The binary wallet backup includes the brainkey...
+                // backup_brainkey_recommended: ()=> {
+                //     var wallet = WalletDb.getWallet()
+                //     if( ! wallet ) return undefined
+                //     return wallet.brainkey_sequence !== 0 && wallet.brainkey_backup_date == null
+                // }
             }}
             ><Footer {...this.props}/>
         </AltContainer>

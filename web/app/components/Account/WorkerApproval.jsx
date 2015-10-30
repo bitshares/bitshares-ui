@@ -49,39 +49,60 @@ class WorkerApproval extends React.Component{
 
    render() {
       let worker = this.props.worker.toJS();
-      console.log( "render...", worker);
+      // console.log( "render...", worker);
       let total_votes = worker.total_votes_for - worker.total_votes_against; 
       let total_days = 1;
-      let approval = "Neutral"
+      let approval = counterpart.translate("account.votes.status.neutral");
 
-      console.log( "this.props.vote_ids: ", this.props.vote_ids )
+      // console.log( "this.props.vote_ids: ", this.props.vote_ids )
       if( this.props.vote_ids.has( worker.vote_for ) && !this.props.vote_ids.has( worker.vote_against ) ) {
-         approval = "Support"
+         approval = counterpart.translate("account.votes.status.supported");
       } else if( !this.props.vote_ids.has( worker.vote_for ) && this.props.vote_ids.has( worker.vote_against ) ) {
-         approval = "Reject"
+         approval = counterpart.translate("account.votes.status.rejected");
       }
-      console.log( "worker: ", worker );
+      // console.log( "worker: ", worker );
 
       return  (
-      <div>
-         <span> <LinkToAccountById account={worker.worker_account} /> </span>
-         <span> {worker.name} </span>
-         <div> {worker.url} </div>
-         Total Votes: <FormattedAsset amount={total_votes} asset="1.3.0" /><br/>
-         Daily Pay: <FormattedAsset amount={worker.daily_pay} asset="1.3.0" /><br/>
-         Max Total Pay: <FormattedAsset amount={worker.daily_pay*total_days} asset="1.3.0" /><br/>
-         Unclaimed Pay: <VestingBalance balance={worker.worker[1].balance} /> <br/>
-         Status: {approval} <br/>
-         
+      <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
+         <div className="card">
+            <div className="card-divider text-center info">
+               <span> {worker.name} </span>
+            </div>
+            <div className="card-section">
+            <ul >
+               <li>
+                  <span><Translate content="account.votes.worker_account" />:&nbsp;<LinkToAccountById account={worker.worker_account} /> </span>
+               </li>
+               <li>
+                  <div><Translate content="account.votes.url" />:&nbsp;{worker.url} </div>
+               </li>
+               <li>
+                  <Translate content="account.votes.total_votes" />: <FormattedAsset amount={total_votes} asset="1.3.0" /><br/>
+               </li>
+               <li>
+                  <Translate content="account.votes.daily_pay" />: <FormattedAsset amount={worker.daily_pay} asset="1.3.0" /><br/>
+               </li>
+               <li>
+                  <Translate content="account.votes.max_pay" />: <FormattedAsset amount={worker.daily_pay*total_days} asset="1.3.0" /><br/>
+               </li>
+               <li>
+                  <Translate content="account.votes.unclaimed" />: <VestingBalance balance={worker.worker[1].balance} /> <br/>
+               </li>
+               <li>
+                  <Translate content="account.votes.status.title" />: {approval} <br/>
+               </li>
+            </ul>
+            </div>
 
-         <button className="button outline" onClick={this.onApprove.bind(this)}>
-            <Translate content="account.votes.approve_worker"/>
-         </button>
+            <button className="button outline" onClick={this.onApprove.bind(this)}>
+               <Translate content="account.votes.approve_worker"/>
+            </button>
 
-         <button className="button outline" onClick={this.onReject.bind(this)}>
-            <Translate content="account.votes.reject_worker"/>
-         </button>
+            <button className="button outline" onClick={this.onReject.bind(this)}>
+               <Translate content="account.votes.reject_worker"/>
+            </button>
 
+         </div>
       </div>
       )
    }

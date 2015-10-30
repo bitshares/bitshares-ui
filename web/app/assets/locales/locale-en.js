@@ -110,7 +110,19 @@
             add_committee_label: "Committee Member",
             add_witness_label: "Witness",
             approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal"
+            reject_worker: "Reject worker proposal",
+            worker_account: "Worker account",
+            total_votes: "Total votes",
+            votes_against: "Votes against",
+            daily_pay: "Daily pay",
+            max_pay: "Maximum total pay",
+            unclaimed: "Unclaimed pay",
+            status: {
+                title: "Status",
+                supported: "Supported",
+                rejected: "Rejected",
+                neutral: "Neutral"
+            }
         },
         options: {
             num_witnesses: "Desired Witnesses",
@@ -213,7 +225,7 @@
         update_feed_producers: "pdated the feed producers of asset",
         feed_producer: "Became a feed producer for the asset",
         feed_price: "Feed price",
-        asset_issue: "Issued",
+        asset_issue: "issued",
         was_issued: "Was issued",
         by: "by",
         burn_asset: "Burnt",
@@ -261,6 +273,9 @@
         publisher: "Publisher",
         market_fee: "Market fee",
         max_market_fee: "Maximum market fee",
+        blinding_factor: "Blinding factor",
+        outputs: "Outputs",
+        inputs: "Inputs",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -300,7 +315,10 @@
             custom: "Custom",
             assert: "Assert operation",
             balance_claim: "Claim balance",
-            override_transfer: "Override transfer"
+            override_transfer: "Override transfer",
+            transfer_to_blind: "Transfer to blinded account",
+            blind_transfer: "Blinded transfer",
+            transfer_from_blind: "Transfer from blinded account"
         }
     },
     explorer: {

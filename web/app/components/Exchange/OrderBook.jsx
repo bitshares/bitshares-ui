@@ -162,7 +162,7 @@ class OrderBook extends React.Component {
                 if (order.price_full < high / 5) {
                     return null;
                 }
-                return (horizontal ? 
+                return (horizontal ?
                     <OrderBookRowHorizontal
                         key={order.price_full}
                         order={order}
@@ -296,7 +296,7 @@ class OrderBook extends React.Component {
                                 {askRows}
                                 <tr onClick={this._centerView.bind(this)} key="spread" className="orderbook-latest-price" ref="centerRow">
                                     <td colSpan="3" className="text-center spread">
-                                        <Translate content="exchange.latest" />: {this.props.latest ? <span>{utils.format_number(this.props.latest.price_full, Math.max(5, quote ? quote.get("precision") : 0))} {baseSymbol}/{quoteSymbol}</span> : null}
+                                        <Translate content="exchange.latest" />: {this.props.latest ? <span>{utils.format_number(this.props.latest.price_full, Math.max(5, base ? base.get("precision") : 0))} {baseSymbol}/{quoteSymbol}</span> : null}
                                     </td>
                                 </tr>
                                 {bidRows}

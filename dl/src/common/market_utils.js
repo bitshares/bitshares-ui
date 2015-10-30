@@ -209,11 +209,10 @@ class MarketUtils {
         receives = utils.format_number(receives, receivesAsset.get("precision") - 1);
         let pays = order.pays.amount / payPrecision;
         pays = utils.format_number(pays, paysAsset.get("precision") - 1);
-        let price_full = utils.format_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, true);
-        price_full = !flipped ? (1 / price_full) : price_full;
+        let price_full = utils.get_asset_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, isAsk);
+        // price_full = !flipped ? (1 / price_full) : price_full;
         let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
         let className = isCall ? "orderHistoryCall" : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
-
         let time = order.time.split("T")[1];
         let now = new Date();
         let offset = now.getTimezoneOffset() / 60;
