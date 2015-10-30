@@ -26,7 +26,7 @@ export default class BalanceClaimAssetTotals extends Component {
             .map( l => l.reduce( (r,v) => r + Number(v.balance.amount), 0 ))
 
         if( ! total_by_asset.size)
-            return <div>No Balances</div>
+            return <div>None</div>
         
         return <div>
             {total_by_asset.map( (total, asset_id) =>
