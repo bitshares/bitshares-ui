@@ -339,7 +339,7 @@ export default class ImportKeys extends Component {
                 
                 var account_keys = unfiltered_account_keys
                 genesis_filter.filter( account_keys, status => {
-                    console.log("import filter", status)
+                    //console.log("import filter", status)
                     if( status.error === "missing_public_keys" ) {
                         console.error("un-released format, just for testing")
                         update_state({ password_checksum, account_keys: unfiltered_account_keys,
