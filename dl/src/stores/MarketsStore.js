@@ -216,6 +216,7 @@ class MarketsStore {
         }
 
         if (result.history) {
+            this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
                 // console.log("order:", order);
                 order.op.time = order.time;
