@@ -1,8 +1,8 @@
 # Graphene Yardım
 
-BitShares 2.0 is a Financial Smart Contracts platform that is based on the
-[Graphene](https://github.com/cryptonomex/graphene) technology built by
-[Cryptonomex](http://cryptonomex.com). You can see Graphene as a toolkit or
+BitShares 2.0 , [Cryptonomex](http://cryptonomex.com) tarafından inşa edilmiş olan
+[Graphene](https://github.com/cryptonomex/graphene) teknolojisine dayanan bir 
+Finansal Akıllı Kontratları platformudur. Graphene'i  gerçek-zamanlı blokzincirleri için 
 technology for real-time blockchains.
 
 This help section gives a brief overview and describes the most basic concepts
