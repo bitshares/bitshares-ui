@@ -30,41 +30,37 @@ $light-panel-bg-color: #353742;
 }
 
 td.orderHistoryBid {
-  > span.price-integer {
+  > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $bid-color;
   }
 
-  > span.price-decimal {
+  > span.price-decimal, > span > span.price-decimal {
     color: #e0e0e0;
-    font-size: 90%;
     opacity: 0.6;
-
   }
 }
 
 td.orderHistoryAsk {
-  > span.price-integer {
+  > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $ask-color;
   }
 
-  > span.price-decimal {
+  > span.price-decimal, > span >span.price-decimal {
     color: #e0e0e0;
-    font-size: 90%;
     opacity: 0.6;
   }
 }
 
 td.orderHistoryCall {
-  > span.price-integer {
+  > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $call-color;
   }
 
-  > span.price-decimal {
+  > span.price-decimal, > span >span.price-decimal {
     color: #e0e0e0;
-    font-size: 90%;
     opacity: 0.6;
   }
 }
@@ -296,12 +292,6 @@ a.order-cancel {
     padding-top: 1.3rem;
 }
 
-.button.bucket-button {
-  text-transform: none !important;
-  background-color: #616161 !important;
-  font-size: 0.75rem !important;
-}
-
 .active-bucket {
   font-size: 0.75rem !important;
   background-color: lighten($light-panel-bg-color, 12%);
@@ -310,6 +300,7 @@ a.order-cancel {
 
 .bucket-option {
   cursor: pointer;
+  text-transform: none !important;
 }
 
 .buy-sell-row {

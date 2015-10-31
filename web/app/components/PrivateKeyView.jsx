@@ -27,8 +27,6 @@ export default class PrivateKeyView extends Component {
         var modalId = "key_view_modal" + this.props.pubkey
         let modal = React.findDOMNode(this.refs[modalId])
         ZfApi.subscribe(modalId, (name, msg) => {
-            //DEBUG 
-            console.log('... name, msg',name, msg)
             if(name !== modalId) return
             if(msg === "close") this.reset()
         })

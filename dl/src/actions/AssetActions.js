@@ -14,7 +14,9 @@ class AssetActions {
     createAsset(account_id, createObject) {
         // Create asset action here...
         console.log("create asset:", createObject);
-        var tr = wallet_api.new_transaction();
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(createObject.precision);
+
         tr.add_type_operation("asset_create", {
             "fee": {
                 amount: 0,
@@ -24,9 +26,9 @@ class AssetActions {
             "symbol": createObject.symbol,
             "precision": parseInt(createObject.precision, 10),
             "common_options": {
-                "max_supply": createObject.max_supply,
-                "market_fee_percent": 0,
-                "max_market_fee": "0",
+                "max_supply": createObject.max_supply * precision,
+                "market_fee_percent": createObject.common_options.market_fee_percent * 100 || 0,
+                "max_market_fee": createObject.common_options.max_market_fee * precision || 0,
                 "issuer_permissions": 79,
                 "flags": 0,
                 "core_exchange_rate": {

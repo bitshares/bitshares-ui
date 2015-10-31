@@ -8,6 +8,8 @@ import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import RecentTransactions from "../Account/RecentTransactions";
+import Immutable from "immutable";
 
 class Transfer extends React.Component {
 
@@ -123,9 +125,13 @@ class Transfer extends React.Component {
         if(!this.state.from_account || !this.state.to_account || !this.state.amount || this.state.amount === "0" || !this.state.asset || from_error)
             submitButtonClass += " disabled";
 
+        let accountsList = Immutable.Set();
+        accountsList = accountsList.add(this.state.from_account)
+
         return (
-            <form className="grid-block vertical full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                <div className="grid-container large-5 medium-7 small-11" style={{paddingTop: "2rem"}}>
+            <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
+            <form className="grid-block large-5 large-offset-1 medium-6 small-12 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+                <div className="grid-content no-overflow">
                     {/*  F R O M  */}
                     <div className="content-block">
                         <AccountSelector label="transfer.from"
@@ -175,6 +181,18 @@ class Transfer extends React.Component {
                 </div>
 
             </form>
+            <div className="grid-block medium-6 large-5 small-12 right-column">
+                <div className="grid-content">
+                    <h4><Translate content="account.recent" /></h4>
+                    <RecentTransactions
+                        accountsList={accountsList}
+                        limit={25}
+                        compactView={true}
+                        filter="transfer"
+                    />
+                </div>
+            </div>
+            </div>
         );
     }
 }

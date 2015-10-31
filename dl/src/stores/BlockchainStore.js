@@ -2,7 +2,6 @@ var Immutable = require("immutable");
 var alt = require("../alt-instance");
 var BlockchainActions = require("../actions/BlockchainActions");
 import BaseStore from "./BaseStore";
-import {operations} from "chain/chain_types";
 import ChainStore from "../api/ChainStore";
 
 import {
@@ -30,29 +29,10 @@ class BlockchainStore extends BaseStore{
             onUpdateRpcConnectionStatus: BlockchainActions.updateRpcConnectionStatus
         });
 
-        this._export("getFee");
-
         this.maxBlocks = 100;
     }
 
-    getFee(op_type, options) {
-        let op_code = operations[op_type];
 
-        let currentFees = this.globalObject.parameters.current_fees.parameters[op_code][1];
-
-        let fee = 0;
-        if (currentFees.fee) {
-            fee += currentFees.fee;
-        }
-
-        if (options) {
-            for (let option of options) {
-                fee += currentFees[option];
-            }
-        }
-
-        return fee;
-    }
 
     onGetBlock(block) {
         if (!this.blocks.get(block.id)) {
