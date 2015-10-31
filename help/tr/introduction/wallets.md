@@ -1,6 +1,6 @@
 # Cüzdan
 
-Şu ana kadar farketmiş olduğunuz gibi bu uygulama bir web uygulamasıdır ve 
+Şu ana kadar farketmiş olduğunuz gibi bu uygulama bir web uygulamasıdır ve tarayacı içerisinde çalışır. Ekosistemin geri kalanına geçit görevi gören , ağda bulunan güvenilir bir boğumla(node) bağlantı kurar.
 tarayacı içerisinde çalışır. Ekosistemin geri kalanına geçit görevi gören , ağda bulunan  
 güvenilir bir boğumla(node) bağlantı kurar.
 
@@ -9,7 +9,7 @@ güvenilir bir boğumla(node) bağlantı kurar.
 İçiniz rahat olsun , sunucularımızın fonlarınıza erişimi mümkün değildir, çünkü özel 
 anahtarlarınızın hiçbiri asla tarayıcınızdan ayrılmazlar. Onun yerine , parola cümlenizle 
 kriptolanmış vaziyette yerel tarayıcınızın veritabanında saklı tutulurlar.
-Dolayısıyla, bilgisayar arızaları ve tarayıcı çökmelerine karşı uygun yedeklemeyi [Backup](../introduction/backups.md) mutlaka yapmayı ihmal etmeyin. 
+Dolayısıyla, bilgisayar arızaları ve tarayıcı çökmelerine karşı uygun yedeklemeyi 
 [Backup](../introduction/backups.md) mutlaka yapmayı ihmal etmeyin. 
 
 ## Cüzdan Yönetimi
