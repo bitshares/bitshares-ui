@@ -14,16 +14,16 @@ gerekmektedir.
 BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemlere yetki veren bir veya 
 daha çok sayıda kişiden oluşur.
 
-Bir yetki , bir yada daha fazla sayıda hesap adı ve*ağırlık* çiftinden oluşur.
-birçok hesap adı çiftinden oluşur.
+Bir yetki , bir yada daha fazla sayıda hesap adı ve*ağırlık* 
+çiftinden oluşur.
 
-Geçerli bir işlem elde edebilmek için , tarafların imzalanmasından gelen ağırlıkların 
-toplamı yetkiler bölümünde belirlenen alt-sınırı geçmesi gerekmektedir.
+Geçerli bir işlem elde edebilmek için , imzalayan tarafların ağırlıklarının toplamı 
+izinlerde belirlenmiş olan alt-sınırı geçiyor olması gerekir.  
 
 # Örnekler
 
 Birkaç örneğe bakarak kullanılan terminolojiye ve kullanım senaryolarına ışık tutalım. 
-Aşağıda verilen etkin izinlere sahip yeni bir hesap oluşturulduğunu farz 
+Aşağıda tanımlanmış etkin izinlerle yeni bir hesap oluşturulduğunu farz edelim. 
 ediyoruz.  Aynı tertibin aynı zamanda sahip izinleri için de aynı şekilde işe yaradığına 
 dikkatinizi  çekeriz!
 
