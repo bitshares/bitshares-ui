@@ -11,6 +11,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
+import PriceText from "../Utility/PriceText";
 
 class TableHeader extends React.Component {
 
@@ -98,9 +99,7 @@ class OrderRow extends React.Component {
             return (
                 <tr key={order.id}>
                     <td className={tdClass}>
-                        <span className="price-integer">{price.int}</span>
-                        .
-                        <span className="price-decimal">{price.dec}</span>
+                        <PriceText preFormattedPrice={price} />
                         {priceSymbol}
                     </td>
                     <td>{utils.format_number(amount, base.get("precision"))} {amountSymbol}</td>
