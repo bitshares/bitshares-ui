@@ -9,9 +9,9 @@ Her ikisi de hesabınızın 'Yetkiler' sekmesi içinde *yetkililer* (aşağıda)
   ve bir işlemin geçerli sayılabilmesi için aşılması gerekli  olan *eşik*  kullanılarak 
 belirtilebilir.
 
-## Merciler
+## Yetkililer
 
-BitShares'de bir *merci*,  transfer veya alım-satım gibi işlemleri yetkilendiren bir veya 
+BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemleri yetkilendiren bir veya 
 daha çok sayıda kişiden oluşur.
 
 Bir merci , *ağırlığı* olan bir veya 
