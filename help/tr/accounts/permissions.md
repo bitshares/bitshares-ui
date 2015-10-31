@@ -1,11 +1,11 @@
-# Yetkiler
+# İzinler
 
 BitShares'de , her hesap ikiye ayrılır 
 
 * **Etkin  İzin**: fonların yönetimi 
-* **Sahip Yetkisi**: hesap yönetimi.
+* **Sahip İzni**: hesap yönetimi.
 
-Her ikisi de hesabınızın 'Yetkiler' sekmesi içinde *yetkililer* (aşağıda)
+Her ikisi de hesabınızın 'İzinler' sekmesi içinde *izinler* (aşağıda)
   ve bir işlemin geçerli sayılabilmesi için aşılması gerekli  olan *eşik*  kullanılarak 
 belirtilebilir.
 
@@ -14,17 +14,17 @@ belirtilebilir.
 BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemleri yetkilendiren bir veya 
 daha çok sayıda kişiden oluşur.
 
-Bir merci , *ağırlığı* olan bir veya 
+Bir yetkili , *ağırlığı* olan bir veya 
 birçok hesap adı çiftinden oluşur.
 
 Geçerli bir işlem elde edebilmek için , tarafların imzalanmasından gelen ağırlıkların 
-toplamı yetkilerde belirlenen alt sınırı aşması gerekmektedir.
+toplamı yetkiler bölümünde belirlenen alt-sınırı geçmesi gerekmektedir.
 
 # Örnekler
 
 Birkaç örneğe bakarak kullanılan terminolojiye ve kullanım senaryolarına ışık tutalım. 
-Aşağıda verilen etkin yetkilere sahip yeni bir hesap oluşturulduğunu farz 
-ediyoruz.  Aynı tertibin aynı zamanda sahip yetkileri için de aynı şekilde işe yaradığına 
+Aşağıda verilen etkin izinlere sahip yeni bir hesap oluşturulduğunu farz 
+ediyoruz.  Aynı tertibin aynı zamanda sahip izinleri için de aynı şekilde işe yaradığına 
 dikkatinizi  çekeriz!
 
 ## (Düz) Çoklu-İmza
@@ -59,7 +59,7 @@ Alt-sınır ve ağırlıklar sayesinde fonlarımızla şimdi daha esneğiz, yada
 daha fazla *hakimiyetimiz* var.  Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
 Farzedelim ki Alice fonlarını çoklu-imza tertibi kullanarak hırsızlığa karşı korumak 
 istiyor fakat aynı zamanda arkadaşlarına da gereğinden fazla hakimiyet teslim etmek 
-istemiyor. O zaman şuna benzer bir yetkili oluşturuyoruz :
+istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 
@@ -79,7 +79,7 @@ Gelin beraber basit bir çok-basamaklı anonim hesap kurulumuna göz atalım. Ma
 Müdürü (MİM) ve onun için altında çalışan işte Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
 departmanları olan bir şirkete bakıyor olalım. Şirketin bir de harcama ayrıcalıkları 
 olsun isteyen bir CEO'su olsun. 
-O zaman biz fonlar için yetkiliyi şunlara göre oluştururuz :
+O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 
