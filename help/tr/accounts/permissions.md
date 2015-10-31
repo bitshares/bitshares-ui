@@ -5,16 +5,16 @@ BitShares'de , her hesap ikiye ayrılır
 * **Etkin  İzin**: fonların yönetimi 
 * **Sahip İzni**: hesap yönetimi.
 
-Her ikisi de hesabınızın `İzinler` sekmesinde *yetkiler* ve *alt-sınır*'ın birlikte kullanılmasıyla belirlenebilir.
-  ve bir işlemin geçerli sayılabilmesi için aşılması gerekli  olan *eşik*  kullanılarak 
-belirtilebilir.
+Her ikisi de hesabınızın `İzinler` sekmesinde *yetkiler* ve *alt-sınır*'ın birlikte 
+kullanılmasıyla belirlenebilir. İşlemin geçerli olması için *alt-sınır* ın geçilmesi 
+gerekmektedir.
 
 ## Yetkililer
 
-BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemleri yetkilendiren bir veya 
+BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemlere yetki veren bir veya 
 daha çok sayıda kişiden oluşur.
 
-Bir yetkili , *ağırlığı* olan bir veya 
+Bir yetki , bir yada daha fazla sayıda hesap adı ve*ağırlık* çiftinden oluşur.
 birçok hesap adı çiftinden oluşur.
 
 Geçerli bir işlem elde edebilmek için , tarafların imzalanmasından gelen ağırlıkların 
