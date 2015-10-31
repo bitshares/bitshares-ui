@@ -1,7 +1,7 @@
 # Cüzdan
 
-Şu ana kadar farketmiş olduğunuz gibi bu uygulama bir web uygulamasıdır ve tarayacı içerisinde çalışır. Ekosistemin geri kalanına geçit görevi gören , ağda bulunan güvenilir bir boğumla(node) bağlantı kurar.
-tarayacı içerisinde çalışır. Ekosistemin geri kalanına geçit görevi gören , ağda bulunan  
+Şu ana kadar farketmiş olduğunuz gibi bu uygulama bir web uygulamasıdır ve 
+tarayacı içerisinde çalışır. Ekosistemin geri kalanına geçit görevi gören , ağda bulunan 
 güvenilir bir boğumla(node) bağlantı kurar.
 
 ## Cüzdan Güvenliği
