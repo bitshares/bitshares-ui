@@ -3,12 +3,12 @@
 BitShares 2.0 , [Cryptonomex](http://cryptonomex.com) tarafından inşa edilmiş olan
 [Graphene](https://github.com/cryptonomex/graphene) teknolojisine dayanan bir 
 Finansal Akıllı Kontratları platformudur. Graphene'i  gerçek-zamanlı blokzincirleri için 
-technology for real-time blockchains.
+bir araç takımı yada bir teknoloji olarak görabilirsiniz.
 
-This help section gives a brief overview and describes the most basic concepts
-of this application.
+Bu yardım bölümü özet bir genel bakış sağlar ve bu uygulamanın en temel 
+kavramlarını tanımlar.
 
-## Introduction 
+## Takdim 
  * [BitShares](introduction/bitshares.md)
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
