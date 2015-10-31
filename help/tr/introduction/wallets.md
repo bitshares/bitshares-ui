@@ -10,7 +10,7 @@ güvenilir bir boğumla(node) bağlantı kurar.
 anahtarlarınızın hiçbiri asla tarayıcınızdan ayrılmazlar. Onun yerine , parola cümlenizle 
 kriptolanmış vaziyette yerel tarayıcınızın veritabanında saklı tutulurlar.
 Dolayısıyla, bilgisayar arızaları ve tarayıcı çökmelerine karşı uygun yedeklemeyi 
-[Backup](../introduction/backups.md) mutlaka yapmayı ihmal etmeyin. 
+[Yedekle](../introduction/backups.md) mutlaka yapmayı ihmal etmeyin. 
 
 ## Cüzdan Yönetimi
 
