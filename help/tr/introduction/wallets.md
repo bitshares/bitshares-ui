@@ -9,11 +9,11 @@ güvenilir bir boğumla(node) bağlantı kurar.
 İçiniz rahat olsun , sunucularımızın fonlarınıza erişimi mümkün değildir, çünkü özel 
 anahtarlarınızın hiçbiri asla tarayıcınızdan ayrılmazlar. Onun yerine , parola cümlenizle 
 kriptolanmış vaziyette yerel tarayıcınızın veritabanında saklı tutulurlar.
-Dolayısıyla, bilgisayar arızaları ve tarayıcı çökmelerine karşı uygun yedeklemeyi 
-[Yedekle](../introduction/backups.md) mutlaka yapmayı ihmal etmeyin. 
+Dolayısıyla, bilgisayar arızaları ve tarayıcı çökmelerine karşı mutlaka uygun bir 
+[Yedekleme](../introduction/backups.md) yapmayı ihmal etmeyin. 
 
 ## Cüzdan Yönetimi
 
-Üstelik , kullanıcı arayüzü , birden çok sayıda her biri muhtemelen içerisinde birçok 
-hesap ve bunlara ait fonlar bulunduran ayrı cüzdanları muhafaza edebilir ve erişebilir.
+Üstelik , bu kullanıcı arayüzü , birden çok sayıda ve içerisinde muhtemel birçok 
+hesap ve bunlara ait fonlar bulunduran ayrı cüzdanları muhafaza edebilir ve bunlara erişebilir.
 `Ayarlar->Cüzdanlar` 'dan ekleme, yedekleme yapabilir ve mevcut cüzdanlar arasında geçiş yapabilirsiniz.
