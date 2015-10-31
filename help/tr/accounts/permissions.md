@@ -30,12 +30,12 @@ işe yarar.
 ## (Düz) Çoklu-İmza
 
 Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
-imzalamak zorunda olduğu 'M' sayıda teşekkülden oluşur. Şimdi biz, Bitshares'de, 'M' 
+imzalamak zorunda olduğu 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 
-Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis in ortak fonları olsun . 
-Aralarından sadece ikisinin hemfikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
+Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis'in ortak fonları olsun . 
+Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
 isteyelim. Dolayısıyla **4-ün-2-si** (M-in-N-i) tertibi şöyle görünür : 
 
 | Hesap | Ağırlık | 
@@ -56,7 +56,7 @@ yada alt-sınırı 99%'a yükseltebiliriz.
 ## (Düz) Esnek Çoklu-İmza
 
 Alt-sınır ve ağırlıklar sayesinde fonlarımızla şimdi daha esneğiz, yada daha doğrusu 
-daha fazla *hakimiyetimiz* var.  Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
+daha fazla *hakimiyetimiz* var. Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
 Farzedelim ki Alice fonlarını çoklu-imza tertibi kullanarak hırsızlığa karşı korumak 
 istiyor fakat aynı zamanda arkadaşlarına da gereğinden fazla hakimiyet teslim etmek 
 istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
