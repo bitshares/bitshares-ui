@@ -24,12 +24,12 @@ izinlerde belirlenmiş olan alt-sınırı geçiyor olması gerekir.
 
 Birkaç örneğe bakarak kullanılan terminolojiye ve kullanım senaryolarına ışık tutalım. 
 Aşağıda tanımlanmış etkin izinlerle yeni bir hesap oluşturulduğunu farz edelim. 
-ediyoruz.  Aynı tertibin aynı zamanda sahip izinleri için de aynı şekilde işe yaradığına 
-dikkatinizi  çekeriz!
+Dikkatinizi çekeriz , aynı tertip sahip izinleri için de 
+işe yarar. 
 
 ## (Düz) Çoklu-İmza
 
-Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda teşekkülün 
+Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
 imzalamak zorunda olduğu 'M' sayıda teşekkülden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
