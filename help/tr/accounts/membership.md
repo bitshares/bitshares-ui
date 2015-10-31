@@ -1,6 +1,6 @@
 # Üyelik
 
-BitShares deki hesaplar üç gruba ayrılırlar . Biz kullanıcılara dilerlerse hesaplarını VIP-
+BitShares'deki hesaplar üç gruba ayrılırlar . Biz kullanıcılara dilerlerse hesaplarını VIP-
 gibi bir statüye yükseltmelerine ve ilave özelliklerden ve indirimlerden 
 faydalanmalarına imkan tanıdık.
 
