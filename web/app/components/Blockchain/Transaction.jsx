@@ -387,6 +387,7 @@ class Transaction extends React.Component {
 
                 case "asset_create":
                     color = "warning";
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" /></td>
@@ -408,7 +409,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.user_issued_assets.max_supply" /></td>
-                            <td><FormattedAsset amount={op[1].common_options.max_supply} asset={op[1].symbol} /></td>
+                            <td>{utils.format_asset(op[1].common_options.max_supply, op[1])}</td>
                         </tr>
                     );
                     rows.push(
@@ -420,13 +421,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.market_fee" /></td>
-                            <td>{op[1].common_options.market_fee_percent / 1000}%</td>
+                            <td>{op[1].common_options.market_fee_percent / 100}%</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.max_market_fee" /></td>
-                            <td>{op[1].common_options.max_market_fee / 1000}%</td>
+                            <td>{utils.format_asset(op[1].common_options.max_market_fee, op[1])}</td>
                         </tr>
                     );
                     rows.push(
@@ -441,7 +442,7 @@ class Transaction extends React.Component {
                 case "asset_update":
                 case "asset_update_bitasset":
                     color = "warning";
-
+                    console.log("op:", op);
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.asset_update" /></td>

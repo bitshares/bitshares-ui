@@ -1,7 +1,7 @@
 var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-import {object_type} from "chain/chain_types";
+import {object_type, operations} from "chain/chain_types";
 
 var Utils = {
     get_object_id: (obj_id) => {
@@ -232,6 +232,38 @@ var Utils = {
     format_time: function(time_str) {
         let date = new Date(time_str);
         return date.toLocaleString();
+    },
+
+    limitByPrecision(value, assetPrecision) {
+        let valueString = value.toString();
+        let splitString = valueString.split(".");
+        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
+            return value;
+        }
+        let precision = this.get_asset_precision(assetPrecision);
+        value = Math.floor(value * precision) / precision;
+        if (isNaN(value) || !isFinite(value)) {
+            return 0;
+        }
+        return value;
+    },
+
+    estimateFee(op_type, options, globalObject) {
+        let op_code = operations[op_type];
+        let currentFees = globalObject.getIn(["parameters", "current_fees", "parameters", op_code, 1]).toJS();
+
+        let fee = 0;
+        if (currentFees.fee) {
+            fee += currentFees.fee;
+        }
+
+        if (options) {
+            for (let option of options) {
+                fee += currentFees[option];
+            }
+        }
+
+        return fee * globalObject.getIn(["parameters", "current_fees", "scale"]) / 10000;
     }
 
 };

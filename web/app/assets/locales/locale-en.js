@@ -71,7 +71,14 @@
             max_supply: "Maximum supply",
             precision: "Precision",
             to: "Issue to account",
-            details: "Details"
+            market_fee: "Market fee",
+            max_market_fee: "Max market fee",
+            details: "Details",
+            primary: "Primary settings",
+            optional: "Optional settings",
+            approx_fee: "Approximate fee",
+            exists: "That asset already exists",
+            max_positive: "Max supply should be a positive number"
         },
         connections: {
             known: "Known by",
