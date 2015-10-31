@@ -5,7 +5,7 @@ BitShares'de , her hesap ikiye ayrılır
 * **Etkin  İzin**: fonların yönetimi 
 * **Sahip İzni**: hesap yönetimi.
 
-Her ikisi de hesabınızın 'İzinler' sekmesi içinde *izinler* (aşağıda)
+Her ikisi de hesabınızın `İzinler` sekmesinde *yetkiler* ve *alt-sınır*'ın birlikte kullanılmasıyla belirlenebilir.
   ve bir işlemin geçerli sayılabilmesi için aşılması gerekli  olan *eşik*  kullanılarak 
 belirtilebilir.
 
