@@ -33,10 +33,10 @@ verir.
 
 ### Bekleyen Ücretler
 
-Ödenen ücretler ağımız, getirenler, ve kayıtçılar arasında  ancak her bakım aralığında 
+Ödenen ücretler sadece ağımız, getirenler, ve kayıtçılar arasında her bakım aralığında 
 bir kez pay edilir.
                  
-### Hak Edilmiş Ücretler
+### Hak Ücretler
 
 Çoğu ücretler anında ödenmesine rağmen , bir limitin üzerindeki ücretler (mesela 
 üyeliğinizi yükseltmek için ödediğiniz ya da paralı hesap kaydetmek için ödediğiniz 
