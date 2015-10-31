@@ -21,14 +21,14 @@ tek-seferlik bir ücret vardır.
 karşılığında yıllık abone olarak bir sonraki seneye de aynı iadeyi 
 alabilirsiniz.
 
-### Ücret Paylaşması
+### Ücret Paylaşımı
 
-Getirdiğiniz hesap işlem ücreti ödediği her seferde o ücret birçok farklı hesap arasında 
-pay edilir. Ağımız bir kısmını keser , hesabı getiren ömür-boyu üye de diğer kısmını alır.
-Hesabı getiren bir kısım pay alır.
+Getirdiğiniz hesap her işlem ücreti ödediğinde o ücret birçok farklı hesap arasında 
+pay edilir. Ağımız bir kısmını alır , hesabı getiren ömür-boyu üye de diğer kısmını alır.
+Hesabı getiren üye bir kısım pay alır.
 
-Kayıtçı hesabın ağımıza kaydı yapılırkenki işlem ücretini  ödeyen hesaptır. Kayıtçı 
-ücretin geri kalan kısmını kendileri ve ortaklarıyla nasıl pay edeceğine  kendisi karar 
+Kayıtçı , hesabın ağımıza kaydı yapılırken işlem ücretini ödeyen hesaptır. Kayıtçı 
+ücretin geri kalan kısmını kendisi ve bağlantılarıyla nasıl pay edeceğine kendisi karar 
 verir.
 
 ### Bekleyen Ücretler
