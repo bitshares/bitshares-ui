@@ -10,9 +10,9 @@ faydalanmalarına imkan tanıdık.
 
 ## Ömür-boyu Üyeler
 
-Ömür-boyu üyeler ödedikleri her işlem başına belirli bir yüzde kendilerine iade edilir 
-ve kaydını yaptırdıkları ya da getirdikleri üyelerden komisyon geliri kazanmaya hak 
-kazanırlar. Ömür-boyu üyelikle alakalı kurul tarafından belirlenmiş belli bir miktarda 
+Ömür-boyu üyelerin ödediği her işlem ücretinin belirli bir yüzdesi kendilerine iade 
+edilir ve kaydını yaptıkları ya da getirdikleri üyelerden komisyon geliri kazanmaya 
+hak kazanırlar. Ömür-boyu üyelikle alakalı kurul tarafından belirlenmiş belli miktarda 
 tek-seferlik bir ücret vardır.
 
 ## Yıllık Üyeler
