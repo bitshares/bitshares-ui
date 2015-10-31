@@ -136,6 +136,9 @@ class DepthHighChart extends React.Component {
                 gridLineWidth: 0,
                 crosshair: {
                     snap: false
+                },
+                currentPriceIndicator: {
+                    enabled: false
                 }
             },
             xAxis: {
