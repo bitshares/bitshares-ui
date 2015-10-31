@@ -17,8 +17,8 @@ tek-seferlik bir ücret vardır.
 
 ## Yıllık Üyeler
 
-Ömür-boyu üyelik eğer çok fazla gelirse , tek-seferlik düşük bir bedel 
-karşılığında bir  yıl süren yıllık abonelik alarak bir sonraki seneye de aynı iadeyi 
+Ömür-boyu üyelik eğer çok fazla gelirse , bir yıl süreli tek-seferlik düşük bir bedel 
+karşılığında yıllık abone olarak bir sonraki seneye de aynı iadeyi 
 alabilirsiniz.
 
 ### Ücret Paylaşması
