@@ -31,14 +31,14 @@ müşteriye kalmıştır.
   Fonlarınız ve ticari işlemleriniz endüstriyel seviyedeki eliptik-eğrisi kriptografisiyle  
   tamamen güvence altındadır. Kimse siz izin vermedikçe fonlarınıza erişemez.
   Güvenliği daha da güçlendirmek amacıyla müşterilerimize emanet-escrow ve çoklu-
-  imza planları tertiplemelerine imkan tanıyoruz.
+  imza planları düzenlemelerine imkan tanıyoruz.
 * **Hızlı**:
   Diğer merkezsiz ağların tersine BitShares DEX gerçek-zamanlı ticarete
-   imkan sağlar ve sadece ışık hızı ve gezegenin büyüklüğü 
+   imkan sağlar , sadece ışık hızı ve gezegenin büyüklüğü 
   ile sınırlıdır.
-* **Kanıtlanabilir Sipariş Eşleştirme Algoritması**:
-  BitShares DEX i nadir yapan şeylerden biri de kanıtlanabilir sipariş eşleştirme 
-  algoritmasıdır.  Verilen bir takım işlem-emri  için her zaman bu siparişlerin 
+* **Kanıtlanabilir Emir Eşleştirme Algoritması**:
+  BitShares DEX i nadir yapan şeylerden biri de kanıtlanabilir emir eşleştirme 
+  algoritmasıdır.  Verilen bir takım işlem-emri  için her zaman bu emirlerin 
   kanıtlanabilir şekilde eşleştirilmiş olduğunu teyit edebilirsiniz.
 * **Teminata Bağlanmış**:
   BitShares'in en büyük özelliklerinden biri de bitUSD, bitEUR, bitCNY gibi 
@@ -46,5 +46,5 @@ müşteriye kalmıştır.
   diye kısaltılmışlardır. Bu dijital kuponlar altlarında yatan fiziksel varlıkla aynı değeri 
   temsil ederler. Yani bu cüzdandaki 1 USD nin değeri 1 dolardır ve o şekilde 
   ödenebilir. Bu kuponların hepsinin karşılığı olarak teminatta kitli tutulan ve anlık 
-  fiyatında hesap görümü için mevcut olabilen, BitShares'in şirket hisseleri (BTS)  
+  fiyatında hesap görümü için mevcut olabilen, **BitShares'in şirket hisseleri (BTS)**  vardır.
   vardır.
