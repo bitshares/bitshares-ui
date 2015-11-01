@@ -3,7 +3,7 @@
 Çoğu zaman tek bir yedekleme yeterli olsa bile cüzdanınızı düzenli bir şekilde 
 yedeklemeniz önerilir. Bir yedeklemeden geri kurtarma yapabilmek için şifre 
 cümlenize ihtiyacınız olduğunu untmayın , çünkü **yedeklemeler kriptolanmıştır**. 
-Dolayısıyla , cüzdanınızı ya da şifre cümlenizi kaybederseniz fonlarınıza tekrar 
+Dolayısıyla , cüzdanınızı yada şifre cümlenizi kaybederseniz fonlarınıza tekrar 
 erişmeniz imkansız olur.
 
 Yedeklere Cüzdan Yönetim Panelinden ulaşabilirsiniz . 
