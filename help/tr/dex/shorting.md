@@ -11,7 +11,7 @@ karşılığında katılımcılara borç vermesi mümkündür.
 
  * *uzlaşma fiyatı* : 1 BTS in dış borsalarda alıp-satılırkenki fiyatı.
  * *idame teminat oranı* (MCR) :  zorunlu minimum teminat oranı 
- * *maksimum kısa sıkıştırma oranı* (MSQR) : Tanıklar tarafından kısaların kısa sıkıştırmalara karşı nereye kadar korunacaklarını belirleyen oran. 
+ * *maksimum kısa sıkıştırma oranı* (MSQR) : Tanıklar tarafından kısaların kısa sıkıştırmalara karşı nereye kadar korunacaklarını belirleyen oran.
  * *kısa sıkıştırmadan korunma* (SQP) : Marjin pozisyonuna ödettirilebilecek en yüksek  
  * *çağrı fiyatı* (cp):   Kısa/ödünç pozisyonlarının marjin çağrıldığı fiyat.  
 
@@ -53,7 +53,7 @@ gerektirir.
 
 ## Kapamak
 
-Ödünç/kısa pozisyonunu kapamak için , bir kimse BitShares ağına teslim 
+Ödünç/kısa pozisyonunu kapamak için , ilk önce kişinin , BitShares ağına teslim 
 etmek üzere o Bitvarlığın ödünç alınan miktarının elinde bulunması gerekir. Ondan 
 sonra , BitVarlıklar ilgili arz stoğundan düşer ve teminat serbest bırakılıp sahibine geri 
 verilir.
