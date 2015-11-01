@@ -2,12 +2,12 @@
 
 Graphene de çoğu kripto para gibi , blokzincirinden, transferler ve piyasa 
 hareketleriyle ilgili katılımcıları haberdar  etmek için faydalanır.
-Her blok bir önceki bloğu kaynak olarak gösterdiği için ağda daha önce 
+Her blok bir önceki bloğu kaynak olarak gösterdiği için ağda daha önceden 
 gerçekleşmiş tüm işlemleri içeren bir bloklar zinciri (blokzinciri) elde ederiz . 
-Blokzinciri umumi  erişilebilir ve denetlenebilir bir defteri-kebir olduğundan , herkes 
-transferlere, piyasa emirlerine ve sipariş defterlerine yakından  bakabilir ve teyit 
+umumi  erişilebilir ve denetlenebilir bir defteri-kebir olduğundan , herkes 
+transferlere, piyasa emirlerine ve sipariş defterlerine yakından  bakabilir ve teyit
 
-edebilir. Tabii ki bu web cüzdanı size denetlemelerinize yardımcı olması için bir blok 
+edebilir. Elbette, bu web cüzdanı size denetlemelerinize yardımcı olması için bir blok 
 araştırıcısı da sunmaktadır.
 
 ## Mutabakat Mekanizması
