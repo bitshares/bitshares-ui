@@ -10,7 +10,7 @@ BitShares ağının herhangi bir miktarda BitVarlığı piyasaya sürmesi ve yet
 karşılığında katılımcılara borç vermesi mümkündür. 
 
  * *uzlaşma fiyatı* : 1 BTS in dış borsalarda alıp-satılırkenki fiyatı.
- **idame teminat oranı* (MCR) : Tanıklar tarafından zorunlu minimum teminat oranı olarak belirlenen oran
+ * *idame teminat oranı* (MCR) : Tanıklar tarafından zorunlu minimum teminat oranı olarak belirlenen oran
  **maksimum kısa sıkıştırma oranı* (MSQR) : Tanıklar tarafından kısaların kısa sıkıştırmalara karşı nereye kadar korunacaklarını belirleyen oran. 
  **kısa sıkıştırmadan korunma* (SQP) : Marjin pozisyonuna ödettirilebilecek en yüksek  
  **çağrı fiyatı* (cp):   Kısa/ödünç pozisyonlarının marjin çağrıldığı fiyat.  
@@ -39,11 +39,11 @@ hesap görmek üzere teminatı satar.
 
 ## Satış
 
-BitVarlık ödünç aldıktan sonra, ilgili herhangi bir piyasada alıcının ödemek istediği bir 
-fiyattan satılabilir . Bu aşamayla ,  kısa-satış tamamlanmış olur ve o bitVarlık da kısa 
+BitVarlık ödünç alındıktan sonra, ilgili herhangi bir piyasada alıcının ödemek istediği 
+bir fiyattan satılabilir . Bu aşamayla ,  kısa-satış tamamlanmış olur ve o bitVarlık da kısa 
 olursunuz.
 
-## Teminat Oranı Güncellermesi
+## Teminat Oranını Güncellemek
 
 Ödünç/kısa pozisyonu tutan kişi , herhangi bir zamanda , piyasa 
 davranışını esnek bir biçimde ayarlamak için teminat oranını değiştirebilir. Eğer 
