@@ -13,10 +13,10 @@ sunduklarından daha kaliteli hizmetleri çok daha ucuza temin sunarlar.  DAClar
 çıkışı , insansız ve yozlaştırılamaz iş kuralları kontrölü altında işleyebilen şirketlerin 
 oluşturduğu organizasyon yapısında yeni bir örnek teşkil etmektedir. Bu kurallar 
 halka açık şekilde denetlenilebilir açık kaynak yazılımın içine kodlanmıştır ve 
-şirketlerin hissedarlarının bilgisayarlarına dağıtılmıştır. Bu şekilde şirket keyfi 
-kontrolde kolayca korunur.
+şirketlerin hissedarlarının bilgisayarlarına dağıtılmıştır. Bu şekilde şirketin keyfekeder
+manupülelerden  korunması daha kolay olur.
 
-Bitcoin para için ne yaptıysa BitShares'de işletme için onu yapar. Bunu , evrensel, 
+Bitcoin para için ne yaptıysa BitShares'de işletme için onu yapar.  Bunu , evrensel, 
 şeffaf, güvenilir, verimli ve karlı şirketler yaratmak için dağıtık mutabakat teknolojisini 
 kullanarak yapar.
 
