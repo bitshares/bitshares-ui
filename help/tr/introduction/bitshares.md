@@ -16,13 +16,13 @@ halka açık şekilde denetlenilebilen açık kaynak yazılımın içine kodlanm
 şirketlerin hissedarlarının bilgisayarlarına dağıtılmıştır. Bu şekilde şirketin keyfekeder
 manüpülelerden  korunması daha kolay olur.
 
-Bitcoin para için ne yaptıysa BitShares'de işletmeler için onu yapar.  Bunu , evrensel, 
+Bitcoin para için ne yaptıysa BitShares'de işletmeler için onu yapar. Bunu , evrensel, 
 şeffaf, güvenilir, verimli ve karlı şirketler yaratmak için dağıtık mutabakat teknolojisini 
 kullanarak yapar.
 
 ## Bu Cüzdan
 
-Şu an bu tarayıcı penceresinde açık olan cüzdan BitShares ağının tüm işlevlerine
-erişime izin verir. 
+Şu an bu tarayıcı penceresinde açık olan cüzdanla BitShares ağının tüm işlevlerine
+erişebilirsiniz.
 [BitVarlıklar](../assets/mpa.md), [Kullanıcı-Sürümü-Varlıklar](../assets/uia.md) ve 
 [dağıtık borsa](../dex/introduction.md).
