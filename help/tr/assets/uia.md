@@ -1,4 +1,4 @@
-# Kullanıcı İhracı Varlıklar
+# Kullanıcı Sürümü Varlıklar
 
 Daha önce bahsedilen *piyasaya sabitli varlıkların* yanısıra , BitShares bireylere ve 
 şirketlere, hayal edebilecekleri herşeye ait  kendi kuponlarını yaratma ve piyasaya 
