@@ -8,6 +8,9 @@ import utils from "common/utils";
 import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
+import big from "bignumber.js";
+
+let MAX_SAFE_INT = new big("9007199254740991");
 
 class AccountAssetCreate extends React.Component {
 
@@ -77,6 +80,7 @@ class AccountAssetCreate extends React.Component {
 
     _onCreateInput(value, e) {
         let {create} = this.state;
+        let precision = utils.get_asset_precision(create.precision);
 
         switch (value) {
             case "market_fee_percent":
@@ -84,11 +88,17 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "max_market_fee":
+                if ((new big(e.target.value)).times(precision).gt(MAX_SAFE_INT)) {
+                    return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
+                }
                 e.target.value = utils.limitByPrecision(e.target.value, this.state.create.precision);
                 create.common_options[value] = e.target.value;
                 break;
 
             case "max_supply":
+                if ((new big(e.target.value)).times(precision).gt(MAX_SAFE_INT)) {
+                    return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
+                }
                 e.target.value = utils.limitByPrecision(e.target.value, this.state.create.precision);
                 create[value] = e.target.value;
                 break;
@@ -194,6 +204,7 @@ class AccountAssetCreate extends React.Component {
                                 <label><Translate content="account.user_issued_assets.max_market_fee"/> {create.symbol ? <span>({create.symbol})</span> : null}
                                     <input type="number" value={create.common_options.max_market_fee} onChange={this._onCreateInput.bind(this, "max_market_fee")}/>
                                 </label>
+                                { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
                             </div>
                         </div>
 

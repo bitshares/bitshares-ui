@@ -23,10 +23,21 @@ import classnames from "classnames";
 import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import IssueModal from "../Modal/IssueModal"
+import connectToStores from "alt/utils/connectToStores";
 
+@connectToStores
 class AccountAssets extends React.Component {
+    static getStores() {
+        return [AssetStore]
+    }
 
-    static contextTypes = { router: React.PropTypes.func.isRequired }
+    static getPropsFromStores() {
+        return {assets: AssetStore.getState().assets}
+    }
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
 
     static defaultProps = {
         symbol: "",
@@ -34,7 +45,7 @@ class AccountAssets extends React.Component {
         description: "",
         max_supply: 0,
         precision: 0
-    }
+    };
 
     static propTypes = {
         symbol: PropTypes.string.isRequired
@@ -62,28 +73,47 @@ class AccountAssets extends React.Component {
                 symbol: null
             },
             isValid: false,
-            searchTerm: "",
-            assets: AssetStore.getState().assets
+            searchTerm: ""
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 150);
     }
 
-    onAssetsChange(state) {
-        this.setState({assets: state.assets});
+    _checkAssets(assets, force) {
+
+        let lastAsset = assets.sort((a, b) => {
+            if (a.symbol > b.symbol) {
+                return 1;
+            } else if (a.symbol < b.symbol) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }).last();
+       
+        if (assets.size === 0 || force) {
+            AssetActions.getAssetList("A", 100);
+            this.setState({assetsFetched: 100});  
+        } else if (assets.size >= this.state.assetsFetched) {
+            AssetActions.getAssetList(lastAsset.symbol, 100);           
+            this.setState({assetsFetched: this.state.assetsFetched + 99}); 
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this._checkAssets(nextProps.assets);
+    }
+
+    componentWillMount() {
+        this._checkAssets(this.props.assets, true);
     }
 
     componentDidMount() {
-        AssetStore.listen(this.onAssetsChange);
         let query_params = this.context.router.getCurrentQuery();
         if(query_params.create_asset) {
             console.log("zf publish create asset");
             ZfApi.publish("create_asset", "open");
         }
-    }
-
-    componentWillUnmount() {
-        AssetStore.unlisten(this.onAssetsChange);
     }
 
     _onIssueInput(value, e) {
@@ -115,7 +145,7 @@ class AccountAssets extends React.Component {
         e.preventDefault();
         ZfApi.publish("issue_asset", "close");
         let {issue} = this.state;
-        let asset = this.state.assets.get(issue.asset_id);
+        let asset = this.props.assets.get(issue.asset_id);
         issue.amount *= utils.get_asset_precision(asset.precision);
         AssetActions.issueAsset(account_id, issue).then(result => {
             if (result) {
@@ -146,6 +176,11 @@ class AccountAssets extends React.Component {
         ZfApi.publish("issue_asset", "open");
     }
 
+    _editButtonClick(symbol, account_name, e) {
+        e.preventDefault();
+        this.context.router.transitionTo("account-update-asset", {account_name: account_name, asset: symbol});
+    }
+
     _onAccountSelect(account_name) {
         let {issue} = this.state;
         issue.to = account_name;
@@ -154,21 +189,8 @@ class AccountAssets extends React.Component {
     }
 
     render() {
-        let {account, account_name, searchAccounts} = this.props;
-        let {issue, errors, isValid, create, assets} = this.state;
-
-
-        // Calculate the CreateAsset fee by measuring the length of the symbol.
-        // let symbolLength = create.symbol.length, createFee = "N/A";
-        // if(symbolLength === 3) {
-        //     createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol3"])} asset={"1.3.0"} />;
-        // }
-        // else if(symbolLength === 4) {
-        //     createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["symbol4"])} asset={"1.3.0"} />;
-        // }
-        // else if(symbolLength > 4) {
-        //     createFee = <FormattedAsset amount={BlockchainStore.getFee("asset_create", ["long_symbol"])} asset={"1.3.0"} />;
-        // }
+        let {account, account_name, searchAccounts, assets} = this.props;
+        let {issue, errors, isValid, create} = this.state;
 
         let accountExists = true;
         if (!account) {
@@ -179,11 +201,8 @@ class AccountAssets extends React.Component {
         if (!accountExists) {
             return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
-
-
        
         let isMyAccount = PrivateKeyStore.hasKey(account.getIn(["owner", "key_auths", "0", "0"]));
-        // console.log("account:", account, "id:", account.get("id"));
         let myAssets = assets.filter(asset => {
             return asset.issuer === account.get("id");
         })
@@ -198,8 +217,13 @@ class AccountAssets extends React.Component {
                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
                        <td>
-                          <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">
+                          <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
                                 <Translate content="transaction.trxTypes.asset_issue" />
+                          </button>
+                      </td>
+                       <td>
+                          <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button outline">
+                                <Translate content="transaction.trxTypes.asset_update" />
                           </button>
                       </td>
                     </tr>
@@ -225,6 +249,7 @@ class AccountAssets extends React.Component {
                                     <Translate component="th" content="markets.supply" />
                                     <th>Max Supply</th>
                                     <th>Issue</th>
+                                    <th>Update</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -235,7 +260,7 @@ class AccountAssets extends React.Component {
                     </div>
 
                     <div className="content-block">
-                        <Link to="account-create-asset" params={{account_name}}><button className="button">Create New Asset</button></Link>
+                        <Link to="account-create-asset" params={{account_name}}><button className="button outline">Create New Asset</button></Link>
                     </div>
 
                     <Modal id="create_asset" overlay={true}>

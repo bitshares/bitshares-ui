@@ -21,6 +21,7 @@
         current: "Current Account",
         create_account: "Create Account",
         create_asset: "Create Asset",
+        update_asset: "Update Asset",
         lock: "Lock",
         unlock: "Unlock",
         help: "Help",
@@ -78,7 +79,13 @@
             optional: "Optional settings",
             approx_fee: "Approximate fee",
             exists: "That asset already exists",
-            max_positive: "Max supply should be a positive number"
+            max_positive: "Max supply should be a positive number",
+            core_exchange_rate: "Core exchange rate",
+            quote: "Quote asset amount",
+            base: "Base asset amount",
+            update_owner: "Update owner",
+            current_issuer: "Current owner account",
+            new_issuer: "New owner account"
         },
         connections: {
             known: "Known by",
