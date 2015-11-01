@@ -66,7 +66,7 @@ class MarketRow extends React.Component {
         let buttonStyle = null;
         if (this.props.compact) {
             buttonClass += " no-margin";
-            buttonStyle = {marginBottom: 0, fontSize: "0.75rem"}
+            buttonStyle = {marginBottom: 0, fontSize: "0.75rem" , padding: "4px 10px" , borderRadius: "0px" , letterSpacing: "0.05rem"}
         }
 
         let columns = this.props.columns.map(column => {
