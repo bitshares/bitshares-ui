@@ -12,24 +12,24 @@ müşteriye kalmıştır.
   IOU 'lari piyasaya sürme  ve sipariş defterlerine işleme görevinden aynı 
   kişi/teşekküllerin sorumlu olmasını gerektirecek bir sebep yoktur. BitShares'de işlem 
   emirleri/siparişlerin eşleştirilmesi işi protokol tarafından yürütülür, protokolün 
-  olan varlıklarlarla ilgili bilgisi yoktur, sadece işlem görür.
-* **Evrensel Birleşik Emir Defteri**:
+  işlemlere konu olan varlıklarlarla ilgili bilgisi yoktur, sadece işlem görür.
+* **Evrensel Birleşik Emir/Sipariş Defteri**:
   BitShares evrensel olduğu için , internet erişimi olan herkes  DEX'i alım-satım için 
-  kullanabilir. Bu dünyanın likiditesini , merkezsiz alım-satım için tekbir sipariş 
+  kullanabilir. Bu, dünyanın likiditesini , merkezsiz/dağıtık alım-satım için tekbir sipariş 
   defterine getirir.
 * **Neredeyse Herşeyi Alıp-Satabilirsiniz**:
-  BitShares DEX varlığın ne olduğunu anlamaz , dolayısı ile **hertürlü**  çiftin ticareti 
+  BitShares DEX varlığın muhteviyatını bilmez , dolayısı ile **hertürlü**  çiftin ticareti 
   yapılabilir. GÜMÜŞ:ALTIN gibi bazı eşleşmeler  az likidite sağlarken FOREX ticareti 
   için USD:EUR gibi eşleşmeler çok büyük hacimli işlem görür.
 * **Limit Yok**:
   BitShares protokolünün sizin ticaret deneyiminizi sınırlaması mümkün değidir.
 * **Merkezsiz**:
-  DEX (merkezsiz borsa) tüm dünyada merkezi yoktur. Bu sadece tek kırılma noktası 
+  DEX (merkezsiz borsa) tüm dünyaya dağıtıktır. Bu sadece tek kırılma noktası 
   yok demek değil , ayrıca BitShares borsasının ticaret için 7/24 açık olduğu anlamına 
   gelir, çünkü her zaman dünyada bir yerde vakit mutlaka gündüzdür. 
 * **Güvenli**:
   Fonlarınız ve ticari işlemleriniz endüstriyel seviyedeki eliptik-eğrisi kriptografisiyle  
-  tamamen güvence altında. Kimse siz izin vermedikçe fonlarınıza erişemez.
+  tamamen güvence altındadır. Kimse siz izin vermedikçe fonlarınıza erişemez.
   Güvenliği daha da güçlendirmek amacıyla müşterilerimize emanet-escrow ve çoklu-
   imza planları tertiplemelerine imkan tanıyoruz.
 * **Hızlı**:
