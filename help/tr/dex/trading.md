@@ -21,7 +21,7 @@ belirteceğiz
 
 Sipariş defteri *ask* (istenilen satış fiyatı) ve *bid* (verilen alış teklif fiyatı) yanlarından 
 oluşur. Alış-satış çiftlerin tercihen bir yönü olmadığından ters çevirilebilirler, aşağıdaki 
-tablo ask/bid ve her iki yanın ilgili al/sat operasyonlarına genel bakış verilmiştir:
+tabloda ask/bid ve her iki yanın ilgili al/sat operasyonlarına genel bakış verilmiştir:
 
 | Yan   | Sat  | Al   | 
 | ---------- | ------- | ------- |
