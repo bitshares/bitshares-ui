@@ -88,7 +88,7 @@ O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    |
 
-ve bu durumda CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
+bu durumda CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
 MİM.ŞİRKET hesabı şöyle olabilir :
 
 | MİM.ŞİRKET         | Ağırlık |
