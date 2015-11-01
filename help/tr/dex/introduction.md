@@ -1,6 +1,6 @@
 # Giriş
 
-Merkezsiz borsa (further denoted simply as *the DEX*) BitShares ekosisteminde 
+Merkezsiz borsa (kısaca *DEX*) BitShares ekosisteminde 
 alıp-satılan dijital mamüllerin doğrudan dönüştürülmesini sağlar.
 
 Merkezsiz bir borsanın , geleneksel borsalardan bir takım bariz avantajları vardır. 
