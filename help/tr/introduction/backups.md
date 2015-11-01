@@ -7,13 +7,13 @@ Dolayısıyla , cüzdanınızı yada şifre cümlenizi kaybederseniz fonlarını
 erişmeniz imkansız olur.
 
 Yedeklere Cüzdan Yönetim Panelinden ulaşabilirsiniz . 
-(`Ayarlar ->Wallets`).
+(`Ayarlar ->Cüzdanlar`).
 
 ## Cüzdan İhracı
 
-Yeni bir yedekleme oluşturmanın en kolay yolu cüzdanı Cüzdan Yönetim Panelinde 
+Yeni bir yedekleme oluşturmanın en kolay yolu Cüzdan Yönetim Panelinde
 verilen bağlantıdan yapmaktır. Lütfen yedeklerinizi güvenli bir yerde 
-kaybetmekten,hırsızlıktan, ve doğal afetlerden koruyunuz. 
+kaybetmekten, hırsızlıklardan, ve doğal afetlerden koruyunuz. 
 
 ## Beyin-anahtarı (YALNIZCA gelişmiş kullanıcılar )
 
