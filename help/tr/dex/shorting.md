@@ -1,6 +1,6 @@
 # BitVarlık Kısa Satışı
 
-BTS le temasınızı arttırmak ve USD,EUR,GOLD, gibi BitVarlıklara likidite sağlamak için 
+BTS'le temasınızı arttırmak ve USD,EUR,GOLD, gibi BitVarlıklara likidite sağlamak için 
 bu BitVarlıkları ağdan *ödünç* alabilir ve *kısa satabilirsiniz*. Prosedürü burada kısaca 
 anlatacağız.
 
