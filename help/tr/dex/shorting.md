@@ -1,18 +1,18 @@
 # BitVarlık Kısa Satışı
 
-BTS'le temasınızı arttırmak ve USD,EUR,GOLD, gibi BitVarlıklara likidite sağlamak için 
+BTS'le temasınızı arttırmak ve USD,EUR,GOLD gibi BitVarlıklara likidite sağlamak için 
 bu BitVarlıkları ağdan *ödünç* alabilir ve *kısa satabilirsiniz*. Prosedürü burada kısaca 
 anlatacağız.
 
 ## Ödünç Alma
 
-BitShares ağı herhangi bir miktarda BitVarlığı piyasaya sürmesi ve yeterli teminat 
+BitShares ağının herhangi bir miktarda BitVarlığı piyasaya sürmesi ve yeterli teminat 
 karşılığında katılımcılara borç vermesi mümkündür. 
 
- **uzlaşma fiyatı* : 1 BTS in dış borsalarda alıp-satılırkenki fiyatı.
+ * *uzlaşma fiyatı* : 1 BTS in dış borsalarda alıp-satılırkenki fiyatı.
  **idame teminat oranı* (MCR) : Tanıklar tarafından zorunlu minimum teminat oranı olarak belirlenen oran
  **maksimum kısa sıkıştırma oranı* (MSQR) : Tanıklar tarafından kısaların kısa sıkıştırmalara karşı nereye kadar korunacaklarını belirleyen oran. 
- **kısa sıkıştırmadan korunma* (SQP) : Defines the most that a margin position will ever be forced to pay to cover 
+ **kısa sıkıştırmadan korunma* (SQP) : Marjin pozisyonuna kapama için ödettirilebilecek en yüksek  
  **çağrı fiyatı* (cp):   Kısa/ödünç pozisyonlarının marjin çağrıldığı fiyat.  
 
 ### Marjin Çağrısı ( Teminat Tamamlama Çağrısı)
