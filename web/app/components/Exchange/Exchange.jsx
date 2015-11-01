@@ -157,6 +157,9 @@ class Exchange extends React.Component {
     componentDidMount() {
         let centerContainer = React.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
+        SettingsActions.changeViewSetting({
+            lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
+        });
     }
 
     _addMarket(quote, base) {

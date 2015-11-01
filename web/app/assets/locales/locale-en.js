@@ -525,9 +525,11 @@
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         market_name: "Market name",
         quote_supply: "Quote supply",
-        base_supply: "Base supply"
+        base_supply: "Base supply",
+        more: "More markets"
     },
     markets: {
+        title: "Markets",
         base: "Base asset",
         market_search: "Market Search",
         filter: "Filter",

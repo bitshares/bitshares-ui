@@ -65,7 +65,7 @@ require("./components/Utility/Prototypes"); // Adds a .equals method to Array fo
 require("./assets/stylesheets/app.scss");
 require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
-const { Route, RouteHandler, DefaultRoute } = Router;
+const { Route, RouteHandler, DefaultRoute, Redirect} = Router;
 
 class App extends React.Component {
 
@@ -251,8 +251,10 @@ let routes = (
         <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={Transfer}/>
         <Route name="invoice" path="invoice/:data" handler={Invoice}/>
-        <Route name="markets" path="markets" handler={Markets}/>
-        <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
+        <Redirect from="markets" to="markets"/>
+        <Route name="markets" path="explorer/markets" handler={Markets}/>
+        <Redirect from="exchange/trade/:marketID" to="exchange"/>
+        <Route name="exchange" path="market/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
         <Route name="block" path="block/:height" handler={BlockContainer}/>
         <Route name="asset" path="asset/:symbol" handler={AssetContainer}/>
