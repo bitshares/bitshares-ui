@@ -213,7 +213,7 @@ class AccountAssets extends React.Component {
             return (
                     <tr>
                        <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
-                       <td>{asset.options.description}</td>
+                       <td style={{maxWidth: "200px"}}>{asset.options.description}</td>
                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
                        <td>
@@ -244,8 +244,7 @@ class AccountAssets extends React.Component {
                                 <thead>
                                 <tr>
                                     <th>Symbol</th>
-                                    <th>Description</th>
-                                    {/* <th>Public Data</th> FIXME: this column is hidden because its purpose overlaps with Description */}
+                                    <th style={{maxWidth: "200px"}}>Description</th>
                                     <Translate component="th" content="markets.supply" />
                                     <th>Max Supply</th>
                                     <th>Issue</th>

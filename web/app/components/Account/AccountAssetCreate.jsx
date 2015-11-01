@@ -209,7 +209,7 @@ class AccountAssetCreate extends React.Component {
                         </div>
 
                         <div className="grid-content button-group no-overflow">
-                            <input type="submit" className={classnames("button", {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.get("id"))} value="Create Asset" />
+                            <input type="submit" className={classnames("button", {success: isValid && create.symbol.length >= 3}, {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.get("id"))} value="Create Asset" />
 
                             <span><Translate content="account.user_issued_assets.approx_fee" />: {createFee}</span>
                         </div>

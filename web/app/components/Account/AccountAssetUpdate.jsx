@@ -189,8 +189,8 @@ class AccountAssetUpdate extends React.Component {
                     <h3><Translate content="header.update_asset" />: {symbol}</h3>
 
                     <form onSubmit={this._updateAsset.bind(this)} noValidate>
-                        <div className="grid-block shrink">
-                            <div className="small-6 grid-content">
+                        <div className="grid-block shrink small-vertical medium-horizontal">
+                            <div className="small-12 medium-6 grid-content">
                                 <h3><Translate content="account.user_issued_assets.primary" /></h3>
                   
                                 <label>
@@ -209,7 +209,7 @@ class AccountAssetUpdate extends React.Component {
                                 <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
                                 <label>                                    
                                     <div className="grid-block no-margin">
-                                        <div className="grid-block no-margin small-6">
+                                        <div className="grid-block no-margin small-12 medium-6">
                                             <AmountSelector
                                                 label="account.user_issued_assets.quote"
                                                 amount={core_exchange_rate.quote.amount}
@@ -220,7 +220,7 @@ class AccountAssetUpdate extends React.Component {
                                                 tabIndex={1}
                                             />
                                         </div>
-                                        <div className="grid-block no-margin small-6">
+                                        <div className="grid-block no-margin small-12 medium-6">
                                             <AmountSelector
                                                 label="account.user_issued_assets.base" 
                                                 amount={core_exchange_rate.base.amount}
@@ -265,7 +265,7 @@ class AccountAssetUpdate extends React.Component {
 
                             </div>
 
-                            <div className="small-6 grid-content">
+                            <div className="small-12 medium-6 grid-content">
                                 <h3><Translate content="account.user_issued_assets.optional" /></h3>
 
                                 <label><Translate content="account.user_issued_assets.description" />
@@ -292,7 +292,7 @@ class AccountAssetUpdate extends React.Component {
                         </div>
 
                         <div className="grid-content button-group no-overflow" style={{paddingTop: "2rem"}}>
-                            <input type="submit" className={classnames("button", {disabled: !isValid || symbol.length < 3})} onClick={this._updateAsset.bind(this)} value="Update Asset" />
+                            <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._updateAsset.bind(this)} value="Update Asset" />
 
                             <span><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</span>
                         </div>
