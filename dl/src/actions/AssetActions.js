@@ -101,7 +101,7 @@ class AssetActions {
             asset_to_update: asset.get("id"),
             extensions: asset.get("extensions"),
             issuer: issuer,
-            new_issuer: new_issuer ? new_issuer : issuer,
+            new_issuer: new_issuer,
             new_options: {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
@@ -126,6 +126,9 @@ class AssetActions {
                 }
             }
         };
+        if (issuer === new_issuer) {
+            delete updateObject.new_issuer;
+        }
         tr.add_type_operation("asset_update", updateObject);
         return WalletDb.process_transaction(tr, null, true).then(result => {
             // console.log("asset create result:", result);
