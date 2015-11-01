@@ -10,19 +10,19 @@ piyangolar,seçimler, müzik, mezat veya birçok diğerleri olsun , dijital umum
 defteri-kebir, dağıtık-otonom-şirketlerin (DAC- distributed autonomous companies) 
 yaratılabilmesine imkan tanır. Bu DAC lar geleneksel merkeziyetçi rakiplerinin 
 sunduklarından daha kaliteli hizmetleri çok daha ucuza temin sunarlar.  DACların ortaya 
-çıkışı , organizasyon yapılarında yeni bir paradigma teşkil etmektedir. Artık şirketler
-bozulamayan iş kuralları altında ve insan yönetimi olmadan işleyebilirler.
-halka açık şekilde denetlenilebilir açık kaynak yazılımın içine kodlanmıştır ve 
+çıkışı , organizasyon yapılarında yeni bir paradigma teşkil etmektedir. Artık şirketler,
+bozulamayan iş kuralları altında ve insan yönetimi olmadan işleyebilirler. Bu kurallar
+halka açık şekilde denetlenilebilen açık kaynak yazılımın içine kodlanmıştır ve 
 şirketlerin hissedarlarının bilgisayarlarına dağıtılmıştır. Bu şekilde şirketin keyfekeder
-manupülelerden  korunması daha kolay olur.
+manüpülelerden  korunması daha kolay olur.
 
-Bitcoin para için ne yaptıysa BitShares'de işletme için onu yapar.  Bunu , evrensel, 
+Bitcoin para için ne yaptıysa BitShares'de işletmeler için onu yapar.  Bunu , evrensel, 
 şeffaf, güvenilir, verimli ve karlı şirketler yaratmak için dağıtık mutabakat teknolojisini 
 kullanarak yapar.
 
 ## Bu Cüzdan
 
-Şu an bu tarayıcı penceresinde açık olan cüzdan BitShares ağının işlevselliklerine 
+Şu an bu tarayıcı penceresinde açık olan cüzdan BitShares ağının tüm işlevlerine
 erişime izin verir. 
 [BitVarlıklar](../assets/mpa.md), [Kullanıcı-Sürümü-Varlıklar](../assets/uia.md) ve 
 [dağıtık borsa](../dex/introduction.md).
