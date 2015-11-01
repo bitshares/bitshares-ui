@@ -10,8 +10,8 @@ piyangolar,seçimler, müzik, mezat veya birçok diğerleri olsun , dijital umum
 defteri-kebir, dağıtık-otonom-şirketlerin (DAC- distributed autonomous companies) 
 yaratılabilmesine imkan tanır. Bu DAC lar geleneksel merkeziyetçi rakiplerinin 
 sunduklarından daha kaliteli hizmetleri çok daha ucuza temin sunarlar.  DACların ortaya 
-çıkışı , insansız ve yozlaştırılamaz iş kuralları kontrölü altında işleyebilen şirketlerin 
-oluşturduğu organizasyon yapısında yeni bir örnek teşkil etmektedir. Bu kurallar 
+çıkışı , organizasyon yapılarında yeni bir paradigma teşkil etmektedir. Artık şirketler
+bozulamayan iş kuralları altında ve insan yönetimi olmadan işleyebilirler.
 halka açık şekilde denetlenilebilir açık kaynak yazılımın içine kodlanmıştır ve 
 şirketlerin hissedarlarının bilgisayarlarına dağıtılmıştır. Bu şekilde şirketin keyfekeder
 manupülelerden  korunması daha kolay olur.
