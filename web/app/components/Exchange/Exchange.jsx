@@ -72,8 +72,8 @@ class PriceStat extends React.Component {
                     <b className={"value stat-primary"}>
                         {utils.format_number(price, Math.max(5, quote ? quote.get("precision") : 0))}
                         {change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-                        
-                    </b>                                                    
+
+                    </b>
                     <br/>
                     <em>{base.get("symbol")}/{quote.get("symbol")}</em>
                 </span>
@@ -517,7 +517,7 @@ class Exchange extends React.Component {
                             return Math.min(total, ask.full);
                         }
                     }, null);
-                    
+
                     squeezePrice = settlementPrice * short_squeeze;
                     showCallLimit = lowestAsk > lowestCallPrice && lowestCallPrice < squeezePrice;
                 }
@@ -567,8 +567,8 @@ class Exchange extends React.Component {
             let paysAsset, receivesAsset, isAsk = false;
             if (latest.pays.asset_id === base.get("id")) {
                 paysAsset = base;
-                receivesAsset = quote;                    
-                isAsk = true;                    
+                receivesAsset = quote;
+                isAsk = true;
             } else {
                 paysAsset = quote;
                 receivesAsset = base;
@@ -578,11 +578,11 @@ class Exchange extends React.Component {
             if (second_latest) {
                 if (second_latest.pays.asset_id === base.get("id")) {
                     paysAsset = base;
-                    receivesAsset = quote;                    
+                    receivesAsset = quote;
                 } else {
                     paysAsset = quote;
                     receivesAsset = base;
-                    isAsk = true;                    
+                    isAsk = true;
                 }
                 let oldPrice = market_utils.parse_order_history(second_latest, paysAsset, receivesAsset, isAsk, flipped);
                 changeClass = latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
@@ -706,7 +706,7 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.latest" />
                                                     <br/>
-                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>                                                    
+                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
@@ -867,7 +867,7 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 60vh"}}>
                             <MarketHistory
                                 history={activeMarketHistory}
                                 base={base}
@@ -876,7 +876,7 @@ class Exchange extends React.Component {
                                 quoteSymbol={quoteSymbol}
                             />
                         </div>
-                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 40vh"}}>
                             <MyMarkets />
                         </div>
                     </div>
