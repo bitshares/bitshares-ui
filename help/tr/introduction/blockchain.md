@@ -1,6 +1,6 @@
 # Blokzinciri
 
-Çoğu kripto paralar gibi , Graphene blokzincirini transferler ve piyasa hareketleriyle 
+Graphene de çoğu kripto para gibi , blokzincirini transferler ve piyasa hareketleriyle 
 ilgili katılımcıları haberdar  etmek için kullanır.
 Her blok bir önceki bloğu kaynak olarak gösterdiği için ağda daha önce 
 gerçekleşmiş tüm işlemleri içeren bir bloklar zinciri (blokzinciri) elde ederiz . 
