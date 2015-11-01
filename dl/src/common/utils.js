@@ -238,14 +238,16 @@ var Utils = {
         let valueString = value.toString();
         let splitString = valueString.split(".");
         if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
-            return value;
+            return valueString;
+        } else {
+            return splitString[0] + "." + splitString[1].substr(0, assetPrecision);
         }
-        let precision = this.get_asset_precision(assetPrecision);
-        value = Math.floor(value * precision) / precision;
-        if (isNaN(value) || !isFinite(value)) {
-            return 0;
-        }
-        return value;
+        // let precision = this.get_asset_precision(assetPrecision);
+        // value = Math.floor(value * precision) / precision;
+        // if (isNaN(value) || !isFinite(value)) {
+        //     return 0;
+        // }
+        // return value;
     },
 
     estimateFee(op_type, options, globalObject) {
