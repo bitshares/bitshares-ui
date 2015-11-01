@@ -6,12 +6,12 @@ alıp-satılan dijital mamüllerin doğrudan dönüştürülmesini sağlar.
 Merkezsiz bir borsanın , geleneksel borsalardan bir takım bariz avantajları vardır. 
 Bunlardan kısaca bahsetmek istiyoruz. BitShares DEX'de hepsi mevcut olmasina 
 rağmen o özellikleri tamamen ya da kısmen layığı ile kullanabilmek okuyucuya ve 
-müşteriye  bağlı.
+müşteriye kalmıştır.
 
 * **Güçler Ayrılığı**: 
-  IOU 'lari piyasaya sürme  ve sipariş defterlerini işleme işinden aynı  kişi/teşekkül ün 
-  sorumlu olmasını gerektirecek bir sebep yoktur. BitShares'de işlem 
-  emirleri/siparişlerin eşleştirilmesi işi protokol tarafından yürütülür, işlemlere konu 
+  IOU 'lari piyasaya sürme  ve sipariş defterlerine işleme görevinden aynı 
+  kişi/teşekküllerin sorumlu olmasını gerektirecek bir sebep yoktur. BitShares'de işlem 
+  emirleri/siparişlerin eşleştirilmesi işi protokol tarafından yürütülür, protokolün 
   olan varlıklarlarla ilgili bilgisi yoktur, sadece işlem görür.
 * **Evrensel Birleşik Emir Defteri**:
   BitShares evrensel olduğu için , internet erişimi olan herkes  DEX'i alım-satım için 
