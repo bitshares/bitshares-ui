@@ -442,7 +442,7 @@ class Transaction extends React.Component {
                 case "asset_update":
                 case "asset_update_bitasset":
                     color = "warning";
-                    console.log("op:", op);
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.asset_update" /></td>
@@ -455,6 +455,28 @@ class Transaction extends React.Component {
                             <td>{this.linkToAccount(op[1].issuer)}</td>
                         </tr>
                     );
+                    if (op[1].new_issuer !== op[1].issuer) {
+                        rows.push(
+                            <tr>
+                                <td><Translate component="span" content="account.user_issued_assets.new_issuer" /></td>
+                                <td>{this.linkToAccount(op[1].new_issuer)}</td>
+                            </tr>
+                        );
+                        }
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="markets.core_rate" /></td>
+                            <td>
+                                <FormattedPrice
+                                    base_asset={op[1].new_options.core_exchange_rate.base.asset_id}
+                                    quote_asset={op[1].new_options.core_exchange_rate.quote.asset_id}
+                                    base_amount={op[1].new_options.core_exchange_rate.base.amount}
+                                    quote_amount={op[1].new_options.core_exchange_rate.quote.amount}
+                                />
+                            </td>
+                        </tr>
+                    );
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.new_options" /></td>
