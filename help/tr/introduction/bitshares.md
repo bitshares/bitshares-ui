@@ -1,7 +1,7 @@
 # BitShares
 
 Daha önce bahsedildiği gibi , Graphene sadece bir *teknolojiyi* yada *protokolü* 
-tarif etmektedir. Fakat ekosistem olarak evrim geçirmesi yalnızca BitShares gibi 
+tarif etmektedir. Fakat fiilen bir  ekosisteme dönüşmesi  BitShares gibi 
 gerçek bir blokzinciri ile birlikte mümkün olur.
 
 BitShares , blokzinciri yeniliğini , hizmetlerini internet kullanarak sunan tüm 
@@ -9,7 +9,7 @@ endüstrilere yaymayı ummaktadır. Bankacılık, hisse senedi borsaları,
 piyangolar,seçimler, müzik, mezat veya birçok diğerleri olsun , dijital umumi bir 
 defteri-kebir, dağıtık-otonom-şirketlerin (DAC- distributed autonomous companies) 
 yaratılabilmesine imkan tanır. Bu DAC lar geleneksel merkeziyetçi rakiplerinin 
-sunduklarından daha kaliteli servisi çok daha ucuza temin eder.  DACların ortaya 
+sunduklarından daha kaliteli hizmetleri çok daha ucuza temin sunarlar.  DACların ortaya 
 çıkışı , insansız ve yozlaştırılamaz iş kuralları kontrölü altında işleyebilen şirketlerin 
 oluşturduğu organizasyon yapısında yeni bir örnek teşkil etmektedir. Bu kurallar 
 halka açık şekilde denetlenilebilir açık kaynak yazılımın içine kodlanmıştır ve 
