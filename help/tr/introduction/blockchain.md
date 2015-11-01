@@ -7,7 +7,7 @@ gerçekleşmiş tüm işlemleri içeren bir bloklar zinciri (blokzinciri) elde e
 umumi  erişilebilir ve denetlenebilir bir defteri-kebir olduğundan , herkes transferlere,
  piyasa emirlerine ve sipariş defterlerine yakından  bakabilir ve teyit edebilir.
 
- Elbette, bu web cüzdanı size denetlemelerinize yardımcı olması için bir blok 
+ Elbette, bu web cüzdanı denetlemelerinize yardımcı olması için size bir blok 
 araştırıcısı da sunmaktadır.
 
 ## Mutabakat Mekanizması
@@ -20,8 +20,8 @@ blokları üretmelerine izin verilir.
 
 ## İşlemler
 
-Graphene blokzinciri teknolojisi çeşitli işlem türleri sunmaktadır.   Kullanıcıların 
-aralarında varlık transferi yapabilmekle  kalmaz ayrıca dağıtık borsayla etkileşim 
-kurabilen işlemler de vardır. Bu işlem türlerinin bir çoğu kendi kendini izah eden 
-fişlerle etiketlenmişlerdir, diğerleri ise şirketin iç işleriyle alakalı daha çok bilgi 
-gerektirir.
+Graphene blokzinciri teknolojisi çeşitli işlem türleri sunmaktadır.  Kullanıcılar 
+aralarında varlık transferi yapabildikleri gibi dağıtık borsayla etkileşim kurabilen 
+işlemler de vardır. Bu işlem türlerinin bir çoğu kendi kendini izah eden 
+fişlerle etiketlenmişlerdir, diğer işlemler ise ise şirketin iç işleriyle alakalı daha çok 
+bilgi gerektirir.
