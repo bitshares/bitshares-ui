@@ -1,6 +1,6 @@
 # BitShares
 
-Daha önce bahsedildiği gibi , Graphene yalnızca bir *teknolojiyi* yada *protokolü* 
+Daha önce bahsedildiği gibi , Graphene sadece bir *teknolojiyi* yada *protokolü* 
 tarif etmektedir. Fakat ekosistem olarak evrim geçirmesi yalnızca BitShares gibi 
 gerçek bir blokzinciri ile birlikte mümkün olur.
 
@@ -24,5 +24,5 @@ kullanarak yapar.
 
 Şu an bu tarayıcı penceresinde açık olan cüzdan BitShares ağının işlevselliklerine 
 erişime izin verir. 
-[BitAssets](../assets/mpa.md), [User-Issued Assets](../assets/uia.md) ve 
-[decentralized exchange](../dex/introduction.md).
+[BitVarlıklar](../assets/mpa.md), [Kullanıcı-Sürümü-Varlıklar](../assets/uia.md) ve 
+[dağıtık borsa](../dex/introduction.md).
