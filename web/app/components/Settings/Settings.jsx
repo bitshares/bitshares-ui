@@ -174,7 +174,7 @@ class Settings extends React.Component {
         let {settings, defaults} = this.props;
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block medium-6 main-content">
+                <div className="grid-block main-content">
                     <div className="grid-content no-overflow">
                         {settings.map((value, setting) => {
                             return (
@@ -188,11 +188,8 @@ class Settings extends React.Component {
                                     triggerModal={this.triggerModal.bind(this)}
                                 />);                   
                         }).toArray()}
-                    </div>
-                </div>
-                <div className="grid-block medium-6 right-column">
-                    <div className="grid-content">
-                        <div><label><h5><Link to="wallet"><Translate content="settings.wallets" /></Link></h5></label></div>
+                        <Link to="wallet"><div className="button outline">
+                            <Translate content="wallet.console" /></div></Link>
                     </div>
                 </div>
                 <WebsocketAddModal ref="ws_modal" apis={defaults["connection"]} />
