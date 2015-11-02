@@ -1,7 +1,7 @@
 # Piyasa Sabitli Varlıklar
 
 Bitcoin'e benzeyen özelliklerde ve avantajlarda, amerikan Doları gibi tüm dünya
-tarafından benimsenmiş bir para birimi ile bir fiyat paritesine sahip bir kripto-paranın
+tarafından benimsenmiş bir parayla pariteye sahip bir kripto-paranın
  sansürsüz ve kolay bir ticaret için çok faydası vardır. Bu, BitShares'in 
 piyasaya  sabitli varlıkları (PSV) sayesinde mümkün olur. Bunlar, serbestçe 
 alıp-satılabilen yeni  bir tür dijital varlıklardır. Bunların değerleri, fark-kontratı (FK) yöntemiyle

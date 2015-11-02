@@ -1,9 +1,9 @@
 Özelleştirilmiş BitVarlıklar
 ====================
 
-Özelleştirilmiş BitVarlıklar piyasaya piyasaya-sabitli-varlık sürmek isteyen fakat 
+Özelleştirilmiş BitVarlıklar piyasaya piyasa-sabitli-varlık sürmek isteyen fakat 
 fiyatların tanıklar tarafından duyurulmasını istemeyen müşterilere hitab eder. Onun 
-yerine , piyasaya süren kişi *özelleştirilmiş*  bitvarlık yaratıldığı anda ,  belli bazı varlık 
+yerine, *özelleştirilmiş* bitvarlık oluştururken, piyasaya süren kişi
 fiyatlarının duyurulmasına izin veren yetkililer belirleyebilir. Piyasaya süren kişi bu 
 varlıkla ilgili daha her türlü ücreti belirleyebilir ve kar elde edebilir.
 

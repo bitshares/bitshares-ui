@@ -1,41 +1,41 @@
-# Yetkiler
+# İzinler
 
 BitShares'de , her hesap ikiye ayrılır 
 
-* **Etkin  Yetki**: fonların yönetimi 
-* **Sahip Yetkisi**: hesap yönetimi.
+* **Etkin  İzin**: fonların yönetimi 
+* **Sahip İzni**: hesap yönetimi.
 
-Her ikisi de hesabınızın 'Yetkiler' sekmesi içinde *yetkililer* (aşağıda)
-  ve bir işlemin geçerli sayılabilmesi için aşılması gerekli  olan *eşik*  kullanılarak 
-belirtilebilir.
+Her ikisi de hesabınızın `İzinler` sekmesinde *yetkiler* ve *alt-sınır*'ın birlikte 
+kullanılmasıyla belirlenebilir. İşlemin geçerli olması için *alt-sınır* ın geçilmesi 
+gerekmektedir.
 
-## Merciler
+## Yetkililer
 
-BitShares'de bir *merci*,  transfer veya alım-satım gibi işlemleri yetkilendiren bir veya 
+BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemlere yetki veren bir veya 
 daha çok sayıda kişiden oluşur.
 
-Bir merci , *ağırlığı* olan bir veya 
-birçok hesap adı çiftinden oluşur.
+Bir yetki , bir yada daha fazla sayıda hesap adı ve*ağırlık* 
+çiftinden oluşur.
 
-Geçerli bir işlem elde edebilmek için , tarafların imzalanmasından gelen ağırlıkların 
-toplamı yetkilerde belirlenen alt sınırı aşması gerekmektedir.
+Geçerli bir işlem elde edebilmek için , imzalayan tarafların ağırlıklarının toplamı 
+izinlerde belirlenmiş olan alt-sınırı geçiyor olması gerekir.  
 
 # Örnekler
 
 Birkaç örneğe bakarak kullanılan terminolojiye ve kullanım senaryolarına ışık tutalım. 
-Aşağıda verilen etkin yetkilere sahip yeni bir hesap oluşturulduğunu farz 
-ediyoruz.  Aynı tertibin aynı zamanda sahip yetkileri için de aynı şekilde işe yaradığına 
-dikkatinizi  çekeriz!
+Aşağıda tanımlanmış etkin izinlerle yeni bir hesap oluşturulduğunu farz edelim. 
+Dikkatinizi çekeriz , aynı tertip sahip izinleri için de 
+işe yarar. 
 
 ## (Düz) Çoklu-İmza
 
-Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda teşekkülün 
-imzalamak zorunda olduğu 'M' sayıda teşekkülden oluşur. Şimdi biz, Bitshares'de, 'M' 
+Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
+imzalamak zorunda olduğu 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 
-Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis in ortak fonları olsun . 
-Aralarından sadece ikisinin hemfikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
+Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis'in ortak fonları olsun . 
+Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
 isteyelim. Dolayısıyla **4-ün-2-si** (M-in-N-i) tertibi şöyle görünür : 
 
 | Hesap | Ağırlık | 
@@ -56,10 +56,10 @@ yada alt-sınırı 99%'a yükseltebiliriz.
 ## (Düz) Esnek Çoklu-İmza
 
 Alt-sınır ve ağırlıklar sayesinde fonlarımızla şimdi daha esneğiz, yada daha doğrusu 
-daha fazla *hakimiyetimiz* var.  Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
+daha fazla *hakimiyetimiz* var. Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
 Farzedelim ki Alice fonlarını çoklu-imza tertibi kullanarak hırsızlığa karşı korumak 
 istiyor fakat aynı zamanda arkadaşlarına da gereğinden fazla hakimiyet teslim etmek 
-istemiyor. O zaman şuna benzer bir yetkili oluşturuyoruz :
+istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 
@@ -79,7 +79,7 @@ Gelin beraber basit bir çok-basamaklı anonim hesap kurulumuna göz atalım. Ma
 Müdürü (MİM) ve onun için altında çalışan işte Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
 departmanları olan bir şirkete bakıyor olalım. Şirketin bir de harcama ayrıcalıkları 
 olsun isteyen bir CEO'su olsun. 
-O zaman biz fonlar için yetkiliyi şunlara göre oluştururuz :
+O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 
@@ -88,7 +88,7 @@ O zaman biz fonlar için yetkiliyi şunlara göre oluştururuz :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    |
 
-ve bu durumda CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
+bu durumda CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
 MİM.ŞİRKET hesabı şöyle olabilir :
 
 | MİM.ŞİRKET         | Ağırlık |

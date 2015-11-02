@@ -1,6 +1,6 @@
 # Üyelik
 
-BitShares deki hesaplar üç gruba ayrılırlar . Biz kullanıcılara dilerlerse hesaplarını VIP-
+BitShares'deki hesaplar üç gruba ayrılırlar . Biz kullanıcılara dilerlerse hesaplarını VIP-
 gibi bir statüye yükseltmelerine ve ilave özelliklerden ve indirimlerden 
 faydalanmalarına imkan tanıdık.
 
@@ -10,33 +10,33 @@ faydalanmalarına imkan tanıdık.
 
 ## Ömür-boyu Üyeler
 
-Ömür-boyu üyeler ödedikleri her işlem başına belirli bir yüzde kendilerine iade edilir 
-ve kaydını yaptırdıkları ya da getirdikleri üyelerden komisyon geliri kazanmaya hak 
-kazanırlar. Ömür-boyu üyelikle alakalı kurul tarafından belirlenmiş belli bir miktarda 
+Ömür-boyu üyelerin ödediği her işlem ücretinin belirli bir yüzdesi kendilerine iade 
+edilir ve kaydını yaptıkları ya da getirdikleri üyelerden komisyon geliri kazanmaya 
+hak kazanırlar. Ömür-boyu üyelikle alakalı kurul tarafından belirlenmiş belli miktarda 
 tek-seferlik bir ücret vardır.
 
 ## Yıllık Üyeler
 
-Ömür-boyu üyelik eğer çok fazla gelirse , tek-seferlik düşük bir bedel 
-karşılığında bir  yıl süren yıllık abonelik alarak bir sonraki seneye de aynı iadeyi 
+Ömür-boyu üyelik eğer çok fazla gelirse , bir yıl süreli tek-seferlik düşük bir bedel 
+karşılığında yıllık abone olarak bir sonraki seneye de aynı iadeyi 
 alabilirsiniz.
 
-### Ücret Paylaşması
+### Ücret Paylaşımı
 
-Getirdiğiniz hesap işlem ücreti ödediği her seferde o ücret birçok farklı hesap arasında 
-pay edilir. Ağımız bir kısmını keser , hesabı getiren ömür-boyu üye de diğer kısmını alır.
-Hesabı getiren bir kısım pay alır.
+Getirdiğiniz hesap her işlem ücreti ödediğinde o ücret birçok farklı hesap arasında 
+pay edilir. Ağımız bir kısmını alır , hesabı getiren ömür-boyu üye de diğer kısmını alır.
+Hesabı getiren üye bir kısım pay alır.
 
-Kayıtçı hesabın ağımıza kaydı yapılırkenki işlem ücretini  ödeyen hesaptır. Kayıtçı 
-ücretin geri kalan kısmını kendileri ve ortaklarıyla nasıl pay edeceğine  kendisi karar 
+Kayıtçı , hesabın ağımıza kaydı yapılırken işlem ücretini ödeyen hesaptır. Kayıtçı 
+ücretin geri kalan kısmını kendisi ve bağlantılarıyla nasıl pay edeceğine kendisi karar 
 verir.
 
 ### Bekleyen Ücretler
 
-Ödenen ücretler ağımız, getirenler, ve kayıtçılar arasında  ancak her bakım aralığında 
+Ödenen ücretler sadece ağımız, getirenler, ve kayıtçılar arasında her bakım aralığında 
 bir kez pay edilir.
                  
-### Hak Edilmiş Ücretler
+### Hak Ücretler
 
 Çoğu ücretler anında ödenmesine rağmen , bir limitin üzerindeki ücretler (mesela 
 üyeliğinizi yükseltmek için ödediğiniz ya da paralı hesap kaydetmek için ödediğiniz 
