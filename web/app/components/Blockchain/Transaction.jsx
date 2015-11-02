@@ -387,6 +387,7 @@ class Transaction extends React.Component {
 
                 case "asset_create":
                     color = "warning";
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.assets.issuer" /></td>
@@ -408,7 +409,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="account.user_issued_assets.max_supply" /></td>
-                            <td><FormattedAsset amount={op[1].common_options.max_supply} asset={op[1].symbol} /></td>
+                            <td>{utils.format_asset(op[1].common_options.max_supply, op[1])}</td>
                         </tr>
                     );
                     rows.push(
@@ -420,13 +421,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.market_fee" /></td>
-                            <td>{op[1].common_options.market_fee_percent / 1000}%</td>
+                            <td>{op[1].common_options.market_fee_percent / 100}%</td>
                         </tr>
                     );
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transaction.max_market_fee" /></td>
-                            <td>{op[1].common_options.max_market_fee / 1000}%</td>
+                            <td>{utils.format_asset(op[1].common_options.max_market_fee, op[1])}</td>
                         </tr>
                     );
                     rows.push(
@@ -454,6 +455,28 @@ class Transaction extends React.Component {
                             <td>{this.linkToAccount(op[1].issuer)}</td>
                         </tr>
                     );
+                    if (op[1].new_issuer !== op[1].issuer) {
+                        rows.push(
+                            <tr>
+                                <td><Translate component="span" content="account.user_issued_assets.new_issuer" /></td>
+                                <td>{this.linkToAccount(op[1].new_issuer)}</td>
+                            </tr>
+                        );
+                        }
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="markets.core_rate" /></td>
+                            <td>
+                                <FormattedPrice
+                                    base_asset={op[1].new_options.core_exchange_rate.base.asset_id}
+                                    quote_asset={op[1].new_options.core_exchange_rate.quote.asset_id}
+                                    base_amount={op[1].new_options.core_exchange_rate.base.amount}
+                                    quote_amount={op[1].new_options.core_exchange_rate.quote.amount}
+                                />
+                            </td>
+                        </tr>
+                    );
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.new_options" /></td>

@@ -1,0 +1,1 @@
+[Committee members](introduction/committee) may propose changes to the dynamic parameters of the blockchain, such as fees, block time and many other things. It is a position of great responsibility that requires a good understanding of how Bitshares works.

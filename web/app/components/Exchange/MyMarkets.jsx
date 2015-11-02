@@ -18,6 +18,10 @@ class MyMarkets extends React.Component {
         assets: ChainTypes.ChainAssetsList.isRequired
     }
 
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
+
     constructor(props) {
         super();
         this.state = {
@@ -50,6 +54,10 @@ class MyMarkets extends React.Component {
         this.setState({
             inverseSort: !this.state.inverseSort
         });
+    }
+
+    _goMarkets() {
+        this.context.router.transitionTo("markets");
     }
 
     render() {
@@ -119,7 +127,7 @@ class MyMarkets extends React.Component {
                         <thead>
                             <tr>
                                 <th className="mymarkets-header clickable" onClick={this._inverseSort.bind(this)} style={{textAlign: "left", paddingLeft: "15px"}}><Translate content="exchange.market_name" /></th>
-                                <th className="mymarkets-header" style={{textAlign: "left" }}><Translate content="exchange.price" /></th>
+                                <th className="mymarkets-header" style={{textAlign: "left" }}><button onClick={this._goMarkets.bind(this)} className="button outline"><Translate content="exchange.more" /></button></th>
                             </tr>
                         </thead>
                     </table>

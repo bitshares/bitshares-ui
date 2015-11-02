@@ -21,6 +21,7 @@
         current: "Current Account",
         create_account: "Create Account",
         create_asset: "Create Asset",
+        update_asset: "Update Asset",
         lock: "Lock",
         unlock: "Unlock",
         help: "Help",
@@ -53,7 +54,7 @@
             fees_vested: "Pending vested fees",
             referrals: "Referrals",
             rewards: "Cashback Rewards",
-            cashback: "Cashback",
+            cashback: "Vesting cashback balance",
             vested: "Vested",
             unknown: "Unknown member",
             lifetime: "Lifetime member",
@@ -62,7 +63,8 @@
             upgrade_lifetime: "Buy Lifetime Subscribtion",
             subscribe: "Buy Annual Subscription",
             expires: "expires",
-            membership_expiration: "Membership Expiration"
+            membership_expiration: "Membership Expiration",
+            fees_cashback: "Fees and cashback"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -71,7 +73,20 @@
             max_supply: "Maximum supply",
             precision: "Precision",
             to: "Issue to account",
-            details: "Details"
+            market_fee: "Market fee",
+            max_market_fee: "Max market fee",
+            details: "Details",
+            primary: "Primary settings",
+            optional: "Optional settings",
+            approx_fee: "Approximate fee",
+            exists: "That asset already exists",
+            max_positive: "Max supply should be a positive number",
+            core_exchange_rate: "Core exchange rate",
+            quote: "Quote asset amount",
+            base: "Base asset amount",
+            update_owner: "Update owner",
+            current_issuer: "Current owner account",
+            new_issuer: "New owner account"
         },
         connections: {
             known: "Known by",
@@ -94,6 +109,8 @@
             memo_public_key: "Memo Public Key"
         },
         votes: {
+            proxy_short: "Proxy",
+            workers_short: "Workers",            
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             name: "Name",
@@ -511,9 +528,11 @@
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         market_name: "Market name",
         quote_supply: "Quote supply",
-        base_supply: "Base supply"
+        base_supply: "Base supply",
+        more: "More markets"
     },
     markets: {
+        title: "Markets",
         base: "Base asset",
         market_search: "Market Search",
         filter: "Filter",

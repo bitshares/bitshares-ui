@@ -30,25 +30,28 @@ class ValueComponent extends React.Component {
     render() {
         let {amount, baseAsset, quoteAsset, fullPrecision} = this.props;
 
-        let coreType = this.props.baseAsset.get('id');
-        let quoteType = this.props.quoteAsset.get('id');
+        let coreType = this.props.baseAsset.get("id");
+        let quoteType = this.props.quoteAsset.get("id");
 
         if (!fullPrecision) {
             amount = utils.get_asset_amount(amount, quoteAsset);
         }
 
-        let coreValue = quoteAsset.get("id") !== coreType ?
-            amount * quoteAsset.getIn(["options", "core_exchange_rate", "quote", "amount"]) / quoteAsset.getIn(["options", "core_exchange_rate", "base", "amount"]) :
+        let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
+        let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
+        let price = utils.convertPrice(quoteAsset, baseAsset);
+        let assetPrice = utils.get_asset_price(price.quoteAmount, quoteAsset, price.baseAmount, baseAsset);
+
+        let eqValue = quoteType !== coreType ?
+            basePrecision * (amount / quotePrecision) / assetPrice :
             amount;
 
-        if (isNaN(coreValue)) {
+        if (isNaN(eqValue) || !isFinite(eqValue)) {
             return <span>n/a</span>
         }
         if (coreType === quoteType) {
-            return <FormattedAsset amount={coreValue} asset={coreType}/>;
+            return <FormattedAsset amount={eqValue} asset={coreType}/>;
         }
-
-        let eqValue = coreValue * baseAsset.getIn(["options", "core_exchange_rate", "base", "amount"]) / baseAsset.getIn(["options", "core_exchange_rate", "quote", "amount"]);
 
         return <FormattedAsset amount={eqValue} asset={coreType}/>;
     }
@@ -63,8 +66,8 @@ class BalanceValueComponent extends React.Component {
     }
 
     render() {
-        let amount = Number(this.props.balance.get('balance'));
-        let type = this.props.balance.get('asset_type');
+        let amount = Number(this.props.balance.get("balance"));
+        let type = this.props.balance.get("asset_type");
             
         return <ValueComponent amount={amount} quoteAsset={type} baseAsset={this.props.baseAsset}/>;
     }

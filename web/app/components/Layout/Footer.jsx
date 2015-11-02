@@ -10,6 +10,7 @@ import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
+import ReactTooltip from "react-tooltip"
 
 @BindToChainState({keep_updating: true})
 class Footer extends React.Component {
@@ -72,7 +73,10 @@ class Footer extends React.Component {
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     { this.props.backup_recommended ? <span>
                         <div className="grid-block">
-                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup Required</a>
+                            <a className="shrink txtlabel facolor-alert"
+                                data-tip="Please understand that you are responsible for making your own backup&hellip;"
+                                data-type="warning"
+                                onClick={this.onBackup.bind(this)}>Backup Required</a>
                             &nbsp;&nbsp;
                         </div>
                     </span> : null}

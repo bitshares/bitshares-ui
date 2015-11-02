@@ -30,6 +30,7 @@ class WalletActions {
         If <b>wallet_name</b> does not exist, provide a <b>create_wallet_password</b>.
     */
     setWallet(wallet_name, create_wallet_password, brnkey) {
+        WalletUnlockActions.lock()
         if( ! wallet_name) wallet_name = "default"
         return new Promise( resolve => {
             this.dispatch({wallet_name, create_wallet_password, brnkey, resolve})
@@ -92,6 +93,7 @@ class WalletActions {
             let create_account_promise = fetch(SettingsStore.getSetting("faucet_address") + "/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',
+                credentials: "include",
                 headers: {
                     "Accept": "application/json",
                     "Content-type": "application/json"

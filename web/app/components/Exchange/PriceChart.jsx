@@ -123,7 +123,8 @@ class PriceChart extends React.Component {
                 },
                 column: {
                     animation: false,
-                    borderColor: "#000000"
+                    borderColor: "#000000",
+                    pointWidth: 4
                 },
                 series: {
                     marker: {
