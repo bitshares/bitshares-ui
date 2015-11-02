@@ -34,8 +34,10 @@ export default class PrivateKeyView extends Component {
     
     render() {
         var modalId = "key_view_modal" + this.props.pubkey
-        var has_private = PrivateKeyStore.getState().keys.has(this.props.pubkey)
+        var keys = PrivateKeyStore.getState().keys
+        var has_private = keys.has(this.props.pubkey)
         if( ! has_private) return <span>{this.props.children}</span>
+        var key = keys.get(this.props.pubkey)
         return <span>
             <a onClick={this.onOpen.bind(this)}>{this.props.children}</a>
             <Modal ref={modalId} id={modalId} overlay={true} overlayClose={false}>
@@ -61,7 +63,22 @@ export default class PrivateKeyView extends Component {
                                 </span>}
                             </div>
                         </div>
-                        
+                        <br/>
+
+                        <div className="grid-block grid-content">
+                            <label>Brainkey Position</label>
+                            {key.brainkey_sequence == null ? "Non-deterministic" : key.brainkey_sequence}
+                        </div>
+                        <br/>
+
+                        {key.import_account_names && key.import_account_names.length ?
+                        <div className="grid-block grid-content">
+                            <label>Imported From Account</label>
+                            {key.import_account_names.join(", ")}
+                            <br/>
+                        </div>
+                        :null}
+
                     </div>
                 </div>
                 <div className="button-group">

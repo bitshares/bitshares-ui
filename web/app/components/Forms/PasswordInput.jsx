@@ -61,7 +61,7 @@ class PasswordInput extends Component {
     }
 
     onKeyDown(e) {
-        if(this.props.onEnter && event.keyCode === 13) this.props.onEnter(e);
+        if(this.props.onEnter && e.keyCode === 13) this.props.onEnter(e);
     }
 
     render() {
