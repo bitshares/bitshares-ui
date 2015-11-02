@@ -183,6 +183,9 @@ class Exchange extends React.Component {
 
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
+            SettingsActions.changeViewSetting({
+                lastMarket: nextProps.quoteAsset.get("symbol") + "_" + nextProps.baseAsset.get("symbol")
+            });
             return this._subToMarket(nextProps);
         }
     }
