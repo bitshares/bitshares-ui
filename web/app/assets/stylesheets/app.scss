@@ -288,3 +288,9 @@ section > ul > li.key-value {
 label.inline {
   display: inline;
 }
+
+.blocks-row {
+  > div.grid-block {
+    padding-bottom: 0 !important;
+  }
+}

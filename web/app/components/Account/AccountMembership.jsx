@@ -36,13 +36,15 @@ class AccountMembership extends React.Component {
         let dprops = this.props.dprops;
 
         let account = this.props.account.toJS();
-
+        console.log("account:", account);
         let ltr = ChainStore.getAccount( account.lifetime_referrer );
         if( ltr ) account.lifetime_referrer_name = ltr.get('name');
         let ref = ChainStore.getAccount( account.referrer );
         if( ref ) account.referrer_name = ref.get('name');
         let reg = ChainStore.getAccount( account.registrar );
         if( reg ) account.registrar_name = reg.get('name');
+
+        let cvb = ChainStore.getObject( account.cashback_vb );
 
         let account_name = account.name;
 
@@ -121,10 +123,18 @@ class AccountMembership extends React.Component {
                                     </td>
                                     <td>{referrer_fee}%</td>
                                 </tr>
-                                <Statistics stat_object={account.statistics}/>
                                 <tr>
                                     <td><Translate content="account.member.membership_expiration"/> </td>
                                     <td>{expiration_date}</td>
+                                </tr>
+                            </table>
+
+                            <h4 style={{paddingTop: "1rem"}}><Translate content="account.member.fees_cashback"/></h4>
+                            <table className="table key-value-table">                                
+                                <Statistics stat_object={account.statistics}/>
+                                <tr>
+                                    <td><Translate content="account.member.cashback"/> </td>
+                                    <td>{cvb ? <FormattedAsset amount={cvb.getIn(["balance", "amount"])} asset={cvb.getIn(["balance", "asset_id"])} /> : null}</td>
                                 </tr>
                             </table>
                         </div>

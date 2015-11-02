@@ -54,7 +54,7 @@
             fees_vested: "Pending vested fees",
             referrals: "Referrals",
             rewards: "Cashback Rewards",
-            cashback: "Cashback",
+            cashback: "Vesting cashback balance",
             vested: "Vested",
             unknown: "Unknown member",
             lifetime: "Lifetime member",
@@ -63,7 +63,8 @@
             upgrade_lifetime: "Buy Lifetime Subscribtion",
             subscribe: "Buy Annual Subscription",
             expires: "expires",
-            membership_expiration: "Membership Expiration"
+            membership_expiration: "Membership Expiration",
+            fees_cashback: "Fees and cashback"
         },
         user_issued_assets: {
             symbol: "Symbol",
