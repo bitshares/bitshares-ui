@@ -126,7 +126,7 @@ class AssetActions {
                 }
             }
         };
-        if (issuer === new_issuer) {
+        if (issuer === new_issuer || !new_issuer) {
             delete updateObject.new_issuer;
         }
         tr.add_type_operation("asset_update", updateObject);
