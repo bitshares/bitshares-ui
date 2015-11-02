@@ -1,6 +1,19 @@
 #### 目录
 
-- [介绍](index.md)
-- [词汇表](glossary.md)
-- 资产
-  * [USD](assets/usd.md)
+ * [介绍](index.md)
+ * [词汇表](glossary.md)
+ * [BitShares比特股](introduction/bitshares.md)
+ * [钱包](introduction/wallets.md)
+ * [备份](introduction/backups.md)
+ * [区块链](introduction/blockchain.md)
+ * [见证人](introduction/witness.md)
+ * [理事会成员](introduction/committee.md)
+ * [账户](accounts/general.md)
+ * [权限](accounts/permissions.md)
+ * [会员等级](accounts/membership.md)
+ * [市场锚定资产](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
+ * [用户发行资产](assets/uia.md)
+ * [私有比特资产](assets/privbitassets.md)
+ * [去中心化交易所](dex/introduction.md)
+ * [交易](dex/trading.md)
+ * [卖空比特资产](dex/shorting.md)

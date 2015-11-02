@@ -21,6 +21,7 @@
         current: "Current Account",
         create_account: "Create Account",
         create_asset: "Create Asset",
+        update_asset: "Update Asset",
         lock: "Lock",
         unlock: "Unlock",
         help: "Help",
@@ -71,7 +72,20 @@
             max_supply: "Maximum supply",
             precision: "Precision",
             to: "Issue to account",
-            details: "Details"
+            market_fee: "Market fee",
+            max_market_fee: "Max market fee",
+            details: "Details",
+            primary: "Primary settings",
+            optional: "Optional settings",
+            approx_fee: "Approximate fee",
+            exists: "That asset already exists",
+            max_positive: "Max supply should be a positive number",
+            core_exchange_rate: "Core exchange rate",
+            quote: "Quote asset amount",
+            base: "Base asset amount",
+            update_owner: "Update owner",
+            current_issuer: "Current owner account",
+            new_issuer: "New owner account"
         },
         connections: {
             known: "Known by",
@@ -110,7 +124,19 @@
             add_committee_label: "Committee Member",
             add_witness_label: "Witness",
             approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal"
+            reject_worker: "Reject worker proposal",
+            worker_account: "Worker account",
+            total_votes: "Total votes",
+            votes_against: "Votes against",
+            daily_pay: "Daily pay",
+            max_pay: "Maximum total pay",
+            unclaimed: "Unclaimed pay",
+            status: {
+                title: "Status",
+                supported: "Supported",
+                rejected: "Rejected",
+                neutral: "Neutral"
+            }
         },
         options: {
             num_witnesses: "Desired Witnesses",
@@ -213,7 +239,7 @@
         update_feed_producers: "pdated the feed producers of asset",
         feed_producer: "Became a feed producer for the asset",
         feed_price: "Feed price",
-        asset_issue: "Issued",
+        asset_issue: "issued",
         was_issued: "Was issued",
         by: "by",
         burn_asset: "Burnt",
@@ -261,6 +287,9 @@
         publisher: "Publisher",
         market_fee: "Market fee",
         max_market_fee: "Maximum market fee",
+        blinding_factor: "Blinding factor",
+        outputs: "Outputs",
+        inputs: "Inputs",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -300,7 +329,10 @@
             custom: "Custom",
             assert: "Assert operation",
             balance_claim: "Claim balance",
-            override_transfer: "Override transfer"
+            override_transfer: "Override transfer",
+            transfer_to_blind: "Transfer to blinded account",
+            blind_transfer: "Blinded transfer",
+            transfer_from_blind: "Transfer from blinded account"
         }
     },
     explorer: {
@@ -493,9 +525,11 @@
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         market_name: "Market name",
         quote_supply: "Quote supply",
-        base_supply: "Base supply"
+        base_supply: "Base supply",
+        more: "More markets"
     },
     markets: {
+        title: "Markets",
         base: "Base asset",
         market_search: "Market Search",
         filter: "Filter",

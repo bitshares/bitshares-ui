@@ -108,7 +108,6 @@ class DepthHighChart extends React.Component {
             },
             tooltip: {
                 shared: false,
-                crosshairs: [true, true],
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
@@ -134,7 +133,13 @@ class DepthHighChart extends React.Component {
                         color: "#FFFFFF"
                     }
                 },
-                gridLineWidth: 0
+                gridLineWidth: 0,
+                crosshair: {
+                    snap: false
+                },
+                currentPriceIndicator: {
+                    enabled: false
+                }
             },
             xAxis: {
                 labels: {

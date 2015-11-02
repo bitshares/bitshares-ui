@@ -248,7 +248,6 @@ class Download extends BackupBaseComponent {
             throw new Error("Invalid backup to download conversion")
         
         saveAs(blob, this.props.backup.name);
-        CachedPropertyActions.set("backup_recommended", false)
         WalletActions.setBackupDate()
     }
 }

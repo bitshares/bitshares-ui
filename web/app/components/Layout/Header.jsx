@@ -4,6 +4,7 @@ import connectToStores from "alt/utils/connectToStores";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
@@ -11,26 +12,32 @@ import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import WalletManagerStore from "stores/WalletManagerStore";
 
 @connectToStores
 class Header extends React.Component {
 
     static getStores() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore]
+        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore]
     }
 
     static getPropsFromStores() {
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             locked: WalletUnlockStore.getState().locked,
-            current_wallet: WalletManagerStore.getState().current_wallet
+            current_wallet: WalletManagerStore.getState().current_wallet,
+            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket")
         }
     }
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.linkedAccounts !== this.props.linkedAccounts
-               || nextProps.locked !== this.props.locked
-               || nextProps.current_wallet !== this.props.current_wallet;
+        return (
+            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.locked !== this.props.locked ||
+            nextProps.current_wallet !== this.props.current_wallet ||
+            nextProps.lastMarket !== this.props.lastMarket
+        );
+
     }
 
     _triggerMenu(e) {
@@ -61,6 +68,10 @@ class Header extends React.Component {
                 <a href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light"><Icon name="locked"/></a>
                 : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light"><Icon name="unlocked"/></a> }
             </div>);
+
+        let tradeLink = this.props.lastMarket ?
+            <Link to="exchange" params={{marketID: this.props.lastMarket}}><Translate component="span" content="header.exchange" /></Link>:
+            <Link to="markets"><Translate component="span" content="header.exchange" /></Link>
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -73,7 +84,8 @@ class Header extends React.Component {
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
                         <li><Link to="explorer"><Translate component="span" content="header.explorer" /></Link></li>
-                        {linkedAccounts.size === 0 ? null : <li><Link to="markets"><Translate component="span" content="header.exchange" /></Link></li>}
+                        {linkedAccounts.size === 0 ? null :
+                            <li>{tradeLink}</li>}
                         <li><Link to="transfer"><Translate component="span" content="header.payments" /></Link></li>
                     </ul>
                 </div>

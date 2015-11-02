@@ -19,19 +19,13 @@ BitShares(比特股) 2.0 是一个金融智能合约平台，该平台基于[Cry
 
 ## 资产
  * [市场锚定资产](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
- * [用户自定义资产](assets/uia.md)
+ * [用户发行资产](assets/uia.md)
  * [私有比特资产](assets/privbitassets.md)
 
 ## 去中心化交易所
  * [介绍](dex/introduction.md)
- * [交易对](dex/pairs.md)
- * [买卖盘记录](dex/orderbooks.md)
- * [买入及售出](dex/buysell.md)
+ * [交易](dex/trading.md)
  * [卖空比特资产](dex/shorting.md)
-   * [借贷](dex/borrow.md)
-   * [Selling](dex/sell.md)
-   * [平仓](dex/cover.md)
-   * [清算](dex/settlement.md)
 
 ----------
 [词汇表](glossary.md)

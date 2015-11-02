@@ -4,6 +4,7 @@ import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import ChainStore from "api/ChainStore";
+import big from "bignumber.js";
 
 let wallet_api = new WalletApi();
 
@@ -14,7 +15,14 @@ class AssetActions {
     createAsset(account_id, createObject) {
         // Create asset action here...
         console.log("create asset:", createObject);
-        var tr = wallet_api.new_transaction();
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(createObject.precision);
+
+        big.config({DECIMAL_PLACES: createObject.precision});
+        let max_supply = (new big(createObject.max_supply)).times(precision).toString();
+        let max_market_fee = (new big(createObject.common_options.max_market_fee || 0)).times(precision).toString();
+        console.log("max_supply:", max_supply);
+        console.log("max_market_fee:", max_market_fee);
         tr.add_type_operation("asset_create", {
             "fee": {
                 amount: 0,
@@ -24,9 +32,9 @@ class AssetActions {
             "symbol": createObject.symbol,
             "precision": parseInt(createObject.precision, 10),
             "common_options": {
-                "max_supply": createObject.max_supply,
-                "market_fee_percent": 0,
-                "max_market_fee": "0",
+                "max_supply": max_supply,
+                "market_fee_percent": createObject.common_options.market_fee_percent * 100 || 0,
+                "max_market_fee": max_market_fee,
                 "issuer_permissions": 79,
                 "flags": 0,
                 "core_exchange_rate": {
@@ -58,7 +66,72 @@ class AssetActions {
             "extensions": null
         });
         return WalletDb.process_transaction(tr, null, true).then(result => {
-            console.log("asset create result:", result);
+            // console.log("asset create result:", result);
+            // this.dispatch(account_id);
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- createAsset error ----->", error);
+            return false;
+        });
+    }
+
+    updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, core) {
+        // Create asset action here...
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(asset.get("precision"));
+        let corePrecision = utils.get_asset_precision(core.get("precision"));
+
+        big.config({DECIMAL_PLACES: asset.get("precision")});
+        let max_supply = (new big(update.max_supply)).times(precision).toString();
+        let max_market_fee = (new big(update.max_market_fee || 0)).times(precision).toString();
+
+        let cr_quote_amount = core_exchange_rate.quote.asset_id === asset.get("id") ?
+            (new big(core_exchange_rate.quote.amount)).times(precision).toString() :
+            (new big(core_exchange_rate.quote.amount)).times(corePrecision).toString();
+
+        let cr_base_amount = core_exchange_rate.base.asset_id === asset.get("id") ?
+            (new big(core_exchange_rate.base.amount)).times(precision).toString() :
+            (new big(core_exchange_rate.base.amount)).times(corePrecision).toString();
+
+        let updateObject = {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            asset_to_update: asset.get("id"),
+            extensions: asset.get("extensions"),
+            issuer: issuer,
+            new_issuer: new_issuer,
+            new_options: {
+                max_supply: max_supply,
+                max_market_fee: max_market_fee,
+                market_fee_percent: update.market_fee_percent * 100,
+                description: update.description,
+                issuer_permissions: asset.getIn(["options", "issuer_permissions"]),
+                flags: asset.getIn(["options", "flags"]),
+                whitelist_authorities: asset.getIn(["options", "whitelist_authorities"]),
+                blacklist_authorities: asset.getIn(["options", "blacklist_authorities"]),
+                whitelist_markets: asset.getIn(["options", "whitelist_markets"]),
+                blacklist_markets: asset.getIn(["options", "blacklist_markets"]),
+                extensions: asset.getIn(["options", "extensions"]),
+                core_exchange_rate: {
+                    quote: {
+                        amount: cr_quote_amount,
+                        asset_id: core_exchange_rate.quote.asset_id
+                    },
+                    base: {
+                        amount: cr_base_amount,
+                        asset_id: core_exchange_rate.base.asset_id
+                    }
+                }
+            }
+        };
+        if (issuer === new_issuer) {
+            delete updateObject.new_issuer;
+        }
+        tr.add_type_operation("asset_update", updateObject);
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            // console.log("asset create result:", result);
             // this.dispatch(account_id);
             return true;
         }).catch(error => {

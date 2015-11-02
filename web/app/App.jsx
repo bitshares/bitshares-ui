@@ -15,6 +15,7 @@ import AccountPage from "./components/Account/AccountPage";
 import AccountOverview from "./components/Account/AccountOverview";
 import AccountAssets from "./components/Account/AccountAssets";
 import AccountAssetCreate from "./components/Account/AccountAssetCreate";
+import AccountAssetUpdate from "./components/Account/AccountAssetUpdate";
 import AccountMembership from "./components/Account/AccountMembership";
 import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPayees from "./components/Account/AccountPayees";
@@ -43,6 +44,7 @@ import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/Exist
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
+import CachedPropertyStore from "stores/CachedPropertyStore"
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
@@ -63,7 +65,7 @@ require("./components/Utility/Prototypes"); // Adds a .equals method to Array fo
 require("./assets/stylesheets/app.scss");
 require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
-const { Route, RouteHandler, DefaultRoute } = Router;
+const { Route, RouteHandler, DefaultRoute, Redirect} = Router;
 
 class App extends React.Component {
 
@@ -123,6 +125,17 @@ class App extends React.Component {
     // }
 
     render() {
+        if( ! this.backup_recommended_warned ) {
+            this.backup_recommended_warned = true
+            var wallet = WalletDb.getWallet()
+            if( wallet ) setTimeout(()=> {
+                if( CachedPropertyStore.get("backup_recommended") ||
+                    ! wallet.backup_date ) {
+                    alert("Please understand that you are responsible for making your own backup...")
+                    
+                }
+            }, 2500)
+        }
         if (this.context.router.getCurrentPath() === "/init-error") { // temporary, until we implement right offline mode
             return (
                 <div className="grid-frame vertical">
@@ -238,8 +251,10 @@ let routes = (
         <Route name="console" path="console" handler={Console}/>
         <Route name="transfer" path="transfer" handler={Transfer}/>
         <Route name="invoice" path="invoice/:data" handler={Invoice}/>
-        <Route name="markets" path="markets" handler={Markets}/>
-        <Route name="exchange" path="exchange/trade/:marketID" handler={Exchange}/>
+        <Redirect from="markets" to="markets"/>
+        <Route name="markets" path="explorer/markets" handler={Markets}/>
+        <Redirect from="exchange/trade/:marketID" to="exchange"/>
+        <Route name="exchange" path="market/:marketID" handler={Exchange}/>
         <Route name="settings" path="settings" handler={Settings}/>
         <Route name="block" path="block/:height" handler={BlockContainer}/>
         <Route name="asset" path="asset/:symbol" handler={AssetContainer}/>
@@ -256,7 +271,9 @@ let routes = (
             <DefaultRoute handler={AccountOverview}/>
             <Route name="account-overview" path="overview" handler={AccountOverview}/>
             <Route name="account-assets" path="assets" handler={AccountAssets}/>
-            {<Route name="account-create-asset" path="create-asset" handler={AccountAssetCreate}/>}
+            <Route name="account-create-asset" path="create-asset" handler={AccountAssetCreate}/>
+            <Route name="account-update-asset" path="update-asset/:asset" handler={AccountAssetUpdate}/>
+
             <Route name="account-member-stats" path="member-stats" handler={AccountMembership}/>
             <Route name="account-payees" path="payees" handler={AccountPayees}/>
             <Route name="account-permissions" path="permissions" handler={AccountPermissions}/>

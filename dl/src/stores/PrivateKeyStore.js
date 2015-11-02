@@ -8,6 +8,7 @@ import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import AddressIndex from "stores/AddressIndex"
+import ChainStore from "api/ChainStore"
 import PublicKey from "ecc/key_public"
 import Address from "ecc/address"
 
@@ -30,7 +31,7 @@ class PrivateKeyStore extends BaseStore {
             onAddKey: PrivateKeyActions.addKey
         })
         this._export("hasKey", "getPubkeys", "getTcomb_byPubkey",
-            "getPubkeys_having_PrivateKey");
+            "getPubkeys_having_PrivateKey", "addPrivateKeys_noindex");
     }
     
     _getInitialState() {
@@ -151,6 +152,30 @@ class PrivateKeyStore extends BaseStore {
             resolve(p)
         })
         resolve(p)
+    }
+    
+    
+    /** WARN: does not update AddressIndex.  This is designed for bulk importing.
+        @return duplicate_count
+    */
+    addPrivateKeys_noindex(private_key_objects, transaction) {
+        var store = transaction.objectStore("private_keys")
+        var duplicate_count = 0
+        var keys = this.state.keys.withMutations( keys => {
+            for(let private_key_object of private_key_objects) {
+                if(this.state.keys.has(private_key_object.pubkey)) {
+                    duplicate_count++
+                    continue
+                }
+                var private_tcomb = PrivateKeyTcomb(private_key_object)
+                store.add( private_key_object )
+                keys.set( private_key_object.pubkey, private_tcomb )
+                ChainStore.getAccountRefsOfKey(private_key_object.pubkey)
+            }
+        })
+        this.setState({ keys })
+        this.binaryBackupRecommended()
+        return duplicate_count
     }
     
     binaryBackupRecommended() {

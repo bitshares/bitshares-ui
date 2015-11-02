@@ -72,8 +72,8 @@ class PriceStat extends React.Component {
                     <b className={"value stat-primary"}>
                         {utils.format_number(price, Math.max(5, quote ? quote.get("precision") : 0))}
                         {change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-                        
-                    </b>                                                    
+
+                    </b>
                     <br/>
                     <em>{base.get("symbol")}/{quote.get("symbol")}</em>
                 </span>
@@ -157,6 +157,9 @@ class Exchange extends React.Component {
     componentDidMount() {
         let centerContainer = React.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
+        SettingsActions.changeViewSetting({
+            lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
+        });
     }
 
     _addMarket(quote, base) {
@@ -176,9 +179,7 @@ class Exchange extends React.Component {
             }
         }
 
-
-
-        if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol")) {
+        if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
 
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
@@ -504,9 +505,9 @@ class Exchange extends React.Component {
                 if (flipped) {
                     highestBid = bids.reduce((total, bid) => {
                         if (!total) {
-                            return bid.price_full;
+                            return bid.full;
                         } else {
-                            return Math.max(total, bid.price_full);
+                            return Math.max(total, bid.full);
                         }
                     }, null);
                     squeezePrice = settlementPrice / short_squeeze;
@@ -514,12 +515,12 @@ class Exchange extends React.Component {
                 } else {
                     lowestAsk = asks.reduce((total, ask) => {
                         if (!total) {
-                            return ask.price_full;
+                            return ask.full;
                         } else {
-                            return Math.min(total, ask.price_full);
+                            return Math.min(total, ask.full);
                         }
                     }, null);
-                    
+
                     squeezePrice = settlementPrice * short_squeeze;
                     showCallLimit = lowestAsk > lowestCallPrice && lowestCallPrice < squeezePrice;
                 }
@@ -542,7 +543,9 @@ class Exchange extends React.Component {
             combinedBids = bids;
         }
 
-        lowestAsk = combinedAsks.length > 0 ? combinedAsks.reduce((a, b) => {
+        lowestAsk = combinedAsks.length === 1 ?
+            combinedAsks[0].price_full : combinedAsks.length > 1 ?
+            combinedAsks.reduce((a, b) => {
             if (a.price_full) {
                 return a.price_full <= b.price_full ? a.price_full : b.price_full;
            } else {
@@ -550,7 +553,9 @@ class Exchange extends React.Component {
            }
         }) : 0;
 
-        highestBid = combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
+        highestBid = combinedBids.length === 1 ?
+        combinedBids[0].price_full :
+        combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
             return a >= b.price_full ? a : b.price_full;
         }, 0) : 0;
 
@@ -565,25 +570,25 @@ class Exchange extends React.Component {
             let paysAsset, receivesAsset, isAsk = false;
             if (latest.pays.asset_id === base.get("id")) {
                 paysAsset = base;
-                receivesAsset = quote;                    
+                receivesAsset = quote;
+                isAsk = true;
             } else {
                 paysAsset = quote;
                 receivesAsset = base;
-                isAsk = true;                    
             }
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             latestPrice = market_utils.parse_order_history(latest, paysAsset, receivesAsset, isAsk, flipped);
             if (second_latest) {
                 if (second_latest.pays.asset_id === base.get("id")) {
                     paysAsset = base;
-                    receivesAsset = quote;                    
+                    receivesAsset = quote;
                 } else {
                     paysAsset = quote;
                     receivesAsset = base;
-                    isAsk = true;                    
+                    isAsk = true;
                 }
                 let oldPrice = market_utils.parse_order_history(second_latest, paysAsset, receivesAsset, isAsk, flipped);
-                changeClass = latestPrice.price_full - oldPrice.price_full > 0 ? "change-up" : "change-down";
+                changeClass = latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
             }
 
         }
@@ -618,12 +623,12 @@ class Exchange extends React.Component {
 
         let bucketTexts = {
             "15": "15s",
-            "60": "1min",
-            "300": "5min",
-            "900": "15min",
-            "1800": "30min",
-            "3600": "1hr",
-            "14400": "4hrs",
+            "60": "1m",
+            "300": "5m",
+            "900": "15m",
+            "1800": "30m",
+            "3600": "1h",
+            "14400": "4h",
             "86400": "1d"
         };
 
@@ -704,7 +709,7 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.latest" />
                                                     <br/>
-                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.price_full, Math.max(5, quote ? quote.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>                                                    
+                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
@@ -784,8 +789,8 @@ class Exchange extends React.Component {
                                     amount={buyAmount}
                                     price={buyPrice}
                                     total={buyTotal}
-                                    quoteSymbol={quoteSymbol}
-                                    baseSymbol={baseSymbol}
+                                    quote={quote}
+                                    base={base}
                                     amountChange={this._buyAmountChanged.bind(this, base, quote)}
                                     priceChange={this._buyPriceChanged.bind(this, base, quote)}
                                     totalChange={this._buyTotalChanged.bind(this, base, quote)}
@@ -807,8 +812,8 @@ class Exchange extends React.Component {
                                     amount={sellAmount}
                                     price={sellPrice}
                                     total={sellTotal}
-                                    quoteSymbol={quoteSymbol}
-                                    baseSymbol={baseSymbol}
+                                    quote={quote}
+                                    base={base}
                                     amountChange={this._sellAmountChanged.bind(this, base, quote)}
                                     priceChange={this._sellPriceChanged.bind(this, base, quote)}
                                     totalChange={this._sellTotalChanged.bind(this, base, quote)}
@@ -865,7 +870,7 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 60vh"}}>
                             <MarketHistory
                                 history={activeMarketHistory}
                                 base={base}
@@ -874,7 +879,7 @@ class Exchange extends React.Component {
                                 quoteSymbol={quoteSymbol}
                             />
                         </div>
-                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 40vh"}}>
                             <MyMarkets />
                         </div>
                     </div>
