@@ -93,6 +93,7 @@ class WalletActions {
             let create_account_promise = fetch(SettingsStore.getSetting("faucet_address") + "/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',
+                credentials: "include",
                 headers: {
                     "Accept": "application/json",
                     "Content-type": "application/json"
