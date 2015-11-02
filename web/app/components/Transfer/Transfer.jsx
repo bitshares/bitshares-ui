@@ -130,7 +130,7 @@ class Transfer extends React.Component {
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
-            <form className="grid-block large-5 large-offset-1 medium-6 small-12 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+            <form className="grid-block medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
                 <div className="grid-content no-overflow">
                     {/*  F R O M  */}
                     <div className="content-block">
@@ -181,7 +181,7 @@ class Transfer extends React.Component {
                 </div>
 
             </form>
-            <div className="grid-block medium-6 large-5 small-12 right-column">
+            <div className="grid-block medium-6 right-column">
                 <div className="grid-content">
                     <h4><Translate content="account.recent" /></h4>
                     <RecentTransactions
