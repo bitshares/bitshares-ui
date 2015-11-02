@@ -48,7 +48,7 @@ class AccountVotingProxy extends React.Component {
         if(this.state.new_proxy_account && this.props.currentAccount.get("id") === this.state.new_proxy_account.get("id"))
             error = "cannot proxy to yourself";
         return (
-        <div className="content-block">
+        <div className="content-block" style={{maxWidth: "600px"}}>
             <h3>Proxy</h3>
             <AccountSelector label="account.votes.proxy"
                              error={error}

@@ -109,6 +109,8 @@
             memo_public_key: "Memo Public Key"
         },
         votes: {
+            proxy_short: "Proxy",
+            workers_short: "Workers",            
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             name: "Name",

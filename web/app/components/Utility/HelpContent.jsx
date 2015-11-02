@@ -106,7 +106,7 @@ class HelpContent extends React.Component {
         if (!value) throw new Error(`help file not found '${this.props.path}' for locale '${locale}'`);
         if (this.props.section) value = value[this.props.section];
         if (!value) throw new Error(`help section not found ${this.props.path}#${this.props.section}`);
-        return <div className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value)}}/>;
+        return <div style={this.props.style} className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value)}}/>;
     }
 }
 

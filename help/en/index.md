@@ -13,8 +13,9 @@ of this application.
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
  * [Blockchain](introduction/blockchain.md)
- * [Witness](introduction/witness.md)
- * [Committe Member](introduction/committee.md)
+ * [Witnesses](introduction/witness.md)
+ * [Workers](introduction/workers.md)
+ * [Committe Members](introduction/committee.md)
 
 ## Accounts
  * [Introduction](accounts/general.md)
