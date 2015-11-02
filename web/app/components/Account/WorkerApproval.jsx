@@ -62,7 +62,7 @@ class WorkerApproval extends React.Component{
       }
 
       return  (
-      <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card">
+      <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card worker-card">
          <div className="card">
             <div className="card-divider text-center info">
                <span> {worker.name} </span>
@@ -73,7 +73,7 @@ class WorkerApproval extends React.Component{
                      <span><Translate content="account.votes.worker_account" />:&nbsp;<LinkToAccountById account={worker.worker_account} /> </span>
                   </li>
                   <li>
-                     <div><Translate content="account.votes.url" />:&nbsp;{worker.url} </div>
+                     <div><Translate content="account.votes.url" />:&nbsp;<a target="_blank" href={worker.url}>{worker.url}</a> </div>
                   </li>
                   <li>
                      <Translate content="account.votes.total_votes" />: <FormattedAsset amount={total_votes} asset="1.3.0" /><br/>
