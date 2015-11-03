@@ -7,9 +7,11 @@ import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import BlockchainStore from "stores/BlockchainStore";
+import ChainStore from "api/ChainStore"
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
+import ReactTooltip from "react-tooltip"
 
 @BindToChainState({keep_updating: true})
 class Footer extends React.Component {
@@ -58,7 +60,8 @@ class Footer extends React.Component {
     render() {
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
-        let bt = new Date(block_time).getTime() / 1000;
+        // console.log("block_time", block_time)
+        let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
         let now = new Date().getTime() / 1000
         return (
             <div className="show-for-medium grid-block shrink footer">
@@ -72,7 +75,10 @@ class Footer extends React.Component {
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
                     { this.props.backup_recommended ? <span>
                         <div className="grid-block">
-                            <a className="shrink txtlabel facolor-alert" onClick={this.onBackup.bind(this)}>Backup Required</a>
+                            <a className="shrink txtlabel facolor-alert"
+                                data-tip="Please understand that you are responsible for making your own backup&hellip;"
+                                data-type="warning"
+                                onClick={this.onBackup.bind(this)}>Backup Required</a>
                             &nbsp;&nbsp;
                         </div>
                     </span> : null}

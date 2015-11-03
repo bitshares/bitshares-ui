@@ -91,7 +91,7 @@ var Utils = {
         }
     },
 
-    price_to_text(price, base, quote, forcePrecision = null) {
+    price_to_text: function(price, base, quote, forcePrecision = null) {
         if (typeof price !== "number" || !base || !quote) {
             return;
         }
@@ -234,21 +234,23 @@ var Utils = {
         return date.toLocaleString();
     },
 
-    limitByPrecision(value, assetPrecision) {
+    limitByPrecision: function(value, assetPrecision) {
         let valueString = value.toString();
         let splitString = valueString.split(".");
         if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
-            return value;
+            return valueString;
+        } else {
+            return splitString[0] + "." + splitString[1].substr(0, assetPrecision);
         }
-        let precision = this.get_asset_precision(assetPrecision);
-        value = Math.floor(value * precision) / precision;
-        if (isNaN(value) || !isFinite(value)) {
-            return 0;
-        }
-        return value;
+        // let precision = this.get_asset_precision(assetPrecision);
+        // value = Math.floor(value * precision) / precision;
+        // if (isNaN(value) || !isFinite(value)) {
+        //     return 0;
+        // }
+        // return value;
     },
 
-    estimateFee(op_type, options, globalObject) {
+    estimateFee: function(op_type, options, globalObject) {
         let op_code = operations[op_type];
         let currentFees = globalObject.getIn(["parameters", "current_fees", "parameters", op_code, 1]).toJS();
 
@@ -264,6 +266,46 @@ var Utils = {
         }
 
         return fee * globalObject.getIn(["parameters", "current_fees", "scale"]) / 10000;
+    },
+
+    convertPrice: function(quote, base) {
+        let quoteID = quote.get("id"),
+            baseID = base.get("id");
+    
+        let quoteRate = quote.get("bitasset") ? quote.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : quote.getIn(["options", "core_exchange_rate"]).toJS();
+        let baseRate =  base.get("bitasset") ? base.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : base.getIn(["options", "core_exchange_rate"]).toJS();
+        
+        let quoteCoreRateQuoteID = quoteRate.quote.asset_id;
+        let baseCoreRateQuoteID = baseRate.quote.asset_id;
+
+        let quoteCoreRateQuoteAmount, quoteCoreRateBaseAmount;
+        if (quoteCoreRateQuoteID === quoteID) {
+            quoteCoreRateQuoteAmount = quoteRate.quote.amount;
+            quoteCoreRateBaseAmount = quoteRate.base.amount;
+        } else {
+            quoteCoreRateQuoteAmount = quoteRate.base.amount;
+            quoteCoreRateBaseAmount = quoteRate.quote.amount;
+        }
+
+        let baseCoreRateQuoteAmount, baseCoreRateBaseAmount;
+        if (quoteCoreRateQuoteID === baseID) {
+            baseCoreRateQuoteAmount = baseRate.quote.amount;
+            baseCoreRateBaseAmount = baseRate.base.amount;
+        } else {
+            baseCoreRateQuoteAmount = baseRate.base.amount;
+            baseCoreRateBaseAmount = baseRate.quote.amount;
+        }
+
+        let baseRatio;
+        if (baseCoreRateBaseAmount > quoteCoreRateBaseAmount) {
+            baseRatio = baseCoreRateBaseAmount / quoteCoreRateBaseAmount;
+            quoteCoreRateQuoteAmount *= baseRatio;
+        } else {
+            baseRatio = quoteCoreRateBaseAmount / baseCoreRateBaseAmount;
+            baseCoreRateQuoteAmount *= baseRatio;
+        }
+
+        return {quoteAmount: quoteCoreRateQuoteAmount, baseAmount: baseCoreRateQuoteAmount};
     }
 
 };

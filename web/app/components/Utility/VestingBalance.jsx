@@ -19,7 +19,6 @@ class VestingBalance extends React.Component {
     render() {
         let amount = Number(this.props.balance.getIn(['balance','amount']));
         let type = this.props.balance.getIn(['balance','asset_id']);
-        console.log( "amount: ", amount )
         return (<FormattedAsset amount={amount} asset={type}/>);
     }
 }

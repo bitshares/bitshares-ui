@@ -4,6 +4,7 @@ import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
+import utils from "common/utils";
 
 @BindToChainState()
 class AssetOption extends React.Component {
@@ -61,19 +62,21 @@ class AssetSelector extends React.Component {
 
     static propTypes = {
         label: React.PropTypes.string, // a translation key for the label
-        asset: ChainTypes.ChainObject, // selected asset by default
+        asset: ChainTypes.ChainAsset.isRequired, // selected asset by default
         assets: React.PropTypes.array,
         amount: React.PropTypes.string,
         placeholder: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired,
         display_balance: React.PropTypes.object,
         tabIndex: React.PropTypes.number
-    }
+    };
 
     formatAmount(v) {
         // TODO: use asset's precision to format the number
         if (!v) v = "";
+        if (typeof v === "number") v = v.toString();
         let value = v.trim().replace(/,/g, "");
+        value = utils.limitByPrecision(value, this.props.asset.get("precision"));
         while (value.substring(0, 2) == "00")
             value = value.substring(1);
         if (value[0] === ".") value = "0" + value;
@@ -102,7 +105,9 @@ class AssetSelector extends React.Component {
     }
 
     render() {
+
         let value = this.formatAmount(this.props.amount);
+        
         return (
             <div className="amount-selector">
                 <div className="float-right">{this.props.display_balance}</div>

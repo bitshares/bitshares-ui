@@ -7,6 +7,7 @@
  * [Backups](introduction/backups.md)
  * [Blockchain](introduction/blockchain.md)
  * [Witness](introduction/witness.md)
+ * [Workers](introduction/workers.md)
  * [Committe Member](introduction/committee.md)
  * [Accounts](accounts/general.md)
  * [Permissions](accounts/permissions.md)

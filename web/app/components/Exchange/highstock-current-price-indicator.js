@@ -32,7 +32,7 @@ import utils from "common/utils";
     });
 
     function renderCurrentPriceIndicator(chart) {
-        if (!chart.series[0].yData.length) {
+        if (!chart.series[0] || (chart.series[0] && chart.series[0].yData && !chart.series[0].yData.length)) {
             return;
         }
         var priceYAxis = chart.yAxis[0],

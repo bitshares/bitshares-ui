@@ -157,6 +157,9 @@ class Exchange extends React.Component {
     componentDidMount() {
         let centerContainer = React.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
+        SettingsActions.changeViewSetting({
+            lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
+        });
     }
 
     _addMarket(quote, base) {
@@ -180,6 +183,9 @@ class Exchange extends React.Component {
 
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
+            SettingsActions.changeViewSetting({
+                lastMarket: nextProps.quoteAsset.get("symbol") + "_" + nextProps.baseAsset.get("symbol")
+            });
             return this._subToMarket(nextProps);
         }
     }

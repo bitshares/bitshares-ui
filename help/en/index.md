@@ -8,13 +8,14 @@ technology for real-time blockchains.
 This help section gives a brief overview and describes the most basic concepts
 of this application.
 
-## Introduction
+## Introduction 
  * [BitShares](introduction/bitshares.md)
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
  * [Blockchain](introduction/blockchain.md)
- * [Witness](introduction/witness.md)
- * [Committe Member](introduction/committee.md)
+ * [Witnesses](introduction/witness.md)
+ * [Workers](introduction/workers.md)
+ * [Committe Members](introduction/committee.md)
 
 ## Accounts
  * [Introduction](accounts/general.md)

@@ -39,7 +39,7 @@ and sells the collateral for the settlement.
 
 ## Selling
 
-After burrowing bitAssets, they can be sold free at any of the corresponding
+After borrowing bitAssets, they can be sold free at any of the corresponding
 markets at any price a buyer is willing to pay. With this step, the
 short-selling is now complete and you are short that particular bitAsset.
 

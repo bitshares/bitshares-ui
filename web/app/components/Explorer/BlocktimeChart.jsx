@@ -100,7 +100,10 @@ class BlocktimeChart extends React.Component {
                 labels: {
                     enabled: false
                 },
-                gridLineWidth: 0
+                gridLineWidth: 0,
+                currentPriceIndicator: {
+                    enabled: false
+                }
             },
             plotOptions: {
                 column: {

@@ -221,7 +221,7 @@ class MarketUtils {
             localHour -= 24;            
         }
         let hourString = localHour.toString();
-        if (hour < 10) {
+        if (parseInt(hourString, 10) < 10) {
             hourString = "0" + hourString;
         }
         time = time.replace(hour, hourString);

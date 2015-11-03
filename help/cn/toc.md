@@ -1,10 +1,5 @@
 #### 目录
 
-- [介绍](index.md)
-- [词汇表](glossary.md)
-- 资产
-  * [USD](assets/usd.md)
-  
  * [介绍](index.md)
  * [词汇表](glossary.md)
  * [BitShares比特股](introduction/bitshares.md)

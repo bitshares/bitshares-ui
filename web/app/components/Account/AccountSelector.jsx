@@ -102,7 +102,7 @@ class AccountSelector extends React.Component {
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
         return (
-            <div className="account-selector no-overflow">
+            <div className="account-selector no-overflow" style={this.props.style}>
                 {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
                 <AccountImage size={{height: 80, width: 80}}
                               account={this.props.account ? this.props.account.get('name') : null} custom_image={null}/>}
