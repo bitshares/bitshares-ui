@@ -84,8 +84,6 @@ export default class GenesisFilter {
         var initalizing = true
         status({ initalizing })
         this.init(()=> {
-            var previous_address_prefix = config.address_prefix
-            config.address_prefix = "BTS"
             try {
                 initalizing = false
                 status({ initalizing })
@@ -109,7 +107,7 @@ export default class GenesisFilter {
                         var key = keys.public_keys[k]
                         if( /^GPH/.test(key) ) key = "BTS" + key.substring(3)
                         if(this.inGenesis( key )) continue
-                        var addresses = key_utils.addresses(key)
+                        var addresses = key_utils.addresses(key, 'BTS')
                         var addy_found = false
                         for(var i = 0; i < addresses.length; i++) {
                             if(this.inGenesis( addresses[i] )) {
@@ -135,7 +133,6 @@ export default class GenesisFilter {
                 }
                 status({ success: true,  })
             } finally {
-                config.address_prefix = previous_address_prefix
                 if( initalizing ) {
                     initalizing = false
                     status({ initalizing })

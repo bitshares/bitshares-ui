@@ -1,4 +1,5 @@
-(function () { 'use strict';
+(function () {
+    'use strict';
 
     var app = require('app');
     var BrowserWindow = require('browser-window');
@@ -6,6 +7,7 @@
     var env = require('./vendor/electron_boilerplate/env_config');
     var devHelper = require('./vendor/electron_boilerplate/dev_helper');
     var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
+    var fs = require('fs');
 
     var mainWindow;
 
@@ -14,6 +16,8 @@
         width: 1000,
         height: 600
     });
+    global.guid = mainWindowState.guid;
+    global.version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
 
     app.on('ready', function () {
 
@@ -40,23 +44,36 @@
         });
 
         // Create the Application's main menu
-        var template = [{
+
+        var app_menu = process.platform === 'darwin' ?
+        {
             label: "Application",
             submenu: [
-                { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-                { type: "separator" },
-                { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
-            ]}, {
+                {label: "About Application", selector: "orderFrontStandardAboutPanel:"},
+                {type: "separator"},
+                {label: "Quit", accelerator: "Command+Q", click: function () { app.quit(); }}
+            ]
+        }
+            :
+        {
+            label: "File",
+            submenu: [
+                {label: "Quit", accelerator: "Command+Q", click: function () { app.quit(); }}
+            ]
+        }
+
+        var template = [app_menu, {
             label: "Edit",
             submenu: [
-                { label: "Undo", accelerator: "Command+Z", selector: "undo:" },
-                { label: "Redo", accelerator: "Shift+Command+Z", selector: "redo:" },
-                { type: "separator" },
-                { label: "Cut", accelerator: "Command+X", selector: "cut:" },
-                { label: "Copy", accelerator: "Command+C", selector: "copy:" },
-                { label: "Paste", accelerator: "Command+V", selector: "paste:" },
-                { label: "Select All", accelerator: "Command+A", selector: "selectAll:" }
-            ]}, {
+                {label: "Undo", accelerator: "Command+Z", selector: "undo:"},
+                {label: "Redo", accelerator: "Shift+Command+Z", selector: "redo:"},
+                {type: "separator"},
+                {label: "Cut", accelerator: "Command+X", selector: "cut:"},
+                {label: "Copy", accelerator: "Command+C", selector: "copy:"},
+                {label: "Paste", accelerator: "Command+V", selector: "paste:"},
+                {label: "Select All", accelerator: "Command+A", selector: "selectAll:"}
+            ]
+        }, {
             label: 'View',
             submenu: [{
                 label: 'Reload',
@@ -64,7 +81,7 @@
                 click: function () {
                     BrowserWindow.getFocusedWindow().reloadIgnoringCache();
                 }
-            },{
+            }, {
                 label: 'Toggle DevTools',
                 accelerator: 'Alt+CmdOrCtrl+I',
                 click: function () {
