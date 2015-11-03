@@ -95,6 +95,8 @@ module.exports = {
             memo_public_key: "备注公钥"
         },
         votes: {
+            proxy_short: "代理投票",
+            workers_short: "预算项目",
             proxy: "代理投票账户",
             no_proxy: "无代理",
             name: "账户名",
@@ -459,7 +461,7 @@ module.exports = {
             title: "理事会成员"
         },
         workers: {
-            title: "雇员"
+            title: "预算项目"
         },
         proposals: {
             title: "提案"
@@ -523,7 +525,7 @@ module.exports = {
         base_supply: "基础资产供给量"
     },
     markets: {
-        choose_base: "选择基准资产",
+        title: "交易所",
         filter: "筛选",
         core_rate: "CORE 汇率",
         supply: "供应量",
