@@ -24,19 +24,19 @@ izinlerde belirlenmiş olan alt-sınırı geçiyor olması gerekir.
 
 Birkaç örneğe bakarak kullanılan terminolojiye ve kullanım senaryolarına ışık tutalım. 
 Aşağıda tanımlanmış etkin izinlerle yeni bir hesap oluşturulduğunu farz edelim. 
-Dikkatinizi çekeriz , aynı tertip sahip izinleri için de 
+Dikkatinizi çekeriz , aynı şema sahip izinleri için de 
 işe yarar. 
 
 ## (Düz) Çoklu-İmza
 
-Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
+Düz çok-imzalı bir şema, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
 imzalamak zorunda olduğu 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 
 Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis'in ortak fonları olsun . 
 Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
-isteyelim. Dolayısıyla **4-ün-2-si** (M-in-N-i) tertibi şöyle görünür : 
+Dolayısıyla **4-ün-2-si** (M-in-N-i) şeması şöyle görünür : 
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 
@@ -50,14 +50,14 @@ isteyelim. Dolayısıyla **4-ün-2-si** (M-in-N-i) tertibi şöyle görünür :
 Her dört katılımcının 33% ağırlığı var fakat alt sınır 51%  olarak ayarlanmış.
 Dolayısıyla  işlemi geçerli kılmak için 4 kişiden sadece 2 sinin hemfikir olması gerekir.
 
-Alternatif olarak, bir 4-ün-3'ü tertibi oluşturmak için biz ya ağırlıkları 17 ye indirebiliriz 
+Alternatif olarak, bir 4-ün-3'ü şeması oluşturmak için biz ya ağırlıkları 17 ye indirebiliriz 
 yada alt-sınırı 99%'a yükseltebiliriz. 
 
 ## (Düz) Esnek Çoklu-İmza
 
 Alt-sınır ve ağırlıklar sayesinde fonlarımızla şimdi daha esneğiz, yada daha doğrusu 
 daha fazla *hakimiyetimiz* var. Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
-Farzedelim ki Alice fonlarını çoklu-imza tertibi kullanarak hırsızlığa karşı korumak 
+Farzedelim ki Alice fonlarını çoklu-imza şeması kullanarak hırsızlığa karşı korumak 
 istiyor fakat aynı zamanda arkadaşlarına da gereğinden fazla hakimiyet teslim etmek 
 istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
 
@@ -101,7 +101,7 @@ MİM.ŞİRKET hesabı şöyle olabilir :
 | ------------------- | ------ |
 | Alt-sınır:          | 51%    |
 
-Bu tertip şunlara izin verir :
+Bu şema şunlara izin verir :
 
 *CEO'a fonları harcamaya
 *Mali İşler Müdürüne fonları harcamaya
