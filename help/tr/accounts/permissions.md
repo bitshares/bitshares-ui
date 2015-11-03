@@ -14,10 +14,10 @@ gerekmektedir.
 BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemlere yetki veren bir veya 
 daha çok sayıda kişiden oluşur.
 
-Bir yetki , bir yada daha fazla sayıda hesap adı ve*ağırlık* 
+Bir yetki , bir yada daha fazla sayıda hesap adı ve *ağırlık* 
 çiftinden oluşur.
 
-Geçerli bir işlem elde edebilmek için , imzalayan tarafların ağırlıklarının toplamı 
+Geçerli bir işlem elde edebilmek için , imzalayan tarafların etki ağırlıklarının toplamı 
 izinlerde belirlenmiş olan alt-sınırı geçiyor olması gerekir.  
 
 # Örnekler
@@ -29,7 +29,7 @@ işe yarar.
 
 ## (Düz) Çoklu-İmza
 
-Düz çok-imzalı bir şema, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
+Düz çok-imzalı bir şema, işlemin geçerli olabilmesi için aralarından 'N' sayıda kişinin 
 imzalamak zorunda olduğu 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
