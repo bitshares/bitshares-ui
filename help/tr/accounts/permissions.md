@@ -35,7 +35,7 @@ ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceği
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 
 Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis'in ortak fonları olsun . 
-Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
+Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı isteyelim.
 Dolayısıyla **4-ün-2-si** (M-in-N-i) şeması şöyle görünür : 
 
 | Hesap | Ağırlık | 
@@ -88,7 +88,7 @@ O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    |
 
-bu durumda CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
+burada CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
 MİM.ŞİRKET hesabı şöyle olabilir :
 
 | MİM.ŞİRKET         | Ağırlık |
