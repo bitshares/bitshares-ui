@@ -101,12 +101,12 @@ MİM.ŞİRKET hesabı şöyle olabilir :
 | ------------------- | ------ |
 | Alt-sınır:          | 51%    |
 
-Bu şema şunlara izin verir :
+Bu şema fonların harcanabilmesi  kişilere şöyle izinler verir :
 
-* CEO'a fonları harcamaya
-* Mali İşler Müdürüne fonları harcamaya
-*  Vezneyle birlikte Denetçi ye fonları harcamaya
-*Denetçi yada Veznedar ile birlikte ya Vergi Müdürü yada Muhasabeci'ye fonları 
+* CEO ' ya
+* Mali İşler Müdürüne 
+*  Vezneyle birlikte Denetçi ye bir
+* Denetçi yada Veznedar ile birlikte ya Vergi Müdürü yada Muhasabeci'ye fonları 
   harcama.
 
 Dolayısıyla görüldüldüğü gibi yetkilendirmeleri gelişigüzel derinlikte yayarak her türlü 
