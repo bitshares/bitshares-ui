@@ -33,5 +33,17 @@
 </main>
 <script src="vendors.js" charset="utf-8"></script>
 <script src="app.js" charset="utf-8"></script>
+<script src="1.app.js" charset="utf-8"></script>
+<script>
+    var BTSW = window.BTSW || {};
+    (function () {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = 'https://bitshares.openledger.info/widgets/2/w.js?ref=' + encodeURIComponent(document.referrer);
+        var entry = document.getElementsByTagName('script')[0];
+        entry.parentNode.insertBefore(script, entry);
+    }());
+</script>
 </body>
 </html>
