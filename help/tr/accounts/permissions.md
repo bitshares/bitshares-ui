@@ -103,11 +103,11 @@ MİM.ŞİRKET hesabı şöyle olabilir :
 
 Bu şema şunlara izin verir :
 
-*CEO'a fonları harcamaya
-*Mali İşler Müdürüne fonları harcamaya
-*Vezneyle birlikte Morakıp afonları harcamaya
-*Denetçi yada Veznedar ile birlikte ya Vergi Müdürü yada Muhasabeci fonları 
-  harcamaya.
+* CEO'a fonları harcamaya
+* Mali İşler Müdürüne fonları harcamaya
+*  Vezneyle birlikte Denetçi ye fonları harcamaya
+*Denetçi yada Veznedar ile birlikte ya Vergi Müdürü yada Muhasabeci'ye fonları 
+  harcama.
 
 Dolayısıyla görüldüldüğü gibi yetkilendirmeleri gelişigüzel derinlikte yayarak her türlü 
 iş alanına uyacak esneklikte uygulamak mümkün.
