@@ -99,14 +99,14 @@ MİM.ŞİRKET hesabı şöyle olabilir :
 | Vergi Müdürü.ŞİRKET | 10%    |
 | Muhasebe.ŞİRKET  | 10%    |
 | ------------------- | ------ |
-| Alt-sınır:          | 51%    |
+| Alt-sınır :       | 51%    |
 
 Bu şema fonların harcanabilmesi için  kişilere şöyle izinler verir :
 
 * CEO  tek başına
 * Mali İşler Müdürün tek başına 
 *  Vezne ve Denetçi birlikte
-* Denetçi veya Veznedar , Vergi Müdürü yada Muhasabeciyle birlikte 
+* Denetçi veya Veznedar , Vergi Müdürü ve Muhasebeciyle birlikte 
   harcama.
 
 Dolayısıyla görüldüldüğü gibi yetkilendirmeleri gelişigüzel derinlikte yayarak her türlü 
