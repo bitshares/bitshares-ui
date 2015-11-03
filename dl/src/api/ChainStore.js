@@ -48,6 +48,8 @@ class ChainStore
       this.subscribed = false
       this.clearCache()
       this.progress = 0;
+      // this.chain_time_offset is used to estimate the blockchain time
+      this.chain_time_offset = []
    }
 
    /**
@@ -98,6 +100,7 @@ class ChainStore
 
                   let head_time = new Date(optional_object.time+"+00:00").getTime();
                   this.head_block_time_string = optional_object.time
+                  this.chain_time_offset.push( Date.now() - timeStringToDate(optional_object.time).getTime() )
                   let now = Date.now();
                   let delta = (now - head_time)/1000
                   let start = Date.parse('Sep 1, 2015');
@@ -925,6 +928,8 @@ class ChainStore
       if( object.id == "2.1.0" ) {
          object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
          this.head_block_time_string = object.time
+         this.chain_time_offset.push( Date.now() - timeStringToDate(object.time).getTime() )
+         if(this.chain_time_offset.length > 10) this.chain_time_offset.shift() // remove first
       }
 
       let current = this.objects_by_id.get( object.id )
@@ -1116,12 +1121,17 @@ class ChainStore
     }
 
     getHeadBlockDate() {
-        var head_block_time_string = this.head_block_time_string
-        if( ! head_block_time_string) return new Date("1970-01-01T00:00:00.000Z")
-        if( ! /Z$/.test(head_block_time_string)) //does not end in Z
-            // https://github.com/cryptonomex/graphene/issues/368
-            head_block_time_string = head_block_time_string + "Z"
-        return new Date(head_block_time_string)
+        return timeStringToDate( this.head_block_time_string )
+    }
+    
+    getEstimatedChainTimeOffset() {
+        if( this.chain_time_offset.length === 0 ) return 0
+        // Immutable is fast, sorts numbers correctly, and leaves the original unmodified
+        // This will fix itself if the user changes their clock
+        var median_offset = Immutable.List(this.chain_time_offset)
+            .sort().get(Math.floor( (this.chain_time_offset.length - 1) / 2 ))
+        // console.log("median_offset", median_offset)
+        return median_offset
     }
 
 }
@@ -1158,4 +1168,12 @@ export function FetchChainObjects(method, object_ids, timeout) {
 
     });
 
+}
+
+function timeStringToDate(time_string) {
+    if( ! time_string) return new Date("1970-01-01T00:00:00.000Z")
+    if( ! /Z$/.test(time_string)) //does not end in Z
+        // https://github.com/cryptonomex/graphene/issues/368
+        time_string = time_string + "Z"
+    return new Date(time_string)
 }

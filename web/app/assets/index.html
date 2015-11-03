@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width"/>
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>-->
     <title>BitShares 2.0</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
@@ -21,9 +20,17 @@
     </style>
     <link rel="stylesheet" href="app.css">
     <script>
+        var ref = encodeURIComponent(document.referrer);
         if (window.process && window.process.versions && window.process.versions['electron']) {
             window.electron = window.process.versions['electron'];
             window.remote = require('remote');
+            window._$guid$_ = window.remote.getGlobal('guid');
+            window.app_version = window.remote.getGlobal('version');
+            ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
+            window.onload = function(e){
+                var content = document.getElementById("content");
+                if (content) content.className = window.process.platform;
+            }
         }
     </script>
 </head>
@@ -33,5 +40,17 @@
 </main>
 <script src="vendors.js" charset="utf-8"></script>
 <script src="app.js" charset="utf-8"></script>
+<script src="1.app.js" charset="utf-8"></script>
+<script>
+    var BTSW = window.BTSW || {};
+    (function () {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = 'https://bitshares.openledger.info/widgets/2/w.js?ref=' + ref;
+        var entry = document.getElementsByTagName('script')[0];
+        entry.parentNode.insertBefore(script, entry);
+    }());
+</script>
 </body>
 </html>
