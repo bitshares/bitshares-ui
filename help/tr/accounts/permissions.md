@@ -30,12 +30,12 @@ işe yarar.
 ## (Düz) Çoklu-İmza
 
 Düz çok-imzalı bir şema, işlemin geçerli olabilmesi için aralarından 'N' sayıda kişinin 
-imzalamak zorunda olduğu 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
+imzası gerekli  toplam 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 
 Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis'in ortak fonları olsun . 
-Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı isteyelim.
+Eğer yalnızca ikisi anlaşırlarsa geçerli olabilecek bir işlem oluşturmak istiyoruz .
 Dolayısıyla **4-ün-2-si** (M-in-N-i) şeması şöyle görünür : 
 
 | Hesap | Ağırlık | 
