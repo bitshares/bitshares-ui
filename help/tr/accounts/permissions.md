@@ -47,13 +47,13 @@ Dolayısıyla **4-ün-2-si** (M-in-N-i) şeması şöyle görünür :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    | 
 
-Her dört katılımcının 33% ağırlığı var fakat alt sınır 51%  olarak ayarlanmış.
-Dolayısıyla  işlemi geçerli kılmak için 4 kişiden sadece 2 sinin hemfikir olması gerekir.
+Katılımcıların her birinin 33% etki ağırlığı var fakat alt sınır 51%  olarak ayarlanmış.
+Dolayısıyla  işlemi geçerli kılmak için 4 kişiden sadece 2 sinin anlaşması yeterlidir.
 
-Alternatif olarak, bir 4-ün-3'ü şeması oluşturmak için biz ya ağırlıkları 17 ye indirebiliriz 
+Alternatif olarak, bir 4-ün-3'ü şeması oluşturmak için ya ağırlıkları 17% ye indirebiliriz 
 yada alt-sınırı 99%'a yükseltebiliriz. 
 
-## (Düz) Esnek Çoklu-İmza
+## (Yassı) Esnek Çoklu-İmza
 
 Alt-sınır ve ağırlıklar sayesinde fonlarımızla şimdi daha esneğiz, yada daha doğrusu 
 daha fazla *hakimiyetimiz* var. Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
@@ -70,14 +70,14 @@ istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    |
 
-Şimdi, fonlara Alice ya tek bir arkadaşıyla yada  tüm üç arkadaşıyla birlikte ulaşma 
+Şimdi, fonlara Alice tek bir arkadaşıyla yada  tüm üç arkadaşıyla birlikte erişebilme 
 imkanına sahip olur.
 
 ## Çok-Basamaklı Esnek Çoklu-İmza
 
 Gelin beraber basit bir çok-basamaklı anonim hesap kurulumuna göz atalım. Mali İşler 
-Müdürü (MİM) ve onun için altında çalışan işte Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
-departmanları olan bir şirkete bakıyor olalım. Şirketin bir de harcama ayrıcalıkları 
+Müdürü (MİM) ve onun için altında çalışan Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
+departmanları olan bir şirkete bakıyor olalım.  Bir de harcama ayrıcalıkları 
 olsun isteyen bir CEO'su olsun. 
 O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 
