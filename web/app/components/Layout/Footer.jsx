@@ -7,6 +7,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import BlockchainStore from "stores/BlockchainStore";
+import ChainStore from "api/ChainStore"
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
@@ -59,7 +60,8 @@ class Footer extends React.Component {
     render() {
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
-        let bt = new Date(block_time).getTime() / 1000;
+        // console.log("block_time", block_time)
+        let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
         let now = new Date().getTime() / 1000
         return (
             <div className="show-for-medium grid-block shrink footer">
