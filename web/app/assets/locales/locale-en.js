@@ -173,6 +173,7 @@
         create_account: "Create account",
         identicon: "Identicon",
         pay_from: "Pay From",
+        propose_from: "Propose From",
         existing_accounts: "Existing Accounts"
     },
     pagination: {

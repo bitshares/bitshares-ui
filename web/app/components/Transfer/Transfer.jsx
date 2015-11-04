@@ -187,10 +187,10 @@ class Transfer extends React.Component {
                         {/*<div>{memo_error}</div>*/}
                     </div>
                     
-                    {/* P R O P O S E  P A Y  F R O M */}
+                    {/* P R O P O S E   F R O M */}
                     {this.state.propose ?
                     <div className="full-width-content form-group">
-                        <label><Translate content="account.pay_from" /></label>
+                        <label><Translate content="account.propose_from" /></label>
                         <AccountSelect account_names={AccountStore.getMyAccounts()}
                             onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
                     </div>:null}
