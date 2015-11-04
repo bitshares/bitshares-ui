@@ -15,7 +15,7 @@ class AccountVotingProxy extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            current_proxy_input: null,
+            current_proxy_input: props.currentProxy,
             new_proxy_account: null
         }
         this.onProxyChange = this.onProxyChange.bind(this);

@@ -113,6 +113,7 @@
             workers_short: "Workers",            
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
+            clear_proxy: "Remove proxy",
             name: "Name",
             info: "Info",
             votes: "Votes",
