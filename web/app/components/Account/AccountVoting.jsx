@@ -211,7 +211,7 @@ class AccountVoting extends React.Component {
             }
             if (botchedWorkers.indexOf(id) === -1) {
                 workers.push(
-                    <WorkerApproval worker={id} vote_ids={this.state.vote_ids}
+                    <WorkerApproval key={id} worker={id} vote_ids={this.state.vote_ids}
                         onAddVote={this.onAddVoteID.bind(this)}
                         onRemoveVote={this.onRemoveVoteID.bind(this)}
                     />
