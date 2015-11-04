@@ -62,7 +62,7 @@ class TransactionConfirmStore {
             broadcasted_transaction: this.state.transaction});
     }
 
-    onError(error) {
+    onError({ error }) {
         let state = this.state;
         this.setState({broadcast: false, broadcasting: false, error});
     }
