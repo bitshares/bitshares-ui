@@ -26,19 +26,20 @@ _my.signed_transaction = ->
     operations: []
     signatures: []
     signer_private_keys: []
-    
+
+    add_type_operation: (name, operation) ->
+        @add_operation @get_type_operation name, operation
+        return
+
     add_operation: (operation) ->
         throw new Error "already finalized" if @tr_buffer
         v.required operation, "operation"
-        v.required operation.get_operations, "operation.get_operations()"
-        results = operation.get_operations()
-        for result in results
-            unless Array.isArray result
-                throw new Error "Expecting array [operation_id, operation]"
-            @operations.push result
+        unless Array.isArray operation
+            throw new Error "Expecting array [operation_id, operation]"
+        @operations.push operation
         return
-    
-    add_type_operation: (name, operation) ->
+
+    get_type_operation: (name, operation) ->
         throw new Error "already finalized" if @tr_buffer
         v.required name, "name"
         v.required operation, "operation"
@@ -50,8 +51,7 @@ _my.signed_transaction = ->
         unless operation.fee
             operation.fee = {amount: 0, asset_id: 0}
         operation_instance = _type.fromObject operation
-        @operations.push [operation_id, operation_instance]
-        return
+        [operation_id, operation_instance]
     
     set_expire_seconds:(sec)->
         throw new Error "already finalized" if @tr_buffer

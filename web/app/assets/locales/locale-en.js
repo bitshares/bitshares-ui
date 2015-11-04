@@ -31,6 +31,8 @@
     operation: {
         pending: "pending %(blocks)s blocks"
     },
+    propose: "propose",
+    cancel: "cancel",
     account: {
         welcome: "Welcome to Graphene",
         asset: "Asset",

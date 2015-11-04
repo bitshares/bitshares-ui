@@ -3,6 +3,7 @@ import utils from "../common/utils";
 import api from "../api/accountApi";
 
 import WalletApi from "../rpc_api/WalletApi";
+import ApplicationApi from "../rpc_api/ApplicationApi";
 import WalletDb from "../stores/WalletDb";
 import WalletActions from "../actions/WalletActions";
 
@@ -10,6 +11,7 @@ let accountSubs = {};
 let accountLookup = {};
 let accountSearch = {};
 let wallet_api = new WalletApi();
+let application_api = new ApplicationApi()
 let inProgress = {};
 
 /**
@@ -46,19 +48,14 @@ class AccountActions {
     /**
      *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
      */
-    transfer(from_account_name_or_id, to_account_name_or_id, amount, asset_name_or_id, memo) {
-        //console.log("[AccountActions.js:68] ----- transfer ----->", from_account_name_or_id, to_account_name_or_id, amount, asset_name_or_id, memo);
-        var from_account_id = from_account_name_or_id;
-        var to_account_id = to_account_name_or_id;
-        var asset_id = asset_name_or_id;
-
+    transfer(from_account, to_account, amount, asset, memo, propose) {
         try {
-            return  wallet_api.transfer(
-                from_account_id, to_account_id,
-                amount, asset_id, memo
-            ).then(result => {
-                    // console.log( "transfer result: ", result )
-                    this.dispatch(result);
+            return application_api.transfer({
+                from_account, to_account,
+                amount, asset, memo, propose
+            }).then(result => {
+                // console.log( "transfer result: ", result )
+                this.dispatch(result);
             });
         } catch (error) {
             console.log("[AccountActions.js:90] ----- transfer error ----->", error);
@@ -92,7 +89,7 @@ class AccountActions {
     }
 
     /**
-     *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions, the account should already
+     *  TODO:  This is a function of the wallet_api and has no business being part of AccountActions, the account should already
      *  be linked.  
      */
     upgradeAccount(account_id, lifetime) {
