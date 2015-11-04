@@ -71,25 +71,26 @@ class ApplicationApi {
     }
     
     /**
-        Note, an empty or null memo will still be encypted if  encrypt_memo
-        is true.
+        NOTE: Parameters are passed in as an object
     */
-    transfer(
-        from_account_id,
-        to_account_id,
+    transfer( {
+        from_account,
+        to_account,
         amount, 
         asset, 
-        memo_message,
+        memo,
         broadcast = true,
         encrypt_memo = true,
         optional_nonce = null,
-        sign = true
-    ) {
+        sign = true,
+        propose = false
+    }) {
+        console.log("app api propose", propose, from_account, to_account)
         var memo_from_public, memo_to_public
 
-        if( memo_message && encrypt_memo  ) {
-            memo_from_public = lookup.memo_public_key(from_account_id)
-            memo_to_public = lookup.memo_public_key(to_account_id)
+        if( memo && encrypt_memo  ) {
+            memo_from_public = lookup.memo_public_key(from_account)
+            memo_to_public = lookup.memo_public_key(to_account)
         }
         var asset_id_lookup = lookup.asset_id(asset)
         var lookup_promise = lookup.resolve()
@@ -98,22 +99,22 @@ class ApplicationApi {
             var asset_id = asset_id_lookup.resolve
             
             var memo_from_privkey
-            if(encrypt_memo && memo_message ) {
+            if(encrypt_memo && memo ) {
                 var from_public = memo_from_public.resolve
                 memo_from_privkey =
                     WalletDb.getPrivateKey(from_public)
                 
                 if(! memo_from_privkey)
                     throw new Error("Missing private memo key for sender: " +
-                        from_account_id)
+                        from_account)
             }
-            var memo
-            if(memo_message && memo_to_public.resolve && memo_from_public.resolve) {
+            var memo_object
+            if(memo && memo_to_public.resolve && memo_from_public.resolve) {
                 var nonce = optional_nonce == null ?
                     helper.unique_nonce_uint64() :
                     optional_nonce
                 
-                memo = {
+                memo_object = {
                     from: memo_from_public.resolve,
                     to: memo_to_public.resolve,
                     nonce,
@@ -122,9 +123,9 @@ class ApplicationApi {
                             memo_from_privkey,
                             memo_to_public.resolve,
                             nonce,
-                            memo_message
+                            memo
                         ) :
-                        memo_message
+                        memo
                 }
             }
             let transfer_asset = ChainStore.getAsset( asset_id ).toJS();
@@ -134,16 +135,21 @@ class ApplicationApi {
                fee_asset_id = "1.3.0";
 
             var tr = new ops.signed_transaction()
-            tr.add_type_operation("transfer", {
+            var transfer_op = tr.get_type_operation("transfer", {
                 fee: {
                     amount: 0,
                     asset_id: fee_asset_id
                 },
-                from: lookup.account_id(from_account_id),
-                to: lookup.account_id(to_account_id),
+                from: lookup.account_id(from_account),
+                to: lookup.account_id(to_account),
                 amount: { amount, asset_id}, //lookup.asset_id(
-                memo
+                memo: memo_object
             })
+            if( propose )
+                tr.add_type_operation("proposal_create", { proposed_ops: [ transfer_op ] })
+            else
+                tr.add_operation( transfer_op )
+            
             return WalletDb.process_transaction(
                 tr,
                 null, //signer_private_keys,
