@@ -50,6 +50,8 @@ _my.signed_transaction = ->
             throw new Error "unknown operation: #{_type.operation_name}"
         unless operation.fee
             operation.fee = {amount: 0, asset_id: 0}
+        if name is 'proposal_create'
+            operation.expiration_time ||= base_expiration_sec() + chain_config.expire_in_secs
         operation_instance = _type.fromObject operation
         [operation_id, operation_instance]
     
