@@ -71,9 +71,9 @@ class ApplicationApi {
     }
     
     /**
-        NOTE: Parameters are passed in as an object
+        @param propose_account (or null) pays the fee to create the proposal, also used as memo from
     */
-    transfer( {
+    transfer({ // OBJECT: { ... }
         from_account,
         to_account,
         amount, 
@@ -83,21 +83,21 @@ class ApplicationApi {
         encrypt_memo = true,
         optional_nonce = null,
         sign = true,
-        propose = false
+        propose_account = null
     }) {
-        console.log("app api propose", propose, from_account, to_account)
+        var memo_sender = propose_account || from_account
         var memo_from_public, memo_to_public
-
         if( memo && encrypt_memo  ) {
-            memo_from_public = lookup.memo_public_key(from_account)
+            memo_from_public = lookup.memo_public_key(memo_sender)
             memo_to_public = lookup.memo_public_key(to_account)
         }
         var asset_id_lookup = lookup.asset_id(asset)
+        var propose_acount_id = propose_account ? lookup.account_id(propose_account) : null
         var lookup_promise = lookup.resolve()
         var unlock_promise = WalletUnlockActions.unlock()
         return Promise.all([lookup_promise, unlock_promise]).then(()=> {
             var asset_id = asset_id_lookup.resolve
-            
+            if( propose_account ) propose_acount_id = propose_acount_id.resolve
             var memo_from_privkey
             if(encrypt_memo && memo ) {
                 var from_public = memo_from_public.resolve
@@ -105,8 +105,7 @@ class ApplicationApi {
                     WalletDb.getPrivateKey(from_public)
                 
                 if(! memo_from_privkey)
-                    throw new Error("Missing private memo key for sender: " +
-                        from_account)
+                    throw new Error("Missing private memo key for sender: " + memo_sender)
             }
             var memo_object
             if(memo && memo_to_public.resolve && memo_from_public.resolve) {
@@ -145,8 +144,11 @@ class ApplicationApi {
                 amount: { amount, asset_id}, //lookup.asset_id(
                 memo: memo_object
             })
-            if( propose )
-                tr.add_type_operation("proposal_create", { proposed_ops: [ transfer_op ] })
+            if( propose_account )
+                tr.add_type_operation("proposal_create", {
+                    proposed_ops: [ transfer_op ],
+                    fee_paying_account: propose_acount_id
+                })
             else
                 tr.add_operation( transfer_op )
             
