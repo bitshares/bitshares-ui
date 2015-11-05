@@ -2,6 +2,7 @@ import React from "react";
 import AccountSelector from "./AccountSelector";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import Translate from "react-translate-component";
 
 @BindToChainState()
 class AccountVotingProxy extends React.Component {
@@ -15,7 +16,7 @@ class AccountVotingProxy extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            current_proxy_input: null,
+            current_proxy_input: props.currentProxy,
             new_proxy_account: null
         }
         this.onProxyChange = this.onProxyChange.bind(this);
@@ -26,6 +27,12 @@ class AccountVotingProxy extends React.Component {
         if(!this.state.current_proxy_input) this.setState({
             current_proxy_input: nextProps.proxyAccount ? nextProps.proxyAccount.get("name") : ""
         });
+
+        if (nextProps.currentProxy !== this.state.current_proxy_input) {
+            this.setState({
+                current_proxy_input: nextProps.currentProxy
+            });
+        }
     }
 
     onProxyChange(current_proxy_input) {
@@ -49,7 +56,7 @@ class AccountVotingProxy extends React.Component {
             error = "cannot proxy to yourself";
         return (
         <div className="content-block" style={{maxWidth: "600px"}}>
-            <h3>Proxy</h3>
+            <h3><Translate content="account.votes.proxy_short" /></h3>
             <AccountSelector label="account.votes.proxy"
                              error={error}
                              account={this.state.current_proxy_input}

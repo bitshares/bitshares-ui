@@ -159,7 +159,10 @@ class AccountVoting extends React.Component {
     }
 
     onProxyAccountChange(proxy_account) {
-        this.setState({proxy_account_id: proxy_account ? proxy_account.get("id") : ""});
+        this.setState({
+            proxy_account_id: proxy_account ? proxy_account.get("id") : "",
+            proxy_account_name: proxy_account ? proxy_account.get("name") : ""
+        });
     }
 
     validateAccount(collection, account) {
@@ -184,6 +187,14 @@ class AccountVoting extends React.Component {
         this.setState({activeTab: value});
     }
 
+    onClearProxy(e) {
+        e.preventDefault();
+        this.setState({
+            proxy_account_id: "",
+            proxy_account_name: ""
+        });
+    }
+
     render() {
         let {activeTab} = this.state;
         let proxy_is_set = !!this.state.proxy_account_id;
@@ -191,7 +202,7 @@ class AccountVoting extends React.Component {
 
         let workers = [];
         let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
-        
+
         for (var i = 0; i < 50; i++) {
             let id = "1.14." + i;
             let worker = ChainStore.getObject(id);
@@ -200,7 +211,7 @@ class AccountVoting extends React.Component {
             }
             if (botchedWorkers.indexOf(id) === -1) {
                 workers.push(
-                    <WorkerApproval worker={id} vote_ids={this.state.vote_ids} 
+                    <WorkerApproval key={id} worker={id} vote_ids={this.state.vote_ids}
                         onAddVote={this.onAddVoteID.bind(this)}
                         onRemoveVote={this.onRemoveVoteID.bind(this)}
                     />
@@ -224,6 +235,10 @@ class AccountVoting extends React.Component {
                     <button className={"outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
                         <Translate content="account.perm.reset"/>
                     </button>
+                    {proxy_is_set ? (
+                        <button className={"outline"} onClick={this.onClearProxy.bind(this)} tabIndex={8}>
+                            <Translate content="account.votes.clear_proxy"/>
+                        </button>) : null}
                 </div>
 
                 <div className="tabs" style={{maxWidth: "800px"}}>
@@ -245,9 +260,10 @@ class AccountVoting extends React.Component {
                 <div style={{paddingTop: "1em"}}>
 
                 {activeTab === "proxy" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                    <div className="content-block">
                         <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
                         <AccountVotingProxy
+                            currentProxy={this.state.proxy_account_name}
                             currentAccount={this.props.account}
                             proxyAccount={this.state.proxy_account_id}
                             onProxyAccountChanged={this.onProxyAccountChange}
@@ -283,7 +299,7 @@ class AccountVoting extends React.Component {
                 {activeTab === "workers" ? (
                     <div className={cnames("content-block", {disabled : proxy_is_set})}>
                         <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
-                        <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">                    
+                        <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">
                             {workers}
                         </div>
                     </div>) : null}

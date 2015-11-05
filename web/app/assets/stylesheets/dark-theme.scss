@@ -575,3 +575,7 @@ section input[type="text"] {
     border-radius: 2px;
   }
 }
+
+.menu-group.primary .menu-bar > li > a.active {
+  background-color: #4c4c4c !important;
+}
