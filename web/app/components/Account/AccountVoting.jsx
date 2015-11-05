@@ -158,10 +158,10 @@ class AccountVoting extends React.Component {
       this.setState(state);
     }
 
-    onProxyAccountChange(proxy_account) {
+    onProxyAccountChange(proxy_account, current_proxy_input) {
         this.setState({
             proxy_account_id: proxy_account ? proxy_account.get("id") : "",
-            proxy_account_name: proxy_account ? proxy_account.get("name") : ""
+            proxy_account_name: current_proxy_input
         });
     }
 
