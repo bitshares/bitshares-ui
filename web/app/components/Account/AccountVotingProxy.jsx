@@ -43,9 +43,9 @@ class AccountVotingProxy extends React.Component {
     onProxyAccountChange(new_proxy_account) {
         //console.log("-- AccountVotingProxy.onProxyAccountChange -->", new_proxy_account);
         if(new_proxy_account && this.props.currentAccount.get("id") === new_proxy_account.get("id"))
-            this.props.onProxyAccountChanged(null);
+            this.props.onProxyAccountChanged(null, this.state.current_proxy_input);
         else
-            this.props.onProxyAccountChanged(new_proxy_account);
+            this.props.onProxyAccountChanged(new_proxy_account, this.state.current_proxy_input);
         this.setState({new_proxy_account});
     }
 
