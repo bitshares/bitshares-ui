@@ -1,3 +1,5 @@
+/* ***** declarations ****** */
+
 @mixin font-face($font-family, $file-path, $font-weight, $font-style) {
   @font-face {
     font-family: $font-family;
@@ -8,16 +10,107 @@
 }
 
 @include font-face(Roboto-Light, './Roboto-Light', 300, normal);
-@mixin Roboto-Light {
-  font-family: 'Roboto-Light', arial, sans-serif;;
-  font-weight: lighter; font-style: normal; }
+@mixin FontLight {
+  font-family: 'Roboto-Light', arial, sans-serif;
+  font-weight: lighter;
+  font-style: normal;
+}
 
 @include font-face(Roboto-Regular, './Roboto-Regular', normal, normal);
-@mixin Roboto-Regular {
+@mixin FontRegular {
   font-family: 'Roboto-Regular', arial, sans-serif;
-  font-weight: normal; font-style: normal; }
+  font-weight: normal;
+  font-style: normal;
+}
 
 @include font-face(RobotoCondensed-Regular, './RobotoCondensed-Regular', normal, normal);
-@mixin RobotoCondensed-Regular {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;;
-  font-weight: normal; font-style: normal; }
+@mixin FontCondensed {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  &.win32 {
+    font-family: arial, sans-serif;
+  }
+}
+
+/* ***** styles ****** */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.monospace {
+  font-family: "Lucida Console", Monaco, monospace !important;
+}
+
+label, label > span {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.json-inspector__key {
+  font-family: "Lucida Console", Monaco, monospace !important;
+  text-transform: none;
+}
+
+.json-inspector__value {
+  font-family: "Lucida Console", Monaco, monospace !important;
+  text-transform: none;
+}
+
+button, .button {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  text-transform: uppercase;
+}
+
+.content-block > h3 {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.page-header > h3 {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+a.currency, span.currency {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.txtlabel {
+  text-transform: uppercase;
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+}
+
+span.time {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.account-drop-down a.button {
+  background-color: transparent;
+  text-transform: none;
+  font-family: 'Roboto-Regular', arial, sans-serif;
+}
+
+.footer .logo {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+}
+
+.tabs > .tab-item {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+}
+
+.label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+}
+
+.table > thead > tr > th {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+}
+
+.key-value-table tr > td:first-child {
+  padding-left: 0 !important;
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.account-drop-down a.button {
+  font-family: 'Roboto-Regular', arial, sans-serif;
+}

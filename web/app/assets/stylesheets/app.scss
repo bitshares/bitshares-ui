@@ -1,4 +1,3 @@
-@import "./fonts";
 @import "./foundation_settings";
 @import "~react-foundation-apps/node_modules/foundation-apps/scss/foundation.scss";
 @import "./foundation_overrides";
@@ -16,7 +15,7 @@
 @import "./console";
 @import "./pagination";
 @import "./existing_accounts";
-
+@import "./fonts";
 
 #content.win32 {
   font-size: 90%;
@@ -42,10 +41,6 @@
 
 a {
   transition: all 0.3s ease 0s;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto-Light', arial, sans-serif;
 }
 
 // border is needed when centering
@@ -96,10 +91,6 @@ hr {
   }
 }
 
-.monospace {
-  font-family: "Courier New", Courier, monospace
-}
-
 .flex-start {
   align-items: flex-start;
 }
@@ -112,28 +103,11 @@ a > .label {
   cursor: pointer;
 }
 
-label, label > span {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
-  text-transform: uppercase;
-}
-
-.json-inspector__key {
-  font-family: "Lucida Console", Monaco, monospace !important;
-  text-transform: none;
-}
-
-.json-inspector__value {
-  font-family: "Lucida Console", Monaco, monospace !important;
-  text-transform: none;
-}
-
 .block-button {
   display: block;
 }
 
 button, .button {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
-  text-transform: uppercase;
   transition: all 0.3s ease 0s !important;
   margin: 2px 5px 2px 5px;
   vertical-align: middle;
@@ -168,7 +142,6 @@ td > button:first-child, td > .button:first-child, div > button:first-child, div
 .content-block {
   margin-bottom: 2rem;
   > h3 {
-    font-family: 'Roboto-Light', arial, sans-serif;
     font-size: 2rem;
     border-bottom: 1px solid #444;
     margin-top: 0;
@@ -196,7 +169,6 @@ td > button:first-child, td > .button:first-child, div > button:first-child, div
     padding: 1rem 0 1rem 0;
   }
   h3 {
-    font-family: 'Roboto-Light', arial, sans-serif;
     font-size: 2rem;
   }
   h1 + h3 {
@@ -261,20 +233,11 @@ div.disabled input {
   background-color: #444;
 }
 
-a.currency, span.currency {
-  font-family: 'Roboto-Light', arial, sans-serif;
-}
-
 .modal-header {
   > h3, >h6 {
     margin-bottom: 0;
   }
   margin-bottom: 1rem;
-}
-
-.txtlabel {
-  text-transform: uppercase;
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
 }
 
 .memo {
@@ -301,7 +264,6 @@ a.currency, span.currency {
 
 span.time {
   white-space: nowrap;
-  font-family: 'Roboto-Light', arial, sans-serif;
 }
 
 section > ul > li.key-value {
