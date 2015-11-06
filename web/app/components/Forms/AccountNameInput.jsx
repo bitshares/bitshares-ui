@@ -6,6 +6,7 @@ import AccountStore from "stores/AccountStore";
 import BaseComponent from "../BaseComponent";
 import validation from "common/validation";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 class AccountNameInput extends BaseComponent {
 
@@ -19,7 +20,7 @@ class AccountNameInput extends BaseComponent {
         accountShouldNotExist: PropTypes.bool,
         cheapNameOnly: PropTypes.bool
     };
-    
+
     constructor(props) {
         super(props, AccountStore);
         this.state.value = null;
@@ -31,10 +32,10 @@ class AccountNameInput extends BaseComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.value !== this.state.value
-               || nextState.error !== this.state.error
-               || nextState.account_name !== this.state.account_name
-               || nextState.existing_account !== this.state.existing_account
-               || nextState.searchAccounts !== this.state.searchAccounts
+            || nextState.error !== this.state.error
+            || nextState.account_name !== this.state.account_name
+            || nextState.existing_account !== this.state.existing_account
+            || nextState.searchAccounts !== this.state.searchAccounts
     }
 
     componentDidUpdate() {
@@ -69,10 +70,10 @@ class AccountNameInput extends BaseComponent {
         } else if (this.props.accountShouldExist || this.props.accountShouldNotExist) {
             let account = this.state.searchAccounts.find(a => a === this.state.value);
             if (this.props.accountShouldNotExist && account) {
-                error = "Account name is already taken.";
+                error = counterpart.translate("account.name_input.name_is_taken");
             }
             if (this.props.accountShouldExist && !account) {
-                error = "Account not found.";
+                error = counterpart.translate("account.name_input.not_found");
             }
         }
         return error;
@@ -82,14 +83,14 @@ class AccountNameInput extends BaseComponent {
         this.state.error = value === "" ?
             "Please enter valid account name" :
             validation.is_account_name_error(value)
-        
+
         this.state.warning = null
         if(this.props.cheapNameOnly) {
             if( ! this.state.error && ! validation.is_cheap_name( value ))
-                this.state.error = "This faucet accepts names with at least one dash, number or no vowels."
+                this.state.error = counterpart.translate("account.name_input.premium_name_faucet");
         } else {
             if( ! this.state.error && ! validation.is_cheap_name( value ))
-                this.state.warning = "This is a premium name.  Cheap names have at least one dash, number or no vowles."
+                this.state.warning = counterpart.translate("account.name_input.premium_name_warning");
         }
         this.setState({value: value, error: this.state.error, warning: this.state.warning});
         if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
@@ -123,8 +124,8 @@ class AccountNameInput extends BaseComponent {
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}
                        value={this.state.account_name}/>
-                   <div className="facolor-error">{error}</div>
-                   <div className="facolor-warning">{error ? null : warning}</div>
+                <div className="facolor-error">{error}</div>
+                <div className="facolor-warning">{error ? null : warning}</div>
             </div>
         );
     }

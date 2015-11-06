@@ -18,8 +18,9 @@ class TransactionConfirmActions {
             clearTimeout(broadcast_timeout);
             this.actions.wasIncluded(res);
         }).catch( error => {
+            console.error(error)
             clearTimeout(broadcast_timeout);
-            let message = error.message.split( '\n' )[1];
+            message = message[message.length === 1 ? 0 : 1]
             this.actions.error(message);
         });
     }

@@ -24,7 +24,7 @@ class Footer extends React.Component {
     static defaultProps = {
         dynGlobalObject: "2.1.0"
     }
-    
+
     static contextTypes = {
         router: React.PropTypes.func.isRequired
     }
@@ -41,22 +41,6 @@ class Footer extends React.Component {
                nextProps.synced !== this.props.synced;
     }
 
-    _triggerPerf() {
-        if (!this.state.perf) {
-            Perf.start();
-        } else {
-            Perf.stop();
-            console.log("Inclusive prints the overall time taken. If no argument's passed, defaults to all the measurements from the last recording. This prints a nicely formatted table in the console, like so:");
-            Perf.printInclusive();
-            console.log("Wasted time is spent on components that didn't actually render anything, e.g. the render stayed the same, so the DOM wasn't touched.");
-            Perf.printWasted();
-            console.log("Exclusive times don't include the times taken to mount the components: processing props, getInitialState, call componentWillMount and componentDidMount, etc.");
-            Perf.printExclusive();
-            Perf.printDOM();
-        }
-        this.setState({perf: !this.state.perf});
-    }
-
     render() {
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
@@ -66,9 +50,9 @@ class Footer extends React.Component {
         return (
             <div className="show-for-medium grid-block shrink footer">
                 <div className="align-justify grid-block">
-                    <div onClick={this._triggerPerf.bind(this)} className="grid-block">
+                    <div className="grid-block">
                         <div className="logo">
-                            <Translate content="footer.title" />
+                            <Translate content="footer.title" /> &nbsp; <span className="version">{window.app_version}</span>
                         </div>
                     </div>
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
@@ -99,18 +83,18 @@ class Footer extends React.Component {
             </div>
         );
     }
-    
+
     onBackup() {
         this.context.router.transitionTo("wmc-backup-create")
     }
-    
+
     onBackupBrainkey() {
         this.context.router.transitionTo("wmc-backup-brainkey")
     }
 }
 
 class AltFooter extends Component {
-    
+
     render() {
         var wallet = WalletDb.getWallet()
         return <AltContainer

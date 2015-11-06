@@ -14,29 +14,29 @@ gerekmektedir.
 BitShares'de bir *yetkili*,  transfer veya alım-satım gibi işlemlere yetki veren bir veya 
 daha çok sayıda kişiden oluşur.
 
-Bir yetki , bir yada daha fazla sayıda hesap adı ve*ağırlık* 
+Bir yetki , bir yada daha fazla sayıda hesap adı ve *ağırlık* 
 çiftinden oluşur.
 
-Geçerli bir işlem elde edebilmek için , imzalayan tarafların ağırlıklarının toplamı 
+Geçerli bir işlem elde edebilmek için , imzalayan tarafların etki ağırlıklarının toplamı 
 izinlerde belirlenmiş olan alt-sınırı geçiyor olması gerekir.  
 
 # Örnekler
 
 Birkaç örneğe bakarak kullanılan terminolojiye ve kullanım senaryolarına ışık tutalım. 
 Aşağıda tanımlanmış etkin izinlerle yeni bir hesap oluşturulduğunu farz edelim. 
-Dikkatinizi çekeriz , aynı tertip sahip izinleri için de 
+Dikkatinizi çekeriz , aynı şema sahip izinleri için de 
 işe yarar. 
 
 ## (Düz) Çoklu-İmza
 
-Düz çok-imzalı bir tertip, işlemin geçerli olabilmesi için 'N' sayıda kişinin 
-imzalamak zorunda olduğu 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
+Düz çok-imzalı bir şema, işlemin geçerli olabilmesi için aralarından 'N' sayıda kişinin 
+imzası gerekli  toplam 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 
 Gelin şöyle farz edelim , Alice, Bob, Charlie ve Dennis'in ortak fonları olsun . 
-Aralarından sadece ikisinin hem-fikir olduğu geçerli bir işlem oluşturmayı istiyoruz.
-isteyelim. Dolayısıyla **4-ün-2-si** (M-in-N-i) tertibi şöyle görünür : 
+Eğer yalnızca ikisi anlaşırlarsa geçerli olabilecek bir işlem oluşturmak istiyoruz .
+Dolayısıyla **4-ün-2-si** (M-in-N-i) şeması şöyle görünür : 
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 
@@ -47,17 +47,17 @@ isteyelim. Dolayısıyla **4-ün-2-si** (M-in-N-i) tertibi şöyle görünür :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    | 
 
-Her dört katılımcının 33% ağırlığı var fakat alt sınır 51%  olarak ayarlanmış.
-Dolayısıyla  işlemi geçerli kılmak için 4 kişiden sadece 2 sinin hemfikir olması gerekir.
+Katılımcıların her birinin 33% etki ağırlığı var fakat alt sınır 51%  olarak ayarlanmış.
+Dolayısıyla  işlemi geçerli kılmak için 4 kişiden sadece 2 sinin anlaşması yeterlidir.
 
-Alternatif olarak, bir 4-ün-3'ü tertibi oluşturmak için biz ya ağırlıkları 17 ye indirebiliriz 
+Alternatif olarak, bir 4-ün-3'ü şeması oluşturmak için ya ağırlıkları 17% ye indirebiliriz 
 yada alt-sınırı 99%'a yükseltebiliriz. 
 
-## (Düz) Esnek Çoklu-İmza
+## (Yassı) Esnek Çoklu-İmza
 
 Alt-sınır ve ağırlıklar sayesinde fonlarımızla şimdi daha esneğiz, yada daha doğrusu 
 daha fazla *hakimiyetimiz* var. Mesela , farklı kişiler için ayrı ağırlıklar belirleyebiliriz.
-Farzedelim ki Alice fonlarını çoklu-imza tertibi kullanarak hırsızlığa karşı korumak 
+Farzedelim ki Alice fonlarını çoklu-imza şeması kullanarak hırsızlığa karşı korumak 
 istiyor fakat aynı zamanda arkadaşlarına da gereğinden fazla hakimiyet teslim etmek 
 istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
 
@@ -70,14 +70,14 @@ istemiyor. O zaman şuna benzer bir yetki oluşturuyoruz :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    |
 
-Şimdi, fonlara Alice ya tek bir arkadaşıyla yada  tüm üç arkadaşıyla birlikte ulaşma 
+Şimdi, fonlara Alice tek bir arkadaşıyla yada  tüm üç arkadaşıyla birlikte erişebilme 
 imkanına sahip olur.
 
 ## Çok-Basamaklı Esnek Çoklu-İmza
 
 Gelin beraber basit bir çok-basamaklı anonim hesap kurulumuna göz atalım. Mali İşler 
-Müdürü (MİM) ve onun için altında çalışan işte Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
-departmanları olan bir şirkete bakıyor olalım. Şirketin bir de harcama ayrıcalıkları 
+Müdürü (MİM) ve onun için altında çalışan Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
+departmanları olan bir şirkete bakıyor olalım.  Bir de harcama ayrıcalıkları 
 olsun isteyen bir CEO'su olsun. 
 O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 
@@ -88,7 +88,7 @@ O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
 | ---------- | ------ | 
 | Alt Sınır : | 51%    |
 
-bu durumda CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
+burada CEO.ŞİRKET ve MİM.ŞİRKET in kendilerine ait ayrı yetkileri var.  Mesela 
 MİM.ŞİRKET hesabı şöyle olabilir :
 
 | MİM.ŞİRKET         | Ağırlık |
@@ -99,15 +99,15 @@ MİM.ŞİRKET hesabı şöyle olabilir :
 | Vergi Müdürü.ŞİRKET | 10%    |
 | Muhasebe.ŞİRKET  | 10%    |
 | ------------------- | ------ |
-| Alt-sınır:          | 51%    |
+| Alt-sınır :       | 51%    |
 
-Bu tertip şunlara izin verir :
+Bu şema fonların harcanabilmesi için  kişilere şöyle izinler verir :
 
-*CEO'a fonları harcamaya
-*Mali İşler Müdürüne fonları harcamaya
-*Vezneyle birlikte Morakıp afonları harcamaya
-*Denetçi yada Veznedar ile birlikte ya Vergi Müdürü yada Muhasabeci fonları 
-  harcamaya.
+* CEO  tek başına
+* Mali İşler Müdürün tek başına 
+*  Vezne ve Denetçi birlikte
+* Denetçi veya Veznedar , Vergi Müdürü ve Muhasebeciyle birlikte 
+  harcama.
 
 Dolayısıyla görüldüldüğü gibi yetkilendirmeleri gelişigüzel derinlikte yayarak her türlü 
 iş alanına uyacak esneklikte uygulamak mümkün.

@@ -44,7 +44,7 @@ class AccountItemRow extends React.Component {
 
 
         return (
-            <tr key={name}>
+            <tr>
                 <td>
                     <AccountImage size={{height: 30, width: 30}} account={name}/>
                 </td>
@@ -122,7 +122,7 @@ class AccountsList extends React.Component {
                  return 0;
                  })
            .map(i => {
-            return (<AccountItemRow account={i} type={this.props.type} onRemoveItem={this.props.onRemoveItem}/>)
+            return (<AccountItemRow key={i.get("name")} account={i} type={this.props.type} onRemoveItem={this.props.onRemoveItem}/>)
            });
 
         let error = this.state.error;
