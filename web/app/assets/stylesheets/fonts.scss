@@ -10,24 +10,40 @@
 }
 
 @include font-face(Roboto-Light, './Roboto-Light', 300, normal);
-@mixin FontLight {
+@mixin RobotoLight {
   font-family: 'Roboto-Light', arial, sans-serif;
   font-weight: lighter;
   font-style: normal;
 }
 
 @include font-face(Roboto-Regular, './Roboto-Regular', normal, normal);
-@mixin FontRegular {
+@mixin RobotoRegular {
   font-family: 'Roboto-Regular', arial, sans-serif;
   font-weight: normal;
   font-style: normal;
 }
 
 @include font-face(RobotoCondensed-Regular, './RobotoCondensed-Regular', normal, normal);
-@mixin FontCondensed {
+@mixin RobotoCondensed {
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   font-weight: normal;
   font-style: normal;
+}
+
+@mixin SegoeUILight {
+  font-family: 'wf_SegoeUILight', 'Segoe UI Light', 'Segoe WP Light', 'wf_SegoeUI', 'Segoe UI', 'Segoe', 'Segoe WP', 'Tahoma', 'Verdana', arial, sans-serif;
+  font-size: 90%;
+  font-weight: lighter;
+}
+
+@mixin SegoeUIRegular {
+  font-family: 'wf_SegoeUI', 'Segoe UI', 'Segoe', 'Segoe WP', 'Tahoma', 'Verdana', arial, sans-serif;
+  font-size: 90%;
+  font-weight: normal;
+}
+
+@mixin MonospaceFont {
+  font-family: "Lucida Console", Monaco, monospace !important;
 }
 
 /* ***** styles ****** */
@@ -37,141 +53,141 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .monospace {
-  font-family: "Lucida Console", Monaco, monospace !important;
+  @include MonospaceFont;
 }
 
 label, label > span {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  @include RobotoCondensed;
   text-transform: uppercase;
 }
 
 .json-inspector__key {
-  font-family: "Lucida Console", Monaco, monospace !important;
+  @include MonospaceFont;
   text-transform: none;
 }
 
 .json-inspector__value {
-  font-family: "Lucida Console", Monaco, monospace !important;
+  @include MonospaceFont;
   text-transform: none;
 }
 
 button, .button {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  @include RobotoCondensed;
   text-transform: uppercase;
 }
 
 .content-block > h3 {
-  font-family: 'Roboto-Light', arial, sans-serif;
+  @include RobotoLight;
 }
 
 .page-header > h3 {
-  font-family: 'Roboto-Light', arial, sans-serif;
+  @include RobotoLight;
 }
 
 a.currency, span.currency {
-  font-family: 'Roboto-Light', arial, sans-serif;
+  @include RobotoLight;
 }
 
 .txtlabel {
+  @include RobotoCondensed;
   text-transform: uppercase;
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
 }
 
 span.time {
-  font-family: 'Roboto-Light', arial, sans-serif;
+  @include RobotoLight;
 }
 
 .account-drop-down a.button {
-  font-family: 'Roboto-Regular', arial, sans-serif;
+  @include RobotoRegular;
 }
 
 .footer .logo {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  @include RobotoCondensed;
 }
 
 .tabs > .tab-item {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  @include RobotoCondensed;
 }
 
 .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  @include RobotoCondensed;
 }
 
 .table > thead > tr > th {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  @include RobotoCondensed;
 }
 
 .key-value-table tr > td:first-child {
-  font-family: 'Roboto-Light', arial, sans-serif;
+  @include RobotoLight;
 }
 
 .win32 {
-  font-family: 'Segoe UI', arial, sans-serif;
+  @include RobotoRegular;
 }
 
 .win32 {
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Segoe UI', arial, sans-serif;
+    @include SegoeUILight;
   }
 
   label, label > span {
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    @include RobotoCondensed;
     text-transform: uppercase;
+    font-size: 90%;
   }
 
   button, .button {
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    @include RobotoCondensed;
     text-transform: uppercase;
   }
 
   .content-block > h3 {
-    font-family: 'Segoe UI', arial, sans-serif;
-    font-weight: lighter;
+    @include SegoeUILight;
   }
 
   .page-header > h3 {
-    font-family: 'Segoe UI', arial, sans-serif;
-    font-weight: lighter;
+    @include SegoeUILight;
   }
 
   a.currency, span.currency {
-    font-family: 'Segoe UI', arial, sans-serif;
-    font-weight: lighter;
+    @include SegoeUILight;
   }
 
   .txtlabel {
+    @include RobotoCondensed;
     text-transform: uppercase;
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   }
 
   span.time {
-    font-family: 'Segoe UI', arial, sans-serif;
-    font-weight: lighter;
+    @include SegoeUILight;
   }
 
   .account-drop-down a.button {
-    font-family: 'Segoe UI', arial, sans-serif;
+    @include SegoeUIRegular;
   }
 
   .footer .logo {
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    @include RobotoCondensed;
+    font-size: 90%;
   }
 
   .tabs > .tab-item {
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    @include RobotoCondensed;
+    font-size: 90%;
   }
 
   .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    @include RobotoCondensed;
+    font-size: 80%;
   }
 
   .table > thead > tr > th {
-    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    @include RobotoCondensed;
+    font-size: 90%;
   }
 
   .key-value-table tr > td:first-child {
-    font-family: 'Segoe UI', arial, sans-serif;
-    font-weight: lighter;
+    @include SegoeUILight;
   }
 
 }
