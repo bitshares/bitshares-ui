@@ -13,12 +13,9 @@
   .logo {
     font-size: 1.1rem;
     line-height: 2rem;
-    vertical-align: middle;
-    > span, svg {
-      vertical-align: middle;
-    }
     .version {
       font-size: 80%;
+      vertical-align: baseline;
     }
   }
 }
