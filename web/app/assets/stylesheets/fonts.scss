@@ -28,9 +28,6 @@
   font-family: 'RobotoCondensed-Regular', arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  &.win32 {
-    font-family: arial, sans-serif;
-  }
 }
 
 /* ***** styles ****** */
@@ -85,8 +82,6 @@ span.time {
 }
 
 .account-drop-down a.button {
-  background-color: transparent;
-  text-transform: none;
   font-family: 'Roboto-Regular', arial, sans-serif;
 }
 
@@ -107,10 +102,76 @@ span.time {
 }
 
 .key-value-table tr > td:first-child {
-  padding-left: 0 !important;
   font-family: 'Roboto-Light', arial, sans-serif;
 }
 
-.account-drop-down a.button {
-  font-family: 'Roboto-Regular', arial, sans-serif;
+.win32 {
+  font-family: 'Segoe UI', arial, sans-serif;
+}
+
+.win32 {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Segoe UI', arial, sans-serif;
+  }
+
+  label, label > span {
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    text-transform: uppercase;
+  }
+
+  button, .button {
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+    text-transform: uppercase;
+  }
+
+  .content-block > h3 {
+    font-family: 'Segoe UI', arial, sans-serif;
+    font-weight: lighter;
+  }
+
+  .page-header > h3 {
+    font-family: 'Segoe UI', arial, sans-serif;
+    font-weight: lighter;
+  }
+
+  a.currency, span.currency {
+    font-family: 'Segoe UI', arial, sans-serif;
+    font-weight: lighter;
+  }
+
+  .txtlabel {
+    text-transform: uppercase;
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  }
+
+  span.time {
+    font-family: 'Segoe UI', arial, sans-serif;
+    font-weight: lighter;
+  }
+
+  .account-drop-down a.button {
+    font-family: 'Segoe UI', arial, sans-serif;
+  }
+
+  .footer .logo {
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  }
+
+  .tabs > .tab-item {
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  }
+
+  .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  }
+
+  .table > thead > tr > th {
+    font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  }
+
+  .key-value-table tr > td:first-child {
+    font-family: 'Segoe UI', arial, sans-serif;
+    font-weight: lighter;
+  }
+
 }
