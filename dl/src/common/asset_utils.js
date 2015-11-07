@@ -2,7 +2,7 @@ import assetConstants from "../chain/asset_constants";
 
 export default class AssetUtils {
     
-    static getFlagBooleans(mask) {
+    static getFlagBooleans(mask, isBitAsset = false) {
         let booleans = {
             charge_market_fee    : false,
             white_list           : false,
@@ -16,9 +16,13 @@ export default class AssetUtils {
         }
 
         for (let flag in booleans) {
-            if (mask & assetConstants.permission_flags[flag]) {
-                booleans[flag] = true;
-            }
+            if (!isBitAsset && (assetConstants.uia_permission_mask.indexOf(flag) === -1)) {
+                delete booleans[flag];
+            } else {
+                if (mask & assetConstants.permission_flags[flag]) {
+                    booleans[flag] = true;
+                }
+            } 
         }
 
         return booleans;
@@ -38,7 +42,7 @@ export default class AssetUtils {
         return flags;
     }
 
-    static getPermissions(flagBooleans, isBitAsset) {
+    static getPermissions(flagBooleans, isBitAsset = false) {
         let permissions = isBitAsset ? Object.keys(assetConstants.permission_flags) : assetConstants.uia_permission_mask;
         let flags = 0;
         permissions.forEach(permission => {

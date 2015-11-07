@@ -349,8 +349,8 @@ class AccountAssetUpdate extends React.Component {
                     <h3><Translate content="header.update_asset" />: {symbol}</h3>
 
                     <div className="grid-content button-group no-overflow" style={{paddingTop: "2rem"}}>
-                        <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._updateAsset.bind(this)} value="Update Asset" />
-                        <input type="submit" className="button info" onClick={this._reset.bind(this)} value="Reset changes" />
+                        <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._updateAsset.bind(this)} value={counterpart.translate("header.update_asset")} />
+                        <input type="submit" className="button info" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")} />
 
                         <div><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</div>
                     </div>

@@ -8,104 +8,139 @@ import utils from "common/utils";
 import ChainStore from "api/ChainStore";
 import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import AmountSelector from "../Utility/AmountSelector";
+import FormattedPrice from "../Utility/FormattedPrice";
+import AccountSelector from "../Account/AccountSelector";
+import AssetSelector from "../Utility/AssetSelector";
+import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import AccountInfo from "./AccountInfo";
 import big from "bignumber.js";
+import cnames from "classnames";
+import Tabs from "react-foundation-apps/src/tabs";
+import connectToStores from "alt/utils/connectToStores";
+import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
+import assetUtils from "common/asset_utils";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
+@BindToChainState()
 class AccountAssetCreate extends React.Component {
 
-    static contextTypes = { router: React.PropTypes.func.isRequired }
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
+
+    static propTypes = {
+        core: ChainTypes.ChainAsset.isRequired,
+        globalObject: ChainTypes.ChainObject.isRequired
+    };
 
     static defaultProps = {
-        symbol: "",
-        name: "",
-        description: "",
-        max_supply: 0,
-        precision: 0
+        globalObject: "2.0.0",
+        core: "1.3.0"
     }
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            create: {
+        this.state = this.resetState(props);
+    }
+
+    resetState(props) {
+        // let asset = props.asset.toJS();
+        let isBitAsset = false;
+        let precision = utils.get_asset_precision(4);
+        let corePrecision = utils.get_asset_precision(props.core.get("precision"));
+
+        let flagBooleans = assetUtils.getFlagBooleans(0);
+        let permissionBooleans = assetUtils.getFlagBooleans(79);
+        let flags = assetUtils.getFlags(flagBooleans);
+        let permissions = assetUtils.getPermissions(permissionBooleans);
+
+        return {
+
+            update: {
                 symbol: "",
-                name: "",
-                description: "",
-                max_supply: 0,
                 precision: 4,
-                common_options: {
-                    market_fee_percent: 0,
-                    max_market_fee: 0
-                }
+                max_supply: 0,
+                max_market_fee: 0,
+                market_fee_percent: 0,
+                description: ""
             },
             errors: {
-                symbol: null,
                 max_supply: null
             },
-            isValid: false
+            isValid: true,
+            flagBooleans: flagBooleans,
+            permissionBooleans: permissionBooleans,
+            isBitAsset: isBitAsset,
+            activeTab: props.tab
         };
     }
 
-    _createAsset(account_id, e) {
-        console.log("account_id:", account_id);
+
+
+    _createAsset(e) {
         e.preventDefault();
-        let {create} = this.state;
-        let existingAsset = ChainStore.getAsset(create.symbol);
-        if (existingAsset) {
-            return this._validateCreateFields(create);
-        }
-        AssetActions.createAsset(account_id, create).then(result => {
-            console.log("... AssetActions.createAsset(account_id, create)", account_id, create)
-            // Notify 'Successfully created the asset' was running before transaction dialog confirm
-            // if (result) {
-            //     notify.addNotification({
-            //         message: `Successfully created the asset ${create.symbol}`,//: ${this.state.wallet_public_name}
-            //         level: "success",
-            //         autoDismiss: 10
-            //     });
-            // } else {
-            //     notify.addNotification({
-            //         message: `Failed to create the asset`,//: ${this.state.wallet_public_name}
-            //         level: "error",
-            //         autoDismiss: 10
-            //     });
-            // }
+        let {update, flagBooleans, permissionBooleans} = this.state;
+        let {account} = this.props;
+
+        let flags = assetUtils.getFlags(flagBooleans);
+        let permissions = assetUtils.getPermissions(permissionBooleans);
+
+        AssetActions.createAsset(account.get("id"), update, flags, permissions).then(result => {
+            console.log("... AssetActions.updateAsset(account_id, update)", account.get("id"),  update, flags, permissions)
         });
+    }
+
+    _hasChanged() {
+        return !utils.are_equal_shallow(this.state, this.resetState(this.props));
+    }
+
+    _reset(e) {
+        e.preventDefault();
+
+        this.setState(
+            this.resetState(this.props)
+        );
     }
 
     _forcePositive(number) {
         return parseFloat(number) < 0 ? "0" : number;
     }
 
-    _onCreateInput(value, e) {
-        let {create} = this.state;
-        let precision = utils.get_asset_precision(create.precision);
+    _onUpdateInput(value, e) {
+        let {update} = this.state;
+        let updateState = true;
+        let precision = utils.get_asset_precision(this.state.update.precision);
 
         switch (value) {
             case "market_fee_percent":
-                create.common_options[value] = this._forcePositive(e.target.value);
+                update[value] = this._forcePositive(e.target.value);
                 break;
 
             case "max_market_fee":
                 if ((new big(e.target.value)).times(precision).gt(MAX_SAFE_INT)) {
                     return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
                 }
-                e.target.value = utils.limitByPrecision(e.target.value, this.state.create.precision);
-                create.common_options[value] = e.target.value;
+                e.target.value = utils.limitByPrecision(e.target.value, this.state.update.precision);
+                update[value] = e.target.value;
+                break;
+
+            case "precision":
+                // Enforce positive number
+                update[value] = this._forcePositive(e.target.value);
                 break;
 
             case "max_supply":
                 if ((new big(e.target.value)).times(precision).gt(MAX_SAFE_INT)) {
                     return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
                 }
-                e.target.value = utils.limitByPrecision(e.target.value, this.state.create.precision);
-                create[value] = e.target.value;
-                break;
-
-            case "precision":
-                // Enforce positive number
-                create[value] = this._forcePositive(e.target.value);
+                e.target.value = utils.limitByPrecision(e.target.value, this.state.update.precision);
+                update[value] = e.target.value;
                 break;
 
             case "symbol":
@@ -117,108 +152,242 @@ class AccountAssetCreate extends React.Component {
                     break;
                 }
                 ChainStore.getAsset(e.target.value);
-                create[value] = this._forcePositive(e.target.value);
+                update[value] = this._forcePositive(e.target.value);
                 break;
 
             default:
-                create[value] = e.target.value;
+                update[value] = e.target.value;
                 break;
         }
-        this.setState({create: create});
-        this._validateCreateFields(create);
+
+        if (updateState) {
+            this.setState({update: update});
+            this._validateEditFields(update);
+        }
     }
 
-    _validateCreateFields( new_state ) {
+    _validateEditFields( new_state ) {
+        let {core} = this.props;
 
         let errors = {
-            create: null,
             max_supply: null
         };
+
         errors.symbol = validation.is_valid_symbol_error(new_state.symbol);
         let existingAsset = ChainStore.getAsset(new_state.symbol);
         if (existingAsset) {
             errors.symbol = counterpart.translate("account.user_issued_assets.exists");
         }
+
         errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") : null;
-        let isValid = errors.symbol === null && errors.max_supply === null;
+
+        let isValid = !errors.symbol && !errors.max_supply;
 
         this.setState({isValid: isValid, errors: errors});
     }
 
+    _onFlagChange(key) {
+        let booleans = this.state.flagBooleans;
+        booleans[key] = !booleans[key];
+        this.setState({
+            flagBooleans: booleans
+        });
+    }
+
+    _onPermissionChange(key) {
+        let booleans = this.state.permissionBooleans;
+        booleans[key] = !booleans[key];
+        this.setState({
+            permissionBooleans: booleans
+        });
+    }
+
+    _changeTab(value) {
+        SettingsActions.changeViewSetting({
+            createAssetTab: value
+        });
+        this.setState({activeTab: value});
+    }
+
     render() {
-        let {account, account_name} = this.props;
-        let {errors, isValid, create, assets} = this.state;
+        let {account, account_name, globalObject, core} = this.props;
+        let {errors, isValid, update, assets, flagBooleans, permissionBooleans, activeTab} = this.state;
 
-        let globalObject = ChainStore.getObject("2.0.0");
+        // Estimate the asset update fee
+        let symbol = update.symbol;
+        let updateFee = "N/A";
 
-        // Estimate the asset creation fee from the symbol character length
-        let symbolLength = create.symbol.length, createFee = "N/A";
+        updateFee = <FormattedAsset amount={utils.estimateFee("asset_update", [], globalObject)} asset={"1.3.0"} />;
 
-        if(symbolLength === 3) {
-            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["symbol3"], globalObject)} asset={"1.3.0"} />;
+        // let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
+        // let precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
+        // let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
+        // let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
+
+        // let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
+        // let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
+
+        // console.log("flags:", assetUtils.getFlags(flagBooleans), "permissions:", assetUtils.getPermissions(permissionBooleans));
+
+        let primaryTabClass = cnames("tab-item", {"is-active": activeTab === "primary"});
+        let ownerTabClass = cnames("tab-item", {"is-active": activeTab === "owner"});
+        let flagsTabClass = cnames("tab-item", {"is-active": activeTab === "flags"});
+        let permTabClass = cnames("tab-item", {"is-active": activeTab === "permissions"});
+
+        // Loop over flags        
+        let flags = [];
+        for (let key in permissionBooleans) {
+            if (permissionBooleans[key] && key !== "charge_market_fee") {
+                flags.push(
+                    <table key={"table_" + key} className="table">
+                        <tr>
+                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                            <td style={{border: "none"}}>
+                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, key)}>
+                                    <input type="checkbox" checked={flagBooleans[key]} />
+                                    <label />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                )
+            }
         }
-        else if(symbolLength === 4) {
-            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["symbol4"], globalObject)} asset={"1.3.0"} />;
-        }
-        else if(symbolLength > 4) {
-            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
+
+        // Loop over permissions
+        let permissions = [];
+        for (let key in permissionBooleans) {
+                permissions.push(
+                    <table key={"table_" + key} className="table">
+                        <tr>
+                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                            <td style={{border: "none"}}>
+                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
+                                    <input type="checkbox" checked={permissionBooleans[key]} />
+                                    <label />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                )
         }
 
         return (
             <div className="grid-block">
                 <div className="grid-content">
-                    <Translate component="h3" content="header.create_asset" />
-                    <HelpContent path="components/AccountAssetCreate" />
+                    <h3><Translate content="header.create_asset" />: {symbol}</h3>
 
-                    <form onSubmit={this._createAsset.bind(this, account.get("id"))} noValidate>
-                        <div className="grid-block shrink">
-                            <div className="small-6 grid-content">
-                                <h3><Translate content="account.user_issued_assets.primary" /></h3>
-                                <label><Translate content="account.user_issued_assets.symbol" />
-                                    <input type="text" value={create.symbol} onChange={this._onCreateInput.bind(this, "symbol")}/>
-                                </label>
-                                { errors.symbol ? <p className="grid-content has-error">{errors.symbol}</p> : null}
+                    <div className="grid-content button-group no-overflow" style={{paddingTop: "2rem"}}>
+                        <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._createAsset.bind(this)} value={counterpart.translate("header.create_asset")} />
+                        <input type="submit" className="button info" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")} />
 
-                                <label><Translate content="account.user_issued_assets.max_supply" /> {create.symbol ? <span>({create.symbol})</span> : null}
-                                    <input type="number" value={create.max_supply} onChange={this._onCreateInput.bind(this, "max_supply")} />
-                                </label>
-                                { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
+                        <div><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</div>
+                    </div>
 
-                                <label><Translate content="account.user_issued_assets.precision" />
-                                    <input type="number" value={create.precision} onChange={this._onCreateInput.bind(this, "precision")} />
-                                </label>
-
-                            </div>
-
-                            <div className="small-6 grid-content">
-                                <h3><Translate content="account.user_issued_assets.optional" /></h3>
-
-                                <label><Translate content="account.user_issued_assets.description" />
-                                    <input type="text" value={create.description} onChange={this._onCreateInput.bind(this, "description")} />
-                                </label>
-
-                                <label><Translate content="account.user_issued_assets.market_fee" /> (%)
-                                    <input type="number" value={create.common_options.market_fee_percent} onChange={this._onCreateInput.bind(this, "market_fee_percent")}/>
-                                </label>
-
-                                <label><Translate content="account.user_issued_assets.max_market_fee"/> {create.symbol ? <span>({create.symbol})</span> : null}
-                                    <input type="number" value={create.common_options.max_market_fee} onChange={this._onCreateInput.bind(this, "max_market_fee")}/>
-                                </label>
-                                { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
-                            </div>
+                    <div className="tabs" style={{maxWidth: "800px"}}>
+                        <div className={primaryTabClass} onClick={this._changeTab.bind(this, "primary")}>
+                            <Translate content="account.user_issued_assets.primary" />
                         </div>
-
-                        <div className="grid-content button-group no-overflow">
-                            <input type="submit" className={classnames("button", {success: isValid && create.symbol.length >= 3}, {disabled: !isValid || create.symbol.length < 3})} onClick={this._createAsset.bind(this, account.get("id"))} value="Create Asset" />
-
-                            <span><Translate content="account.user_issued_assets.approx_fee" />: {createFee}</span>
+                        <div className={flagsTabClass} onClick={this._changeTab.bind(this, "flags")}>
+                            <Translate content="account.user_issued_assets.flags" />
                         </div>
-                    </form>
+                        <div className={permTabClass} onClick={this._changeTab.bind(this, "permissions")}>
+                            <Translate content="account.permissions" />
+                        </div>
+                    </div>
+
+                    {/* Tab content */}
+
+                        
+                            <div className="grid-block shrink small-vertical medium-horizontal">
+                            {activeTab === "primary" ? (
+                                <div className="small-12 large-6 grid-content">
+                                    <h3><Translate content="account.user_issued_assets.primary" /></h3>
+                                    <label><Translate content="account.user_issued_assets.symbol" />
+                                        <input type="text" value={update.symbol} onChange={this._onUpdateInput.bind(this, "symbol")}/>
+                                    </label>
+                                    { errors.symbol ? <p className="grid-content has-error">{errors.symbol}</p> : null}
+
+
+                                    <label><Translate content="account.user_issued_assets.max_supply" /> {update.symbol ? <span>({update.symbol})</span> : null}
+                                        <input type="number" value={update.max_supply} onChange={this._onUpdateInput.bind(this, "max_supply")} />
+                                    </label>
+                                    { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
+
+                                    <label><Translate content="account.user_issued_assets.precision" />
+                                        <input type="number" value={update.precision} onChange={this._onUpdateInput.bind(this, "precision")} />
+                                    </label>                                
+
+                                    <Translate component="h3" content="account.user_issued_assets.description" />
+                                    <label>
+                                        <textarea style={{height: "7rem"}} rows="1" value={update.description} onChange={this._onUpdateInput.bind(this, "description")} />
+                                    </label>
+
+                                </div>) : null}
+
+                                {activeTab === "flags" ? (
+                                    <div className="small-12 large-6 grid-content">
+                                        {permissionBooleans["charge_market_fee"] ? (
+                                            <div>
+                                                <Translate component="h3" content="account.user_issued_assets.market_fee" />
+                                                <table className="table">
+                                                    <tr>
+                                                        <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
+                                                        <td style={{border: "none"}}>
+                                                            <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
+                                                                <input type="checkbox" checked={flagBooleans.charge_market_fee} />
+                                                                <label />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div className={cnames({disabled: !flagBooleans.charge_market_fee})}>
+                                                <label><Translate content="account.user_issued_assets.market_fee" /> (%)
+                                                    <input type="number" value={update.market_fee_percent} onChange={this._onUpdateInput.bind(this, "market_fee_percent")}/>
+                                                </label>
+
+                                                <label>
+                                                     <input type="number" value={update.max_market_fee} onChange={this._onUpdateInput.bind(this, "max_market_fee")}/>
+                                                </label>
+                                                { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
+                                                </div>
+                                            </div>) : null}
+
+                                        <h3><Translate content="account.user_issued_assets.flags" /></h3>
+                                        {flags}
+                                    </div>) : null}
+
+                                {activeTab === "permissions" ? (
+
+                                    <div className="small-12 large-6 grid-content">
+                                        <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
+                                        {permissions}
+                                    </div>) : null}
+                            </div>
                 </div>
             </div>
-    );
+        );
     }
 
 }
 
-export default AccountAssetCreate;
+@connectToStores
+class AssetCreateWrapper extends React.Component {
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
+
+    static getStores() {
+        return [SettingsStore]
+    }
+
+    static getPropsFromStores() {
+        return {tab: SettingsStore.getState().viewSettings.get("createAssetTab")}
+    }
+
+    render() {
+        return <AccountAssetCreate {...this.props} />;
+    }   
+}
+
+export default AssetCreateWrapper;

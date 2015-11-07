@@ -12,15 +12,15 @@ let inProgress = {};
 
 class AssetActions {
 
-    createAsset(account_id, createObject) {
+    createAsset(account_id, createObject, flags, permissions) {
         // Create asset action here...
-        console.log("create asset:", createObject);
+        console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);
         let tr = wallet_api.new_transaction();
         let precision = utils.get_asset_precision(createObject.precision);
 
         big.config({DECIMAL_PLACES: createObject.precision});
         let max_supply = (new big(createObject.max_supply)).times(precision).toString();
-        let max_market_fee = (new big(createObject.common_options.max_market_fee || 0)).times(precision).toString();
+        let max_market_fee = (new big(createObject.max_market_fee || 0)).times(precision).toString();
         // console.log("max_supply:", max_supply);
         // console.log("max_market_fee:", max_market_fee);
 
@@ -36,10 +36,10 @@ class AssetActions {
             "precision": parseInt(createObject.precision, 10),
             "common_options": {
                 "max_supply": max_supply,
-                "market_fee_percent": createObject.common_options.market_fee_percent * 100 || 0,
+                "market_fee_percent": createObject.market_fee_percent * 100 || 0,
                 "max_market_fee": max_market_fee,
-                "issuer_permissions": 79,
-                "flags": 0,
+                "issuer_permissions": permissions,
+                "flags": flags,
                 "core_exchange_rate": {
                     "base": {
                         "amount": 1 * corePrecision,
