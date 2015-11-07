@@ -20,7 +20,7 @@ class TransactionConfirmActions {
         }).catch( error => {
             console.error(error)
             clearTimeout(broadcast_timeout);
-            message = message[message.length === 1 ? 0 : 1]
+            let message = error.data.length ? error.data[0].format : "Unknown error";
             this.actions.error(message);
         });
     }
