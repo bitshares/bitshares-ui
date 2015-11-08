@@ -107,8 +107,6 @@ class Block extends BaseComponent {
 
     componentDidMount() {
         this._getBlock(this.props.height);
-        this._bindKey("right", this._nextBlock);
-        this._bindKey("left", this._previousBlock);
     }
 
     render() {

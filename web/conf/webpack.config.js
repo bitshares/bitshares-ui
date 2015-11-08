@@ -72,13 +72,13 @@ module.exports = function(options) {
                 { 
                     test: /\.jsx$/,
                     include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps")],
-                    loaders: options.prod ? ["babel-loader"] : ["react-hot", "babel-loader"] 
+                    loaders: options.prod ? ["babel-loader"] : ["babel-loader?cacheDirectory"]
                 },
                 { 
                     test: /\.js$/,
                     exclude: /node_modules/,
                     loader: "babel-loader",
-                    query: {compact: false} 
+                    query: {compact: false, cacheDirectory: true}
                 },
                 { test: /\.json/, loader: "json" },
                 { test: /\.coffee$/, loader: "coffee-loader" },
