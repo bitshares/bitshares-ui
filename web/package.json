@@ -25,7 +25,6 @@
     "cookies-js": "^1.2.1",
     "counterpart": "^0.17.0",
     "event-emitter": "^0.3.4",
-    "file-loader": "^0.8.1",
     "git-rev-sync": "^1.4.0",
     "html-loader": "^0.3.0",
     "immutable": "^3.7.5",
