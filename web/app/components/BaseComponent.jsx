@@ -1,5 +1,4 @@
 import React from "react";
-import keyboardjs from "keyboardjs";
 
 class BaseComponent extends React.Component {
     constructor(props, store) {
@@ -27,16 +26,6 @@ class BaseComponent extends React.Component {
         methods.forEach((method) => this[method] = this[method].bind(this));
     }
 
-    _bindKey(keyCombo, fn) {
-        this._keyBindings = this._keyBindings || [];
-        this._keyBindings.push(keyboardjs.on(keyCombo, e => {
-            if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) >= 0) {
-                return;
-            }
-            fn();
-        }));
-    }
-
     componentWillMount() {
         if (this.stores) {
             for (let storeName in this.stores) {
@@ -51,12 +40,6 @@ class BaseComponent extends React.Component {
                 this.stores[storeName].unlisten(this.onChange.bind(this));
             }
         }
-
-        if (this._keyBindings) {
-            this._keyBindings.forEach(binding => binding.clear());
-        }
-
-        delete this._keyBindings;
     }
 
     // shouldComponentUpdate(nextProps, nextState) {

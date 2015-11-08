@@ -20,7 +20,9 @@ class TransactionConfirmActions {
         }).catch( error => {
             console.error(error)
             clearTimeout(broadcast_timeout);
-            message = message[message.length === 1 ? 0 : 1]
+            let splitError = error.message.split("\n");
+
+            let message = splitError.length > 1 ? splitError[0] + splitError[1] : splitError[0];
             this.actions.error(message);
         });
     }

@@ -94,8 +94,6 @@ class AccountAssetUpdate extends React.Component {
                 max_supply: null
             },
             isValid: true,
-            quoteName: asset.symbol,
-            baseName: core,
             flagBooleans: flagBooleans,
             permissionBooleans: permissionBooleans,
             isBitAsset: isBitAsset,
@@ -326,7 +324,7 @@ class AccountAssetUpdate extends React.Component {
         // Loop over permissions
         let permissions = [];
         for (let key in originalPermissions) {
-            if (originalPermissions[key]) {
+            if (true || originalPermissions[key]) {
                 permissions.push(
                     <table key={"table_" + key} className="table">
                         <tr>
