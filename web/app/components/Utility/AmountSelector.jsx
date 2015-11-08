@@ -76,7 +76,7 @@ class AssetSelector extends React.Component {
         if (!v) v = "";
         if (typeof v === "number") v = v.toString();
         let value = v.trim().replace(/,/g, "");
-        value = utils.limitByPrecision(value, this.props.asset.get("precision"));
+        // value = utils.limitByPrecision(value, this.props.asset.get("precision"));
         while (value.substring(0, 2) == "00")
             value = value.substring(1);
         if (value[0] === ".") value = "0" + value;
@@ -109,7 +109,7 @@ class AssetSelector extends React.Component {
         let value = this.formatAmount(this.props.amount);
         
         return (
-            <div className="amount-selector">
+            <div className="amount-selector" style={this.props.style}>
                 <div className="float-right">{this.props.display_balance}</div>
                 <Translate component="label" content={this.props.label}/>
                 <div className="inline-label">

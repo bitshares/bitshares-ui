@@ -32,6 +32,7 @@
     "event-emitter": "^0.3.4",
     "extract-text-webpack-plugin": "^0.8.0",
     "file-loader": "^0.8.1",
+    "git-rev-sync": "^1.4.0",
     "html-loader": "^0.3.0",
     "immutable": "~3.7.2",
     "indexeddbshim": "^2.0.4",
