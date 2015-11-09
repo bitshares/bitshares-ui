@@ -38,6 +38,8 @@ ChainTypes.impl_object_type=
     account_transaction_history: 9
     blinded_balance: 10
     chain_property: 11
+    witness_schedule: 12
+    budget_record: 13
 
 ChainTypes.vote_type=
     committee:0
@@ -88,3 +90,5 @@ ChainTypes.operations=
     transfer_to_blind: 39
     blind_transfer: 40
     transfer_from_blind: 41
+    asset_settle_cancel: 42
+    asset_claim_fees: 43
