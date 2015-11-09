@@ -50,7 +50,7 @@ class Transfer extends React.Component {
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
-        this.setState({from_name,asset,amount, error: null})
+        this.setState({from_name,asset,amount, error: null, propose: false, propose_account: ""})
     }
 
     toChanged(to_name) {
