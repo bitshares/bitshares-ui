@@ -110,6 +110,35 @@ class Transaction extends React.Component {
 
                     color = "success";
 
+                    let memo_text = null;
+
+                    if(op[1].memo) {
+                        let memo = op[1].memo;
+                        let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
+                        let to_private_key = PrivateKeyStore.getState().keys.get(memo.to)
+                        let private_key = from_private_key ? from_private_key : to_private_key;
+                        let public_key = from_private_key ? memo.to : memo.from;
+                        public_key = PublicKey.fromPublicKeyString(public_key)
+
+                        try {
+                            private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
+                        }
+                        catch(e) {
+                            private_key = null;
+                        }
+                        try {
+                            memo_text = private_key ? Aes.decrypt_with_checksum(
+                                private_key,
+                                public_key,
+                                memo.nonce,
+                                memo.message
+                            ).toString() : null;
+                        } catch(e) {
+                            console.log("transfer memo exception ...", e);
+                            memo_text = "*";
+                        }
+                    }
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.from" /></td>
@@ -128,6 +157,14 @@ class Transaction extends React.Component {
                             <td><FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /></td>
                         </tr>
                     );
+
+                    {memo_text ?
+                        rows.push(
+                            <tr>
+                                <td><Translate content="transfer.memo" /></td>
+                                <td>{memo_text}</td>
+                            </tr>
+                    ) : null}
 
                     break;
 

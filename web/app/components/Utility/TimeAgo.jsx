@@ -2,10 +2,20 @@ import React from "react";
 import {FormattedRelative} from "react-intl";
 
 class TimeAgo extends React.Component {
-    
+
+    static propTypes = {
+        time: React.PropTypes.object.isRequired,
+        chain_time: React.PropTypes.bool,
+        component: React.PropTypes.element,
+        className: React.PropTypes.string
+    }
+
+    static defaultProps = {
+        chain_time: true
+    }
+
     constructor(props) {
         super(props);
-
         this.timeout = null;
         this._update = this._update.bind(this);
     }
@@ -19,11 +29,12 @@ class TimeAgo extends React.Component {
 
     _update() {
         this._clearTimeout();
-        let {time} = this.props;
+        let {time, chain_time} = this.props;
+        var offset_mills = chain_time ? ChainStore.getEstimatedChainTimeOffset() : 0
         if (typeof time === "string") {
             time += "+00:00";
         }
-        let timePassed = Math.round((new Date()).getTime() - (new Date(time)).getTime()) / 1000;
+        let timePassed = Math.round( ( new Date().getTime() - new Date(time).getTime() + offset_mills ) / 1000 );
         let interval;
         if (timePassed < 60) { // 60s
             interval = 1000; // 1s
@@ -55,7 +66,8 @@ class TimeAgo extends React.Component {
     }
 
     render() {
-        let {time, component} = this.props;
+        let {time, component, chain_time} = this.props;
+        var offset_mills = chain_time ? ChainStore.getEstimatedChainTimeOffset() : 0
         if (!time) {
             return null;
         }
@@ -66,7 +78,7 @@ class TimeAgo extends React.Component {
 
         component = component ? component : "span";
 
-        let timeAgo = <span ref={"timeago_ttip_" + time} data-tip={new Date(time)} data-place="top" data-type="light"><FormattedRelative value={time}/></span>
+        let timeAgo = <span ref={"timeago_ttip_" + time} data-tip={new Date(time)} data-place="top" data-type="light"><FormattedRelative value={new Date(time).getTime() + offset_mills}/></span>
         return React.createElement(component, {className: this.props.className}, timeAgo);
     }
 }

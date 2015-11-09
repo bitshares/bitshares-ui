@@ -122,6 +122,8 @@ class WalletDb extends BaseStore {
                             if(signer_pubkeys_added[pubkey_string]) continue
                             var private_key = this.getPrivateKey(pubkey_string)
                             if( ! private_key)
+                                // This should not happen, get_required_signatures will only
+                                // returned keys from my_pubkeys
                                 throw new Error("Missing signing key for " + pubkey_string)
                             tr.add_signer(private_key, pubkey_string)
                         }

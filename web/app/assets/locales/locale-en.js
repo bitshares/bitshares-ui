@@ -54,7 +54,7 @@
             fees_vested: "Pending vested fees",
             referrals: "Referrals",
             rewards: "Cashback Rewards",
-            cashback: "Cashback",
+            cashback: "Vesting cashback balance",
             vested: "Vested",
             unknown: "Unknown member",
             lifetime: "Lifetime member",
@@ -63,7 +63,8 @@
             upgrade_lifetime: "Buy Lifetime Subscribtion",
             subscribe: "Buy Annual Subscription",
             expires: "expires",
-            membership_expiration: "Membership Expiration"
+            membership_expiration: "Membership Expiration",
+            fees_cashback: "Fees and cashback"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -82,10 +83,25 @@
             max_positive: "Max supply should be a positive number",
             core_exchange_rate: "Core exchange rate",
             quote: "Quote asset amount",
+            quote_name: "Quote asset",
             base: "Base asset amount",
+            base_name: "Base asset",
             update_owner: "Update owner",
             current_issuer: "Current owner account",
-            new_issuer: "New owner account"
+            new_issuer: "New owner account",
+            flags: "Flags",
+            charge_market_fee: "Enable market fee",
+            override_authority: "Issuer may transfer asset back to himself",
+            transfer_restricted: "Issuer must approve all transfers",
+            disable_confidential: "Disable confidential transactions",
+            white_list: "Require holders to be white-listed",
+            witness_fed_asset: "Allow witnesses to provide feeds",
+            committee_fed_asset: "Allow committee members to provide feeds",
+            disable_force_settle: "Disable force settling",
+            global_settle: "Allow issuer to force a global settling",
+            advanced: "Advanced",
+            need_asset: "At least one of the two assets must be %(name)s",
+            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!"
         },
         connections: {
             known: "Known by",
@@ -108,8 +124,11 @@
             memo_public_key: "Memo Public Key"
         },
         votes: {
+            proxy_short: "Proxy",
+            workers_short: "Workers",            
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
+            clear_proxy: "Remove proxy",
             name: "Name",
             info: "Info",
             votes: "Votes",
@@ -167,7 +186,13 @@
         create_account: "Create account",
         identicon: "Identicon",
         pay_from: "Pay From",
-        existing_accounts: "Existing Accounts"
+        existing_accounts: "Existing Accounts",
+        name_input: {
+            name_is_taken: "Account name is already taken.",
+            not_found: "Account not found.",
+            premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
+            premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
+        }
     },
     pagination: {
         newer: "Newer",

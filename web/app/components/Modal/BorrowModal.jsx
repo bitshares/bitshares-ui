@@ -299,8 +299,8 @@ class BorrowModalContent extends React.Component {
             <div>
                 <form className="grid-container small-10 small-offset-1 no-overflow" noValidate>
                     <Translate component="h3" content="borrow.title" asset_symbol={quote_asset.get("symbol")} />
-                    <HelpContent path="components/BorrowModal" debt={quote_asset.get('symbol')} collateral={backing_asset.get('symbol')} borrower={this.props.account.get('name')} />
-                    <div style={{paddingBottom: "1rem"}}>
+                    {this.props.hide_help ? null : <HelpContent path="components/BorrowModal" debt={quote_asset.get('symbol')} collateral={backing_asset.get('symbol')} borrower={this.props.account.get('name')} />}
+                    <div style={{paddingBottom: "1rem"}} >
                         <div className="borrow-price-feeds">
                             <span className="borrow-price-label"><Translate content="transaction.feed_price" />:&nbsp;</span>
                             <FormattedPrice
@@ -394,10 +394,22 @@ class BorrowModalContent extends React.Component {
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {
 
+    constructor() {
+        super();
+        this.state = {
+            smallScreen: false
+        };
+    }
 
     show() {
         let modalId = "borrow_modal_" + this.props.quote_asset;
         ZfApi.publish(modalId, "open");
+    }
+
+    componentWillMount() {
+        this.setState({
+            smallScreen: window.innerHeight <= 800
+        });
     }
 
     render() {
@@ -433,6 +445,7 @@ export default class ModalWrapper extends React.Component {
                                 bitasset_balance={bitAssetBalance}
                                 backing_balance={coreBalance}
                                 backing_asset={"1.3.0"}
+                                hide_help={this.state.smallScreen}
                             />
                 </div>
             </Modal>

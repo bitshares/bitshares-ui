@@ -7,6 +7,14 @@
 var app = require('app');
 var fs = require('fs');
 
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16).substring(1);
+    }
+    return s4() + s4() + s4() + s4();
+}
+
 module.exports = function (name, defaults) {
     var stateStoreFile = 'window-state-' + name + '.json';
     var state_file_name = app.getPath('userData') + "/" + stateStoreFile;
@@ -15,6 +23,7 @@ module.exports = function (name, defaults) {
     catch(error) {}
 
     var state = state_file_data ? JSON.parse(state_file_data) : {width: defaults.width, height: defaults.height};
+    if (!state.guid) state.guid = guid();
 
     var saveState = function (win) {
         if (!win.isMaximized() && !win.isMinimized()) {
@@ -35,6 +44,7 @@ module.exports = function (name, defaults) {
         get width() { return state.width; },
         get height() { return state.height; },
         get isMaximized() { return state.isMaximized; },
+        get guid() { return state.guid; },
         saveState: saveState
     };
 };

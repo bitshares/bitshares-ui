@@ -7,6 +7,7 @@ Aes = require '../ecc/aes'
 hash = require './hash'
 dictionary = require './dictionary_en'
 secureRandom = require './secureRandom'
+config = require 'chain/config'
 
 # hash for .25 second
 HASH_POWER_MILLS = 250
@@ -161,16 +162,13 @@ module.exports = key =
         entropyStr
 
     # @return array of 5 legacy addresses for a pubkey string parameter.
-    addresses: (pubkey) ->
-        public_key = PublicKey.fromPublicKeyString(pubkey)
+    addresses: (pubkey, address_prefix = config.address_prefix) ->
+        public_key = PublicKey.fromPublicKeyString(pubkey, address_prefix)
         address_string = [# S L O W
-            Address.fromPublic(public_key, false, 0).toString(), # btc_uncompressed
-            Address.fromPublic(public_key, true, 0).toString(),  # btc_compressed
-            Address.fromPublic(public_key, false, 56).toString(),# pts_uncompressed
-            Address.fromPublic(public_key, true, 56).toString(), # pts_compressed
-            public_key.toAddressString() # bts_short, most recent format
+            Address.fromPublic(public_key, false, 0).toString(address_prefix), # btc_uncompressed
+            Address.fromPublic(public_key, true, 0).toString(address_prefix),  # btc_compressed
+            Address.fromPublic(public_key, false, 56).toString(address_prefix),# pts_uncompressed
+            Address.fromPublic(public_key, true, 56).toString(address_prefix), # pts_compressed
+            public_key.toAddressString(address_prefix) # bts_short, most recent format
         ]
-        address_cache[pubkey] = address_string
         address_string
-
-address_cache = {}

@@ -2,13 +2,11 @@ import React from "react";
 import {PropTypes} from "react";
 import {Link} from "react-router";
 import intlData from "../Utility/intlData";
-// import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate, FormattedRelative,FormattedTime} from "react-intl";
 import Operation from "../Blockchain/Operation";
 import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
-require("../Blockchain/json-inspector.scss");
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import TransactionChart from "./TransactionChart";
@@ -17,8 +15,11 @@ import classNames from "classnames";
 import utils from "common/utils";
 import Immutable from "immutable";
 import TimeAgo from "../Utility/TimeAgo";
+import FormattedAsset from "../Utility/FormattedAsset";
 import Icon from "../Icon/Icon";
+import Ps from "perfect-scrollbar";
 
+require("../Blockchain/json-inspector.scss");
 
 class BlockTimeAgo extends React.Component {
 
@@ -51,12 +52,14 @@ class Blocks extends React.Component {
 
     static propTypes = {
         globalObject: ChainTypes.ChainObject.isRequired,
-        dynGlobalObject: ChainTypes.ChainObject.isRequired
+        dynGlobalObject: ChainTypes.ChainObject.isRequired,
+        coreAsset: ChainTypes.ChainAsset.isRequired
     }
 
     static defaultProps = {
         globalObject: "2.0.0",
-        dynGlobalObject: "2.1.0"
+        dynGlobalObject: "2.1.0",
+        coreAsset: "1.3.0"
     }
 
     constructor(props) {
@@ -84,6 +87,10 @@ class Blocks extends React.Component {
 
     componentDidMount() {
         this._getInitialBlocks();
+        let oc = React.findDOMNode(this.refs.operations);
+        Ps.initialize(oc);
+        let blocks = React.findDOMNode(this.refs.blocks);
+        Ps.initialize(blocks);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -112,7 +119,7 @@ class Blocks extends React.Component {
 
     render() {
 
-        let {latestBlocks, latestTransactions, globalObject, dynGlobalObject} = this.props;
+        let {latestBlocks, latestTransactions, globalObject, dynGlobalObject, coreAsset} = this.props;
         let blocks = null, transactions = null;
         let headBlock = null;
         let trxCount = 0, blockCount = latestBlocks.size, trxPerSec = 0, blockTimes = [], avgTime = 0;
@@ -194,7 +201,7 @@ class Blocks extends React.Component {
             <div className="grid-block vertical page-layout">
 
                 {/* First row of stats */}
-                <div className="align-center grid-block shrink small-horizontal">
+                <div className="align-center grid-block shrink small-horizontal blocks-row">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
                             <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.current_block" /></span>
@@ -225,7 +232,7 @@ class Blocks extends React.Component {
                 </div>
 
                 {/* Second row of stats */ }
-                <div className="align-center grid-block shrink small-horizontal">
+                <div className="align-center grid-block shrink small-horizontal  blocks-row">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
                             <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.active_witnesses" /></span>
@@ -261,27 +268,50 @@ class Blocks extends React.Component {
                 </div>
 
             {/* Third row: graphs */ }
-                <div className="align-center grid-block shrink small-vertical medium-horizontal ">
-
-                    <div className="grid-block text-center small-12 medium-6 large-4 ">
-                        <div className="grid-content no-overflow">
-                        <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.block_times" /></div>
-                            <BlocktimeChart blockTimes={blockTimes} head_block_number={dynGlobalObject.get("head_block_number")} />
+                <div className="align-center grid-block shrink small-vertical medium-horizontal blocks-row">
+                    <div className="grid-block text-center small-12 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.asset.summary.current_supply" /></span>
+                            <h3 className="txtlabel">
+                                <FormattedAsset
+                                    amount={coreAsset.getIn(["dynamic", "current_supply"])}
+                                    asset={coreAsset.get("id")}
+                                    decimalOffset={5}
+                                />
+                            </h3>
                         </div>
                     </div>
-                    <div className="grid-block text-center small-12 medium-6 large-4">
+                    <div className="grid-block text-center small-12 medium-3">
+                        <div className="grid-content no-overflow">
+                            <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.block_times" /></div>
+                                <BlocktimeChart blockTimes={blockTimes} head_block_number={dynGlobalObject.get("head_block_number")} />
+                            </div>
+                        </div>
+                    <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow">
                             <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.trx" /></div>
                             <TransactionChart blocks={latestBlocks} head_block={dynGlobalObject.get("head_block_number")}/>
+                        </div>
+                    </div>
+                    <div className="grid-block text-center small-12 medium-3">
+                        <div className="grid-content no-overflow clear-fix">
+                            <span className="txtlabel subheader"><Translate component="span" content="explorer.asset.summary.stealth_supply" /></span>
+                            <h3 className="txtlabel">
+                                <FormattedAsset
+                                    amount={coreAsset.getIn(["dynamic", "confidential_supply"])}
+                                    asset={coreAsset.get("id")}
+                                    decimalOffset={5}
+                                />
+                            </h3>
                         </div>
                     </div>
 
                 </div>
 
             {/* Fourth row: transactions and blocks */ }
-                <div className="grid-block" style={{minHeight: "400px"}}>
-                    <div className="grid-block small-12 medium-6 vertical">
-                        <div className="grid-content">
+                <div className="grid-block no-overflow" style={{minHeight: "400px"}}>
+                    <div className="grid-block small-12 medium-6 vertical no-overflow">
+                        <div className="grid-content" ref="operations">
                             <h3><Translate content="account.recent" /> </h3>
                             <table className="table">
                                 <thead>
@@ -296,9 +326,8 @@ class Blocks extends React.Component {
                             </table>
                         </div>
                     </div>
-                    <div className="grid-block medium-6 show-for-medium vertical ">
-
-                        <div className="grid-content">
+                    <div className="grid-block medium-6 show-for-medium vertical no-overflow">
+                        <div className="grid-content" ref="blocks">
                             <h3><Translate component="span" content="explorer.blocks.recent" /></h3>
                             <table className="table">
                                 <thead>

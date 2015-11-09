@@ -12,17 +12,20 @@ let inProgress = {};
 
 class AssetActions {
 
-    createAsset(account_id, createObject) {
+    createAsset(account_id, createObject, flags, permissions) {
         // Create asset action here...
-        console.log("create asset:", createObject);
+        console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);
         let tr = wallet_api.new_transaction();
         let precision = utils.get_asset_precision(createObject.precision);
 
         big.config({DECIMAL_PLACES: createObject.precision});
         let max_supply = (new big(createObject.max_supply)).times(precision).toString();
-        let max_market_fee = (new big(createObject.common_options.max_market_fee || 0)).times(precision).toString();
-        console.log("max_supply:", max_supply);
-        console.log("max_market_fee:", max_market_fee);
+        let max_market_fee = (new big(createObject.max_market_fee || 0)).times(precision).toString();
+        // console.log("max_supply:", max_supply);
+        // console.log("max_market_fee:", max_market_fee);
+
+        let corePrecision = utils.get_asset_precision(ChainStore.getAsset("1.3.0").get("precision"));
+
         tr.add_type_operation("asset_create", {
             "fee": {
                 amount: 0,
@@ -33,17 +36,17 @@ class AssetActions {
             "precision": parseInt(createObject.precision, 10),
             "common_options": {
                 "max_supply": max_supply,
-                "market_fee_percent": createObject.common_options.market_fee_percent * 100 || 0,
+                "market_fee_percent": createObject.market_fee_percent * 100 || 0,
                 "max_market_fee": max_market_fee,
-                "issuer_permissions": 79,
-                "flags": 0,
+                "issuer_permissions": permissions,
+                "flags": flags,
                 "core_exchange_rate": {
                     "base": {
-                        "amount": "1",
+                        "amount": 1 * corePrecision,
                         "asset_id": "1.3.0"
                     },
                     "quote": {
-                        "amount": "1",
+                        "amount": 1 * precision,
                         "asset_id": "1.3.1"
                     }
                 },
@@ -75,23 +78,22 @@ class AssetActions {
         });
     }
 
-    updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, core) {
+    updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, flags, permissions) {
         // Create asset action here...
         let tr = wallet_api.new_transaction();
-        let precision = utils.get_asset_precision(asset.get("precision"));
-        let corePrecision = utils.get_asset_precision(core.get("precision"));
+        let quotePrecision = utils.get_asset_precision(asset.get("precision"));
 
         big.config({DECIMAL_PLACES: asset.get("precision")});
-        let max_supply = (new big(update.max_supply)).times(precision).toString();
-        let max_market_fee = (new big(update.max_market_fee || 0)).times(precision).toString();
+        let max_supply = (new big(update.max_supply)).times(quotePrecision).toString();
+        let max_market_fee = (new big(update.max_market_fee || 0)).times(quotePrecision).toString();
 
-        let cr_quote_amount = core_exchange_rate.quote.asset_id === asset.get("id") ?
-            (new big(core_exchange_rate.quote.amount)).times(precision).toString() :
-            (new big(core_exchange_rate.quote.amount)).times(corePrecision).toString();
+        let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
+        let cr_quote_precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
+        let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
+        let cr_base_precision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        let cr_base_amount = core_exchange_rate.base.asset_id === asset.get("id") ?
-            (new big(core_exchange_rate.base.amount)).times(precision).toString() :
-            (new big(core_exchange_rate.base.amount)).times(corePrecision).toString();
+        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(cr_quote_precision).toString();
+        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(cr_base_precision).toString();
 
         let updateObject = {
             fee: {
@@ -107,8 +109,8 @@ class AssetActions {
                 max_market_fee: max_market_fee,
                 market_fee_percent: update.market_fee_percent * 100,
                 description: update.description,
-                issuer_permissions: asset.getIn(["options", "issuer_permissions"]),
-                flags: asset.getIn(["options", "flags"]),
+                issuer_permissions: permissions,
+                flags: flags,
                 whitelist_authorities: asset.getIn(["options", "whitelist_authorities"]),
                 blacklist_authorities: asset.getIn(["options", "blacklist_authorities"]),
                 whitelist_markets: asset.getIn(["options", "whitelist_markets"]),
@@ -126,7 +128,7 @@ class AssetActions {
                 }
             }
         };
-        if (issuer === new_issuer) {
+        if (issuer === new_issuer || !new_issuer) {
             delete updateObject.new_issuer;
         }
         tr.add_type_operation("asset_update", updateObject);

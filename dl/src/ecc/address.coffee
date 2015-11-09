@@ -13,10 +13,10 @@ class Address
         addy = hash.ripemd160(_hash)
         new Address(addy)
     
-    Address.fromString = (string) ->
-        prefix = string.slice 0, config.address_prefix.length
-        assert.equal config.address_prefix, prefix, "Expecting key to begin with #{config.address_prefix}, instead got #{prefix}"
-        addy = string.slice config.address_prefix.length
+    Address.fromString = (string, address_prefix = config.address_prefix) ->
+        prefix = string.slice 0, address_prefix.length
+        assert.equal address_prefix, prefix, "Expecting key to begin with #{address_prefix}, instead got #{prefix}"
+        addy = string.slice address_prefix.length
         addy = new Buffer(base58.decode(addy), 'binary')
         checksum = addy.slice -4
         addy = addy.slice 0, -4
@@ -40,9 +40,9 @@ class Address
     toBuffer: ->
         @addy
         
-    toString: ->
+    toString: (address_prefix = config.address_prefix) ->
         checksum = hash.ripemd160 @addy
         addy = Buffer.concat [@addy, checksum.slice 0, 4]
-        config.address_prefix + base58.encode addy
+        address_prefix + base58.encode addy
 
 module.exports = Address

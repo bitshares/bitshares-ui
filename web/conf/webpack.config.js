@@ -2,6 +2,7 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
+var git = require('git-rev-sync')
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname, "..");
@@ -26,7 +27,10 @@ module.exports = function(options) {
     // COMMON PLUGINS
     var plugins = [
         new webpack.optimize.DedupePlugin(),
-        new Clean(cleanDirectories)
+        new Clean(cleanDirectories),
+        new webpack.DefinePlugin({
+            APP_VERSION: JSON.stringify(git.tag())
+        })
     ];
 
     if (options.prod) {
@@ -35,6 +39,7 @@ module.exports = function(options) {
         scssLoaders = extractForProduction(scssLoaders);
 
         // PROD PLUGINS
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"production"'}}));
         plugins.push(new webpack.PrefetchPlugin("react"));
         plugins.push(new ExtractTextPlugin("app.css"));
         plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false, compress: true, output: {screw_ie8: true}}));
@@ -42,6 +47,7 @@ module.exports = function(options) {
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
     } else {
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"development"'}}));
         plugins.push(new webpack.HotModuleReplacementPlugin());
     }
 
@@ -66,13 +72,13 @@ module.exports = function(options) {
                 { 
                     test: /\.jsx$/,
                     include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps")],
-                    loaders: options.prod ? ["babel-loader"] : ["react-hot", "babel-loader"] 
+                    loaders: options.prod ? ["babel-loader"] : ["babel-loader?cacheDirectory"]
                 },
                 { 
                     test: /\.js$/,
                     exclude: /node_modules/,
                     loader: "babel-loader",
-                    query: {compact: false} 
+                    query: {compact: false, cacheDirectory: true}
                 },
                 { test: /\.json/, loader: "json" },
                 { test: /\.coffee$/, loader: "coffee-loader" },

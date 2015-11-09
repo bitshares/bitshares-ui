@@ -44,21 +44,21 @@ class PublicKey
     Full public key 
     {return} string
     ###
-    toPublicKeyString: ->
+    toPublicKeyString: (address_prefix = config.address_prefix) ->
         pub_buf = @toBuffer()
         checksum = hash.ripemd160 pub_buf
         addy = Buffer.concat [pub_buf, checksum.slice 0, 4]
-        config.address_prefix + base58.encode addy
+        address_prefix + base58.encode addy
     
     ###*
     {param1} public_key string
     {return} PublicKey
     ###
-    PublicKey.fromPublicKeyString = (public_key) ->
+    PublicKey.fromPublicKeyString = (public_key, address_prefix = config.address_prefix) ->
         try 
-           prefix = public_key.slice 0, config.address_prefix.length
-           assert.equal config.address_prefix, prefix, "Expecting key to begin with #{config.address_prefix}, instead got #{prefix}"
-           public_key = public_key.slice config.address_prefix.length
+           prefix = public_key.slice 0, address_prefix.length
+           assert.equal address_prefix, prefix, "Expecting key to begin with #{address_prefix}, instead got #{prefix}"
+           public_key = public_key.slice address_prefix.length
            
            public_key = new Buffer(base58.decode(public_key), 'binary')
            checksum = public_key.slice -4
@@ -72,13 +72,13 @@ class PublicKey
             null
         
     
-    toAddressString: ->
+    toAddressString: (address_prefix = config.address_prefix) ->
         pub_buf = @toBuffer()
         pub_sha = hash.sha512 pub_buf
         addy = hash.ripemd160 pub_sha
         checksum = hash.ripemd160 addy
         addy = Buffer.concat [addy, checksum.slice 0, 4]
-        config.address_prefix + base58.encode addy
+        address_prefix + base58.encode addy
         
     toPtsAddy: ->
         pub_buf = @toBuffer()

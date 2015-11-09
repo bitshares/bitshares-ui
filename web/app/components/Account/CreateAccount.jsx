@@ -37,7 +37,7 @@ class CreateAccount extends React.Component {
     }
 
     isValid() {
-        let first_account = true; //AccountStore.getMyAccounts().length === 0;
+        let first_account = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
         if (!first_account) valid = valid && this.state.registrar_account;
@@ -129,7 +129,7 @@ class CreateAccount extends React.Component {
 
     render() {
         let my_accounts = AccountStore.getMyAccounts()
-        let first_account = true; //my_accounts.length === 0;
+        let first_account = my_accounts.length === 0;
         let valid = this.isValid();
         let buttonClass = classNames("button", {disabled: !valid});
         return (

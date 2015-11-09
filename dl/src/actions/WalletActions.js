@@ -30,6 +30,7 @@ class WalletActions {
         If <b>wallet_name</b> does not exist, provide a <b>create_wallet_password</b>.
     */
     setWallet(wallet_name, create_wallet_password, brnkey) {
+        WalletUnlockActions.lock()
         if( ! wallet_name) wallet_name = "default"
         return new Promise( resolve => {
             this.dispatch({wallet_name, create_wallet_password, brnkey, resolve})
@@ -81,14 +82,6 @@ class WalletActions {
             return create_account();
         } else {
             // using faucet
-          /*
-            let hostname = "localhost", protocol;
-            try {
-                hostname = window.location.hostname;
-                protocol = window.location.protocol === "https:" ? "https://" : "http://";
-            } catch(e) {}
-            let port = (hostname === "localhost" || hostname.indexOf("192.168.") === 0) ? ":3000" : "";
-            */
             let create_account_promise = fetch(SettingsStore.getSetting("faucet_address") + "/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',
@@ -100,9 +93,11 @@ class WalletActions {
                     "account": {
                         "name": account_name,
                         "owner_key": owner_private.private_key.toPublicKey().toPublicKeyString(),
-                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString()//,
+                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString(),
+                        "memo_key": active_private.private_key.toPublicKey().toPublicKeyString(),
                         //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
-                        //"refcode": refcode
+                        "refcode": refcode,
+                        "referrer": window && window.BTSW ? BTSW.referrer : ""
                     }
                 })
             }).then(r => r.json());
