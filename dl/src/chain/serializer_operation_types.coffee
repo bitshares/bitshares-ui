@@ -669,12 +669,17 @@ witness_update = new Serializer(
     new_signing_key: optional public_key
 )
 
+operation_wrapper = new Serializer( 
+    "operation_wrapper"
+    op: operation
+)
+
 proposal_create = new Serializer( 
     "proposal_create"
     fee: asset
     fee_paying_account: protocol_id_type "account"
     expiration_time: time_point_sec
-    proposed_ops: array operation 
+    proposed_ops: array operation_wrapper 
     review_period_seconds: optional uint32
     extensions: set future_extensions
 )
