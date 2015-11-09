@@ -1,4 +1,4 @@
-
+require("babel/polyfill");
 var key = require('common/key_utils')
 var Aes = require('ecc/aes')
 

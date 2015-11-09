@@ -22,7 +22,7 @@ class ExistingAccount extends ExistingAccountBaseComponent {
         var has_wallet = this.props.wallet.wallet_names.count() != 0
         return (
             <div className="grid-block vertical">
-                <div className="grid-container">
+                <div className="grid-content">
                     <div className="content-block center-content">
                         <div className="page-header">
                             <h1><Translate content="account.welcome" /></h1>
@@ -30,7 +30,7 @@ class ExistingAccount extends ExistingAccountBaseComponent {
                                 <h3><Translate content="wallet.create_wallet" /></h3> :
                                 <h3><Translate content="wallet.setup_wallet" /></h3>}
                         </div>
-                        <div className="content-block">
+                        <div className="content-block" style={{width: '24em'}}>
                             <RouteHandler/>
                         </div>
                     </div>
@@ -47,29 +47,23 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
         var has_wallet = this.props.wallet.wallet_names.count() != 0
         return (
             <span>
-                {!has_wallet ? <span>
-                    <Link to="welcome-import-backup">
-                    <div className="button success"><Translate content="wallet.import_backup" /></div></Link>
-
-                    <Link to="welcome-import-keys">
-                    <div className="button success"><Translate content="wallet.import_bts1" /></div></Link>
-
-                    <Link to="welcome-import-keys">
-                    <div className="button success"><Translate content="wallet.create_wallet" /></div></Link>
-
+                {!has_wallet ? <div>
+                    <Link to="welcome-import-backup"><Translate content="wallet.import_backup" /></Link><br/><br/>
+                    <Link to="welcome-import-keys"><Translate content="wallet.import_bts1" /></Link><br/><br/>
+                    <Link to="welcome-import-keys"><Translate content="wallet.create_wallet" /></Link><br/>
                     <hr/>
-                </span>:null}
+                </div>:null}
 
                 { has_wallet ? <BalanceClaimActive/>:null}
 
                 {!has_wallet ? <p>
-                    <h5><Translate content="wallet.import_20_notice1" /><br/><Translate content="wallet.import_20_notice2" /></h5>
+                    <h6><Translate content="wallet.import_20_notice1" /><br/><Translate content="wallet.import_20_notice2" /></h6>
                 </p>:null}
 
                 {has_wallet ? <span>
-                    <Link to="dashboard"><div className="button success">
+                    <Link to="dashboard"><div className="button outline">
                         <Translate component="span" content="header.dashboard" /></div></Link>
-                    <Link to="wallet"><div className="button success">
+                    <Link to="wallet"><div className="button outline">
                         <Translate content="settings.wallets" /></div></Link>
                 </span>:null}
             </span>
