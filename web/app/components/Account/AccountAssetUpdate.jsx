@@ -112,6 +112,10 @@ class AccountAssetUpdate extends React.Component {
         let {update, issuer, new_issuer_account, core_exchange_rate, flagBooleans, permissionBooleans} = this.state;
 
         let flags = assetUtils.getFlags(flagBooleans);
+        // Handle incorrect flag from genesis
+        if (this.props.asset.getIn(["options", "flags"]) & 128 && !(this.props.asset.getIn(["options", "issuer_permissions"]) & 128)) {
+            flags += 128;
+        }
         let permissions = assetUtils.getPermissions(permissionBooleans);
 
         let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
@@ -292,7 +296,7 @@ class AccountAssetUpdate extends React.Component {
         let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
         let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
 
-        // console.log("flags:", assetUtils.getFlags(flagBooleans), "permissions:", assetUtils.getPermissions(permissionBooleans));
+        // console.log(asset.toJS(), "flags:", assetUtils.getFlags(flagBooleans), "permissions:", assetUtils.getPermissions(permissionBooleans));
 
         let primaryTabClass = cnames("tab-item", {"is-active": activeTab === "primary"});
         let ownerTabClass = cnames("tab-item", {"is-active": activeTab === "owner"});
