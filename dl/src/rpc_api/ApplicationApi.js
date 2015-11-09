@@ -146,7 +146,7 @@ class ApplicationApi {
             })
             if( propose_account )
                 tr.add_type_operation("proposal_create", {
-                    proposed_ops: [ transfer_op ],
+                    proposed_ops: [{ op: transfer_op }],
                     fee_paying_account: propose_acount_id
                 })
             else

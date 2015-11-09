@@ -75,9 +75,24 @@ _my.signed_transaction = ->
         Apis.instance().db_api().exec( "get_required_fees",
             [operations, asset_id]
         ).then (assets)=>
-            #DEBUG console.log('... get_required_fees',assets)
+            flat_assets = []
+            flatten = (obj) ->
+                if Array.isArray obj
+                    for item in obj
+                        flatten item
+                else
+                    flat_assets.push obj
+                return
+            flatten assets
+            asset_index = 0
             for i in [0...@operations.length] by 1
-                @operations[i][1].fee = assets[i]
+                set_fee = (operation) ->
+                    operation.fee =  flat_assets[ asset_index++ ]
+                    if operation.proposed_ops
+                        for y in [0...operation.proposed_ops.length] by 1
+                            set_fee operation.proposed_ops[y].op[1]
+                set_fee @operations[i][1]
+            #DEBUG console.log('... get_required_fees',operations,asset_id,flat_assets)
             return
     
     finalize:()->
