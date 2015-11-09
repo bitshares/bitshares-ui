@@ -26,19 +26,20 @@ _my.signed_transaction = ->
     operations: []
     signatures: []
     signer_private_keys: []
-    
+
+    add_type_operation: (name, operation) ->
+        @add_operation @get_type_operation name, operation
+        return
+
     add_operation: (operation) ->
         throw new Error "already finalized" if @tr_buffer
         v.required operation, "operation"
-        v.required operation.get_operations, "operation.get_operations()"
-        results = operation.get_operations()
-        for result in results
-            unless Array.isArray result
-                throw new Error "Expecting array [operation_id, operation]"
-            @operations.push result
+        unless Array.isArray operation
+            throw new Error "Expecting array [operation_id, operation]"
+        @operations.push operation
         return
-    
-    add_type_operation: (name, operation) ->
+
+    get_type_operation: (name, operation) ->
         throw new Error "already finalized" if @tr_buffer
         v.required name, "name"
         v.required operation, "operation"
@@ -49,9 +50,10 @@ _my.signed_transaction = ->
             throw new Error "unknown operation: #{_type.operation_name}"
         unless operation.fee
             operation.fee = {amount: 0, asset_id: 0}
+        if name is 'proposal_create'
+            operation.expiration_time ||= (base_expiration_sec() + chain_config.expire_in_secs_proposal) * 1000
         operation_instance = _type.fromObject operation
-        @operations.push [operation_id, operation_instance]
-        return
+        [operation_id, operation_instance]
     
     set_expire_seconds:(sec)->
         throw new Error "already finalized" if @tr_buffer
@@ -73,9 +75,24 @@ _my.signed_transaction = ->
         Apis.instance().db_api().exec( "get_required_fees",
             [operations, asset_id]
         ).then (assets)=>
-            #DEBUG console.log('... get_required_fees',assets)
+            flat_assets = []
+            flatten = (obj) ->
+                if Array.isArray obj
+                    for item in obj
+                        flatten item
+                else
+                    flat_assets.push obj
+                return
+            flatten assets
+            asset_index = 0
             for i in [0...@operations.length] by 1
-                @operations[i][1].fee = assets[i]
+                set_fee = (operation) ->
+                    operation.fee =  flat_assets[ asset_index++ ]
+                    if operation.proposed_ops
+                        for y in [0...operation.proposed_ops.length] by 1
+                            set_fee operation.proposed_ops[y].op[1]
+                set_fee @operations[i][1]
+            #DEBUG console.log('... get_required_fees',operations,asset_id,flat_assets)
             return
     
     finalize:()->

@@ -34,14 +34,7 @@ When updating generated code
 Replace:  operation = static_variant [
 with:     operation.st_operations = [
 
-replace: sha256 
-with: bytes 32
-
 Delete:
-operation  = new Serializer( 
-    "operation "
-    op: operation
-)
 public_key = new Serializer( 
     "public_key"
     key_data: bytes 33
@@ -63,7 +56,6 @@ Serializer=(operation_name, serilization_types_object)->
 ##  Generated code follows
 # programs/js_operation_serializer
 ## -------------------------------
-
 transfer_operation_fee_parameters = new Serializer( 
     "transfer_operation_fee_parameters"
     fee: uint64
@@ -289,6 +281,15 @@ transfer_from_blind_operation_fee_parameters = new Serializer(
     fee: uint64
 )
 
+asset_settle_cancel_operation_fee_parameters = new Serializer( 
+    "asset_settle_cancel_operation_fee_parameters"
+)
+
+asset_claim_fees_operation_fee_parameters = new Serializer( 
+    "asset_claim_fees_operation_fee_parameters"
+    fee: uint64
+)
+
 fee_parameters = static_variant [
     transfer_operation_fee_parameters    
     limit_order_create_operation_fee_parameters    
@@ -331,7 +332,9 @@ fee_parameters = static_variant [
     override_transfer_operation_fee_parameters    
     transfer_to_blind_operation_fee_parameters    
     blind_transfer_operation_fee_parameters    
-    transfer_from_blind_operation_fee_parameters
+    transfer_from_blind_operation_fee_parameters    
+    asset_settle_cancel_operation_fee_parameters    
+    asset_claim_fees_operation_fee_parameters
 ]
 
 fee_schedule = new Serializer( 
@@ -669,12 +672,17 @@ witness_update = new Serializer(
     new_signing_key: optional public_key
 )
 
+op_wrapper = new Serializer( 
+    "op_wrapper"
+    op: operation
+)
+
 proposal_create = new Serializer( 
     "proposal_create"
     fee: asset
     fee_paying_account: protocol_id_type "account"
     expiration_time: time_point_sec
-    proposed_ops: array operation 
+    proposed_ops: array op_wrapper
     review_period_seconds: optional uint32
     extensions: set future_extensions
 )
@@ -767,7 +775,6 @@ chain_parameters = new Serializer(
     committee_proposal_review_period: uint32
     maximum_transaction_size: uint32
     maximum_block_size: uint32
-    maximum_expiration: uint32
     maximum_time_until_expiration: uint32
     maximum_proposal_lifetime: uint32
     maximum_asset_whitelist_authorities: uint8
@@ -971,6 +978,23 @@ transfer_from_blind = new Serializer(
     inputs: array blind_input
 )
 
+asset_settle_cancel = new Serializer( 
+    "asset_settle_cancel"
+    fee: asset
+    settlement: protocol_id_type "force_settlement"
+    account: protocol_id_type "account"
+    amount: asset
+    extensions: set future_extensions
+)
+
+asset_claim_fees = new Serializer( 
+    "asset_claim_fees"
+    fee: asset
+    issuer: protocol_id_type "account"
+    amount_to_claim: asset
+    extensions: set future_extensions
+)
+
 operation.st_operations = [
     transfer    
     limit_order_create    
@@ -1013,7 +1037,9 @@ operation.st_operations = [
     override_transfer    
     transfer_to_blind    
     blind_transfer    
-    transfer_from_blind
+    transfer_from_blind    
+    asset_settle_cancel    
+    asset_claim_fees
 ]
 
 transaction = new Serializer( 
@@ -1034,7 +1060,6 @@ signed_transaction = new Serializer(
     extensions: set future_extensions
     signatures: array bytes 65
 )
-
 ## -------------------------------
 ##  Generated code end
 ## -------------------------------
