@@ -376,7 +376,7 @@
             trx_per_block: "Trx/block",
             active_committee_members: "Active committee members",
             active_witnesses: "Active Witnesses",
-            avg_conf_time: "Avg conf. time",
+            avg_conf_time: "Average confirmation time",
             trx_per_sec: "Trx/s",
             last_block: "Last block",
             current_block: "Current Block"
