@@ -20,9 +20,10 @@ class TransactionConfirmActions {
         }).catch( error => {
             console.error(error)
             clearTimeout(broadcast_timeout);
-            let splitError = error.message.split("\n");
-
-            let message = splitError.length > 1 ? splitError[0] + splitError[1] : splitError[0];
+            // messages of length 1 are local exceptions (use the 1st line)
+            // longer messages are remote API exceptions (use the 2nd line)
+            let splitError = error.message.split( '\n' );
+            let message = splitError[splitError.length === 1 ? 0 : 1];
             this.actions.error(message);
         });
     }
