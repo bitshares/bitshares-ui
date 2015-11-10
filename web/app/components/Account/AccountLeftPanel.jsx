@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes} from "react";
 import {Link} from "react-router";
 import counterpart from "counterpart";
+import ReactTooltip from "react-tooltip";
 import Icon from "../Icon/Icon";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
@@ -43,6 +44,12 @@ class AccountLeftPanel extends React.Component {
         AccountActions.unlinkAccount(this.props.account.get("name"));
     }
 
+    onCreateAccountClick(e) {
+        e.preventDefault();
+        ReactTooltip.hide();
+        this.context.router.transitionTo("create-account");
+    }
+
     render() {
         let {account, linkedAccounts, isMyAccount} = this.props;
         let account_name = account.get("name");
@@ -61,8 +68,7 @@ class AccountLeftPanel extends React.Component {
                     <div className="grid-content no-padding">
                         <ConfirmModal
                             modalId="confirm_modal"
-                            ref="confirmModal"
-                            />
+                            ref="confirmModal" />
 
                         <div className="regular-padding">
                             <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={isMyAccount}/>
@@ -88,7 +94,7 @@ class AccountLeftPanel extends React.Component {
                 {isMyAccount ?
                 <div className="grid-block shrink bottom">
                     <div className="center">
-                        <Link to="create-account"><span data-tip="Create New Account" data-place="top"><Icon name="plus-circle"/></span></Link>
+                        <a href data-tip="Create New Account" data-place="top" onClick={this.onCreateAccountClick.bind(this)}><Icon name="plus-circle"/></a>
                     </div>
                 </div> : null}
             </div>

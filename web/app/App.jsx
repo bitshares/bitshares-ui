@@ -114,7 +114,7 @@ class App extends React.Component {
         if (notification.autoDismiss === void 0) {
             notification.autoDismiss = 10;
         }
-        this.refs.notificationSystem.addNotification(notification);
+        if (this.refs.notificationSystem) this.refs.notificationSystem.addNotification(notification);
     }
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
