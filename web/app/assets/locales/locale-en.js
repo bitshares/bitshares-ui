@@ -31,6 +31,8 @@
     operation: {
         pending: "pending %(blocks)s blocks"
     },
+    propose: "propose",
+    cancel: "cancel",
     account: {
         welcome: "Welcome to BitShares 2.0",
         asset: "Asset",
@@ -83,10 +85,25 @@
             max_positive: "Max supply should be a positive number",
             core_exchange_rate: "Core exchange rate",
             quote: "Quote asset amount",
+            quote_name: "Quote asset",
             base: "Base asset amount",
+            base_name: "Base asset",
             update_owner: "Update owner",
             current_issuer: "Current owner account",
-            new_issuer: "New owner account"
+            new_issuer: "New owner account",
+            flags: "Flags",
+            charge_market_fee: "Enable market fee",
+            override_authority: "Issuer may transfer asset back to himself",
+            transfer_restricted: "Issuer must approve all transfers",
+            disable_confidential: "Disable confidential transactions",
+            white_list: "Require holders to be white-listed",
+            witness_fed_asset: "Allow witnesses to provide feeds",
+            committee_fed_asset: "Allow committee members to provide feeds",
+            disable_force_settle: "Disable force settling",
+            global_settle: "Allow issuer to force a global settling",
+            advanced: "Advanced",
+            need_asset: "At least one of the two assets must be %(name)s",
+            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!"
         },
         connections: {
             known: "Known by",
@@ -177,7 +194,8 @@
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        propose_from: "Propose From"
     },
     pagination: {
         newer: "Newer",

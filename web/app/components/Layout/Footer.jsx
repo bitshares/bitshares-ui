@@ -46,13 +46,15 @@ class Footer extends React.Component {
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
         // console.log("block_time", block_time)
         let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
-        let now = new Date().getTime() / 1000
+        let now = new Date().getTime() / 1000;
+        let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
+        let version = version_match ? `.${version_match[1]}` : ` ${APP_VERSION}`;
         return (
             <div className="show-for-medium grid-block shrink footer">
                 <div className="align-justify grid-block">
                     <div className="grid-block">
                         <div className="logo">
-                            <Translate content="footer.title" /> &nbsp; <span className="version">{window.app_version}</span>
+                            <Translate content="footer.title" /><span className="version">{version}</span>
                         </div>
                     </div>
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
