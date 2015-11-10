@@ -349,13 +349,16 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {hide_refcode: true};
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.account !== this.props.account || nextProps.qprops !== this.props.qprops || nextProps.dprops !== this.props.dprops || nextState.hide_refcode !== this.state.hide_refcode;
+    }
+
     showRefcodeInput(e) {
         e.preventDefault();
         this.setState({hide_refcode: false});
     }
 
     render() {
-		
         return (
 		<div className="grid-content">
 			<div className="content-block">
