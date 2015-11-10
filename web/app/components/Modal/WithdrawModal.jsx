@@ -24,7 +24,8 @@ class WithdrawModal extends React.Component {
        issuer: ChainTypes.ChainAccount.isRequired,
        asset: ChainTypes.ChainAsset.isRequired,
        receive_asset_name: React.PropTypes.string,
-       receive_asset_symbol: React.PropTypes.string
+       receive_asset_symbol: React.PropTypes.string,
+       memo_prefix: React.PropTypes.string
    }
 
    constructor( props ) {
@@ -53,7 +54,7 @@ class WithdrawModal extends React.Component {
          this.props.issuer.get("id"),
          parseInt(amount * precision, 10),
          asset.get("id"),
-         this.state.withdraw_address
+         (this.props.memo_prefix || "") + this.state.withdraw_address
      )
    }
 
