@@ -243,6 +243,16 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="dash"
                                 deposit_asset_name="Dash"
                                 receive_coin_type="opendash" />
+                            <BlockTradesDepositRequest
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account.get('name')}
+                                receive_asset="OPENMUSE"
+                                deposit_asset="MUSE"
+                                deposit_coin_type="muse"
+                                deposit_asset_name="Muse"
+                                receive_coin_type="openmuse" />
                             </tbody>
                         </table>
                     </div>

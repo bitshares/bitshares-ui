@@ -31,6 +31,7 @@ class SettingsStore {
             ["BTC_USD", {"quote":"BTC","base":"USD"}],
             ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
             ["OPENBTC_" + CORE_ASSET, {"quote":"OPENBTC","base":CORE_ASSET} ],
+            ["OPENMUSE_" + CORE_ASSET, {"quote":"OPENMUSE","base":CORE_ASSET} ],
             ["TRADE.BTC_" + CORE_ASSET, {"quote":"TRADE.BTC","base":CORE_ASSET} ]
         ]);
 
