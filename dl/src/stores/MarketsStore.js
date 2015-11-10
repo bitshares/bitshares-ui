@@ -228,7 +228,7 @@ class MarketsStore {
 
         if (result.fillOrders) {
             result.fillOrders.forEach(fill => {
-                console.log("fill:", fill);
+                // console.log("fill:", fill);
                 this.activeMarketHistory = this.activeMarketHistory.add(
                     fill[0][1]
                 );
@@ -458,6 +458,7 @@ class MarketsStore {
             }).map(order => {
                 // let isAskOrder = market_utils.isAsk(order, this.baseAsset);
                 let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
+                // console.log("order:", order);
                 bids.push({
                     value: value,
                     price: price,
@@ -465,7 +466,8 @@ class MarketsStore {
                     price_dec: price.dec,
                     price_int: price.int,
                     amount: amount,
-                    type: "bid"
+                    type: "bid",
+                    sell_price: order.sell_price
                 });
             });
 
@@ -573,7 +575,8 @@ class MarketsStore {
                     price_dec: price.dec,
                     price_int: price.int,
                     amount: amount,
-                    type: "call"
+                    type: "call",
+                    sell_price: order.call_price
                 });
             });
 
@@ -611,7 +614,8 @@ class MarketsStore {
                     price_dec: price.dec,
                     price_int: price.int,
                     amount: amount,
-                    type: "ask"
+                    type: "ask",
+                    sell_price: order.sell_price
                 });
             });
 
