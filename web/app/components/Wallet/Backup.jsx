@@ -102,7 +102,7 @@ export class BackupRestore extends BackupBaseComponent {
         return <span>
 
             <h3><Translate content="wallet.import_backup" /></h3>
-
+            {(new FileReader).readAsBinaryString ? null : <p className="error">Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.</p>}
             <Upload>
                 <NameSizeModified/>
                 <DecryptBackup saveWalletObject={true}>
