@@ -34,21 +34,31 @@ class IssueModal extends React.Component {
        };
     }
 
-    onAmountChanged( {amount,asset} )
-    {
-       this.setState( {amount:amount} );
+    onAmountChanged({amount, asset}) {
+      this.setState({
+        amount: amount
+      });
     }
 
     onToAccountChanged( to ) {
-       this.setState( {to:to.get('name'),
-                       to_id:to.get('id')} );
+      if (to) {
+        this.setState({
+          to: to.get('name'),
+          to_id: to.get('id')
+        });
+      }
     }
+
     onToChanged( to ) {
-       this.setState( {to:to,to_id:null} );
+      if (to) {
+        this.setState({
+          to: to,
+          to_id:null
+        });
+      }
     }
 
     onSubmit() {
-       console.log( "on submit" );
        let precision = utils.get_asset_precision(this.props.asset_to_issue.get("precision"));
        let amount = this.state.amount.replace( /,/g, "" );
        amount *= precision;
@@ -77,7 +87,7 @@ class IssueModal extends React.Component {
     }
 
     render() {
-        console.log( "Issue Modal!", this.props.asset_to_issue );
+        // console.log( "Issue Modal!", this.props.asset_to_issue );
         let asset_to_issue = this.props.asset_to_issue.get('id');
         return ( <form className="grid-block vertical full-width-content">
                   <div className="grid-container " style={{paddingTop: "2rem"}}>
