@@ -237,18 +237,18 @@ class AccountAssets extends React.Component {
         return (    
             <div className="grid-content">
                     <div className="content-block">
-                        <h3>Issued Assets</h3>
+                        <h3><Translate content="account.user_issued_assets.issued_assets" /></h3>
 
                         <div>
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th>Symbol</th>
-                                    <th style={{maxWidth: "200px"}}>Description</th>
+                                    <th><Translate content="account.user_issued_assets.symbol" /></th>
+                                    <th style={{maxWidth: "200px"}}><Translate content="account.user_issued_assets.description" /></th>
                                     <Translate component="th" content="markets.supply" />
-                                    <th>Max Supply</th>
-                                    <th>Issue</th>
-                                    <th>Update</th>
+                                    <th><Translate content="account.user_issued_assets.max_supply" /></th>
+                                    <th><Translate content="transaction.trxTypes.asset_issue" /></th>
+                                    <th><Translate content="transaction.trxTypes.asset_update" /></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -259,7 +259,7 @@ class AccountAssets extends React.Component {
                     </div>
 
                     <div className="content-block">
-                        <Link to="account-create-asset" params={{account_name}}><button className="button outline">Create New Asset</button></Link>
+                        <Link to="account-create-asset" params={{account_name}}><button className="button outline"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
                     </div>
 
                     <Modal id="create_asset" overlay={true}>
