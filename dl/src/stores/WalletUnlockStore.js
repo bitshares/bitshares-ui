@@ -30,7 +30,8 @@ class WalletUnlockStore {
     }
     
     onCancel() {
-        this.setState({resolve:null, reject:null})
+        this.state.reject();
+        this.setState({resolve:null, reject:null});
     }
     
     onChange() {

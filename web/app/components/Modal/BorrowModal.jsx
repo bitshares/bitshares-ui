@@ -211,7 +211,9 @@ class BorrowModalContent extends React.Component {
                 "amount": parseInt(this.state.short_amount * quotePrecision - currentPosition.debt, 10),
                 "asset_id": this.props.quote_asset.get("id")
             }});
-        WalletDb.process_transaction(tr, null, true);
+        WalletDb.process_transaction(tr, null, true).catch(err => {
+            // console.log("unlock failed:", err);
+        });
 
         ZfApi.publish(this.props.modalId, "close"); 
     }
