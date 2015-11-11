@@ -7,7 +7,7 @@
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-        
+
     },
     header: {
         title: "Graphene UI",
@@ -62,7 +62,7 @@
             lifetime: "Lifetime member",
             basic: "Basic member",
             annual: "Annual subscriber",
-            upgrade_lifetime: "Buy Lifetime Subscribtion",
+            upgrade_lifetime: "Buy Lifetime Subscription",
             subscribe: "Buy Annual Subscription",
             expires: "expires",
             membership_expiration: "Membership Expiration",
@@ -127,7 +127,7 @@
         },
         votes: {
             proxy_short: "Proxy",
-            workers_short: "Workers",            
+            workers_short: "Workers",
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             clear_proxy: "Remove proxy",
@@ -564,7 +564,7 @@
         core_rate: "Core rate",
         supply: "Supply",
         search: "Search",
-        preferred: "My Favourite Markets"
+        preferred: "My Favorite Markets"
     },
     wallet: {
         title: "Wallet",
