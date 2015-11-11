@@ -103,7 +103,8 @@
             global_settle: "Allow issuer to force a global settling",
             advanced: "Advanced",
             need_asset: "At least one of the two assets must be %(name)s",
-            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!"
+            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!",
+            issued_assets: "Issued Assets"
         },
         connections: {
             known: "Known by",

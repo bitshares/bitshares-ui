@@ -24,7 +24,8 @@ module.exports = {
         account: "账户",
         help: "帮助",
         locked_tip: "钱包已锁定，点击解锁。",
-        unlocked_tip: "钱包已解锁，点击锁定。"
+        unlocked_tip: "钱包已解锁，点击锁定。",
+        update_asset: "更新资产"
     },
     account: {
         welcome: "欢迎使用 Graphene (石墨烯)系统",
@@ -76,7 +77,36 @@ module.exports = {
             max_supply: "最大供给量",
             precision: "精度",
             to: "发行到账户",
-            details: "详细"
+            details: "详细",
+            market_fee: "交易手续费率",
+            max_market_fee: "最大交易手续费",
+            primary: "主要设定",
+            optional: "可选设定",
+            approx_fee: "资产创建费用预估",
+            exists: "资产代码已存在",
+            max_positive: "最大供应量必须是个大于0",
+            core_exchange_rate: "手续费汇率",
+            quote: "报价资产数量",
+            quote_name: "报价资产",
+            base: "基础资产数量",
+            base_name: "基础资产",
+            update_owner: "更新发行人",
+            current_issuer: "当前发行人",
+            new_issuer: "新发行人",
+            flags: "旗标",
+            charge_market_fee: "收取交易手续费",
+            override_authority: "发行人可将资产收回",
+            transfer_restricted: "所有转账必须通过发行人审核同意",
+            disable_confidential: "禁止隐私交易",
+            white_list: "要求资产持有人预先加入白名单",
+            witness_fed_asset: "允许见证人提供喂价",
+            committee_fed_asset: "允许理事会成员提供喂价",
+            disable_force_settle: "禁止强制清算",
+            global_settle: "允许发行人进行全局强制清算",
+            advanced: "高级设定",
+            need_asset: "这两个资产中至少有一个必须为 %(name)s",
+            perm_warning: "警告：有些设定的禁用操作不可逆，生效后将无法重新启用。",
+            issued_assets: "我发行的资产"
         },
         perm: {
             active: "活跃权限",
@@ -125,7 +155,8 @@ module.exports = {
                 supported: "已支持",
                 rejected: "已反对",
                 neutral: "中立"
-            }
+            },
+            clear_proxy: "移除投票代理"
         },
         options: {
             num_witnesses: "信任见证人",
@@ -159,11 +190,12 @@ module.exports = {
         existing_accounts: "已有账户",
         bts_market: "交易市场",
         name_input: {
-            name_is_taken: "Account name is already taken.",
-            not_found: "Account not found.",
-            premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
-            premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+            name_is_taken: "账户名已经被使用",
+            not_found: "账户未找到",
+            premium_name_faucet: "你使用的是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母",
+            premium_name_warning: "这是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母"
+        },
+        propose_from: "发起账户"
     },
     transfer: {
         from: "来自",
@@ -328,7 +360,7 @@ module.exports = {
         max_market_fee: "最大市场手续费",
         blinding_factor: "隐私因子",
         outputs: "输出",
-        inputs: "输入",
+        inputs: "输入"
     },
     explorer: {
         accounts: {
@@ -522,7 +554,8 @@ module.exports = {
         horizontal: "水平布局",
         market_name: "市场名称",
         quote_supply: "报价资产供给量",
-        base_supply: "基础资产供给量"
+        base_supply: "基础资产供给量",
+        more: "更多交易对"
     },
     markets: {
         title: "交易所",
@@ -646,5 +679,7 @@ module.exports = {
         claim_refcode: "领取推荐码",
         refcode_optional: "推荐码 (可选)",
         enter_refcode: "输入推荐码"
-    }
+    },
+    propose: "提议",
+    cancel: "取消"
 };
