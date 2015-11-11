@@ -2,6 +2,7 @@ import React from "react";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
+import AccountSelect from "../Forms/AccountSelect";
 import AccountSelector from "../Account/AccountSelector";
 import AccountStore from "stores/AccountStore";
 import AmountSelector from "../Utility/AmountSelector";
@@ -10,6 +11,7 @@ import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
+import ChainStore from "api/ChainStore";
 
 class Transfer extends React.Component {
 
@@ -40,14 +42,16 @@ class Transfer extends React.Component {
             asset_id: null,
             asset: null,
             memo: "",
-            error: null
+            error: null,
+            propose: false,
+            propose_account: ""
         };
     }
-
+    
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
-        this.setState({from_name,asset,amount, error: null})
+        this.setState({from_name,asset,amount, error: null, propose: false, propose_account: ""})
     }
 
     toChanged(to_name) {
@@ -80,6 +84,15 @@ class Transfer extends React.Component {
             TransactionConfirmStore.reset();
         }
     }
+    
+    onPropose(propose, e) {
+        e.preventDefault()
+        this.setState({ propose, propose_account: null })
+    }
+    
+    onProposeAccount(propose_account) {
+        this.setState({ propose_account });
+    }
 
     onSubmit(e) {
         e.preventDefault();
@@ -92,7 +105,8 @@ class Transfer extends React.Component {
             this.state.to_account.get("id"),
             parseInt(amount * precision, 10),
             asset.get("id"),
-            this.state.memo
+            this.state.memo,
+            this.state.propose ? this.state.propose_account : null
         ).then( () => {
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.listen(this.onTrxIncluded);
@@ -105,14 +119,26 @@ class Transfer extends React.Component {
 
     render() {
         let from_error = null;
-        if(this.state.from_account && !AccountStore.isMyAccount(this.state.from_account) )
-            from_error = counterpart.translate("account.errors.not_yours");
+        let from_my_account = AccountStore.isMyAccount(this.state.from_account)
+        let propose = this.state.propose
+        if(this.state.from_account && ! from_my_account && ! propose ) {
+            from_error = <span>
+                {counterpart.translate("account.errors.not_yours")}
+                {/* &nbsp;(<a onClick={this.onPropose.bind(this, true)}>{counterpart.translate("propose")}</a>) */}
+            </span>;
+        }
 
         let asset_types = [];
         let balance = null;
         if (this.state.from_account && !from_error) {
             let account_balances = this.state.from_account.get("balances").toJS();
             asset_types = Object.keys(account_balances);
+            for (let key in account_balances) {
+                let balanceObject = ChainStore.getObject(account_balances[key]);
+                if (balanceObject && balanceObject.get("balance") === 0) {
+                    asset_types.splice(asset_types.indexOf(key), 1);
+                }
+            }
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
                 balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
@@ -120,27 +146,27 @@ class Transfer extends React.Component {
                 balance = "No funds";
             }
         }
-
+        let propose_incomplete = this.state.propose && ! this.state.propose_account
         let submitButtonClass = "button";
-        if(!this.state.from_account || !this.state.to_account || !this.state.amount || this.state.amount === "0" || !this.state.asset || from_error)
+        if(!this.state.from_account || !this.state.to_account || !this.state.amount || this.state.amount === "0"|| !this.state.asset || from_error || propose_incomplete)
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(this.state.from_account)
-
+        let tabIndex = 1
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
             <form className="grid-block medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
                 <div className="grid-content no-overflow">
                     {/*  F R O M  */}
                     <div className="content-block">
-                        <AccountSelector label="transfer.from"
+                        <AccountSelector label="transfer.from" ref="from"
                                          accountName={this.state.from_name}
                                          onChange={this.fromChanged.bind(this)}
                                          onAccountChanged={this.onFromAccountChanged.bind(this)}
                                          account={this.state.from_name}
                                          error={from_error}
-                                         tabIndex={1}/>
+                                         tabIndex={tabIndex++}/>
                     </div>
                     {/*  T O  */}
                     <div className="content-block">
@@ -149,7 +175,7 @@ class Transfer extends React.Component {
                                          onChange={this.toChanged.bind(this)}
                                          onAccountChanged={this.onToAccountChanged.bind(this)}
                                          account={this.state.to_name}
-                                         tabIndex={2}/>
+                                         tabIndex={tabIndex++}/>
                     </div>
                     {/*  A M O U N T   */}
                     <div className="content-block">
@@ -159,21 +185,39 @@ class Transfer extends React.Component {
                                         asset={asset_types.length > 0 && this.state.asset ? this.state.asset.get("id") : ( this.state.asset_id ? this.state.asset_id : asset_types[0])}
                                         assets={asset_types}
                                         display_balance={balance}
-                                        tabIndex={3}/>
+                                        tabIndex={tabIndex++}/>
                     </div>
                     {/*  M E M O  */}
                     <div className="content-block">
                         <label><Translate component="span" content="transfer.memo"/></label>
-                        <textarea rows="1" value={this.state.memo} tabIndex="4" onChange={this.onMemoChanged.bind(this)}/>
+                        <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
                         {/*<div>{memo_error}</div>*/}
                     </div>
+                    
+                    {/* P R O P O S E   F R O M */}
+                    {this.state.propose ?
+                    <div className="full-width-content form-group">
+                        <label><Translate content="account.propose_from" /></label>
+                        <AccountSelect account_names={AccountStore.getMyAccounts()}
+                            onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
+                    </div>:null}
 
                     {/*  S E N D  B U T T O N  */}
                     {this.state.error ? <div className="content-block has-error">{this.state.error}</div> : null}
                     <div>
-                        <button className={submitButtonClass} type="submit" value="Submit" tabIndex="5">
-                            <Translate component="span" content="transfer.send" />
-                        </button>
+                        {propose ?
+                        <span>
+                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                <Translate component="span" content="propose" />
+                            </button>
+                            <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
+                                <Translate component="span" content="cancel" />
+                            </button>
+                        </span>:<span>
+                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                <Translate component="span" content="transfer.send" />
+                            </button>
+                        </span>}
                     </div>
 
                     {/* TODO: show remaining balance */}

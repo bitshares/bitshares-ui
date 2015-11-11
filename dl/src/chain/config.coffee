@@ -2,6 +2,7 @@ module.exports = _this =
     core_asset: "BTS"
     address_prefix: "BTS"
     expire_in_secs: 15
+    expire_in_secs_proposal: 24 * 60 * 60
     networks:
         BitShares:
             core_asset: "BTS"

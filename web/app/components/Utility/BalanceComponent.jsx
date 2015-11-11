@@ -18,9 +18,6 @@ class BalanceComponent extends React.Component {
 
     render() {
         let amount = Number(this.props.balance.get('balance'));
-        if (!amount) {
-            return null;
-        }
         let type = this.props.balance.get('asset_type');
         return (<FormattedAsset amount={amount} asset={type}/>);
     }

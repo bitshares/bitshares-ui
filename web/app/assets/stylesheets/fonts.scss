@@ -1,3 +1,5 @@
+/* ***** declarations ****** */
+
 @mixin font-face($font-family, $file-path, $font-weight, $font-style) {
   @font-face {
     font-family: $font-family;
@@ -8,16 +10,184 @@
 }
 
 @include font-face(Roboto-Light, './Roboto-Light', 300, normal);
-@mixin Roboto-Light {
-  font-family: 'Roboto-Light', arial, sans-serif;;
-  font-weight: lighter; font-style: normal; }
+@mixin RobotoLight {
+  font-family: 'Roboto-Light', arial, sans-serif;
+  font-weight: lighter;
+  font-style: normal;
+}
 
 @include font-face(Roboto-Regular, './Roboto-Regular', normal, normal);
-@mixin Roboto-Regular {
+@mixin RobotoRegular {
   font-family: 'Roboto-Regular', arial, sans-serif;
-  font-weight: normal; font-style: normal; }
+  font-weight: normal;
+  font-style: normal;
+}
 
 @include font-face(RobotoCondensed-Regular, './RobotoCondensed-Regular', normal, normal);
-@mixin RobotoCondensed-Regular {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;;
-  font-weight: normal; font-style: normal; }
+@mixin RobotoCondensed {
+  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@mixin SegoeUILight {
+  font-family: 'wf_SegoeUILight', 'Segoe UI Light', 'Segoe WP Light', 'wf_SegoeUI', 'Segoe UI', 'Segoe', 'Segoe WP', 'Tahoma', 'Verdana', arial, sans-serif;
+  font-size: 90%;
+  font-weight: lighter;
+}
+
+@mixin SegoeUIRegular {
+  font-family: 'wf_SegoeUI', 'Segoe UI', 'Segoe', 'Segoe WP', 'Tahoma', 'Verdana', arial, sans-serif;
+  font-size: 90%;
+  font-weight: normal;
+}
+
+@mixin MonospaceFont {
+  font-family: "Lucida Console", Monaco, monospace !important;
+}
+
+/* ***** styles ****** */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto-Light', arial, sans-serif;
+}
+
+.monospace {
+  @include MonospaceFont;
+}
+
+label, label > span {
+  @include RobotoCondensed;
+  text-transform: uppercase;
+}
+
+.json-inspector__key {
+  @include MonospaceFont;
+  text-transform: none;
+}
+
+.json-inspector__value {
+  @include MonospaceFont;
+  text-transform: none;
+}
+
+button, .button {
+  @include RobotoCondensed;
+  text-transform: uppercase;
+}
+
+.content-block > h3 {
+  @include RobotoLight;
+}
+
+.page-header > h3 {
+  @include RobotoLight;
+}
+
+a.currency, span.currency {
+  @include RobotoLight;
+}
+
+.txtlabel {
+  @include RobotoCondensed;
+  text-transform: uppercase;
+}
+
+span.time {
+  @include RobotoLight;
+}
+
+.account-drop-down a.button {
+  @include RobotoRegular;
+}
+
+.footer .logo {
+  @include RobotoCondensed;
+}
+
+.tabs > .tab-item {
+  @include RobotoCondensed;
+}
+
+.label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
+  @include RobotoCondensed;
+}
+
+.table > thead > tr > th {
+  @include RobotoCondensed;
+}
+
+.key-value-table tr > td:first-child {
+  @include RobotoLight;
+}
+
+.win32 {
+  @include RobotoRegular;
+}
+
+.win32 {
+  h1, h2, h3, h4, h5, h6 {
+    @include SegoeUILight;
+  }
+
+  label, label > span {
+    @include RobotoCondensed;
+    text-transform: uppercase;
+    font-size: 90%;
+  }
+
+  button, .button {
+    @include RobotoCondensed;
+    text-transform: uppercase;
+  }
+
+  .content-block > h3 {
+    @include SegoeUILight;
+  }
+
+  .page-header > h3 {
+    @include SegoeUILight;
+  }
+
+  a.currency, span.currency {
+    @include SegoeUILight;
+  }
+
+  .txtlabel {
+    @include RobotoCondensed;
+    text-transform: uppercase;
+  }
+
+  span.time {
+    @include SegoeUILight;
+  }
+
+  .account-drop-down a.button {
+    @include SegoeUIRegular;
+  }
+
+  .footer .logo {
+    @include RobotoCondensed;
+    font-size: 90%;
+  }
+
+  .tabs > .tab-item {
+    @include RobotoCondensed;
+    font-size: 90%;
+  }
+
+  .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
+    @include RobotoCondensed;
+    font-size: 80%;
+  }
+
+  .table > thead > tr > th {
+    @include RobotoCondensed;
+    font-size: 90%;
+  }
+
+  .key-value-table tr > td:first-child {
+    @include SegoeUILight;
+  }
+
+}

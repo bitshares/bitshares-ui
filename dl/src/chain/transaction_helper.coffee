@@ -7,7 +7,7 @@ type = require './serializer_operation_types'
 key = require '../common/key_utils'
 chain_types = require './chain_types'
 
-Promise = require '../common/Promise'
+#Promise = require '../common/Promise'
 ByteBuffer = require('../common/bytebuffer')
 Long = ByteBuffer.Long
 PrivateKey = require '../ecc/key_private'
