@@ -298,12 +298,12 @@ class Exchange extends React.Component {
     _depthChartClick(base, quote, power, e) {
         console.log("value:", e.xAxis[0].value, "power:", power);
         e.preventDefault();
-        console.log("ratio:", market_utils.priceToObject(e.xAxis[0].value / power));
+        console.log("ratio:", market_utils.priceToObject(e.xAxis[0].value / power, "ask"));
         let value = this._limitByPrecision(e.xAxis[0].value / power, quote);
         let buyPrice = this._getBuyPrice(e.xAxis[0].value / power);
         let sellPrice = this._getSellPrice(e.xAxis[0].value / power);
-        let displayBuyPrice = this._getDisplayPrice("bid", {quote: buyPrice.base, base: buyPrice.quote});
-        let displaySellPrice = this._getDisplayPrice("ask", {quote: sellPrice.base, base: sellPrice.quote});
+        let displayBuyPrice = this._getDisplayPrice("bid", buyPrice);
+        let displaySellPrice = this._getDisplayPrice("ask", sellPrice);
         // let buyPrice = this._buyPriceChanged(base, quote, {target: {value: value}});
 
         this.setState({
@@ -428,27 +428,27 @@ class Exchange extends React.Component {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
             
-        return ((total * totalPrecision / price.quote.amount) * price.base.amount) / amountPrecision;
+        return ((total * totalPrecision / price.base.amount) * price.quote.amount) / amountPrecision;
     }
 
     getSellTotal(price, amount) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
             
-        return ((amount * amountPrecision / price.base.amount) * price.quote.amount) / totalPrecision;
+        return ((amount * amountPrecision / price.quote.amount) * price.base.amount) / totalPrecision;
     }
 
     getBuyAmount(price, total) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
             
-        return ((total * totalPrecision / price.base.amount) * price.quote.amount) / amountPrecision;
+        return ((total * totalPrecision / price.quote.amount) * price.base.amount) / amountPrecision;
     }
 
     getBuyTotal(price, amount) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        return ((amount * amountPrecision / price.quote.amount) * price.base.amount) / totalPrecision;
+        return ((amount * amountPrecision / price.base.amount) * price.quote.amount) / totalPrecision;
     }
 
     _toggleCharts() {
@@ -525,8 +525,7 @@ class Exchange extends React.Component {
     }
 
     _getBuyPrice(price) {
-        console.log("_getBuyPrice:", price);
-        let ratio = market_utils.priceToObject(price);
+        let ratio = market_utils.priceToObject(price, "bid");
         let {baseAsset, quoteAsset} = this.props;
         let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
         let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
@@ -534,11 +533,11 @@ class Exchange extends React.Component {
         return {
             base: {
                  asset_id: baseAsset.get("id"),
-                 amount: ratio.quote * basePrecision
+                 amount: ratio.base * quotePrecision
             },
             quote: {
                 asset_id: quoteAsset.get("id"),
-                amount: ratio.base * quotePrecision
+                amount: ratio.quote * basePrecision
             }            
         };
     }
@@ -567,7 +566,7 @@ class Exchange extends React.Component {
     }
 
     _getSellPrice(price) {
-        let ratio = market_utils.priceToObject(price);
+        let ratio = market_utils.priceToObject(price, "ask");
         let {baseAsset, quoteAsset} = this.props;
         let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
         let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
@@ -575,11 +574,11 @@ class Exchange extends React.Component {
         return {
             base: {
                  asset_id: this.props.quoteAsset.get("id"),
-                 amount: ratio.base * quotePrecision
+                 amount: ratio.base * basePrecision
             },
             quote: {
                 asset_id: this.props.baseAsset.get("id"),
-                amount: ratio.quote * basePrecision
+                amount: ratio.quote * quotePrecision
             }
         };
     }
