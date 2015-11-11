@@ -296,9 +296,7 @@ class Exchange extends React.Component {
     }
 
     _depthChartClick(base, quote, power, e) {
-        console.log("value:", e.xAxis[0].value, "power:", power);
         e.preventDefault();
-        console.log("ratio:", market_utils.priceToObject(e.xAxis[0].value / power, "ask"));
         let value = this._limitByPrecision(e.xAxis[0].value / power, quote);
         let buyPrice = this._getBuyPrice(e.xAxis[0].value / power);
         let sellPrice = this._getSellPrice(e.xAxis[0].value / power);
@@ -468,9 +466,7 @@ class Exchange extends React.Component {
     }
 
     _orderbookClick(base, quote, type, order) {
-        console.log("type:", type);
         let precision = utils.get_asset_precision(quote.get("precision") + base.get("precision"));
-        console.log("order:", order);
         if (type === "bid") {
             let value = order.totalAmount.toString();
             if (value.indexOf(".") !== value.length -1) {
@@ -589,13 +585,9 @@ class Exchange extends React.Component {
             calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
             displayBuyPrice, displaySellPrice} = this.state;
-        console.log("buyPrice:", buyPrice, "sellPrice:", sellPrice);
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
             quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null, settlementQuote, settlementBase,
             flipped = false, showCallLimit = false, highestBid, lowestAsk, latestPrice, changeClass;
-
-
-        console.log("displayBuyPrice:", displayBuyPrice, "displaySellPrice:", displaySellPrice);
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset;
