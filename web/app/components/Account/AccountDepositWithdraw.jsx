@@ -400,7 +400,7 @@ class AccountDepositWithdraw extends React.Component {
 
 
                 <div className="content-block">
-                    <h3>Open Ledger (CCEDK)</h3>
+                    <h3>OpenLedger (CCEDK)</h3>
 
                     <div>
                         <table className="table">
