@@ -234,7 +234,7 @@ class CommitteeMembers extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.globalObject, this.props.globalObject) ||
-            nextState.filterCommitteeMember !== this.state.filterCommitteeMember,
+            nextState.filterCommitteeMember !== this.state.filterCommitteeMember ||
             nextState.cardView !== this.state.cardView
         );
     }

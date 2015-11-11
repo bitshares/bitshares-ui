@@ -7,7 +7,7 @@
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-        
+
     },
     header: {
         title: "BitShares 2.0",
@@ -62,7 +62,7 @@
             lifetime: "Lifetime member",
             basic: "Basic member",
             annual: "Annual subscriber",
-            upgrade_lifetime: "Buy Lifetime Subscribtion",
+            upgrade_lifetime: "Buy Lifetime Subscription",
             subscribe: "Buy Annual Subscription",
             expires: "expires",
             membership_expiration: "Membership Expiration",
@@ -103,7 +103,8 @@
             global_settle: "Allow issuer to force a global settling",
             advanced: "Advanced",
             need_asset: "At least one of the two assets must be %(name)s",
-            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!"
+            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!",
+            issued_assets: "Issued Assets"
         },
         connections: {
             known: "Known by",
@@ -127,7 +128,7 @@
         },
         votes: {
             proxy_short: "Proxy",
-            workers_short: "Workers",            
+            workers_short: "Workers",
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             clear_proxy: "Remove proxy",
@@ -379,7 +380,7 @@
             trx_per_block: "Trx/block",
             active_committee_members: "Active committee members",
             active_witnesses: "Active Witnesses",
-            avg_conf_time: "Avg conf. time",
+            avg_conf_time: "Average confirmation time",
             trx_per_sec: "Trx/s",
             last_block: "Last block",
             current_block: "Current Block"
@@ -564,7 +565,7 @@
         core_rate: "Core rate",
         supply: "Supply",
         search: "Search",
-        preferred: "My Favourite Markets"
+        preferred: "My Favorite Markets"
     },
     wallet: {
         title: "Wallet",

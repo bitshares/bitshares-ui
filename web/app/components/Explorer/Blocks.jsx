@@ -289,7 +289,7 @@ class Blocks extends React.Component {
                         </div>
                     <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow">
-                            <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.trx" /></div>
+                            <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.trx_per_block" /></div>
                             <TransactionChart blocks={latestBlocks} head_block={dynGlobalObject.get("head_block_number")}/>
                         </div>
                     </div>

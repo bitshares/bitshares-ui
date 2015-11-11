@@ -31,6 +31,7 @@ class BlockTradesDepositRequest extends React.Component {
         gateway:           React.PropTypes.string,
         deposit_coin_type: React.PropTypes.string,
         deposit_asset_name: React.PropTypes.string,
+        deposit_account: React.PropTypes.string,
         receive_coin_type: React.PropTypes.string,
         account: ChainTypes.ChainAccount,
         issuer_account: ChainTypes.ChainAccount,
@@ -135,10 +136,20 @@ class BlockTradesDepositRequest extends React.Component {
                 balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
         }
         let withdraw_modal_id = this.getWithdrawModalId();
+        if (this.props.deposit_account)
+        {
+            var deposit_address_fragment = (<span><code>{this.props.deposit_account}</code> with memo <code>{this.props.receive_coin_type + ':' + this.props.account.get('name')}</code></span>);
+            var withdraw_memo_prefix = this.props.deposit_coin_type + ':';
+        }
+        else
+        {
+            var deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button></span>);
+            var withdraw_memo_prefix = '';
+        }
 
         return <tr>
             <td>{this.props.deposit_asset} </td>
-            <td><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button> </td>
+            <td>{deposit_address_fragment}</td>
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
             <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
                 <Modal id={withdraw_modal_id} overlay={true}>
@@ -153,6 +164,7 @@ class BlockTradesDepositRequest extends React.Component {
                             asset={this.props.receive_asset.get('symbol')}
                             receive_asset_name={this.props.deposit_asset_name}
                             receive_asset_symbol={this.props.deposit_asset}
+                            memo_prefix={withdraw_memo_prefix}
                             modal_id={withdraw_modal_id} />
                     </div>
                 </Modal>
@@ -400,7 +412,7 @@ class AccountDepositWithdraw extends React.Component {
 
 
                 <div className="content-block">
-                    <h3>Open Ledger (CCEDK)</h3>
+                    <h3>OpenLedger (CCEDK)</h3>
 
                     <div>
                         <table className="table">
@@ -453,15 +465,26 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="dash"
                                 deposit_asset_name="Dash"
                                 receive_coin_type="opendash" />
-                            <BlockTradesDepositRequest
+                            <BlockTradesDepositRequest 
                                 gateway="openledger"
                                 url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')}
-                                receive_asset="OPENMUSE"
+                                account={this.props.account.get('name')} 
+                                receive_asset="OPENPPC"
+                                deposit_asset="PPC"
+                                deposit_coin_type="peercoin"
+                                deposit_asset_name="Peercoin"
+                                receive_coin_type="openppc" />
+                            <BlockTradesDepositRequest 
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account.get('name')} 
                                 deposit_asset="MUSE"
-                                deposit_coin_type="muse"
                                 deposit_asset_name="Muse"
+                                deposit_coin_type="muse"
+                                deposit_account="openledger-wallet"
+                                receive_asset="OPENMUSE"
                                 receive_coin_type="openmuse" />
                             </tbody>
                         </table>

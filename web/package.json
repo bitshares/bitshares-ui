@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "alt": "^0.17.8",
+    "babel": "^5.8.29",
     "bignumber.js": "^2.1.0",
     "classnames": "^2.2.0",
     "cookies-js": "^1.2.1",

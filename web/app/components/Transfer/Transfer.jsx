@@ -11,6 +11,7 @@ import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
+import ChainStore from "api/ChainStore";
 
 class Transfer extends React.Component {
 
@@ -132,6 +133,12 @@ class Transfer extends React.Component {
         if (this.state.from_account && !from_error) {
             let account_balances = this.state.from_account.get("balances").toJS();
             asset_types = Object.keys(account_balances);
+            for (let key in account_balances) {
+                let balanceObject = ChainStore.getObject(account_balances[key]);
+                if (balanceObject && balanceObject.get("balance") === 0) {
+                    asset_types.splice(asset_types.indexOf(key), 1);
+                }
+            }
             if (asset_types.length > 0) {
                 let current_asset_id = this.state.asset ? this.state.asset.get("id") : asset_types[0];
                 balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)

@@ -85,7 +85,8 @@ class BorrowModalContent extends React.Component {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
             !Immutable.is(nextProps.quote_asset.get("bitasset"), this.props.quote_asset.get("bitasset")) ||
-            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol")
+            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol") ||
+            nextProps.account !== this.props.account
         );
     }
 
@@ -211,7 +212,9 @@ class BorrowModalContent extends React.Component {
                 "amount": parseInt(this.state.short_amount * quotePrecision - currentPosition.debt, 10),
                 "asset_id": this.props.quote_asset.get("id")
             }});
-        WalletDb.process_transaction(tr, null, true);
+        WalletDb.process_transaction(tr, null, true).catch(err => {
+            // console.log("unlock failed:", err);
+        });
 
         ZfApi.publish(this.props.modalId, "close"); 
     }
