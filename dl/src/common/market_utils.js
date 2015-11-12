@@ -127,7 +127,7 @@ class MarketUtils {
         let pricePrecision = order.call_price ?
             (quote.toJS ? quote.get("precision") : quote.precision) :
             (base.toJS ? base.get("precision") : base.precision);
-        
+
         let buy, sell;
         let callPrice;
         if (order.sell_price) {
@@ -218,7 +218,7 @@ class MarketUtils {
         let hourNumber = parseInt(hour, 10);
         let localHour = hourNumber - offset
         if (localHour >= 24) {
-            localHour -= 24;            
+            localHour -= 24;
         }
         let hourString = localHour.toString();
         if (parseInt(hourString, 10) < 10) {
@@ -366,6 +366,27 @@ class MarketUtils {
             }
         }
         return orderBookArray;
+    }
+
+    static priceToObject(x, type) {
+        let tolerance = 1.0E-8;
+        let h1=1; let h2=0;
+        let k1=0; let k2=1;
+        let b = x;
+        do {
+            let a = Math.floor(b);
+            let aux = h1; h1 = a*h1+h2; h2 = aux;
+            aux = k1; k1 = a*k1+k2; k2 = aux;
+            b = 1/(b-a);
+        } while (Math.abs(x-h1/k1) > x*tolerance);
+
+        if (type === "ask") {
+            return {base: h1, quote: k1};
+        } else if (type === "bid") {
+            return {quote: h1, base: k1};
+        } else {
+            throw "Unknown type";
+        }
     }
 
 }
