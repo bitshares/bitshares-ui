@@ -213,12 +213,18 @@ class AccountAssetCreate extends React.Component {
         let {account, account_name, globalObject, core} = this.props;
         let {errors, isValid, update, assets, flagBooleans, permissionBooleans, activeTab} = this.state;
 
-        // Estimate the asset update fee
-        let symbol = update.symbol;
-        let updateFee = "N/A";
+        // Estimate the asset creation fee from the symbol character length
+        let symbolLength = update.symbol.length, createFee = "N/A";
 
-        updateFee = <FormattedAsset amount={utils.estimateFee("asset_update", [], globalObject)} asset={"1.3.0"} />;
-
+        if(symbolLength === 3) {
+            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["symbol3"], globalObject)} asset={"1.3.0"} />;
+        }
+        else if(symbolLength === 4) {
+            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["symbol4"], globalObject)} asset={"1.3.0"} />;
+        }
+        else if(symbolLength > 4) {
+            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
+        }
         // let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
         // let precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
         // let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
@@ -368,7 +374,7 @@ class AccountAssetCreate extends React.Component {
                         </button>
                         <br/>
                         <br/>
-                        <p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>
+                        <p><Translate content="account.user_issued_assets.approx_fee" />: {createFee}</p>
                     </div>
 
                 </div>
