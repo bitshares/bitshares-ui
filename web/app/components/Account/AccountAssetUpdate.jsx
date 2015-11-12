@@ -101,7 +101,7 @@ class AccountAssetUpdate extends React.Component {
             quoteAssetInput: coreRateQuoteAssetName,
             coreRateBaseAssetName: coreRateBaseAssetName,
             baseAssetInput: coreRateBaseAssetName,
-            activeTab: props.tab
+            activeTab: props.tab || "primary"
         };
     }
 
@@ -163,11 +163,13 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_supply":
                 let maxSupply = e.amount.replace(/,/g, "");
-                if ((new big(maxSupply)).times(precision).gt(MAX_SAFE_INT)) {
-                    updateState = false;
-                    return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
-                }
-                update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
+                try {
+                    if ((new big(maxSupply)).times(precision).gt(MAX_SAFE_INT)) {
+                        updateState = false;
+                        return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
+                    }
+                    update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
+                } catch(e) {}
                 break;
 
             default:
@@ -350,13 +352,6 @@ class AccountAssetUpdate extends React.Component {
                 <div className="grid-content">
                     <h3><Translate content="header.update_asset" />: {symbol}</h3>
 
-                    <div className="grid-content button-group no-overflow" style={{paddingTop: "2rem"}}>
-                        <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._updateAsset.bind(this)} value={counterpart.translate("header.update_asset")} />
-                        <input type="submit" className="button info" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")} />
-
-                        <div><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</div>
-                    </div>
-
                     <div className="tabs" style={{maxWidth: "800px"}}>
                         <div className={primaryTabClass} onClick={this._changeTab.bind(this, "primary")}>
                             <Translate content="account.user_issued_assets.primary" />
@@ -534,6 +529,20 @@ class AccountAssetUpdate extends React.Component {
                                         {permissions}
                                     </div>) : null}
                             </div>
+
+                    <hr/>
+                    <div style={{paddingTop: "0.5rem"}}>
+                        <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
+                            <Translate content="header.update_asset" />
+                        </button>
+                        <button className="button outline" onClick={this._reset.bind(this)}>
+                            <Translate content="account.perm.reset" />
+                        </button>
+                        <br/>
+                        <br/>
+                        <p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>
+                    </div>
+
                 </div>
             </div>
         );
