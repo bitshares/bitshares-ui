@@ -665,7 +665,8 @@ module.exports = {
             amount: "提现金额",
             address: "提现到地址",
             submit: "提现"
-        }
+        },
+        ok: "确定"
     },
     init_error: {
         title: "系统初始化错误",
@@ -679,6 +680,28 @@ module.exports = {
         claim_refcode: "领取推荐码",
         refcode_optional: "推荐码 (可选)",
         enter_refcode: "输入推荐码"
+    },
+    gateway: {
+        bridge: "币种转换",
+        gateway: "承兑商",
+        symbol: "资产",
+        deposit_to: "充值地址",
+        balance: "余额",
+        generate: "生成地址",
+        deposit: "充值",
+        withdraw: "提现",
+        inventory: "库存",
+        scan_qr: "扫描二维码，手机支付",
+        transwiser: {
+            gateway: "Transwiser 巨蟹",
+            visit_weidian: "访问微店进行充值",
+            withdraw_title: "提现 %(asset)s 到人民币",
+            alipay: "支付宝账户名",
+            withdraw_note: "目前仅支持支付宝提现，将自动将资产按1:1比例兑换成人民币发送到您的支付宝账户中"
+        },
+        meta: {
+            open_website: "访问官网"
+        }
     },
     propose: "提议",
     cancel: "取消"

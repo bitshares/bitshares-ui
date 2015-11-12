@@ -605,7 +605,8 @@ module.exports = {
         amount: "Amount to Withdraw",
         address: "Withdraw to Address",
         submit: "Withdraw"
-      }
+      },
+      ok: "OK"
     },
     init_error: {
         title: "Application initialization issues",
@@ -613,5 +614,27 @@ module.exports = {
         retry: "다시 시도",
         connected: "연결됨",
         not_connected: "연결안됨"
+    },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser 巨蟹",
+            visit_weidian: "Visit WEIDIAN to deposit",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account."
+        },
+        meta: {
+            open_website: "Open Website"
+        }
     }
 };
