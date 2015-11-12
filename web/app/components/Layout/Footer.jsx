@@ -54,7 +54,7 @@ class Footer extends React.Component {
                 <div className="align-justify grid-block">
                     <div className="grid-block">
                         <div className="logo">
-                            <Translate content="footer.title" /><span className="version">{version}</span>
+                            <Translate content="footer.title" /> &nbsp; <span className="version">(Powered by BitShares {APP_VERSION})</span>
                         </div>
                     </div>
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
