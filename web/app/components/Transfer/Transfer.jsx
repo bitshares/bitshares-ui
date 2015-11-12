@@ -124,7 +124,7 @@ class Transfer extends React.Component {
         if(this.state.from_account && ! from_my_account && ! propose ) {
             from_error = <span>
                 {counterpart.translate("account.errors.not_yours")}
-                {/* &nbsp;(<a onClick={this.onPropose.bind(this, true)}>{counterpart.translate("propose")}</a>) */}
+                &nbsp;(<a onClick={this.onPropose.bind(this, true)}>{counterpart.translate("propose")}</a>)
             </span>;
         }
 
