@@ -25,7 +25,11 @@ class Dashboard extends Component {
                         {itemRows}
                     </div>
                 </div>
-                <div className="grid-block medium-4 right-column">
+                <div className="grid-block medium-4 right-column vertical">
+                    <div className="grid-content">
+                        <h4><Translate content="proposals" /></h4>
+                        <Proposals />
+                    </div>
                     <div className="grid-content">
                         <h4><Translate content="account.recent" /></h4>
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>

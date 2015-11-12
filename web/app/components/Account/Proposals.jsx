@@ -3,6 +3,7 @@ import {PropTypes, Component} from "react";
 import Translate from "react-translate-component";
 import AccountStore from "stores/AccountStore"
 import Inspector from "react-json-inspector";
+import Operation from "components/Blockchain/Operation"
 
 export default class Proposals extends Component {
 
@@ -18,18 +19,36 @@ export default class Proposals extends Component {
             if( account && account.get("proposals").count() ) {
                 account.get("proposals").forEach( proposal_id => {
                     var proposal = ChainStore.getObject( proposal_id )
-                    if( proposal ) proposalRows.push(
-                        <div>
-                            Proposal: {account_name}
-                            <Inspector data={ proposal.toObject() } search={false} />
-                        </div>
-                    )
+                    if( proposal ) {
+                        var proposed_transaction = proposal.get("proposed_transaction")
+                        var operations = proposed_transaction.get("operations")
+                        operations.forEach( o => {
+                            proposalRows.push(
+                                <Operation
+                                    key={proposal_id} op={o.toJS()}
+                                    inverted={false} hideFee={true} hideOpLabel={true}
+                                />
+                            )
+                        })
+                    }
                 })
             }
         }
 
         return (
-            <span>{ proposalRows }</span>
+            <table className={"table compact"}>
+                <thead>
+                <tr>
+                    <th><Translate content="account.votes.info" /></th>
+                    <th><Translate content="explorer.block.date" /></th>
+                </tr>
+                </thead>
+                <tbody>
+                    { proposalRows }
+                </tbody>
+            </table>
         );
     }
-}
+}/*  
+                                    <Inspector data={ o.toJS() } search={false} />
+*/

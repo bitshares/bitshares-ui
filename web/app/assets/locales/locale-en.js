@@ -32,6 +32,7 @@
         pending: "pending %(blocks)s blocks"
     },
     propose: "Propose",
+    proposals: "Proposals",
     cancel: "Cancel",
     account: {
         welcome: "Welcome to Graphene",
