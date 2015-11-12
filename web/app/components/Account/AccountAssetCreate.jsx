@@ -77,7 +77,7 @@ class AccountAssetCreate extends React.Component {
             flagBooleans: flagBooleans,
             permissionBooleans: permissionBooleans,
             isBitAsset: isBitAsset,
-            activeTab: props.tab
+            activeTab: props.tab || "primary"
         };
     }
 
@@ -275,14 +275,7 @@ class AccountAssetCreate extends React.Component {
         return (
             <div className="grid-block">
                 <div className="grid-content">
-                    <h3><Translate content="header.create_asset" />: {symbol}</h3>
-
-                    <div className="grid-content button-group no-overflow" style={{paddingTop: "2rem"}}>
-                        <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._createAsset.bind(this)} value={counterpart.translate("header.create_asset")} />
-                        <input type="submit" className="button info" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")} />
-
-                        <div><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</div>
-                    </div>
+                    <h3><Translate content="header.create_asset" /></h3>
 
                     <div className="tabs" style={{maxWidth: "800px"}}>
                         <div className={primaryTabClass} onClick={this._changeTab.bind(this, "primary")}>
@@ -364,6 +357,20 @@ class AccountAssetCreate extends React.Component {
                                         {permissions}
                                     </div>) : null}
                             </div>
+
+                    <hr/>
+                    <div style={{paddingTop: "0.5rem"}}>
+                        <button className={classnames("button", {disabled: !isValid})} onClick={this._createAsset.bind(this)}>
+                            <Translate content="header.create_asset" />
+                        </button>
+                        <button className="button outline" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")}>
+                            <Translate content="account.perm.reset" />
+                        </button>
+                        <br/>
+                        <br/>
+                        <p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>
+                    </div>
+
                 </div>
             </div>
         );

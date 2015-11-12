@@ -85,7 +85,8 @@ class BorrowModalContent extends React.Component {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
             !Immutable.is(nextProps.quote_asset.get("bitasset"), this.props.quote_asset.get("bitasset")) ||
-            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol")
+            !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol") ||
+            nextProps.account !== this.props.account
         );
     }
 
