@@ -5,6 +5,7 @@ import {Link} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import AccountStore from "stores/AccountStore";
+import ChainStore from "api/ChainStore";
 
 /**
  *  @brief displays the summary of a given account in a condenced view (for the dashboard)
@@ -45,9 +46,14 @@ class AccountCard extends React.Component {
         {
            name = this.props.account.get('name');
            let abal = this.props.account.get('balances' )
-           if( abal )
-           {
-              balances = abal.map( x => <li key={x}><BalanceComponent balance={x}/></li>).toArray();
+           if( abal ) {
+              balances = abal.map( x => {
+                let balanceAmount = ChainStore.getObject(x);
+                if (!balanceAmount.get("balance")) {
+                    return null;
+                }
+                return <li key={x}><BalanceComponent balance={x}/></li>;
+            }).toArray();
            }
            isMyAccount = AccountStore.isMyAccount(this.props.account);
         }
