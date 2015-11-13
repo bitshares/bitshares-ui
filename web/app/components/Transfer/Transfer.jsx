@@ -190,11 +190,17 @@ class Transfer extends React.Component {
                     {/*  M E M O  */}
                     <div className="content-block">
                         <label><Translate component="span" content="transfer.memo"/></label>
-                        <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
-                        {/*<div>{memo_error}</div>*/}
+                        <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                        {/* warning */}
+                        { this.state.propose ?
+                        <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
+                        :null}
                     </div>
                     
-                    {/* P R O P O S E   F R O M */}
+                    {/* P R O P O S E   F R O M 
+                        Having some proposed transaction logic here (prior to the transaction confirmation)
+                        allows adjusting of the memo to / from parameters. 
+                    */}
                     {this.state.propose ?
                     <div className="full-width-content form-group">
                         <label><Translate content="account.propose_from" /></label>

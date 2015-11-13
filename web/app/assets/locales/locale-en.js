@@ -209,6 +209,7 @@
         amount: "Amount",
         to: "To",
         memo: "Memo",
+        warn_name_unable_read_memo: "Warning: %(name)s will be unable to read this memo",
         fee: "Fee",
         send: "Send",
         final: "Final balance",
