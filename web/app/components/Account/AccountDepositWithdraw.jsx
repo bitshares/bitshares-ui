@@ -431,7 +431,7 @@ class AccountDepositWithdraw extends React.Component {
                                 <TranswiserDepositWithdraw
                                     issuerAccount="transwiser-wallet"
                                     account={this.props.account.get('name')}
-                                    receiveAsset="BOTSCNYLOCAL" />
+                                    receiveAsset="BOTSCNY" />
                             </tbody>
                         </table>
                     </div>
