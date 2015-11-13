@@ -115,20 +115,22 @@ var Utils = {
             }
         }
         let price_split = priceText.split(".");
-        let int = price_split[0], intClass;
-        let dec = price_split[1], decClass = "major-int";
+        let int = price_split[0];
+        let dec = price_split[1];
         let i;
 
         let zeros = 0;
         if (price > 1) {
-            for (i = dec.length - 1; i >= 0; i--) {
+            let l = dec.length;
+            for (i = l - 1; i >= 0; i--) {
                 if (dec[i] !== "0") {
                     break;
                 }
                 zeros++;
             };
         } else {
-            for (i = 0; i < dec.length; i++) {
+            let l = dec.length;
+            for (i = 0; i < l; i++) {
                 if (dec[i] !== "0") {
                     i--;
                     break;
@@ -146,14 +148,10 @@ var Utils = {
             }
         }
 
-        intClass = price < 1 ? "minor price-integer" : "price-integer";
-
         return {
             text: priceText,
             int: int,
-            intClass: intClass,
             dec: dec,
-            decClass: decClass,
             trailing: trailing,
             full: price
         };
