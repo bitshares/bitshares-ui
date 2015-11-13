@@ -17,6 +17,7 @@ import {Link} from "react-router";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
+import ChainStore from "api/ChainStore";
 import BindToChainState from "../Utility/BindToChainState";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
@@ -247,7 +248,13 @@ class Exchange extends React.Component {
 
     _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
-        if (sellAssetAmount > balance) {
+        let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
+        if (sellAsset.get("id") !== "1.3.0") {
+            let cer = sellAsset.getIn(["options", "core_exchange_rate"]);
+            console.log("sellAsset:", sellAsset.toJS());
+        }
+
+        if ((sellAssetAmount) > balance) {
             return notify.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
                 level: "error"
@@ -467,6 +474,7 @@ class Exchange extends React.Component {
 
     _orderbookClick(base, quote, type, order) {
         let precision = utils.get_asset_precision(quote.get("precision") + base.get("precision"));
+
         if (type === "bid") {
             let value = order.totalAmount.toString();
             if (value.indexOf(".") !== value.length -1) {
@@ -476,11 +484,13 @@ class Exchange extends React.Component {
 
             let displaySellPrice = this._getDisplayPrice("ask", order.sell_price);
 
+            let total = this.getSellTotal(order.sell_price, value);
+
             this.setState({
                 displaySellPrice: displaySellPrice,
                 sellPrice: order.sell_price,
                 sellAmount: value,
-                sellTotal: this._limitByPrecision(order.value, base)
+                sellTotal: this._limitByPrecision(total, base)
             });
 
         } else if (type === "ask") {
@@ -489,13 +499,15 @@ class Exchange extends React.Component {
                 value = this._limitByPrecision(order.totalAmount, base);
             }
 
-             let displayBuyPrice = this._getDisplayPrice("bid", order.sell_price);
+            let displayBuyPrice = this._getDisplayPrice("bid", order.sell_price);
+
+            let total = this.getBuyTotal(order.sell_price, value);
 
             this.setState({
                 displayBuyPrice: displayBuyPrice,
                 buyPrice: order.sell_price,
                 buyAmount: value,
-                buyTotal: this._limitByPrecision(order.totalValue, base)
+                buyTotal: this._limitByPrecision(total, base)
             });
         }
     }
