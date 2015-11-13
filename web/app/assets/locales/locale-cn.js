@@ -210,7 +210,8 @@ module.exports = {
             req: "必填信息",
             pos: "数量必须大于0",
             valid: "请输入一个合法的大于0的半角数字",
-            balance: "最终余额必须大于0"
+            balance: "最终余额必须大于0",
+            insufficient: "余额不足"
         },
         back: "返回",
         confirm: "确认发送",
@@ -693,11 +694,13 @@ module.exports = {
         inventory: "库存",
         scan_qr: "扫描二维码，手机支付",
         transwiser: {
-            gateway: "Transwiser 巨蟹",
+            gateway: "Transwiser",
             visit_weidian: "访问微店进行充值",
+            deposit_title: "充值人民币到 %(asset)s",
             withdraw_title: "提现 %(asset)s 到人民币",
             alipay: "支付宝账户名",
-            withdraw_note: "目前仅支持支付宝提现，将自动将资产按1:1比例兑换成人民币发送到您的支付宝账户中"
+            withdraw_note: "目前仅支持支付宝提现，将资产按1:1比例兑换成人民币发送到您的支付宝账户中",
+            you_will_receive: "您将收到 %(amount)s 元人民币"
         },
         meta: {
             open_website: "访问官网"

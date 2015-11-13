@@ -22,6 +22,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import RefcodeInput from "../Forms/RefcodeInput";
 import WithdrawModalMetaexchange from "../Modal/WithdrawModalMetaexchange";
 import DepositModalMetaexchange from "../Modal/DepositModalMetaexchange";
+import TranswiserDepositWithdraw from "./transwiser/TranswiserDepositWithdraw";
 var Post = require("../Utility/FormPost.js");
 
 @BindToChainState({keep_updating:true})
@@ -409,6 +410,33 @@ class AccountDepositWithdraw extends React.Component {
             <div className="content-block">
                 <h2><Translate content="gateway.gateway" /></h2>
                 <hr/>
+
+                <div className="content-block">
+                        <h3><Translate content="gateway.transwiser.gateway" /><small style={{float:'right',lineHeight:2}}><a href="http://www.transwiser.com" target="_blank">http://www.transwiser.com</a></small></h3>
+                    <div>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <TranswiserDepositWithdraw
+                                    issuerAccount="transwiser-wallet"
+                                    account={this.props.account.get('name')}
+                                    receiveAsset="CNY" />
+                                <TranswiserDepositWithdraw
+                                    issuerAccount="transwiser-wallet"
+                                    account={this.props.account.get('name')}
+                                    receiveAsset="BOTSCNYLOCAL" />
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
 
 
                 <div className="content-block">

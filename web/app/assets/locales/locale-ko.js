@@ -168,7 +168,8 @@ module.exports = {
             req: "필수 입력",
             pos: "금액은 양수를 입력해주세요",
             valid: "유효한 값을 입력해주세요",
-            balance: "전송 후 잔고는 0보다 커야 합니다"
+            balance: "전송 후 잔고는 0보다 커야 합니다",
+            insufficient: "Insufficient Balance"
         },
         back: "뒤로가기",
         confirm: "확인",
@@ -629,9 +630,11 @@ module.exports = {
         transwiser: {
             gateway: "Transwiser 巨蟹",
             visit_weidian: "Visit WEIDIAN to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
             withdraw_title: "Withdraw %(asset)s to RMB",
             alipay: "ALIPAY Account Name",
-            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account."
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
         },
         meta: {
             open_website: "Open Website"

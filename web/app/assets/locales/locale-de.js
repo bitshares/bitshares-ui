@@ -167,7 +167,8 @@ module.exports = {
             req: "Plfichtfeld",
             pos: "Betrag darf nicht negativ sein",
             valid: "Bitte geben Sie einen positiven Betrag ein",
-            balance: "Ihr abschließendes Guthaben kann nicht negativ sein!"
+            balance: "Ihr abschließendes Guthaben kann nicht negativ sein!",
+            insufficient: "Insufficient Balance"
         },
         back: "ZURÜCK",
         confirm: "BESTÄTIGEN",
@@ -623,9 +624,11 @@ module.exports = {
         transwiser: {
             gateway: "Transwiser 巨蟹",
             visit_weidian: "Visit WEIDIAN to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
             withdraw_title: "Withdraw %(asset)s to RMB",
             alipay: "ALIPAY Account Name",
-            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account."
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
         },
         meta: {
             open_website: "Open Website"
