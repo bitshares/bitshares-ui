@@ -90,7 +90,7 @@ class Operation extends React.Component {
     static defaultProps = {
         op: [],
         current: "",
-        block: false,
+        block: null,
         hideDate: false,
         hideFee: false,
         hideOpLabel: false
@@ -762,7 +762,6 @@ class Operation extends React.Component {
                     </span>
                 );
                 break;
-
 
             case "custom":
                 column = (
