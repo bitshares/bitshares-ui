@@ -22,6 +22,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import RefcodeInput from "../Forms/RefcodeInput";
 import WithdrawModalMetaexchange from "../Modal/WithdrawModalMetaexchange";
 import DepositModalMetaexchange from "../Modal/DepositModalMetaexchange";
+import TranswiserDepositWithdraw from "./transwiser/TranswiserDepositWithdraw";
 var Post = require("../Utility/FormPost.js");
 
 @BindToChainState({keep_updating:true})
@@ -143,7 +144,7 @@ class BlockTradesDepositRequest extends React.Component {
         }
         else
         {
-            var deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button></span>);
+            var deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
             var withdraw_memo_prefix = '';
         }
 
@@ -151,7 +152,7 @@ class BlockTradesDepositRequest extends React.Component {
             <td>{this.props.deposit_asset} </td>
             <td>{deposit_address_fragment}</td>
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
-            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
+            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
                 <Modal id={withdraw_modal_id} overlay={true}>
                     <Trigger close={withdraw_modal_id}>
                         <a href="#" className="close-button">&times;</a>
@@ -291,9 +292,9 @@ class MetaexchangeDepositRequest extends React.Component {
 		
         return <tr>
             <td>{this.props.deposit_asset} </td>
-           
-			
-			<td> <button className={"button outline"} onClick={this.onDeposit.bind(this)}><Translate content="" /> Deposit </button>
+
+
+			<td> <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
                 <Modal id={deposit_modal_id} overlay={true}>
                     <Trigger close={deposit_modal_id}>
                         <a href="#" className="close-button">&times;</a>
@@ -317,7 +318,7 @@ class MetaexchangeDepositRequest extends React.Component {
 			<td><button className={"button outline"}><a target="__blank" href={this.getMetaLink()}>Open in metaexchange</a></button></td>
 			
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.state.base_symbol} /> </td>
-            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
+            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
                 <Modal id={withdraw_modal_id} overlay={true}>
                     <Trigger close={withdraw_modal_id}>
                         <a href="#" className="close-button">&times;</a>
@@ -374,7 +375,7 @@ class AccountDepositWithdraw extends React.Component {
         return (
 		<div className="grid-content">
 			<div className="content-block">
-                <h2>Bridges</h2>
+                <h2><Translate content="gateway.bridge" /></h2>
                 <hr/>
 				<div className="content-block">
                     <h3><a href="https://metaexchange.info" target="__blank">metaexchange.info</a></h3>
@@ -383,11 +384,11 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
+                                <th><Translate content="gateway.symbol" /></th>
                                 <th></th>
-								<th>Open website</th>
-								<th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.meta.open_website" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -407,8 +408,35 @@ class AccountDepositWithdraw extends React.Component {
 			</div>
 				
             <div className="content-block">
-                <h2>Gateways</h2>
+                <h2><Translate content="gateway.gateway" /></h2>
                 <hr/>
+
+                <div className="content-block">
+                        <h3><Translate content="gateway.transwiser.gateway" /><small style={{float:'right',lineHeight:2}}><a href="http://www.transwiser.com" target="_blank">http://www.transwiser.com</a></small></h3>
+                    <div>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <TranswiserDepositWithdraw
+                                    issuerAccount="transwiser-wallet"
+                                    account={this.props.account.get('name')}
+                                    receiveAsset="CNY" />
+                                <TranswiserDepositWithdraw
+                                    issuerAccount="transwiser-wallet"
+                                    account={this.props.account.get('name')}
+                                    receiveAsset="BOTSCNY" />
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
 
 
                 <div className="content-block">
@@ -418,10 +446,10 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
-                                <th>Deposit To</th>
-                                <th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -497,11 +525,11 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
+                                <th><Translate content="gateway.symbol" /></th>
                                 <th></th>
-								<th>Open website</th>
-								<th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.meta.open_website" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -540,10 +568,10 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
-                                <th>Deposit To</th>
-                                <th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
