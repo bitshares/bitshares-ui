@@ -183,6 +183,7 @@ class AssetActions {
                     let dynamicIDS = [];
 
                     assets.forEach(asset => {
+                        ChainStore._updateObject(asset, false);
                         dynamicIDS.push(asset.dynamic_asset_data_id);
 
                         if (asset.bitasset_data_id) {

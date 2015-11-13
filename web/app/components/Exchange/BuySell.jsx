@@ -110,7 +110,7 @@ class BuySell extends React.Component {
 
                             <div className="grid-block no-padding buy-sell-row">
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                                    Fee:
+                                    <Translate content="transfer.fee" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                     <FormattedFee opType="limit_order_create" />

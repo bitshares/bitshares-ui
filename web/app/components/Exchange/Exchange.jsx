@@ -249,9 +249,11 @@ class Exchange extends React.Component {
     _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
         e.preventDefault();
         let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
+
+        // TODO Convert fee to relevant asset fee and check if user has sufficient balance
         if (sellAsset.get("id") !== "1.3.0") {
             let cer = sellAsset.getIn(["options", "core_exchange_rate"]);
-            console.log("sellAsset:", sellAsset.toJS());
+            // console.log("sellAsset:", sellAsset.toJS());
         }
 
         if ((sellAssetAmount) > balance) {
