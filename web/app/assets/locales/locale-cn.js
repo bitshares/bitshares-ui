@@ -683,7 +683,7 @@ module.exports = {
         enter_refcode: "输入推荐码"
     },
     gateway: {
-        bridge: "币种转换",
+        bridge: "桥接",
         gateway: "承兑商",
         symbol: "资产",
         deposit_to: "充值地址",
