@@ -556,7 +556,8 @@
         market_name: "Market name",
         quote_supply: "Quote supply",
         base_supply: "Base supply",
-        more: "More markets"
+        more: "More markets",
+        volume_24: "24hr Volume"
     },
     markets: {
         title: "Markets",

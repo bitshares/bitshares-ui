@@ -27,6 +27,7 @@ import Icon from "../Icon/Icon";
 import classnames from "classnames";
 import ee from "emitter-instance";
 import market_utils from "common/market_utils";
+import LoadingIndicator from "../LoadingIndicator";
 
 require("./exchange.scss");
 
@@ -50,33 +51,38 @@ class PriceStat extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            nextProps.price !== this.props.price
+            nextProps.price !== this.props.price ||
+            nextProps.ready !== this.props.ready
         );
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({change: nextProps.price - this.props.price});
+        if (nextProps.ready && this.props.ready) {
+            this.setState({change: parseFloat(nextProps.price) - parseFloat(this.props.price)});
+        } else {
+            this.setState({change: 0});
+        }
     }
 
     render() {
-        let {base, quote, price, content} = this.props;
+        let {base, quote, price, content, decimals, ready} = this.props;
         let {change} = this.state;
         let changeClass = null;
-        if (change !== null) {
+        if (change && change !== null) {
             changeClass = change > 0 ? "change-up" : "change-down";
         }
+
         return (
-            <li className="stat">
+            <li className={classnames("stat", this.props.className)}>
                 <span>
                     <Translate component="span" content={content} />
                     <br/>
-                    <b className={"value stat-primary"}>
-                        {utils.format_number(price, Math.max(5, quote ? quote.get("precision") : 0))}
-                        {change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-
-                    </b>
+                        <b className={"value stat-primary"}>
+                            {!ready ? 0 : utils.format_number(price, Math.max(decimals >= 0 ? decimals : 5, quote ? quote.get("precision") : 0))}
+                            {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
+                        </b>
                     <br/>
-                    <em>{base.get("symbol")}/{quote.get("symbol")}</em>
+                    <em>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</em>
                 </span>
             </li>
         );
@@ -522,18 +528,6 @@ class Exchange extends React.Component {
         this.refs.borrowBase.show();
     }
 
-    _accountClickHandler(account_name, e) {
-        e.preventDefault();
-        ZfApi.publish("account_drop_down", "close");
-        let router = this.context.router;
-        AccountActions.setCurrentAccount(account_name);
-        let current_account_name = router.getCurrentParams()["account_name"];
-        if(current_account_name && current_account_name !== account_name) {
-            let routes = router.getCurrentRoutes();
-            this.context.router.transitionTo(routes[routes.length - 1].name, {account_name: account_name});
-        }
-    }
-
     _getBuyPrice(price) {
         let ratio = market_utils.priceToObject(price, "bid");
         let {baseAsset, quoteAsset} = this.props;
@@ -596,7 +590,7 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
-            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets } = this.props;
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
             displayBuyPrice, displaySellPrice} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
@@ -736,34 +730,6 @@ class Exchange extends React.Component {
 
         }
 
-        let accountsDropDown = null;
-        if (currentAccount) {
-
-            let account_display_name = currentAccount.get("name").length > 20 ? `${currentAccount.get("name").slice(0, 20)}..` : currentAccount.get("name");
-
-            if(linkedAccounts.size > 1) {
-                let accountsList = linkedAccounts
-                    .sort()
-                    .map(name => {
-                        return <li key={name}><a href onClick={this._accountClickHandler.bind(this, name)}>{name}</a></li>;
-                    });
-
-                accountsDropDown = (
-                    <ActionSheet>
-                        <ActionSheet.Button title="">
-                            <a className="button">
-                                <Icon name="user"/>&nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
-                            </a>
-                        </ActionSheet.Button>
-                        <ActionSheet.Content >
-                            <ul className="no-first-element-top-border">
-                                {accountsList}
-                            </ul>
-                        </ActionSheet.Content>
-                    </ActionSheet>);
-            }
-        }
-
         let bucketTexts = {
             "15": "15s",
             "60": "1m",
@@ -780,10 +746,18 @@ class Exchange extends React.Component {
         }).reverse();
 
 
+        // Market stats
+        let dayChange = marketStats.get("change");
+        let dayChangeClass = dayChange === "n/a" ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
+        let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
+        let volumeBase = utils.get_asset_amount(marketStats.get("volumeBase"), baseAsset);
+        let volumeQuote = utils.get_asset_amount(marketStats.get("volumeQuote"), quoteAsset);
+
         return (
 
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
+                    {!marketReady ? <LoadingIndicator /> : null}
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
@@ -811,28 +785,28 @@ class Exchange extends React.Component {
                     <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
-                        <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
+                        <div className="grid-block no-padding shrink overflow-visible" style={{minHeight: "67px"}}>
                             <div className="grid-block overflow-visible">
                                 <div className="grid-block shrink">
                                     <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
-                                <div className="grid-block">
+                                    <div className="grid-block">
                                     <ul className="market-stats stats">
                                         {/*coreRate ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="exchange.core_rate" /><br/>
-                                                    <b className="value stat-primary">{utils.format_number(coreRate, base.get("precision"))}</b><br/>
+                                                    <b className="value">{utils.format_number(coreRate, base.get("precision"))}</b><br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li>) : null*/}
-                                        {settlementPrice ? <PriceStat price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
+                                        {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
                                         {lowestCallPrice && showCallLimit ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="explorer.block.call_limit" />
                                                     <br/>
-                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
+                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
@@ -842,7 +816,7 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.squeeze" />
                                                     <br/>
-                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
+                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
@@ -852,17 +826,29 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.latest" />
                                                     <br/>
-                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                    <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li> : null}
+
+                                        {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+                                        {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+                                        {dayChange ?
+                                            <li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="account.hour_24" />
+                                                    <br/>
+                                                    <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                    <br/>
+                                                    <em>%</em>
+                                                </span>
+                                            </li> : null}
+
                                     </ul>
 
                                 </div>
-                                <div className="grid-block shrink overflow-visible account-drop-down">
-                                    {accountsDropDown}
-                                </div>
+
                                 <div className="grid-block shrink borrow-button-container">
                                     {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
                                     {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
@@ -892,7 +878,6 @@ class Exchange extends React.Component {
                                         quoteSymbol={quoteSymbol}
                                         height={400}
                                         leftOrderBook={leftOrderBook}
-
                                     />
 
                         </div>) : (

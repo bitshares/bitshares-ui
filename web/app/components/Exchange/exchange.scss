@@ -268,7 +268,7 @@ a.order-cancel {
   min-height: 63px;
 }
 .stats .stat {
-  padding: 0 10px;
+  padding: 0 5px;
   height: 100%;
 }
 .stats .stat:first-child {
@@ -282,6 +282,14 @@ a.order-cancel {
 .stats .stat em {
   color: #888888;
   display: block;
+}
+
+.stats .stat .negative {
+  color: $ask-color !important;
+}
+
+.stats .stat .positive {
+  color: $bid-color;
 }
 
 .market-symbol {
@@ -407,6 +415,8 @@ input[type=number]::-webkit-outer-spin-button {
 .change-down {
   color: $ask-color !important;
 }
+
+
 
 table thead tr th.mymarkets-header {
   padding-bottom: 9px !important;

@@ -44,6 +44,11 @@ class MarketsStore {
         this.priceHistory = [];
         this.lowestCallPrice = null;
         this.marketBase = "CORE";
+        this.marketStats = Immutable.Map({
+            change: "n/a",
+            volumeBase: 0,
+            volumeQuote: 0
+        });
         this.baseAsset = {
             id: "1.3.0",
             symbol: "CORE",
@@ -130,15 +135,28 @@ class MarketsStore {
         this.flat_asks = [];
         this.flat_calls = [];
         this.priceHistory =[];
+        this.marketStats = Immutable.Map({
+            change: "n/a",
+            volumeBase: 0,
+            volumeQuote: 0
+        });
     }
 
     onSubscribeMarket(result) {
+
+        if (result.switchMarket) {
+            this.marketReady = false;
+            return true;
+        }
+
         // console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
 
         // Get updated assets every time for updated feed data
         this.quoteAsset = ChainStore.getAsset(result.quote.get("id"));
         this.baseAsset = ChainStore.getAsset(result.base.get("id"));
+
+
 
         if (result.market && (result.market !== this.activeMarket)) {
             // console.log("switch active market from", this.activeMarket, "to", result.market);
@@ -235,6 +253,45 @@ class MarketsStore {
             });
         }
 
+        if (result.recent.length) {
+            let yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            yesterday = yesterday.getTime();
+            let volumeBase = 0;
+            let volumeQuote = 0;
+            let first = result.recent[0];
+            let invert = first.key.base === this.baseAsset.get("id");
+
+            result.recent.forEach(bucket => {
+                let date = new Date(bucket.key.open + "+00:00").getTime();
+                if (date > yesterday) {
+                    if (invert) {
+                        volumeBase += parseInt(bucket.base_volume, 10);
+                        volumeQuote += parseInt(bucket.quote_volume, 10);
+                    } else {
+                        volumeQuote += parseInt(bucket.base_volume, 10);
+                        volumeBase += parseInt(bucket.quote_volume, 10);
+                    }
+                }
+            });
+
+            let last = result.recent[result.recent.length -1];
+            let open, close;
+            if (invert) {
+                open = utils.get_asset_price(first.open_quote, this.quoteAsset, first.open_base, this.baseAsset, invert);
+                close = utils.get_asset_price(last.close_quote, this.quoteAsset, last.close_base, this.baseAsset, invert);
+            } else {
+                open = utils.get_asset_price(first.open_quote, this.baseAsset, first.open_base, this.quoteAsset, invert);
+                close = utils.get_asset_price(last.close_quote, this.baseAsset, last.close_base, this.quoteAsset, invert);
+            }
+
+            let change = (100 * (close - open) / open).toFixed(2);
+
+            this.marketStats = this.marketStats.set("change", change);
+            this.marketStats = this.marketStats.set("volumeBase", volumeBase);
+            this.marketStats = this.marketStats.set("volumeQuote", volumeQuote);
+        }
+
         // Update orderbook
         this._orderBook();
 
@@ -246,72 +303,9 @@ class MarketsStore {
             this.priceHistory = result.price;
             this._priceChart();
         }
-        // if (result.sub) {
-        //     result.sub.forEach(newOrder => {
-        //         let {order, orderType} = market_utils.parse_order(newOrder);
 
-        //         switch (orderType) {
-        //             case "limit_order":
-        //                 this.activeMarketLimits = this.activeMarketLimits.set(
-        //                     order.id,
-        //                     LimitOrder(order)
-        //                 );
-        //                 break;
-
-        //             case "short_order":
-        //                 this.activeMarketShorts = this.activeMarketShorts.set(
-        //                     order.id,
-        //                     ShortOrder(order)
-        //                 );
-        //                 break;
-
-        //             default:
-        //                 break;
-        //         }
-
-        //     });
-
-        // }
-
+        this.marketReady = true;
     }
-
-    // onCreateLimitOrder(e) {
-    //     this.pendingCounter++;
-    //     if (e.newOrder) { // Optimistic update
-    //         e.newOrder.id = `${e.newOrder.seller}_${this.pendingCounter}`;
-    //         this.pendingCreateLimitOrders.push({id: e.newOrder.id, seller: e.newOrder.seller, expiration: e.newOrder.expiration});
-    //         e.newOrder.for_sale = parseInt(e.newOrder.for_sale, 10);
-    //         e.newOrder.expiration = new Date(e.newOrder.expiration);
-    //         this.activeMarketLimits = this.activeMarketLimits.set(
-    //             e.newOrder.id,
-    //             LimitOrder(e.newOrder)
-    //         );
-    //     }
-
-    //     if (e.failedOrder) { // Undo order if failed
-    //         let uid;
-    //         for (var i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
-    //             if (this.pendingCreateLimitOrders[i].expiration === e.failedOrder.expiration) {
-    //                 console.log("found failed order to remove", this.pendingCreateLimitOrders[i]);
-    //                 uid = this.pendingCreateLimitOrders[i].id;
-    //                 this.pendingCreateLimitOrders.splice(i, 1);
-    //                 this.activeMarketLimits = this.activeMarketLimits.delete(uid);
-    //                 break;
-    //             }
-    //         }
-
-    //         if (this.pendingCreateLimitOrders.length === 0) {
-    //             this.pendingCounter = 0;
-    //         }
-    //     }
-
-    //     // Update orderbook
-    //     this._orderBook();
-
-    //     // Update depth chart data
-    //     this._depthChart();
-
-    // }
 
     onCancelLimitOrderSuccess(orderID) {
         if (orderID && this.activeMarketLimits.has(orderID)) {

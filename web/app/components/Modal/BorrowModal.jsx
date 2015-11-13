@@ -366,7 +366,7 @@ class BorrowModalContent extends React.Component {
                         <a onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></a>
                         <a onClick={(e) => {e.preventDefault(); this.setState(this._initialState())}} href className="button info"><Translate content="wallet.reset" /></a>
                         {/*<Trigger close={this.props.modalId}>
-                            <a href className="secondary button" onClick={(e) => {this.setState(this._initialState())}}><Translate content="account.perm.cancel" /></a>
+                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>*/}
                     </div>
                 </form>

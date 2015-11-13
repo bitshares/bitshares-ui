@@ -10,7 +10,8 @@ class Chart {
         return (
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             !utils.are_equal_shallow(nextProps.config.series[0], this.props.config.series[0]) ||
-            !utils.are_equal_shallow(nextProps.config.series[1], this.props.config.series[1])
+            !utils.are_equal_shallow(nextProps.config.series[1], this.props.config.series[1]) ||
+            nextProps.loading !== this.props.loading
         );
     }
 
@@ -46,7 +47,7 @@ class PriceChart extends React.Component {
 
 
     render() {
-        let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote} = this.props;
+        let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, loading} = this.props;
         // let {open, close, lastPointY} = this.state;
 
         let maxVolume = 0;
@@ -155,7 +156,7 @@ class PriceChart extends React.Component {
                             "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>C:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;<b>V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1].point.y, vol_dec, ".", ",") + " " +
+                            "&nbsp;&nbsp;<b>V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[1].point.y : 0, vol_dec, ".", ",") + " " +
                             quoteSymbol + TA + "</span>");
                     // }
                     // else if this.points.length == 1 && this.points[0] && this.points[0].point.open
@@ -335,7 +336,7 @@ class PriceChart extends React.Component {
         return (
             <div className="grid-content no-padding no-overflow middle-content">
                 <div style={{paddingTop: "1.5rem", paddingBottom: "0.5rem"}}>
-                    {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} /> : null}
+                    {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} loading={loading}/> : null}
                 </div>
             </div>
         );
