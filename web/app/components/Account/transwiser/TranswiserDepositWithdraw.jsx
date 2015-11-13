@@ -36,7 +36,8 @@ class TranswiserDepositWithdraw extends React.Component {
         this.state = { depositUrl: null, qr: null, deposit_fee:null, withdraw_fee:null };
 
         this.depositCoin = "rmb";
-        this.apiUrl      = "http://www.transwiser.com/setting.json";
+        this.apiUrl      = "https://bitshares.dacplay.org/transwiser/setting.json";
+        // this.apiUrl      = "http://www.transwiser.com/setting.json";
         // this.apiUrl      = "http://localhost:3000/setting-dev.json";
     }
 
