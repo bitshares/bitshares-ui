@@ -627,7 +627,7 @@
         inventory: "Inventory",
         scan_qr: "Scan QR",
         transwiser: {
-            gateway: "Transwiser 巨蟹",
+            gateway: "Transwiser",
             visit_weidian: "Visit WEIDIAN to deposit",
             deposit_title: "Deposit RMB to %(asset)s",
             withdraw_title: "Withdraw %(asset)s to RMB",
