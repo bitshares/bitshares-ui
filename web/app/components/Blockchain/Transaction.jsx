@@ -867,8 +867,48 @@ class Transaction extends React.Component {
                     );
                     break;
 
-
-
+                case "proposal_create":
+                    var key = 1
+                    var expiration_date = new Date(op[1].expiration_time+'Z')
+                    var has_review_period = op[1].review_period_seconds !== undefined
+                    var review_begin_time = ! has_review_period ? null :
+                        expiration_date.getTime() - op[1].review_period_seconds * 1000
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.review_period" /></td>
+                            <td>
+                                { has_review_period ?
+                                <FormattedDate value={new Date( review_begin_time )}
+                                    formats={intlData.formats} format="full" />
+                                :<span>&mdash;</span>}
+                            </td>
+                        </tr>
+                    )
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.expiration_time" /></td>
+                            <td><FormattedDate value={expiration_date}
+                                formats={intlData.formats} format="full" /></td>
+                        </tr>
+                    )
+                    var operations = [] // remove op_wrapper
+                    for(let pop of op[1].proposed_ops) operations.push( pop.op )
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.proposed_operations" /></td>
+                            <td><Transaction trx={{ operations }}/></td>
+                        </tr>
+                    )
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
+                            <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
+                        </tr>
+                    )
+                    break
+                
+                // proposal_update
+                // proposal_delete
                 default:
                     console.log("unimplemented op:", op);
                     rows.push(

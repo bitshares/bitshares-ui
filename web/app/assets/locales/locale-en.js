@@ -678,5 +678,11 @@
         claim_refcode: "Claim Referral Code",
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
+    },
+    proposal_create : {
+        review_period: "Review period begin",
+        expiration_time: "Expiration time",
+        proposed_operations: "Proposed operations",
+        fee_paying_account: "Fee paying account"
     }
 };
