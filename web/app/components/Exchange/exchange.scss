@@ -2,6 +2,8 @@ $bid-color: #50D2C2;
 $ask-color: #E3745B;
 $call-color: #BBBF2B;
 $light-panel-bg-color: #353742;
+$positive-color: #75D200;
+$negative-color: #E1424A;
 
 .market-layout {
   > .grid-block {
@@ -285,11 +287,11 @@ a.order-cancel {
 }
 
 .stats .stat .negative {
-  color: $ask-color !important;
+  color: $negative-color;
 }
 
 .stats .stat .positive {
-  color: $bid-color;
+  color: $positive-color;
 }
 
 .market-symbol {
@@ -409,15 +411,53 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .change-up {
-  color: $bid-color !important;
+  color: $positive-color !important;
 }
 
 .change-down {
-  color: $ask-color !important;
+  color: $negative-color !important;
 }
 
+.mymarkets-header {
+  text-transform: uppercase;
+  width: 50%;
+  text-align: center;
+  font-size: 1.10rem;
+  padding: 10px 0;
+  font-weight: 500;
+}
 
+.mymarkets-header.inactive {
+  background-color: #3F3F3F;
+}
+
+.mymarkets-list {
+  padding-top: 0.55rem;
+  font-size: 0.75rem;
+}
 
 table thead tr th.mymarkets-header {
   padding-bottom: 9px !important;
+}
+
+.title-star {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-right: 0.25rem;
+}
+
+.gold-star > svg > path {
+  fill: #CC9F00;
+}
+
+.grey-star > svg > path {
+  fill: #878787;
+}
+
+.positive-change {
+  color: $positive-color;
+}
+
+.negative-change {
+  color: $negative-color;
 }

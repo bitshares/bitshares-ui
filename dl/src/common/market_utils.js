@@ -149,21 +149,24 @@ class MarketUtils {
         // let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
         let {int, dec, trailing} = utils.price_to_text(price_full, isAsk ? receivesAsset : paysAsset, isAsk ? paysAsset : receivesAsset);
         let className = isCall ? "orderHistoryCall" : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
-        let time = order.time.split("T")[1];
-        let now = new Date();
-        let offset = now.getTimezoneOffset() / 60;
-        let hour = time.substr(0, 2);
-        let hourNumber = parseInt(hour, 10);
-        let localHour = hourNumber - offset
-        if (localHour >= 24) {
-            localHour -= 24;
+        
+        let time;
+        if (order.time) {
+            time = order.time.split("T")[1];
+            let now = new Date();
+            let offset = now.getTimezoneOffset() / 60;
+            let hour = time.substr(0, 2);
+            let hourNumber = parseInt(hour, 10);
+            let localHour = hourNumber - offset
+            if (localHour >= 24) {
+                localHour -= 24;
+            }
+            let hourString = localHour.toString();
+            if (parseInt(hourString, 10) < 10) {
+                hourString = "0" + hourString;
+            }
+            time = time.replace(hour, hourString);
         }
-        let hourString = localHour.toString();
-        if (parseInt(hourString, 10) < 10) {
-            hourString = "0" + hourString;
-        }
-        time = time.replace(hour, hourString);
-
         return {
             receives: isAsk ? receives : pays,
             pays : isAsk ? pays : receives,

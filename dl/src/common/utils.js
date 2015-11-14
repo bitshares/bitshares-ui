@@ -35,8 +35,18 @@ var Utils = {
         return Math.round(number * precision) / precision;
     },
 
+    format_volume(amount) {
+        if (amount < 10) {
+            return this.format_number(amount, 2);            
+        } else if (amount < 10000) {
+            return this.format_number(amount, 0);            
+        } else {
+            return Math.round(amount / 1000) + "k";
+        }
+    },
+
     format_number: (number, decimals, trailing_zeros = true) => {
-        if(isNaN(number) || number === undefined || number === null) return "";
+        if(isNaN(number) || !isFinite(number) || number === undefined || number === null) return "";
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
             zeros += "0";     

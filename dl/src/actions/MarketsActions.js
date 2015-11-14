@@ -9,6 +9,8 @@ let ops = Object.keys(operations);
 let subs = {};
 let currentBucketSize;
 let wallet_api = new WalletApi();
+let marketStats = {};
+let statTTL = 60 * 5 * 1000; // 5 minutes
 
 class MarketsActions {
 
@@ -18,6 +20,37 @@ class MarketsActions {
 
     changeBucketSize(size) {
         this.dispatch(size);
+    }
+
+    getMarketStats(base, quote) {
+        let market = quote.get("id") + "_" + base.get("id");
+        let marketName = quote.get("symbol") + "_" + base.get("symbol");
+        let now = new Date();
+        let endDate = new Date();
+        let startDateShort = new Date();
+        endDate.setDate(endDate.getDate() + 1);
+        startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
+
+        if (marketStats[market]) {
+            if ((now - marketStats[market].lastFetched) < statTTL) {
+                return false;
+            }
+        }
+        if (!marketStats[market]) {
+            Promise.all([
+                Apis.instance().history_api().exec("get_market_history", [
+                    base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                ]),
+                Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 1])
+            ])            
+            .then(result => {
+                marketStats[market] = {
+                    lastFetched: new Date()
+                };
+
+                this.dispatch({history: result[0], last: result[1], market: marketName, base, quote});
+            });
+        }
     }
 
     subscribeMarket(base, quote, bucketSize) {

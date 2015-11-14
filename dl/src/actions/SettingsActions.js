@@ -18,6 +18,14 @@ class SettingsActions {
         this.dispatch({quote, base});
     }
 
+    addStarMarket(quote, base) {
+        this.dispatch({quote, base});
+    }
+
+    removeStarMarket(quote, base) {
+        this.dispatch({quote, base});
+    }
+
     addWS(ws) {
         this.dispatch(ws);
     }

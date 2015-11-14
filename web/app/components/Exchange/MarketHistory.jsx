@@ -69,7 +69,7 @@ class MarketHistory extends React.Component {
         return (
             <div className="left-order-book no-padding no-overflow">
                 <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                    <table className="table expand order-table text-right market-right-padding">
+                    <table className="table order-table text-right market-right-padding">
                         <thead>
                             <tr>
                                 <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
@@ -81,11 +81,9 @@ class MarketHistory extends React.Component {
                     </table>
                 </div>
                 <div className="table-container grid-content market-right-padding-only" ref="history">
-                    <table className="table expand order-table text-right market-right-padding">
+                    <table className="table order-table text-right market-right-padding">
                         <tbody>
-                        {
-                            historyRows
-                        }
+                            {historyRows}
                         </tbody>
                     </table>
                 </div>

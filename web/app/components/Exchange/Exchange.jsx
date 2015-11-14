@@ -65,12 +65,15 @@ class PriceStat extends React.Component {
     }
 
     render() {
-        let {base, quote, price, content, decimals, ready} = this.props;
+        let {base, quote, price, content, decimals, ready, volume} = this.props;
         let {change} = this.state;
         let changeClass = null;
         if (change && change !== null) {
             changeClass = change > 0 ? "change-up" : "change-down";
         }
+
+        let value = !volume ? utils.format_number(price, Math.max(decimals >= 0 ? decimals : 5, quote ? quote.get("precision") : 0)) :
+            utils.format_volume(price);
 
         return (
             <li className={classnames("stat", this.props.className)}>
@@ -78,7 +81,7 @@ class PriceStat extends React.Component {
                     <Translate component="span" content={content} />
                     <br/>
                         <b className={"value stat-primary"}>
-                            {!ready ? 0 : utils.format_number(price, Math.max(decimals >= 0 ? decimals : 5, quote ? quote.get("precision") : 0))}
+                            {!ready ? 0 : value}
                             {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
                         </b>
                     <br/>
@@ -748,13 +751,13 @@ class Exchange extends React.Component {
 
         // Market stats
         let dayChange = marketStats.get("change");
-        let dayChangeClass = dayChange === "n/a" ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
+
+        let dayChangeClass = dayChange === "0.00" ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
         let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
-        let volumeBase = utils.get_asset_amount(marketStats.get("volumeBase"), baseAsset);
-        let volumeQuote = utils.get_asset_amount(marketStats.get("volumeQuote"), quoteAsset);
+        let volumeBase = marketStats.get("volumeBase");
+        let volumeQuote = marketStats.get("volumeQuote");
 
         return (
-
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
                     {!marketReady ? <LoadingIndicator /> : null}
@@ -792,14 +795,6 @@ class Exchange extends React.Component {
                                 </div>
                                     <div className="grid-block">
                                     <ul className="market-stats stats">
-                                        {/*coreRate ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="exchange.core_rate" /><br/>
-                                                    <b className="value">{utils.format_number(coreRate, base.get("precision"))}</b><br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null*/}
                                         {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
                                         {lowestCallPrice && showCallLimit ?
                                             (<li className="stat">
@@ -832,8 +827,8 @@ class Exchange extends React.Component {
                                                 </span>
                                             </li> : null}
 
-                                        {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
-                                        {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+                                        {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+                                        {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
                                         {dayChange ?
                                             <li className="stat">
                                                 <span>
@@ -998,7 +993,7 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 60vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
                             <MarketHistory
                                 history={activeMarketHistory}
                                 base={base}
@@ -1007,7 +1002,7 @@ class Exchange extends React.Component {
                                 quoteSymbol={quoteSymbol}
                             />
                         </div>
-                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 40vh"}}>
+                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
                             <MyMarkets />
                         </div>
                     </div>
