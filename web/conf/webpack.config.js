@@ -94,10 +94,10 @@ module.exports = function(options) {
             ]
         },
         resolve: {
-            //alias: {lzma: path.resolve(root_dir, "./node_modules/lzma/src/lzma.js")},
+            alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
             root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
-            modulesDirectories: ["node_modules", "bower_components"],
+            modulesDirectories: ["node_modules"],
             fallback: [path.resolve(root_dir, "./node_modules")]
         },
         resolveLoader: {
@@ -116,7 +116,7 @@ module.exports = function(options) {
         "react", "classnames", "react-router", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
         "whatwg-fetch", "alt", "react-json-inspector",
-        "immutable", "lzma", "bytebuffer_3.5.4.js", "lodash"
+        "immutable", "lzma", "bytebuffer", "lodash"
     ];
 
     return config;
