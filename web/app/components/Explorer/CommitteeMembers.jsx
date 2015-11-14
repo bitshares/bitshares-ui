@@ -1,6 +1,5 @@
 import React from "react";
 import Immutable from "immutable";
-import CommitteeMembersActions from "actions/CommitteeMembersActions";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";

@@ -1,6 +1,6 @@
 import alt from "../alt-instance";
 import utils from "../common/utils";
-import api from "../api/accountApi";
+import AccountApi from "../api/accountApi";
 
 import WalletApi from "../rpc_api/WalletApi";
 import ApplicationApi from "../rpc_api/ApplicationApi";
@@ -30,7 +30,7 @@ class AccountActions {
         let uid = `${start_symbol}_${limit}}`;
         if (!accountSearch[uid]) {
             accountSearch[uid] = true;
-            return api.lookupAccounts(start_symbol, limit)
+            return AccountApi.lookupAccounts(start_symbol, limit)
                 .then(result => {
                     accountSearch[uid] = false;
                     this.dispatch({accounts: result, searchTerm: start_symbol});

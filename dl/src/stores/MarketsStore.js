@@ -36,7 +36,6 @@ class MarketsStore {
         this.volumeData = [];
         this.pendingCreateLimitOrders = [];
         this.activeMarket = null;
-        this.inverseMarket = true;
         this.quoteAsset = null;
         this.pendingCounter = 0;
         this.buckets = [15,60,300,3600,86400];
@@ -64,9 +63,7 @@ class MarketsStore {
         this.bindListeners({
             onSubscribeMarket: MarketsActions.subscribeMarket,
             onUnSubscribeMarket: MarketsActions.unSubscribeMarket,
-            onGetMarkets: MarketsActions.getMarkets,
             onChangeBase: MarketsActions.changeBase,
-            onInverseMarket: SettingsActions.changeSetting,
             onChangeBucketSize: MarketsActions.changeBucketSize,
             onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
             onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
@@ -91,16 +88,6 @@ class MarketsStore {
         this.bucketSize = size;
         if (ls) {
             ls.setItem("__graphene___bucketSize", size);
-        }
-    }
-
-    onInverseMarket(payload) {
-        if (payload.setting === "inverseMarket") {
-            this.inverseMarket = payload.value;
-
-            // TODO: Handle market inversion
-        } else {
-            return false;
         }
     }
 
@@ -357,14 +344,6 @@ class MarketsStore {
             }
 
         }
-    }
-
-    onGetMarkets(markets) {
-        markets.forEach(market => {
-            this.markets = this.markets.set(
-                market.id,
-                market);
-        });
     }
 
     _priceChart() {

@@ -9,31 +9,6 @@ let ops = Object.keys(operations);
 let subs = {};
 let currentBucketSize;
 let wallet_api = new WalletApi();
-let orderCounter = -1;
-let lastExpiration;
-
-let addSeconds = (expiration) => {
-    let newExpiration;
-
-    if (lastExpiration !== null && lastExpiration !== expiration) { // Orders were not placed in the same minute, reset the counter
-        orderCounter = -1;
-        newExpiration = `${expiration}00`;
-    }
-    else { // Orders placed in the same minute, use counter to create 'unique' seconds
-        orderCounter++;
-        if (orderCounter === 59) { // Reset if the user places 60 orders in one minute, the first order should've failed by then anyway
-            orderCounter = 0;
-        }
-        if (orderCounter < 10) {
-            newExpiration = `${expiration}0${orderCounter}`;
-        } else {
-            newExpiration = `${expiration}${orderCounter}`;
-        }
-    }
-
-    lastExpiration = expiration;
-    return newExpiration;
-};
 
 class MarketsActions {
 
@@ -49,8 +24,6 @@ class MarketsActions {
 
         let subID = quote.get("id") + "_" + base.get("id");
 
-        // console.log("sub to market:", subID);
-
         let isMarketAsset = false, marketAsset, inverted = false;
 
         if (quote.get("bitasset") && base.get("id") === "1.3.0") {
@@ -62,11 +35,7 @@ class MarketsActions {
             marketAsset = {id: base.get("id")};
         }
 
-        // 2hours, 4hours, 6hours 12hours
-        // 1w  |  3d  1d  | 4h 1h  |  30m  15m  5m 1m
-        // [60, 300, 900, 1800, 3600, 14400, 86400]
         let subscription = (subResult) => {
-            // console.log("markets subscription result:", subResult);
             let callPromise = null,
                 settlePromise = null;
 
@@ -78,21 +47,6 @@ class MarketsActions {
                     marketAsset.id, 100
                 ]);
             }
-
-            // let foundFill = false, fillOrders = [];
-            // for (var i = 0; i < subResult[0].length; i++) {
-            //     if (ops[subResult[0][i][0][0]] === "fill_order") {
-            //         foundFill = true;
-            //         fillOrders.push(subResult[0][i]);
-            //     }
-            // }
-            // if (foundFill) {
-            //     this.dispatch({
-            //         fillOrders: fillOrders,
-            //         base: base,
-            //         quote: quote
-            //     });
-            // }
 
             let startDate = new Date();
             let endDate = new Date();
@@ -219,47 +173,10 @@ class MarketsActions {
         return Promise.resolve(true);
     }
 
-    getMarkets() {
-        // return Apis.instance().db_api().exec("get_objects", [
-        //     [id]
-        // ]).then((result) => {
-        //     this.dispatch(result[0]);
-        // }).catch((error) => {
-        //     console.log("Error in AssetStore.updateAsset: ", error);
-        // });
-    }
-
     createLimitOrder(account, sellAmount, sellAsset, buyAmount, buyAsset, expiration, isFillOrKill) {
-        // let uniqueExpiration = addSeconds(expiration);
-        // console.log("create limit order:", expiration, "unique expiration:", uniqueExpiration);
 
-        // var order = {
-        //     expiration: uniqueExpiration,
-        //     for_sale: sellAmount,
-        //     id: "unknown", // order ID unknown until server reply. TODO: populate ASAP, for cancels. Is never populated
-        //     sell_price: {
-        //         base: {
-        //             amount: sellAmount,
-        //             asset_id: sellAssetID
-        //         },
-        //         quote: {
-        //             amount: buyAmount,
-        //             asset_id: buyAssetID
-        //         }
-        //     },
-        //     seller: account
-        // };
-
-        // console.log("sellamount " + sellAmount + ". sellID " + sellAssetID + ". buyAmount " + buyAmount + ". buyID " + buyAssetID);
-
-        // this.dispatch({newOrder: order});
-
-        // TODO: enable the optimistic dispatch. It causes the order to appear twice, due to the subscription to market
-        // this.dispatch({newOrderID: epochTime, order: order});
         var tr = wallet_api.new_transaction();
 
-        // let sell_asset = ChainStore.getAsset( sellAssetID ).toJS();
-        // console.log( "sell asset: ", sell_asset, sellAssetID );
         let fee_asset_id = sellAsset.get("id");
         if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
            fee_asset_id = "1.3.0";
@@ -292,10 +209,6 @@ class MarketsActions {
     }
 
     cancelLimitOrder(accountID, orderID) {
-        // console.log("cancel action:", accountID, orderID);
-        // this.dispatch({
-        //     newOrderID: orderID
-        // });
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
             fee: {
@@ -323,13 +236,6 @@ class MarketsActions {
         this.dispatch(order);
     }
 
-    // addMarket(quote, base) {
-    //     this.dispatch({quote, base});
-    // }
-
-    // removeMarket(quote, base) {
-    //     this.dispatch({quote, base});
-    // }
 }
 
 module.exports = alt.createActions(MarketsActions);
