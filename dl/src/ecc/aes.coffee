@@ -1,7 +1,7 @@
 # https://code.google.com/p/crypto-js
 CryptoJS = require("crypto-js")
 assert = require("assert")
-ByteBuffer = require("../common/bytebuffer")
+ByteBuffer = require("bytebuffer")
 Long = ByteBuffer.Long
 hash = require("../common/hash")
 

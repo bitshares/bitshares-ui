@@ -1,7 +1,7 @@
 var Aes = require('../ecc/aes');
 var PrivateKey = require('../ecc/key_private');
 var PublicKey = require('../ecc/key_public');
-var Long = require('../common/bytebuffer').Long;
+var Long = require('bytebuffer').Long;
 
 var chain_types = require('../chain/chain_types');
 var chain_config = require('../chain/config');
