@@ -246,12 +246,15 @@ class MarketsStore {
             yesterday = yesterday.getTime();
             let volumeBase = 0;
             let volumeQuote = 0;
-            let first = result.recent[0];
-            let invert = first.key.base === this.baseAsset.get("id");
 
-            result.recent.forEach(bucket => {
+            let first, invert;
+            result.recent.forEach((bucket, i) => {
                 let date = new Date(bucket.key.open + "+00:00").getTime();
                 if (date > yesterday) {
+                    if (!first) {
+                        first = result.recent[i > 0 ? i - 1 : i];
+                        invert = first.key.base === this.baseAsset.get("id");
+                    }
                     if (invert) {
                         volumeBase += parseInt(bucket.base_volume, 10);
                         volumeQuote += parseInt(bucket.quote_volume, 10);
@@ -261,7 +264,9 @@ class MarketsStore {
                     }
                 }
             });
-
+            if (!first) {
+                first = result.recent[0];
+            }
             let last = result.recent[result.recent.length -1];
             let open, close;
             if (invert) {
@@ -350,7 +355,7 @@ class MarketsStore {
         let volumeData = [];
         let prices = [];
 
-        
+
         let open, high, low, close, volume;
 
         for (let i = 0; i < this.priceHistory.length; i++) {
@@ -376,7 +381,7 @@ class MarketsStore {
         // max buckets returned is 100, if we get less, fill in the gaps starting at the first data point
         let priceLength = prices.length;
         if (priceLength > 0 && priceLength < 100) {
-            let now = (new Date()).getTime();    
+            let now = (new Date()).getTime();
             let firstDate = prices[0][0];
 
             // ensure there's a final entry close to the current time
@@ -486,12 +491,12 @@ class MarketsStore {
 
         let constructCalls = (callsArray) => {
             let calls = [];
-            
+
             callsArray.filter(a => {
                 let a_price;
                 if (this.invertedCalls) {
                     a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                    this.lowestCallPrice = Math.max(this.lowestCallPrice, a_price.full);                    
+                    this.lowestCallPrice = Math.max(this.lowestCallPrice, a_price.full);
                     return a_price.full >= settlementPrice / squeezeRatio; // TODO verify this
                 } else {
                     a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
