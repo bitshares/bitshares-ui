@@ -13,7 +13,7 @@ function extractForProduction(loaders) {
 }
 
 module.exports = function(options) {
-    console.log(options.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
+    // console.log(options.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
     var cssLoaders = "style-loader!css-loader",
       scssLoaders = "style!css!autoprefixer!sass?outputStyle=expanded";
@@ -40,7 +40,6 @@ module.exports = function(options) {
 
         // PROD PLUGINS
         plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"production"'}}));
-        plugins.push(new webpack.PrefetchPlugin("react"));
         plugins.push(new ExtractTextPlugin("app.css"));
         plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false, compress: true, output: {screw_ie8: true}}));
         plugins.push(new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"));
@@ -63,9 +62,10 @@ module.exports = function(options) {
         },
         output: {
             path: outputPath,
-            filename: "app.js"
+            filename: "app.js",
+            pathinfo: true
         },
-        devtool: "#inline-source-map",
+        devtool: options.prod ? "#inline-source-map" : "eval",
         debug: options.prod ? false : true,
         module: {
             loaders: [
@@ -76,7 +76,7 @@ module.exports = function(options) {
                 },
                 { 
                     test: /\.js$/,
-                    exclude: /node_modules/,
+                    exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true}
                 },
@@ -86,7 +86,6 @@ module.exports = function(options) {
                 { test: /\.css$/, loader: cssLoaders },
                 {
                     test: /\.scss$/,
-                    //loader: "style!css!sass?outputStyle=expanded&includePaths[]=" + (path.resolve(root_dir, "./node_modules"))
                     loader: scssLoaders
                 },
                 { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
@@ -98,7 +97,7 @@ module.exports = function(options) {
             //alias: {lzma: path.resolve(root_dir, "./node_modules/lzma/src/lzma.js")},
             root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
-            modulesDirectories: ["node_modules", "bower_components", path.resolve(root_dir, "../dl/lib")],
+            modulesDirectories: ["node_modules", "bower_components"],
             fallback: [path.resolve(root_dir, "./node_modules")]
         },
         resolveLoader: {
