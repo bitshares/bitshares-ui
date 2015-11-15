@@ -731,7 +731,7 @@ class Exchange extends React.Component {
                 }
 
                 let oldPrice = market_utils.parse_order_history(second_latest, paysAsset, receivesAsset, isAsk, flipped);
-                changeClass = latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
+                changeClass = latestPrice.full === oldPrice.full ? "" : latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
             }
 
 
@@ -757,7 +757,7 @@ class Exchange extends React.Component {
         // Market stats
         let dayChange = marketStats.get("change");
 
-        let dayChangeClass = dayChange === "0.00" ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
+        let dayChangeClass = parseInt(dayChange, 10) === 0 ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
         let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
         let volumeBase = marketStats.get("volumeBase");
         let volumeQuote = marketStats.get("volumeQuote");
@@ -833,17 +833,18 @@ class Exchange extends React.Component {
                                             </li> : null}
 
                                         {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+                                        
                                         {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
-                                        {dayChange ?
-                                            <li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="account.hour_24" />
-                                                    <br/>
-                                                    <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
-                                                    <br/>
-                                                    <em>%</em>
-                                                </span>
-                                            </li> : null}
+                                        
+                                        <li className="stat">
+                                            <span>
+                                                <Translate component="span" content="account.hour_24" />
+                                                <br/>
+                                                <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                <br/>
+                                                <em>%</em>
+                                            </span>
+                                        </li>
 
                                     </ul>
 

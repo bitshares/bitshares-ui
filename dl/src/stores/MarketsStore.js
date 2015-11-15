@@ -44,7 +44,7 @@ class MarketsStore {
         this.lowestCallPrice = null;
         this.marketBase = "CORE";
         this.marketStats = Immutable.Map({
-            change: "n/a",
+            change: 0,
             volumeBase: 0,
             volumeQuote: 0
         });
@@ -127,7 +127,7 @@ class MarketsStore {
         this.flat_calls = [];
         this.priceHistory =[];
         this.marketStats = Immutable.Map({
-            change: "n/a",
+            change: 0,
             volumeBase: 0,
             volumeQuote: 0
         });
@@ -713,7 +713,7 @@ class MarketsStore {
                 close = utils.get_asset_price(last.close_quote, baseAsset, last.close_base, quoteAsset, invert);
             }
 
-            change = noTrades ? 0 : (100 * (close - open) / open).toFixed(2);
+            change = noTrades ? 0 : Math.round(10000 * (close - open) / open) / 100;
         }
 
         if (recent && recent.length) {
@@ -735,7 +735,7 @@ class MarketsStore {
         let close = {quote: invert ? last.close_quote : last.close_base, base: invert ? last.close_base : last.close_quote};
 
         return {
-            change,
+            change: change.toFixed(2),
             volumeBase: utils.get_asset_amount(volumeBase, baseAsset),
             volumeQuote: utils.get_asset_amount(volumeQuote, quoteAsset),
             close: close,
