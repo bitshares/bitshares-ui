@@ -718,18 +718,23 @@ class Exchange extends React.Component {
             }
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             latestPrice = market_utils.parse_order_history(latest, paysAsset, receivesAsset, isAsk, flipped);
+            
+            isAsk = false;
             if (second_latest) {
                 if (second_latest.pays.asset_id === base.get("id")) {
                     paysAsset = base;
                     receivesAsset = quote;
+                    isAsk = true;
                 } else {
                     paysAsset = quote;
                     receivesAsset = base;
-                    isAsk = true;
                 }
+
                 let oldPrice = market_utils.parse_order_history(second_latest, paysAsset, receivesAsset, isAsk, flipped);
                 changeClass = latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
             }
+
+
 
         }
 
@@ -1003,7 +1008,19 @@ class Exchange extends React.Component {
                             />
                         </div>
                         <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
-                            <MyMarkets />
+                            <MyMarkets
+                                className="left-order-book no-padding no-overflow"
+                                headerStyle={{paddingTop: 0}}
+                                columns={
+                                    [
+                                        {name: "star", index: 1},
+                                        {name: "market", index: 2},
+                                        {name: "vol", index: 3},
+                                        {name: "price", index: 4},
+                                        {name: "change", index: 5}
+                                    ]
+                                }
+                            />
                         </div>
                     </div>
                     {quoteIsBitAsset ?

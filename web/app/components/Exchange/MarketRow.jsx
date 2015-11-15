@@ -19,7 +19,8 @@ class MarketRow extends React.Component {
     };
 
     static defaultProps = {
-        noSymbols: false
+        noSymbols: false,
+        tempComponent: "tr"        
     };
 
     static contextTypes = {router: React.PropTypes.func.isRequired};
@@ -30,6 +31,12 @@ class MarketRow extends React.Component {
 
     componentDidMount() {
         MarketsActions.getMarketStats(this.props.base, this.props.quote);
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return (
+            !utils.are_equal_shallow(nextProps, this.props)
+        )
     }
 
     _onStar(quote, base, e) {
@@ -43,8 +50,8 @@ class MarketRow extends React.Component {
 
     render() {
         let {quote, base, noSymbols, stats, starred} = this.props;
-        let core = ChainStore.getAsset("1.3.0");
-        if (!core || !quote || !base) {
+        // let core = ChainStore.getAsset("1.3.0");
+        if (!quote || !base) {
             return null;
         }
 
@@ -88,7 +95,7 @@ class MarketRow extends React.Component {
                 case "change":
                     let change = utils.format_number(stats && stats.change ? stats.change : 0, 2);
                     let changeClass = change === "0.00" ? "" : change > 0 ? "positive-change" : "negative-change";
-                    
+
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className={"text-right " + changeClass} key={column.index}>
                             {change + "%"}
@@ -103,14 +110,11 @@ class MarketRow extends React.Component {
                     );
 
                 case "market":
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
+                    return (<td onClick={this._onClick.bind(this, marketID)} key={column.index}>
                             {marketName}
-                        </td>
-                    );
+                        </td>);
 
                 case "price":
-                    // console.log
                     let finalPrice = stats && stats.latestPrice ?
                         stats.latestPrice :
                         stats && (stats.close.quote && stats.close.base) ?
@@ -125,7 +129,7 @@ class MarketRow extends React.Component {
 
                 case "quoteSupply":
                     return (
-                        <td key={column.index}>
+                        <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
                             {dynamic_data ? <FormattedAsset
                                 style={{fontWeight: "bold"}}
                                 amount={parseInt(dynamic_data.get("current_supply"), 10)}
@@ -135,7 +139,7 @@ class MarketRow extends React.Component {
 
                 case "baseSupply":
                     return (
-                        <td key={column.index}>
+                        <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
                             {base_dynamic_data ? <FormattedAsset
                             style={{fontWeight: "bold"}}
                             amount={parseInt(base_dynamic_data.get("current_supply"), 10)}
@@ -159,9 +163,7 @@ class MarketRow extends React.Component {
         });
 
         return (
-            <tr className="clickable" key={"tr_" + marketID} style={rowStyles}>
-                {columns}
-            </tr>
+            <tr className="clickable" style={rowStyles}>{columns}</tr>
         );
     }
 }

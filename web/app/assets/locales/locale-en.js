@@ -527,6 +527,7 @@
         loading: "Loading..."
     },
     exchange: {
+        market: "Market",
         price_history: "Price Chart",
         order_depth: "Market Depth",
         market_history: "Market History",
@@ -544,6 +545,7 @@
         maintenance: "Maintenance Call Price",
         your_price: "Your Call Price",
         volume: "Volume",
+        vol_short: "Vol",
         spread: "Spread",
         quantity: "Amount",
         buy: "Buy",
@@ -557,7 +559,8 @@
         quote_supply: "Quote supply",
         base_supply: "Base supply",
         more: "All markets",
-        volume_24: "24hr Volume"
+        volume_24: "24hr Volume",
+        change: "Change"
     },
     markets: {
         title: "Markets",
