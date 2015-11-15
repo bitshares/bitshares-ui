@@ -3,7 +3,6 @@ import Immutable from "immutable";
 import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
