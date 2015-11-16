@@ -10,6 +10,7 @@ import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
+import Proposals from "components/Account/Proposals";
 
 class AccountOverview extends React.Component {
 
@@ -44,7 +45,7 @@ class AccountOverview extends React.Component {
                 );
             })
         }
-
+        
         return (
             <div className="grid-content">
                 <div className="content-block">
@@ -86,6 +87,10 @@ class AccountOverview extends React.Component {
                         compactView={false}
                         showMore={true}
                     />
+                </div>
+                <div className="content-block">
+                    <h3><Translate content="proposals" account={account.get("id")} /></h3>
+                    <Proposals accountList={Immutable.fromJS([account.get("id")])}/>
                 </div>
             </div>
 

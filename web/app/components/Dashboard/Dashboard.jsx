@@ -8,10 +8,6 @@ import Proposals from "components/Account/Proposals";
 
 class Dashboard extends Component {
 
-    static propTypes = {
-      linkedAccounts: PropTypes.object.isRequired
-    }
-
     render() {
         let names = this.props.linkedAccounts.toArray().sort();
         let itemRows = [];
@@ -27,12 +23,12 @@ class Dashboard extends Component {
                 </div>
                 <div className="grid-block medium-4 right-column vertical">
                     <div className="grid-content">
-                        <h4><Translate content="proposals" /></h4>
-                        <Proposals />
-                    </div>
-                    <div className="grid-content">
                         <h4><Translate content="account.recent" /></h4>
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
+                    </div>
+                    <div className="grid-content">
+                        <h4><Translate content="proposals" /></h4>
+                        <Proposals accountList={this.props.linkedAccounts} />
                     </div>
                 </div>
             </div>);
