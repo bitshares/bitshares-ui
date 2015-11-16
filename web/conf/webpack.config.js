@@ -2,7 +2,8 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
-var git = require('git-rev-sync')
+var git = require('git-rev-sync');
+require('es6-promise').polyfill();
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname, "..");
