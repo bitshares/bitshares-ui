@@ -560,7 +560,8 @@
         base_supply: "Base supply",
         more: "All markets",
         volume_24: "24hr Volume",
-        change: "Change"
+        change: "Change",
+        confirm: "Your order is %(diff)s% away from the current price, are you sure?"
     },
     markets: {
         title: "Markets",
