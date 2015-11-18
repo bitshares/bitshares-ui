@@ -70,7 +70,7 @@ class PriceChart extends React.Component {
                     enabled: false
                 },
                 pinchType: "x",
-                spacing: [10, 10, 5, 10],
+                spacing: [20, 10, 5, 10],
                 // events: {
                     // redraw: (e) => {
                     //     debugger;
@@ -118,14 +118,11 @@ class PriceChart extends React.Component {
                     animation: false,
                     color: "#E3745B",
                     upColor: "#50D2C2",
-                    lineColor: "#D7DBDE",
-                    lineWidth: 1,
-                    pointWidth: 4
+                    lineColor: "#D7DBDE"
                 },
                 column: {
                     animation: false,
-                    borderColor: "#000000",
-                    pointWidth: 4
+                    borderColor: "#000000"
                 },
                 series: {
                     marker: {
@@ -145,18 +142,19 @@ class PriceChart extends React.Component {
                 formatter: function () {
                     let price_dec = base.get("precision");
                     let vol_dec = quote.get("precision");
-                    let time = new Date(this.x).toLocaleString() + "  ";
+                    let time =  Highcharts.Highcharts.dateFormat("%Y-%m-%d %H:%M", this.x);
+
                     let TA = "";
                     if (!this.points || this.points.length === 0) {
                         return "";
                     }
                     // if ((this.points[0].point && this.points[0].point.open) && (this.points[1].point && this.points[1].point.y)) {
-                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time +
-                            "&nbsp;&nbsp;&nbsp;<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
+                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time + "<br/>" +
+                            "<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>C:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;<b>V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[1].point.y : 0, vol_dec, ".", ",") + " " +
+                            "<br/><b>V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[1].point.y : 0, vol_dec, ".", ",") + " " +
                             quoteSymbol + TA + "</span>");
                     // }
                     // else if this.points.length == 1 && this.points[0] && this.points[0].point.open
@@ -335,7 +333,7 @@ class PriceChart extends React.Component {
 
         return (
             <div className="grid-content no-padding no-overflow middle-content">
-                <div style={{paddingTop: "1.5rem", paddingBottom: "0.5rem"}}>
+                <div style={{paddingTop: "0.5rem", paddingBottom: "0.5rem"}}>
                     {priceData && volumeData ? <Chart quoteSymbol={quoteSymbol} config={config} loading={loading}/> : null}
                 </div>
             </div>

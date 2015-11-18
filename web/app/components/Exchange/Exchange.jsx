@@ -924,7 +924,7 @@ class Exchange extends React.Component {
                                         quote={quote}
                                         baseSymbol={baseSymbol}
                                         quoteSymbol={quoteSymbol}
-                                        height={400}
+                                        height={425}
                                         leftOrderBook={leftOrderBook}
                                     />
 
