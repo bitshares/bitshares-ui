@@ -571,32 +571,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return  <div></div>;
 
-        let wallet = WalletDb.getWallet();
-        let receive_address = this.state.receive_address;
-        if( !receive_address )  {
-            if( wallet.deposit_keys &&
-                wallet.deposit_keys[this.props.gateway] &&
-                wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] &&
-                wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')]
-            )
-            {
-                let addresses = wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')]
-                receive_address = addresses[addresses.length-1]
-            }
-        }
-        if( !receive_address ) { this.requestDepositAddress(); }
-
-        let account_balances = this.props.account.get("balances").toJS();
-        console.log( "balances: ", account_balances );
-        let asset_types = Object.keys(account_balances);
-
-        let balance = "0 " + this.props.receive_asset.get('symbol');
-        if (asset_types.length > 0) {
-            let current_asset_id = this.props.receive_asset.get('id');
-            if( current_asset_id )
-                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
-        }
-    
         if (this.state.coin_info_request_state == this.coin_info_request_states.request_failed)
         {
             return  <div>
