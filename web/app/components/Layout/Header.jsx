@@ -110,6 +110,8 @@ class Header extends React.Component {
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
         let linkToAccountOrDashboard;
 
+        let myAccounts = AccountStore.getMyAccounts();
+
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a className={cnames({active: active === "dashboard"})} onClick={this._onNavigate.bind(this, "dashboard")}><Translate component="span" content="header.dashboard" /></a>;
         else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>;
         else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
@@ -133,8 +135,8 @@ class Header extends React.Component {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
 
-            if(linkedAccounts.size > 1) {
-                let accountsList = linkedAccounts
+            if(myAccounts.length > 1) {
+                let accountsList = myAccounts
                     .sort()
                     .map(name => {
                         return <li key={name}><a href onClick={this._accountClickHandler.bind(this, name)}>{name}</a></li>;
