@@ -203,7 +203,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   left: 25px;
   color: $bid-color;
-  z-index: 999;
+  z-index: 50;
 }
 
 .ask-total {
@@ -212,7 +212,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   right: 25px;
   color: $ask-color;
-  z-index: 999;
+  z-index: 50;
 }
 
 .chart-label {
