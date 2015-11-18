@@ -1,6 +1,5 @@
 import React from "react";
 import Immutable from "immutable";
-import WitnessActions from "actions/WitnessActions";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";

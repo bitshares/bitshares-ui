@@ -173,6 +173,7 @@ class AssetActions {
     }
 
     getAssetList(start, count) {
+
         let id = start + "_" + count;
         if (!inProgress[id]) {
             inProgress[id] = true;
@@ -183,6 +184,7 @@ class AssetActions {
                     let dynamicIDS = [];
 
                     assets.forEach(asset => {
+                        ChainStore._updateObject(asset, false);
                         dynamicIDS.push(asset.dynamic_asset_data_id);
 
                         if (asset.bitasset_data_id) {

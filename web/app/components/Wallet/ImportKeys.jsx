@@ -99,7 +99,7 @@ export default class ImportKeys extends Component {
                         <td>{status.account_name}</td>
                         <td>{filtering ?
                             <span>Filtering { Math.round( (status.count / status.total) * 100) } % </span>
-                            : <span>Keeping {status.count} of {status.total}</span>
+                            : <span>{status.count}</span>
                         }</td>
                     </tr>
                 )

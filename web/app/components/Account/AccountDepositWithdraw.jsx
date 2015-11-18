@@ -22,156 +22,11 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import RefcodeInput from "../Forms/RefcodeInput";
 import WithdrawModalMetaexchange from "../Modal/WithdrawModalMetaexchange";
 import DepositModalMetaexchange from "../Modal/DepositModalMetaexchange";
+import TranswiserDepositWithdraw from "./transwiser/TranswiserDepositWithdraw";
+import BlockTradesBridgeDepositRequest from "./blocktrades/BlockTradesBridgeDepositRequest";
+import BlockTradesGatewayDepositRequest from "./blocktrades/BlockTradesGatewayDepositRequest";
+import WithdrawModalBlocktrades from "../Modal/WithdrawModalBlocktrades";
 var Post = require("../Utility/FormPost.js");
-
-@BindToChainState({keep_updating:true})
-class BlockTradesDepositRequest extends React.Component {
-    static propTypes = {
-        url:               React.PropTypes.string,
-        gateway:           React.PropTypes.string,
-        deposit_coin_type: React.PropTypes.string,
-        deposit_asset_name: React.PropTypes.string,
-        deposit_account: React.PropTypes.string,
-        receive_coin_type: React.PropTypes.string,
-        account: ChainTypes.ChainAccount,
-        issuer_account: ChainTypes.ChainAccount,
-        deposit_asset: React.PropTypes.string,
-        receive_asset: ChainTypes.ChainAsset
-    };
-
-    constructor(props) {
-        super(props);
-        this.state = { receive_address: null };
-    }
-
-    requestDepositAddress() {
-        let body = JSON.stringify({
-            inputCoinType:this.props.deposit_coin_type,
-            outputCoinType:this.props.receive_coin_type,
-            outputAddress:this.props.account.get('name')
-        })
-        console.log( "body: ", body );
-
-        fetch( this.props.url + '/initiate-trade', {
-            method:'post',
-            headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
-            body: body
-        }).then( reply => { reply.json().then( json => {
-                console.log( "reply: ", json )
-                if( json.inputAddress )
-                    this.addDepositAddress( json.inputAddress );
-                else
-                    this.addDepositAddress( "unknown" );
-            }, error => {
-                console.log( "error: ",error  );
-                this.addDepositAddress( "unknown" );
-            }
-        )
-        }, error => {
-            console.log( "error: ",error  );
-            this.addDepositAddress( "unknown" );
-        });
-
-    }
-
-    addDepositAddress( receive_address ) {
-        let wallet = WalletDb.getWallet();
-        let name = this.props.account.get('name');
-        console.log( "this.props.gateway: ", this.props.gateway );
-        console.log( "this.props.deposit_asset: ", this.props.deposit_asset );
-		
-        if( !wallet.deposit_keys ) wallet.deposit_keys = {}
-        if( !wallet.deposit_keys[this.props.gateway] )
-            wallet.deposit_keys[this.props.gateway] = {}
-        if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] )
-            wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] = {}
-        if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name] )
-            wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name] = [receive_address]
-        else
-            wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name].push( receive_address );
-
-        WalletDb._updateWallet();
-
-        this.setState( {receive_address} );
-    }
-
-    getWithdrawModalId() {
-        console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
-        console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
-        return "withdraw_asset_"+this.props.issuer_account.get('name') + "_"+this.props.receive_asset.get('symbol');
-    }
-
-    onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
-
-    render() {
-        if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
-            return <tr><td></td><td></td><td></td><td></td></tr>
-
-        let wallet = WalletDb.getWallet();
-        let receive_address = this.state.receive_address;
-        if( !receive_address )  {
-            if( wallet.deposit_keys &&
-                wallet.deposit_keys[this.props.gateway] &&
-                wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] &&
-                wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')]
-            )
-            {
-                let addresses = wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')]
-                receive_address = addresses[addresses.length-1]
-            }
-        }
-        if( !receive_address ) { this.requestDepositAddress(); }
-
-        let account_balances = this.props.account.get("balances").toJS();
-        console.log( "balances: ", account_balances );
-        let asset_types = Object.keys(account_balances);
-
-        let balance = "0 " + this.props.receive_asset.get('symbol');
-        if (asset_types.length > 0) {
-            let current_asset_id = this.props.receive_asset.get('id');
-            if( current_asset_id )
-                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
-        }
-        let withdraw_modal_id = this.getWithdrawModalId();
-        if (this.props.deposit_account)
-        {
-            var deposit_address_fragment = (<span><code>{this.props.deposit_account}</code> with memo <code>{this.props.receive_coin_type + ':' + this.props.account.get('name')}</code></span>);
-            var withdraw_memo_prefix = this.props.deposit_coin_type + ':';
-        }
-        else
-        {
-            var deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="" />Generate</button></span>);
-            var withdraw_memo_prefix = '';
-        }
-
-        return <tr>
-            <td>{this.props.deposit_asset} </td>
-            <td>{deposit_address_fragment}</td>
-            <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
-            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
-                <Modal id={withdraw_modal_id} overlay={true}>
-                    <Trigger close={withdraw_modal_id}>
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
-                    <br/>
-                    <div className="grid-block vertical">
-                        <WithdrawModal
-                            account={this.props.account.get('name')}
-                            issuer={this.props.issuer_account.get('name')}
-                            asset={this.props.receive_asset.get('symbol')}
-                            receive_asset_name={this.props.deposit_asset_name}
-                            receive_asset_symbol={this.props.deposit_asset}
-                            memo_prefix={withdraw_memo_prefix}
-                            modal_id={withdraw_modal_id} />
-                    </div>
-                </Modal>
-            </td>
-        </tr>
-    }
-}; // BlockTradesDepositRequest
 
 @BindToChainState({keep_updating:true})
 class MetaexchangeDepositRequest extends React.Component {
@@ -291,9 +146,9 @@ class MetaexchangeDepositRequest extends React.Component {
 		
         return <tr>
             <td>{this.props.deposit_asset} </td>
-           
-			
-			<td> <button className={"button outline"} onClick={this.onDeposit.bind(this)}><Translate content="" /> Deposit </button>
+
+
+			<td> <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
                 <Modal id={deposit_modal_id} overlay={true}>
                     <Trigger close={deposit_modal_id}>
                         <a href="#" className="close-button">&times;</a>
@@ -317,7 +172,7 @@ class MetaexchangeDepositRequest extends React.Component {
 			<td><button className={"button outline"}><a target="__blank" href={this.getMetaLink()}>Open in metaexchange</a></button></td>
 			
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.state.base_symbol} /> </td>
-            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
+            <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
                 <Modal id={withdraw_modal_id} overlay={true}>
                     <Trigger close={withdraw_modal_id}>
                         <a href="#" className="close-button">&times;</a>
@@ -374,8 +229,23 @@ class AccountDepositWithdraw extends React.Component {
         return (
 		<div className="grid-content">
 			<div className="content-block">
-                <h2>Bridges</h2>
+                <h2><Translate content="gateway.bridge" /></h2>
                 <hr/>
+				<div className="content-block">
+                    <h3><a href="https://blocktrades.us" target="__blank">BlockTrades.us</a></h3>
+                    <BlockTradesBridgeDepositRequest
+                        gateway="blocktrades"
+                        url="https://api.blocktrades.us/v2"
+                        bridge_mode={true}
+                        issuer_account="blocktrades"
+                        account={this.props.account}
+                        receive_asset="BTS"
+                        deposit_asset="BTC"
+                        deposit_coin_type="btc"
+                        deposit_asset_name="Bitcoin"
+                        initial_input_coin_type="ltc"
+                        receive_coin_type="bts" />
+                </div>
 				<div className="content-block">
                     <h3><a href="https://metaexchange.info" target="__blank">metaexchange.info</a></h3>
 
@@ -383,11 +253,11 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
+                                <th><Translate content="gateway.symbol" /></th>
                                 <th></th>
-								<th>Open website</th>
-								<th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.meta.open_website" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -395,7 +265,7 @@ class AccountDepositWithdraw extends React.Component {
 									symbol_pair="BTS_BTC"
 									gateway="metaexchange"
 									issuer_account="metaexchangebtc"
-									account={this.props.account.get('name')}
+									account={this.props.account}
 									receive_asset="BTS"
 									is_bts_deposit="true"
 									deposit_asset="BTS"
@@ -407,8 +277,35 @@ class AccountDepositWithdraw extends React.Component {
 			</div>
 				
             <div className="content-block">
-                <h2>Gateways</h2>
+                <h2><Translate content="gateway.gateway" /></h2>
                 <hr/>
+
+                <div className="content-block">
+                        <h3><Translate content="gateway.transwiser.gateway" /><small style={{float:'right',lineHeight:2}}><a href="http://www.transwiser.com" target="_blank">http://www.transwiser.com</a></small></h3>
+                    <div>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <TranswiserDepositWithdraw
+                                    issuerAccount="transwiser-wallet"
+                                    account={this.props.account.get('name')}
+                                    receiveAsset="CNY" />
+                                <TranswiserDepositWithdraw
+                                    issuerAccount="transwiser-wallet"
+                                    account={this.props.account.get('name')}
+                                    receiveAsset="BOTSCNY" />
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
 
 
                 <div className="content-block">
@@ -418,68 +315,68 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
-                                <th>Deposit To</th>
-                                <th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <BlockTradesDepositRequest
+                            <BlockTradesGatewayDepositRequest
                                 gateway="openledger"
-                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')}
+                                account={this.props.account}
                                 receive_asset="OPENBTC"
                                 deposit_asset="BTC"
                                 deposit_coin_type="btc"
                                 deposit_asset_name="Bitcoin"
                                 receive_coin_type="openbtc" />
-                            <BlockTradesDepositRequest
+                            <BlockTradesGatewayDepositRequest
                                 gateway="openledger"
-                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')}
+                                account={this.props.account}
                                 receive_asset="OPENLTC"
                                 deposit_asset="LTC"
                                 deposit_coin_type="ltc"
                                 deposit_asset_name="Litecoin"
                                 receive_coin_type="openltc" />
-                            <BlockTradesDepositRequest
+                            <BlockTradesGatewayDepositRequest
                                 gateway="openledger"
-                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')}
+                                account={this.props.account}
                                 receive_asset="OPENDOGE"
                                 deposit_asset="DOGE"
                                 deposit_coin_type="doge"
                                 deposit_asset_name="Dogecoin"
                                 receive_coin_type="opendoge" />
-                            <BlockTradesDepositRequest
+                            <BlockTradesGatewayDepositRequest
                                 gateway="openledger"
-                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')}
+                                account={this.props.account}
                                 receive_asset="OPENDASH"
                                 deposit_asset="DASH"
                                 deposit_coin_type="dash"
                                 deposit_asset_name="Dash"
                                 receive_coin_type="opendash" />
-                            <BlockTradesDepositRequest 
+                            <BlockTradesGatewayDepositRequest 
                                 gateway="openledger"
-                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')} 
+                                account={this.props.account} 
                                 receive_asset="OPENPPC"
                                 deposit_asset="PPC"
                                 deposit_coin_type="peercoin"
                                 deposit_asset_name="Peercoin"
                                 receive_coin_type="openppc" />
-                            <BlockTradesDepositRequest 
+                            <BlockTradesGatewayDepositRequest 
                                 gateway="openledger"
-                                url="https://bitshares.openledger.info:443/depositwithdraw/api/v2/simple-api"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
                                 issuer_account="openledger-wallet"
-                                account={this.props.account.get('name')} 
+                                account={this.props.account} 
                                 deposit_asset="MUSE"
                                 deposit_asset_name="Muse"
                                 deposit_coin_type="muse"
@@ -497,11 +394,11 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
+                                <th><Translate content="gateway.symbol" /></th>
                                 <th></th>
-								<th>Open website</th>
-								<th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.meta.open_website" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -509,7 +406,7 @@ class AccountDepositWithdraw extends React.Component {
 									symbol_pair="METAEX.BTC_BTC"
 									gateway="metaexchange"
 									issuer_account="dev-metaexchange.monsterer"
-									account={this.props.account.get('name')}
+									account={this.props.account}
 									receive_asset="METAEX.BTC"
 									deposit_asset="BTC"
 									deposit_asset_name="Bitcoin"/>
@@ -517,7 +414,7 @@ class AccountDepositWithdraw extends React.Component {
 									symbol_pair="METAEX.ETH_ETH"
 									gateway="metaexchange"
 									issuer_account="dev-metaexchange.monsterer"
-									account={this.props.account.get('name')}
+									account={this.props.account}
 									receive_asset="METAEX.ETH"
 									deposit_asset="ETH"
 									deposit_asset_name="Ether"/>
@@ -525,7 +422,7 @@ class AccountDepositWithdraw extends React.Component {
 									symbol_pair="METAEX.NXT_NXT"
 									gateway="metaexchange"
 									issuer_account="dev-metaexchange.monsterer"
-									account={this.props.account.get('name')}
+									account={this.props.account}
 									receive_asset="METAEX.NXT"
 									deposit_asset="NXT"
 									deposit_asset_name="Nxt"/>
@@ -540,28 +437,28 @@ class AccountDepositWithdraw extends React.Component {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th>Symbol</th>
-                                <th>Deposit To</th>
-                                <th>Balance</th>
-                                <th>Withdraw</th>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th><Translate content="gateway.deposit_to" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <BlockTradesDepositRequest
+                            <BlockTradesGatewayDepositRequest
                                 gateway="blocktrades"
-                                url="https://blocktrades.us:443/api/v2/simple-api"
+                                url="https://api.blocktrades.us/v2"
                                 issuer_account="blocktrades"
-                                account={this.props.account.get('name')}
+                                account={this.props.account}
                                 receive_asset="TRADE.BTC"
                                 deposit_asset="BTC"
                                 deposit_coin_type="btc"
                                 deposit_asset_name="Bitcoin"
                                 receive_coin_type="trade.btc" />
-                            <BlockTradesDepositRequest
+                            <BlockTradesGatewayDepositRequest
                                 gateway="blocktrades"
-                                url="https://blocktrades.us:443/api/v2/simple-api"
+                                url="https://api.blocktrades.us/v2"
                                 issuer_account="blocktrades"
-                                account={this.props.account.get('name')}
+                                account={this.props.account}
                                 deposit_coin_type="ltc"
                                 deposit_asset_name="Litecoin"
                                 deposit_asset="LTC"

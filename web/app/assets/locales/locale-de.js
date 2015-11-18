@@ -167,7 +167,8 @@ module.exports = {
             req: "Plfichtfeld",
             pos: "Betrag darf nicht negativ sein",
             valid: "Bitte geben Sie einen positiven Betrag ein",
-            balance: "Ihr abschließendes Guthaben kann nicht negativ sein!"
+            balance: "Ihr abschließendes Guthaben kann nicht negativ sein!",
+            insufficient: "Insufficient Balance"
         },
         back: "ZURÜCK",
         confirm: "BESTÄTIGEN",
@@ -593,7 +594,8 @@ module.exports = {
         amount: "Abzuhebender Betrag",
         address: "Abheben zu Adresse",
         submit: "Abheben"
-      }
+      },
+      ok: "OK"
     },
     init_error: {
         title: "Initialisierungsfehler",
@@ -607,5 +609,29 @@ module.exports = {
         claim_refcode: "Claim Referral Code",
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
+    },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser",
+            visit_weidian: "Visit WEIDIAN to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
+        },
+        meta: {
+            open_website: "Open Website"
+        }
     }
 };

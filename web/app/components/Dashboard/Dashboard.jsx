@@ -18,10 +18,7 @@ class Dashboard extends Component {
         for(let a of names)
             itemRows.push(<AccountCard key={a} account={a}/>);
 
-        return (<div>
-            {/* P R O P O S A L S 
-            <Proposals/>
-            <br/>*/}
+        return (
             <div className="grid-block page-layout vertical medium-horizontal">
                 <div className="grid-block medium-8 flex-start" style={{overflowY: "auto", zIndex: 1}}>
                     <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-3">
@@ -34,8 +31,7 @@ class Dashboard extends Component {
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
                     </div>
                 </div>
-            </div>
-        </div>);
+            </div>);
     }
 }
 

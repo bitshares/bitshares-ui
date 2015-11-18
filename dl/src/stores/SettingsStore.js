@@ -35,6 +35,9 @@ class SettingsStore {
             ["TRADE.BTC_" + CORE_ASSET, {"quote":"TRADE.BTC","base":CORE_ASSET} ]
         ]);
 
+        this.starredMarkets = Immutable.Map([
+        ]);
+
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
         this.defaults = {
@@ -61,6 +64,8 @@ class SettingsStore {
             onChangeViewSetting: SettingsActions.changeViewSetting,
             onAddMarket: SettingsActions.addMarket,
             onRemoveMarket: SettingsActions.removeMarket,
+            onAddStarMarket: SettingsActions.addStarMarket,
+            onRemoveStarMarket: SettingsActions.removeStarMarket,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS
         });
@@ -71,6 +76,10 @@ class SettingsStore {
 
         if (this._lsGet("defaultMarkets")) {
             this.defaultMarkets = Immutable.Map(JSON.parse(this._lsGet("defaultMarkets")));
+        }
+
+        if (this._lsGet("starredMarkets")) {
+            this.starredMarkets = Immutable.Map(JSON.parse(this._lsGet("starredMarkets")));
         }
 
         if (this._lsGet("defaults")) {
@@ -134,6 +143,26 @@ class SettingsStore {
         this.defaultMarkets = this.defaultMarkets.delete(marketID);
 
         this._lsSet("defaultMarkets", this.defaultMarkets.toJS());
+    }
+
+    onAddStarMarket(market) {
+        let marketID = market.quote + "_" + market.base;
+
+        if (!this.starredMarkets.has(marketID)) {
+            this.starredMarkets = this.starredMarkets.set(marketID, {quote: market.quote, base: market.base});
+
+            this._lsSet("starredMarkets", this.starredMarkets.toJS());
+        } else {
+            return false;
+        }
+    }
+
+    onRemoveStarMarket(market) {
+        let marketID = market.quote + "_" + market.base;
+
+        this.starredMarkets = this.starredMarkets.delete(marketID);
+
+        this._lsSet("starredMarkets", this.starredMarkets.toJS());
     }
 
     onAddWS(ws) {

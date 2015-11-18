@@ -1,4 +1,4 @@
-ByteBuffer = require '../common/bytebuffer'
+ByteBuffer = require 'bytebuffer'
 EC = require '../common/error_with_cause'
 config = require './serializer_config'
 

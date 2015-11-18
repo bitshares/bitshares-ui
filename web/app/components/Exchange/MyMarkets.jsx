@@ -7,16 +7,30 @@ import Translate from "react-translate-component";
 import connectToStores from "alt/utils/connectToStores";
 import MarketRow from "./MarketRow";
 import SettingsStore from "stores/SettingsStore";
+import MarketsStore from "stores/MarketsStore";
+import AssetStore from "stores/AssetStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
+import AssetActions from "actions/AssetActions";
+import MarketsActions from "actions/MarketsActions";
+import cnames from "classnames";
+import Icon from "../Icon/Icon";
+import {debounce} from "lodash";
+
+let lastLookup = new Date();
 
 @BindToChainState()
 class MyMarkets extends React.Component {
 
     static propTypes = {
-        assets: ChainTypes.ChainAssetsList.isRequired
-    }
+        core: ChainTypes.ChainAsset.isRequired
+    };
+
+    static defaultProps = {
+        activeTab: "starred",
+        core: "1.3.0"
+    };
 
     static contextTypes = {
         router: React.PropTypes.func.isRequired
@@ -24,22 +38,46 @@ class MyMarkets extends React.Component {
 
     constructor(props) {
         super();
+
+        let inputValue = props.viewSettings.get("marketLookupInput");
+        let symbols = inputValue ? inputValue.split(":") : [null];
+        let quote = symbols[0];
+        let base = symbols.length === 2 ? symbols[1] : null;
+
         this.state = {
-            inverseSort: props.viewSettings.get("myMarketsInvert")
+            inverseSort: props.viewSettings.get("myMarketsInvert"),
+            sortBy: props.viewSettings.get("myMarketsSort"),
+            activeTab: props.viewSettings.get("favMarketTab"),
+            lookupQuote: quote,
+            lookupBase: base,
+            inputValue: inputValue
         };
+
+        this.getAssetList = _.debounce(AssetActions.getAssetList, 150);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.assets, this.props.assets) ||
+            !Immutable.is(nextProps.searchAssets, this.props.searchAssets) ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
-            nextState.inverseSort !== this.state.inverseSort
+            !Immutable.is(nextProps.starredMarkets, this.props.starredMarkets) ||
+            !Immutable.is(nextProps.marketStats, this.props.marketStats) ||
+            nextState.inverseSort !== this.state.inverseSort ||
+            nextState.sortBy !== this.state.sortBy ||
+            nextState.activeTab !== this.state.activeTab ||
+            nextState.lookupQuote !== this.state.lookupQuote ||
+            nextState.lookupBase !== this.state.lookupBase
         );
     }
 
     componentDidMount() {
         let historyContainer = React.findDOMNode(this.refs.favorites);
         Ps.initialize(historyContainer);
+
+        if (this.state.activeTab === "all") {
+            this._lookupAssets({target: {value: this.state.inputValue}}, true);
+        }
     }
 
     componentDidUpdate() {
@@ -56,89 +94,252 @@ class MyMarkets extends React.Component {
         });
     }
 
+    _changeSort(type) {
+        if (type !== this.state.sortBy) {
+            SettingsActions.changeViewSetting({
+                myMarketsSort: type
+            });
+            this.setState({
+                sortBy: type
+            });
+        } else {
+            this._inverseSort();
+        }
+    }
+
     _goMarkets() {
         this.context.router.transitionTo("markets");
     }
 
-    render() {
-        let {markets} = this.props;
-        let {inverseSort} = this.state;
-        let marketRows = null;
+    _changeTab(tab) {
+        SettingsActions.changeViewSetting({
+            favMarketTab: tab
+        });
+        this.setState({
+            activeTab: tab
+        });
+    }
 
-        let columns = [
-            {name: "marketName", index: 0},
-            {name: "price", index: 1}
+    _lookupAssets(e, force = false) {
+        let now = new Date();
+
+        let symbols = e.target.value.toUpperCase().split(":");
+        let quote = symbols[0];
+        let base = symbols.length === 2 ? symbols[1] : null;
+
+        this.setState({
+            lookupQuote: quote,
+            lookupBase: base,
+            inputValue: e.target.value.toUpperCase()
+        });
+
+        SettingsActions.changeViewSetting({
+            marketLookupInput: e.target.value.toUpperCase()
+        });
+
+        if (this.state.lookupQuote !== quote || force) {
+            if (quote.length < 3 || now - lastLookup <= 250) {
+                return false;
+            }
+            this.getAssetList(quote, 50);
+        } else {
+            if (base && this.state.lookupBase !== base) {
+                if (base.length < 3 || now - lastLookup <= 250) {
+                    return false;
+                }
+                this.getAssetList(base, 50);
+            }
+        }
+    }
+
+    render() {
+        let {starredMarkets, marketStats, columns, searchAssets, core} = this.props;
+        let {inverseSort, activeTab, sortBy, lookupQuote, lookupBase} = this.state;
+        let marketRows = <tr></tr>;
+
+        let coreSymbol = core.get("symbol");
+        // Add some default base options
+        let defaultBases = [coreSymbol, "BTC", "CNY", "USD"];
+        let baseOptions = [
+            coreSymbol, "BTC", "CNY", "USD"
         ];
 
-        let assets = {};
-        this.props.assets.forEach(asset => {
-            if (asset && asset.toJS()) {
-                assets[asset.get("symbol")] = asset;
+        searchAssets
+        .filter(a => {
+            // Always keep core asset as an option
+            if (defaultBases.indexOf(a.symbol) === 0) {
+                return true;
+            }
+            if (lookupBase && lookupBase.length > 1) {
+                return a.symbol.indexOf(lookupBase) === 0;
+            }
+            return a.symbol.indexOf(lookupQuote) !== -1;
+        })
+        .forEach(asset => {
+            if (defaultBases.indexOf(asset.symbol) < 0) {
+                baseOptions.push(asset.symbol);
             }
         });
 
-        if (markets.size > 0) {
-            marketRows = this.props.markets.map(market => {
-                if (assets[market.quote] && assets[market.base]) {
-                    return (
-                        <MarketRow
-                            key={market.quote + "_" + market.base}
-                            quote={market.quote}
-                            base={market.base}
-                            columns={columns}
-                            leftAlign={true}
-                            compact={true}
-                        />
-                    );
+        baseOptions = baseOptions
+        .filter(base => {
+            // Always keep core asset as an option
+            // if (defaultBases.indexOf(base) !== -1) {
+            //     return true;
+            // }
+            if (lookupBase && lookupBase.length > 1) {
+                return base.indexOf(lookupBase) === 0;
+            } else {
+                return true;
+            }
+        });
+
+        let allMarkets = [];
+
+        if (searchAssets.size) {
+            searchAssets
+            .filter(a => {
+                return a.symbol.indexOf(lookupQuote) !== -1;
+            })
+            .forEach(asset => {
+                baseOptions.forEach(base => {
+                    let marketID = asset.symbol + "_" + base;
+
+                    if (base !== asset.symbol) {
+                        allMarkets.push([marketID, {quote: asset.symbol, base: base}]);
+                    }
+                });
+            });
+        }
+
+        allMarkets = Immutable.Map(allMarkets);
+
+        let activeMarkets = activeTab === "starred" ? starredMarkets : allMarkets;
+
+        if (activeMarkets.size > 0) {
+            marketRows = activeMarkets
+            .filter(a => {
+                if (activeTab === "all") {
+                    if (lookupQuote.length < 3) {return false; }
+                    return a.quote.indexOf(lookupQuote) !== -1;
+                } else {
+                    return true;
                 }
+            })
+            .map(market => {
+                let marketID = market.quote + "_" + market.base;
+                    return <MarketRow
+                        key={marketID}
+                        quote={market.quote}
+                        base={market.base}
+                        columns={columns}
+                        leftAlign={true}
+                        compact={true}
+                        noSymbols={true}
+                        stats={marketStats.get(marketID)}
+                        starred={starredMarkets.has(marketID)}
+                    />;
             }).filter(a => {
-                return a !== undefined;
-            }).sort((a,b) => {
+                return a !== null;
+            }).sort((a, b) => {
                 let a_symbols = a.key.split("_");
                 let b_symbols = b.key.split("_");
-                if (a_symbols[0] > b_symbols[0]) {
-                    return inverseSort ? -1 : 1;
-                } else if (a_symbols[0] < b_symbols[0]) {
-                    return inverseSort ? 1 : -1;
-                } else {
-                    if (a_symbols[1] > b_symbols[1]) {
-                        return inverseSort ? -1 : 1;
-                    } else if (a_symbols[1] < b_symbols[1]) {
-                        return inverseSort ? 1 : -1
-                    } else {
-                        return 0;
-                    }
+                let aStats = marketStats.get(a_symbols[0] + "_" + a_symbols[1]);
+                let bStats = marketStats.get(b_symbols[0] + "_" + b_symbols[1]);
+
+                switch (sortBy) {
+
+                    case "name":
+                        if (a_symbols[0] > b_symbols[0]) {
+                            return inverseSort ? -1 : 1;
+                        } else if (a_symbols[0] < b_symbols[0]) {
+                            return inverseSort ? 1 : -1;
+                        } else {
+                            if (a_symbols[1] > b_symbols[1]) {
+                                return inverseSort ? -1 : 1;
+                            } else if (a_symbols[1] < b_symbols[1]) {
+                                return inverseSort ? 1 : -1
+                            } else {
+                                return 0;
+                            }
+                        }
+
+                    case "volume":
+                        if (aStats && bStats) {
+                            if (inverseSort) {
+                                return bStats.volumeQuote - aStats.volumeQuote;
+                            } else {
+                                return aStats.volumeQuote - bStats.volumeQuote;
+                            }
+                        } else {
+                            return 0;
+                        }
+
+                    case "change":
+                        if (aStats && bStats) {
+                            if (inverseSort) {
+                                return bStats.change - aStats.change;
+                            } else {
+                                return aStats.change - bStats.change;
+                            }
+                        } else {
+                            return 0;
+                        }
                 }
 
             }).toArray();
-
-        } else {
-            return null;
         }
 
-        if (!marketRows.length || !marketRows) {
-            return null;
-        }
+        let hc = "mymarkets-header clickable";
+        let starClass = cnames(hc, {inactive: activeTab === "all"});
+        let allClass = cnames(hc, {inactive: activeTab === "starred"});
+
+        let headers = columns.map(header => {
+            switch (header.name) {
+                case "market":
+                    return <th className="clickable" onClick={this._changeSort.bind(this, "name")}><Translate content="exchange.market" /></th>;
+
+                case "vol":
+                    return <th className="clickable" onClick={this._changeSort.bind(this, "volume")}style={{textAlign: "right"}}><Translate content="exchange.vol_short" /></th>;
+
+                case "price":
+                    return <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>;
+
+                case "quoteSupply":
+                    return <th><Translate content="exchange.quote_supply" /></th>;
+
+                case "change":
+                    return <th className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
+
+                default:
+                    return <th></th>;
+            }
+        });
 
         return (
-            <div className="left-order-book no-padding no-overflow">
-                <div className="grid-block shrink left-orderbook-header bottom-header">
-                    <table className="table expand order-table text-right market-right-padding">
-                        <thead>
-                            <tr>
-                                <th className="mymarkets-header clickable" onClick={this._inverseSort.bind(this)} style={{textAlign: "left", paddingLeft: "15px"}}><Translate content="exchange.market_name" /></th>
-                                <th className="mymarkets-header" style={{textAlign: "left" }}><button onClick={this._goMarkets.bind(this)} className="small button outline" style={{padding: "4px 8px", opacity: "0.65" , letterSpacing: "0.05rem"}}><Translate content="exchange.more" /></button></th>
-                            </tr>
-                        </thead>
-                    </table>
+            <div className={this.props.className} style={this.props.style}>
+                <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
+                    <div className={starClass} onClick={this._changeTab.bind(this, "starred")}>
+                        <Icon className="gold-star title-star" name="fi-star"/><Translate content="exchange.market_name" />
+                    </div>
+                    <div className={allClass} onClick={this._changeTab.bind(this, "all")} >
+                        <Translate content="exchange.more" />
+                    </div>
                 </div>
-                <div className="table-container grid-content" ref="favorites">
-                    <table className="table expand order-table text-right market-right-padding">
-                        <tbody>
-                        {
-                            marketRows
+
+                {activeTab === "all" || this.props.controls ? (
+                    <div className="small-12 medium-6" style={{padding: "1rem 0"}}>
+                        {this.props.controls ? <div style={{paddingBottom: "0.5rem"}}>{this.props.controls}</div> : null}
+                        {activeTab === "all" ? <input type="text" value={this.state.inputValue} onChange={this._lookupAssets.bind(this)} placeholder="SYMBOL:SYMBOL" /> : null}
+                    </div> ) : null}
+                <div className="table-container grid-content mymarkets-list" ref="favorites">
+                    <table className="table table-hover text-right market-right-padding">
+                        <thead>
+                            <tr>{headers}</tr>
+                        </thead>
+                        {marketRows && marketRows.length ?
+                            <tbody>{marketRows}</tbody> : null
                         }
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -149,34 +350,22 @@ class MyMarkets extends React.Component {
 @connectToStores
 class MyMarketsWrapper extends React.Component {
     static getStores() {
-        return [SettingsStore]
+        return [SettingsStore, MarketsStore, AssetStore]
     }
 
     static getPropsFromStores() {
         return {
-            markets: SettingsStore.getState().defaultMarkets,
-            viewSettings: SettingsStore.getState().viewSettings
+            starredMarkets: SettingsStore.getState().starredMarkets,
+            viewSettings: SettingsStore.getState().viewSettings,
+            marketStats: MarketsStore.getState().allMarketStats,
+            searchAssets: AssetStore.getState().assets
         }
     }
 
     render () {
-        let {markets, viewSettings} = this.props;
-        let assets = [];
-
-        markets.forEach(market => {
-            if (assets.indexOf(market.quote) === -1) {
-                assets.push(market.quote);
-            }
-            if (assets.indexOf(market.base) === -1) {
-                assets.push(market.base);
-            }
-        });
-
         return (
             <MyMarkets
-                markets={markets}
-                assets={Immutable.List(assets)}
-                viewSettings={viewSettings}
+                {...this.props}
             />
         );
     }

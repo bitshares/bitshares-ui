@@ -14,7 +14,7 @@ class MarketsContainer extends React.Component {
                   stores={[SettingsStore, AssetStore, MarketsStore]}
                   inject={{
                     defaultMarkets: () => {
-                        return SettingsStore.getState().defaultMarkets;
+                        return SettingsStore.getState().starredMarkets;
                     },
                     viewSettings: () => {
                         return SettingsStore.getState().viewSettings;

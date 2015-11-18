@@ -3,7 +3,6 @@ import Immutable from "immutable";
 import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
@@ -19,9 +18,7 @@ import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";
 import HelpContent from "../Utility/HelpContent";
 import cnames from "classnames";
-import connectToStores from "alt/utils/connectToStores";
-import SettingsActions from "actions/SettingsActions";
-import SettingsStore from "stores/SettingsStore";
+import Tabs, {Tab} from "../Utility/Tabs";
 
 let wallet_api = new WalletApi()
 
@@ -37,8 +34,7 @@ class AccountVoting extends React.Component {
             proxy_account_id: "",//"1.2.16",
             witnesses: null,
             committee: null,
-            vote_ids: Immutable.Set(),
-            activeTab: props.tab || "proxy"
+            vote_ids: Immutable.Set()
         };
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -180,13 +176,6 @@ class AccountVoting extends React.Component {
         return null;
     }
 
-    _changeTab(value) {
-        SettingsActions.changeViewSetting({
-            votingTab: value
-        });
-        this.setState({activeTab: value});
-    }
-
     onClearProxy(e) {
         e.preventDefault();
         this.setState({
@@ -196,7 +185,6 @@ class AccountVoting extends React.Component {
     }
 
     render() {
-        let {activeTab} = this.state;
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
 
@@ -219,11 +207,6 @@ class AccountVoting extends React.Component {
             }
         };
 
-        let proxyTabClass = cnames("tab-item", {"is-active": activeTab === "proxy"});
-        let witnessTabClass = cnames("tab-item", {"is-active": activeTab === "witnesses"});
-        let committeeTabClass = cnames("tab-item", {"is-active": activeTab === "committee"});
-        let workerTabClass = cnames("tab-item", {"is-active": activeTab === "workers"});
-
         return (
             <div className="grid-content">
                 <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
@@ -241,89 +224,60 @@ class AccountVoting extends React.Component {
                         </button>) : null}
                 </div>
 
-                <div className="tabs" style={{maxWidth: "800px"}}>
-                    <div className={proxyTabClass} onClick={this._changeTab.bind(this, "proxy")}>
-                        <Translate content="account.votes.proxy_short" />
-                    </div>
-                    <div className={witnessTabClass} onClick={this._changeTab.bind(this, "witnesses")}>
-                        <Translate content="explorer.witnesses.title" />
-                    </div>
-                    <div className={committeeTabClass} onClick={this._changeTab.bind(this, "committee")}>
-                        <Translate content="explorer.committee_members.title" />
-                    </div>
-                    <div className={workerTabClass} onClick={this._changeTab.bind(this, "workers")}>
-                        <Translate content="account.votes.workers_short" />
-                    </div>
-                </div>
+                <Tabs setting="votingTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
 
-                {/* Tab content */}
-                <div style={{paddingTop: "1em"}}>
+                        <Tab title="account.votes.proxy_short">
+                            <div className="content-block">
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
+                                <AccountVotingProxy
+                                    currentProxy={this.state.proxy_account_name}
+                                    currentAccount={this.props.account}
+                                    proxyAccount={this.state.proxy_account_id}
+                                    onProxyAccountChanged={this.onProxyAccountChange}
+                                />
+                            </div>
+                        </Tab>
 
-                {activeTab === "proxy" ? (
-                    <div className="content-block">
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
-                        <AccountVotingProxy
-                            currentProxy={this.state.proxy_account_name}
-                            currentAccount={this.props.account}
-                            proxyAccount={this.state.proxy_account_id}
-                            onProxyAccountChanged={this.onProxyAccountChange}
-                        />
-                    </div>) : null}
+                        <Tab title="explorer.witnesses.title">
+                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
+                                <AccountsList
+                                    type="witness"
+                                    label="account.votes.add_witness_label"
+                                    items={this.state.witnesses}
+                                    validateAccount={this.validateAccount.bind(this, "witnesses")}
+                                    onAddItem={this.onAddItem.bind(this, "witnesses")}
+                                    onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
+                                    tabIndex={proxy_is_set ? -1 : 2}/>
+                            </div>
+                        </Tab>
 
-                {activeTab === "witnesses" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
-                        <AccountsList
-                            type="witness"
-                            label="account.votes.add_witness_label"
-                            items={this.state.witnesses}
-                            validateAccount={this.validateAccount.bind(this, "witnesses")}
-                            onAddItem={this.onAddItem.bind(this, "witnesses")}
-                            onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
-                            tabIndex={proxy_is_set ? -1 : 2}/>
-                    </div>) : null}
+                        <Tab title="explorer.committee_members.title">
+                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
+                                <AccountsList
+                                    type="committee"
+                                    label="account.votes.add_committee_label"
+                                    items={this.state.committee}
+                                    validateAccount={this.validateAccount.bind(this, "committee")}
+                                    onAddItem={this.onAddItem.bind(this, "committee")}
+                                    onRemoveItem={this.onRemoveItem.bind(this, "committee")}
+                                    tabIndex={proxy_is_set ? -1 : 3}/>
+                            </div>
+                        </Tab>
 
-                {activeTab === "committee" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
-                        <AccountsList
-                            type="committee"
-                            label="account.votes.add_committee_label"
-                            items={this.state.committee}
-                            validateAccount={this.validateAccount.bind(this, "committee")}
-                            onAddItem={this.onAddItem.bind(this, "committee")}
-                            onRemoveItem={this.onRemoveItem.bind(this, "committee")}
-                            tabIndex={proxy_is_set ? -1 : 3}/>
-                    </div>) : null}
-
-                {activeTab === "workers" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
-                        <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">
-                            {workers}
-                        </div>
-                    </div>) : null}
-
-                </div>
-
+                        <Tab title="account.votes.workers_short">
+                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
+                                <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">
+                                    {workers}
+                                </div>
+                            </div>
+                        </Tab>
+                </Tabs>
             </div>
         )
     }
 }
 
-@connectToStores
-class AccountVotingWrapper extends React.Component {
-    static getStores() {
-        return [SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {tab: SettingsStore.getState().viewSettings.get("votingTab")}
-    }
-
-    render () {
-        return <AccountVoting {...this.props}/>
-    }
-}
-
-export default AccountVotingWrapper;
+export default AccountVoting;

@@ -20,6 +20,7 @@ var Utils = {
     },
 
     get_asset_amount: function(amount, asset) {
+        if (amount === 0) return amount;
         if (!amount) return null;
         return amount / this.get_asset_precision(asset.toJS ? asset.get("precision") : asset.precision);
     },
@@ -34,8 +35,18 @@ var Utils = {
         return Math.round(number * precision) / precision;
     },
 
+    format_volume(amount) {
+        if (amount < 10) {
+            return this.format_number(amount, 2);            
+        } else if (amount < 10000) {
+            return this.format_number(amount, 0);            
+        } else {
+            return Math.round(amount / 1000) + "k";
+        }
+    },
+
     format_number: (number, decimals, trailing_zeros = true) => {
-        if(isNaN(number) || number === undefined || number === null) return "";
+        if(isNaN(number) || !isFinite(number) || number === undefined || number === null) return "";
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
             zeros += "0";     
@@ -115,20 +126,22 @@ var Utils = {
             }
         }
         let price_split = priceText.split(".");
-        let int = price_split[0], intClass;
-        let dec = price_split[1], decClass = "major-int";
+        let int = price_split[0];
+        let dec = price_split[1];
         let i;
 
         let zeros = 0;
         if (price > 1) {
-            for (i = dec.length - 1; i >= 0; i--) {
+            let l = dec.length;
+            for (i = l - 1; i >= 0; i--) {
                 if (dec[i] !== "0") {
                     break;
                 }
                 zeros++;
             };
         } else {
-            for (i = 0; i < dec.length; i++) {
+            let l = dec.length;
+            for (i = 0; i < l; i++) {
                 if (dec[i] !== "0") {
                     i--;
                     break;
@@ -146,14 +159,10 @@ var Utils = {
             }
         }
 
-        intClass = price < 1 ? "minor price-integer" : "price-integer";
-
         return {
             text: priceText,
             int: int,
-            intClass: intClass,
             dec: dec,
-            decClass: decClass,
             trailing: trailing,
             full: price
         };

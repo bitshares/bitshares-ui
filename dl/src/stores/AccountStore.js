@@ -2,7 +2,6 @@ import BaseStore from "./BaseStore";
 import Immutable from "immutable";
 import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
-import { Account } from "./tcomb_structs";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
 import validation from "common/validation"
@@ -53,7 +52,6 @@ class AccountStore extends BaseStore {
     
     chainStoreUpdate() {
         if(this.state.update) {
-            // console.log("Account chainStoreUpdate, notify listners");
             this.setState({update: false})
         }
         this.addAccountRefs()

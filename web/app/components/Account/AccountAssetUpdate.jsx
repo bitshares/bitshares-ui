@@ -18,11 +18,8 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import AccountInfo from "./AccountInfo";
 import big from "bignumber.js";
 import cnames from "classnames";
-import Tabs from "react-foundation-apps/src/tabs";
-import connectToStores from "alt/utils/connectToStores";
-import SettingsActions from "actions/SettingsActions";
-import SettingsStore from "stores/SettingsStore";
 import assetUtils from "common/asset_utils";
+import Tabs, {Tab} from "../Utility/Tabs";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
@@ -100,8 +97,7 @@ class AccountAssetUpdate extends React.Component {
             coreRateQuoteAssetName: coreRateQuoteAssetName,
             quoteAssetInput: coreRateQuoteAssetName,
             coreRateBaseAssetName: coreRateBaseAssetName,
-            baseAssetInput: coreRateBaseAssetName,
-            activeTab: props.tab
+            baseAssetInput: coreRateBaseAssetName
         };
     }
 
@@ -163,11 +159,13 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_supply":
                 let maxSupply = e.amount.replace(/,/g, "");
-                if ((new big(maxSupply)).times(precision).gt(MAX_SAFE_INT)) {
-                    updateState = false;
-                    return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
-                }
-                update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
+                try {
+                    if ((new big(maxSupply)).times(precision).gt(MAX_SAFE_INT)) {
+                        updateState = false;
+                        return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
+                    }
+                    update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
+                } catch(e) {}
                 break;
 
             default:
@@ -271,16 +269,9 @@ class AccountAssetUpdate extends React.Component {
         });
     }
 
-    _changeTab(value) {
-        SettingsActions.changeViewSetting({
-            updateAssetTab: value
-        });
-        this.setState({activeTab: value});
-    }
-
     render() {
         let {account, account_name, globalObject, asset, core} = this.props;
-        let {errors, isValid, update, assets, core_exchange_rate, flagBooleans, permissionBooleans, activeTab} = this.state;
+        let {errors, isValid, update, assets, core_exchange_rate, flagBooleans, permissionBooleans} = this.state;
 
         // Estimate the asset update fee
         let symbol = asset.get("symbol");
@@ -295,13 +286,6 @@ class AccountAssetUpdate extends React.Component {
 
         let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
         let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
-
-        // console.log(asset.toJS(), "flags:", assetUtils.getFlags(flagBooleans), "permissions:", assetUtils.getPermissions(permissionBooleans));
-
-        let primaryTabClass = cnames("tab-item", {"is-active": activeTab === "primary"});
-        let ownerTabClass = cnames("tab-item", {"is-active": activeTab === "owner"});
-        let flagsTabClass = cnames("tab-item", {"is-active": activeTab === "flags"});
-        let permTabClass = cnames("tab-item", {"is-active": activeTab === "permissions"});
 
         let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]));
         
@@ -350,33 +334,8 @@ class AccountAssetUpdate extends React.Component {
                 <div className="grid-content">
                     <h3><Translate content="header.update_asset" />: {symbol}</h3>
 
-                    <div className="grid-content button-group no-overflow" style={{paddingTop: "2rem"}}>
-                        <input type="submit" className={classnames("button", {success: isValid}, {disabled: !isValid})} onClick={this._updateAsset.bind(this)} value={counterpart.translate("header.update_asset")} />
-                        <input type="submit" className="button info" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")} />
-
-                        <div><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</div>
-                    </div>
-
-                    <div className="tabs" style={{maxWidth: "800px"}}>
-                        <div className={primaryTabClass} onClick={this._changeTab.bind(this, "primary")}>
-                            <Translate content="account.user_issued_assets.primary" />
-                        </div>
-                        <div className={ownerTabClass} onClick={this._changeTab.bind(this, "owner")}>
-                            <Translate content="account.user_issued_assets.update_owner" />
-                        </div>
-                        <div className={flagsTabClass} onClick={this._changeTab.bind(this, "flags")}>
-                            <Translate content="account.user_issued_assets.flags" />
-                        </div>
-                        <div className={permTabClass} onClick={this._changeTab.bind(this, "permissions")}>
-                            <Translate content="account.permissions" />
-                        </div>
-                    </div>
-
-                    {/* Tab content */}
-
-                        
-                            <div className="grid-block shrink small-vertical medium-horizontal">
-                            {activeTab === "primary" ? (
+                        <Tabs setting="updateAssetTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
+                            <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 large-6 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>
                       
@@ -461,79 +420,92 @@ class AccountAssetUpdate extends React.Component {
                                             <textarea style={{height: "7rem"}} rows="1" value={update.description} onChange={this._onUpdateInput.bind(this, "description")} />
                                         </label>
 
-                                </div>) : null}
-
-                                {activeTab === "owner" ? (
-                                    <div className="small-12 large-6 grid-content">
-                                        <Translate component="h3" content="account.user_issued_assets.update_owner" />
-                                        <div style={{paddingBottom: "1rem"}}>
-                                            <AccountSelector
-                                                label="account.user_issued_assets.current_issuer"
-                                                accountName={this.props.account.get("name")}
-                                                account={this.props.account.get("name")}
-                                                error={null}
-                                                tabIndex={1}
-                                             />
-                                        </div>
+                                </div>
+                            </Tab>
+                            <Tab title="account.user_issued_assets.update_owner">
+                                <div className="small-12 large-6 grid-content">
+                                    <Translate component="h3" content="account.user_issued_assets.update_owner" />
+                                    <div style={{paddingBottom: "1rem"}}>
                                         <AccountSelector
-                                            label="account.user_issued_assets.new_issuer"
-                                            accountName={this.state.issuer_account_name}
-                                            onChange={this.issuerNameChanged.bind(this)}
-                                            onAccountChanged={this.onIssuerAccountChanged.bind(this)}
-                                            account={this.state.issuer_account_name}
+                                            label="account.user_issued_assets.current_issuer"
+                                            accountName={this.props.account.get("name")}
+                                            account={this.props.account.get("name")}
                                             error={null}
                                             tabIndex={1}
                                          />
                                     </div>
-                                 ) : null}
+                                    <AccountSelector
+                                        label="account.user_issued_assets.new_issuer"
+                                        accountName={this.state.issuer_account_name}
+                                        onChange={this.issuerNameChanged.bind(this)}
+                                        onAccountChanged={this.onIssuerAccountChanged.bind(this)}
+                                        account={this.state.issuer_account_name}
+                                        error={null}
+                                        tabIndex={1}
+                                     />
+                                </div>
+                            </Tab>
+                            <Tab title="account.user_issued_assets.flags">
+                                <div className="small-12 large-6 grid-content">
+                                    {originalPermissions["charge_market_fee"] ? (
+                                        <div>
+                                            <Translate component="h3" content="account.user_issued_assets.market_fee" />
+                                            <table className="table">
+                                                <tr>
+                                                    <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
+                                                    <td style={{border: "none"}}>
+                                                        <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
+                                                            <input type="checkbox" checked={flagBooleans.charge_market_fee} />
+                                                            <label />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div className={cnames({disabled: !flagBooleans.charge_market_fee})}>
+                                            <label><Translate content="account.user_issued_assets.market_fee" /> (%)
+                                                <input type="number" value={update.market_fee_percent} onChange={this._onUpdateInput.bind(this, "market_fee_percent")}/>
+                                            </label>
 
-                                {activeTab === "flags" ? (
-                                    <div className="small-12 large-6 grid-content">
-                                        {originalPermissions["charge_market_fee"] ? (
-                                            <div>
-                                                <Translate component="h3" content="account.user_issued_assets.market_fee" />
-                                                <table className="table">
-                                                    <tr>
-                                                        <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
-                                                        <td style={{border: "none"}}>
-                                                            <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
-                                                                <input type="checkbox" checked={flagBooleans.charge_market_fee} />
-                                                                <label />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <div className={cnames({disabled: !flagBooleans.charge_market_fee})}>
-                                                <label><Translate content="account.user_issued_assets.market_fee" /> (%)
-                                                    <input type="number" value={update.market_fee_percent} onChange={this._onUpdateInput.bind(this, "market_fee_percent")}/>
-                                                </label>
+                                            <label>
+                                                <AmountSelector
+                                                    label="account.user_issued_assets.max_market_fee"
+                                                    amount={update.max_market_fee}
+                                                    onChange={this._onUpdateInput.bind(this, "max_market_fee")}
+                                                    asset={this.props.asset.get("id")}
+                                                    assets={[this.props.asset.get("id")]}
+                                                    placeholder="0.0"
+                                                    tabIndex={1}
+                                                />
+                                            </label>
+                                            { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
+                                            </div>
+                                        </div>) : null}
 
-                                                <label>
-                                                    <AmountSelector
-                                                        label="account.user_issued_assets.max_market_fee"
-                                                        amount={update.max_market_fee}
-                                                        onChange={this._onUpdateInput.bind(this, "max_market_fee")}
-                                                        asset={this.props.asset.get("id")}
-                                                        assets={[this.props.asset.get("id")]}
-                                                        placeholder="0.0"
-                                                        tabIndex={1}
-                                                    />
-                                                </label>
-                                                { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
-                                                </div>
-                                            </div>) : null}
+                                    <h3><Translate content="account.user_issued_assets.flags" /></h3>
+                                    {flags}
+                                </div>
+                            </Tab>
+                            <Tab title="account.permissions">
+                                <div className="small-12 large-6 grid-content">
+                                    <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
+                                    {permissions}
+                                </div>
+                            </Tab>
+                        </Tabs>
 
-                                        <h3><Translate content="account.user_issued_assets.flags" /></h3>
-                                        {flags}
-                                    </div>) : null}
+                    <hr/>
+                    <div style={{paddingTop: "0.5rem"}}>
+                        <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
+                            <Translate content="header.update_asset" />
+                        </button>
+                        <button className="button outline" onClick={this._reset.bind(this)}>
+                            <Translate content="account.perm.reset" />
+                        </button>
+                        <br/>
+                        <br/>
+                        <p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>
+                    </div>
 
-                                {activeTab === "permissions" ? (
-
-                                    <div className="small-12 large-6 grid-content">
-                                        <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
-                                        {permissions}
-                                    </div>) : null}
-                            </div>
                 </div>
             </div>
         );
@@ -541,23 +513,14 @@ class AccountAssetUpdate extends React.Component {
 
 }
 
-@connectToStores
 class AssetUpdateWrapper extends React.Component {
     static contextTypes = {
         router: React.PropTypes.func.isRequired
     };
 
-    static getStores() {
-        return [SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {tab: SettingsStore.getState().viewSettings.get("updateAssetTab")}
-    }
-
     render() {
         let asset = this.context.router.getCurrentParams().asset;
-        return <AccountAssetUpdate asset={asset} {...this.props} />;
+        return <AccountAssetUpdate asset={asset} {...this.props}/>;
     }   
 }
 

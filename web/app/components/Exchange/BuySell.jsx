@@ -7,6 +7,7 @@ import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
+import FormattedFee from "../Utility/FormattedFee";
 
 @BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
@@ -106,6 +107,17 @@ class BuySell extends React.Component {
                                     {base.get("symbol")}
                                 </div>
                             </div>
+
+                            <div className="grid-block no-padding buy-sell-row">
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                                    <Translate content="transfer.fee" />:
+                                </div>
+                                <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <FormattedFee opType="limit_order_create" />
+                                </div>
+
+                            </div>
+
                         </div>
                         <div>
                             <div className="grid-content clear-fix no-padding">

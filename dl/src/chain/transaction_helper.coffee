@@ -8,7 +8,7 @@ key = require '../common/key_utils'
 chain_types = require './chain_types'
 
 #Promise = require '../common/Promise'
-ByteBuffer = require('../common/bytebuffer')
+ByteBuffer = require('bytebuffer')
 Long = ByteBuffer.Long
 PrivateKey = require '../ecc/key_private'
 Signature = require '../ecc/signature'
