@@ -281,7 +281,7 @@ class AccountDepositWithdraw extends React.Component {
                 <hr/>
 
                 <div className="content-block">
-                        <h3><Translate content="gateway.transwiser.gateway" /><small style={{float:'right',lineHeight:2}}><a href="http://www.transwiser.com" target="_blank">http://www.transwiser.com</a></small></h3>
+                        <h3><a href="http://www.transwiser.com" target="_blank"><Translate content="gateway.transwiser.gateway" /></a></h3>
                     <div>
                         <table className="table">
                             <thead>
