@@ -235,7 +235,7 @@ class AccountDepositWithdraw extends React.Component {
                     <h3><a href="https://blocktrades.us" target="__blank">BlockTrades.us</a></h3>
                     <BlockTradesBridgeDepositRequest
                         gateway="blocktrades"
-                        url="https://blocktrades.us/api/v2"
+                        url="https://api.blocktrades.us/v2"
                         bridge_mode={true}
                         issuer_account="blocktrades"
                         account={this.props.account}
@@ -446,7 +446,7 @@ class AccountDepositWithdraw extends React.Component {
                             <tbody>
                             <BlockTradesGatewayDepositRequest
                                 gateway="blocktrades"
-                                url="https://blocktrades.us/api/v2"
+                                url="https://api.blocktrades.us/v2"
                                 issuer_account="blocktrades"
                                 account={this.props.account}
                                 receive_asset="TRADE.BTC"
@@ -456,7 +456,7 @@ class AccountDepositWithdraw extends React.Component {
                                 receive_coin_type="trade.btc" />
                             <BlockTradesGatewayDepositRequest
                                 gateway="blocktrades"
-                                url="https://blocktrades.us/api/v2"
+                                url="https://api.blocktrades.us/v2"
                                 issuer_account="blocktrades"
                                 account={this.props.account}
                                 deposit_coin_type="ltc"

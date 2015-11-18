@@ -626,7 +626,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             }
 
-            let deposit_limit_element = <span>...</span>;
+            let deposit_limit_element = <span>updating<span>;
             if (this.state.deposit_limit)
             {
                 if (this.state.deposit_limit.limit)
