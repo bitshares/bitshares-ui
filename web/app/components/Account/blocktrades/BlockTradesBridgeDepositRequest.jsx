@@ -586,185 +586,198 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         }
         else
         {
-            let withdraw_modal_id = this.getWithdrawModalId();
-            let withdraw_asset_symbol = this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol;
+            // depending on what wallets are online, we might support deposits, withdrawals, both, or neither at any given time.
+            let deposit_table = null;
+            let withdraw_table = null;
 
-            // deposit
-            let deposit_input_coin_type_options = [];
-            Object.keys(this.state.allowed_mappings_for_deposit).forEach(allowed_deposit_input_coin_type => {
-                deposit_input_coin_type_options.push(<option value={allowed_deposit_input_coin_type}>{this.state.coins_by_type[allowed_deposit_input_coin_type].symbol}</option>);
-            });
-            let deposit_output_coin_type_options = [];
-            let deposit_output_coin_types = this.state.allowed_mappings_for_deposit[this.state.deposit_input_coin_type];
-            deposit_output_coin_types.forEach(allowed_deposit_output_coin_type => {
-                deposit_output_coin_type_options.push(<option value={allowed_deposit_output_coin_type}>{this.state.coins_by_type[allowed_deposit_output_coin_type].symbol}</option>);
-            });
-
-            let input_address = this.state.input_address ? this.state.input_address : "unknown";
-
-            let deposit_input_output_estimator_elements = <span></span>;
+            let select_style = {width: "8em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
             let input_style = {width: "9em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
-            if (this.state.deposit_input_coin_type && this.state.deposit_output_coin_type)
+
+            if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_deposit).length > 0)
             {
+                // deposit
+                let deposit_input_coin_type_options = [];
+                Object.keys(this.state.allowed_mappings_for_deposit).forEach(allowed_deposit_input_coin_type => {
+                    deposit_input_coin_type_options.push(<option value={allowed_deposit_input_coin_type}>{this.state.coins_by_type[allowed_deposit_input_coin_type].symbol}</option>);
+                });
+                let deposit_input_coin_type_select = 
+                    <select value={this.state.deposit_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "deposit")} style={select_style}>
+                      {deposit_input_coin_type_options}
+                    </select>;
+
+                let deposit_output_coin_type_options = [];
+                let deposit_output_coin_types = this.state.allowed_mappings_for_deposit[this.state.deposit_input_coin_type];
+                deposit_output_coin_types.forEach(allowed_deposit_output_coin_type => {
+                    deposit_output_coin_type_options.push(<option value={allowed_deposit_output_coin_type}>{this.state.coins_by_type[allowed_deposit_output_coin_type].symbol}</option>);
+                });
+                let deposit_output_coin_type_select = 
+                    <select value={this.state.deposit_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "deposit")} style={select_style}>
+                      {deposit_output_coin_type_options}
+                    </select>
+
+                let input_address = this.state.input_address ? this.state.input_address : "unknown";
+
+                    
                 let estimated_input_amount_text = this.state.deposit_estimated_input_amount || "calculating";
                 let estimated_output_amount_text = this.state.deposit_estimated_output_amount || "calculating";
 
-                deposit_input_output_estimator_elements = 
-                    <span>
+                let deposit_input_amount_edit_box = 
                         <input type="text"
                             value={estimated_input_amount_text}
                             onChange={this.onInputAmountChanged.bind(this, "deposit") } 
-                            style={input_style} />
-                        {this.state.coins_by_type[this.state.deposit_input_coin_type].symbol}
-                        &nbsp;&rarr;&nbsp;
+                            style={input_style} />;
+                let deposit_output_amount_edit_box = 
                         <input type="text"
                             value={estimated_output_amount_text}
                             onChange={this.onOutputAmountChanged.bind(this, "deposit") } 
-                            style={input_style} />
-                        {this.state.coins_by_type[this.state.deposit_output_coin_type].symbol}
-                    </span>;
-
+                            style={input_style} />;
+                
+                let deposit_limit_element = <span>updating</span>;
+                if (this.state.deposit_limit)
+                {
+                    if (this.state.deposit_limit.limit)
+                        deposit_limit_element = <span style={{color: "grey", "line-height": "150%"}}>Limit: {this.state.deposit_limit.limit} {this.state.coins_by_type[this.state.deposit_input_coin_type].symbol}
+</span>;
+                    else
+                        deposit_limit_element = null;
+                    //else
+                    //    deposit_limit_element = <span>no limit</span>;
+                }
+                
+                deposit_table = 
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th style={{width: "38em"}}>Deposit</th>
+                                <th style={{width: "12em"}}>Balance</th>
+                                <th>Deposit To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {deposit_input_amount_edit_box}{deposit_input_coin_type_select}
+                                    &rarr;
+                                    {deposit_output_amount_edit_box}{deposit_output_coin_type_select}
+                                </td>
+                                <td>
+                                    <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].symbol} /> 
+                                </td>
+                                <td>
+                                    {input_address}<br/>
+                                    {deposit_limit_element}                                 
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>;
             }
 
-            let deposit_limit_element = <span>updating</span>;
-            if (this.state.deposit_limit)
+            if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_withdraw).length > 0)
             {
-                if (this.state.deposit_limit.limit)
-                    deposit_limit_element = <span>{this.state.deposit_limit.limit}</span>;
-                else
-                    deposit_limit_element = <span>no limit</span>;
-            }
-            
-            // withdrawal
-            let withdraw_input_coin_type_options = [];
-            Object.keys(this.state.allowed_mappings_for_withdraw).forEach(allowed_withdraw_input_coin_type => {
-                withdraw_input_coin_type_options.push(<option value={allowed_withdraw_input_coin_type}>{this.state.coins_by_type[allowed_withdraw_input_coin_type].symbol}</option>);
-            });
-            let withdraw_output_coin_type_options = [];
-            let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
-            withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
-                withdraw_output_coin_type_options.push(<option value={allowed_withdraw_output_coin_type}>{this.state.coins_by_type[allowed_withdraw_output_coin_type].symbol}</option>);
-            });
+                let withdraw_modal_id = this.getWithdrawModalId();
+                let withdraw_asset_symbol = this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol;
 
-            let withdraw_input_output_estimator_elements = <span></span>;
-            if (this.state.withdraw_input_coin_type && this.state.withdraw_output_coin_type)
-            {
+                // withdrawal
+                let withdraw_input_coin_type_options = [];
+                Object.keys(this.state.allowed_mappings_for_withdraw).forEach(allowed_withdraw_input_coin_type => {
+                    withdraw_input_coin_type_options.push(<option value={allowed_withdraw_input_coin_type}>{this.state.coins_by_type[allowed_withdraw_input_coin_type].symbol}</option>);
+                });
+                let withdraw_input_coin_type_select =
+                    <select value={this.state.withdraw_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "withdraw")} style={select_style}>
+                      {withdraw_input_coin_type_options}
+                    </select>;
+
+                let withdraw_output_coin_type_options = [];
+                let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
+                withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+                    withdraw_output_coin_type_options.push(<option value={allowed_withdraw_output_coin_type}>{this.state.coins_by_type[allowed_withdraw_output_coin_type].symbol}</option>);
+                });
+                let withdraw_output_coin_type_select = 
+                    <select value={this.state.withdraw_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "withdraw")} style={select_style}>
+                      {withdraw_output_coin_type_options}
+                    </select>;
+
                 let estimated_input_amount_text = this.state.withdraw_estimated_input_amount || "calculating";
-                let estimated_output_amount_text = this.state.withdraw_estimated_output_amount || "calculating";
 
-                withdraw_input_output_estimator_elements = 
+                let withdraw_input_amount_edit_box = 
+                    <input type="text"
+                        value={estimated_input_amount_text}
+                        onChange={this.onInputAmountChanged.bind(this, "withdraw") } 
+                        style={input_style} />;
+
+                let estimated_output_amount_text = this.state.withdraw_estimated_output_amount || "calculating";
+                let withdraw_output_amount_edit_box = 
+                    <input type="text"
+                        value={estimated_output_amount_text}
+                        onChange={this.onOutputAmountChanged.bind(this, "withdraw") } 
+                        style={input_style} />;
+
+                let withdraw_button = 
                     <span>
-                        <input type="text"
-                            value={estimated_input_amount_text}
-                            onChange={this.onInputAmountChanged.bind(this, "withdraw") } 
-                            style={input_style} />
-                        {this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol}
-                        &nbsp;&rarr;&nbsp;
-                        <input type="text"
-                            value={estimated_output_amount_text}
-                            onChange={this.onOutputAmountChanged.bind(this, "withdraw") } 
-                            style={input_style} />
-                        {this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
+                        <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
+                        <Modal id={withdraw_modal_id} overlay={true}>
+                            <Trigger close={withdraw_modal_id}>
+                                <a href="#" className="close-button">&times;</a>
+                            </Trigger>
+                            <br/>
+                            <div className="grid-block vertical">
+                                <WithdrawModalBlocktrades
+                                    account={this.props.account.get('name')}
+                                    issuer={this.props.issuer_account.get('name')}
+                                    asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol}
+                                    output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
+                                    output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
+                                    output_coin_type={this.state.withdraw_output_coin_type}
+                                    modal_id={withdraw_modal_id} />
+                            </div>
+                        </Modal>
                     </span>;
 
-            }
-
-            let withdraw_limit_element = <span>...</span>;
-            if (this.state.withdraw_limit)
-            {
-                if (this.state.withdraw_limit.limit)
-                    withdraw_limit_element = <span>{this.state.withdraw_limit.limit}</span>;
-                else
-                    withdraw_limit_element = <span>no limit</span>;
-            }
+                let withdraw_limit_element = <span>...</span>;
+                if (this.state.withdraw_limit)
+                {
+                    if (this.state.withdraw_limit.limit)
+                        withdraw_limit_element = <span style={{color: "grey", "line-height": "150%"}}>Limit: {this.state.withdraw_limit.limit} {this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol}</span>;
+                    else
+                        withdraw_limit_element = <span>no limit</span>;
+                }
 
 
-            let select_style = {width: "8em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
+               withdraw_table = <table className="table">
+                        <thead>
+                            <tr>
+                                <th style={{width: "38em"}}>Withdraw</th>
+                                <th style={{width: "12em"}}>Balance</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {withdraw_input_amount_edit_box}{withdraw_input_coin_type_select}
+                                    &rarr;
+                                    {withdraw_output_amount_edit_box}{withdraw_output_coin_type_select}
+                                </td>
+                                <td>
+                                    <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol} /> 
+                                </td>
+                                <td>
+                                    {withdraw_button}<br/>
+                                    {withdraw_limit_element}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+        }
+
+            return <div>{deposit_table}{withdraw_table}</div>;
+
+
             //                        <th style={{width: "25%"}}>Deposit</th>
             //                        <th style={{width: "30%"}}>Deposit To</th>
             //                        <th style={{width: "30%"}}>Rate</th>
             //                        <th style={{width: "15%"}}>Limit</th>
             return  <div>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Deposit</th>
-                                    <th>Deposit To</th>
-                                    <th>Rate</th>
-                                    <th>Limit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <select value={this.state.deposit_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "deposit")} style={select_style}>
-                                          {deposit_input_coin_type_options}
-                                        </select>
-                                        &rarr;
-                                        <select value={this.state.deposit_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "deposit")} style={select_style}>
-                                          {deposit_output_coin_type_options}
-                                        </select>
-                                    </td>
-                                    <td>
-                                        {input_address}
-                                        </td>
-                                            <td>
-                                        {deposit_input_output_estimator_elements}
-                                    </td>
-                                    <td>
-                                        {deposit_limit_element} {this.state.coins_by_type[this.state.deposit_input_coin_type].symbol}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Withdraw</th>
-                                    <th>Withdraw</th>
-                                    <th>Rate</th>
-                                    <th>Limit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <select value={this.state.withdraw_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "withdraw")} style={select_style}>
-                                          {withdraw_input_coin_type_options}
-                                        </select>
-                                        &rarr;
-                                        <select value={this.state.withdraw_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "withdraw")} style={select_style}>
-                                          {withdraw_output_coin_type_options}
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button className={"button outline"} onClick={this.onWithdraw.bind(this)}><Translate content="" /> Withdraw </button>
-                                        <Modal id={withdraw_modal_id} overlay={true}>
-                                            <Trigger close={withdraw_modal_id}>
-                                                <a href="#" className="close-button">&times;</a>
-                                            </Trigger>
-                                            <br/>
-                                            <div className="grid-block vertical">
-                                                <WithdrawModalBlocktrades
-                                                    account={this.props.account.get('name')}
-                                                    issuer={this.props.issuer_account.get('name')}
-                                                    asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol}
-                                                    output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
-                                                    output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
-                                                    output_coin_type={this.state.withdraw_output_coin_type}
-                                                    modal_id={withdraw_modal_id} />
-                                            </div>
-                                        </Modal>
-                                    </td>
-                                    <td>
-                                        {withdraw_input_output_estimator_elements}
-                                    </td>
-                                    <td>
-                                        {withdraw_limit_element} {this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>;
 
         }

@@ -232,7 +232,7 @@ class AccountDepositWithdraw extends React.Component {
                 <h2><Translate content="gateway.bridge" /></h2>
                 <hr/>
 				<div className="content-block">
-                    <h3><a href="https://blocktrades.us" target="__blank">BlockTrades.us</a></h3>
+                    <h3><a href="https://blocktrades.us" target="__blank">BlockTrades</a></h3>
                     <BlockTradesBridgeDepositRequest
                         gateway="blocktrades"
                         url="https://api.blocktrades.us/v2"
@@ -431,7 +431,7 @@ class AccountDepositWithdraw extends React.Component {
                     </div>
                 </div>
                 <div className="content-block">
-                    <h3>BlockTrades.us</h3>
+                    <h3><a href="https://blocktrades.us" target="__blank">BlockTrades</a></h3>
 
                     <div>
                         <table className="table">
