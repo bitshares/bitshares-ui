@@ -50,7 +50,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         {
             request_in_progress: 0,
             request_complete: 1,
-            request_failed: 2 
+            request_failed: 2
         };
 
         this.estimation_directions =
@@ -59,12 +59,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             input_from_output: 1
         };
 
-        this.state = 
-        { 
+        this.state =
+        {
             // things that get displayed for deposits
             deposit_input_coin_type: null,
             deposit_output_coin_type: null,
-            input_address: null, 
+            input_address: null,
             deposit_estimated_input_amount: this.props.initial_deposit_estimated_input_amount || "1.0",
             deposit_estimated_output_amount: null,
             deposit_limit: null,
@@ -84,7 +84,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             deposit_estimate_direction: this.estimation_directions.output_from_input,
 
             // deposit limit-related
-            deposit_limit_cache: {}, 
+            deposit_limit_cache: {},
             deposit_limit_requests_in_progress: {},
 
             // generic data from BlockTrades
@@ -92,11 +92,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             allowed_mappings_for_deposit: null,
             allowed_mappings_for_withdraw: null
         };
-        
+
         // get basic data from blocktrades
 
         let coin_types_url = this.props.url + "/coins";
-        let coin_types_promise = fetch(coin_types_url, 
+        let coin_types_promise = fetch(coin_types_url,
                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                  .then(response => response.json());
         
@@ -603,7 +603,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             let input_address = this.state.input_address ? this.state.input_address : "unknown";
 
             let deposit_input_output_estimator_elements = <span></span>;
-            let input_style = {width: "10em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
+            let input_style = {width: "9em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
             if (this.state.deposit_input_coin_type && this.state.deposit_output_coin_type)
             {
                 let estimated_input_amount_text = this.state.deposit_estimated_input_amount || "calculating";
@@ -679,15 +679,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             }
 
 
-            let select_style = {width: "10em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
+            let select_style = {width: "8em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
+            //                        <th style={{width: "25%"}}>Deposit</th>
+            //                        <th style={{width: "30%"}}>Deposit To</th>
+            //                        <th style={{width: "30%"}}>Rate</th>
+            //                        <th style={{width: "15%"}}>Limit</th>
             return  <div>
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th style={{width: "25%"}}>Deposit</th>
-                                    <th style={{width: "30%"}}>Deposit To</th>
-                                    <th style={{width: "30%"}}>Rate</th>
-                                    <th style={{width: "15%"}}>Limit</th>
+                                    <th>Deposit</th>
+                                    <th>Deposit To</th>
+                                    <th>Rate</th>
+                                    <th>Limit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -716,10 +720,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th style={{width: "25%"}}>Withdraw</th>
-                                    <th style={{width: "30%"}}>Withdraw</th>
-                                    <th style={{width: "30%"}}>Rate</th>
-                                    <th style={{width: "15%"}}>Limit</th>
+                                    <th>Withdraw</th>
+                                    <th>Withdraw</th>
+                                    <th>Rate</th>
+                                    <th>Limit</th>
                                 </tr>
                             </thead>
                             <tbody>
