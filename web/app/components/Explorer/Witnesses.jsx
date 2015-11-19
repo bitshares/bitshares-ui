@@ -86,7 +86,7 @@ class WitnessRow extends React.Component {
         router: React.PropTypes.func.isRequired
     };
 
-    _onCardClick(e) {
+    _onRowClick(e) {
         e.preventDefault();
         this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
     }
@@ -118,7 +118,7 @@ class WitnessRow extends React.Component {
         );
 
         return (
-            <tr className={currentClass} >
+            <tr className={currentClass} onClick={this._onRowClick.bind(this)} >
                 <td>{rank}</td>
                 <td style={color}>{witness.get("name")}</td>
                 <td><TimeAgo time={last_aslot_time} /></td>
@@ -154,11 +154,18 @@ class WitnessList extends React.Component {
 
     render() {
 
-        let {witnesses, current, cardView} = this.props;
+        let {witnesses, current, cardView, witnessList} = this.props;
         let {sortBy, inverseSort} = this.state;
         let most_recent_aslot = 0;
         let ranks = {};
+
         witnesses
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            return witnessList.indexOf(a.get("id")) !== -1;
+        })
         .sort((a, b) => {
             if (a && b) {
                 return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
@@ -235,7 +242,7 @@ class WitnessList extends React.Component {
         // table view
         if (!cardView) {
             return (
-                <table className="table">
+                <table className="table table-hover">
                     <thead>
                         <tr>
                             <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
@@ -302,7 +309,7 @@ class Witnesses extends React.Component {
     }
 
     render() {
-        let { dynGlobalObject, globalObject} = this.props;
+        let { dynGlobalObject, globalObject } = this.props;
         dynGlobalObject = dynGlobalObject.toJS();
         globalObject = globalObject.toJS();
 
@@ -359,6 +366,7 @@ class Witnesses extends React.Component {
                                     current_aslot={dynGlobalObject.current_aslot}
                                     current={current ? current.get("id") : null}
                                     witnesses={Immutable.List(globalObject.active_witnesses)}
+                                    witnessList={globalObject.active_witnesses}
                                     filter={this.state.filterWitness}
                                     cardView={this.state.cardView}
                                 />

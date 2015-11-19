@@ -56,6 +56,15 @@ class CommitteeMemberRow extends React.Component {
 
     static propTypes = {
         committee_member: ChainTypes.ChainAccount.isRequired
+    };
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
+
+    _onRowClick(e) {
+        e.preventDefault();
+        this.context.router.transitionTo("account", {account_name: this.props.committee_member.get("name")});
     }
 
     render() {
@@ -64,31 +73,13 @@ class CommitteeMemberRow extends React.Component {
         if ( !committee_member_data ) return null;
         let total_votes = committee_member_data.get( "total_votes" );
 
-        // let witness_aslot = witness_data.get('last_aslot')
-        let color = {};
-        // if( this.props.most_recent - witness_aslot > 100 ) {
-        //    color = {borderLeft: "1px solid #FCAB53"};
-        // }
-        // else {
-        //    color = {borderLeft: "1px solid #50D2C2"};
-        // }
-
-        // let currentClass = isCurrent ? "active-witness" : "";
-
-        // let missed = committee_member_data.get('total_missed');
-        // let missedClass = classNames("txtlabel",
-        //     {"success": missed <= 25 },
-        //     {"info": missed > 25 && missed <= 50},
-        //     {"warning": missed > 50 && missed <= 150},
-        //     {"error": missed >= 150}
-        // );
 
         return (
-            <tr>
+            <tr onClick={this._onRowClick.bind(this)}>
                 <td>{rank}</td>
-                <td style={color}>{committee_member.get("name")}</td>
+                <td>{committee_member.get("name")}</td>
                 <td><FormattedAsset amount={committee_member_data.get('total_votes')} asset="1.3.0" /></td>
-                <td style={color}>{committee_member_data.get("url")}</td>
+                <td>{committee_member_data.get("url")}</td>
             </tr>
         )
     }
@@ -116,13 +107,21 @@ class CommitteeMemberList extends React.Component {
     }
 
     render() {
-        let {committee_members, cardView} = this.props;
+        let {committee_members, cardView, membersList} = this.props;
         let {sortBy, inverseSort} = this.state;
 
         let itemRows = null;
 
         let ranks = {};
-        committee_members.sort((a, b) => {
+
+        committee_members
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            return membersList.indexOf(a.get("id")) !== -1;
+        })
+        .sort((a, b) => {
             if (a && b) {
                 return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
             }
@@ -185,7 +184,7 @@ class CommitteeMemberList extends React.Component {
         // table view
         if (!cardView) {
             return (
-                <table className="table">
+                <table className="table table-hover">
                     <thead>
                         <tr>
                             <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
@@ -285,6 +284,7 @@ class CommitteeMembers extends React.Component {
                             </div>
                             <CommitteeMemberList
                                 committee_members={Immutable.List(globalObject.active_committee_members)}
+                                membersList={globalObject.active_committee_members}
                                 filter={this.state.filterCommitteeMember}
                                 cardView={this.state.cardView}
                             />

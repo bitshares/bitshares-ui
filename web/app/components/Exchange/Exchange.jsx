@@ -1058,11 +1058,14 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
+                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
                         <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
                             <MarketHistory
+                                className="left-order-book no-padding no-overflow"
+                                headerStyle={{paddingTop: 0}}
                                 history={activeMarketHistory}
+                                myHistory={currentAccount.get("history")}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
