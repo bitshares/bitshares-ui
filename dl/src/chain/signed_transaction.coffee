@@ -1,7 +1,7 @@
 ObjectId = require './object_id'
 Signature = require '../ecc/signature'
 PublicKey = require '../ecc/key_public'
-ByteBuffer = require('../common/bytebuffer')
+ByteBuffer = require('bytebuffer')
 Long = ByteBuffer.Long
 Aes = require '../ecc/aes'
 

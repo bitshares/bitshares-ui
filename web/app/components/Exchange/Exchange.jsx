@@ -17,15 +17,18 @@ import {Link} from "react-router";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
+import ChainStore from "api/ChainStore";
 import BindToChainState from "../Utility/BindToChainState";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
-import classnames from "classnames";
+import cnames from "classnames";
 import ee from "emitter-instance";
 import market_utils from "common/market_utils";
+import LoadingIndicator from "../LoadingIndicator";
+import ConfirmOrderModal from "./ConfirmOrderModal";
 
 require("./exchange.scss");
 
@@ -49,33 +52,41 @@ class PriceStat extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            nextProps.price !== this.props.price
+            nextProps.price !== this.props.price ||
+            nextProps.ready !== this.props.ready
         );
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({change: nextProps.price - this.props.price});
+        if (nextProps.ready && this.props.ready) {
+            this.setState({change: parseFloat(nextProps.price) - parseFloat(this.props.price)});
+        } else {
+            this.setState({change: 0});
+        }
     }
 
     render() {
-        let {base, quote, price, content} = this.props;
+        let {base, quote, price, content, decimals, ready, volume} = this.props;
         let {change} = this.state;
         let changeClass = null;
-        if (change !== null) {
+        if (change && change !== null) {
             changeClass = change > 0 ? "change-up" : "change-down";
         }
+
+        let value = !volume ? utils.format_number(price, Math.max(decimals >= 0 ? decimals : 5, quote ? quote.get("precision") : 0)) :
+            utils.format_volume(price);
+
         return (
-            <li className="stat">
+            <li className={cnames("stat", this.props.className)}>
                 <span>
                     <Translate component="span" content={content} />
                     <br/>
-                    <b className={"value stat-primary"}>
-                        {utils.format_number(price, Math.max(5, quote ? quote.get("precision") : 0))}
-                        {change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-
-                    </b>
+                        <b className={"value stat-primary"}>
+                            {!ready ? 0 : value}
+                            {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
+                        </b>
                     <br/>
-                    <em>{base.get("symbol")}/{quote.get("symbol")}</em>
+                    <em>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</em>
                 </span>
             </li>
         );
@@ -87,24 +98,48 @@ class Exchange extends React.Component {
     constructor(props) {
         super();
 
-        this.state = {
+        this.state = this._initialState(props);
+
+        this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
+    }
+
+    _initialState(props) {
+        return {
             history: [],
             buyAmount: 0,
-            buyPrice: 0,
+            displaySellPrice: 0,
+            displayBuyPrice: 0,
+            buyPrice: {
+                quote: {
+                    asset_id: props.quoteAsset.get("id"),
+                    amount: 0
+                },
+                base: {
+                     asset_id: props.baseAsset.get("id"),
+                     amount: 0
+                }
+            },
+            sellPrice: {
+                quote: {
+                    asset_id: props.baseAsset.get("id"),
+                    amount: 0
+                },
+                base: {
+                     asset_id: props.quoteAsset.get("id"),
+                     amount: 0
+                }
+            },
             buyTotal: 0,
             sellAmount: 0,
-            sellPrice: 0,
             sellTotal: 0,
             sub: null,
-            activeTab: "buy",
             flipBuySell: props.viewSettings.get("flipBuySell"),
             favorite: false,
             showDepthChart: props.viewSettings.get("showDepthChart"),
-            leftOrderBook: props.viewSettings.get("leftOrderBook")
+            leftOrderBook: props.viewSettings.get("leftOrderBook"),
+            buyDiff: false,
+            sellDiff: false
         };
-
-        this._createLimitOrderConfirm = this._createLimitOrderConfirm.bind(this);
-        this._setDepthLine = debounce(this._setDepthLine.bind(this), 500);
     }
 
     static propTypes = {
@@ -146,7 +181,7 @@ class Exchange extends React.Component {
     componentWillMount() {
         if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
             this._subToMarket(this.props);
-            this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
+            // this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
         }
 
         emitter.on('cancel-order', limitListener = MarketsActions.cancelLimitOrderSuccess);
@@ -163,23 +198,24 @@ class Exchange extends React.Component {
     }
 
     _addMarket(quote, base) {
-        if (!this.state.favorite) {
-            SettingsActions.addMarket(quote, base);
-            this.setState({
-                favorite: true
-            });
+        let marketID = `${quote}_${base}`;
+        if (!this.props.starredMarkets.has(marketID)) {
+            SettingsActions.addStarMarket(quote, base);
+        } else {
+            SettingsActions.removeStarMarket(quote, base);
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.quoteAsset.toJS && nextProps.baseAsset.toJS) {
-            this._addMarket(nextProps.quoteAsset.get("symbol"), nextProps.baseAsset.get("symbol"));
+            // this._addMarket(nextProps.quoteAsset.get("symbol"), nextProps.baseAsset.get("symbol"));
             if (!this.state.sub) {
                 return this._subToMarket(nextProps);
             }
         }
 
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
+            this.setState(this._initialState(nextProps));
 
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
@@ -222,9 +258,36 @@ class Exchange extends React.Component {
         });
     }
 
-    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, e) {
+    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, balance, type, e) {
         e.preventDefault();
-        if (sellAssetAmount > balance) {
+        let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
+
+        // TODO Convert fee to relevant asset fee and check if user has sufficient balance
+        if (sellAsset.get("id") !== "1.3.0") {
+            let cer = sellAsset.getIn(["options", "core_exchange_rate"]);
+            // console.log("sellAsset:", sellAsset.toJS());
+        }
+
+        let {lowestAsk, highestBid} = this._parseMarket();
+        if (type === "buy") {
+            let diff = (100 * (this.state.displayBuyPrice - lowestAsk) / lowestAsk);
+            if (Math.abs(diff) > 25) {
+                this.refs.buy.show();
+                return this.setState({
+                    buyDiff: diff
+                });
+            }
+        } else if (type === "sell") {
+            let diff = (100 * (this.state.displaySellPrice - highestBid) / highestBid);
+            if (Math.abs(diff) > 25) {
+                this.refs.sell.show();
+                return this.setState({
+                    sellDiff: diff
+                });
+            }
+        }
+
+        if ((sellAssetAmount) > balance) {
             return notify.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.symbol,
                 level: "error"
@@ -239,6 +302,18 @@ class Exchange extends React.Component {
         }
 
         this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount);
+    }
+
+    _forceBuy(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, value) {
+        if (value) {
+            this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount)
+        }
+    }
+
+    _forceSell(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, value) {
+        if (value) {
+            this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount)
+        }
     }
 
     _cancelLimitOrder(orderID, e) {
@@ -275,12 +350,23 @@ class Exchange extends React.Component {
     _depthChartClick(base, quote, power, e) {
         e.preventDefault();
         let value = this._limitByPrecision(e.xAxis[0].value / power, quote);
+        let buyPrice = this._getBuyPrice(e.xAxis[0].value / power);
+        let sellPrice = this._getSellPrice(e.xAxis[0].value / power);
+        let displayBuyPrice = this._getDisplayPrice("bid", buyPrice);
+        let displaySellPrice = this._getDisplayPrice("ask", sellPrice);
+        // let buyPrice = this._buyPriceChanged(base, quote, {target: {value: value}});
+
         this.setState({
-            depthLine: value
+            depthLine: value,
+            buyPrice: buyPrice,
+            displayBuyPrice: displayBuyPrice,
+            buyTotal: this._limitByPrecision(this.getBuyTotal(buyPrice, this.state.buyAmount), base),
+            sellPrice: sellPrice,
+            displaySellPrice: displaySellPrice,
+            sellTotal: this._limitByPrecision(this.getSellTotal(sellPrice, this.state.sellAmount), base)
         });
 
-        this._buyPriceChanged(base, quote, {target: {value: value}});
-        this._sellPriceChanged(base, quote, {target: {value: value}});
+        // this._sellPriceChanged(base, quote, {target: {value: value}});
     }
 
     _addZero(value) {
@@ -294,9 +380,7 @@ class Exchange extends React.Component {
         return value;
     }
 
-    _setDepthLine(value) { this.setState({depthLine: value}); }
-
-    _limitByPrecision(value, asset) {
+    _limitByPrecision(value, asset, floor = true) {
         let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
         let valueString = value.toString();
         let splitString = valueString.split(".");
@@ -304,7 +388,7 @@ class Exchange extends React.Component {
             return value;
         }
         let precision = utils.get_asset_precision(assetPrecision);
-        value = Math.floor(value * precision) / precision;
+        value = floor ? Math.floor(value * precision) / precision : Math.round(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;
         }
@@ -312,11 +396,14 @@ class Exchange extends React.Component {
     }
 
     _buyPriceChanged(base, quote, e) {
+        let price = this._getBuyPrice(e.target.value);
+
         this.setState({
-            buyPrice: this._limitByPrecision(this._addZero(e.target.value), {precision: quote.get("precision") + base.get("precision")}),
-            buyTotal: this._limitByPrecision(this.state.buyAmount * e.target.value, base)
+            buyPrice: price,
+            displayBuyPrice: e.target.value,
+            buyTotal: this._limitByPrecision(this.getBuyTotal(price, this.state.buyAmount), base),
+            depthLine: e.target.value
         });
-        this._setDepthLine(e.target.value);
     }
 
     _buyAmountChanged(base, quote, e) {
@@ -324,9 +411,10 @@ class Exchange extends React.Component {
         if (e.target.value.indexOf(".") !== e.target.value.length -1) {
             value = this._limitByPrecision(e.target.value, quote);
         }
+
         this.setState({
             buyAmount: this._addZero(value),
-            buyTotal: this._limitByPrecision(value * this.state.buyPrice, base)
+            buyTotal: this._limitByPrecision(this.getBuyTotal(this.state.buyPrice, value), base)
         });
     }
 
@@ -335,8 +423,11 @@ class Exchange extends React.Component {
         if (e.target.value.indexOf(".") !== e.target.value.length -1) {
             value = this._limitByPrecision(e.target.value, base);
         }
+
+        let amount = this.getBuyAmount(this.state.buyPrice, value);
+
         this.setState({
-            buyAmount: this._limitByPrecision(value / this.state.buyPrice, quote),
+            buyAmount: this._limitByPrecision(amount, quote),
             buyTotal: this._addZero(value)
         });
     }
@@ -348,16 +439,19 @@ class Exchange extends React.Component {
         }
         this.setState({
             sellAmount: this._addZero(value),
-            sellTotal: this._limitByPrecision(value * this.state.sellPrice, base)
+            sellTotal: this._limitByPrecision(this.getSellTotal(this.state.sellPrice, value), base)
         });
     }
 
     _sellPriceChanged(base, quote, e) {
+        let price = this._getSellPrice(e.target.value);
+
         this.setState({
-            sellPrice: this._limitByPrecision(this._addZero(e.target.value), {precision: quote.get("precision") + base.get("precision")}),
-            sellTotal: this._limitByPrecision(this.state.sellAmount * e.target.value, base)
+            sellPrice: price,
+            displaySellPrice: e.target.value,
+            sellTotal: this._limitByPrecision(this.getSellTotal(price, this.state.sellAmount), base),
+            depthLine: e.target.value
         });
-        this._setDepthLine(e.target.value);
     }
 
     _sellTotalChanged(base, quote, e) {
@@ -365,14 +459,11 @@ class Exchange extends React.Component {
         if (e.target.value.indexOf(".") !== e.target.value.length -1) {
             value = this._limitByPrecision(e.target.value, base);
         }
+
         this.setState({
-            sellAmount: this._limitByPrecision(value / this.state.sellPrice, quote),
+            sellAmount: this._limitByPrecision(this.getSellAmount(this.state.sellPrice, value), quote),
             sellTotal: this._addZero(value)
         });
-    }
-
-    _changeTab(value) {
-        this.setState({activeTab: value});
     }
 
     _flipBuySell() {
@@ -381,6 +472,33 @@ class Exchange extends React.Component {
         });
 
         this.setState({flipBuySell: !this.state.flipBuySell});
+    }
+
+    getSellAmount(price, total) {
+        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
+        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
+
+        return ((total * totalPrecision / price.base.amount) * price.quote.amount) / amountPrecision;
+    }
+
+    getSellTotal(price, amount) {
+        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
+        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
+
+        return ((amount * amountPrecision / price.quote.amount) * price.base.amount) / totalPrecision;
+    }
+
+    getBuyAmount(price, total) {
+        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
+        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
+
+        return ((total * totalPrecision / price.quote.amount) * price.base.amount) / amountPrecision;
+    }
+
+    getBuyTotal(price, amount) {
+        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
+        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
+        return ((amount * amountPrecision / price.base.amount) * price.quote.amount) / totalPrecision;
     }
 
     _toggleCharts() {
@@ -399,35 +517,43 @@ class Exchange extends React.Component {
         this.setState({leftOrderBook: !this.state.leftOrderBook});
     }
 
-    _orderbookClick(base, quote, price, amount, type) {
-
+    _orderbookClick(base, quote, type, order) {
         let precision = utils.get_asset_precision(quote.get("precision") + base.get("precision"));
 
         if (type === "bid") {
-
-            let value = amount.toString();
+            let value = order.totalAmount.toString();
             if (value.indexOf(".") !== value.length -1) {
-                value = this._limitByPrecision(amount, quote);
+                value = this._limitByPrecision(order.totalAmount, quote);
             }
-            // price = Math.round(price * precision) /
+
+
+            let displaySellPrice = this._getDisplayPrice("ask", order.sell_price);
+
+            let total = this.getSellTotal(order.sell_price, value);
+
             this.setState({
-                sellPrice: price,
+                displaySellPrice: displaySellPrice,
+                sellPrice: order.sell_price,
                 sellAmount: value,
-                sellTotal: this._limitByPrecision(value * price, base)
+                sellTotal: this._limitByPrecision(total, base)
             });
 
         } else if (type === "ask") {
-            let value = amount.toString();
+            let value = order.totalAmount.toString();
             if (value.indexOf(".") !== value.length -1) {
-                value = this._limitByPrecision(amount, base);
+                value = this._limitByPrecision(order.totalAmount, base);
             }
+
+            let displayBuyPrice = this._getDisplayPrice("bid", order.sell_price);
+
+            let total = this.getBuyTotal(order.sell_price, value);
+
             this.setState({
-                buyPrice: price,
+                displayBuyPrice: displayBuyPrice,
+                buyPrice: order.sell_price,
                 buyAmount: value,
-                buyTotal: this._limitByPrecision(value * price, base)
+                buyTotal: this._limitByPrecision(total, base)
             });
-            // this._buyPriceChanged(base, {target: {value: price}});
-            // this._buyAmountChanged(base, quote, {target: {value: amount.toString()}});
         }
     }
 
@@ -439,30 +565,118 @@ class Exchange extends React.Component {
         this.refs.borrowBase.show();
     }
 
-    _accountClickHandler(account_name, e) {
-        e.preventDefault();
-        ZfApi.publish("account_drop_down", "close");
-        let router = this.context.router;
-        AccountActions.setCurrentAccount(account_name);
-        let current_account_name = router.getCurrentParams()["account_name"];
-        if(current_account_name && current_account_name !== account_name) {
-            let routes = router.getCurrentRoutes();
-            this.context.router.transitionTo(routes[routes.length - 1].name, {account_name: account_name});
+    _getBuyPrice(price) {
+        let ratio = market_utils.priceToObject(price, "bid");
+        let {baseAsset, quoteAsset} = this.props;
+        let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
+        let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
+
+        return {
+            base: {
+                 asset_id: baseAsset.get("id"),
+                 amount: ratio.base * quotePrecision
+            },
+            quote: {
+                asset_id: quoteAsset.get("id"),
+                amount: ratio.quote * basePrecision
+            }
+        };
+    }
+
+    _getDisplayPrice(type, priceObject) {
+        let {quoteAsset, baseAsset} = this.props;
+        let precision =  Math.min(8, quoteAsset.get("precision") + baseAsset.get("precision"));
+        let price;
+
+        switch (type) {
+            case "bid":
+                price = utils.get_asset_price(priceObject.quote.amount, baseAsset, priceObject.base.amount, quoteAsset);
+                price = this._limitByPrecision(this._addZero(price), {precision}, false);
+                return isNaN(price) ? 0 : price;
+
+            case "ask":
+                price = utils.get_asset_price(priceObject.base.amount, baseAsset, priceObject.quote.amount, quoteAsset);
+                price = this._limitByPrecision(this._addZero(price), {precision}, false);
+                return isNaN(price) ? 0 : price;
+
+            default:
+                break;
         }
+
+        return price;
+    }
+
+    _getSellPrice(price) {
+        let ratio = market_utils.priceToObject(price, "ask");
+        let {baseAsset, quoteAsset} = this.props;
+        let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
+        let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
+
+        return {
+            base: {
+                 asset_id: this.props.quoteAsset.get("id"),
+                 amount: ratio.base * basePrecision
+            },
+            quote: {
+                asset_id: this.props.baseAsset.get("id"),
+                amount: ratio.quote * quotePrecision
+            }
+        };
+    }
+
+    _parseMarket() {
+        let {bids, asks, calls, invertedCalls} = this.props;
+        let combinedAsks, combinedBids, highestBid, lowestAsk;
+
+        if (calls.length && invertedCalls) {
+            combinedAsks = showCallLimit ? asks.concat(calls) : asks;
+            combinedBids = bids;
+        } else if (calls.length && !invertedCalls) {
+            combinedBids = showCallLimit ? bids.concat(calls) : bids;
+            combinedAsks = asks;
+        } else {
+            combinedAsks = asks;
+            combinedBids = bids;
+        }
+
+        lowestAsk = combinedAsks.length === 1 ?
+            combinedAsks[0].price_full : combinedAsks.length > 1 ?
+            combinedAsks.reduce((a, b) => {
+            if (a.price_full) {
+                return a.price_full <= b.price_full ? a.price_full : b.price_full;
+           } else {
+                return a <= b.price_full ? a : b.price_full;
+           }
+        }) : 0;
+
+        highestBid = combinedBids.length === 1 ?
+        combinedBids[0].price_full :
+        combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
+            return a >= b.price_full ? a : b.price_full;
+        }, 0) : 0;
+
+        let spread = lowestAsk - highestBid;
+
+        return {
+            spread,
+            combinedAsks,
+            combinedBids,
+            highestBid,
+            lowestAsk
+        };
+
     }
 
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
-            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
-            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets } = this.props;
-        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook} = this.state;
-
+            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
+        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
+            displayBuyPrice, displaySellPrice, buyDiff, sellDiff} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
             quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null, settlementQuote, settlementBase,
-            flipped = false, showCallLimit = false, highestBid, lowestAsk, latestPrice, changeClass;
+            flipped = false, showCallLimit = false, latestPrice, changeClass;
 
-
-        // console.log("currentAccount:", currentAccount.toJS());
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset;
             quote = quoteAsset;
@@ -534,36 +748,8 @@ class Exchange extends React.Component {
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
-        let combinedAsks, combinedBids;
+        let {combinedAsks, combinedBids, spread, lowestAsk, highestBid} = this._parseMarket();
 
-        if (calls.length && invertedCalls) {
-            combinedAsks = showCallLimit ? asks.concat(calls) : asks;
-            combinedBids = bids;
-        } else if (calls.length && !invertedCalls) {
-            combinedBids = showCallLimit ? bids.concat(calls) : bids;
-            combinedAsks = asks;
-        } else {
-            combinedAsks = asks;
-            combinedBids = bids;
-        }
-
-        lowestAsk = combinedAsks.length === 1 ?
-            combinedAsks[0].price_full : combinedAsks.length > 1 ?
-            combinedAsks.reduce((a, b) => {
-            if (a.price_full) {
-                return a.price_full <= b.price_full ? a.price_full : b.price_full;
-           } else {
-                return a <= b.price_full ? a : b.price_full;
-           }
-        }) : 0;
-
-        highestBid = combinedBids.length === 1 ?
-        combinedBids[0].price_full :
-        combinedBids.length > 0 ? combinedBids.reduce((a, b) => {
-            return a >= b.price_full ? a : b.price_full;
-        }, 0) : 0;
-
-        let spread = lowestAsk - highestBid;
 
         // Latest price
         if (activeMarketHistory.size) {
@@ -582,46 +768,20 @@ class Exchange extends React.Component {
             }
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             latestPrice = market_utils.parse_order_history(latest, paysAsset, receivesAsset, isAsk, flipped);
+
+            isAsk = false;
             if (second_latest) {
                 if (second_latest.pays.asset_id === base.get("id")) {
                     paysAsset = base;
                     receivesAsset = quote;
+                    isAsk = true;
                 } else {
                     paysAsset = quote;
                     receivesAsset = base;
-                    isAsk = true;
                 }
+
                 let oldPrice = market_utils.parse_order_history(second_latest, paysAsset, receivesAsset, isAsk, flipped);
-                changeClass = latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
-            }
-
-        }
-
-        let accountsDropDown = null;
-        if (currentAccount) {
-
-            let account_display_name = currentAccount.get("name").length > 20 ? `${currentAccount.get("name").slice(0, 20)}..` : currentAccount.get("name");
-
-            if(linkedAccounts.size > 1) {
-                let accountsList = linkedAccounts
-                    .sort()
-                    .map(name => {
-                        return <li key={name}><a href onClick={this._accountClickHandler.bind(this, name)}>{name}</a></li>;
-                    });
-
-                accountsDropDown = (
-                    <ActionSheet>
-                        <ActionSheet.Button title="">
-                            <a className="button">
-                                <Icon name="user"/>&nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
-                            </a>
-                        </ActionSheet.Button>
-                        <ActionSheet.Content >
-                            <ul className="no-first-element-top-border">
-                                {accountsList}
-                            </ul>
-                        </ActionSheet.Content>
-                    </ActionSheet>);
+                changeClass = latestPrice.full === oldPrice.full ? "" : latestPrice.full - oldPrice.full > 0 ? "change-up" : "change-down";
             }
         }
 
@@ -639,14 +799,26 @@ class Exchange extends React.Component {
 
 
         let bucketOptions = buckets.map(bucket => {
-            return <div className={classnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div className={cnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
 
 
-        return (
+        // Market stats
+        let dayChange = marketStats.get("change");
 
+        let dayChangeClass = parseInt(dayChange, 10) === 0 ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
+        let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
+        let volumeBase = marketStats.get("volumeBase");
+        let volumeQuote = marketStats.get("volumeQuote");
+
+        // Favorite star
+        let marketID = `${quoteSymbol}_${baseSymbol}`;
+        let starClass = starredMarkets.has(marketID) ? "gold-star" : "grey-star";
+
+        return (
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
+                    {!marketReady ? <LoadingIndicator /> : null}
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
@@ -671,31 +843,23 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
+                    <div className={cnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
-                        <div className="grid-block no-padding shrink overflow-visible" style={{paddingTop: 0}}>
-                            <div className="grid-block overflow-visible">
+                        <div className="grid-block no-padding shrink overflow-visible" style={{minHeight: "67px"}}>
+                            <div className="grid-block overflow-visible vertical medium-horizontal">
                                 <div className="grid-block shrink">
-                                    <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
+                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
-                                <div className="grid-block">
+                                    <div className="grid-block">
                                     <ul className="market-stats stats">
-                                        {/*coreRate ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="exchange.core_rate" /><br/>
-                                                    <b className="value stat-primary">{utils.format_number(coreRate, base.get("precision"))}</b><br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null*/}
-                                        {settlementPrice ? <PriceStat price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
+                                        {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
                                         {lowestCallPrice && showCallLimit ?
                                             (<li className="stat">
                                                 <span>
                                                     <Translate component="span" content="explorer.block.call_limit" />
                                                     <br/>
-                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
+                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
@@ -705,7 +869,7 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.squeeze" />
                                                     <br/>
-                                                    <b className="value stat-primary" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
+                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
@@ -715,17 +879,30 @@ class Exchange extends React.Component {
                                                 <span>
                                                     <Translate component="span" content="exchange.latest" />
                                                     <br/>
-                                                    <b className={"value stat-primary"}>{utils.format_number(latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                    <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                     <br/>
                                                     <em>{baseSymbol}/{quoteSymbol}</em>
                                                 </span>
                                             </li> : null}
+
+                                        {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+
+                                        {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+
+                                        <li className="stat">
+                                            <span>
+                                                <Translate component="span" content="account.hour_24" />
+                                                <br/>
+                                                <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                <br/>
+                                                <em>%</em>
+                                            </span>
+                                        </li>
+
                                     </ul>
 
                                 </div>
-                                <div className="grid-block shrink overflow-visible account-drop-down">
-                                    {accountsDropDown}
-                                </div>
+
                                 <div className="grid-block shrink borrow-button-container">
                                     {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
                                     {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
@@ -753,9 +930,8 @@ class Exchange extends React.Component {
                                         quote={quote}
                                         baseSymbol={baseSymbol}
                                         quoteSymbol={quoteSymbol}
-                                        height={400}
+                                        height={425}
                                         leftOrderBook={leftOrderBook}
-
                                     />
 
                         </div>) : (
@@ -782,6 +958,7 @@ class Exchange extends React.Component {
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
                                 />
+
                             </div>)}
 
                         {/* Buy/Sell forms */}
@@ -790,10 +967,10 @@ class Exchange extends React.Component {
                             <div className="grid-block small-vertical medium-horizontal no-padding align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
-                                    className={classnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
+                                    className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
                                     type="buy"
                                     amount={buyAmount}
-                                    price={buyPrice}
+                                    price={displayBuyPrice}
                                     total={buyTotal}
                                     quote={quote}
                                     base={base}
@@ -801,22 +978,29 @@ class Exchange extends React.Component {
                                     priceChange={this._buyPriceChanged.bind(this, base, quote)}
                                     totalChange={this._buyTotalChanged.bind(this, base, quote)}
                                     balance={baseBalance}
-                                    onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyAmount * buyPrice, baseBalance / utils.get_asset_precision(base.get("precision")))}
+                                    onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyTotal, baseBalance / utils.get_asset_precision(base.get("precision")), "buy")}
                                     balancePrecision={base.get("precision")}
                                     quotePrecision={quote.get("precision")}
                                     totalPrecision={base.get("precision")}
                                     currentPrice={lowestAsk}
                                     account={currentAccount.get("name")}
                                 /> : null}
+                                <ConfirmOrderModal
+                                    type="buy"
+                                    ref="buy"
+                                    onForce={this._forceBuy.bind(this, quote, base, buyAmount, buyTotal)}
+                                    diff={buyDiff}
+                                />
+
                                 <div onClick={this._flipBuySell.bind(this)} className="grid-block vertical align-center text-center no-padding shrink order-2" style={{cursor: "pointer"}}>
                                     <span style={{fontSize: "2rem"}}>&#8646;</span>
                                 </div>
                                 {quote && base ?
                                 <BuySell
-                                    className={classnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-3 sell-form")}
+                                    className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-3 sell-form")}
                                     type="sell"
                                     amount={sellAmount}
-                                    price={sellPrice}
+                                    price={displaySellPrice}
                                     total={sellTotal}
                                     quote={quote}
                                     base={base}
@@ -824,13 +1008,20 @@ class Exchange extends React.Component {
                                     priceChange={this._sellPriceChanged.bind(this, base, quote)}
                                     totalChange={this._sellTotalChanged.bind(this, base, quote)}
                                     balance={quoteBalance}
-                                    onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellAmount * sellPrice, sellAmount, quoteBalance / utils.get_asset_precision(quote.get("precision")))}
+                                    onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellTotal, sellAmount, quoteBalance / utils.get_asset_precision(quote.get("precision")), "sell")}
                                     balancePrecision={quote.get("precision")}
                                     quotePrecision={quote.get("precision")}
                                     totalPrecision={base.get("precision")}
                                     currentPrice={highestBid}
                                     account={currentAccount.get("name")}
+                                    ref="sell"
                                 /> : null}
+                                <ConfirmOrderModal
+                                    type="sell"
+                                    ref="sell"
+                                    onForce={this._forceSell.bind(this, base, quote, sellTotal, sellAmount)}
+                                    diff={sellDiff}
+                                />
                             </div>
                         </div>
 
@@ -874,19 +1065,34 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingRight: "0.5rem"}}>
+                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 60vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
                             <MarketHistory
+                                className="left-order-book no-padding no-overflow"
+                                headerStyle={{paddingTop: 0}}
                                 history={activeMarketHistory}
+                                myHistory={currentAccount.get("history")}
                                 base={base}
                                 quote={quote}
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                             />
                         </div>
-                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 40vh"}}>
-                            <MyMarkets />
+                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
+                            <MyMarkets
+                                className="left-order-book no-padding no-overflow"
+                                headerStyle={{paddingTop: 0}}
+                                columns={
+                                    [
+                                        {name: "star", index: 1},
+                                        {name: "market", index: 2},
+                                        {name: "vol", index: 3},
+                                        {name: "price", index: 4},
+                                        {name: "change", index: 5}
+                                    ]
+                                }
+                            />
                         </div>
                     </div>
                     {quoteIsBitAsset ?

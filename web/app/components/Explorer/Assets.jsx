@@ -6,6 +6,8 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import utils from "common/utils";
+import counterpart from "counterpart";
+import FormattedAsset from "../Utility/FormattedAsset";
 
 class Assets extends React.Component {
 
@@ -14,17 +16,18 @@ class Assets extends React.Component {
         this.state = {
             foundLast: false,
             lastAsset: "", 
-            assetsFetched: 0
+            assetsFetched: 0,
+            filterUIA: "",
+            filterMPA: ""
         }
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
-                !Immutable.is(nextProps.assets, this.props.assets) ||
-                // Object.keys(nextProps.account_id_to_name).equals(Object.keys(this.props.account_id_to_name))
-                // returning true here until issue #93 has been resolved
-                true
-            );
+            !Immutable.is(nextProps.assets, this.props.assets) ||
+            nextState.filterMPA !== this.state.filterMPA ||
+            nextState.filterUIA !== this.state.filterUIA
+        );
     }
 
     componentWillMount() {
@@ -42,56 +45,41 @@ class Assets extends React.Component {
                 return 0;
             }
         }).last();
-
-        // console.log("assets.size:", assets.size, "assetsFetched:", this.state.assetsFetched);
-        
+       
         if (assets.size === 0 || force) {
             AssetActions.getAssetList("A", 100);
             this.setState({assetsFetched: 100});  
         } else if (assets.size >= this.state.assetsFetched) {
-            // console.log("assets.last():", lastAsset.symbol);
             AssetActions.getAssetList(lastAsset.symbol, 100);           
             this.setState({assetsFetched: this.state.assetsFetched + 99}); 
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log("nextProps.assets:", nextProps.assets.toJS());
         this._checkAssets(nextProps.assets);
     }
-
-    // _getAccount(id) {
-
-    //     if (this.props.account_id_to_name[id]) {
-    //         return this.props.account_id_to_name[id];
-    //     } else {
-    //         AccountActions.getAccounts(id, 1);
-    //         return false;
-    //     }
-    // }
 
     linkToAccount(name_or_id) {
         if(!name_or_id) {
             return <span>-</span>;
         }
-        // return utils.is_object_id(name_or_id) ?
-        return <LinkToAccountById account={name_or_id}/> 
-        //     <Link to="account-overview" params={{account_name: name_or_id}}>{name_or_id}</Link>;
-        return <span>{name_or_id}</span>;
+        
+        return <LinkToAccountById account={name_or_id}/>         
     }
 
     render() {
         let {assets} = this.props;
 
-        let uia = assets.filter(a => {
-            return !a.market_asset;
-        }).map((asset) => {
-            // let account = this._getAccount(asset.issuer);
+        let placeholder = counterpart.translate("markets.filter").toUpperCase();
 
+        let uia = assets.filter(a => {
+            return !a.market_asset  && a.symbol.indexOf(this.state.filterUIA) !== -1;
+        }).map((asset) => {
             return (
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
+                    <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></td>
                 </tr>
             );
         }).sort((a, b) => {
@@ -105,14 +93,13 @@ class Assets extends React.Component {
         }).toArray();
 
         let mia = assets.filter(a => {
-            return a.market_asset;
+            return a.market_asset && a.symbol.indexOf(this.state.filterMPA) !== -1;
         }).map((asset) => {
-            // let account = this._getAccount(asset.issuer);
-
             return (
                 <tr key={asset.symbol}>
                     <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
+                    <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></td>
                 </tr>
             );
         }).sort((a, b) => {
@@ -128,32 +115,44 @@ class Assets extends React.Component {
         return (
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
-                    <div className="grid-block medium-6 main-content">
+                    <div className="grid-block medium-6 main-content vertical">
+                            <div className="grid-content shrink no-overflow" style={{paddingBottom: 0}}>
+                                <h3><Translate component="span" content="explorer.assets.market" /></h3>
+                                <input style={{maxWidth: "400px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={(e) => {this.setState({filterMPA: e.target.value.toUpperCase()})}}></input>
+                                <table className="table">
+                                    <thead>
+                                    <tr>
+                                        <th><Translate component="span" content="explorer.assets.symbol" /></th>
+                                        <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                        <th><Translate component="span" content="markets.supply" /></th>
+                                    </tr>
+                                    </thead>
+                                </table>                        
+                            </div>
                             <div className="grid-content">
-                            <h3><Translate component="span" content="explorer.assets.market" /></h3>
+                                <table className="table">
+                                    <tbody>
+                                        {mia}
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                    <div className="grid-block medium-6 right-column vertical">
+                        <div className="grid-content shrink no-overflow" style={{paddingBottom: 0}}>
+                            <h3><Translate component="span" content="explorer.assets.user" /></h3>
+                            <input style={{maxWidth: "400px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={(e) => {this.setState({filterUIA: e.target.value.toUpperCase()})}}></input>
                             <table className="table">
                                 <thead>
                                 <tr>
                                     <th><Translate component="span" content="explorer.assets.symbol" /></th>
                                     <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                    <th><Translate component="span" content="markets.supply" /></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                    {mia}
-                                </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div className="grid-block medium-6 right-column">
                         <div className="grid-content">
-                            <h3><Translate component="span" content="explorer.assets.user" /></h3>
                             <table className="table">
-                                <thead>
-                                <tr>
-                                    <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                    <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                </tr>
-                                </thead>
                                 <tbody>
                                     {uia}
                                 </tbody>
@@ -167,13 +166,11 @@ class Assets extends React.Component {
 }
 
 Assets.defaultProps = {
-    assets: {},
-    account_id_to_name: {}
+    assets: {}
 };
 
 Assets.propTypes = {
-    assets: PropTypes.object.isRequired,
-    account_id_to_name: PropTypes.object.isRequired
+    assets: PropTypes.object.isRequired
 };
 
 export default Assets;

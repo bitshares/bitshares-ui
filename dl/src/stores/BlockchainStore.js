@@ -5,11 +5,9 @@ import BaseStore from "./BaseStore";
 import ChainStore from "../api/ChainStore";
 
 import {
-    Block, GlobalObject, DynGlobalObject
+    Block
 }
 from "./tcomb_structs";
-
-
 
 class BlockchainStore extends BaseStore{
     constructor() {
@@ -18,8 +16,6 @@ class BlockchainStore extends BaseStore{
         this.blocks = Immutable.Map();
         this.latestBlocks = Immutable.List();
         this.latestTransactions = Immutable.List();
-        this.dynGlobalObject = {};
-        this.globalObject = {};
         this.rpc_connection_status = null;
         this.no_ws_connection = false;
 
@@ -31,8 +27,6 @@ class BlockchainStore extends BaseStore{
 
         this.maxBlocks = 100;
     }
-
-
 
     onGetBlock(block) {
         if (!this.blocks.get(block.id)) {
@@ -69,18 +63,6 @@ class BlockchainStore extends BaseStore{
             }
         }
 
-    }
-
-    onGetGlobals(objectArray) {
-        objectArray.forEach(object => {
-            if (object.id === "2.0.0") {
-                this.globalObject = GlobalObject(object);
-            } else if (object.id === "2.1.0") {
-                object.time = new Date(object.time);
-                object.next_maintenance_time = new Date(object.next_maintenance_time);
-                this.dynGlobalObject = DynGlobalObject(object);
-            }
-        });
     }
 
     onUpdateRpcConnectionStatus(status){

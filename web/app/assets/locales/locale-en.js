@@ -217,7 +217,8 @@
             req: "Required field",
             pos: "Amount must be positive",
             valid: "Please enter a valid, positive number",
-            balance: "The final balance must be larger than 0"
+            balance: "The final balance must be larger than 0",
+            insufficient: "Insufficient Balance"
         },
         back: "BACK",
         confirm: "CONFIRM",
@@ -526,9 +527,11 @@
         loading: "Loading..."
     },
     exchange: {
+        market: "Market",
         price_history: "Price Chart",
         order_depth: "Market Depth",
-        market_history: "Market History",
+        history: "History",
+        my_history: "My History",
         balance: "Your balance",
         lowest_ask: "Lowest ask",
         highest_bid: "Highest bid",
@@ -543,6 +546,7 @@
         maintenance: "Maintenance Call Price",
         your_price: "Your Call Price",
         volume: "Volume",
+        vol_short: "Vol",
         spread: "Spread",
         quantity: "Amount",
         buy: "Buy",
@@ -552,10 +556,13 @@
         horizontal: "Horizontal",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-        market_name: "Market name",
+        market_name: "Markets",
         quote_supply: "Quote supply",
         base_supply: "Base supply",
-        more: "More markets"
+        more: "All markets",
+        volume_24: "24hr Volume",
+        change: "Change",
+        confirm: "Your order is %(diff)s% away from the current price, are you sure?"
     },
     markets: {
         title: "Markets",
@@ -662,7 +669,8 @@
         amount: "Amount to Withdraw",
         address: "Withdraw to Address",
         submit: "Withdraw"
-      }
+      },
+      ok: "OK"
     },
     init_error: {
         title: "Application initialization issues",
@@ -676,5 +684,29 @@
         claim_refcode: "Claim Referral Code",
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
+    },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser",
+            visit_weidian: "Visit WEIDIAN to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
+        },
+        meta: {
+            open_website: "Open Website"
+        }
     }
 };

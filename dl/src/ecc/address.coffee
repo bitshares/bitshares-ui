@@ -1,5 +1,5 @@
 assert = require 'assert'
-ByteBuffer = require '../common/bytebuffer'
+ByteBuffer = require 'bytebuffer'
 config = require '../chain/config'
 hash = require '../common/hash'
 base58 = require 'bs58'

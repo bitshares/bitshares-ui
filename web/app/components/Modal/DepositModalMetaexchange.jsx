@@ -113,7 +113,7 @@ class DepositModalMetaexchange extends React.Component {
 				  {memoPart} 
 				   <div className="content-block">
                        <Trigger close={this.props.modal_id}>
-                           <a href className="secondary button"><Translate content="" />Ok</a>
+                           <a href className="secondary button"><Translate content="modal.ok" /></a>
                        </Trigger>
                    </div>
                  </div> 
