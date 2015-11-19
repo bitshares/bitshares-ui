@@ -13,10 +13,12 @@ $negative-color: #E1424A;
 /*  .left-column-2 {
     min-width: 15rem;
   }
-
+*/
   .right-column {
-    min-width: 15rem;
-  }*/
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-top: none;
+  }
 }
 
 .market-content {
