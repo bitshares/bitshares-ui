@@ -171,8 +171,10 @@ class SettingsStore {
     }
 
     onRemoveWS(index) {
-        this.defaults.connection.splice(index, 1);
-        this._lsSet("defaults", this.defaults);
+        if (index !== 0) { // Prevent removing the default connection
+            this.defaults.connection.splice(index, 1);
+            this._lsSet("defaults", this.defaults);
+        }
     }
 }
 
