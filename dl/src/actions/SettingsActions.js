@@ -10,14 +10,6 @@ class SettingsActions {
         this.dispatch(value);
     }
 
-    addMarket(quote, base) {
-        this.dispatch({quote, base});
-    }
-
-    removeMarket(quote, base) {
-        this.dispatch({quote, base});
-    }
-
     addStarMarket(quote, base) {
         this.dispatch({quote, base});
     }

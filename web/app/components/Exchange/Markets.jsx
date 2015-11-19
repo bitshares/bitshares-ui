@@ -229,7 +229,7 @@ class MarketSelector extends React.Component {
     }
 
     _addMarket(quote, base) {
-        SettingsActions.addMarket(quote, base);
+        SettingsActions.addStarMarket(quote, base);
     }
 
     _isPreferred(quote, base) {
@@ -333,11 +333,11 @@ class MarketSelector extends React.Component {
 class Markets extends React.Component {
 
     _removeMarket(quote, base) {
-        SettingsActions.removeMarket(quote, base);
+        SettingsActions.removeStarMarket(quote, base);
     }
 
     render() {
-        let {defaultMarkets} = this.props;
+        let {starredMarkets} = this.props;
         let assets = [];
 
         return (
@@ -346,7 +346,7 @@ class Markets extends React.Component {
                 <div className="grid-block flex-start" style={{overflowY: "auto", zIndex: 1}}>
                     <PreferredMarketsList
                         viewSettings={this.props.viewSettings}
-                        markets={defaultMarkets}
+                        markets={starredMarkets}
                         removeMarket={this._removeMarket}
                     />
                 </div>

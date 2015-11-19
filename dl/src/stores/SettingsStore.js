@@ -3,7 +3,7 @@ var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
 const STORAGE_KEY = "__graphene__";
-const CORE_ASSET = "CORE";
+const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
 var ls = typeof localStorage === "undefined" ? null : localStorage;
 
@@ -21,7 +21,7 @@ class SettingsStore {
             cardView: true
         });
 
-        this.defaultMarkets = Immutable.Map([
+        this.starredMarkets = Immutable.Map([
             ["BTC_" + CORE_ASSET, {"quote":"BTC","base":CORE_ASSET}],
             ["CNY_" + CORE_ASSET, {"quote":"CNY","base":CORE_ASSET}],
             ["EUR_" + CORE_ASSET, {"quote":"EUR","base":CORE_ASSET}],
@@ -32,10 +32,10 @@ class SettingsStore {
             ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
             ["OPENBTC_" + CORE_ASSET, {"quote":"OPENBTC","base":CORE_ASSET} ],
             ["OPENMUSE_" + CORE_ASSET, {"quote":"OPENMUSE","base":CORE_ASSET} ],
-            ["TRADE.BTC_" + CORE_ASSET, {"quote":"TRADE.BTC","base":CORE_ASSET} ]
-        ]);
-
-        this.starredMarkets = Immutable.Map([
+            ["TRADE.BTC_" + CORE_ASSET, {"quote":"TRADE.BTC","base":CORE_ASSET} ],
+            ["METAFEES" + CORE_ASSET, {"quote":"METAFEES","base":CORE_ASSET} ],
+            ["OBITS" + CORE_ASSET, {"quote":"OBITS","base":CORE_ASSET} ],
+            ["TRADE.MUSE" + CORE_ASSET, {"quote":"TRADE.MUSE","base":CORE_ASSET} ]
         ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -62,8 +62,6 @@ class SettingsStore {
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
-            onAddMarket: SettingsActions.addMarket,
-            onRemoveMarket: SettingsActions.removeMarket,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
             onAddWS: SettingsActions.addWS,
@@ -72,10 +70,6 @@ class SettingsStore {
 
         if (this._lsGet("settings_v2")) {
             this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v2")));
-        }
-
-        if (this._lsGet("defaultMarkets")) {
-            this.defaultMarkets = Immutable.Map(JSON.parse(this._lsGet("defaultMarkets")));
         }
 
         if (this._lsGet("starredMarkets")) {
@@ -123,26 +117,6 @@ class SettingsStore {
             ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
         }
 
-    }
-
-    onAddMarket(market) {
-        let marketID = market.quote + "_" + market.base;
-
-        if (!this.defaultMarkets.has(marketID)) {
-            this.defaultMarkets = this.defaultMarkets.set(marketID, {quote: market.quote, base: market.base});
-
-            this._lsSet("defaultMarkets", this.defaultMarkets.toJS());
-        } else {
-            return false;
-        }
-    }
-
-    onRemoveMarket(market) {
-        let marketID = market.quote + "_" + market.base;
-
-        this.defaultMarkets = this.defaultMarkets.delete(marketID);
-
-        this._lsSet("defaultMarkets", this.defaultMarkets.toJS());
     }
 
     onAddStarMarket(market) {
