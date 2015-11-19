@@ -138,13 +138,13 @@ class MyMarkets extends React.Component {
         });
 
         if (this.state.lookupQuote !== quote || force) {
-            if (quote.length < 3 || now - lastLookup <= 250) {
+            if (quote.length < 2 || now - lastLookup <= 250) {
                 return false;
             }
             this.getAssetList(quote, 50);
         } else {
             if (base && this.state.lookupBase !== base) {
-                if (base.length < 3 || now - lastLookup <= 250) {
+                if (base.length < 2 || now - lastLookup <= 250) {
                     return false;
                 }
                 this.getAssetList(base, 50);
@@ -176,8 +176,10 @@ class MyMarkets extends React.Component {
             return a.symbol.indexOf(lookupQuote) !== -1;
         })
         .forEach(asset => {
-            if (defaultBases.indexOf(asset.symbol) < 0) {
-                baseOptions.push(asset.symbol);
+            if (defaultBases.indexOf(asset.symbol) < 0 ) {
+                if (asset.symbol.length === lookupQuote.length) {
+                    baseOptions.push(asset.symbol);
+                }
             }
         });
 
@@ -220,7 +222,7 @@ class MyMarkets extends React.Component {
             marketRows = activeMarkets
             .filter(a => {
                 if (activeTab === "all") {
-                    if (lookupQuote.length < 3) {return false; }
+                    if (lookupQuote.length < 2) {return false; }
                     return a.quote.indexOf(lookupQuote) !== -1;
                 } else {
                     return true;
@@ -287,7 +289,9 @@ class MyMarkets extends React.Component {
                         }
                 }
 
-            }).toArray();
+            })
+            .take(activeTab === "starred" ? 150 : 50)
+            .toArray();
         }
 
         let hc = "mymarkets-header clickable";
