@@ -13,7 +13,7 @@ class MarketsContainer extends React.Component {
               <AltContainer 
                   stores={[SettingsStore, AssetStore, MarketsStore]}
                   inject={{
-                    defaultMarkets: () => {
+                    starredMarkets: () => {
                         return SettingsStore.getState().starredMarkets;
                     },
                     viewSettings: () => {

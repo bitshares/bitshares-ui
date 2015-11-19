@@ -24,12 +24,11 @@ import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
-import classnames from "classnames";
+import cnames from "classnames";
 import ee from "emitter-instance";
 import market_utils from "common/market_utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
-
 
 require("./exchange.scss");
 
@@ -78,7 +77,7 @@ class PriceStat extends React.Component {
             utils.format_volume(price);
 
         return (
-            <li className={classnames("stat", this.props.className)}>
+            <li className={cnames("stat", this.props.className)}>
                 <span>
                     <Translate component="span" content={content} />
                     <br/>
@@ -182,7 +181,7 @@ class Exchange extends React.Component {
     componentWillMount() {
         if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
             this._subToMarket(this.props);
-            this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
+            // this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
         }
 
         emitter.on('cancel-order', limitListener = MarketsActions.cancelLimitOrderSuccess);
@@ -199,17 +198,17 @@ class Exchange extends React.Component {
     }
 
     _addMarket(quote, base) {
-        if (!this.state.favorite) {
-            SettingsActions.addMarket(quote, base);
-            this.setState({
-                favorite: true
-            });
+        let marketID = `${quote}_${base}`;
+        if (!this.props.starredMarkets.has(marketID)) {
+            SettingsActions.addStarMarket(quote, base);
+        } else {
+            SettingsActions.removeStarMarket(quote, base);
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.quoteAsset.toJS && nextProps.baseAsset.toJS) {
-            this._addMarket(nextProps.quoteAsset.get("symbol"), nextProps.baseAsset.get("symbol"));
+            // this._addMarket(nextProps.quoteAsset.get("symbol"), nextProps.baseAsset.get("symbol"));
             if (!this.state.sub) {
                 return this._subToMarket(nextProps);
             }
@@ -670,7 +669,7 @@ class Exchange extends React.Component {
 
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
-            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks,
+            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
             calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
             displayBuyPrice, displaySellPrice, buyDiff, sellDiff} = this.state;
@@ -797,7 +796,7 @@ class Exchange extends React.Component {
         };
 
         let bucketOptions = buckets.map(bucket => {
-            return <div className={classnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div className={cnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
 
         // Market stats
@@ -807,6 +806,10 @@ class Exchange extends React.Component {
         let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
         let volumeBase = marketStats.get("volumeBase");
         let volumeQuote = marketStats.get("volumeQuote");
+
+        // Favorite star
+        let marketID = `${quoteSymbol}_${baseSymbol}`;
+        let starClass = starredMarkets.has(marketID) ? "gold-star" : "grey-star";
 
         return (
                 <div className="grid-block page-layout market-layout">
@@ -836,13 +839,13 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={classnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
+                    <div className={cnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible" style={{minHeight: "67px"}}>
                             <div className="grid-block overflow-visible vertical medium-horizontal">
                                 <div className="grid-block shrink">
-                                    <Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
+                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
                                     <div className="grid-block">
                                     <ul className="market-stats stats">
@@ -960,7 +963,7 @@ class Exchange extends React.Component {
                             <div className="grid-block small-vertical medium-horizontal no-padding align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
-                                    className={classnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
+                                    className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
                                     type="buy"
                                     amount={buyAmount}
                                     price={displayBuyPrice}
@@ -990,7 +993,7 @@ class Exchange extends React.Component {
                                 </div>
                                 {quote && base ?
                                 <BuySell
-                                    className={classnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-3 sell-form")}
+                                    className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-3 sell-form")}
                                     type="sell"
                                     amount={sellAmount}
                                     price={displaySellPrice}

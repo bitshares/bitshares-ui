@@ -312,6 +312,9 @@ class MyMarkets extends React.Component {
                 case "quoteSupply":
                     return <th><Translate content="exchange.quote_supply" /></th>;
 
+                case "baseSupply":
+                    return <th><Translate content="exchange.base_supply" /></th>;
+
                 case "change":
                     return <th className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
 

@@ -11,8 +11,7 @@ class WebsocketAddModal extends React.Component {
         super();
         this.state = {
             ws: "ws://",
-            type: "remove",
-            removeIndex: null
+            type: "remove"
         };
     }
     
@@ -40,17 +39,10 @@ class WebsocketAddModal extends React.Component {
         this.close();
     }
 
-    _onRemoveSelect(e) {
-        this.setState({
-            removeIndex: this.props.apis.indexOf(e.target.value)
-        });
-    }
-
     onRemoveSubmit(e) {
-        e.preventDefault()
-        if (this.state.removeIndex) {
-            SettingsActions.removeWS(this.state.removeIndex);
-        }
+        e.preventDefault();
+        let removeIndex = this.props.apis.indexOf(this.props.api[0]);
+        SettingsActions.removeWS(removeIndex);
         this.close();
     }
 
@@ -77,8 +69,13 @@ class WebsocketAddModal extends React.Component {
     }
 
     _renderRemoveModal() {
-        let options = this.props.apis.map(entry => {
-            return <option key={entry}>{entry}</option>;
+        if (!this.props.api) {
+            return null;
+        }
+        let removeString;
+        let options = this.props.api.map(entry => {
+            removeString = entry;
+            return <div><h5 key={entry}>{entry}</h5></div>;
         });
 
         return ( 
@@ -91,16 +88,14 @@ class WebsocketAddModal extends React.Component {
                     <header><Translate component="span" content={`settings.connection`} /></header>
                     <ul>
                         <li className="with-dropdown">
-                            <select onChange={this._onRemoveSelect.bind(this)}>
-                                {options}
-                            </select>
+                            {options}
                         </li>
                     </ul>
                     </section>
                 <form onSubmit={this.onRemoveSubmit.bind(this)} noValidate>
 
                     <div className="button-group">
-                        <button className={"button"} onClick={this.onRemoveSubmit.bind(this)}>
+                        <button className={"button"} onClick={this.onRemoveSubmit.bind(this, )}>
                             <Translate content="transfer.confirm" />
                         </button>
                         <Trigger close={"ws_modal_remove"}>
