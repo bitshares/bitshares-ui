@@ -22,20 +22,23 @@ class SettingsStore {
         });
 
         this.starredMarkets = Immutable.Map([
-            ["BTC_" + CORE_ASSET, {"quote":"BTC","base":CORE_ASSET}],
-            ["CNY_" + CORE_ASSET, {"quote":"CNY","base":CORE_ASSET}],
-            ["EUR_" + CORE_ASSET, {"quote":"EUR","base":CORE_ASSET}],
-            ["GOLD_" + CORE_ASSET, {"quote":"GOLD","base":CORE_ASSET}],
-            ["SILVER_" + CORE_ASSET, {"quote":"SILVER","base":CORE_ASSET}],
-            ["USD_" + CORE_ASSET, {"quote":"USD","base":CORE_ASSET}],
+            [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
+            [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
+            [CORE_ASSET + "_EUR", {"quote": CORE_ASSET,"base": "EUR"}],
+            [CORE_ASSET + "_GOLD", {"quote": CORE_ASSET,"base": "GOLD"}],
+            [CORE_ASSET + "_SILVER", {"quote": CORE_ASSET,"base": "SILVER"}],
+            [CORE_ASSET + "_USD", {"quote": CORE_ASSET,"base": "USD"}],
             ["BTC_USD", {"quote":"BTC","base":"USD"}],
             ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
-            ["OPENBTC_" + CORE_ASSET, {"quote":"OPENBTC","base":CORE_ASSET} ],
-            ["OPENMUSE_" + CORE_ASSET, {"quote":"OPENMUSE","base":CORE_ASSET} ],
-            ["TRADE.BTC_" + CORE_ASSET, {"quote":"TRADE.BTC","base":CORE_ASSET} ],
-            ["METAFEES" + CORE_ASSET, {"quote":"METAFEES","base":CORE_ASSET} ],
-            ["OBITS" + CORE_ASSET, {"quote":"OBITS","base":CORE_ASSET} ],
-            ["TRADE.MUSE" + CORE_ASSET, {"quote":"TRADE.MUSE","base":CORE_ASSET} ]
+            [CORE_ASSET + "_OPENBTC", {"quote": CORE_ASSET,"base": "OPENBTC"} ],
+            [CORE_ASSET + "_OPENMUSE", {"quote": CORE_ASSET,"base": "OPENMUSE"} ],
+            [CORE_ASSET + "_TRADE.BTC", {"quote": CORE_ASSET,"base": "TRADE.BTC"} ],
+            ["TRADE.BTC_BTC", {"quote":"TRADE.BTC","base": "BTC"} ],
+            [CORE_ASSET + "_METAFEES", {"quote": CORE_ASSET,"base": "METAFEES"} ],
+            [CORE_ASSET + "_OBITS", {"quote": CORE_ASSET,"base": "OBITS"} ],
+            [CORE_ASSET + "_TRADE.MUSE", {"quote": CORE_ASSET,"base": "TRADE.MUSE"} ],
+            ["METAEX.BTC_BTC", {"quote":"METAEX.BTC","base": "BTC"} ],
+            [CORE_ASSET + "_METAEX.BTC", {"quote": CORE_ASSET,"base": "METAEX.BTC" } ]
         ]);
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
