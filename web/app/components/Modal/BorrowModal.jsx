@@ -97,7 +97,6 @@ class BorrowModalContent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.account !== this.props.account ||
-            nextProps.call_orders !== this.props.call_orders ||
             nextProps.hasCallOrders !== this.props.hasCallOrders
             ) {
             this.setState(this._initialState(nextProps));
