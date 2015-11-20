@@ -236,15 +236,15 @@ class AccountDepositWithdraw extends React.Component {
                     <BlockTradesBridgeDepositRequest
                         gateway="blocktrades"
                         url="https://api.blocktrades.us/v2"
-                        bridge_mode={true}
                         issuer_account="blocktrades"
                         account={this.props.account}
-                        receive_asset="BTS"
-                        deposit_asset="BTC"
-                        deposit_coin_type="btc"
-                        deposit_asset_name="Bitcoin"
-                        initial_input_coin_type="ltc"
-                        receive_coin_type="bts" />
+                        initial_deposit_input_coin_type="btc" 
+                        initial_deposit_output_coin_type="bts" 
+                        initial_deposit_estimated_input_amount="1.0"
+                        initial_withdraw_input_coin_type="bts" 
+                        initial_withdraw_output_coin_type="btc" 
+                        initial_withdraw_estimated_input_amount="100000"
+                        />
                 </div>
 				<div className="content-block">
                     <h3><a href="https://metaexchange.info" target="__blank">metaexchange.info</a></h3>
