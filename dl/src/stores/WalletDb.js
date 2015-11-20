@@ -295,7 +295,9 @@ class WalletDb extends BaseStore {
         var sequence = wallet.brainkey_sequence
         var used_sequence = null
         // Skip ahead in the sequence if any keys are found in use
-        for (var i = sequence; i < sequence + 10; i++) {
+        // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
+        this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead||0) + 1)
+        for (var i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
             var private_key = key.get_brainkey_private( brainkey, i )
             var pubkey =
                 this.generateNextKey_pubcache[i] ?
