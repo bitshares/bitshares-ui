@@ -9,7 +9,7 @@ import BuySell from "./BuySell";
 import utils from "common/utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
-import {debounce} from "lodash";
+import {debounce, cloneDeep} from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
 import Translate from "react-translate-component";
 import notify from "actions/NotificationActions";
@@ -29,6 +29,7 @@ import ee from "emitter-instance";
 import market_utils from "common/market_utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
+import IndicatorModal from "./IndicatorModal";
 
 require("./exchange.scss");
 
@@ -138,7 +139,30 @@ class Exchange extends React.Component {
             showDepthChart: props.viewSettings.get("showDepthChart"),
             leftOrderBook: props.viewSettings.get("leftOrderBook"),
             buyDiff: false,
-            sellDiff: false
+            sellDiff: false,
+            indicators: props.viewSettings.get("indicators") || {
+                rsi: false,
+                sma: false,
+                atr: false,
+                ema: false
+            },
+            indicatorSettings: props.viewSettings.get("indicatorSettings") || {
+                rsi: {
+                    period: 14,
+                    overbought: 70,
+                    oversold: 30
+                },
+                sma: {
+                    period: 5
+                },
+                atr: {
+                    period: 14
+                },
+                ema: {
+                    period: 10,
+                    index: 0
+                }
+            }
         };
     }
 
@@ -565,6 +589,10 @@ class Exchange extends React.Component {
         this.refs.borrowBase.show();
     }
 
+    _onSelectIndicators() {
+        this.refs.indicators.show();
+    }
+
     _getBuyPrice(price) {
         let ratio = market_utils.priceToObject(price, "bid");
         let {baseAsset, quoteAsset} = this.props;
@@ -664,7 +692,32 @@ class Exchange extends React.Component {
             highestBid,
             lowestAsk
         };
+    }
 
+    _changeIndicator(key) {
+        let indicators = cloneDeep(this.state.indicators);
+        indicators[key] = !indicators[key];
+        this.setState({
+            indicators: indicators
+        });
+
+        SettingsActions.changeViewSetting({
+            indicators: indicators
+        });
+    }
+
+    _changeIndicatorSetting(key, setting, e) {
+        e.preventDefault();
+        let indicatorSettings = cloneDeep(this.state.indicatorSettings);
+        indicatorSettings[key][setting] = parseInt(e.target.value, 10);
+
+        this.setState({
+            indicatorSettings: indicatorSettings
+        });
+
+        SettingsActions.changeViewSetting({
+            indicatorSettings: indicatorSettings
+        });
     }
 
     render() {
@@ -672,7 +725,7 @@ class Exchange extends React.Component {
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
             calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
-            displayBuyPrice, displaySellPrice, buyDiff, sellDiff} = this.state;
+            displayBuyPrice, displaySellPrice, buyDiff, sellDiff, indicators, indicatorSettings} = this.state;
         let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
             quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null, settlementQuote, settlementBase,
             flipped = false, showCallLimit = false, latestPrice, changeClass;
@@ -910,28 +963,39 @@ class Exchange extends React.Component {
                         <div ref="center">
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink" id="market-charts" style={{marginTop: "0.5rem"}}>
-                            {/* Price history chart */}
-                            <div className="chart-zoom-dropdown no-overflow" style={{position: "absolute", top: "24px", left: "24px", zIndex: 999}} >
-                              <Icon className="grid-block" name="cog"/>
+                                {/* Price history chart */}
+                                <div style={{position: "absolute", top: "24px", left: "50px", zIndex: 999}}><button onClick={this._onSelectIndicators.bind(this)} className="button outline">Indicators</button></div>
 
-                                  <div className="grid-block float-right" >
-                                    <div className="grid-content float-right no-overflow">
-                                   {bucketOptions}
-                                  </div>
+                                <div className="chart-zoom-dropdown no-overflow" style={{position: "absolute", top: "24px", left: "24px", zIndex: 999}} >
+                                    <Icon className="grid-block" name="cog"/>
+
+                                        <div className="grid-block float-right" >
+                                            <div className="grid-content float-right no-overflow">
+                                            {bucketOptions}
+                                        </div>
+                                    </div>
                                 </div>
-                              </div>
-                                    <PriceChart
-                                        priceData={this.props.priceData}
-                                        volumeData={this.props.volumeData}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        height={425}
-                                        leftOrderBook={leftOrderBook}
-                                    />
-
-                        </div>) : (
+                                <PriceChart
+                                    priceData={this.props.priceData}
+                                    volumeData={this.props.volumeData}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    height={425}
+                                    leftOrderBook={leftOrderBook}
+                                    marketReady={marketReady}
+                                    indicators={indicators}
+                                    indicatorSettings={indicatorSettings}
+                                />
+                                <IndicatorModal
+                                    ref="indicators"
+                                    indicators={indicators}
+                                    indicatorSettings={indicatorSettings}
+                                    onChangeIndicator={this._changeIndicator.bind(this)}
+                                    onChangeSetting={this._changeIndicatorSetting.bind(this)}
+                                />
+                            </div>) : (
                             <div className="grid-block no-overflow no-padding shrink" >
                                 <DepthHighChart
                                     orders={limit_orders}

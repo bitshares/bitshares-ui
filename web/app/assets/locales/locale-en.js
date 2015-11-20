@@ -562,7 +562,17 @@
         more: "All markets",
         volume_24: "24hr Volume",
         change: "Change",
-        confirm: "Your order is %(diff)s% away from the current price, are you sure?"
+        confirm: "Your order is %(diff)s% away from the current price, are you sure?",
+        indicators: "Indicators",
+        rsi: "Relative Strength Index",
+        ema: "Exponential Moving Average",
+        sma: "Simple Moving Average",
+        atr: "Average True Range",
+        period: "Time period (days)",
+        overbought: "Overbought",
+        oversold: "Oversold",
+        index: "Index"
+
     },
     markets: {
         title: "Markets",
