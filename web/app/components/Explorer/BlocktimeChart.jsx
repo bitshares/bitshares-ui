@@ -14,14 +14,31 @@ class BlocktimeChart extends React.Component {
             return true;
         }
 
+        let chart = this.refs.chart ? this.refs.chart.chart : null;
+        if (chart) {
+            let {blockTimes, colors} = this._getData(nextProps);
+            let series = chart.series[0];
+            let finalValue = series.data[series.data.length -1];
+
+            blockTimes.forEach(point => {
+                if (point[0] > finalValue.x) {
+                    series.addPoint(point, false, true);
+                }
+            });
+
+            chart.options.plotOptions.column.colors = colors;
+
+            chart.redraw();
+            return false;
+        }
+
         return (
             nextProps.blockTimes[nextProps.blockTimes.length - 1][0] !== this.props.blockTimes[this.props.blockTimes.length - 1][0] ||
             nextProps.blockTimes.length !== this.props.blockTimes.length
         );
     }
 
-    render() {
-
+    _getData() {
         let {blockTimes, head_block} = this.props;
 
         blockTimes.filter(a => {
@@ -43,6 +60,16 @@ class BlocktimeChart extends React.Component {
                 return "#deb869";
             }
         })
+
+        return {
+            blockTimes,
+            colors
+        }
+    }
+
+    render() {
+
+        let {blockTimes, colors} = this._getData(this.props);
 
         let tooltipLabel = counterpart.translate("explorer.blocks.block_time");
 
@@ -107,7 +134,7 @@ class BlocktimeChart extends React.Component {
             },
             plotOptions: {
                 column: {
-                    animation: false,
+                    animation: true,
                     minPointLength: 3,
                     colorByPoint: true,
                     colors: colors,
@@ -117,7 +144,7 @@ class BlocktimeChart extends React.Component {
         };
 
         return (
-            blockTimes.length ? <Highcharts config={config}/> : null
+            blockTimes.length ? <Highcharts ref="chart" config={config}/> : null
         );
     }
 };
