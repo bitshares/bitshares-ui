@@ -49,7 +49,6 @@ class WalletDb extends BaseStore {
             return // no change
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
         // Helps to ensure we are looking at an un-used key
-        // Adversly affected by https://github.com/cryptonomex/graphene/issues/324
         try { this.generateNextKey( false /*save*/ ) } catch(e) {
             console.error(e) }
     }
@@ -250,7 +249,6 @@ class WalletDb extends BaseStore {
                 var password_aes = Aes.fromSeed( password )
                 var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
                 aes_private = Aes.fromSeed( encryption_plainbuffer )
-                this.checkNextGeneratedKey()
             }                 
             return true
         } catch(e) {
