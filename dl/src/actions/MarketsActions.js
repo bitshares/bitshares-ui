@@ -10,7 +10,7 @@ let subs = {};
 let currentBucketSize;
 let wallet_api = new WalletApi();
 let marketStats = {};
-let statTTL = 60 * 5 * 1000; // 5 minutes
+let statTTL = 60 * 2 * 1000; // 2 minutes
 
 class MarketsActions {
 
@@ -31,12 +31,17 @@ class MarketsActions {
         endDate.setDate(endDate.getDate() + 1);
         startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
 
+        let refresh = false;
+
         if (marketStats[market]) {
             if ((now - marketStats[market].lastFetched) < statTTL) {
                 return false;
+            } else {
+                refresh = true;
             }
         }
-        if (!marketStats[market]) {
+
+        if (!marketStats[market] || refresh) {
             Promise.all([
                 Apis.instance().history_api().exec("get_market_history", [
                     base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)

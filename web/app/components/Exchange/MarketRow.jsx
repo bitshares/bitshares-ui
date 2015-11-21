@@ -25,12 +25,24 @@ class MarketRow extends React.Component {
 
     static contextTypes = {router: React.PropTypes.func.isRequired};
 
+    constructor() {
+        super();
+
+        this.statsInterval = null;
+    }
+
     _onClick(marketID) {
         this.context.router.transitionTo("exchange", {marketID: marketID});
     }
 
     componentDidMount() {
         MarketsActions.getMarketStats(this.props.base, this.props.quote);
+        this.statsChecked = new Date();
+        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.props.base, this.props.quote), 35 * 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.statsInterval);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -50,7 +62,7 @@ class MarketRow extends React.Component {
 
     render() {
         let {quote, base, noSymbols, stats, starred} = this.props;
-        // let core = ChainStore.getAsset("1.3.0");
+
         if (!quote || !base) {
             return null;
         }
