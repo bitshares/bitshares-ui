@@ -613,7 +613,7 @@ class Exchange extends React.Component {
 
     _getDisplayPrice(type, priceObject) {
         let {quoteAsset, baseAsset} = this.props;
-        let precision =  Math.min(8, quoteAsset.get("precision") + baseAsset.get("precision"));
+        let precision =  Math.max(10, quoteAsset.get("precision") + baseAsset.get("precision"));
         let price;
 
         switch (type) {
@@ -654,6 +654,7 @@ class Exchange extends React.Component {
 
     _parseMarket() {
         let {bids, asks, calls, invertedCalls} = this.props;
+        let {showCallLimit} = this._getSettlementInfo;
         let combinedAsks, combinedBids, highestBid, lowestAsk;
 
         if (calls.length && invertedCalls) {
@@ -694,62 +695,13 @@ class Exchange extends React.Component {
         };
     }
 
-    _changeIndicator(key) {
-        let indicators = cloneDeep(this.state.indicators);
-        indicators[key] = !indicators[key];
-        this.setState({
-            indicators: indicators
-        });
+    _getSettlementInfo() {
+        let {quoteAsset: quote, baseAsset: base, bids, asks, lowestCallPrice} = this.props;
+        let settlement_price, core_rate, short_squeeze, flipped,
+            settlementBase, settlementQuote, settlementPrice, highestBid,
+            squeezePrice, lowestAsk, showCallLimit;
 
-        SettingsActions.changeViewSetting({
-            indicators: indicators
-        });
-    }
-
-    _changeIndicatorSetting(key, setting, e) {
-        e.preventDefault();
-        let indicatorSettings = cloneDeep(this.state.indicatorSettings);
-        indicatorSettings[key][setting] = parseInt(e.target.value, 10);
-
-        this.setState({
-            indicatorSettings: indicatorSettings
-        });
-
-        SettingsActions.changeViewSetting({
-            indicatorSettings: indicatorSettings
-        });
-    }
-
-    render() {
-        let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
-            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
-            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
-        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
-            displayBuyPrice, displaySellPrice, buyDiff, sellDiff, indicators, indicatorSettings} = this.state;
-        let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
-            quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null, settlementQuote, settlementBase,
-            flipped = false, showCallLimit = false, latestPrice, changeClass;
-
-        if (quoteAsset.size && baseAsset.size && currentAccount.size) {
-            base = baseAsset;
-            quote = quoteAsset;
-            baseSymbol = base.get("symbol");
-            quoteSymbol = quote.get("symbol");
-
-            accountBalance = currentAccount.get("balances").toJS();
-
-            if (accountBalance) {
-                for (let id in accountBalance) {
-                    if (id === quote.get("id")) {
-                        quoteBalance = accountBalance[id];
-                    }
-                    if (id === base.get("id")) {
-                        baseBalance = accountBalance[id];
-                    }
-                }
-            }
-
-            let settlement_price, core_rate, short_squeeze;
+        if (quote && base) {
             if (quote.get("bitasset") && quote.getIn(["bitasset", "current_feed"]) && base.get("id") === "1.3.0") {
                 settlement_price = quote.getIn(["bitasset", "current_feed", "settlement_price"]);
                 short_squeeze = quote.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
@@ -797,11 +749,77 @@ class Exchange extends React.Component {
             }
         }
 
+        return {
+            squeezePrice,
+            settlementPrice,
+            showCallLimit
+        }
+    }
+
+    _changeIndicator(key) {
+        let indicators = cloneDeep(this.state.indicators);
+        indicators[key] = !indicators[key];
+        this.setState({
+            indicators: indicators
+        });
+
+        SettingsActions.changeViewSetting({
+            indicators: indicators
+        });
+    }
+
+    _changeIndicatorSetting(key, setting, e) {
+        e.preventDefault();
+        let indicatorSettings = cloneDeep(this.state.indicatorSettings);
+        indicatorSettings[key][setting] = parseInt(e.target.value, 10);
+
+        this.setState({
+            indicatorSettings: indicatorSettings
+        });
+
+        SettingsActions.changeViewSetting({
+            indicatorSettings: indicatorSettings
+        });
+    }
+
+    render() {
+        let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
+            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
+
+        let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
+            displayBuyPrice, displaySellPrice, buyDiff, sellDiff, indicators, indicatorSettings} = this.state;
+
+        let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null,
+            quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null,
+            showCallLimit = false, latestPrice, changeClass;
+
+        if (quoteAsset.size && baseAsset.size && currentAccount.size) {
+            base = baseAsset;
+            quote = quoteAsset;
+            baseSymbol = base.get("symbol");
+            quoteSymbol = quote.get("symbol");
+
+            accountBalance = currentAccount.get("balances").toJS();
+
+            if (accountBalance) {
+                for (let id in accountBalance) {
+                    if (id === quote.get("id")) {
+                        quoteBalance = accountBalance[id];
+                    }
+                    if (id === base.get("id")) {
+                        baseBalance = accountBalance[id];
+                    }
+                }
+            }
+
+            ({showCallLimit, settlementPrice, squeezePrice} = this._getSettlementInfo());            
+        }
+
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
-        let {combinedAsks, combinedBids, spread, lowestAsk, highestBid} = this._parseMarket();
-
+        let {combinedAsks, combinedBids, spread, lowestAsk, highestBid} = this._parseMarket(showCallLimit);
 
         // Latest price
         if (activeMarketHistory.size) {
@@ -999,6 +1017,7 @@ class Exchange extends React.Component {
                             <div className="grid-block no-overflow no-padding shrink" >
                                 <DepthHighChart
                                     orders={limit_orders}
+                                    showCallLimit={showCallLimit}
                                     call_orders={call_orders}
                                     flat_asks={flat_asks}
                                     flat_bids={flat_bids}

@@ -159,7 +159,7 @@ class MarketsActions {
                     ])
                 ])
                 .then((results) => {
-                    console.log("market subscription success:", results[0], results);
+                    // console.log("market subscription success:", results[0], results);
                     subs[subID] = true;
 
                     this.dispatch({
