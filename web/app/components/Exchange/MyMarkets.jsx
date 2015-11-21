@@ -161,27 +161,33 @@ class MyMarkets extends React.Component {
         // Add some default base options
         let defaultBases = [coreSymbol, "BTC", "CNY", "USD"];
         let baseOptions = [
-            coreSymbol, "BTC", "CNY", "USD"
+            // coreSymbol, "BTC", "CNY", "USD"
         ];
 
         searchAssets
         .filter(a => {
             // Always keep core asset as an option
-            if (defaultBases.indexOf(a.symbol) === 0) {
-                return true;
-            }
-            if (lookupBase && lookupBase.length > 1) {
+            // if (defaultBases.indexOf(a.symbol) === 0) {
+            //     return true;
+            // }
+            if (lookupBase && lookupBase.length) {
                 return a.symbol.indexOf(lookupBase) === 0;
             }
             return a.symbol.indexOf(lookupQuote) !== -1;
         })
         .forEach(asset => {
-            if (defaultBases.indexOf(asset.symbol) < 0 ) {
-                if (asset.symbol.length === lookupQuote.length) {
+            if (lookupBase && lookupBase.length) {
+                if (asset.symbol.indexOf(lookupBase) === 0) {
+                    baseOptions.push(asset.symbol);
+                }
+            } else if (defaultBases.indexOf(asset.symbol) < 0 ) {
+                if (asset.symbol.length >= lookupQuote.length && asset.symbol.length < lookupQuote.length + 3) {
                     baseOptions.push(asset.symbol);
                 }
             }
         });
+
+        baseOptions = baseOptions.concat(defaultBases.filter(a => {if (!lookupBase || !lookupBase.length) {return true}; return a.indexOf(lookupBase) === 0;}));
 
         baseOptions = baseOptions
         .filter(base => {
@@ -201,7 +207,10 @@ class MyMarkets extends React.Component {
         if (searchAssets.size) {
             searchAssets
             .filter(a => {
-                return a.symbol.indexOf(lookupQuote) !== -1;
+                return (
+                    a.symbol.indexOf(lookupQuote) !== -1 &&
+                    a.symbol.length >= lookupQuote.length
+                );
             })
             .forEach(asset => {
                 baseOptions.forEach(base => {
@@ -290,7 +299,7 @@ class MyMarkets extends React.Component {
                 }
 
             })
-            .take(activeTab === "starred" ? 150 : 50)
+            .take(activeTab === "starred" ? 100 : 30)
             .toArray();
         }
 
