@@ -1,9 +1,9 @@
 # Giriş
 
-Merkezsiz borsa (kısaca *DEX*) BitShares ekosisteminde 
-alıp-satılan dijital mamüllerin doğrudan dönüştürülmesini sağlar.
+Merkezsiz borsa (kısaca *DEX*) , BitShares ekosisteminde 
+alıp-satılan dijital mamüllerin doğrudan takas edilebilmelerini sağlar.
 
-Merkezsiz bir borsanın , geleneksel borsalardan bir takım bariz avantajları vardır. 
+Merkezsiz bir borsanın , bariz geleneksel borsalardan bir takım avantajları vardır. 
 Bunlardan kısaca bahsetmek istiyoruz. BitShares DEX'de hepsi mevcut olmasina 
 rağmen o özellikleri tamamen ya da kısmen layığı ile kullanabilmek okuyucuya ve 
 müşteriye kalmıştır.
@@ -46,5 +46,5 @@ müşteriye kalmıştır.
   diye kısaltılmışlardır. Bu dijital kuponlar altlarında yatan fiziksel varlıkla aynı değeri 
   temsil ederler. Yani bu cüzdandaki 1 USD nin değeri 1 dolardır ve o şekilde 
   ödenebilir. Bu kuponların hepsinin karşılığı olarak teminatta kitli tutulan ve anlık 
-  fiyatında hesap görümü için mevcut olabilen, **BitShares'in şirket hisseleri (BTS)**  vardır.
-  vardır.
+  fiyatında hesap görümü için mevcut olabilen, **BitShares'in şirket hisseleri (BTS)** 
+   vardır.
