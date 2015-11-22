@@ -101,6 +101,7 @@ npm test
 ## Development process
 
 - Bugs are always worked before enhancements
+- Developers should work each issue accordong to a numbered branch corresponding to the issue `git checkout -b 123`
 
 ### Github issues are being used to track bugs and feature requests. 
 
