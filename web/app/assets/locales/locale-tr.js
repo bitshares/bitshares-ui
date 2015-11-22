@@ -15,7 +15,7 @@
         dashboard: "Panel",
         explorer: "Araştır",
         exchange: "Al-Sat",
-        payments: "Transfer", 
+        payments: "Transferler", 
         logout: "Çıkış",
         settings: "Ayarlar",
         current: "Kullanılan Hesap",
@@ -223,7 +223,7 @@
         back: "GERİ",
         confirm: "ONAYLA",
         broadcasting: "Yayınlanıyor...",
-        broadcast: "Transfer işleminiz yayınlanmıştır",
+        broadcast: "Transfer işleminiz ağa yayınlanmıştır",
         again: "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
         see: "TRANSFER İŞLEMLERİMİ GÖR",
         close: "Kapat"
@@ -562,7 +562,17 @@
         more: "Tüm piyasalar",
         volume_24: "24s Değişim",
         change: "Değişim",
-        confirm: "Emriniz şimdiki fiyattan%(diff)s% kadar farklı, emin misiniz?"
+        confirm: "Verdiğiniz emir şimdiki fiyattan %(diff)s% kadar farklı, emin misiniz?",
+        indicators: "Göstergeler",
+        rsi: "Relatif Güç İndeksi",
+        ema: "Üssel Hareketli Ortalama",
+        sma: "Basit Hareketli Ortalama",
+        atr: "Ortalama Gerçek Fiyat Aralığı",
+        period: "Zaman aralığı (gün)",
+        overbought: "Aşırı Alım",
+        oversold: "Aşırı Satış",
+        index: "Indeks"
+
     },
     markets: {
         title: "Piyasalar",
@@ -572,7 +582,7 @@
         core_rate: "Esas oran",
         supply: "Arz",
         search: "Ara",
-        preferred: "Piyasalarım"
+        preferred: "Benim Gözde Piyasalarım"
     },
     wallet: {
         title: "Cüzdan",
