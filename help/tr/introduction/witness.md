@@ -1,4 +1,4 @@
-#Tanık
+# Tanık
 
 Tanıklar yeni bloklar inşa etmek suretiyle blokzincirine çalışan kimselerdir.
 Her tanık, hissedarlar tarafından onaylanır ve tasdikli işlemlerden bloklar inşaa eder 
@@ -10,5 +10,5 @@ tasdik  edilmek zorundadır.
 Kimin tam olarak hangi anda blok *ürettiği* , *Delegated Proof of Stake* 
 (Yetkilendirilmiş-vekil-pay-ispatı) denilen mutabakat mekanizmasıyla belirlenir. 
 Esasında, BitShares hissedarları (elinde BTS kuponu olan)  tercih edilen blok 
-üreticilerine blokzincirinde oy verebilirler. O *tanıklar* denilen en çok oyu alan 
-kişilerin blokları üretmelerine izin verilir.
+üreticilerine blokzincirinde oy verebilirler. O *tanıklar* adı verilen, en çok oyu alan 
+kimselerin blokları üretmelerine müsade edilir.
