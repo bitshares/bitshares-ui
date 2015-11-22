@@ -23,6 +23,7 @@ var Utils = {
     },
 
     get_asset_precision: (precision) => {
+        precision = precision.toJS ? precision.get("precision") : precision;
         return Math.pow(10, precision);
     },
 
@@ -38,7 +39,8 @@ var Utils = {
     },
 
     round_number: function(number, asset) {
-        let precision = this.get_asset_precision(asset.precision);
+        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
+        let precision = this.get_asset_precision(assetPrecision);
         return Math.round(number * precision) / precision;
     },
 
@@ -267,6 +269,7 @@ var Utils = {
     },
 
     estimateFee: function(op_type, options, globalObject) {
+        if (!globalObject) return 0;
         let op_code = operations[op_type];
         let currentFees = globalObject.getIn(["parameters", "current_fees", "parameters", op_code, 1]).toJS();
 
