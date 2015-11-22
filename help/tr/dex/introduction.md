@@ -22,17 +22,17 @@ müşteriye kalmıştır.
   yapılabilir. GÜMÜŞ:ALTIN gibi bazı eşleşmeler  az likidite sağlarken FOREX ticareti 
   için USD:EUR gibi eşleşmeler çok büyük hacimli işlem görür.
 * **Limit Yok** :
-  BitShares protokolünün sizin ticaret deneyiminizi sınırlaması mümkün değidir.
-* **Merkezsiz**:
-  DEX (merkezsiz borsa) tüm dünyaya dağıtıktır. Bu sadece tek kırılma noktası 
-  yok demek değil , ayrıca BitShares borsasının ticaret için 7/24 açık olduğu anlamına 
+  BitShares protokolünün sizin ticaret deneyiminizi sınırlaması mümkün değildir.
+* **Merkezsiz** :
+  DEX (merkezsiz borsa) tüm dünyaya dağıtıktır. Bölece tek kırılma noktası 
+  olmadığı gibi bu BitShares borsasının ticaret için 7/24 açık olduğu anlamına 
   gelir, çünkü her zaman dünyada bir yerde vakit mutlaka gündüzdür. 
-* **Güvenli**:
-  Fonlarınız ve ticari işlemleriniz endüstriyel seviyedeki eliptik-eğrisi kriptografisiyle  
-  tamamen güvence altındadır. Kimse siz izin vermedikçe fonlarınıza erişemez.
+* **Güvenli** :
+  Fonlarınız ve ticari işlemleriniz endüstriyel seviyedeki eliptik-eğri kriptografisiyle tamamen güvence altındadır. 
+   Kimse siz izin vermedikçe fonlarınıza erişemez.
   Güvenliği daha da güçlendirmek amacıyla müşterilerimize emanet-escrow ve çoklu-
   imza planları düzenlemelerine imkan tanıyoruz.
-* **Hızlı**:
+* **Hızlı** :
   Diğer merkezsiz ağların tersine BitShares DEX gerçek-zamanlı ticarete
    imkan sağlar , sadece ışık hızı ve gezegenin büyüklüğü 
   ile sınırlıdır.
