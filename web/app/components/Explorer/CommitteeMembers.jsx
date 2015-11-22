@@ -224,7 +224,7 @@ class CommitteeMembers extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filterCommitteeMember: "",
+            filterCommitteeMember: props.filterCommitteeMember || "",
             cardView: props.cardView
         };
     }
@@ -239,7 +239,11 @@ class CommitteeMembers extends React.Component {
 
     _onFilter(e) {
         e.preventDefault();
-        this.setState({filterCommitteeMember: e.target.value});
+        this.setState({filterCommitteeMember: e.target.value.toLowerCase()});
+
+        SettingsActions.changeViewSetting({
+            filterCommitteeMember: e.target.value.toLowerCase()
+        });
     }
 
     _toggleView() {
@@ -303,11 +307,14 @@ class CommitteeMembersStoreWrapper extends React.Component {
     }
 
     static getPropsFromStores() {
-        return {cardViewCommittee: SettingsStore.getState().viewSettings.get("cardViewCommittee")}
+        return {
+            cardViewCommittee: SettingsStore.getState().viewSettings.get("cardViewCommittee"),
+            filterCommitteeMember: SettingsStore.getState().viewSettings.get("filterCommitteeMember"),
+        }
     }
 
     render () {
-        return <CommitteeMembers cardView={this.props.cardViewCommittee}/>
+        return <CommitteeMembers {...this.props}/>
     }
 }
 
