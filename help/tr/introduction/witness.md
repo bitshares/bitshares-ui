@@ -1,6 +1,6 @@
 #Tanık
 
-Tanıklar yeni bloklar inşa etmek suretiyle blokzincirine çalışan teşekküllerdir.
+Tanıklar yeni bloklar inşa etmek suretiyle blokzincirine çalışan kimselerdir.
 Her tanık, hissedarlar tarafından onaylanır ve tasdikli işlemlerden bloklar inşaa eder 
 ve imzalar. Ağın içinde gerçekleşen her işlem en sonunda tüm tanıklar tarafından 
 tasdik  edilmek zorundadır.
