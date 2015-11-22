@@ -15,7 +15,7 @@
         dashboard: "Panel",
         explorer: "Araştır",
         exchange: "Al-Sat",
-        payments: "Transfer", 
+        payments: "Transferler", 
         logout: "Çıkış",
         settings: "Ayarlar",
         current: "Kullanılan Hesap",
@@ -83,7 +83,7 @@
             approx_fee: "Yaklaşık ücret",
             exists: "O varlık zaten mevcut",
             max_positive: "Maksimum pozitif bir sayı olmalıdır",
-            core_exchange_rate: "Çekirdek kur oranı",
+            core_exchange_rate: "Esas kur oranı",
             quote: "Kota varlık miktarı",
             quote_name: "Kota varlıl",
             base: "Temel varlık miktarı",
@@ -562,7 +562,17 @@
         more: "Tüm piyasalar",
         volume_24: "24s Değişim",
         change: "Değişim",
-        confirm: "Emriniz şimdiki fiyattan%(diff)s% kadar farklı, emin misiniz?"
+        confirm: "Verdiğiniz emir şimdiki fiyattan %(diff)s% kadar farklı, emin misiniz?",
+        indicators: "Göstergeler",
+        rsi: "Relatif Güç İndeksi",
+        ema: "Üssel Hareketli Ortalama",
+        sma: "Basit Hareketli Ortalama",
+        atr: "Ortalama Gerçek Fiyat Aralığı",
+        period: "Zaman aralığı (gün)",
+        overbought: "Aşırı Alım",
+        oversold: "Aşırı Satış",
+        index: "Indeks"
+
     },
     markets: {
         title: "Piyasalar",
