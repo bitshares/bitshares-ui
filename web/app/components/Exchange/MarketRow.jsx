@@ -129,9 +129,9 @@ class MarketRow extends React.Component {
                 case "price":
                     let finalPrice = stats && stats.latestPrice ?
                         stats.latestPrice :
-                        stats && (stats.close.quote && stats.close.base) ?
-                        utils.get_asset_price(stats.close.quote, quote, stats.close.base, base, true) :
-                        utils.get_asset_price(price.baseAmount, base, price.quoteAmount, quote)
+                        stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
+                        utils.get_asset_price(stats.close.quote.amount, quote, stats.close.base.amount, base, true) :
+                        utils.get_asset_price(price.base.amount, base, price.quote.amount, quote)
 
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>

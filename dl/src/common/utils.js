@@ -15,6 +15,13 @@ var Utils = {
         return (match !== null && obj_id.split(".").length === 3);
     },
 
+    is_object_type: (obj_id, type) => {
+        let prefix = object_type[type];
+        if (!prefix || !obj_id) return null;
+        prefix = "1." + prefix.toString();
+        return obj_id.substring(0, prefix.length) === prefix;
+    },
+
     get_asset_precision: (precision) => {
         return Math.pow(10, precision);
     },
@@ -277,44 +284,77 @@ var Utils = {
         return fee * globalObject.getIn(["parameters", "current_fees", "scale"]) / 10000;
     },
 
-    convertPrice: function(quote, base) {
-        let quoteID = quote.get("id"),
-            baseID = base.get("id");
-    
-        let quoteRate = quote.get("bitasset") ? quote.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : quote.getIn(["options", "core_exchange_rate"]).toJS();
-        let baseRate =  base.get("bitasset") ? base.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : base.getIn(["options", "core_exchange_rate"]).toJS();
-        
-        let quoteCoreRateQuoteID = quoteRate.quote.asset_id;
-        let baseCoreRateQuoteID = baseRate.quote.asset_id;
-
-        let quoteCoreRateQuoteAmount, quoteCoreRateBaseAmount;
-        if (quoteCoreRateQuoteID === quoteID) {
-            quoteCoreRateQuoteAmount = quoteRate.quote.amount;
-            quoteCoreRateBaseAmount = quoteRate.base.amount;
-        } else {
-            quoteCoreRateQuoteAmount = quoteRate.base.amount;
-            quoteCoreRateBaseAmount = quoteRate.quote.amount;
+    convertPrice: function(fromRate, toRate, fromID, toID) {
+        // Handle case of input simply being a fromAsset and toAsset
+        if (fromRate.toJS && this.is_object_type(fromRate.get("id"), "asset")) {
+            fromID = fromRate.get("id")
+            fromRate = fromRate.get("bitasset") ? fromRate.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : fromRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
 
-        let baseCoreRateQuoteAmount, baseCoreRateBaseAmount;
-        if (quoteCoreRateQuoteID === baseID) {
-            baseCoreRateQuoteAmount = baseRate.quote.amount;
-            baseCoreRateBaseAmount = baseRate.base.amount;
-        } else {
-            baseCoreRateQuoteAmount = baseRate.base.amount;
-            baseCoreRateBaseAmount = baseRate.quote.amount;
+        if (toRate.toJS && this.is_object_type(toRate.get("id"), "asset")) {
+            toID = toRate.get("id");
+            toRate = toRate.get("bitasset") ? toRate.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : toRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
 
-        let baseRatio;
-        if (baseCoreRateBaseAmount > quoteCoreRateBaseAmount) {
-            baseRatio = baseCoreRateBaseAmount / quoteCoreRateBaseAmount;
-            quoteCoreRateQuoteAmount *= baseRatio;
+
+        let fromRateQuoteID = fromRate.quote.asset_id;
+        let toRateQuoteID = toRate.quote.asset_id;
+
+        let fromRateQuoteAmount, fromRateBaseAmount, finalQuoteID, finalBaseID;
+        if (fromRateQuoteID === fromID) {
+            fromRateQuoteAmount = fromRate.quote.amount;
+            fromRateBaseAmount = fromRate.base.amount;
         } else {
-            baseRatio = quoteCoreRateBaseAmount / baseCoreRateBaseAmount;
-            baseCoreRateQuoteAmount *= baseRatio;
+            fromRateQuoteAmount = fromRate.base.amount;
+            fromRateBaseAmount = fromRate.quote.amount;
         }
 
-        return {quoteAmount: quoteCoreRateQuoteAmount, baseAmount: baseCoreRateQuoteAmount};
+        let toRateQuoteAmount, toRateBaseAmount;
+        if (toRateQuoteID === toID) {
+            toRateQuoteAmount = toRate.quote.amount;
+            toRateBaseAmount = toRate.base.amount;
+        } else {
+            toRateQuoteAmount = toRate.base.amount;
+            toRateBaseAmount = toRate.quote.amount;
+        }
+
+        let baseRatio, finalQuoteAmount, finalBaseAmount;
+        if (toRateBaseAmount > fromRateBaseAmount) {
+            baseRatio = toRateBaseAmount / fromRateBaseAmount;
+            finalQuoteAmount = fromRateQuoteAmount * baseRatio;
+            finalBaseAmount = toRateQuoteAmount;
+        } else {
+            baseRatio = fromRateBaseAmount / toRateBaseAmount;
+            finalQuoteAmount = fromRateQuoteAmount;
+            finalBaseAmount = toRateQuoteAmount * baseRatio;
+        }
+
+        return {
+            quote: {
+                amount: finalQuoteAmount,
+                asset_id: toID
+            },
+            base: {
+                amount: finalBaseAmount,
+                asset_id: fromID
+            }
+        };
+    },
+
+    convertValue: function(priceObject, amount, fromAsset, toAsset) {
+        let quotePrecision = this.get_asset_precision(fromAsset.get("precision"));
+        let basePrecision = this.get_asset_precision(toAsset.get("precision"));
+
+        let assetPrice = this.get_asset_price(priceObject.quote.amount, fromAsset, priceObject.base.amount, toAsset);
+
+        let eqValue = fromAsset.get("id") !== toAsset.get("id") ?
+            basePrecision * (amount / quotePrecision) / assetPrice :
+            amount;
+
+        if (isNaN(eqValue) || !isFinite(eqValue)) {
+            return null;
+        }
+        return eqValue;
     }
 
 };
