@@ -178,11 +178,12 @@ class DepthHighChart extends React.Component {
         // Center the charts between bids and asks
         if (flatBids.length > 0 && flatAsks.length > 0) {
             let middleValue = (flatAsks[0][0] + flatBids[flatBids.length - 1][0]) / 2;
-            config.xAxis.min = middleValue * 0.25;
-            config.xAxis.max = middleValue * 1.75;
-            if (spread > 0 && spread > middleValue) {
-                config.xAxis.min = Math.max(0, middleValue - 1.5 * spread);
-                config.xAxis.max = middleValue + 1.5 * spread;
+            let adjustedSpread = spread * power;
+            config.xAxis.min = middleValue * 0.45;
+            config.xAxis.max = middleValue * 1.55;
+            if (adjustedSpread > 0 && adjustedSpread > middleValue) {
+                config.xAxis.min = Math.max(0, middleValue - 1.5 * adjustedSpread);
+                config.xAxis.max = middleValue + 1.5 * adjustedSpread;
             }
         }
 
