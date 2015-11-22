@@ -98,4 +98,45 @@ Tests are then run using
 npm test
 ```
 
+## Development process
+
+- Bugs are always worked before enhancements
+
+### Github issues are being used to track bugs and feature requests. 
+
+- Project Coordinator (@wmbutler) reads through new issues and requests clarification if needed
+- Issues get assigned to Milestones
+- Milestones are typically 1 week long ending on Wednesday
+- All devs are expected to install zenhub. Zenhub creates viewable pipelines and allows for issue estimation. Estimates are based on anticipated hours to complete.
+
+`http://zenhub.io`
+
+- New issues have not been categorized yet or are tagged as question when seeking clarification
+- Backlog issues have been assigned to a Milestone and are waiting for a dev to estimate and claim
+- In Progress issues are being actively worked
+- Testing issues are waiting for independent tests. (Methodology fully defined as of yet, so devs test their own work for now)
+- Closed issues are complete
+
+### When a new Milestone is about to start
+
+- Project Coordinator announces the number of issues and requests them to be claimed and estimated
+- Presents a burndown chart for the week
+
+### Sunday
+
+- Project Coordinator summarizes progress with burndown chart
+- Ensures that all items are claimed and estimated
+- Escalates to @valzav for unestimated and/or unclaimed items
+
+### Wednesday
+
+- Testing is completed
+- Release notes completed by @valzav
+- Project Coordinator announces release on bitsharestalk and provides link to release notes
+
+### Thursday
+
+- Incomplete items are moved to new Milestone
+- Old Milestone is closed
+- New Milestone is activated (rinse lather repeat)
 
