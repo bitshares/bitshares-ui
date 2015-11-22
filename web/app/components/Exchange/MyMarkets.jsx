@@ -67,7 +67,8 @@ class MyMarkets extends React.Component {
             nextState.sortBy !== this.state.sortBy ||
             nextState.activeTab !== this.state.activeTab ||
             nextState.lookupQuote !== this.state.lookupQuote ||
-            nextState.lookupBase !== this.state.lookupBase
+            nextState.lookupBase !== this.state.lookupBase ||
+            nextProps.current !== this.props.current
         );
     }
 
@@ -153,7 +154,7 @@ class MyMarkets extends React.Component {
     }
 
     render() {
-        let {starredMarkets, marketStats, columns, searchAssets, core} = this.props;
+        let {starredMarkets, marketStats, columns, searchAssets, core, current} = this.props;
         let {inverseSort, activeTab, sortBy, lookupQuote, lookupBase} = this.state;
         let marketRows = <tr></tr>;
 
@@ -248,17 +249,20 @@ class MyMarkets extends React.Component {
             })
             .map(market => {
                 let marketID = market.quote + "_" + market.base;
-                    return <MarketRow
-                        key={marketID}
-                        quote={market.quote}
-                        base={market.base}
-                        columns={columns}
-                        leftAlign={true}
-                        compact={true}
-                        noSymbols={true}
-                        stats={marketStats.get(marketID)}
-                        starred={starredMarkets.has(marketID)}
-                    />;
+                    return (
+                        <MarketRow
+                            key={marketID}
+                            quote={market.quote}
+                            base={market.base}
+                            columns={columns}
+                            leftAlign={true}
+                            compact={true}
+                            noSymbols={true}
+                            stats={marketStats.get(marketID)}
+                            starred={starredMarkets.has(marketID)}
+                            current={current === marketID}
+                        />
+                    );
             }).filter(a => {
                 return a !== null;
             }).sort((a, b) => {

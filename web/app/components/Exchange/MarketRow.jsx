@@ -174,8 +174,13 @@ class MarketRow extends React.Component {
             return a.key > b.key;
         });
 
+        let className = "clickable";
+        if (this.props.current) {
+            className += " activeMarket";
+        } 
+
         return (
-            <tr className="clickable" style={rowStyles}>{columns}</tr>
+            <tr className={className} style={rowStyles}>{columns}</tr>
         );
     }
 }

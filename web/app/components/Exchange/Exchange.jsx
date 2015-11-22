@@ -1172,6 +1172,7 @@ class Exchange extends React.Component {
                                         {name: "change", index: 5}
                                     ]
                                 }
+                                current={marketID}
                             />
                         </div>
                     </div>
