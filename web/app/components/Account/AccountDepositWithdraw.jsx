@@ -383,6 +383,28 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_account="openledger-wallet"
                                 receive_asset="OPENMUSE"
                                 receive_coin_type="openmuse" />
+                            <BlockTradesGatewayDepositRequest 
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account} 
+                                deposit_asset="NSR"
+                                deposit_asset_name="NuShares"
+                                deposit_coin_type="nsr"
+                                deposit_account="openledger-wallet"
+                                receive_asset="OPENNSR"
+                                receive_coin_type="opennsr" />
+                            <BlockTradesGatewayDepositRequest 
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account} 
+                                deposit_asset="NBT"
+                                deposit_asset_name="NuBits"
+                                deposit_coin_type="nbt"
+                                deposit_account="openledger-wallet"
+                                receive_asset="OPENNBT"
+                                receive_coin_type="opennbt" />
                             </tbody>
                         </table>
                     </div>
@@ -464,6 +486,26 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset="LTC"
                                 receive_asset="TRADE.LTC"
                                 receive_coin_type="trade.ltc" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
+                                deposit_coin_type="nsr"
+                                deposit_asset_name="NuShares"
+                                deposit_asset="NSR"
+                                receive_asset="TRADE.NSR"
+                                receive_coin_type="trade.nsr" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
+                                deposit_coin_type="nbt"
+                                deposit_asset_name="NuBits"
+                                deposit_asset="NBT"
+                                receive_asset="TRADE.NBT"
+                                receive_coin_type="trade.nbt" />
                             </tbody>
                         </table>
                     </div>
