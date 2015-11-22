@@ -223,6 +223,15 @@ class MyMarkets extends React.Component {
             });
         }
 
+        allMarkets = allMarkets
+        .filter(a => {
+            // If a base asset is specified, limit the quote asset to the exact search term
+            if (lookupBase) {
+                return a[1].quote === lookupQuote;
+            }
+            return true;
+        })
+
         allMarkets = Immutable.Map(allMarkets);
 
         let activeMarkets = activeTab === "starred" ? starredMarkets : allMarkets;
