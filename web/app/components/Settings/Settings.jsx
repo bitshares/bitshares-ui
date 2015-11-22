@@ -177,7 +177,7 @@ class Settings extends React.Component {
 
             case "inverseMarket":
             case "confirmMarketOrder":
-                value = findEntry(e.target.value, defaults) === 0; // USD/BTS is true, BTS/USD is false
+                value = findEntry(e.target.value, defaults[setting]) === 0; // USD/BTS is true, BTS/USD is false
                 break;
 
             case "connection":
@@ -187,8 +187,13 @@ class Settings extends React.Component {
                 });
                 break;
 
+            case "unit":
+                let index = findEntry(e.target.value, defaults[setting]);
+                SettingsActions.changeSetting({setting: setting, value: defaults[setting][index]});
+                break;
+
             default:
-                value = findEntry(e.target.value, defaults);
+                value = findEntry(e.target.value, defaults[setting]);
                 break;
         }
 

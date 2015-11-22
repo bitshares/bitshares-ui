@@ -19,7 +19,7 @@ class AccountOverview extends React.Component {
     }
 
     render() {
-        let account = this.props.account;
+        let {account, settings} = this.props;
         if (!account) {
             return null;
         }
@@ -29,6 +29,8 @@ class AccountOverview extends React.Component {
         let account_balances = account.get("balances");
         let balanceList = Immutable.List();
 
+        let preferredUnit = settings.get("unit") || "1.3.0";
+
         if (account_balances) {
             account_balances.forEach( balance => {
                 let balanceAmount = ChainStore.getObject(balance);
@@ -37,10 +39,10 @@ class AccountOverview extends React.Component {
                 }
                 balanceList = balanceList.push(balance);
                 balances[balance] = (
-                    <tr key={balance}>
+                    <tr key={balance} style={{maxWidth: "100rem"}}>
                         <td><BalanceComponent balance={balance}/></td>
-                        <td><BalanceValueComponent balance={balance}/></td>
                         <td><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
+                        <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
                     </tr>
                 );
             })
@@ -48,20 +50,20 @@ class AccountOverview extends React.Component {
 
         return (
             <div className="grid-content">
-                <div className="content-block">
+                <div className="content-block small-12 medium-10 large-8">
                     <h3><Translate content="transfer.balances" /></h3>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th><Translate component="span" content="account.asset" /></th>
-                                    <th><Translate component="span" content="account.eq_value" /></th>
-                                    <th><Translate component="span" content="account.bts_market" /></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {React.addons.createFragment(balances)}
-                            </tbody>
-                        </table>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th><Translate component="span" content="account.asset" /></th>
+                                <th><Translate component="span" content="account.bts_market" /></th>
+                                <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {React.addons.createFragment(balances)}
+                        </tbody>
+                    </table>
                 </div>
                 {call_orders.length > 0 ? <div className="content-block">
                     <h3><Translate content="account.collaterals" /></h3>
