@@ -47,7 +47,7 @@ class MyMarkets extends React.Component {
         this.state = {
             inverseSort: props.viewSettings.get("myMarketsInvert"),
             sortBy: props.viewSettings.get("myMarketsSort"),
-            activeTab: props.viewSettings.get("favMarketTab"),
+            activeTab: props.viewSettings.get("favMarketTab") || "starred",
             lookupQuote: quote,
             lookupBase: base,
             inputValue: inputValue
