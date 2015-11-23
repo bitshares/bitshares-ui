@@ -43,6 +43,7 @@ class AccountOverview extends React.Component {
                         <td><BalanceComponent balance={balance}/></td>
                         <td><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
                         <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
+                        <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td>
                     </tr>
                 );
             })
@@ -58,6 +59,7 @@ class AccountOverview extends React.Component {
                                 <th><Translate component="span" content="account.asset" /></th>
                                 <th><Translate component="span" content="account.bts_market" /></th>
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
+                                <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
                             </tr>
                         </thead>
                         <tbody>

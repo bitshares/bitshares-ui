@@ -185,6 +185,7 @@
         },
         collaterals: "Collateral Positions",
         eq_value: "Equivalent Value",
+        percent: "Percent of total supply",
         please_create_account: "Please create an account",
         create_account: "Create account",
         identicon: "Identicon",
