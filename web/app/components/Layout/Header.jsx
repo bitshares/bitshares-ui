@@ -90,6 +90,17 @@ class Header extends React.Component {
 
     }
 
+    _onGoBack(e) {
+        e.preventDefault();
+        // this.context.router.goBack();
+        window.history.back();
+    }
+
+    _onGoForward(e) {
+        e.preventDefault();
+        window.history.forward();
+    }
+
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
@@ -168,6 +179,8 @@ class Header extends React.Component {
 
                 <div className="show-for-medium medium-8">
                     <ul className="menu-bar">
+                        <li><div style={{marginLeft: "1rem", height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline">{"<"}</div></div></li>
+                        <li><div style={{height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline">></div></div></li>
                         <li>{linkToAccountOrDashboard}</li>
                         <li><a className={cnames({active: active === "explorer"})} onClick={this._onNavigate.bind(this, "explorer")}><Translate component="span" content="header.explorer" /></a></li>
                         {linkedAccounts.size === 0 ? null :
