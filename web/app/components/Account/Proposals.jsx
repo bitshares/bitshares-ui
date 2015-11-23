@@ -12,7 +12,7 @@ export default class Proposals extends Component {
     static propTypes = {
         accountList: ChainTypes.ChainAccountsList.isRequired,
     }
-    
+
     shouldComponentUpdate(nextProps, nextState) {
         // console.log("should render")
         var len1 = this.props.accountList.length
@@ -27,7 +27,7 @@ export default class Proposals extends Component {
         }
         return false
     }
-    
+
     render() {
         // console.log("render")
         let proposalRows = []
@@ -39,8 +39,7 @@ export default class Proposals extends Component {
                 if( proposal ) {
                     var proposed_transaction = proposal.get("proposed_transaction")
                     var operations = proposed_transaction.get("operations")
-                    <ProposedOperations operations={operations} proposal_id={proposal_id}/>
-                    
+                    proposalRows.push(<ProposedOperations operations={operations} proposal_id={proposal_id}/>);
                 }
             })
         }
