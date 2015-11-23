@@ -16,7 +16,6 @@ class TransactionChart extends React.Component {
             let finalValue = series.xData[series.xData.length -1];
 
             // console.log("chart:", chart, "series:", series.data, "finalValue:", finalValue);
-            debugger;
             if (series.xData.length) {
                 trxData.forEach(point => {
                     if (point[0] > finalValue) {
