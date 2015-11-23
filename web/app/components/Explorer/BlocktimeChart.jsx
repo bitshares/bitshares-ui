@@ -18,18 +18,21 @@ class BlocktimeChart extends React.Component {
         if (chart) {
             let {blockTimes, colors} = this._getData(nextProps);
             let series = chart.series[0];
-            let finalValue = series.data[series.data.length -1];
+                let finalValue = series.xData[series.xData.length -1];
 
-            blockTimes.forEach(point => {
-                if (point[0] > finalValue.x) {
-                    series.addPoint(point, false, true);
-                }
-            });
+            if (series.xData.length) {
+                // console.log(chart, "series:", series.data, "finalValue:", finalValue);
+                blockTimes.forEach(point => {
+                    if (point[0] > finalValue) {
+                        series.addPoint(point, false, series.xData.length >= 30);
+                    }
+                });
 
-            chart.options.plotOptions.column.colors = colors;
+                chart.options.plotOptions.column.colors = colors;
 
-            chart.redraw();
-            return false;
+                chart.redraw();
+                return false;
+            }
         }
 
         return (
