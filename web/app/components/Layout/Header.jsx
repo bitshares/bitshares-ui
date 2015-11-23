@@ -145,8 +145,12 @@ class Header extends React.Component {
         if (currentAccount && active === "exchange") {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
+            if (myAccounts.indexOf(currentAccount) < 0) {
+                myAccounts.push(currentAccount);
+            }
 
             if(myAccounts.length > 1) {
+
                 let accountsList = myAccounts
                     .sort()
                     .map(name => {
