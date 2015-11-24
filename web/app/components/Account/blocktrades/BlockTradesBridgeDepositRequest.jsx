@@ -591,8 +591,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             let deposit_table = null;
             let withdraw_table = null;
 
-            let select_style = {width: "8em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
-            let input_style = {width: "9em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border-color": "grey"};
+            let select_style = {width: "8em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border": "1px solid #555"};
+            let input_style = {width: "9em", display: "inline", color: "inherit", "background-color": "transparent", "font-size": "0.9em", "border": "1px solid #555"};
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_deposit).length > 0)
             {
