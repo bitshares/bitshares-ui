@@ -1,10 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import {Link} from "react-router";
-import Immutable from "immutable";
-import AssetActions from "actions/AssetActions";
 import Translate from "react-translate-component";
-import Inspector from "react-json-inspector";
 import LinkToAccountById from "./LinkToAccountById";
 import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
@@ -14,74 +11,20 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
-require("./json-inspector.scss");
-
-
-//-------------------------------------------------------------
-// TODO: Capitalize?
-var chargeMarketFeeBit =      0x01;
-var allowWhiteListBit =       0x02;
-var allowIssuerOverrideBit =  0x04;
-var restrictTransfersBit =    0x08;
-var allowForceSettleBit =     0x10;
-var allowGlobalSettleBit =    0x20;
-var allowStealthTransferBit = 0x40;
-
-
-function permissionName(bit) {
-    /* enum asset_issuer_permission_flags
-     {
-     charge_market_fee    = 0x01, //< an issuer-specified percentage of all market trades in this asset is paid to the issuer
-     white_list           = 0x02, //< accounts must be whitelisted in order to hold this asset
-     override_authority   = 0x04, //< issuer may transfer asset back to himself
-     transfer_restricted  = 0x08, //< require the issuer to be one party to every transfer
-     disable_force_settle = 0x10, //< disable force settling
-     global_settle        = 0x20, //< allow the bitasset issuer to force a global settling -- this may be set in permissions, but not flags
-     disable_confidential = 0x40  //< allow the asset to be used with confidential transactions
-     };
-     */
-    var name = {
-        0x01 : "chargeMarketFee",
-        0x02 : "allowWhiteList",
-        0x04 : "allowIssuerOverride",
-        0x08 : "restrictTransfers",
-        0x10 : "allowForceSettle",
-        0x20 : "allowGlobalSettle",
-        0x40 : "allowStealthTransfer",
-    };
-    //FIXME if bit not in name
-    return (<Translate content={"explorer.asset.permissions." + name[bit]}/>);
-}
-
-
-function permissionSet(asset, bit) {
-    var inverted = [allowForceSettleBit, allowGlobalSettleBit]; // 'disable' settings that values are inverted
-    var mask = asset.options.flags;
-    var value = mask & bit > 0;
-    if ([chargeMarketFeeBit, allowWhiteListBit].indexOf(bit) > -1) return true; // FIXME: Remove hardcoded
-    if (inverted.indexOf(bit) > -1)
-        return  !value;
-    return value;
-}
-
-
-function permissionAllowed(asset, bit) {
-    var mask = asset.options.issuer_permissions;
-    return mask & bit > 0;
-}
-
+import assetUtils from "common/asset_utils";
 
 class AssetFlag extends React.Component {
     render()
     {
-        if (!permissionSet(this.props.asset, this.props.bit)) {
+        let {isSet, name} = this.props;
+        if (!isSet) {
             return ( <span></span> );
         }
 
         return (
             <span>
                 <span className="button disabled small" style={{margin: "0 0 0.25rem 0"}}>
-                    {permissionName(this.props.bit)}
+                    <Translate content={"account.user_issued_assets." + name}/>
                 </span>
                 {' '}
             </span>
@@ -94,14 +37,16 @@ class AssetFlag extends React.Component {
 class AssetPermission extends React.Component {
     render()
     {
-        if (!permissionAllowed(this.props.asset, this.props.bit)) {
+        let {isSet, name} = this.props;
+
+        if (!isSet) {
             return ( <span></span> );
         }
 
         return (
             <span>
                 <span className="button disabled small"  style={{margin: "0 0 0.25rem 0"}}>
-                    {permissionName(this.props.bit)}
+                    <Translate content={"account.user_issued_assets." + name}/>
                 </span>
                 {' '}
             </span>
@@ -126,43 +71,6 @@ class Asset extends React.Component {
     }
 
 
-/*
-    onCheckbox(name, e)
-    {
-        alert('set ' + name + ' to ' + e.target.checked);
-    }
-
-
-    setting(permission)
-    {
-        // TODO: on/off slider grey if no permission
-        return (
-            <span >
-                <input type="checkbox"
-                       checked={permission.value}
-                       disabled={permission.disabled ? "disabled" : false}
-                       onChange={this.onCheckbox.bind(this, permission.name)}
-                    />
-                {' ' + permission.name}
-                <br/>
-            </span>
-        );
-    }
-*/
-
-
-/*
-    assetHeader() {
-     //this.header_image = "http://theeconomiccollapseblog.com/wp-content/uploads/2012/03/10-Reasons-Why-The-Reign-Of-The-Dollar-As-The-World-Reserve-Currency-Is-About-To-Come-To-An-End.jpg";
-        // TODO: use images from the bundle
-        return (
-            <div className="grid-block small-12 medium-10 medium-offset-2" style={{overflow:"visible"}}>
-                <img src={this.header_image} style={{maxWidth:"1000px", width:"100%", height:"auto"}}/>
-            </div>
-        );
-    }
-*/
-
     _assetType(asset) {
         return ('bitasset' in asset) ?
                (asset.bitasset.is_prediction_market ? 'Prediction' : 'Smart') :
@@ -170,33 +78,26 @@ class Asset extends React.Component {
     }
 
 
-    renderFlagIndicators(asset)
+    renderFlagIndicators(flags, names)
     {
         return (
+
             <div>
-                <AssetFlag asset={asset} bit={chargeMarketFeeBit}/>
-                <AssetFlag asset={asset} bit={allowWhiteListBit}/>
-                <AssetFlag asset={asset} bit={allowIssuerOverrideBit}/>
-                <AssetFlag asset={asset} bit={restrictTransfersBit}/>
-                <AssetFlag asset={asset} bit={allowForceSettleBit}/>
-                <AssetFlag asset={asset} bit={allowGlobalSettleBit}/>
-                <AssetFlag asset={asset} bit={allowStealthTransferBit}/>
+                {names.map((name) => {
+                    return <AssetFlag name={name} isSet={flags[name]}/>
+                })}
             </div>
         );
     }
 
 
-    renderPermissionIndicators(asset)
+    renderPermissionIndicators(permissions, names)
     {
         return (
             <div>
-                <AssetPermission asset={asset} bit={chargeMarketFeeBit}/>
-                <AssetPermission asset={asset} bit={allowWhiteListBit}/>
-                <AssetPermission asset={asset} bit={allowIssuerOverrideBit}/>
-                <AssetPermission asset={asset} bit={restrictTransfersBit}/>
-                <AssetPermission asset={asset} bit={allowForceSettleBit}/>
-                <AssetPermission asset={asset} bit={allowGlobalSettleBit}/>
-                <AssetPermission asset={asset} bit={allowStealthTransferBit}/>
+                {names.map((name) => {
+                    return <AssetPermission name={name} isSet={permissions[name]}/>
+                })}
             </div>
         );
     }
@@ -280,6 +181,10 @@ class Asset extends React.Component {
         var dynamic = asset.dynamic;
         var options = asset.options;
 
+        let flagBooleans = assetUtils.getFlagBooleans(asset.options.flags, this.props.asset.has("bitasset_data_id"));
+
+        let bitNames = Object.keys(flagBooleans);
+
         var currentSupply = (dynamic) ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.current_supply"/> </td>
@@ -295,7 +200,7 @@ class Asset extends React.Component {
         ) : (<tr> </tr>)
 
 
-        var marketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
+        var marketFee = flagBooleans["charge_market_fee"] ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.market_fee"/> </td>
                 <td> {options.market_fee_percent / 100.0} % </td>
@@ -303,7 +208,7 @@ class Asset extends React.Component {
         ) : '';
 
         // options.max_market_fee initially a string
-        var maxMarketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
+        var maxMarketFee = flagBooleans["charge_market_fee"] ? (
             <tr>
                 <td> <Translate content="explorer.asset.summary.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={+options.max_market_fee} asset={asset.id} /> </td>
@@ -329,7 +234,7 @@ class Asset extends React.Component {
                 </table>
 
                 <br/>
-                {this.renderFlagIndicators(asset)}
+                {this.renderFlagIndicators(flagBooleans, bitNames)}
             </div>
         );
     }
@@ -400,13 +305,17 @@ class Asset extends React.Component {
 
         var options = asset.options;
 
-        options.blacklist_authorities = ["1.2.3", "1.2.4"];
-        options.whitelist_authorities = ["1.2.1", "1.2.2"];
-        options.blacklist_markets = ["JPY", "RUB"];
-        options.whitelist_markets = ["USD", "EUR", "GOLD"];
+        let permissionBooleans = assetUtils.getFlagBooleans(asset.options.issuer_permissions, this.props.asset.has("bitasset_data_id"));
+
+        let bitNames = Object.keys(permissionBooleans);
+
+        // options.blacklist_authorities = ["1.2.3", "1.2.4"];
+        // options.whitelist_authorities = ["1.2.1", "1.2.2"];
+        // options.blacklist_markets = ["JPY", "RUB"];
+        // options.whitelist_markets = ["USD", "EUR", "GOLD"];
 
         // options.max_market_fee initially a string
-        var maxMarketFee = (permissionSet(asset, chargeMarketFeeBit)) ? (
+        var maxMarketFee = permissionBooleans["charge_market_fee"] ? (
             <tr>
                 <td> <Translate content="explorer.asset.permissions.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={+options.max_market_fee} asset={asset.id} /> </td>
@@ -421,7 +330,7 @@ class Asset extends React.Component {
             </tr>
         );
 
-        var whiteLists = (permissionSet(asset, allowWhiteListBit)) ? (
+        var whiteLists = permissionBooleans["white_list"] ? (
             <span>
                 <br/>
                     <Translate content="explorer.asset.permissions.blacklist_authorities"/>:
@@ -447,7 +356,7 @@ class Asset extends React.Component {
                 </table>
 
                 <br/>
-                {this.renderPermissionIndicators(asset)}
+                {this.renderPermissionIndicators(permissionBooleans, bitNames)}
                 <br/>
 
                 {/*whiteLists*/}
@@ -530,11 +439,11 @@ class Asset extends React.Component {
     render()
     {
         var asset = this.props.asset.toJS();
-        var priceFeed = ('bitasset' in asset) ? this.renderPriceFeed(asset) : '';
-        var priceFeedData = ('bitasset' in asset) ? this.renderPriceFeedData(asset) : '';
+        var priceFeed = ('bitasset' in asset) ? this.renderPriceFeed(asset) : null;
+        var priceFeedData = ('bitasset' in asset) ? this.renderPriceFeedData(asset) : null;
 
         //console.log("This: ", this);
-        console.log("Asset: ", asset); //TODO Remove
+        // console.log("Asset: ", asset); //TODO Remove
 
         return (
             <div className="grid-block page-layout vertical medium-horizontal" >
@@ -549,7 +458,7 @@ class Asset extends React.Component {
                             {this.renderSummary(asset)}
                         </div>
                         <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                            {priceFeed}
+                            {priceFeed ? priceFeed : this.renderPermissions(asset)}
                         </div>
                       </div>
                       <div className="grid-block small-12  vertical medium-horizontal" style={{ overflow:"visible"}}>
@@ -558,7 +467,7 @@ class Asset extends React.Component {
                          </div>
 
                          <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                            {this.renderPermissions(asset)}
+                            {priceFeed ? this.renderPermissions(asset) : null}
                           </div>
                     </div>
 

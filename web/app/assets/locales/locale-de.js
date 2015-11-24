@@ -392,16 +392,9 @@ module.exports = {
                 unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile"
             },
             permissions: {
-                permissions: "Befugnisse",
+                title: "Befugnisse",
                 max_market_fee: "Maximale Marktgebühr",
                 max_supply: "Maximale Verfügbarkeit",
-                chargeMarketFee: "Marktgebühren erheben",
-                allowWhiteList: "Weißlisten zulassen",
-                allowIssuerOverride: "Überschreiben des Herausgebers zulassen",
-                restrictTransfers: "Transfers beschränken",
-                allowForceSettle: "Force Settlements erlauben",
-                allowGlobalSettle: "Global Settlements erlauben",
-                allowStealthTransfer: "Versteckte Transfers erlauben",
                 blacklist_authorities: "Authoritäten der Schwarzliste",
                 blacklist_markets: "Schwarzgelistete Märkte",
                 whitelist_authorities: "Authoritäten der Weißliste",

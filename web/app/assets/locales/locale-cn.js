@@ -448,20 +448,13 @@ module.exports = {
                 title: "手续费资金池"
             },
             permissions: {
+                title: "权限",
                 max_market_fee: "交易市场手续费上限",
                 max_supply: "最大供给",
-                chargeMarketFee: "收取交易手续费",
-                allowWhiteList: "允许持仓账户白名单",
-                allowIssuerOverride: "允许发行人变更",
-                restrictTransfers: "限制资产转账",
-                allowForceSettle: "允许强制清算",
-                allowGlobalSettle: "允许全局清算",
-                allowStealthTransfer: "允许隐私转账",
                 blacklist_authorities: "黑名单职权实体",
                 blacklist_markets: "禁止交易对市场",
                 whitelist_authorities: "白名单职权实体",
                 whitelist_markets: "允许交易对市场",
-                title: "权限"
             },
             price_feed_data: {
                 title: "喂价数据",
