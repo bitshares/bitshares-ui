@@ -6,6 +6,8 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import Operation from "../Blockchain/Operation";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
+import TotalBalanceValue from "../Utility/TotalBalanceValue";
+
 import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
@@ -30,7 +32,6 @@ class AccountOverview extends React.Component {
         let balanceList = Immutable.List();
 
         let preferredUnit = settings.get("unit") || "1.3.0";
-
         if (account_balances) {
             account_balances.forEach( balance => {
                 let balanceAmount = ChainStore.getObject(balance);
@@ -49,6 +50,8 @@ class AccountOverview extends React.Component {
             })
         }
 
+        let totalBalance = balanceList.size ? <TotalBalanceValue balances={balanceList}/> : null;
+
         return (
             <div className="grid-content">
                 <div className="content-block small-12 medium-10 large-8">
@@ -64,6 +67,7 @@ class AccountOverview extends React.Component {
                         </thead>
                         <tbody>
                             {React.addons.createFragment(balances)}
+                            {balanceList.size ? <tr><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
                         </tbody>
                     </table>
                 </div>

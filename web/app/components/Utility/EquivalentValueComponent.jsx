@@ -60,6 +60,32 @@ class ValueComponent extends React.Component {
         clearInterval(this.toStatsInterval);
     }
 
+    getValue() {
+        let {amount, toAsset, fromAsset, fullPrecision, marketStats} = this.props;
+        let coreAsset = ChainStore.getAsset("1.3.0");
+        let toStats, fromStats;
+
+        let toID = toAsset.get("id");
+        let toSymbol = toAsset.get("symbol");
+        let fromID = fromAsset.get("id");
+        let fromSymbol = fromAsset.get("symbol");
+
+        if (!fullPrecision) {
+            amount = utils.get_asset_amount(amount, fromAsset);
+        }
+
+        if (coreAsset && marketStats) {
+            let coreSymbol = coreAsset.get("symbol");
+
+            toStats = marketStats.get(toSymbol + "_" + coreSymbol);
+            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
+        }
+
+        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromAsset, toStats && toStats.close ? toStats.close : toAsset, fromID, toID);
+
+        return utils.convertValue(price, amount, fromAsset, toAsset);
+    }
+
     render() {
         let {amount, toAsset, fromAsset, fullPrecision, marketStats} = this.props;
         let coreAsset = ChainStore.getAsset("1.3.0");

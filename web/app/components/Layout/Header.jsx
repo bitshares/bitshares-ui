@@ -14,6 +14,9 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
+import {AccountWrapper} from "../Utility/TotalBalanceValue";
+
+
 
 @connectToStores
 class Header extends React.Component {
@@ -77,7 +80,7 @@ class Header extends React.Component {
         e.preventDefault();
         let path = route.route ? route.route : route;
         this.setState({active: route.route ? route.route : route});
-        
+
         switch(path) {
             case "exchange":
                 this.context.router.transitionTo(path, route.params);
@@ -139,7 +142,7 @@ class Header extends React.Component {
             <a className={cnames({active: active === "exchange" || active === "markets"})} onClick={this._onNavigate.bind(this, {route: "exchange", params: {marketID: this.props.lastMarket}})}><Translate component="span" content="header.exchange" /></a>:
             <a className={cnames({active: active === "markets" || active === "exchange"})} onClick={this._onNavigate.bind(this, "markets")}><Translate component="span" content="header.exchange" /></a>
 
-        // Account selector: Only active inside the exchange            
+        // Account selector: Only active inside the exchange
         let accountsDropDown = null;
 
         if (currentAccount && active === "exchange") {
@@ -197,7 +200,9 @@ class Header extends React.Component {
                         <div className="grid-block shrink overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
-
+                        <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
+                            <AccountWrapper account={currentAccount} />
+                        </div>
                         <div className="grp-menu-item" >
                             <Link to="settings" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>
