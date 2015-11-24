@@ -595,3 +595,12 @@ section input[type="text"] {
     background-color: transparent;
   }
 }
+
+
+// Asset Detail
+
+.asset-card {
+  .card-divider {
+    background: $panel-bg-color;
+  }
+}

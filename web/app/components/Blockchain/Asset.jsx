@@ -12,7 +12,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import TimeAgo from "../Utility/TimeAgo";
-import Box from "../Utility/Box";
 import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 require("./json-inspector.scss");
@@ -81,7 +80,7 @@ class AssetFlag extends React.Component {
 
         return (
             <span>
-                <span className="label success">
+                <span className="button disabled small" style={{margin: "0 0 0.25rem 0"}}>
                     {permissionName(this.props.bit)}
                 </span>
                 {' '}
@@ -101,7 +100,7 @@ class AssetPermission extends React.Component {
 
         return (
             <span>
-                <span className="label info">
+                <span className="button disabled small"  style={{margin: "0 0 0.25rem 0"}}>
                     {permissionName(this.props.bit)}
                 </span>
                 {' '}
@@ -256,7 +255,7 @@ class Asset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer);
         var issuerName = issuer ? issuer.get('name') : '';
 
-        var icon = (<Icon name="piggy" className="pig" size="4x"/>);
+        var icon = (<Icon name="asset" className="asset" size="4x"/>);
         var help = (
             <HelpContent
                 path = {"assets/" + asset.symbol}
@@ -269,18 +268,9 @@ class Asset extends React.Component {
         );
 
         return (
-            <Box>
-                <div className="grid-block" style={{overflow:"visible"}}>
-                    <div className="grid-block small-1" style={{overflow:"visible"}}>
-                        <br/>
-                        <br/>
-                        {icon}
-                    </div>
-                    <div className="grid-block small-11" style={{overflow:"visible"}}>
+                <div className="grid-block regular-padding" style={{overflow:"visible"}}>
                         {help}
-                    </div>
                 </div>
-            </Box>
         );
     }
 
@@ -321,12 +311,9 @@ class Asset extends React.Component {
         ) : '';
 
         return (
-            <Box header= {asset.symbol}>
-                {options.description}
-                <br/>
-                <br/>
-
-                <table className="table key-value-table">
+            <div className="asset-card">
+              <div className="card-divider">{asset.symbol}</div>
+                <table className="table key-value-table table-hover">
                     <tr>
                         <td> <Translate content="explorer.asset.summary.asset_type"/> </td>
                         <td> {this._assetType(asset)} </td>
@@ -343,7 +330,7 @@ class Asset extends React.Component {
 
                 <br/>
                 {this.renderFlagIndicators(asset)}
-            </Box>
+            </div>
         );
     }
 
@@ -353,12 +340,14 @@ class Asset extends React.Component {
         var bitAsset = asset.bitasset;
 
         if (!('current_feed' in bitAsset))
-            return ( <Box header= {title} /> );
+            return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
 
         return (
-            <Box accordian="true" header= {title} >
-                <table className="table key-value-table">
+            <div className="asset-card">
+              <div className="card-divider">{title}</div>
+
+                <table className="table key-value-table table-hover"  style={{ padding:"1.2rem"}}>
                     <tr>
                         <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
                         <td> {this.formattedPrice(currentFeed.settlement_price)} </td>
@@ -374,7 +363,7 @@ class Asset extends React.Component {
                         <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
                     </tr>
                 </table>
-            </Box>
+            </div>
         );
     }
 
@@ -383,8 +372,9 @@ class Asset extends React.Component {
         var dynamic = asset.dynamic;
         var options = asset.options;
         return (
-            <Box accordian="true" header= {(<Translate content="explorer.asset.fee_pool.title"/>)} >
-                <table className="table key-value-table">
+            <div className="asset-card">
+              <div className="card-divider">{(<Translate content="explorer.asset.fee_pool.title"/>)}</div>
+                <table className="table key-value-table" style={{ padding:"1.2rem"}}>
                     <tr>
                         <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
                         <td> {this.formattedPrice(options.core_exchange_rate)} </td>
@@ -398,7 +388,7 @@ class Asset extends React.Component {
                         <td> {dynamic ? dynamic.accumulated_fees : ''} </td>
                     </tr>
                 </table>
-            </Box>
+            </div>
         );
     }
 
@@ -449,8 +439,9 @@ class Asset extends React.Component {
         ) : '';
 
         return (
-            <Box accordian="true" header= {(<Translate content="explorer.asset.permissions.title"/>)} >
-                <table className="table key-value-table">
+            <div className="asset-card">
+              <div className="card-divider">{(<Translate content="explorer.asset.permissions.title"/>)} </div>
+                <table className="table key-value-table table-hover" style={{ padding:"1.2rem"}}>
                     {maxMarketFee}
                     {maxSupply}
                 </table>
@@ -460,7 +451,7 @@ class Asset extends React.Component {
                 <br/>
 
                 {/*whiteLists*/}
-            </Box>
+            </div>
         );
     }
 
@@ -488,16 +479,18 @@ class Asset extends React.Component {
         var settlement_price_header = feeds[0][1][1].settlement_price;
         var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
         rows.push(
+          <thead>
             <tr>
-                <th> <Translate content="explorer.asset.price_feed_data.settlement_price"/> <br/>
+                <th> <Translate content="explorer.asset.price_feed_data.settlement_price"/> –
                       {this.formattedPrice(settlement_price_header, false, true)}</th>
-                <th> <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/> <br/>
+                    <th> <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/> –
                      {this.formattedPrice(core_exchange_rate_header, false, true)} </th>
                 <th> <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.publisher"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.published"/> </th>
             </tr>
+        </thead>
         )
         for (var i = 0; i < feeds.length; i++) {
             var feed = feeds[i];
@@ -520,11 +513,16 @@ class Asset extends React.Component {
         }
 
         return (
-            <Box accordian="true" header= {(<Translate content="explorer.asset.price_feed_data.title"/>)}>
-                <table className="table">
+          <div className="small-12 " style={{ overflow:"visible", padding:"0.8rem"}}>
+            <div className="grid-content">
+              <div className="asset-card">
+              <div className="card-divider">{(<Translate content="explorer.asset.price_feed_data.title"/>)}</div>
+                <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
                     {rows}
                 </table>
-            </Box>
+                </div>
+            </div>
+          </div>
         );
     }
 
@@ -539,24 +537,29 @@ class Asset extends React.Component {
         console.log("Asset: ", asset); //TODO Remove
 
         return (
-            <div className="grid-block page-layout vertical medium-horizontal">
+            <div className="grid-block page-layout vertical medium-horizontal" >
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
-
+                  <div className="grid-block small-12" style={{ overflow:"visible"}}>
                     {this.renderAboutBox(asset)}
 
+                  </div>
+                    <div className="grid-block small-12  vertical medium-horizontal" style={{ overflow:"visible"}}>
 
-                    <div className="grid-block" style={{padding:0, overflow:"visible"}}>
-                        <div className="grid-block vertical" style={{overflow:"visible"}}>
-                            {/* COLUMN 1 */}
+                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {this.renderSummary(asset)}
+                        </div>
+                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {priceFeed}
                         </div>
-
-                        <div className="grid-block vertical" style={{overflow:"visible"}}>
-                            {/* COLUMN 2 */}
+                      </div>
+                      <div className="grid-block small-12  vertical medium-horizontal" style={{ overflow:"visible"}}>
+                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {this.renderFeePool(asset)}
-                            {this.renderPermissions(asset)}
                          </div>
+
+                         <div className="small-12 medium-6" style={{overflow:"visible"}}>
+                            {this.renderPermissions(asset)}
+                          </div>
                     </div>
 
                     {priceFeedData}
