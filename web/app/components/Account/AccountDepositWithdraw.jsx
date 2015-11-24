@@ -391,7 +391,6 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset="NSR"
                                 deposit_asset_name="NuShares"
                                 deposit_coin_type="nsr"
-                                deposit_account="openledger-wallet"
                                 receive_asset="OPENNSR"
                                 receive_coin_type="opennsr" />
                             <BlockTradesGatewayDepositRequest 
@@ -402,7 +401,6 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset="NBT"
                                 deposit_asset_name="NuBits"
                                 deposit_coin_type="nbt"
-                                deposit_account="openledger-wallet"
                                 receive_asset="OPENNBT"
                                 receive_coin_type="opennbt" />
                             </tbody>
