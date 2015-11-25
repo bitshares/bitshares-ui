@@ -85,7 +85,7 @@
             max_positive: "Maksimum pozitif bir sayı olmalıdır",
             core_exchange_rate: "Esas kur oranı",
             quote: "Kota varlık miktarı",
-            quote_name: "Kota varlıl",
+            quote_name: "Kota varlık",
             base: "Temel varlık miktarı",
             base_name: "Temel varlık",
             update_owner: "Sahibi güncelle",
@@ -335,7 +335,7 @@
             asset_update: "Varlık güncelleme",
             asset_update_bitasset: "Akıllı para güncelle",
             asset_update_feed_producers: "Varlık feed üreticilerini güncelle",
-            asset_issue: "Varlık İhracı",
+            asset_issue: "Varlık ihraç et",
             asset_reserve: "Varlık yak",
             asset_fund_fee_pool: "Varlık ücret havuzu finansı",
             asset_settle: "Varlık ödemesi",
@@ -677,7 +677,7 @@
       settle: {
         title: "%(asset)s ödenmesini talep et",
         amount: "Ödenecek miktar",
-        submit: "Varlı ödemesi yap"
+        submit: "Varlık tasfiye et"
       },
       ok: "Tamam"
     },
