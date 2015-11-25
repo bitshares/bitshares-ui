@@ -280,3 +280,14 @@ label.inline {
     padding-bottom: 0 !important;
   }
 }
+
+.electron-only {
+  display: none;
+}
+
+.electron-only {
+  visibility: hidden;
+}
+#content.electron {
+  visibility: visible;
+}

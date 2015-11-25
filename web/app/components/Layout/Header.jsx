@@ -178,11 +178,14 @@ class Header extends React.Component {
                         <li><a href onClick={this._triggerMenu}><Icon name="menu"/></a></li>
                     </ul>
                 </div>
-
-                <div className="show-for-medium medium-8">
+                {window.electron ? <div className="grid-block show-for-medium shrink">
                     <ul className="menu-bar">
                         <li><div style={{marginLeft: "1rem", height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline">{"<"}</div></div></li>
                         <li><div style={{height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline">></div></div></li>
+                    </ul>
+                </div> : null}
+                <div className="grid-block show-for-medium">
+                    <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
                         <li><a className={cnames({active: active === "explorer"})} onClick={this._onNavigate.bind(this, "explorer")}><Translate component="span" content="header.explorer" /></a></li>
                         {linkedAccounts.size === 0 ? null :
@@ -190,7 +193,7 @@ class Header extends React.Component {
                         <li><a className={cnames({active: active === "transfer"})} onClick={this._onNavigate.bind(this, "transfer")}><Translate component="span" content="header.payments" /></a></li>
                     </ul>
                 </div>
-                <div className="show-for-medium medium-4">
+                <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
                         <div className="grid-block shrink overflow-visible account-drop-down">
                             {accountsDropDown}
