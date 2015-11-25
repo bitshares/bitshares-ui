@@ -151,5 +151,5 @@ class BalanceValueComponent extends React.Component {
     }
 }
 
-ValueComponent.BalanceValueComponent = BalanceValueComponent;
-export default ValueComponent;
+ValueStoreWrapper.BalanceValueComponent = BalanceValueComponent;
+export default ValueStoreWrapper

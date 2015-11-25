@@ -342,6 +342,7 @@
             asset_global_settle: "Global asset settlement",
             asset_publish_feed: "Publish feed",
             committee_member_create: "Create committee member",
+            committee_member_update : "Update committee member",
             witness_create: "Create witness",
             witness_update: "Update witness",
             witness_withdraw_pay: "Witness pay withdrawal",
@@ -364,6 +365,25 @@
             transfer_to_blind: "Transfer to blinded account",
             blind_transfer: "Blinded transfer",
             transfer_from_blind: "Transfer from blinded account"
+        },
+        feeGroups : {
+         general : "General",
+         asset   : "Asset-Specific",
+         market  : "Market-Specific",
+         account : "Account-Specific",
+         business: "Business Administration",
+        },
+        feeTypes: {
+            _none : "Free of Charge",
+            fee : "Regular Transaction Fee",
+            price_per_kbyte: "Price per KByte Transaction Size",
+            basic_fee : "Basic Fee",
+            premium_fee : "Fee for Premium Names",
+            membership_annual_fee : "Annual Membership",
+            membership_lifetime_fee : "Lifetime Membership",
+            symbol3 : "Symbols with 3 Characters",
+            symbol4 : "Sybmols with 4 Characters",
+            long_symbol : "Longer Symbols"
         }
     },
     explorer: {
@@ -567,6 +587,9 @@
         oversold: "Oversold",
         index: "Index"
 
+    },
+    fees: {
+     title: "Fee Schedule"
     },
     markets: {
         title: "Markets",
