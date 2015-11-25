@@ -32,7 +32,7 @@
         pending: "sırada %(blocks)s blok var"
     },
     propose: "teklif et",
-    cancel: "iptal et"
+    cancel: "iptal et",
     account: {
         welcome: "Graphene'e Hoşgeldiniz",
         asset: "Varlık",
