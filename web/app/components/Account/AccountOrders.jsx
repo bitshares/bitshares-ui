@@ -8,6 +8,8 @@ import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
+import ChainStore from "api/ChainStore";
+import MarketLink from "../Utility/MarketLink";
 
 class AccountOrders extends React.Component {
 
@@ -33,7 +35,6 @@ class AccountOrders extends React.Component {
         let {account_name, assets, account} = this.props;
         // let account = cachedAccounts.get(account_name);
         let cancel = counterpart.translate("account.perm.cancel");
-
         let markets = {};
 
         let accountExists = true;
@@ -46,36 +47,76 @@ class AccountOrders extends React.Component {
             return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
 
-        let orders = account.get("orders").map(order => {
-            let base = assets.get(order.sell_price.base.asset_id);
-            let quote = assets.get(order.sell_price.quote.asset_id);
+        let marketOrders ={};
+        account.get("orders").forEach(order => {
+            let base = ChainStore.getAsset(order.sell_price.base.asset_id);
+            let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+            if (base && quote) {
+                let baseID = parseInt(order.sell_price.base.asset_id.split(".")[2], 10);
+                let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
 
-            let marketID = quote.id < base.id ? `${quote.symbol}_${base.symbol}` : `${base.symbol}_${quote.symbol}`;
-            if (!markets[marketID]) {
-                markets[marketID] = {
-                    base: {id: base.id, symbol: base.symbol, precision: base.precision},
-                    quote: {id: quote.id, symbol: quote.symbol, precision: quote.precision}
-                };
-            }
+                let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
-            return <OrderRow
+                if (!markets[marketID]) {
+                    if (quoteID > baseID) {
+                        markets[marketID] = {
+                            base: {id: base.get("id"), symbol: base.get("symbol"), precision: base.get("precision")},
+                            quote: {id: quote.get("id"), symbol: quote.get("symbol"), precision: quote.get("precision")}
+                        };
+                    } else {
+                        markets[marketID] = {
+                            base: {id: quote.get("id"), symbol: quote.get("symbol"), precision: quote.get("precision")},
+                            quote: {id: base.get("id"), symbol: base.get("symbol"), precision: base.get("precision")}
+                        };
+                    }
+                }
+
+                let marketBase = ChainStore.getAsset(markets[marketID].base.id);
+                let marketQuote = ChainStore.getAsset(markets[marketID].quote.id);
+
+                if (!marketOrders[marketID]) {
+                    marketOrders[marketID] = [];
+                }
+                marketOrders[marketID].push(
+                    <OrderRow
+                        ref={markets[marketID].base.symbol}
                         key={order.id}
-                        order={order} base={markets[marketID].base}
-                        quote={markets[marketID].quote} cancel_text={cancel}
-                        showSymbols={true}
+                        order={order}
+                        base={marketBase}
+                        quote={marketQuote}
+                        cancel_text={cancel}
+                        showSymbols={false}
                         invert={true}
-                        onCancel={this._cancelLimitOrder.bind(this, order.id)}/>;
+                        onCancel={this._cancelLimitOrder.bind(this, order.id)}
+                    />
+                );
+            }
         });
+
+        let tables = [];
+
+        let marketIndex = 0;
+        for (let market in marketOrders) {
+            if (marketOrders[market].length) {
+                tables.push(
+                    <div style={marketIndex > 0 ? {paddingTop: "1rem"} : {}}>
+                    <h5><MarketLink quote={markets[market].quote.id} base={markets[market].base.id} /></h5>
+                    <table className="table table-striped text-right ">
+                        <TableHeader baseSymbol={markets[market].base.symbol} quoteSymbol={markets[market].quote.symbol}/>
+                        <tbody>
+                            {marketOrders[market]}
+                        </tbody>
+                    </table>
+                    </div>
+                );
+                marketIndex++;
+            }
+        }
 
         return (
             <div className="grid-block">
-                <div className="grid-content small-offset-1 small-8">
-                    <table className="table table-striped text-right ">
-                        <TableHeader type="sell"/>
-                        <tbody>
-                            {orders}
-                        </tbody>
-                    </table>
+                <div className="grid-content small-12">
+                    {tables}
                 </div>
 
             </div>

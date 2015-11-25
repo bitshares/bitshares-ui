@@ -14,7 +14,8 @@ class SettingsStore {
         this.settings = Immutable.Map({
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
-            faucet_address: "https://bitshares.openledger.info"
+            faucet_address: "https://bitshares.openledger.info",
+            unit: CORE_ASSET
         });
 
         this.viewSettings =  Immutable.Map({
@@ -55,6 +56,13 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws"
+            ],
+            unit: [
+                CORE_ASSET,
+                "USD",
+                "CNY",
+                "BTC",
+                "EUR"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -71,16 +79,16 @@ class SettingsStore {
             onRemoveWS: SettingsActions.removeWS
         });
 
-        if (this._lsGet("settings_v2")) {
-            this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v2")));
+        if (this._lsGet("settings_v3")) {
+            this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v3")));
         }
 
         if (this._lsGet("starredMarkets")) {
             this.starredMarkets = Immutable.Map(JSON.parse(this._lsGet("starredMarkets")));
         }
 
-        if (this._lsGet("defaults")) {
-            this.defaults = JSON.parse(this._lsGet("defaults"));
+        if (this._lsGet("defaults_v1")) {
+            this.defaults = JSON.parse(this._lsGet("defaults_v1"));
         }
 
         if (this._lsGet("viewSettings_v1")) {
@@ -98,7 +106,7 @@ class SettingsStore {
             payload.value
         );
 
-        this._lsSet("settings_v2", this.settings.toJS());
+        this._lsSet("settings_v3", this.settings.toJS());
     }
 
     onChangeViewSetting(payload) {
@@ -144,13 +152,13 @@ class SettingsStore {
 
     onAddWS(ws) {
         this.defaults.connection.push(ws);
-        this._lsSet("defaults", this.defaults);
+        this._lsSet("defaults_v1", this.defaults);
     }
 
     onRemoveWS(index) {
         if (index !== 0) { // Prevent removing the default connection
             this.defaults.connection.splice(index, 1);
-            this._lsSet("defaults", this.defaults);
+            this._lsSet("defaults_v1", this.defaults);
         }
     }
 }

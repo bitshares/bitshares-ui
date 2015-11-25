@@ -25,12 +25,24 @@ class MarketRow extends React.Component {
 
     static contextTypes = {router: React.PropTypes.func.isRequired};
 
+    constructor() {
+        super();
+
+        this.statsInterval = null;
+    }
+
     _onClick(marketID) {
         this.context.router.transitionTo("exchange", {marketID: marketID});
     }
 
     componentDidMount() {
         MarketsActions.getMarketStats(this.props.base, this.props.quote);
+        this.statsChecked = new Date();
+        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.props.base, this.props.quote), 35 * 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.statsInterval);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -50,7 +62,7 @@ class MarketRow extends React.Component {
 
     render() {
         let {quote, base, noSymbols, stats, starred} = this.props;
-        // let core = ChainStore.getAsset("1.3.0");
+
         if (!quote || !base) {
             return null;
         }
@@ -117,9 +129,9 @@ class MarketRow extends React.Component {
                 case "price":
                     let finalPrice = stats && stats.latestPrice ?
                         stats.latestPrice :
-                        stats && (stats.close.quote && stats.close.base) ?
-                        utils.get_asset_price(stats.close.quote, quote, stats.close.base, base, true) :
-                        utils.get_asset_price(price.baseAmount, base, price.quoteAmount, quote)
+                        stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
+                        utils.get_asset_price(stats.close.quote.amount, quote, stats.close.base.amount, base, true) :
+                        utils.get_asset_price(price.base.amount, base, price.quote.amount, quote)
 
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
@@ -162,8 +174,13 @@ class MarketRow extends React.Component {
             return a.key > b.key;
         });
 
+        let className = "clickable";
+        if (this.props.current) {
+            className += " activeMarket";
+        } 
+
         return (
-            <tr className="clickable" style={rowStyles}>{columns}</tr>
+            <tr className={className} style={rowStyles}>{columns}</tr>
         );
     }
 }

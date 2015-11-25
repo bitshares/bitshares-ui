@@ -49,7 +49,7 @@ export default class BalanceClaimSelector extends Component {
                 if(private_key_object && private_key_object.import_account_names)
                     // Imported Account Names (just a visual aid, helps to auto select a real account)
                     names = private_key_object.import_account_names.join(', ')
-                // Signing is very slow, further devide the groups based on the number of signatures requred
+                // Signing is very slow, further divide the groups based on the number of signatures required
                 var batch_number = Math.ceil( groupCount(Immutable.List([names, v.balance.asset_id]), v.owner) / 60 )
                 var name_asset_key = Immutable.List([names, v.balance.asset_id, batch_number])
                 return name_asset_key

@@ -20,6 +20,7 @@ module.exports = {
         current: "Aktives Konto",
         create_account: "Konto erstellen",
         create_asset: "Asset erstellen",
+        update_asset: "Asset ändern",
         lock: "Sperren",
         unlock: "Entsperren",
         help: "Hilfe",
@@ -29,6 +30,8 @@ module.exports = {
     operation: {
         pending: "pending %(blocks)s blocks"
     },
+    propose: "vorschlagen",
+    cancel: "abbrechen",
     account: {
         welcome: "Willkommen",
         asset: "Asset",
@@ -61,7 +64,8 @@ module.exports = {
             upgrade_lifetime: "Lifetime Mietgliedschaft erwerben",
             subscribe: "Jährliche Mitgliedschaft erwerben",
             expires: "endet",
-            membership_expiration: "Ablauf der Mitgliedschaft"
+            membership_expiration: "Ablauf der Mitgliedschaft",
+            fees_cashback: "Gebühren und Rückerstattung"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -70,7 +74,36 @@ module.exports = {
             max_supply: "Maximale Verfügbarkeit",
             precision: "Genauigkeit",
             to: "An Konto emittieren",
-            details: "Details"
+            market_fee: "Marktgebühr",
+            max_market_fee: "Max. Marktgebühr",
+            details: "Details",
+            primary: "Primäreinstellungen",
+            optional: "Optionales",
+            approx_fee: "Geschätze Gebühr",
+            exists: "Dieses Asset existiert bereits",
+            max_positive: "Maximale Verfügbarkeit muss eine positive Zahl sein!",
+            core_exchange_rate: "Kernwechselrate",
+            quote: "Quote Menge",
+            quote_name: "Quote Asset",
+            base: "Base Menge",
+            base_name: "Base Asset",
+            update_owner: "Eigentümer aktualisieren",
+            current_issuer: "Aktueller Eigentümer",
+            new_issuer: "Neues Eigentümerkonto",
+            flags: "Schalter",
+            charge_market_fee: "Marktgebühren aktivieren",
+            override_authority: "Herausgeber darf Anteile zurückholen",
+            transfer_restricted: "Herauseber muss alle Transfers genehmigen",
+            disable_confidential: "Verbiete vertrauliche Transfers",
+            white_list: "Setze Whitelisting eines Eigentümers vorraus",
+            witness_fed_asset: "Erlaube Witnesses einen Feed bereit zustellen",
+            committee_fed_asset: "Erlaube Kommittee einen Feed bereit zustellen",
+            disable_force_settle: "Deaktiviere Zwangs-Settlements",
+            global_settle: "Erlaube Herausgeber ein Globales Settlement zu erzwingen",
+            advanced: "Fortgeschrittene",
+            need_asset: "Zumindest eines der Assets muss %(name)s sein",
+            perm_warning: "WARNUNG: Rechte können nur abgeschalten werden. Einmal abgeschalten, lassen Sie sich nicht re-aktivieren!",
+            issued_assets: "Herausgegebene Assets"
         },
         connections: {
             known: "Bekannt von",
@@ -94,7 +127,10 @@ module.exports = {
         },
         votes: {
             proxy: "Abstimmkonto vermitteln",
+            workers_short: "Worker",
+            proxy: "Proxy Konto",
             no_proxy: "Keine Vermittlung",
+            clear_proxy: "Proxy entfernen",
             name: "Name",
             info: "Info",
             votes: "Stimmen",
@@ -109,7 +145,19 @@ module.exports = {
             add_committee_label: "Mitglied des Komitees",
             add_witness_label: "Witness",
             approve_worker: "Budgetpunkt bestätigen",
-            reject_worker: "Budgetpunkt ablehnen"
+            reject_worker: "Budgetpunkt ablehnen",
+            worker_account: "Worker-Konto",
+            total_votes: "Gesamtstimmen",
+            votes_against: "Gegenstimmen",
+            daily_pay: "Tagessold",
+            max_pay: "Maximaler Tagessold",
+            unclaimed: "nicht ausbezahlter Sold",
+            status: {
+                title: "Status",
+                supported: "Pro",
+                rejected: "Contra",
+                neutral: "Neutral"
+            }
         },
         options: {
             num_witnesses : "Gewünschte Anzahl Witnesses",
@@ -136,6 +184,7 @@ module.exports = {
         },
         collaterals: "Kollateral Positionen",
         eq_value: "entspricht",
+        percent: "Prozent der Gesamtmenge",
         please_create_account: "Bitte erstellen Sie ein Konto",
         create_account: "Konto erstellen",
         identicon: "Identicon",
@@ -146,7 +195,8 @@ module.exports = {
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        propose_from: "Vorschlagen von"
     },
     pagination: {
         newer: "Jüngere",
@@ -168,7 +218,7 @@ module.exports = {
             pos: "Betrag darf nicht negativ sein",
             valid: "Bitte geben Sie einen positiven Betrag ein",
             balance: "Ihr abschließendes Guthaben kann nicht negativ sein!",
-            insufficient: "Insufficient Balance"
+            insufficient: "Ungenügende Bilanz"
         },
         back: "ZURÜCK",
         confirm: "BESTÄTIGEN",
@@ -265,6 +315,11 @@ module.exports = {
         delta_debt: "Schulden Änderungen",
         new_url: "Webseite",
         publisher: "Publisher",
+        market_fee: "Marktgebühr",
+        max_market_fee: "Maximale Marktgebühr",
+        blinding_factor: "Blinding Faktor",
+        outputs: "Ausgänge",
+        inputs: "Eingänge",
         trxTypes: {
             transfer: "Überweisung",
             limit_order_create: "Limit-Order",
@@ -286,6 +341,7 @@ module.exports = {
             asset_global_settle: "Globales Asset Settlement",
             asset_publish_feed: "Asset Feed publiszieren",
             committee_member_create: "Komiteemitglied erstellen",
+            committee_member_update : "Komiteemitglied editieren",
             witness_create: "Witness erstellen",
             witness_update: "Witness ändern",
             witness_withdraw_pay: "Witnesslohn ausbezahlen",
@@ -304,7 +360,29 @@ module.exports = {
             custom: "benutzerdefiniert",
             assert: "Assert Pperation",
             balance_claim: "Guthaben eingefordert",
-            override_transfer: "Transaktion überschreiben"
+            override_transfer: "Transaktion überschreiben",
+            transfer_to_blind: "Transfer zu blinden Konten",
+            blind_transfer: "Blind Transfer",
+            transfer_from_blind: "Transfer von blindem Konto"
+        },
+        feeGroups : {
+         general : "Allgemein",
+         asset   : "Asset-spezifisch",
+         market  : "Markt-spezifisch",
+         account : "Konto-spezifisch",
+         business: "Unternehmensführung",
+        },
+        feeTypes: {
+            _none : "gratis",
+            fee : "Reguläre Gebühr",
+            price_per_kbyte: "Preis pro KByte Transaktionsgröße",
+            basic_fee : "Grundgebühr",
+            premium_fee : "Premium Name",
+            membership_annual_fee : "Jahresabonement",
+            membership_lifetime_fee : "Lebenslanges Abonement",
+            symbol3 : "Symbol mit 3 Zeichen",
+            symbol4 : "Sybmol mit 4 Zeichen",
+            long_symbol : "Längere Symbol"
         }
     },
     explorer: {
@@ -392,16 +470,9 @@ module.exports = {
                 unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile"
             },
             permissions: {
-                permissions: "Befugnisse",
+                title: "Befugnisse",
                 max_market_fee: "Maximale Marktgebühr",
                 max_supply: "Maximale Verfügbarkeit",
-                chargeMarketFee: "Marktgebühren erheben",
-                allowWhiteList: "Weißlisten zulassen",
-                allowIssuerOverride: "Überschreiben des Herausgebers zulassen",
-                restrictTransfers: "Transfers beschränken",
-                allowForceSettle: "Force Settlements erlauben",
-                allowGlobalSettle: "Global Settlements erlauben",
-                allowStealthTransfer: "Versteckte Transfers erlauben",
                 blacklist_authorities: "Authoritäten der Schwarzliste",
                 blacklist_markets: "Schwarzgelistete Märkte",
                 whitelist_authorities: "Authoritäten der Weißliste",
@@ -468,9 +539,11 @@ module.exports = {
         loading: "Lade..."
     },
     exchange: {
+        market: "Markt",
         price_history: "Preisverlauf",
         order_depth: "Ordertiefe",
-        market_history: "Marktverlauf",
+        history: "Marktverlauf",
+        my_history: "Meine Historie",
         balance: "Guthaben",
         lowest_ask: "Günstigstes Ask",
         highest_bid: "Höchstes Bid",
@@ -484,6 +557,8 @@ module.exports = {
         squeeze: "Margin Call Preis",
         maintenance: "Maintenance Call Preis",
         your_price: "Ihr Call Preis",
+        volume: "Volumen",
+        vol_short: "Vol",
         spread: "Spread",
         quantity: "Quantität",
         buy: "Kaufen",
@@ -492,10 +567,31 @@ module.exports = {
         vertical: "Vertical",
         horizontal: "Horizontal",
         confirm_buy: "Bestätigen Sie die Anweisung: Kauf von %(buy_amount)s %(buy_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
-        confirm_sell: "Bestätigen Sie die Anweisung: Verkauf von %(sell_amount)s %(sell_symbol)s zum Preis von %(price_amount)s %(price_symbol)s"
+        confirm_sell: "Bestätigen Sie die Anweisung: Verkauf von %(sell_amount)s %(sell_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
+        market_name: "Meine Märkte",
+        quote_supply: "Quote Verfügbarkeit",
+        base_supply: "Base Verfügbarkeit",
+        more: "Alle Märkte",
+        volume_24: "24h Volume",
+        change: "Änderung",
+        confirm: "Ihre Order ist %(diff)s% vom aktuellen Preis entfernt. Sind Sie sicher?",
+        indicators: "Indikatoren",
+        rsi: "Relative Strength Index",
+        ema: "Exponential Moving Average",
+        sma: "Simple Moving Average",
+        atr: "Average True Range",
+        period: "Periode (Tage)",
+        overbought: "Overbought",
+        oversold: "Oversold",
+        index: "Index"
+
+    },
+    fees: {
+     title: "Gebühren"
     },
     markets: {
-        choose_base: "Wählen Sie Ihre Grundwährung (base)",
+        title: "Märkte",
+        base: "Base Asset",
         market_search: "Markt Suche",
         filter: "Filter",
         core_rate: "Kernrate:",
@@ -518,6 +614,8 @@ module.exports = {
         delete_confirm_line3: "Diese Aktion kan NICHT rückgängig gemacht werden!",
         delete_wallet_name: "Gelbörse (%(name)s) löschen",
         balance_claims: "Eingeforderte Guthaben",
+        delete_wallet_name: "Wallet (%(name)s) löschen",
+        balance_claims: "Balance einfordern",
         download: "Download",
         name: "Name der Geldbörse",
         create: "Erstellen",
@@ -528,6 +626,7 @@ module.exports = {
         import_backup: "Sicherung Importieren",
         restore_backup: "Sicherung wiederherstellen",
         import_keys: "Schlüssel importieren",
+        import_keys_tool: "Schlüssel Import Werkzeug",
         brainkey: "Brainkey",
         new_wallet: "Neue Geldbörse",
         active_wallet: "Active Gelbörse",
@@ -569,7 +668,8 @@ module.exports = {
         last_backup: "letzte Sicherung",
         never_backed_up: "Diese Geldbörse wurde noch nie gesichert!",
         need_backup: "Diese Gelbörse sollte neu gesichert werden!",
-        noneed_backup: "Keine Sicherung nötig!"
+        noneed_backup: "Keine Sicherung nötig!",
+        noneed_backup: "Kein Sicherung erforderlich"
     },
     borrow: {
         title: "Kollateral Position für %(asset_symbol)s",
@@ -594,6 +694,11 @@ module.exports = {
         amount: "Abzuhebender Betrag",
         address: "Abheben zu Adresse",
         submit: "Abheben"
+      },
+      settle: {
+        title: "Settlement für %(asset)s durchführen",
+        amount: "Menge für das Settlement",
+        submit: "Settlement durchführen"
       },
       ok: "OK"
     },

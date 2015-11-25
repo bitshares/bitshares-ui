@@ -29,7 +29,7 @@ class MarketHistory extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.viewSettings.get("historyTab")
+            activeTab: props.viewSettings.get("historyTab") || "history"
         }
     }
 
@@ -155,11 +155,11 @@ class MarketHistory extends React.Component {
         return (
             <div className="left-order-book no-padding no-overflow">
                 <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
-                    <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
-                        <Translate content="exchange.history" />
-                    </div>
                     <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
                         <Translate content="exchange.my_history" />
+                    </div>
+                    <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
+                        <Translate content="exchange.history" />
                     </div>
                 </div>
                 <div className="grid-block shrink left-orderbook-header market-right-padding-only">

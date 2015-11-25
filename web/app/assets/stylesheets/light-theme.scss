@@ -508,3 +508,11 @@ td.orderHistoryBid {
     background-color: $primary-text-color;
   }
 }
+
+// Asset Detail
+
+.asset-card {
+  .card-divider {
+    background: $panel-bg-color;
+  }
+}

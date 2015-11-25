@@ -732,7 +732,16 @@ class MarketsStore {
             latestPrice = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped).full;
         }
 
-        let close = {quote: invert ? last.close_quote : last.close_base, base: invert ? last.close_base : last.close_quote};
+        let close = last.close_base && last.close_quote ? {
+            quote: {
+                amount: invert ? last.close_quote : last.close_base,
+                asset_id: invert ? last.key.quote : last.key.base
+            },
+            base: {
+                amount: invert ? last.close_base : last.close_quote,
+                asset_id: invert ? last.key.base : last.key.quote
+            }
+        } : null;
 
         return {
             change: change.toFixed(2),

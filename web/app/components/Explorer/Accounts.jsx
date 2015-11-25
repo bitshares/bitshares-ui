@@ -5,6 +5,35 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import {debounce} from "lodash";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import FormattedAsset from "../Utility/FormattedAsset";
+import BalanceComponent from "../Utility/BalanceComponent";
+
+@BindToChainState()
+class AccountRow extends React.Component {
+    static propTypes = {
+        account: ChainTypes.ChainAccount.isRequired
+    };
+
+    static defaultProps = {
+        tempComponent: "tr"
+    };
+
+    render() {
+        let {account} = this.props;
+        let balance = account.getIn(["balances", "1.3.0"]) || null;
+
+        return (
+            <tr key={account.get("id")}>
+                <td>{account.get("id")}</td>
+                <td><Link to="account" params={{account_name: account.get("name")}}>{account.get("name")}</Link></td>
+                <td>{!balance? "n/a" : <BalanceComponent balance={balance} />}</td>
+                <td>{!balance ? "n/a" : <BalanceComponent balance={balance} asPercentage={true} />}</td>
+            </tr>
+        )
+    }
+}
 
 class Accounts extends React.Component {
 
@@ -53,10 +82,7 @@ class Accounts extends React.Component {
             })
             .map((account, id) => {
                 return (
-                    <tr key={account}>
-                        <td>{id}</td>
-                        <td><Link to="account" params={{account_name: account}}>{account}</Link></td>
-                    </tr>
+                    <AccountRow account={account} />
                 );
             }).toArray();
         }
@@ -74,6 +100,8 @@ class Accounts extends React.Component {
                                 <tr>
                                     <th><Translate component="span" content="explorer.assets.id" /></th>
                                     <th><Translate component="span" content="account.name" /></th>
+                                    <th><Translate component="span" content="gateway.balance" /></th>
+                                    <th><Translate component="span" content="account.percent" /></th>
                                 </tr>
                             </thead>
 

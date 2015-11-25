@@ -695,7 +695,7 @@ class ChainStore
                  account.lifetime_referrer_name = lifetime_referrer_name
                  account.registrar_name = registrar_name
                  account.balances = {}
-                 account.orders = new Immutable.Set()
+                 account.orders = new Immutable.Set(limit_orders)
                  account.vesting_balances = new Immutable.Set()
                  account.balances = new Immutable.Map()
                  account.call_orders = new Immutable.Set()

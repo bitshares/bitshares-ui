@@ -29,7 +29,7 @@
             ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
             window.onload = function(e){
                 var content = document.getElementById("content");
-                if (content) content.className = window.process.platform;
+                if (content) content.className = "electron " + window.process.platform;
             }
         }
     </script>

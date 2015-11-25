@@ -1,3 +1,4 @@
+import config from "chain/config";
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
@@ -26,6 +27,7 @@ import TranswiserDepositWithdraw from "./transwiser/TranswiserDepositWithdraw";
 import BlockTradesBridgeDepositRequest from "./blocktrades/BlockTradesBridgeDepositRequest";
 import BlockTradesGatewayDepositRequest from "./blocktrades/BlockTradesGatewayDepositRequest";
 import WithdrawModalBlocktrades from "../Modal/WithdrawModalBlocktrades";
+import Tabs, {Tab} from "../Utility/Tabs";
 var Post = require("../Utility/FormPost.js");
 
 @BindToChainState({keep_updating:true})
@@ -228,212 +230,27 @@ class AccountDepositWithdraw extends React.Component {
     render() {
         return (
 		<div className="grid-content">
-			<div className="content-block">
-                <h2><Translate content="gateway.bridge" /></h2>
-                <hr/>
-				<div className="content-block">
-                    <h3><a href="https://blocktrades.us" target="__blank">BlockTrades</a></h3>
-                    <BlockTradesBridgeDepositRequest
-                        gateway="blocktrades"
-                        url="https://api.blocktrades.us/v2"
-                        bridge_mode={true}
-                        issuer_account="blocktrades"
-                        account={this.props.account}
-                        receive_asset="BTS"
-                        deposit_asset="BTC"
-                        deposit_coin_type="btc"
-                        deposit_asset_name="Bitcoin"
-                        initial_input_coin_type="ltc"
-                        receive_coin_type="bts" />
-                </div>
-				<div className="content-block">
-                    <h3><a href="https://metaexchange.info" target="__blank">metaexchange.info</a></h3>
+			<Tabs settings="depositWithdrawSettingsTab" defaultActiveTab={config.depositWithdrawDefaultActiveTab}>
 
-                    <div>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th><Translate content="gateway.symbol" /></th>
-                                <th></th>
-                                <th><Translate content="gateway.meta.open_website" /></th>
-                                <th><Translate content="gateway.balance" /></th>
-                                <th><Translate content="gateway.withdraw" /></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-								<MetaexchangeDepositRequest
-									symbol_pair="BTS_BTC"
-									gateway="metaexchange"
-									issuer_account="metaexchangebtc"
-									account={this.props.account}
-									receive_asset="BTS"
-									is_bts_deposit="true"
-									deposit_asset="BTS"
-									deposit_asset_name="Bitcoin"/>
-                            </tbody>
-                        </table>
+                <Tab title="BlockTrades">
+                    <div className="content-block">
+                        <div className="float-right"><a href="https://blocktrades.us" target="__blank">VISIT WEBSITE</a></div>
+                        <h3><Translate content="gateway.bridge" /></h3>
+                        <BlockTradesBridgeDepositRequest
+                            gateway="blocktrades"
+                            url="https://api.blocktrades.us/v2"
+                            issuer_account="blocktrades"
+                            account={this.props.account}
+                            initial_deposit_input_coin_type="btc"
+                            initial_deposit_output_coin_type="bts"
+                            initial_deposit_estimated_input_amount="1.0"
+                            initial_withdraw_input_coin_type="bts"
+                            initial_withdraw_output_coin_type="btc"
+                            initial_withdraw_estimated_input_amount="100000"
+                        />
                     </div>
-                </div>
-			</div>
-				
-            <div className="content-block">
-                <h2><Translate content="gateway.gateway" /></h2>
-                <hr/>
-
-                <div className="content-block">
-                        <h3><a href="http://www.transwiser.com" target="_blank"><Translate content="gateway.transwiser.gateway" /></a></h3>
-                    <div>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th><Translate content="gateway.symbol" /></th>
-                                <th><Translate content="gateway.deposit_to" /></th>
-                                <th><Translate content="gateway.balance" /></th>
-                                <th><Translate content="gateway.withdraw" /></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <TranswiserDepositWithdraw
-                                    issuerAccount="transwiser-wallet"
-                                    account={this.props.account.get('name')}
-                                    receiveAsset="CNY" />
-                                <TranswiserDepositWithdraw
-                                    issuerAccount="transwiser-wallet"
-                                    account={this.props.account.get('name')}
-                                    receiveAsset="BOTSCNY" />
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-
-
-                <div className="content-block">
-                    <h3>OpenLedger (CCEDK)</h3>
-
-                    <div>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th><Translate content="gateway.symbol" /></th>
-                                <th><Translate content="gateway.deposit_to" /></th>
-                                <th><Translate content="gateway.balance" /></th>
-                                <th><Translate content="gateway.withdraw" /></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <BlockTradesGatewayDepositRequest
-                                gateway="openledger"
-                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                issuer_account="openledger-wallet"
-                                account={this.props.account}
-                                receive_asset="OPENBTC"
-                                deposit_asset="BTC"
-                                deposit_coin_type="btc"
-                                deposit_asset_name="Bitcoin"
-                                receive_coin_type="openbtc" />
-                            <BlockTradesGatewayDepositRequest
-                                gateway="openledger"
-                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                issuer_account="openledger-wallet"
-                                account={this.props.account}
-                                receive_asset="OPENLTC"
-                                deposit_asset="LTC"
-                                deposit_coin_type="ltc"
-                                deposit_asset_name="Litecoin"
-                                receive_coin_type="openltc" />
-                            <BlockTradesGatewayDepositRequest
-                                gateway="openledger"
-                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                issuer_account="openledger-wallet"
-                                account={this.props.account}
-                                receive_asset="OPENDOGE"
-                                deposit_asset="DOGE"
-                                deposit_coin_type="doge"
-                                deposit_asset_name="Dogecoin"
-                                receive_coin_type="opendoge" />
-                            <BlockTradesGatewayDepositRequest
-                                gateway="openledger"
-                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                issuer_account="openledger-wallet"
-                                account={this.props.account}
-                                receive_asset="OPENDASH"
-                                deposit_asset="DASH"
-                                deposit_coin_type="dash"
-                                deposit_asset_name="Dash"
-                                receive_coin_type="opendash" />
-                            <BlockTradesGatewayDepositRequest 
-                                gateway="openledger"
-                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                issuer_account="openledger-wallet"
-                                account={this.props.account} 
-                                receive_asset="OPENPPC"
-                                deposit_asset="PPC"
-                                deposit_coin_type="peercoin"
-                                deposit_asset_name="Peercoin"
-                                receive_coin_type="openppc" />
-                            <BlockTradesGatewayDepositRequest 
-                                gateway="openledger"
-                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                issuer_account="openledger-wallet"
-                                account={this.props.account} 
-                                deposit_asset="MUSE"
-                                deposit_asset_name="Muse"
-                                deposit_coin_type="muse"
-                                deposit_account="openledger-wallet"
-                                receive_asset="OPENMUSE"
-                                receive_coin_type="openmuse" />
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-				<div className="content-block">
-                    <h3><a href="https://metaexchange.info" target="__blank">metaexchange.info</a></h3>
-
-                    <div>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th><Translate content="gateway.symbol" /></th>
-                                <th></th>
-                                <th><Translate content="gateway.meta.open_website" /></th>
-                                <th><Translate content="gateway.balance" /></th>
-                                <th><Translate content="gateway.withdraw" /></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-								<MetaexchangeDepositRequest
-									symbol_pair="METAEX.BTC_BTC"
-									gateway="metaexchange"
-									issuer_account="dev-metaexchange.monsterer"
-									account={this.props.account}
-									receive_asset="METAEX.BTC"
-									deposit_asset="BTC"
-									deposit_asset_name="Bitcoin"/>
-								<MetaexchangeDepositRequest
-									symbol_pair="METAEX.ETH_ETH"
-									gateway="metaexchange"
-									issuer_account="dev-metaexchange.monsterer"
-									account={this.props.account}
-									receive_asset="METAEX.ETH"
-									deposit_asset="ETH"
-									deposit_asset_name="Ether"/>
-								<MetaexchangeDepositRequest
-									symbol_pair="METAEX.NXT_NXT"
-									gateway="metaexchange"
-									issuer_account="dev-metaexchange.monsterer"
-									account={this.props.account}
-									receive_asset="METAEX.NXT"
-									deposit_asset="NXT"
-									deposit_asset_name="Nxt"/>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="content-block">
-                    <h3><a href="https://blocktrades.us" target="__blank">BlockTrades</a></h3>
-
-                    <div>
+                    <div className="content-block">
+                        <h3><Translate content="gateway.gateway" /></h3>
                         <table className="table">
                             <thead>
                             <tr>
@@ -464,21 +281,222 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset="LTC"
                                 receive_asset="TRADE.LTC"
                                 receive_coin_type="trade.ltc" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
+                                deposit_coin_type="nsr"
+                                deposit_asset_name="NuShares"
+                                deposit_asset="NSR"
+                                receive_asset="TRADE.NSR"
+                                receive_coin_type="trade.nsr" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
+                                deposit_coin_type="nbt"
+                                deposit_asset_name="NuBits"
+                                deposit_asset="NBT"
+                                receive_asset="TRADE.NBT"
+                                receive_coin_type="trade.nbt" />
                             </tbody>
                         </table>
                     </div>
+                </Tab>
 
+                <Tab title="CCEDK">
+                    <div className="float-right"><a href="https://www.ccedk.com/" target="__blank">VISIT WEBSITE</a></div>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th><Translate content="gateway.symbol" /></th>
+                            <th><Translate content="gateway.deposit_to" /></th>
+                            <th><Translate content="gateway.balance" /></th>
+                            <th><Translate content="gateway.withdraw" /></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            receive_asset="OPENBTC"
+                            deposit_asset="BTC"
+                            deposit_coin_type="btc"
+                            deposit_asset_name="Bitcoin"
+                            receive_coin_type="openbtc" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            receive_asset="OPENLTC"
+                            deposit_asset="LTC"
+                            deposit_coin_type="ltc"
+                            deposit_asset_name="Litecoin"
+                            receive_coin_type="openltc" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            receive_asset="OPENDOGE"
+                            deposit_asset="DOGE"
+                            deposit_coin_type="doge"
+                            deposit_asset_name="Dogecoin"
+                            receive_coin_type="opendoge" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            receive_asset="OPENDASH"
+                            deposit_asset="DASH"
+                            deposit_coin_type="dash"
+                            deposit_asset_name="Dash"
+                            receive_coin_type="opendash" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            receive_asset="OPENPPC"
+                            deposit_asset="PPC"
+                            deposit_coin_type="peercoin"
+                            deposit_asset_name="Peercoin"
+                            receive_coin_type="openppc" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            deposit_asset="MUSE"
+                            deposit_asset_name="Muse"
+                            deposit_coin_type="muse"
+                            deposit_account="openledger-wallet"
+                            receive_asset="OPENMUSE"
+                            receive_coin_type="openmuse" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            deposit_asset="NSR"
+                            deposit_asset_name="NuShares"
+                            deposit_coin_type="nsr"
+                            receive_asset="OPENNSR"
+                            receive_coin_type="opennsr" />
+                        <BlockTradesGatewayDepositRequest
+                            gateway="openledger"
+                            url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                            issuer_account="openledger-wallet"
+                            account={this.props.account}
+                            deposit_asset="NBT"
+                            deposit_asset_name="NuBits"
+                            deposit_coin_type="nbt"
+                            receive_asset="OPENNBT"
+                            receive_coin_type="opennbt" />
+                        </tbody>
+                    </table>
+                </Tab>
 
-                </div>
-                <div className="content-block shrink">
-                    {this.state.hide_refcode ?
-                        <label className="inline"><a href onClick={this.showRefcodeInput.bind(this)}><Translate content="refcode.claim_refcode"/></a></label>
-                        : <RefcodeInput
-                        label="refcode.claim_refcode"
-                        action_label="refcode.claim"
-                        allow_claim_to_account={this.props.account.get('name')} />}
-                </div>
-            </div>
+                <Tab title="metaexchange">
+                    <div className="content-block">
+                        <div className="float-right"><a href="https://metaexchange.info" target="__blank">VISIT WEBSITE</a></div>
+                        <h3><Translate content="gateway.bridge" /></h3>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th></th>
+                                <th><Translate content="gateway.meta.open_website" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <MetaexchangeDepositRequest
+                                symbol_pair="BTS_BTC"
+                                gateway="metaexchange"
+                                issuer_account="metaexchangebtc"
+                                account={this.props.account}
+                                receive_asset="BTS"
+                                is_bts_deposit="true"
+                                deposit_asset="BTS"
+                                deposit_asset_name="Bitcoin"/>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="content-block">
+                        <h3><Translate content="gateway.gateway" /></h3>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th><Translate content="gateway.symbol" /></th>
+                                <th></th>
+                                <th><Translate content="gateway.meta.open_website" /></th>
+                                <th><Translate content="gateway.balance" /></th>
+                                <th><Translate content="gateway.withdraw" /></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <MetaexchangeDepositRequest
+                                symbol_pair="METAEX.BTC_BTC"
+                                gateway="metaexchange"
+                                issuer_account="dev-metaexchange.monsterer"
+                                account={this.props.account}
+                                receive_asset="METAEX.BTC"
+                                deposit_asset="BTC"
+                                deposit_asset_name="Bitcoin"/>
+                            <MetaexchangeDepositRequest
+                                symbol_pair="METAEX.ETH_ETH"
+                                gateway="metaexchange"
+                                issuer_account="dev-metaexchange.monsterer"
+                                account={this.props.account}
+                                receive_asset="METAEX.ETH"
+                                deposit_asset="ETH"
+                                deposit_asset_name="Ether"/>
+                            <MetaexchangeDepositRequest
+                                symbol_pair="METAEX.NXT_NXT"
+                                gateway="metaexchange"
+                                issuer_account="dev-metaexchange.monsterer"
+                                account={this.props.account}
+                                receive_asset="METAEX.NXT"
+                                deposit_asset="NXT"
+                                deposit_asset_name="Nxt"/>
+                            </tbody>
+                        </table>
+                    </div>
+                </Tab>
+
+                <Tab title="transwiser">
+                    <div className="float-right"><a href="http://www.transwiser.com" target="_blank">VISIT WEBSITE</a></div>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th><Translate content="gateway.symbol" /></th>
+                            <th><Translate content="gateway.deposit_to" /></th>
+                            <th><Translate content="gateway.balance" /></th>
+                            <th><Translate content="gateway.withdraw" /></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <TranswiserDepositWithdraw
+                            issuerAccount="transwiser-wallet"
+                            account={this.props.account.get('name')}
+                            receiveAsset="CNY" />
+                        <TranswiserDepositWithdraw
+                            issuerAccount="transwiser-wallet"
+                            account={this.props.account.get('name')}
+                            receiveAsset="BOTSCNY" />
+                        </tbody>
+                    </table>
+                </Tab>
+
+            </Tabs>
 		</div>
         )
     }

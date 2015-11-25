@@ -80,7 +80,6 @@ td.orderHistoryCall {
 
     > tbody > tr > td {
         font-size: 0.75rem;
-        border: none;
     }
 }
 
@@ -106,12 +105,12 @@ p.order-table-title {
 .backingWarning { color: yellow; }
 .backingError { color: red; }
 
-.buy-form {
+.bid-form {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
 
-.sell-form {
+.ask-form {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
@@ -121,11 +120,11 @@ p.order-table-title {
   min-width: 4rem;
 }
 
-.buy {
+.bid {
   background-color: $bid-color !important;
 }
 
-.sell {
+.ask {
   background-color: $ask-color !important;
 }
 
@@ -352,6 +351,7 @@ a.order-cancel {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
+    background-color: lighten($light-panel-bg-color, 12%);
 }
 
 .account-drop-down {
@@ -432,6 +432,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .mymarkets-header.inactive {
   background-color: #3F3F3F;
+  color: grey;
 }
 
 .mymarkets-list {
@@ -463,4 +464,8 @@ table thead tr th.mymarkets-header {
 
 .negative-change {
   color: $negative-color;
+}
+
+tr.activeMarket {
+  color: #4C85D8;
 }

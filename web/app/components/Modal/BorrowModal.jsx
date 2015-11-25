@@ -88,16 +88,17 @@ class BorrowModalContent extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
-            !Immutable.is(nextProps.quote_asset.get("bitasset"), this.props.quote_asset.get("bitasset")) ||
+            !Immutable.is(nextProps.quote_asset, this.props.quote_asset) ||
             !nextProps.backing_asset.get("symbol") === this.props.backing_asset.get("symbol") ||
-            nextProps.account !== this.props.account ||
-            nextProps.call_orders !== this.props.call_orders
+            !Immutable.is(nextProps.account, this.props.account) ||
+            !Immutable.is(nextProps.call_orders, this.props.call_orders)
         );
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.account !== this.props.account ||
-            nextProps.hasCallOrders !== this.props.hasCallOrders
+            nextProps.hasCallOrders !== this.props.hasCallOrders ||
+            nextProps.quote_asset.get("id") !== this.props.quote_asset.get("id")
             ) {
             this.setState(this._initialState(nextProps));
         }
@@ -194,7 +195,7 @@ class BorrowModalContent extends React.Component {
 
         let quotePrecision = utils.get_asset_precision(this.props.quote_asset.get("precision"));
         let backingPrecision = utils.get_asset_precision(this.props.backing_asset.get("precision"));
-        let currentPosition = this._getCurrentPosition();
+        let currentPosition = this._getCurrentPosition(this.props);
 
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("call_order_update", {
@@ -278,10 +279,11 @@ class BorrowModalContent extends React.Component {
         let buttonClass = classNames("button", {disabled: errors.collateral_balance || !isValid}, {success: isValid});
 
         // Dynamically update user's remaining collateral
-        let currentPosition = this._getCurrentPosition();
-        let backingBalance = ChainStore.getObject(backing_balance.id);
+        let currentPosition = this._getCurrentPosition(this.props);
+        let backingBalance = backing_balance.id ? ChainStore.getObject(backing_balance.id) : null;;
+        let backingAmount = backingBalance ? backingBalance.get("balance") : 0;
         let collateralChange = parseInt(this.state.collateral * backingPrecision - currentPosition.collateral, 10);
-        let remainingBalance = backingBalance.get("balance") - collateralChange;
+        let remainingBalance = backingAmount - collateralChange;
 
         let bitAssetBalanceText = <span><Translate component="span" content="transfer.available"/>: {bitasset_balance.id ? <BalanceComponent balance={bitasset_balance.id}/> : <FormattedAsset amount={0} asset={quote_asset.get("id")} />}</span>;
         let backingBalanceText = <span><Translate component="span" content="transfer.available"/>: {backing_balance.id ? <FormattedAsset amount={remainingBalance} asset={backing_asset.get("id")} /> : <FormattedAsset amount={0} asset={backing_asset.get("id")} />}</span>;
@@ -429,7 +431,7 @@ export default class ModalWrapper extends React.Component {
         }
 
         return (
-            <Modal id={modalId} overlay={true}>
+            <Modal id={modalId} overlay={true} ref={modalId}>
                 <Trigger close={modalId}>
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>

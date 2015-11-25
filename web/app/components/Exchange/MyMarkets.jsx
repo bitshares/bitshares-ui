@@ -47,7 +47,7 @@ class MyMarkets extends React.Component {
         this.state = {
             inverseSort: props.viewSettings.get("myMarketsInvert"),
             sortBy: props.viewSettings.get("myMarketsSort"),
-            activeTab: props.viewSettings.get("favMarketTab"),
+            activeTab: props.viewSettings.get("favMarketTab") || "starred",
             lookupQuote: quote,
             lookupBase: base,
             inputValue: inputValue
@@ -67,7 +67,8 @@ class MyMarkets extends React.Component {
             nextState.sortBy !== this.state.sortBy ||
             nextState.activeTab !== this.state.activeTab ||
             nextState.lookupQuote !== this.state.lookupQuote ||
-            nextState.lookupBase !== this.state.lookupBase
+            nextState.lookupBase !== this.state.lookupBase ||
+            nextProps.current !== this.props.current
         );
     }
 
@@ -153,7 +154,7 @@ class MyMarkets extends React.Component {
     }
 
     render() {
-        let {starredMarkets, marketStats, columns, searchAssets, core} = this.props;
+        let {starredMarkets, marketStats, columns, searchAssets, core, current} = this.props;
         let {inverseSort, activeTab, sortBy, lookupQuote, lookupBase} = this.state;
         let marketRows = <tr></tr>;
 
@@ -161,27 +162,33 @@ class MyMarkets extends React.Component {
         // Add some default base options
         let defaultBases = [coreSymbol, "BTC", "CNY", "USD"];
         let baseOptions = [
-            coreSymbol, "BTC", "CNY", "USD"
+            // coreSymbol, "BTC", "CNY", "USD"
         ];
 
         searchAssets
         .filter(a => {
             // Always keep core asset as an option
-            if (defaultBases.indexOf(a.symbol) === 0) {
-                return true;
-            }
-            if (lookupBase && lookupBase.length > 1) {
+            // if (defaultBases.indexOf(a.symbol) === 0) {
+            //     return true;
+            // }
+            if (lookupBase && lookupBase.length) {
                 return a.symbol.indexOf(lookupBase) === 0;
             }
             return a.symbol.indexOf(lookupQuote) !== -1;
         })
         .forEach(asset => {
-            if (defaultBases.indexOf(asset.symbol) < 0 ) {
-                if (asset.symbol.length === lookupQuote.length) {
+            if (lookupBase && lookupBase.length) {
+                if (asset.symbol.indexOf(lookupBase) === 0) {
+                    baseOptions.push(asset.symbol);
+                }
+            } else if (defaultBases.indexOf(asset.symbol) < 0 ) {
+                if (asset.symbol.length >= lookupQuote.length && asset.symbol.length < lookupQuote.length + 3) {
                     baseOptions.push(asset.symbol);
                 }
             }
         });
+
+        baseOptions = baseOptions.concat(defaultBases.filter(a => {if (!lookupBase || !lookupBase.length) {return true}; return a.indexOf(lookupBase) === 0;}));
 
         baseOptions = baseOptions
         .filter(base => {
@@ -201,7 +208,10 @@ class MyMarkets extends React.Component {
         if (searchAssets.size) {
             searchAssets
             .filter(a => {
-                return a.symbol.indexOf(lookupQuote) !== -1;
+                return (
+                    a.symbol.indexOf(lookupQuote) !== -1 &&
+                    a.symbol.length >= lookupQuote.length
+                );
             })
             .forEach(asset => {
                 baseOptions.forEach(base => {
@@ -213,6 +223,15 @@ class MyMarkets extends React.Component {
                 });
             });
         }
+
+        allMarkets = allMarkets
+        .filter(a => {
+            // If a base asset is specified, limit the quote asset to the exact search term
+            if (lookupBase) {
+                return a[1].quote === lookupQuote;
+            }
+            return true;
+        })
 
         allMarkets = Immutable.Map(allMarkets);
 
@@ -230,17 +249,20 @@ class MyMarkets extends React.Component {
             })
             .map(market => {
                 let marketID = market.quote + "_" + market.base;
-                    return <MarketRow
-                        key={marketID}
-                        quote={market.quote}
-                        base={market.base}
-                        columns={columns}
-                        leftAlign={true}
-                        compact={true}
-                        noSymbols={true}
-                        stats={marketStats.get(marketID)}
-                        starred={starredMarkets.has(marketID)}
-                    />;
+                    return (
+                        <MarketRow
+                            key={marketID}
+                            quote={market.quote}
+                            base={market.base}
+                            columns={columns}
+                            leftAlign={true}
+                            compact={true}
+                            noSymbols={true}
+                            stats={marketStats.get(marketID)}
+                            starred={starredMarkets.has(marketID)}
+                            current={current === marketID}
+                        />
+                    );
             }).filter(a => {
                 return a !== null;
             }).sort((a, b) => {
@@ -290,7 +312,7 @@ class MyMarkets extends React.Component {
                 }
 
             })
-            .take(activeTab === "starred" ? 150 : 50)
+            .take(activeTab === "starred" ? 100 : 30)
             .toArray();
         }
 
