@@ -674,6 +674,11 @@
         address: "Withdraw to Address",
         submit: "Withdraw"
       },
+      settle: {
+        title: "Request settlement of %(asset)s",
+        amount: "Amount to settle",
+        submit: "Settle asset"
+      },
       ok: "OK"
     },
     init_error: {

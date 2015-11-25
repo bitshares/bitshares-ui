@@ -7,7 +7,7 @@ import Operation from "../Blockchain/Operation";
 import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
-
+import SettleModal from "../Modal/SettleModal";
 import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
@@ -18,6 +18,21 @@ class AccountOverview extends React.Component {
 
     static propTypes = {
         account: React.PropTypes.object.isRequired
+    };
+
+    constructor() {
+        super();
+        this.state = {
+            settleAsset: "1.3.0"
+        };
+    }
+
+    _onSettleAsset(id) {
+        this.setState({
+            settleAsset: id
+        });
+
+        this.refs.settlement_modal.show();
     }
 
     render() {
@@ -38,11 +53,15 @@ class AccountOverview extends React.Component {
                 if (!balanceAmount.get("balance")) {
                     return null;
                 }
+                let asset = ChainStore.getObject(balanceAmount.get("asset_type"));
+                let isBitAsset = asset && asset.has("bitasset_data_id");
+
                 balanceList = balanceList.push(balance);
                 balances[balance] = (
                     <tr key={balance} style={{maxWidth: "100rem"}}>
-                        <td><BalanceComponent balance={balance}/></td>
-                        <td><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
+                        {isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline">Settle</div></td> : <td></td>}
+                        <td style={{textAlign: "right"}}><BalanceComponent balance={balance}/></td>
+                        <td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
                         <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
                         <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td>
                     </tr>
@@ -54,22 +73,24 @@ class AccountOverview extends React.Component {
 
         return (
             <div className="grid-content">
-                <div className="content-block small-12 medium-10 large-8">
+                <div className="content-block small-12">
                     <h3><Translate content="transfer.balances" /></h3>
                     <table className="table">
                         <thead>
                             <tr>
-                                <th><Translate component="span" content="account.asset" /></th>
-                                <th><Translate component="span" content="account.bts_market" /></th>
+                                <th><Translate component="span" content="modal.settle.submit" /></th>
+                                <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
+                                <th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
                             </tr>
                         </thead>
                         <tbody>
                             {React.addons.createFragment(balances)}
-                            {balanceList.size ? <tr><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
+                            {balanceList.size ? <tr><td></td><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
                         </tbody>
                     </table>
+                    <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
                 </div>
                 {call_orders.length > 0 ? <div className="content-block">
                     <h3><Translate content="account.collaterals" /></h3>
