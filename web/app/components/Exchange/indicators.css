@@ -1,0 +1,4 @@
+  .chart-title { background-color: #3d3d3d; color: #fff; width: 1169px; padding: 10px; float: left; }
+  .chart-subtitle { line-height: 1.7em; font-size: 0.8em; padding-right: 10px; color: rgba(255,0,0,0.8);  float: right; }
+  .chart-href, .chart-href a { float: right; color: red; text-decoration: none}
+  

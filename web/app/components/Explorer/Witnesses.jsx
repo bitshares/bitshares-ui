@@ -286,16 +286,21 @@ class Witnesses extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("props:", props)
 
         this.state = {
-            filterWitness: "",
+            filterWitness: props.filterWitness || "",
             cardView: props.cardView
         };
     }
 
     _onFilter(e) {
         e.preventDefault();
-        this.setState({filterWitness: e.target.value});
+        this.setState({filterWitness: e.target.value.toLowerCase()});
+
+        SettingsActions.changeViewSetting({
+            filterWitness: e.target.value.toLowerCase()
+        });
     }
 
     _toggleView() {
@@ -385,11 +390,14 @@ class WitnessStoreWrapper extends React.Component {
     }
 
     static getPropsFromStores() {
-        return {cardView: SettingsStore.getState().viewSettings.get("cardView")}
+        return {
+            cardView: SettingsStore.getState().viewSettings.get("cardView"),
+            filterWitness: SettingsStore.getState().viewSettings.get("filterWitness")
+        }
     }
 
     render () {
-        return <Witnesses cardView={this.props.cardView}/>
+        return <Witnesses {...this.props}/>
     }
 }
 

@@ -67,8 +67,8 @@ class OrderRow extends React.Component {
         let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
 
         let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
-        let valueSymbol = showSymbols ? " " + quote.get("symbol") : null;
-        let amountSymbol = showSymbols ? " " + base.get("symbol") : null;
+        let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
+        let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
         // if (!isAskOrder && !invert) {
 
@@ -102,8 +102,8 @@ class OrderRow extends React.Component {
                         <PriceText preFormattedPrice={price} />
                         {priceSymbol}
                     </td>
-                    <td>{utils.format_number(amount, base.get("precision"))} {amountSymbol}</td>
-                    <td>{utils.format_number(value, quote.get("precision"))} {valueSymbol}</td>
+                    <td>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
+                    <td>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
                     <td><FormattedDate
                         value={order.expiration}
                         formats={intlData.formats}

@@ -119,6 +119,9 @@ class AccountAssetUpdate extends React.Component {
 
         AssetActions.updateAsset(issuer, new_issuer_account, update, core_exchange_rate, this.props.asset, flags, permissions).then(result => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account, this.props.asset.get("id"), update)
+            setTimeout(() => {
+                AssetActions.getAsset(this.props.asset.get("id"));
+            }, 3000);
         });
     }
 

@@ -14,6 +14,9 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
+import {AccountWrapper} from "../Utility/TotalBalanceValue";
+
+
 
 @connectToStores
 class Header extends React.Component {
@@ -75,19 +78,25 @@ class Header extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
-        let path = route.route ? route.route : route;
-        this.setState({active: route.route ? route.route : route});
-        
-        switch(path) {
-            case "exchange":
-                this.context.router.transitionTo(path, route.params);
-                break;
-
-            default:
-                this.context.router.transitionTo(path);
-                break;
+        if (route.route) {
+            this.setState({active: route.route});
+            this.context.router.transitionTo(route.route, route.params);
         }
+        else {
+            this.setState({active: route});
+            this.context.router.transitionTo(route);
+        }
+    }
 
+    _onGoBack(e) {
+        e.preventDefault();
+        // this.context.router.goBack();
+        window.history.back();
+    }
+
+    _onGoForward(e) {
+        e.preventDefault();
+        window.history.forward();
     }
 
     _accountClickHandler(account_name, e) {
@@ -113,7 +122,7 @@ class Header extends React.Component {
         let myAccounts = AccountStore.getMyAccounts();
 
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a className={cnames({active: active === "dashboard"})} onClick={this._onNavigate.bind(this, "dashboard")}><Translate component="span" content="header.dashboard" /></a>;
-        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>;
+        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a className={cnames({active: active === "account-overview"})} onClick={this._onNavigate.bind(this, {route: "account-overview", params: {account_name: linkedAccounts.first()}})}><Translate component="span" content="header.account" /></a>;
         else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
         let lock_unlock = null;
         if (this.props.current_wallet) lock_unlock = (
@@ -128,14 +137,18 @@ class Header extends React.Component {
             <a className={cnames({active: active === "exchange" || active === "markets"})} onClick={this._onNavigate.bind(this, {route: "exchange", params: {marketID: this.props.lastMarket}})}><Translate component="span" content="header.exchange" /></a>:
             <a className={cnames({active: active === "markets" || active === "exchange"})} onClick={this._onNavigate.bind(this, "markets")}><Translate component="span" content="header.exchange" /></a>
 
-        // Account selector: Only active inside the exchange            
+        // Account selector: Only active inside the exchange
         let accountsDropDown = null;
 
         if (currentAccount && active === "exchange") {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
+            if (myAccounts.indexOf(currentAccount) < 0) {
+                myAccounts.push(currentAccount);
+            }
 
             if(myAccounts.length > 1) {
+
                 let accountsList = myAccounts
                     .sort()
                     .map(name => {
@@ -165,8 +178,13 @@ class Header extends React.Component {
                         <li><a href onClick={this._triggerMenu}><Icon name="menu"/></a></li>
                     </ul>
                 </div>
-
-                <div className="show-for-medium medium-8">
+                {window.electron ? <div className="grid-block show-for-medium shrink">
+                    <ul className="menu-bar">
+                        <li><div style={{marginLeft: "1rem", height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline">{"<"}</div></div></li>
+                        <li><div style={{height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline">></div></div></li>
+                    </ul>
+                </div> : null}
+                <div className="grid-block show-for-medium">
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
                         <li><a className={cnames({active: active === "explorer"})} onClick={this._onNavigate.bind(this, "explorer")}><Translate component="span" content="header.explorer" /></a></li>
@@ -175,12 +193,14 @@ class Header extends React.Component {
                         <li><a className={cnames({active: active === "transfer"})} onClick={this._onNavigate.bind(this, "transfer")}><Translate component="span" content="header.payments" /></a></li>
                     </ul>
                 </div>
-                <div className="show-for-medium medium-4">
+                <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
                         <div className="grid-block shrink overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
-
+                        <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
+                            <AccountWrapper account={currentAccount} />
+                        </div>
                         <div className="grp-menu-item" >
                             <Link to="settings" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>

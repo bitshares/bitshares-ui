@@ -1,6 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import AssetActions from "actions/AssetActions";
+import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
@@ -11,14 +12,14 @@ import FormattedAsset from "../Utility/FormattedAsset";
 
 class Assets extends React.Component {
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             foundLast: false,
             lastAsset: "", 
             assetsFetched: 0,
-            filterUIA: "",
-            filterMPA: ""
+            filterUIA: props.filterUIA || "",
+            filterMPA: props.filterMPA || ""
         }
     }
 
@@ -65,6 +66,13 @@ class Assets extends React.Component {
         }
         
         return <LinkToAccountById account={name_or_id}/>         
+    }
+
+    _onFilter(type, e) {
+        this.setState({[type]: e.target.value.toUpperCase()});
+        SettingsActions.changeViewSetting({
+            [type]: e.target.value.toUpperCase()
+        });
     }
 
     render() {
@@ -118,7 +126,7 @@ class Assets extends React.Component {
                     <div className="grid-block medium-6 main-content vertical">
                             <div className="grid-content shrink no-overflow" style={{paddingBottom: 0}}>
                                 <h3><Translate component="span" content="explorer.assets.market" /></h3>
-                                <input style={{maxWidth: "400px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={(e) => {this.setState({filterMPA: e.target.value.toUpperCase()})}}></input>
+                                <input style={{maxWidth: "400px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={this._onFilter.bind(this, "filterMPA")}></input>
                                 <table className="table">
                                     <thead>
                                     <tr>
@@ -140,7 +148,7 @@ class Assets extends React.Component {
                     <div className="grid-block medium-6 right-column vertical">
                         <div className="grid-content shrink no-overflow" style={{paddingBottom: 0}}>
                             <h3><Translate component="span" content="explorer.assets.user" /></h3>
-                            <input style={{maxWidth: "400px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={(e) => {this.setState({filterUIA: e.target.value.toUpperCase()})}}></input>
+                            <input style={{maxWidth: "400px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={this._onFilter.bind(this, "filterUIA")}></input>
                             <table className="table">
                                 <thead>
                                 <tr>

@@ -7,6 +7,7 @@ import BorrowModal from "../Modal/BorrowModal";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
+import utils from "common/utils";
 
 let wallet_api = new WalletApi();
 /**
@@ -19,8 +20,13 @@ let wallet_api = new WalletApi();
 class CollateralPosition extends React.Component {
 
     static propTypes = {
-        object: ChainTypes.ChainObject.isRequired
-    }
+        debtAsset: ChainTypes.ChainAsset.isRequired,
+        collateralAsset: ChainTypes.ChainAsset.isRequired
+    };
+
+    static defaultProps = {
+        tempComponent: "tr"
+    };
 
     _onUpdatePosition(e) {
         e.preventDefault();
@@ -50,12 +56,35 @@ class CollateralPosition extends React.Component {
         WalletDb.process_transaction(tr, null, true);
     }
 
+    _getFeedPrice() {
+
+        if (!this.props) {
+            return 1;
+        }
+
+        return 1 / utils.get_asset_price(
+            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"]),
+            this.props.collateralAsset,
+            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"]),
+            this.props.debtAsset
+        );
+    }
+
+    _getCollateralRatio(debt, collateral) {
+        let c = utils.get_asset_amount(collateral, this.props.collateralAsset);
+        let d = utils.get_asset_amount(debt, this.props.debtAsset);
+        return c / (d / this._getFeedPrice());
+    }
+
     render() {
         let co = this.props.object.toJS();
+        let cr = this._getCollateralRatio(co.debt, co.collateral);
+
         return (
             <tr>
                 <td>{<FormattedAsset amount={co.debt} asset={co.call_price.quote.asset_id}/>}</td>
                 <td>{<FormattedAsset amount={co.collateral} asset={co.call_price.base.asset_id}/>}</td>
+                <td>{utils.format_number(cr, 2)}</td>
                 <td>{<FormattedPrice
                     base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                     quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}/>}
@@ -77,4 +106,20 @@ class CollateralPosition extends React.Component {
     }
 }
 
-export default CollateralPosition;
+@BindToChainState({keep_updating: true})
+export default class CollateralPositionWrapper extends React.Component {
+    static propTypes = {
+        object: ChainTypes.ChainObject.isRequired
+    };
+
+    render() {
+        let {object} = this.props;
+        let debtAsset = object.getIn(["call_price", "quote", "asset_id"]);
+        let collateralAsset = object.getIn(["call_price", "base", "asset_id"]);
+
+        return <CollateralPosition debtAsset={debtAsset} collateralAsset={collateralAsset} {...this.props} />;
+    }
+
+
+
+}

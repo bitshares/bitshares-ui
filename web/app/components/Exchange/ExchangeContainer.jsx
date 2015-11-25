@@ -7,6 +7,18 @@ import Exchange from "./Exchange";
 
 class ExchangeContainer extends React.Component {
 
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
+
+    componentWillMount() {
+        let currentAccount = AccountStore.getState().currentAccount;
+
+        if (!currentAccount) {
+            this.context.router.transitionTo("create-account");
+        }
+    }
+
     render() {
         let symbols = this.context.router.getCurrentParams().marketID.split("_");
 

@@ -37,7 +37,7 @@ class Tab extends React.Component {
 
         return (
             <div className={c} onClick={changeTab.bind(this, index)}>
-                <Translate content={title} />
+                {title.indexOf(".") > 0 ? <Translate content={title} /> : title}
             </div>
         );
     }
@@ -47,11 +47,13 @@ class Tab extends React.Component {
 class Tabs extends React.Component {
 
     static propTypes = {
-        setting: PropTypes.string
+        setting: PropTypes.string,
+        defaultActiveTab: PropTypes.number
     };
 
     static defaultProps = {
-        active: 0
+        active: 0,
+        defaultActiveTab: 0
     };
 
     static getStores() {
@@ -65,7 +67,7 @@ class Tabs extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.setting ? props.viewSettings.get(props.setting) || 0 : 0
+            activeTab: props.setting ? props.viewSettings.get(props.setting) || props.defaultActiveTab : props.defaultActiveTab
         };
     }
 

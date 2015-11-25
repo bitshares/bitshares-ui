@@ -185,6 +185,7 @@
         },
         collaterals: "Collateral Positions",
         eq_value: "Equivalent Value",
+        percent: "Percent of total supply",
         please_create_account: "Please create an account",
         create_account: "Create account",
         identicon: "Identicon",
@@ -341,6 +342,7 @@
             asset_global_settle: "Global asset settlement",
             asset_publish_feed: "Publish feed",
             committee_member_create: "Create committee member",
+            committee_member_update : "Update committee member",
             witness_create: "Create witness",
             witness_update: "Update witness",
             witness_withdraw_pay: "Witness pay withdrawal",
@@ -363,6 +365,25 @@
             transfer_to_blind: "Transfer to blinded account",
             blind_transfer: "Blinded transfer",
             transfer_from_blind: "Transfer from blinded account"
+        },
+        feeGroups : {
+         general : "General",
+         asset   : "Asset-Specific",
+         market  : "Market-Specific",
+         account : "Account-Specific",
+         business: "Business Administration",
+        },
+        feeTypes: {
+            _none : "Free of Charge",
+            fee : "Regular Transaction Fee",
+            price_per_kbyte: "Price per KByte Transaction Size",
+            basic_fee : "Basic Fee",
+            premium_fee : "Fee for Premium Names",
+            membership_annual_fee : "Annual Membership",
+            membership_lifetime_fee : "Lifetime Membership",
+            symbol3 : "Symbols with 3 Characters",
+            symbol4 : "Sybmols with 4 Characters",
+            long_symbol : "Longer Symbols"
         }
     },
     explorer: {
@@ -454,13 +475,6 @@
                 title: "Permissions",
                 max_market_fee: "Max market fee",
                 max_supply: "Max supply",
-                chargeMarketFee: "Charge market fee",
-                allowWhiteList: "Allow white list",
-                allowIssuerOverride: "Allow issuer override",
-                restrictTransfers: "Restrict transfers",
-                allowForceSettle: "Allow force settle",
-                allowGlobalSettle: "Allow global settle",
-                allowStealthTransfer: "Allow stealth transfers",
                 blacklist_authorities: "Blacklist authorities",
                 blacklist_markets: "Blacklist markets",
                 whitelist_authorities: "Whitelist authorities",
@@ -530,7 +544,7 @@
         market: "Market",
         price_history: "Price Chart",
         order_depth: "Market Depth",
-        history: "History",
+        history: "All History",
         my_history: "My History",
         balance: "Your balance",
         lowest_ask: "Lowest ask",
@@ -556,13 +570,26 @@
         horizontal: "Horizontal",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-        market_name: "Markets",
+        market_name: "My Markets",
         quote_supply: "Quote supply",
         base_supply: "Base supply",
         more: "All markets",
         volume_24: "24hr Volume",
         change: "Change",
-        confirm: "Your order is %(diff)s% away from the current price, are you sure?"
+        confirm: "Your order is %(diff)s% away from the current price, are you sure?",
+        indicators: "Indicators",
+        rsi: "Relative Strength Index",
+        ema: "Exponential Moving Average",
+        sma: "Simple Moving Average",
+        atr: "Average True Range",
+        period: "Time period (days)",
+        overbought: "Overbought",
+        oversold: "Oversold",
+        index: "Index"
+
+    },
+    fees: {
+     title: "Fee Schedule"
     },
     markets: {
         title: "Markets",
@@ -669,6 +696,11 @@
         amount: "Amount to Withdraw",
         address: "Withdraw to Address",
         submit: "Withdraw"
+      },
+      settle: {
+        title: "Request settlement of %(asset)s",
+        amount: "Amount to settle",
+        submit: "Settle asset"
       },
       ok: "OK"
     },

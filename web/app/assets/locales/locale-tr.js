@@ -32,7 +32,7 @@
         pending: "sırada %(blocks)s blok var"
     },
     propose: "teklif et",
-    cancel: "iptal et"
+    cancel: "iptal et",
     account: {
         welcome: "Graphene'e Hoşgeldiniz",
         asset: "Varlık",
@@ -85,7 +85,7 @@
             max_positive: "Maksimum pozitif bir sayı olmalıdır",
             core_exchange_rate: "Esas kur oranı",
             quote: "Kota varlık miktarı",
-            quote_name: "Kota varlıl",
+            quote_name: "Kota varlık",
             base: "Temel varlık miktarı",
             base_name: "Temel varlık",
             update_owner: "Sahibi güncelle",
@@ -335,7 +335,7 @@
             asset_update: "Varlık güncelleme",
             asset_update_bitasset: "Akıllı para güncelle",
             asset_update_feed_producers: "Varlık feed üreticilerini güncelle",
-            asset_issue: "Varlık İhracı",
+            asset_issue: "Varlık ihraç et",
             asset_reserve: "Varlık yak",
             asset_fund_fee_pool: "Varlık ücret havuzu finansı",
             asset_settle: "Varlık ödemesi",
@@ -455,13 +455,6 @@
                 title: "İzinler",
                 max_market_fee: "Max piyasa ücreti",
                 max_supply: "Max arz",
-                chargeMarketFee: "Piyasa ücreti ödet",
-                allowWhiteList: "Beyaz Listeye müsade et",
-                allowIssuerOverride: "İhraçcı geçersiz kılabilsin .",
-                restrictTransfers: "Transfer işlemlerini kısıtla",
-                allowForceSettle: "Mahsuba zorlasın",
-                allowGlobalSettle: "Genel mahsuplaşma olsun",
-                allowStealthTransfer: "Gizli transfer işlemlerine müsade et",
                 blacklist_authorities: "Karaliste yetkiler",
                 blacklist_markets: "Karaliste piyasları",
                 whitelist_authorities: "Beyaz Liste yetkiler",
@@ -680,6 +673,11 @@
         amount: "Çekilecek Miktar",
         address: "Şu Adrese Çekilecek",
         submit: "Çek"
+      },
+      settle: {
+        title: "%(asset)s ödenmesini talep et",
+        amount: "Ödenecek miktar",
+        submit: "Varlık tasfiye et"
       },
       ok: "Tamam"
     },

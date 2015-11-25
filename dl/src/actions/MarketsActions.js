@@ -10,7 +10,7 @@ let subs = {};
 let currentBucketSize;
 let wallet_api = new WalletApi();
 let marketStats = {};
-let statTTL = 60 * 5 * 1000; // 5 minutes
+let statTTL = 60 * 2 * 1000; // 2 minutes
 
 class MarketsActions {
 
@@ -31,12 +31,17 @@ class MarketsActions {
         endDate.setDate(endDate.getDate() + 1);
         startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
 
+        let refresh = false;
+
         if (marketStats[market]) {
             if ((now - marketStats[market].lastFetched) < statTTL) {
                 return false;
+            } else {
+                refresh = true;
             }
         }
-        if (!marketStats[market]) {
+
+        if (!marketStats[market] || refresh) {
             Promise.all([
                 Apis.instance().history_api().exec("get_market_history", [
                     base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
@@ -159,7 +164,7 @@ class MarketsActions {
                     ])
                 ])
                 .then((results) => {
-                    console.log("market subscription success:", results[0], results);
+                    // console.log("market subscription success:", results[0], results);
                     subs[subID] = true;
 
                     this.dispatch({
@@ -206,11 +211,11 @@ class MarketsActions {
         return Promise.resolve(true);
     }
 
-    createLimitOrder(account, sellAmount, sellAsset, buyAmount, buyAsset, expiration, isFillOrKill) {
+    createLimitOrder(account, sellAmount, sellAsset, buyAmount, buyAsset, expiration, isFillOrKill, fee_asset_id) {
 
         var tr = wallet_api.new_transaction();
 
-        let fee_asset_id = sellAsset.get("id");
+        // let fee_asset_id = sellAsset.get("id");
         if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
            fee_asset_id = "1.3.0";
         }
