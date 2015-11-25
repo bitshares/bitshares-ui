@@ -35,19 +35,6 @@ class AccountOverview extends React.Component {
         this.refs.settlement_modal.show();
     }
 
-    constructor() {
-        super();
-        this.state = {
-            limit: 1000
-        };
-    }
-
-    _onIncreaseLimit() {
-        this.setState({
-            limit: this.state.limit + 20
-        });
-    }
-
     render() {
         let {account, settings} = this.props;
         if (!account) {
@@ -90,17 +77,17 @@ class AccountOverview extends React.Component {
                     <h3><Translate content="transfer.balances" /></h3>
                     <table className="table">
                         <thead>
-                            <tr>
-                                <th><Translate component="span" content="modal.settle.submit" /></th>
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
-                            </tr>
+                        <tr>
+                            <th><Translate component="span" content="modal.settle.submit" /></th>
+                            <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
+                            <th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>
+                            <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
+                            <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {React.addons.createFragment(balances)}
-                            {balanceList.size ? <tr><td></td><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
+                        {React.addons.createFragment(balances)}
+                        {balanceList.size ? <tr><td></td><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
                         </tbody>
                     </table>
                     <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
@@ -125,13 +112,11 @@ class AccountOverview extends React.Component {
                 </div> : null}
                 <div className="content-block">
                     <h3><Translate content="account.recent" /></h3>
-                    <RecentTransactions accountsList={Immutable.fromJS([account.get("id")])} limit={this.state.limit} compactView={false}/>
-                    {/* valzav: temporary disabled - fetching extended history is not yet supported by ChainStore
-                    <div className="account-info more-button">
-                        <div className="button" onClick={this._onIncreaseLimit.bind(this)}>
-                            <Translate content="account.more" />
-                        </div>
-                    </div>*/}
+                    <RecentTransactions
+                        accountsList={Immutable.fromJS([account.get("id")])}
+                        compactView={false}
+                        showMore={true}
+                    />
                 </div>
             </div>
 
