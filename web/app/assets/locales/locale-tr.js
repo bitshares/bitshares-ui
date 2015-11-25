@@ -32,7 +32,7 @@
         pending: "sırada %(blocks)s blok var"
     },
     propose: "teklif et",
-    cancel: "iptal et",
+    cancel: "iptal et"
     account: {
         welcome: "Graphene'e Hoşgeldiniz",
         asset: "Varlık",
@@ -185,6 +185,7 @@
         },
         collaterals: "Teminat Pozisyonları",
         eq_value: "Eş Değeri",
+        percent: "Toplam arzın yüzdesi",
         please_create_account: "Lütfen bir hesap açın",
         create_account: "Hesap aç",
         identicon: "Identicon",
@@ -523,7 +524,7 @@
         market: "Piyasa",
         price_history: "Fiyat Tablosu",
         order_depth: "Piyasa Derinliği",
-        history: "Geçmiş",
+        history: "Tüm Geçmiş",
         my_history: "Geçmişim",
         balance: "Bakiyeniz",
         lowest_ask: "En düşük istenen",
@@ -549,7 +550,7 @@
         horizontal: "Yatay",
         confirm_buy: "Alma emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s   Fiyat: %(price_amount)s %(price_symbol)s",
         confirm_sell: "Emri teyit et: Sat %(sell_amount)s %(sell_symbol)s fiyat %(price_amount)s %(price_symbol)s",
-        market_name: "Piyasalar",
+        market_name: "Piyasalarım",
         quote_supply: "Kota arzı",
         base_supply: "Teel arz",
         more: "Tüm piyasalar",
@@ -672,6 +673,11 @@
         amount: "Çekilecek Miktar",
         address: "Şu Adrese Çekilecek",
         submit: "Çek"
+      },
+      settle: {
+        title: "%(asset)s ödenmesini talep et",
+        amount: "Ödenecek miktar",
+        submit: "Varlı ödemesi yap"
       },
       ok: "Tamam"
     },
