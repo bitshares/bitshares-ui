@@ -78,19 +78,14 @@ class Header extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
-        let path = route.route ? route.route : route;
-        this.setState({active: route.route ? route.route : route});
-
-        switch(path) {
-            case "exchange":
-                this.context.router.transitionTo(path, route.params);
-                break;
-
-            default:
-                this.context.router.transitionTo(path);
-                break;
+        if (route.route) {
+            this.setState({active: route.route});
+            this.context.router.transitionTo(route.route, route.params);
         }
-
+        else {
+            this.setState({active: route});
+            this.context.router.transitionTo(route);
+        }
     }
 
     _onGoBack(e) {
@@ -127,7 +122,7 @@ class Header extends React.Component {
         let myAccounts = AccountStore.getMyAccounts();
 
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a className={cnames({active: active === "dashboard"})} onClick={this._onNavigate.bind(this, "dashboard")}><Translate component="span" content="header.dashboard" /></a>;
-        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to="account-overview" params={{account_name: linkedAccounts.first()}}><Translate component="span" content="header.account" /></Link>;
+        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a className={cnames({active: active === "account-overview"})} onClick={this._onNavigate.bind(this, {route: "account-overview", params: {account_name: linkedAccounts.first()}})}><Translate component="span" content="header.account" /></a>;
         else linkToAccountOrDashboard = <Link to="create-account">Create Account</Link>;
         let lock_unlock = null;
         if (this.props.current_wallet) lock_unlock = (

@@ -85,7 +85,7 @@ module.exports = {
             core_exchange_rate: "Kernwechselrate",
             quote: "Quote Menge",
             quote_name: "Quote Asset",
-            base: "Base Menge,
+            base: "Base Menge",
             base_name: "Base Asset",
             update_owner: "Eigentümer aktualisieren",
             current_issuer: "Aktueller Eigentümer",
