@@ -1083,7 +1083,7 @@ class Exchange extends React.Component {
                         </div>
                         <div ref="center">
                         {!this.state.showDepthChart ? (
-                            <div className="grid-block shrink" id="market-charts" style={{marginTop: "0.5rem"}}>
+                            <div className="grid-block shrink" id="market-charts" style={{marginTop: 0}}>
                                 {/* Price history chart */}
                                 <div style={{position: "absolute", top: "24px", left: "50px", zIndex: 999}}><button onClick={this._onSelectIndicators.bind(this)} className="button outline">Indicators</button></div>
 

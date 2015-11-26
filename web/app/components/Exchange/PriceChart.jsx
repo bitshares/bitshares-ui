@@ -324,13 +324,17 @@ class PriceChart extends React.Component {
                         }
                     },
                     top: "0%",
-                    height: "70%",
+                    height: "80%",
                     offset: 5,
                     gridLineWidth: 0,
                     plotLines: [],
                     crosshair: {
                         snap: false
                     },
+                    startOnTick: false,
+                    endOnTick: false,
+                    showLastLabel: true,
+                    maxPadding: 0,
                     currentPriceIndicator: {
                         precision: base.get("precision"),
                         backgroundColor: '#000000',
@@ -345,7 +349,7 @@ class PriceChart extends React.Component {
                         },
                         x: -30,
                         y: 0,
-                        zIndex: 7,
+                        zIndex: 99,
                         width: 80
                     }
                 },
@@ -371,8 +375,8 @@ class PriceChart extends React.Component {
                         }
                     },
                     opposite: true,
-                    top: "77%",
-                    height: "23%",
+                    top: "80%",
+                    height: "20%",
                     offset: 5,
                     gridLineWidth: 0,
                     title: {
@@ -381,6 +385,7 @@ class PriceChart extends React.Component {
                             color: "#FFFFFF"
                         }
                     },
+                    showFirstLabel: true,
                     tickInterval: Math.floor(maxVolume / 2.5),
                     min: 0,
                     max: maxVolume
@@ -438,7 +443,7 @@ class PriceChart extends React.Component {
         
         return (
             <div className="grid-content no-padding no-overflow middle-content">
-                <div style={{paddingTop: "0.5rem", paddingBottom: "0.5rem"}}>
+                <div style={{paddingTop: 0, paddingBottom: "0.5rem"}}>
                     {priceData && volumeData ? <Highcharts ref="chart" config={config}/> : null}
                 </div>
             </div>
