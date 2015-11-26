@@ -195,7 +195,8 @@ module.exports = {
             premium_name_faucet: "你使用的是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母",
             premium_name_warning: "这是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母"
         },
-        propose_from: "发起账户"
+        propose_from: "发起账户",
+        percent: "供给占比"
     },
     transfer: {
         from: "来自",
@@ -334,7 +335,8 @@ module.exports = {
             committee_member_update_global_parameters: "全局参数更新",
             transfer_to_blind: "向隐私账户转账",
             blind_transfer: "隐私转账",
-            transfer_from_blind: "从隐私账户转出"
+            transfer_from_blind: "从隐私账户转出",
+            committee_member_update: "更新理事会成员账户"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
@@ -473,7 +475,7 @@ module.exports = {
                 blacklist_authorities: "黑名单职权实体",
                 blacklist_markets: "禁止交易对市场",
                 whitelist_authorities: "白名单职权实体",
-                whitelist_markets: "允许交易对市场",
+                whitelist_markets: "允许交易对市场"
             },
             price_feed_data: {
                 title: "喂价数据",
@@ -575,7 +577,16 @@ module.exports = {
         vol_short: "量",
         volume_24: "日成交量",
         change: "涨跌幅",
-        confirm: "你的订单价偏离当前价 %(diff)s% , 你确定么?"
+        confirm: "你的订单价偏离当前价 %(diff)s% , 你确定么?",
+        indicators: "技术指标",
+        rsi: "相对强弱指数(rsi)",
+        ema: "指数移动平均线(ema)",
+        sma: "算数移动平均线(sma)",
+        atr: "平均真实波幅(atr)",
+        period: "周期 (天)",
+        overbought: "超买",
+        oversold: "超卖",
+        index: "指数"
     },
     markets: {
         title: "交易所",
@@ -686,7 +697,12 @@ module.exports = {
             address: "提现到地址",
             submit: "提现"
         },
-        ok: "确定"
+        ok: "确定",
+        settle: {
+            title: "请求清算资产%(asset)s",
+            amount: "数量",
+            submit: "清算资产"
+        }
     },
     init_error: {
         title: "系统初始化错误",
@@ -726,5 +742,8 @@ module.exports = {
         }
     },
     propose: "提议",
-    cancel: "取消"
+    cancel: "取消",
+    fees: {
+        title: "费率表"
+    }
 };
