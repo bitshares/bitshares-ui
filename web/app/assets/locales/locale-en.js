@@ -113,6 +113,7 @@
         perm: {
             active: "Active Permissions",
             owner: "Owner Permissions",
+            memo_key: "Memo key",
             publish: "Publish Changes",
             reset: "Reset Changes",
             add: "Add Permission",
@@ -124,7 +125,13 @@
             cancel: "Cancel",
             add_permission_label: "Enter account name/key and weight",
             account_name_or_key: "Account name or key",
-            memo_public_key: "Memo Public Key"
+            memo_public_key: "Memo Public Key",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy_short: "Proxy",

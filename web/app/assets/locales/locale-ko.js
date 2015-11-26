@@ -80,6 +80,7 @@ module.exports = {
         perm: {
             active: "활성화된 사용권한",
             owner: "소유자 사용권한",
+            memo_key: "Memo key",
             publish: "변경사항 적용",
             reset: "변경사항 되돌리기",
             add: "사용권한 추가",
@@ -91,7 +92,13 @@ module.exports = {
             cancel: "취소",
             add_permission_label: "계정명/키 및 가중치를 입력하세요",
             account_name_or_key: "계정명 또는 키",
-            memo_public_key: "메모 공개키"
+            memo_public_key: "메모 공개키",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy: "대리투표 계정",

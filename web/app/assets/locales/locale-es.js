@@ -80,6 +80,7 @@
         perm: {
             active: "Permisos Activos",
             owner: "Permisos de Propietario",
+            memo_key: "Memo key",
             publish: "Publicar Cambios",
             reset: "Resetear Cambios",
             add: "Agregar Permisos",
@@ -91,7 +92,13 @@
             cancel: "Cancelar",
             add_permission_label: "Ingrese nombre de cuenta/llave y su relevancia",
             account_name_or_key: "Nombre de cuenta o Llave",
-            memo_public_key: "Llave Pública Memo"
+            memo_public_key: "Llave Pública Memo",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy: "Convertir en Apoderado de sus Votos a",

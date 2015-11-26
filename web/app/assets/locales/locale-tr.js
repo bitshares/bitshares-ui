@@ -113,6 +113,7 @@
         perm: {
             active: "Etkin İzinler",
             owner: "Sahip İzinleri ",
+            memo_key: "Memo key",
             publish: "Değişimleri Duyur",
             reset: "Değişiklikleri Sıfırla",
             add: "Yetki Ekle",
@@ -124,7 +125,13 @@
             cancel: "İptal",
             add_permission_label: "Hesap adı/anahtarını ve ağırlığını girin",
             account_name_or_key: "Hesap adı yada anahtar",
-            memo_public_key: "Açık Anahtar Memo"
+            memo_public_key: "Açık Anahtar Memo",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy_short: "Vekil",
