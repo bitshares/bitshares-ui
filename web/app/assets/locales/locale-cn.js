@@ -196,7 +196,8 @@ module.exports = {
             premium_name_warning: "这是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母"
         },
         propose_from: "发起账户",
-        percent: "供给占比"
+        percent: "供给占比",
+        settle: "清算"
     },
     transfer: {
         from: "来自",
