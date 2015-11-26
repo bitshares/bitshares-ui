@@ -15,7 +15,7 @@
         dashboard: "Panel",
         explorer: "Araştır",
         exchange: "Al-Sat",
-        payments: "Transferler", 
+        payments: "Transferler",
         logout: "Çıkış",
         settings: "Ayarlar",
         current: "Kullanılan Hesap",
@@ -197,7 +197,8 @@
             premium_name_faucet: "Bu paralı bir addır. Ücretli adlar hem daha pahalıdır hem de musluk tarafından ücretsiz kayıt yapılmazlar. En azından bir tire , rakam içeren yada sesli harfin bulunmadığı bir ad seçiniz.",
             premium_name_warning: "Bu kayıt yapılması daha pahalı ücretli bir addır. Normal adların içerinde en azından bir tire, rakam bulunur yada hiç sesli harf yoktur."
         },
-        propose_from: "Tarafından teklif"
+        propose_from: "Tarafından teklif",
+        settle: "Settle"
     },
     pagination: {
         newer: "Daha yeni",
@@ -373,7 +374,7 @@
         blocks: {
             title: "Blokzinciri",
             globals: "Evrensel parametreler",
-            recent: "Son bloklar", 
+            recent: "Son bloklar",
             trx: "İşlem",
             block_times: "Blok süreleri",
             block_time: "Blok süresi",

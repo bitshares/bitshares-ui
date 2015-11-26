@@ -197,7 +197,8 @@
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
-        propose_from: "Propose From"
+        propose_from: "Propose From",
+        settle: "Settle"
     },
     pagination: {
         newer: "Newer",

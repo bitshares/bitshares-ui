@@ -113,7 +113,8 @@ module.exports = {
             invalid: "Compte non valable",
             unknown: "Compte inconnu",
             not_yours: "Pas votre compte"
-        }
+        },
+        settle: "Settle"
     },
     transfer: {
         from: "De",

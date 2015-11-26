@@ -7,7 +7,7 @@ module.exports = {
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-        
+
     },
     header: {
         title: "비트쉐어 2.0",
@@ -110,7 +110,7 @@ module.exports = {
             add_committee_label: "위원",
             add_witness_label: "증인",
             approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal"            
+            reject_worker: "Reject worker proposal"
         },
         options: {
             num_witnesses: "선호 증인 수",
@@ -147,7 +147,8 @@ module.exports = {
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        settle: "Settle"
     },
     pagination: {
         newer: "이전",
@@ -426,7 +427,7 @@ module.exports = {
             rank: "순위",
             last_confirmed: "마지막 승인블록",
             missed: "누락 블록수"
-            
+
         },
         committee_members: {
             title: "위원",
