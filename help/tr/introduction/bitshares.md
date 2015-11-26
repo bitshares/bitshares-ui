@@ -9,7 +9,7 @@ endüstrilere yaymayı ummaktadır. Bankacılık, hisse senedi borsaları,
 piyangolar,seçimler, müzik, mezat veya birçok diğerleri olsun , dijital umumi bir 
 defteri-kebir, dağıtık-otonom-şirketlerin (DAC- distributed autonomous companies) 
 yaratılabilmesine imkan tanır. Bu DAC lar geleneksel merkeziyetçi rakiplerinin 
-sunduklarından daha kaliteli hizmetleri çok daha ucuza temin sunarlar.  DACların ortaya 
+sunduklarından daha kaliteli hizmetleri çok daha ucuza sunarlar.  DACların ortaya 
 çıkışı , organizasyon yapılarında yeni bir paradigma teşkil etmektedir. Artık şirketler,
 bozulamayan iş kuralları altında ve insan yönetimi olmadan işleyebilirler. Bu kurallar
 halka açık şekilde denetlenilebilen açık kaynak yazılımın içine kodlanmıştır ve 
