@@ -126,7 +126,6 @@ module.exports = {
             memo_public_key: "Öffentlicher Schlüssel für Memos"
         },
         votes: {
-            proxy: "Abstimmkonto vermitteln",
             workers_short: "Worker",
             proxy: "Proxy Konto",
             no_proxy: "Keine Vermittlung",
