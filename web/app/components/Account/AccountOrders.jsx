@@ -15,37 +15,19 @@ class AccountOrders extends React.Component {
 
     _cancelLimitOrder(orderID, e) {
         e.preventDefault();
-        console.log("canceling limit order:", orderID);
-        let {account_name, cachedAccounts, assets} = this.props;
-        let account = cachedAccounts.get(account_name);
+
         MarketsActions.cancelLimitOrder(
-            account.id,
+            this.props.account.get("id"),
             orderID // order id to cancel
-        ).then(result => {
-            if (!result) {
-                notify.addNotification({
-                        message: `Failed to cancel limit order ${orderID}`,
-                        level: "error"
-                    });
-            }
+        ).catch(err => {
+            console.log("cancel order error:", err);
         });
     }
 
     render() {
-        let {account_name, assets, account} = this.props;
-        // let account = cachedAccounts.get(account_name);
+        let {assets, account} = this.props;
         let cancel = counterpart.translate("account.perm.cancel");
         let markets = {};
-
-        let accountExists = true;
-        if (!account) {
-            return <LoadingIndicator type="circle"/>;
-        } else if (account.notFound) {
-            accountExists = false;
-        } 
-        if (!accountExists) {
-            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
-        }
 
         let marketOrders ={};
         account.get("orders").forEach(order => {
@@ -123,17 +105,5 @@ class AccountOrders extends React.Component {
         );
     }
 }
-
-AccountOrders.defaultProps = {
-    account_name: "",
-    cachedAccounts: {},
-    assets: {}
-};
-
-AccountOrders.propTypes = {
-    account_name: PropTypes.string.isRequired,
-    cachedAccounts: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired
-};
 
 export default AccountOrders;

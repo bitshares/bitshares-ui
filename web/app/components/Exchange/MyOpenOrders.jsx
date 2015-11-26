@@ -18,31 +18,17 @@ class TableHeader extends React.Component {
     render() {
         let {buy, baseSymbol, quoteSymbol} = this.props;
 
-        // if (this.props.type === "buy") {
-        //     return (
-        //         <thead>
-        //             <tr>
-        //                 <th style={{textAlign: "left"}}></th>
-        //                 <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
-        //                 <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <small>({baseSymbol})</small> : null}</th>
-        //                 <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <small>({quoteSymbol})</small> : null}</th>
-        //                 <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <small>({baseSymbol}/{quoteSymbol})</small> : null}</th>
-        //             </tr>
-        //         </thead>
-        //     );
-        // } else {
-            return (
-                <thead>
-                    <tr>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
-                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol})</span> : null}</th>
-                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
-                        <th style={{textAlign: "right"}}></th>
-                    </tr>
-                </thead>
-            );
-        // }
+        return (
+            <thead>
+                <tr>
+                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
+                    <th style={{textAlign: "right"}}></th>
+                </tr>
+            </thead>
+        );
     }
 }
 
@@ -70,32 +56,6 @@ class OrderRow extends React.Component {
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
-        // if (!isAskOrder && !invert) {
-
-        //     return (
-        //         <tr key={order.id}>
-        //             <td className="text-right" style={{padding: "2px 5px"}}>
-        //                 <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
-        //                 <span>{cancel_text}</span>
-        //                 </a>
-        //             </td>
-        //             <td><FormattedDate
-        //                 value={order.expiration}
-        //                 formats={intlData.formats}
-        //                 format="short"
-        //                 />
-        //             </td>
-        //             <td>{utils.format_number(value, quote.get("precision"))} {valueSymbol}</td>
-        //             <td>{utils.format_number(amount, base.get("precision"))} {amountSymbol}</td>
-        //             <td className={tdClass}>
-        //                 <span className="price-integer">{price.int}</span>
-        //                 .
-        //                 <span className="price-decimal">{price.dec}</span>
-        //                 {priceSymbol}
-        //             </td>
-        //         </tr>
-        //     );
-        // } else {
             return (
                 <tr key={order.id}>
                     <td className={tdClass}>
