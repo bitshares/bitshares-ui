@@ -361,7 +361,26 @@ module.exports = {
         max_market_fee: "最大市场手续费",
         blinding_factor: "隐私因子",
         outputs: "输出",
-        inputs: "输入"
+        inputs: "输入",
+        feeGroups: {
+            general: "一般费率",
+            asset: "资产相关",
+            market: "市场相关",
+            account: "账户相关",
+            business: "业务管理"
+        },
+        feeTypes: {
+            _none: "免费",
+            fee: "普通转账手续费",
+            price_per_kbyte: "交易字节数，每千字节手续费",
+            basic_fee: "普通用户名手续费",
+            premium_fee: "高级用户名手续费",
+            membership_annual_fee: "年度会籍",
+            membership_lifetime_fee: "终身会籍",
+            symbol3: "资产符号长度3位",
+            symbol4: "资产符号长度4位",
+            long_symbol: "更长的资产符号"
+        }
     },
     explorer: {
         accounts: {
