@@ -86,6 +86,7 @@ button, .button {
 
 a.currency, span.currency {
   @include RobotoLight;
+  font-variant: small-caps;
 }
 
 .txtlabel {
@@ -132,13 +133,10 @@ span.time {
 
   label, label > span {
     @include RobotoCondensed;
-    text-transform: uppercase;
-    font-size: 90%;
   }
 
   button, .button {
     @include RobotoCondensed;
-    text-transform: uppercase;
   }
 
   .content-block > h3 {
@@ -155,7 +153,6 @@ span.time {
 
   .txtlabel {
     @include RobotoCondensed;
-    text-transform: uppercase;
   }
 
   span.time {
@@ -168,22 +165,18 @@ span.time {
 
   .footer .logo {
     @include RobotoCondensed;
-    font-size: 90%;
   }
 
   .tabs > .tab-item {
     @include RobotoCondensed;
-    font-size: 90%;
   }
 
   .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
     @include RobotoCondensed;
-    font-size: 80%;
   }
 
   .table > thead > tr > th {
     @include RobotoCondensed;
-    font-size: 90%;
   }
 
   .key-value-table tr > td:first-child {

@@ -579,3 +579,12 @@ section input[type="text"] {
 .menu-group.primary .menu-bar > li > a.active {
   background-color: #4c4c4c !important;
 }
+
+
+// Asset Detail
+
+.asset-card {
+  .card-divider {
+    background: $panel-bg-color;
+  }
+}

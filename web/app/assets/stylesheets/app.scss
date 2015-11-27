@@ -1,5 +1,5 @@
 @import "./foundation_settings";
-@import "~react-foundation-apps/node_modules/foundation-apps/scss/foundation.scss";
+@import "~foundation-apps/scss/foundation.scss";
 @import "./foundation_overrides";
 @import "~react-tooltip/dist/react-tooltip.scss";
 @import "./forms";
@@ -11,6 +11,7 @@
 @import "./cards";
 @import "./account";
 @import "./dark-theme";
+@import "./blocktrades";
 @import "./perfect-scrollbar";
 @import "./console";
 @import "./pagination";
@@ -278,4 +279,15 @@ label.inline {
   > div.grid-block {
     padding-bottom: 0 !important;
   }
+}
+
+.electron-only {
+  display: none;
+}
+
+.electron-only {
+  visibility: hidden;
+}
+#content.electron {
+  visibility: visible;
 }

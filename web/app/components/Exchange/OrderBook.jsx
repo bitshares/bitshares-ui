@@ -75,7 +75,7 @@ class OrderBookRowHorizontal extends React.Component {
                 </td>
                 <td>{utils.format_number(order.amount, quote.get("precision") - 2)}</td>
                 <td>{utils.format_number(order.value, base.get("precision") - 2)}</td>
-                <td>{utils.format_number(order.total, base.get("precision") - 2)}</td>
+                <td>{utils.format_number(order.totalValue, base.get("precision") - 2)}</td>
 
             </tr>
         )
@@ -155,7 +155,8 @@ class OrderBook extends React.Component {
             }).map(order => {
                 totalBidAmount += order.amount;
                 totalBidValue += order.value;
-                order.total = totalBidValue;
+                order.totalValue = totalBidValue;
+                order.totalAmount = totalBidAmount;
                 if (order.price_full < high / 5) {
                     return null;
                 }
@@ -163,7 +164,7 @@ class OrderBook extends React.Component {
                     <OrderBookRowHorizontal
                         key={order.price_full}
                         order={order}
-                        onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}
+                        onClick={this.props.onClick.bind(this, "bid", order)}
                         base={base}
                         quote={quote}
                         type={order.type}
@@ -171,7 +172,7 @@ class OrderBook extends React.Component {
                     <OrderBookRowVertical
                         key={order.price_full}
                         order={order}
-                        onClick={this.props.onClick.bind(this, order.price_full, totalBidAmount, "bid")}
+                        onClick={this.props.onClick.bind(this, "bid", order)}
                         base={base}
                         quote={quote}
                         type={order.type}
@@ -198,7 +199,8 @@ class OrderBook extends React.Component {
             }).map(order => {
                 totalAskAmount += order.amount;
                 totalAskValue += order.value;
-                order.total = totalAskValue;
+                order.totalValue = totalAskValue;
+                order.totalAmount = totalAskAmount;
                 if (order.price_full > low * 5) {
                     return null;
                 }
@@ -207,7 +209,7 @@ class OrderBook extends React.Component {
                     <OrderBookRowHorizontal
                         key={order.price_full}
                         order={order}
-                        onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}
+                        onClick={this.props.onClick.bind(this, "ask", order)}
                         base={base}
                         quote={quote}
                         type={order.type}
@@ -215,7 +217,7 @@ class OrderBook extends React.Component {
                     <OrderBookRowVertical
                         key={order.price_full}
                         order={order}
-                        onClick={this.props.onClick.bind(this, order.price_full, totalAskAmount, "ask")}
+                        onClick={this.props.onClick.bind(this, "ask", order)}
                         base={base}
                         quote={quote}
                         type={order.type}

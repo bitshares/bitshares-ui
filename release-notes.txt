@@ -1,0 +1,50 @@
+---------------------------------------------------------------------
+Release 2.0.151119
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Added "Back" and "Forward" buttons #453
+- Show stake percentages at all times in wallet #522
+- Display total assets of all account in chosen currency #512
+- Request settlement of bit asset #493
+- Show BTS balance in Accounts search results table #482
+- Exchange > highlight active market state on bottom right #499
+- Deposit/Withdraw page split into tabs (addresses #521)
+
+BUG FIXES:
+- Fix market issue: clicking on account balance vs Lowest Ask #469
+- Transfer Dialog does not fall back to BTS fee when there is no core exchange rate or funded fee pool #329
+- "Borrow Asset" window resets on new block on some accounts #505
+- Clicking on lowest or highest buy/sell price does not result in an eligible market order #515
+- Add the collateral ratio number of each asset to the overview page #397
+- App crashes on the market page - argument is not an object id #520
+- OS X Light Wallet Bug #525
+- Market %change and volume do not match #528
+- The [FAV MARKETS] / [ALL MARKETS] tabs don't work when accessed for the very first time. #519
+- Cannot find some markets #526
+- Account drop-down options are inconsistent with selected third-party account #523
+- Market page shows loading indicator if user doesn't have any account - it should suggest to create account instead #507
+
+---------------------------------------------------------------------
+Release 2.0.151119
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Warn users placing below the price market orders (e.g. 20% off market price) #445
+- Feedback while adjusting collateral slider #451
+- Account orders history on Exchange
+- Markets overview page redisign, improved market search functionality
+- Add 24h change and volume to markets list
+- Improved favorite/unvoriete markets functionality
+- Added support for deposits/withdrawals on blocktrades.us in bridge mode
+- Added filtering and current supply to Assets overview
+- Added TRADE.MUSE, METAFEES and OBITS to default favorite markets
+
+BUG FIXES:
+- Fixed several spelling and typos issues
+- Issue building with the latest node.js on Windows #481
+- "Promise not defined" build issue #488
+- Orderbook and market history colors are missing for some numbers #490
+- "Borrow Asset" window resets on new block on some accounts #505
+- Animation on create account page - helps to safe space
+- Fix asset creation fee estimation

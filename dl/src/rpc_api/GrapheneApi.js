@@ -16,7 +16,7 @@ class GrapheneApi {
 
     exec(method, params) {
         return this.ws_rpc.call([this.api_id, method, params]).catch(error => {
-            console.log("!!! GrapheneApi error: ", method, params, error);
+            console.log("!!! GrapheneApi error: ", method, params, error, JSON.stringify(error));
             throw error;
         });
     }

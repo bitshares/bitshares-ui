@@ -7,7 +7,7 @@
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-        
+
     },
     header: {
         title: "Graphene UI",
@@ -31,6 +31,8 @@
     operation: {
         pending: "pending %(blocks)s blocks"
     },
+    propose: "propose",
+    cancel: "cancel",
     account: {
         welcome: "Welcome to Graphene",
         asset: "Asset",
@@ -60,7 +62,7 @@
             lifetime: "Lifetime member",
             basic: "Basic member",
             annual: "Annual subscriber",
-            upgrade_lifetime: "Buy Lifetime Subscribtion",
+            upgrade_lifetime: "Buy Lifetime Subscription",
             subscribe: "Buy Annual Subscription",
             expires: "expires",
             membership_expiration: "Membership Expiration",
@@ -101,7 +103,8 @@
             global_settle: "Allow issuer to force a global settling",
             advanced: "Advanced",
             need_asset: "At least one of the two assets must be %(name)s",
-            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!"
+            perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!",
+            issued_assets: "Issued Assets"
         },
         connections: {
             known: "Known by",
@@ -110,6 +113,7 @@
         perm: {
             active: "Active Permissions",
             owner: "Owner Permissions",
+            memo_key: "Memo key",
             publish: "Publish Changes",
             reset: "Reset Changes",
             add: "Add Permission",
@@ -121,11 +125,17 @@
             cancel: "Cancel",
             add_permission_label: "Enter account name/key and weight",
             account_name_or_key: "Account name or key",
-            memo_public_key: "Memo Public Key"
+            memo_public_key: "Memo Public Key",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy_short: "Proxy",
-            workers_short: "Workers",            
+            workers_short: "Workers",
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             clear_proxy: "Remove proxy",
@@ -182,6 +192,7 @@
         },
         collaterals: "Collateral Positions",
         eq_value: "Equivalent Value",
+        percent: "Percent of total supply",
         please_create_account: "Please create an account",
         create_account: "Create account",
         identicon: "Identicon",
@@ -192,7 +203,9 @@
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        propose_from: "Propose From",
+        settle: "Settle"
     },
     pagination: {
         newer: "Newer",
@@ -213,7 +226,8 @@
             req: "Required field",
             pos: "Amount must be positive",
             valid: "Please enter a valid, positive number",
-            balance: "The final balance must be larger than 0"
+            balance: "The final balance must be larger than 0",
+            insufficient: "Insufficient Balance"
         },
         back: "BACK",
         confirm: "CONFIRM",
@@ -336,6 +350,7 @@
             asset_global_settle: "Global asset settlement",
             asset_publish_feed: "Publish feed",
             committee_member_create: "Create committee member",
+            committee_member_update : "Update committee member",
             witness_create: "Create witness",
             witness_update: "Update witness",
             witness_withdraw_pay: "Witness pay withdrawal",
@@ -358,6 +373,25 @@
             transfer_to_blind: "Transfer to blinded account",
             blind_transfer: "Blinded transfer",
             transfer_from_blind: "Transfer from blinded account"
+        },
+        feeGroups : {
+         general : "General",
+         asset   : "Asset-Specific",
+         market  : "Market-Specific",
+         account : "Account-Specific",
+         business: "Business Administration",
+        },
+        feeTypes: {
+            _none : "Free of Charge",
+            fee : "Regular Transaction Fee",
+            price_per_kbyte: "Price per KByte Transaction Size",
+            basic_fee : "Basic Fee",
+            premium_fee : "Fee for Premium Names",
+            membership_annual_fee : "Annual Membership",
+            membership_lifetime_fee : "Lifetime Membership",
+            symbol3 : "Symbols with 3 Characters",
+            symbol4 : "Sybmols with 4 Characters",
+            long_symbol : "Longer Symbols"
         }
     },
     explorer: {
@@ -376,7 +410,7 @@
             trx_per_block: "Trx/block",
             active_committee_members: "Active committee members",
             active_witnesses: "Active Witnesses",
-            avg_conf_time: "Avg conf. time",
+            avg_conf_time: "Average confirmation time",
             trx_per_sec: "Trx/s",
             last_block: "Last block",
             current_block: "Current Block"
@@ -449,13 +483,6 @@
                 title: "Permissions",
                 max_market_fee: "Max market fee",
                 max_supply: "Max supply",
-                chargeMarketFee: "Charge market fee",
-                allowWhiteList: "Allow white list",
-                allowIssuerOverride: "Allow issuer override",
-                restrictTransfers: "Restrict transfers",
-                allowForceSettle: "Allow force settle",
-                allowGlobalSettle: "Allow global settle",
-                allowStealthTransfer: "Allow stealth transfers",
                 blacklist_authorities: "Blacklist authorities",
                 blacklist_markets: "Blacklist markets",
                 whitelist_authorities: "Whitelist authorities",
@@ -522,9 +549,11 @@
         loading: "Loading..."
     },
     exchange: {
+        market: "Market",
         price_history: "Price Chart",
         order_depth: "Market Depth",
-        market_history: "Market History",
+        history: "All History",
+        my_history: "My History",
         balance: "Your balance",
         lowest_ask: "Lowest ask",
         highest_bid: "Highest bid",
@@ -539,6 +568,7 @@
         maintenance: "Maintenance Call Price",
         your_price: "Your Call Price",
         volume: "Volume",
+        vol_short: "Vol",
         spread: "Spread",
         quantity: "Amount",
         buy: "Buy",
@@ -548,10 +578,26 @@
         horizontal: "Horizontal",
         confirm_buy: "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
         confirm_sell: "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-        market_name: "Market name",
+        market_name: "My Markets",
         quote_supply: "Quote supply",
         base_supply: "Base supply",
-        more: "More markets"
+        more: "All markets",
+        volume_24: "24hr Volume",
+        change: "Change",
+        confirm: "Your order is %(diff)s% away from the current price, are you sure?",
+        indicators: "Indicators",
+        rsi: "Relative Strength Index",
+        ema: "Exponential Moving Average",
+        sma: "Simple Moving Average",
+        atr: "Average True Range",
+        period: "Time period (days)",
+        overbought: "Overbought",
+        oversold: "Oversold",
+        index: "Index"
+
+    },
+    fees: {
+     title: "Fee Schedule"
     },
     markets: {
         title: "Markets",
@@ -561,7 +607,7 @@
         core_rate: "Core rate",
         supply: "Supply",
         search: "Search",
-        preferred: "My Favourite Markets"
+        preferred: "My Favorite Markets"
     },
     wallet: {
         title: "Wallet",
@@ -658,7 +704,13 @@
         amount: "Amount to Withdraw",
         address: "Withdraw to Address",
         submit: "Withdraw"
-      }
+      },
+      settle: {
+        title: "Request settlement of %(asset)s",
+        amount: "Amount to settle",
+        submit: "Settle asset"
+      },
+      ok: "OK"
     },
     init_error: {
         title: "Application initialization issues",
@@ -672,5 +724,29 @@
         claim_refcode: "Claim Referral Code",
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
+    },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser",
+            visit_weidian: "Visit WEIDIAN to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
+        },
+        meta: {
+            open_website: "Open Website"
+        }
     }
 };

@@ -1,7 +1,7 @@
 var Aes = require('../ecc/aes');
 var PrivateKey = require('../ecc/key_private');
 var PublicKey = require('../ecc/key_public');
-var Long = require('../common/bytebuffer').Long;
+var Long = require('bytebuffer').Long;
 
 var chain_types = require('../chain/chain_types');
 var chain_config = require('../chain/config');
@@ -71,49 +71,49 @@ class ApplicationApi {
     }
     
     /**
-        Note, an empty or null memo will still be encypted if  encrypt_memo
-        is true.
+        @param propose_account (or null) pays the fee to create the proposal, also used as memo from
     */
-    transfer(
-        from_account_id,
-        to_account_id,
+    transfer({ // OBJECT: { ... }
+        from_account,
+        to_account,
         amount, 
         asset, 
-        memo_message,
+        memo,
         broadcast = true,
         encrypt_memo = true,
         optional_nonce = null,
-        sign = true
-    ) {
+        sign = true,
+        propose_account = null
+    }) {
+        var memo_sender = propose_account || from_account
         var memo_from_public, memo_to_public
-
-        if( memo_message && encrypt_memo  ) {
-            memo_from_public = lookup.memo_public_key(from_account_id)
-            memo_to_public = lookup.memo_public_key(to_account_id)
+        if( memo && encrypt_memo  ) {
+            memo_from_public = lookup.memo_public_key(memo_sender)
+            memo_to_public = lookup.memo_public_key(to_account)
         }
         var asset_id_lookup = lookup.asset_id(asset)
+        var propose_acount_id = propose_account ? lookup.account_id(propose_account) : null
         var lookup_promise = lookup.resolve()
         var unlock_promise = WalletUnlockActions.unlock()
         return Promise.all([lookup_promise, unlock_promise]).then(()=> {
             var asset_id = asset_id_lookup.resolve
-            
+            if( propose_account ) propose_acount_id = propose_acount_id.resolve
             var memo_from_privkey
-            if(encrypt_memo && memo_message ) {
+            if(encrypt_memo && memo ) {
                 var from_public = memo_from_public.resolve
                 memo_from_privkey =
                     WalletDb.getPrivateKey(from_public)
                 
                 if(! memo_from_privkey)
-                    throw new Error("Missing private memo key for sender: " +
-                        from_account_id)
+                    throw new Error("Missing private memo key for sender: " + memo_sender)
             }
-            var memo
-            if(memo_message && memo_to_public.resolve && memo_from_public.resolve) {
+            var memo_object
+            if(memo && memo_to_public.resolve && memo_from_public.resolve) {
                 var nonce = optional_nonce == null ?
                     helper.unique_nonce_uint64() :
                     optional_nonce
                 
-                memo = {
+                memo_object = {
                     from: memo_from_public.resolve,
                     to: memo_to_public.resolve,
                     nonce,
@@ -122,9 +122,9 @@ class ApplicationApi {
                             memo_from_privkey,
                             memo_to_public.resolve,
                             nonce,
-                            memo_message
+                            memo
                         ) :
-                        memo_message
+                        memo
                 }
             }
             let transfer_asset = ChainStore.getAsset( asset_id ).toJS();
@@ -134,16 +134,24 @@ class ApplicationApi {
                fee_asset_id = "1.3.0";
 
             var tr = new ops.signed_transaction()
-            tr.add_type_operation("transfer", {
+            var transfer_op = tr.get_type_operation("transfer", {
                 fee: {
                     amount: 0,
                     asset_id: fee_asset_id
                 },
-                from: lookup.account_id(from_account_id),
-                to: lookup.account_id(to_account_id),
+                from: lookup.account_id(from_account),
+                to: lookup.account_id(to_account),
                 amount: { amount, asset_id}, //lookup.asset_id(
-                memo
+                memo: memo_object
             })
+            if( propose_account )
+                tr.add_type_operation("proposal_create", {
+                    proposed_ops: [{ op: transfer_op }],
+                    fee_paying_account: propose_acount_id
+                })
+            else
+                tr.add_operation( transfer_op )
+            
             return WalletDb.process_transaction(
                 tr,
                 null, //signer_private_keys,

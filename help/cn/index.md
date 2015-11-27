@@ -10,6 +10,7 @@ BitShares(比特股) 2.0 是一个金融智能合约平台，该平台基于[Cry
  * [备份](introduction/backups.md)
  * [区块链](introduction/blockchain.md)
  * [见证人](introduction/witness.md)
+ * [预算项目](introduction/workers.md)
  * [理事会](introduction/committee.md)
 
 ## 账户

@@ -51,7 +51,7 @@ class AccountMembership extends React.Component {
         let network_fee  = account.network_fee_percentage/100;
         let lifetime_fee = account.lifetime_referrer_fee_percentage/100;
         let referrer_total_fee = 100 - network_fee - lifetime_fee;
-        let referrer_fee  = referrer_total_fee * account.referrer_rewards_percentage/100;
+        let referrer_fee  = referrer_total_fee * account.referrer_rewards_percentage/10000;
         let registrar_fee = 100 - referrer_fee - lifetime_fee - network_fee;
 
         gprops = gprops.toJS();

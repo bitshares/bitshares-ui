@@ -7,7 +7,7 @@ module.exports = {
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-        
+
     },
     header: {
         title: "비트쉐어 2.0",
@@ -80,6 +80,7 @@ module.exports = {
         perm: {
             active: "활성화된 사용권한",
             owner: "소유자 사용권한",
+            memo_key: "Memo key",
             publish: "변경사항 적용",
             reset: "변경사항 되돌리기",
             add: "사용권한 추가",
@@ -91,7 +92,13 @@ module.exports = {
             cancel: "취소",
             add_permission_label: "계정명/키 및 가중치를 입력하세요",
             account_name_or_key: "계정명 또는 키",
-            memo_public_key: "메모 공개키"
+            memo_public_key: "메모 공개키",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy: "대리투표 계정",
@@ -110,7 +117,7 @@ module.exports = {
             add_committee_label: "위원",
             add_witness_label: "증인",
             approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal"            
+            reject_worker: "Reject worker proposal"
         },
         options: {
             num_witnesses: "선호 증인 수",
@@ -147,7 +154,8 @@ module.exports = {
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        settle: "Settle"
     },
     pagination: {
         newer: "이전",
@@ -168,7 +176,8 @@ module.exports = {
             req: "필수 입력",
             pos: "금액은 양수를 입력해주세요",
             valid: "유효한 값을 입력해주세요",
-            balance: "전송 후 잔고는 0보다 커야 합니다"
+            balance: "전송 후 잔고는 0보다 커야 합니다",
+            insufficient: "Insufficient Balance"
         },
         back: "뒤로가기",
         confirm: "확인",
@@ -398,13 +407,6 @@ module.exports = {
                 permissions: "사용권한",
                 max_market_fee: "최대 거래수수료",
                 max_supply: "최대 공급량",
-                chargeMarketFee: "거래수수료 변경",
-                allowWhiteList: "화이트리스트 사용",
-                allowIssuerOverride: "Allow issuer override",
-                restrictTransfers: "전송 제한",
-                allowForceSettle: "강제청산 사용",
-                allowGlobalSettle: "Allow global settle",
-                allowStealthTransfer: "익명전송 사용",
                 blacklist_authorities: "Blacklist authorities",
                 blacklist_markets: "Blacklist markets",
                 whitelist_authorities: "Whitelist authorities",
@@ -432,7 +434,7 @@ module.exports = {
             rank: "순위",
             last_confirmed: "마지막 승인블록",
             missed: "누락 블록수"
-            
+
         },
         committee_members: {
             title: "위원",
@@ -605,7 +607,8 @@ module.exports = {
         amount: "Amount to Withdraw",
         address: "Withdraw to Address",
         submit: "Withdraw"
-      }
+      },
+      ok: "OK"
     },
     init_error: {
         title: "Application initialization issues",
@@ -613,5 +616,29 @@ module.exports = {
         retry: "다시 시도",
         connected: "연결됨",
         not_connected: "연결안됨"
+    },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser",
+            visit_weidian: "Visit WEIDIAN to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
+        },
+        meta: {
+            open_website: "Open Website"
+        }
     }
 };

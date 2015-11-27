@@ -686,7 +686,8 @@ class ChainStore
                      call_orders,
                      limit_orders,
                      referrer_name, registrar_name, lifetime_referrer_name,
-                     votes
+                     votes,
+                     proposals
                  } = full_account
 
                  this.accounts_by_name = this.accounts_by_name.set( account.name, account.id )
@@ -694,11 +695,11 @@ class ChainStore
                  account.lifetime_referrer_name = lifetime_referrer_name
                  account.registrar_name = registrar_name
                  account.balances = {}
-                 account.orders = new Immutable.Set()
+                 account.orders = new Immutable.Set(limit_orders)
                  account.vesting_balances = new Immutable.Set()
                  account.balances = new Immutable.Map()
                  account.call_orders = new Immutable.Set()
-
+                 account.proposals = new Immutable.Set()
                   account.vesting_balances = account.vesting_balances.withMutations(set => {
                       vesting_balances.forEach(vb => {
                           this._updateObject( vb, false );
@@ -721,6 +722,13 @@ class ChainStore
                           set.add( co.id )
                       });
                   });
+                  
+                  account.proposals = account.proposals.withMutations(set => {
+                      proposals.forEach(p => {
+                          this._updateObject( p, false )
+                          set.add( p.id )
+                      })
+                  })
 
                  this._updateObject( statistics, false )
                  let updated_account = this._updateObject( account, false )

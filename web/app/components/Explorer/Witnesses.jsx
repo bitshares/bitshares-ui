@@ -1,6 +1,5 @@
 import React from "react";
 import Immutable from "immutable";
-import WitnessActions from "actions/WitnessActions";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -87,7 +86,7 @@ class WitnessRow extends React.Component {
         router: React.PropTypes.func.isRequired
     };
 
-    _onCardClick(e) {
+    _onRowClick(e) {
         e.preventDefault();
         this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
     }
@@ -119,7 +118,7 @@ class WitnessRow extends React.Component {
         );
 
         return (
-            <tr className={currentClass} >
+            <tr className={currentClass} onClick={this._onRowClick.bind(this)} >
                 <td>{rank}</td>
                 <td style={color}>{witness.get("name")}</td>
                 <td><TimeAgo time={last_aslot_time} /></td>
@@ -155,11 +154,18 @@ class WitnessList extends React.Component {
 
     render() {
 
-        let {witnesses, current, cardView} = this.props;
+        let {witnesses, current, cardView, witnessList} = this.props;
         let {sortBy, inverseSort} = this.state;
         let most_recent_aslot = 0;
         let ranks = {};
+
         witnesses
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            return witnessList.indexOf(a.get("id")) !== -1;
+        })
         .sort((a, b) => {
             if (a && b) {
                 return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
@@ -236,7 +242,7 @@ class WitnessList extends React.Component {
         // table view
         if (!cardView) {
             return (
-                <table className="table">
+                <table className="table table-hover">
                     <thead>
                         <tr>
                             <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
@@ -280,16 +286,21 @@ class Witnesses extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("props:", props)
 
         this.state = {
-            filterWitness: "",
+            filterWitness: props.filterWitness || "",
             cardView: props.cardView
         };
     }
 
     _onFilter(e) {
         e.preventDefault();
-        this.setState({filterWitness: e.target.value});
+        this.setState({filterWitness: e.target.value.toLowerCase()});
+
+        SettingsActions.changeViewSetting({
+            filterWitness: e.target.value.toLowerCase()
+        });
     }
 
     _toggleView() {
@@ -303,7 +314,7 @@ class Witnesses extends React.Component {
     }
 
     render() {
-        let { dynGlobalObject, globalObject} = this.props;
+        let { dynGlobalObject, globalObject } = this.props;
         dynGlobalObject = dynGlobalObject.toJS();
         globalObject = globalObject.toJS();
 
@@ -360,6 +371,7 @@ class Witnesses extends React.Component {
                                     current_aslot={dynGlobalObject.current_aslot}
                                     current={current ? current.get("id") : null}
                                     witnesses={Immutable.List(globalObject.active_witnesses)}
+                                    witnessList={globalObject.active_witnesses}
                                     filter={this.state.filterWitness}
                                     cardView={this.state.cardView}
                                 />
@@ -378,11 +390,14 @@ class WitnessStoreWrapper extends React.Component {
     }
 
     static getPropsFromStores() {
-        return {cardView: SettingsStore.getState().viewSettings.get("cardView")}
+        return {
+            cardView: SettingsStore.getState().viewSettings.get("cardView"),
+            filterWitness: SettingsStore.getState().viewSettings.get("filterWitness")
+        }
     }
 
     render () {
-        return <Witnesses cardView={this.props.cardView}/>
+        return <Witnesses {...this.props}/>
     }
 }
 

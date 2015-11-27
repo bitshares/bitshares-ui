@@ -4,6 +4,7 @@ import Immutable from "immutable";
 import AccountCard from "./AccountCard";
 import RecentTransactions from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
+import Proposals from "components/Account/Proposals";
 
 class Dashboard extends Component {
 
@@ -30,8 +31,7 @@ class Dashboard extends Component {
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
                     </div>
                 </div>
-            </div>
-        );
+            </div>);
     }
 }
 

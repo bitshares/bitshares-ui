@@ -26,6 +26,7 @@ import Exchange from "./components/Exchange/ExchangeContainer";
 import Markets from "./components/Exchange/MarketsContainer";
 import Transfer from "./components/Transfer/Transfer";
 import Settings from "./components/Settings/SettingsContainer";
+import FeesContainer from "./components/Blockchain/FeesContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
 import AssetContainer from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
@@ -114,7 +115,7 @@ class App extends React.Component {
         if (notification.autoDismiss === void 0) {
             notification.autoDismiss = 10;
         }
-        this.refs.notificationSystem.addNotification(notification);
+        if (this.refs.notificationSystem) this.refs.notificationSystem.addNotification(notification);
     }
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
@@ -213,6 +214,7 @@ let routes = (
         <Route name="auth" path="/auth/:data" handler={Auth}/>
         <Route name="dashboard" path="/dashboard" handler={DashboardContainer}/>
         <Route name="explorer" path="/explorer" handler={Explorer}/>
+        <Route name="fees" path="/explorer/fees" handler={FeesContainer}/>
         <Route name="blocks" path="/explorer/blocks" handler={Blocks}/>
         <Route name="assets" path="/explorer/assets" handler={Assets}/>
         <Route name="accounts" path="/explorer/accounts" handler={AccountsContainer}/>

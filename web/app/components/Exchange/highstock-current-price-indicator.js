@@ -58,7 +58,7 @@ import utils from "common/utils";
                 },
                 x: 0,
                 y: 0,
-                zIndex: 7
+                zIndex: 9
             },
 
             chartWidth = chart.chartWidth,
@@ -89,6 +89,9 @@ import utils from "common/utils";
         x = priceYAxis.opposite ? chartWidth - width : marginLeft;
         y = priceYAxis.toPixels(currentPrice);
 
+        if (!x || !y) {
+            return;
+        }
         lineFrom = priceYAxis.opposite ? marginLeft : chartWidth - marginRight;
 
         // offset

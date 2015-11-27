@@ -1,4 +1,4 @@
-Promise = require '../common/Promise'
+#Promise = require '../common/Promise'
 PublicKey = require '../ecc/key_public'
 
 v = require '../chain/serializer_validation'

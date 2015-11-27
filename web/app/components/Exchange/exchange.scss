@@ -2,6 +2,8 @@ $bid-color: #50D2C2;
 $ask-color: #E3745B;
 $call-color: #BBBF2B;
 $light-panel-bg-color: #353742;
+$positive-color: #75D200;
+$negative-color: #E1424A;
 
 .market-layout {
   > .grid-block {
@@ -11,10 +13,12 @@ $light-panel-bg-color: #353742;
 /*  .left-column-2 {
     min-width: 15rem;
   }
-
+*/
   .right-column {
-    min-width: 15rem;
-  }*/
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-top: none;
+  }
 }
 
 .market-content {
@@ -76,7 +80,6 @@ td.orderHistoryCall {
 
     > tbody > tr > td {
         font-size: 0.75rem;
-        border: none;
     }
 }
 
@@ -102,12 +105,12 @@ p.order-table-title {
 .backingWarning { color: yellow; }
 .backingError { color: red; }
 
-.buy-form {
+.bid-form {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
 
-.sell-form {
+.ask-form {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
@@ -117,11 +120,11 @@ p.order-table-title {
   min-width: 4rem;
 }
 
-.buy {
+.bid {
   background-color: $bid-color !important;
 }
 
-.sell {
+.ask {
   background-color: $ask-color !important;
 }
 
@@ -201,7 +204,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   left: 25px;
   color: $bid-color;
-  z-index: 999;
+  z-index: 50;
 }
 
 .ask-total {
@@ -210,7 +213,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   right: 25px;
   color: $ask-color;
-  z-index: 999;
+  z-index: 50;
 }
 
 .chart-label {
@@ -268,7 +271,7 @@ a.order-cancel {
   min-height: 63px;
 }
 .stats .stat {
-  padding: 0 10px;
+  padding: 0 5px;
   height: 100%;
 }
 .stats .stat:first-child {
@@ -282,6 +285,14 @@ a.order-cancel {
 .stats .stat em {
   color: #888888;
   display: block;
+}
+
+.stats .stat .negative {
+  color: $negative-color;
+}
+
+.stats .stat .positive {
+  color: $positive-color;
 }
 
 .market-symbol {
@@ -340,6 +351,7 @@ a.order-cancel {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
+    background-color: lighten($light-panel-bg-color, 12%);
 }
 
 .account-drop-down {
@@ -401,13 +413,59 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .change-up {
-  color: $bid-color !important;
+  color: $positive-color !important;
 }
 
 .change-down {
-  color: $ask-color !important;
+  color: $negative-color !important;
+}
+
+.mymarkets-header {
+  text-transform: uppercase;
+  width: 50%;
+  max-width: 300px;
+  text-align: center;
+  font-size: 1.10rem;
+  padding: 10px 0;
+  font-weight: 500;
+}
+
+.mymarkets-header.inactive {
+  background-color: #3F3F3F;
+  color: grey;
+}
+
+.mymarkets-list {
+  padding-top: 0.55rem;
+  font-size: 0.75rem;
 }
 
 table thead tr th.mymarkets-header {
   padding-bottom: 9px !important;
+}
+
+.title-star {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-right: 0.25rem;
+}
+
+.gold-star > svg > path {
+  fill: #CC9F00;
+}
+
+.grey-star > svg > path {
+  fill: #878787;
+}
+
+.positive-change {
+  color: $positive-color;
+}
+
+.negative-change {
+  color: $negative-color;
+}
+
+tr.activeMarket {
+  color: #4C85D8;
 }

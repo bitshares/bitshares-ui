@@ -5,7 +5,7 @@ Aes = require 'ecc/aes'
 WebSocketRpc = require '../src/rpc_api/WebSocketRpc'
 GrapheneApi = require '../src/rpc_api/GrapheneApi'
 
-Promise = require '../src/common/Promise'
+#Promise = require '../src/common/Promise'
 ByteBuffer = require '../src/common/bytebuffer'
 secureRandom = require 'secure-random'
 assert = require 'assert'
