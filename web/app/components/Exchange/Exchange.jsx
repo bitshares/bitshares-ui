@@ -313,8 +313,8 @@ class Exchange extends React.Component {
         e.preventDefault();
         let feeID; // = "1.3.0";
 
-        sellBalance = parseInt(ChainStore.getObject(sellBalance).toJS().balance, 10);
-        coreBalance = parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10);
+        sellBalance = sellBalance ? parseInt(ChainStore.getObject(sellBalance).toJS().balance, 10) : 0;
+        coreBalance = coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0;
         let sellPrecision = utils.get_asset_precision(sellAsset);
         let buyPrecision = utils.get_asset_precision(buyAsset);
 
