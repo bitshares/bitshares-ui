@@ -149,14 +149,14 @@ class Header extends React.Component {
         // Account selector: Only active inside the exchange
         let accountsDropDown = null;
 
-        if (currentAccount && active === "exchange") {
+        if (currentAccount && (active === "exchange" || active === "markets")) {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (selectAccounts.indexOf(currentAccount) < 0) {
                 selectAccounts.push(currentAccount);
             }
 
-            if(selectAccounts.length > 1) {
+            if (selectAccounts.length > 1) {
 
                 let accountsList = selectAccounts
                     .sort()
