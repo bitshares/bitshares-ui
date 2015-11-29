@@ -594,7 +594,6 @@ class Transaction extends React.Component {
 
                 case "asset_fund_fee_pool":
                     color = "warning";
-
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.account.title" /></td>
@@ -612,7 +611,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="transfer.amount" /></td>
-                            <td><FormattedAsset amount={op[1].amount} asset={op[1].asset_id} /></td>
+                            <td><FormattedAsset amount={op[1].amount} asset="1.3.0" /></td>
                         </tr>
                     );
 
@@ -865,6 +864,25 @@ class Transaction extends React.Component {
                             <td><Inspector data={ op[1].outputs[0]} search={false} /></td>
                         </tr>
                     );
+                    break;
+
+                case "asset_claim_fees":
+                    color = "success";
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.claimed" /></td>
+                            <td><FormattedAsset amount={op[1].amount_to_claim.amount} asset={op[1].amount_to_claim.asset_id} /></td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transaction.deposit_to" /></td>
+                            <td>{this.linkToAccount(op[1].issuer)}</td>
+                        </tr>
+                    );
+                    
                     break;
 
 

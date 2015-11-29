@@ -5,9 +5,9 @@ import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
 
 /**
+ *
  *  Given an operation type, displays the CORE fee for that operation
  *
- *  Expects one property, 'balance' which should be a balance_object id
  */
 
 @BindToChainState({keep_updating: true})
