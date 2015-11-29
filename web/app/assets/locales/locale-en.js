@@ -314,6 +314,7 @@
         custom: "Created a custom operation",
         order_id: "Order ID",
         balance_claim: "claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
+        asset_claim_fees: "claimed asset fees of %(balance_amount)s from %(asset)s fee pool",
         balance_owner: "Balance owner key",
         balance_id: "Balance ID",
         deposit_to: "Deposited to account",
@@ -372,7 +373,8 @@
             override_transfer: "Override transfer",
             transfer_to_blind: "Transfer to blinded account",
             blind_transfer: "Blinded transfer",
-            transfer_from_blind: "Transfer from blinded account"
+            transfer_from_blind: "Transfer from blinded account",
+            asset_claim_fees: "Claim asset fees"
         },
         feeGroups : {
          general : "General",
@@ -477,7 +479,10 @@
                 title: "Fee Pool",
                 core_exchange_rate: "Core exchange rate (CER)",
                 pool_balance: "Pool balance",
-                unclaimed_issuer_income: "Unclaimed issuer income"
+                unclaimed_issuer_income: "Unclaimed issuer income",
+                claim_fees: "Claim fees",
+                fund_text: "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s.",
+                claim_text: "The asset issuer may claim any accumulated fees here."
             },
             permissions: {
                 title: "Permissions",
