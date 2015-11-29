@@ -214,11 +214,15 @@ class MarketsStore {
 
         }
 
-        if (result.settles) {
+        if (result.settles && result.settles.length) {
+
+            // console.log("result:", result);
+
             result.settles.forEach(settle => {
+                let key = settle.owner + "_" + settle.balance.asset_id;
                 settle.settlement_date = new Date(settle.settlement_date);
                 this.activeMarketSettles = this.activeMarketSettles.set(
-                    settle.id,
+                    key,
                     SettleOrder(settle)
                 );
             });
@@ -227,7 +231,6 @@ class MarketsStore {
         if (result.history) {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
-                // console.log("order:", order);
                 order.op.time = order.time;
                 this.activeMarketHistory = this.activeMarketHistory.add(
                     order.op

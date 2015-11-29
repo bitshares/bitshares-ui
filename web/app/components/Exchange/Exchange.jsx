@@ -30,6 +30,7 @@ import market_utils from "common/market_utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
 import IndicatorModal from "./IndicatorModal";
+import OpenSettleOrders from "./OpenSettleOrders";
 
 require("./exchange.scss");
 
@@ -257,7 +258,7 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
-        // console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
+        console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
         let expiration = new Date();
         // TODO: Add selector for expiry
         expiration.setYear(expiration.getFullYear() + 5);
@@ -881,7 +882,8 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
-            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats,
+            marketReady, settle_orders } = this.props;
 
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
             displayBuyPrice, displaySellPrice, buyDiff, sellDiff, indicators, indicatorSettings} = this.state;
@@ -968,7 +970,6 @@ class Exchange extends React.Component {
         let bucketOptions = buckets.map(bucket => {
             return <div className={cnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
-
 
         // Market stats
         let dayChange = marketStats.get("change");
@@ -1125,6 +1126,7 @@ class Exchange extends React.Component {
                                     flat_asks={flat_asks}
                                     flat_bids={flat_bids}
                                     flat_calls={ showCallLimit ? flat_calls : []}
+                                    settles={settle_orders}
                                     invertedCalls={invertedCalls}
                                     totalBids={totalBids}
                                     totalCalls={showCallLimit ? totalCalls : 0}
@@ -1244,6 +1246,20 @@ class Exchange extends React.Component {
                                     quoteSymbol={quoteSymbol}
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
+                                />) : null}
+                        </div>
+                        <div className="grid-block no-overflow shrink no-padding">
+                            {settle_orders.size > 0 && base && quote &&
+                            (base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
+                                <OpenSettleOrders
+                                    key="settle_orders"
+                                    orders={settle_orders}
+                                    currentAccount={currentAccount.get("id")}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    settlementPrice={settlementPrice}
                                 />) : null}
                         </div>
 
