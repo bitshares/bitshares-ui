@@ -330,6 +330,7 @@
         blinding_factor: "Blinding factor",
         outputs: "Outputs",
         inputs: "Inputs",
+        settlement_date: "Settlement date",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -546,7 +547,10 @@
         connection: "API Connection",
         add_ws: "Add new websocket API",
         remove_ws: "Remove websocket API",
-        faucet_address: "Faucet Address"
+        faucet_address: "Faucet Address",
+        showSettles: "Show settle orders in depth chart",
+        yes: "Yes",
+        no: "No"
     },
     footer: {
         title: "Graphene",

@@ -34,7 +34,7 @@ class DepthHighChart extends React.Component {
 
 
     render() {
-        let {flat_bids, flat_asks, flat_calls, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
+        let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
@@ -236,6 +236,7 @@ class DepthHighChart extends React.Component {
             });
         }
 
+
         if (this.props.settlementPrice) {
             config.xAxis.plotLines.push({
                 color: "#7B1616",
@@ -269,6 +270,43 @@ class DepthHighChart extends React.Component {
             }
         }
 
+        // Add settle orders
+        if (this.props.settlementPrice && this.props.settles.size) {
+            let settleAsset, amountRatio, inverted;
+            if (quote.get("id") === "1.3.0") {
+                amountRatio = this.props.settlementPrice;
+                settleAsset = base;
+                inverted = true;
+            } else {
+                amountRatio = 1;
+                settleAsset = quote;
+                inverted = false;
+            }
+
+            let flat_settles = this.props.settles.reduce((final, a) => {
+                if (!final) {
+                    return [[this.props.settlementPrice * power, utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio]];
+                } else {
+                    final[0][1] = final[0][1] + utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio;
+                    return final;
+                }
+            }, null);
+
+            if (inverted) {
+                flat_settles.unshift([0, flat_settles[0][1]]);
+            } else {
+                flat_settles.push([flat_asks[flat_asks.length-1][0] * power, flat_settles[0][1]]);
+            }
+
+            config.series.push({
+                name: `Settle ${quoteSymbol}`,
+                data: flat_settles,
+                color: "#4777A0"
+            })
+
+        }
+
+
         // Push asks and bids
         if (flatBids.length) {
             config.series.push({
@@ -285,6 +323,8 @@ class DepthHighChart extends React.Component {
                 color: "#E3745B"
             });
         }
+
+        
 
         // Fix the height if defined, if not use offsetHeight
         if (this.props.height) {
