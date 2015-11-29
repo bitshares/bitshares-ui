@@ -87,7 +87,6 @@ class SettingsStore {
         });
 
         if (this._lsGet("settings_v3")) {
-            console.log("assign:", _.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
             this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
         }
 

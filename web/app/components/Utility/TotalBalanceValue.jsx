@@ -42,7 +42,7 @@ class TotalValue extends React.Component {
     _startUpdates(props) {
         let coreAsset = ChainStore.getAsset("1.3.0");
         let {fromAssets} = props;
-        
+
         if (coreAsset) {
             // From assets
             fromAssets.forEach(asset => {
@@ -64,7 +64,7 @@ class TotalValue extends React.Component {
                     MarketsActions.getMarketStats.bind(this, coreAsset, props.toAsset);
                     this.toStatsInterval = setInterval(MarketsActions.getMarketStats.bind(this, coreAsset, props.toAsset), 10 * 60 * 1000);
                 }, 150);
-            }                    
+            }
         }
     }
 
@@ -78,7 +78,7 @@ class TotalValue extends React.Component {
 
     _stopUpdates() {
         for (let key in this.fromStatsIntervals) {
-            clearInterval(this.fromStatsIntervals[key]);            
+            clearInterval(this.fromStatsIntervals[key]);
         }
         clearInterval(this.toStatsInterval);
     }
@@ -98,7 +98,7 @@ class TotalValue extends React.Component {
                 assets[asset.get("id")] = asset;
             }
         });
-        
+
         let totalValue = 0;
         balances.forEach(balance => {
             if (balance.asset_id === toAsset.get("id")) {
@@ -164,7 +164,7 @@ class TotalBalanceValue extends React.Component {
 
     render() {
         let {balances, toAsset} = this.props;
-        let assets = Immutable.List(); 
+        let assets = Immutable.List();
         let amounts = [];
 
         balances.forEach(balance => {
@@ -182,20 +182,25 @@ class TotalBalanceValue extends React.Component {
 class AccountWrapper extends React.Component {
 
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired
+        accounts: ChainTypes.ChainAccountsList.isRequired
     };
 
     render() {
-        let account_balances = this.props.account.get("balances");
         let balanceList = Immutable.List();
 
-        account_balances.forEach( balance => {
-            let balanceAmount = ChainStore.getObject(balance);
-            if (!balanceAmount.get("balance")) {
-                return null;
+        this.props.accounts.forEach(account => {
+            if (account) {
+                let account_balances = account.get("balances");
+
+                account_balances.forEach( balance => {
+                    let balanceAmount = ChainStore.getObject(balance);
+                    if (!balanceAmount.get("balance")) {
+                        return null;
+                    }
+                    balanceList = balanceList.push(balance);
+                });
             }
-            balanceList = balanceList.push(balance);
-        });
+        })
 
         return balanceList.size ? <TotalBalanceValue balances={balanceList}/> : null;
     }
