@@ -294,7 +294,6 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-            console.log("op:", op);
                 if (op[1].new_options.voting_account) {
                     let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
                     column = (
@@ -601,7 +600,6 @@ class Operation extends React.Component {
             case "fill_order":
                 color = "success";
                 o = op[1];
-                console.log("op:", op);
                 column = (
                         <span>
                             {this.linkToAccount(op[1].account_id)}&nbsp;
