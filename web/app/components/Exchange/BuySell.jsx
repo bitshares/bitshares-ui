@@ -65,14 +65,13 @@ class BuySell extends React.Component {
 
         let hasBalance = type === "bid" ? balanceAmount >= parseFloat(total) : balanceAmount >= parseFloat(amount);
 
-        let buttonText = `${type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell")}`;
+        let buttonText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
         let buttonClass = classNames("button buySellButton", type, {disabled: !((balanceAmount > 0 && hasBalance) && amount > 0 && price > 0)});
         let balanceSymbol = type === "bid" ? base.get("symbol") : quote.get("symbol");
 
-
-
         return (
             <div className={this.props.className + " middle-content"}>
+                <div className="exchange-content-header">{`${buttonText} ${quote.get("symbol")}`}</div>
                 <form className="order-form" onSubmit={onSubmit} noValidate>
                     <div className="grid-block vertical no-overflow no-padding">
 

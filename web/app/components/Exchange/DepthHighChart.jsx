@@ -5,6 +5,7 @@ import Highstock from "react-highcharts/highstock";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import _ from "lodash";
+import Translate from "react-translate-component";
 
 class DepthHighChart extends React.Component {
 
@@ -342,6 +343,7 @@ class DepthHighChart extends React.Component {
 
         return (
             <div className="grid-content no-overflow middle-content">
+                {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
                 <p className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</p>
                 {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}
