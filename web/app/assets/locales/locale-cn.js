@@ -123,7 +123,13 @@ module.exports = {
             cancel: "取消",
             add_permission_label: "输入账户名/公钥以及权重",
             account_name_or_key: "账户名或公钥",
-            memo_public_key: "备注公钥"
+            memo_public_key: "备注公钥",
+            warning1: "活跃权限权重总和 %(weights_total)s 应不小于阀值设定 %(threshold)s",
+            warning2: "账户权限权重总和 %(weights_total)s 应不小于阀值设定 %(threshold)s",
+            warning3: "账户名被授权",
+            warning4: "公钥已被授权",
+            action: "操作",
+            acct_or_key: " 账户名/公钥"
         },
         votes: {
             proxy_short: "代理投票",
@@ -338,7 +344,8 @@ module.exports = {
             transfer_to_blind: "向隐私账户转账",
             blind_transfer: "隐私转账",
             transfer_from_blind: "从隐私账户转出",
-            committee_member_update: "更新理事会成员账户"
+            committee_member_update: "更新理事会成员账户",
+            asset_claim_fees: "Claim asset fees"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
@@ -384,7 +391,9 @@ module.exports = {
             symbol3: "资产符号长度3位",
             symbol4: "资产符号长度4位",
             long_symbol: "更长的资产符号"
-        }
+        },
+        asset_claim_fees: "从 %(asset)s 资产手续费池中领取 %(balance_amount)s 资产手续费",
+        settlement_date: "清算时间"
     },
     explorer: {
         accounts: {
@@ -468,7 +477,10 @@ module.exports = {
                 core_exchange_rate: "汇率",
                 pool_balance: "资金池余额",
                 unclaimed_issuer_income: "发行人未申领收入",
-                title: "手续费资金池"
+                title: "手续费资金池",
+                claim_fees: "领取手续费",
+                fund_text: "手续费最终以%(core)s形态进行支付。手续费资金池用来承担从%(asset)s转换为%(core)s的费用，以便用户可以使用%(asset)s来支付手续费。",
+                claim_text: "资产发行人可以在这里领取累积的资产手续费。"
             },
             permissions: {
                 title: "权限",
@@ -531,7 +543,10 @@ module.exports = {
         connection: "API 服务器设定",
         add_ws: "添加新的 websocket API",
         remove_ws: "删除 websocket API",
-        faucet_address: "水龙头地址"
+        faucet_address: "水龙头地址",
+        showSettles: "在深度图中显示清算订单",
+        yes: "是",
+        no: "否"
     },
     pagination: {
         newer: "更近",
