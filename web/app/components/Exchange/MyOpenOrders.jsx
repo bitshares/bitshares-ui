@@ -168,6 +168,7 @@ class MyOpenOrders extends React.Component {
         return (
             <div style={{maxHeight: "400px"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
+                    <div className="exchange-content-header"><Translate content="exchange.my_bids" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         <tbody>
@@ -179,6 +180,7 @@ class MyOpenOrders extends React.Component {
                     <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
                 </div>
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
+                    <div className="exchange-content-header"><Translate content="exchange.my_asks" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         <tbody>

@@ -26,15 +26,16 @@ class OrderBookRowVertical extends React.Component {
 
     render() {
 
-        let {order, quote, base, type} = this.props;
+        let {order, quote, base, type, final} = this.props;
         let changeClass = null;
         if (this.state.hasChanged) {
             changeClass = "order-change";
         }
-        let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
+        let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall";
+
         return (
-            <tr key={order.price_full} onClick={this.props.onClick} className={changeClass}>
-                <td className={classnames({"show-for-large": !this.props.horizontal})}>{utils.format_number(order.value, base.get("precision") - 1)}</td>
+            <tr key={order.price_full} onClick={this.props.onClick} className={classnames({"final-row": final} ,changeClass)}>
+                <td>{utils.format_number(order.value, base.get("precision") - 1)}</td>
                 <td>{utils.format_number(order.amount, quote.get("precision") - 1)}</td>
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
@@ -98,8 +99,16 @@ class OrderBook extends React.Component {
                 !Immutable.is(nextProps.calls, this.props.calls) ||
                 nextProps.horizontal !== this.props.horizontal ||
                 nextState.flip !== this.state.flip ||
-                nextState.latest !== this.state.latest
+                nextProps.latest !== this.props.latest
             );
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.marketReady) {
+            this.setState({
+                hasCentered: false
+            });
+        }
     }
 
     componentDidMount() {
@@ -109,13 +118,17 @@ class OrderBook extends React.Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (!this.props.horizontal) {
             let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
             let centerRow = React.findDOMNode(this.refs.centerRow);
-            if (!this.state.hasCentered) {
+
+            if (this.props.marketReady && !this.state.hasCentered || (prevProps.quote !== this.props.quote) ) {
                 this._centerView();
                 this.setState({hasCentered: true});
+                setTimeout(() => {
+                    this._centerView();
+                }, 250);
             }
             Ps.update(bidsContainer);
         }
@@ -150,16 +163,19 @@ class OrderBook extends React.Component {
                 return total < a.price_full ? a.price_full : total;
             }, 0) : 0;
 
+            let bidCount = combinedBids.length - 1;
             bidRows = combinedBids.sort((a, b) => {
                 return b.price_full - a.price_full;
-            }).map(order => {
+            })
+            .filter(a => {
+                return a.price_full >= high / 5
+            })
+            .map((order, index) => {
                 totalBidAmount += order.amount;
                 totalBidValue += order.value;
                 order.totalValue = totalBidValue;
                 order.totalAmount = totalBidAmount;
-                if (order.price_full < high / 5) {
-                    return null;
-                }
+
                 return (horizontal ?
                     <OrderBookRowHorizontal
                         key={order.price_full}
@@ -176,6 +192,7 @@ class OrderBook extends React.Component {
                         base={base}
                         quote={quote}
                         type={order.type}
+                        final={index === 0}
                     />
                 )
             }).filter(a => {
@@ -196,14 +213,14 @@ class OrderBook extends React.Component {
             let totalAskValue = 0;
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
-            }).map(order => {
+            }).filter(a => {
+                return a.price_full <= low * 5;
+            }).map((order, index) => {
                 totalAskAmount += order.amount;
                 totalAskValue += order.value;
                 order.totalValue = totalAskValue;
                 order.totalAmount = totalAskAmount;
-                if (order.price_full > low * 5) {
-                    return null;
-                }
+
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
@@ -221,6 +238,8 @@ class OrderBook extends React.Component {
                         base={base}
                         quote={quote}
                         type={order.type}
+                        final={0 === index}
+
                     />
                     );
             }).filter(a => {
@@ -240,6 +259,7 @@ class OrderBook extends React.Component {
             return (
                     <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
+                            <div className="exchange-content-header"><Translate content="exchange.asks" /></div>
                             <table className="table order-table table-hover text-right">
                                 <thead>
                                     <tr key="top-header" className="top-header">
@@ -259,6 +279,7 @@ class OrderBook extends React.Component {
                             <button onClick={this.props.moveOrderBook} className="button outline"><Translate content="exchange.vertical" /></button>
                         </div>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
+                            <div className="exchange-content-header"><Translate content="exchange.bids" /></div>
                             <table className="table order-table table-hover text-right">
                                 <thead>
                                     <tr key="top-header" className="top-header">
@@ -282,7 +303,7 @@ class OrderBook extends React.Component {
                         <table className="table expand order-table table-hover text-right">
                             <thead>
                                 <tr>
-                                    <th className="show-for-large" style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                    <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
                                     <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
                                     <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
                                 </tr>
@@ -295,14 +316,14 @@ class OrderBook extends React.Component {
                                 {askRows}
                                 <tr onClick={this._centerView.bind(this)} key="spread" className="orderbook-latest-price" ref="centerRow">
                                     <td colSpan="3" className="text-center spread">
-                                        <Translate content="exchange.latest" />: {this.props.latest ? <span><PriceText preFormattedPrice={this.props.latest} /> {baseSymbol}/{quoteSymbol}</span> : null}
+                                        {this.props.latest ? <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /> {baseSymbol}/{quoteSymbol}</span> : null}
                                     </td>
                                 </tr>
                                 {bidRows}
                             </tbody>
                         </table>
                     </div>
-                    <div style={{width: "100%"}} className="align-center grid-block footer shrink bottom-header">
+                    <div style={{width: "100%", borderTop: "1px solid grey"}} className="align-center grid-block footer shrink bottom-header">
                         <div onClick={this.props.moveOrderBook} className="button outline">
                             <Translate content="exchange.horizontal" />
                         </div>

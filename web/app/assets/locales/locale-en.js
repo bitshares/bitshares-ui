@@ -571,10 +571,10 @@
         total: "Total",
         value: "Value",
         price: "Price",
-        latest: "Latest Price",
+        latest: "Latest",
         call: "Call Price",
         core_rate: "Fee Rate",
-        settle: "Settlement Price",
+        settle: "Settlement",
         squeeze: "Margin Call Price",
         maintenance: "Maintenance Call Price",
         your_price: "Your Call Price",
@@ -604,8 +604,13 @@
         period: "Time period (days)",
         overbought: "Overbought",
         oversold: "Oversold",
-        index: "Index"
-
+        index: "Index",
+        my_bids: "My bids",
+        my_asks: "My asks",
+        settle_orders: "Settle orders",
+        asks: "Asks",
+        bids: "Bids",
+        no_data: "No data"
     },
     fees: {
      title: "Fee Schedule"

@@ -3,6 +3,7 @@ import {PropTypes} from "react";
 import Highcharts from "react-highcharts/highstock";
 import utils from "common/utils";
 import _ from "lodash";
+import Translate from "react-translate-component";
 
 require("./technical-indicators.src.js");
 require("./rsi.js");
@@ -217,7 +218,7 @@ class PriceChart extends React.Component {
                     enabled: false
                 },
                 pinchType: "x",
-                spacing: [20 + (currentIndicator.length) * 15, 10, 5, 10]
+                spacing: [20, 10, 5, 10]
             },
             
             indicators: priceData.length ? currentIndicator : [],
@@ -278,17 +279,17 @@ class PriceChart extends React.Component {
                         return finalString + "<b>" + key.toUpperCase() + "</b>" + ": " + Highcharts.Highcharts.numberFormat(indicator[1], price_dec, ".", ",") + "  ";
                     }, "");
 
-                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time + "<br/>" +
-                            "<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
+                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time + 
+                            "&nbsp;<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>C:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
-                            "<br/><b>V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[1].point.y : 0, vol_dec, ".", ",") + " " +
+                            "<b>&nbsp;V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[1].point.y : 0, vol_dec, ".", ",") + " " +
                             quoteSymbol + "<br/>" + TA + "</span>");
 
                 },
                 positioner: function () {
-                    return { x: 250, y: -5 };
+                    return { x: 110, y: -5 };
                 }
             },
             series: [
@@ -440,9 +441,12 @@ class PriceChart extends React.Component {
         }
 
         let boxHeight = 20;
+
+
         
         return (
-            <div className="grid-content no-padding no-overflow middle-content">
+            <div className="grid-content no-padding no-overflow">
+                {!priceData.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
                 <div style={{paddingTop: 0, paddingBottom: "0.5rem"}}>
                     {priceData && volumeData ? <Highcharts ref="chart" config={config}/> : null}
                 </div>

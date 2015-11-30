@@ -7,18 +7,41 @@ $negative-color: #E1424A;
 
 .market-layout {
   > .grid-block {
-    padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
+    // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
   }
 
-/*  .left-column-2 {
-    min-width: 15rem;
+  >.left-column {
+    border-right: 1px solid grey;
+    border-top: none;
   }
-*/
+
   .right-column {
+    border-left: 1px solid grey;
+
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     border-top: none;
   }
+
+  .main-content {
+    .top-bar {
+      border-bottom: 1px solid grey;
+    }
+
+    .buy-sell {
+      border-top: 1px solid grey;
+      border-bottom: 1px solid grey;
+    }
+  }
+}
+
+.exchange-content-header {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding-bottom: 0.25rem;
+  padding-top: 1rem;
 }
 
 .market-content {
@@ -172,9 +195,17 @@ p.order-table-title {
   // }
 }
 
+.final-row > td {
+  border-bottom: none !important;
+}
+
 .orderbook-latest-price {
-  border-bottom: 1px solid #777;
-  border-top: 1px solid #777;
+    td {
+      background-color: #202020 !important;
+      // border-bottom: 1px solid red !important;
+      // border-top: 1px solid red !important;
+      padding: 10px 0 !important;
+    }
 }
 
 .left-orderbook-header {
@@ -183,11 +214,9 @@ p.order-table-title {
 }
 
 .top-header {
-  border-bottom: 1px solid #777;
   padding-bottom: 0.25rem;
 }
 .bottom-header {
-  border-top: 1px solid #777;
   padding-top: 0.25rem;
 }
 
@@ -244,41 +273,67 @@ a.order-cancel {
   overflow: visible;
 }
 
-.market-stats > li {
-  display: inline-block;
-  padding-right: 0.5rem;
+.market-stats {
+  > li {
+    display: inline-block;
+    padding-right: 0.5rem;
+  }
 }
 
 .market-stats .stat {
   text-align: left;
-  font-size: 12px;
+  font-size: 0.75rem;
   overflow: hidden;
-  padding: 5px 0px;
 }
 
 .market-stats .stat .value {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #000;
   letter-spacing: normal;
 }
 
 .stats {
+  line-height: 1rem !important;
   list-style: none;
   overflow: hidden;
-  text-align: right;
   margin: 0px;
-  padding: 0px;
-  min-height: 63px;
+  padding: 0px; 
 }
+
+.top-stats li {
+  border-right: 1px solid grey;
+}
+
+.bottom-stats li {
+  border-right: 1px solid grey;
+}
+
 .stats .stat {
-  padding: 0 5px;
+  padding: 3px 5px;
   height: 100%;
+
+  > span {
+    > span:first-of-type {
+      color: grey;
+      padding-right: 5px;
+    }
+
+    > span:last-of-type {
+      color: #468EDE;
+      padding-left: 5px;
+    }
+  }
 }
+
+.stats .indicators {
+  padding: 5px 0;
+  text-transform: uppercase;
+}
+
 .stats .stat:first-child {
   border-left: none;
 }
 .stats .stat .value {
-  font-size: 120%;
   color: #FFFFFF;
   letter-spacing: 1px;
 }
@@ -297,9 +352,9 @@ a.order-cancel {
 
 .market-symbol {
     font-weight: bold;
-    font-size: 110%;
-    padding-left: 1rem;
-    padding-right: 1.1rem;
+    font-size: 1.1rem;
+    padding-left: 0.3rem;
+    padding-right: 0.5rem;
     padding-top: 1.3rem;
 }
 
@@ -312,6 +367,7 @@ a.order-cancel {
 .bucket-option {
   cursor: pointer;
   text-transform: none !important;
+  padding-right: 0.5rem;
 }
 
 .buy-sell-row {
@@ -365,11 +421,17 @@ a.order-cancel {
 }
 
 .borrow-button {
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
+  margin-right: 0.2rem;
+  font-size: 0.8rem
 }
 
 .borrow-button-container {
-  padding-right: 1rem;
+  padding-left: 0.25rem;
+
+  > div:last-of-type {
+    margin-bottom: 0.2rem;
+  }
 }
 
 .order-change {
@@ -458,14 +520,15 @@ table thead tr th.mymarkets-header {
   fill: #878787;
 }
 
-.positive-change {
-  color: $positive-color;
-}
-
-.negative-change {
-  color: $negative-color;
-}
-
 tr.activeMarket {
   color: #4C85D8;
+}
+
+.no-data {
+  position: relative;
+  left: 50%;
+  top: 200px;
+  z-index: 999;
+  text-transform: uppercase;
+  font-size: 2rem;
 }

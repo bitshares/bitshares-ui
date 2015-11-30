@@ -117,8 +117,9 @@ class OpenSettleOrders extends React.Component {
         }
 
         return (
-            <div style={{maxHeight: "400px"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
+            <div style={{maxHeight: "400px", borderBottom: "1px solid grey"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
                 <div className="small-12 medium-6">
+                    <div className="exchange-content-header"><Translate content="exchange.settle_orders" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         <tbody>

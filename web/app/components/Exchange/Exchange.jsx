@@ -82,13 +82,11 @@ class PriceStat extends React.Component {
             <li className={cnames("stat", this.props.className)}>
                 <span>
                     <Translate component="span" content={content} />
-                    <br/>
-                        <b className={"value stat-primary"}>
-                            {!ready ? 0 : value}
-                            {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-                        </b>
-                    <br/>
-                    <em>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</em>
+                    <b className={"value stat-primary"}>
+                        {!ready ? 0 : value}
+                        {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
+                    </b>
+                    <span>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</span>
                 </span>
             </li>
         );
@@ -974,7 +972,7 @@ class Exchange extends React.Component {
         // Market stats
         let dayChange = marketStats.get("change");
 
-        let dayChangeClass = parseInt(dayChange, 10) === 0 ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
+        let dayChangeClass = parseFloat(dayChange) === 0 ? "" : parseFloat(dayChange) < 0 ? "negative" : "positive";
         let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
         let volumeBase = marketStats.get("volumeBase");
         let volumeQuote = marketStats.get("volumeQuote");
@@ -998,6 +996,7 @@ class Exchange extends React.Component {
                         <div className="grid-block left-column large-2 no-overflow">
                             <OrderBook
                                 latest={latestPrice}
+                                changeClass={changeClass}
                                 orders={limit_orders}
                                 calls={call_orders}
                                 invertedCalls={invertedCalls}
@@ -1011,6 +1010,7 @@ class Exchange extends React.Component {
                                 horizontal={!leftOrderBook}
                                 moveOrderBook={this._moveOrderBook.bind(this)}
                                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
+                                marketReady={marketReady}
                             />
                     </div>) : null}
 
@@ -1018,64 +1018,75 @@ class Exchange extends React.Component {
                     <div className={cnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
-                        <div className="grid-block no-padding shrink overflow-visible" style={{minHeight: "67px"}}>
-                            <div className="grid-block overflow-visible vertical medium-horizontal">
-                                <div className="grid-block shrink">
+                        <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
+                            <div className="grid-block overflow-visible">
+                                <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
                                     <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
-                                    <div className="grid-block">
-                                    <ul className="market-stats stats">
-                                        {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
-                                        {lowestCallPrice && showCallLimit ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="explorer.block.call_limit" />
-                                                    <br/>
-                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
-                                                    <br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null}
-                                        {squeezePrice && showCallLimit ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="exchange.squeeze" />
-                                                    <br/>
-                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
-                                                    <br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null}
-                                        {latestPrice ?
+                                <div className="grid-block vertical">
+                                    <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>
+                                        <ul className="market-stats stats top-stats">
+                                            {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
+                                            {lowestCallPrice && showCallLimit ?
+                                                (<li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content="explorer.block.call_limit" />
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
+                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                    </span>
+                                                </li>) : null}
+                                            {squeezePrice && showCallLimit ?
+                                                (<li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content="exchange.squeeze" />
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
+                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                    </span>
+                                                </li>) : null}
+                                            {latestPrice ?
+                                                <li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content="exchange.latest" />
+                                                        <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                    </span>
+                                                </li> : null}
+
+                                            {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+
+                                            {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+
                                             <li className="stat">
                                                 <span>
-                                                    <Translate component="span" content="exchange.latest" />
-                                                    <br/>
-                                                    <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
-                                                    <br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                    <Translate component="span" content="account.hour_24" />
+                                                    <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                    <span>%</span>
                                                 </span>
-                                            </li> : null}
+                                            </li>
 
-                                        {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
-
-                                        {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
-
-                                        <li className="stat">
-                                            <span>
-                                                <Translate component="span" content="account.hour_24" />
-                                                <br/>
-                                                <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
-                                                <br/>
-                                                <em>%</em>
-                                            </span>
-                                        </li>
-
-                                    </ul>
-
+                                        </ul>
+                                    </div>
+                                    <div className="grid-block wrap no-overflow">
+                                        <ul className="market-stats stats bottom-stats">
+                                            <li className="stat">
+                                                <span>
+                                                    <span>Time interval:</span>
+                                                    <span>{bucketOptions}</span>
+                                                    <span></span>
+                                                </span>
+                                            </li>
+                                            {!this.state.showDepthChart ? (
+                                                <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
+                                                    <div className="indicators">
+                                                        <Translate content="header.settings" />
+                                                    </div>
+                                            </li>) : null}
+                                        </ul>
+                                    </div>
                                 </div>
 
-                                <div className="grid-block shrink borrow-button-container">
+
+                                <div className="grid-block vertical shrink borrow-button-container" style={{borderLeft: "1px solid grey"}}>
                                     {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
                                     {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
                                     <div><button onClick={this._toggleCharts.bind(this)} className="button outline borrow-button">{!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}&nbsp;</button></div>
@@ -1086,17 +1097,7 @@ class Exchange extends React.Component {
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink" id="market-charts" style={{marginTop: 0}}>
                                 {/* Price history chart */}
-                                <div style={{position: "absolute", top: "24px", left: "50px", zIndex: 999}}><button onClick={this._onSelectIndicators.bind(this)} className="button outline">Indicators</button></div>
 
-                                <div className="chart-zoom-dropdown no-overflow" style={{position: "absolute", top: "24px", left: "24px", zIndex: 999}} >
-                                    <Icon className="grid-block" name="cog"/>
-
-                                        <div className="grid-block float-right" >
-                                            <div className="grid-content float-right no-overflow">
-                                            {bucketOptions}
-                                        </div>
-                                    </div>
-                                </div>
                                 <PriceChart
                                     priceData={this.props.priceData}
                                     volumeData={this.props.volumeData}
@@ -1148,8 +1149,8 @@ class Exchange extends React.Component {
 
                         {/* Buy/Sell forms */}
 
-                        <div className="grid-block vertical shrink no-padding">
-                            <div className="grid-block small-vertical medium-horizontal no-padding align-spaced" style={{ flexGrow: "0" }} >
+                        <div className="grid-block vertical shrink buy-sell">
+                            <div className="grid-block small-vertical medium-horizontal align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
                                     className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
@@ -1272,7 +1273,7 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh", borderBottom: "1px solid grey"}}>
                             <MarketHistory
                                 className="left-order-book no-padding no-overflow"
                                 headerStyle={{paddingTop: 0}}

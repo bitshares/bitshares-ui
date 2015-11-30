@@ -106,7 +106,7 @@ class MarketRow extends React.Component {
 
                 case "change":
                     let change = utils.format_number(stats && stats.change ? stats.change : 0, 2);
-                    let changeClass = change === "0.00" ? "" : change > 0 ? "positive-change" : "negative-change";
+                    let changeClass = change === "0.00" ? "" : change > 0 ? "change-up" : "change-down";
 
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className={"text-right " + changeClass} key={column.index}>
