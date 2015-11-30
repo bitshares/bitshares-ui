@@ -206,7 +206,8 @@
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
         propose_from: "Propose From",
-        settle: "Settle"
+        settle: "Settle",
+        "no_orders": "No open orders"
     },
     pagination: {
         newer: "Newer",
