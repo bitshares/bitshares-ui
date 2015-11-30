@@ -294,12 +294,23 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-                column = (
-                    <span>
-                        {this.linkToAccount(op[1].account)}&nbsp;
-                        <Translate component="span" content="transaction.update_account" />
-                    </span>
-                );
+            console.log("op:", op);
+                if (op[1].new_options.voting_account) {
+                    let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
+                    column = (
+                        <span>
+                            {this.linkToAccount(op[1].account)}&nbsp;
+                            <Translate component="span" content="transaction.set_proxy" proxy={proxyAccount ? proxyAccount.get("name") : ""} />
+                        </span>
+                    );
+                } else {
+                    column = (
+                        <span>
+                            {this.linkToAccount(op[1].account)}&nbsp;
+                            <Translate component="span" content="transaction.update_account" />
+                        </span>
+                    );
+                }
                 break;
 
             case "account_whitelist":

@@ -92,8 +92,13 @@ class RecentTransactions extends React.Component {
                     />
                 )
         });
+
+        if (!history.length) {
+            history = <tr><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>
+        }
+
         return (
-            <div>
+            <div style={this.props.style}>
                 <table className={"table" + (compactView ? " compact" : "")}>
                     <thead>
                     <tr>
