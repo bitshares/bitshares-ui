@@ -19,6 +19,7 @@ import AccountPermissionsList from "./AccountPermissionsList";
 import PubKeyInput from "../Forms/PubKeyInput";
 import Tabs, {Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
+import RecentTransactions from "./RecentTransactions";
 
 let wallet_api = new WalletApi()
 
@@ -183,6 +184,8 @@ class AccountPermissions extends React.Component {
         let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() && this.refs.memo_key.isValidPubKey(this.state.memo_key) ? "" : " disabled");
         let reset_buttons_class = "button outline" + (this.isChanged() ? "" : " disabled");
 
+        let accountsList = Immutable.Set();
+        accountsList = accountsList.add(this.props.account.get("id"));
         return (
             <div className="grid-content">
 
@@ -261,7 +264,13 @@ class AccountPermissions extends React.Component {
                     <Translate content="account.perm.reset"/>
                 </button>
 
-
+                <RecentTransactions
+                    accountsList={accountsList}
+                    limit={25}
+                    compactView={false}
+                    filter="account_update"
+                    style={{paddingTop: "2rem", maxWidth: "1000px"}}
+                />
 
             </div>
         )

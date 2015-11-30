@@ -29,7 +29,8 @@
         unlocked_tip: "Wallet is unlocked. Click to lock."
     },
     operation: {
-        pending: "pending %(blocks)s blocks"
+        pending: "pending %(blocks)s blocks",
+        no_recent: "No recent transactions"
     },
     propose: "propose",
     cancel: "cancel",
@@ -270,7 +271,8 @@
         call_order_update: "updated margin position for ",
         lifetime_upgrade_account: "upgraded to lifetime member",
         annual_upgrade_account: "upgraded to annual member",
-        update_account: "updated account",
+        update_account: "updated their account data",
+        set_proxy: "set %(proxy)s as their voting proxy",
         whitelist_account: "Whitelisted the account",
         whitelisted_by: "Was whitelisted by the account",
         transfer_account: "Transferred the account",
