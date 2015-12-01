@@ -117,7 +117,7 @@ class Header extends React.Component {
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
-        locked_tip = <span>Test tip</span>;
+
         let linkToAccountOrDashboard;
 
         let selectAccounts = AccountStore.getMyAccounts();
