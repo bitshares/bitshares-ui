@@ -2,7 +2,7 @@
 
 Şu ana kadar farketmiş olduğunuz gibi bu uygulama bir web uygulamasıdır ve 
 tarayacı içerisinde çalışır. Ekosistemin geri kalanına geçit görevi gören , ağda bulunan 
-güvenilir bir düğüm(node) bağlantı kurar.
+güvenilir bir düğüm(node) bağlantı kurar. test
 
 ## Cüzdan Güvenliği
 
