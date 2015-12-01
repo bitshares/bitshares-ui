@@ -611,7 +611,9 @@
         settle_orders: "Settle orders",
         asks: "Asks",
         bids: "Bids",
-        no_data: "No data"
+        no_data: "No data",
+        time: "Time interval",
+        borrow: "Borrow"
     },
     fees: {
      title: "Fee Schedule"

@@ -2,7 +2,7 @@ $bid-color: #50D2C2;
 $ask-color: #E3745B;
 $call-color: #BBBF2B;
 $light-panel-bg-color: #353742;
-$positive-color: #75D200;
+$positive-color: #6EC105;
 $negative-color: #E1424A;
 
 .market-layout {
@@ -201,10 +201,11 @@ p.order-table-title {
 
 .orderbook-latest-price {
     td {
-      background-color: #202020 !important;
-      // border-bottom: 1px solid red !important;
-      // border-top: 1px solid red !important;
+      background-color: #4C4C4C !important;
+      border-bottom: 1px solid grey !important;
+      border-top: 1px solid grey !important;
       padding: 10px 0 !important;
+      font-weight: bold;
     }
 }
 
@@ -271,6 +272,10 @@ a.order-cancel {
 
 .stats {
   overflow: visible;
+}
+
+li.stat.clickable:hover {
+  background-color: #4C4C4C;
 }
 
 .market-stats {
@@ -368,6 +373,10 @@ a.order-cancel {
   cursor: pointer;
   text-transform: none !important;
   padding-right: 0.5rem;
+}
+
+.bucket-option:hover {
+  background-color: #4C4C4C;
 }
 
 .buy-sell-row {

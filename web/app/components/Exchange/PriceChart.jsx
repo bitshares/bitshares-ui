@@ -5,13 +5,13 @@ import utils from "common/utils";
 import _ from "lodash";
 import Translate from "react-translate-component";
 
-require("./technical-indicators.src.js");
-require("./rsi.js");
-require("./ema.js");
-require("./atr.js");
-require("./sma.js");
-require("./indicators.css");
-require("./highstock-current-price-indicator.js")
+require("./highcharts-plugins/technical-indicators.src.js");
+require("./highcharts-plugins/rsi.js");
+require("./highcharts-plugins/ema.js");
+require("./highcharts-plugins/atr.js");
+require("./highcharts-plugins/sma.js");
+require("./highcharts-plugins/indicators.css");
+require("./highcharts-plugins/highstock-current-price-indicator.js")
 
 class PriceChart extends React.Component {
 
@@ -195,6 +195,9 @@ class PriceChart extends React.Component {
     render() {
         let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, marketReady, indicators, indicatorSettings} = this.props;
         // let {open, close, lastPointY} = this.state;
+ 
+        let positiveColor = "rgba(110, 193, 5, 0.80)";
+        let negativeColor = "rgba(225, 66, 74, 0.80)";
 
         let maxVolume = 0;
         let volumeColors = [], colorByPoint = false;
@@ -205,7 +208,7 @@ class PriceChart extends React.Component {
         for (var i = 0; i < volumeData.length; i++) {
             maxVolume = Math.max(maxVolume, volumeData[i][1]);
             if (colorByPoint) {
-                volumeColors.push(priceData[i][1] <= priceData[i][4] ? "#50D2C2" : "#E3745B");
+                volumeColors.push(priceData[i][1] <= priceData[i][4] ? positiveColor : negativeColor);
             }
         }
 
@@ -242,10 +245,12 @@ class PriceChart extends React.Component {
             },
             plotOptions: {
                 candlestick: {
+                    oxymoronic: false,
                     animation: false,
-                    color: "#E3745B",
-                    upColor: "#50D2C2",
-                    lineColor: "#D7DBDE"
+                    color: negativeColor,
+                    lineColor: negativeColor,
+                    upColor: positiveColor,
+                    upLineColor: positiveColor
                 },
                 column: {
                     animation: false,
