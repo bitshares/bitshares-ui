@@ -89,7 +89,7 @@ class BuySell extends React.Component {
                             
                             <div className="grid-block no-padding buy-sell-row">
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                                    {buttonText}:
+                                    <Translate content="transfer.amount" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                     <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
@@ -101,7 +101,7 @@ class BuySell extends React.Component {
 
                             <div className="grid-block no-padding buy-sell-row bottom-row">
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                                    {type === "bid" ? <Translate content="account.pay" /> : <Translate content="exchange.receive" />}:
+                                    <Translate content="exchange.total" />:
                                 </div>
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                     <input type="number" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
