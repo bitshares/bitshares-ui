@@ -1087,7 +1087,7 @@ class Exchange extends React.Component {
                                          </ul>
                                          <ul className="market-stats stats bottom-stats">
                                             {quoteIsBitAsset ? 
-                                                (<li className="stat clickable" onClick={this._borrowQuote.bind(this)}>
+                                                (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowQuote.bind(this)}>
                                                     <div className="indicators">
                                                        <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
                                                     </div>
