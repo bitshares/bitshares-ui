@@ -19,7 +19,7 @@ class PriceChart extends React.Component {
         let chart = this.refs.chart.chart;
         if (chart && (!utils.are_equal_shallow(nextProps.indicators, this.props.indicators))) {
             let changed, added;
-            
+
             for (let key in nextProps.indicators) {
                 if (nextProps.indicators[key] !== this.props.indicators[key]) {
                     changed = key;
@@ -45,7 +45,7 @@ class PriceChart extends React.Component {
 
         if (chart && (!utils.are_equal_shallow(nextProps.indicatorSettings, this.props.indicatorSettings))) {
             let changed, added, changedSetting;
-            
+
             for (let key in nextProps.indicatorSettings) {
                 let change = _(nextProps.indicatorSettings[key]).reduce((total, a, settingKey) => {
 
@@ -76,8 +76,9 @@ class PriceChart extends React.Component {
             !utils.are_equal_shallow(nextProps.priceData, this.props.priceData) ||
             nextState.lastPointY !== this.state.lastPointY ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.latest !== this.props.latest ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
-            !utils.are_equal_shallow(nextProps.indicatorSettings, this.props.indicatorSettings)            
+            !utils.are_equal_shallow(nextProps.indicatorSettings, this.props.indicatorSettings)
         );
     }
 
@@ -123,7 +124,7 @@ class PriceChart extends React.Component {
                             params: indicatorSettings[indicator],
                             styles: {
                                 strokeWidth: 2,
-                                stroke: 'green',
+                                stroke: props.priceData.length ? "green" : "black",
                                 dashstyle: 'solid'
                             }
                         })
@@ -152,7 +153,7 @@ class PriceChart extends React.Component {
                                         color: "#FFFFFF"
                                     }
                                 }
-                            }   
+                            }
                         });
                         break;
 
@@ -193,26 +194,40 @@ class PriceChart extends React.Component {
     }
 
     render() {
-        let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, marketReady, indicators, indicatorSettings} = this.props;
-        // let {open, close, lastPointY} = this.state;
- 
+        let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, marketReady,
+            indicators, indicatorSettings, latest, bucketSize} = this.props;
+
+        let priceSeriesData = _.cloneDeep(priceData);
+        let currentIndicator = this.getIndicators(this.props);
+
         let positiveColor = "rgba(110, 193, 5, 0.80)";
         let negativeColor = "rgba(225, 66, 74, 0.80)";
+
+        if (!priceSeriesData.length && latest) {
+            let now = (new Date).getTime();
+            priceSeriesData.push([now, latest.full, latest.full, latest.full, latest.full]);
+            volumeData.push([now, 0]);
+            for (var i = 1; i < 100; i++) {
+                priceSeriesData.unshift([now - (bucketSize * 1000) * i, latest.full, latest.full, latest.full, latest.full]);
+                volumeData.unshift([now - (bucketSize * 1000) * i, 0]);
+            };
+
+            positiveColor = "black";
+            negativeColor = "black";
+        }
 
         let maxVolume = 0;
         let volumeColors = [], colorByPoint = false;
 
-        if (volumeData.length === priceData.length) {
+        if (volumeData.length === priceSeriesData.length) {
             colorByPoint = true;
         }
         for (var i = 0; i < volumeData.length; i++) {
             maxVolume = Math.max(maxVolume, volumeData[i][1]);
             if (colorByPoint) {
-                volumeColors.push(priceData[i][1] <= priceData[i][4] ? positiveColor : negativeColor);
+                volumeColors.push(priceSeriesData[i][1] <= priceSeriesData[i][4] ? positiveColor : negativeColor);
             }
         }
-
-        let currentIndicator = this.getIndicators(this.props);       
 
         let config = {
             chart: {
@@ -223,8 +238,8 @@ class PriceChart extends React.Component {
                 pinchType: "x",
                 spacing: [20, 10, 5, 10]
             },
-            
-            indicators: priceData.length ? currentIndicator : [],
+
+            indicators: priceSeriesData.length ? currentIndicator : [],
             title: {
                 text: null
             },
@@ -276,7 +291,7 @@ class PriceChart extends React.Component {
                     let vol_dec = quote.get("precision");
                     let time =  Highcharts.Highcharts.dateFormat("%Y-%m-%d %H:%M", this.x);
 
-                    
+
                     if (!this.points || this.points.length === 0) {
                         return "";
                     }
@@ -284,7 +299,7 @@ class PriceChart extends React.Component {
                         return finalString + "<b>" + key.toUpperCase() + "</b>" + ": " + Highcharts.Highcharts.numberFormat(indicator[1], price_dec, ".", ",") + "  ";
                     }, "");
 
-                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time + 
+                    return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time +
                             "&nbsp;<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
                             "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
@@ -302,7 +317,7 @@ class PriceChart extends React.Component {
                     id: "primary",
                     type: "candlestick",
                     name: `Price`,
-                    data: _.cloneDeep(priceData)
+                    data: priceSeriesData
                 },
                 {
                     type: "column",
@@ -311,7 +326,7 @@ class PriceChart extends React.Component {
                     color: "#E3745B",
                     yAxis: 1
                 }
-                
+
             ],
             yAxis: [{
                     labels: {
@@ -348,7 +363,7 @@ class PriceChart extends React.Component {
                         lineColor: '#000000',
                         lineDashStyle: 'Solid',
                         lineOpacity: 0.6,
-                        enabled: priceData.length > 0 && marketReady,
+                        enabled: priceSeriesData.length > 0 && marketReady,
                         style: {
                             color: '#ffffff',
                             fontSize: '12px'
@@ -399,7 +414,7 @@ class PriceChart extends React.Component {
             xAxis: {
                 type: "datetime",
                 lineWidth: 1,
-                lineColor: "#000000",
+                lineColor: "grey",
                 labels: {
                     style: {
                         color: "#FFFFFF"
@@ -410,7 +425,7 @@ class PriceChart extends React.Component {
                 },
                 plotLines: []
 
-            }            
+            }
         };
 
         // Set up/down colors on volume series
@@ -448,12 +463,12 @@ class PriceChart extends React.Component {
         let boxHeight = 20;
 
 
-        
+
         return (
             <div className="grid-content no-padding no-overflow">
-                {!priceData.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
+                {!priceSeriesData.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
                 <div style={{paddingTop: 0, paddingBottom: "0.5rem"}}>
-                    {priceData && volumeData ? <Highcharts ref="chart" config={config}/> : null}
+                    {priceSeriesData && volumeData ? <Highcharts ref="chart" config={config}/> : null}
                 </div>
             </div>
         );
