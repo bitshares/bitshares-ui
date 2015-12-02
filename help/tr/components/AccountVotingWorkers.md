@@ -1,0 +1,1 @@
+[İşçiler](introduction/workers) BitShares'e özgü bir kavramdır. İşçiler, blok zincirinin kendisinden aldıkları maaş karşılığında hizmet sağlayan tekliflerdir.
