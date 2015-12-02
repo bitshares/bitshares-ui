@@ -1,1 +1,1 @@
-[İşçiler](introduction/workers) BitShares'e özgü bir kavramdır. İşçiler, blok zincirinin kendisinden aldıkları maaş karşılığında hizmet sağlayan tekliflerdir.
+[İşçiler](introduction/workers) BitShares'e özgü bir kavramdır. İşçiler, blok zincirinin kendisinden aldıkları maaş karşılığında hizmet sağlayan tekliflerdir. Teklifin amacını açıklayan bir web veya forum bağlantısı teklifin içine dahil edilmelidir, teklifleri burada görebilirsiniz :  [Bitsharestalk](https://bitsharestalk.org/index.php/board,103.0.html).
