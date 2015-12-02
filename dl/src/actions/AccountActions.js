@@ -48,10 +48,10 @@ class AccountActions {
     /**
      *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
      */
-    transfer(from_account, to_account, amount, asset, memo, propose_account) {
+    transfer(from_account, to_account, amount, asset, memo, propose_account, fee_asset_id = "1.3.0") {
         try {
             return application_api.transfer({
-                from_account, to_account, amount, asset, memo, propose_account
+                from_account, to_account, amount, asset, memo, propose_account, fee_asset_id
             }).then(result => {
                 // console.log( "transfer result: ", result )
                 this.dispatch(result);

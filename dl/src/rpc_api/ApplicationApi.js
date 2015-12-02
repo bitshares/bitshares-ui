@@ -83,7 +83,8 @@ class ApplicationApi {
         encrypt_memo = true,
         optional_nonce = null,
         sign = true,
-        propose_account = null
+        propose_account = null,
+        fee_asset_id = "1.3.0"
     }) {
         var memo_sender = propose_account || from_account
         var memo_from_public, memo_to_public
@@ -127,10 +128,10 @@ class ApplicationApi {
                         memo
                 }
             }
-            let transfer_asset = ChainStore.getAsset( asset_id ).toJS();
-            let fee_asset_id = asset_id;
-            if( transfer_asset.options.core_exchange_rate.base.asset_id == "1.3.0" &&
-                transfer_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
+            let fee_asset = ChainStore.getAsset( fee_asset_id ).toJS();
+            // let fee_asset_id = asset_id;
+            if( fee_asset.options.core_exchange_rate.base.asset_id == "1.3.0" &&
+                fee_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
                fee_asset_id = "1.3.0";
 
             var tr = new ops.signed_transaction()

@@ -65,7 +65,7 @@ class SettingsEntry extends React.Component {
                 });
 
                 let defaultConnection = defaults[0];
-                let confirmButton = <div onClick={this._onConfirm.bind(this)} style={{padding: "10px"}}><button className="button outline"><Translate content="transaction.confirm" /></button></div>
+                let confirmButton = <div onClick={this._onConfirm.bind(this)} style={{padding: "10px"}}><button className="button outline"><Translate content="transfer.confirm" /></button></div>
 
                 optional = (
                     <div style={{position: "absolute", right: 0, top: "0.2rem"}}>
