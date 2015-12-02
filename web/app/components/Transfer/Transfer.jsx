@@ -131,8 +131,18 @@ class Transfer extends React.Component {
         } );
     }
 
-    setNestedRef = (ref) => {
+    setNestedRef(ref) {
         this.nestedRef = ref;
+    }
+
+    _setTotal(asset_id, balance_id, fee, fee_asset_id, e) {
+        let balanceObject = ChainStore.getObject(balance_id);
+        let transferAsset = ChainStore.getObject(asset_id);
+        let feeAsset = ChainStore.getObject(fee_asset_id);
+        if (balanceObject) {
+            let amount = (utils.get_asset_amount(balanceObject.get("balance"), transferAsset) - (asset_id === fee_asset_id ? fee : 0)).toString();
+            this.setState({amount});
+        }
     }
 
     render() {
@@ -150,6 +160,10 @@ class Transfer extends React.Component {
 
         let asset_types = [], fee_asset_types = [];
         let balance = null;
+
+        // Estimate fee
+        let globalObject = ChainStore.getObject("2.0.0");
+        let fee = utils.estimateFee("transfer", null, globalObject);
         if (from_account && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             asset_types = Object.keys(account_balances);
@@ -166,9 +180,21 @@ class Transfer extends React.Component {
                     }
                 }
             }
+
+            // Finish fee estimation
+            let core = ChainStore.getObject("1.3.0");
+            if (feeAsset && feeAsset.get("id") !== "1.3.0") {
+                let price = utils.convertPrice(core, feeAsset);
+                fee = utils.convertValue(price, fee, core, feeAsset);
+            }
+            if (core) {
+                fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
+            }
+
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+                let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
+                balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
             } else {
                 balance = "No funds";
             }
@@ -182,18 +208,7 @@ class Transfer extends React.Component {
         accountsList = accountsList.add(from_account)
         let tabIndex = 1
 
-        // Estimate fee
-        let globalObject = ChainStore.getObject("2.0.0");
-        let core = ChainStore.getObject("1.3.0");
 
-        let fee = utils.estimateFee("transfer", null, globalObject);
-        if (feeAsset && feeAsset.get("id") !== "1.3.0") {
-            let price = utils.convertPrice(core, feeAsset);
-            fee = utils.convertValue(price, fee, core, feeAsset);
-        }
-        if (core) {
-            fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
-        }
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
@@ -237,7 +252,7 @@ class Transfer extends React.Component {
 
                     {/*  F E E   */}
                     <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <AmountSelector refCallback={this.setNestedRef}
+                        <AmountSelector refCallback={this.setNestedRef.bind(this)}
                                         label="transfer.fee"
                                         disabled={true}
                                         amount={fee}
