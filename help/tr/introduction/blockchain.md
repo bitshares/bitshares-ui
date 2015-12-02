@@ -21,7 +21,7 @@ blokları üretmelerine izin verilir.
 ## İşlemler
 
 Graphene blokzinciri teknolojisi çeşitli işlem türleri sunmaktadır.  Kullanıcılar 
-aralarında varlık transferleri yapabildikleri gibi dağıtık borsayla ilişkili 
-işlemler de vardır. Bu işlem türlerinin bir çoğu kendi kendini izah eden 
-fişlerle etiketlenmişlerdir, diğer işlemler ise ise şirketin iç işleriyle alakalı daha çok 
+aralarında aktiif transferleri yapabildikleri gibi dağıtık borsayla ilişkili 
+işlemler de vardır. Bu işlem türlerinin bir çoğu kendini izah eden 
+fişlerle etiketlenmişlerdir, diğer işlemler ise şirketin iç işleriyle alakalı daha çok 
 bilgi gerektirir.
