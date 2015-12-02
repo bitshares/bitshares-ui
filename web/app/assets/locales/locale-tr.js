@@ -611,7 +611,9 @@
         settle_orders: "Emirleri öde",
         asks: "Satış Fiyatları",
         bids: "Alış Fiyatları",
-        no_data: "V<eri yok"
+        no_data: "Veri yok",
+        time: "Zama aralığı",
+        borrow: "Borç Al"
     },
     fees: {
      title: "Ücret Tarifesi"
