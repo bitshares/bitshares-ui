@@ -22,15 +22,15 @@ kavramlarını tanımlar.
  * [İzinler](accounts/permissions.md)
  * [Üyelikler](accounts/membership.md)
 
-## Varlıklar
+## Aktifler
  * [Piyasa Sabitli Varlıklar](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
- * [Kullanıcı Sürümü Varlıklar](assets/uia.md)
+ * [Kullanıcı Aktifleri](assets/uia.md)
  * [Özelleştirilmiş Varlıklar](assets/privbitassets.md)
 
 ## Merkezsiz/Dağıtık Borsa
  * [Giriş](dex/introduction.md)
- * [Alım-Satım](dex/trading.md)
- * [BitVarlıkların Kısa Satışları](dex/shorting.md)
+ * [Alış/Satış](dex/trading.md)
+ * [BitAktif Kısa Satışları](dex/shorting.md)
 
 ----------
 [Terimler](glossary.md)
