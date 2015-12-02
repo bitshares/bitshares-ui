@@ -12,7 +12,7 @@ müşteriye kalmıştır.
   IOU 'lari piyasaya sürme  ve sipariş defterlerine işleme görevinden aynı 
   kimsenin sorumlu olmasını gerektirecek bir sebep yoktur. BitShares'de işlem 
   emirlerin eşleştirilmesi işi protokol tarafından yürütülür, protokolün 
-  işlemlere konu olan varlıklarlarla ilgili bilgisi yoktur, sadece işlem görür.
+  işlemlere konu olan aktiflerle ilgili bilgisi yoktur, sadece işlem görür.
 * **Genel Birleşik Emir/Sipariş Defteri** :
   BitShares evrensel olduğu için , internet erişimi olan herkes  DEX'i alım-satım için 
   kullanabilir. Bu, dünyanın likiditesini , merkezsiz/dağıtık alım-satım için tek bir emir 
@@ -34,17 +34,17 @@ müşteriye kalmıştır.
   imza planları düzenlemelerine imkan tanıyoruz.
 * **Hızlı** :
   Diğer merkezsiz ağların tersine BitShares DEX gerçek-zamanlı ticarete
-   imkan sağlar , sadece ışık hızı ve gezegenin büyüklüğü 
+   imkan tanır , sadece ışık hızı ve gezegenin büyüklüğü 
   ile sınırlıdır.
-* **Kanıtlanabilir Emir Eşleştirme Algoritması**:
-  BitShares DEX i nadir yapan şeylerden biri de kanıtlanabilir emir eşleştirme 
+* **Kanıtlanabilir Emir Eşleştirme Algoritması** :
+  BitShares DEX i nadir kılan şeylerden biri de ispatlanabilir emir eşleştirme 
   algoritmasıdır.  Verilen bir takım işlem-emri  için her zaman bu emirlerin 
   kanıtlanabilir şekilde eşleştirilmiş olduğunu teyit edebilirsiniz.
-* **Teminata Bağlanmış**:
+* **Teminata Bağlanmış** :
   BitShares'in en büyük özelliklerinden biri de bitUSD, bitEUR, bitCNY gibi 
   *akıllıparalar*dır. Kolaylık olsun diye bu varlıklar cüzdan içerisinde USD,EUR,CNY 
-  diye kısaltılmışlardır. Bu dijital kuponlar altlarında yatan fiziksel varlıkla aynı değeri 
+  diye kısaltılmışlardır. Bu dijital kuponlar dayandıkları fiziksel varlıkla aynı değeri 
   temsil ederler. Yani bu cüzdandaki 1 USD nin değeri 1 dolardır ve o şekilde 
-  ödenebilir. Bu kuponların hepsinin karşılığı olarak teminatta kitli tutulan ve anlık 
+  ödenebilir. Bu kuponların hepsinin karşılığı olarak teminat olarak kitli tutulan ve anlık 
   fiyatında hesap görümü için mevcut olabilen, **BitShares'in şirket hisseleri (BTS)** 
    vardır.
