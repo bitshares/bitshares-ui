@@ -13,8 +13,9 @@ kavramlarını tanımlar.
  * [Cüzdan](introduction/wallets.md)
  * [Yedekler](introduction/backups.md)
  * [Blokzinciri](introduction/blockchain.md)
- * [Witness](introduction/witness.md)
- * [Kurul Üyesi](introduction/committee.md)
+ * [Tanıklar](introduction/witness.md)
+ * [İşçiler](introduction/workers.md)
+ * [Kurul Üyeleri](introduction/committee.md)
 
 ## Hesaplar
  * [Giriş](accounts/general.md)
