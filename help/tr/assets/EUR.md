@@ -1,4 +1,4 @@
-[# özet]
+[# summary]
 ### Varlık {symbol}
 
 {description}  
