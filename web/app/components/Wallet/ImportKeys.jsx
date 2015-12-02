@@ -596,11 +596,20 @@ export default class ImportKeys extends Component {
     _saveImport(e) {
         e.preventDefault()
         var keys = PrivateKeyStore.getState().keys
+        var dups = {}
         for(let public_key_string in this.state.imported_keys_public) {
-            if(keys.get(public_key_string)) {
-                notify.error("This wallet has already been imported")
-                return
-            }
+            if( ! keys.has(public_key_string) ) continue
+            delete this.state.imported_keys_public[public_key_string]
+            dups[public_key_string] = true
+        }
+        if( Object.keys(this.state.imported_keys_public).length === 0 ) {
+            notify.error("This wallet has already been imported")
+            return
+        }
+        var keys_to_account = this.state.keys_to_account
+        for(let private_plainhex of Object.keys(keys_to_account)) {
+            var {account_names, public_key_string} = keys_to_account[private_plainhex]
+            if( dups[public_key_string] ) delete keys_to_account[private_plainhex]
         }
         WalletUnlockActions.unlock().then(()=> {
             ImportKeysStore.importing(true)

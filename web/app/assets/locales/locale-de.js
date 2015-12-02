@@ -112,6 +112,7 @@ module.exports = {
         perm: {
             active: "Aktive Berechitigungen",
             owner: "Eigentümer Berechtigungen",
+            memo_key: "Memo key",
             publish: "Änderungen veröffentlichen",
             reset: "Zurücksetzen",
             add: "Berechtigung hinzufügen",
@@ -123,10 +124,16 @@ module.exports = {
             cancel: "Abbrechen",
             add_permission_label: "Geben Sie den Kontoname/Schlüssel und eine Gewichtung an",
             account_name_or_key: "Kontoname oder Schlüssel",
-            memo_public_key: "Öffentlicher Schlüssel für Memos"
+            memo_public_key: "Öffentlicher Schlüssel für Memos",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
+
         },
         votes: {
-            proxy: "Abstimmkonto vermitteln",
             workers_short: "Worker",
             proxy: "Proxy Konto",
             no_proxy: "Keine Vermittlung",
@@ -196,7 +203,8 @@ module.exports = {
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
-        propose_from: "Vorschlagen von"
+        propose_from: "Vorschlagen von",
+        settle: "Settle"
     },
     pagination: {
         newer: "Jüngere",

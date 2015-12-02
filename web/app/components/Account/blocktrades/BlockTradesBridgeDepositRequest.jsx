@@ -722,7 +722,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
                                     output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
                                     output_coin_type={this.state.withdraw_output_coin_type}
-                                    modal_id={withdraw_modal_id} />
+                                    modal_id={withdraw_modal_id} 
+                                    url={this.props.url}
+                                    output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 
                             </div>
                         </Modal>
                     </span>;

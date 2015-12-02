@@ -358,6 +358,19 @@ var Utils = {
             return null;
         }
         return eqValue;
+    },
+
+    isValidPrice(rate) {
+        if (!rate || !rate.toJS) {
+            return false;
+        }
+        let base = rate.get("base").toJS();
+        let quote = rate.get("quote").toJS();
+        if ((base.amount > 0 && quote.amount > 0) && (base.asset_id !== quote.asset_id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 };

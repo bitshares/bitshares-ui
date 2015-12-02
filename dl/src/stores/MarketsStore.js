@@ -214,11 +214,15 @@ class MarketsStore {
 
         }
 
-        if (result.settles) {
+        if (result.settles && result.settles.length) {
+
+            // console.log("result:", result);
+
             result.settles.forEach(settle => {
+                let key = settle.owner + "_" + settle.balance.asset_id;
                 settle.settlement_date = new Date(settle.settlement_date);
                 this.activeMarketSettles = this.activeMarketSettles.set(
-                    settle.id,
+                    key,
                     SettleOrder(settle)
                 );
             });
@@ -227,7 +231,6 @@ class MarketsStore {
         if (result.history) {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
-                // console.log("order:", order);
                 order.op.time = order.time;
                 this.activeMarketHistory = this.activeMarketHistory.add(
                     order.op
@@ -347,9 +350,9 @@ class MarketsStore {
             volumeData.push([date, volume]);
         }
 
-        // max buckets returned is 100, if we get less, fill in the gaps starting at the first data point
+        // max buckets returned is 200, if we get less, fill in the gaps starting at the first data point
         let priceLength = prices.length;
-        if (priceLength > 0 && priceLength < 100) {
+        if (priceLength > 0 && priceLength < 200) {
             let now = (new Date()).getTime();
             let firstDate = prices[0][0];
 

@@ -294,12 +294,22 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-                column = (
-                    <span>
-                        {this.linkToAccount(op[1].account)}&nbsp;
-                        <Translate component="span" content="transaction.update_account" />
-                    </span>
-                );
+                if (op[1].new_options.voting_account) {
+                    let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
+                    column = (
+                        <span>
+                            {this.linkToAccount(op[1].account)}&nbsp;
+                            <Translate component="span" content="transaction.set_proxy" proxy={proxyAccount ? proxyAccount.get("name") : ""} />
+                        </span>
+                    );
+                } else {
+                    column = (
+                        <span>
+                            {this.linkToAccount(op[1].account)}&nbsp;
+                            <Translate component="span" content="transaction.update_account" />
+                        </span>
+                    );
+                }
                 break;
 
             case "account_whitelist":
@@ -590,7 +600,6 @@ class Operation extends React.Component {
             case "fill_order":
                 color = "success";
                 o = op[1];
-
                 column = (
                         <span>
                             {this.linkToAccount(op[1].account_id)}&nbsp;
@@ -759,6 +768,26 @@ class Operation extends React.Component {
                         {this.linkToAccount(op[1].to)}
                         &nbsp;<Translate component="span" content="transaction.received"/>
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
+                    </span>
+                );
+                break;
+
+            case "asset_claim_fees":
+                color = "success";
+                op[1].amount_to_claim.amount = parseInt(op[1].amount_to_claim.amount, 10);
+                column = (
+                    <span>
+                        {this.linkToAccount(op[1].issuer)}&nbsp;
+                        <BindToChainState.Wrapper asset={op[1].amount_to_claim.asset_id}>
+                           { ({asset}) =>
+                                   <Translate
+                                       component="span"
+                                       content="transaction.asset_claim_fees"
+                                       balance_amount={utils.format_asset(op[1].amount_to_claim.amount, asset)}
+                                       asset={asset.get("symbol")}
+                                   />
+                           }
+                       </BindToChainState.Wrapper>
                     </span>
                 );
                 break;

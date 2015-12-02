@@ -59,7 +59,7 @@ class AccountOverview extends React.Component {
                 balanceList = balanceList.push(balance);
                 balances[balance] = (
                     <tr key={balance} style={{maxWidth: "100rem"}}>
-                        {isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline">Settle</div></td> : <td></td>}
+                        {isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline"><Translate content="account.settle" /></div></td> : <td></td>}
                         <td style={{textAlign: "right"}}><BalanceComponent balance={balance}/></td>
                         <td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
                         <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>

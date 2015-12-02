@@ -2,7 +2,9 @@ var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
 
 var Immutable = require("immutable");
-const STORAGE_KEY = "__openlegder__";
+var _ =require("lodash");
+
+const STORAGE_KEY = "__graphene__";
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
 var ls = typeof localStorage === "undefined" ? null : localStorage;
@@ -15,7 +17,8 @@ class SettingsStore {
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
             faucet_address: "https://bitshares.openledger.info",
-            unit: CORE_ASSET
+            unit: CORE_ASSET,
+            showSettles: false
         });
 
         this.viewSettings =  Immutable.Map({
@@ -63,6 +66,10 @@ class SettingsStore {
                 "CNY",
                 "BTC",
                 "EUR"
+            ],
+            showSettles: [
+                {translate: "yes"},
+                {translate: "no"}
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -80,7 +87,7 @@ class SettingsStore {
         });
 
         if (this._lsGet("settings_v3")) {
-            this.settings = Immutable.Map(JSON.parse(this._lsGet("settings_v3")));
+            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
         }
 
         if (this._lsGet("starredMarkets")) {
@@ -88,7 +95,7 @@ class SettingsStore {
         }
 
         if (this._lsGet("defaults_v1")) {
-            this.defaults = JSON.parse(this._lsGet("defaults_v1"));
+            this.defaults = _.merge(this.defaults, JSON.parse(this._lsGet("defaults_v1")));
         }
 
         if (this._lsGet("viewSettings_v1")) {

@@ -5,7 +5,7 @@ ve al-sat eşlerinin nasıl temsil edildiğine dair hızlı bir giriştir.
 
 ## Çiftler/Eşler
 
-BitShares'de , neredeyse her varlık tüm diğer varlıklarla alınıp-satılabilirler. İki varlık 
+BitShares'de , neredeyse her aktif tüm diğer aktiflerle alınıp-satılabilirler. İki varlık 
 seçmiş olduğumuz vakit , biz genelde *piyasa çifti* diye hitab ediyoruz. Mesela , 
 USD'yi EUR'a karşı  USD:EUR çiftinde takas edebiliriz.
 
@@ -21,9 +21,9 @@ belirteceğiz
 
 Sipariş defteri *ask* (istenilen satış fiyatı) ve *bid* (verilen alış teklif fiyatı) yanlarından 
 oluşur. Alış-satış çiftlerin tercihen bir yönü olmadığından ters çevirilebilirler, aşağıdaki 
-tabloda ask/bid ve her iki yanın ilgili al/sat operasyonlarına genel bakış verilmiştir:
+tabloda ask/bid ve her iki tarafın ilgili al/sat operasyonlarına genel bakış verilmiştir:
 
-| Yan   | Sat  | Al   | 
+| Taraf   | Sat  | Al   | 
 | ---------- | ------- | ------- |
 | Ask        | *kota* | *temel*  |
 | Bid        | *temel*  | *kota* |
@@ -35,7 +35,7 @@ olacaktır.
 
 ## Alış-Satış
 
-Al-sat emri vermek için , formun iyi tarafından birini doldurmak 
+Al-sat emri vermek için , formun taraflarından birini doldurmak 
 gereklidir,  ya *ask*, yada *bid* tarafı ( *al* yada *sat* tarafı) . Satmak/almak için bir 
 *fiyat* ve bir *miktar* belirlemeniz gerekecektir. Bu emrin maliyeti otomatik olarak 
 hesaplanacaktır. 
