@@ -1078,7 +1078,7 @@ class Exchange extends React.Component {
                                                     <span></span>
                                                 </span>
                                             </li>
-                                            {!this.state.showDepthChart ? (
+                                            {!this.state.showDepthChart && this.props.priceData.length ? (
                                                 <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
                                                     <div className="indicators">
                                                         <Translate content="header.settings" />
