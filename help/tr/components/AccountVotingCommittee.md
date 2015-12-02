@@ -1,0 +1,1 @@
+[Kurul üyeleri](introduction/committee) blok zincirine ait ücretler, blok süreleri  ve diğer bir çok şey gibi dinamik parametrelerin değiştirilmesini teklif edebilirler. BitShares'in nasıl işlediğine dair derin bilgi gerektiren büyük bir sorumluluk pozisyonudur.
