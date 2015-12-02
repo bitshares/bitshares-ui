@@ -736,7 +736,10 @@
         ws_status: "Websocket Connection Status",
         retry: "Retry",
         connected: "Connected",
-        not_connected: "Not connected"
+        not_connected: "Not connected",
+        browser: "Unsupported browser",
+        browser_text: "The Browser you are using has not been fully tested to support the Bitshares Wallet. We highly recommend that you backup your wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+        understand: "I understand"
     },
     refcode: {
         claim: "Claim",

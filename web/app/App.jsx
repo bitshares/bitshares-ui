@@ -60,6 +60,7 @@ import Brainkey from "./components/Wallet/Brainkey";
 import AccountRefsStore from "stores/AccountRefsStore";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
+import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -80,34 +81,41 @@ class App extends React.Component {
         NotificationStore.unlisten(this._onNotificationChange);
     }
 
-    componentDidMount() { try {
-        NotificationStore.listen(this._onNotificationChange.bind(this));
+    componentDidMount() { 
+        try {
+            NotificationStore.listen(this._onNotificationChange.bind(this));
 
-        // Try to retrieve locale from cookies
-        let locale;
-        if (cookies) {
-            locale = cookies.get("graphene_locale");
+            // Try to retrieve locale from cookies
+            let locale;
+            if (cookies) {
+                locale = cookies.get("graphene_locale");
+            }
+            // Switch locale if the user has already set a different locale than en
+            let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
+            Promise.all([
+                localePromise, // Non API
+                AccountStore.loadDbData()            
+            ]).then(() => {
+                AccountStore.tryToSetCurrentAccount();
+                this.setState({loading: false});
+            }).catch(error => {
+                console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
+                this.setState({loading: false});
+            });
+
+            ChainStore.init().then(() => {
+                this.setState({synced: true});
+            }).catch(error => {
+                console.log("[App.jsx] ----- ChainStore.init error ----->", error, error.stack);
+                this.setState({loading: false});
+            });
+        } catch(e) {
+            console.error(e);
         }
-        // Switch locale if the user has already set a different locale than en
-        let localePromise = (locale) ? IntlActions.switchLocale(locale) : null;
-        Promise.all([
-            localePromise, // Non API
-            AccountStore.loadDbData()            
-        ]).then(() => {
-            AccountStore.tryToSetCurrentAccount();
-            this.setState({loading: false});
-        }).catch(error => {
-            console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
-            this.setState({loading: false});
-        });
-
-        ChainStore.init().then(() => {
-            this.setState({synced: true});
-        }).catch(error => {
-            console.log("[App.jsx] ----- ChainStore.init error ----->", error, error.stack);
-            this.setState({loading: false});
-        });
-    } catch(e) { console.error(e) }}
+        if (!window.chrome) {
+            this.refs.browser_modal.show();
+        }
+    }
 
     /** Usage: NotificationActions.[success,error,warning,info] */
     _onNotificationChange() {
@@ -158,6 +166,7 @@ class App extends React.Component {
                 <NotificationSystem ref="notificationSystem" allowHTML={true}/>
                 <TransactionConfirm/>
                 <WalletUnlockModal/>
+                <BrowserSupportModal ref="browser_modal"/>
             </div>
         );
 
