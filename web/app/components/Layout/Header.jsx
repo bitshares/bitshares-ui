@@ -15,7 +15,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
 import {AccountWrapper} from "../Utility/TotalBalanceValue";
-
+import Immutable from "immutable";
 
 
 @connectToStores
@@ -117,9 +117,18 @@ class Header extends React.Component {
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
+
         let linkToAccountOrDashboard;
 
+        let selectAccounts = AccountStore.getMyAccounts();
         let myAccounts = AccountStore.getMyAccounts();
+
+        let myAccountsList = Immutable.List(myAccounts);
+
+        let walletBalance = myAccounts.length ? (
+                            <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
+                                <AccountWrapper accounts={myAccounts} />
+                            </div>) : null;
 
         if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a className={cnames({active: active === "dashboard"})} onClick={this._onNavigate.bind(this, "dashboard")}><Translate component="span" content="header.dashboard" /></a>;
         else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a className={cnames({active: active === "account-overview"})} onClick={this._onNavigate.bind(this, {route: "account-overview", params: {account_name: linkedAccounts.first()}})}><Translate component="span" content="header.account" /></a>;
@@ -140,16 +149,16 @@ class Header extends React.Component {
         // Account selector: Only active inside the exchange
         let accountsDropDown = null;
 
-        if (currentAccount && active === "exchange") {
+        if (currentAccount && (active === "exchange" || active === "markets")) {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
-            if (myAccounts.indexOf(currentAccount) < 0) {
-                myAccounts.push(currentAccount);
+            if (selectAccounts.indexOf(currentAccount) < 0) {
+                selectAccounts.push(currentAccount);
             }
 
-            if(myAccounts.length > 1) {
+            if (selectAccounts.length > 1) {
 
-                let accountsList = myAccounts
+                let accountsList = selectAccounts
                     .sort()
                     .map(name => {
                         return <li key={name}><a href onClick={this._accountClickHandler.bind(this, name)}>{name}</a></li>;
@@ -198,9 +207,7 @@ class Header extends React.Component {
                         <div className="grid-block shrink overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
-                        <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
-                            <AccountWrapper account={currentAccount} />
-                        </div>
+                        {walletBalance}
                         <div className="grp-menu-item" >
                             <Link to="settings" data-tip={settings} data-place="bottom" data-type="light"><Icon name="cog"/></Link>
                         </div>

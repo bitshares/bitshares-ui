@@ -269,7 +269,7 @@ class AccountVoting extends React.Component {
                         <Tab title="account.votes.workers_short">
                             <div className={cnames("content-block", {disabled : proxy_is_set})}>
                                 <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
-                                <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">
+                                <div className="grid-block no-padding no-margin small-up-1 medium-up-2 large-up-2">
                                     {workers}
                                 </div>
                             </div>

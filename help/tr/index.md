@@ -13,23 +13,24 @@ kavramlarını tanımlar.
  * [Cüzdan](introduction/wallets.md)
  * [Yedekler](introduction/backups.md)
  * [Blokzinciri](introduction/blockchain.md)
- * [Witness](introduction/witness.md)
- * [Kurul Üyesi](introduction/committee.md)
+ * [Tanıklar](introduction/witness.md)
+ * [İşçiler](introduction/workers.md)
+ * [Kurul Üyeleri](introduction/committee.md)
 
 ## Hesaplar
  * [Giriş](accounts/general.md)
  * [İzinler](accounts/permissions.md)
  * [Üyelikler](accounts/membership.md)
 
-## Varlıklar
+## Aktifler
  * [Piyasa Sabitli Varlıklar](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
- * [Kullanıcı Sürümü Varlıklar](assets/uia.md)
+ * [Kullanıcı Aktifleri](assets/uia.md)
  * [Özelleştirilmiş Varlıklar](assets/privbitassets.md)
 
 ## Merkezsiz/Dağıtık Borsa
  * [Giriş](dex/introduction.md)
- * [Alım-Satım](dex/trading.md)
- * [BitVarlıkların Kısa Satışları](dex/shorting.md)
+ * [Alış/Satış](dex/trading.md)
+ * [BitAktif Kısa Satışları](dex/shorting.md)
 
 ----------
 [Terimler](glossary.md)

@@ -12,6 +12,51 @@ let inProgress = {};
 
 class AssetActions {
 
+    fundPool(account_id, core, asset, amount) {
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(core.get("precision"));
+        tr.add_type_operation("asset_fund_fee_pool", {
+            "fee": {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            "from_account": account_id,
+            "asset_id": asset.get("id"),
+            "amount": amount * precision
+        });
+
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- fundPool error ----->", error);
+            return false;
+        });
+    }
+
+    claimPoolFees(account_id, asset, amount) {
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(asset.get("precision"));
+
+        tr.add_type_operation("asset_claim_fees", {
+            "fee": {
+                amount: 0,
+                asset_id: 0
+            },
+            "issuer": account_id,
+            "amount_to_claim": {
+                "asset_id": asset.get("id"),
+                "amount": amount * precision
+            }
+        });
+
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- claimFees error ----->", error);
+            return false;
+        });
+    }
+
     createAsset(account_id, createObject, flags, permissions) {
         // Create asset action here...
         console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);

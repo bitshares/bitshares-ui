@@ -30,11 +30,19 @@ class AssetSelector extends React.Component {
     }
 
     constructor(props) {
-        super(props)
+        super(props);
+
+        this.state = {
+            selected: props.assets[0]
+        }
     }
 
     onChange(event) {
-        this.props.onChange(ChainStore.getAsset(event.target.value))
+        let asset = ChainStore.getAsset(event.target.value);
+        this.props.onChange(asset);
+        this.setState({
+            selected: asset ? asset.get("id") : "1.3.0"
+        });
     }
 
     render() {
@@ -48,8 +56,8 @@ class AssetSelector extends React.Component {
 
         } else {
             return (
-                <select defaultValue={this.props.value} className="form-control" onChange={this.onChange.bind(this)}>
-                {options}
+                <select value={this.state.selected} defaultValue={this.props.value} className="form-control" onChange={this.onChange.bind(this)}>
+                    {options}
                 </select>
                 );
         }
@@ -58,7 +66,8 @@ class AssetSelector extends React.Component {
 
 }
 
-@BindToChainState() class AmountSelector extends React.Component {
+@BindToChainState()
+class AmountSelector extends React.Component {
 
     static propTypes = {
         label: React.PropTypes.string, // a translation key for the label
@@ -69,6 +78,10 @@ class AssetSelector extends React.Component {
         onChange: React.PropTypes.func.isRequired,
         display_balance: React.PropTypes.object,
         tabIndex: React.PropTypes.number
+    };
+
+    static defaultProps = {
+        disabled: false
     };
 
     formatAmount(v) {
@@ -113,15 +126,20 @@ class AssetSelector extends React.Component {
                 <div className="float-right">{this.props.display_balance}</div>
                 <Translate component="label" content={this.props.label}/>
                 <div className="inline-label">
-                    <input type="text"
+                    <input 
+                           disabled={this.props.disabled}
+                           type="text"
                            value={value}
                            placeholder={this.props.placeholder}
                            onChange={this._onChange.bind(this) }
                            tabIndex={this.props.tabIndex}/>
                    <span className="form-label select">
                        <AssetSelector
+                           ref={this.props.refCallback}                  
+                           value={this.props.assetValue}
                            assets={this.props.assets}
-                           onChange={this.onAssetChange.bind(this)}/>
+                           onChange={this.onAssetChange.bind(this)}                           
+                       />
                    </span>
                 </div>
             </div>

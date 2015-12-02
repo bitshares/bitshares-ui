@@ -30,6 +30,7 @@ import market_utils from "common/market_utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
 import IndicatorModal from "./IndicatorModal";
+import OpenSettleOrders from "./OpenSettleOrders";
 
 require("./exchange.scss");
 
@@ -81,13 +82,11 @@ class PriceStat extends React.Component {
             <li className={cnames("stat", this.props.className)}>
                 <span>
                     <Translate component="span" content={content} />
-                    <br/>
-                        <b className={"value stat-primary"}>
-                            {!ready ? 0 : value}
-                            {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-                        </b>
-                    <br/>
-                    <em>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</em>
+                    <b className={"value stat-primary"}>
+                        {!ready ? 0 : value}
+                        {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
+                    </b>
+                    <span>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</span>
                 </span>
             </li>
         );
@@ -257,7 +256,7 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
-        // console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
+        console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
         let expiration = new Date();
         // TODO: Add selector for expiry
         expiration.setYear(expiration.getFullYear() + 5);
@@ -313,8 +312,8 @@ class Exchange extends React.Component {
         e.preventDefault();
         let feeID; // = "1.3.0";
 
-        sellBalance = parseInt(ChainStore.getObject(sellBalance).toJS().balance, 10);
-        coreBalance = parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10);
+        sellBalance = sellBalance ? parseInt(ChainStore.getObject(sellBalance).toJS().balance, 10) : 0;
+        coreBalance = coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0;
         let sellPrecision = utils.get_asset_precision(sellAsset);
         let buyPrecision = utils.get_asset_precision(buyAsset);
 
@@ -881,7 +880,8 @@ class Exchange extends React.Component {
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
-            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats, marketReady } = this.props;
+            calls, quoteAsset, baseAsset, transaction, broadcast, lowestCallPrice, buckets, marketStats,
+            marketReady, settle_orders, bucketSize } = this.props;
 
         let {buyAmount, buyPrice, buyTotal, sellAmount, sellPrice, sellTotal, leftOrderBook,
             displayBuyPrice, displaySellPrice, buyDiff, sellDiff, indicators, indicatorSettings} = this.state;
@@ -966,13 +966,13 @@ class Exchange extends React.Component {
         };
 
         let bucketOptions = buckets.map(bucket => {
-            return <div className={cnames("label bucket-option", {" ": this.props.bucketSize !== bucket, "active-bucket": this.props.bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
 
         // Market stats
         let dayChange = marketStats.get("change");
 
-        let dayChangeClass = parseInt(dayChange, 10) === 0 ? "" : parseInt(dayChange, 10) < 0 ? "negative" : "positive";
+        let dayChangeClass = parseFloat(dayChange) === 0 ? "" : parseFloat(dayChange) < 0 ? "negative" : "positive";
         let dayChangeArrow = dayChangeClass === "" ? "" : dayChangeClass === "positive" ? "change-up" : "change-down";
         let volumeBase = marketStats.get("volumeBase");
         let volumeQuote = marketStats.get("volumeQuote");
@@ -985,6 +985,9 @@ class Exchange extends React.Component {
         let sellFee = utils.round_number(utils.get_asset_amount(this._getFee(quote), quote), quote);
         let buyFee = utils.round_number(utils.get_asset_amount(this._getFee(base), base), base);
 
+        // Decimals
+        let priceDecimals = Math.max(5, base ? base.get("precision") : 0);
+
         return (
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
@@ -996,6 +999,7 @@ class Exchange extends React.Component {
                         <div className="grid-block left-column large-2 no-overflow">
                             <OrderBook
                                 latest={latestPrice}
+                                changeClass={changeClass}
                                 orders={limit_orders}
                                 calls={call_orders}
                                 invertedCalls={invertedCalls}
@@ -1009,6 +1013,7 @@ class Exchange extends React.Component {
                                 horizontal={!leftOrderBook}
                                 moveOrderBook={this._moveOrderBook.bind(this)}
                                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
+                                marketReady={marketReady}
                             />
                     </div>) : null}
 
@@ -1016,85 +1021,100 @@ class Exchange extends React.Component {
                     <div className={cnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
 
                         {/* Top bar with info */}
-                        <div className="grid-block no-padding shrink overflow-visible" style={{minHeight: "67px"}}>
-                            <div className="grid-block overflow-visible vertical medium-horizontal">
-                                <div className="grid-block shrink">
+                        <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
+                            <div className="grid-block overflow-visible">
+                                <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
                                     <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
-                                    <div className="grid-block">
-                                    <ul className="market-stats stats">
-                                        {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
-                                        {lowestCallPrice && showCallLimit ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="explorer.block.call_limit" />
-                                                    <br/>
-                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
-                                                    <br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null}
-                                        {squeezePrice && showCallLimit ?
-                                            (<li className="stat">
-                                                <span>
-                                                    <Translate component="span" content="exchange.squeeze" />
-                                                    <br/>
-                                                    <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
-                                                    <br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
-                                                </span>
-                                            </li>) : null}
-                                        {latestPrice ?
+                                <div className="grid-block vertical">
+                                    <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>
+                                        <ul className="market-stats stats top-stats">
+                                            {settlementPrice ? <PriceStat ready={marketReady} decimals={priceDecimals} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
+                                            {lowestCallPrice && showCallLimit ?
+                                                (<li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content="explorer.block.call_limit" />
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
+                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                    </span>
+                                                </li>) : null}
+                                            {squeezePrice && showCallLimit ?
+                                                (<li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content="exchange.squeeze" />
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
+                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                    </span>
+                                                </li>) : null}
+                                            {latestPrice ?
+                                                <li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content="exchange.latest" />
+                                                        <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, priceDecimals)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                    </span>
+                                                </li> : null}
+
+                                            {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+
+                                            {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+
                                             <li className="stat">
                                                 <span>
-                                                    <Translate component="span" content="exchange.latest" />
-                                                    <br/>
-                                                    <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, Math.max(5, base ? base.get("precision") : 0))}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
-                                                    <br/>
-                                                    <em>{baseSymbol}/{quoteSymbol}</em>
+                                                    <Translate component="span" content="account.hour_24" />
+                                                    <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                    <span>%</span>
                                                 </span>
-                                            </li> : null}
+                                            </li>
 
-                                        {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
+                                        </ul>
+                                    </div>
+                                    <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
+                                        <ul className="market-stats stats bottom-stats">
+                                            <li className="stat" style={{minHeight: "2rem"}}>
+                                                <span>
+                                                    <span><Translate content="exchange.time" />:</span>
+                                                    <span>{bucketOptions}</span>
+                                                    <span></span>
+                                                </span>
+                                            </li>
+                                            {!this.state.showDepthChart && this.props.priceData.length ? (
+                                                <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
+                                                    <div className="indicators">
+                                                        <Translate content="header.settings" />
+                                                    </div>
+                                                </li>) : null}
+                                         </ul>
+                                         <ul className="market-stats stats bottom-stats">
+                                            {quoteIsBitAsset ? 
+                                                (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowQuote.bind(this)}>
+                                                    <div className="indicators">
+                                                       <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
+                                                    </div>
+                                                </li>) : null}
 
-                                        {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+                                            {baseIsBitAsset ? 
+                                                (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowBase.bind(this)}>
+                                                    <div className="indicators">
+                                                       <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
+                                                    </div>
+                                                </li>) : null}
 
-                                        <li className="stat">
-                                            <span>
-                                                <Translate component="span" content="account.hour_24" />
-                                                <br/>
-                                                <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
-                                                <br/>
-                                                <em>%</em>
-                                            </span>
-                                        </li>
-
-                                    </ul>
-
-                                </div>
-
-                                <div className="grid-block shrink borrow-button-container">
-                                    {quoteIsBitAsset ? <div><button onClick={this._borrowQuote.bind(this)} className="button outline borrow-button">Borrow&nbsp;{quoteAsset.get("symbol")}</button></div> : null}
-                                    {baseIsBitAsset ? <div><button onClick={this._borrowBase.bind(this)} className="button outline borrow-button">Borrow&nbsp;{baseAsset.get("symbol")}</button></div> : null}
-                                    <div><button onClick={this._toggleCharts.bind(this)} className="button outline borrow-button">{!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}&nbsp;</button></div>
+                                                <li className="stat float-right clickable" style={{borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px"}} onClick={this._toggleCharts.bind(this)}>
+                                                    <div className="indicators">
+                                                       {!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+                                                    </div>
+                                                </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div ref="center">
                         {!this.state.showDepthChart ? (
-                            <div className="grid-block shrink" id="market-charts" style={{marginTop: "0.5rem"}}>
+                            <div className="grid-block shrink" id="market-charts" style={{marginTop: 0}}>
                                 {/* Price history chart */}
-                                <div style={{position: "absolute", top: "24px", left: "50px", zIndex: 999}}><button onClick={this._onSelectIndicators.bind(this)} className="button outline">Indicators</button></div>
 
-                                <div className="chart-zoom-dropdown no-overflow" style={{position: "absolute", top: "24px", left: "24px", zIndex: 999}} >
-                                    <Icon className="grid-block" name="cog"/>
-
-                                        <div className="grid-block float-right" >
-                                            <div className="grid-content float-right no-overflow">
-                                            {bucketOptions}
-                                        </div>
-                                    </div>
-                                </div>
                                 <PriceChart
                                     priceData={this.props.priceData}
                                     volumeData={this.props.volumeData}
@@ -1107,6 +1127,8 @@ class Exchange extends React.Component {
                                     marketReady={marketReady}
                                     indicators={indicators}
                                     indicatorSettings={indicatorSettings}
+                                    bucketSize={bucketSize}
+                                    latest={latestPrice}
                                 />
                                 <IndicatorModal
                                     ref="indicators"
@@ -1124,6 +1146,7 @@ class Exchange extends React.Component {
                                     flat_asks={flat_asks}
                                     flat_bids={flat_bids}
                                     flat_calls={ showCallLimit ? flat_calls : []}
+                                    settles={settle_orders}
                                     invertedCalls={invertedCalls}
                                     totalBids={totalBids}
                                     totalCalls={showCallLimit ? totalCalls : 0}
@@ -1145,8 +1168,8 @@ class Exchange extends React.Component {
 
                         {/* Buy/Sell forms */}
 
-                        <div className="grid-block vertical shrink no-padding">
-                            <div className="grid-block small-vertical medium-horizontal no-padding align-spaced" style={{ flexGrow: "0" }} >
+                        <div className="grid-block vertical shrink buy-sell">
+                            <div className="grid-block small-vertical medium-horizontal align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
                                     className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
@@ -1245,6 +1268,20 @@ class Exchange extends React.Component {
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                                 />) : null}
                         </div>
+                        <div className="grid-block no-overflow shrink no-padding">
+                            {settle_orders.size > 0 && base && quote &&
+                            (base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
+                                <OpenSettleOrders
+                                    key="settle_orders"
+                                    orders={settle_orders}
+                                    currentAccount={currentAccount.get("id")}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    settlementPrice={settlementPrice}
+                                />) : null}
+                        </div>
 
 
                     </div>
@@ -1255,7 +1292,7 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh", borderBottom: "1px solid grey"}}>
                             <MarketHistory
                                 className="left-order-book no-padding no-overflow"
                                 headerStyle={{paddingTop: 0}}

@@ -349,7 +349,7 @@ class MyMarkets extends React.Component {
             <div className={this.props.className} style={this.props.style}>
                 <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
                     <div className={starClass} onClick={this._changeTab.bind(this, "starred")}>
-                        <Icon className="gold-star title-star" name="fi-star"/><Translate content="exchange.market_name" />
+                        <Translate content="exchange.market_name" />
                     </div>
                     <div className={allClass} onClick={this._changeTab.bind(this, "all")} >
                         <Translate content="exchange.more" />

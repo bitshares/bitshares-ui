@@ -15,6 +15,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
+import Icon from "../Icon/Icon";
 
 @BindToChainState({keep_updating:true})
 class WithdrawModalBlocktrades extends React.Component {
@@ -25,14 +26,18 @@ class WithdrawModalBlocktrades extends React.Component {
        asset: ChainTypes.ChainAsset.isRequired,
        output_coin_name: React.PropTypes.string.isRequired,
        output_coin_symbol: React.PropTypes.string.isRequired,
-       output_coin_type: React.PropTypes.string.isRequired
+       output_coin_type: React.PropTypes.string.isRequired,
+       url: React.PropTypes.string,
+       output_wallet_type: React.PropTypes.string
    }
 
    constructor( props ) {
       super(props);
       this.state = {
-         withdraw_amount:null,
-         withdraw_address:null
+         withdraw_amount: null,
+         withdraw_address: null,
+         withdraw_address_check_in_progress: false,
+         withdraw_address_is_valid: false
       }
    }
 
@@ -41,7 +46,32 @@ class WithdrawModalBlocktrades extends React.Component {
    }
 
    onWithdrawAddressChanged( e ) {
-      this.setState( {withdraw_address:e.target.value} );
+      let new_withdraw_address = e.target.value;
+
+      fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_withdraw_address),
+            {
+               method: 'get',
+               headers: new Headers({"Accept": "application/json"})
+            }).then(reply => { reply.json().then( json =>
+            {
+               // only process it if the user hasn't changed the address
+               // since we initiated the request
+               if (this.state.withdraw_address === new_withdraw_address)
+               {
+                  this.setState(
+                  {
+                     withdraw_address_check_in_progress: false,
+                     withdraw_address_is_valid: json.isValid
+                  });
+               }
+            })});
+
+      this.setState( 
+         {
+            withdraw_address: new_withdraw_address,
+            withdraw_address_check_in_progress: true,
+            withdraw_address_is_valid: null
+         });
    }
 
    onSubmit() {
@@ -75,6 +105,16 @@ class WithdrawModalBlocktrades extends React.Component {
            balance = "No funds";
        }
 
+       let invalid_address_message = null;
+       if (!this.state.withdraw_address_check_in_progress)
+       {
+          if (!this.state.withdraw_address_is_valid)
+            invalid_address_message = <span>Please enter a valid {this.props.output_coin_name} address</span>;
+          // if (this.state.withdraw_address_is_valid)
+          //   invalid_address_message = <Icon name="checkmark-circle" className="success" />;
+          // else
+          //   invalid_address_message = <Icon name="cross-circle" className="alert" />;
+       }
 
        return (<form className="grid-block vertical full-width-content">
                  <div className="grid-container">
@@ -91,10 +131,12 @@ class WithdrawModalBlocktrades extends React.Component {
                                      display_balance={balance}
                                      />
                    </div>
-                   <div className="content-block full-width-content">
+                   <div className="content-block">
                        <label><Translate component="span" content="modal.withdraw.address"/></label>
-                       <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
-                       {/*<div>{memo_error}</div>*/}
+                       <span>
+                          <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off" style={{width: "100%"}} />
+                          {invalid_address_message}
+                       </span>
                    </div>
                                   
                    <div className="content-block">

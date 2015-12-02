@@ -2,7 +2,7 @@
 
 BitShares'de , her hesap ikiye ayrılır 
 
-* **Etkin  İzin**: fonların yönetimi 
+* **Etkin  İzin**: fonların yönetimi ve
 * **Sahip İzni**: hesap yönetimi.
 
 Her ikisi de hesabınızın `İzinler` sekmesinde *yetkiler* ve *alt-sınır*'ın birlikte 
@@ -77,9 +77,9 @@ imkanına sahip olur.
 
 Gelin beraber basit bir çok-basamaklı anonim hesap kurulumuna göz atalım. Mali İşler 
 Müdürü (MİM) ve onun için altında çalışan Vezne, Denetçi, Vergi Müdürü, Muhasebe vb. gibi 
-departmanları olan bir şirkete bakıyor olalım.  Bir de harcama ayrıcalıkları 
-olsun isteyen bir CEO'su olsun. 
-O zaman biz fonlar için yetkiyi şunlara göre oluştururuz :
+departmanları olan bir şirkete bakıyor olalım.  Bir de harcama ayrıcalıklarına sahip
+olmayı  isteyen bir CEO'su olsun. 
+O zaman biz fonlar için şunlara göre bir yetki oluştururuz :
 
 | Hesap | Ağırlık | 
 | ---------- | ------ | 

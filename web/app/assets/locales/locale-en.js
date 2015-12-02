@@ -29,7 +29,8 @@
         unlocked_tip: "Wallet is unlocked. Click to lock."
     },
     operation: {
-        pending: "pending %(blocks)s blocks"
+        pending: "pending %(blocks)s blocks",
+        no_recent: "No recent transactions"
     },
     propose: "propose",
     cancel: "cancel",
@@ -113,6 +114,7 @@
         perm: {
             active: "Active Permissions",
             owner: "Owner Permissions",
+            memo_key: "Memo key",
             publish: "Publish Changes",
             reset: "Reset Changes",
             add: "Add Permission",
@@ -124,7 +126,13 @@
             cancel: "Cancel",
             add_permission_label: "Enter account name/key and weight",
             account_name_or_key: "Account name or key",
-            memo_public_key: "Memo Public Key"
+            memo_public_key: "Memo Public Key",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy_short: "Proxy",
@@ -197,7 +205,9 @@
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
-        propose_from: "Propose From"
+        propose_from: "Propose From",
+        settle: "Settle",
+        "no_orders": "No open orders"
     },
     pagination: {
         newer: "Newer",
@@ -262,7 +272,8 @@
         call_order_update: "updated margin position for ",
         lifetime_upgrade_account: "upgraded to lifetime member",
         annual_upgrade_account: "upgraded to annual member",
-        update_account: "updated account",
+        update_account: "updated their account data",
+        set_proxy: "set %(proxy)s as their voting proxy",
         whitelist_account: "Whitelisted the account",
         whitelisted_by: "Was whitelisted by the account",
         transfer_account: "Transferred the account",
@@ -306,6 +317,7 @@
         custom: "Created a custom operation",
         order_id: "Order ID",
         balance_claim: "claimed a balance of %(balance_amount)s from balance ID #%(balance_id)s",
+        asset_claim_fees: "claimed asset fees of %(balance_amount)s from %(asset)s fee pool",
         balance_owner: "Balance owner key",
         balance_id: "Balance ID",
         deposit_to: "Deposited to account",
@@ -321,6 +333,7 @@
         blinding_factor: "Blinding factor",
         outputs: "Outputs",
         inputs: "Inputs",
+        settlement_date: "Settlement date",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -364,7 +377,8 @@
             override_transfer: "Override transfer",
             transfer_to_blind: "Transfer to blinded account",
             blind_transfer: "Blinded transfer",
-            transfer_from_blind: "Transfer from blinded account"
+            transfer_from_blind: "Transfer from blinded account",
+            asset_claim_fees: "Claim asset fees"
         },
         feeGroups : {
          general : "General",
@@ -469,7 +483,10 @@
                 title: "Fee Pool",
                 core_exchange_rate: "Core exchange rate (CER)",
                 pool_balance: "Pool balance",
-                unclaimed_issuer_income: "Unclaimed issuer income"
+                unclaimed_issuer_income: "Unclaimed issuer income",
+                claim_fees: "Claim fees",
+                fund_text: "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s.",
+                claim_text: "The asset issuer may claim any accumulated fees here."
             },
             permissions: {
                 title: "Permissions",
@@ -533,7 +550,10 @@
         connection: "API Connection",
         add_ws: "Add new websocket API",
         remove_ws: "Remove websocket API",
-        faucet_address: "Faucet Address"
+        faucet_address: "Faucet Address",
+        showSettles: "Show settle orders in depth chart",
+        yes: "Yes",
+        no: "No"
     },
     footer: {
         title: "BitShares 2.0",
@@ -552,10 +572,10 @@
         total: "Total",
         value: "Value",
         price: "Price",
-        latest: "Latest Price",
+        latest: "Latest",
         call: "Call Price",
         core_rate: "Fee Rate",
-        settle: "Settlement Price",
+        settle: "Settlement",
         squeeze: "Margin Call Price",
         maintenance: "Maintenance Call Price",
         your_price: "Your Call Price",
@@ -585,8 +605,15 @@
         period: "Time period (days)",
         overbought: "Overbought",
         oversold: "Oversold",
-        index: "Index"
-
+        index: "Index",
+        my_bids: "My bids",
+        my_asks: "My asks",
+        settle_orders: "Settle orders",
+        asks: "Asks",
+        bids: "Bids",
+        no_data: "No data",
+        time: "Time interval",
+        borrow: "Borrow"
     },
     fees: {
      title: "Fee Schedule"
@@ -709,7 +736,10 @@
         ws_status: "Websocket Connection Status",
         retry: "Retry",
         connected: "Connected",
-        not_connected: "Not connected"
+        not_connected: "Not connected",
+        browser: "Unsupported browser",
+        browser_text: "The Browser you are using has not been fully tested to support the Bitshares Wallet. We highly recommend that you backup your wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+        understand: "I understand"
     },
     refcode: {
         claim: "Claim",

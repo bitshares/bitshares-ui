@@ -7,7 +7,7 @@ module.exports = {
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-        
+
     },
     header: {
         title: "비트쉐어 2.0",
@@ -80,6 +80,7 @@ module.exports = {
         perm: {
             active: "활성화된 사용권한",
             owner: "소유자 사용권한",
+            memo_key: "Memo key",
             publish: "변경사항 적용",
             reset: "변경사항 되돌리기",
             add: "사용권한 추가",
@@ -91,7 +92,13 @@ module.exports = {
             cancel: "취소",
             add_permission_label: "계정명/키 및 가중치를 입력하세요",
             account_name_or_key: "계정명 또는 키",
-            memo_public_key: "메모 공개키"
+            memo_public_key: "메모 공개키",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy: "대리투표 계정",
@@ -110,7 +117,7 @@ module.exports = {
             add_committee_label: "위원",
             add_witness_label: "증인",
             approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal"            
+            reject_worker: "Reject worker proposal"
         },
         options: {
             num_witnesses: "선호 증인 수",
@@ -147,7 +154,8 @@ module.exports = {
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        settle: "Settle"
     },
     pagination: {
         newer: "이전",
@@ -426,7 +434,7 @@ module.exports = {
             rank: "순위",
             last_confirmed: "마지막 승인블록",
             missed: "누락 블록수"
-            
+
         },
         committee_members: {
             title: "위원",

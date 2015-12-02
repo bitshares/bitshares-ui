@@ -31,7 +31,7 @@ module.exports = {
         welcome: "欢迎使用 Graphene (石墨烯)系统",
         assets: "资产",
         market_value: "市值",
-        hour_24: "24小时",
+        hour_24: "日涨跌幅%",
         recent: "近期活动",
         name: "账户名",
         member: {
@@ -111,6 +111,7 @@ module.exports = {
         perm: {
             active: "活跃权限",
             owner: "账户权限",
+            memo_key: "Memo key",
             publish: "保存修改",
             reset: "重置修改",
             add: "增加权限",
@@ -122,7 +123,13 @@ module.exports = {
             cancel: "取消",
             add_permission_label: "输入账户名/公钥以及权重",
             account_name_or_key: "账户名或公钥",
-            memo_public_key: "备注公钥"
+            memo_public_key: "备注公钥",
+            warning1: "活跃权限权重总和 %(weights_total)s 应不小于阀值设定 %(threshold)s",
+            warning2: "账户权限权重总和 %(weights_total)s 应不小于阀值设定 %(threshold)s",
+            warning3: "账户名被授权",
+            warning4: "公钥已被授权",
+            action: "操作",
+            acct_or_key: " 账户名/公钥"
         },
         votes: {
             proxy_short: "代理投票",
@@ -195,7 +202,9 @@ module.exports = {
             premium_name_faucet: "你使用的是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母",
             premium_name_warning: "这是高级账户名。高级账户名的注册需要花费更多，因为无法通过免费水龙头服务进行注册。请选择其他名字，包含至少一个横杠、数字或者不含元音字母"
         },
-        propose_from: "发起账户"
+        propose_from: "发起账户",
+        percent: "供给占比",
+        settle: "清算"
     },
     transfer: {
         from: "来自",
@@ -334,7 +343,9 @@ module.exports = {
             committee_member_update_global_parameters: "全局参数更新",
             transfer_to_blind: "向隐私账户转账",
             blind_transfer: "隐私转账",
-            transfer_from_blind: "从隐私账户转出"
+            transfer_from_blind: "从隐私账户转出",
+            committee_member_update: "更新理事会成员账户",
+            asset_claim_fees: "Claim asset fees"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
@@ -361,7 +372,28 @@ module.exports = {
         max_market_fee: "最大市场手续费",
         blinding_factor: "隐私因子",
         outputs: "输出",
-        inputs: "输入"
+        inputs: "输入",
+        feeGroups: {
+            general: "一般费率",
+            asset: "资产相关",
+            market: "市场相关",
+            account: "账户相关",
+            business: "业务管理"
+        },
+        feeTypes: {
+            _none: "免费",
+            fee: "普通转账手续费",
+            price_per_kbyte: "交易字节数，每千字节手续费",
+            basic_fee: "普通用户名手续费",
+            premium_fee: "高级用户名手续费",
+            membership_annual_fee: "年度会籍",
+            membership_lifetime_fee: "终身会籍",
+            symbol3: "资产符号长度3位",
+            symbol4: "资产符号长度4位",
+            long_symbol: "更长的资产符号"
+        },
+        asset_claim_fees: "从 %(asset)s 资产手续费池中领取 %(balance_amount)s 资产手续费",
+        settlement_date: "清算时间"
     },
     explorer: {
         accounts: {
@@ -445,7 +477,10 @@ module.exports = {
                 core_exchange_rate: "汇率",
                 pool_balance: "资金池余额",
                 unclaimed_issuer_income: "发行人未申领收入",
-                title: "手续费资金池"
+                title: "手续费资金池",
+                claim_fees: "领取手续费",
+                fund_text: "手续费最终以%(core)s形态进行支付。手续费资金池用来承担从%(asset)s转换为%(core)s的费用，以便用户可以使用%(asset)s来支付手续费。",
+                claim_text: "资产发行人可以在这里领取累积的资产手续费。"
             },
             permissions: {
                 title: "权限",
@@ -454,7 +489,7 @@ module.exports = {
                 blacklist_authorities: "黑名单职权实体",
                 blacklist_markets: "禁止交易对市场",
                 whitelist_authorities: "白名单职权实体",
-                whitelist_markets: "允许交易对市场",
+                whitelist_markets: "允许交易对市场"
             },
             price_feed_data: {
                 title: "喂价数据",
@@ -508,7 +543,10 @@ module.exports = {
         connection: "API 服务器设定",
         add_ws: "添加新的 websocket API",
         remove_ws: "删除 websocket API",
-        faucet_address: "水龙头地址"
+        faucet_address: "水龙头地址",
+        showSettles: "在深度图中显示清算订单",
+        yes: "是",
+        no: "否"
     },
     pagination: {
         newer: "更近",
@@ -524,12 +562,12 @@ module.exports = {
         order_depth: "市场深度",
         market_history: "市场历史",
         balance: "我的余额",
-        lowest_ask: "最低卖单",
-        highest_bid: "最高买单",
+        lowest_ask: "最低卖价",
+        highest_bid: "最高买价",
         total: "成交额",
         value: "数量",
         price: "价格",
-        latest: "最新价格",
+        latest: "最新成交价",
         call: "赎回价格",
         volume: "成交量",
         spread: "买卖价差",
@@ -549,7 +587,23 @@ module.exports = {
         market_name: "市场名称",
         quote_supply: "报价资产供给量",
         base_supply: "基础资产供给量",
-        more: "更多交易对"
+        more: "更多交易对",
+        market: "交易对",
+        history: "交易历史",
+        my_history: "我的交易历史",
+        vol_short: "量",
+        volume_24: "日成交量",
+        change: "涨跌幅",
+        confirm: "你的订单价偏离当前价 %(diff)s% , 你确定么?",
+        indicators: "技术指标",
+        rsi: "相对强弱指数(rsi)",
+        ema: "指数移动平均线(ema)",
+        sma: "算数移动平均线(sma)",
+        atr: "平均真实波幅(atr)",
+        period: "周期 (天)",
+        overbought: "超买",
+        oversold: "超卖",
+        index: "指数"
     },
     markets: {
         title: "交易所",
@@ -660,7 +714,12 @@ module.exports = {
             address: "提现到地址",
             submit: "提现"
         },
-        ok: "确定"
+        ok: "确定",
+        settle: {
+            title: "请求清算资产%(asset)s",
+            amount: "数量",
+            submit: "清算资产"
+        }
     },
     init_error: {
         title: "系统初始化错误",
@@ -700,5 +759,8 @@ module.exports = {
         }
     },
     propose: "提议",
-    cancel: "取消"
+    cancel: "取消",
+    fees: {
+        title: "费率表"
+    }
 };
