@@ -1,5 +1,27 @@
 ---------------------------------------------------------------------
-Release 2.0.151119
+Release 2.0.151202
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Option to pay fees in BTS if possible #356
+- Block explorer page that shows the current fee schedule #357
+- Improved my history panel on Exchange page #527
+- Exchange layout improvements: add borders, refactor statusbar, no-data text, panel headers #538
+- Support for Fee Pool funding and Asset fee claims #495
+- Exchange layout: add borders, refactor statusbar, no-data text, panel
+- Ability to send all, subtract fees if paid in same asset #454
+- Cease IE support and warn IE users that they need to switch to Edge, Chrome or Firefox #474
+
+BUG FIXES:
+- Active account name is missing on the top toolbar of the market page #545
+- Don't show "This wallet has already been imported" if there are duplicate keys #565
+- Populate empty pricedata with latest price if outside of bucket window #550
+- Turkish ui buttons don't respond #539
+- Changing indicators on market without history makes whole web wallet unresponsive #569
+
+
+---------------------------------------------------------------------
+Release 2.0.151125
 ---------------------------------------------------------------------
 
 NEW FEATURES:
@@ -24,6 +46,7 @@ BUG FIXES:
 - Cannot find some markets #526
 - Account drop-down options are inconsistent with selected third-party account #523
 - Market page shows loading indicator if user doesn't have any account - it should suggest to create account instead #507
+
 
 ---------------------------------------------------------------------
 Release 2.0.151119
