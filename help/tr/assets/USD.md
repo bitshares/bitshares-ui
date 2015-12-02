@@ -1,7 +1,7 @@
-[# özet]
-### Varlık {symbol}
+[# summary]
+### Aktif {symbol}
 
 {description}  
 Piyasaya süren {issuer}
 
-Amerikan Doları (sign: $; symbol: USD $) ABD'nin resmi para birimidir.
+Amerikan Doları (işeret: $; sembol: USD $) ABD'nin resmi para birimidir.
