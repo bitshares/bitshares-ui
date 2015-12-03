@@ -1,16 +1,16 @@
-[# ömürboyu]
-###Ücretlerde {feesCashback}% iade alın.
+[# lifetime]
+### Ücretlerde {feesCashback}% iade alın.
 
 Ömür-boyu Üyeler ödedikleri her ücretten {feesCashback}% iade alırlar ve kaydını 
 yaptıkları ya da ağa yönlendirdikleri kullanıcılardan gelir elde ederler. Ömür-boyu ücret 
 sadece {price}dir.
 
-[# yıllık]
+[# annual]
 
 Eğer ömür-boyu üyelik fazla geliyorsa,  {price} miktarında bir ücret karşılığında bir  
 yıllığına abone olarak gelecek yıl için {feesCashback}% para iadesi alabilirsiniz.
 
-[# ücret-paylaşımı]
+[# fee-division]
 #### Ücret Paylaşımı
 {account} adlı hesap her işlem ücreti ödediğinde, o ücret birçok farklı hesaplar arasında 
 paylaştırılır. Ağımız {networkFee}% pay alırken, {account} adlı hesabı  getiren Ömür-boyu Üye de  {lifetimeFee}% pay alır.
