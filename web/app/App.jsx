@@ -112,7 +112,7 @@ class App extends React.Component {
         } catch(e) {
             console.error(e);
         }
-        if (!window.chrome) {
+        if (!window.chrome && !window.electron) {
             this.refs.browser_modal.show();
         }
     }
