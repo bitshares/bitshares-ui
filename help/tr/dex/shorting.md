@@ -1,7 +1,7 @@
-# BitVarlık Kısa Satışı
+# BitAktif Kısa Satışı
 
-BTS'le temasınızı arttırmak ve USD,EUR,GOLD gibi BitVarlıklara likidite sağlamak için 
-bu BitVarlıkları ağdan *ödünç* alabilir ve *kısa satabilirsiniz*. Prosedürü burada kısaca 
+BTS'le temasınızı arttırmak ve USD,EUR,GOLD gibi BitAktiflere likidite sağlamak için 
+bu BitAktifleri ağdan *ödünç* alabilir ve *kısa satabilirsiniz*. Prosedürü burada kısaca 
 anlatacağız.
 
 ## Ödünç Alma
@@ -27,20 +27,20 @@ fiyatından(x/BTS) daha düşük olduğu anda teminatı zorla sattırılır.
     SQP =  uzlaşma fiyatı / MSQR
     çağrı fiyatı = BORÇ / TEMİNAT * MCR
 
-Marjin çağrısı teminatı alır , ödünç alınmış bitVarlık hisselerinin SQP ya kadarki kısmını
+Marjin çağrısı teminatı alır , ödünç alınmış bitaktif hisselerinin SQP ya kadarki kısmını
 piyasa fiyatından satın alır ve pozisyonu kapar. Teminattan geri kalan BTS müşteriye 
 iade edilir.
 
 ### Hesap görme
 
-Her bitVarlık sahibi istediği zaman *adil bir fiyattan* hesap görmeyi talep edebilir.
+Her bitaktif sahibi istediği zaman *adil bir fiyattan* hesap görmeyi talep edebilir.
 Hesap görme işlemi, ödünç/kısa pozisyonlarını en düşük teminat oranıyla kapar ve 
 hesap görmek üzere teminatı satar.
 
 ## Satış
 
-BitVarlık ödünç alındıktan sonra, ilgili herhangi bir piyasada alıcının ödemek istediği 
-bir fiyattan satılabilir . Bu aşamayla ,  kısa-satış tamamlanmış olur ve o bitVarlık da kısa 
+BitAktif ödünç alındıktan sonra alakalı piyasalardan herhangi birinde herhangi
+bir fiyattan satılabilir . Bu aşamayla ,  kısa-satış tamamlanmış olur ve o bitaktif da kısa 
 olursunuz.
 
 ## Teminat Oranını Güncellemek
@@ -54,6 +54,6 @@ gerektirir.
 ## Kapamak
 
 Ödünç/kısa pozisyonunu kapamak için , ilk önce kişinin , BitShares ağına teslim 
-etmek üzere o Bitvarlığın ödünç alınan miktarının elinde bulunması gerekir. Ondan 
-sonra , BitVarlıklar ilgili arz stoğundan düşer ve teminat serbest bırakılıp sahibine geri 
+etmek üzere o Bitvarlığın ödünç alınan miktarda elinde bulunması gerekir. Ondan 
+sonra , BitAktifler arz stoğundan düşer ve teminat serbest bırakılıp sahibine geri 
 verilir.
