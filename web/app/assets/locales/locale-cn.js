@@ -204,7 +204,8 @@ module.exports = {
         },
         propose_from: "发起账户",
         percent: "供给占比",
-        settle: "清算"
+        settle: "清算",
+        no_orders: "暂无委单"
     },
     transfer: {
         from: "来自",
@@ -345,7 +346,7 @@ module.exports = {
             blind_transfer: "隐私转账",
             transfer_from_blind: "从隐私账户转出",
             committee_member_update: "更新理事会成员账户",
-            asset_claim_fees: "Claim asset fees"
+            asset_claim_fees: "领取资产手续费"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
@@ -393,7 +394,8 @@ module.exports = {
             long_symbol: "更长的资产符号"
         },
         asset_claim_fees: "从 %(asset)s 资产手续费池中领取 %(balance_amount)s 资产手续费",
-        settlement_date: "清算时间"
+        settlement_date: "清算时间",
+        set_proxy: "设置 %(proxy)s 为他们的投票代理人"
     },
     explorer: {
         accounts: {
@@ -603,7 +605,15 @@ module.exports = {
         period: "周期 (天)",
         overbought: "超买",
         oversold: "超卖",
-        index: "指数"
+        index: "指数",
+        my_bids: "我的买单",
+        my_asks: "我的卖单",
+        settle_orders: "清算单",
+        asks: "卖单",
+        bids: "买单",
+        no_data: "暂无数据",
+        time: "时间间隔",
+        borrow: "借入"
     },
     markets: {
         title: "交易所",
@@ -701,7 +711,8 @@ module.exports = {
         call_limit: "Market Call Limit"
     },
     operation: {
-        pending: " %(blocks)s 个区块待定"
+        pending: " %(blocks)s 个区块待定",
+        no_recent: "近期无交易"
     },
     modal: {
         issue: {
@@ -726,7 +737,10 @@ module.exports = {
         ws_status: "Websocket 连接状态",
         retry: "重试",
         connected: "已连接",
-        not_connected: "未连接"
+        not_connected: "未连接",
+        browser: "不支持的浏览器",
+        browser_text: "你使用的浏览器(版本)未经过BitShares钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌Chrome浏览器。今后进过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
+        understand: "我理解"
     },
     refcode: {
         claim: "领取",
