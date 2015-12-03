@@ -346,7 +346,7 @@ module.exports = {
             blind_transfer: "隐私转账",
             transfer_from_blind: "从隐私账户转出",
             committee_member_update: "更新理事会成员账户",
-            asset_claim_fees: "Claim asset fees"
+            asset_claim_fees: "领取资产手续费"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
