@@ -111,7 +111,7 @@ module.exports = {
         perm: {
             active: "活跃权限",
             owner: "账户权限",
-            memo_key: "Memo key",
+            memo_key: "备注密钥",
             publish: "保存修改",
             reset: "重置修改",
             add: "增加权限",
