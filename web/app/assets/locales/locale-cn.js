@@ -395,7 +395,7 @@ module.exports = {
         },
         asset_claim_fees: "从 %(asset)s 资产手续费池中领取 %(balance_amount)s 资产手续费",
         settlement_date: "清算时间",
-        set_proxy: "设置 %(proxy)s 为他们的投票代理人"
+        set_proxy: "设置 %(proxy)s 为投票代理人"
     },
     explorer: {
         accounts: {
