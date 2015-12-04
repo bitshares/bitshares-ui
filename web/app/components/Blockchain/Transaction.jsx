@@ -372,6 +372,13 @@ class Transaction extends React.Component {
                                 </tr>
                     );
 
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.common_options" /></td>
+                            <td><Inspector data={ op[1] } search={false} /></td>
+                        </tr>
+                    );
+
                     break;
 
                 case "account_whitelist":

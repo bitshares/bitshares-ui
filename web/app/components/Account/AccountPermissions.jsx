@@ -109,13 +109,17 @@ class AccountPermissions extends React.Component {
         updated_account.account = updated_account.id;
         updated_account.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_weights);
         updated_account.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_weights);
-        if (s.memo_key && s.memo_key !== s.prev_memo_key && this.refs.memo_key.isValidPubKey(s.memo_key)) {
+        if (s.memo_key && s.memo_key !== s.prev_memo_key && this.isValidPubKey(s.memo_key)) {
             updated_account.new_options.memo_key = s.memo_key;
         }
         //console.log("-- AccountPermissions.onPublish -->", updated_account);
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_update", updated_account);
         WalletDb.process_transaction(tr, null, true);
+    }
+
+    isValidPubKey(value) {
+        return !!PublicKey.fromPublicKeyString(value);
     }
 
     onReset() {
@@ -181,7 +185,7 @@ class AccountPermissions extends React.Component {
         if (weights_total < threshold)
             error2 = counterpart.translate("account.perm.warning2", {weights_total, threshold});
 
-        let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() && this.refs.memo_key.isValidPubKey(this.state.memo_key) ? "" : " disabled");
+        let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() && this.isValidPubKey(this.state.memo_key) ? "" : " disabled");
         let reset_buttons_class = "button outline" + (this.isChanged() ? "" : " disabled");
 
         let accountsList = Immutable.Set();
