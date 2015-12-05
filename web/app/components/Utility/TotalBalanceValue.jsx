@@ -87,10 +87,29 @@ class TotalValue extends React.Component {
         this._stopUpdates();
     }
 
-    render() {
-        let {fromAssets, toAsset, balances, marketStats} = this.props;
-        let coreAsset = ChainStore.getAsset("1.3.0");
+    _convertValue(amount, fromAsset, toAsset, marketStats, coreAsset) {
         let toStats, fromStats;
+
+        let toID = toAsset.get("id");
+        let toSymbol = toAsset.get("symbol");
+        let fromID = fromAsset.get("id");
+        let fromSymbol = fromAsset.get("symbol");
+
+        if (coreAsset && marketStats) {
+            let coreSymbol = coreAsset.get("symbol");
+
+            toStats = marketStats.get(toSymbol + "_" + coreSymbol);
+            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
+        }
+
+        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromAsset, toStats && toStats.close ? toStats.close : toAsset, fromID, toID);
+
+        return utils.convertValue(price, amount, fromAsset, toAsset);
+    }
+
+    render() {
+        let {fromAssets, toAsset, balances, marketStats, collateral, debt, openOrders} = this.props;
+        let coreAsset = ChainStore.getAsset("1.3.0");
 
         let assets = {};
         fromAssets.forEach(asset => {
@@ -100,27 +119,38 @@ class TotalValue extends React.Component {
         });
 
         let totalValue = 0;
+
+        // Collateral value
+        let collateralValue = this._convertValue(collateral, coreAsset, toAsset, marketStats, coreAsset);
+
+        totalValue += collateralValue;
+
+        // Open orders value
+        for (let asset in openOrders) {
+            let fromAsset = assets[asset];
+            if (fromAsset) {
+                let orderValue = this._convertValue(openOrders[asset], fromAsset, toAsset, marketStats, coreAsset);
+                totalValue += orderValue;
+            }
+        }
+
+        // Debt value
+        for (let asset in debt) {
+            let fromAsset = assets[asset];
+            if (fromAsset) {
+                let debtValue = this._convertValue(debt[asset], fromAsset, toAsset, marketStats, coreAsset);
+                totalValue -= debtValue;
+            }
+        }
+
+        // Balance value
         balances.forEach(balance => {
             if (balance.asset_id === toAsset.get("id")) {
                 totalValue += balance.amount;
             } else {
                 let fromAsset = assets[balance.asset_id];
                 if (fromAsset) {
-                    let toID = toAsset.get("id");
-                    let toSymbol = toAsset.get("symbol");
-                    let fromID = fromAsset.get("id");
-                    let fromSymbol = fromAsset.get("symbol");
-
-                    if (coreAsset && marketStats) {
-                        let coreSymbol = coreAsset.get("symbol");
-
-                        toStats = marketStats.get(toSymbol + "_" + coreSymbol);
-                        fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
-                    }
-
-                    let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromAsset, toStats && toStats.close ? toStats.close : toAsset, fromID, toID);
-
-                    let eqValue = utils.convertValue(price, balance.amount, fromAsset, toAsset);
+                    let eqValue = this._convertValue(balance.amount, fromAsset, toAsset, marketStats, coreAsset);
                     totalValue += eqValue;
                 }
             }
@@ -160,10 +190,16 @@ class TotalBalanceValue extends React.Component {
 
     static propTypes = {
         balances: ChainTypes.ChainObjectsList.isRequired
-    }
+    };
+
+    static defaultProps = {
+        collateral: 0,
+        debt: {},
+        openOrders: {}
+    };
 
     render() {
-        let {balances, toAsset} = this.props;
+        let {balances, toAsset, collateral, debt, openOrders} = this.props;
         let assets = Immutable.List();
         let amounts = [];
 
@@ -172,9 +208,21 @@ class TotalBalanceValue extends React.Component {
                 assets = assets.push(balance.get("asset_type"));
                 amounts.push({asset_id: balance.get("asset_type"), amount: parseInt(balance.get("balance"), 10)});
             }
-        })
+        });
 
-        return <ValueStoreWrapper balances={amounts} fromAssets={assets}/>;
+        for (let asset in debt) {
+            if (!assets.has(asset)) {
+                assets.push(asset);
+            }
+        }
+
+        for (let asset in openOrders) {
+            if (!assets.has(asset)) {
+                assets.push(asset);
+            }
+        }
+
+        return <ValueStoreWrapper balances={amounts}  openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
     }
 }
 
@@ -186,15 +234,42 @@ class AccountWrapper extends React.Component {
     };
 
     render() {
-        let balanceList = Immutable.List();
+        let balanceList = Immutable.List(), collateral = 0, debt = {}, openOrders = {};
 
         this.props.accounts.forEach(account => {
-            if (account) {
-                let account_balances = account.get("balances");
 
+            if (account) {
+
+                account.get("orders").forEach( (orderID, key) => {
+                    let order = ChainStore.getObject(orderID);
+                    if (order) {
+                        let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
+                        if (!openOrders[orderAsset]) {
+                            openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
+                        } else {
+                            openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
+                        }
+                    }
+                });
+
+                account.get("call_orders").forEach( (callID, key) => {
+                    let position = ChainStore.getObject(callID);
+                    if (position) {
+                        collateral += parseInt(position.get("collateral"), 10);
+
+                        let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
+                        if (!debt[debtAsset]) {
+                            debt[debtAsset] = parseInt(position.get("debt"), 10);
+                        } else {
+                            debt[debtAsset] += parseInt(position.get("debt"), 10);
+                        }
+                    }
+                });
+
+                let account_balances = account.get("balances");
                 account_balances.forEach( balance => {
                     let balanceAmount = ChainStore.getObject(balance);
-                    if (!balanceAmount.get("balance")) {
+                    if (!balanceAmount || !balanceAmount.get("balance")) {
                         return null;
                     }
                     balanceList = balanceList.push(balance);
@@ -202,7 +277,7 @@ class AccountWrapper extends React.Component {
             }
         })
 
-        return balanceList.size ? <TotalBalanceValue balances={balanceList}/> : null;
+        return balanceList.size ? <TotalBalanceValue balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/> : null;
     }
 }
 
