@@ -30,7 +30,8 @@ class AccountOrders extends React.Component {
         let markets = {};
 
         let marketOrders ={};
-        account.get("orders").forEach(order => {
+        account.get("orders").forEach(orderID => {
+            let order = ChainStore.getObject(orderID).toJS();
             let base = ChainStore.getAsset(order.sell_price.base.asset_id);
             let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
             if (base && quote) {
