@@ -3,12 +3,13 @@ var IntlActions = require("../actions/IntlActions");
 var BaseStore = require("./BaseStore");
 var counterpart = require("counterpart-instance");
 var locale_en = require("assets/locales/locale-en");
+var cookies = require("cookies-js");
 counterpart.registerTranslations("en", locale_en);
 
 class IntlStore extends BaseStore {
     constructor() {
         super();
-        this.currentLocale = "en";
+        this.currentLocale = cookies.locale || "en";
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
 

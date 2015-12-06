@@ -8,7 +8,7 @@ import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
-import _ from "lodash";
+import {debounce} from "lodash";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LoadingIndicator from "../LoadingIndicator";
@@ -189,7 +189,7 @@ class MarketSelector extends React.Component {
             }
         }
 
-        this._assetLookup = _.debounce(this._assetLookup, 150);
+        this._assetLookup = debounce(this._assetLookup, 150);
     }
 
     _assetLookup(symbol, type) {

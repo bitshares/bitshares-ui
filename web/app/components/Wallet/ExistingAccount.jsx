@@ -31,7 +31,7 @@ class ExistingAccount extends ExistingAccountBaseComponent {
                                 <h3><Translate content="wallet.setup_wallet" /></h3>}
                         </div>
                         <div className="content-block" style={{width: '24em'}}>
-                            <RouteHandler/>
+                            {this.props.children}
                         </div>
                     </div>
                 </div>

@@ -2,9 +2,6 @@ import React from "react";
 import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
-import Operation from "../Blockchain/Operation";
-import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
@@ -16,11 +13,7 @@ import ChainStore from "api/ChainStore";
 
 class AccountOverview extends React.Component {
 
-    static propTypes = {
-        account: React.PropTypes.object.isRequired
-    };
-
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             settleAsset: "1.3.0"
@@ -42,7 +35,7 @@ class AccountOverview extends React.Component {
         }
         let call_orders = [];
         if (account.toJS && account.has("call_orders")) call_orders = account.get("call_orders").toJS();
-        let balances = {};
+        let balances = [];
         let account_balances = account.get("balances");
         let balanceList = Immutable.List();
 
@@ -57,7 +50,7 @@ class AccountOverview extends React.Component {
                 let isBitAsset = asset && asset.has("bitasset_data_id");
 
                 balanceList = balanceList.push(balance);
-                balances[balance] = (
+                balances.push(
                     <tr key={balance} style={{maxWidth: "100rem"}}>
                         {isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline"><Translate content="account.settle" /></div></td> : <td></td>}
                         <td style={{textAlign: "right"}}><BalanceComponent balance={balance}/></td>
@@ -86,7 +79,7 @@ class AccountOverview extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {React.addons.createFragment(balances)}
+                            {balances}
                             {balanceList.size ? <tr><td></td><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
                         </tbody>
                     </table>
@@ -106,7 +99,7 @@ class AccountOverview extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                        { call_orders.map(id =><CollateralPosition object={id} account={account}/>) }
+                        { call_orders.map(id =><CollateralPosition key={id} object={id} account={account}/>) }
                         </tbody>
                     </table>
                 </div> : null}

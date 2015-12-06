@@ -1,11 +1,11 @@
 import React from "react";
+import {PropTypes} from "react-router";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import Link from "react-router";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
@@ -23,7 +23,7 @@ class MarketRow extends React.Component {
         tempComponent: "tr"        
     };
 
-    static contextTypes = {router: React.PropTypes.func.isRequired};
+    static contextTypes = {history: PropTypes.history};
 
     constructor() {
         super();
@@ -32,7 +32,7 @@ class MarketRow extends React.Component {
     }
 
     _onClick(marketID) {
-        this.context.router.transitionTo("exchange", {marketID: marketID});
+        this.context.history.pushState(null, `/market/${marketID}`);
     }
 
     componentDidMount() {

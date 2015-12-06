@@ -2,25 +2,15 @@ import config from "chain/config";
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
-import LoadingIndicator from "../LoadingIndicator";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import Statistics from "./Statistics";
-import AccountActions from "actions/AccountActions";
-import Icon from "../Icon/Icon";
-import TimeAgo from "../Utility/TimeAgo";
-import HelpContent from "../Utility/HelpContent";
 import WalletDb from "stores/WalletDb";
-import AmountSelector from "../Utility/AmountSelector";
 import WithdrawModal from "../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../Account/AccountBalance";
-import BalanceComponent from "../Utility/BalanceComponent";
-import RefcodeInput from "../Forms/RefcodeInput";
 import WithdrawModalMetaexchange from "../Modal/WithdrawModalMetaexchange";
 import DepositModalMetaexchange from "../Modal/DepositModalMetaexchange";
 import TranswiserDepositWithdraw from "./transwiser/TranswiserDepositWithdraw";
@@ -213,18 +203,12 @@ class AccountDepositWithdraw extends React.Component {
         dprops: "2.1.0"
     }
 
-    constructor( props ) {
-        super(props);
-        this.state = {hide_refcode: true};
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.account !== this.props.account || nextProps.qprops !== this.props.qprops || nextProps.dprops !== this.props.dprops || nextState.hide_refcode !== this.state.hide_refcode;
-    }
-
-    showRefcodeInput(e) {
-        e.preventDefault();
-        this.setState({hide_refcode: false});
+        return (
+            nextProps.account !== this.props.account ||
+            nextProps.qprops !== this.props.qprops ||
+            nextProps.dprops !== this.props.dprops
+        );
     }
 
     render() {

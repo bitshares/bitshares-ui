@@ -12,7 +12,6 @@ import Icon from "../../Icon/Icon";
 import TimeAgo from "../../Utility/TimeAgo";
 import HelpContent from "../../Utility/HelpContent";
 import WalletDb from "stores/WalletDb";
-import AmountSelector from "../../Utility/AmountSelector";
 import WithdrawModal from "../../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -596,7 +595,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 // deposit
                 let deposit_input_coin_type_options = [];
                 Object.keys(this.state.allowed_mappings_for_deposit).sort().forEach(allowed_deposit_input_coin_type => {
-                    deposit_input_coin_type_options.push(<option value={allowed_deposit_input_coin_type}>{this.state.coins_by_type[allowed_deposit_input_coin_type].symbol}</option>);
+                    deposit_input_coin_type_options.push(<option key={allowed_deposit_input_coin_type} value={allowed_deposit_input_coin_type}>{this.state.coins_by_type[allowed_deposit_input_coin_type].symbol}</option>);
                 });
                 let deposit_input_coin_type_select = 
                     <select value={this.state.deposit_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "deposit")}>
@@ -606,7 +605,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let deposit_output_coin_type_options = [];
                 let deposit_output_coin_types = this.state.allowed_mappings_for_deposit[this.state.deposit_input_coin_type];
                 deposit_output_coin_types.forEach(allowed_deposit_output_coin_type => {
-                    deposit_output_coin_type_options.push(<option value={allowed_deposit_output_coin_type}>{this.state.coins_by_type[allowed_deposit_output_coin_type].symbol}</option>);
+                    deposit_output_coin_type_options.push(<option key={allowed_deposit_output_coin_type} value={allowed_deposit_output_coin_type}>{this.state.coins_by_type[allowed_deposit_output_coin_type].symbol}</option>);
                 });
                 let deposit_output_coin_type_select = 
                     <select value={this.state.deposit_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "deposit")}>
@@ -676,7 +675,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 // withdrawal
                 let withdraw_input_coin_type_options = [];
                 Object.keys(this.state.allowed_mappings_for_withdraw).sort().forEach(allowed_withdraw_input_coin_type => {
-                    withdraw_input_coin_type_options.push(<option value={allowed_withdraw_input_coin_type}>{this.state.coins_by_type[allowed_withdraw_input_coin_type].symbol}</option>);
+                    withdraw_input_coin_type_options.push(<option key={allowed_withdraw_input_coin_type} value={allowed_withdraw_input_coin_type}>{this.state.coins_by_type[allowed_withdraw_input_coin_type].symbol}</option>);
                 });
                 let withdraw_input_coin_type_select =
                     <select value={this.state.withdraw_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "withdraw")}>
@@ -686,7 +685,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let withdraw_output_coin_type_options = [];
                 let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
                 withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
-                    withdraw_output_coin_type_options.push(<option value={allowed_withdraw_output_coin_type}>{this.state.coins_by_type[allowed_withdraw_output_coin_type].symbol}</option>);
+                    withdraw_output_coin_type_options.push(<option key={allowed_withdraw_output_coin_type} value={allowed_withdraw_output_coin_type}>{this.state.coins_by_type[allowed_withdraw_output_coin_type].symbol}</option>);
                 });
                 let withdraw_output_coin_type_select = 
                     <select value={this.state.withdraw_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "withdraw")}>

@@ -1,5 +1,6 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -113,15 +114,15 @@ class OrderBook extends React.Component {
 
     componentDidMount() {
         if (!this.props.horizontal) {
-            let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
             Ps.initialize(bidsContainer);
         }
     }
 
     componentDidUpdate(prevProps) {
         if (!this.props.horizontal) {
-            let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
-            let centerRow = React.findDOMNode(this.refs.centerRow);
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
+            let centerRow = ReactDOM.findDOMNode(this.refs.centerRow);
 
             if (this.props.marketReady && !this.state.hasCentered || (prevProps.quote !== this.props.quote) ) {
                 this._centerView();
@@ -135,8 +136,8 @@ class OrderBook extends React.Component {
     }
 
     _centerView() {
-        let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
-        let centerRow = React.findDOMNode(this.refs.centerRow);
+        let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
+        let centerRow = ReactDOM.findDOMNode(this.refs.centerRow);
         let outer = bidsContainer.getBoundingClientRect();
         let center = centerRow.getBoundingClientRect();
         bidsContainer.scrollTop += (center.top + center.height / 2) - (outer.height / 2);

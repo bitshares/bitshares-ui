@@ -1,6 +1,7 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes} from "react";
-import Highcharts from "react-highcharts/highstock";
+import Highcharts from "react-highcharts/bundle/highstock";
 import utils from "common/utils";
 import _ from "lodash";
 import Translate from "react-translate-component";
@@ -93,7 +94,7 @@ class PriceChart extends React.Component {
     }
 
     componentWillReceiveProps() {
-        let height = React.findDOMNode(this).offsetHeight;
+        let height = ReactDOM.findDOMNode(this).offsetHeight;
         this.setState({offsetHeight: height - 10});
     }
 

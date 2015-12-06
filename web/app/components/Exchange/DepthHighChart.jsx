@@ -1,10 +1,11 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highstock from "react-highcharts/highstock";
+import Highstock from "react-highcharts/bundle/highstock";
 import utils from "common/utils";
 import counterpart from "counterpart";
-import _ from "lodash";
+import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
 
 class DepthHighChart extends React.Component {
@@ -29,7 +30,7 @@ class DepthHighChart extends React.Component {
     }
 
     componentWillReceiveProps() {
-        let height = React.findDOMNode(this).offsetHeight;
+        let height = ReactDOM.findDOMNode(this).offsetHeight;
         this.setState({offsetHeight: height - 10});
     }
 
@@ -43,7 +44,7 @@ class DepthHighChart extends React.Component {
 
         let power = 1;
 
-        let flatBids = _.cloneDeep(flat_bids), flatAsks = _.cloneDeep(flat_asks), flatCalls = _.cloneDeep(flat_calls);
+        let flatBids = cloneDeep(flat_bids), flatAsks = cloneDeep(flat_asks), flatCalls = cloneDeep(flat_calls);
 
         if (flat_bids.length) {
             while ((flat_bids[flat_bids.length - 1][0] * power) < 1) {
@@ -113,9 +114,7 @@ class DepthHighChart extends React.Component {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/>
-                        <span style="color:${this.series.color}">\u25CF</span>
-                        ${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/><span style="color:${this.series.color}">\u25CF</span>${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"

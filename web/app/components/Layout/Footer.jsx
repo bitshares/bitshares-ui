@@ -1,6 +1,5 @@
-import React, {Component} from "react/addons";
-let Perf = React.addons.Perf;
-import AltContainer from "alt/AltContainer"
+import React, {Component} from "react";
+import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
@@ -27,11 +26,6 @@ class Footer extends React.Component {
 
     static contextTypes = {
         router: React.PropTypes.func.isRequired
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {perf: false};
     }
 
     shouldComponentUpdate(nextProps, nextState) {

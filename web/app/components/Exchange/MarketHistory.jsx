@@ -1,5 +1,6 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import {Link} from "react-router";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
@@ -43,12 +44,12 @@ class MarketHistory extends React.Component {
     }
 
     componentDidMount() {
-        let historyContainer = React.findDOMNode(this.refs.history);
+        let historyContainer = ReactDOM.findDOMNode(this.refs.history);
         Ps.initialize(historyContainer);
     }
 
     componentDidUpdate() {
-        let historyContainer = React.findDOMNode(this.refs.history);
+        let historyContainer = ReactDOM.findDOMNode(this.refs.history);
         Ps.update(historyContainer);
     }
 

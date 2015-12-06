@@ -1,13 +1,13 @@
 import React from "react";
 import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
-import AltContainer from "alt/AltContainer";
+import AltContainer from "alt-container";
 import Asset from "./Asset";
 
 class AssetContainer extends React.Component {
 
     render() {
-        let symbol = this.context.router.getCurrentParams().symbol;
+        let symbol = this.props.params.symbol;
         return (
               <AltContainer 
                   stores={[AccountStore, AssetStore]}
@@ -23,12 +23,10 @@ class AssetContainer extends React.Component {
                     }                    
                   }} 
                   >
-                <Asset symbol={symbol}/>
+                <Asset {...this.props} symbol={symbol}/>
               </AltContainer>
         );
     }
 }
-
-AssetContainer.contextTypes = { router: React.PropTypes.func.isRequired };
 
 export default AssetContainer;

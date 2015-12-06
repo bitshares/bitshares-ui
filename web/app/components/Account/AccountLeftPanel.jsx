@@ -74,19 +74,19 @@ class AccountLeftPanel extends React.Component {
                             <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={isMyAccount}/>
                             <div className="grid-container no-margin">
                                 { linkBtn }
-                                <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay"/></Link>
+                                <Link className="button outline block-button" to={`/transfer/?to=${account_name}`}><Translate content="account.pay"/></Link>
                             </div>
                         </div>
                         <section className="block-list">
                             <ul className="account-left-menu">
-                                <li><Link to="account-overview" params={{account_name}}><Translate content="account.overview"/></Link></li>
-                                <li><Link to="account-assets" params={{account_name}}><Translate content="explorer.assets.title"/></Link></li>
-                                <li><Link to="account-member-stats" params={{account_name}}><Translate content="account.member.stats"/></Link></li>
+                                <li><Link to={`/account/${account_name}/overview/`} ><Translate content="account.overview"/></Link></li>
+                                <li><Link to={`/account/${account_name}/assets/`}><Translate content="explorer.assets.title"/></Link></li>
+                                <li><Link to={`/account/${account_name}/member-stats/`}><Translate content="account.member.stats"/></Link></li>
                                 {/*<li><Link to="account-payees" params={{account_name}}><Translate content="account.payees"/></Link></li>*/}
-                                <li><Link to="account-permissions" params={{account_name}}><Translate content="account.permissions"/></Link></li>
-                                <li><Link to="account-voting" params={{account_name}}><Translate content="account.voting"/></Link></li>
-                                <li><Link to="account-orders" params={{account_name}}><Translate content="account.orders"/></Link></li>
-                                {isMyAccount ? <li><Link to="account-deposit-withdraw" params={{account_name}}><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                                <li><Link to={`/account/${account_name}/permissions/`}><Translate content="account.permissions"/></Link></li>
+                                <li><Link to={`/account/${account_name}/voting/`}><Translate content="account.voting"/></Link></li>
+                                <li><Link to={`/account/${account_name}/orders/`}><Translate content="account.orders"/></Link></li>
+                                {isMyAccount ? <li><Link to={`/account/${account_name}/deposit-withdraw/`}><Translate content="account.deposit_withdraw"/></Link></li> : null}
                             </ul>
                         </section>
                     </div>

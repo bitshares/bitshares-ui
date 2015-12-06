@@ -19,7 +19,7 @@ import BindToChainState from "./BindToChainState";
 class FormattedAsset extends React.Component {
 
     static propTypes = {
-        amount: PropTypes.number.isRequired,
+        amount: PropTypes.any.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
@@ -30,6 +30,7 @@ class FormattedAsset extends React.Component {
     };
 
     static defaultProps = {
+        amount: 0,
         decimalOffset: 0,
         hide_asset: false,
         hide_amount: false,

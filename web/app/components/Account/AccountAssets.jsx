@@ -31,10 +31,6 @@ class AccountAssets extends React.Component {
         return {assets: AssetStore.getState().assets}
     }
 
-    static contextTypes = {
-        router: React.PropTypes.func.isRequired
-    };
-
     static defaultProps = {
         symbol: "",
         name: "",
@@ -104,14 +100,6 @@ class AccountAssets extends React.Component {
         this._checkAssets(this.props.assets, true);
     }
 
-    componentDidMount() {
-        let query_params = this.context.router.getCurrentQuery();
-        if(query_params.create_asset) {
-            console.log("zf publish create asset");
-            ZfApi.publish("create_asset", "open");
-        }
-    }
-
     _onIssueInput(value, e) {
         let key = e.target.id;
         let {issue} = this.state;
@@ -174,7 +162,7 @@ class AccountAssets extends React.Component {
 
     _editButtonClick(symbol, account_name, e) {
         e.preventDefault();
-        this.context.router.transitionTo("account-update-asset", {account_name: account_name, asset: symbol});
+        this.props.history.pushState(null, `/account/${account_name}/update-asset/${symbol}`);
     }
 
     _onAccountSelect(account_name) {
@@ -207,8 +195,8 @@ class AccountAssets extends React.Component {
         })
         .map(asset => {
             return (
-                    <tr>
-                       <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
+                    <tr key={asset.symbol}>
+                       <td><Link to={`asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                        <td style={{maxWidth: "200px"}}>{asset.options.description}</td>
                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
@@ -255,18 +243,8 @@ class AccountAssets extends React.Component {
                     </div>
 
                     <div className="content-block">
-                        <Link to="account-create-asset" params={{account_name}}><button className="button outline"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
+                        <Link to={`/account/${account_name}/create-asset/`}><button className="button outline"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
                     </div>
-
-                    <Modal id="create_asset" overlay={true}>
-                        <Trigger close="create_asset">
-                            <a href="#" className="close-button">&times;</a>
-                        </Trigger>
-                        <br/>
-                        <div className="grid-block vertical">
-
-                        </div>
-                    </Modal>
 
                     <Modal id="issue_asset" overlay={true}>
                         <Trigger close="issue_asset">

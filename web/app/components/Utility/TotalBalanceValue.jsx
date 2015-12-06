@@ -88,6 +88,9 @@ class TotalValue extends React.Component {
     }
 
     _convertValue(amount, fromAsset, toAsset, marketStats, coreAsset) {
+        if (!fromAsset || !toAsset) {
+            return 0;
+        }
         let toStats, fromStats;
 
         let toID = toAsset.get("id");
@@ -107,10 +110,22 @@ class TotalValue extends React.Component {
         return utils.convertValue(price, amount, fromAsset, toAsset);
     }
 
+    _assetValues(totals, amount, asset) {
+        if (!totals[asset]) {
+            totals[asset] = amount; 
+        } else {
+            totals[asset] += amount; 
+        }
+
+        return totals;
+    }
+
     render() {
         let {fromAssets, toAsset, balances, marketStats, collateral, debt, openOrders} = this.props;
         let coreAsset = ChainStore.getAsset("1.3.0");
-
+        if (!coreAsset || !toAsset) {
+            return null;
+        }
         let assets = {};
         fromAssets.forEach(asset => {
             if (asset) {
@@ -119,11 +134,13 @@ class TotalValue extends React.Component {
         });
 
         let totalValue = 0;
+        let assetValues = {};
 
         // Collateral value
         let collateralValue = this._convertValue(collateral, coreAsset, toAsset, marketStats, coreAsset);
 
         totalValue += collateralValue;
+        assetValues = this._assetValues(assetValues, collateralValue, coreAsset.get("id"));
 
         // Open orders value
         for (let asset in openOrders) {
@@ -131,6 +148,7 @@ class TotalValue extends React.Component {
             if (fromAsset) {
                 let orderValue = this._convertValue(openOrders[asset], fromAsset, toAsset, marketStats, coreAsset);
                 totalValue += orderValue;
+                assetValues = this._assetValues(assetValues, orderValue, fromAsset.get("id"));
             }
         }
 
@@ -140,6 +158,7 @@ class TotalValue extends React.Component {
             if (fromAsset) {
                 let debtValue = this._convertValue(debt[asset], fromAsset, toAsset, marketStats, coreAsset);
                 totalValue -= debtValue;
+                assetValues = this._assetValues(assetValues, -debtValue, fromAsset.get("id"));
             }
         }
 
@@ -152,12 +171,26 @@ class TotalValue extends React.Component {
                 if (fromAsset) {
                     let eqValue = this._convertValue(balance.amount, fromAsset, toAsset, marketStats, coreAsset);
                     totalValue += eqValue;
+                    assetValues = this._assetValues(assetValues, eqValue, fromAsset.get("id"));
                 }
             }
-        })
+        });
+
+        let totalsTip = "<table><tbody>";
+        for (let asset in assetValues) {
+            if (assets[asset]) {
+                let symbol = assets[asset].get("symbol");
+                let amount = utils.format_asset(assetValues[asset], toAsset );
+                totalsTip = totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount}</td></tr>`;
+            }
+        }
+
+        totalsTip += "</tbody></table>"
+        
+        // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
 
         return (
-            <div>
+            <div data-tip={totalsTip} data-place="bottom" data-type="light" html data-html={true} >
                 <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>
             </div>
 

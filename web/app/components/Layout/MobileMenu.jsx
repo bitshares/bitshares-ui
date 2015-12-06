@@ -21,7 +21,7 @@ class MobileMenu extends React.Component {
     }
 
     static contextTypes = {
-      router: React.PropTypes.func.isRequired
+      history: React.PropTypes.object
     };
 
     static getStores() {
@@ -43,6 +43,8 @@ class MobileMenu extends React.Component {
     }
 
     _onNavigate(route, e) {
+      console.log("mobilemenu this:", this);
+
       e.preventDefault();
       let path = route.route ? route.route : route;
       this.setState({active: route.route ? route.route : route});

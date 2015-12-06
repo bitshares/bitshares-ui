@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
@@ -167,9 +168,7 @@ class Exchange extends React.Component {
         currentAccount: ChainTypes.ChainAccount.isRequired,
         quoteAsset: ChainTypes.ChainAsset.isRequired,
         baseAsset: ChainTypes.ChainAsset.isRequired,
-        quote: PropTypes.string.isRequired,
-        base: PropTypes.string.isRequired,
-        limit_orders: PropTypes.array.isRequired,
+        limit_orders: PropTypes.object.isRequired,
         balances: PropTypes.array.isRequired,
         totalBids: PropTypes.number.isRequired,
         flat_asks: PropTypes.array.isRequired,
@@ -197,8 +196,6 @@ class Exchange extends React.Component {
         volumeData: []
     }
 
-    static contextTypes = {router: React.PropTypes.func.isRequired};
-
     componentWillMount() {
         if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
             this._subToMarket(this.props);
@@ -211,7 +208,7 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = React.findDOMNode(this.refs.center);
+        let centerContainer = ReactDOM.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
         SettingsActions.changeViewSetting({
             lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
@@ -966,7 +963,7 @@ class Exchange extends React.Component {
         };
 
         let bucketOptions = buckets.map(bucket => {
-            return <div className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div key={bucket} className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
         }).reverse();
 
         // Market stats
@@ -1024,7 +1021,7 @@ class Exchange extends React.Component {
                         <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
                             <div className="grid-block overflow-visible">
                                 <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
-                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
+                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
                                 <div className="grid-block vertical">
                                     <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>

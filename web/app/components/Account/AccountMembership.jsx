@@ -101,42 +101,46 @@ class AccountMembership extends React.Component {
                         <div className="grid-content regular-padding">
                             <h4><Translate content="account.member.fee_allocation"/></h4>
                             <table className="table key-value-table">
-                                <tr>
-                                    <td><Translate content="account.member.network_percentage"/></td>
-                                    <td>{network_fee}%</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.lifetime_referrer"/>  &nbsp;
-                                    (<Link to="account" params={{account_name: account.lifetime_referrer}}>{account.lifetime_referrer_name}</Link>)
-                                    </td>
-                                    <td>{lifetime_fee}%</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.registrar"/>  &nbsp;
-                                    (<Link to="account" params={{account_name: account.registrar_name}}>{account.registrar_name}</Link>)
-                                    </td>
-                                    <td>{registrar_fee}%</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.referrer"/>  &nbsp;
-                                    (<Link to="account" params={{account_name: account.referrer}}>{account.referrer_name }</Link>)
-                                    </td>
-                                    <td>{referrer_fee}%</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.membership_expiration"/> </td>
-                                    <td>{expiration_date}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><Translate content="account.member.network_percentage"/></td>
+                                        <td>{network_fee}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="account.member.lifetime_referrer"/>  &nbsp;
+                                        (<Link to="account" params={{account_name: account.lifetime_referrer}}>{account.lifetime_referrer_name}</Link>)
+                                        </td>
+                                        <td>{lifetime_fee}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="account.member.registrar"/>  &nbsp;
+                                        (<Link to="account" params={{account_name: account.registrar_name}}>{account.registrar_name}</Link>)
+                                        </td>
+                                        <td>{registrar_fee}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="account.member.referrer"/>  &nbsp;
+                                        (<Link to="account" params={{account_name: account.referrer}}>{account.referrer_name }</Link>)
+                                        </td>
+                                        <td>{referrer_fee}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="account.member.membership_expiration"/> </td>
+                                        <td>{expiration_date}</td>
+                                    </tr>
+                                </tbody>
                             </table>
 
                             <h4 style={{paddingTop: "1rem"}}><Translate content="account.member.fees_cashback"/></h4>
-                            <table className="table key-value-table">                                
+                            <table className="table key-value-table">
                                 <Statistics stat_object={account.statistics}/>
                                 {cvb ? (
-                                    <tr>
-                                        <td><Translate content="account.member.cashback"/> </td>
-                                        <td><FormattedAsset amount={cvb.getIn(["balance", "amount"])} asset={cvb.getIn(["balance", "asset_id"])} /></td>
-                                    </tr>) : null}
+                                    <tbody>
+                                        <tr>
+                                            <td><Translate content="account.member.cashback"/> </td>
+                                            <td><FormattedAsset amount={cvb.getIn(["balance", "amount"])} asset={cvb.getIn(["balance", "asset_id"])} /></td>
+                                        </tr>
+                                    </tbody>) : null}
                             </table>
                         </div>
                     </div>

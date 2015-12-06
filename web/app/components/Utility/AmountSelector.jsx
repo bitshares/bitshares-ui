@@ -73,7 +73,7 @@ class AmountSelector extends React.Component {
         label: React.PropTypes.string, // a translation key for the label
         asset: ChainTypes.ChainAsset.isRequired, // selected asset by default
         assets: React.PropTypes.array,
-        amount: React.PropTypes.string,
+        amount: React.PropTypes.any,
         placeholder: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired,
         display_balance: React.PropTypes.object,
@@ -118,7 +118,6 @@ class AmountSelector extends React.Component {
     }
 
     render() {
-
         let value = this.formatAmount(this.props.amount);
         
         return (

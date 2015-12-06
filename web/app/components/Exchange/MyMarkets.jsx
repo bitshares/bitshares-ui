@@ -1,5 +1,6 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react-router";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -33,7 +34,7 @@ class MyMarkets extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
     constructor(props) {
@@ -73,7 +74,7 @@ class MyMarkets extends React.Component {
     }
 
     componentDidMount() {
-        let historyContainer = React.findDOMNode(this.refs.favorites);
+        let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
         Ps.initialize(historyContainer);
 
         if (this.state.activeTab === "all") {
@@ -82,7 +83,7 @@ class MyMarkets extends React.Component {
     }
 
     componentDidUpdate() {
-        let historyContainer = React.findDOMNode(this.refs.favorites);
+        let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
         Ps.update(historyContainer);
     }
 
@@ -109,7 +110,7 @@ class MyMarkets extends React.Component {
     }
 
     _goMarkets() {
-        this.context.router.transitionTo("markets");
+        this.context.history.pushState(null, "/markets");
     }
 
     _changeTab(tab) {
@@ -323,25 +324,25 @@ class MyMarkets extends React.Component {
         let headers = columns.map(header => {
             switch (header.name) {
                 case "market":
-                    return <th className="clickable" onClick={this._changeSort.bind(this, "name")}><Translate content="exchange.market" /></th>;
+                    return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "name")}><Translate content="exchange.market" /></th>;
 
                 case "vol":
-                    return <th className="clickable" onClick={this._changeSort.bind(this, "volume")}style={{textAlign: "right"}}><Translate content="exchange.vol_short" /></th>;
+                    return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "volume")}style={{textAlign: "right"}}><Translate content="exchange.vol_short" /></th>;
 
                 case "price":
-                    return <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>;
+                    return <th key={header.name} style={{textAlign: "right"}}><Translate content="exchange.price" /></th>;
 
                 case "quoteSupply":
-                    return <th><Translate content="exchange.quote_supply" /></th>;
+                    return <th key={header.name}><Translate content="exchange.quote_supply" /></th>;
 
                 case "baseSupply":
-                    return <th><Translate content="exchange.base_supply" /></th>;
+                    return <th key={header.name}><Translate content="exchange.base_supply" /></th>;
 
                 case "change":
-                    return <th className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
+                    return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
 
                 default:
-                    return <th></th>;
+                    return <th key={header.name}></th>;
             }
         });
 

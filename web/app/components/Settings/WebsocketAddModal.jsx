@@ -75,7 +75,7 @@ class WebsocketAddModal extends React.Component {
         let removeString;
         let options = this.props.api.map(entry => {
             removeString = entry;
-            return <div><h5 key={entry}>{entry}</h5></div>;
+            return <div key={entry}><h5>{entry}</h5></div>;
         });
 
         return ( 

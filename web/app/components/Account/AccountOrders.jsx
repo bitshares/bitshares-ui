@@ -82,7 +82,7 @@ class AccountOrders extends React.Component {
         for (let market in marketOrders) {
             if (marketOrders[market].length) {
                 tables.push(
-                    <div style={marketIndex > 0 ? {paddingTop: "1rem"} : {}}>
+                    <div key={market} style={marketIndex > 0 ? {paddingTop: "1rem"} : {}}>
                     <h5><MarketLink quote={markets[market].quote.id} base={markets[market].base.id} /></h5>
                     <table className="table table-striped text-right ">
                         <TableHeader baseSymbol={markets[market].base.symbol} quoteSymbol={markets[market].quote.symbol}/>

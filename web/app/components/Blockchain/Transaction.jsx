@@ -6,7 +6,6 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
@@ -214,7 +213,6 @@ class Transaction extends React.Component {
                             <td>
                                 <FormattedDate
                                     value={op[1].expiration}
-                                    formats={intlData.formats}
                                     format="full"
                                 />
                             </td>

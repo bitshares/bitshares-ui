@@ -5,7 +5,6 @@ import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
-import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
 import PublicKey from "ecc/key_public";
 import WalletApi from "rpc_api/WalletApi";
@@ -24,10 +23,6 @@ import RecentTransactions from "./RecentTransactions";
 let wallet_api = new WalletApi()
 
 class AccountPermissions extends React.Component {
-
-    static propTypes = {
-        account: React.PropTypes.object.isRequired // the account object that should be updated
-    }
 
     constructor(props) {
         super(props);

@@ -24,10 +24,6 @@ let wallet_api = new WalletApi()
 
 class AccountVoting extends React.Component {
 
-    static propTypes = {
-        account: React.PropTypes.object.isRequired // the account object that should be updated
-    }
-
     constructor(props) {
         super(props);
         this.state = {

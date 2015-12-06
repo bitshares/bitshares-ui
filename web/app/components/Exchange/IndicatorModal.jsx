@@ -47,7 +47,7 @@ export default class IndicatorModal extends React.Component {
                         <td style={{border: "none", width: "80%"}}><Translate style={{fontWeight: "bold"}} content={`exchange.${indicator}`} />:</td>
                         <td style={{border: "none"}}>
                             <div className="switch" style={{marginBottom: "10px"}} onClick={this.props.onChangeIndicator.bind(this, indicator)}>
-                                <input type="checkbox" checked={indicators[indicator]} />
+                                <input type="checkbox" checked={indicators[indicator]} onChange={() => {}} />
                                 <label />
                             </div>
                         </td>

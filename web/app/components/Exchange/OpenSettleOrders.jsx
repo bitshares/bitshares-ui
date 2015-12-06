@@ -1,10 +1,10 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -58,7 +58,6 @@ class SettleOrderRow extends React.Component {
                     <td><FormattedAsset amount={order.balance.amount} asset={order.balance.asset_id} /></td>
                     <td><FormattedDate
                         value={order.settlement_date}
-                        formats={intlData.formats}
                         format="short"
                         />
                     </td>
@@ -83,7 +82,7 @@ class OpenSettleOrders extends React.Component {
     }
 
     componentDidMount() {
-        let orderContainer = React.findDOMNode(this.refs.orders);
+        let orderContainer = ReactDOM.findDOMNode(this.refs.orders);
         Ps.initialize(orderContainer);
     }
 

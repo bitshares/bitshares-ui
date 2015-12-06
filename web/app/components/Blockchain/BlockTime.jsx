@@ -54,7 +54,7 @@ class BlockTime extends React.Component {
     }
     */
 
-                //{this.state.time ?  <FormattedDate value={this.state.time} formats={intlData.formats} format="short"/> : null}
+                //{this.state.time ?  <FormattedDate value={this.state.time} format="short"/> : null}
     render() {
         return (
             <span className="time" key={this.props.block_number}>

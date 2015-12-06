@@ -8,10 +8,6 @@ import Proposals from "components/Account/Proposals";
 
 class Dashboard extends Component {
 
-    static propTypes = {
-      linkedAccounts: PropTypes.object.isRequired
-    }
-
     render() {
         let names = this.props.linkedAccounts.toArray().sort();
         let itemRows = [];

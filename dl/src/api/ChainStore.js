@@ -1100,8 +1100,6 @@ class ChainStore
 
         let account = this.objects_by_id.get(object.borrower);
         if (account && account.has("call_orders")) {
-          console.log("call orders:", object)
-          console.log("account:", account.get("name"), account.get("id"), account.toJS());
           let call_orders = account.get("call_orders");
           if (!call_orders.has(object.id)) {
             account = account.set("call_orders", call_orders.add(object.id));

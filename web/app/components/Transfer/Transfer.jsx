@@ -15,20 +15,18 @@ import ChainStore from "api/ChainStore";
 
 class Transfer extends React.Component {
 
-    static contextTypes = {
-        router: React.PropTypes.func.isRequired
-    }
-
     constructor(props) {
         super(props);
         this.state = Transfer.getInitialState();
-        if(props.query.from) this.state.from_name = props.query.from;
-        if(props.query.to) this.state.to_name = props.query.to;
-        if(props.query.amount) this.state.amount = props.query.amount;
-        if(props.query.asset) this.state.asset_id = props.query.asset;
-        if(props.query.memo) this.state.memo = props.query.memo;
+        let {query} = this.props.location;
+
+        if(query.from) this.state.from_name = query.from;
+        if(query.to) this.state.to_name = query.to;
+        if(query.amount) this.state.amount = query.amount;
+        if(query.asset) this.state.asset_id = query.asset;
+        if(query.memo) this.state.memo = query.memo;
         let currentAccount = AccountStore.getState().currentAccount;
-        if (!this.state.from_name && props.query.to !== currentAccount) this.state.from_name = currentAccount;
+        if (!this.state.from_name && query.to !== currentAccount) this.state.from_name = currentAccount;
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
@@ -152,10 +150,7 @@ class Transfer extends React.Component {
 
         let from_my_account = AccountStore.isMyAccount(from_account)
         if(from_account && ! from_my_account && ! propose ) {
-            from_error = <span>
-                {counterpart.translate("account.errors.not_yours")}
-                {/* &nbsp;(<a onClick={this.onPropose.bind(this, true)}>{counterpart.translate("propose")}</a>) */}
-            </span>;
+            from_error = counterpart.translate("account.errors.not_yours");
         }
 
         let asset_types = [], fee_asset_types = [];
@@ -207,8 +202,6 @@ class Transfer extends React.Component {
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account)
         let tabIndex = 1
-
-
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
