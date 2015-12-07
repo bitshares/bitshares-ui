@@ -23,7 +23,7 @@ class AssetFlag extends React.Component {
 
         return (
             <span>
-                <span className="button disabled small" style={{margin: "0 0 0.25rem 0"}}>
+                <span className="label info">
                     <Translate content={"account.user_issued_assets." + name}/>
                 </span>
                 {' '}
@@ -45,7 +45,7 @@ class AssetPermission extends React.Component {
 
         return (
             <span>
-                <span className="button disabled small"  style={{margin: "0 0 0.25rem 0"}}>
+                <span className="label info">
                     <Translate content={"account.user_issued_assets." + name}/>
                 </span>
                 {' '}
@@ -157,20 +157,17 @@ class Asset extends React.Component {
         var issuerName = issuer ? issuer.get('name') : '';
 
         var icon = (<Icon name="asset" className="asset" size="4x"/>);
-        var help = (
-            <HelpContent
-                path = {"assets/" + asset.symbol}
-                alt_path = "assets/Asset"
-                section="summary"
-                symbol= {asset.symbol}
-                description={asset.options.description}
-                issuer= {issuerName}
-            />
-        );
 
         return (
-                <div className="grid-block regular-padding" style={{overflow:"visible"}}>
-                        {help}
+                <div style={{overflow:"visible"}}>
+                    <HelpContent
+                        path = {"assets/" + asset.symbol}
+                        alt_path = "assets/Asset"
+                        section="summary"
+                        symbol= {asset.symbol}
+                        description={asset.options.description}
+                        issuer= {issuerName}
+                    />
                 </div>
         );
     }

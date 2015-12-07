@@ -85,7 +85,7 @@ class Assets extends React.Component {
         }).map((asset) => {
             return (
                 <tr key={asset.symbol}>
-                    <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
+                    <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></td>
                 </tr>
@@ -105,7 +105,7 @@ class Assets extends React.Component {
         }).map((asset) => {
             return (
                 <tr key={asset.symbol}>
-                    <td><Link to="asset" params={{symbol: asset.symbol}}>{asset.symbol}</Link></td>
+                    <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></td>
                 </tr>
