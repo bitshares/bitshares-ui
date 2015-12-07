@@ -60,7 +60,7 @@ import AccountRefsStore from "stores/AccountRefsStore";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
-import createBrowserHistory from 'history/lib/createBrowserHistory';
+import createBrowserHistory from 'history/lib/createHashHistory';
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
@@ -69,7 +69,7 @@ require("./components/Utility/Prototypes"); // Adds a .equals method to Array fo
 require("./assets/stylesheets/app.scss");
 require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
-let history = createBrowserHistory()
+let history = createBrowserHistory({queryKey: false})
 
 class App extends React.Component {
 
