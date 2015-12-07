@@ -160,6 +160,10 @@ class Operation extends React.Component {
                 color = "success";
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
 
+                if (memo_text && memo_text.length > 35) {
+                    memo_text = memo_text.substr(0, 35) + "...";
+                }
+
                 // if (current === op[1].from) {
 
                 //     column = (
