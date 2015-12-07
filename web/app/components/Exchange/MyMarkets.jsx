@@ -46,8 +46,8 @@ class MyMarkets extends React.Component {
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
-            inverseSort: props.viewSettings.get("myMarketsInvert"),
-            sortBy: props.viewSettings.get("myMarketsSort"),
+            inverseSort: props.viewSettings.get("myMarketsInvert") || true,
+            sortBy: props.viewSettings.get("myMarketsSort") || "volume",
             activeTab: props.viewSettings.get("favMarketTab") || "starred",
             lookupQuote: quote,
             lookupBase: base,
