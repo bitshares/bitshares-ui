@@ -1,5 +1,5 @@
 [# summary]
-### Varlık {symbol}
+### Aktif {symbol}
 
 {description}  
 Piyasaya süren {issuer}
