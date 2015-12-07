@@ -1,4 +1,4 @@
-# İşçiler
+# Emekçiler
 
 İşçiler maaş karşılığında bir hizmet veren tekliflerdir, maaşlarını blok zincirinden alırlar. Bir işçi teklifi en azından aşağıdaki bilgileri kapsamalıdır :
 
