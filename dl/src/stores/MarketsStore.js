@@ -85,7 +85,7 @@ class MarketsStore {
 
     _getBucketSize() {
         let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
-        return bs ? parseInt(bs) : 3600;
+        return bs ? parseInt(bs) : 4 * 3600;
     }
 
     _setBucketSize(size) {

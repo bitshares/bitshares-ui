@@ -116,6 +116,9 @@ class OrderBook extends React.Component {
         if (!this.props.horizontal) {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
             Ps.initialize(bidsContainer);
+        } else {
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
+            Ps.initialize(bidsContainer);            
         }
     }
 
@@ -132,6 +135,9 @@ class OrderBook extends React.Component {
                 }, 250);
             }
             Ps.update(bidsContainer);
+        } else {
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
+            Ps.update(bidsContainer);            
         }
     }
 
@@ -258,7 +264,7 @@ class OrderBook extends React.Component {
 
         if (this.props.horizontal) {
             return (
-                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
+                    <div ref="hor_bids"  className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                             <div className="exchange-content-header"><Translate content="exchange.asks" /></div>
                             <table className="table order-table table-hover text-right">
