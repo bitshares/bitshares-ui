@@ -993,7 +993,7 @@ class Exchange extends React.Component {
 
                     {/* Left Column - Open Orders */}
                     {leftOrderBook ? (
-                        <div className="grid-block left-column large-2 no-overflow">
+                        <div className="grid-block left-column shrink no-overflow">
                             <OrderBook
                                 latest={latestPrice}
                                 changeClass={changeClass}
@@ -1015,7 +1015,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
+                    <div className={cnames("grid-block main-content vertical ps-container")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
@@ -1068,13 +1068,14 @@ class Exchange extends React.Component {
                                     </div>
                                     <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
                                         <ul className="market-stats stats bottom-stats">
-                                            <li className="stat" style={{minHeight: "2rem"}}>
-                                                <span>
-                                                    <span><Translate content="exchange.time" />:</span>
-                                                    <span>{bucketOptions}</span>
-                                                    <span></span>
-                                                </span>
-                                            </li>
+                                            {!this.state.showDepthChart ? (
+                                                    <li className="stat" style={{minHeight: "2rem"}}>
+                                                    <span>
+                                                        <span><Translate content="exchange.time" />:</span>
+                                                        <span>{bucketOptions}</span>
+                                                        <span></span>
+                                                    </span>
+                                                </li>) : null}
                                             {!this.state.showDepthChart && this.props.priceData.length ? (
                                                 <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
                                                     <div className="indicators">
@@ -1151,7 +1152,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={445}
+                                    height={425}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     plotLine={this.state.depthLine}
                                     settlementPrice={settlementPrice}
@@ -1287,7 +1288,7 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
+                    <div className="grid-block shrink right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
                         <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh", borderBottom: "1px solid grey"}}>
                             <MarketHistory

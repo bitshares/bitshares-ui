@@ -14,7 +14,7 @@ class DepthHighChart extends React.Component {
         return (
             !Immutable.is(nextProps.orders, this.props.orders) ||
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
-            nextProps.plotLine !== this.props.plotLine ||
+            // nextProps.plotLine !== this.props.plotLine ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.settlementPrice !== this.props.settlementPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
@@ -188,16 +188,16 @@ class DepthHighChart extends React.Component {
         }
 
         // Add plotlines if defined
-        if (this.props.plotLine) {
-            config.xAxis.plotLines.push({
-                color: "red",
-                id: "plot_line",
-                dashStyle: "longdashdot",
-                value: this.props.plotLine * power,
-                width: 1,
-                zIndex: 5
-            });
-        }
+        // if (falsethis.props.plotLine) {
+        //     config.xAxis.plotLines.push({
+        //         color: "red",
+        //         id: "plot_line",
+        //         dashStyle: "longdashdot",
+        //         value: this.props.plotLine * power,
+        //         width: 1,
+        //         zIndex: 5
+        //     });
+        // }
 
         // Market asset
         if (this.props.LCP) {

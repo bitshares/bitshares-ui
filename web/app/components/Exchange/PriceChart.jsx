@@ -203,7 +203,7 @@ class PriceChart extends React.Component {
 
         let positiveColor = "rgba(110, 193, 5, 0.80)";
         let negativeColor = "rgba(225, 66, 74, 0.80)";
-
+        
         if (!priceSeriesData.length && latest) {
             let now = (new Date).getTime();
             priceSeriesData.push([now, latest.full, latest.full, latest.full, latest.full]);
