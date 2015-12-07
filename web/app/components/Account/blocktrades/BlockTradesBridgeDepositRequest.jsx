@@ -276,7 +276,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.update_timer = setInterval(this.updateEstimates.bind(this), this.refresh_interval);
     }
 
-    componentWillUnount()
+    componentWillUnmount()
     {
         clearInterval(this.update_timer);
     }
