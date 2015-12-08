@@ -147,7 +147,7 @@ class App extends React.Component {
                     <div className="grid-block vertical">
                         {this.props.children}
                     </div>
-                    {/*<Footer synced={this.state.synced}/>*/}
+                    <Footer synced={this.state.synced}/>
                     <ReactTooltip place="top" type="dark" effect="solid"/>
                 </div>
             );
