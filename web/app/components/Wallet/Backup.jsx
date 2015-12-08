@@ -426,6 +426,5 @@ class Reset extends BackupBaseComponent {
     onReset() {
         BackupActions.reset()
         window.history.back()
-        // this.context.router.transitionTo("backup")
     }
 }

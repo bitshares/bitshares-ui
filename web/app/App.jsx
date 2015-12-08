@@ -141,9 +141,8 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    {<Header/>}
-                    {/*<MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                    */}
+                    <Header/>
+                    <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                     <div className="grid-block vertical">
                         {this.props.children}
                     </div>

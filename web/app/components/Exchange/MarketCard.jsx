@@ -20,10 +20,12 @@ class MarketCard extends React.Component {
         core: "1.3.0"
     }
 
-    static contextTypes = {router: React.PropTypes.func.isRequired};
+    static contextTypes = {
+        history: React.PropTypes.object
+    }
 
     _onClick(marketID) {
-        this.context.router.transitionTo("exchange", {marketID: marketID});
+        this.context.history.pushState(null, `/market/${marketID}`);
     }
 
     render() {
