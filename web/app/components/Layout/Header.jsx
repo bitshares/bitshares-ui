@@ -30,7 +30,8 @@ class Header extends React.Component {
             currentAccount: AccountStore.getState().currentAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket")
+            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            starredAccounts: SettingsStore.getState().starredAccounts
         }
     }
 
@@ -65,6 +66,7 @@ class Header extends React.Component {
             nextProps.locked !== this.props.locked ||
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||
+            nextProps.starredAccounts !== this.props.starredAccounts ||
             nextState.active !== this.state.active
         );
     }
@@ -107,21 +109,35 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {linkedAccounts, currentAccount} = this.props;
+        let {linkedAccounts, currentAccount, starredAccounts} = this.props;
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
         let linkToAccountOrDashboard;
 
-        let selectAccounts = AccountStore.getMyAccounts();
+        let tradingAccounts = AccountStore.getMyAccounts();
+
+        if (starredAccounts.size) {
+            for (let i = tradingAccounts.length - 1; i >= 0; i--) {
+                if (!starredAccounts.has(tradingAccounts[i])) {
+                    tradingAccounts.splice(i, 1);
+                }
+            };
+            starredAccounts.forEach(account => {
+                if (tradingAccounts.indexOf(account.name) === -1) {
+                    tradingAccounts.push(account.name);
+                }
+            });
+        }
+
         let myAccounts = AccountStore.getMyAccounts();
 
         let myAccountsList = Immutable.List(myAccounts);
 
         let walletBalance = myAccounts.length ? (
                             <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
-                                <AccountWrapper accounts={myAccounts} />
+                                <AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
         if (linkedAccounts.size > 1) {
@@ -161,13 +177,13 @@ class Header extends React.Component {
         if (currentAccount && active.indexOf("market/") !== -1) {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
-            if (selectAccounts.indexOf(currentAccount) < 0) {
-                selectAccounts.push(currentAccount);
+            if (tradingAccounts.indexOf(currentAccount) < 0) {
+                tradingAccounts.push(currentAccount);
             }
 
-            if (selectAccounts.length > 1) {
+            if (tradingAccounts.length > 1) {
 
-                let accountsList = selectAccounts
+                let accountsList = tradingAccounts
                     .sort()
                     .map(name => {
                         return <li key={name}><a href onClick={this._accountClickHandler.bind(this, name)}>{name}</a></li>;

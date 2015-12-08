@@ -22,8 +22,13 @@ class AccountPage extends React.Component {
 
     componentWillMount() {
         let account = this.props.params.account_name;
-        if(account && AccountStore.getState().linkedAccounts.get(account))
+        let {linkedAccounts, starredAccounts} = AccountStore.getState();
+        if(account && linkedAccounts.get(account)) {
+            if (starredAccounts.size && !starredAccounts.has(account)) {
+                return;
+            }
             AccountActions.setCurrentAccount(this.props.params.account_name);
+        }
     }
 
     render() {

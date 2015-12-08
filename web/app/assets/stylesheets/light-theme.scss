@@ -412,7 +412,7 @@ td.orderHistoryBid {
   h6 {
     color: $secondary-text-color;
   }
-  .my-account h5 {
+  .my-account h5, td.my-account {
     color: $info-color;
   }
 }
