@@ -808,7 +808,7 @@ class Operation extends React.Component {
                 console.log("unimplemented op:", op);
                 column = (
                     <span>
-                        <Link to="block" params={{height: block}}>#{block}</Link>
+                        <Link to={`/block/${block}`}>#{block}</Link>
                     </span>
 
                 );

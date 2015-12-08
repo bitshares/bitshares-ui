@@ -81,7 +81,7 @@ class Transaction extends React.Component {
         let Link = this.props.no_links ? NoLinkDecorator : RealLink;
         return utils.is_object_id(name_or_id) ?
             <LinkToAccountById account={name_or_id}/> :
-            <Link to="account-overview" params={{account_name: name_or_id}}>{name_or_id}</Link>;
+            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>;
     }
 
     linkToAsset(symbol_or_id) {
@@ -89,7 +89,7 @@ class Transaction extends React.Component {
         let Link = this.props.no_links ? NoLinkDecorator : RealLink;
         return utils.is_object_id(symbol_or_id) ?
             <LinkToAssetById asset={symbol_or_id}/> :
-            <Link to="asset" params={{symbol: symbol_or_id}}>{symbol_or_id}</Link>;
+            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
     render() {

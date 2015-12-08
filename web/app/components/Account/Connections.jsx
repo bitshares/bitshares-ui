@@ -8,13 +8,13 @@ class Connections extends React.Component {
         let {organizations, blackList, isMyAccount} = this.props;
         let knownBy = organizations ? organizations.map((account, i) => {
             if (i< 5) {
-                return <li key={account}>X: <Link to="account" params={{account_name: account}}>{account}</Link></li>;
+                return <li key={account}>X: <Link to={`/account/${account}/overview/`}>{account}</Link></li>;
             }
         }) : null;
 
         let unwanted = blackList ? blackList.map((account, i) => {
             if (i< 5) {
-                return <li key={account}>X: <Link to="account" params={{account_name: account}}>{account}</Link></li>;
+                return <li key={account}>X: <Link to={`/account/${account}/overview/`}>{account}</Link></li>;
             }
         }) : null;
 
