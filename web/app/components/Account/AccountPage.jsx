@@ -22,7 +22,8 @@ class AccountPage extends React.Component {
 
     componentWillMount() {
         let account = this.props.params.account_name;
-        let {linkedAccounts, starredAccounts} = AccountStore.getState();
+        let {linkedAccounts} = AccountStore.getState();
+        let {starredAccounts} = SettingsStore.getState();
         if(account && linkedAccounts.get(account)) {
             if (starredAccounts.size && !starredAccounts.has(account)) {
                 return;
