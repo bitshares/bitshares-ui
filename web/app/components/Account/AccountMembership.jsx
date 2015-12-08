@@ -108,19 +108,19 @@ class AccountMembership extends React.Component {
                                     </tr>
                                     <tr>
                                         <td><Translate content="account.member.lifetime_referrer"/>  &nbsp;
-                                        (<Link to="account" params={{account_name: account.lifetime_referrer}}>{account.lifetime_referrer_name}</Link>)
+                                        (<Link to={`account/${account.lifetime_referrer_name}/overview`}>{account.lifetime_referrer_name}</Link>)
                                         </td>
                                         <td>{lifetime_fee}%</td>
                                     </tr>
                                     <tr>
                                         <td><Translate content="account.member.registrar"/>  &nbsp;
-                                        (<Link to="account" params={{account_name: account.registrar_name}}>{account.registrar_name}</Link>)
+                                        (<Link to={`account/${account.registrar_name}/overview`}>{account.registrar_name}</Link>)
                                         </td>
                                         <td>{registrar_fee}%</td>
                                     </tr>
                                     <tr>
                                         <td><Translate content="account.member.referrer"/>  &nbsp;
-                                        (<Link to="account" params={{account_name: account.referrer}}>{account.referrer_name }</Link>)
+                                        (<Link to={`account/${account.referrer_name}/overview`}>{account.referrer_name }</Link>)
                                         </td>
                                         <td>{referrer_fee}%</td>
                                     </tr>
