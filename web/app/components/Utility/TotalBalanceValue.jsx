@@ -25,7 +25,12 @@ class TotalValue extends React.Component {
 
     static propTypes = {
         fromAssets: ChainTypes.ChainAssetsList.isRequired,
-        toAsset: ChainTypes.ChainAsset.isRequired
+        toAsset: ChainTypes.ChainAsset.isRequired,
+        inHeader: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        inHeader: false
     };
 
     constructor() {
@@ -37,6 +42,17 @@ class TotalValue extends React.Component {
 
     componentWillMount() {
         this._startUpdates(this.props);
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return (
+            !utils.are_equal_shallow(nextProps.fromAssets, this.props.fromAssets) ||
+            nextProps.toAsset !== this.props.toAsset ||
+            !utils.are_equal_shallow(nextProps.balances, this.props.balances) ||
+            !utils.are_equal_shallow(nextProps.openOrders, this.props.openOrders) ||
+            !utils.are_equal_shallow(nextProps.collateral, this.props.collateral) ||
+            !utils.are_equal_shallow(nextProps.debt, this.props.debt)
+        );
     }
 
     _startUpdates(props) {
@@ -121,7 +137,7 @@ class TotalValue extends React.Component {
     }
 
     render() {
-        let {fromAssets, toAsset, balances, marketStats, collateral, debt, openOrders} = this.props;
+        let {fromAssets, toAsset, balances, marketStats, collateral, debt, openOrders, inHeader} = this.props;
         let coreAsset = ChainStore.getAsset("1.3.0");
         if (!coreAsset || !toAsset) {
             return null;
@@ -188,13 +204,16 @@ class TotalValue extends React.Component {
         totalsTip += "</tbody></table>"
         
         // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
+        if (!inHeader) {
+            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>;
+        } else {
+            return (
+                <div data-tip={totalsTip} data-place="bottom" data-type="light" html data-html={true} >
+                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>
+                </div>
 
-        return (
-            <div data-tip={totalsTip} data-place="bottom" data-type="light" html data-html={true} >
-                <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>
-            </div>
-
-        );
+            );
+        }
     }
 }
 
@@ -222,7 +241,7 @@ class ValueStoreWrapper extends React.Component {
 class TotalBalanceValue extends React.Component {
 
     static propTypes = {
-        balances: ChainTypes.ChainObjectsList.isRequired
+        balances: ChainTypes.ChainObjectsList
     };
 
     static defaultProps = {
@@ -232,7 +251,7 @@ class TotalBalanceValue extends React.Component {
     };
 
     render() {
-        let {balances, toAsset, collateral, debt, openOrders} = this.props;
+        let {balances, toAsset, collateral, debt, openOrders, inHeader} = this.props;
         let assets = Immutable.List();
         let amounts = [];
 
@@ -245,17 +264,17 @@ class TotalBalanceValue extends React.Component {
 
         for (let asset in debt) {
             if (!assets.has(asset)) {
-                assets.push(asset);
+                assets = assets.push(asset);
             }
         }
 
         for (let asset in openOrders) {
             if (!assets.has(asset)) {
-                assets.push(asset);
+                assets = assets.push(asset);
             }
         }
 
-        return <ValueStoreWrapper balances={amounts}  openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
+        return <ValueStoreWrapper inHeader={inHeader} balances={amounts} openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
     }
 }
 
@@ -265,6 +284,10 @@ class AccountWrapper extends React.Component {
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired
     };
+
+    shouldComponentUpdate(nextProps) {
+        return !utils.are_equal_shallow(nextProps.accounts, this.props.accounts);
+    }
 
     render() {
         let balanceList = Immutable.List(), collateral = 0, debt = {}, openOrders = {};
@@ -310,7 +333,7 @@ class AccountWrapper extends React.Component {
             }
         })
 
-        return balanceList.size ? <TotalBalanceValue balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/> : null;
+        return balanceList.size ? <TotalBalanceValue inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/> : null;
     }
 }
 
