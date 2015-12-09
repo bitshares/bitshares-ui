@@ -291,3 +291,26 @@ label.inline {
 #content.electron {
   visibility: visible;
 }
+
+
+.Popover-body {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0 2rem 1rem 2rem;
+  background: hsl(0, 0%, 32%);
+  color: white;
+  border-radius: 0.3rem;
+}
+
+.Popover-tipShape {
+  fill: hsl(0, 0%, 32%)
+}
+
+a.currency, span.currency {
+  margin-left: 0.26rem;
+}
+
+.click-for-help {
+  border-bottom: 1px dotted #777;
+  cursor: help;
+}

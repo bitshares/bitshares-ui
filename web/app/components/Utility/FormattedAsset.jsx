@@ -5,6 +5,9 @@ import {PropTypes} from "react";
 import {Link} from "react-router";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import Popover from "react-popover";
+import MarketLink from "./MarketLink";
+import HelpContent from "./HelpContent";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -37,6 +40,26 @@ class FormattedAsset extends React.Component {
         asPercentage: false
     };
 
+    static contextTypes = {
+        history: React.PropTypes.object
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = {isPopoverOpen: false};
+        this.togglePopover = this.togglePopover.bind(this);
+        this.closePopover = this.closePopover.bind(this);
+    }
+
+    togglePopover(e) {
+        e.preventDefault();
+        this.setState({isPopoverOpen: !this.state.isPopoverOpen});
+    }
+
+    closePopover() {
+        this.setState({isPopoverOpen: false});
+    }
+
     render() {
         let {amount, decimalOffset, color, asset, hide_asset, hide_amount, asPercentage} = this.props;
 
@@ -63,6 +86,18 @@ class FormattedAsset extends React.Component {
 
         }
 
+        const currency_popover_body = <div>
+            <HelpContent
+                path = {"assets/" + asset.symbol}
+                alt_path = "assets/Asset"
+                section="summary"
+                symbol= {asset.symbol}
+                description={asset.options.description}
+            />
+            {asset.symbol !== 'BTS' && <p><a href={`#/market/${asset.symbol}_BTS`}>Market</a></p>}
+            <p><a href={`#/asset/${asset.symbol}`}>Asset details</a></p>
+        </div>;
+
         return (
                 <span className={colorClass}  >
                 {!hide_amount ?
@@ -72,7 +107,9 @@ class FormattedAsset extends React.Component {
                     maximumFractionDigits={decimals}
                     />
                 : null}
-                {hide_asset ? null : <span className="currency">{"\u00a0" + asset.symbol}</span>}
+                {!hide_asset && <Popover isOpen={this.state.isPopoverOpen} onOuterAction={this.closePopover} body={currency_popover_body}>
+                    <span className="currency click-for-help" onClick={this.togglePopover}>{asset.symbol}</span>
+                </Popover>}
                 </span>
         );
     }

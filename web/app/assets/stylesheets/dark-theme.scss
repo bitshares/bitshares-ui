@@ -516,9 +516,6 @@ td.orderHistoryBid {
   }
 }
 
-
-
-
 .remove {
   color: $alert-color;
   border: none;
@@ -547,6 +544,11 @@ td.orderHistoryBid {
     background-color: transparent;
     border-color: $dark-text-color;
   }
+}
+
+
+.click-for-help {
+  border-bottom-color: $secondary-text-color !important;
 }
 
 // Block List (section)
