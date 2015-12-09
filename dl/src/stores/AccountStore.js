@@ -251,7 +251,7 @@ class AccountStore extends BaseStore {
     
 }
 
-module.exports = alt.createStore(AccountStore, "AccountStore");
+export default alt.createStore(AccountStore, "AccountStore");
 
 // @return 3 full, 2 partial, 0 none
 function pubkeyThreshold(authority) {

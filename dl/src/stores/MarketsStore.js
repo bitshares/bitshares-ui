@@ -763,4 +763,4 @@ class MarketsStore {
     }
 }
 
-module.exports = alt.createStore(MarketsStore, "MarketsStore");
+export default alt.createStore(MarketsStore, "MarketsStore");

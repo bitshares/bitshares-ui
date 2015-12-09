@@ -77,4 +77,4 @@ class BlockchainStore extends BaseStore{
 
 }
 
-module.exports = alt.createStore(BlockchainStore, "BlockchainStore");
+export default alt.createStore(BlockchainStore, "BlockchainStore");

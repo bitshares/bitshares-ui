@@ -14,7 +14,7 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
-import {AccountWrapper} from "../Utility/TotalBalanceValue";
+import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import Immutable from "immutable";
 
 @connectToStores
@@ -137,7 +137,7 @@ class Header extends React.Component {
 
         let walletBalance = myAccounts.length ? (
                             <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
-                                <AccountWrapper accounts={myAccounts} inHeader={true}/>
+                                <TotalBalanceValue.AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
         if (linkedAccounts.size > 1) {

@@ -197,4 +197,4 @@ class WalletActions {
     }
 }
 
-module.exports = alt.createActions(WalletActions)
+export default alt.createActions(WalletActions)

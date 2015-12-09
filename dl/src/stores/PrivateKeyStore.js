@@ -204,4 +204,4 @@ class PrivateKeyStore extends BaseStore {
     
 }
 
-module.exports = alt.createStore(PrivateKeyStore, "PrivateKeyStore");
+export default alt.createStore(PrivateKeyStore, "PrivateKeyStore");
