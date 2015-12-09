@@ -15,9 +15,7 @@ import cnames from "classnames";
 class MobileMenu extends React.Component {
     constructor() {
         super();
-        this.state = {
-            active: null
-        };
+        this.state = {};
     }
 
     static contextTypes = {
@@ -45,11 +43,11 @@ class MobileMenu extends React.Component {
     _onNavigate(route, e) {
         e.preventDefault();
         this.context.history.pushState(null, route);
+        ZfApi.publish("mobile-menu", "close");
     }
 
     render() {
         let id = this.props.id;
-        let {active} = this.state;
         let accounts = null;
         let linkedAccounts = AccountStore.getState().linkedAccounts;
         if(linkedAccounts.size > 1) {
@@ -61,13 +59,13 @@ class MobileMenu extends React.Component {
         }
 
         let linkToAccountOrDashboard;
-        if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a className={cnames({active: active === "dashboard"})} onClick={this._onNavigate.bind(this, "/dashboard")}><Translate component="span" content="header.dashboard" /></a>;
-        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <Link to={`/account/${linkedAccounts.first()}/overview`}><Translate component="span" content="header.account" /></Link>;
+        if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, "/dashboard")}><Translate component="span" content="header.dashboard" /></a>;
+        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview`)}><Translate component="span" content="header.account" /></a>;
         else linkToAccountOrDashboard = <Link to="/create-account">Create Account</Link>;
 
-        let tradeLink = this.props.lastMarket && active.indexOf("market/") === -1 ?
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a>:
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate component="span" content="header.exchange" /></a>
+        let tradeLink = this.props.lastMarket ?
+            <a onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a> :
+            <a onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate component="span" content="header.exchange" /></a>
 
         return (
             <Panel id={id} position="left">
@@ -78,7 +76,7 @@ class MobileMenu extends React.Component {
                 <section style={{marginTop: "3rem"}} className="block-list">
                     <ul>
                         <li>{linkToAccountOrDashboard}</li>
-                        <li><a className={cnames({active: active === "explorer"})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
+                        <li><a onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
                         {linkedAccounts.size === 0 ? null :
                           <li>{tradeLink}</li>}
                         <li onClick={this.onClick}><Link to="transfer"><Translate component="span" content="header.payments"/></Link></li>
