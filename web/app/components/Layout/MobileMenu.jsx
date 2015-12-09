@@ -52,7 +52,7 @@ class MobileMenu extends React.Component {
         let linkedAccounts = AccountStore.getState().linkedAccounts;
         if(linkedAccounts.size > 1) {
             accounts = linkedAccounts.map( a => {
-                return <li key={a} onClick={this.onClick}><Link to={`/account/${account_name}/overview`}>{a}</Link></li>;
+                return <li key={a} onClick={this.onClick}><Link to={`/account/${a}/overview`}>{a}</Link></li>;
             });
         }  else if (linkedAccounts.size === 1) {
             accounts = <li key="account" onClick={this.onClick}><Link to={`/account/${linkedAccounts.first()}/overview`}><Translate component="span" content="header.account" /></Link></li>;
