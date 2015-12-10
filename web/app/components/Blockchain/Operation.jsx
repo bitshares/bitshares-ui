@@ -18,7 +18,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import ChainStore from "api/ChainStore";
-import Popover from "react-popover";
 
 require("./operations.scss");
 
@@ -58,24 +57,12 @@ class Row extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {detailsPopoverOpen: false};
-        //this.showDetails = this.showDetails.bind(this);
-        this.togglePopover = this.togglePopover.bind(this);
-        this.closePopover = this.closePopover.bind(this);
+        this.showDetails = this.showDetails.bind(this);
     }
 
-    //showDetails(e) {
-    //    e.preventDefault();
-    //    //this.context.history.pushState(null, `/block/${this.props.block}`);
-    //}
-
-    togglePopover(e) {
+    showDetails(e) {
         e.preventDefault();
-        this.setState({detailsPopoverOpen: !this.state.detailsPopoverOpen});
-    }
-
-    closePopover() {
-        this.setState({detailsPopoverOpen: false});
+        this.context.history.pushState(null, `/block/${this.props.block}`);
     }
 
     render() {
@@ -87,19 +74,9 @@ class Row extends React.Component {
            pending = <span>(<Translate content="operation.pending" blocks={block - last_irreversible_block_num} />)</span>
 
         fee.amount = parseInt(fee.amount, 10);
-
-
-        const details_popover_body = <div>
-            TODO: Operation details here
-        </div>;
-
         return (
                 <tr key={key}>
-                    {hideOpLabel ? null : <td className="left-td">
-                        <Popover isOpen={this.state.detailsPopoverOpen} onOuterAction={this.closePopover} body={details_popover_body}>
-                            <span className="cursor-help" onClick={this.togglePopover}><TransactionLabel color={color} type={type} /></span>
-                        </Popover>
-                    </td>}
+                    {hideOpLabel ? null : <td className="left-td"><a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a></td>}
                     <td>{this.props.info}&nbsp;{pending}&nbsp;{hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
                     <td className="cursor-pointer" onClick={this.showDetails}><BlockTime block_number={block}/></td>
                 </tr>
@@ -848,7 +825,6 @@ class Operation extends React.Component {
                 hideFee={this.props.hideFee}
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
-                op={op}
             >
             </Row>
         ) : null;

@@ -296,7 +296,7 @@ label.inline {
 .Popover-body {
   display: inline-flex;
   flex-direction: column;
-  padding: 1rem 2rem 1rem 2rem;
+  padding: 0 2rem 1rem 2rem;
   background: hsl(0, 0%, 32%);
   color: white;
   border-radius: 0.05rem;
@@ -312,9 +312,5 @@ a.currency, span.currency {
 
 .click-for-help {
   border-bottom: 1px dotted #777;
-  cursor: help;
-}
-
-.cursor-help, .cursor-help > span {
   cursor: help;
 }
