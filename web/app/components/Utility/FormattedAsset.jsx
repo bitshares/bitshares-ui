@@ -29,7 +29,8 @@ class FormattedAsset extends React.Component {
         color: PropTypes.string,
         hide_asset: PropTypes.bool,
         hide_amount: PropTypes.bool,
-        asPercentage: PropTypes.bool
+        asPercentage: PropTypes.bool,
+        assetInfoLinks: PropTypes.node
     };
 
     static defaultProps = {
@@ -37,7 +38,8 @@ class FormattedAsset extends React.Component {
         decimalOffset: 0,
         hide_asset: false,
         hide_amount: false,
-        asPercentage: false
+        asPercentage: false,
+        assetInfoLinks: null
     };
 
     static contextTypes = {
@@ -86,16 +88,15 @@ class FormattedAsset extends React.Component {
 
         }
 
-        const currency_popover_body = <div>
+        const currency_popover_body = !hide_asset && <div>
             <HelpContent
-                path = {"assets/" + asset.symbol}
-                alt_path = "assets/Asset"
+                path={"assets/" + asset.symbol}
+                alt_path="assets/Asset"
                 section="summary"
-                symbol= {asset.symbol}
+                symbol={asset.symbol}
                 description={asset.options.description}
-            />
-            {asset.symbol !== 'BTS' && <p><a href={`#/market/${asset.symbol}_BTS`}>Market</a></p>}
-            <p><a href={`#/asset/${asset.symbol}`}>Asset details</a></p>
+                issuer={asset.issuer}/>
+            {this.props.assetInfoLinks}
         </div>;
 
         return (

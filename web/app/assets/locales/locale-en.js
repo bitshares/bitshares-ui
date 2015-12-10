@@ -207,7 +207,8 @@
         },
         propose_from: "Propose From",
         settle: "Settle",
-        "no_orders": "No open orders"
+        "no_orders": "No open orders",
+        asset_details: "Asset details"
     },
     pagination: {
         newer: "Newer",
