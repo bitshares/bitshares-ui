@@ -175,11 +175,11 @@ class AccountsList extends React.Component {
                 <thead>
                     <tr>
                         <th className="clickable"><Icon className="grey-star" name="fi-star"/></th>
-                        <th>Account</th>
-                        <th style={{textAlign: "right"}}>In open orders</th>
-                        {width >= 750 ? <th style={{textAlign: "right"}}>As collateral</th> : null}
-                        {width >= 1200 ? <th style={{textAlign: "right"}}>Debt</th> : null}
-                        <th style={{textAlign: "right"}}>Total Value</th>
+                        <th><Translate content="header.account" /></th>
+                        <th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
+                        {width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
+                        {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
+                        <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
                     </tr>
                 </thead>
                 <tbody>

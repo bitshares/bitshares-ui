@@ -43,6 +43,9 @@
         name: "Account name",
         more: "see more",
         deposit_withdraw: "Deposit/Withdraw",
+        as_collateral: "Collateral",
+        open_orders: "Open orders",
+        total_value: "Total value",
         member: {
             stats: "Membership",
             join: "Joined on",
