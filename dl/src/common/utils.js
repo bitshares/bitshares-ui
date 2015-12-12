@@ -371,6 +371,24 @@ var Utils = {
         } else {
             return false;
         }
+    },
+
+    sortText(a, b, inverse = false) {
+        if (a > b) {
+            return inverse ? 1 : -1;
+        } else if (a < b) {
+            return inverse ? -1 : 1;
+        } else {
+            return 0;
+        }
+    },
+
+    sortID(a, b, inverse = false) {
+        // inverse = false => low to high
+        let intA = parseInt(a.split(".")[2], 10);
+        let intB = parseInt(b.split(".")[2], 10);
+
+        return inverse ? (intB - intA) : (intA -intB);
     }
 
 };
