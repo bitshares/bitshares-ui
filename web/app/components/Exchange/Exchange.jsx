@@ -951,19 +951,24 @@ class Exchange extends React.Component {
             }
         }
 
-        let bucketTexts = {
-            "15": "15s",
-            "60": "1m",
-            "300": "5m",
-            "900": "15m",
-            "1800": "30m",
-            "3600": "1h",
-            "14400": "4h",
-            "86400": "1d"
-        };
+        let bucketText = function(size) {
+            if (size < 60) {
+                return size + "s";
+            } else if (size < 3600) {
+                return (size / 60) + "m";
+            } else if (size < 86400) {
+                return (size / 3600) + "h"
+            } else if (size < 604800) {
+                return (size / 86400) + "d"
+            } else if (size < 2419200) {
+                return (size / 604800) + "w"
+            } else {
+                return (size / 2419200) + "m"
+            }
+        }
 
         let bucketOptions = buckets.map(bucket => {
-            return <div key={bucket} className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div key={bucket} className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketText(bucket)}</div>
         }).reverse();
 
         // Market stats
