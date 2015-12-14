@@ -206,9 +206,13 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onCoreRateChange(type, amount) {
-        let updateObject = {};
-        updateObject[type] = {$set: {amount: amount.amount.replace(/,/g, ""), asset_id: amount.asset.get("id")}};
-        this.setState({core_exchange_rate: React.addons.update(this.state.core_exchange_rate, updateObject)});
+        amount.amount = amount.amount == "" ? "0" : amount.amount;
+        let {core_exchange_rate} = this.state;
+        core_exchange_rate[type] = {
+            amount: amount.amount.replace(/,/g, ""),
+            asset_id: amount.asset.get("id")
+        };
+        this.forceUpdate();
     }
 
     onIssuerAccountChanged(account) {
