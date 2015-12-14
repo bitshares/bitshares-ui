@@ -76,7 +76,7 @@ class MyMarkets extends React.Component {
         let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
         Ps.initialize(historyContainer);
 
-        if (this.state.activeTab === "all") {
+        if (this.state.activeTab === "all" && this.state.inputValue) {
             this._lookupAssets({target: {value: this.state.inputValue}}, true);
         }
     }
@@ -122,6 +122,9 @@ class MyMarkets extends React.Component {
     }
 
     _lookupAssets(e, force = false) {
+        if (!e.target.value) {
+            return;
+        }
         let now = new Date();
 
         let symbols = e.target.value.toUpperCase().split(":");
