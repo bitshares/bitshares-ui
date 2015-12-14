@@ -36,7 +36,7 @@ class Dashboard extends React.Component {
         window.addEventListener("resize", this._setWidth, false);
     }
 
-    componentWillUnMount() {
+    componentWillUnmount() {
         window.removeEventListener("resize", this._setWidth, false);
     }
 
