@@ -48,17 +48,17 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
         return (
             <span>
                 {!has_wallet ? <div>
-                    <Link to="welcome-import-backup"><Translate content="wallet.import_backup" /></Link><br/><br/>
-                    <Link to="welcome-import-keys"><Translate content="wallet.import_bts1" /></Link><br/><br/>
-                    <Link to="welcome-import-keys"><Translate content="wallet.create_wallet" /></Link><br/>
+                    <Link to="existing-account/import-backup"><Translate content="wallet.import_backup" /></Link><br/><br/>
+                    <Link to="existing-account/import-keys"><Translate content="wallet.import_bts1" /></Link><br/><br/>
+                    <Link to="existing-account/import-keys"><Translate content="wallet.create_wallet" /></Link><br/>
                     <hr/>
                 </div>:null}
 
                 { has_wallet ? <BalanceClaimActive/>:null}
 
-                {!has_wallet ? <p>
+                {!has_wallet ? <div>
                     <h6><Translate content="wallet.import_20_notice1" /><br/><Translate content="wallet.import_20_notice2" /></h6>
-                </p>:null}
+                </div>:null}
 
                 {has_wallet ? <span>
                     <Link to="dashboard"><div className="button outline">
