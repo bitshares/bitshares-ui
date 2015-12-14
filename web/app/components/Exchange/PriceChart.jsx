@@ -73,11 +73,15 @@ class PriceChart extends React.Component {
             }
         }
 
+        let latestCheck = false;
+        if ((nextProps.priceData && !nextProps.priceData.length) && this.props.latest) {
+            latestCheck = nextProps.latest.full !== this.props.latest.full;
+        }
         return (
             !utils.are_equal_shallow(nextProps.priceData, this.props.priceData) ||
             nextState.lastPointY !== this.state.lastPointY ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
-            nextProps.latest !== this.props.latest ||
+            latestCheck ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             !utils.are_equal_shallow(nextProps.indicatorSettings, this.props.indicatorSettings)
         );
