@@ -205,7 +205,11 @@ module.exports = {
         propose_from: "发起账户",
         percent: "供给占比",
         settle: "清算",
-        no_orders: "暂无委单"
+        no_orders: "暂无委单",
+        as_collateral: "债仓",
+        open_orders: "委单",
+        total_value: "市值",
+        asset_details: "资产详情"
     },
     transfer: {
         from: "来自",
@@ -395,7 +399,7 @@ module.exports = {
         },
         asset_claim_fees: "从 %(asset)s 资产手续费池中领取 %(balance_amount)s 资产手续费",
         settlement_date: "清算时间",
-        set_proxy: "设置 %(proxy)s 为他们的投票代理人"
+        set_proxy: "设置 %(proxy)s 为投票代理人"
     },
     explorer: {
         accounts: {
