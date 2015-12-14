@@ -17,6 +17,7 @@ import Icon from "../Icon/Icon";
 import ChainStore from "api/ChainStore";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
+import counterpart from "counterpart";
 
 let lastLookup = new Date();
 
@@ -44,17 +45,19 @@ class AccountsList extends React.Component {
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
-            inverseSort: props.viewSettings.get("myMarketsInvert") || true,
-            sortBy: props.viewSettings.get("myMarketsSort") || "volume"
+            inverseSort: props.viewSettings.get("dashboardSortInverse") || true,
+            sortBy: props.viewSettings.get("dashboardSort") || "star",
+            dashboardFilter: props.viewSettings.get("dashboardFilter") || ""
         };
 
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
             nextProps.width !== this.props.width ||
-            !utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts)
+            !utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
+            !utils.are_equal_shallow(nextState, this.state)
         );
     }
 
@@ -71,29 +74,70 @@ class AccountsList extends React.Component {
         this.context.history.pushState(null, `/account/${name}`);
     }
 
+    _onFilter(e) {
+        this.setState({dashboardFilter: e.target.value.toUpperCase()});
+
+        SettingsActions.changeViewSetting({
+            dashboardFilter: e.target.value.toUpperCase()
+        });
+    }
+
+    _setSort(field) {
+        let inverse = field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort;
+        this.setState({
+          sortBy: field,
+          inverseSort: inverse
+        });
+
+        SettingsActions.changeViewSetting({
+            dashboardSort: field,
+            dashboardSortInverse: inverse
+        });
+      }
+
     render() {
         let {width, starredAccounts} = this.props;
+        let {dashboardFilter, sortBy, inverseSort} = this.state;
         let balanceList = Immutable.List();
-        
-        let accounts = this.props.accounts
-        .sort((a, b) => {
+
+        let starSort = function(a, b, inverse) {
             let aName = a.get("name");
             let bName = b.get("name");
             let aStarred = starredAccounts.has(aName);
             let bStarred = starredAccounts.has(bName);
 
             if (aStarred && !bStarred) {
-                return -1;
+                return inverse ? -1 : 1;
             } else if (bStarred && !aStarred) {
-                return 1;
+                return inverse ? 1 : -1;
             } else {
                 if (aName > bName) {
-                    return 1;
+                    return inverse ? 1 : -1;
                 } else if (aName < bName) {
-                    return -1;
+                    return inverse ? -1 : 1;
                 } else {
-                    return 0;
+                    return utils.sortText(aName, bName, !inverse);
                 }
+            }
+        }
+        
+        let accounts = this.props.accounts
+        .filter(a => {
+            if (!a) return false;
+            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+        })
+        .sort((a, b) => {
+            switch (sortBy) {
+                case "star":
+                    return starSort(a, b, inverseSort);
+                    break;
+
+                case "name":
+                    return utils.sortText(a.get("name"), b.get("name"), inverseSort);
+                    break;
+
+                default:
+                    break;
             }
         }).map(account => {
             if (account) {
@@ -168,24 +212,31 @@ class AccountsList extends React.Component {
 
                 )
             }
-        })
+        });
+
+        let filterText = counterpart.translate("markets.filter").toUpperCase();
 
         return (
-            <table className="table table-hover" style={{fontSize: "0.85rem"}}>
-                <thead>
-                    <tr>
-                        <th className="clickable"><Icon className="grey-star" name="fi-star"/></th>
-                        <th><Translate content="header.account" /></th>
-                        <th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
-                        {width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
-                        {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
-                        <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {accounts}
-                </tbody>
-            </table>                
+            <div>
+                <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
+                    <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+                </div>
+                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
+                    <thead>
+                        <tr>
+                            <th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
+                            <th onClick={this._setSort.bind(this, 'name')} className="clickable"><Translate content="header.account" /></th>
+                            <th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
+                            {width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
+                            {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
+                            <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {accounts}
+                    </tbody>
+                </table>
+            </div>          
         )
 
     }

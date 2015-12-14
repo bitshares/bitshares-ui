@@ -55,7 +55,7 @@ class Dashboard extends React.Component {
         let firstDiv = "grid-block no-overflow " + (width < 750 ? "" : "shrink");
         return (
             <div className={outerClass}>
-                <div className={firstDiv}>
+                <div className={firstDiv} style={{minWidth: "50%"}}>
                     <div ref="container" className="grid-content" style={{paddingLeft: "0.25rem", paddingRight: "0.25rem"}}>
                         <h4 style={{paddingLeft: "1rem"}}><Translate content="account.overview" /></h4>
                         <AccountsList accounts={Immutable.List(names)} width={width} />

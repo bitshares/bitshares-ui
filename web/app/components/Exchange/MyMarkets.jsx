@@ -39,7 +39,7 @@ class MyMarkets extends React.Component {
     constructor(props) {
         super();
 
-        let inputValue = props.viewSettings.get("marketLookupInput");
+        let inputValue = props.viewSettings.get("marketLookupInput") || null;
         let symbols = inputValue ? inputValue.split(":") : [null];
         let quote = symbols[0];
         let base = symbols.length === 2 ? symbols[1] : null;
