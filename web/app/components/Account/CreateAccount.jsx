@@ -80,7 +80,7 @@ class CreateAccount extends React.Component {
             TransactionConfirmStore.unlisten(this.onFinishConfirm);
             TransactionConfirmStore.reset();
             if(op0[0] === 5 && op0[1].name === this.state.accountName) {
-                this.props.history.pushState(null, `/account/${this.state.accountName}/overview"`);
+                this.props.history.pushState(null, `/account/${this.state.accountName}/overview`);
             }
         }
     }
@@ -94,7 +94,7 @@ class CreateAccount extends React.Component {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else {
-                    this.props.history.pushState(null, `/account/${name}/overview"`);
+                    this.props.history.pushState(null, `/account/${name}/overview`);
                 }
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
