@@ -604,3 +604,12 @@ section input[type="text"] {
     background: $panel-bg-color;
   }
 }
+
+// Exchange
+.mymarkets-header {
+  border-bottom-color: $button-bg-color;
+  &.inactive {
+    border-bottom-color: transparent;
+    color: $secondary-text-color;
+  }
+}
