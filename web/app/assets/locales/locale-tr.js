@@ -760,7 +760,7 @@
         scan_qr: "QR Tara",
         transwiser: {
             gateway: "Transwiser",
-            visit_weidian: "Yatırmak için WEIDIAN'ı ziyaret edin ",
+            visit_weidian: "Yatırmak için 'ı ziyaret edin ",
             deposit_title: "%(asset)s'a RMB yatırın",
             withdraw_title: "RMB'ye %(asset)s çekin",
             alipay: "ALIPAY Hesap Adı",
