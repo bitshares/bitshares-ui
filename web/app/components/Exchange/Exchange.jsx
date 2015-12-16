@@ -76,7 +76,7 @@ class PriceStat extends React.Component {
             changeClass = change > 0 ? "change-up" : "change-down";
         }
 
-        let value = !volume ? utils.format_number(price, Math.max(decimals >= 0 ? decimals : 5, quote ? quote.get("precision") : 0)) :
+        let value = !volume ? utils.price_text(price, quote, base) :
             utils.format_volume(price);
 
         return (
@@ -1029,12 +1029,12 @@ class Exchange extends React.Component {
                                 <div className="grid-block vertical">
                                     <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>
                                         <ul className="market-stats stats top-stats">
-                                            {settlementPrice ? <PriceStat ready={marketReady} decimals={priceDecimals} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
+                                            {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
                                             {lowestCallPrice && showCallLimit ?
                                                 (<li className="stat">
                                                     <span>
                                                         <Translate component="span" content="explorer.block.call_limit" />
-                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(lowestCallPrice, quote, base)}</b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li>) : null}
@@ -1042,7 +1042,7 @@ class Exchange extends React.Component {
                                                 (<li className="stat">
                                                     <span>
                                                         <Translate component="span" content="exchange.squeeze" />
-                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(squeezePrice, quote, base)}</b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li>) : null}
@@ -1050,7 +1050,7 @@ class Exchange extends React.Component {
                                                 <li className="stat">
                                                     <span>
                                                         <Translate component="span" content="exchange.latest" />
-                                                        <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, priceDecimals)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                        <b className={"value"}>{utils.price_text(!marketReady ? 0 : latestPrice.full, quote, base)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li> : null}

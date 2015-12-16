@@ -31,7 +31,6 @@ var Utils = {
         if (decimalPosition === -1) {
             return parseInt(amount, 10) * assetPrecision;
         } else {
-            debugger;
             let amountLength = amount.length;
             amount = amount.replace(".", "");
             for (let i = 0; i < precision; i++) {
@@ -134,28 +133,34 @@ var Utils = {
         }
     },
 
+    price_text: function(price, base, quote) {
+        let maxDecimals = 9;
+        let priceText;
+        let quoteID = quote.toJS ? quote.get("id") : quote.id;
+        let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
+        let baseID = base.toJS ? base.get("id") : base.id;
+        let basePrecision  = base.toJS ? base.get("precision") : base.precision;
+        if (quoteID === "1.3.0") {
+            priceText = this.format_number(price, quotePrecision - 1);
+        } else if (baseID === "1.3.0") {
+            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 1));
+        } else {
+            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + basePrecision));
+        }
+        return priceText;
+    },
+
     price_to_text: function(price, base, quote, forcePrecision = null) {
         if (typeof price !== "number" || !base || !quote) {
             return;
         }
         let precision;
         let priceText;
-        let satoshi = 8;
 
         if (forcePrecision) {
             priceText = this.format_number(price, forcePrecision);
         } else {
-            let quoteID = quote.toJS ? quote.get("id") : quote.id;
-            let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
-            let baseID = base.toJS ? base.get("id") : base.id;
-            let basePrecision  = base.toJS ? base.get("precision") : base.precision;
-            if (quoteID === "1.3.0") {
-                priceText = this.format_number(price, quotePrecision - 1);
-            } else if (baseID === "1.3.0") {
-                priceText = this.format_number(price, Math.min(satoshi, quotePrecision + 1));
-            } else {
-                priceText = this.format_number(price, Math.min(satoshi, quotePrecision + basePrecision));
-            }
+            priceText = this.price_text(price, base, quote);
         }
         let price_split = priceText.split(".");
         let int = price_split[0];
