@@ -765,7 +765,7 @@ module.exports = {
         scan_qr: "扫描二维码，手机支付",
         transwiser: {
             gateway: "Transwiser",
-            visit_weidian: "访问微店进行充值",
+            visit_weidian: "访问网店进行充值",
             deposit_title: "充值人民币到 %(asset)s",
             withdraw_title: "提现 %(asset)s 到人民币",
             alipay: "支付宝账户名",
