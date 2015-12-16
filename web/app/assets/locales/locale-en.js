@@ -169,7 +169,9 @@
                 supported: "Supported",
                 rejected: "Rejected",
                 neutral: "Neutral"
-            }
+            },
+            start: "Start date",
+            end: "End date"
         },
         options: {
             num_witnesses: "Desired Witnesses",

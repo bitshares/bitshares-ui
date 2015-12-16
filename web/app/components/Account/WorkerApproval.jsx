@@ -64,7 +64,7 @@ class WorkerApproval extends React.Component{
       <div style={{padding: "0.5em 0.5em"}} className="grid-content account-card worker-card">
          <div className="card">
             <div className="card-divider text-center info">
-               <span> {worker.name} </span>
+               <span>#{worker.id} : {worker.name} </span>
             </div>
             <div className="card-section">
                <ul >
@@ -90,7 +90,10 @@ class WorkerApproval extends React.Component{
                      <Translate content="account.votes.status.title" />: {approval} <br/>
                   </li>
                   <li>
-                     Id: {this.props.worker.get("id")} <br/>
+                     <Translate content="account.votes.start" />: {new Date(worker.work_begin_date).toLocaleString()}
+                  </li>
+                  <li>
+                     <Translate content="account.votes.end" />: {new Date(worker.work_end_date).toLocaleString()}
                   </li>
                </ul>
 
