@@ -259,9 +259,9 @@ class Exchange extends React.Component {
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
             this.props.currentAccount.get("id"),
-            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.get("precision")), 10),
+            utils.get_satoshi_amount(sellAssetAmount, sellAsset),
             sellAsset,
-            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.get("precision")), 10),
+            utils.get_satoshi_amount(buyAssetAmount, buyAsset),
             buyAsset,
             expiration,
             false, // fill or kill TODO: add fill or kill switch
@@ -556,29 +556,27 @@ class Exchange extends React.Component {
 
     getSellAmount(price, total = 0) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-
-        return ((total * totalPrecision / price.base.amount) * price.quote.amount) / amountPrecision;
+        let satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);    
+        return ((satAmount / price.base.amount) * price.quote.amount) / amountPrecision;
     }
 
     getSellTotal(price, amount = 0) {
-        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-
-        return ((amount * amountPrecision / price.quote.amount) * price.base.amount) / totalPrecision;
+        let satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        return ((satAmount / price.quote.amount) * price.base.amount) / totalPrecision;
     }
 
     getBuyAmount(price, total = 0) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
+        let satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);
 
-        return ((total * totalPrecision / price.quote.amount) * price.base.amount) / amountPrecision;
+        return ((satAmount / price.quote.amount) * price.base.amount) / amountPrecision;
     }
 
     getBuyTotal(price, amount = 0) {
-        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        return ((amount * amountPrecision / price.base.amount) * price.quote.amount) / totalPrecision;
+        let satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        return ((satAmount / price.base.amount) * price.quote.amount) / totalPrecision;
     }
 
     _toggleCharts() {

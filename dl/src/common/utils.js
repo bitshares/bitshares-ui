@@ -22,6 +22,29 @@ var Utils = {
         return obj_id.substring(0, prefix.length) === prefix;
     },
 
+    get_satoshi_amount(amount, asset) {
+        let precision = asset.toJS ? asset.get("precision") : asset.precision;
+        let assetPrecision = this.get_asset_precision(precision);
+        amount = typeof amount === "string" ? amount : amount.toString();
+
+        let decimalPosition = amount.indexOf(".");
+        if (decimalPosition === -1) {
+            return parseInt(amount, 10) * assetPrecision;
+        } else {
+            debugger;
+            let amountLength = amount.length;
+            amount = amount.replace(".", "");
+            for (let i = 0; i < precision; i++) {
+                decimalPosition += 1;
+                if (decimalPosition > amount.length) {
+                    amount += "0";
+                }
+            };
+
+            return parseInt(amount, 10);
+        }
+    },
+
     get_asset_precision: (precision) => {
         precision = precision.toJS ? precision.get("precision") : precision;
         return Math.pow(10, precision);
@@ -46,9 +69,9 @@ var Utils = {
 
     format_volume(amount) {
         if (amount < 10) {
-            return this.format_number(amount, 2);            
+            return this.format_number(amount, 2);
         } else if (amount < 10000) {
-            return this.format_number(amount, 0);            
+            return this.format_number(amount, 0);
         } else {
             return Math.round(amount / 1000) + "k";
         }
@@ -58,7 +81,7 @@ var Utils = {
         if(isNaN(number) || !isFinite(number) || number === undefined || number === null) return "";
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
-            zeros += "0";     
+            zeros += "0";
         }
         let num = numeral(number).format("0,0" + zeros);
         if( num.indexOf('.') > 0 && !trailing_zeros)
@@ -71,13 +94,13 @@ var Utils = {
         let digits = 0
         if( asset === undefined )
            return undefined
-        if( 'symbol' in asset ) 
+        if( 'symbol' in asset )
         {
             // console.log( "asset: ", asset )
             symbol = asset.symbol
             digits = asset.precision
         }
-        else 
+        else
         {
            // console.log( "asset: ", asset.toJS() )
            symbol = asset.get('symbol')
