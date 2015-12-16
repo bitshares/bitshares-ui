@@ -122,7 +122,7 @@ class MyMarkets extends React.Component {
     }
 
     _lookupAssets(e, force = false) {
-        if (!e.target.value) {
+        if (!e.target.value && e.target.value !== "") {
             return;
         }
         let now = new Date();
