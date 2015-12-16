@@ -25,7 +25,7 @@ class LinkToAccountById extends React.Component {
         } else {
             // console.log( "account_name exists: ", this.props.account.get("id"), this.props.account.get("name") );
         }
-        return <Link to="account-overview" params={{account_name}}>{account_name}</Link>
+        return <Link to={`/account/${account_name}/overview/`}>{account_name}</Link>
     }
 }
 

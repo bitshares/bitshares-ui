@@ -26,9 +26,14 @@ class Tab extends React.Component {
 
     static propTypes = {
         title: PropTypes.string.isRequired,
-        changeTab: PropTypes.func.isRequired,
+        changeTab: PropTypes.func,
         isActive: PropTypes.bool.isRequired,
         index: PropTypes.number.isRequired
+    };
+
+    static defaultProps = {
+        isActive: false,
+        index: 0
     };
 
     render() {

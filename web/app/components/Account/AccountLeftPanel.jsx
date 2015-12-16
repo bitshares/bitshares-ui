@@ -21,17 +21,18 @@ class AccountLeftPanel extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.func
+        history: React.PropTypes.object
+    }
+
+    constructor(props) {
+        super(props);
+        this.last_path = null;
     }
 
     shouldComponentUpdate(nextProps) {
-        if (this.context.router) {
-            const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
-            this.pureComponentLastPath = this.context.router.getCurrentPath();
-            if (changed) return true;
-        }
-        return this.props.account !== nextProps.account ||
-            this.props.linkedAccounts !== nextProps.linkedAccounts
+        const changed = this.last_path !== window.location.hash;
+        this.last_path = window.location.hash;
+        return changed || this.props.account !== nextProps.account || this.props.linkedAccounts !== nextProps.linkedAccounts
     }
 
     onLinkAccount(e) {
@@ -47,7 +48,7 @@ class AccountLeftPanel extends React.Component {
     onCreateAccountClick(e) {
         e.preventDefault();
         ReactTooltip.hide();
-        this.context.router.transitionTo("create-account");
+        this.context.history.pushState(null, "/create-account");
     }
 
     render() {
@@ -74,19 +75,18 @@ class AccountLeftPanel extends React.Component {
                             <AccountInfo account={account.get("id")} image_size={{height: 120, width: 120}} my_account={isMyAccount}/>
                             <div className="grid-container no-margin">
                                 { linkBtn }
-                                <Link className="button outline block-button" to="transfer" query={{to: account_name}}><Translate content="account.pay"/></Link>
+                                <Link className="button outline block-button" to={`/transfer/?to=${account_name}`}><Translate content="account.pay"/></Link>
                             </div>
                         </div>
                         <section className="block-list">
                             <ul className="account-left-menu">
-                                <li><Link to="account-overview" params={{account_name}}><Translate content="account.overview"/></Link></li>
-                                <li><Link to="account-assets" params={{account_name}}><Translate content="explorer.assets.title"/></Link></li>
-                                <li><Link to="account-member-stats" params={{account_name}}><Translate content="account.member.stats"/></Link></li>
-                                {/*<li><Link to="account-payees" params={{account_name}}><Translate content="account.payees"/></Link></li>*/}
-                                <li><Link to="account-permissions" params={{account_name}}><Translate content="account.permissions"/></Link></li>
-                                <li><Link to="account-voting" params={{account_name}}><Translate content="account.voting"/></Link></li>
-                                <li><Link to="account-orders" params={{account_name}}><Translate content="account.orders"/></Link></li>
-                                {isMyAccount ? <li><Link to="account-deposit-withdraw" params={{account_name}}><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                                <li><Link to={`/account/${account_name}/overview/`} activeClassName="active"><Translate content="account.overview"/></Link></li>
+                                <li><Link to={`/account/${account_name}/assets/`} activeClassName="active"><Translate content="explorer.assets.title"/></Link></li>
+                                <li><Link to={`/account/${account_name}/member-stats/`} activeClassName="active"><Translate content="account.member.stats"/></Link></li>
+                                <li><Link to={`/account/${account_name}/permissions/`} activeClassName="active"><Translate content="account.permissions"/></Link></li>
+                                <li><Link to={`/account/${account_name}/voting/`} activeClassName="active"><Translate content="account.voting"/></Link></li>
+                                <li><Link to={`/account/${account_name}/orders/`} activeClassName="active"><Translate content="account.orders"/></Link></li>
+                                {isMyAccount ? <li><Link to={`/account/${account_name}/deposit-withdraw/`} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                             </ul>
                         </section>
                     </div>

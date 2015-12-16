@@ -87,20 +87,21 @@ class CreateNewWallet extends Component {
                 onChange={this.formChange.bind(this)} noValidate
             >
                 <PasswordConfirm onValid={this.onPassword.bind(this)}/>
-                { has_wallet ? <div className="grid-content no-overflow">
-                    <br/>
-                    <label><Translate content="wallet.name" /></label>
-                    <input type="text" id="wallet_public_name"
-                        value={this.state.wallet_public_name}
-                    />
-                    <div className="has-error">{errors.wallet_public_name}</div>
-                    <br/>
-                </div>:null}
+                { has_wallet ? (
+                    <div className="grid-content no-overflow">
+                        <br/>
+                        <label><Translate content="wallet.name" /></label>
+                        <input type="text" id="wallet_public_name"
+                            defaultValue={this.state.wallet_public_name}
+                        />
+                        <div className="has-error">{errors.wallet_public_name}</div>
+                        <br/>
+                    </div>) : null}
                 <div className="grid-content no-overflow">
                     { this.state.custom_brainkey ? <div>
                         <label><Translate content="wallet.brainkey" /></label>
                         <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
-                        This BrainKey is not compatable with BTS 1.0
+                            This BrainKey is not compatable with BTS 1.0
                         <br/>(Use a backup file instead)
                         <br/>&nbsp;
                     </div>:null}

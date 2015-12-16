@@ -43,6 +43,9 @@
         name: "Account name",
         more: "see more",
         deposit_withdraw: "Deposit/Withdraw",
+        as_collateral: "Collateral",
+        open_orders: "Open orders",
+        total_value: "Total value",
         member: {
             stats: "Membership",
             join: "Joined on",
@@ -166,7 +169,9 @@
                 supported: "Supported",
                 rejected: "Rejected",
                 neutral: "Neutral"
-            }
+            },
+            start: "Start date",
+            end: "End date"
         },
         options: {
             num_witnesses: "Desired Witnesses",
@@ -207,7 +212,8 @@
         },
         propose_from: "Propose From",
         settle: "Settle",
-        "no_orders": "No open orders"
+        "no_orders": "No open orders",
+        asset_details: "Asset details"
     },
     pagination: {
         newer: "Newer",
@@ -760,7 +766,7 @@
         scan_qr: "Scan QR",
         transwiser: {
             gateway: "Transwiser",
-            visit_weidian: "Visit WEIDIAN to deposit",
+            visit_weidian: "Visit to deposit",
             deposit_title: "Deposit RMB to %(asset)s",
             withdraw_title: "Withdraw %(asset)s to RMB",
             alipay: "ALIPAY Account Name",

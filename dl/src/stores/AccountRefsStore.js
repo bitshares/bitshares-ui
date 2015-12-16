@@ -80,8 +80,8 @@ class AccountRefsStore extends BaseStore {
     }
     
 }
-    
-module.exports = alt.createStore(AccountRefsStore, "AccountRefsStore")
+
+export default alt.createStore(AccountRefsStore, "AccountRefsStore")
 
 // Performance optimization for large wallets
 function loadNoAccountRefs() {

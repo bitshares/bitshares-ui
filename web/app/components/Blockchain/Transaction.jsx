@@ -6,7 +6,6 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
@@ -82,7 +81,7 @@ class Transaction extends React.Component {
         let Link = this.props.no_links ? NoLinkDecorator : RealLink;
         return utils.is_object_id(name_or_id) ?
             <LinkToAccountById account={name_or_id}/> :
-            <Link to="account-overview" params={{account_name: name_or_id}}>{name_or_id}</Link>;
+            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>;
     }
 
     linkToAsset(symbol_or_id) {
@@ -90,7 +89,7 @@ class Transaction extends React.Component {
         let Link = this.props.no_links ? NoLinkDecorator : RealLink;
         return utils.is_object_id(symbol_or_id) ?
             <LinkToAssetById asset={symbol_or_id}/> :
-            <Link to="asset" params={{symbol: symbol_or_id}}>{symbol_or_id}</Link>;
+            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
     render() {
@@ -214,7 +213,6 @@ class Transaction extends React.Component {
                             <td>
                                 <FormattedDate
                                     value={op[1].expiration}
-                                    formats={intlData.formats}
                                     format="full"
                                 />
                             </td>
@@ -370,6 +368,13 @@ class Transaction extends React.Component {
                                    {/* TODO replace with KEY render component that provides a popup */}
                                     <td>{op[1].new_options.memo_key.substring(0,10)+"..."}</td>
                                 </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.block.common_options" /></td>
+                            <td><Inspector data={ op[1] } search={false} /></td>
+                        </tr>
                     );
 
                     break;

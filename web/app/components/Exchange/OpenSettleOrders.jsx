@@ -1,10 +1,10 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -52,19 +52,17 @@ class SettleOrderRow extends React.Component {
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
-            return (
-                <tr>
-                    <td>{utils.format_number(settlementPrice, quote.get("precision"))} {amountSymbol}</td>
-                    <td><FormattedAsset amount={order.balance.amount} asset={order.balance.asset_id} /></td>
-                    <td><FormattedDate
-                        value={order.settlement_date}
-                        formats={intlData.formats}
-                        format="short"
-                        />
-                    </td>
-                </tr>
-            );
-        // }
+        return (
+            <tr>
+                <td>{utils.format_number(settlementPrice, quote.get("precision"))} {amountSymbol}</td>
+                <td><FormattedAsset amount={order.balance.amount} asset={order.balance.asset_id} /></td>
+                <td><FormattedDate
+                    value={order.settlement_date}
+                    format="short"
+                    />
+                </td>
+            </tr>
+        );
     }
 }
 
@@ -83,7 +81,7 @@ class OpenSettleOrders extends React.Component {
     }
 
     componentDidMount() {
-        let orderContainer = React.findDOMNode(this.refs.orders);
+        let orderContainer = ReactDOM.findDOMNode(this.refs.orders);
         Ps.initialize(orderContainer);
     }
 
@@ -97,7 +95,7 @@ class OpenSettleOrders extends React.Component {
             .sort((a, b) => {
                 return a.settlement_date > b.settlement_date;
             }).map((order, key) => {
-                return <SettleOrderRow settlementPrice={settlementPrice} order={order} base={base} quote={quote}/>;
+                return <SettleOrderRow key={order} settlementPrice={settlementPrice} order={order} base={base} quote={quote}/>;
             }).toArray();
 
         } else {
@@ -118,7 +116,7 @@ class OpenSettleOrders extends React.Component {
 
         return (
             <div style={{maxHeight: "400px", borderBottom: "1px solid grey"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
-                <div className="small-12 medium-6">
+                <div className="small-12 medium-6" style={{paddingBottom: "1rem"}}>
                     <div className="exchange-content-header"><Translate content="exchange.settle_orders" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>

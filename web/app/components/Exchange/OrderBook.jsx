@@ -1,5 +1,6 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -113,15 +114,18 @@ class OrderBook extends React.Component {
 
     componentDidMount() {
         if (!this.props.horizontal) {
-            let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
             Ps.initialize(bidsContainer);
+        } else {
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
+            Ps.initialize(bidsContainer);            
         }
     }
 
     componentDidUpdate(prevProps) {
         if (!this.props.horizontal) {
-            let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
-            let centerRow = React.findDOMNode(this.refs.centerRow);
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
+            let centerRow = ReactDOM.findDOMNode(this.refs.centerRow);
 
             if (this.props.marketReady && !this.state.hasCentered || (prevProps.quote !== this.props.quote) ) {
                 this._centerView();
@@ -131,12 +135,15 @@ class OrderBook extends React.Component {
                 }, 250);
             }
             Ps.update(bidsContainer);
+        } else {
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
+            Ps.update(bidsContainer);            
         }
     }
 
     _centerView() {
-        let bidsContainer = React.findDOMNode(this.refs.orderbook_container);
-        let centerRow = React.findDOMNode(this.refs.centerRow);
+        let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
+        let centerRow = ReactDOM.findDOMNode(this.refs.centerRow);
         let outer = bidsContainer.getBoundingClientRect();
         let center = centerRow.getBoundingClientRect();
         bidsContainer.scrollTop += (center.top + center.height / 2) - (outer.height / 2);
@@ -257,7 +264,7 @@ class OrderBook extends React.Component {
 
         if (this.props.horizontal) {
             return (
-                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
+                    <div ref="hor_bids"  className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                             <div className="exchange-content-header"><Translate content="exchange.asks" /></div>
                             <table className="table order-table table-hover text-right">

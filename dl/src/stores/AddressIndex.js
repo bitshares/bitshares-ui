@@ -107,4 +107,4 @@ class AddressIndex extends BaseStore {
 }
 // console.log("post msg a");
 // worker.postMessage("a")
-module.exports = alt.createStore(AddressIndex, "AddressIndex");
+export default alt.createStore(AddressIndex, "AddressIndex");

@@ -1,10 +1,10 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
@@ -66,7 +66,6 @@ class OrderRow extends React.Component {
                     <td>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
                     <td><FormattedDate
                         value={order.expiration}
-                        formats={intlData.formats}
                         format="short"
                         />
                     </td>
@@ -104,7 +103,7 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let orderContainer = React.findDOMNode(this.refs.orders);
+        let orderContainer = ReactDOM.findDOMNode(this.refs.orders);
         Ps.initialize(orderContainer);
     }
 

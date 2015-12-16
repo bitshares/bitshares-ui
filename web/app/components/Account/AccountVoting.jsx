@@ -24,10 +24,6 @@ let wallet_api = new WalletApi()
 
 class AccountVoting extends React.Component {
 
-    static propTypes = {
-        account: React.PropTypes.object.isRequired // the account object that should be updated
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -188,24 +184,40 @@ class AccountVoting extends React.Component {
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
 
-        let workers = [];
+        let workerArray = [];
         let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
 
-        for (var i = 0; i < 50; i++) {
+        for (var i = 0; i < 100; i++) {
             let id = "1.14." + i;
             let worker = ChainStore.getObject(id);
             if (worker === null) {
                 break;
             }
             if (botchedWorkers.indexOf(id) === -1) {
-                workers.push(
-                    <WorkerApproval key={id} worker={id} vote_ids={this.state.vote_ids}
+                workerArray.push(worker)
+            }
+        };
+
+        let now = new Date();
+
+        let workers = workerArray
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            return new Date(a.get("work_end_date")) > now;
+            
+        })
+        .sort((a, b) => {
+            return (parseInt(b.get("total_votes_for"), 10) - parseInt(b.get("total_votes_against"), 10)) -
+            (parseInt(a.get("total_votes_for"), 10) - parseInt(a.get("total_votes_against"), 10))
+        })
+        .map(worker => {
+            return <WorkerApproval key={worker.get("id")} worker={worker.get("id")} vote_ids={this.state.vote_ids}
                         onAddVote={this.onAddVoteID.bind(this)}
                         onRemoveVote={this.onRemoveVoteID.bind(this)}
                     />
-                )
-            }
-        };
+        })
 
         return (
             <div className="grid-content">

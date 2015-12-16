@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Immutable from "immutable";

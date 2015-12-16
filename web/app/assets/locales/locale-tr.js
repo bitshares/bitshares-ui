@@ -12,9 +12,9 @@
     header: {
         title: "Bitshares 2.0",
         account: "Hesap",
-        dashboard: "Panel",
+        dashboard: "Hesaplar",
         explorer: "Araştır",
-        exchange: "Alış / Satış",
+        exchange: "Al / Sat",
         payments: "Transferler", 
         logout: "Çıkış",
         settings: "Ayarlar",
@@ -38,7 +38,7 @@
         welcome: "Graphene'e Hoşgeldiniz",
         asset: "Aktif",
         market_value: "Piyasa Değeri",
-        hour_24: "24sa Değişim",
+        hour_24: "24 Saat",
         recent: "Son hareketler",
         name: "Hesap adı",
         more: "fazlası",
@@ -136,7 +136,7 @@
         },
         votes: {
             proxy_short: "Vekil",
-            workers_short: "İşgörenler",
+            workers_short: "Emekçiler",
             proxy: "Vekil Oy Hesabı",
             no_proxy: "Vekil Yok",
             clear_proxy: "Vekili kaldır",
@@ -145,7 +145,7 @@
             votes: "Oylar",
             url: "Web Sayfası",
             support: "Destek",
-            workers: "Bütçe Öğeler",
+            workers: "Bütçe Öğeleri",
             publish: "Değişimleri Duyur",
             add_witness: "Ekle",
             remove_witness: "Kaldır",
@@ -153,9 +153,9 @@
             add_committee: "Ekle",
             add_committee_label: "Kurul Üyesi",
             add_witness_label: "Tanık",
-            approve_worker: "İşgören önerisini onayla",
-            reject_worker: "İşgören teklifini reddet",
-            worker_account: "İşgören hesabı",
+            approve_worker: "Emekçi teklifini onayla",
+            reject_worker: "Emekçi teklifini reddet",
+            worker_account: "Emekçi hesabı",
             total_votes: "Toplam oylar",
             votes_against: "Aleyhine oylar",
             daily_pay: "Günlük Ödeme",
@@ -333,7 +333,7 @@
         blinding_factor: "Körlük faktörü",
         outputs: "Çıkanlar",
         inputs: "Girdiler",
-        settlement_date: "Ödeme tarihi",
+        settlement_date: "Uzlaşma tarihi",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Emir Ver",
@@ -345,7 +345,7 @@
             account_upgrade: "Hesap yükseltme",
             account_transfer: "Hesap transferi",
             asset_create: "Aktif oluşturma",
-            asset_update: "Aktif güncelleme",
+            asset_update: "Aktif güncellemesi",
             asset_update_bitasset: "Akıllıpara güncelleme",
             asset_update_feed_producers: "Aktif feed üreticileri güncelleme",
             asset_issue: "Aktif ihracı",
@@ -451,10 +451,10 @@
             max_margin_period_sec: "Max marjin periodları (s)",
             call_limit: "Çağrı Sınırı",
             short_limit: "Short limit",
-            settlement_price: "Ödeme Fiyatı"
+            settlement_price: "Uzlaşma"
         },
         assets: {
-            title: "Aktiflet",
+            title: "Aktifler",
             market: "AkıllıParalar",
             user: "Kullanıcı Aktifleri",
             symbol: "Sembol",
@@ -475,7 +475,7 @@
             },
             price_feed: {
                 title: "Fiyat Yayını",
-                settlement_price: "Ödeme Fiyatı",
+                settlement_price: "Uzlaşma",
                 maintenance_collateral_ratio: "İdame Teminat Oranı (MCR)",
                 maximum_short_squeeze_ratio: "Maksimum kısa sıkıştırma oranı (MSSR)"
             },
@@ -499,7 +499,7 @@
             },
             price_feed_data: {
                 title: "Fiyat Yayın Verileri",
-                settlement_price: "Ödeme Fiyatı",
+                settlement_price: "Uzlaşma",
                 core_exchange_rate: "CER",
                 maintenance_collateral_ratio: "MCR",
                 maximum_short_squeeze_ratio: "MSSR",
@@ -567,8 +567,8 @@
         history: "Tüm Geçmiş",
         my_history: "Geçmişim",
         balance: "Bakiyeniz",
-        lowest_ask: "En düşük istenen",
-        highest_bid: "En yüksek verilen",
+        lowest_ask: "En düşük",
+        highest_bid: "En yüksek",
         total: "Toplam",
         value: "Değer",
         price: "Fiyat",
@@ -594,7 +594,7 @@
         quote_supply: "Karşıt arzı",
         base_supply: "Taban arzı",
         more: "Tüm piyasalar",
-        volume_24: "24sa. Değişim",
+        volume_24: "24 Saat",
         change: "Değişim",
         confirm: "Verdiğiniz emir şimdiki fiyattan %(diff)s% kadar farklı, emin misiniz?",
         indicators: "Göstergeler",
@@ -602,7 +602,7 @@
         ema: "Üssel Hareketli Ortalama",
         sma: "Basit Hareketli Ortalama",
         atr: "Ortalama Gerçek Fiyat Aralığı",
-        period: "Zaman aralığı (gün)",
+        period: "periot (gün)",
         overbought: "Aşırı Alım",
         oversold: "Aşırı Satış",
         index: "Indeks",
@@ -612,8 +612,8 @@
         asks: "Satış Fiyatları",
         bids: "Alış Fiyatları",
         no_data: "Veri yok",
-        time: "Zama aralığı",
-        borrow: "Borç Al"
+        time: "Süre",
+        borrow: "Ödünç"
     },
     fees: {
      title: "Ücret Tarifesi"
@@ -736,7 +736,10 @@
         ws_status: "Websocket Bağlantı Durumu",
         retry: "Yeniden dene",
         connected: "Bağlandı",
-        not_connected: "Bağlanmadı"
+        not_connected: "Bağlı değil",
+        browser: "Desteklenmeyen tarayıcı",
+        browser_text: "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
+        understand: "Anladım"
     },
     refcode: {
         claim: "Talep",
@@ -757,7 +760,7 @@
         scan_qr: "QR Tara",
         transwiser: {
             gateway: "Transwiser",
-            visit_weidian: "Yatırmak için WEIDIAN'ı ziyaret edin ",
+            visit_weidian: "Yatırmak için 'ı ziyaret edin ",
             deposit_title: "%(asset)s'a RMB yatırın",
             withdraw_title: "RMB'ye %(asset)s çekin",
             alipay: "ALIPAY Hesap Adı",

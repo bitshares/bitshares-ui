@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from "react";
+import ReactDOM from "react-dom";
 import PrivateKey from "ecc/key_private";
 import Address from "ecc/address"
 import Aes from "ecc/aes";
@@ -490,7 +491,7 @@ export default class ImportKeys extends Component {
     }
     
     _passwordCheck(evt) {
-        var pwNode = React.findDOMNode(this.refs.password)
+        var pwNode = ReactDOM.findDOMNode(this.refs.password)
         if(pwNode) pwNode.focus()
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum

@@ -1,21 +1,13 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
-import classNames from "classnames";
 import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb";
-import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-import Icon from "../Icon/Icon";
 
 @BindToChainState({keep_updating:true})
 class WithdrawModalBlocktrades extends React.Component {
@@ -90,9 +82,9 @@ class WithdrawModalBlocktrades extends React.Component {
 
    render() {
        let balance = null;
-       console.log( "account: ", this.props.account.toJS() );
+       // console.log( "account: ", this.props.account.toJS() );
        let account_balances = this.props.account.get("balances").toJS();
-       console.log( "balances: ", account_balances );
+       // console.log( "balances: ", account_balances );
        let asset_types = Object.keys(account_balances);
 
        if (asset_types.length > 0) {

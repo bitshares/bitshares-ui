@@ -85,7 +85,7 @@ class MarketsStore {
 
     _getBucketSize() {
         let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
-        return bs ? parseInt(bs) : 3600;
+        return bs ? parseInt(bs) : 24 * 3600;
     }
 
     _setBucketSize(size) {
@@ -767,4 +767,4 @@ class MarketsStore {
     }
 }
 
-module.exports = alt.createStore(MarketsStore, "MarketsStore");
+export default alt.createStore(MarketsStore, "MarketsStore");

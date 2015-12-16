@@ -113,4 +113,4 @@ class AccountActions {
     }
 }
 
-module.exports = alt.createActions(AccountActions);
+export default alt.createActions(AccountActions);

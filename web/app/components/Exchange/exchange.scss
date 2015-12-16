@@ -499,11 +499,10 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 1.10rem;
   padding: 10px 0;
   font-weight: 500;
-}
-
-.mymarkets-header.inactive {
-  background-color: #3F3F3F;
-  color: grey;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  margin-bottom: 0.25rem;
+  transition: border-color 0.3s ease 0s;
 }
 
 .mymarkets-list {

@@ -340,4 +340,4 @@ class AssetActions {
     }
 }
 
-module.exports = alt.createActions(AssetActions);
+export default alt.createActions(AssetActions);

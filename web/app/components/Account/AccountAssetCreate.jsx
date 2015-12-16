@@ -10,7 +10,6 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import AmountSelector from "../Utility/AmountSelector";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
@@ -226,15 +225,17 @@ class AccountAssetCreate extends React.Component {
             if (permissionBooleans[key] && key !== "charge_market_fee") {
                 flags.push(
                     <table key={"table_" + key} className="table">
-                        <tr>
-                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
-                            <td style={{border: "none"}}>
-                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, key)}>
-                                    <input type="checkbox" checked={flagBooleans[key]} />
-                                    <label />
-                                </div>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                                <td style={{border: "none"}}>
+                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, key)}>
+                                        <input type="checkbox" checked={flagBooleans[key]} />
+                                        <label />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 )
             }
@@ -245,15 +246,17 @@ class AccountAssetCreate extends React.Component {
         for (let key in permissionBooleans) {
                 permissions.push(
                     <table key={"table_" + key} className="table">
-                        <tr>
-                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
-                            <td style={{border: "none"}}>
-                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
-                                    <input type="checkbox" checked={permissionBooleans[key]} />
-                                    <label />
-                                </div>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                                <td style={{border: "none"}}>
+                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
+                                        <input type="checkbox" checked={permissionBooleans[key]} onChange={() => {}}/>
+                                        <label />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 )
         }
@@ -295,15 +298,17 @@ class AccountAssetCreate extends React.Component {
                                     <div>
                                         <Translate component="h3" content="account.user_issued_assets.market_fee" />
                                         <table className="table">
-                                            <tr>
-                                                <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
-                                                <td style={{border: "none"}}>
-                                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
-                                                        <input type="checkbox" checked={flagBooleans.charge_market_fee} />
-                                                        <label />
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
+                                                    <td style={{border: "none"}}>
+                                                        <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
+                                                            <input type="checkbox" checked={flagBooleans.charge_market_fee} />
+                                                            <label />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                         <div className={cnames({disabled: !flagBooleans.charge_market_fee})}>
                                         <label><Translate content="account.user_issued_assets.market_fee" /> (%)

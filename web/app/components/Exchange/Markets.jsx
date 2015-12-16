@@ -8,7 +8,7 @@ import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
-import _ from "lodash";
+import {debounce} from "lodash";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LoadingIndicator from "../LoadingIndicator";
@@ -189,7 +189,7 @@ class MarketSelector extends React.Component {
             }
         }
 
-        this._assetLookup = _.debounce(this._assetLookup, 150);
+        this._assetLookup = debounce(this._assetLookup, 150);
     }
 
     _assetLookup(symbol, type) {
@@ -286,7 +286,7 @@ class MarketSelector extends React.Component {
                     let isPreferred = this._isPreferred(a.get("symbol"), marketBase);
                     return (
                         <tr key={marketID + "_search"}>
-                            <td><Link to="exchange" params={{marketID: marketID}}>{marketName}</Link></td>
+                            <td><Link to={`/market/${marketID}`}>{marketName}</Link></td>
                             {isPreferred ?
                                 <td className="clickable" onClick={this.props.removeMarket.bind(this, a.get("symbol"), marketBase)}>-</td> :
                                 <td className="clickable" onClick={this._addMarket.bind(this, a.get("symbol"), marketBase)}>+</td>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-
+import ReactDOM from "react-dom";
 import Apis from "rpc_api/ApiInstances"
 import ApplicationApi from "rpc_api/ApplicationApi"
 import WalletApi from "rpc_api/WalletApi"
@@ -61,8 +61,8 @@ export default class Console extends Component {
     }
     
     componentDidUpdate() {
-        React.findDOMNode(this.refs.console_input).focus()
-        var node = React.findDOMNode(this.refs.console_div)
+        ReactDOM.findDOMNode(this.refs.console_input).focus()
+        var node = ReactDOM.findDOMNode(this.refs.console_div)
         node.scrollTop = node.scrollHeight
     }
     
@@ -105,7 +105,7 @@ export default class Console extends Component {
             if( cmd_history.length - 1 == cmd_history_position &&
                 this.state.cmd != ""
             ) {
-                cmd_history.push("")
+                cmd_history.pushState("")
                 cmd_history_position++
                 this.setState({cmd:""})
                 break
@@ -171,7 +171,7 @@ export default class Console extends Component {
             cmd_history.pop()
         
         cmd_history_position = cmd_history.length
-        cmd_history.push("")
+        cmd_history.pushState("")
         this.setState({cmd_console, cmd:""})
     }
     

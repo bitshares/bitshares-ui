@@ -95,7 +95,7 @@ export default class BackupBrainkey extends Component {
             </span>
         }
         return <div className="grid-block vertical" style={{overflowY: 'hidden'}}>
-            <div class="grid-container">
+            <div className="grid-container">
                 <div className="grid-content no-overflow">
                     {content}
                 </div>

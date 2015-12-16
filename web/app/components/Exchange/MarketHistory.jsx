@@ -1,5 +1,6 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import {Link} from "react-router";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
@@ -43,12 +44,12 @@ class MarketHistory extends React.Component {
     }
 
     componentDidMount() {
-        let historyContainer = React.findDOMNode(this.refs.history);
+        let historyContainer = ReactDOM.findDOMNode(this.refs.history);
         Ps.initialize(historyContainer);
     }
 
     componentDidUpdate() {
-        let historyContainer = React.findDOMNode(this.refs.history);
+        let historyContainer = ReactDOM.findDOMNode(this.refs.history);
         Ps.update(historyContainer);
     }
 
@@ -100,6 +101,7 @@ class MarketHistory extends React.Component {
                 }
 
                 let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
+                const block_num = trx.get("block_num");
                 return (
                     <tr key={"my_history_" + keyIndex}>
                         <td className={parsed_order.className}>
@@ -107,7 +109,7 @@ class MarketHistory extends React.Component {
                         </td>
                         <td>{parsed_order.receives}</td>
                         <td>{parsed_order.pays}</td>
-                        <td><Link to="block" params={{height: trx.get("block_num")}}>#{utils.format_number(trx.get("block_num"), 0)}</Link></td>
+                        <td><Link to={`/block/${block_num}`}>#{utils.format_number(block_num, 0)}</Link></td>
                     </tr>
                 );
             }).toArray();

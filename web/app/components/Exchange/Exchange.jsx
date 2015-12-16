@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
@@ -75,7 +76,7 @@ class PriceStat extends React.Component {
             changeClass = change > 0 ? "change-up" : "change-down";
         }
 
-        let value = !volume ? utils.format_number(price, Math.max(decimals >= 0 ? decimals : 5, quote ? quote.get("precision") : 0)) :
+        let value = !volume ? utils.price_text(price, quote, base) :
             utils.format_volume(price);
 
         return (
@@ -167,9 +168,7 @@ class Exchange extends React.Component {
         currentAccount: ChainTypes.ChainAccount.isRequired,
         quoteAsset: ChainTypes.ChainAsset.isRequired,
         baseAsset: ChainTypes.ChainAsset.isRequired,
-        quote: PropTypes.string.isRequired,
-        base: PropTypes.string.isRequired,
-        limit_orders: PropTypes.array.isRequired,
+        limit_orders: PropTypes.object.isRequired,
         balances: PropTypes.array.isRequired,
         totalBids: PropTypes.number.isRequired,
         flat_asks: PropTypes.array.isRequired,
@@ -197,8 +196,6 @@ class Exchange extends React.Component {
         volumeData: []
     }
 
-    static contextTypes = {router: React.PropTypes.func.isRequired};
-
     componentWillMount() {
         if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
             this._subToMarket(this.props);
@@ -211,7 +208,7 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = React.findDOMNode(this.refs.center);
+        let centerContainer = ReactDOM.findDOMNode(this.refs.center);
         Ps.initialize(centerContainer);
         SettingsActions.changeViewSetting({
             lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
@@ -262,9 +259,9 @@ class Exchange extends React.Component {
         expiration.setYear(expiration.getFullYear() + 5);
         MarketsActions.createLimitOrder(
             this.props.currentAccount.get("id"),
-            parseInt(sellAssetAmount * utils.get_asset_precision(sellAsset.get("precision")), 10),
+            utils.get_satoshi_amount(sellAssetAmount, sellAsset),
             sellAsset,
-            parseInt(buyAssetAmount * utils.get_asset_precision(buyAsset.get("precision")), 10),
+            utils.get_satoshi_amount(buyAssetAmount, buyAsset),
             buyAsset,
             expiration,
             false, // fill or kill TODO: add fill or kill switch
@@ -559,29 +556,27 @@ class Exchange extends React.Component {
 
     getSellAmount(price, total = 0) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-
-        return ((total * totalPrecision / price.base.amount) * price.quote.amount) / amountPrecision;
+        let satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);    
+        return ((satAmount / price.base.amount) * price.quote.amount) / amountPrecision;
     }
 
     getSellTotal(price, amount = 0) {
-        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-
-        return ((amount * amountPrecision / price.quote.amount) * price.base.amount) / totalPrecision;
+        let satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        return ((satAmount / price.quote.amount) * price.base.amount) / totalPrecision;
     }
 
     getBuyAmount(price, total = 0) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
+        let satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);
 
-        return ((total * totalPrecision / price.quote.amount) * price.base.amount) / amountPrecision;
+        return ((satAmount / price.quote.amount) * price.base.amount) / amountPrecision;
     }
 
     getBuyTotal(price, amount = 0) {
-        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        return ((amount * amountPrecision / price.base.amount) * price.quote.amount) / totalPrecision;
+        let satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        return ((satAmount / price.base.amount) * price.quote.amount) / totalPrecision;
     }
 
     _toggleCharts() {
@@ -954,19 +949,24 @@ class Exchange extends React.Component {
             }
         }
 
-        let bucketTexts = {
-            "15": "15s",
-            "60": "1m",
-            "300": "5m",
-            "900": "15m",
-            "1800": "30m",
-            "3600": "1h",
-            "14400": "4h",
-            "86400": "1d"
-        };
+        let bucketText = function(size) {
+            if (size < 60) {
+                return size + "s";
+            } else if (size < 3600) {
+                return (size / 60) + "m";
+            } else if (size < 86400) {
+                return (size / 3600) + "h"
+            } else if (size < 604800) {
+                return (size / 86400) + "d"
+            } else if (size < 2419200) {
+                return (size / 604800) + "w"
+            } else {
+                return (size / 2419200) + "m"
+            }
+        }
 
         let bucketOptions = buckets.map(bucket => {
-            return <div className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketTexts[bucket]}</div>
+            return <div key={bucket} className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketText(bucket)}</div>
         }).reverse();
 
         // Market stats
@@ -996,7 +996,7 @@ class Exchange extends React.Component {
 
                     {/* Left Column - Open Orders */}
                     {leftOrderBook ? (
-                        <div className="grid-block left-column large-2 no-overflow">
+                        <div className="grid-block left-column shrink no-overflow">
                             <OrderBook
                                 latest={latestPrice}
                                 changeClass={changeClass}
@@ -1018,23 +1018,23 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical ps-container", leftOrderBook ? "small-8 medium-9 large-7 " : "small-12 large-9 ")} >
+                    <div className={cnames("grid-block main-content vertical ps-container")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
                             <div className="grid-block overflow-visible">
                                 <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
-                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to="exchange" params={{marketID: `${baseSymbol}_${quoteSymbol}`}}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
+                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
                                 <div className="grid-block vertical">
                                     <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>
                                         <ul className="market-stats stats top-stats">
-                                            {settlementPrice ? <PriceStat ready={marketReady} decimals={priceDecimals} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
+                                            {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
                                             {lowestCallPrice && showCallLimit ?
                                                 (<li className="stat">
                                                     <span>
                                                         <Translate component="span" content="explorer.block.call_limit" />
-                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(lowestCallPrice, base.get("precision"))}</b>
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(lowestCallPrice, quote, base)}</b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li>) : null}
@@ -1042,7 +1042,7 @@ class Exchange extends React.Component {
                                                 (<li className="stat">
                                                     <span>
                                                         <Translate component="span" content="exchange.squeeze" />
-                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.format_number(squeezePrice, base.get("precision"))}</b>
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(squeezePrice, quote, base)}</b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li>) : null}
@@ -1050,7 +1050,7 @@ class Exchange extends React.Component {
                                                 <li className="stat">
                                                     <span>
                                                         <Translate component="span" content="exchange.latest" />
-                                                        <b className={"value"}>{utils.format_number(!marketReady ? 0 : latestPrice.full, priceDecimals)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                        <b className={"value"}>{utils.price_text(!marketReady ? 0 : latestPrice.full, quote, base)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li> : null}
@@ -1071,13 +1071,14 @@ class Exchange extends React.Component {
                                     </div>
                                     <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
                                         <ul className="market-stats stats bottom-stats">
-                                            <li className="stat" style={{minHeight: "2rem"}}>
-                                                <span>
-                                                    <span><Translate content="exchange.time" />:</span>
-                                                    <span>{bucketOptions}</span>
-                                                    <span></span>
-                                                </span>
-                                            </li>
+                                            {!this.state.showDepthChart ? (
+                                                    <li className="stat" style={{minHeight: "2rem"}}>
+                                                    <span>
+                                                        <span><Translate content="exchange.time" />:</span>
+                                                        <span>{bucketOptions}</span>
+                                                        <span></span>
+                                                    </span>
+                                                </li>) : null}
                                             {!this.state.showDepthChart && this.props.priceData.length ? (
                                                 <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
                                                     <div className="indicators">
@@ -1154,7 +1155,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={445}
+                                    height={425}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     plotLine={this.state.depthLine}
                                     settlementPrice={settlementPrice}
@@ -1290,7 +1291,7 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block show-for-large large-3 right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
+                    <div className="grid-block shrink right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
                         <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh", borderBottom: "1px solid grey"}}>
                             <MarketHistory

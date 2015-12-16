@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------
+Release 2.0.151216
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Dashboard makeover #590
+- Total Value in header #584
+- Show Date in All History #580
+- Switch the default chart interval to 1 day #601
+- Show one more decimal for prices in Exchange
+- Show popup with additional info when user clicks on currency symbol
+
+
+BUG FIXES:
+- Failed to broadcast the transaction (now <= trx.expiration) #583
+- Consolidated Open Orders screen bug #585
+- Get rid of the horizontal scroll-bar in Recent Activity #470
+- Unnecessary scroll-bars on the Create Asset confirmation screen #547
+- Decimal Bug in Matching in 8-digit Assets #586
+- In Lite wallet all website links result in broken pages #581
+
+---------------------------------------------------------------------
 Release 2.0.151202
 ---------------------------------------------------------------------
 

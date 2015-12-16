@@ -454,7 +454,7 @@ td.orderHistoryBid {
   }
 }
 
-.my-account h5, .my-account h4 {
+.my-account h5, .my-account h4, td.my-account {
   color: $info-color;
 }
 
@@ -602,5 +602,14 @@ section input[type="text"] {
 .asset-card {
   .card-divider {
     background: $panel-bg-color;
+  }
+}
+
+// Exchange
+.mymarkets-header {
+  border-bottom-color: $button-bg-color;
+  &.inactive {
+    border-bottom-color: transparent;
+    color: $secondary-text-color;
   }
 }

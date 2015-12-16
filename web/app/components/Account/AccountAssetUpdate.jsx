@@ -27,10 +27,6 @@ let MAX_SAFE_INT = new big("9007199254740991");
 @BindToChainState()
 class AccountAssetUpdate extends React.Component {
 
-    static contextTypes = {
-        router: React.PropTypes.func.isRequired
-    };
-
     static propTypes = {
         asset: ChainTypes.ChainAsset.isRequired,
         core: ChainTypes.ChainAsset.isRequired
@@ -210,9 +206,13 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onCoreRateChange(type, amount) {
-        let updateObject = {};
-        updateObject[type] = {$set: {amount: amount.amount.replace(/,/g, ""), asset_id: amount.asset.get("id")}};
-        this.setState({core_exchange_rate: React.addons.update(this.state.core_exchange_rate, updateObject)});
+        amount.amount = amount.amount == "" ? "0" : amount.amount;
+        let {core_exchange_rate} = this.state;
+        core_exchange_rate[type] = {
+            amount: amount.amount.replace(/,/g, ""),
+            asset_id: amount.asset.get("id")
+        };
+        this.forceUpdate();
     }
 
     onIssuerAccountChanged(account) {
@@ -321,15 +321,17 @@ class AccountAssetUpdate extends React.Component {
             if (originalPermissions[key] && key !== "charge_market_fee") {
                 flags.push(
                     <table key={"table_" + key} className="table">
-                        <tr>
-                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
-                            <td style={{border: "none"}}>
-                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, key)}>
-                                    <input type="checkbox" checked={flagBooleans[key]} />
-                                    <label />
-                                </div>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                                <td style={{border: "none"}}>
+                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, key)}>
+                                        <input type="checkbox" checked={flagBooleans[key]} />
+                                        <label />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 )
             }
@@ -341,15 +343,17 @@ class AccountAssetUpdate extends React.Component {
             if (true || originalPermissions[key]) {
                 permissions.push(
                     <table key={"table_" + key} className="table">
-                        <tr>
-                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
-                            <td style={{border: "none"}}>
-                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
-                                    <input type="checkbox" checked={permissionBooleans[key]} />
-                                    <label />
-                                </div>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                                <td style={{border: "none"}}>
+                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
+                                        <input type="checkbox" checked={permissionBooleans[key]} onChange={() => {}}/>
+                                        <label />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 )
             }
@@ -526,15 +530,17 @@ class AccountAssetUpdate extends React.Component {
                                         <div>
                                             <Translate component="h3" content="account.user_issued_assets.market_fee" />
                                             <table className="table">
-                                                <tr>
-                                                    <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
-                                                    <td style={{border: "none"}}>
-                                                        <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
-                                                            <input type="checkbox" checked={flagBooleans.charge_market_fee} />
-                                                            <label />
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
+                                                        <td style={{border: "none"}}>
+                                                            <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
+                                                                <input type="checkbox" checked={flagBooleans.charge_market_fee} />
+                                                                <label />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
                                             </table>
                                             <div className={cnames({disabled: !flagBooleans.charge_market_fee})}>
                                             <label><Translate content="account.user_issued_assets.market_fee" /> (%)
@@ -657,12 +663,9 @@ class AccountAssetUpdate extends React.Component {
 }
 
 class AssetUpdateWrapper extends React.Component {
-    static contextTypes = {
-        router: React.PropTypes.func.isRequired
-    };
 
     render() {
-        let asset = this.context.router.getCurrentParams().asset;
+        let asset = this.props.params.asset;;
         return <AccountAssetUpdate asset={asset} {...this.props}/>;
     }   
 }

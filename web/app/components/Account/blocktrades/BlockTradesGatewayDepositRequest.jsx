@@ -12,7 +12,6 @@ import Icon from "../../Icon/Icon";
 import TimeAgo from "../../Utility/TimeAgo";
 import HelpContent from "../../Utility/HelpContent";
 import WalletDb from "stores/WalletDb";
-import AmountSelector from "../../Utility/AmountSelector";
 import WithdrawModal from "../../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -75,8 +74,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     addDepositAddress( receive_address ) {
         let wallet = WalletDb.getWallet();
         let name = this.props.account.get('name');
-        console.log( "this.props.gateway: ", this.props.gateway );
-        console.log( "this.props.deposit_asset: ", this.props.deposit_asset );
+        // console.log( "this.props.gateway: ", this.props.gateway );
+        // console.log( "this.props.deposit_asset: ", this.props.deposit_asset );
 		
         if( !wallet.deposit_keys ) wallet.deposit_keys = {}
         if( !wallet.deposit_keys[this.props.gateway] )
@@ -94,8 +93,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 
     getWithdrawModalId() {
-        console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
-        console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
+        // console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
+        // console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
         return "withdraw_asset_"+this.props.issuer_account.get('name') + "_"+this.props.receive_asset.get('symbol');
     }
 
@@ -123,7 +122,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         if( !receive_address ) { this.requestDepositAddress(); }
 
         let account_balances = this.props.account.get("balances").toJS();
-        console.log( "balances: ", account_balances );
+        // console.log( "balances: ", account_balances );
         let asset_types = Object.keys(account_balances);
 
         let balance = "0 " + this.props.receive_asset.get('symbol');

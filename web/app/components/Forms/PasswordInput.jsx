@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import Translate from "react-translate-component";
@@ -20,17 +21,17 @@ class PasswordInput extends Component {
     }
     
     value() {
-        let node = React.findDOMNode(this.refs.password);
+        let node = ReactDOM.findDOMNode(this.refs.password);
         return node ? node.value : "";
     }
 
     clear() {
-        React.findDOMNode(this.refs.password).value = "";
-        if(this.props.confirmation) React.findDOMNode(this.refs.confirm_password).value = "";
+        ReactDOM.findDOMNode(this.refs.password).value = "";
+        if(this.props.confirmation) ReactDOM.findDOMNode(this.refs.confirm_password).value = "";
     }
 
     focus() {
-        React.findDOMNode(this.password.password).focus();
+        ReactDOM.findDOMNode(this.password.password).focus();
     }
 
     valid() {
@@ -38,8 +39,8 @@ class PasswordInput extends Component {
     }
 
     checkPasswordConfirmation() {
-        let confirmation = React.findDOMNode(this.refs.confirm_password).value;
-        let password = React.findDOMNode(this.refs.password).value;
+        let confirmation = ReactDOM.findDOMNode(this.refs.confirm_password).value;
+        let password = ReactDOM.findDOMNode(this.refs.password).value;
         this.state.doesnt_match = confirmation && password !== confirmation;
         this.setState({doesnt_match: this.state.doesnt_match});
     }
@@ -47,8 +48,8 @@ class PasswordInput extends Component {
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
-        let confirmation = this.props.confirmation ? React.findDOMNode(this.refs.confirm_password).value : true;
-        let password = React.findDOMNode(this.refs.password).value;
+        let confirmation = this.props.confirmation ? ReactDOM.findDOMNode(this.refs.confirm_password).value : true;
+        let password = ReactDOM.findDOMNode(this.refs.password).value;
         if(this.props.confirmation) this.checkPasswordConfirmation();
         let state = {
             valid: !this.state.error && !this.state.wrong

@@ -45,6 +45,8 @@ class SettingsStore {
             [CORE_ASSET + "_METAEX.BTC", {"quote": CORE_ASSET,"base": "METAEX.BTC" } ]
         ]);
 
+        this.starredAccounts = Immutable.Map();
+
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
         this.defaults = {
@@ -82,6 +84,8 @@ class SettingsStore {
             onChangeViewSetting: SettingsActions.changeViewSetting,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
+            onAddStarAccount: SettingsActions.addStarAccount,
+            onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS
         });
@@ -92,6 +96,10 @@ class SettingsStore {
 
         if (this._lsGet("starredMarkets")) {
             this.starredMarkets = Immutable.Map(JSON.parse(this._lsGet("starredMarkets")));
+        }
+
+        if (this._lsGet("starredAccounts")) {
+            this.starredAccounts = Immutable.Map(JSON.parse(this._lsGet("starredAccounts")));
         }
 
         if (this._lsGet("defaults_v1")) {
@@ -155,6 +163,23 @@ class SettingsStore {
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
         this._lsSet("starredMarkets", this.starredMarkets.toJS());
+    }
+
+    onAddStarAccount(account) {
+        if (!this.starredAccounts.has(account)) {
+            this.starredAccounts = this.starredAccounts.set(account, {name: account});
+
+            this._lsSet("starredAccounts", this.starredAccounts.toJS());
+        } else {
+            return false;
+        }
+    }
+
+    onRemoveStarAccount(account) {
+
+        this.starredAccounts = this.starredAccounts.delete(account);
+
+        this._lsSet("starredAccounts", this.starredAccounts.toJS());
     }
 
     onAddWS(ws) {
