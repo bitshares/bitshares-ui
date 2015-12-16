@@ -454,29 +454,26 @@ class Asset extends React.Component {
         // console.log("Asset: ", asset); //TODO Remove
 
         return (
-            <div className="grid-block page-layout vertical medium-horizontal" >
+            <div className="grid-block page-layout">
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
-                  <div className="grid-block small-12" style={{ overflow:"visible"}}>
-                    {this.renderAboutBox(asset)}
-
-                  </div>
-                    <div className="grid-block small-12  vertical medium-horizontal" style={{ overflow:"visible"}}>
-
+                    <div className="grid-block small-12 shrink" style={{ overflow:"visible"}}>
+                        {this.renderAboutBox(asset)}
+                    </div>
+                    <div className="grid-block small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
                         <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {this.renderSummary(asset)}
                         </div>
                         <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {priceFeed ? priceFeed : this.renderPermissions(asset)}
                         </div>
-                      </div>
-                      <div className="grid-block small-12  vertical medium-horizontal" style={{ overflow:"visible"}}>
+                    </div>
+                    <div className="grid-block small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
                         <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {this.renderFeePool(asset)}
-                         </div>
-
-                         <div className="small-12 medium-6" style={{overflow:"visible"}}>
+                        </div>
+                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
                             {priceFeed ? this.renderPermissions(asset) : null}
-                          </div>
+                        </div>
                     </div>
 
                     {priceFeedData}
