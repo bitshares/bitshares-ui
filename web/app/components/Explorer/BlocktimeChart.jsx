@@ -1,6 +1,6 @@
 
 import React from "react";
-import Highcharts from "react-highcharts/highstock";
+import Highcharts from "react-highcharts/bundle/highstock";
 import _ from "lodash";
 import counterpart from "counterpart";
 

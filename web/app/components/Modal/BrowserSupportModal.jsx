@@ -27,9 +27,9 @@ export default class BrowserSupportModal extends React.Component {
 
                     <p><a href onClick={this._openLink}>Google Chrome</a></p>
 
-                    <div className="grid-content button-group no-overflow" style={{paddingTop: "0"}}>
+                    <div className="button-group no-overflow" style={{paddingTop: "0"}}>
                         <Trigger close="browser_modal">
-                            <a href onClick={this._openLink} className="button success"><Translate content="init_error.understand" /></a>
+                            <a href onClick={this._openLink} className="button"><Translate content="init_error.understand" /></a>
                         </Trigger>
                     </div>
 

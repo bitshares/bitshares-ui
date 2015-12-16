@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link, RouteHandler} from "react-router"
+import {Link} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
 import WalletManagerStore from "stores/WalletManagerStore"
@@ -32,7 +32,7 @@ export default class WalletManager extends WalletBaseComponent {
                             <h3><Translate content="wallet.console" /></h3>
                         </div>
                         <div className="content-block">
-                            <RouteHandler/>
+                            {this.props.children}
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@ export class WalletOptions extends WalletBaseComponent {
                                 <div>{current_wallet}</div>
                                 <br/>
                                 {has_wallets ? (
-                                    <Link to="wmc-change-wallet">
+                                    <Link to="/wallet/change">
                                         <div className="button outline success">
                                             <Translate content="wallet.change_wallet" />
                                         </div>
@@ -76,7 +76,7 @@ export class WalletOptions extends WalletBaseComponent {
                                 <div style={{visibility: "hidden"}}>Dummy</div>
                                 <br/>
                                 {has_wallet ? (
-                                    <Link to="wmc-import-keys">
+                                    <Link to="/wallet/import-keys">
                                         <div className="button outline success">
                                             <Translate content="wallet.import_keys" />
                                         </div>
@@ -93,7 +93,7 @@ export class WalletOptions extends WalletBaseComponent {
                             <label><Translate content="wallet.balance_claims" /></label>
                             <div style={{visibility: "hidden"}}>Dummy</div>
                             <br/>
-                            <Link to="wmc-balance-claims">
+                            <Link to="wallet/balance-claims">
                                 <div className="button outline success">
                                     <Translate content="wallet.balance_claim_lookup" />
                                 </div>
@@ -110,27 +110,27 @@ export class WalletOptions extends WalletBaseComponent {
             
             </div>
             
-            {has_wallet ? <Link to="wmc-backup-create">
+            {has_wallet ? <Link to="wallet/backup/create">
             <div className="button outline success"><Translate content="wallet.create_backup" /></div></Link>:null}
                 
-            {has_wallet ? <Link to="wmc-backup-brainkey">
+            {has_wallet ? <Link to="wallet/backup/brainkey">
             <div className="button outline success"><Translate content="wallet.backup_brainkey" /></div></Link>:null}
 
 
-            <Link to="wmc-backup-verify-restore">
+            <Link to="wallet/backup/restore">
             <div className="button outline success"><Translate content="wallet.restore_backup" /></div></Link>
 
             <br/>
 
             {has_wallet ? <br/> : null}
             
-            <Link to="wmc-wallet-create">
+            <Link to="wallet/create">
             <div className="button outline success"><Translate content="wallet.new_wallet" /></div></Link>
             
-            {has_wallet ? <Link to="wmc-wallet-delete">
+            {has_wallet ? <Link to="wallet/delete">
             <div className="button outline success"><Translate content="wallet.delete_wallet" /></div></Link>:null}
 
-            {has_wallet ? <Link to="wmc-change-password">
+            {has_wallet ? <Link to="wallet/change-password">
             <div className="button outline success"><Translate content="wallet.change_password" /></div></Link>:null}
             
         </span>
@@ -158,7 +158,7 @@ export class ChangeActiveWallet extends WalletBaseComponent {
 
         var options = []
         state.wallet_names.forEach( wallet_name => {
-            options.push(<option value={wallet_name}>{wallet_name.toUpperCase()}</option>)
+            options.push(<option key={wallet_name} value={wallet_name}>{wallet_name.toUpperCase()}</option>)
         })
 
         var is_dirty = this.state.current_wallet !== this.props.current_wallet
@@ -213,29 +213,32 @@ export class WalletDelete extends WalletBaseComponent {
         
         
         // this.props.current_wallet
-        var placeholder
-        if (this.props.wallet_names.size > 1) {
-            placeholder = <option value="" disabled>{placeholder}</option>;
-        }
-        else {
-            //When disabled and list_size was 1, chrome was skipping the 
-            //placeholder and selecting the 1st item automatically (not shown)
-            placeholder = <option value="">{placeholder}</option>;
-        }
-        var options = []
-        options.push(<option value="">Select Wallet&hellip;</option>)
+        var placeholder = <option key="placeholder" value="" disabled={this.props.wallet_names.size > 1}></option>
+        // if (this.props.wallet_names.size > 1) {
+        //     placeholder = <option value="" disabled>{placeholder}</option>;
+        // }
+        // else {
+        //     //When disabled and list_size was 1, chrome was skipping the 
+        //     //placeholder and selecting the 1st item automatically (not shown)
+        //     placeholder = <option value="">{placeholder}</option>;
+        // }
+        var options = [placeholder]
+        options.push(<option key="select_option" value="">Select Wallet&hellip;</option>)
         this.props.wallet_names.forEach( wallet_name => {
-            options.push(<option value={wallet_name}>{wallet_name.toUpperCase()}</option>)
+            options.push(<option key={wallet_name} value={wallet_name}>{wallet_name.toUpperCase()}</option>)
         })
 
         var is_dirty = !!this.state.selected_wallet
 
         return <div className="">
-            <select value={this.state.selected_wallet}
+            <select 
+                value={this.state.selected_wallet}
                 className="form-control  account-select"
                 style={{margin: '0 auto'}}
-                onChange={this.onChange.bind(this)}>
-                { placeholder} { options }</select>
+                onChange={this.onChange.bind(this)}
+            >
+                { options }
+            </select>
             <br/>
             <div className={ cname("button success", {disabled: !is_dirty}) } onClick={this.onConfirm.bind(this)}>
                 <Translate content="wallet.delete_wallet" /></div>

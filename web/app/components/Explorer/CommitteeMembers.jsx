@@ -1,4 +1,5 @@
 import React from "react";
+import {PropTypes} from "react-router";
 import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
@@ -15,15 +16,15 @@ class CommitteeMemberCard extends React.Component {
 
     static propTypes = {
         committee_member: ChainTypes.ChainAccount.isRequired
-    }
+    };
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
     _onCardClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("account", {account_name: this.props.committee_member.get("name")});
+        this.context.history.pushState(null, `/account/${this.props.committee_member.get("name")}`);
     }
 
     render() {
@@ -59,12 +60,12 @@ class CommitteeMemberRow extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
     _onRowClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("account", {account_name: this.props.committee_member.get("name")});
+        this.context.history.pushState(null, `/account/${this.props.committee_member.get("name")}`);
     }
 
     render() {

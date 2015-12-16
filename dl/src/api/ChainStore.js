@@ -145,7 +145,6 @@ class ChainStore
             let obj = updated_objects[a][i]
 
             if( utils.is_object_id( obj ) ) { /// the object was removed
-
               // Cancelled limit order, emit event for MarketStore to update it's state
               if( obj.search( order_prefix ) == 0 ) {
                 let old_obj = this.objects_by_id.get(obj);
@@ -153,6 +152,14 @@ class ChainStore
                   return;
                 }
                 emitter.emit('cancel-order', old_obj.get("id"));
+                let account = this.objects_by_id.get(old_obj.get("seller"));
+                if (account && account.has("orders")) {
+                  let limit_orders = account.get("orders");
+                  if (account.get("orders").has(obj)) {
+                    account = account.set("orders", limit_orders.delete(obj));
+                    this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
+                  }
+                }
               }
 
                // Update nested call_order inside account object
@@ -695,7 +702,7 @@ class ChainStore
                  account.lifetime_referrer_name = lifetime_referrer_name
                  account.registrar_name = registrar_name
                  account.balances = {}
-                 account.orders = new Immutable.Set(limit_orders)
+                 account.orders = new Immutable.Set()
                  account.vesting_balances = new Immutable.Set()
                  account.balances = new Immutable.Map()
                  account.call_orders = new Immutable.Set()
@@ -713,6 +720,13 @@ class ChainStore
                       full_account.balances.forEach(b => {
                           this._updateObject( b, false );
                           map.set( b.asset_type, b.id );
+                      });
+                  });
+
+                 account.orders = account.orders.withMutations(set => {
+                      limit_orders.forEach(order => {
+                          this._updateObject( order, false )
+                          set.add( order.id )
                       });
                   });
 
@@ -869,50 +883,50 @@ class ChainStore
     *  then updates the account object with relevant meta-info depending
     *  upon the type of account
     */
-   _updateAccount( account_id, payload )
-   {
-      let updates = payload[0]
+   // _updateAccount( account_id, payload )
+   // {
+   //    let updates = payload[0]
 
-      for( let i = 0; i < updates.length; ++i )
-      {
-         let update = updates[i]
-         if( typeof update  == 'string' )
-         {
-            let old_obj = this._removeObject( update )
+   //    for( let i = 0; i < updates.length; ++i )
+   //    {
+   //       let update = updates[i]
+   //       if( typeof update  == 'string' )
+   //       {
+   //          let old_obj = this._removeObject( update )
 
-            if( update.search( order_prefix ) == 0 )
-            {
-                  acnt = acnt.setIn( ['orders'], set => set.delete(update) )
-            }
-            else if( update.search( vesting_balance_prefix ) == 0 )
-            {
-                  acnt = acnt.setIn( ['vesting_balances'], set => set.delete(update) )
-            }
-         }
-         else
-         {
-            let updated_obj = this._updateObject( update )
-            if( update.id.search( balance_prefix ) == 0 )
-            {
-               if( update.owner == account_id )
-                  acnt = acnt.setIn( ['balances'], map => map.set(update.asset_type,update.id) )
-            }
-            else if( update.id.search( order_prefix ) == 0 )
-            {
-               if( update.owner == account_id )
-                  acnt = acnt.setIn( ['orders'], set => set.add(update.id) )
-            }
-            else if( update.id.search( vesting_balance_prefix ) == 0 )
-            {
-               if( update.owner == account_id )
-                  acnt = acnt.setIn( ['vesting_balances'], set => set.add(update.id) )
-            }
+   //          if( update.search( order_prefix ) == 0 )
+   //          {
+   //                acnt = acnt.setIn( ['orders'], set => set.delete(update) )
+   //          }
+   //          else if( update.search( vesting_balance_prefix ) == 0 )
+   //          {
+   //                acnt = acnt.setIn( ['vesting_balances'], set => set.delete(update) )
+   //          }
+   //       }
+   //       else
+   //       {
+   //          let updated_obj = this._updateObject( update )
+   //          if( update.id.search( balance_prefix ) == 0 )
+   //          {
+   //             if( update.owner == account_id )
+   //                acnt = acnt.setIn( ['balances'], map => map.set(update.asset_type,update.id) )
+   //          }
+   //          else if( update.id.search( order_prefix ) == 0 )
+   //          {
+   //             if( update.owner == account_id )
+   //                acnt = acnt.setIn( ['orders'], set => set.add(update.id) )
+   //          }
+   //          else if( update.id.search( vesting_balance_prefix ) == 0 )
+   //          {
+   //             if( update.owner == account_id )
+   //                acnt = acnt.setIn( ['vesting_balances'], set => set.add(update.id) )
+   //          }
 
-            this.objects_by_id = this.objects_by_id.set( acnt.id, acnt )
-         }
-      }
-      this.fetchRecentHistory( acnt )
-   }
+   //          this.objects_by_id = this.objects_by_id.set( acnt.id, acnt )
+   //       }
+   //    }
+   //    this.fetchRecentHistory( acnt )
+   // }
 
 
    /**
@@ -933,6 +947,8 @@ class ChainStore
       // if (!(object.id.split(".")[0] == 2) && !(object.id.split(".")[1] == 6)) {
       //   console.log( "update: ", object )
       // }
+      
+      // DYNAMIC GLOBAL OBJECT
       if( object.id == "2.1.0" ) {
          object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
          this.head_block_time_string = object.time
@@ -952,6 +968,7 @@ class ChainStore
       }
 
 
+      // BALANCE OBJECT
       if( object.id.substring(0,balance_prefix.length) == balance_prefix )
       {
          let owner = this.objects_by_id.get( object.owner )
@@ -973,6 +990,7 @@ class ChainStore
          }
          this.objects_by_id = this.objects_by_id.set( object.owner, owner  )
       }
+      // ACCOUNT STATS OBJECT
       else if( object.id.substring(0,account_stats_prefix.length) == account_stats_prefix )
       {
         // console.log( "HISTORY CHANGED" )
@@ -982,16 +1000,19 @@ class ChainStore
             this.fetchRecentHistory( object.owner );
          }
       }
+      // WITNESS OBJECT
       else if( object.id.substring(0,witness_prefix.length) == witness_prefix )
       {
          this.witness_by_account_id.set( object.witness_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
       }
+      // COMMITTEE MEMBER OBJECT
       else if( object.id.substring(0,committee_prefix.length) == committee_prefix )
       {
          this.committee_by_account_id.set( object.committee_member_account, object.id )
          this.objects_by_vote_id.set( object.vote_id, object.id )
       }
+      // ACCOUNT OBJECT
       else if( object.id.substring(0,account_prefix.length) == account_prefix )
       {
          current = current.set( 'active', Immutable.fromJS( object.active ) );
@@ -1004,6 +1025,7 @@ class ChainStore
          this.objects_by_id = this.objects_by_id.set( object.id, current );
          this.accounts_by_name = this.accounts_by_name.set( object.name, object.id )
       }
+      // ASSET OBJECT
       else if( object.id.substring(0,asset_prefix.length) == asset_prefix )
       {
          this.assets_by_symbol = this.assets_by_symbol.set( object.symbol, object.id )
@@ -1036,6 +1058,7 @@ class ChainStore
             this.objects_by_id = this.objects_by_id.set( object.id, current );
          }
       }
+      // ASSET DYNAMIC DATA OBJECT
       else if( object.id.substring(0,asset_dynamic_data_prefix.length) == asset_dynamic_data_prefix )
       {
          // let asset_id = asset_prefix + object.id.substring( asset_dynamic_data_prefix.length )
@@ -1049,11 +1072,13 @@ class ChainStore
          }
 
       }
+      // WORKER OBJECT
       else if( object.id.substring(0,worker_prefix.length ) == worker_prefix )
       {
         this.objects_by_vote_id.set( object.vote_for, object.id );
         this.objects_by_vote_id.set( object.vote_against, object.id );
       }
+      // BITASSET DATA OBJECT
       else if( object.id.substring(0,bitasset_data_prefix.length) == bitasset_data_prefix )
       {
           let asset_id = current.get( "asset_id" );
@@ -1065,21 +1090,36 @@ class ChainStore
              }
           }
       }
+      // CALL ORDER OBJECT
       else if( object.id.substring(0,call_order_prefix.length ) == call_order_prefix )
       {
         // Update nested call_orders inside account object
         if (emit) {
           emitter.emit("call-order-update", object);
         }
+
         let account = this.objects_by_id.get(object.borrower);
         if (account && account.has("call_orders")) {
           let call_orders = account.get("call_orders");
-          if (!account.get("call_orders").has(object.id)) {
+          if (!call_orders.has(object.id)) {
             account = account.set("call_orders", call_orders.add(object.id));
             this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
           }
         }
       }
+      // LIMIT ORDER OBJECT
+      else if( object.id.substring(0,order_prefix.length ) == order_prefix ) {
+        let account = this.objects_by_id.get(object.seller);
+        if (account && account.has("orders")) {
+          let limit_orders = account.get("orders");
+          if (!limit_orders.has(object.id)) {
+            account = account.set("orders", limit_orders.add(object.id));
+            this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
+          }
+        }
+      }
+
+
 
       if( notify_subscribers )
          this.notifySubscribers()

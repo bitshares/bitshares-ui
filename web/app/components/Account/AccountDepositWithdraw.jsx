@@ -2,32 +2,22 @@ import config from "chain/config";
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
-import LoadingIndicator from "../LoadingIndicator";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import Statistics from "./Statistics";
-import AccountActions from "actions/AccountActions";
-import Icon from "../Icon/Icon";
-import TimeAgo from "../Utility/TimeAgo";
-import HelpContent from "../Utility/HelpContent";
 import WalletDb from "stores/WalletDb";
-import AmountSelector from "../Utility/AmountSelector";
 import WithdrawModal from "../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../Account/AccountBalance";
-import BalanceComponent from "../Utility/BalanceComponent";
-import RefcodeInput from "../Forms/RefcodeInput";
 import WithdrawModalMetaexchange from "../Modal/WithdrawModalMetaexchange";
 import DepositModalMetaexchange from "../Modal/DepositModalMetaexchange";
 import TranswiserDepositWithdraw from "./transwiser/TranswiserDepositWithdraw";
 import BlockTradesBridgeDepositRequest from "./blocktrades/BlockTradesBridgeDepositRequest";
 import BlockTradesGatewayDepositRequest from "./blocktrades/BlockTradesGatewayDepositRequest";
 import WithdrawModalBlocktrades from "../Modal/WithdrawModalBlocktrades";
-import Tabs, {Tab} from "../Utility/Tabs";
+import Tabs from "../Utility/Tabs";
 var Post = require("../Utility/FormPost.js");
 
 @BindToChainState({keep_updating:true})
@@ -213,18 +203,12 @@ class AccountDepositWithdraw extends React.Component {
         dprops: "2.1.0"
     }
 
-    constructor( props ) {
-        super(props);
-        this.state = {hide_refcode: true};
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.account !== this.props.account || nextProps.qprops !== this.props.qprops || nextProps.dprops !== this.props.dprops || nextState.hide_refcode !== this.state.hide_refcode;
-    }
-
-    showRefcodeInput(e) {
-        e.preventDefault();
-        this.setState({hide_refcode: false});
+        return (
+            nextProps.account !== this.props.account ||
+            nextProps.qprops !== this.props.qprops ||
+            nextProps.dprops !== this.props.dprops
+        );
     }
 
     render() {
@@ -232,7 +216,7 @@ class AccountDepositWithdraw extends React.Component {
 		<div className="grid-content">
 			<Tabs settings="depositWithdrawSettingsTab" defaultActiveTab={config.depositWithdrawDefaultActiveTab}>
 
-                <Tab title="BlockTrades">
+                <Tabs.Tab title="BlockTrades">
                     <div className="content-block">
                         <div className="float-right"><a href="https://blocktrades.us" target="__blank">VISIT WEBSITE</a></div>
                         <h3><Translate content="gateway.bridge" /></h3>
@@ -304,9 +288,9 @@ class AccountDepositWithdraw extends React.Component {
                             </tbody>
                         </table>
                     </div>
-                </Tab>
+                </Tabs.Tab>
 
-                <Tab title="CCEDK">
+                <Tabs.Tab title="CCEDK">
                     <div className="float-right"><a href="https://www.ccedk.com/" target="__blank">VISIT WEBSITE</a></div>
                     <table className="table">
                         <thead>
@@ -401,9 +385,9 @@ class AccountDepositWithdraw extends React.Component {
                             receive_coin_type="opennbt" />
                         </tbody>
                     </table>
-                </Tab>
+                </Tabs.Tab>
 
-                <Tab title="metaexchange">
+                <Tabs.Tab title="metaexchange">
                     <div className="content-block">
                         <div className="float-right"><a href="https://metaexchange.info" target="__blank">VISIT WEBSITE</a></div>
                         <h3><Translate content="gateway.bridge" /></h3>
@@ -470,9 +454,9 @@ class AccountDepositWithdraw extends React.Component {
                             </tbody>
                         </table>
                     </div>
-                </Tab>
+                </Tabs.Tab>
 
-                <Tab title="transwiser">
+                <Tabs.Tab title="transwiser">
                     <div className="float-right"><a href="http://www.transwiser.com" target="_blank">VISIT WEBSITE</a></div>
                     <table className="table">
                         <thead>
@@ -487,6 +471,10 @@ class AccountDepositWithdraw extends React.Component {
                         <TranswiserDepositWithdraw
                             issuerAccount="transwiser-wallet"
                             account={this.props.account.get('name')}
+                            receiveAsset="TCNY" />
+                        <TranswiserDepositWithdraw
+                            issuerAccount="transwiser-wallet"
+                            account={this.props.account.get('name')}
                             receiveAsset="CNY" />
                         <TranswiserDepositWithdraw
                             issuerAccount="transwiser-wallet"
@@ -494,7 +482,7 @@ class AccountDepositWithdraw extends React.Component {
                             receiveAsset="BOTSCNY" />
                         </tbody>
                     </table>
-                </Tab>
+                </Tabs.Tab>
 
             </Tabs>
 		</div>

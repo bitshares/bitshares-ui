@@ -2,9 +2,6 @@ import React from "react";
 import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
-import Operation from "../Blockchain/Operation";
-import LoadingIndicator from "../LoadingIndicator";
 import BalanceComponent from "../Utility/BalanceComponent";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
@@ -16,18 +13,15 @@ import ChainStore from "api/ChainStore";
 
 class AccountOverview extends React.Component {
 
-    static propTypes = {
-        account: React.PropTypes.object.isRequired
-    };
-
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             settleAsset: "1.3.0"
         };
     }
 
-    _onSettleAsset(id) {
+    _onSettleAsset(id, e) {
+        e.preventDefault();
         this.setState({
             settleAsset: id
         });
@@ -42,7 +36,7 @@ class AccountOverview extends React.Component {
         }
         let call_orders = [];
         if (account.toJS && account.has("call_orders")) call_orders = account.get("call_orders").toJS();
-        let balances = {};
+        let balances = [];
         let account_balances = account.get("balances");
         let balanceList = Immutable.List();
 
@@ -56,12 +50,19 @@ class AccountOverview extends React.Component {
                 let asset = ChainStore.getObject(balanceAmount.get("asset_type"));
                 let isBitAsset = asset && asset.has("bitasset_data_id");
 
+                const core_asset = ChainStore.getAsset("1.3.0");
+                let assetInfoLinks = asset && <ul>
+                    <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                    <li><a href={`#/market/${asset.get("symbol")}_${core_asset?core_asset.get("symbol"):"BTS"}`}><Translate content="exchange.market"/></a></li>
+                    {isBitAsset && <li><a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a></li>}
+                </ul>;
+
                 balanceList = balanceList.push(balance);
-                balances[balance] = (
+                balances.push(
                     <tr key={balance} style={{maxWidth: "100rem"}}>
-                        {isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline"><Translate content="account.settle" /></div></td> : <td></td>}
-                        <td style={{textAlign: "right"}}><BalanceComponent balance={balance}/></td>
-                        <td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>
+                        {/*isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline"><Translate content="account.settle" /></div></td> : <td></td>*/}
+                        <td style={{textAlign: "right"}}><BalanceComponent balance={balance} assetInfo={assetInfoLinks}/></td>
+                        {/*<td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>*/}
                         <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
                         <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td>
                     </tr>
@@ -78,16 +79,20 @@ class AccountOverview extends React.Component {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th><Translate component="span" content="modal.settle.submit" /></th>
+                                {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>
+                                {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {React.addons.createFragment(balances)}
-                            {balanceList.size ? <tr><td></td><td></td><td></td><td style={{textAlign: "right"}}>{totalBalance}</td><td></td></tr> : null}
+                            {balances}
+                            {balanceList.size > 1 ? <tr>
+                                <td></td>
+                                <td style={{textAlign: "right"}}>{totalBalance}</td>
+                                <td></td>
+                            </tr> : null}
                         </tbody>
                     </table>
                     <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
@@ -106,7 +111,7 @@ class AccountOverview extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                        { call_orders.map(id =><CollateralPosition object={id} account={account}/>) }
+                        { call_orders.map(id =><CollateralPosition key={id} object={id} account={account}/>) }
                         </tbody>
                     </table>
                 </div> : null}

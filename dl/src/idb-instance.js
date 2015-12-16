@@ -63,9 +63,7 @@ var openDatabase = function(database_name = this.getDatabaseName()) {
     })
 }
 
-var iDB
-
-module.exports = iDB = (function () {
+var iDB = (function () {
 
     var _instance;
     var idb;
@@ -256,3 +254,4 @@ module.exports = iDB = (function () {
 
 })();
 
+export default iDB;

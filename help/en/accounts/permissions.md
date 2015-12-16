@@ -106,7 +106,7 @@ This scheme allows:
 * the CEO to spend funds
 * the Chief of Finance Officer to spend funds
 * Treasurer together with Controller to spend funds
-* Controller or Treasurer together with wither the Tax Manager or Accounting to
+* Controller or Treasurer together with the Tax Manager and Accounting to
   spend funds.
 
 Hence, a try of arbitrary depth can be spanned in order to construct a flexible

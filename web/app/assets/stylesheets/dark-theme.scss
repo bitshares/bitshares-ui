@@ -416,7 +416,7 @@ td.orderHistoryBid {
   }
 }
 
-.my-account h5, .my-account h4 {
+.my-account h5, .my-account h4, td.my-account {
   color: $info-color;
 }
 
@@ -516,9 +516,6 @@ td.orderHistoryBid {
   }
 }
 
-
-
-
 .remove {
   color: $alert-color;
   border: none;
@@ -547,6 +544,11 @@ td.orderHistoryBid {
     background-color: transparent;
     border-color: $dark-text-color;
   }
+}
+
+
+.click-for-help {
+  border-bottom-color: $secondary-text-color !important;
 }
 
 // Block List (section)
@@ -586,5 +588,15 @@ section input[type="text"] {
 .asset-card {
   .card-divider {
     background: $panel-bg-color;
+  }
+}
+
+
+// Exchange
+.mymarkets-header {
+  border-bottom-color: $button-bg-color;
+  &.inactive {
+    border-bottom-color: transparent;
+    color: $secondary-text-color;
   }
 }

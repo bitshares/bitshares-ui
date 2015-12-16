@@ -1,4 +1,5 @@
 import React from "react";
+import {PropTypes} from "react-router";
 import _ from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
@@ -53,7 +54,7 @@ class HelpContent extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     }
 
     constructor(props) {
@@ -67,7 +68,7 @@ class HelpContent extends React.Component {
         let path = e.target.hash.split("/").filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
-        this.context.router.transitionTo(route);
+        this.context.history.pushState(null, route);
         return false;
     }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import {PropTypes} from "react";
 import classNames from "classnames";
 import utils from "common/utils";
 import Translate from "react-translate-component";

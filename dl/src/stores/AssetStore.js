@@ -101,4 +101,4 @@ class AssetStore extends BaseStore {
     }
 }
 
-module.exports = alt.createStore(AssetStore, "AssetStore");
+export default alt.createStore(AssetStore, "AssetStore");

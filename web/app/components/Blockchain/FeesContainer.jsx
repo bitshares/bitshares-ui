@@ -1,7 +1,7 @@
 import React from "react";                                                                                                                                                            
 import BlockchainActions from "actions/BlockchainActions";
 import SettingsStore from "stores/SettingsStore";
-import AltContainer from "alt/AltContainer";
+import AltContainer from "alt-container";
 import Fees from "./Fees";
 
 class FeesContainer extends React.Component {
@@ -13,7 +13,7 @@ class FeesContainer extends React.Component {
                 inject={{
                         settings : SettingsStore.getState().settings
                 }}>   
-             <Fees/>
+             <Fees {...this.props}/>
             </AltContainer>
            );  
     }   

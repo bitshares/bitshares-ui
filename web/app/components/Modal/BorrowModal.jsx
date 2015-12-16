@@ -352,7 +352,7 @@ class BorrowModalContent extends React.Component {
                     </div>
                     <div className="form-group">
                         <AmountSelector label="transaction.borrow_amount"
-                                        amount={short_amount}
+                                        amount={short_amount.toString()}
                                         onChange={this._onBorrowChange.bind(this)}
                                         asset={quote_asset.get("id")}
                                         assets={[quote_asset.get("id")]}
@@ -362,7 +362,7 @@ class BorrowModalContent extends React.Component {
                     </div>
                     <div className={collateralClass}>
                         <AmountSelector label="transaction.collateral"
-                                        amount={collateral}
+                                        amount={collateral.toString()}
                                         onChange={this._onCollateralChange.bind(this)}
                                         asset={backing_asset.get("id")}
                                         assets={[backing_asset.get("id")]}

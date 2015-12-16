@@ -27,7 +27,7 @@ class AccountRow extends React.Component {
         return (
             <tr key={account.get("id")}>
                 <td>{account.get("id")}</td>
-                <td><Link to="account" params={{account_name: account.get("name")}}>{account.get("name")}</Link></td>
+                <td><Link to={`/account/${account.get("name")}/overview`}>{account.get("name")}</Link></td>
                 <td>{!balance? "n/a" : <BalanceComponent balance={balance} />}</td>
                 <td>{!balance ? "n/a" : <BalanceComponent balance={balance} asPercentage={true} />}</td>
             </tr>
@@ -82,7 +82,7 @@ class Accounts extends React.Component {
             })
             .map((account, id) => {
                 return (
-                    <AccountRow account={account} />
+                    <AccountRow key={id} account={account} />
                 );
             }).toArray();
         }

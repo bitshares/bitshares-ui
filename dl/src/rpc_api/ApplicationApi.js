@@ -163,4 +163,4 @@ class ApplicationApi {
     }
 
 }
-module.exports = ApplicationApi;
+export default ApplicationApi;

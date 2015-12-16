@@ -509,7 +509,7 @@ class WalletDb extends BaseStore {
 }
 
 export var WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
-module.exports = WalletDbWrapped
+export default WalletDbWrapped
 
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)

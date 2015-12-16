@@ -2,7 +2,6 @@ import React from "react";
 import {PropTypes} from "react";
 import BaseComponent from "../BaseComponent";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
 import Transaction from "./Transaction";
@@ -59,11 +58,7 @@ class Block extends BaseComponent {
         dynGlobalObject: "2.1.0",
         blocks: {},
         height: 1
-    }
-
-    static contextTypes = {
-        router: React.PropTypes.func.isRequired 
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -94,15 +89,15 @@ class Block extends BaseComponent {
     }
 
     _nextBlock() {
-        let height = this.context.router.getCurrentParams().height;
+        let height = this.props.params.height;
         let nextBlock = Math.min(this.props.dynGlobalObject.get("head_block_number"), parseInt(height, 10) + 1);
-        this.context.router.transitionTo("block", {height: nextBlock});
+        this.props.history.pushState(null, `/block/${nextBlock}`);
     }
 
     _previousBlock() {
-        let height = this.context.router.getCurrentParams().height;
+        let height = this.props.params.height;
         let previousBlock = Math.max(1, parseInt(height, 10) - 1);
-        this.context.router.transitionTo("block", {height: previousBlock});
+        this.props.history.pushState(null, `/block/${previousBlock}`);
     }
 
     componentDidMount() {
@@ -123,7 +118,6 @@ class Block extends BaseComponent {
                         <ul>
                            <li><Translate component="span" content="explorer.block.date" />:  {block ? <FormattedDate
                                 value={block.timestamp}
-                                formats={intlData.formats}
                                 format="full"
                                 /> : null}
                             </li>

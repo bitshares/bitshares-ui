@@ -64,17 +64,13 @@ class FeeList extends React.Component {
 @BindToChainState({keep_updating:true})
 class FeeGroup extends React.Component {
 
-    static contextTypes = {
-        router: React.PropTypes.func.isRequired
-    }
-
     static propTypes = {
         globalObject: ChainTypes.ChainObject.isRequired
-    }
+    };
 
     static defaultProps = {
         globalObject: "2.0.0",
-    }
+    };
 
     constructor(props) {
         super(props);

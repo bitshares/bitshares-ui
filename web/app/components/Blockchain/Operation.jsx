@@ -1,7 +1,6 @@
 import React from "react";
-import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router";
+import {Link, PropTypes} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -45,7 +44,7 @@ class TransactionLabel extends React.Component {
 @BindToChainState({keep_updating:true})
 class Row extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     }
 
     static propTypes = {
@@ -63,7 +62,7 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.router.transitionTo("block", {height: this.props.block});
+        this.context.history.pushState(null, `/block/${this.props.block}`);
     }
 
     render() {
@@ -97,11 +96,11 @@ class Operation extends React.Component {
     }
 
     static propTypes = {
-        op: PropTypes.array.isRequired,
-        current: PropTypes.string,
-        block: PropTypes.number,
-        hideDate: PropTypes.bool,
-        hideFee: PropTypes.bool
+        op: React.PropTypes.array.isRequired,
+        current: React.PropTypes.string,
+        block: React.PropTypes.number,
+        hideDate: React.PropTypes.bool,
+        hideFee: React.PropTypes.bool
     }
 
     // shouldComponentUpdate(nextProps) {
@@ -112,14 +111,14 @@ class Operation extends React.Component {
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
             <LinkToAccountById account={name_or_id}/> :
-            <Link to="account-overview" params={{account_name: name_or_id}}>{name_or_id}</Link>;
+            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>;
     }
 
     linkToAsset(symbol_or_id) {
         if(!symbol_or_id) return <span>-</span>;
         return utils.is_object_id(symbol_or_id) ?
             <LinkToAssetById asset={symbol_or_id}/> :
-            <Link to="asset" params={{symbol: symbol_or_id}}>{symbol_or_id}</Link>;
+            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
     render() {
@@ -160,6 +159,10 @@ class Operation extends React.Component {
 
                 color = "success";
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
+
+                if (memo_text && memo_text.length > 35) {
+                    memo_text = memo_text.substr(0, 35) + "...";
+                }
 
                 // if (current === op[1].from) {
 
@@ -805,7 +808,7 @@ class Operation extends React.Component {
                 console.log("unimplemented op:", op);
                 column = (
                     <span>
-                        <Link to="block" params={{height: block}}>#{block}</Link>
+                        <Link to={`/block/${block}`}>#{block}</Link>
                     </span>
 
                 );

@@ -1,5 +1,5 @@
 [# lifetime]
-###Ücretlerde {feesCashback}% iade alın.
+### Ücretlerde {feesCashback}% iade alın.
 
 Ömür-boyu Üyeler ödedikleri her ücretten {feesCashback}% iade alırlar ve kaydını 
 yaptıkları ya da ağa yönlendirdikleri kullanıcılardan gelir elde ederler. Ömür-boyu ücret 

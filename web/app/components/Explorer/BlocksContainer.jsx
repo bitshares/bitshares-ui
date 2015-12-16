@@ -1,6 +1,6 @@
 import React from "react";
 import BlockchainStore from "stores/BlockchainStore";
-import AltContainer from "alt/AltContainer";
+import AltContainer from "alt-container";
 import Blocks from "./Blocks";
 
 class BlocksContainer extends React.Component {

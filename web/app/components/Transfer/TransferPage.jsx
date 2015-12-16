@@ -1,7 +1,7 @@
 import React from "react";
 import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
-import AltContainer from "alt/AltContainer";
+import AltContainer from "alt-container";
 import Transfer from "./Transfer";
 
 class TransferPage extends React.Component {

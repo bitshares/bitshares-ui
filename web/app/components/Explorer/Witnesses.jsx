@@ -1,4 +1,5 @@
 import React from "react";
+import {PropTypes} from "react-router";
 import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
@@ -22,12 +23,12 @@ class WitnessCard extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
     _onCardClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
+        this.context.history.pushState(null, `/account/${this.props.witness.get("name")}`);
     }
 
     render() {
@@ -55,18 +56,20 @@ class WitnessCard extends React.Component {
                         </div>
                         <br/>
                         <table className="table key-value-table">
+                            <tbody>
                             <tr>
                                 <td>Votes</td>
                                 <td><FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5} /></td>
                             </tr>
                             <tr>
                                 <td>Last&nbsp;Block</td>
-                                <td><TimeAgo time={last_aslot_time} /></td>
+                                <td><TimeAgo time={new Date(last_aslot_time)} /></td>
                             </tr>
                             <tr>
                                 <td>Missed</td>
                                 <td>{witness_data.get('total_missed')}</td>
                             </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -83,12 +86,12 @@ class WitnessRow extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
     _onRowClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
+        this.context.history.pushState(null, `/account/${this.props.witness.get("name")}`);
     }
 
     render() {
@@ -121,7 +124,7 @@ class WitnessRow extends React.Component {
             <tr className={currentClass} onClick={this._onRowClick.bind(this)} >
                 <td>{rank}</td>
                 <td style={color}>{witness.get("name")}</td>
-                <td><TimeAgo time={last_aslot_time} /></td>
+                <td><TimeAgo time={new Date(last_aslot_time)} /></td>
                 <td>{witness_data.get('last_confirmed_block_num')}</td>
                 <td className={missedClass}>{missed}</td>
                 <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" /></td>
@@ -286,7 +289,6 @@ class Witnesses extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("props:", props)
 
         this.state = {
             filterWitness: props.filterWitness || "",
@@ -331,6 +333,7 @@ class Witnesses extends React.Component {
                         <div className="grid-content">
                             <br/>
                             <table className="table key-value-table">
+                                <tbody>
                                 <tr>
                                     <td><Translate content="explorer.witnesses.current"/></td>
                                     <td>{currentAccount ? currentAccount.get("name") : null}</td>
@@ -353,12 +356,13 @@ class Witnesses extends React.Component {
                                 </tr>
                                 <tr>
                                     <td><Translate content="explorer.witnesses.next_vote"/></td>
-                                    <td> <TimeAgo time={dynGlobalObject.next_maintenance_time} /></td>
+                                    <td> <TimeAgo time={new Date(dynGlobalObject.next_maintenance_time)} /></td>
                                 </tr>
                                 <tr>
                                     <td> <Translate component="h4" content="markets.filter" /> </td>
                                     <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
                                 </tr>
+                                </tbody>
                             </table>
                             <div className="view-switcher">
                                 <span className="button outline" onClick={this._toggleView.bind(this)}>{!this.state.cardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}</span>
@@ -374,7 +378,7 @@ class Witnesses extends React.Component {
                                 witnessList={globalObject.active_witnesses}
                                 filter={this.state.filterWitness}
                                 cardView={this.state.cardView}
-                                />
+                            />
                         </div>
                     </div>
                 </div>

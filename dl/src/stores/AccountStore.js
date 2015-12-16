@@ -8,6 +8,7 @@ import validation from "common/validation"
 import ChainStore from "api/ChainStore"
 import AccountRefsStore from "stores/AccountRefsStore"
 import AddressIndex from "stores/AddressIndex"
+import SettingsStore from "stores/SettingsStore"
 
 /**
  *  This Store holds information about accounts in this wallet
@@ -174,7 +175,12 @@ class AccountStore extends BaseStore {
         if (localStorage.currentAccount) {
             return this.setCurrentAccount(localStorage.currentAccount);
         }
-        if (this.state.linkedAccounts.size > 0) {
+
+        let {starredAccounts} = SettingsStore.getState();
+        if (starredAccounts.size) {
+            return this.setCurrentAccount(starredAccounts.first().name);
+        }
+        if (this.state.linkedAccounts.size) {
             return this.setCurrentAccount(this.state.linkedAccounts.first());
         }  
     }
@@ -245,7 +251,7 @@ class AccountStore extends BaseStore {
     
 }
 
-module.exports = alt.createStore(AccountStore, "AccountStore");
+export default alt.createStore(AccountStore, "AccountStore");
 
 // @return 3 full, 2 partial, 0 none
 function pubkeyThreshold(authority) {

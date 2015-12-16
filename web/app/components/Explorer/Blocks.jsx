@@ -1,7 +1,7 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import {Link} from "react-router";
-import intlData from "../Utility/intlData";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate, FormattedRelative,FormattedTime} from "react-intl";
@@ -87,9 +87,9 @@ class Blocks extends React.Component {
 
     componentDidMount() {
         this._getInitialBlocks();
-        let oc = React.findDOMNode(this.refs.operations);
+        let oc = ReactDOM.findDOMNode(this.refs.operations);
         Ps.initialize(oc);
-        let blocks = React.findDOMNode(this.refs.blocks);
+        let blocks = ReactDOM.findDOMNode(this.refs.blocks);
         Ps.initialize(blocks);
     }
 
@@ -157,10 +157,9 @@ class Blocks extends React.Component {
 
                 return (
                         <tr key={block.id}>
-                            <td><Link to="block" params={{height: block.id}}>#{utils.format_number(block.id, 0)}</Link></td>
+                            <td><Link to={`/block/${block.id}`}>#{utils.format_number(block.id, 0)}</Link></td>
                             <td><FormattedDate
                                 value={block.timestamp}
-                                formats={intlData.formats}
                                 format="time"
                             /></td>
                             <td><LinkToWitnessById witness={block.witness} /></td>

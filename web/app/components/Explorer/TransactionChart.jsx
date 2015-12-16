@@ -1,6 +1,6 @@
 
 import React from "react";
-import Highcharts from "react-highcharts/highstock";
+import Highcharts from "react-highcharts/bundle/highstock";
 import counterpart from "counterpart";
 
 class TransactionChart extends React.Component {

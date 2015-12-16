@@ -18,6 +18,14 @@ class SettingsActions {
         this.dispatch({quote, base});
     }
 
+    addStarAccount(account) {
+        this.dispatch(account);
+    }
+
+    removeStarAccount(account) {
+        this.dispatch(account);
+    }
+
     addWS(ws) {
         this.dispatch(ws);
     }

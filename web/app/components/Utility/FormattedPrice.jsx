@@ -22,8 +22,8 @@ class FormattedPrice extends React.Component {
     static propTypes = {
         base_asset: ChainTypes.ChainAsset.isRequired,
         quote_asset: ChainTypes.ChainAsset.isRequired,
-        base_amount: React.PropTypes.number,
-        quote_amount: React.PropTypes.number,
+        base_amount: React.PropTypes.any,
+        quote_amount: React.PropTypes.any,
         invert: React.PropTypes.bool,
         decimals: React.PropTypes.number
     };  

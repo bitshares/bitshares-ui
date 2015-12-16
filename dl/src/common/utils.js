@@ -22,6 +22,28 @@ var Utils = {
         return obj_id.substring(0, prefix.length) === prefix;
     },
 
+    get_satoshi_amount(amount, asset) {
+        let precision = asset.toJS ? asset.get("precision") : asset.precision;
+        let assetPrecision = this.get_asset_precision(precision);
+        amount = typeof amount === "string" ? amount : amount.toString();
+
+        let decimalPosition = amount.indexOf(".");
+        if (decimalPosition === -1) {
+            return parseInt(amount, 10) * assetPrecision;
+        } else {
+            let amountLength = amount.length;
+            amount = amount.replace(".", "");
+            for (let i = 0; i < precision; i++) {
+                decimalPosition += 1;
+                if (decimalPosition > amount.length) {
+                    amount += "0";
+                }
+            };
+
+            return parseInt(amount, 10);
+        }
+    },
+
     get_asset_precision: (precision) => {
         precision = precision.toJS ? precision.get("precision") : precision;
         return Math.pow(10, precision);
@@ -46,9 +68,9 @@ var Utils = {
 
     format_volume(amount) {
         if (amount < 10) {
-            return this.format_number(amount, 2);            
+            return this.format_number(amount, 2);
         } else if (amount < 10000) {
-            return this.format_number(amount, 0);            
+            return this.format_number(amount, 0);
         } else {
             return Math.round(amount / 1000) + "k";
         }
@@ -58,7 +80,7 @@ var Utils = {
         if(isNaN(number) || !isFinite(number) || number === undefined || number === null) return "";
         let zeros = ".";
         for (var i = 0; i < decimals; i++) {
-            zeros += "0";     
+            zeros += "0";
         }
         let num = numeral(number).format("0,0" + zeros);
         if( num.indexOf('.') > 0 && !trailing_zeros)
@@ -71,13 +93,13 @@ var Utils = {
         let digits = 0
         if( asset === undefined )
            return undefined
-        if( 'symbol' in asset ) 
+        if( 'symbol' in asset )
         {
             // console.log( "asset: ", asset )
             symbol = asset.symbol
             digits = asset.precision
         }
-        else 
+        else
         {
            // console.log( "asset: ", asset.toJS() )
            symbol = asset.get('symbol')
@@ -111,28 +133,34 @@ var Utils = {
         }
     },
 
+    price_text: function(price, base, quote) {
+        let maxDecimals = 9;
+        let priceText;
+        let quoteID = quote.toJS ? quote.get("id") : quote.id;
+        let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
+        let baseID = base.toJS ? base.get("id") : base.id;
+        let basePrecision  = base.toJS ? base.get("precision") : base.precision;
+        if (quoteID === "1.3.0") {
+            priceText = this.format_number(price, quotePrecision - 1);
+        } else if (baseID === "1.3.0") {
+            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 1));
+        } else {
+            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + basePrecision));
+        }
+        return priceText;
+    },
+
     price_to_text: function(price, base, quote, forcePrecision = null) {
         if (typeof price !== "number" || !base || !quote) {
             return;
         }
         let precision;
         let priceText;
-        let satoshi = 8;
 
         if (forcePrecision) {
             priceText = this.format_number(price, forcePrecision);
         } else {
-            let quoteID = quote.toJS ? quote.get("id") : quote.id;
-            let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
-            let baseID = base.toJS ? base.get("id") : base.id;
-            let basePrecision  = base.toJS ? base.get("precision") : base.precision;
-            if (quoteID === "1.3.0") {
-                priceText = this.format_number(price, quotePrecision - 1);
-            } else if (baseID === "1.3.0") {
-                priceText = this.format_number(price, Math.min(satoshi, quotePrecision + 1));
-            } else {
-                priceText = this.format_number(price, Math.min(satoshi, quotePrecision + basePrecision));
-            }
+            priceText = this.price_text(price, base, quote);
         }
         let price_split = priceText.split(".");
         let int = price_split[0];
@@ -371,8 +399,26 @@ var Utils = {
         } else {
             return false;
         }
+    },
+
+    sortText(a, b, inverse = false) {
+        if (a > b) {
+            return inverse ? 1 : -1;
+        } else if (a < b) {
+            return inverse ? -1 : 1;
+        } else {
+            return 0;
+        }
+    },
+
+    sortID(a, b, inverse = false) {
+        // inverse = false => low to high
+        let intA = parseInt(a.split(".")[2], 10);
+        let intB = parseInt(b.split(".")[2], 10);
+
+        return inverse ? (intB - intA) : (intA -intB);
     }
 
 };
 
-module.exports = Utils;
+export default Utils;
