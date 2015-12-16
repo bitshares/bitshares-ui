@@ -88,6 +88,9 @@ class FormattedAsset extends React.Component {
 
         }
 
+        var issuer = ChainStore.getObject(asset.issuer);
+        var issuerName = issuer ? issuer.get('name') : '';
+
         const currency_popover_body = !hide_asset && <div>
             <HelpContent
                 path={"assets/" + asset.symbol}
@@ -95,7 +98,7 @@ class FormattedAsset extends React.Component {
                 section="summary"
                 symbol={asset.symbol}
                 description={asset.options.description}
-                issuer={asset.issuer}/>
+                issuer={issuerName}/>
             {this.props.assetInfoLinks}
         </div>;
 
