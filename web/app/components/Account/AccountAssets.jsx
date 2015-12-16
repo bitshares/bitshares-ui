@@ -194,10 +194,14 @@ class AccountAssets extends React.Component {
             return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
         })
         .map(asset => {
+            let desc = asset.options.description;
+            if (desc.length > 100) {
+                desc = desc.substr(0, 100) + "...";
+            }
             return (
                     <tr key={asset.symbol}>
                        <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
-                       <td style={{maxWidth: "200px"}}>{asset.options.description}</td>
+                       <td style={{maxWidth: "250px"}}>{desc}</td>
                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
                        <td>
