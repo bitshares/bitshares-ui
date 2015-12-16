@@ -376,17 +376,18 @@ class Asset extends React.Component {
             return '';
         }
 
-        // Sort by published date
+        let now = new Date().getTime();
+        let oldestValidDate = new Date(now - asset.bitasset.options.feed_lifetime_sec * 1000);
+
+        // Filter by valid feed lifetime, Sort by published date
         var feeds = bitAsset.feeds;
-        feeds.sort(function(feed1, feed2){
-            if (feed1[1][0] < feed2[1][0]) {
-                return 1;
-            }
-            if (feed1[1][0] > feed2[1][0]) {
-                return -1;
-            }
-            return 0;
+        feeds = feeds
+        .filter(a => {
+            return new Date(a[1][0]) > oldestValidDate;
         })
+        .sort(function(feed1, feed2){
+            return new Date(feed2[1][0]) - new Date(feed1[1][0]) 
+        });
 
         var rows = [];
         var settlement_price_header = feeds[0][1][1].settlement_price;
