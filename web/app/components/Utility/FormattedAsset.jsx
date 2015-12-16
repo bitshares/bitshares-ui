@@ -30,7 +30,7 @@ class FormattedAsset extends React.Component {
         hide_asset: PropTypes.bool,
         hide_amount: PropTypes.bool,
         asPercentage: PropTypes.bool,
-        assetInfoLinks: PropTypes.node
+        assetInfo: PropTypes.node
     };
 
     static defaultProps = {
@@ -39,7 +39,7 @@ class FormattedAsset extends React.Component {
         hide_asset: false,
         hide_amount: false,
         asPercentage: false,
-        assetInfoLinks: null
+        assetInfo: null
     };
 
     static contextTypes = {
@@ -91,7 +91,7 @@ class FormattedAsset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer);
         var issuerName = issuer ? issuer.get('name') : '';
 
-        const currency_popover_body = !hide_asset && <div>
+        const currency_popover_body = !hide_asset && this.props.assetInfo && <div>
             <HelpContent
                 path={"assets/" + asset.symbol}
                 alt_path="assets/Asset"
@@ -99,7 +99,7 @@ class FormattedAsset extends React.Component {
                 symbol={asset.symbol}
                 description={asset.options.description}
                 issuer={issuerName}/>
-            {this.props.assetInfoLinks}
+            {this.props.assetInfo}
         </div>;
 
         return (
@@ -111,9 +111,9 @@ class FormattedAsset extends React.Component {
                     maximumFractionDigits={decimals}
                     />
                 : null}
-                {!hide_asset && <Popover isOpen={this.state.isPopoverOpen} onOuterAction={this.closePopover} body={currency_popover_body}>
+                {!hide_asset && (this.props.assetInfo ? <Popover isOpen={this.state.isPopoverOpen} onOuterAction={this.closePopover} body={currency_popover_body}>
                     <span className="currency click-for-help" onClick={this.togglePopover}>{asset.symbol}</span>
-                </Popover>}
+                </Popover> : <span className="currency" onClick={this.togglePopover}>{asset.symbol}</span>)}
                 </span>
         );
     }
