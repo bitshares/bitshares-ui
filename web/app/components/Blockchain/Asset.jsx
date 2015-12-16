@@ -22,11 +22,10 @@ class AssetFlag extends React.Component {
         }
 
         return (
-            <span>
+            <span className="asset-flag">
                 <span className="label info">
                     <Translate content={"account.user_issued_assets." + name}/>
                 </span>
-                {' '}
             </span>
         );
     }
@@ -44,11 +43,10 @@ class AssetPermission extends React.Component {
         }
 
         return (
-            <span>
+            <span className="asset-flag">
                 <span className="label info">
                     <Translate content={"account.user_issued_assets." + name}/>
                 </span>
-                {' '}
             </span>
         );
     }
