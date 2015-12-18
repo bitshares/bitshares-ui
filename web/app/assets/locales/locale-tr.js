@@ -43,6 +43,9 @@
         name: "Hesap adı",
         more: "fazlası",
         deposit_withdraw: "Yatır/Çek",
+        as_collateral: "Teminat",
+        open_orders: "Açık emirler",
+        total_value: "Toplam değeri",
         member: {
             stats: "Üyelik",
             join: "Katılma tarihi",
@@ -166,7 +169,9 @@
                 supported: "Destekleniyor",
                 rejected: "Red edildi",
                 neutral: "Tarafsız"
-            }
+            },
+            start: "Başlangıç tarihi",
+            end: "Bitiş tarihi"
         },
         options: {
             num_witnesses: "Gerekli Tanıklar",
@@ -207,7 +212,8 @@
         },
         propose_from: "Teklifi sunan",
         settle: "Öde",
-        "no_orders": "Açık emir yok"
+        "no_orders": "Açık emir yok",
+        asset_details: "Aktif detayları"
     },
     pagination: {
         newer: "Daha yeni",
@@ -256,8 +262,8 @@
         min_receive: "Alınacak minimum miktar",
         seller: "Satıcı",
         collateral: "Teminat",
-        coll_ratio: "İlk teminat oranı",
-        coll_maint: "Teminat idame oranı",
+        coll_ratio: "Başlangıç teminat oranı",
+        coll_maint: "Teminat sürdürme oranı",
         "create_key": "Açık anahtar oluşturuldu",
         reg_account: "Hesabı kaydetti",
         was_reg_account: "kaydı yapıldı, yapan :",
@@ -476,7 +482,7 @@
             price_feed: {
                 title: "Fiyat Yayını",
                 settlement_price: "Uzlaşma",
-                maintenance_collateral_ratio: "İdame Teminat Oranı (MCR)",
+                maintenance_collateral_ratio: "Sürdürme Teminat Oranı (MCR)",
                 maximum_short_squeeze_ratio: "Maksimum kısa sıkıştırma oranı (MSSR)"
             },
             fee_pool: {
@@ -576,8 +582,8 @@
         call: "Çağrı Fiyatı",
         core_rate: "Ücret Oranı",
         settle: "Ödeme",
-        squeeze: "Marjin Çağrı Fiyatı",
-        maintenance: "İdame Çağrı Fiyatı",
+        squeeze: "Teminat Tamamlama Çağrısı Fiyatı",
+        maintenance: "Sürdürme Çağrı Fiyatı",
         your_price: "Sizin Çağrı Fiyatınız",
         volume: "Hacim",
         vol_short: "Hacim",
@@ -760,7 +766,7 @@
         scan_qr: "QR Tara",
         transwiser: {
             gateway: "Transwiser",
-            visit_weidian: "Yatırmak için 'ı ziyaret edin ",
+            visit_weidian: "Yatırmak için ziyaret edin",
             deposit_title: "%(asset)s'a RMB yatırın",
             withdraw_title: "RMB'ye %(asset)s çekin",
             alipay: "ALIPAY Hesap Adı",
