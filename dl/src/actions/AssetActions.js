@@ -57,7 +57,7 @@ class AssetActions {
         });
     }
 
-    createAsset(account_id, createObject, flags, permissions) {
+    createAsset(account_id, createObject, flags, permissions, cer) {
         // Create asset action here...
         console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);
         let tr = wallet_api.new_transaction();
@@ -69,7 +69,7 @@ class AssetActions {
         // console.log("max_supply:", max_supply);
         // console.log("max_market_fee:", max_market_fee);
 
-        let corePrecision = utils.get_asset_precision(ChainStore.getAsset("1.3.0").get("precision"));
+        let corePrecision = utils.get_asset_precision(ChainStore.getAsset(cer.base.asset_id).get("precision"));
 
         tr.add_type_operation("asset_create", {
             "fee": {
@@ -87,11 +87,11 @@ class AssetActions {
                 "flags": flags,
                 "core_exchange_rate": {
                     "base": {
-                        "amount": 1 * corePrecision,
-                        "asset_id": "1.3.0"
+                        "amount": cer.base.amount * corePrecision,
+                        "asset_id": cer.base.asset_id
                     },
                     "quote": {
-                        "amount": 1 * precision,
+                        "amount": cer.quote.amount * precision,
                         "asset_id": "1.3.1"
                     }
                 },

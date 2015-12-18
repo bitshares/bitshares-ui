@@ -403,7 +403,12 @@ class AccountAssetUpdate extends React.Component {
             </span>
         );
 
+        let cerValid = false;
 
+        if ((cr_quote_asset.get("id") === "1.3.0" || cr_base_asset.get("id") === "1.3.0") &&
+            (cr_quote_asset.get("id") === asset.get("id") || cr_base_asset.get("id") === asset.get("id"))) {
+            cerValid = true;
+        }
 
         return (
             <div className="grid-block">
@@ -431,7 +436,7 @@ class AccountAssetUpdate extends React.Component {
                                     <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
                                     <label>                                    
                                         <div className="grid-block no-margin">
-                                            <div className="grid-block no-margin small-12 medium-6">
+                                            {cerValid ? null : (<div className="grid-block no-margin small-12 medium-6">
                                                 <AssetSelector
                                                     label="account.user_issued_assets.quote_name"
                                                     onChange={this._onInputCoreAsset.bind(this, "quote")}
@@ -441,8 +446,8 @@ class AccountAssetUpdate extends React.Component {
                                                     style={{width: "100%", paddingRight: "10px"}}
                                                     onFound={this._onFoundCoreAsset.bind(this, "quote")}
                                                 />
-                                            </div>
-                                            <div className="grid-block no-margin small-12 medium-6">
+                                            </div>)}
+                                            {cerValid ? null : (<div className="grid-block no-margin small-12 medium-6">
                                                 <AssetSelector
                                                     label="account.user_issued_assets.base_name"
                                                     onChange={this._onInputCoreAsset.bind(this, "base")}
@@ -452,7 +457,7 @@ class AccountAssetUpdate extends React.Component {
                                                     style={{width: "100%", paddingLeft: "10px"}}
                                                     onFound={this._onFoundCoreAsset.bind(this, "base")}
                                                 />
-                                            </div>
+                                            </div>)}
                                             {errors.quote_asset ? <p className="grid-content has-error">{errors.quote_asset}</p> : null}
                                             {errors.base_asset ? <p className="grid-content has-error">{errors.base_asset}</p> : null}
                                             <div className="grid-block no-margin small-12 medium-6">

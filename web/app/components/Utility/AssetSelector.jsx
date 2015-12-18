@@ -31,7 +31,11 @@ class AssetSelector extends React.Component {
         asset: ChainTypes.ChainAsset, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: React.PropTypes.string // use it if you need to disable action button
-    }
+    };
+
+    static defaultProps = {
+        disabled: false
+    };
 
     // can be used in parent component: this.refs.asset_selector.getAsset()
     getAsset() {
@@ -80,12 +84,16 @@ class AssetSelector extends React.Component {
     }
 
     render() {
+        let {disabled} = this.props;
         let error; // = this.getError();
         let lookup_display;
-        if (this.props.asset) {
-            lookup_display = this.props.asset.get("symbol");
-        } else if (!error && this.props.assetInput) error = counterpart.translate("explorer.asset.not_found", {name: this.props.assetInput});
-
+        if (!disabled) {
+            if (this.props.asset) {
+                lookup_display = this.props.asset.get("symbol");
+            } else if (!error && this.props.assetInput) {
+                error = counterpart.translate("explorer.asset.not_found", {name: this.props.assetInput});
+            }
+        }
         return (
             <div className="account-selector no-overflow" style={this.props.style}>
 
@@ -96,7 +104,9 @@ class AssetSelector extends React.Component {
                     </div>
                     <div className="input-area">
                       <span className="inline-label">
-                      <input type="text"
+                      <input 
+                             disabled={this.props.disabled}
+                             type="text"
                              value={this.props.assetInput}
                              defaultValue={this.props.assetInput}
                              placeholder={counterpart.translate("explorer.assets.symbol")}
