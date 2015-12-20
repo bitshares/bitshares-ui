@@ -206,10 +206,13 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onCoreRateChange(type, amount) {
-        amount.amount = amount.amount == "" ? "0" : amount.amount;
+        amount.amount = amount.amount == "" ? "0" : amount.amount.replace(/,/g, "");
+
+        amount.amount = utils.limitByPrecision(amount.amount, type === "quote" ? this.props.asset.get("precision") : this.props.core.get("precision"));
+
         let {core_exchange_rate} = this.state;
         core_exchange_rate[type] = {
-            amount: amount.amount.replace(/,/g, ""),
+            amount: amount.amount,
             asset_id: amount.asset.get("id")
         };
         this.forceUpdate();
@@ -419,7 +422,11 @@ class AccountAssetUpdate extends React.Component {
                             <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 large-6 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>
-                      
+                                    <label><Translate content="account.user_issued_assets.precision" />
+                                        <span>: {asset.get("precision")}</span>
+                                    </label>
+                                    <br/>
+
                                     <label>
                                         <AmountSelector
                                             label="account.user_issued_assets.max_supply"
