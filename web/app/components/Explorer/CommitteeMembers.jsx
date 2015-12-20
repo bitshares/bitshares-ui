@@ -74,13 +74,16 @@ class CommitteeMemberRow extends React.Component {
         if ( !committee_member_data ) return null;
         let total_votes = committee_member_data.get( "total_votes" );
 
+        let url = committee_member_data.get("url");
+
+        url = url && url.length > 0 && url.indexOf("http") === -1 ? "http://" + url : url;
 
         return (
-            <tr onClick={this._onRowClick.bind(this)}>
-                <td>{rank}</td>
-                <td>{committee_member.get("name")}</td>
-                <td><FormattedAsset amount={committee_member_data.get('total_votes')} asset="1.3.0" /></td>
-                <td>{committee_member_data.get("url")}</td>
+            <tr>
+                <td onClick={this._onRowClick.bind(this)}>{rank}</td>
+                <td onClick={this._onRowClick.bind(this)}>{committee_member.get("name")}</td>
+                <td onClick={this._onRowClick.bind(this)}><FormattedAsset amount={committee_member_data.get('total_votes')} asset="1.3.0" /></td>
+                <td><a href={url} target="_blank">{committee_member_data.get("url")}</a></td>
             </tr>
         )
     }
