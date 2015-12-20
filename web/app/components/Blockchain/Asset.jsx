@@ -301,11 +301,11 @@ class Asset extends React.Component {
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
-                            <td> {dynamic ? dynamic.fee_pool : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : ''} </td>
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
-                            <td> {dynamic ? dynamic.accumulated_fees : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : ''} </td>
                         </tr>
                     </tbody>
                 </table>
