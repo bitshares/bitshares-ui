@@ -393,8 +393,22 @@ class AccountAssetCreate extends React.Component {
                             </div>
                         </Tab>
 
+                        <Tab title="account.permissions">
+                            <div className="small-12 large-6 grid-content">
+                                <HelpContent
+                                    path = {"components/AccountAssetCreate"}
+                                    section="permissions"
+                                />
+                                {permissions}
+                            </div>
+                        </Tab>
+
                         <Tab title="account.user_issued_assets.flags">
                             <div className="small-12 large-6 grid-content">
+                                <HelpContent
+                                    path = {"components/AccountAssetCreate"}
+                                    section="flags"
+                                />
                                 {permissionBooleans["charge_market_fee"] ? (
                                     <div>
                                         <Translate component="h3" content="account.user_issued_assets.market_fee" />
@@ -416,7 +430,7 @@ class AccountAssetCreate extends React.Component {
                                             <input type="number" value={update.market_fee_percent} onChange={this._onUpdateInput.bind(this, "market_fee_percent")}/>
                                         </label>
 
-                                        <label>
+                                        <label><Translate content="account.user_issued_assets.max_market_fee" /> ({update.symbol})
                                              <input type="number" value={update.max_market_fee} onChange={this._onUpdateInput.bind(this, "max_market_fee")}/>
                                         </label>
                                         { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
@@ -425,13 +439,6 @@ class AccountAssetCreate extends React.Component {
 
                                 <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                 {flags}
-                            </div>
-                        </Tab>
-
-                        <Tab title="account.permissions">
-                            <div className="small-12 large-6 grid-content">
-                                <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
-                                {permissions}
                             </div>
                         </Tab>
                     </Tabs>
