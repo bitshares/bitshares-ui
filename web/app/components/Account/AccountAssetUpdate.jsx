@@ -420,7 +420,7 @@ class AccountAssetUpdate extends React.Component {
 
                         <Tabs setting="updateAssetTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
                             <Tab title="account.user_issued_assets.primary">
-                                <div className="small-12 large-6 grid-content">
+                                <div className="small-12 large-8 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>
                                     <label><Translate content="account.user_issued_assets.precision" />
                                         <span>: {asset.get("precision")}</span>
@@ -512,7 +512,7 @@ class AccountAssetUpdate extends React.Component {
                                 
                             </Tab>
                             <Tab title="account.user_issued_assets.update_owner">
-                                <div className="small-12 large-6 grid-content">
+                                <div className="small-12 large-8 grid-content">
                                     <Translate component="h3" content="account.user_issued_assets.update_owner" />
                                     <div style={{paddingBottom: "1rem"}}>
                                         <AccountSelector
@@ -536,8 +536,26 @@ class AccountAssetUpdate extends React.Component {
                                 </div>
                                 
                             </Tab>
-                            <Tab title="account.user_issued_assets.flags">
-                                <div className="small-12 large-6 grid-content">
+
+                            <Tab title="account.permissions">
+                                <div className="small-12 large-8 grid-content">
+                                    <HelpContent
+                                        path = {"components/AccountAssetCreate"}
+                                        section="permissions"
+                                    />
+                                    <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
+                                    {permissions}
+                                {confirmButtons}
+
+                                </div>
+                            </Tab>
+                            
+                            <Tab title="account.user_issued_assets.flags">                                
+                                <div className="small-12 large-8 grid-content">
+                                    <HelpContent
+                                        path = {"components/AccountAssetCreate"}
+                                        section="flags"
+                                    />
                                     {originalPermissions["charge_market_fee"] ? (
                                         <div>
                                             <Translate component="h3" content="account.user_issued_assets.market_fee" />
@@ -577,15 +595,6 @@ class AccountAssetUpdate extends React.Component {
                                     <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                     {flags}
                                     {confirmButtons}
-                                </div>
-                            </Tab>
-
-                            <Tab title="account.permissions">
-                                <div className="small-12 large-6 grid-content">
-                                    <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
-                                    {permissions}
-                                {confirmButtons}
-
                                 </div>
                             </Tab>
 

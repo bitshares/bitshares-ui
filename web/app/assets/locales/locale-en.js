@@ -491,7 +491,7 @@
                 pool_balance: "Pool balance",
                 unclaimed_issuer_income: "Unclaimed issuer income",
                 claim_fees: "Claim fees",
-                fund_text: "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s.",
+                fund_text: "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s",
                 claim_text: "The asset issuer may claim any accumulated fees here."
             },
             permissions: {
