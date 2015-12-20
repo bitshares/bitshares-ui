@@ -76,11 +76,20 @@ class MyMarkets extends React.Component {
         let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
         Ps.initialize(historyContainer);
 
+        this._setMinWidth();
+
         if (this.state.activeTab === "all" && this.state.inputValue) {
             this._lookupAssets({target: {value: this.state.inputValue}}, true);
         }
     }
 
+    _setMinWidth() {
+        if (this.refs.favorites && this.props.activeTab === "starred") {
+            this.setState({
+                minWidth: this.refs.favorites.offsetWidth
+            });
+        }
+    }
     componentDidUpdate() {
         let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
         Ps.update(historyContainer);
@@ -119,6 +128,8 @@ class MyMarkets extends React.Component {
         this.setState({
             activeTab: tab
         });
+
+        this._setMinWidth();
     }
 
     _lookupAssets(e, force = false) {
@@ -351,7 +362,7 @@ class MyMarkets extends React.Component {
         return (
             <div className={this.props.className} style={this.props.style}>
                 <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
-                    <div className={starClass} onClick={this._changeTab.bind(this, "starred")}>
+                    <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "starred")}>
                         <Translate content="exchange.market_name" />
                     </div>
                     <div className={allClass} onClick={this._changeTab.bind(this, "all")} >
@@ -364,7 +375,7 @@ class MyMarkets extends React.Component {
                         {this.props.controls ? <div style={{paddingBottom: "0.5rem"}}>{this.props.controls}</div> : null}
                         {activeTab === "all" ? <input type="text" value={this.state.inputValue} onChange={this._lookupAssets.bind(this)} placeholder="SYMBOL:SYMBOL" /> : null}
                     </div> ) : null}
-                <div className="table-container grid-content mymarkets-list" ref="favorites">
+                <div style={{minWidth: this.state.minWidth}} className="table-container grid-content mymarkets-list" ref="favorites">
                     <table className="table table-hover text-right market-right-padding">
                         <thead>
                             <tr>{headers}</tr>
