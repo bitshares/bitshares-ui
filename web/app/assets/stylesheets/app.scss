@@ -142,7 +142,7 @@ td > button:first-child, td > .button:first-child, div > button:first-child, div
 
 .content-block {
   margin-bottom: 2rem;
-  > h3 {
+  > h3, .recent-transactions > h3 {
     font-size: 2rem;
     border-bottom: 1px solid #444;
     margin-top: 0;
@@ -305,10 +305,6 @@ label.inline {
 
 .Popover-tipShape {
   fill: hsl(0, 0%, 32%)
-}
-
-a.currency, span.currency {
-  margin-left: 0.26rem;
 }
 
 .click-for-help {

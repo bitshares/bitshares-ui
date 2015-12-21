@@ -25,8 +25,8 @@
         lock: "Lock",
         unlock: "Unlock",
         help: "Help",
-        locked_tip: "Wallet is locked. Click to unlock.",
-        unlocked_tip: "Wallet is unlocked. Click to lock."
+        locked_tip: "Wallet is locked.<br/>Click to unlock.",
+        unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
     operation: {
         pending: "pending %(blocks)s blocks",

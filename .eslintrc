@@ -18,6 +18,7 @@
     "semi": [2, "always"],
     "camelcase": [0],
     "no-console": [0],
-    "object-curly-spacing": [0]
+    "object-curly-spacing": [0],
+    "react/jsx-indent-props": [2,4]
   }
 }

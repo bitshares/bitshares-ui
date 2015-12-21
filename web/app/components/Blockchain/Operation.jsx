@@ -92,7 +92,8 @@ class Operation extends React.Component {
         block: false,
         hideDate: false,
         hideFee: false,
-        hideOpLabel: false
+        hideOpLabel: false,
+        csvExportMode: false
     }
 
     static propTypes = {
@@ -100,7 +101,8 @@ class Operation extends React.Component {
         current: React.PropTypes.string,
         block: React.PropTypes.number,
         hideDate: React.PropTypes.bool,
-        hideFee: React.PropTypes.bool
+        hideFee: React.PropTypes.bool,
+        csvExportMode: React.PropTypes.bool
     }
 
     // shouldComponentUpdate(nextProps) {
@@ -812,6 +814,17 @@ class Operation extends React.Component {
                     </span>
 
                 );
+        }
+
+        if (this.props.csvExportMode) {
+            return (
+                <div key={this.props.key}>
+                    <div>{ops[op[0]]}</div>
+                    <div>{block}</div>
+                    <div>{column}</div>
+                    <div><FormattedAsset amount={parseInt(op[1].fee.amount, 10)} asset={op[1].fee.asset_id} /></div>
+                </div>
+            );
         }
 
         line = column ? (
