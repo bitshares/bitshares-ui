@@ -63,7 +63,6 @@ class Dashboard extends React.Component {
                 </div>
                 <div className="grid-block right-column no-overflow">
                     <div ref="transactions" className="grid-content" style={{paddingLeft: "0.5rem", paddingRight: "0.25rem"}}>
-                        <h4 style={{paddingLeft: "1rem"}}><Translate content="account.recent" /></h4>
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
                     </div>
                 </div>
