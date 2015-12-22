@@ -25,8 +25,8 @@
         lock: "Kiliti Kapat",
         unlock: "Aç",
         help: "Yardım",
-        locked_tip: "Cüzdan kilidi kapalı . Açmak için tıkla.",
-        unlocked_tip: "Cüzdan kilidi açık. Kapamak için tıkla."
+        locked_tip: "Cüzdan kilidi kapalı.<br/>Açmak için tıkla.",
+        unlocked_tip: "Cüzdan kilidi açık .<br/>Kapamak için tıkla."
     },
     operation: {
         pending: "bekleyen %(blocks)s blok",
@@ -491,7 +491,7 @@
                 pool_balance: "Havuz bakiyesi",
                 unclaimed_issuer_income: "Talep edilmemiş ihraççı geliri",
                 claim_fees: "Ücretleri talep et",
-                fund_text: " Ücret havuzu ücretleri  %(asset)s'den %(core)s'e çevirerek %(core)s cinsinden ödemek için kullanılır.",
+                fund_text: "Ücret havuzu (asset)s olarak ödenen işlem ücretlerini %(core)s'e çevirerek   ödemek için kullanılır. Eğer ücret havuzunda para kalmazsa, ücretler artık %(asset)s olarak ödenemez ve %(core)s kullanılır ",
                 claim_text: "Aktifi ihraç eden burada biriken ücretleri talep edebilir."
             },
             permissions: {
