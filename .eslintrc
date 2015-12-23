@@ -1,35 +1,24 @@
-// see http://eslint.org/docs/rules/
 {
+  "extends": "airbnb",
   "parser": "babel-eslint",
-  "plugins": [
-    "react"
-  ],
   "env": {
     "browser": true,
     "node": true,
     "es6": true
   },
-  "globals": {
-    "__DEV__": true,
-    "__SERVER__": true,
-    "jest": true,
-    "it": true,
-    "describe": true,
-    "expect": true,
-    "beforeEach": true
-  },
   "ecmaFeatures": {
+    "blockBindings": true,
+    "forOf": true,
     "jsx": true
   },
   "rules": {
-    // Strict mode
-    "strict": [2, "never"],
-    // Code style
-    "no-underscore-dangle": [0],
-    //"indent": [4, 4],
+    "comma-dangle": 0,
+    "indent": [2,4],
+    "quotes": [2, "double", "avoid-escape"],
+    "semi": [2, "always"],
     "camelcase": [0],
-    "new-cap": [0],
-    "no-trailing-spaces": [0],
-    "semi": [0]
+    "no-console": [0],
+    "object-curly-spacing": [0],
+    "react/jsx-indent-props": [2,4]
   }
 }

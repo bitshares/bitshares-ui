@@ -25,8 +25,8 @@
         lock: "Lock",
         unlock: "Unlock",
         help: "Help",
-        locked_tip: "Wallet is locked. Click to unlock.",
-        unlocked_tip: "Wallet is unlocked. Click to lock."
+        locked_tip: "Wallet is locked.<br/>Click to unlock.",
+        unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
     operation: {
         pending: "pending %(blocks)s blocks",
@@ -70,7 +70,13 @@
             subscribe: "Buy Annual Subscription",
             expires: "expires",
             membership_expiration: "Membership Expiration",
-            fees_cashback: "Fees and cashback"
+            fees_cashback: "Fees and cashback",
+            coindays: "coin days",
+            earned: "Coin days earned",
+            required: "Coin days required",
+            remaining: "Days left of vesting period",
+            claim: "Claim now",
+            available: "Available to claim"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -491,7 +497,7 @@
                 pool_balance: "Pool balance",
                 unclaimed_issuer_income: "Unclaimed issuer income",
                 claim_fees: "Claim fees",
-                fund_text: "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s.",
+                fund_text: "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s",
                 claim_text: "The asset issuer may claim any accumulated fees here."
             },
             permissions: {

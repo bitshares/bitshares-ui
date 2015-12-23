@@ -71,8 +71,8 @@ class Asset extends React.Component {
 
     _assetType(asset) {
         return ('bitasset' in asset) ?
-            (asset.bitasset.is_prediction_market ? 'Prediction' : 'Smart') :
-            'Simple';
+               (asset.bitasset.is_prediction_market ? 'Prediction' : 'Smart') :
+               'Simple';
     }
 
 
@@ -83,7 +83,7 @@ class Asset extends React.Component {
             <div>
                 {names.map((name) => {
                     return <AssetFlag key={`flag_${name}`} name={name} isSet={flags[name]}/>
-                    })}
+                })}
             </div>
         );
     }
@@ -95,7 +95,7 @@ class Asset extends React.Component {
             <div>
                 {names.map((name) => {
                     return <AssetPermission key={`perm_${name}`}name={name} isSet={permissions[name]}/>
-                    })}
+                })}
             </div>
         );
     }
@@ -155,17 +155,33 @@ class Asset extends React.Component {
 
         var icon = (<Icon name="asset" className="asset" size="4x"/>);
 
+
+        // Add <a to any links included in the description
+        let desc = asset.options.description;
+        let urlTest = /(http?):\/\/(www\.)?[a-z0-9\.:].*?(?=\s)/g;
+
+        // Regexp needs a whitespace after a url, so add one to make sure
+        desc = desc && desc.length > 0 ? desc + " " : desc;
+        let urls = desc.match(urlTest);
+
+        if (urls && urls.length) {
+            urls.forEach(url => {
+                let markdownUrl = `<a target="_blank" href="${url}">${url}</a>`;
+                desc = desc.replace(url, markdownUrl);
+            })
+        }
+
         return (
-            <div style={{overflow:"visible"}}>
-                <HelpContent
-                    path = {"assets/" + asset.symbol}
-                    alt_path = "assets/Asset"
-                    section="summary"
-                    symbol= {asset.symbol}
-                    description={asset.options.description}
-                    issuer= {issuerName}
-                />
-            </div>
+                <div style={{overflow:"visible"}}>
+                    <HelpContent
+                        path = {"assets/" + asset.symbol}
+                        alt_path = "assets/Asset"
+                        section="summary"
+                        symbol= {asset.symbol}
+                        description={desc}
+                        issuer= {issuerName}
+                    />
+                </div>
         );
     }
 
@@ -211,22 +227,22 @@ class Asset extends React.Component {
 
         return (
             <div className="asset-card">
-                <div className="card-divider">{asset.symbol}</div>
+              <div className="card-divider">{asset.symbol}</div>
                 <table className="table key-value-table table-hover">
                     <tbody>
-                    <tr>
-                        <td> <Translate content="explorer.asset.summary.asset_type"/> </td>
-                        <td> {this._assetType(asset)} </td>
-                    </tr>
-                    <tr>
-                        <td> <Translate content="explorer.asset.summary.issuer"/> </td>
-                        <td> <LinkToAccountById account={asset.issuer}/> </td>
-                    </tr>
-                    {currentSupply}
-                    {stealthSupply}
-                    {marketFee}
-                    {maxMarketFee}
-                    </tbody>
+                        <tr>
+                            <td> <Translate content="explorer.asset.summary.asset_type"/> </td>
+                            <td> {this._assetType(asset)} </td>
+                        </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.summary.issuer"/> </td>
+                            <td> <LinkToAccountById account={asset.issuer}/> </td>
+                        </tr>
+                        {currentSupply}
+                        {stealthSupply}
+                        {marketFee}
+                        {maxMarketFee}
+                        </tbody>
                 </table>
 
                 <br/>
@@ -246,24 +262,24 @@ class Asset extends React.Component {
 
         return (
             <div className="asset-card">
-                <div className="card-divider">{title}</div>
+              <div className="card-divider">{title}</div>
 
                 <table className="table key-value-table table-hover"  style={{ padding:"1.2rem"}}>
                     <tbody>
-                    <tr>
-                        <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
-                        <td> {this.formattedPrice(currentFeed.settlement_price)} </td>
-                    </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
+                            <td> {this.formattedPrice(currentFeed.settlement_price)} </td>
+                        </tr>
 
-                    <tr>
-                        <td> <Translate content="explorer.asset.price_feed.maintenance_collateral_ratio"/> </td>
-                        <td> {currentFeed.maintenance_collateral_ratio/10}% </td>
-                    </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.price_feed.maintenance_collateral_ratio"/> </td>
+                            <td> {currentFeed.maintenance_collateral_ratio/10}% </td>
+                        </tr>
 
-                    <tr>
-                        <td> <Translate content="explorer.asset.price_feed.maximum_short_squeeze_ratio"/> </td>
-                        <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
-                    </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.price_feed.maximum_short_squeeze_ratio"/> </td>
+                            <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -276,21 +292,21 @@ class Asset extends React.Component {
         var options = asset.options;
         return (
             <div className="asset-card">
-                <div className="card-divider">{(<Translate content="explorer.asset.fee_pool.title"/>)}</div>
+              <div className="card-divider">{(<Translate content="explorer.asset.fee_pool.title"/>)}</div>
                 <table className="table key-value-table" style={{ padding:"1.2rem"}}>
                     <tbody>
-                    <tr>
-                        <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
-                        <td> {this.formattedPrice(options.core_exchange_rate)} </td>
-                    </tr>
-                    <tr>
-                        <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
-                        <td> {dynamic ? dynamic.fee_pool : ''} </td>
-                    </tr>
-                    <tr>
-                        <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
-                        <td> {dynamic ? dynamic.accumulated_fees : ''} </td>
-                    </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
+                            <td> {this.formattedPrice(options.core_exchange_rate)} </td>
+                        </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
+                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : ''} </td>
+                        </tr>
+                        <tr>
+                            <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
+                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : ''} </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -334,26 +350,26 @@ class Asset extends React.Component {
             <span>
                 <br/>
                     <Translate content="explorer.asset.permissions.blacklist_authorities"/>:
-                &nbsp;{this.renderAuthorityList(options.blacklist_authorities)}
+                    &nbsp;{this.renderAuthorityList(options.blacklist_authorities)}
                 <br/>
                     <Translate content="explorer.asset.permissions.blacklist_markets"/>:
-                &nbsp;{this.renderMarketList(asset, options.blacklist_markets)}
+                    &nbsp;{this.renderMarketList(asset, options.blacklist_markets)}
                 <br/>
                     <Translate content="explorer.asset.permissions.whitelist_authorities"/>:
-                &nbsp;{this.renderAuthorityList(options.whitelist_authorities)}
+                    &nbsp;{this.renderAuthorityList(options.whitelist_authorities)}
                 <br/>
                     <Translate content="explorer.asset.permissions.whitelist_markets"/>:
-                &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
+                    &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
             </span>
         ) : '';
 
         return (
             <div className="asset-card">
-                <div className="card-divider">{(<Translate content="explorer.asset.permissions.title"/>)} </div>
+              <div className="card-divider">{(<Translate content="explorer.asset.permissions.title"/>)} </div>
                 <table className="table key-value-table table-hover" style={{ padding:"1.2rem"}}>
                     <tbody>
-                    {maxMarketFee}
-                    {maxSupply}
+                        {maxMarketFee}
+                        {maxSupply}
                     </tbody>
                 </table>
 
@@ -380,23 +396,23 @@ class Asset extends React.Component {
         // Filter by valid feed lifetime, Sort by published date
         var feeds = bitAsset.feeds;
         feeds = feeds
-            .filter(a => {
-                return new Date(a[1][0]) > oldestValidDate;
-            })
-            .sort(function(feed1, feed2){
-                return new Date(feed2[1][0]) - new Date(feed1[1][0])
-            });
+        .filter(a => {
+            return new Date(a[1][0]) > oldestValidDate;
+        })
+        .sort(function(feed1, feed2){
+            return new Date(feed2[1][0]) - new Date(feed1[1][0])
+        });
 
         var rows = [];
         var settlement_price_header = feeds[0][1][1].settlement_price;
         var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
         let header = (
-            <thead>
+          <thead>
             <tr>
                 <th> <Translate content="explorer.asset.price_feed_data.settlement_price"/> –
-                    {this.formattedPrice(settlement_price_header, false, true)}</th>
-                <th> <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/> –
-                    {this.formattedPrice(core_exchange_rate_header, false, true)} </th>
+                      {this.formattedPrice(settlement_price_header, false, true)}</th>
+                    <th> <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/> –
+                     {this.formattedPrice(core_exchange_rate_header, false, true)} </th>
                 <th> <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.publisher"/> </th>
@@ -425,19 +441,19 @@ class Asset extends React.Component {
         }
 
         return (
-            <div className="small-12 " style={{ overflow:"visible", padding:"0.8rem"}}>
-                <div className="grid-content">
-                    <div className="asset-card">
-                        <div className="card-divider">{(<Translate content="explorer.asset.price_feed_data.title"/>)}</div>
-                        <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
-                            {header}
-                            <tbody>
-                            {rows}
-                            </tbody>
-                        </table>
-                    </div>
+          <div className="small-12 " style={{ overflow:"visible", padding:"0.8rem"}}>
+            <div className="grid-content">
+              <div className="asset-card">
+              <div className="card-divider">{(<Translate content="explorer.asset.price_feed_data.title"/>)}</div>
+                <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
+                    {header}
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>
                 </div>
             </div>
+          </div>
         );
     }
 
@@ -483,18 +499,18 @@ class Asset extends React.Component {
 }
 
 /*
- Asset.defaultProps = {
- assets: {},
- accounts: {},
- asset_symbol_to_id: {}
- };
+Asset.defaultProps = {
+    assets: {},
+    accounts: {},
+    asset_symbol_to_id: {}
+};
 
- Asset.propTypes = {
- assets: PropTypes.object.isRequired,
- accounts: PropTypes.object.isRequired,
- asset_symbol_to_id: PropTypes.object.isRequired
- };
- Asset.contextTypes = { router: React.PropTypes.func.isRequired };
- */
+Asset.propTypes = {
+    assets: PropTypes.object.isRequired,
+    accounts: PropTypes.object.isRequired,
+    asset_symbol_to_id: PropTypes.object.isRequired
+};
+Asset.contextTypes = { router: React.PropTypes.func.isRequired };
+*/
 
 export default Asset;

@@ -19,6 +19,7 @@ import big from "bignumber.js";
 import cnames from "classnames";
 import assetUtils from "common/asset_utils";
 import Tabs, {Tab} from "../Utility/Tabs";
+import AmountSelector from "../Utility/AmountSelector";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
@@ -52,6 +53,8 @@ class AccountAssetCreate extends React.Component {
         let flags = assetUtils.getFlags(flagBooleans);
         let permissions = assetUtils.getPermissions(permissionBooleans);
 
+        let coreRateBaseAssetName = ChainStore.getAsset("1.3.0").get("symbol");
+
         return {
 
             update: {
@@ -68,7 +71,17 @@ class AccountAssetCreate extends React.Component {
             isValid: true,
             flagBooleans: flagBooleans,
             permissionBooleans: permissionBooleans,
-            isBitAsset: isBitAsset
+            isBitAsset: isBitAsset,
+            core_exchange_rate: {
+                quote: {
+                    asset_id: null,
+                    amount: 1
+                },
+                base: {
+                    asset_id: "1.3.0",
+                    amount: 1
+                }
+            }
         };
     }
 
@@ -76,13 +89,13 @@ class AccountAssetCreate extends React.Component {
 
     _createAsset(e) {
         e.preventDefault();
-        let {update, flagBooleans, permissionBooleans} = this.state;
+        let {update, flagBooleans, permissionBooleans, core_exchange_rate} = this.state;
         let {account} = this.props;
 
         let flags = assetUtils.getFlags(flagBooleans);
         let permissions = assetUtils.getPermissions(permissionBooleans);
 
-        AssetActions.createAsset(account.get("id"), update, flags, permissions).then(result => {
+        AssetActions.createAsset(account.get("id"), update, flags, permissions, core_exchange_rate).then(result => {
             console.log("... AssetActions.updateAsset(account_id, update)", account.get("id"),  update, flags, permissions)
         });
     }
@@ -193,9 +206,58 @@ class AccountAssetCreate extends React.Component {
         });
     }
 
+    _onInputCoreAsset(type, asset) {
+       
+        if (type === "quote") {
+            this.setState({
+                quoteAssetInput: asset
+            });
+        } else if (type === "base") {
+            this.setState({
+                baseAssetInput: asset
+            });
+        }
+    }
+
+    _onFoundCoreAsset(type, asset) {
+        if (asset) {
+            let core_rate = this.state.core_exchange_rate;
+            core_rate[type].asset_id = asset.get("id");
+
+            this.setState({
+                core_exchange_rate: core_rate
+            });
+
+            this._validateEditFields({
+                max_supply: this.state.max_supply,
+                core_exchange_rate: core_rate
+            });
+        }
+    }
+
+    _onCoreRateChange(type, e) {
+
+        let amount, asset;
+        if (type === "quote") {
+            amount = utils.limitByPrecision(e.target.value, this.state.update.precision);
+            asset = null;
+        } else {
+            amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.replace(/,/g, ""), this.props.core.get("precision"));
+            asset = e.asset.get("id")
+        }
+            
+        let {core_exchange_rate} = this.state;
+        core_exchange_rate[type] = {
+            amount: amount,
+            asset_id: asset
+        };
+        this.forceUpdate();
+    }
+
     render() {
         let {account, account_name, globalObject, core} = this.props;
-        let {errors, isValid, update, assets, flagBooleans, permissionBooleans} = this.state;
+        let {errors, isValid, update, assets, flagBooleans, permissionBooleans,
+            core_exchange_rate} = this.state;
 
         // Estimate the asset creation fee from the symbol character length
         let symbolLength = update.symbol.length, createFee = "N/A";
@@ -209,17 +271,13 @@ class AccountAssetCreate extends React.Component {
         else if(symbolLength > 4) {
             createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
         }
+
         // let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
         // let precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
-        // let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
-        // let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
+        let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
+        let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        // let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
-        // let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
-
-        // console.log("flags:", assetUtils.getFlags(flagBooleans), "permissions:", assetUtils.getPermissions(permissionBooleans));
-
-        // Loop over flags        
+        // Loop over flags
         let flags = [];
         for (let key in permissionBooleans) {
             if (permissionBooleans[key] && key !== "charge_market_fee") {
@@ -283,7 +341,50 @@ class AccountAssetCreate extends React.Component {
 
                                 <label><Translate content="account.user_issued_assets.precision" />
                                     <input type="number" value={update.precision} onChange={this._onUpdateInput.bind(this, "precision")} />
-                                </label>                                
+                                </label>
+
+                                {/* CER */}
+                                <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
+                                
+                                <label>                                    
+                                    <div className="grid-block no-margin">
+                                        {errors.quote_asset ? <p className="grid-content has-error">{errors.quote_asset}</p> : null}
+                                        {errors.base_asset ? <p className="grid-content has-error">{errors.base_asset}</p> : null}
+                                        <div className="grid-block no-margin small-12 medium-6">
+                                            <div className="amount-selector" style={{width: "100%", paddingRight: "10px"}}>    
+                                                <Translate component="label" content="account.user_issued_assets.quote"/>
+                                                <div className="inline-label">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="0.0"
+                                                        onChange={this._onCoreRateChange.bind(this, "quote")}
+                                                        value={core_exchange_rate.quote.amount}
+                                                    />
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                        <div className="grid-block no-margin small-12 medium-6">
+                                            <AmountSelector
+                                                label="account.user_issued_assets.base" 
+                                                amount={core_exchange_rate.base.amount}
+                                                onChange={this._onCoreRateChange.bind(this, "base")}
+                                                asset={core_exchange_rate.base.asset_id}
+                                                assets={[core_exchange_rate.base.asset_id]}
+                                                placeholder="0.0"
+                                                tabIndex={1}
+                                                style={{width: "100%", paddingLeft: "10px"}}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5>
+                                            <Translate content="exchange.price" />
+                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount, {precision: update.precision}, core_exchange_rate.base.amount, core)}</span>
+                                            <span> {update.symbol}/{core.get("symbol")}</span>
+                                        </h5> 
+                                    </div>
+                                </label>
 
                                 <Translate component="h3" content="account.user_issued_assets.description" />
                                 <label>
@@ -292,8 +393,22 @@ class AccountAssetCreate extends React.Component {
                             </div>
                         </Tab>
 
+                        <Tab title="account.permissions">
+                            <div className="small-12 large-6 grid-content">
+                                <HelpContent
+                                    path = {"components/AccountAssetCreate"}
+                                    section="permissions"
+                                />
+                                {permissions}
+                            </div>
+                        </Tab>
+
                         <Tab title="account.user_issued_assets.flags">
                             <div className="small-12 large-6 grid-content">
+                                <HelpContent
+                                    path = {"components/AccountAssetCreate"}
+                                    section="flags"
+                                />
                                 {permissionBooleans["charge_market_fee"] ? (
                                     <div>
                                         <Translate component="h3" content="account.user_issued_assets.market_fee" />
@@ -315,7 +430,7 @@ class AccountAssetCreate extends React.Component {
                                             <input type="number" value={update.market_fee_percent} onChange={this._onUpdateInput.bind(this, "market_fee_percent")}/>
                                         </label>
 
-                                        <label>
+                                        <label><Translate content="account.user_issued_assets.max_market_fee" /> ({update.symbol})
                                              <input type="number" value={update.max_market_fee} onChange={this._onUpdateInput.bind(this, "max_market_fee")}/>
                                         </label>
                                         { errors.max_market_fee ? <p className="grid-content has-error">{errors.max_market_fee}</p> : null}
@@ -324,13 +439,6 @@ class AccountAssetCreate extends React.Component {
 
                                 <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                 {flags}
-                            </div>
-                        </Tab>
-
-                        <Tab title="account.permissions">
-                            <div className="small-12 large-6 grid-content">
-                                <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
-                                {permissions}
                             </div>
                         </Tab>
                     </Tabs>

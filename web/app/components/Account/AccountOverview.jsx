@@ -116,7 +116,6 @@ class AccountOverview extends React.Component {
                     </table>
                 </div> : null}
                 <div className="content-block">
-                    <h3><Translate content="account.recent" /></h3>
                     <RecentTransactions
                         accountsList={Immutable.fromJS([account.get("id")])}
                         compactView={false}

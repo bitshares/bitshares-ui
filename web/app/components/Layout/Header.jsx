@@ -163,8 +163,8 @@ class Header extends React.Component {
         if (this.props.current_wallet) lock_unlock = (
             <div className="grp-menu-item" >
             { this.props.locked ?
-                <a href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light"><Icon name="locked"/></a>
-                : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light"><Icon name="unlocked"/></a> }
+                <a href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light" data-html><Icon name="locked"/></a>
+                : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light" data-html><Icon name="unlocked"/></a> }
             </div>);
 
         let tradeLink = this.props.lastMarket && active.indexOf("market/") === -1 ?
