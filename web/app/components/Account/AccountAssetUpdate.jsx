@@ -206,10 +206,13 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onCoreRateChange(type, amount) {
-        amount.amount = amount.amount == "" ? "0" : amount.amount;
+        amount.amount = amount.amount == "" ? "0" : amount.amount.replace(/,/g, "");
+
+        amount.amount = utils.limitByPrecision(amount.amount, type === "quote" ? this.props.asset.get("precision") : this.props.core.get("precision"));
+
         let {core_exchange_rate} = this.state;
         core_exchange_rate[type] = {
-            amount: amount.amount.replace(/,/g, ""),
+            amount: amount.amount,
             asset_id: amount.asset.get("id")
         };
         this.forceUpdate();
@@ -403,7 +406,12 @@ class AccountAssetUpdate extends React.Component {
             </span>
         );
 
+        let cerValid = false;
 
+        if ((cr_quote_asset.get("id") === "1.3.0" || cr_base_asset.get("id") === "1.3.0") &&
+            (cr_quote_asset.get("id") === asset.get("id") || cr_base_asset.get("id") === asset.get("id"))) {
+            cerValid = true;
+        }
 
         return (
             <div className="grid-block">
@@ -412,9 +420,13 @@ class AccountAssetUpdate extends React.Component {
 
                         <Tabs setting="updateAssetTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
                             <Tab title="account.user_issued_assets.primary">
-                                <div className="small-12 large-6 grid-content">
+                                <div className="small-12 large-8 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>
-                      
+                                    <label><Translate content="account.user_issued_assets.precision" />
+                                        <span>: {asset.get("precision")}</span>
+                                    </label>
+                                    <br/>
+
                                     <label>
                                         <AmountSelector
                                             label="account.user_issued_assets.max_supply"
@@ -431,7 +443,7 @@ class AccountAssetUpdate extends React.Component {
                                     <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
                                     <label>                                    
                                         <div className="grid-block no-margin">
-                                            <div className="grid-block no-margin small-12 medium-6">
+                                            {cerValid ? null : (<div className="grid-block no-margin small-12 medium-6">
                                                 <AssetSelector
                                                     label="account.user_issued_assets.quote_name"
                                                     onChange={this._onInputCoreAsset.bind(this, "quote")}
@@ -441,8 +453,8 @@ class AccountAssetUpdate extends React.Component {
                                                     style={{width: "100%", paddingRight: "10px"}}
                                                     onFound={this._onFoundCoreAsset.bind(this, "quote")}
                                                 />
-                                            </div>
-                                            <div className="grid-block no-margin small-12 medium-6">
+                                            </div>)}
+                                            {cerValid ? null : (<div className="grid-block no-margin small-12 medium-6">
                                                 <AssetSelector
                                                     label="account.user_issued_assets.base_name"
                                                     onChange={this._onInputCoreAsset.bind(this, "base")}
@@ -452,7 +464,7 @@ class AccountAssetUpdate extends React.Component {
                                                     style={{width: "100%", paddingLeft: "10px"}}
                                                     onFound={this._onFoundCoreAsset.bind(this, "base")}
                                                 />
-                                            </div>
+                                            </div>)}
                                             {errors.quote_asset ? <p className="grid-content has-error">{errors.quote_asset}</p> : null}
                                             {errors.base_asset ? <p className="grid-content has-error">{errors.base_asset}</p> : null}
                                             <div className="grid-block no-margin small-12 medium-6">
@@ -500,7 +512,7 @@ class AccountAssetUpdate extends React.Component {
                                 
                             </Tab>
                             <Tab title="account.user_issued_assets.update_owner">
-                                <div className="small-12 large-6 grid-content">
+                                <div className="small-12 large-8 grid-content">
                                     <Translate component="h3" content="account.user_issued_assets.update_owner" />
                                     <div style={{paddingBottom: "1rem"}}>
                                         <AccountSelector
@@ -524,8 +536,26 @@ class AccountAssetUpdate extends React.Component {
                                 </div>
                                 
                             </Tab>
-                            <Tab title="account.user_issued_assets.flags">
-                                <div className="small-12 large-6 grid-content">
+
+                            <Tab title="account.permissions">
+                                <div className="small-12 large-8 grid-content">
+                                    <HelpContent
+                                        path = {"components/AccountAssetCreate"}
+                                        section="permissions"
+                                    />
+                                    <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
+                                    {permissions}
+                                {confirmButtons}
+
+                                </div>
+                            </Tab>
+                            
+                            <Tab title="account.user_issued_assets.flags">                                
+                                <div className="small-12 large-8 grid-content">
+                                    <HelpContent
+                                        path = {"components/AccountAssetCreate"}
+                                        section="flags"
+                                    />
                                     {originalPermissions["charge_market_fee"] ? (
                                         <div>
                                             <Translate component="h3" content="account.user_issued_assets.market_fee" />
@@ -565,15 +595,6 @@ class AccountAssetUpdate extends React.Component {
                                     <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                     {flags}
                                     {confirmButtons}
-                                </div>
-                            </Tab>
-
-                            <Tab title="account.permissions">
-                                <div className="small-12 large-6 grid-content">
-                                    <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
-                                    {permissions}
-                                {confirmButtons}
-
                                 </div>
                             </Tab>
 

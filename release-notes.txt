@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------
+Release 2.0.151223
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Membership page: show vested cashback balance and add Claim button next to it #500
+- Ability to download account history as CSV file #611
+- UX improvements to asset update and create
+
+BUG FIXES:
+- Many URLs in the GUI are not clickable #546
+- Update Voting help text #589
+- Add asset formatting to fee pool balance and issuer income #618
+- Limit core exchange rate asset amounts by asset precision #617
+- Fix 'cannot dispatch in the middle of dispatch' error #614
+- Restrict min width of markets section #615
+- Add vesting balance information and claim button #500
+- Add CER (core exchange rate) to asset creation #543
+
+---------------------------------------------------------------------
 Release 2.0.151216
 ---------------------------------------------------------------------
 

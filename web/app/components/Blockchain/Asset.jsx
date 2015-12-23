@@ -155,6 +155,22 @@ class Asset extends React.Component {
 
         var icon = (<Icon name="asset" className="asset" size="4x"/>);
 
+
+        // Add <a to any links included in the description
+        let desc = asset.options.description;
+        let urlTest = /(http?):\/\/(www\.)?[a-z0-9\.:].*?(?=\s)/g;
+
+        // Regexp needs a whitespace after a url, so add one to make sure
+        desc = desc && desc.length > 0 ? desc + " " : desc;
+        let urls = desc.match(urlTest);
+
+        if (urls && urls.length) {
+            urls.forEach(url => {
+                let markdownUrl = `<a target="_blank" href="${url}">${url}</a>`;
+                desc = desc.replace(url, markdownUrl);
+            })
+        }
+
         return (
                 <div style={{overflow:"visible"}}>
                     <HelpContent
@@ -162,7 +178,7 @@ class Asset extends React.Component {
                         alt_path = "assets/Asset"
                         section="summary"
                         symbol= {asset.symbol}
-                        description={asset.options.description}
+                        description={desc}
                         issuer= {issuerName}
                     />
                 </div>
@@ -285,11 +301,11 @@ class Asset extends React.Component {
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
-                            <td> {dynamic ? dynamic.fee_pool : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : ''} </td>
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
-                            <td> {dynamic ? dynamic.accumulated_fees : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : ''} </td>
                         </tr>
                     </tbody>
                 </table>
@@ -384,7 +400,7 @@ class Asset extends React.Component {
             return new Date(a[1][0]) > oldestValidDate;
         })
         .sort(function(feed1, feed2){
-            return new Date(feed2[1][0]) - new Date(feed1[1][0]) 
+            return new Date(feed2[1][0]) - new Date(feed1[1][0])
         });
 
         var rows = [];
