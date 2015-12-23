@@ -70,7 +70,13 @@
             subscribe: "Buy Annual Subscription",
             expires: "expires",
             membership_expiration: "Membership Expiration",
-            fees_cashback: "Fees and cashback"
+            fees_cashback: "Fees and cashback",
+            coindays: "coin days",
+            earned: "Coin days earned",
+            required: "Coin days required",
+            remaining: "Days left of vesting period",
+            claim: "Claim now",
+            available: "Available to claim"
         },
         user_issued_assets: {
             symbol: "Symbol",
