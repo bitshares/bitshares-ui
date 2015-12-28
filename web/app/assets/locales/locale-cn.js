@@ -62,7 +62,13 @@ module.exports = {
             subscribe: "购买1年会籍",
             expires: "过期时间",
             membership_expiration: "会籍过期时间",
-            fees_cashback: "手续费及现金返回"
+            fees_cashback: "手续费及现金返回",
+            coindays: "币天",
+            earned: "已完成币天",
+            required: "要求的币天",
+            remaining: "剩余解冻天数",
+            claim: "立即领取",
+            available: "可领取数量"
         },
         connections: {
             known: "识别为",
@@ -163,7 +169,9 @@ module.exports = {
                 rejected: "已反对",
                 neutral: "中立"
             },
-            clear_proxy: "移除投票代理"
+            clear_proxy: "移除投票代理",
+            start: "开始时间",
+            end: "结束时间"
         },
         options: {
             num_witnesses: "信任见证人",
