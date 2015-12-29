@@ -20,6 +20,7 @@ import AccountAssetUpdate from "./components/Account/AccountAssetUpdate";
 import AccountMembership from "./components/Account/AccountMembership";
 import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPermissions from "./components/Account/AccountPermissions";
+import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
 import Exchange from "./components/Exchange/ExchangeContainer";
@@ -286,6 +287,7 @@ let routes = (
             <Route name="account-voting" path="voting" component={AccountVoting}/>
             <Route name="account-deposit-withdraw" path="deposit-withdraw" component={AccountDepositWithdraw}/>
             <Route name="account-orders" path="orders" component={AccountOrders}/>
+            <Route path="whitelist" component={AccountWhitelist}/>
         </Route>
         <Route name="init-error" path="/init-error" component={InitError}/>
         <Route name="help" path="/help" component={Help}>

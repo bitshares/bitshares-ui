@@ -1019,7 +1019,7 @@ class ChainStore
          current = current.set( 'owner', Immutable.fromJS( object.owner ) );
          current = current.set( 'options', Immutable.fromJS( object.options ) );
          current = current.set( 'whitelisting_accounts', Immutable.fromJS( object.whitelisting_accounts ) );
-         current = current.set( 'blacklisting_accounts', Immutable.fromJS( object.whitelisting_accounts ) );
+         current = current.set( 'blacklisting_accounts', Immutable.fromJS( object.blacklisting_accounts ) );
          current = current.set( 'whitelisted_accounts', Immutable.fromJS( object.whitelisted_accounts ) );
          current = current.set( 'blacklisted_accounts', Immutable.fromJS( object.blacklisted_accounts ) );
          this.objects_by_id = this.objects_by_id.set( object.id, current );

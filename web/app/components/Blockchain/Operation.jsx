@@ -18,10 +18,12 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import ChainStore from "api/ChainStore";
+import account_constants from "chain/account_constants";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
+let listings = account_constants.account_listing;
 
 class TransactionLabel extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -318,21 +320,40 @@ class Operation extends React.Component {
                 break;
 
             case "account_whitelist":
-                if (current === op[1].authorizing_account) {
-                    column = (
-                        <span>
-                            <Translate component="span" content="transaction.whitelist_account" />
-                            &nbsp;{this.linkToAccount(op[1].account_to_list)}
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            <Translate component="span" content="transaction.whitelisted_by" />
-                            &nbsp;{this.linkToAccount(op[1].authorizing_account)}
-                        </span>
-                    );
-                }
+
+                let label = op[1].new_listing === listings.no_listing ? "unlisted_by" :
+                              op[1].new_listing === listings.white_listed ? "whitelisted_by" :
+                              "blacklisted_by";
+                column = (
+                    <span>
+                        <BindToChainState.Wrapper lister={op[1].authorizing_account} listee={op[1].account_to_list}>
+                            { ({lister, listee}) =>
+                                <Translate
+                                    component="span"
+                                    content={"transaction." + label}
+                                    lister={lister.get("name")}
+                                    listee={listee.get("name")}
+                                />
+
+                            }
+                        </BindToChainState.Wrapper>
+                    </span>
+                )
+                // if (current === op[1].authorizing_account) {
+                //     column = (
+                //         <span>
+                //             <Translate component="span" content="transaction.whitelist_account" />
+                //             &nbsp;{this.linkToAccount(op[1].account_to_list)}
+                //         </span>
+                //     );
+                // } else {
+                //     column = (
+                //         <span>
+                //             <Translate component="span" content="transaction.whitelisted_by" />
+                //             &nbsp;{this.linkToAccount(op[1].authorizing_account)}
+                //         </span>
+                //     );
+                // }
                 break;
 
             case "account_upgrade":
