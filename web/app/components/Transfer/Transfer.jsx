@@ -290,7 +290,6 @@ class Transfer extends React.Component {
             </form>
             <div className="grid-content medium-6 right-column">
                 <div className="grid-content">
-                    <h4><Translate content="account.recent" /></h4>
                     <RecentTransactions
                         accountsList={accountsList}
                         limit={25}
