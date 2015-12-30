@@ -646,7 +646,10 @@
         bids: "Bids",
         no_data: "No data",
         time: "Time interval",
-        borrow: "Borrow"
+        borrow: "Borrow",
+        no_balance: "Insufficient balance",
+        invalid_amount: "Invalid amount",
+        invalid_price: "Invalid price"
     },
     fees: {
      title: "Fee Schedule"
