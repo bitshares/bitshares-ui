@@ -194,7 +194,7 @@ class TotalValue extends React.Component {
 
         let totalsTip = "<table><tbody>";
         for (let asset in assetValues) {
-            if (assets[asset]) {
+            if (assets[asset] && assetValues[asset]) {
                 let symbol = assets[asset].get("symbol");
                 let amount = utils.format_asset(assetValues[asset], toAsset );
                 totalsTip = totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount}</td></tr>`;
