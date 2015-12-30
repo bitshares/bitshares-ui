@@ -316,3 +316,10 @@ label.inline {
   margin-bottom: 0.4rem;
   margin-right: 0.5rem;
 }
+
+.markets-view-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 90;
+}

@@ -128,8 +128,12 @@ class PreferredMarketsList extends React.Component {
 
         if (!marketsCardView) {
             return (
-                <div className="grid-content" style={{paddingTop: 0}}>
-
+                <div className="grid-block vertical">
+                    <div className="markets-view-toggle">
+                        <span className="button outline" onClick={this._toggleView.bind(this)}>
+                            {!marketsCardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}
+                        </span>
+                    </div>
                     <MyMarkets
                         style={{width: "100%"}}
                         className="no-padding no-overflow"
@@ -145,26 +149,24 @@ class PreferredMarketsList extends React.Component {
                                 {name: "change", index: 7}
                             ]
                         }
-                        controls={
-                            (<span className="button outline" onClick={this._toggleView.bind(this)}>
-                                {!marketsCardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}
-                            </span>)
-                        }
                     />
                 </div>
             );
         } else {
             return (
                 <div className="grid-block vertical">
-                    <h2><Translate content="markets.preferred" />:</h2>
+                    <div className="markets-view-toggle">
+                        <span className="button outline" onClick={this._toggleView.bind(this)}>
+                            {!marketsCardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}
+                        </span>
+                    </div>
+
                     <div className="grid-block">
                         <div className="small-12 medium-6">
                             <h5><Translate content="markets.filter" />:</h5>
                             <input type="text" value={this.state.filter} onChange={this._onFilterMarkets.bind(this)}></input>
                         </div>
-                        <div className="view-switcher small-12 medium-6 no-padding">
-                            <span className="button outline" onClick={this._toggleView.bind(this)}>{!marketsCardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}</span>
-                        </div>
+
                     </div>
                     <div className="grid-block small-up-1 medium-up-2 large-up-3" style={{minHeight: "20rem"}}>
                         {preferredMarkets}
