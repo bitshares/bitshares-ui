@@ -41,11 +41,24 @@
         hour_24: "24 Saat",
         recent: "Son hareketler",
         name: "Hesap adı",
+        id: "Account ID",
         more: "fazlası",
         deposit_withdraw: "Yatır/Çek",
         as_collateral: "Teminat",
         open_orders: "Açık emirler",
         total_value: "Toplam değeri",
+        whitelist: {
+            title: "Beyazliste",
+            black: "Karaliste",
+            add: "Beyaz listeye ekle",
+            add_black: "Karalisteye ekle",
+            empty: "%(account)s herhangi bir hesabı beyazlisteye eklemedi.",
+            empty_black: "%(account)s herhangi bir hesabı karalisteye eklemedi.",
+            white_by: "Beyazlisteye alındı",
+            black_by: "Karalisteye alındı",
+            empty_white_by: "%(account)s adlı hesabı beyazlisteye alan olmadı.",
+            empty_black_by: "%(account)s adlı hesabı karalisteye alan olmadı."
+        },
         member: {
             stats: "Üyelik",
             join: "Katılma tarihi",
@@ -287,7 +300,9 @@
         update_account: "hesap verilerini güncelledi",
         set_proxy: "oylama vekili olarak %(proxy)s belirlediler",
         whitelist_account: "Beyaz listeye alındı",
-        whitelisted_by: "Hesap tarafından beyaz listeye alındı",
+        unlisted_by: "%(lister)s adlı hesap %(listee)s adlı hesabı listeden çıkardı",
+        whitelisted_by: "%(lister)s adlı hesapt %(listee)s adlı hesabı beyazlisteye aldı",
+        blacklisted_by: "%(lister)s adlı hesap %(listee)s adlı hesabı karalisteye aldı",
         transfer_account: "Hesap transfer edildi",
         update_asset: "Aktif güncelledi",
         update_feed_producers: "Aktifin yayın üreticileri güncellendi ",
@@ -410,6 +425,12 @@
             symbol3 : "3 Haneli Semboller",
             symbol4 : "4 Haneli Semboller",
             long_symbol : "Uzun Semboller"
+        },
+        whitelist_states: {
+            no_listing: "Listeleye alınmamış",
+            white_listed: "Beyazlisteye alınmış",
+            black_listed: "Karalisteye alınmış",
+            white_and_black_listed: "Beyazlisteye ve karalisteye alınmış"
         }
     },
     explorer: {
