@@ -10,7 +10,7 @@ counterpart.setFallbackLocale("en");
 class IntlStore extends BaseStore {
     constructor() {
         super();
-        this.currentLocale = cookies.locale || "en";
+        this.currentLocale = cookies.get("graphene_locale") || "en";
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
 

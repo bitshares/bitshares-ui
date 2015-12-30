@@ -178,6 +178,10 @@ class RootIntl extends React.Component {
         }
     };
 
+    componentDidMount() {
+        IntlActions.switchLocale(this.props.locale);
+    }
+
     render() {
         return <IntlProvider locale={this.props.locale} formats={intlData.formats}><App {...this.props}/></IntlProvider>;
     }
