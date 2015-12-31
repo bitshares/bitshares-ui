@@ -35,16 +35,16 @@ class MetaexchangeDepositRequest extends React.Component {
 	
 	constructor(props) 
 	{
-		let parts = props.symbol_pair.split('_');
-		props.base_symbol = parts[0];
-		props.quote_symbol = parts[1];
-	
         super(props);
-        this.state = { deposit_address: null, 
-						memo:null, 
-						base_symbol:parts[0],
-						quote_symbol:parts[1]
-					};
+
+		let parts = props.symbol_pair.split('_');
+
+        this.state = {
+            deposit_address: null, 
+   			memo:null, 
+			base_symbol:parts[0],
+			quote_symbol:parts[1]
+		};
 		this.apiRoot = "https://metaexchange.info/api";
 		this.marketPath = "https://metaexchange.info/markets/";
 		//this.apiRoot = "http://localhost:1235/api";
@@ -214,7 +214,7 @@ class AccountDepositWithdraw extends React.Component {
     render() {
         return (
 		<div className="grid-content">
-			<Tabs settings="depositWithdrawSettingsTab" defaultActiveTab={config.depositWithdrawDefaultActiveTab}>
+			<Tabs setting="depositWithdrawSettingsTab" defaultActiveTab={config.depositWithdrawDefaultActiveTab}>
 
                 <Tabs.Tab title="BlockTrades">
                     <div className="content-block">
