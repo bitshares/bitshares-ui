@@ -41,7 +41,7 @@
         hour_24: "24 Saat",
         recent: "Son hareketler",
         name: "Hesap adı",
-        id: "Account ID",
+        id: "Hesap Kimlik",
         more: "fazlası",
         deposit_withdraw: "Yatır/Çek",
         as_collateral: "Teminat",
@@ -127,7 +127,7 @@
             advanced: "Gelişmiş",
             need_asset: " İki aktiften biri an azından %(name)s olmalıdır",
             perm_warning: "UYARI: İzinler yalnızca etkisiz hale getirilebilitler, bir kere etkisiziştiridiklerinde tekrar aktif hale getirilemezler!!",
-            issued_assets: "İhrac Olunmuş Aktifler"
+            issued_assets: "İhraç Edilmiş Aktifler"
         },
         connections: {
             known: "Tarafından Tanınıyor",
@@ -646,7 +646,10 @@
         bids: "Alış Fiyatları",
         no_data: "Veri yok",
         time: "Süre",
-        borrow: "Ödünç"
+        borrow: "Ödünç Al",
+        no_balance: "Yetersiz bakiye",
+        invalid_amount: "Geçersiz miktar",
+        invalid_price: "Geçersiz fiyat"
     },
     fees: {
      title: "Ücret Tarifesi"
