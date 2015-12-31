@@ -59,6 +59,10 @@
             empty_white_by: "No accounts have whitelisted %(account)s.",
             empty_black_by: "No accounts have blacklisted %(account)s."
         },
+        vesting: {
+            title: "Vesting balances",
+            balance_number: "Balance #%(id)s"
+        },
         member: {
             stats: "Membership",
             join: "Joined on",
@@ -73,7 +77,7 @@
             fees_vested: "Pending vested fees",
             referrals: "Referrals",
             rewards: "Cashback Rewards",
-            cashback: "Vesting cashback balance",
+            cashback: "Vesting balance amount",
             vested: "Vested",
             unknown: "Unknown member",
             lifetime: "Lifetime member",
