@@ -61,7 +61,8 @@
         },
         vesting: {
             title: "Vesting balances",
-            balance_number: "Balance #%(id)s"
+            balance_number: "Balance #%(id)s",
+            no_balances: "This account has no vesting balances"
         },
         member: {
             stats: "Membership",

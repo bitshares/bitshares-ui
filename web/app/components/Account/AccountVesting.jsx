@@ -16,6 +16,9 @@ class VestingBalance extends React.Component {
 
     render() {
         let {account} = this.props;
+        if (!this.props.vb) {
+            return null;
+        }
         let vb = ChainStore.getObject( this.props.vb );
         if (!vb) {
             return null;
@@ -117,7 +120,9 @@ class AccountVesting extends React.Component {
 
                 <div className="grid-container">
 
-                    <h4 style={{paddingTop: "1rem"}}><Translate content="account.vesting.title"/></h4>
+                    <h4 style={{paddingTop: "1rem"}}>
+                        <Translate content={balances.length ? "account.vesting.title" : "account.vesting.no_balances"}/>
+                    </h4>
 
                     {balances}
                     
