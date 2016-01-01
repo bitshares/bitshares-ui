@@ -59,6 +59,11 @@
             empty_white_by: "%(account)s adlı hesabı beyazlisteye alan olmadı.",
             empty_black_by: "%(account)s adlı hesabı karalisteye alan olmadı."
         },
+        vesting: {
+            title: "Tutulan bakiyeler",
+            balance_number: "Bakiye #%(id)s",
+            no_balances: "Bu hesaba ait tutulan bir bakiye yok"
+        },
         member: {
             stats: "Üyelik",
             join: "Katılma tarihi",
@@ -73,7 +78,7 @@
             fees_vested: "Bekleyen hak ücretler",
             referrals: "Referraller",
             rewards: "Nakit-İade Ödülleri",
-            cashback: "Bekletilen nakit iadesi",
+            cashback: "Tutulan bakiye miktarı",
             vested: "Hak edilmiş",
             unknown: "Bilinmeyen üye",
             lifetime: "Ömür-Boyu üye",
