@@ -1,26 +1,26 @@
-@import "./utils";
+@import "../utils/utils";
 
 // variables
 
-$light-text-color: #3F2E55;
-$dark-text-color: #3F2E55;
-$primary-text-color: #3F2E55;
+$light-text-color: #fff;
+$dark-text-color: #444;
+$primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
-$link-text-color: #aeabff;
+$link-text-color: #4A90E2;
 $error-text-color: #E3745B;
 
-$bg-color: #FFF;
-$panel-bg-color: #e5e6e4;
-$light-panel-bg-color: #FFF;
-$super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
-$button-bg-color: #8c88ff;
-$secondary-button-bg-color: #999999;
+$bg-color: #191A1F;
+$panel-bg-color: #2C2E37;
+$light-panel-bg-color: #353742;
+$super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$button-bg-color: #4A90E2;
+$secondary-button-bg-color: #546979;
 
 $alert-color: $error-text-color;
-$info-color: #A0A4B8;
-$success-color: #21D19F;
-$warning-color: #f35b92;
-$fee-color: #7f055e;
+$info-color: #4A90E2;
+$success-color: #18BC9C;
+$warning-color: #FCAB53;
+$fee-color: $secondary-text-color;
 
 // general
 
@@ -29,13 +29,14 @@ body {
 }
 
 hr {
-  border-color: $light-panel-bg-color;
+  border-color: $dark-text-color;
+  background-color: $dark-text-color !important;
 }
 
 a {
   color: $link-text-color;
   &:hover, &:focus, &:active {
-    color: darken($link-text-color, 4%);
+    color: lighten($link-text-color, 4%);
   }
 }
 
@@ -107,19 +108,19 @@ label, label > span {
   }
 }
 
-.reactTooltip.type-dark {
-  @include color($light-text-color, $super-light-panel-bg-color);
+.__react_component_tooltip.type-light {
+  @include color($light-text-color, $super-light-panel-bg-color, true);
   &.place-bottom:after {
-    border-bottom-color: $super-light-panel-bg-color;
+    border-bottom-color: $super-light-panel-bg-color !important;
   }
   &.place-top:after {
-    border-top-color: $super-light-panel-bg-color;
+    border-top-color: $super-light-panel-bg-color !important;
   }
   &.place-right:after {
-    border-right-color: $super-light-panel-bg-color;
+    border-right-color: $super-light-panel-bg-color !important;
   }
   &.place-left:after {
-    border-left-color: $super-light-panel-bg-color;
+    border-left-color: $super-light-panel-bg-color !important;
   }
 }
 
@@ -132,7 +133,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal {
-  @include color($light-text-color, $light-panel-bg-color);
+  @include color($light-text-color, $bg-color);
   .close-button {
     color: $secondary-text-color;
     &:hover {
@@ -147,14 +148,27 @@ h1, h2, h3, h4, h5, h6 {
       color: $error-text-color
     }
   }
+  .circle-wrapper {
+    .circle:before {
+      background-color: $primary-text-color;
+    }
+  }
+  .table {
+    > thead > tr > th, > tbody > tr > td {
+      border-bottom-color: darken($secondary-text-color, 10%);
+    }
+  }
 }
 
 .footer {
-  @include color($secondary-text-color, $panel-bg-color);
+  @include color($secondary-text-color, lighten($panel-bg-color, 8%));
+  svg > path {
+    fill: $secondary-text-color;
+  }
 }
 
 .panel-left {
-  @include color($dark-text-color, $light-panel-bg-color);
+  @include color($light-text-color, $light-panel-bg-color);
   .block-list li > a {
     color: $light-text-color;
     &:hover {
@@ -168,27 +182,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-.menu-group.primary {
-  background-color: darken($panel-bg-color, 20%);
-  .menu-bar {
-  background-color: darken($panel-bg-color, 20%);
-  }
-    .button {
-    background-color: darken($panel-bg-color, 20%);
-    &:hover {
-    background-color: lighten($panel-bg-color, 80%);
-    }
-  }
-}
-
-
 .page-layout {
   background-color: $bg-color;
 
   .left-column {
     border-top-color: $bg-color;
     border-bottom-color: $bg-color;
-    background-color: lighten($panel-bg-color, 4%);
+    background-color: $panel-bg-color; //lighten($bg-color, 4%);
 
   }
 
@@ -219,13 +219,19 @@ h1, h2, h3, h4, h5, h6 {
 
 // buttons
 
+.button.bucket-button {
+  text-transform: none !important;
+  font-size: 0.75rem !important;
+}
+
 .button {
   background-color: $button-bg-color;
   &:hover, &:focus, &:active {
     background-color: lighten($button-bg-color, 4%) !important;
   }
   &.outline {
-    color: lighten($primary-text-color, 40%);
+    color: $secondary-text-color;
+    border-color: $secondary-text-color;
     &:hover {
       color: $light-text-color;
       border-color: $light-text-color;
@@ -240,27 +246,49 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.header .button {
-  background-color: $panel-bg-color;
+.header .button,  .header .button:active {
+background-color: #3E414D !important;
+&:hover, &:focus, &:active {
+  background-color: #3E414D !important;
 }
+}
+
+
 
 .grp-menu-item button {
   &:hover, &:focus, &:active {
-    background-color: #4c4c4c !important;
+    background-color: #3E414D !important;
   }
+}
+
+.header {
+  @include color($secondary-text-color, $panel-bg-color);
 }
 
 .header .logo {
   color: $secondary-text-color;
+
+}
+
+.menu-group.primary .menu-bar {
+
+}
+
+
+.header-right-menu {
+  a > span { color: $secondary-text-color; }
+  svg > path { fill: $secondary-text-color; }
+  a:hover > span { color: $primary-text-color; }
+  svg:hover > path { fill: $primary-text-color; }
 }
 
 // cards
 
+
 .card-section {
-  color: black;
   padding-left: 0.5rem;
   > ul {
-    color: $primary-text-color;
+    color: #FFF;
     list-style: none;
     font-size: 85%;
     margin-left: 0;
@@ -268,38 +296,39 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-
 .card {
-  @include color($primary-text-color, $panel-bg-color);
+  @include color($primary-text-color, $bg-color);
   background-color: $panel-bg-color;
   &:hover {
     background-color: lighten($panel-bg-color, 4%);
     > h4 {
       background-color: lighten($light-panel-bg-color, 4%);
+      color: $link-text-color
     }
   }
   a {
     color: $primary-text-color;
   }
   .card-divider {
-    @include color($primary-text-color, darken($light-panel-bg-color, 20%));
+    @include color($primary-text-color, lighten($bg-color, 12%) );
   }
   > h4 {
-    background-color: darken($super-light-panel-bg-color, 4%);
+    background-color: lighten($bg-color, 24%);
   }
 }
+
 
 // tables
 .table {
   > thead > tr > th {
-    border-bottom: 2px solid lighten($secondary-text-color, 80%);
+    border-bottom-color: $dark-text-color;
     color: $secondary-text-color;
   }
   > tbody > tr > td {
-    border-bottom: 1px solid lighten($secondary-text-color, 80%);
+    border-bottom-color: $dark-text-color;
   }
   &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
-    background-color: darken($bg-color, 4%);
+    background-color: lighten($bg-color, 4%);
   }
 }
 
@@ -322,7 +351,6 @@ h1, h2, h3, h4, h5, h6 {
   }
   header {
     color: $secondary-text-color;
-    background-color: $panel-bg-color;
   }
 }
 
@@ -342,24 +370,18 @@ div.has-error > input, div.has-error > input:hover, div.has-error > input:focus 
 }
 
 input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
-  background-color: #e0e0e0;
+  color: $primary-text-color;
+  background-color: $panel-bg-color;
   border: none;
   &:hover, &:focus, &:active {
-    background-color: #cfd2cd;
+    color: $primary-text-color;
+    background-color: darken($panel-bg-color, 2%);
     border: none;
   }
   &:focus {
+    color: $primary-text-color;
     border: none;
   }
-}
-
-
-div.buy-sell-box {
-  background-color: #e0e0e0;
-  text-shadow: none;
-  font-weight: 300;
-  border-left: 1px solid #FFF;
-  border-radius: 0px;
 }
 
 
@@ -403,6 +425,21 @@ td.orderHistoryBid {
   font-weight: bold;
 }
 
+.buy-sell-box {
+  background-color: lighten($light-panel-bg-color, 12%);
+}
+
+.active-bucket {
+  text-transform: none !important;
+  font-size: 0.75rem !important;
+  background-color: lighten($light-panel-bg-color, 12%);
+  text-transform: uppercase;
+}
+
+
+.market-top-bar {
+  border-bottom: 1px solid $panel-bg-color;
+}
 
 // Account page
 .account-left-panel {
@@ -412,34 +449,30 @@ td.orderHistoryBid {
   h6 {
     color: $secondary-text-color;
   }
-  .my-account h5, td.my-account {
-    color: $info-color;
+  .bottom {
+    border-top-color: $bg-color;
   }
 }
 
-.account-left-menu {
-  > li {
-    border-bottom: 1px solid lighten($secondary-text-color, 80%);
-    &:first-child {
-    border-top: 1px solid lighten($secondary-text-color, 80%);
-    }
-  }
+.my-account h5, .my-account h4, td.my-account {
+  color: $info-color;
+}
 
+.account-left-menu {
   > li > a:hover, > li > label:hover, > li select:hover {
     color: $light-text-color;
     background-color: $panel-bg-color;
-    border-top: none;
   }
   > li > a.active {
     color: $light-text-color;
-    background-color: darken($panel-bg-color, 4%);
+    background-color: lighten($panel-bg-color, 4%);
     border-left-color: darken($button-bg-color, 4%);
   }
 }
 
 
 .pagination {
-    background-color: lighten($panel-bg-color, 4%) ;
+    background-color: $panel-bg-color;
 }
 
 .invoice {
@@ -491,28 +524,92 @@ td.orderHistoryBid {
   }
 }
 
-.icon > svg > path {
-    fill:  darken($light-panel-bg-color, 20%);
-  }
-
-
-
 .circle-wrapper {
    .circle:before {
      background-color: $secondary-text-color;
    }
 }
 
-.modal .circle-wrapper {
-  .circle:before {
-    background-color: $primary-text-color;
+// Misc
+
+.chart-zoom-dropdown {
+  width:24px;
+  height: 28px;
+  padding: 4px;
+  opacity: 0.5;
+  overflow: hidden;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+
+  &:hover, &:active, &:focus {
+    background-color: $bg-color;
+    padding: 4px;
+    opacity: 0.85;
+    border-radius: 2px;
+    color: $light-text-color;
+    font-size: 60%;
+    width:348px;
+    height: 48px;
   }
 }
+
+
+
+
+.remove {
+  color: $alert-color;
+  border: none;
+  padding: 2px 4px;
+  font-size: 120%;
+  background-color: transparent;
+  border-radius: 0;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  transition: all .5s ease;
+  &:hover, &:active, &:focus {
+    color: $light-text-color;
+    background-color: $alert-color;
+    font-size: 120%;
+    border-radius: 2px;
+  }
+}
+
+.memo {
+  color: $secondary-text-color;
+}
+
+.help-content {
+  code {
+    color: $primary-text-color;
+    background-color: transparent;
+    border-color: $dark-text-color;
+  }
+}
+
+// Block List (section)
+section input[type="text"] {
+  background-color: transparent;
+  &:hover, &:active, &:focus {
+    color: $primary-text-color;
+    background-color: transparent;
+  }
+}
+
 
 // Asset Detail
 
 .asset-card {
   .card-divider {
     background: $panel-bg-color;
+  }
+}
+
+// Exchange
+.mymarkets-header {
+  border-bottom-color: $button-bg-color;
+  &.inactive {
+    border-bottom-color: transparent;
+    color: $secondary-text-color;
   }
 }
