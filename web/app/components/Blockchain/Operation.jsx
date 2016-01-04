@@ -838,10 +838,13 @@ class Operation extends React.Component {
         }
 
         if (this.props.csvExportMode) {
+            const globalObject = ChainStore.getObject("2.0.0");
+            const dynGlobalObject = ChainStore.getObject("2.1.0");
+            const block_time = utils.calc_block_time(block, globalObject, dynGlobalObject)
             return (
                 <div key={this.props.key}>
+                    <div>{block_time ? block_time.toLocaleString() : ""}</div>
                     <div>{ops[op[0]]}</div>
-                    <div>{block}</div>
                     <div>{column}</div>
                     <div><FormattedAsset amount={parseInt(op[1].fee.amount, 10)} asset={op[1].fee.asset_id} /></div>
                 </div>
