@@ -41,11 +41,29 @@
         hour_24: "24 Saat",
         recent: "Son hareketler",
         name: "Hesap adı",
+        id: "Hesap Kimlik",
         more: "fazlası",
         deposit_withdraw: "Yatır/Çek",
         as_collateral: "Teminat",
         open_orders: "Açık emirler",
         total_value: "Toplam değeri",
+        whitelist: {
+            title: "Beyazliste",
+            black: "Karaliste",
+            add: "Beyaz listeye ekle",
+            add_black: "Karalisteye ekle",
+            empty: "%(account)s herhangi bir hesabı beyazlisteye eklemedi.",
+            empty_black: "%(account)s herhangi bir hesabı karalisteye eklemedi.",
+            white_by: "Beyazlisteye alındı",
+            black_by: "Karalisteye alındı",
+            empty_white_by: "%(account)s adlı hesabı beyazlisteye alan olmadı.",
+            empty_black_by: "%(account)s adlı hesabı karalisteye alan olmadı."
+        },
+        vesting: {
+            title: "Tutulan bakiyeler",
+            balance_number: "Bakiye #%(id)s",
+            no_balances: "Bu hesaba ait tutulan bir bakiye yok"
+        },
         member: {
             stats: "Üyelik",
             join: "Katılma tarihi",
@@ -60,7 +78,7 @@
             fees_vested: "Bekleyen hak ücretler",
             referrals: "Referraller",
             rewards: "Nakit-İade Ödülleri",
-            cashback: "Hak edilmiş nakit iade bakiyesi",
+            cashback: "Tutulan bakiye miktarı",
             vested: "Hak edilmiş",
             unknown: "Bilinmeyen üye",
             lifetime: "Ömür-Boyu üye",
@@ -70,7 +88,13 @@
             subscribe: "Yıllık Abone ol",
             expires: "bitiş tarihi",
             membership_expiration: "Üyelik Bitiş Tarihi",
-            fees_cashback: "Ücretler ve nakit iadeler"
+            fees_cashback: "Ücretler ve nakit paraüstleri",
+            coindays: "coin günler",
+            earned: "Kazanılmış coin günü",
+            required: "Gerekli coin günü",
+            remaining: "Bekletilecek günler",
+            claim: "Şimdi iste",
+            available: "İstemek için mevcut"
         },
         user_issued_assets: {
             symbol: "Sembol",
@@ -108,7 +132,7 @@
             advanced: "Gelişmiş",
             need_asset: " İki aktiften biri an azından %(name)s olmalıdır",
             perm_warning: "UYARI: İzinler yalnızca etkisiz hale getirilebilitler, bir kere etkisiziştiridiklerinde tekrar aktif hale getirilemezler!!",
-            issued_assets: "İhrac Olunmuş Aktifler"
+            issued_assets: "İhraç Edilmiş Aktifler"
         },
         connections: {
             known: "Tarafından Tanınıyor",
@@ -281,7 +305,9 @@
         update_account: "hesap verilerini güncelledi",
         set_proxy: "oylama vekili olarak %(proxy)s belirlediler",
         whitelist_account: "Beyaz listeye alındı",
-        whitelisted_by: "Hesap tarafından beyaz listeye alındı",
+        unlisted_by: "%(lister)s adlı hesap %(listee)s adlı hesabı listeden çıkardı",
+        whitelisted_by: "%(lister)s adlı hesapt %(listee)s adlı hesabı beyazlisteye aldı",
+        blacklisted_by: "%(lister)s adlı hesap %(listee)s adlı hesabı karalisteye aldı",
         transfer_account: "Hesap transfer edildi",
         update_asset: "Aktif güncelledi",
         update_feed_producers: "Aktifin yayın üreticileri güncellendi ",
@@ -311,9 +337,9 @@
         obtain: "ödendi, ",
         global_parameters_update: "Evrensel parametrelerini güncelledi",
         file_write: "Bir dosya yazıldı",
-        vesting_balance_create: "Şunun hakedilmiş bakiyesini oluşturdu :",
+        vesting_balance_create: "Şunun bekletilen bakiyesini oluşturdu :",
         for: "için",
-        vesting_balance_withdraw: "Şunun hakedilmiş bakiyesini çekti : ",
+        vesting_balance_withdraw: "Şunun bekletilen bakiyesini çekti : ",
         bond_create_offer: "Senet teklifi oluştur",
         bond_cancel_offer: "Senet teklifini iptal etti",
         bond_accept_offer: "Senet teklifi kabul edilen:",
@@ -374,8 +400,8 @@
             withdraw_permission_delete: "Çekme izni silme",
             fill_order: "Emir İcra",
             committee_member_update_global_parameters: "Evrensel parametreleri güncelleme",
-            vesting_balance_create: "Hakedilmiş bakiye oluşturma",
-            vesting_balance_withdraw: "Hakedilmiş bakiyeyi çekme",
+            vesting_balance_create: "Bekletilen bakiye oluşturma",
+            vesting_balance_withdraw: "Bekletilen bakiyeyi çekme",
             worker_create: "Bütçe öğesi oluşturma",
             custom: "Kişiye özel",
             assert: "İşlem beyanı",
@@ -404,6 +430,12 @@
             symbol3 : "3 Haneli Semboller",
             symbol4 : "4 Haneli Semboller",
             long_symbol : "Uzun Semboller"
+        },
+        whitelist_states: {
+            no_listing: "Listeleye alınmamış",
+            white_listed: "Beyazlisteye alınmış",
+            black_listed: "Karalisteye alınmış",
+            white_and_black_listed: "Beyazlisteye ve karalisteye alınmış"
         }
     },
     explorer: {
@@ -619,7 +651,10 @@
         bids: "Alış Fiyatları",
         no_data: "Veri yok",
         time: "Süre",
-        borrow: "Ödünç"
+        borrow: "Ödünç Al",
+        no_balance: "Yetersiz bakiye",
+        invalid_amount: "Geçersiz miktar",
+        invalid_price: "Geçersiz fiyat"
     },
     fees: {
      title: "Ücret Tarifesi"
@@ -691,7 +726,7 @@
         claim_balances: "Bakiyelerı Sahiplen",
         balance_claim_lookup: "Bakiye Arama",
         unclaimed: "Sahiplenilmemiş",
-        unclaimed_vesting: "Sahiplenilmemiş ",
+        unclaimed_vesting: "Çekilebilecek miktar",
         no_accounts: "Hesap Yok",
         brainkey_no_match: "Beyin-anahtarı uyuşmuyor, devam et",
         reenter_brainkey: "Beyin-anahtarını tekrar gir",

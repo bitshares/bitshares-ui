@@ -23,7 +23,7 @@ function compareOps(b, a) {
 }
 
 function textContent(n) {
-    return n ? `"${n.textContent}"` : "";
+    return n ? `"${n.textContent.replace(/[\s\t\r\n]/gi, " ")}"` : "";
 }
 
 @BindToChainState({keep_updating: true})
@@ -61,10 +61,10 @@ class RecentTransactions extends React.Component {
             const nodes = csv_export_container.childNodes;
             let csv = "";
             for (const n of nodes) {
-                console.log("-- RecentTransactions._downloadCSV -->", n);
+                //console.log("-- RecentTransactions._downloadCSV -->", n);
                 const cn = n.childNodes;
                 if (csv !== "") csv += "\n";
-                csv += [textContent(cn[0]), textContent(cn[1]), textContent(cn[2]), textContent(cn[3])].join(", ");
+                csv += [textContent(cn[0]), textContent(cn[1]), textContent(cn[2]), textContent(cn[3])].join(",");
             }
             var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
             var today = new Date();
@@ -159,6 +159,12 @@ class RecentTransactions extends React.Component {
                 {
                     historyCount > 0 && this.state.csvExport &&
                     <div id="csv_export_container" style={{display: "none"}}>
+                        <div>
+                            <div>DATE</div>
+                            <div>OPERATION</div>
+                            <div>MEMO</div>
+                            <div>AMOUNT</div>
+                        </div>
                         {
                             history.map(o => {
                                 return (

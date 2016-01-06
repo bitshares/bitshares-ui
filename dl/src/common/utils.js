@@ -417,6 +417,15 @@ var Utils = {
         let intB = parseInt(b.split(".")[2], 10);
 
         return inverse ? (intB - intA) : (intA -intB);
+    },
+
+    calc_block_time(block_number, globalObject, dynGlobalObject) {
+        if (!globalObject || !dynGlobalObject) return null;
+        const block_interval = globalObject.get("parameters").get("block_interval");
+        const head_block = dynGlobalObject.get("head_block_number");
+        const head_block_time = new Date(dynGlobalObject.get("time") + "+00:00");
+        const seconds_below = (head_block - block_number) * block_interval;
+        return new Date(head_block_time - seconds_below * 1000);
     }
 
 };

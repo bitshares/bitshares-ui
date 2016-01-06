@@ -30,25 +30,14 @@ class SettingsEntry extends React.Component {
 
         switch (setting) {
             case "locale":
-                
-                options = defaults.map(function(entry) {
-                    var translationKey = "languages." + entry;
-                    return <Translate key={entry} value={entry} component="option" content={translationKey} />;
-                }).sort((a, b) => {
-                    if (a.key === myLocale) {
-                        return -1;
-                    }
-                    if (b.key === myLocale) {
-                        return 1;
-                    }
-                    if (b.key < a.key) {
-                        return 1;
-                    } else if (b.key > a.key) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                });
+                value = selected;
+                options = defaults.map(entry => {
+                    let translationKey = "languages." + entry;
+                    let value = counterpart.translate(translationKey);
+
+                    return <option key={entry} value={entry}>{value}</option>;
+                })
+
                 break;
 
             case "defaultMarkets":
@@ -75,8 +64,13 @@ class SettingsEntry extends React.Component {
 
                 break;
 
-            default: 
-                
+            case "walletLockTimeout":
+                value = selected;
+                input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>
+                break;
+
+            default:
+
                 if (typeof selected === "number") {
                     value = defaults[selected];
                 }
@@ -95,8 +89,8 @@ class SettingsEntry extends React.Component {
                     options = defaults.map(entry => {
                         let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                         let key = entry.translate ? entry.translate : entry;
-                        return <option key={key}>{option}</option>;
-                    });
+                        return <option value={option} key={key}>{option}</option>;
+                    })
                 } else {
                     input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>
                 }
@@ -172,7 +166,14 @@ class Settings extends React.Component {
                 }
                 break;
 
-            case "defaultMarkets": 
+            case "defaultMarkets":
+                break;
+
+            case "walletLockTimeout":
+                let newValue = parseInt(e.target.value, 10);
+                if (newValue && !isNaN(newValue) && typeof newValue === "number") {
+                    SettingsActions.changeSetting({setting: "walletLockTimeout", value: e.target.value });
+                }
                 break;
 
             case "inverseMarket":
@@ -208,8 +209,8 @@ class Settings extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block main-content small-12 medium-8 medium-offset-2 large-6 large-offset-3">
-                    <div className="grid-content no-overflow">
+                <div className="grid-block main-content small-12 medium-10 medium-offset-1 large-6 large-offset-3">
+                    <div className="grid-content">
                         {settings.map((value, setting) => {
                             return (
                                 <SettingsEntry
@@ -221,7 +222,7 @@ class Settings extends React.Component {
                                     locales={this.props.localesObject}
                                     triggerModal={this.triggerModal.bind(this)}
                                     {...this.state}
-                                />);                   
+                                />);
                         }).toArray()}
                         <Link to="wallet"><div className="button outline">
                             <Translate content="wallet.console" /></div></Link>
@@ -230,7 +231,7 @@ class Settings extends React.Component {
                 <WebsocketAddModal
                     ref="ws_modal"
                     apis={defaults["connection"]}
-                    api={defaults["connection"].filter(a => {return a === this.state.connection})} 
+                    api={defaults["connection"].filter(a => {return a === this.state.connection})}
                 />
             </div>
         );

@@ -9,14 +9,20 @@ class WebsocketAddModal extends React.Component {
 
     constructor() {
         super();
+
+        let protocol = window.location.protocol;
         this.state = {
-            ws: "ws://",
+            protocol: protocol,
+            ws: protocol === "https:" ? "wss://" : "ws://",
             type: "remove"
         };
     }
-    
+
     onInput(e) {
-        this.setState({ws: e.target.value});        
+        if (this.state.protocol === "https:") {
+            e.target.value = e.target.value.replace("ws://", "wss://")
+        }
+        this.setState({ws: e.target.value});
     }
 
     show(e) {
@@ -29,12 +35,14 @@ class WebsocketAddModal extends React.Component {
     close() {
         ZfApi.publish("ws_modal_" + this.state.type, "close")
     }
-    
+
     onAddSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
+
         SettingsActions.addWS(this.state.ws);
+
         this.setState({
-            ws: "ws://"
+            ws: this.state.protocol === "https:" ? "wss://" : "ws://"
         });
         this.close();
     }
@@ -47,7 +55,7 @@ class WebsocketAddModal extends React.Component {
     }
 
     _renderAddModal() {
-        return ( 
+        return (
             <Modal id="ws_modal_add" ref="ws_modal_add" overlay={true} overlayClose={false}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
@@ -65,7 +73,7 @@ class WebsocketAddModal extends React.Component {
                     </div>
                 </form>
             </Modal>
-        )        
+        )
     }
 
     _renderRemoveModal() {
@@ -78,7 +86,7 @@ class WebsocketAddModal extends React.Component {
             return <div key={entry}><h5>{entry}</h5></div>;
         });
 
-        return ( 
+        return (
             <Modal id="ws_modal_remove" ref="ws_modal_remove" overlay={true} overlayClose={false}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
@@ -104,17 +112,17 @@ class WebsocketAddModal extends React.Component {
                     </div>
                 </form>
             </Modal>
-        )        
+        )
     }
-    
+
     render() {
-        return ( 
+        return (
             <div>
                 {this._renderAddModal()}
                 {this._renderRemoveModal()}
             </div>
         );
-    }    
+    }
 }
 
 export default WebsocketAddModal;

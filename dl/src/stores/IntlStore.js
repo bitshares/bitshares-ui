@@ -5,11 +5,12 @@ var counterpart = require("counterpart-instance");
 var locale_en = require("assets/locales/locale-en");
 var cookies = require("cookies-js");
 counterpart.registerTranslations("en", locale_en);
+counterpart.setFallbackLocale("en");
 
 class IntlStore extends BaseStore {
     constructor() {
         super();
-        this.currentLocale = cookies.locale || "en";
+        this.currentLocale = cookies.get("graphene_locale") || "en";
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
 

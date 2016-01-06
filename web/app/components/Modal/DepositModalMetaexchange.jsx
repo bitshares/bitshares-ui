@@ -36,14 +36,14 @@ class DepositModalMetaexchange extends React.Component {
 	  
 		Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair}).then( reply=>reply.json().then(reply=>
 		{
-			console.log(reply);
+			// console.log(reply);
 			this.setState( {limit:reply.ask_max} );
 			
 			if (props.is_bts_deposit)
 			{
 				Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'buy',deposit_amount:1}).then( reply=>reply.json().then(reply=>
 				{
-					console.log(reply);
+					// console.log(reply);
 					this.setState( {quote:reply.result} );
 				}));
 			}

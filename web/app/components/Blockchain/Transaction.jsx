@@ -12,11 +12,15 @@ import utils from "common/utils";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
+import account_constants from "chain/account_constants";
+import Icon from "../Icon/Icon";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 require("./operations.scss");
 require("./json-inspector.scss");
 
 let ops = Object.keys(operations);
+let listings = Object.keys(account_constants.account_listing);
 
 class OpType extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -92,6 +96,13 @@ class Transaction extends React.Component {
             <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
+    _toggleLock(e) {
+        e.preventDefault();
+        WalletUnlockActions.unlock().then(() => {
+            this.forceUpdate();
+        })
+    }
+
     render() {
         let {trx} = this.props;
         let info = null;
@@ -111,6 +122,7 @@ class Transaction extends React.Component {
 
                     let memo_text = null;
 
+                    let lockedWallet = false;
                     if(op[1].memo) {
                         let memo = op[1].memo;
                         let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
@@ -118,13 +130,14 @@ class Transaction extends React.Component {
                         let private_key = from_private_key ? from_private_key : to_private_key;
                         let public_key = from_private_key ? memo.to : memo.from;
                         public_key = PublicKey.fromPublicKeyString(public_key)
-
                         try {
                             private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
                         }
                         catch(e) {
+                            lockedWallet = true;
                             private_key = null;
                         }
+
                         try {
                             memo_text = private_key ? Aes.decrypt_with_checksum(
                                 private_key,
@@ -162,6 +175,19 @@ class Transaction extends React.Component {
                             <tr>
                                 <td><Translate content="transfer.memo" /></td>
                                 <td>{memo_text}</td>
+                            </tr>
+                    ) : null}
+
+                    {op[1].memo && lockedWallet ?
+                        rows.push(
+                            <tr>
+                                <td><Translate content="transfer.memo" /></td>
+                                <td>
+                                    <Translate content="transfer.memo_unlock" />&nbsp;
+                                    <a href onClick={this._toggleLock.bind(this)}>
+                                        <Icon name="locked"/>
+                                    </a>
+                                </td>
                             </tr>
                     ) : null}
 
@@ -380,6 +406,14 @@ class Transaction extends React.Component {
                     break;
 
                 case "account_whitelist":
+                    let listing;
+                    for (var i = 0; i < listings.length; i++) {
+                        if (account_constants.account_listing[listings[i]] === op[1].new_listing) {
+                            console.log("listings:", listings[i]);
+                            listing = listings[i];
+                        }
+                    };
+
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.authorizing_account" /></td>
@@ -395,7 +429,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.new_listing" /></td>
-                            <td>{op[1].new_listing.toString()}</td>
+                            <td><Translate content={`transaction.whitelist_states.${listing}`} /></td>
                         </tr>
                     );
 
