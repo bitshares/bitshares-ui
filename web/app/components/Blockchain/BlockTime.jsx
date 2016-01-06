@@ -2,6 +2,7 @@ import React from "react";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import TimeAgo from "../Utility/TimeAgo";
+import utils from "common/utils";
 
 /**
  * @brief displays block's date and time based on block number
@@ -34,12 +35,7 @@ class BlockTime extends React.Component {
     }
 
     calcTime(block_number) {
-        let block_interval = this.props.globalObject.get("parameters").get("block_interval");
-        let head_block = this.props.dynGlobalObject.get("head_block_number");
-        let head_block_time = new Date(this.props.dynGlobalObject.get("time") + "+00:00");
-        let seconds_below = (head_block - block_number) * block_interval;
-        let time = new Date(head_block_time - seconds_below * 1000);
-        this.setState({time});
+        this.setState({time: utils.calc_block_time(block_number, this.props.globalObject, this.props.dynGlobalObject)});
     }
 
     componentWillReceiveProps(next_props) {

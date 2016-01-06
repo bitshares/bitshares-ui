@@ -13,6 +13,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
+import {VestingBalance} from "./AccountVesting";
 
 @BindToChainState({keep_updating:true})
 class AccountMembership extends React.Component {
@@ -51,21 +52,7 @@ class AccountMembership extends React.Component {
         if( ref ) account.referrer_name = ref.get('name');
         let reg = ChainStore.getAccount( account.registrar );
         if( reg ) account.registrar_name = reg.get('name');
-
-        let cvb = account.cashback_vb ? ChainStore.getObject( account.cashback_vb ) : null;
-
-        let cvbAsset, vestingPeriod, remaining, earned, secondsPerDay = 60 * 60 * 24,
-            availablePercent;
-        
-        if (cvb) {
-            let balance = cvb.getIn(["balance", "amount"]);
-            cvbAsset = ChainStore.getAsset(cvb.getIn(["balance", "asset_id"]));
-            earned = cvb.getIn(["policy", 1, "coin_seconds_earned"]);
-            vestingPeriod = cvb.getIn(["policy", 1, "vesting_seconds"]);
-
-            availablePercent = earned / (vestingPeriod * balance);
-        }
-        
+       
         let account_name = account.name;
 
         let network_fee  = account.network_fee_percentage/100;
@@ -156,37 +143,7 @@ class AccountMembership extends React.Component {
                                 <Statistics stat_object={account.statistics}/>
                             </table>
                             <br/>
-                            <table className="table key-value-table">
-                                {cvb && cvbAsset ? (
-                                    <tbody>
-            
-                                        <tr>
-                                            <td><Translate content="account.member.cashback"/> </td>
-                                            <td><FormattedAsset amount={cvb.getIn(["balance", "amount"])} asset={cvb.getIn(["balance", "asset_id"])} /></td>
-                                        </tr>
-                                        <tr>
-                                            <td><Translate content="account.member.earned" /></td>
-                                            <td>{utils.format_number(utils.get_asset_amount(earned / secondsPerDay, cvbAsset), 0)} <Translate content="account.member.coindays" /></td>
-                                        </tr>
-                                        <tr>
-                                            <td><Translate content="account.member.required" /></td>
-                                            <td>{utils.format_number(utils.get_asset_amount(cvb.getIn(["balance", "amount"]) * vestingPeriod / secondsPerDay, cvbAsset), 0)} <Translate content="account.member.coindays" /></td>
-                                        </tr>
-                                        <tr>
-                                            <td><Translate content="account.member.remaining" /></td>
-                                            <td>{utils.format_number(vestingPeriod * (1 -  availablePercent) / secondsPerDay, 2)} days</td>
-                                        </tr>
-                                        <tr>
-                                            <td><Translate content="account.member.available" /></td>
-                                            <td>{utils.format_number(availablePercent * 100, 2)}% / <FormattedAsset amount={availablePercent * cvb.getIn(["balance", "amount"])} asset={cvbAsset.get("id")} /></td>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan="2" style={{textAlign: "right"}}>
-                                                <button onClick={this._onClaim.bind(this)} className="button outline"><Translate content="account.member.claim" /></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>) : null}
-                            </table>
+                            <VestingBalance vb={account.cashback_vb} account={account}/>                            
                         </div>
                     </div>
                     <div className="grid-block large-1">&nbsp;</div>

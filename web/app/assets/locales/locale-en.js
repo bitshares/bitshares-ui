@@ -41,11 +41,29 @@
         hour_24: "24hr Change",
         recent: "Recent activity",
         name: "Account name",
+        id: "Account ID",
         more: "see more",
         deposit_withdraw: "Deposit/Withdraw",
         as_collateral: "Collateral",
         open_orders: "Open orders",
         total_value: "Total value",
+        whitelist: {
+            title: "Whitelist",
+            black: "Blacklist",
+            add: "Add to whitelist",
+            add_black: "Add to blacklist",
+            empty: "%(account)s has not whitelisted any accounts.",
+            empty_black: "%(account)s has not blacklisted any accounts.",
+            white_by: "Whitelisted by",
+            black_by: "Blacklisted by",
+            empty_white_by: "No accounts have whitelisted %(account)s.",
+            empty_black_by: "No accounts have blacklisted %(account)s."
+        },
+        vesting: {
+            title: "Vesting balances",
+            balance_number: "Balance #%(id)s",
+            no_balances: "This account has no vesting balances"
+        },
         member: {
             stats: "Membership",
             join: "Joined on",
@@ -60,7 +78,7 @@
             fees_vested: "Pending vested fees",
             referrals: "Referrals",
             rewards: "Cashback Rewards",
-            cashback: "Vesting cashback balance",
+            cashback: "Vesting balance amount",
             vested: "Vested",
             unknown: "Unknown member",
             lifetime: "Lifetime member",
@@ -249,7 +267,8 @@
         broadcast: "Your transfer has been broadcast to the network",
         again: "MAKE ANOTHER TRANSFER",
         see: "SEE MY TRANSFERS",
-        close: "Close"
+        close: "Close",
+        memo_unlock: "Unlock your wallet in order to see this memo"
     },
     transaction: {
         confirm: "Please confirm the transaction",
@@ -287,7 +306,9 @@
         update_account: "updated their account data",
         set_proxy: "set %(proxy)s as their voting proxy",
         whitelist_account: "Whitelisted the account",
-        whitelisted_by: "Was whitelisted by the account",
+        unlisted_by: "%(lister)s unlisted the account %(listee)s",
+        whitelisted_by: "%(lister)s whitelisted the account %(listee)s",
+        blacklisted_by: "%(lister)s blacklisted the account %(listee)s",
         transfer_account: "Transferred the account",
         update_asset: "Updated the asset",
         update_feed_producers: "pdated the feed producers of asset",
@@ -410,6 +431,12 @@
             symbol3 : "Symbols with 3 Characters",
             symbol4 : "Sybmols with 4 Characters",
             long_symbol : "Longer Symbols"
+        },
+        whitelist_states: {
+            no_listing: "Unlisted",
+            white_listed: "Whitelisted",
+            black_listed: "Blacklisted",
+            white_and_black_listed: "Whitelisted and blacklisted"
         }
     },
     explorer: {
@@ -565,7 +592,8 @@
         faucet_address: "Faucet Address",
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
-        no: "No"
+        no: "No",
+        walletLockTimeout: "Wallet auto-lock time (seconds)"
     },
     footer: {
         title: "OpenLedger",
@@ -625,7 +653,10 @@
         bids: "Bids",
         no_data: "No data",
         time: "Time interval",
-        borrow: "Borrow"
+        borrow: "Borrow",
+        no_balance: "Insufficient balance",
+        invalid_amount: "Invalid amount",
+        invalid_price: "Invalid price"
     },
     fees: {
      title: "Fee Schedule"

@@ -18,7 +18,8 @@ class SettingsStore {
             connection: "wss://bitshares.openledger.info/ws",
             faucet_address: "https://bitshares.openledger.info",
             unit: CORE_ASSET,
-            showSettles: false
+            showSettles: false,
+            walletLockTimeout: 60 * 10
         });
 
         this.viewSettings =  Immutable.Map({
@@ -122,6 +123,9 @@ class SettingsStore {
         );
 
         this._lsSet("settings_v3", this.settings.toJS());
+        if (payload.setting === "walletLockTimeout") {
+            this._lsSet("lockTimeout", payload.value);
+        }
     }
 
     onChangeViewSetting(payload) {

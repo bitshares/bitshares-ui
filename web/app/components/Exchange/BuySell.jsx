@@ -66,8 +66,20 @@ class BuySell extends React.Component {
         let hasBalance = type === "bid" ? balanceAmount >= parseFloat(total) : balanceAmount >= parseFloat(amount);
 
         let buttonText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
-        let buttonClass = classNames("button buySellButton", type, {disabled: !((balanceAmount > 0 && hasBalance) && amount > 0 && price > 0)});
+        let disabled = !((balanceAmount > 0 && hasBalance) && amount > 0 && price > 0);
+
+        let buttonClass = classNames("button buySellButton", type, {disabled: disabled});
         let balanceSymbol = type === "bid" ? base.get("symbol") : quote.get("symbol");
+
+
+        let noBalance = !(balanceAmount > 0 && hasBalance);
+        let invalidPrice = !(price > 0);
+        let invalidAmount = !(amount >0);
+
+        let disabledText = invalidPrice ? counterpart.translate("exchange.invalid_price") :
+                           invalidAmount ? counterpart.translate("exchange.invalid_amount") :
+                           noBalance ? counterpart.translate("exchange.no_balance") :
+                           null;
 
         return (
             <div className={this.props.className + " middle-content"}>
@@ -86,7 +98,7 @@ class BuySell extends React.Component {
                                     {base.get("symbol")}/{quote.get("symbol")}
                                 </div>
                             </div>
-                            
+
                             <div className="grid-block no-padding buy-sell-row">
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                     <Translate content="transfer.amount" />:
@@ -137,11 +149,17 @@ class BuySell extends React.Component {
                                           {currentPrice ? <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}><PriceText price={currentPrice} quote={quote} base={base} />&nbsp;{base.get("symbol")}/{quote.get("symbol")}</span> : null}
                                       </div>
                                   </div>
-                                  <div className="float-right">
-                                    <input className={buttonClass} type="submit" value={buttonText} />
-                                  </div>
+                                    {disabledText ?
+                                        (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                            <input className={buttonClass} type="submit" value={buttonText} />
+                                        </div>) :
+                                        (<div className="float-right">
+                                            <input className={buttonClass} type="submit" value={buttonText} />
+                                        </div>)
+                                    }
+
                               </div>
-                              
+
                         </div>
 
                 </form>

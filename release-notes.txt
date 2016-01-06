@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------
+Release 2.0.160106
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Add tooltips explaining why Buy/Sell buttons are disabled fix #628
+- Add vesting balances page showing all vesting balance objects fix #640
+- Enforce secure websocket connections when using https host fix #638
+- Add tooltip showing full memo #636
+- Add text and unlock button for transfers with memos when wallet is locked #636
+- Wallet auto lock #265
+
+
+BUG FIXES:
+- Incorrect asset listed in "net worth" tooltip #633
+- Persistence of language selection #634
+- Settings screen "Preferred unit of account", wrong asset is selected #626
+- Inconsistent toggle placement between Table View and Card View #613
+- MetaExchange withdraw/deposit page, persist tab state
+- Excel issue with transactions history csv format
+
+---------------------------------------------------------------------
 Release 2.0.151223
 ---------------------------------------------------------------------
 

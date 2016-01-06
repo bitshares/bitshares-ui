@@ -83,7 +83,7 @@ class ModalContent extends React.Component {
 
         let currentBalance = null, balanceAmount = 0;
 
-        account_balances.forEach( balance => {
+        account_balances && account_balances.forEach( balance => {
             let balanceObject = ChainStore.getObject(balance);
             if (!balanceObject.get("balance")) {
                 return null;

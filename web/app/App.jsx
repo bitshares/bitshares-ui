@@ -18,8 +18,10 @@ import AccountAssets from "./components/Account/AccountAssets";
 import AccountAssetCreate from "./components/Account/AccountAssetCreate";
 import AccountAssetUpdate from "./components/Account/AccountAssetUpdate";
 import AccountMembership from "./components/Account/AccountMembership";
+import AccountVesting from "./components/Account/AccountVesting";
 import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPermissions from "./components/Account/AccountPermissions";
+import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
 import Exchange from "./components/Exchange/ExchangeContainer";
@@ -177,6 +179,10 @@ class RootIntl extends React.Component {
         }
     };
 
+    componentDidMount() {
+        IntlActions.switchLocale(this.props.locale);
+    }
+
     render() {
         return <IntlProvider locale={this.props.locale} formats={intlData.formats}><App {...this.props}/></IntlProvider>;
     }
@@ -280,12 +286,13 @@ let routes = (
             <Route name="account-assets" path="assets" component={AccountAssets}/>
             <Route name="account-create-asset" path="create-asset" component={AccountAssetCreate}/>
             <Route name="account-update-asset" path="update-asset/:asset" component={AccountAssetUpdate}/>
-
             <Route name="account-member-stats" path="member-stats" component={AccountMembership}/>
+            <Route path="vesting" component={AccountVesting}/>
             <Route name="account-permissions" path="permissions" component={AccountPermissions}/>
             <Route name="account-voting" path="voting" component={AccountVoting}/>
             <Route name="account-deposit-withdraw" path="deposit-withdraw" component={AccountDepositWithdraw}/>
             <Route name="account-orders" path="orders" component={AccountOrders}/>
+            <Route path="whitelist" component={AccountWhitelist}/>
         </Route>
         <Route name="init-error" path="/init-error" component={InitError}/>
         <Route name="help" path="/help" component={Help}>
