@@ -121,7 +121,6 @@ class Transaction extends React.Component {
                     color = "success";
 
                     let memo_text = null;
-                    console.log("memo:", op[1].memo);
 
                     let lockedWallet = false;
                     if(op[1].memo) {
@@ -131,17 +130,13 @@ class Transaction extends React.Component {
                         let private_key = from_private_key ? from_private_key : to_private_key;
                         let public_key = from_private_key ? memo.to : memo.from;
                         public_key = PublicKey.fromPublicKeyString(public_key)
-                        console.log("from:", from_private_key, "to:", to_private_key, "private_key:", private_key);
                         try {
                             private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
                         }
                         catch(e) {
-                            console.log("e:", e);
                             lockedWallet = true;
                             private_key = null;
                         }
-
-                        console.log("memo_text:", memo_text, private_key);
 
                         try {
                             memo_text = private_key ? Aes.decrypt_with_checksum(
@@ -155,7 +150,6 @@ class Transaction extends React.Component {
                             memo_text = "*";
                         }
                     }
-
 
                     rows.push(
                         <tr>
