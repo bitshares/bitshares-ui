@@ -13,6 +13,8 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
 import account_constants from "chain/account_constants";
+import Icon from "../Icon/Icon";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -94,6 +96,13 @@ class Transaction extends React.Component {
             <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
+    _toggleLock(e) {
+        e.preventDefault();
+        WalletUnlockActions.unlock().then(() => {
+            this.forceUpdate();
+        })
+    }
+
     render() {
         let {trx} = this.props;
         let info = null;
@@ -112,7 +121,9 @@ class Transaction extends React.Component {
                     color = "success";
 
                     let memo_text = null;
+                    console.log("memo:", op[1].memo);
 
+                    let lockedWallet = false;
                     if(op[1].memo) {
                         let memo = op[1].memo;
                         let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
@@ -120,13 +131,18 @@ class Transaction extends React.Component {
                         let private_key = from_private_key ? from_private_key : to_private_key;
                         let public_key = from_private_key ? memo.to : memo.from;
                         public_key = PublicKey.fromPublicKeyString(public_key)
-
+                        console.log("from:", from_private_key, "to:", to_private_key, "private_key:", private_key);
                         try {
                             private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
                         }
                         catch(e) {
+                            console.log("e:", e);
+                            lockedWallet = true;
                             private_key = null;
                         }
+
+                        console.log("memo_text:", memo_text, private_key);
+
                         try {
                             memo_text = private_key ? Aes.decrypt_with_checksum(
                                 private_key,
@@ -139,6 +155,7 @@ class Transaction extends React.Component {
                             memo_text = "*";
                         }
                     }
+
 
                     rows.push(
                         <tr>
@@ -164,6 +181,19 @@ class Transaction extends React.Component {
                             <tr>
                                 <td><Translate content="transfer.memo" /></td>
                                 <td>{memo_text}</td>
+                            </tr>
+                    ) : null}
+
+                    {op[1].memo && lockedWallet ?
+                        rows.push(
+                            <tr>
+                                <td><Translate content="transfer.memo" /></td>
+                                <td>
+                                    <Translate content="transfer.memo_unlock" />&nbsp;
+                                    <a href onClick={this._toggleLock.bind(this)}>
+                                        <Icon name="locked"/>
+                                    </a>
+                                </td>
                             </tr>
                     ) : null}
 

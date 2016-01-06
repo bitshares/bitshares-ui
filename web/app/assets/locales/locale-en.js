@@ -267,7 +267,8 @@
         broadcast: "Your transfer has been broadcast to the network",
         again: "MAKE ANOTHER TRANSFER",
         see: "SEE MY TRANSFERS",
-        close: "Close"
+        close: "Close",
+        memo_unlock: "Unlock your wallet in order to see this memo"
     },
     transaction: {
         confirm: "Please confirm the transaction",

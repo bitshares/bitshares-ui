@@ -19,6 +19,8 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import ChainStore from "api/ChainStore";
 import account_constants from "chain/account_constants";
+import Icon from "../Icon/Icon";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 require("./operations.scss");
 
@@ -125,6 +127,13 @@ class Operation extends React.Component {
             <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
+    _toggleLock(e) {
+        e.preventDefault();
+        WalletUnlockActions.unlock().then(() => {
+            this.forceUpdate();
+        })
+    }
+
     render() {
         let {op, current, block} = this.props;
         let line = null, column = null, color = "info";
@@ -133,7 +142,7 @@ class Operation extends React.Component {
 
             case "transfer":
                 let memo_text = null;
-
+                let lockedWallet = false;
                 if(op[1].memo) {
                     let memo = op[1].memo;
                     let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
@@ -146,6 +155,7 @@ class Operation extends React.Component {
                         private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
                     }
                     catch(e) {
+                        lockedWallet = true;
                         private_key = null;
                     }
                     try {
@@ -169,36 +179,29 @@ class Operation extends React.Component {
                     memo_text = memo_text.substr(0, 35) + "...";
                 }
 
-                // if (current === op[1].from) {
+                let memoComponent = op[1].memo && lockedWallet ? (
+                    <div className="memo">
+                        <Translate content="transfer.memo_unlock" />&nbsp;
+                        <a href onClick={this._toggleLock.bind(this)}>
+                            <Icon name="locked"/>
+                        </a>
+                    </div>) : memo_text ? (
+                        <div className="memo">
+                            <span data-tip={full_memo} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>
+                                {memo_text}
+                            </span>
+                        </div>
+                    ) : null;
 
-                //     column = (
-                //         <span>
-                //             <Translate component="span" content="transaction.sent" />
-                //             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                //             &nbsp;<Translate component="span" content="transaction.to" /> {this.linkToAccount(op[1].to)}
-                //             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                //         </span>
-                //     );
-                // } else if(current === op[1].to){
-                //     column = (
-                //         <span key={"transfer_" + this.props.key} className="right-td">
-                //             <Translate component="span" content="transaction.received"/>
-                //             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                //             &nbsp;<Translate component="span" content="transaction.from"/> {this.linkToAccount(op[1].from)}
-                //             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                //         </span>
-                //     );
-                // } else {
-                    column = (
-                        <span key={"transfer_" + this.props.key} className="right-td">
-                            {this.linkToAccount(op[1].from)}
-                            &nbsp;<Translate component="span" content="transaction.sent"/>
-                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                            &nbsp;<Translate component="span" content="transaction.to"/> {this.linkToAccount(op[1].to)}
-                            {memo_text ? <div className="memo"><span data-tip={full_memo} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>{memo_text}</span></div> : null}
-                        </span>
-                    );
-                // }
+                column = (
+                    <span key={"transfer_" + this.props.key} className="right-td">
+                        {this.linkToAccount(op[1].from)}
+                        &nbsp;<Translate component="span" content="transaction.sent"/>
+                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
+                        &nbsp;<Translate component="span" content="transaction.to"/> {this.linkToAccount(op[1].to)}
+                        {memoComponent}
+                    </span>
+                );
 
                 break;
 
