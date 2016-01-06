@@ -188,7 +188,7 @@ class AccountWhitelist extends React.Component {
                                     white={true}
                                 />
                             </div>
-                            <p className="has-error">Due to a bug in the witness node, this list is currently always empty. It does work however, you just won't see your whitelisted accounts.</p>
+                            {!account.get("whitelisted_accounts") ? <p className="has-error">Due to a bug in the witness node, this list is currently always empty. It does work however, you just won't see your whitelisted accounts.</p> : null}
                             <div style={{padding: "2rem 0"}}>
                                 <AccountSelector
                                     label={"account.whitelist.add"}
