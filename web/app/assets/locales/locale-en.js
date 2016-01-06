@@ -592,7 +592,8 @@
         faucet_address: "Faucet Address",
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
-        no: "No"
+        no: "No",
+        walletLockTimeout: "Wallet auto-lock time (seconds)"
     },
     footer: {
         title: "Graphene",

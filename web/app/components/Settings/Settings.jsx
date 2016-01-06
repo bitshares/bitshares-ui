@@ -64,6 +64,11 @@ class SettingsEntry extends React.Component {
 
                 break;
 
+            case "walletLockTimeout":
+                value = selected;
+                input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>
+                break;
+
             default:
 
                 if (typeof selected === "number") {
@@ -164,6 +169,13 @@ class Settings extends React.Component {
             case "defaultMarkets":
                 break;
 
+            case "walletLockTimeout":
+                let newValue = parseInt(e.target.value, 10);
+                if (newValue && !isNaN(newValue) && typeof newValue === "number") {
+                    SettingsActions.changeSetting({setting: "walletLockTimeout", value: e.target.value });
+                }
+                break;
+
             case "inverseMarket":
             case "confirmMarketOrder":
                 value = findEntry(e.target.value, defaults[setting]) === 0; // USD/BTS is true, BTS/USD is false
@@ -197,8 +209,8 @@ class Settings extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block main-content small-12 medium-8 medium-offset-2 large-6 large-offset-3">
-                    <div className="grid-content no-overflow">
+                <div className="grid-block main-content small-12 medium-10 medium-offset-1 large-6 large-offset-3">
+                    <div className="grid-content">
                         {settings.map((value, setting) => {
                             return (
                                 <SettingsEntry
