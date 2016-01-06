@@ -163,8 +163,9 @@ class Operation extends React.Component {
 
                 color = "success";
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
-
+                let full_memo = memo_text;
                 if (memo_text && memo_text.length > 35) {
+
                     memo_text = memo_text.substr(0, 35) + "...";
                 }
 
@@ -194,7 +195,7 @@ class Operation extends React.Component {
                             &nbsp;<Translate component="span" content="transaction.sent"/>
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
                             &nbsp;<Translate component="span" content="transaction.to"/> {this.linkToAccount(op[1].to)}
-                            {memo_text ? <div className="memo">{memo_text}</div> : null}
+                            {memo_text ? <div className="memo"><span data-tip={full_memo} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>{memo_text}</span></div> : null}
                         </span>
                     );
                 // }
