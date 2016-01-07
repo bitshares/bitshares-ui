@@ -267,7 +267,8 @@
         broadcast: "Transfer işleminiz yayınlanmıştır",
         again: "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
         see: "TRANSFER İŞLEMLERİMİ GÖR",
-        close: "Kapat"
+        close: "Kapalı",
+        memo_unlock: "Bu memoyu görebilmek için cüzdanın kilidini açın"
     },
     transaction: {
         confirm: "Lütfen işlemi teyit et",
@@ -591,7 +592,8 @@
         faucet_address: "Musluk Adresi",
         showSettles: "Ödeme emirlerini derinlik tablosunda gösterin ",
         yes: "Evet",
-        no: "Hayır"
+        no: "Hayır",
+        walletLockTimeout: "Cüzdan oto-kilit süresi (saniyeler)"
     },
     footer: {
         title: "Graphene",
