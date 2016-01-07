@@ -17,7 +17,6 @@ import Icon from "../Icon/Icon";
 import ChainStore from "api/ChainStore";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
-import counterpart from "counterpart";
 
 let lastLookup = new Date();
 
@@ -25,7 +24,8 @@ let lastLookup = new Date();
 class AccountsList extends React.Component {
 
     static propTypes = {
-        accounts: ChainTypes.ChainAccountsList.isRequired
+        accounts: ChainTypes.ChainAccountsList.isRequired,
+        dashboardFilter: React.PropTypes.string
     };
 
     static contextTypes = {
@@ -33,7 +33,8 @@ class AccountsList extends React.Component {
     };
 
     static defaultProps = {
-        width: 2000
+        width: 2000,
+        dashboardFilter: ""
     };
 
     constructor(props) {
@@ -46,8 +47,7 @@ class AccountsList extends React.Component {
 
         this.state = {
             inverseSort: props.viewSettings.get("dashboardSortInverse") || true,
-            sortBy: props.viewSettings.get("dashboardSort") || "star",
-            dashboardFilter: props.viewSettings.get("dashboardFilter") || ""
+            sortBy: props.viewSettings.get("dashboardSort") || "star"
         };
 
     }
@@ -55,6 +55,7 @@ class AccountsList extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+            !nextProps.dashboardFilter !== this.props.dashboardFilter ||
             nextProps.width !== this.props.width ||
             !utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
             !utils.are_equal_shallow(nextState, this.state)
@@ -74,14 +75,6 @@ class AccountsList extends React.Component {
         this.context.history.pushState(null, `/account/${name}`);
     }
 
-    _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
-
-        SettingsActions.changeViewSetting({
-            dashboardFilter: e.target.value.toUpperCase()
-        });
-    }
-
     _setSort(field) {
         let inverse = field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort;
         this.setState({
@@ -97,7 +90,7 @@ class AccountsList extends React.Component {
 
     render() {
         let {width, starredAccounts} = this.props;
-        let {dashboardFilter, sortBy, inverseSort} = this.state;
+        let {sortBy, inverseSort} = this.state;
         let balanceList = Immutable.List();
 
         let starSort = function(a, b, inverse) {
@@ -124,7 +117,7 @@ class AccountsList extends React.Component {
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+            return a.get("name").toUpperCase().indexOf(this.props.dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -190,9 +183,9 @@ class AccountsList extends React.Component {
 
                 return (
                     <tr key={accountName}>
-                        <td onClick={this._onStar.bind(this, accountName, isStarred)}>
+                        {/*<td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
-                        </td>
+                        </td>*/}
                         <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
                             {accountName}
                         </td>
@@ -214,17 +207,12 @@ class AccountsList extends React.Component {
             }
         });
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
-
         return (
             <div>
-                <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
-                    <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                </div>
                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
                     <thead>
                         <tr>
-                            <th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
+                            {/*<th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>*/}
                             <th onClick={this._setSort.bind(this, 'name')} className="clickable"><Translate content="header.account" /></th>
                             <th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
                             {width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}

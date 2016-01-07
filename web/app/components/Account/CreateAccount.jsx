@@ -6,7 +6,7 @@ import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
-import notify from 'actions/NotificationActions';
+import notify from "actions/NotificationActions";
 import {Link} from "react-router";
 import AccountImage from "./AccountImage";
 import AccountSelect from "../Forms/AccountSelect";
@@ -22,11 +22,11 @@ import {TransitionMotion, spring} from 'react-motion';
 class CreateAccount extends React.Component {
 
     static getStores() {
-        return [AccountStore]
+        return [AccountStore];
     }
 
     static getPropsFromStores() {
-        return {}
+        return {};
     }
 
     constructor() {
@@ -246,7 +246,7 @@ class CreateAccount extends React.Component {
                                         <br/>
                                     </div>
                                 }
-                                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
+                                {this.state.loading ? <LoadingIndicator type="three-bounce"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
                                 <br/>
                                 <br/>
                                 <label className="inline"><Link to="/existing-account"><Translate content="account.existing_accounts" /></Link></label>

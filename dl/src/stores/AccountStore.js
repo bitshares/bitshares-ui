@@ -25,7 +25,8 @@ class AccountStore extends BaseStore {
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
-            // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
+            onAddPrivateAccount: AccountActions.addPrivateAccount,
+            onAddPrivateContact: AccountActions.addPrivateContact
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
             "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
@@ -39,7 +40,9 @@ class AccountStore extends BaseStore {
             currentAccount: null,
             linkedAccounts: Immutable.Set(),
             searchAccounts: Immutable.Map(),
-            searchTerm: ""
+            searchTerm: "",
+            privateAccounts: Immutable.Set(),
+            privateContacts: Immutable.Set()
         }
     }
     
@@ -247,6 +250,14 @@ class AccountStore extends BaseStore {
         if (this.state.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
         }
+    }
+
+    onAddPrivateAccount(name) {
+        this.state.privateAccounts = this.state.privateAccounts.add(name);
+    }
+
+    onAddPrivateContact(name) {
+        this.state.privateContacts = this.state.privateContacts.add(name);
     }
     
 }

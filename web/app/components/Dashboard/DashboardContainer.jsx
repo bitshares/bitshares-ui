@@ -18,8 +18,13 @@ class DashboardContainer extends React.Component {
                 },
                 /** the dashboard only really needs the list of accounts */
                 linkedAccounts: () => {
-                    //console.log( "Linked Accounts: ", AccountStore.getState().linkedAccounts,  AccountStore.getState().linkedAccounts.toJS() );
                     return AccountStore.getState().linkedAccounts;
+                },
+                privateAccounts: () => {
+                    return AccountStore.getState().privateAccounts;
+                },
+                privateContacts: () => {
+                    return AccountStore.getState().privateContacts;
                 }
               }}>
                 <Dashboard/>
