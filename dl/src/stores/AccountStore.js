@@ -26,7 +26,8 @@ class AccountStore extends BaseStore {
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
             onAddPrivateAccount: AccountActions.addPrivateAccount,
-            onAddPrivateContact: AccountActions.addPrivateContact
+            onAddPrivateContact: AccountActions.addPrivateContact,
+            onRemovePrivateContact: AccountActions.removePrivateContact
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
             "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
@@ -259,7 +260,10 @@ class AccountStore extends BaseStore {
     onAddPrivateContact(name) {
         this.state.privateContacts = this.state.privateContacts.add(name);
     }
-    
+
+    onRemovePrivateContact(name) {
+        this.state.privateContacts = this.state.privateContacts.remove(name);
+    }
 }
 
 export default alt.createStore(AccountStore, "AccountStore");

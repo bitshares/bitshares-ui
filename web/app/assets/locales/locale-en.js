@@ -41,6 +41,7 @@
         hour_24: "24hr Change",
         recent: "Recent activity",
         name: "Account name",
+        label: "Label",
         id: "Account ID",
         more: "see more",
         deposit_withdraw: "Deposit/Withdraw",

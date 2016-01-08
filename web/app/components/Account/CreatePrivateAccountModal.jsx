@@ -2,6 +2,8 @@ import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Modal from "react-foundation-apps/src/modal";
 import AccountActions from "actions/AccountActions";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import AccountNameInput from "../Forms/AccountNameInput";
 
 class CreatePrivateAccountModal extends React.Component {
 
@@ -12,15 +14,21 @@ class CreatePrivateAccountModal extends React.Component {
         this._onLabelChange = this._onLabelChange.bind(this);
     }
 
+    clear() {
+        this.refs.label.clear();
+        this.setState({label: ""});
+    }
+
     _onCreateClick() {
         console.log("-- CreatePrivateAccountModal._onCreateClick -->");
         AccountActions.addPrivateAccount(this.state.label);
+        ZfApi.publish("add_private_account_modal", "close");
     }
 
-    _onLabelChange(e) {
-        this.setState({
-            label: e.target.value
-        });
+    _onLabelChange({value}) {
+        if (!value) return;
+        console.log("-- CreatePrivateAccountModal._onLabelChange -->",  value);
+        this.setState({label: value});
     }
 
     render() {
@@ -31,10 +39,11 @@ class CreatePrivateAccountModal extends React.Component {
             <h3>Create Private Account</h3>
             <form style={{paddingTop: "1rem"}}>
                 <div className="form-group">
-                    <label>
-                        Label
-                        <input type="text" value={this.state.label} onChange={this._onLabelChange}/>
-                    </label>
+                    <AccountNameInput ref="label" cheapNameOnly={false}
+                                      onChange={this._onLabelChange}
+                                      accountShouldNotExist={false}
+                                      labelMode
+                    />
                 </div>
                 <div className="form-group">
                     <label>

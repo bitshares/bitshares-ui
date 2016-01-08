@@ -19,7 +19,8 @@ class AccountNameInput extends BaseComponent {
         onEnter: PropTypes.func,
         accountShouldExist: PropTypes.bool,
         accountShouldNotExist: PropTypes.bool,
-        cheapNameOnly: PropTypes.bool
+        cheapNameOnly: PropTypes.bool,
+        labelMode: PropTypes.bool
     };
 
     constructor(props) {
@@ -52,7 +53,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     clear() {
-        this.setState({ account_name: null, error: null, warning: null })
+        this.setState({ account_name: null, error: null, warning: null });
     }
 
     focus() {
@@ -87,10 +88,10 @@ class AccountNameInput extends BaseComponent {
 
         this.state.warning = null
         if(this.props.cheapNameOnly) {
-            if( ! this.state.error && ! validation.is_cheap_name( value ))
+            if( !this.state.error && !validation.is_cheap_name( value ))
                 this.state.error = counterpart.translate("account.name_input.premium_name_faucet");
         } else {
-            if( ! this.state.error && ! validation.is_cheap_name( value ))
+            if( !this.props.labelMode && !this.state.error && !validation.is_cheap_name( value ))
                 this.state.warning = counterpart.translate("account.name_input.premium_name_warning");
         }
         this.setState({value: value, error: this.state.error, warning: this.state.warning});
@@ -107,7 +108,6 @@ class AccountNameInput extends BaseComponent {
         account_name = account_name ? account_name[0] : null
         this.setState({ account_name })
         this.validateAccountName(account_name);
-
     }
 
     onKeyDown(e) {
@@ -117,10 +117,11 @@ class AccountNameInput extends BaseComponent {
     render() {
         let error = this.getError() || "";
         let class_name = classNames("form-group", "account-name", {"has-error": false});
-        let warning = this.state.warning
+        let warning = this.state.warning;
+        const label_content_key = this.props.labelMode ? "account.label" : "account.name";
         return (
             <div className={class_name}>
-                <label><Translate content="account.name" /></label>
+                <label><Translate content={label_content_key}/></label>
                 <input name="value" type="text" id={this.props.id} ref="input" autoComplete="off"
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}

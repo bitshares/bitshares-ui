@@ -74,7 +74,8 @@ class PriceChart extends React.Component {
         }
 
         let latestCheck = false;
-        if ((nextProps.priceData && !nextProps.priceData.length) && this.props.latest) {
+        console.log("-- PriceChart.shouldComponentUpdate -->", nextProps);
+        if ((nextProps.priceData && !nextProps.priceData.length) && this.props.latest && nextProps.latest) {
             latestCheck = nextProps.latest.full !== this.props.latest.full;
         }
         return (

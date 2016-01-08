@@ -25,7 +25,9 @@ class AccountsList extends React.Component {
 
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired,
-        dashboardFilter: React.PropTypes.string
+        dashboardFilter: React.PropTypes.string,
+        myAccountsOnly: React.PropTypes.bool,
+        notMyAccountsOnly: React.PropTypes.bool
     };
 
     static contextTypes = {
@@ -34,7 +36,9 @@ class AccountsList extends React.Component {
 
     static defaultProps = {
         width: 2000,
-        dashboardFilter: ""
+        dashboardFilter: "",
+        myAccountsOnly: false,
+        notMyAccountsOnly: false
     };
 
     constructor(props) {
@@ -112,12 +116,14 @@ class AccountsList extends React.Component {
                     return utils.sortText(aName, bName, !inverse);
                 }
             }
-        }
-        
+        };
+
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(this.props.dashboardFilter) !== -1;
+            if (this.props.myAccountsOnly && !AccountStore.isMyAccount(a)) return false;
+            if (this.props.notMyAccountsOnly && AccountStore.isMyAccount(a)) return false;
+            return a.get("name").indexOf(this.props.dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -186,7 +192,7 @@ class AccountsList extends React.Component {
                         {/*<td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
                         </td>*/}
-                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
+                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""}>
                             {accountName}
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
@@ -202,14 +208,13 @@ class AccountsList extends React.Component {
                             <TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
                         </td>
                     </tr>
-
                 )
             }
         });
 
         return (
             <div>
-                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
+                <table className="table table-hover">
                     <thead>
                         <tr>
                             {/*<th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>*/}

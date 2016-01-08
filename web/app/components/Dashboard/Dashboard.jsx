@@ -11,6 +11,8 @@ import ReactTooltip from "react-tooltip";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import CreatePrivateAccountModal from "../Account/CreatePrivateAccountModal";
 import CreatePrivateContactModal from "../Account/CreatePrivateContactModal";
+import AccountActions from "actions/AccountActions";
+import Icon from "../Icon/Icon";
 
 class Dashboard extends React.Component {
 
@@ -28,7 +30,6 @@ class Dashboard extends React.Component {
         this._addPublicAccount = this._addPublicAccount.bind(this);
         this._addPrivateAccount = this._addPrivateAccount.bind(this);
         this._addPrivateContact = this._addPrivateContact.bind(this);
-        this._onCreatePrivateContactClick = this._onCreatePrivateContactClick.bind(this);
     }
 
 
@@ -64,14 +65,10 @@ class Dashboard extends React.Component {
     }
 
     _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
-
-        //SettingsActions.changeViewSetting({
-        //    dashboardFilter: e.target.value.toUpperCase()
-        //});
+        this.setState({dashboardFilter: e.target.value});
     }
 
-    _addPublicAccount(e) {
+    _addPublicAccount() {
         console.log("-- Dashboard._addPublicAccount -->");
         ReactTooltip.hide();
         this.context.history.pushState(null, "/create-account");
@@ -79,16 +76,36 @@ class Dashboard extends React.Component {
 
     _addPrivateAccount() {
         console.log("-- Dashboard._addPrivateAccount -->");
+        this.refs.CreatePrivateAccountModal.clear();
         ZfApi.publish("add_private_account_modal", "open");
     }
 
     _addPrivateContact() {
         console.log("-- Dashboard._addPrivateContact -->");
+        this.refs.CreatePrivateContactModal.clear();
         ZfApi.publish("add_private_contact_modal", "open");
     }
 
-    _onCreatePrivateContactClick() {
-        console.log("-- Dashboard._onCreatePrivateContactClick -->");
+    _removePrivateContact(name) {
+        console.log("-- Dashboard._removePrivateContact -->", name);
+        ReactTooltip.hide();
+        AccountActions.removePrivateContact(name);
+    }
+
+    _selectElementText(el) {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    _copyToClipboard(name, e) {
+        e.preventDefault();
+        const el =  this.refs["$name$" + name];
+        this._selectElementText(el);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
     }
 
     render() {
@@ -101,7 +118,8 @@ class Dashboard extends React.Component {
         let outerClass = "grid-block page-layout no-overflow " + (width < 750 ? "vertical" : "horizontal");
         let firstDiv = "grid-content no-overflow " + (width < 750 ? "" : "shrink");
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
+        const df = this.state.dashboardFilter;
+        const filterText = counterpart.translate("markets.filter");
 
         return (
             <div className={outerClass}>
@@ -109,33 +127,63 @@ class Dashboard extends React.Component {
                 <div className={firstDiv} style={{minWidth: "50%"}}>
                     <div className="content-block">
                         <br/>
-                        <input placeholder={filterText} type="text" value={this.state.dashboardFilter} onChange={this._onFilter.bind(this)} />
+                        <input placeholder={filterText} type="text" value={df} onChange={this._onFilter.bind(this)} />
                     </div>
 
                     <div ref="container" className="content-block">
                         <button className="button outline float-right" onClick={this._addPublicAccount} data-tip="Add Public Account" data-type="light">+</button>
                         <h4>Public Accounts</h4>
-                        <AccountsList accounts={public_accounts} width={width} dashboardFilter={this.state.dashboardFilter}/>
+                        <AccountsList accounts={public_accounts} width={width} dashboardFilter={df} myAccountsOnly/>
                     </div>
                     <div ref="container" className="content-block">
                         <button className="button outline float-right" onClick={this._addPrivateAccount} data-tip="Add Private Account" data-type="light">+</button>
                         <h4>Private Accounts</h4>
-                        <table>
+                        <table className="table table-hover">
+                            <thead>
+                            <tr>
+                                <th><Translate content="header.account" /></th>
+                                <th width="48px">COPY</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             {
-                                private_accounts.map(name => {
-                                    return <tr><td>{name}</td></tr>;
+                                private_accounts.filter(name => name.indexOf(df) !== -1).map(name => {
+                                    return (<tr key={name}>
+                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name}</td>
+                                        <td><a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                    </tr>);
                                 })
                             }
+                            </tbody>
                         </table>
                     </div>
                     <div ref="container" className="content-block">
                         <button className="button outline float-right" onClick={this._addPrivateContact} data-tip="Add Private Contact" data-type="light">+</button>
                         <h4>Private Contacts</h4>
-                        <AccountsList accounts={private_contacts} width={width} dashboardFilter={this.state.dashboardFilter}/>
+                        <table className="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><Translate content="header.account" /></th>
+                                    <th width="48px">COPY</th>
+                                    <th width="48px">REMOVE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                private_contacts.filter(name => name.indexOf(df) !== -1).map(name => {
+                                    return (<tr key={name}>
+                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name}</td>
+                                        <td><a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td><button className="button outline" onClick={this._removePrivateContact.bind(this, name)} data-tip="Remove Contact" data-type="light">-</button></td>
+                                    </tr>);
+                                })
+                            }
+                            </tbody>
+                        </table>
                     </div>
                     <div ref="container" className="content-block">
                         <h4>Following</h4>
-                        <AccountsList accounts={public_accounts} width={width} dashboardFilter={this.state.dashboardFilter}/>
+                        <AccountsList accounts={public_accounts} width={width} dashboardFilter={this.state.dashboardFilter} notMyAccountsOnly/>
                     </div>
                 </div>
 
@@ -145,8 +193,8 @@ class Dashboard extends React.Component {
                     </div>
                 </div>
 
-                <CreatePrivateAccountModal />
-                <CreatePrivateContactModal />
+                <CreatePrivateAccountModal ref="CreatePrivateAccountModal"/>
+                <CreatePrivateContactModal ref="CreatePrivateContactModal"/>
 
             </div>);
     }

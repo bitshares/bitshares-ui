@@ -119,6 +119,10 @@ class AccountActions {
     addPrivateContact(name) {
         this.dispatch(name);
     }
+
+    removePrivateContact(name) {
+        this.dispatch(name);
+    }
 }
 
 export default alt.createActions(AccountActions);
