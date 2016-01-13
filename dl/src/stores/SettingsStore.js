@@ -61,7 +61,11 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
-                "wss://bitshares.openledger.info/ws"
+                "wss://bitshares.openledger.info/ws",
+                "wss://bitshares.dacplay.org:8089",
+                "ws://185.82.203.92:8090", //RiverHead
+                "ws://128.199.143.47:2016", //Harvey
+                "ws://139.196.37.179:8090" //BTSDac
             ],
             unit: [
                 CORE_ASSET,
