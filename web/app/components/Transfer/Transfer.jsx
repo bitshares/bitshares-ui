@@ -2,6 +2,7 @@ import React from "react";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountSelect from "../Forms/AccountSelect";
 import AccountSelector from "../Account/AccountSelector";
 import AccountStore from "stores/AccountStore";
@@ -12,6 +13,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import ChainStore from "api/ChainStore";
+import TransferReceiptModal from "../Stealth/TransferReceiptModal";
 
 class Transfer extends React.Component {
 
@@ -285,8 +287,10 @@ class Transfer extends React.Component {
 
                     {/* TODO: show remaining balance */}
 
-                </div>
+                    <a className="float-right" href onClick={(e) => {e.preventDefault(); ZfApi.publish("transfer_receipt_modal", "open")} }>Show Transfer Receipt</a>
 
+                </div>
+                <TransferReceiptModal value="fdlksjf ldksjflkdsjflkdsj dslkjf lksdjflksd fkljsd klsdl"/>
             </form>
             <div className="grid-content medium-6 right-column">
                 <div className="grid-content">

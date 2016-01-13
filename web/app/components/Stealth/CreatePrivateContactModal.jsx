@@ -30,17 +30,17 @@ class CreatePrivateContactModal extends React.Component {
 
     _onLabelChange({value}) {
         if (!value) return;
-        console.log("-- CreatePrivateAccountModal._onLabelChange -->",  value);
+        console.log("-- CreatePrivateAccountModal._onLabelChange -->", value);
         this.setState({label: value});
     }
 
     _onPayFromChange(account) {
-        console.log("-- CreatePrivateContactModal._onPayFromChange -->", e);
+        console.log("-- CreatePrivateContactModal._onPayFromChange -->", account);
     }
 
     render() {
         let my_accounts = AccountStore.getMyAccounts();
-        return (<Modal id="add_private_contact_modal" overlay={true}>
+        return (<Modal id="add_private_contact_modal" overlay>
             <Trigger close="add_private_contact_modal">
                 <a href="#" className="close-button">&times;</a>
             </Trigger>

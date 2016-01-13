@@ -238,7 +238,10 @@
         propose_from: "Propose From",
         settle: "Settle",
         "no_orders": "No open orders",
-        asset_details: "Asset details"
+        asset_details: "Asset details",
+        private_key: "Private Key",
+        public_key: "Public Key",
+        receive: "Receive"
     },
     pagination: {
         newer: "Newer",

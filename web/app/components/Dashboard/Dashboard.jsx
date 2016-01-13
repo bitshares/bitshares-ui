@@ -9,8 +9,8 @@ import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import CreatePrivateAccountModal from "../Account/CreatePrivateAccountModal";
-import CreatePrivateContactModal from "../Account/CreatePrivateContactModal";
+import CreatePrivateAccountModal from "../Stealth/CreatePrivateAccountModal";
+import CreatePrivateContactModal from "../Stealth/CreatePrivateContactModal";
 import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
 
