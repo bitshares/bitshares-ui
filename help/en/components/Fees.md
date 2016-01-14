@@ -8,5 +8,3 @@ convinced to reduce a certain fee and consensus is reached, the fee will be
 reduced automatically by the blockchain. Changes of blockchain parameters are
 proposed by members of the committee. These members are voted by shareholders
 and improve the flexibility and reaction rate.
-
-\* Require Lifetime/Anual Membership

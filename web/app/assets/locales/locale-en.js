@@ -575,6 +575,13 @@
         },
         account: {
             title: "Account"
+        },
+        fees: {
+            type: "Fee Type",
+            fee: "Standard Fee",
+            feeeq: "(equivalent)",
+            feeltm: "Lifetime/Anual Member Fee",
+            feeltmeq: "(equivalent)",
         }
     },
     settings: {
