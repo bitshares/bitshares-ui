@@ -28,14 +28,18 @@ class FeeItem extends React.Component {
 
         let assetAmount = amount ? <FormattedAsset amount={amount} asset="1.3.0"/> : feeTypes["_none"];
         let equivalentAmount = amount ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount} toAsset={this.props.preferredUnit}/> : feeTypes["_none"];
+        let assetAmountLTM = amount*0.2 ? <FormattedAsset amount={amount*0.2} asset="1.3.0"/> : feeTypes["_none"];
+        let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={this.props.preferredUnit}/> : feeTypes["_none"];
 
         let feeType = feeTypes[this.props.name]
 
         return (
                 <tr>
-                    <td style={{width:"30%"}}>{feeType}</td>
-                    <td style={{width:"30%", textAlign: "right"}}>{assetAmount}</td>
-                    <td style={{width:"30%", textAlign: "right"}}>{equivalentAmount}</td>
+                    <td style={{width:"20%"}}>{feeType}</td>
+                    <td style={{width:"20%", textAlign: "right"}}>{assetAmount}</td>
+                    <td style={{width:"20%", textAlign: "right"}}>{equivalentAmount}</td>
+                    <td style={{width:"20%", textAlign: "right"}}>{assetAmountLTM}*</td>
+                    <td style={{width:"20%", textAlign: "right"}}>{equivalentAmountLTM}*</td>
                 </tr>
                );
     }
@@ -103,7 +107,7 @@ class FeeGroup extends React.Component {
             let feeStruct = feesRaw[feeIdx];
 
             let opId      = feeStruct[0]
-            let feeObejct = feeStruct[1]
+            let feeObject = feeStruct[1]
             let operation_name = ops[ opId ];
             let feename        = trxTypes[ operation_name ];
 
@@ -114,7 +118,7 @@ class FeeGroup extends React.Component {
                           {feename}
                          </span>
                         </td>
-                        <td><FeeList fee={feeObejct} scale={scale} preferredUnit={preferredUnit} /></td>
+                        <td><FeeList fee={feeObject} scale={scale} preferredUnit={preferredUnit} /></td>
                     </tr>
                 );
         })
@@ -153,18 +157,18 @@ class Fees extends React.Component {
         }
 
         return(
-               <div className="grid-block page-layout vertical medium-horizontal" >
+            <div className="grid-block page-layout">
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
-                  <div className="grid-block small-12" style={{ overflow:"visible"}}>
-                    <HelpContent path = {"components/Fees"} />
-                  </div>
-                  <div className="grid-block small-12 " style={{overflow:"visible"}}>
-                   <div className="grid-content">
-                    {feeGroups}
-                   </div>
-                  </div>
+                    <div className="grid-block small-12 shrink" style={{ overflow:"visible"}}>
+                      <HelpContent path = {"components/Fees"} />
+                    </div>
+                    <div className="grid-block small-12 " style={{overflow:"visible"}}>
+                     <div className="grid-content">
+                      {feeGroups}
+                     </div>
+                    </div>
                 </div>
-               </div>
+            </div>
         );
     }
 }
