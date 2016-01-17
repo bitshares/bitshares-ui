@@ -180,12 +180,13 @@
             add_committee: "Add",
             add_committee_label: "Committee Member",
             add_witness_label: "Witness",
-            approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal",
+            approve_worker: "Approve",
+            reject_worker: "Reject",
             worker_account: "Worker account",
-            total_votes: "Total votes",
+            total_votes: "Net votes",
             votes_against: "Votes against",
-            daily_pay: "Daily pay",
+            daily_pay: "Pay",
+            daily: "daily",
             max_pay: "Maximum total pay",
             unclaimed: "Unclaimed pay",
             status: {
@@ -195,7 +196,12 @@
                 neutral: "Neutral"
             },
             start: "Start date",
-            end: "End date"
+            end: "End date",
+            creator: "Creator",
+            recycled: "Recycled",
+            funding: "Funding",
+            total_budget: "Total available worker budget",
+            unused_budget: "Unused worker budget",
         },
         options: {
             num_witnesses: "Desired Witnesses",

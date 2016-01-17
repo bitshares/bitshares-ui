@@ -19,10 +19,24 @@ import AccountsList from "./AccountsList";
 import HelpContent from "../Utility/HelpContent";
 import cnames from "classnames";
 import Tabs, {Tab} from "../Utility/Tabs";
+import FormattedAsset from "../Utility/FormattedAsset";
+import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "../Utility/ChainTypes";
 
 let wallet_api = new WalletApi()
 
+@BindToChainState()
 class AccountVoting extends React.Component {
+   
+    static propTypes = {
+      initialBudget: ChainTypes.ChainObject.isRequired,
+      globalObject: ChainTypes.ChainObject.isRequired
+    };
+
+    static defaultProps = {
+        initialBudget: "2.13.1",
+        globalObject: "2.0.0"
+    };
 
     constructor(props) {
         super(props);
@@ -30,7 +44,8 @@ class AccountVoting extends React.Component {
             proxy_account_id: "",//"1.2.16",
             witnesses: null,
             committee: null,
-            vote_ids: Immutable.Set()
+            vote_ids: Immutable.Set(),
+            lastBudgetObject: null
         };
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -87,10 +102,18 @@ class AccountVoting extends React.Component {
 
     componentWillMount() {
         this.updateAccountData(this.props.account);
+        this.getBudgetObject();
+    }
+
+    componentDidMount() {
+        this.getBudgetObject();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.account !== this.props.account) this.updateAccountData(nextProps.account);
+        if (nextProps.account !== this.props.account) {
+            this.updateAccountData(nextProps.account);
+        }
+        this.getBudgetObject();
     }
 
     onPublish() {
@@ -101,7 +124,7 @@ class AccountVoting extends React.Component {
         updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         updated_account.new_options.num_witness = this.state.witnesses.size;
         updated_account.new_options.num_committee = this.state.committee.size;
-        console.log( "vote_ids: ", this.state.vote_ids.toJS() );
+        // console.log( "vote_ids: ", this.state.vote_ids.toJS() );
         FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
             let witnesses_vote_ids = res.map(o => o.get("vote_id"));
             return Promise.all([Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)]);
@@ -110,7 +133,7 @@ class AccountVoting extends React.Component {
                 .concat(res[1].map(o => o.get("vote_id")))
                 .concat(this.state.vote_ids.filter( id => id.split(":")[0] === "2" ).toArray() )
                 .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
-            console.log("updated_account: ", updated_account);
+            // console.log("updated_account: ", updated_account);
             var tr = wallet_api.new_transaction();
             tr.add_type_operation("account_update", updated_account);
             WalletDb.process_transaction(tr, null, true);
@@ -140,11 +163,15 @@ class AccountVoting extends React.Component {
         this.setState(state);
     }
     onAddVoteID( vote_id ) {
-      let state={}
-      state.vote_ids = this.state.vote_ids.add(vote_id);
-      this.setState(state);
+      let state={};
+      if (!this.state.vote_ids.has(vote_id)) {
+          state.vote_ids = this.state.vote_ids.add(vote_id);
+          this.setState(state);
+      }
     }
+
     onRemoveVoteID( vote_id ) {
+        // console.log("onRemoveVoteID:", this.state.vote_ids.toJS(), vote_id);
       let state={}
       state.vote_ids = this.state.vote_ids.delete(vote_id);
       this.setState(state);
@@ -180,12 +207,62 @@ class AccountVoting extends React.Component {
         });
     }
 
+    _getTotalVotes(worker) {
+        return parseInt(worker.get("total_votes_for"), 10) - parseInt(worker.get("total_votes_against"), 10);
+    }
+
+    getBudgetObject() {
+        let {lastBudgetObject} = this.state;
+        let budgetObject;
+
+        budgetObject = ChainStore.getObject(lastBudgetObject ? lastBudgetObject : "2.13.1"); 
+        // console.log("getBudgetObject:", budgetObject, lastBudgetObject);
+        if (budgetObject) {
+            let timestamp = budgetObject.get("time");
+            let now = new Date();
+
+            let idIndex = parseInt(budgetObject.get("id").split(".")[2], 10);
+            let currentID = idIndex + Math.floor((now - new Date(timestamp + "+00:00").getTime()) / 1000 / 60 / 60) - 1;
+            let newID = "2.13." + Math.max(idIndex, currentID);
+
+            ChainStore.getObject(newID);
+
+            this.setState({lastBudgetObject: newID});
+            if (newID !== currentID) {
+                this.forceUpdate();
+            }
+        } else {
+            this.setState({lastBudgetObject: "2.13.1"});
+        }
+    }
+
     render() {
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
 
+        let {globalObject} = this.props;
+
+        let budgetObject;
+        if (this.state.lastBudgetObject) {
+            budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
+        }
+
+        // if (budgetObject) {
+        //     console.log("budgetObject:", budgetObject.toJS());
+        // }
+
+        let totalBudget = 0;
+        let unusedBudget = 0;
+        let workerBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
+        
+        if (budgetObject) {
+            workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+            totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+        }
+
+        let remainingBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
         let workerArray = [];
-        let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
+        // let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
 
         for (var i = 0; i < 100; i++) {
             let id = "1.14." + i;
@@ -193,9 +270,7 @@ class AccountVoting extends React.Component {
             if (worker === null) {
                 break;
             }
-            if (botchedWorkers.indexOf(id) === -1) {
-                workerArray.push(worker)
-            }
+            workerArray.push(worker)
         };
 
         let now = new Date();
@@ -205,19 +280,35 @@ class AccountVoting extends React.Component {
             if (!a) {
                 return false;
             }
+            
+            // if (this._getTotalVotes(a) < 0) {
+            //     return false;
+            // }
             return new Date(a.get("work_end_date")) > now;
             
         })
         .sort((a, b) => {
-            return (parseInt(b.get("total_votes_for"), 10) - parseInt(b.get("total_votes_against"), 10)) -
-            (parseInt(a.get("total_votes_for"), 10) - parseInt(a.get("total_votes_against"), 10))
+            return this._getTotalVotes(b) - this._getTotalVotes(a);            
         })
-        .map(worker => {
-            return <WorkerApproval key={worker.get("id")} worker={worker.get("id")} vote_ids={this.state.vote_ids}
-                        onAddVote={this.onAddVoteID.bind(this)}
-                        onRemoveVote={this.onRemoveVoteID.bind(this)}
-                    />
-        })
+        .map((worker, index) => {
+            // console.log("worker:", worker.toJS());
+            let dailyPay = parseInt(worker.get("daily_pay"), 10);
+            workerBudget = workerBudget - dailyPay;
+
+            return (
+                <WorkerApproval
+                    rest={workerBudget + dailyPay}
+                    rank={index + 1}
+                    key={worker.get("id")}
+                    worker={worker.get("id")}
+                    vote_ids={this.state.vote_ids}
+                    onAddVote={this.onAddVoteID.bind(this)}
+                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                />
+            );
+        });
+
+        unusedBudget = Math.max(0, workerBudget);
 
         return (
             <div className="grid-content">
@@ -279,11 +370,40 @@ class AccountVoting extends React.Component {
                         </Tab>
 
                         <Tab title="account.votes.workers_short">
+
                             <div className={cnames("content-block", {disabled : proxy_is_set})}>
                                 <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
-                                <div className="grid-block no-padding no-margin small-up-1 medium-up-2 large-up-2">
+                                <table>
+                                    <tbody>
+                                        <tr><td><Translate content="account.votes.total_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
+                                        <tr><td><Translate content="account.votes.unused_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
+                                    </tbody>
+                                </table>
+                                <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th><Translate content="account.user_issued_assets.description" /></th>
+                                        <th><Translate content="account.votes.creator" /></th>
+                                        <th><Translate content="account.votes.total_votes" /></th>
+                                        <th className="hide-column-small">
+                                            <Translate content="account.votes.daily_pay" />
+                                            <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.daily" />)</div>
+                                        </th>
+                                        <th className="hide-column-small">
+                                            <div><Translate content="account.votes.unclaimed" /></div>
+                                            <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.recycled" />)</div>
+                                            </th>
+                                        <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                        <th><Translate content="account.votes.status.title" /> </th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {workers}
-                                </div>
+                                </tbody>
+                            </table>
                             </div>
                         </Tab>
                 </Tabs>
