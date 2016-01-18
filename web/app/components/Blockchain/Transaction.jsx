@@ -916,8 +916,10 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="proposal_create.review_period" /></td>
                             <td>
                                 { has_review_period ?
-                                <FormattedDate value={new Date( review_begin_time )}
-                                    formats={intlData.formats} format="full" />
+                                <FormattedDate
+                                    value={new Date( review_begin_time )}
+                                    format="full"
+                                />
                                 :<span>&mdash;</span>}
                             </td>
                         </tr>
@@ -925,8 +927,11 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="proposal_create.expiration_time" /></td>
-                            <td><FormattedDate value={expiration_date}
-                                formats={intlData.formats} format="full" /></td>
+                            <td><FormattedDate
+                                    value={expiration_date}
+                                    format="full"
+                                />
+                            </td>
                         </tr>
                     )
                     var operations = [] // remove op_wrapper
