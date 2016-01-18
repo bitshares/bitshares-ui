@@ -301,7 +301,7 @@
         at: "için şu kurdan:",
         coll_of: "teminatıyla",
         call_order_update: "marjin pozisyonunu güncelledi, şunun: ",
-        lifetime_upgrade_account: "ömür-boyu üyeye yükseltildi",
+        lifetime_upgrade_account: "ömür-boyu üyeye yükseldi",
         annual_upgrade_account: "yıllık üyeliğe yükseltildi",
         update_account: "hesap verilerini güncelledi",
         set_proxy: "oylama vekili olarak %(proxy)s belirlediler",
@@ -575,6 +575,13 @@
         },
         account: {
             title: "Hesap"
+        },
+        fees: {
+            type: "Ücret Türü",
+            fee: "Standart Ücret",
+            feeeq: "(eşdeğer)",
+            feeltm: "Ömürboyu/Yıllık Üye Ücreti",
+            feeltmeq: "(eşdeğer)",
         }
     },
     settings: {
@@ -593,7 +600,7 @@
         showSettles: "Ödeme emirlerini derinlik tablosunda gösterin ",
         yes: "Evet",
         no: "Hayır",
-        walletLockTimeout: "Cüzdan oto-kilit süresi (saniyeler)"
+        walletLockTimeout: "Cüzdan oto-kilit süresi (saniye)"
     },
     footer: {
         title: "Graphene",
@@ -642,7 +649,7 @@
         ema: "Üssel Hareketli Ortalama",
         sma: "Basit Hareketli Ortalama",
         atr: "Ortalama Gerçek Fiyat Aralığı",
-        period: "periot (gün)",
+        period: "Süre (gün)",
         overbought: "Aşırı Alım",
         oversold: "Aşırı Satış",
         index: "Indeks",
@@ -652,7 +659,7 @@
         asks: "Satış Fiyatları",
         bids: "Alış Fiyatları",
         no_data: "Veri yok",
-        time: "Süre",
+        time: "Zaman aralığı",
         borrow: "Ödünç Al",
         no_balance: "Yetersiz bakiye",
         invalid_amount: "Geçersiz miktar",
