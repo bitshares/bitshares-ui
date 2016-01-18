@@ -297,8 +297,8 @@ class LastBackupDate extends Component {
                 <h4 className="success"><Translate content="wallet.noneed_backup" /></h4>
         }
         return <span>
-            <p>{backup_time}</p>
-            <p>{needs_backup}</p>
+            {backup_time}
+            {needs_backup}
         </span>
     }
 }
@@ -426,6 +426,5 @@ class Reset extends BackupBaseComponent {
     onReset() {
         BackupActions.reset()
         window.history.back()
-        // this.context.router.transitionTo("backup")
     }
 }

@@ -1,4 +1,4 @@
-ByteBuffer = require '../common/bytebuffer'
+ByteBuffer = require 'bytebuffer'
 ObjectId = require './object_id'
 Serializer = require './serializer'
 Address = require '../ecc/address'

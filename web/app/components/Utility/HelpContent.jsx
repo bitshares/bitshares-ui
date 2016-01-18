@@ -1,4 +1,5 @@
 import React from "react";
+import {PropTypes} from "react-router";
 import _ from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
@@ -53,7 +54,7 @@ class HelpContent extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     }
 
     constructor(props) {
@@ -67,7 +68,7 @@ class HelpContent extends React.Component {
         let path = e.target.hash.split("/").filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
-        this.context.router.transitionTo(route);
+        this.context.history.pushState(null, route);
         return false;
     }
 
@@ -84,6 +85,7 @@ class HelpContent extends React.Component {
     }
     render() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
+
         if (!HelpData[locale]) {
             console.error(`missing locale '${locale}' help files, rolling back to 'en'`);
             locale = "en";
@@ -103,9 +105,15 @@ class HelpContent extends React.Component {
             value = HelpData['en'][this.props.alt_path];
         }
 
-        if (!value) throw new Error(`help file not found '${this.props.path}' for locale '${locale}'`);
+        if (!value) {
+            console.error(`help file not found '${this.props.path}' for locale '${locale}'`);
+            return !null;
+        }
         if (this.props.section) value = value[this.props.section];
-        if (!value) throw new Error(`help section not found ${this.props.path}#${this.props.section}`);
+        if (!value) {
+            console.error(`help section not found ${this.props.path}#${this.props.section}`);
+            return null;
+        }
         return <div style={this.props.style} className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value)}}/>;
     }
 }

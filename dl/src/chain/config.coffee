@@ -3,6 +3,7 @@ module.exports = _this =
     address_prefix: "GPH"
     expire_in_secs: 15
     expire_in_secs_proposal: 24 * 60 * 60
+    depositWithdrawDefaultActiveTab: 0
     networks:
         BitShares:
             core_asset: "BTS"

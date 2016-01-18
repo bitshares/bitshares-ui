@@ -3,7 +3,6 @@ import Immutable from "immutable";
 import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import Tabs from "react-foundation-apps/src/tabs";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
@@ -19,17 +18,25 @@ import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";
 import HelpContent from "../Utility/HelpContent";
 import cnames from "classnames";
-import connectToStores from "alt/utils/connectToStores";
-import SettingsActions from "actions/SettingsActions";
-import SettingsStore from "stores/SettingsStore";
+import Tabs, {Tab} from "../Utility/Tabs";
+import FormattedAsset from "../Utility/FormattedAsset";
+import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "../Utility/ChainTypes";
 
 let wallet_api = new WalletApi()
 
+@BindToChainState()
 class AccountVoting extends React.Component {
-
+   
     static propTypes = {
-        account: React.PropTypes.object.isRequired // the account object that should be updated
-    }
+      initialBudget: ChainTypes.ChainObject.isRequired,
+      globalObject: ChainTypes.ChainObject.isRequired
+    };
+
+    static defaultProps = {
+        initialBudget: "2.13.1",
+        globalObject: "2.0.0"
+    };
 
     constructor(props) {
         super(props);
@@ -38,7 +45,7 @@ class AccountVoting extends React.Component {
             witnesses: null,
             committee: null,
             vote_ids: Immutable.Set(),
-            activeTab: props.tab || "proxy"
+            lastBudgetObject: null
         };
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -95,10 +102,18 @@ class AccountVoting extends React.Component {
 
     componentWillMount() {
         this.updateAccountData(this.props.account);
+        this.getBudgetObject();
+    }
+
+    componentDidMount() {
+        this.getBudgetObject();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.account !== this.props.account) this.updateAccountData(nextProps.account);
+        if (nextProps.account !== this.props.account) {
+            this.updateAccountData(nextProps.account);
+        }
+        this.getBudgetObject();
     }
 
     onPublish() {
@@ -109,7 +124,7 @@ class AccountVoting extends React.Component {
         updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         updated_account.new_options.num_witness = this.state.witnesses.size;
         updated_account.new_options.num_committee = this.state.committee.size;
-        console.log( "vote_ids: ", this.state.vote_ids.toJS() );
+        // console.log( "vote_ids: ", this.state.vote_ids.toJS() );
         FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
             let witnesses_vote_ids = res.map(o => o.get("vote_id"));
             return Promise.all([Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)]);
@@ -118,7 +133,7 @@ class AccountVoting extends React.Component {
                 .concat(res[1].map(o => o.get("vote_id")))
                 .concat(this.state.vote_ids.filter( id => id.split(":")[0] === "2" ).toArray() )
                 .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
-            console.log("updated_account: ", updated_account);
+            // console.log("updated_account: ", updated_account);
             var tr = wallet_api.new_transaction();
             tr.add_type_operation("account_update", updated_account);
             WalletDb.process_transaction(tr, null, true);
@@ -148,11 +163,15 @@ class AccountVoting extends React.Component {
         this.setState(state);
     }
     onAddVoteID( vote_id ) {
-      let state={}
-      state.vote_ids = this.state.vote_ids.add(vote_id);
-      this.setState(state);
+      let state={};
+      if (!this.state.vote_ids.has(vote_id)) {
+          state.vote_ids = this.state.vote_ids.add(vote_id);
+          this.setState(state);
+      }
     }
+
     onRemoveVoteID( vote_id ) {
+        // console.log("onRemoveVoteID:", this.state.vote_ids.toJS(), vote_id);
       let state={}
       state.vote_ids = this.state.vote_ids.delete(vote_id);
       this.setState(state);
@@ -180,13 +199,6 @@ class AccountVoting extends React.Component {
         return null;
     }
 
-    _changeTab(value) {
-        SettingsActions.changeViewSetting({
-            votingTab: value
-        });
-        this.setState({activeTab: value});
-    }
-
     onClearProxy(e) {
         e.preventDefault();
         this.setState({
@@ -195,34 +207,108 @@ class AccountVoting extends React.Component {
         });
     }
 
+    _getTotalVotes(worker) {
+        return parseInt(worker.get("total_votes_for"), 10) - parseInt(worker.get("total_votes_against"), 10);
+    }
+
+    getBudgetObject() {
+        let {lastBudgetObject} = this.state;
+        let budgetObject;
+
+        budgetObject = ChainStore.getObject(lastBudgetObject ? lastBudgetObject : "2.13.1"); 
+        // console.log("getBudgetObject:", budgetObject, lastBudgetObject);
+        if (budgetObject) {
+            let timestamp = budgetObject.get("time");
+            let now = new Date();
+
+            let idIndex = parseInt(budgetObject.get("id").split(".")[2], 10);
+            let currentID = idIndex + Math.floor((now - new Date(timestamp + "+00:00").getTime()) / 1000 / 60 / 60) - 1;
+            let newID = "2.13." + Math.max(idIndex, currentID);
+
+            ChainStore.getObject(newID);
+
+            this.setState({lastBudgetObject: newID});
+            if (newID !== currentID) {
+                this.forceUpdate();
+            }
+        } else {
+            this.setState({lastBudgetObject: "2.13.1"});
+        }
+    }
+
     render() {
-        let {activeTab} = this.state;
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
 
-        let workers = [];
-        let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
+        let {globalObject} = this.props;
 
-        for (var i = 0; i < 50; i++) {
+        let budgetObject;
+        if (this.state.lastBudgetObject) {
+            budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
+        }
+
+        // if (budgetObject) {
+        //     console.log("budgetObject:", budgetObject.toJS());
+        // }
+
+        let totalBudget = 0;
+        let unusedBudget = 0;
+        let workerBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
+        
+        if (budgetObject) {
+            workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+            totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+        }
+
+        let remainingBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
+        let workerArray = [];
+        // let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
+
+        for (var i = 0; i < 100; i++) {
             let id = "1.14." + i;
             let worker = ChainStore.getObject(id);
             if (worker === null) {
                 break;
             }
-            if (botchedWorkers.indexOf(id) === -1) {
-                workers.push(
-                    <WorkerApproval key={id} worker={id} vote_ids={this.state.vote_ids}
-                        onAddVote={this.onAddVoteID.bind(this)}
-                        onRemoveVote={this.onRemoveVoteID.bind(this)}
-                    />
-                )
-            }
+            workerArray.push(worker)
         };
 
-        let proxyTabClass = cnames("tab-item", {"is-active": activeTab === "proxy"});
-        let witnessTabClass = cnames("tab-item", {"is-active": activeTab === "witnesses"});
-        let committeeTabClass = cnames("tab-item", {"is-active": activeTab === "committee"});
-        let workerTabClass = cnames("tab-item", {"is-active": activeTab === "workers"});
+        let now = new Date();
+
+        let workers = workerArray
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            
+            // if (this._getTotalVotes(a) < 0) {
+            //     return false;
+            // }
+            return new Date(a.get("work_end_date")) > now;
+            
+        })
+        .sort((a, b) => {
+            return this._getTotalVotes(b) - this._getTotalVotes(a);            
+        })
+        .map((worker, index) => {
+            // console.log("worker:", worker.toJS());
+            let dailyPay = parseInt(worker.get("daily_pay"), 10);
+            workerBudget = workerBudget - dailyPay;
+
+            return (
+                <WorkerApproval
+                    rest={workerBudget + dailyPay}
+                    rank={index + 1}
+                    key={worker.get("id")}
+                    worker={worker.get("id")}
+                    vote_ids={this.state.vote_ids}
+                    onAddVote={this.onAddVoteID.bind(this)}
+                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                />
+            );
+        });
+
+        unusedBudget = Math.max(0, workerBudget);
 
         return (
             <div className="grid-content">
@@ -241,89 +327,89 @@ class AccountVoting extends React.Component {
                         </button>) : null}
                 </div>
 
-                <div className="tabs" style={{maxWidth: "800px"}}>
-                    <div className={proxyTabClass} onClick={this._changeTab.bind(this, "proxy")}>
-                        <Translate content="account.votes.proxy_short" />
-                    </div>
-                    <div className={witnessTabClass} onClick={this._changeTab.bind(this, "witnesses")}>
-                        <Translate content="explorer.witnesses.title" />
-                    </div>
-                    <div className={committeeTabClass} onClick={this._changeTab.bind(this, "committee")}>
-                        <Translate content="explorer.committee_members.title" />
-                    </div>
-                    <div className={workerTabClass} onClick={this._changeTab.bind(this, "workers")}>
-                        <Translate content="account.votes.workers_short" />
-                    </div>
-                </div>
+                <Tabs setting="votingTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
 
-                {/* Tab content */}
-                <div style={{paddingTop: "1em"}}>
+                        <Tab title="account.votes.proxy_short">
+                            <div className="content-block">
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
+                                <AccountVotingProxy
+                                    currentProxy={this.state.proxy_account_name}
+                                    currentAccount={this.props.account}
+                                    proxyAccount={this.state.proxy_account_id}
+                                    onProxyAccountChanged={this.onProxyAccountChange}
+                                />
+                            </div>
+                        </Tab>
 
-                {activeTab === "proxy" ? (
-                    <div className="content-block">
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
-                        <AccountVotingProxy
-                            currentProxy={this.state.proxy_account_name}
-                            currentAccount={this.props.account}
-                            proxyAccount={this.state.proxy_account_id}
-                            onProxyAccountChanged={this.onProxyAccountChange}
-                        />
-                    </div>) : null}
+                        <Tab title="explorer.witnesses.title">
+                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
+                                <AccountsList
+                                    type="witness"
+                                    label="account.votes.add_witness_label"
+                                    items={this.state.witnesses}
+                                    validateAccount={this.validateAccount.bind(this, "witnesses")}
+                                    onAddItem={this.onAddItem.bind(this, "witnesses")}
+                                    onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
+                                    tabIndex={proxy_is_set ? -1 : 2}/>
+                            </div>
+                        </Tab>
 
-                {activeTab === "witnesses" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
-                        <AccountsList
-                            type="witness"
-                            label="account.votes.add_witness_label"
-                            items={this.state.witnesses}
-                            validateAccount={this.validateAccount.bind(this, "witnesses")}
-                            onAddItem={this.onAddItem.bind(this, "witnesses")}
-                            onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
-                            tabIndex={proxy_is_set ? -1 : 2}/>
-                    </div>) : null}
+                        <Tab title="explorer.committee_members.title">
+                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
+                                <AccountsList
+                                    type="committee"
+                                    label="account.votes.add_committee_label"
+                                    items={this.state.committee}
+                                    validateAccount={this.validateAccount.bind(this, "committee")}
+                                    onAddItem={this.onAddItem.bind(this, "committee")}
+                                    onRemoveItem={this.onRemoveItem.bind(this, "committee")}
+                                    tabIndex={proxy_is_set ? -1 : 3}/>
+                            </div>
+                        </Tab>
 
-                {activeTab === "committee" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
-                        <AccountsList
-                            type="committee"
-                            label="account.votes.add_committee_label"
-                            items={this.state.committee}
-                            validateAccount={this.validateAccount.bind(this, "committee")}
-                            onAddItem={this.onAddItem.bind(this, "committee")}
-                            onRemoveItem={this.onRemoveItem.bind(this, "committee")}
-                            tabIndex={proxy_is_set ? -1 : 3}/>
-                    </div>) : null}
+                        <Tab title="account.votes.workers_short">
 
-                {activeTab === "workers" ? (
-                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
-                        <div className="grid-block regular-padding small-up-1 medium-up-2 large-up-2">
-                            {workers}
-                        </div>
-                    </div>) : null}
-
-                </div>
-
+                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
+                                <table>
+                                    <tbody>
+                                        <tr><td><Translate content="account.votes.total_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
+                                        <tr><td><Translate content="account.votes.unused_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
+                                    </tbody>
+                                </table>
+                                <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th><Translate content="account.user_issued_assets.description" /></th>
+                                        <th><Translate content="account.votes.creator" /></th>
+                                        <th><Translate content="account.votes.total_votes" /></th>
+                                        <th className="hide-column-small">
+                                            <Translate content="account.votes.daily_pay" />
+                                            <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.daily" />)</div>
+                                        </th>
+                                        <th className="hide-column-small">
+                                            <div><Translate content="account.votes.unclaimed" /></div>
+                                            <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.recycled" />)</div>
+                                            </th>
+                                        <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                        <th><Translate content="account.votes.status.title" /> </th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {workers}
+                                </tbody>
+                            </table>
+                            </div>
+                        </Tab>
+                </Tabs>
             </div>
         )
     }
 }
 
-@connectToStores
-class AccountVotingWrapper extends React.Component {
-    static getStores() {
-        return [SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {tab: SettingsStore.getState().viewSettings.get("votingTab")}
-    }
-
-    render () {
-        return <AccountVoting {...this.props}/>
-    }
-}
-
-export default AccountVotingWrapper;
+export default AccountVoting;

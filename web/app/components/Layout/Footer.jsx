@@ -1,6 +1,5 @@
-import React, {Component} from "react/addons";
-let Perf = React.addons.Perf;
-import AltContainer from "alt/AltContainer"
+import React, {Component} from "react";
+import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
@@ -26,12 +25,7 @@ class Footer extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {perf: false};
+        history: React.PropTypes.object
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -59,7 +53,7 @@ class Footer extends React.Component {
                     </div>
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
-                    { this.props.backup_recommended ? <span>
+                    {this.props.backup_recommended ? <span>
                         <div className="grid-block">
                             <a className="shrink txtlabel facolor-alert"
                                 data-tip="Please understand that you are responsible for making your own backup&hellip;"
@@ -68,7 +62,7 @@ class Footer extends React.Component {
                             &nbsp;&nbsp;
                         </div>
                     </span> : null}
-                    { this.props.backup_brainkey_recommended ? <span>
+                    {this.props.backup_brainkey_recommended ? <span>
                         <div className="grid-block">
                             <a className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}>Backup brainkey recommended</a>
                             &nbsp;&nbsp;
@@ -87,11 +81,11 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.router.transitionTo("wmc-backup-create")
+        this.context.history.pushState(null, "/wallet/backup/create");
     }
 
     onBackupBrainkey() {
-        this.context.router.transitionTo("wmc-backup-brainkey")
+        this.context.history.pushState(null, "/wallet/backup/brainkey");
     }
 }
 

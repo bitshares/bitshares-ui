@@ -1,10 +1,10 @@
 import React from "react";
-import {PropTypes} from "react/addons";
+import ReactDOM from "react-dom";
+import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
 import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
-import intlData from "../Utility/intlData";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
@@ -18,31 +18,17 @@ class TableHeader extends React.Component {
     render() {
         let {buy, baseSymbol, quoteSymbol} = this.props;
 
-        // if (this.props.type === "buy") {
-        //     return (
-        //         <thead>
-        //             <tr>
-        //                 <th style={{textAlign: "left"}}></th>
-        //                 <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /></th>
-        //                 <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <small>({baseSymbol})</small> : null}</th>
-        //                 <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <small>({quoteSymbol})</small> : null}</th>
-        //                 <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <small>({baseSymbol}/{quoteSymbol})</small> : null}</th>
-        //             </tr>
-        //         </thead>
-        //     );
-        // } else {
-            return (
-                <thead>
-                    <tr>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
-                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
-                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol})</span> : null}</th>
-                        <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
-                        <th style={{textAlign: "right"}}></th>
-                    </tr>
-                </thead>
-            );
-        // }
+        return (
+            <thead>
+                <tr>
+                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
+                    <th style={{textAlign: "right"}}></th>
+                </tr>
+            </thead>
+        );
     }
 }
 
@@ -67,46 +53,19 @@ class OrderRow extends React.Component {
         let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
 
         let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
-        let valueSymbol = showSymbols ? " " + quote.get("symbol") : null;
-        let amountSymbol = showSymbols ? " " + base.get("symbol") : null;
+        let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
+        let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
-        // if (!isAskOrder && !invert) {
-
-        //     return (
-        //         <tr key={order.id}>
-        //             <td className="text-right" style={{padding: "2px 5px"}}>
-        //                 <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
-        //                 <span>{cancel_text}</span>
-        //                 </a>
-        //             </td>
-        //             <td><FormattedDate
-        //                 value={order.expiration}
-        //                 formats={intlData.formats}
-        //                 format="short"
-        //                 />
-        //             </td>
-        //             <td>{utils.format_number(value, quote.get("precision"))} {valueSymbol}</td>
-        //             <td>{utils.format_number(amount, base.get("precision"))} {amountSymbol}</td>
-        //             <td className={tdClass}>
-        //                 <span className="price-integer">{price.int}</span>
-        //                 .
-        //                 <span className="price-decimal">{price.dec}</span>
-        //                 {priceSymbol}
-        //             </td>
-        //         </tr>
-        //     );
-        // } else {
             return (
                 <tr key={order.id}>
                     <td className={tdClass}>
                         <PriceText preFormattedPrice={price} />
                         {priceSymbol}
                     </td>
-                    <td>{utils.format_number(amount, base.get("precision"))} {amountSymbol}</td>
-                    <td>{utils.format_number(value, quote.get("precision"))} {valueSymbol}</td>
+                    <td>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
+                    <td>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
                     <td><FormattedDate
                         value={order.expiration}
-                        formats={intlData.formats}
                         format="short"
                         />
                     </td>
@@ -144,7 +103,7 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let orderContainer = React.findDOMNode(this.refs.orders);
+        let orderContainer = ReactDOM.findDOMNode(this.refs.orders);
         Ps.initialize(orderContainer);
     }
 
@@ -206,8 +165,9 @@ class MyOpenOrders extends React.Component {
         }
 
         return (
-            <div key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
+            <div style={{maxHeight: "400px"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
+                    <div className="exchange-content-header"><Translate content="exchange.my_bids" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         <tbody>
@@ -219,6 +179,7 @@ class MyOpenOrders extends React.Component {
                     <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
                 </div>
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
+                    <div className="exchange-content-header"><Translate content="exchange.my_asks" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         <tbody>

@@ -82,7 +82,7 @@ class Apis {
 
 var apis_instance;
 
-module.exports = {
+export default {
     setRpcConnectionStatusCallback: function(callback) {
         this.update_rpc_connection_status_callback = callback;
         if(apis_instance) apis_instance.setRpcConnectionStatusCallback(callback);

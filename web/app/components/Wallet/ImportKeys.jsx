@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from "react";
+import ReactDOM from "react-dom";
 import PrivateKey from "ecc/key_private";
 import Address from "ecc/address"
 import Aes from "ecc/aes";
@@ -99,7 +100,7 @@ export default class ImportKeys extends Component {
                         <td>{status.account_name}</td>
                         <td>{filtering ?
                             <span>Filtering { Math.round( (status.count / status.total) * 100) } % </span>
-                            : <span>Keeping {status.count} of {status.total}</span>
+                            : <span>{status.count}</span>
                         }</td>
                     </tr>
                 )
@@ -490,7 +491,7 @@ export default class ImportKeys extends Component {
     }
     
     _passwordCheck(evt) {
-        var pwNode = React.findDOMNode(this.refs.password)
+        var pwNode = ReactDOM.findDOMNode(this.refs.password)
         if(pwNode) pwNode.focus()
         var password = evt ? evt.target.value : ""
         var checksum = this.state.password_checksum
@@ -596,11 +597,20 @@ export default class ImportKeys extends Component {
     _saveImport(e) {
         e.preventDefault()
         var keys = PrivateKeyStore.getState().keys
+        var dups = {}
         for(let public_key_string in this.state.imported_keys_public) {
-            if(keys.get(public_key_string)) {
-                notify.error("This wallet has already been imported")
-                return
-            }
+            if( ! keys.has(public_key_string) ) continue
+            delete this.state.imported_keys_public[public_key_string]
+            dups[public_key_string] = true
+        }
+        if( Object.keys(this.state.imported_keys_public).length === 0 ) {
+            notify.error("This wallet has already been imported")
+            return
+        }
+        var keys_to_account = this.state.keys_to_account
+        for(let private_plainhex of Object.keys(keys_to_account)) {
+            var {account_names, public_key_string} = keys_to_account[private_plainhex]
+            if( dups[public_key_string] ) delete keys_to_account[private_plainhex]
         }
         WalletUnlockActions.unlock().then(()=> {
             ImportKeysStore.importing(true)

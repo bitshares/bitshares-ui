@@ -32,7 +32,7 @@ class MarketLink extends React.Component {
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + " : " + base.get("symbol");
         return (
-            <Link to="exchange" params={{marketID: marketID}}>{marketName}</Link>
+            <Link to={`/market/${marketID}`}>{marketName}</Link>
         );
     }
 }

@@ -1,10 +1,12 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highstock from "react-highcharts/highstock";
+import Highstock from "react-highcharts/bundle/highstock";
 import utils from "common/utils";
 import counterpart from "counterpart";
-import _ from "lodash";
+import {cloneDeep} from "lodash";
+import Translate from "react-translate-component";
 
 class DepthHighChart extends React.Component {
 
@@ -12,12 +14,13 @@ class DepthHighChart extends React.Component {
         return (
             !Immutable.is(nextProps.orders, this.props.orders) ||
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
-            nextProps.plotLine !== this.props.plotLine ||
+            // nextProps.plotLine !== this.props.plotLine ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.settlementPrice !== this.props.settlementPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.SQP !== this.props.SQP ||
-            nextProps.LCP !== this.props.LCP 
+            nextProps.LCP !== this.props.LCP ||
+            nextProps.showCallLimit !== this.props.showCallLimit
         );
     }
 
@@ -27,13 +30,13 @@ class DepthHighChart extends React.Component {
     }
 
     componentWillReceiveProps() {
-        let height = React.findDOMNode(this).offsetHeight;
+        let height = ReactDOM.findDOMNode(this).offsetHeight;
         this.setState({offsetHeight: height - 10});
     }
 
 
     render() {
-        let {flat_bids, flat_asks, flat_calls, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
+        let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
@@ -41,7 +44,7 @@ class DepthHighChart extends React.Component {
 
         let power = 1;
 
-        let flatBids = _.cloneDeep(flat_bids), flatAsks = _.cloneDeep(flat_asks), flatCalls = _.cloneDeep(flat_calls);
+        let flatBids = cloneDeep(flat_bids), flatAsks = cloneDeep(flat_asks), flatCalls = cloneDeep(flat_calls);
 
         if (flat_bids.length) {
             while ((flat_bids[flat_bids.length - 1][0] * power) < 1) {
@@ -111,9 +114,7 @@ class DepthHighChart extends React.Component {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/>
-                        <span style="color:${this.series.color}">\u25CF</span>
-                        ${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/><span style="color:${this.series.color}">\u25CF</span>${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"
@@ -177,25 +178,26 @@ class DepthHighChart extends React.Component {
         // Center the charts between bids and asks
         if (flatBids.length > 0 && flatAsks.length > 0) {
             let middleValue = (flatAsks[0][0] + flatBids[flatBids.length - 1][0]) / 2;
-            config.xAxis.min = middleValue * 0.25;
-            config.xAxis.max = middleValue * 1.75;
-            if (spread > 0 && spread > middleValue) {
-                config.xAxis.min = Math.max(0, middleValue - 1.5 * spread);
-                config.xAxis.max = middleValue + 1.5 * spread;
+            let adjustedSpread = spread * power;
+            config.xAxis.min = middleValue * 0.45;
+            config.xAxis.max = middleValue * 1.55;
+            if (adjustedSpread > 0 && adjustedSpread > middleValue) {
+                config.xAxis.min = Math.max(0, middleValue - 1.5 * adjustedSpread);
+                config.xAxis.max = middleValue + 1.5 * adjustedSpread;
             }
         }
 
         // Add plotlines if defined
-        if (this.props.plotLine) {
-            config.xAxis.plotLines.push({
-                color: "red",
-                id: "plot_line",
-                dashStyle: "longdashdot",
-                value: this.props.plotLine * power,
-                width: 1,
-                zIndex: 5
-            });
-        }
+        // if (falsethis.props.plotLine) {
+        //     config.xAxis.plotLines.push({
+        //         color: "red",
+        //         id: "plot_line",
+        //         dashStyle: "longdashdot",
+        //         value: this.props.plotLine * power,
+        //         width: 1,
+        //         zIndex: 5
+        //     });
+        // }
 
         // Market asset
         if (this.props.LCP) {
@@ -234,6 +236,7 @@ class DepthHighChart extends React.Component {
             });
         }
 
+
         if (this.props.settlementPrice) {
             config.xAxis.plotLines.push({
                 color: "#7B1616",
@@ -267,6 +270,43 @@ class DepthHighChart extends React.Component {
             }
         }
 
+        // Add settle orders
+        if (this.props.settlementPrice && this.props.settles.size) {
+            let settleAsset, amountRatio, inverted;
+            if (quote.get("id") === "1.3.0") {
+                amountRatio = this.props.settlementPrice;
+                settleAsset = base;
+                inverted = true;
+            } else {
+                amountRatio = 1;
+                settleAsset = quote;
+                inverted = false;
+            }
+
+            let flat_settles = this.props.settles.reduce((final, a) => {
+                if (!final) {
+                    return [[this.props.settlementPrice * power, utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio]];
+                } else {
+                    final[0][1] = final[0][1] + utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio;
+                    return final;
+                }
+            }, null);
+
+            if (inverted) {
+                flat_settles.unshift([0, flat_settles[0][1]]);
+            } else {
+                flat_settles.push([flat_asks[flat_asks.length-1][0] * power, flat_settles[0][1]]);
+            }
+
+            config.series.push({
+                name: `Settle ${quoteSymbol}`,
+                data: flat_settles,
+                color: "#4777A0"
+            })
+
+        }
+
+
         // Push asks and bids
         if (flatBids.length) {
             config.series.push({
@@ -284,6 +324,8 @@ class DepthHighChart extends React.Component {
             });
         }
 
+        
+
         // Fix the height if defined, if not use offsetHeight
         if (this.props.height) {
             config.chart.height = this.props.height;
@@ -300,6 +342,7 @@ class DepthHighChart extends React.Component {
 
         return (
             <div className="grid-content no-overflow middle-content">
+                {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
                 <p className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</p>
                 <p className="ask-total">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</p>
                 {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}

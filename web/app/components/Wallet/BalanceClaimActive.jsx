@@ -43,26 +43,43 @@ export default class BalanceClaimActive extends Component {
             this.existing_keys = keySeq
             BalanceClaimActiveActions.setPubkeys( keySeq )
         }
-    }
-    
+    }    
+   
     render() {
-        if( this.props.loading || this.props.balances === undefined)
-            return <div className="center-content">
-                <p></p>
-                <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
-                <LoadingIndicator type="circle"/>
-            </div>
-            
-        if( ! this.props.balances.size) return <div>
-            <h5><Translate content="wallet.no_balance" /></h5>
-        </div>
-        
+        if( !this.props.account_refs.size) {
+            return (
+                <div>
+                    <h5><Translate content="wallet.no_balance" /></h5>
+                </div>
+            );
+        }
+
+        if( this.props.loading) {
+            return (
+                <div className="center-content">
+                    <br/>
+                    <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
+                    <br/>
+                    <LoadingIndicator type="three-bounce"/>
+                </div>
+            );
+        }
+
+        if( !this.props.balances || !this.props.balances.size) {
+            return (
+                <div>
+                    <h5><Translate content="wallet.no_balance" /></h5>
+                </div>
+            );
+        }
+
         var import_ready = this.props.selected_balances.size && this.props.claim_account_name
         var claim_balance_label = import_ready ?
                 ` (${this.props.claim_account_name})` :
-                ""
+                null;
+        
         return (
-            <span>
+            <div>
                 <div className="content-block center-content">
                     <h3 className="no-border-bottom"><Translate content="wallet.claim_balances" /></h3>
                 </div>
@@ -84,7 +101,7 @@ export default class BalanceClaimActive extends Component {
                     onClick={this.onClaimBalance.bind(this)}>
                     <Translate content="wallet.claim_balance" />{claim_balance_label}</div>
                 <div className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></div>
-            </span>
+            </div>
         )
     }
     

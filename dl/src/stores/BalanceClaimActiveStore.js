@@ -46,7 +46,7 @@ class BalanceClaimActiveStore extends BaseStore {
             checked: Immutable.Map(),
             selected_balances: Immutable.Seq(),
             claim_account_name: undefined,
-            loading: false
+            loading: true
         }
     }
     
@@ -77,19 +77,24 @@ class BalanceClaimActiveStore extends BaseStore {
     
     // param: Immutable Seq or array
     onSetPubkeys(pubkeys) {
+
         if( Array.isArray( pubkeys )) pubkeys = Immutable.Seq( pubkeys )
         if(this.pubkeys && this.pubkeys.equals( pubkeys )) return
         this.reset()
         this.pubkeys = pubkeys
         if( pubkeys.size === 0) {
             this.setState({ loading: false })
-            return
+            return true;
         }
         this.setState({ loading: true })
         this.loadNoBalanceAddresses().then( () => {
-            for(let pubkey of pubkeys) this.indexPubkey(pubkey)
-            return this.refreshBalances()
-        }).catch( error => console.error( error ))
+            // for(let pubkey of pubkeys) {
+            this.indexPubkeys(pubkeys)
+            // }
+
+            this.refreshBalances();
+            return false;
+        }).catch( error => console.error( error ));
     }
     
     onSetSelectedBalanceClaims(checked) {
@@ -109,10 +114,26 @@ class BalanceClaimActiveStore extends BaseStore {
                 this.no_balance_address = new Set(array)
             })
     }
+
+    indexPubkeys(pubkeys) {
+        let {address_to_pubkey} = this.state;
+        
+        for(let pubkey of pubkeys) {
+            for(let address_string of key.addresses(pubkey)) {
+                if( !this.no_balance_address.has(address_string)) {
+                    // AddressIndex indexes all addresses .. Here only 1 address is involved
+                    address_to_pubkey.set(address_string, pubkey)
+                    this.addresses.add(address_string)
+                }
+            }
+        }
+        this.setState({address_to_pubkey: address_to_pubkey})
+    }
     
     indexPubkey(pubkey) {
+
         for(let address_string of key.addresses(pubkey)) {
-            if( ! this.no_balance_address.has(address_string)) {
+            if( !this.no_balance_address.has(address_string)) {
                 // AddressIndex indexes all addresses .. Here only 1 address is involved
                 this.state.address_to_pubkey.set(address_string, pubkey)
                 this.addresses.add(address_string)
@@ -122,17 +143,17 @@ class BalanceClaimActiveStore extends BaseStore {
     }
     
     refreshBalances() {
-        return this.lookupBalanceObjects().then( balances => {
+        this.lookupBalanceObjects().then( balances => {
             var state = this.getInitialViewState()
             state.balances = balances
             state.loading = false
-            this.setState(state)
+            this.setState(state);            
         })
     }
     
     /** @return Promise.resolve(balances) */
     lookupBalanceObjects() {
-        // console.log("BalanceClaimActiveStore.lookupBalanceObjects")
+        console.log("BalanceClaimActiveStore.lookupBalanceObjects")
         var db = Apis.instance().db_api()
         var no_balance_address = new Set(this.no_balance_address)
         var no_bal_size = no_balance_address.size

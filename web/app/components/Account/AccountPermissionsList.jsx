@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
@@ -9,6 +8,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
 import PrivateKeyView from "components/PrivateKeyView"
+import counterpart from "counterpart";
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
@@ -137,9 +137,9 @@ class AccountPermissionsList extends React.Component {
 
         let error = this.state.error;
         if(!error && this.state.selected_item && this.props.accounts.indexOf(this.state.selected_item) !== -1)
-            error = "Account is already in the list";
+            error = counterpart.translate("account.perm.warning3");
         if(!error && this.state.item_name_input && this.props.keys.indexOf(this.state.item_name_input) !== -1)
-            error = "Key is already in the list";
+            error = counterpart.translate("account.perm.warning4");
 
         let cw = ["10%", "70%", "30%", "10%"];
 
@@ -162,7 +162,7 @@ class AccountPermissionsList extends React.Component {
                            className="weight-input"
                            type="number"
                            autoComplete="off"
-                           placeholder="Weight"
+                           placeholder={counterpart.translate("account.perm.weight")}
                            onKeyDown={this.onWeightKeyDown.bind(this)}
                            tabIndex={this.props.tabIndex + 1}/>
                 </AccountSelector>
@@ -170,9 +170,9 @@ class AccountPermissionsList extends React.Component {
                     <thead>
                     <tr>
                         <th style={{width: cw[0]}}></th>
-                        <th style={{width: cw[1]}}>Account/Key</th>
-                        <th style={{width: cw[2]}}>Weight</th>
-                        <th style={{width: cw[3]}}>ACTION</th>
+                        <th style={{width: cw[1]}}><Translate content="account.perm.acct_or_key" /></th>
+                        <th style={{width: cw[2]}}><Translate content="account.perm.weight" /></th>
+                        <th style={{width: cw[3]}}><Translate content="account.perm.action" /></th>
                     </tr>
                     </thead>
                     <tbody>

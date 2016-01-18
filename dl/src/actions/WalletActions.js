@@ -119,6 +119,34 @@ class WalletActions {
             })
         }
     }
+
+    claimVestingBalance(account, cvb) {
+        var tr = new ops.signed_transaction();
+
+        let balance = cvb.getIn(["balance", "amount"]),
+            earned = cvb.getIn(["policy", 1, "coin_seconds_earned"]),
+            vestingPeriod = cvb.getIn(["policy", 1, "vesting_seconds"]),
+            availablePercent = earned / (vestingPeriod * balance);
+
+
+        tr.add_type_operation("vesting_balance_withdraw", {
+            fee: { amount: "0", asset_id: "1.3.0"},
+            owner: account,
+            vesting_balance: cvb.get("id"),
+            amount: {
+                amount: Math.floor(balance * availablePercent),
+                asset_id: cvb.getIn(["balance", "asset_id"])
+            }
+        });
+
+        return WalletDb.process_transaction(tr, null, true)
+        .then(result => {
+            
+        })
+        .catch(err => {
+            console.log("vesting_balance_withdraw err:", err);
+        })
+    }
     
     /** @parm balances is an array of balance objects with two
         additional values: {vested_balance, public_key_string}
@@ -186,7 +214,7 @@ class WalletActions {
                 }
                 // With a lot of balance claims the signing can take so Long
                 // the transaction will expire.  This will increase the timeout...
-                tr.set_expire_seconds(config.expire_in_secs + balance_claims.length)
+                tr.set_expire_seconds( (15 * 60) + balance_claims.length)
                 
                 return WalletDb.process_transaction(
                     tr, Object.keys(signer_pubkeys), broadcast ).then(
@@ -197,4 +225,4 @@ class WalletActions {
     }
 }
 
-module.exports = alt.createActions(WalletActions)
+export default alt.createActions(WalletActions)

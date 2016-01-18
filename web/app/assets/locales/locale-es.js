@@ -7,7 +7,7 @@
         de: "Deutsch",
         es: "Español",
         tr: "Türkçe"
-        
+
     },
     header: {
         title: "Graphene - Interfaz de Usiario",
@@ -15,7 +15,7 @@
         dashboard: "Tablero",
         explorer: "Explorer",
         exchange: "Exchange",
-        payments: "Transferir", 
+        payments: "Transferir",
         logout: "Salir",
         settings: "Configuración",
         current: "Cuenta Actual",
@@ -80,6 +80,7 @@
         perm: {
             active: "Permisos Activos",
             owner: "Permisos de Propietario",
+            memo_key: "Memo key",
             publish: "Publicar Cambios",
             reset: "Resetear Cambios",
             add: "Agregar Permisos",
@@ -91,7 +92,13 @@
             cancel: "Cancelar",
             add_permission_label: "Ingrese nombre de cuenta/llave y su relevancia",
             account_name_or_key: "Nombre de cuenta o Llave",
-            memo_public_key: "Llave Pública Memo"
+            memo_public_key: "Llave Pública Memo",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy: "Convertir en Apoderado de sus Votos a",
@@ -147,7 +154,8 @@
             not_found: "Account not found.",
             premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
-        }
+        },
+        settle: "Settle"
     },
     pagination: {
         newer: "Más reciente",
@@ -168,7 +176,8 @@
             req: "Campo requerido",
             pos: "El monto debe ser positivo",
             valid: "Por favor ingresar un número positivo válido",
-            balance: "El balance final debe ser mayor a 0"
+            balance: "El balance final debe ser mayor a 0",
+            insufficient: "Insufficient Balance"
         },
         back: "VOLVER",
         confirm: "CONFIRMAR",
@@ -396,13 +405,6 @@
                 title: "Permisos",
                 max_market_fee: "Comisión de mercado máxima",
                 max_supply: "Emisión máxima",
-                chargeMarketFee: "Cambiar comisión de mercado",
-                allowWhiteList: "Permitir lista blanca",
-                allowIssuerOverride: "Allow issuer override",
-                restrictTransfers: "Restringir transferencias",
-                allowForceSettle: "Permitir liquidación forzosa",
-                allowGlobalSettle: "Permitir liquidación global",
-                allowStealthTransfer: "Permitir transferencias secretas",
                 blacklist_authorities: "Blacklist authorities",
                 blacklist_markets: "Blacklist markets",
                 whitelist_authorities: "Whitelist authorities",
@@ -598,7 +600,8 @@
         amount: "Monto a Retirar",
         address: "Retirar al Address",
         submit: "Retirar"
-      }
+      },
+      ok: "OK"
     },
     init_error: {
         title: "Problemas al iniciar la aplicación",
@@ -612,5 +615,29 @@
          claim_refcode: "Claim Referral Code",
          refcode_optional: "Referral Code (optional)",
          enter_refcode: "Enter referral code"
-     }
+     },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser",
+            visit_weidian: "Click to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
+        },
+        meta: {
+            open_website: "Open Website"
+        }
+    }
 };

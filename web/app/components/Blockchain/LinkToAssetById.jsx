@@ -10,7 +10,7 @@ class LinkToAssetById extends React.Component {
     }
     render() {
         let symbol = this.props.asset.get("symbol");
-        return <Link to="asset" params={{symbol}}>{symbol}</Link>;
+        return <Link to={`/asset/${symbol}/`}>{symbol}</Link>;
     }
 }
 

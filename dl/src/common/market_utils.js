@@ -10,68 +10,6 @@ class MarketUtils {
         this.order_type = this.order_type.bind(this);
     }
 
-    // static parse_order(newOrder) {
-    //     let o = newOrder[0][1];
-    //     let orderType = this.order_type(newOrder[1][1]);
-    //     let order = {};
-    //     switch (orderType) {
-
-    //         case "limit_order":
-    //             o.expiration = new Date(o.expiration);
-    //             console.log("new limit order:", orderType, newOrder);
-
-    //             order = {
-    //                 expiration: o.expiration,
-    //                 for_sale: o.amount_to_sell.amount,
-    //                 id: newOrder[1][1],
-    //                 sell_price: {
-    //                     base: {
-    //                         amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount),
-    //                         asset_id: o.min_to_receive.asset_id
-    //                     },
-    //                     quote: {
-    //                         amount: 1,
-    //                         asset_id: parseInt(o.amount_to_sell.asset_id, 10)
-
-    //                     }
-    //                 },
-    //                 seller: o.seller
-    //             };
-
-    //             break;
-
-    //         case "short_order":
-    //             o.expiration = new Date(o.expiration);
-    //             console.log("new short order:", orderType, newOrder);
-
-    //             order = {
-    //                 expiration: o.expiration,
-    //                 for_sale: o.amount_to_sell.amount,
-    //                 id: newOrder[1][1],
-    //                 sell_price: {
-    //                     base: {
-    //                         amount: parseInt(o.min_to_receive.amount, 10) / parseInt(o.amount_to_sell.amount, 10),
-    //                         asset_id: o.min_to_receive.asset_id
-    //                     },
-    //                     quote: {
-    //                         amount: 1,
-    //                         asset_id: o.amount_to_sell.asset_id
-    //                     }
-    //                 },
-    //                 seller: o.seller
-    //             };
-    //             break;
-
-    //         default:
-    //             break;
-    //     }
-
-    //     return {
-    //         order: order,
-    //         orderType: orderType
-    //     };
-    // }
-
     static order_type(id) {
         if (typeof id !== "string") {
             return false;
@@ -127,7 +65,7 @@ class MarketUtils {
         let pricePrecision = order.call_price ?
             (quote.toJS ? quote.get("precision") : quote.precision) :
             (base.toJS ? base.get("precision") : base.precision);
-        
+
         let buy, sell;
         let callPrice;
         if (order.sell_price) {
@@ -209,23 +147,30 @@ class MarketUtils {
         let price_full = utils.get_asset_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, isAsk);
         // price_full = !flipped ? (1 / price_full) : price_full;
         // let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
+        
         let {int, dec, trailing} = utils.price_to_text(price_full, isAsk ? receivesAsset : paysAsset, isAsk ? paysAsset : receivesAsset);
         let className = isCall ? "orderHistoryCall" : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
-        let time = order.time.split("T")[1];
-        let now = new Date();
-        let offset = now.getTimezoneOffset() / 60;
-        let hour = time.substr(0, 2);
-        let hourNumber = parseInt(hour, 10);
-        let localHour = hourNumber - offset
-        if (localHour >= 24) {
-            localHour -= 24;            
+        
+        let time;
+        if (order.time) {
+            time = order.time.split("T")[1];
+            let now = new Date();
+            let offset = now.getTimezoneOffset() / 60;
+            let date = utils.format_date(order.time + "Z").split("/");
+            let hour = time.substr(0, 2);
+            let hourNumber = parseInt(hour, 10);
+            let localHour = hourNumber - offset;
+            if (localHour >= 24) {
+                localHour -= 24;
+            } else if (localHour < 0) {
+                localHour += 24;
+            }
+            let hourString = localHour.toString();
+            if (parseInt(hourString, 10) < 10) {
+                hourString = "0" + hourString;
+            }
+            time = date[0] + "/" + date[1] + " " + time.replace(hour, hourString);
         }
-        let hourString = localHour.toString();
-        if (parseInt(hourString, 10) < 10) {
-            hourString = "0" + hourString;
-        }
-        time = time.replace(hour, hourString);
-
         return {
             receives: isAsk ? receives : pays,
             pays : isAsk ? pays : receives,
@@ -366,6 +311,27 @@ class MarketUtils {
             }
         }
         return orderBookArray;
+    }
+
+    static priceToObject(x, type) {
+        let tolerance = 1.0E-8;
+        let h1=1; let h2=0;
+        let k1=0; let k2=1;
+        let b = x;
+        do {
+            let a = Math.floor(b);
+            let aux = h1; h1 = a*h1+h2; h2 = aux;
+            aux = k1; k1 = a*k1+k2; k2 = aux;
+            b = 1/(b-a);
+        } while (Math.abs(x-h1/k1) > x*tolerance);
+
+        if (type === "ask") {
+            return {base: h1, quote: k1};
+        } else if (type === "bid") {
+            return {quote: h1, base: k1};
+        } else {
+            throw "Unknown type";
+        }
     }
 
 }

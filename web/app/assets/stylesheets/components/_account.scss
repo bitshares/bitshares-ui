@@ -1,0 +1,58 @@
+.account-left-panel {
+  .account-buttons-row .button {
+    min-width: 4.5rem;
+  }
+  .bottom {
+    border-top: 1px solid transparent;
+    padding: 0.5rem;
+    > .center {
+      width: auto;
+      margin: 0 auto;
+    }
+  }
+}
+
+.account-info {
+  text-align: center;
+  .my-account-label {
+    font-size: 90%;
+  }
+}
+
+.account-left-menu {
+  margin-left: 1.0rem !important;
+  > li {
+    > a {
+      padding-left: 1.75rem !important;
+      border-left: 2px solid transparent;
+      &.active {
+        border-left-color: #f00;
+      }
+    }
+  }
+}
+
+.no-amount {
+  padding-right: 1rem;
+  padding-left: 0.7rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.weight-input {
+  display: table-cell;
+  margin: 0 1rem !important;
+  width: 30% !important;
+}
+
+.threshold input {
+  width: 5rem !important;
+}
+
+.more-button {
+  padding-top: 0.5rem;
+}
+
+.create-account-header {
+  height: 180px;
+}

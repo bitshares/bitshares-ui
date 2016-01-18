@@ -12,7 +12,52 @@ let inProgress = {};
 
 class AssetActions {
 
-    createAsset(account_id, createObject, flags, permissions) {
+    fundPool(account_id, core, asset, amount) {
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(core.get("precision"));
+        tr.add_type_operation("asset_fund_fee_pool", {
+            "fee": {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            "from_account": account_id,
+            "asset_id": asset.get("id"),
+            "amount": amount * precision
+        });
+
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- fundPool error ----->", error);
+            return false;
+        });
+    }
+
+    claimPoolFees(account_id, asset, amount) {
+        let tr = wallet_api.new_transaction();
+        let precision = utils.get_asset_precision(asset.get("precision"));
+
+        tr.add_type_operation("asset_claim_fees", {
+            "fee": {
+                amount: 0,
+                asset_id: 0
+            },
+            "issuer": account_id,
+            "amount_to_claim": {
+                "asset_id": asset.get("id"),
+                "amount": amount * precision
+            }
+        });
+
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- claimFees error ----->", error);
+            return false;
+        });
+    }
+
+    createAsset(account_id, createObject, flags, permissions, cer) {
         // Create asset action here...
         console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);
         let tr = wallet_api.new_transaction();
@@ -24,7 +69,7 @@ class AssetActions {
         // console.log("max_supply:", max_supply);
         // console.log("max_market_fee:", max_market_fee);
 
-        let corePrecision = utils.get_asset_precision(ChainStore.getAsset("1.3.0").get("precision"));
+        let corePrecision = utils.get_asset_precision(ChainStore.getAsset(cer.base.asset_id).get("precision"));
 
         tr.add_type_operation("asset_create", {
             "fee": {
@@ -42,11 +87,11 @@ class AssetActions {
                 "flags": flags,
                 "core_exchange_rate": {
                     "base": {
-                        "amount": 1 * corePrecision,
-                        "asset_id": "1.3.0"
+                        "amount": cer.base.amount * corePrecision,
+                        "asset_id": cer.base.asset_id
                     },
                     "quote": {
-                        "amount": 1 * precision,
+                        "amount": cer.quote.amount * precision,
                         "asset_id": "1.3.1"
                     }
                 },
@@ -173,6 +218,7 @@ class AssetActions {
     }
 
     getAssetList(start, count) {
+
         let id = start + "_" + count;
         if (!inProgress[id]) {
             inProgress[id] = true;
@@ -183,6 +229,7 @@ class AssetActions {
                     let dynamicIDS = [];
 
                     assets.forEach(asset => {
+                        ChainStore._updateObject(asset, false);
                         dynamicIDS.push(asset.dynamic_asset_data_id);
 
                         if (asset.bitasset_data_id) {
@@ -293,4 +340,4 @@ class AssetActions {
     }
 }
 
-module.exports = alt.createActions(AssetActions);
+export default alt.createActions(AssetActions);

@@ -1,4 +1,4 @@
-Long = require('../common/bytebuffer').Long
+Long = require('bytebuffer').Long
 BigInteger = require('bigi')
 
 chain_types = require './chain_types.coffee'

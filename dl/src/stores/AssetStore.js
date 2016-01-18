@@ -28,6 +28,10 @@ class AssetStore extends BaseStore {
     }
 
     onGetAssetList(payload) {
+        if (!payload) {
+            return false;
+        }
+        
         payload.assets.forEach(asset => {
 
             for (var i = 0; i < payload.dynamic_data.length; i++) {
@@ -97,4 +101,4 @@ class AssetStore extends BaseStore {
     }
 }
 
-module.exports = alt.createStore(AssetStore, "AssetStore");
+export default alt.createStore(AssetStore, "AssetStore");

@@ -43,6 +43,11 @@
             mainWindowState.saveState(mainWindow);
         });
 
+        mainWindow.webContents.on('new-window', function(e, url) {
+            e.preventDefault();
+            require('shell').openExternal(url);
+        });
+
         // Create the Application's main menu
 
         var app_menu = process.platform === 'darwin' ?

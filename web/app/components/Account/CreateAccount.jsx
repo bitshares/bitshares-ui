@@ -16,6 +16,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import WalletActions from "actions/WalletActions";
 import Translate from "react-translate-component";
 import RefcodeInput from "../Forms/RefcodeInput";
+import {TransitionMotion, spring} from 'react-motion';
 
 @connectToStores
 class CreateAccount extends React.Component {
@@ -28,12 +29,28 @@ class CreateAccount extends React.Component {
         return {}
     }
 
-    static contextTypes = {router: React.PropTypes.func.isRequired};
-
     constructor() {
         super();
-        this.state = {validAccountName: false, accountName: "", validPassword: false, registrar_account: null, loading: false, hide_refcode: true};
+        this.state = {
+            validAccountName: false,
+            accountName: "",
+            validPassword: false,
+            registrar_account: null,
+            loading: false,
+            hide_refcode: true,
+            show_identicon: false
+        };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.validAccountName !== this.state.validAccountName ||
+            nextState.accountName !== this.state.accountName ||
+            nextState.validPassword !== this.state.validPassword ||
+            nextState.registrar_account !== this.state.registrar_account ||
+            nextState.loading !== this.state.loading ||
+            nextState.hide_refcode !== this.state.hide_refcode ||
+            nextState.show_identicon !== this.state.show_identicon;
     }
 
     isValid() {
@@ -45,8 +62,11 @@ class CreateAccount extends React.Component {
     }
 
     onAccountNameChange(e) {
-        if(e.valid !== undefined) this.setState({ validAccountName: e.valid })
-        if(e.value !== undefined) this.setState({ accountName: e.value })
+        const state = {};
+        if(e.valid !== undefined) state.validAccountName = e.valid;
+        if(e.value !== undefined) state.accountName = e.value;
+        if (!this.state.show_identicon) state.show_identicon = true;
+        this.setState(state);
     }
 
     onPasswordChange(e) {
@@ -60,7 +80,7 @@ class CreateAccount extends React.Component {
             TransactionConfirmStore.unlisten(this.onFinishConfirm);
             TransactionConfirmStore.reset();
             if(op0[0] === 5 && op0[1].name === this.state.accountName) {
-                this.context.router.transitionTo("account-overview", {account_name: this.state.accountName});
+                this.props.history.pushState(null, `/account/${this.state.accountName}/overview`);
             }
         }
     }
@@ -74,7 +94,7 @@ class CreateAccount extends React.Component {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else {
-                    this.context.router.transitionTo("account-overview", {account_name: name});
+                    this.props.history.pushState(null, `/account/${name}/overview`);
                 }
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
@@ -127,33 +147,83 @@ class CreateAccount extends React.Component {
         this.setState({hide_refcode: false});
     }
 
+    getHeaderItemStyles() {
+        let config = {};
+        let d = {
+            opacity: spring(1),
+            top: spring(16)
+        };
+        if (this.state.show_identicon) config["icon"] = d;
+        else config["title"] = d;
+        return config;
+    }
+
+    headerItemWillEnter(key) {
+        return {
+            opacity: spring(0),
+            top: spring(-50)
+        };
+    }
+
+    headerItemWillLeave(key) {
+        return {
+            opacity: spring(0),
+            top: spring(-50)
+        };
+    }
+
     render() {
         let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
         let valid = this.isValid();
         let buttonClass = classNames("button", {disabled: !valid});
+
+        let header_items = {
+            icon: <div className="form-group">
+                <label><Translate content="account.identicon"/></label>
+                <AccountImage account={this.state.validAccountName ? this.state.accountName : null}/>
+            </div>,
+            title: first_account ?
+                    (<div>
+                        <h1><Translate content="account.welcome"/></h1>
+                        <h3><Translate content="account.please_create_account"/></h3>
+                        <hr/>
+                    </div>) :
+                    (
+                        <div>
+                            <h1><Translate content="account.create_account"/></h1>
+                            <hr/>
+                        </div>
+                    )
+        };
+
+        const header = <TransitionMotion
+            styles={this.getHeaderItemStyles()}
+            willEnter={this.headerItemWillEnter}
+            willLeave={this.headerItemWillLeave}>
+            {config =>
+                <div>
+                    {Object.keys(config).map(key =>
+                        {
+                            let style = config[key];
+                            return <div key={key} style={{position: "absolute", left: 0, right: 0, ...style}}>
+                                <div className="center-content">{header_items[key]}</div>
+                            </div>;
+                        })
+                    }
+                </div>
+            }
+        </TransitionMotion>
+
         return (
             <div className="grid-block vertical">
                 <div className="grid-content">
+                    <div className="create-account-header">
+                        {header}
+                    </div>
                     <div className="content-block center-content">
-                        <div className="page-header">
-                        {
-                            first_account ?
-                                (<div>
-                                    <h1><Translate content="account.welcome" /></h1>
-                                    <h3><Translate content="account.please_create_account" /></h3>
-                                </div>) :
-                                (
-                                    <h3><Translate content="account.create_account" /></h3>
-                                )
-                        }
-                        </div>
                         <div style={{width: '21em'}}>
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
-                                <div className="form-group">
-                                    <label><Translate content="account.identicon" /></label>
-                                    <AccountImage account={this.state.validAccountName ? this.state.accountName:null}/>
-                                </div>
                                 <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
@@ -176,10 +246,10 @@ class CreateAccount extends React.Component {
                                         <br/>
                                     </div>
                                 }
-                                {this.state.loading ?  <LoadingIndicator type="circle"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
+                                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
                                 <br/>
                                 <br/>
-                                <label className="inline"><Link to="existing-account"><Translate content="account.existing_accounts" /></Link></label>
+                                <label className="inline"><Link to="/existing-account"><Translate content="account.existing_accounts" /></Link></label>
                                 {this.state.hide_refcode ? <span>&nbsp; &bull; &nbsp;
                                     <label className="inline"><a href onClick={this.showRefcodeInput.bind(this)}><Translate content="refcode.enter_refcode"/></a></label>
                                 </span> : null}

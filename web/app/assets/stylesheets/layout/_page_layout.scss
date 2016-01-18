@@ -1,0 +1,40 @@
+.page-layout {
+
+  > .grid-block {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    > .grid-content, > .grid-block {
+      padding: 1rem 1.75rem 1rem 1.75rem;
+    }
+  }
+
+  .left-column {
+    background-color: #fafafa;
+  }
+
+  .main-content {
+    background-color: #f3f3f3;
+  }
+
+  .right-column {
+    background-color: #eaeaea;
+  }
+
+  .regular-padding {
+    padding: 1rem 1.75rem 1rem 1.75rem !important;
+  }
+
+}
+
+#account-notify {
+    position: absolute;
+    top: auto !important;
+    right: 0.5em;
+    width: 30em;
+}
+
+@media (max-width: 1100px) {
+  .hide-column-small {
+    display: none !important;
+  }
+}

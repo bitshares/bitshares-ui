@@ -1,17 +1,17 @@
-[# özet]
-### Varlık {symbol}
+[# summary]
+### Aktif {symbol}
 
 {description}  
 Piyasaya süren {issuer}
 
 
-[# yıllık]
+[# annual]
 
 Eğer ömür-boyu üyelik fazla geliyorsa,  {price} miktarında bir ücret karşılığında bir  
 yıllığına abone olarak gelecek yıl için {feesCashback}% para iadesi alabilirsiniz.
 ![GitHub Logo](/images/logo.png)
 
-[# ücret-paylaşımı]
+[# fee-division]
 #### Ücret Paylaşımı
 {account} adlı hesap her işlem ücreti ödediğinde, o ücret birçok farklı hesaplar arasında 
 paylaştırılır. Ağımız {networkFee}% pay alırken, {account} adlı hesabı  getiren Ömür-boyu Üye de  {lifetimeFee}% pay alır.

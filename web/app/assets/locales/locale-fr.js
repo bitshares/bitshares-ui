@@ -64,7 +64,8 @@ module.exports = {
         },
         perm: {
             active: "Permissions actifs",
-            owner: "Permissions de proprietaire",
+            owner: "Permissions des proprietaires",
+            memo_key: "Cléf mémo",
             publish: "Publier les changements",
             reset: "Annuler les changements",
             add: "Rajouter une permission",
@@ -73,7 +74,13 @@ module.exports = {
             weight: "Poids",
             threshold: "Limite",
             confirm_add: "Rajouter",
-            cancel: "Annuler"
+            cancel: "Annuler",
+            warning1: "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning2: "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            warning3: "Account is already in the list",
+            warning4: "Key is already in the list",
+            action: "Action",
+            acct_or_key:" Account/Key"
         },
         votes: {
             proxy: "Proxy Voting Account",
@@ -113,7 +120,8 @@ module.exports = {
             invalid: "Compte non valable",
             unknown: "Compte inconnu",
             not_yours: "Pas votre compte"
-        }
+        },
+        settle: "Settle"
     },
     transfer: {
         from: "De",
@@ -129,7 +137,8 @@ module.exports = {
             req: "Champ obligatoire",
             pos: "Le montant doit étre positif",
             valid: "Veuillez rentrer un chiffre positif",
-            balance: "Le solde final doit être superieur à 0"
+            balance: "Le solde final doit être superieur à 0",
+            insufficient: "Insufficient Balance"
         },
         back: "REVENIR",
         confirm: "CONFIRMER",
@@ -376,5 +385,29 @@ module.exports = {
         claim_refcode: "Claim Referral Code",
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
+    },
+    gateway: {
+        bridge: "Bridge",
+        gateway: "Gateway",
+        symbol: "Symbol",
+        deposit_to: "Deposit To",
+        balance: "Balance",
+        generate: "Generate",
+        deposit: "Deposit",
+        withdraw: "Withdraw",
+        inventory: "Inventory",
+        scan_qr: "Scan QR",
+        transwiser: {
+            gateway: "Transwiser",
+            visit_weidian: "Click to deposit",
+            deposit_title: "Deposit RMB to %(asset)s",
+            withdraw_title: "Withdraw %(asset)s to RMB",
+            alipay: "ALIPAY Account Name",
+            withdraw_note: "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
+            you_will_receive: "You will receive %(amount)s RMB"
+        },
+        meta: {
+            open_website: "Open Website"
+        }
     }
 };

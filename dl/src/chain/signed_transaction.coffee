@@ -1,7 +1,7 @@
 ObjectId = require './object_id'
 Signature = require '../ecc/signature'
 PublicKey = require '../ecc/key_public'
-ByteBuffer = require('../common/bytebuffer')
+ByteBuffer = require('bytebuffer')
 Long = ByteBuffer.Long
 Aes = require '../ecc/aes'
 
@@ -19,7 +19,7 @@ ChainStore = (require 'api/ChainStore').default
 module.exports = _my = {}
 
 _my.signed_transaction = ->
-    
+
     ref_block_num: 0
     ref_block_prefix: 0
     expiration: 0
@@ -54,7 +54,7 @@ _my.signed_transaction = ->
             operation.expiration_time ||= (base_expiration_sec() + chain_config.expire_in_secs_proposal) * 1000
         operation_instance = _type.fromObject operation
         [operation_id, operation_instance]
-    
+
     set_expire_seconds:(sec)->
         throw new Error "already finalized" if @tr_buffer
         @expiration = base_expiration_sec() + sec
@@ -85,7 +85,7 @@ _my.signed_transaction = ->
         throw new Error "add operations first" unless @operations.length
         operations = for op in @operations
             type.operation.toObject op
-        
+
         if not asset_id
             op1_fee = operations[0][1].fee
             if op1_fee and op1_fee.asset_id isnt null
@@ -93,9 +93,33 @@ _my.signed_transaction = ->
             else
                 asset_id = "1.3.0"
 
-        Apis.instance().db_api().exec( "get_required_fees",
-            [operations, asset_id]
-        ).then (assets)=>
+        promises = [
+            Apis.instance().db_api().exec( "get_required_fees",
+                [operations, asset_id]
+            )
+        ]
+
+        if asset_id isnt "1.3.0"
+            asset = ChainStore.getAsset(asset_id)
+            fee_pool = asset.getIn ["dynamic", "fee_pool"]
+            promises.push Apis.instance().db_api().exec( "get_required_fees",
+                [operations, "1.3.0"]
+            )
+
+        Promise.all(promises)
+        .then (results)=>
+            fees = results[0]
+
+            if asset_id isnt "1.3.0"
+                coreFees = results[1]
+                totalFees = 0
+                for fee in coreFees
+                    totalFees += fee.amount
+
+                if totalFees > parseInt fee_pool, 10
+                    fees = coreFees
+                    asset_id = "1.3.0"
+
             flat_assets = []
             flatten = (obj) ->
                 if Array.isArray obj
@@ -104,7 +128,7 @@ _my.signed_transaction = ->
                 else
                     flat_assets.push obj
                 return
-            flatten assets
+            flatten fees
             asset_index = 0
             for i in [0...@operations.length] by 1
                 set_fee = (operation) ->
@@ -115,7 +139,7 @@ _my.signed_transaction = ->
                 set_fee @operations[i][1]
             #DEBUG console.log('... get_required_fees',operations,asset_id,flat_assets)
             return
-    
+
     finalize:()->
         new Promise (resolve, reject)=>
             throw new Error "already finalized" if @tr_buffer
@@ -131,7 +155,7 @@ _my.signed_transaction = ->
                     @tr_buffer = type.transaction.toBuffer @
                     return
             return
-    
+
     get_potential_signatures:()->
         tr_object = type.signed_transaction.toObject @
         Promise.all([
@@ -139,7 +163,7 @@ _my.signed_transaction = ->
             Apis.instance().db_api().exec( "get_potential_address_signatures", [tr_object] )
         ]).then (results)->
             {pubkeys: results[0], addys: results[1]}
-    
+
     get_required_signatures:(available_keys)->
         return Promise.resolve([]) unless available_keys.length
         tr_object = type.signed_transaction.toObject @
@@ -150,13 +174,13 @@ _my.signed_transaction = ->
         ).then (required_public_keys)->
             #DEBUG console.log('... get_required_signatures',required_public_keys)
             required_public_keys
-    
+
     add_signer:(private_key, public_key)->
         throw new Error "already signed" if @signed
         unless public_key.Q
             public_key = PublicKey.fromPublicKeyString public_key
         @signer_private_keys.push [private_key, public_key]
-    
+
     sign:(chain_id = Apis.instance().chain_id)->
         throw new Error "not finalized" unless @tr_buffer
         throw new Error "already signed" if @signed
@@ -173,10 +197,10 @@ _my.signed_transaction = ->
         @signer_private_keys = []
         @signed = true
         return
-    
+
     serialize:()->
         type.signed_transaction.toObject @
-    
+
     id:()->
         throw new Error "not finalized" unless @tr_buffer
         hash.sha256(@tr_buffer).toString( 'hex' ).substring(0,40)

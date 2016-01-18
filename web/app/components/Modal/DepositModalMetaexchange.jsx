@@ -1,20 +1,8 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
-import utils from "common/utils";
-import classNames from "classnames";
-import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb";
-import FormattedPrice from "../Utility/FormattedPrice";
-import counterpart from "counterpart";
-import AmountSelector from "../Utility/AmountSelector";
-import AccountActions from "actions/AccountActions";
 
 var Post = require ("../Utility/FormPost.js");
 
@@ -48,14 +36,14 @@ class DepositModalMetaexchange extends React.Component {
 	  
 		Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair}).then( reply=>reply.json().then(reply=>
 		{
-			console.log(reply);
+			// console.log(reply);
 			this.setState( {limit:reply.ask_max} );
 			
 			if (props.is_bts_deposit)
 			{
 				Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'buy',deposit_amount:1}).then( reply=>reply.json().then(reply=>
 				{
-					console.log(reply);
+					// console.log(reply);
 					this.setState( {quote:reply.result} );
 				}));
 			}
@@ -74,11 +62,13 @@ class DepositModalMetaexchange extends React.Component {
 			memoName = "Message"
 		}
 		
-		let memoPart = <div className="content-block full-width-content">
-                       <label>{memoName}</label>
-                       <input type="text" value={this.props.memo} tabIndex="4" autoComplete="off"/>
-					   <div>Don't forget to include this {memoName} with the transaction you send, otherwise your deposit will not credit!</div>
-					</div>
+		let memoPart = (
+            <div className="content-block full-width-content">
+               <label>{memoName}</label>
+               <input type="text" value={this.props.memo} tabIndex="4" autoComplete="off"/>
+			   <div>Don't forget to include this {memoName} with the transaction you send, otherwise your deposit will not credit!</div>
+			</div>
+        );
 					
 		let depositPart = null, quotePart = null;
 		if (this.props.is_bts_deposit)
@@ -113,7 +103,7 @@ class DepositModalMetaexchange extends React.Component {
 				  {memoPart} 
 				   <div className="content-block">
                        <Trigger close={this.props.modal_id}>
-                           <a href className="secondary button"><Translate content="" />Ok</a>
+                           <a href className="secondary button"><Translate content="modal.ok" /></a>
                        </Trigger>
                    </div>
                  </div> 

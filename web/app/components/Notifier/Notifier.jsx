@@ -63,7 +63,7 @@ class Notifier extends React.Component {
         if(!trx) { return <div></div>; }
 
         return (
-            <Notification.Static id='account-notify' title={null} image="">
+            <Notification.Static id='account-notify' title={null} image="" wrapperElement="div">
                 <table className="table">
                     <tbody>
                         {info}

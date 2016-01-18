@@ -2,19 +2,46 @@ $bid-color: #50D2C2;
 $ask-color: #E3745B;
 $call-color: #BBBF2B;
 $light-panel-bg-color: #353742;
+$positive-color: #6EC105;
+$negative-color: #E1424A;
 
 .market-layout {
   > .grid-block {
-    padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
+    // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
   }
 
-/*  .left-column-2 {
-    min-width: 15rem;
+  >.left-column {
+    border-right: 1px solid grey;
+    border-top: none;
   }
 
   .right-column {
-    min-width: 15rem;
-  }*/
+    border-left: 1px solid grey;
+
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-top: none;
+  }
+
+  .main-content {
+    .top-bar {
+      border-bottom: 1px solid grey;
+    }
+
+    .buy-sell {
+      border-top: 1px solid grey;
+      border-bottom: 1px solid grey;
+    }
+  }
+}
+
+.exchange-content-header {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding-bottom: 0.25rem;
+  padding-top: 1rem;
 }
 
 .market-content {
@@ -76,7 +103,6 @@ td.orderHistoryCall {
 
     > tbody > tr > td {
         font-size: 0.75rem;
-        border: none;
     }
 }
 
@@ -102,12 +128,12 @@ p.order-table-title {
 .backingWarning { color: yellow; }
 .backingError { color: red; }
 
-.buy-form {
+.bid-form {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
 
-.sell-form {
+.ask-form {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
@@ -117,11 +143,11 @@ p.order-table-title {
   min-width: 4rem;
 }
 
-.buy {
+.bid {
   background-color: $bid-color !important;
 }
 
-.sell {
+.ask {
   background-color: $ask-color !important;
 }
 
@@ -169,9 +195,18 @@ p.order-table-title {
   // }
 }
 
+.final-row > td {
+  border-bottom: none !important;
+}
+
 .orderbook-latest-price {
-  border-bottom: 1px solid #777;
-  border-top: 1px solid #777;
+    td {
+      background-color: #4C4C4C !important;
+      border-bottom: 1px solid grey !important;
+      border-top: 1px solid grey !important;
+      padding: 10px 0 !important;
+      font-weight: bold;
+    }
 }
 
 .left-orderbook-header {
@@ -180,11 +215,9 @@ p.order-table-title {
 }
 
 .top-header {
-  border-bottom: 1px solid #777;
   padding-bottom: 0.25rem;
 }
 .bottom-header {
-  border-top: 1px solid #777;
   padding-top: 0.25rem;
 }
 
@@ -201,7 +234,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   left: 25px;
   color: $bid-color;
-  z-index: 999;
+  z-index: 50;
 }
 
 .ask-total {
@@ -210,7 +243,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   top: 5px;
   right: 25px;
   color: $ask-color;
-  z-index: 999;
+  z-index: 50;
 }
 
 .chart-label {
@@ -241,41 +274,71 @@ a.order-cancel {
   overflow: visible;
 }
 
-.market-stats > li {
-  display: inline-block;
-  padding-right: 0.5rem;
+li.stat.clickable:hover {
+  background-color: #4C4C4C;
+}
+
+.market-stats {
+  > li {
+    display: inline-block;
+    padding-right: 0.5rem;
+  }
 }
 
 .market-stats .stat {
   text-align: left;
-  font-size: 12px;
+  font-size: 0.75rem;
   overflow: hidden;
-  padding: 5px 0px;
 }
 
 .market-stats .stat .value {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #000;
   letter-spacing: normal;
 }
 
 .stats {
+  line-height: 1rem !important;
   list-style: none;
   overflow: hidden;
-  text-align: right;
   margin: 0px;
-  padding: 0px;
-  min-height: 63px;
+  padding: 0px; 
 }
+
+.top-stats li {
+  border-right: 1px solid grey;
+}
+
+.bottom-stats li {
+  border-right: 1px solid grey;
+}
+
 .stats .stat {
-  padding: 0 10px;
+  padding: 3px 5px;
   height: 100%;
+
+  > span {
+    > span:first-of-type {
+      color: grey;
+      padding-right: 5px;
+    }
+
+    > span:last-of-type {
+      color: #468EDE;
+      padding-left: 5px;
+    }
+  }
 }
+
+.stats .indicators {
+  padding: 5px 0;
+  text-transform: uppercase;
+}
+
 .stats .stat:first-child {
   border-left: none;
 }
 .stats .stat .value {
-  font-size: 120%;
   color: #FFFFFF;
   letter-spacing: 1px;
 }
@@ -284,11 +347,19 @@ a.order-cancel {
   display: block;
 }
 
+.stats .stat .negative {
+  color: $negative-color;
+}
+
+.stats .stat .positive {
+  color: $positive-color;
+}
+
 .market-symbol {
     font-weight: bold;
-    font-size: 110%;
-    padding-left: 1rem;
-    padding-right: 1.1rem;
+    font-size: 1.1rem;
+    padding-left: 0.3rem;
+    padding-right: 0.5rem;
     padding-top: 1.3rem;
 }
 
@@ -301,6 +372,11 @@ a.order-cancel {
 .bucket-option {
   cursor: pointer;
   text-transform: none !important;
+  padding-right: 0.5rem;
+}
+
+.bucket-option:hover {
+  background-color: #4C4C4C;
 }
 
 .buy-sell-row {
@@ -340,6 +416,7 @@ a.order-cancel {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
+    background-color: lighten($light-panel-bg-color, 12%);
 }
 
 .account-drop-down {
@@ -353,11 +430,17 @@ a.order-cancel {
 }
 
 .borrow-button {
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
+  margin-right: 0.2rem;
+  font-size: 0.8rem
 }
 
 .borrow-button-container {
-  padding-right: 1rem;
+  padding-left: 0.25rem;
+
+  > div:last-of-type {
+    margin-bottom: 0.2rem;
+  }
 }
 
 .order-change {
@@ -401,13 +484,59 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .change-up {
-  color: $bid-color !important;
+  color: $positive-color !important;
 }
 
 .change-down {
-  color: $ask-color !important;
+  color: $negative-color !important;
+}
+
+.mymarkets-header {
+  text-transform: uppercase;
+  width: 50%;
+  max-width: 300px;
+  text-align: center;
+  font-size: 1.10rem;
+  padding: 10px 0;
+  font-weight: 500;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  margin-bottom: 0.25rem;
+  transition: border-color 0.3s ease 0s;
+}
+
+.mymarkets-list {
+  padding-top: 0.55rem;
+  font-size: 0.75rem;
 }
 
 table thead tr th.mymarkets-header {
   padding-bottom: 9px !important;
+}
+
+.title-star {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-right: 0.25rem;
+}
+
+.gold-star > svg > path {
+  fill: #CC9F00;
+}
+
+.grey-star > svg > path {
+  fill: #878787;
+}
+
+tr.activeMarket {
+  color: #4C85D8;
+}
+
+.no-data {
+  position: relative;
+  left: 45%;
+  top: 200px;
+  z-index: 999;
+  text-transform: uppercase;
+  font-size: 2rem;
 }

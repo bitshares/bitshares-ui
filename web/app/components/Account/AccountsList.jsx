@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
@@ -42,6 +41,7 @@ class AccountItemRow extends React.Component {
             }
         }
 
+        let link = url && url.length > 0 && url.indexOf("http") === -1 ? "http://" + url : url;
 
         return (
             <tr>
@@ -49,7 +49,7 @@ class AccountItemRow extends React.Component {
                     <AccountImage size={{height: 30, width: 30}} account={name}/>
                 </td>
                 <td>{name}</td>
-                <td>{url}</td>
+                <td><a href={link} target="_blank">{url}</a></td>
                 <td><FormattedAsset amount={votes} asset="1.3.0" decimalOffset={5} /></td>
                 <td>
                     <button className="button outline" onClick={this.onRemoveItem.bind(this, item_id)}>

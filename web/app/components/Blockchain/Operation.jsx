@@ -1,7 +1,6 @@
 import React from "react";
-import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router";
+import {Link, PropTypes} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -19,10 +18,14 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import ChainStore from "api/ChainStore";
+import account_constants from "chain/account_constants";
+import Icon from "../Icon/Icon";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
+let listings = account_constants.account_listing;
 
 class TransactionLabel extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -45,7 +48,7 @@ class TransactionLabel extends React.Component {
 @BindToChainState({keep_updating:true})
 class Row extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     }
 
     static propTypes = {
@@ -63,7 +66,7 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.router.transitionTo("block", {height: this.props.block});
+        this.context.history.pushState(null, `/block/${this.props.block}`);
     }
 
     render() {
@@ -93,15 +96,17 @@ class Operation extends React.Component {
         block: null,
         hideDate: false,
         hideFee: false,
-        hideOpLabel: false
+        hideOpLabel: false,
+        csvExportMode: false
     }
 
     static propTypes = {
-        op: PropTypes.array.isRequired,
-        current: PropTypes.string,
-        block: PropTypes.number,
-        hideDate: PropTypes.bool,
-        hideFee: PropTypes.bool
+        op: React.PropTypes.array.isRequired,
+        current: React.PropTypes.string,
+        block: React.PropTypes.number,
+        hideDate: React.PropTypes.bool,
+        hideFee: React.PropTypes.bool,
+        csvExportMode: React.PropTypes.bool
     }
 
     // shouldComponentUpdate(nextProps) {
@@ -112,14 +117,21 @@ class Operation extends React.Component {
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
             <LinkToAccountById account={name_or_id}/> :
-            <Link to="account-overview" params={{account_name: name_or_id}}>{name_or_id}</Link>;
+            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>;
     }
 
     linkToAsset(symbol_or_id) {
         if(!symbol_or_id) return <span>-</span>;
         return utils.is_object_id(symbol_or_id) ?
             <LinkToAssetById asset={symbol_or_id}/> :
-            <Link to="asset" params={{symbol: symbol_or_id}}>{symbol_or_id}</Link>;
+            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
+    }
+
+    _toggleLock(e) {
+        e.preventDefault();
+        WalletUnlockActions.unlock().then(() => {
+            this.forceUpdate();
+        })
     }
 
     render() {
@@ -130,7 +142,7 @@ class Operation extends React.Component {
 
             case "transfer":
                 let memo_text = null;
-
+                let lockedWallet = false;
                 if(op[1].memo) {
                     let memo = op[1].memo;
                     let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
@@ -143,6 +155,7 @@ class Operation extends React.Component {
                         private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
                     }
                     catch(e) {
+                        lockedWallet = true;
                         private_key = null;
                     }
                     try {
@@ -160,37 +173,35 @@ class Operation extends React.Component {
 
                 color = "success";
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
+                let full_memo = memo_text;
+                if (memo_text && memo_text.length > 35) {
 
-                // if (current === op[1].from) {
+                    memo_text = memo_text.substr(0, 35) + "...";
+                }
 
-                //     column = (
-                //         <span>
-                //             <Translate component="span" content="transaction.sent" />
-                //             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                //             &nbsp;<Translate component="span" content="transaction.to" /> {this.linkToAccount(op[1].to)}
-                //             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                //         </span>
-                //     );
-                // } else if(current === op[1].to){
-                //     column = (
-                //         <span key={"transfer_" + this.props.key} className="right-td">
-                //             <Translate component="span" content="transaction.received"/>
-                //             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                //             &nbsp;<Translate component="span" content="transaction.from"/> {this.linkToAccount(op[1].from)}
-                //             {memo_text ? <div className="memo">{memo_text}</div> : null}
-                //         </span>
-                //     );
-                // } else {
-                    column = (
-                        <span key={"transfer_" + this.props.key} className="right-td">
-                            {this.linkToAccount(op[1].from)}
-                            &nbsp;<Translate component="span" content="transaction.sent"/>
-                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                            &nbsp;<Translate component="span" content="transaction.to"/> {this.linkToAccount(op[1].to)}
-                            {memo_text ? <div className="memo">{memo_text}</div> : null}
-                        </span>
-                    );
-                // }
+                let memoComponent = op[1].memo && lockedWallet ? (
+                    <div className="memo">
+                        <Translate content="transfer.memo_unlock" />&nbsp;
+                        <a href onClick={this._toggleLock.bind(this)}>
+                            <Icon name="locked"/>
+                        </a>
+                    </div>) : memo_text ? (
+                        <div className="memo">
+                            <span data-tip={full_memo} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>
+                                {memo_text}
+                            </span>
+                        </div>
+                    ) : null;
+
+                column = (
+                    <span key={"transfer_" + this.props.key} className="right-td">
+                        {this.linkToAccount(op[1].from)}
+                        &nbsp;<Translate component="span" content="transaction.sent"/>
+                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
+                        &nbsp;<Translate component="span" content="transaction.to"/> {this.linkToAccount(op[1].to)}
+                        {memoComponent}
+                    </span>
+                );
 
                 break;
 
@@ -294,30 +305,59 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-                column = (
-                    <span>
-                        {this.linkToAccount(op[1].account)}&nbsp;
-                        <Translate component="span" content="transaction.update_account" />
-                    </span>
-                );
-                break;
-
-            case "account_whitelist":
-                if (current === op[1].authorizing_account) {
+                if (op[1].new_options.voting_account) {
+                    let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.whitelist_account" />
-                            &nbsp;{this.linkToAccount(op[1].account_to_list)}
+                            {this.linkToAccount(op[1].account)}&nbsp;
+                            <Translate component="span" content="transaction.set_proxy" proxy={proxyAccount ? proxyAccount.get("name") : ""} />
                         </span>
                     );
                 } else {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.whitelisted_by" />
-                            &nbsp;{this.linkToAccount(op[1].authorizing_account)}
+                            {this.linkToAccount(op[1].account)}&nbsp;
+                            <Translate component="span" content="transaction.update_account" />
                         </span>
                     );
                 }
+                break;
+
+            case "account_whitelist":
+
+                let label = op[1].new_listing === listings.no_listing ? "unlisted_by" :
+                              op[1].new_listing === listings.white_listed ? "whitelisted_by" :
+                              "blacklisted_by";
+                column = (
+                    <span>
+                        <BindToChainState.Wrapper lister={op[1].authorizing_account} listee={op[1].account_to_list}>
+                            { ({lister, listee}) =>
+                                <Translate
+                                    component="span"
+                                    content={"transaction." + label}
+                                    lister={lister.get("name")}
+                                    listee={listee.get("name")}
+                                />
+
+                            }
+                        </BindToChainState.Wrapper>
+                    </span>
+                )
+                // if (current === op[1].authorizing_account) {
+                //     column = (
+                //         <span>
+                //             <Translate component="span" content="transaction.whitelist_account" />
+                //             &nbsp;{this.linkToAccount(op[1].account_to_list)}
+                //         </span>
+                //     );
+                // } else {
+                //     column = (
+                //         <span>
+                //             <Translate component="span" content="transaction.whitelisted_by" />
+                //             &nbsp;{this.linkToAccount(op[1].authorizing_account)}
+                //         </span>
+                //     );
+                // }
                 break;
 
             case "account_upgrade":
@@ -590,7 +630,6 @@ class Operation extends React.Component {
             case "fill_order":
                 color = "success";
                 o = op[1];
-
                 column = (
                         <span>
                             {this.linkToAccount(op[1].account_id)}&nbsp;
@@ -763,6 +802,26 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "asset_claim_fees":
+                color = "success";
+                op[1].amount_to_claim.amount = parseInt(op[1].amount_to_claim.amount, 10);
+                column = (
+                    <span>
+                        {this.linkToAccount(op[1].issuer)}&nbsp;
+                        <BindToChainState.Wrapper asset={op[1].amount_to_claim.asset_id}>
+                           { ({asset}) =>
+                                   <Translate
+                                       component="span"
+                                       content="transaction.asset_claim_fees"
+                                       balance_amount={utils.format_asset(op[1].amount_to_claim.amount, asset)}
+                                       asset={asset.get("symbol")}
+                                   />
+                           }
+                       </BindToChainState.Wrapper>
+                    </span>
+                );
+                break;
+
             case "custom":
                 column = (
                     <span>
@@ -775,10 +834,24 @@ class Operation extends React.Component {
                 console.log("unimplemented op:", op);
                 column = (
                     <span>
-                        <Link to="block" params={{height: block}}>#{block}</Link>
+                        <Link to={`/block/${block}`}>#{block}</Link>
                     </span>
 
                 );
+        }
+
+        if (this.props.csvExportMode) {
+            const globalObject = ChainStore.getObject("2.0.0");
+            const dynGlobalObject = ChainStore.getObject("2.1.0");
+            const block_time = utils.calc_block_time(block, globalObject, dynGlobalObject)
+            return (
+                <div key={this.props.key}>
+                    <div>{block_time ? block_time.toLocaleString() : ""}</div>
+                    <div>{ops[op[0]]}</div>
+                    <div>{column}</div>
+                    <div><FormattedAsset amount={parseInt(op[1].fee.amount, 10)} asset={op[1].fee.asset_id} /></div>
+                </div>
+            );
         }
 
         line = column ? (

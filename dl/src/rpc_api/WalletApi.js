@@ -75,4 +75,4 @@ class WalletApi {
     }
 
 }
-module.exports = WalletApi
+export default WalletApi

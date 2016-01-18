@@ -1,6 +1,7 @@
 import React from "react";
 import AssetStore from "stores/AssetStore";
-import AltContainer from "alt/AltContainer";
+import SettingsStore from "stores/SettingsStore";
+import AltContainer from "alt-container";
 import Assets from "./Assets";
 
 class AssetsContainer extends React.Component {
@@ -9,10 +10,16 @@ class AssetsContainer extends React.Component {
 
         return (
               <AltContainer 
-                  stores={[AssetStore]}
+                  stores={[AssetStore, SettingsStore]}
                   inject={{
                     assets: () => {
                         return AssetStore.getState().assets;
+                    },
+                    filterMPA: () => {
+                        return SettingsStore.getState().viewSettings.get("filterMPA");
+                    },
+                    filterUIA: () => {
+                        return SettingsStore.getState().viewSettings.get("filterUIA");
                     }
                   }} 
                   >

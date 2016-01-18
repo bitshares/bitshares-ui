@@ -49,7 +49,6 @@ class WalletDb extends BaseStore {
             return // no change
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
         // Helps to ensure we are looking at an un-used key
-        // Adversly affected by https://github.com/cryptonomex/graphene/issues/324
         try { this.generateNextKey( false /*save*/ ) } catch(e) {
             console.error(e) }
     }
@@ -250,7 +249,6 @@ class WalletDb extends BaseStore {
                 var password_aes = Aes.fromSeed( password )
                 var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
                 aes_private = Aes.fromSeed( encryption_plainbuffer )
-                this.checkNextGeneratedKey()
             }                 
             return true
         } catch(e) {
@@ -297,7 +295,9 @@ class WalletDb extends BaseStore {
         var sequence = wallet.brainkey_sequence
         var used_sequence = null
         // Skip ahead in the sequence if any keys are found in use
-        for (var i = sequence; i < sequence + 10; i++) {
+        // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
+        this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead||0) + 1)
+        for (var i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
             var private_key = key.get_brainkey_private( brainkey, i )
             var pubkey =
                 this.generateNextKey_pubcache[i] ?
@@ -509,7 +509,7 @@ class WalletDb extends BaseStore {
 }
 
 export var WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
-module.exports = WalletDbWrapped
+export default WalletDbWrapped
 
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)

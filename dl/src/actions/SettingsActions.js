@@ -10,12 +10,20 @@ class SettingsActions {
         this.dispatch(value);
     }
 
-    addMarket(quote, base) {
+    addStarMarket(quote, base) {
         this.dispatch({quote, base});
     }
 
-    removeMarket(quote, base) {
+    removeStarMarket(quote, base) {
         this.dispatch({quote, base});
+    }
+
+    addStarAccount(account) {
+        this.dispatch(account);
+    }
+
+    removeStarAccount(account) {
+        this.dispatch(account);
     }
 
     addWS(ws) {

@@ -1,4 +1,4 @@
-[# bağlantı-hatası]
+[# connection-error]
 Ful noda websocket bağlantısı kuramadık.
 
 Olası sebepler: TODO

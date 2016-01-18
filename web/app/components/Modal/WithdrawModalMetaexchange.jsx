@@ -1,17 +1,11 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
-import classNames from "classnames";
 import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
@@ -58,7 +52,7 @@ class WithdrawModalMetaexchange extends React.Component {
 		{
 			Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair}).then( reply=>reply.json().then(reply=>
 			{
-				console.log(reply);
+				// console.log(reply);
 				this.setState( {limit:reply.bid_max} );
 
 				this.updateQuote(1);
@@ -85,7 +79,7 @@ class WithdrawModalMetaexchange extends React.Component {
 		
 		Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'sell',deposit_amount:amount}).then( reply=>reply.json().then(reply=>
 				{
-					console.log(reply);
+					// console.log(reply);
 					this.setState( {quote:reply.result} );
 				}));
    }
@@ -110,7 +104,7 @@ class WithdrawModalMetaexchange extends React.Component {
 							order_type:this.props.order_type
 						}).then( reply=>reply.json().then(reply=>
 						{
-							console.log(reply);
+							// console.log(reply);
 							if (reply.error)
 							{
 								this.setState( {api_error:reply.message, memo:null} );
@@ -134,7 +128,7 @@ class WithdrawModalMetaexchange extends React.Component {
 			let asset = this.props.asset;
 			let precision = utils.get_asset_precision(asset.get("precision"));
 			
-			console.log( "withdraw_amount: ", amount );
+			// console.log( "withdraw_amount: ", amount );
 			AccountActions.transfer(
 				this.props.account.get("id"),
 				sendTo.get('id'),
@@ -152,9 +146,9 @@ class WithdrawModalMetaexchange extends React.Component {
 	
 	render() {
        let balance = null;
-       console.log( "account: ", this.props.account.toJS() );
+       // console.log( "account: ", this.props.account.toJS() );
        let account_balances = this.props.account.get("balances").toJS();
-       console.log( "balances: ", account_balances );
+       // console.log( "balances: ", account_balances );
        let asset_types = Object.keys(account_balances);
 
        if (asset_types.length > 0) {

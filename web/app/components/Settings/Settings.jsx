@@ -9,33 +9,35 @@ import WebsocketAddModal from "./WebsocketAddModal";
 
 class SettingsEntry extends React.Component {
 
+    _onConfirm() {
+        SettingsActions.changeSetting({setting: "connection", value: this.props.connection });
+        setTimeout(this._onReloadClick, 250);
+    }
+
+    _onReloadClick() {
+        if (window.electron) {
+            window.location.hash = "";
+            window.remote.getCurrentWindow().reload();
+        }
+        else window.location.href = "/";
+    }
+
     render() {
-        let {defaults, setting, settings} = this.props;
-        let options, optional, value, input, selected = settings.get(setting);
+        let {defaults, setting, settings, connection} = this.props;
+        let options, optional, confirmButton, value, input, selected = settings.get(setting);
 
         let myLocale = counterpart.getLocale();
 
         switch (setting) {
             case "locale":
-                
-                options = defaults.map(function(entry) {
-                    var translationKey = "languages." + entry;
-                    return <Translate key={entry} value={entry} component="option" content={translationKey} />;
-                }).sort((a, b) => {
-                    if (a.key === myLocale) {
-                        return -1;
-                    }
-                    if (b.key === myLocale) {
-                        return 1;
-                    }
-                    if (b.key < a.key) {
-                        return 1;
-                    } else if (b.key > a.key) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                });
+                value = selected;
+                options = defaults.map(entry => {
+                    let translationKey = "languages." + entry;
+                    let value = counterpart.translate(translationKey);
+
+                    return <option key={entry} value={entry}>{value}</option>;
+                })
+
                 break;
 
             case "defaultMarkets":
@@ -44,23 +46,31 @@ class SettingsEntry extends React.Component {
                 break;
 
             case "connection":
-                value = selected;
+                value = connection;
                 options = defaults.map(entry => {
                     let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                     let key = entry.translate ? entry.translate : entry;
                     return <option key={key}>{option}</option>;
                 });
 
+                let defaultConnection = defaults[0];
+                let confirmButton = <div onClick={this._onConfirm.bind(this)} style={{padding: "10px"}}><button className="button outline"><Translate content="transfer.confirm" /></button></div>
+
                 optional = (
                     <div style={{position: "absolute", right: 0, top: "0.2rem"}}>
-                        <div onClick={this.props.triggerModal} id="remove" className="button outline" data-tip="Remove connection string" data-type="light">-</div>
+                        {value !== defaultConnection ? <div onClick={this.props.triggerModal} id="remove" className="button outline" data-tip="Remove connection string" data-type="light">-</div> : null}
                         <div onClick={this.props.triggerModal} id="add" className="button outline" data-tip="Add connection string" data-type="light">+</div>
                     </div>);
 
                 break;
 
-            default: 
-                
+            case "walletLockTimeout":
+                value = selected;
+                input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>
+                break;
+
+            default:
+
                 if (typeof selected === "number") {
                     value = defaults[selected];
                 }
@@ -79,8 +89,8 @@ class SettingsEntry extends React.Component {
                     options = defaults.map(entry => {
                         let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                         let key = entry.translate ? entry.translate : entry;
-                        return <option key={key}>{option}</option>;
-                    });
+                        return <option value={option} key={key}>{option}</option>;
+                    })
                 } else {
                     input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>
                 }
@@ -103,6 +113,7 @@ class SettingsEntry extends React.Component {
                         <select value={value} onChange={this.props.onChange.bind(this, setting)}>
                             {options}
                         </select>
+                        {confirmButton}
                     </li>
                 </ul> : null}
                 {input ? <ul><li>{input}</li></ul> : null}
@@ -113,6 +124,14 @@ class SettingsEntry extends React.Component {
 
 
 class Settings extends React.Component {
+
+    constructor(props) {
+        super();
+
+        this.state = {
+            connection: props.settings.get("connection")
+        };
+    }
 
     triggerModal(e) {
         this.refs.ws_modal.show(e);
@@ -147,20 +166,35 @@ class Settings extends React.Component {
                 }
                 break;
 
-            case "defaultMarkets": 
+            case "defaultMarkets":
+                break;
+
+            case "walletLockTimeout":
+                let newValue = parseInt(e.target.value, 10);
+                if (newValue && !isNaN(newValue) && typeof newValue === "number") {
+                    SettingsActions.changeSetting({setting: "walletLockTimeout", value: e.target.value });
+                }
                 break;
 
             case "inverseMarket":
             case "confirmMarketOrder":
-                value = findEntry(e.target.value, defaults) === 0; // USD/BTS is true, BTS/USD is false
+                value = findEntry(e.target.value, defaults[setting]) === 0; // USD/BTS is true, BTS/USD is false
                 break;
 
             case "connection":
-                SettingsActions.changeSetting({setting: "connection", value: e.target.value });
+                // SettingsActions.changeSetting({setting: "connection", value: e.target.value });
+                this.setState({
+                    connection: e.target.value
+                });
+                break;
+
+            case "unit":
+                let index = findEntry(e.target.value, defaults[setting]);
+                SettingsActions.changeSetting({setting: setting, value: defaults[setting][index]});
                 break;
 
             default:
-                value = findEntry(e.target.value, defaults);
+                value = findEntry(e.target.value, defaults[setting]);
                 break;
         }
 
@@ -172,27 +206,33 @@ class Settings extends React.Component {
 
     render() {
         let {settings, defaults} = this.props;
+
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block main-content">
-                    <div className="grid-content no-overflow">
+                <div className="grid-block main-content small-12 medium-10 medium-offset-1 large-6 large-offset-3">
+                    <div className="grid-content">
                         {settings.map((value, setting) => {
                             return (
-                                <SettingsEntry 
+                                <SettingsEntry
                                     key={setting}
                                     setting={setting}
                                     settings={settings}
                                     defaults={defaults[setting]}
-                                    onChange={this._onChangeSetting}
+                                    onChange={this._onChangeSetting.bind(this)}
                                     locales={this.props.localesObject}
                                     triggerModal={this.triggerModal.bind(this)}
-                                />);                   
+                                    {...this.state}
+                                />);
                         }).toArray()}
                         <Link to="wallet"><div className="button outline">
                             <Translate content="wallet.console" /></div></Link>
                     </div>
                 </div>
-                <WebsocketAddModal ref="ws_modal" apis={defaults["connection"]} />
+                <WebsocketAddModal
+                    ref="ws_modal"
+                    apis={defaults["connection"]}
+                    api={defaults["connection"].filter(a => {return a === this.state.connection})}
+                />
             </div>
         );
     }

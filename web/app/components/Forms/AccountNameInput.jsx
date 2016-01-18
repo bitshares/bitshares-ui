@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
@@ -55,7 +56,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     focus() {
-        React.findDOMNode(this.refs.input).focus();
+        ReactDOM.findDOMNode(this.refs.input).focus();
     }
 
     valid() {

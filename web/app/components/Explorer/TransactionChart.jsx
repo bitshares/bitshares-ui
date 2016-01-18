@@ -1,6 +1,6 @@
 
 import React from "react";
-import Highcharts from "react-highcharts/highstock";
+import Highcharts from "react-highcharts/bundle/highstock";
 import counterpart from "counterpart";
 
 class TransactionChart extends React.Component {
@@ -9,14 +9,34 @@ class TransactionChart extends React.Component {
         if (nextProps.blocks.size < 20) {
             return false;
         }
+        let chart = this.refs.trx_chart ? this.refs.trx_chart.chart : null;
+        if (chart && nextProps.blocks !== this.props.blocks) {
+            let {trxData, colors} = this._getData(nextProps);
+            let series = chart.series[0];
+            let finalValue = series.xData[series.xData.length -1];
+
+            // console.log("chart:", chart, "series:", series.data, "finalValue:", finalValue);
+            if (series.xData.length) {
+                trxData.forEach(point => {
+                    if (point[0] > finalValue) {
+                        series.addPoint(point, false, series.xData.length >= 30);
+                    }
+                });
+
+                chart.options.plotOptions.column.colors = colors;
+
+                chart.redraw();
+                return false;
+            }
+        }
         return (
             nextProps.blocks !== this.props.blocks ||
             nextProps.head_block !== this.props.head_block
         );
     }
 
-    render() {
-        let {blocks, head_block} = this.props;
+    _getData(props) {
+        let {blocks, head_block} = props;
 
         let trxData = [];
         let max = 0;
@@ -42,6 +62,18 @@ class TransactionChart extends React.Component {
                 return "#deb869";
             }
         })
+
+        return {
+            colors,
+            trxData,
+            max
+        }
+    }
+
+    render() {
+        let {blocks, head_block} = this.props;
+
+        let {trxData, colors, max} = this._getData(this.props);
 
         let tooltipLabel = counterpart.translate("explorer.blocks.transactions");
 
@@ -107,7 +139,7 @@ class TransactionChart extends React.Component {
             },
             plotOptions: {
                 column: {
-                    animation: false,
+                    animation: true,
                     minPointLength: 5,
                     colorByPoint: true,
                     colors: colors,
@@ -117,7 +149,7 @@ class TransactionChart extends React.Component {
         };
 
         return (
-            trxData.length ? <Highcharts config={config}/> : null
+            trxData.length ? <Highcharts ref="trx_chart" config={config}/> : null
         );
     }
 };

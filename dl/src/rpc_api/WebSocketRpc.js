@@ -5,6 +5,9 @@ var NODE_DEBUG = process.env.NODE_DEBUG
 class WebSocketRpc {
 
     constructor(ws_server, update_rpc_connection_status_callback) {
+        if (window && window.location && window.location.protocol === "https:") {
+            ws_server = ws_server.replace("ws://", "wss://");
+        }
         this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
         this.web_socket = new WebSocketClient(ws_server);

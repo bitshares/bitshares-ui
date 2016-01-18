@@ -60,9 +60,9 @@ class WithdrawModal extends React.Component {
 
    render() {
        let balance = null;
-       console.log( "account: ", this.props.account.toJS() );
+       // console.log( "account: ", this.props.account.toJS() );
        let account_balances = this.props.account.get("balances").toJS();
-       console.log( "balances: ", account_balances );
+       // console.log( "balances: ", account_balances );
        let asset_types = Object.keys(account_balances);
 
        if (asset_types.length > 0) {

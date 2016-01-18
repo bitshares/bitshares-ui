@@ -1,6 +1,6 @@
 import React from "react";
+import {PropTypes} from "react-router";
 import Immutable from "immutable";
-import WitnessActions from "actions/WitnessActions";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -23,12 +23,12 @@ class WitnessCard extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
     _onCardClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
+        this.context.history.pushState(null, `/account/${this.props.witness.get("name")}`);
     }
 
     render() {
@@ -56,18 +56,20 @@ class WitnessCard extends React.Component {
                         </div>
                         <br/>
                         <table className="table key-value-table">
-                            <tr>
-                                <td>Votes</td>
-                                <td><FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5} /></td>
-                            </tr>
-                            <tr>
-                                <td>Last&nbsp;Block</td>
-                                <td><TimeAgo time={last_aslot_time} /></td>
-                            </tr>
-                            <tr>
-                                <td>Missed</td>
-                                <td>{witness_data.get('total_missed')}</td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td>Votes</td>
+                                    <td><FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5} /></td>
+                                </tr>
+                                <tr>
+                                    <td>Last&nbsp;Block</td>
+                                    <td><TimeAgo time={new Date(last_aslot_time)} /></td>
+                                </tr>
+                                <tr>
+                                    <td>Missed</td>
+                                    <td>{witness_data.get('total_missed')}</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -84,12 +86,12 @@ class WitnessRow extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.func.isRequired
+        history: PropTypes.history
     };
 
-    _onCardClick(e) {
+    _onRowClick(e) {
         e.preventDefault();
-        this.context.router.transitionTo("account", {account_name: this.props.witness.get("name")});
+        this.context.history.pushState(null, `/account/${this.props.witness.get("name")}`);
     }
 
     render() {
@@ -119,10 +121,10 @@ class WitnessRow extends React.Component {
         );
 
         return (
-            <tr className={currentClass} >
+            <tr className={currentClass} onClick={this._onRowClick.bind(this)} >
                 <td>{rank}</td>
                 <td style={color}>{witness.get("name")}</td>
-                <td><TimeAgo time={last_aslot_time} /></td>
+                <td><TimeAgo time={new Date(last_aslot_time)} /></td>
                 <td>{witness_data.get('last_confirmed_block_num')}</td>
                 <td className={missedClass}>{missed}</td>
                 <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" /></td>
@@ -155,11 +157,18 @@ class WitnessList extends React.Component {
 
     render() {
 
-        let {witnesses, current, cardView} = this.props;
+        let {witnesses, current, cardView, witnessList} = this.props;
         let {sortBy, inverseSort} = this.state;
         let most_recent_aslot = 0;
         let ranks = {};
+
         witnesses
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            return witnessList.indexOf(a.get("id")) !== -1;
+        })
         .sort((a, b) => {
             if (a && b) {
                 return parseInt(b.get("total_votes"), 10) - parseInt(a.get("total_votes"), 10);
@@ -236,7 +245,7 @@ class WitnessList extends React.Component {
         // table view
         if (!cardView) {
             return (
-                <table className="table">
+                <table className="table table-hover">
                     <thead>
                         <tr>
                             <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
@@ -282,14 +291,18 @@ class Witnesses extends React.Component {
         super(props);
 
         this.state = {
-            filterWitness: "",
+            filterWitness: props.filterWitness || "",
             cardView: props.cardView
         };
     }
 
     _onFilter(e) {
         e.preventDefault();
-        this.setState({filterWitness: e.target.value});
+        this.setState({filterWitness: e.target.value.toLowerCase()});
+
+        SettingsActions.changeViewSetting({
+            filterWitness: e.target.value.toLowerCase()
+        });
     }
 
     _toggleView() {
@@ -303,7 +316,7 @@ class Witnesses extends React.Component {
     }
 
     render() {
-        let { dynGlobalObject, globalObject} = this.props;
+        let { dynGlobalObject, globalObject } = this.props;
         dynGlobalObject = dynGlobalObject.toJS();
         globalObject = globalObject.toJS();
 
@@ -320,34 +333,36 @@ class Witnesses extends React.Component {
                         <div className="grid-content">
                             <br/>
                             <table className="table key-value-table">
-                                <tr>
-                                    <td><Translate content="explorer.witnesses.current"/></td>
-                                    <td>{currentAccount ? currentAccount.get("name") : null}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="explorer.blocks.active_witnesses"/></td>
-                                    <td>{Object.keys(globalObject.active_witnesses).length}</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="explorer.witnesses.participation"/></td>
-                                    <td>{dynGlobalObject.participation}%</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="explorer.witnesses.pay"/></td>
-                                    <td><FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="explorer.witnesses.budget"/></td>
-                                    <td> <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="explorer.witnesses.next_vote"/></td>
-                                    <td> <TimeAgo time={dynGlobalObject.next_maintenance_time} /></td>
-                                </tr>
-                                <tr>
-                                   <td> <Translate component="h4" content="markets.filter" /> </td>
-                                   <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><Translate content="explorer.witnesses.current"/></td>
+                                        <td>{currentAccount ? currentAccount.get("name") : null}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="explorer.blocks.active_witnesses"/></td>
+                                        <td>{Object.keys(globalObject.active_witnesses).length}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="explorer.witnesses.participation"/></td>
+                                        <td>{dynGlobalObject.participation}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="explorer.witnesses.pay"/></td>
+                                        <td><FormattedAsset amount={globalObject.parameters.witness_pay_per_block} asset="1.3.0" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="explorer.witnesses.budget"/></td>
+                                        <td> <FormattedAsset amount={dynGlobalObject.witness_budget} asset="1.3.0" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="explorer.witnesses.next_vote"/></td>
+                                        <td> <TimeAgo time={new Date(dynGlobalObject.next_maintenance_time)} /></td>
+                                    </tr>
+                                    <tr>
+                                       <td> <Translate component="h4" content="markets.filter" /> </td>
+                                       <td> <input type="text" value={this.state.filterWitness} onChange={this._onFilter.bind(this)} /> </td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <div className="view-switcher">
                                 <span className="button outline" onClick={this._toggleView.bind(this)}>{!this.state.cardView ? <Translate content="explorer.witnesses.card"/> : <Translate content="explorer.witnesses.table"/>}</span>
@@ -360,6 +375,7 @@ class Witnesses extends React.Component {
                                     current_aslot={dynGlobalObject.current_aslot}
                                     current={current ? current.get("id") : null}
                                     witnesses={Immutable.List(globalObject.active_witnesses)}
+                                    witnessList={globalObject.active_witnesses}
                                     filter={this.state.filterWitness}
                                     cardView={this.state.cardView}
                                 />
@@ -378,11 +394,14 @@ class WitnessStoreWrapper extends React.Component {
     }
 
     static getPropsFromStores() {
-        return {cardView: SettingsStore.getState().viewSettings.get("cardView")}
+        return {
+            cardView: SettingsStore.getState().viewSettings.get("cardView"),
+            filterWitness: SettingsStore.getState().viewSettings.get("filterWitness")
+        }
     }
 
     render () {
-        return <Witnesses cardView={this.props.cardView}/>
+        return <Witnesses {...this.props}/>
     }
 }
 

@@ -1,4 +1,4 @@
-ByteBuffer = require '../common/bytebuffer'
+ByteBuffer = require 'bytebuffer'
 
 module.exports=(type)->
 

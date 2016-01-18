@@ -9,15 +9,20 @@ class WebsocketAddModal extends React.Component {
 
     constructor() {
         super();
+
+        let protocol = window.location.protocol;
         this.state = {
-            ws: "ws://",
-            type: "remove",
-            removeIndex: null
+            protocol: protocol,
+            ws: protocol === "https:" ? "wss://" : "ws://",
+            type: "remove"
         };
     }
-    
+
     onInput(e) {
-        this.setState({ws: e.target.value});        
+        if (this.state.protocol === "https:") {
+            e.target.value = e.target.value.replace("ws://", "wss://")
+        }
+        this.setState({ws: e.target.value});
     }
 
     show(e) {
@@ -30,32 +35,27 @@ class WebsocketAddModal extends React.Component {
     close() {
         ZfApi.publish("ws_modal_" + this.state.type, "close")
     }
-    
+
     onAddSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
+
         SettingsActions.addWS(this.state.ws);
+
         this.setState({
-            ws: "ws://"
+            ws: this.state.protocol === "https:" ? "wss://" : "ws://"
         });
         this.close();
     }
 
-    _onRemoveSelect(e) {
-        this.setState({
-            removeIndex: this.props.apis.indexOf(e.target.value)
-        });
-    }
-
     onRemoveSubmit(e) {
-        e.preventDefault()
-        if (this.state.removeIndex) {
-            SettingsActions.removeWS(this.state.removeIndex);
-        }
+        e.preventDefault();
+        let removeIndex = this.props.apis.indexOf(this.props.api[0]);
+        SettingsActions.removeWS(removeIndex);
         this.close();
     }
 
     _renderAddModal() {
-        return ( 
+        return (
             <Modal id="ws_modal_add" ref="ws_modal_add" overlay={true} overlayClose={false}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
@@ -73,15 +73,20 @@ class WebsocketAddModal extends React.Component {
                     </div>
                 </form>
             </Modal>
-        )        
+        )
     }
 
     _renderRemoveModal() {
-        let options = this.props.apis.map(entry => {
-            return <option key={entry}>{entry}</option>;
+        if (!this.props.api) {
+            return null;
+        }
+        let removeString;
+        let options = this.props.api.map(entry => {
+            removeString = entry;
+            return <div key={entry}><h5>{entry}</h5></div>;
         });
 
-        return ( 
+        return (
             <Modal id="ws_modal_remove" ref="ws_modal_remove" overlay={true} overlayClose={false}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
@@ -91,16 +96,14 @@ class WebsocketAddModal extends React.Component {
                     <header><Translate component="span" content={`settings.connection`} /></header>
                     <ul>
                         <li className="with-dropdown">
-                            <select onChange={this._onRemoveSelect.bind(this)}>
-                                {options}
-                            </select>
+                            {options}
                         </li>
                     </ul>
                     </section>
                 <form onSubmit={this.onRemoveSubmit.bind(this)} noValidate>
 
                     <div className="button-group">
-                        <button className={"button"} onClick={this.onRemoveSubmit.bind(this)}>
+                        <button className={"button"} onClick={this.onRemoveSubmit.bind(this, )}>
                             <Translate content="transfer.confirm" />
                         </button>
                         <Trigger close={"ws_modal_remove"}>
@@ -109,17 +112,17 @@ class WebsocketAddModal extends React.Component {
                     </div>
                 </form>
             </Modal>
-        )        
+        )
     }
-    
+
     render() {
-        return ( 
+        return (
             <div>
                 {this._renderAddModal()}
                 {this._renderRemoveModal()}
             </div>
         );
-    }    
+    }
 }
 
 export default WebsocketAddModal;
