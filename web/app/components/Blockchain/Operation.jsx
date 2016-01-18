@@ -831,6 +831,14 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "asset_reserve":
+                column = (
+                    <span>
+                        {this.linkToAccount(op[1].payer)}&nbsp;<Translate content="transaction.asset_reserve" />:&nbsp;<FormattedAsset amount={op[1].amount_to_reserve.amount} asset={op[1].amount_to_reserve.asset_id} />
+                    </span>
+                )
+                break;
+
             default:
                 console.log("unimplemented op:", op);
                 column = (

@@ -373,6 +373,7 @@
         outputs: "Outputs",
         inputs: "Inputs",
         settlement_date: "Settlement date",
+        asset_reserve: "reserved asset amount",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -388,7 +389,7 @@
             asset_update_bitasset: "Update SmartCoin",
             asset_update_feed_producers: "Update asset feed producers",
             asset_issue: "Issue asset",
-            asset_reserve: "Burn asset",
+            asset_reserve: "Reserve asset",
             asset_fund_fee_pool: "Fund asset fee pool",
             asset_settle: "Asset settlement",
             asset_global_settle: "Global asset settlement",

@@ -924,10 +924,32 @@ class Transaction extends React.Component {
                     
                     break;
 
+                case "asset_reserve":
+                    rows.push(
+                        <tr>
+                            <td style={{textTranform: "capitalize"}}><Translate component="span" content="transaction.by" /></td>
+                            <td>{this.linkToAccount(op[1].payer)}</td>
+                        </tr>
+                    );
 
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.asset.title" /></td>
+                            <td>{this.linkToAsset(op[1].amount_to_reserve.asset_id)}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" /></td>
+                            <td><FormattedAsset amount={op[1].amount_to_reserve.amount} asset={op[1].amount_to_reserve.asset_id} /></td>
+                        </tr>
+                    );
+                    break;                    
 
                 default:
                     console.log("unimplemented op:", op);
+
                     rows.push(
                         <tr >
                             <td><Translate component="span" content="explorer.block.op" /></td>
