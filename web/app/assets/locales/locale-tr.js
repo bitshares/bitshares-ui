@@ -180,12 +180,13 @@
             add_committee: "Ekle",
             add_committee_label: "Kurul Üyesi",
             add_witness_label: "Tanık",
-            approve_worker: "Emekçi teklifini onayla",
-            reject_worker: "Emekçi teklifini reddet",
+            approve_worker: "Onayla",
+            reject_worker: "Reddet",
             worker_account: "Emekçi hesabı",
-            total_votes: "Toplam oylar",
+            total_votes: "Net oylar",
             votes_against: "Aleyhine oylar",
-            daily_pay: "Günlük Ödeme",
+            daily_pay: "Ödeme",
+            daily: "günlük",
             max_pay: "Maximum toplam ödeme",
             unclaimed: "Talep edilmemiş ödeme",
             status: {
@@ -195,7 +196,12 @@
                 neutral: "Tarafsız"
             },
             start: "Başlangıç tarihi",
-            end: "Bitiş tarihi"
+            end: "Bitiş günü",
+            creator: "Oluşturan",
+            recycled: "Geri Dönüşmüş",
+            funding: "Fonlama",
+            total_budget: "Toplam mevcut emekçi bütçesi",
+            unused_budget: "Kullanılmamış emekçi bütçesi",
         },
         options: {
             num_witnesses: "Gerekli Tanıklar",
