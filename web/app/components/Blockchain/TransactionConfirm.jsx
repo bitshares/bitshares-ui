@@ -111,7 +111,7 @@ class TransactionConfirm extends BaseComponent {
             );
             button_group = (
                 <div className="button-group">
-                    <div class="grid-block full-width-content">
+                    <div className="grid-block full-width-content">
                         <a className={confirmButtonClass} href onClick={this.onConfirmClick.bind(this)}>
                             {this.state.propose ? 
                                 <Translate content="propose" />:
@@ -124,7 +124,7 @@ class TransactionConfirm extends BaseComponent {
                     {/* P R O P O S E   T O G G L E */}
                     {/* TODO right-justify the propose checkbox */}
                     { ! this.state.transaction.has_proposed_operation() ?
-                    <div class="align-right grid-block">
+                    <div className="align-right grid-block">
                         <div className="switch" onClick={this.onProposeClick.bind(this)}>
                             <input type="checkbox" checked={this.state.propose} />
                             <label />

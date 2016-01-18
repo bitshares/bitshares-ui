@@ -950,7 +950,34 @@ class Transaction extends React.Component {
                     )
                     break
                 
-                // proposal_update
+                case "proposal_update":
+                    let fields = [
+                        "active_approvals_to_add", "active_approvals_to_remove",
+                        "owner_approvals_to_add", "owner_approvals_to_remove",
+                        "key_approvals_to_add", "key_approvals_to_remove"
+                    ];
+
+                    console.log("op:", op);
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
+                            <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
+                        </tr>
+                    )
+
+                    fields.forEach((field, index) => {
+                        if (op[1][field].length) {
+                            rows.push(
+                                <tr key={index}>
+                                    <td><Translate content={`proposal.update.${field}`} /></td>
+                                    <td>{op[1][field].map(value => {return <div>{this.linkToAccount(value)}</div>})}</td>
+                                </tr>
+                            )
+                        }
+                    })
+
+                    break;
+
                 // proposal_delete
 
                 case "asset_claim_fees":

@@ -4,7 +4,6 @@ import Immutable from "immutable";
 import AccountsList from "./AccountsList";
 import RecentTransactions from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
-import Proposals from "components/Account/Proposals";
 import ps from "perfect-scrollbar";
 
 class Dashboard extends React.Component {
@@ -64,12 +63,8 @@ class Dashboard extends React.Component {
                 </div>
 
                 <div className="grid-block vertical right-column no-overflow">
-                    <div ref="transactions" className="grid-content" style={{flex: "0 1 75vh", paddingLeft: "0.5rem", paddingRight: "0.25rem"}}>
+                    <div ref="transactions" className="grid-content" style={{paddingLeft: "0.5rem", paddingRight: "0.25rem"}}>
                         <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
-                    </div>
-                    <div className="grid-content" style={{flex: "0 1 25vh"}}>
-                        <h4><Translate content="proposals" /></h4>
-                        <Proposals accountList={this.props.linkedAccounts} />
                     </div>
                 </div>
             </div>);

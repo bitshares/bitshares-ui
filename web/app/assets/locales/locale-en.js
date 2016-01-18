@@ -32,8 +32,20 @@
         pending: "pending %(blocks)s blocks",
         no_recent: "No recent transactions"
     },
+    proposal: {
+        transfer: "Transfer %(amount)s from %(from)s to %(to)s",
+        limit_order_create: "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+        action: "Action",
+        update: {
+            active_approvals_to_add: "Active approvals to add",
+            active_approvals_to_remove: "Active approvals to remove",
+            owner_approvals_to_add: "Owner approvals to add",
+            owner_approvals_to_remove: "Owner approvals to remove",
+            key_approvals_to_add: "Key approvals to add",
+            key_approvals_to_remove: "Key approvals to remove",
+        }
+    },
     propose: "Propose",
-    proposals: "Proposals",
     cancel: "Cancel",
     account: {
         welcome: "Welcome to Graphene",
@@ -335,9 +347,9 @@
         witness_update: "Updated the witness",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
-        proposal_create: "Created a proposal",
-        proposal_update: "Updated a proposal",
-        proposal_delete: "Deleted a proposal",
+        proposal_create: "Created a proposed transaction",
+        proposal_update: "Updated a proposed transaction",
+        proposal_delete: "Deleted a proposed transaction",
         withdraw_permission_create: "Gave withdrawal permission for account",
         withdraw_permission_update: "Updated withdrawal permission for account",
         withdraw_permission_claim: "Claimed withdrawal permission for account",
@@ -579,7 +591,7 @@
             title: "Budget Items"
         },
         proposals: {
-            title: "Proposals"
+            title: "Proposed transactions"
         },
         account: {
             title: "Account"

@@ -7,7 +7,6 @@ import counterpart from "counterpart";
 import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
-import BlockTime from "./BlockTime";
 import Aes from "ecc/aes";
 import PublicKey from "ecc/key_public";
 import PrivateKeyStore from "stores/PrivateKeyStore";
@@ -45,19 +44,10 @@ class TransactionLabel extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating:true})
 class Row extends React.Component {
     static contextTypes = {
         history: PropTypes.history
-    }
-
-    static propTypes = {
-        dynGlobalObject: ChainTypes.ChainObject.isRequired,
-    }
-
-    static defaultProps = {
-        dynGlobalObject: "2.1.0"
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -70,25 +60,19 @@ class Row extends React.Component {
     }
 
     render() {
-        let {block, fee, color, type, key, hideDate, hideFee, hideOpLabel} = this.props;
-
-        let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
-        let pending = null;
-        if( block > last_irreversible_block_num )
-           pending = <span>(<Translate content="operation.pending" blocks={block - last_irreversible_block_num} />)</span>
+        let {block, fee, color, type, hideDate, hideFee, hideOpLabel} = this.props;
 
         fee.amount = parseInt(fee.amount, 10);
         return (
-                <tr key={key}>
-                    {hideOpLabel ? null : <td className="left-td"><a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a></td>}
-                    <td>{this.props.info}&nbsp;{pending}&nbsp;{hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</td>
-                    {!hideDate ? <td className="cursor-pointer" onClick={this.showDetails}><BlockTime block_number={block}/></td> : null}
-                </tr>
-            );
+            <div style={{padding: "5px 0"}}>
+                {hideOpLabel ? null : <span className="left-td"><a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a></span>}
+                <span>{this.props.info}&nbsp;{hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</span>                    
+            </div>
+        );
     }
 }
 
-class Operation extends React.Component {
+class ProposedOperation extends React.Component {
 
     static defaultProps = {
         op: [],
@@ -193,13 +177,23 @@ class Operation extends React.Component {
                         </div>
                     ) : null;
 
+                console.log("op:", op[1]);
                 column = (
                     <span key={"transfer_" + this.props.key} className="right-td">
-                        {this.linkToAccount(op[1].from)}
-                        &nbsp;<Translate component="span" content="transaction.sent"/>
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id}/>
-                        &nbsp;<Translate component="span" content="transaction.to"/> {this.linkToAccount(op[1].to)}
-                        {memoComponent}
+                        <BindToChainState.Wrapper from={op[1].from} to={op[1].to} asset={op[1].amount.asset_id}>
+                            { ({from, to, asset}) =>
+                                <span className="right-td">
+                                    <Translate
+                                        component="span"
+                                        content="proposal.transfer"
+                                        from={from.get("name")}
+                                        to={to.get("name")}
+                                        amount={utils.format_asset(op[1].amount.amount, asset, false, false)}
+                                    />
+                                    {memoComponent}
+                                </span>
+                            }
+                        </BindToChainState.Wrapper>
                     </span>
                 );
 
@@ -207,39 +201,21 @@ class Operation extends React.Component {
 
             case "limit_order_create":
                 color = "warning";
-                let o = op[1];
-                let isAsk = market_utils.isAskOp(op[1]);
-                // if (!inverted) {
-                //     isAsk = !isAsk;
-                // }
+
                 column = (
                         <span>
-                        <BindToChainState.Wrapper asset_sell={op[1].amount_to_sell.asset_id} asset_min={op[1].min_to_receive.asset_id}>
-                            { ({asset_sell, asset_min}) =>
-                                isAsk ?
+                            <BindToChainState.Wrapper asset_sell={op[1].amount_to_sell.asset_id} asset_min={op[1].min_to_receive.asset_id} account={op[1].seller}>
+                                { ({asset_sell, asset_min, account}) =>
                                     <span>
-                                        {this.linkToAccount(op[1].seller)}&nbsp;
                                         <Translate
-                                            component="span"
-                                            content="transaction.limit_order_sell"
-                                            sell_amount={utils.format_asset(op[1].amount_to_sell.amount, asset_sell, false, false)}
-                                            num={this.props.result[1].substring(4)}
-                                            />
-                                        <FormattedPrice quote_asset={o.amount_to_sell.asset_id} base_asset={o.min_to_receive.asset_id} quote_amount={o.amount_to_sell.amount} base_amount={o.min_to_receive.amount} />
-                                    </span>
-                                    :
-                                    <span>
-                                        {this.linkToAccount(op[1].seller)}&nbsp;
-                                        <Translate
-                                            component="span"
-                                            content="transaction.limit_order_buy"
+                                            content="proposal.limit_order_create"
                                             buy_amount={utils.format_asset(op[1].min_to_receive.amount, asset_min, false, false)}
-                                            num={this.props.result[1].substring(4)}
+                                            sell_amount={utils.format_asset(op[1].amount_to_sell.amount, asset_sell, false, false)}
+                                            account={account.get("name")}
                                             />
-                                        <FormattedPrice base_asset={o.amount_to_sell.asset_id} quote_asset={o.min_to_receive.asset_id} base_amount={o.amount_to_sell.amount} quote_amount={o.min_to_receive.amount} />
                                     </span>
-                            }
-                        </BindToChainState.Wrapper>
+                                }
+                            </BindToChainState.Wrapper>
                         </span>
                 );
                 break;
@@ -562,10 +538,7 @@ class Operation extends React.Component {
             case "proposal_create":
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].fee_paying_account)}&nbsp;
-                        <span style={{textTransform: "lowercase"}}>
-                            <Translate component="span" content="transaction.proposal_create" />
-                        </span>
+                        <Translate component="span" content="transaction.proposal_create" />
                     </span>
                 );
                 break;
@@ -573,10 +546,7 @@ class Operation extends React.Component {
             case "proposal_update":
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].fee_paying_account)}&nbsp;
-                        <span style={{textTransform: "lowercase"}}>
-                            <Translate component="span" content="transaction.proposal_update" />
-                        </span>
+                        <Translate component="span" content="transaction.proposal_update" />
                     </span>
                 );
                 break;
@@ -862,7 +832,7 @@ class Operation extends React.Component {
 
         line = column ? (
             <Row
-                key={this.props.key}
+                index={this.props.index}
                 block={block}
                 type={op[0]}
                 color={color}
@@ -871,6 +841,8 @@ class Operation extends React.Component {
                 hideFee={this.props.hideFee}
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
+                proposalObject={this.props.proposalObject}
+                account={this.props.account}
             >
             </Row>
         ) : null;
@@ -878,9 +850,9 @@ class Operation extends React.Component {
 
 
         return (
-            line ? line : <tr></tr>
+            line ? line : <div></div>
         );
     }
 }
 
-export default Operation;
+export default ProposedOperation;
