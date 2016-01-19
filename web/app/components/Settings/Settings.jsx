@@ -50,7 +50,7 @@ class SettingsEntry extends React.Component {
                 options = defaults.map(entry => {
                     let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                     let key = entry.translate ? entry.translate : entry;
-                    return <option key={key}>{option}</option>;
+                    return <option value={option} key={key}>{option}</option>;
                 });
 
                 let defaultConnection = defaults[0];
