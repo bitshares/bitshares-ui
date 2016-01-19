@@ -84,7 +84,11 @@ export default class Proposals extends Component {
             })
         }
 
-        let proposalRows = proposals.map(proposal => {
+        let proposalRows = proposals
+            .sort((a, b) => {
+                return utils.sortID(a.proposal.get("id"), b.proposal.get("id"), true);
+            })
+            .map(proposal => {
 
             let text = proposal.operations.map( (o, index) => {
                 return <ProposedOperation
