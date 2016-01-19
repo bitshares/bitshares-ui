@@ -373,6 +373,7 @@
         outputs: "Çıkanlar",
         inputs: "Girdiler",
         settlement_date: "Uzlaşma tarihi",
+        asset_reserve: "rezerv aktif miktarı",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Emir Ver",
@@ -388,7 +389,7 @@
             asset_update_bitasset: "Akıllıpara güncelleme",
             asset_update_feed_producers: "Aktif feed üreticileri güncelleme",
             asset_issue: "Aktif ihracı",
-            asset_reserve: "Aktif yak",
+            asset_reserve: "Rezerv aktif",
             asset_fund_fee_pool: "Aktif ücret havuzu finansı",
             asset_settle: "Aktif ödemesi",
             asset_global_settle: "Genel Aktif Ödemesi",
