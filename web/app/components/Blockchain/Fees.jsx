@@ -77,7 +77,7 @@ class FeeGroup extends React.Component {
                 let equivalentAmount = amount ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount} toAsset={preferredUnit}/> : feeTypes["_none"];
                 let assetAmountLTM = amount*0.2 ? <FormattedAsset amount={amount*0.2} asset="1.3.0"/> : feeTypes["_none"];
                 let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={preferredUnit}/> : feeTypes["_none"];
-                let title = ""
+                let title = null;
 
                 if (!headInlucded) {
                     headInlucded = true
@@ -92,9 +92,7 @@ class FeeGroup extends React.Component {
                         <tr key={opId + key}>
                             {title}
                             <td>{feeTypes[key]}</td>
-                            <td style={{textAlign: "right"}}>{assetAmount}</td>
                             <td style={{textAlign: "right"}}>{equivalentAmount}</td>
-                            <td style={{textAlign: "right"}}>{assetAmountLTM}</td>
                             <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
                         </tr>
                        );
@@ -113,9 +111,7 @@ class FeeGroup extends React.Component {
                        <th><Translate content={"explorer.block.op"} /></th>
                        <th><Translate content={"explorer.fees.type"} /></th>
                        <th style={{textAlign: "right"}}><Translate content={"explorer.fees.fee"} /></th>
-                       <th style={{textAlign: "right"}}><Translate content={"explorer.fees.feeeq"} /></th>
                        <th style={{textAlign: "right"}}><Translate content={"explorer.fees.feeltm"} /></th>
-                       <th style={{textAlign: "right"}}><Translate content={"explorer.fees.feeltmeq"} /></th>
                       </tr>
                      </thead>
                       {fees}
