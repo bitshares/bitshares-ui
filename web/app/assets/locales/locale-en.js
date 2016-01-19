@@ -36,6 +36,7 @@
         transfer: "Transfer %(amount)s from %(from)s to %(to)s",
         limit_order_create: "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         action: "Action",
+        expires: "Expires",
         update: {
             active_approvals_to_add: "Active approvals to add",
             active_approvals_to_remove: "Active approvals to remove",

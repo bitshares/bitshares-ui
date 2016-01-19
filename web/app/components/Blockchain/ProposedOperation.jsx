@@ -63,10 +63,27 @@ class Row extends React.Component {
         let {block, fee, color, type, hideDate, hideFee, hideOpLabel} = this.props;
 
         fee.amount = parseInt(fee.amount, 10);
+        let endDate = counterpart.localize(new Date(this.props.expiration), { format: 'short' });
+
         return (
             <div style={{padding: "5px 0"}}>
-                {hideOpLabel ? null : <span className="left-td"><a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a></span>}
-                <span>{this.props.info}&nbsp;{hideFee ? null : <span className="facolor-fee">(<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)</span>}</span>                    
+                {hideOpLabel ? null : (
+                    <span className="left-td">
+                        <a href onClick={this.showDetails}>
+                            <TransactionLabel color={color} type={type} />
+                        </a>
+                    </span>)}
+                <span>
+                    {this.props.info}&nbsp;
+                    {hideFee ? null : (
+                        <span className="facolor-fee">
+                            (<FormattedAsset amount={fee.amount} asset={fee.asset_id} /> fee)
+                        </span>)}
+                </span>
+                {this.props.expiration ? (
+                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
+                        <span><Translate content="proposal.expires" />: {endDate}</span>
+                    </div>) : null}
             </div>
         );
     }
@@ -121,7 +138,7 @@ class ProposedOperation extends React.Component {
     render() {
         let {op, current, block} = this.props;
         let line = null, column = null, color = "info";
-
+        
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
             case "transfer":
@@ -280,7 +297,9 @@ class ProposedOperation extends React.Component {
                 break;
 
             case "account_update":
-                if (op[1].new_options.voting_account) {
+                let account = ChainStore.getAccount(op[1].account);
+                let currentProxy = account ? account.getIn(["options", "voting_account"]) : null;
+                if (account && op[1].new_options.voting_account !== currentProxy) {
                     let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
                     column = (
                         <span>
@@ -840,6 +859,7 @@ class ProposedOperation extends React.Component {
                 hideFee={this.props.hideFee}
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
+                expiration={this.props.expiration}
             >
             </Row>
         ) : null;

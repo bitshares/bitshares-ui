@@ -74,6 +74,7 @@ class TransactionConfirm extends React.Component {
     }
 
     render() {
+        
         if ( !this.props.transaction || this.props.closed ) {return null; }
         let button_group, header, confirmButtonClass = "button";
         if(this.props.propose && ! this.props.fee_paying_account) confirmButtonClass += " disabled";

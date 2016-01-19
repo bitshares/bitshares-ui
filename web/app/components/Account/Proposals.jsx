@@ -68,6 +68,28 @@ export default class Proposals extends Component {
         WalletDb.process_transaction(tr, null, true);
     }
 
+    _canApprove(proposal, id) {
+
+        if (proposal.required_active_approvals.indexOf(id) !== -1 && proposal.available_active_approvals.indexOf(id) === -1) {
+            return true;
+        } else if (proposal.required_owner_approvals.indexOf(id) !== -1 && proposal.available_owner_approvals.indexOf(id) === -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    _canReject(proposal, id) {
+        console.log(proposal, id);
+        if (proposal.available_active_approvals.indexOf(id) !== -1) {
+            return true;
+        } else if (proposal.available_owner_approvals.indexOf(id) !== -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     render() {
 
         let proposals = [];
@@ -93,6 +115,7 @@ export default class Proposals extends Component {
             let text = proposal.operations.map( (o, index) => {
                 return <ProposedOperation
                         key={proposal.proposal.get("id") + "_" + index}
+                        expiration={proposal.proposal.get("expiration_time")}
                         index={index}
                         op={o.toJS()}
                         inverted={false}
@@ -103,6 +126,8 @@ export default class Proposals extends Component {
                     />
                 }).toArray();
 
+            let canApprove = this._canApprove(proposal.proposal.toJS(), proposal.account.get("id"));
+            let canReject = this._canReject(proposal.proposal.toJS(), proposal.account.get("id"));
 
             return (
                 <tr key={proposal.proposal.get("id")}>
@@ -110,12 +135,14 @@ export default class Proposals extends Component {
                     <td>
                         {text}
                     </td>
-                    <td>
-                        <button onClick={this._onProposalAction.bind(this, "approve", proposal)} className="button success">Approve</button>
-                    </td>
-                    <td>
-                        <button onClick={this._onProposalAction.bind(this, "reject", proposal)} className="button">Reject</button>
-                    </td>
+                    {canApprove ? (
+                            <td>
+                            <button onClick={this._onProposalAction.bind(this, "approve", proposal)} className="button success">Approve</button>
+                        </td>) : null}
+                    {canReject ? (
+                            <td>
+                            <button onClick={this._onProposalAction.bind(this, "reject", proposal)} className="button">Reject</button>
+                        </td>) : null}
                 </tr>
             );
         })

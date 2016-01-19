@@ -305,7 +305,9 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-                if (op[1].new_options.voting_account) {
+                let account = ChainStore.getAccount(op[1].account);
+                let currentProxy = account ? account.getIn(["options", "voting_account"]) : null;
+                if (account && op[1].new_options.voting_account !== currentProxy) {
                     let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
                     column = (
                         <span>
