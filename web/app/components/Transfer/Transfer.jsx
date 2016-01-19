@@ -205,7 +205,7 @@ class Transfer extends React.Component {
 
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account)
-        let tabIndex = 1
+        let tabIndex = 1;
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>

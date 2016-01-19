@@ -177,7 +177,6 @@ class ProposedOperation extends React.Component {
                         </div>
                     ) : null;
 
-                console.log("op:", op[1]);
                 column = (
                     <span key={"transfer_" + this.props.key} className="right-td">
                         <BindToChainState.Wrapper from={op[1].from} to={op[1].to} asset={op[1].amount.asset_id}>
@@ -841,8 +840,6 @@ class ProposedOperation extends React.Component {
                 hideFee={this.props.hideFee}
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
-                proposalObject={this.props.proposalObject}
-                account={this.props.account}
             >
             </Row>
         ) : null;

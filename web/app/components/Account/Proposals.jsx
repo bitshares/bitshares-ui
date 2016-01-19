@@ -77,10 +77,9 @@ export default class Proposals extends Component {
             account.get("proposals").forEach( proposal_id => {
                 var proposal = ChainStore.getObject( proposal_id )
                 if( proposal ) {
-                    console.log("proposal:", proposal.toJS());
                     var proposed_transaction = proposal.get("proposed_transaction")
                     var operations = proposed_transaction.get("operations")
-                    proposals.push({operations: operations, proposal: proposal, account: account});
+                    proposals.push({operations, account, proposal});
                 }
             })
         }
@@ -89,6 +88,7 @@ export default class Proposals extends Component {
 
             let text = proposal.operations.map( (o, index) => {
                 return <ProposedOperation
+                        key={proposal.proposal.get("id") + "_" + index}
                         index={index}
                         op={o.toJS()}
                         inverted={false}
@@ -96,14 +96,8 @@ export default class Proposals extends Component {
                         hideOpLabel={true}
                         hideDate={true}
                         proposal={true}
-                        proposalObject={proposal.proposal}
-                        account={proposal.account.toJS()}
                     />
                 }).toArray();
-
-            console.log("text:", text);
-
-            text.push(text[0]);
 
 
             return (

@@ -15,6 +15,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import ProposedOperation from "./ProposedOperation";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -906,7 +907,8 @@ class Transaction extends React.Component {
                     break;
 
                 case "proposal_create":
-                    var key = 1
+                    var key = 1;
+                    console.log("op:", op);
                     var expiration_date = new Date(op[1].expiration_time+'Z')
                     var has_review_period = op[1].review_period_seconds !== undefined
                     var review_begin_time = ! has_review_period ? null :
@@ -934,12 +936,28 @@ class Transaction extends React.Component {
                             </td>
                         </tr>
                     )
-                    var operations = [] // remove op_wrapper
+                    var operations = [];
                     for(let pop of op[1].proposed_ops) operations.push( pop.op )
+
+                    let proposalsText = op[1].proposed_ops.map( (o, index) => {
+                        return (
+                            <ProposedOperation
+                                key={index}
+                                index={index}
+                                op={o.op}
+                                inverted={false}
+                                hideFee={true}
+                                hideOpLabel={true}
+                                hideDate={true}
+                                proposal={true}
+                            />
+                        );
+                    });
+
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="proposal_create.proposed_operations" /></td>
-                            <td><Transaction trx={{ operations }}/></td>
+                            <td>{proposalsText}</td>
                         </tr>
                     )
                     rows.push(
@@ -957,7 +975,8 @@ class Transaction extends React.Component {
                         "key_approvals_to_add", "key_approvals_to_remove"
                     ];
 
-                    console.log("op:", op);
+                    let key = 1;
+
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
@@ -965,10 +984,10 @@ class Transaction extends React.Component {
                         </tr>
                     )
 
-                    fields.forEach((field, index) => {
+                    fields.forEach((field) => {
                         if (op[1][field].length) {
                             rows.push(
-                                <tr key={index}>
+                                <tr key={key++}>
                                     <td><Translate content={`proposal.update.${field}`} /></td>
                                     <td>{op[1][field].map(value => {return <div>{this.linkToAccount(value)}</div>})}</td>
                                 </tr>
