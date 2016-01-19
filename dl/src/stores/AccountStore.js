@@ -30,7 +30,7 @@ class AccountStore extends BaseStore {
             onRemovePrivateContact: AccountActions.removePrivateContact
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
-            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
+            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount", "getPrivateAccountType");
     }
     
     _getInitialState() {
@@ -263,6 +263,14 @@ class AccountStore extends BaseStore {
 
     onRemovePrivateContact(name) {
         this.state.privateContacts = this.state.privateContacts.remove(name);
+    }
+
+    getPrivateAccountType(full_name) {
+        const name = full_name[0] === "~" ? full_name.slice(1) : full_name;
+        let res = null;
+        if (this.state.privateContacts.has(name)) res = "Private Contact";
+        else if (this.state.privateAccounts.has(name)) res = "Private Account";
+        return res;
     }
 }
 

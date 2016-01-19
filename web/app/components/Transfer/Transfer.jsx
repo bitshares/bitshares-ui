@@ -217,7 +217,8 @@ class Transfer extends React.Component {
                                          onAccountChanged={this.onFromAccountChanged.bind(this)}
                                          account={from_name}
                                          error={from_error}
-                                         tabIndex={tabIndex++}/>
+                                         tabIndex={tabIndex++}
+                        />
                     </div>
                     {/*  T O  */}
                     <div className="content-block">
@@ -226,7 +227,9 @@ class Transfer extends React.Component {
                                          onChange={this.toChanged.bind(this)}
                                          onAccountChanged={this.onToAccountChanged.bind(this)}
                                          account={to_name}
-                                         tabIndex={tabIndex++}/>
+                                         tabIndex={tabIndex++}
+                                         allowPubKey
+                        />
                     </div>
                     {/*  A M O U N T   */}
                     <div className="content-block" style={{paddingLeft: "96px"}}>
