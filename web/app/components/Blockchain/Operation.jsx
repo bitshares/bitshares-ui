@@ -164,7 +164,7 @@ class Operation extends React.Component {
                             public_key,
                             memo.nonce,
                             memo.message
-                        ).toString() : null;
+                        ).toString("utf-8") : null;
                     } catch(e) {
                         console.log("transfer memo exception ...", e);
                         memo_text = "*";

@@ -125,7 +125,7 @@ class ApplicationApi {
                             nonce,
                             memo
                         ) :
-                        memo
+                        Buffer.isBuffer(memo) ? memo.toString("utf-8") : memo
                 }
             }
             let fee_asset = ChainStore.getAsset( fee_asset_id ).toJS();
