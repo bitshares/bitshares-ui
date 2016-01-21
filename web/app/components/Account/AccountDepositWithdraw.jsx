@@ -282,6 +282,17 @@ class AccountDepositWithdraw extends React.Component {
                                 url="https://api.blocktrades.us/v2"
                                 issuer_account="blocktrades"
                                 account={this.props.account}
+                                deposit_coin_type="doge"
+                                deposit_asset_name="Dogecoin"
+                                deposit_asset="DOGE"
+                                deposit_wallet_type="dogecoin"
+                                receive_asset="TRADE.DOGE"
+                                receive_coin_type="trade.doge" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
                                 deposit_coin_type="nsr"
                                 deposit_asset_name="NuShares"
                                 deposit_asset="NSR"
@@ -299,6 +310,28 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_wallet_type="nubits"
                                 receive_asset="TRADE.NBT"
                                 receive_coin_type="trade.nbt" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
+                                deposit_coin_type="dash"
+                                deposit_asset_name="Dash"
+                                deposit_asset="DASH"
+                                deposit_wallet_type="dash"
+                                receive_asset="TRADE.DASH"
+                                receive_coin_type="trade.dash" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="blocktrades"
+                                url="https://api.blocktrades.us/v2"
+                                issuer_account="blocktrades"
+                                account={this.props.account}
+                                deposit_coin_type="peercoin"
+                                deposit_asset_name="Peercoin"
+                                deposit_asset="PPC"
+                                deposit_wallet_type="peercoin"
+                                receive_asset="TRADE.PPC"
+                                receive_coin_type="trade.ppc" />
                             </tbody>
                         </table>
                     </div>
