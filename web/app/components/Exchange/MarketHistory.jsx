@@ -63,9 +63,13 @@ class MarketHistory extends React.Component {
     }
 
     render() {
-        let {history, myHistory, base, quote, baseSymbol, quoteSymbol, flipped} = this.props;
+        let {history, myHistory, base, quote, baseSymbol, quoteSymbol, flipped, isNullAccount} = this.props;
         let  {activeTab} = this.state;
         let historyRows = null;
+
+        if (isNullAccount) {
+            activeTab = "history";
+        }
 
         if (activeTab === "my_history" && (myHistory && myHistory.size)) {
             let index = 0;
@@ -157,9 +161,10 @@ class MarketHistory extends React.Component {
         return (
             <div className="left-order-book no-padding no-overflow">
                 <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
-                    <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
-                        <Translate content="exchange.my_history" />
-                    </div>
+                    {isNullAccount ? null : (
+                        <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
+                            <Translate content="exchange.my_history" />
+                        </div>)}
                     <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
                         <Translate content="exchange.history" />
                     </div>
