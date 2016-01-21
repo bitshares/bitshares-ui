@@ -116,7 +116,7 @@ class Transfer extends React.Component {
             this.state.to_account.get("id"),
             parseInt(amount * precision, 10),
             asset.get("id"),
-            this.state.memo,
+            this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo,
             this.state.propose ? this.state.propose_account : null,
             this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
         ).then( () => {

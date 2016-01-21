@@ -180,12 +180,13 @@
             add_committee: "Ekle",
             add_committee_label: "Kurul Üyesi",
             add_witness_label: "Tanık",
-            approve_worker: "Emekçi teklifini onayla",
-            reject_worker: "Emekçi teklifini reddet",
+            approve_worker: "Onayla",
+            reject_worker: "Reddet",
             worker_account: "Emekçi hesabı",
-            total_votes: "Toplam oylar",
+            total_votes: "Net oylar",
             votes_against: "Aleyhine oylar",
-            daily_pay: "Günlük Ödeme",
+            daily_pay: "Ödeme",
+            daily: "günlük",
             max_pay: "Maximum toplam ödeme",
             unclaimed: "Talep edilmemiş ödeme",
             status: {
@@ -195,7 +196,12 @@
                 neutral: "Tarafsız"
             },
             start: "Başlangıç tarihi",
-            end: "Bitiş tarihi"
+            end: "Bitiş günü",
+            creator: "Oluşturan",
+            recycled: "Geri Dönüşmüş",
+            funding: "Fonlama",
+            total_budget: "Toplam mevcut emekçi bütçesi",
+            unused_budget: "Kullanılmamış emekçi bütçesi",
         },
         options: {
             num_witnesses: "Gerekli Tanıklar",
@@ -267,7 +273,8 @@
         broadcast: "Transfer işleminiz yayınlanmıştır",
         again: "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
         see: "TRANSFER İŞLEMLERİMİ GÖR",
-        close: "Kapat"
+        close: "Kapalı",
+        memo_unlock: "Bu memoyu görebilmek için cüzdanın kilidini açın"
     },
     transaction: {
         confirm: "Lütfen işlemi teyit et",
@@ -300,7 +307,7 @@
         at: "için şu kurdan:",
         coll_of: "teminatıyla",
         call_order_update: "marjin pozisyonunu güncelledi, şunun: ",
-        lifetime_upgrade_account: "ömür-boyu üyeye yükseltildi",
+        lifetime_upgrade_account: "ömür-boyu üyeye yükseldi",
         annual_upgrade_account: "yıllık üyeliğe yükseltildi",
         update_account: "hesap verilerini güncelledi",
         set_proxy: "oylama vekili olarak %(proxy)s belirlediler",
@@ -366,6 +373,7 @@
         outputs: "Çıkanlar",
         inputs: "Girdiler",
         settlement_date: "Uzlaşma tarihi",
+        asset_reserve: "rezerv aktif miktarı",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Emir Ver",
@@ -381,7 +389,7 @@
             asset_update_bitasset: "Akıllıpara güncelleme",
             asset_update_feed_producers: "Aktif feed üreticileri güncelleme",
             asset_issue: "Aktif ihracı",
-            asset_reserve: "Aktif yak",
+            asset_reserve: "Rezerv aktif",
             asset_fund_fee_pool: "Aktif ücret havuzu finansı",
             asset_settle: "Aktif ödemesi",
             asset_global_settle: "Genel Aktif Ödemesi",
@@ -574,6 +582,13 @@
         },
         account: {
             title: "Hesap"
+        },
+        fees: {
+            type: "Ücret Türü",
+            fee: "Standart Ücret",
+            feeeq: "(eşdeğer)",
+            feeltm: "Ömürboyu/Yıllık Üye Ücreti",
+            feeltmeq: "(eşdeğer)",
         }
     },
     settings: {
@@ -591,7 +606,8 @@
         faucet_address: "Musluk Adresi",
         showSettles: "Ödeme emirlerini derinlik tablosunda gösterin ",
         yes: "Evet",
-        no: "Hayır"
+        no: "Hayır",
+        walletLockTimeout: "Cüzdan oto-kilit süresi (saniye)"
     },
     footer: {
         title: "OpenLedger",
@@ -640,7 +656,7 @@
         ema: "Üssel Hareketli Ortalama",
         sma: "Basit Hareketli Ortalama",
         atr: "Ortalama Gerçek Fiyat Aralığı",
-        period: "periot (gün)",
+        period: "Süre (gün)",
         overbought: "Aşırı Alım",
         oversold: "Aşırı Satış",
         index: "Indeks",
@@ -650,7 +666,7 @@
         asks: "Satış Fiyatları",
         bids: "Alış Fiyatları",
         no_data: "Veri yok",
-        time: "Süre",
+        time: "Zaman aralığı",
         borrow: "Ödünç Al",
         no_balance: "Yetersiz bakiye",
         invalid_amount: "Geçersiz miktar",

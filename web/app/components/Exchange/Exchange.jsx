@@ -179,9 +179,10 @@ class Exchange extends React.Component {
         viewSettings: PropTypes.object.isRequired,
         priceData: PropTypes.array.isRequired,
         volumeData: PropTypes.array.isRequired
-    }
+    };
 
     static defaultProps = {
+        currentAccount: "1.2.3",
         limit_orders: [],
         balances: [],
         totalBids: 0,
@@ -194,7 +195,7 @@ class Exchange extends React.Component {
         viewSettings: {},
         priceData: [],
         volumeData: []
-    }
+    };
 
     componentWillMount() {
         if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
@@ -885,6 +886,8 @@ class Exchange extends React.Component {
             quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null,
             showCallLimit = false, latestPrice, changeClass;
 
+        let isNullAccount = currentAccount.get("id") === "1.2.3";
+
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset;
             quote = quoteAsset;
@@ -1089,14 +1092,14 @@ class Exchange extends React.Component {
                                                 </li>) : null}
                                          </ul>
                                          <ul className="market-stats stats bottom-stats">
-                                            {quoteIsBitAsset ? 
+                                            {!isNullAccount && quoteIsBitAsset ? 
                                                 (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowQuote.bind(this)}>
                                                     <div className="indicators">
                                                        <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
                                                     </div>
                                                 </li>) : null}
 
-                                            {baseIsBitAsset ? 
+                                            {!isNullAccount && baseIsBitAsset ? 
                                                 (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowBase.bind(this)}>
                                                     <div className="indicators">
                                                        <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
@@ -1171,7 +1174,8 @@ class Exchange extends React.Component {
 
                         {/* Buy/Sell forms */}
 
-                        <div className="grid-block vertical shrink buy-sell">
+                        {isNullAccount ? null : (
+                            <div className="grid-block vertical shrink buy-sell">
                             <div className="grid-block small-vertical medium-horizontal align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
@@ -1237,7 +1241,7 @@ class Exchange extends React.Component {
                                     diff={sellDiff}
                                 />
                             </div>
-                        </div>
+                        </div>)}
 
                         {!leftOrderBook ? <div className="grid-block small-12" style={{overflow: "hidden"}}>
                             <OrderBook
@@ -1257,7 +1261,8 @@ class Exchange extends React.Component {
                             />
                     </div> : null}
 
-                        <div className="grid-block no-overflow shrink no-padding">
+                        {isNullAccount ? null : (
+                            <div className="grid-block no-overflow shrink no-padding">
                             {limit_orders.size > 0 && base && quote ? (
                                 <MyOpenOrders
                                     key="open_orders"
@@ -1270,7 +1275,8 @@ class Exchange extends React.Component {
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                                 />) : null}
-                        </div>
+                        </div>)}
+
                         <div className="grid-block no-overflow shrink no-padding">
                             {settle_orders.size > 0 && base && quote &&
                             (base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
@@ -1305,6 +1311,7 @@ class Exchange extends React.Component {
                                 quote={quote}
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
+                                isNullAccount={isNullAccount}
                             />
                         </div>
                         <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
@@ -1324,13 +1331,13 @@ class Exchange extends React.Component {
                             />
                         </div>
                     </div>
-                    {quoteIsBitAsset ?
+                    {!isNullAccount && quoteIsBitAsset ?
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
                             account={currentAccount}
                          /> : null}
-                    {baseIsBitAsset ?
+                    {!isNullAccount && baseIsBitAsset ?
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}

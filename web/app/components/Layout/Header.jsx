@@ -222,8 +222,7 @@ class Header extends React.Component {
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
                         <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
-                        {linkedAccounts.size === 0 ? null :
-                            <li>{tradeLink}</li>}
+                        <li>{tradeLink}</li>
                         <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
                     </ul>
                 </div>

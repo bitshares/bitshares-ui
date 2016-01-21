@@ -180,12 +180,13 @@
             add_committee: "Add",
             add_committee_label: "Committee Member",
             add_witness_label: "Witness",
-            approve_worker: "Approve worker proposal",
-            reject_worker: "Reject worker proposal",
+            approve_worker: "Approve",
+            reject_worker: "Reject",
             worker_account: "Worker account",
-            total_votes: "Total votes",
+            total_votes: "Net votes",
             votes_against: "Votes against",
-            daily_pay: "Daily pay",
+            daily_pay: "Pay",
+            daily: "daily",
             max_pay: "Maximum total pay",
             unclaimed: "Unclaimed pay",
             status: {
@@ -195,7 +196,12 @@
                 neutral: "Neutral"
             },
             start: "Start date",
-            end: "End date"
+            end: "End date",
+            creator: "Creator",
+            recycled: "Recycled",
+            funding: "Funding",
+            total_budget: "Total available worker budget",
+            unused_budget: "Unused worker budget",
         },
         options: {
             num_witnesses: "Desired Witnesses",
@@ -367,6 +373,7 @@
         outputs: "Outputs",
         inputs: "Inputs",
         settlement_date: "Settlement date",
+        asset_reserve: "reserved asset amount",
         trxTypes: {
             transfer: "Transfer",
             limit_order_create: "Place order",
@@ -382,7 +389,7 @@
             asset_update_bitasset: "Update SmartCoin",
             asset_update_feed_producers: "Update asset feed producers",
             asset_issue: "Issue asset",
-            asset_reserve: "Burn asset",
+            asset_reserve: "Reserve asset",
             asset_fund_fee_pool: "Fund asset fee pool",
             asset_settle: "Asset settlement",
             asset_global_settle: "Global asset settlement",
@@ -575,6 +582,13 @@
         },
         account: {
             title: "Account"
+        },
+        fees: {
+            type: "Fee Type",
+            fee: "Standard Fee",
+            feeeq: "(equivalent)",
+            feeltm: "Lifetime/Anual Member Fee",
+            feeltmeq: "(equivalent)",
         }
     },
     settings: {
