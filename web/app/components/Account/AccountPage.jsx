@@ -20,17 +20,17 @@ class AccountPage extends React.Component {
         account: "props.params.account_name"
     };
 
-    componentWillMount() {
-        let account = this.props.params.account_name;
-        let {linkedAccounts} = AccountStore.getState();
-        let {starredAccounts} = SettingsStore.getState();
-        if(account && linkedAccounts.get(account)) {
-            if (starredAccounts.size && !starredAccounts.has(account)) {
-                return;
-            }
-            AccountActions.setCurrentAccount(this.props.params.account_name);
-        }
-    }
+    // componentWillMount() {
+    //     let account = this.props.params.account_name;
+    //     let {linkedAccounts} = AccountStore.getState();
+    //     let {starredAccounts} = SettingsStore.getState();
+    //     if(account && linkedAccounts.get(account)) {
+    //         if (starredAccounts.size && !starredAccounts.has(account)) {
+    //             return;
+    //         }
+    //         AccountActions.setCurrentAccount(this.props.params.account_name);
+    //     }
+    // }
 
     render() {
         let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account} = this.props;

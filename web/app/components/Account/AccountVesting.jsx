@@ -7,7 +7,7 @@ import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
 
 class VestingBalance extends React.Component {
-    
+
     _onClaim(e) {
         e.preventDefault();
         let vb = ChainStore.getObject( this.props.vb );
@@ -34,7 +34,7 @@ class VestingBalance extends React.Component {
 
             availablePercent = earned / (vestingPeriod * balance);
         }
-        
+
         let account_name = account.name;
 
         if (!cvbAsset) {
@@ -59,7 +59,7 @@ class VestingBalance extends React.Component {
 
         return (
             <div style={{paddingBottom: "1rem"}}>
-            <h5>Balance #{vb.get("id")}</h5>
+            <Translate component="h5" content="account.vesting.balance_number" id={vb.get("id")} />
             <table className="table key-value-table">
                     <tbody>
                         <tr>
@@ -125,7 +125,7 @@ class AccountVesting extends React.Component {
                     </h4>
 
                     {balances}
-                    
+
                 </div>
             </div>
 );

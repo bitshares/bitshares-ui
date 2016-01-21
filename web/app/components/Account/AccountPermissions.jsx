@@ -52,8 +52,8 @@ class AccountPermissions extends React.Component {
 
     permissionsToJson(threshold, accounts, keys, weights) {
         let res = {weight_threshold: threshold};
-        res["account_auths"] = accounts.map(a => [a, weights[a]]).toJS();
-        res["key_auths"] = keys.map(a => [a, weights[a]]).toJS();
+        res["account_auths"] = accounts.sort(utils.sortID).map(a => [a, weights[a]]).toJS();
+        res["key_auths"] = keys.sort(utils.sortID).map(a => [a, weights[a]]).toJS();
         res["address_auths"] = [];
         return res;
     }

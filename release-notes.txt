@@ -3,6 +3,28 @@ Release 2.0.160106
 ---------------------------------------------------------------------
 
 NEW FEATURES:
+- Table View for Workers #632
+- Hide Workers with negative approval #632
+- UTF-8 memo support #624
+- Support for 'asset_reserve' operation
+- Show lifetime membership fees
+- Improved Fee Explorer: Cleanup, nicer tables, better translations
+
+
+BUG FIXES:
+- My History / History alignment #568
+- 'Missing Active Authority' permissions issue #676
+- Show correct selected connection in Settings
+- Allow shorting of prediction market assets, fix #667
+- Refactor AccountVoting worker view to table layout, fix #632
+- Fix 'span' as child of 'tr' error
+- Subtract fees for filled orders, show fees paid, fix #658
+
+---------------------------------------------------------------------
+Release 2.0.160106
+---------------------------------------------------------------------
+
+NEW FEATURES:
 - Add tooltips explaining why Buy/Sell buttons are disabled fix #628
 - Add vesting balances page showing all vesting balance objects fix #640
 - Enforce secure websocket connections when using https host fix #638

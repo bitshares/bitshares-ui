@@ -144,7 +144,7 @@ class Transaction extends React.Component {
                                 public_key,
                                 memo.nonce,
                                 memo.message
-                            ).toString() : null;
+                            ).toString("utf-8") : null;
                         } catch(e) {
                             console.log("transfer memo exception ...", e);
                             memo_text = "*";
@@ -152,19 +152,19 @@ class Transaction extends React.Component {
                     }
 
                     rows.push(
-                        <tr>
+                        <tr key="1">
                             <td><Translate component="span" content="transfer.from" /></td>
                             <td>{this.linkToAccount(op[1].from)}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="2">
                             <td><Translate component="span" content="transfer.to" /></td>
                             <td>{this.linkToAccount(op[1].to)}</td>
                         </tr>
                     );
                     rows.push(
-                        <tr>
+                        <tr key="3">
                             <td><Translate component="span" content="transfer.amount" /></td>
                             <td><FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} /></td>
                         </tr>
@@ -172,7 +172,7 @@ class Transaction extends React.Component {
 
                     {memo_text ?
                         rows.push(
-                            <tr>
+                            <tr key="4">
                                 <td><Translate content="transfer.memo" /></td>
                                 <td>{memo_text}</td>
                             </tr>
@@ -180,7 +180,7 @@ class Transaction extends React.Component {
 
                     {op[1].memo && lockedWallet ?
                         rows.push(
-                            <tr>
+                            <tr key="5">
                                 <td><Translate content="transfer.memo" /></td>
                                 <td>
                                     <Translate content="transfer.memo_unlock" />&nbsp;
@@ -924,10 +924,32 @@ class Transaction extends React.Component {
                     
                     break;
 
+                case "asset_reserve":
+                    rows.push(
+                        <tr>
+                            <td style={{textTranform: "capitalize"}}><Translate component="span" content="transaction.by" /></td>
+                            <td>{this.linkToAccount(op[1].payer)}</td>
+                        </tr>
+                    );
 
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="explorer.asset.title" /></td>
+                            <td>{this.linkToAsset(op[1].amount_to_reserve.asset_id)}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr>
+                            <td><Translate component="span" content="transfer.amount" /></td>
+                            <td><FormattedAsset amount={op[1].amount_to_reserve.amount} asset={op[1].amount_to_reserve.asset_id} /></td>
+                        </tr>
+                    );
+                    break;                    
 
                 default:
                     console.log("unimplemented op:", op);
+
                     rows.push(
                         <tr >
                             <td><Translate component="span" content="explorer.block.op" /></td>

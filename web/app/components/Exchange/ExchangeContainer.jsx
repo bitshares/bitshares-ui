@@ -7,13 +7,13 @@ import Exchange from "./Exchange";
 
 class ExchangeContainer extends React.Component {
 
-    componentWillMount() {
-        let currentAccount = AccountStore.getState().currentAccount;
+    // componentWillMount() {
+    //     let currentAccount = AccountStore.getState().currentAccount;
 
-        if (!currentAccount) {
-            this.props.history.pushState(null, "create-account");
-        }
-    }
+    //     if (!currentAccount) {
+    //         this.props.history.pushState(null, "create-account");
+    //     }
+    // }
 
     render() {
         let symbols = this.props.params.marketID.split("_");

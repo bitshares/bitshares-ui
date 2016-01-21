@@ -135,7 +135,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block} = this.props;
+        let {op, current, block, hideFee} = this.props;
         let line = null, column = null, color = "info";
 
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
@@ -164,7 +164,7 @@ class Operation extends React.Component {
                             public_key,
                             memo.nonce,
                             memo.message
-                        ).toString() : null;
+                        ).toString("utf-8") : null;
                     } catch(e) {
                         console.log("transfer memo exception ...", e);
                         memo_text = "*";
@@ -630,13 +630,16 @@ class Operation extends React.Component {
             case "fill_order":
                 color = "success";
                 o = op[1];
+
+                let receivedAmount = o.fee.asset_id === o.receives.asset_id ? o.receives.amount - o.fee.amount : o.receives.amount;
+                hideFee = !(o.fee.amount > 0);
                 column = (
                         <span>
                             {this.linkToAccount(op[1].account_id)}&nbsp;
                             <Translate component="span" content="transaction.paid" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={op[1].pays.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.obtain" />
-                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} />
+                            &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={receivedAmount} asset={op[1].receives.asset_id} />
                             &nbsp;<Translate component="span" content="transaction.at" />
                             &nbsp;<FormattedPrice base_asset={o.pays.asset_id} base_amount={o.pays.amount}
                                                   quote_asset={o.receives.asset_id} quote_amount={o.receives.amount}  />
@@ -831,6 +834,14 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "asset_reserve":
+                column = (
+                    <span>
+                        {this.linkToAccount(op[1].payer)}&nbsp;<Translate content="transaction.asset_reserve" />:&nbsp;<FormattedAsset amount={op[1].amount_to_reserve.amount} asset={op[1].amount_to_reserve.asset_id} />
+                    </span>
+                )
+                break;
+
             default:
                 console.log("unimplemented op:", op);
                 column = (
@@ -863,7 +874,7 @@ class Operation extends React.Component {
                 color={color}
                 fee={op[1].fee}
                 hideDate={this.props.hideDate}
-                hideFee={this.props.hideFee}
+                hideFee={hideFee}
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
             >

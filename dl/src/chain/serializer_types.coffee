@@ -309,6 +309,11 @@ id_type = (reserved_spaces, object_type)->
             object = v.get_instance reserved_spaces, object_type, object
         
         "#{reserved_spaces}.#{object_type_id}."+object
+    compare: (a, b) ->
+        if(Array.isArray(a) && Array.isArray(b) && a.length > 0 && b.length > 0)
+            return a[0] - b[0]
+        else
+            return 0
 
 Types.protocol_id_type = (name)->
     id_type chain_types.reserved_spaces.protocol_ids, name
@@ -446,7 +451,10 @@ Types.map = (key_st_operation, value_st_operation)->
                 if dup_map[o[0]] isnt undefined
                     throw new Error "duplicate"
                 dup_map[o[0]] = on
-        array
+        if key_st_operation.compare
+            array.sort(key_st_operation.compare)
+        else
+            array
     
     fromByteBuffer:(b)->
         @validate (for i in [0...b.readVarint32()] by 1
