@@ -35,7 +35,6 @@ class WithdrawFiatOpenLedger extends React.Component {
      let asset = this.props.receive_asset;
      let precision = utils.get_asset_precision(asset.get("precision"));
      let amount = this.state.withdraw_amount.replace( /,/g, "" )
-     console.log( "withdraw_amount: ", amount );
 
      let json_rpc_request = {
       "jsonrpc": "2.0", 
@@ -47,9 +46,11 @@ class WithdrawFiatOpenLedger extends React.Component {
       }, 
       "id": 1 
      };
-     let request_url = this.props.rpc_url + '?rq=' + encodeURIComponent(JSON.stringify(json_rpc_request));
-     let is_withdrawal_approved_promise = fetch(request_url,
-                                                {method: 'GET', headers: new Headers({"Accept": "application/json"}) })
+     let is_withdrawal_approved_promise = fetch(this.props.rpc_url,
+                                                {method: 'POST', 
+                                                 headers: new Headers({"Accept": "application/json", 
+                                                 "content-type":"application/x-www-form-urlencoded"}), 
+                                                 body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                           .then(response => response.json());
         
      is_withdrawal_approved_promise.then((json_response) => {

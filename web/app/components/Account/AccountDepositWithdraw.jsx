@@ -344,7 +344,7 @@ class AccountDepositWithdraw extends React.Component {
                         <OpenLedgerFiatDepositWithdrawal
                                 rpc_url="https://openledger.info/api/"
                                 account={this.props.account}
-                                issuer_account="openledger-wallet" />
+                                issuer_account="openledger-fiat" />
                         <OpenLedgerFiatTransactionHistory 
                                 rpc_url="https://openledger.info/api/"
                                 account={this.props.account} />

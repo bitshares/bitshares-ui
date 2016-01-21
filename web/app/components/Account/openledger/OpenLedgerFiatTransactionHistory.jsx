@@ -49,9 +49,11 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
           }, 
           "id": 1 
          };
-         let request_url = this.props.rpc_url + '?rq=' + encodeURIComponent(JSON.stringify(json_rpc_request));
-         let get_transaction_history_promise = fetch(request_url,
-                                                    {method: 'GET', headers: new Headers({"Accept": "application/json"}) })
+         let get_transaction_history_promise = fetch(this.props.rpc_url,
+                                                     {method: 'POST', 
+                                                      headers: new Headers({"Accept": "application/json", 
+                                                      "content-type":"application/x-www-form-urlencoded"}), 
+                                                     body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                               .then(response => response.json());
             
          get_transaction_history_promise.then((json_response) => {

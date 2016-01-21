@@ -45,36 +45,6 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
         this.state = { };
     }
 
-    requestDepositAddress() {
-        let body = JSON.stringify({
-            inputCoinType:this.props.deposit_coin_type,
-            outputCoinType:this.props.receive_coin_type,
-            outputAddress:this.props.account.get('name')
-        })
-        console.log( "body: ", body );
-
-        fetch( this.props.url + '/simple-api/initiate-trade', {
-            method:'post',
-            headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
-            body: body
-        }).then( reply => { reply.json().then( json => {
-                console.log( "reply: ", json )
-                if( json.inputAddress )
-                    this.addDepositAddress( json.inputAddress );
-                else
-                    this.addDepositAddress( "unknown" );
-            }, error => {
-                console.log( "error: ",error  );
-                this.addDepositAddress( "unknown" );
-            }
-        )
-        }, error => {
-            console.log( "error: ",error  );
-            this.addDepositAddress( "unknown" );
-        });
-
-    }
-
     getWithdrawModalId() {
         return "withdraw_fiat_openledger_"+this.props.receive_asset.get('symbol');
     }
@@ -186,16 +156,18 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
         this.state =
         {
             allowedFiatCurrencies : {
-                "deposit": ["USD", "EUR"],
-                "withdraw": ["USD"]
+                "deposit": [],
+                "withdraw": []
             }
         };
 
         // get approval status from openledger
         let json_rpc_request = { "jsonrpc": "2.0", "id": 1, "method": "isValidatedForFiat", "params": {"bitsharesAccountName": this.props.account.get('name')}};
-        let request_url = this.props.rpc_url + '?rq=' + encodeURIComponent(JSON.stringify(json_rpc_request));
-        let is_validated_promise = fetch(request_url,
-                                         {method: 'GET', headers: new Headers({"Accept": "application/json"}) })
+        let is_validated_promise = fetch(this.props.rpc_url,
+                                                {method: 'POST', 
+                                                 headers: new Headers({"Accept": "application/json", 
+                                                 "content-type":"application/x-www-form-urlencoded"}), 
+                                                 body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                  .then(response => response.json());
         
         is_validated_promise.then((json_response) => {

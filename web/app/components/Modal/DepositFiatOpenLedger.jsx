@@ -51,9 +51,12 @@ class DepositFiatOpenLedger extends React.Component {
       }, 
       "id": 1 
      };
-     let request_url = this.props.rpc_url + '?rq=' + encodeURIComponent(JSON.stringify(json_rpc_request));
-     let is_deposit_approved_promise = fetch(request_url,
-                                                {method: 'GET', headers: new Headers({"Accept": "application/json"}) })
+     
+     let is_deposit_approved_promise = fetch(this.props.rpc_url,
+                                             {method: 'POST', 
+                                              headers: new Headers({"Accept": "application/json", 
+                                              "content-type":"application/x-www-form-urlencoded"}), 
+                                              body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                           .then(response => response.json());
         
      is_deposit_approved_promise.then((json_response) => {
