@@ -18,7 +18,8 @@ class SettingsStore {
             connection: "wss://bitshares.openledger.info/ws",
             faucet_address: "https://bitshares.openledger.info",
             unit: CORE_ASSET,
-            showSettles: false
+            showSettles: false,
+            multiAccountMode: false
         });
 
         this.viewSettings =  Immutable.Map({
@@ -72,6 +73,10 @@ class SettingsStore {
             showSettles: [
                 {translate: "yes"},
                 {translate: "no"}
+            ],
+            multiAccountMode: [
+                {translate: "no"},
+                {translate: "yes"}
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
