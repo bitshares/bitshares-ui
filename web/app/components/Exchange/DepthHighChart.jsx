@@ -11,12 +11,12 @@ import Translate from "react-translate-component";
 class DepthHighChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
+        let settleCheck = isNaN(nextProps.settlementPrice) ? false : nextProps.settlementPrice !== this.props.settlementPrice;
         return (
             !Immutable.is(nextProps.orders, this.props.orders) ||
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
-            // nextProps.plotLine !== this.props.plotLine ||
+            settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
-            nextProps.settlementPrice !== this.props.settlementPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
@@ -36,6 +36,7 @@ class DepthHighChart extends React.Component {
 
 
     render() {
+        console.log("depth chart render");
         let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;

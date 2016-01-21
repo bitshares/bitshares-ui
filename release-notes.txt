@@ -1,15 +1,18 @@
 ---------------------------------------------------------------------
-Release 2.0.160106
+Release 2.0.160121
 ---------------------------------------------------------------------
 
 NEW FEATURES:
+- USD, EUR, CNY fiat deposit/withdrawals via OpenLedger
+- Added OPEN.EMC and OPEN.EGD to OpenLedger bridge
+- Blocktrades support for TRADE.DASH/PPC/DOGE
 - Table View for Workers #632
 - Hide Workers with negative approval #632
 - UTF-8 memo support #624
 - Support for 'asset_reserve' operation
 - Show lifetime membership fees
 - Improved Fee Explorer: Cleanup, nicer tables, better translations
-
+- Allow users to browse the Exchange even without having an account
 
 BUG FIXES:
 - My History / History alignment #568

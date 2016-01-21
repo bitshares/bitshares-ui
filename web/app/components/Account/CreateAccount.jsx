@@ -176,7 +176,7 @@ class CreateAccount extends React.Component {
         let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
         let valid = this.isValid();
-        let buttonClass = classNames("button", {disabled: !valid});
+        let buttonClass = classNames("button no-margin", {disabled: !valid});
 
         let header_items = {
             icon: <div className="form-group">
@@ -250,7 +250,7 @@ class CreateAccount extends React.Component {
                                 <br/>
                                 <br/>
                                 <label className="inline"><Link to="/existing-account"><Translate content="account.existing_accounts" /></Link></label>
-                                {this.state.hide_refcode ? <span>&nbsp; &bull; &nbsp;
+                                {false && this.state.hide_refcode ? <span>&nbsp; &bull; &nbsp;
                                     <label className="inline"><a href onClick={this.showRefcodeInput.bind(this)}><Translate content="refcode.enter_refcode"/></a></label>
                                 </span> : null}
                             </form>

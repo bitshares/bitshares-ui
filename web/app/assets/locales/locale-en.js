@@ -781,6 +781,10 @@
         address: "Withdraw to Address",
         submit: "Withdraw"
       },
+      deposit : {
+        amount: "Amount to Deposit",
+        submit: "Deposit"
+      },
       settle: {
         title: "Request settlement of %(asset)s",
         amount: "Amount to settle",

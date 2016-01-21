@@ -316,6 +316,9 @@ var Utils = {
     },
 
     convertPrice: function(fromRate, toRate, fromID, toID) {
+        if (!fromRate || !toRate) {
+            return null;
+        }
         // Handle case of input simply being a fromAsset and toAsset
         if (fromRate.toJS && this.is_object_type(fromRate.get("id"), "asset")) {
             fromID = fromRate.get("id")

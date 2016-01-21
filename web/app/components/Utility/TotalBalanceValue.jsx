@@ -121,9 +121,11 @@ class TotalValue extends React.Component {
             fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
         }
 
-        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromAsset, toStats && toStats.close ? toStats.close : toAsset, fromID, toID);
 
-        return utils.convertValue(price, amount, fromAsset, toAsset);
+
+        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromID === "1.3.0" ? fromAsset : null, toStats && toStats.close ? toStats.close : toID === "1.3.0" ? toAsset : null, fromID, toID);
+
+        return price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
     }
 
     _assetValues(totals, amount, asset) {
