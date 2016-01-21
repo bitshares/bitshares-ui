@@ -160,7 +160,8 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
         {
             let button_label = this.state.current_status === 'never_loaded' ? 'Show Transaction History' : 'Refresh';
             openledger_transaction_history_fragment = <div className="content-block">
-                                                        <h3>Transaction History</h3>
+                                                        <br/>
+                                                        <h4>Transaction History</h4>
                                                         <button className={"button outline"} onClick={this.onShowOpenLedgerTransactionHistory.bind(this)}> {button_label} </button>
                                                         {openledger_withdrawal_history_fragment} 
                                                         {openledger_deposit_history_fragment}
