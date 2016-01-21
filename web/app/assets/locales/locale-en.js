@@ -595,7 +595,8 @@
         faucet_address: "Faucet Address",
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
-        no: "No"
+        no: "No",
+        multiAccountMode: "Multiple Accounts Mode"
     },
     footer: {
         title: "Graphene",

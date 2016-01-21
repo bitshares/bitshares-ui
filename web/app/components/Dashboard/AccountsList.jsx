@@ -212,8 +212,11 @@ class AccountsList extends React.Component {
             }
         });
 
+        if (accounts.length === 0) return null;
+
         return (
-            <div>
+            <div className="accounts-list">
+                <h4>{this.props.title}</h4>
                 <table className="table table-hover">
                     <thead>
                         <tr>

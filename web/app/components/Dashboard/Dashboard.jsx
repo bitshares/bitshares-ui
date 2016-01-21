@@ -8,6 +8,7 @@ import Proposals from "components/Account/Proposals";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
+import ActionSheet from "react-foundation-apps/src/action-sheet";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import CreatePrivateAccountModal from "../Stealth/CreatePrivateAccountModal";
 import CreatePrivateContactModal from "../Stealth/CreatePrivateContactModal";
@@ -68,21 +69,26 @@ class Dashboard extends React.Component {
         this.setState({dashboardFilter: e.target.value});
     }
 
-    _addPublicAccount() {
+    _addPublicAccount(e) {
+        e.preventDefault();
         console.log("-- Dashboard._addPublicAccount -->");
-        ReactTooltip.hide();
+        // ReactTooltip.hide();
         this.context.history.pushState(null, "/create-account");
     }
 
-    _addPrivateAccount() {
+    _addPrivateAccount(e) {
+        e.preventDefault();
         console.log("-- Dashboard._addPrivateAccount -->");
         this.refs.CreatePrivateAccountModal.clear();
+        ZfApi.publish("action-sheet-add", "close");
         ZfApi.publish("add_private_account_modal", "open");
     }
 
-    _addPrivateContact() {
+    _addPrivateContact(e) {
+        e.preventDefault();
         console.log("-- Dashboard._addPrivateContact -->");
         this.refs.CreatePrivateContactModal.clear();
+        ZfApi.publish("action-sheet-add", "close");
         ZfApi.publish("add_private_contact_modal", "open");
     }
 
@@ -113,7 +119,6 @@ class Dashboard extends React.Component {
         let public_accounts = this.props.linkedAccounts.toList();
         let private_accounts = this.props.privateAccounts.toList();
         let private_contacts = this.props.privateContacts.toList();
-        console.log("-- Dashboard.render -->", private_accounts.toJS());
 
         let outerClass = "grid-block page-layout no-overflow " + (width < 750 ? "vertical" : "horizontal");
         let firstDiv = "grid-content no-overflow " + (width < 750 ? "" : "shrink");
@@ -131,12 +136,24 @@ class Dashboard extends React.Component {
                     </div>
 
                     <div ref="container" className="content-block">
-                        <button className="button outline float-right" onClick={this._addPublicAccount} data-tip="Add Public Account" data-type="light">+</button>
-                        <h4>Public Accounts</h4>
-                        <AccountsList accounts={public_accounts} width={width} dashboardFilter={df} myAccountsOnly/>
+                        <div className="float-right">
+                            <ActionSheet id="action-sheet-add">
+                                <ActionSheet.Button title="" setActiveState={active => ZfApi.publish("action-sheet-add", active ? "open" : "close")}>
+                                    <a className="button outline">+</a>
+                                </ActionSheet.Button>
+                                <ActionSheet.Content>
+                                    <ul>
+                                        <li><a href="#" onClick={this._addPublicAccount}>Add Public Account</a></li>
+                                        <li><a href="#" onClick={this._addPrivateAccount}>Add Private Account</a></li>
+                                        <li><a href="#" onClick={this._addPrivateContact}>Add Private Contact</a></li>
+                                    </ul>
+                                </ActionSheet.Content>
+                            </ActionSheet>
+                        </div>
+                        <AccountsList title="Public Accounts" accounts={public_accounts} width={width} dashboardFilter={df} myAccountsOnly/>
                     </div>
-                    <div ref="container" className="content-block">
-                        <button className="button outline float-right" onClick={this._addPrivateAccount} data-tip="Add Private Account" data-type="light">+</button>
+                    {!private_accounts.isEmpty() && <div ref="container" className="content-block">
+                        {/* <button className="button outline float-right" onClick={this._addPrivateAccount} data-tip="Add Private Account" data-type="light">+</button> */}
                         <h4>Private Accounts</h4>
                         <table className="table table-hover">
                             <thead>
@@ -156,9 +173,9 @@ class Dashboard extends React.Component {
                             }
                             </tbody>
                         </table>
-                    </div>
-                    <div ref="container" className="content-block">
-                        <button className="button outline float-right" onClick={this._addPrivateContact} data-tip="Add Private Contact" data-type="light">+</button>
+                    </div>}
+                    {!private_contacts.isEmpty() && <div ref="container" className="content-block">
+                        {/* <button className="button outline float-right" onClick={this._addPrivateContact} data-tip="Add Private Contact" data-type="light">+</button> */}
                         <h4>Private Contacts</h4>
                         <table className="table table-hover">
                             <thead>
@@ -180,10 +197,9 @@ class Dashboard extends React.Component {
                             }
                             </tbody>
                         </table>
-                    </div>
+                    </div>}
                     <div ref="container" className="content-block">
-                        <h4>Following</h4>
-                        <AccountsList accounts={public_accounts} width={width} dashboardFilter={this.state.dashboardFilter} notMyAccountsOnly/>
+                        <AccountsList title="Following" accounts={public_accounts} width={width} dashboardFilter={this.state.dashboardFilter} notMyAccountsOnly/>
                     </div>
                 </div>
 
