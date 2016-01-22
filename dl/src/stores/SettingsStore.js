@@ -62,7 +62,7 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws",
-                "wss://bitshares.dacplay.org:8089"
+                "wss://bitshares.dacplay.org:8089/ws"
             ],
             unit: [
                 CORE_ASSET,
