@@ -19,7 +19,7 @@
         logout: "Çıkış",
         settings: "Ayarlar",
         current: "Kullanılan Hesap",
-        create_account: "Hesap Aç",
+        create_account: "Hesap Oluştur",
         create_asset: "Aktif Oluştur",
         update_asset: "Aktif Güncelle",
         lock: "Kiliti Kapat",
@@ -230,7 +230,7 @@
         eq_value: "Eş Değeri",
         percent: "Toplam arzın yüzdesi",
         please_create_account: "Lütfen bir hesap açın",
-        create_account: "Hesap aç",
+        create_account: "Hesap oluştur",
         identicon: "Identicon",
         pay_from: "Buradan öde",
         existing_accounts: "Mevcut hesaplar",
@@ -780,6 +780,10 @@
         amount: "Çekilecek Miktar",
         address: "Şu Adrese Çekilecek",
         submit: "Çek"
+      },
+      deposit : {
+        amount: "Yatıralacak Miktar",
+        submit: "Yatır"
       },
       settle: {
         title: "%(asset)s ödenmesini talep et",
