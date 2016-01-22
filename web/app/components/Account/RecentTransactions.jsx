@@ -142,7 +142,6 @@ class RecentTransactions extends React.Component {
                     <tr>
                         {compactView ? null : <th><Translate content="explorer.block.op" /></th>}
                         <th><Translate content="account.votes.info" /></th>
-                        <th><Translate content="explorer.block.date" /></th>
                     </tr>
                     </thead>
                     <tbody>

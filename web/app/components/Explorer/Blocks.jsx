@@ -316,7 +316,6 @@ class Blocks extends React.Component {
                                 <thead>
                                     <tr>
                                         <th><Translate content="account.votes.info" /></th>
-                                        <th><Translate content="explorer.block.time" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
