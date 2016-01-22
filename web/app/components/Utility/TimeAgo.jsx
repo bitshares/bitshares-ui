@@ -30,7 +30,6 @@ class TimeAgo extends React.Component {
         if (typeof time === "string" && time.indexOf("+") === -1) {
             time += "+00:00";
         }
-        console.log("time:", time, "offset_mills", offset_mills, new Date(time).getTime() + offset_mills);
 
         let timePassed = Math.round( ( new Date().getTime() - new Date(time).getTime() + offset_mills ) / 1000 );
         let interval;
