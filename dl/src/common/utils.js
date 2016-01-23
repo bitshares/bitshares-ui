@@ -31,9 +31,11 @@ var Utils = {
         if (decimalPosition === -1) {
             return parseInt(amount, 10) * assetPrecision;
         } else {
-            let amountLength = amount.length;
+            let amountLength = amount.length,
+                i;
             amount = amount.replace(".", "");
-            for (let i = 0; i < precision; i++) {
+            amount = amount.substr(0, decimalPosition + precision);
+            for (i = 0; i < precision; i++) {
                 decimalPosition += 1;
                 if (decimalPosition > amount.length) {
                     amount += "0";
@@ -134,7 +136,7 @@ var Utils = {
     },
 
     price_text: function(price, base, quote) {
-        let maxDecimals = 9;
+        let maxDecimals = 8;
         let priceText;
         let quoteID = quote.toJS ? quote.get("id") : quote.id;
         let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
