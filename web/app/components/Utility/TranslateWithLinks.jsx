@@ -32,6 +32,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
  *             decimalOffset: 1 (optional, only used for amounts)
  *         }
  *         ]
+ *     params: object contaning simple strings to be interpolated using standard counterpart syntax: %(string)s
  *
  */
 
@@ -59,9 +60,9 @@ export default class TranslateWithLinks extends React.Component {
 
     render() {
 
-        let {string, keys} = this.props;
+        let {string, params, keys} = this.props;
 
-        let text = counterpart.translate(string);
+        let text = counterpart.translate(string, params);
         let splitText = utils.get_translation_parts(text);
 
         keys.forEach(key => {

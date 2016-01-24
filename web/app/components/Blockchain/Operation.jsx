@@ -248,19 +248,15 @@ class Operation extends React.Component {
                 color = "cancel";
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].fee_paying_account)}&nbsp;
-                        <Translate component="span" content="transaction.limit_order_cancel" />
-                        &nbsp;#{op[1].order.substring(4)}
-                    </span>
-                );
-                break;
-
-            case "short_order_cancel":
-                color = "cancel";
-                column = (
-                    <span>
-                        <Translate component="span" content="transaction.short_order_cancel" />
-                        &nbsp;{op[1].order}
+                        <TranslateWithLinks
+                            string="operation.limit_order_cancel"
+                            keys={[
+                                {type: "account", value: op[1].fee_paying_account, arg: "account"}
+                            ]}
+                            params={{
+                                order: op[1].order.substring(4)
+                            }}                                
+                        />
                     </span>
                 );
                 break;
@@ -303,33 +299,31 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-                if (op[1].new_options.voting_account) {
-                    let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
-                    column = (
-                        <span>
-                            <TranslateWithLinks
-                                string="operation.set_proxy"
-                                keys={[
-                                    {type: "account", value: op[1].account, arg: "account"},
-                                    {type: "account", value: op[1].new_options.voting_account, arg: "proxy"}
-                                ]}                                    
-                            />
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            <TranslateWithLinks
-                                string="operation.update_account"
-                                keys={[
-                                    {type: "account", value: op[1].account, arg: "account"}
-                                ]}                                    
-                            />
-                            {this.linkToAccount(op[1].account)}&nbsp;
-                            <Translate component="span" content="transaction.update_account" />
-                        </span>
-                    );
-                }
+                // if (op[1].new_options.voting_account) {
+                //     let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
+                //     column = (
+                //         <span>
+                //             <TranslateWithLinks
+                //                 string="operation.set_proxy"
+                //                 keys={[
+                //                     {type: "account", value: op[1].account, arg: "account"},
+                //                     {type: "account", value: op[1].new_options.voting_account, arg: "proxy"}
+                //                 ]}                                    
+                //             />
+                //         </span>
+                //     );
+                // } else {
+                column = (
+                    <span>
+                        <TranslateWithLinks
+                            string="operation.update_account"
+                            keys={[
+                                {type: "account", value: op[1].account, arg: "account"}
+                            ]}                                    
+                        />
+                    </span>
+                );
+                // }
                 break;
 
             case "account_whitelist":
@@ -366,10 +360,13 @@ class Operation extends React.Component {
             case "account_transfer":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.transfer_account" />
-                        &nbsp;{this.linkToAccount(op[1].account_id)}
-                        <Translate component="span" content="transaction.to" />
-                        &nbsp;{this.linkToAccount(op[1].new_owner)}
+                        <TranslateWithLinks
+                            string="operation.account_transfer"
+                            keys={[
+                                {type: "account", value: op[1].account_id, arg: "account"},
+                                {type: "account", value: op[1].new_owner, arg: "to"}
+                            ]}                                    
+                        />
                     </span>
                 );
                 break;
@@ -408,23 +405,17 @@ class Operation extends React.Component {
             case "asset_update_feed_producers":
                 color = "warning";
 
-                if (current === op[1].issuer) {
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].issuer)}&nbsp;
-                            <Translate component="span" content="transaction.update_feed_producers" />
-                            &nbsp;{this.linkToAsset(op[1].asset_to_update)}
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].issuer)}&nbsp;
-                            <Translate component="span" content="transaction.feed_producer" />
-                            &nbsp;{this.linkToAsset(op[1].asset_to_update)}
-                        </span>
-                    );
-                }
+                column = (
+                    <span>
+                        <TranslateWithLinks
+                            string="operation.asset_update_feed_producers"
+                            keys={[
+                                {type: "account", value: op[1].issuer, arg: "account"},
+                                {type: "asset", value: op[1].asset_to_update, arg: "asset"}
+                            ]}                                    
+                        />
+                    </span>
+                );               
                 break;
 
             case "asset_issue":
@@ -444,26 +435,19 @@ class Operation extends React.Component {
                 );
                 break;
 
-            case "asset_burn":
-                color = "cancel";
-                column = (
-                    <span>
-                        <Translate component="span" content="transaction.burn_asset" />
-                        &nbsp;<FormattedAsset amount={op[1].amount_to_burn.amount} asset={op[1].amount_to_burn.asset_id} />
-                    </span>
-                );
-                break;
-
             case "asset_fund_fee_pool":
                 color = "warning";
-                let asset = ChainStore.getAsset( op[1].asset_id );
-                if( asset ) asset = asset.get( "symbol" );
-                else asset = op[1].asset_id;
+
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].from_account)} &nbsp;
-                        <Translate component="span" content="transaction.fund_pool"  asset={asset} />
-                        &nbsp;<FormattedAsset amount={op[1].amount} asset="1.3.0" />
+                        <TranslateWithLinks
+                            string="operation.asset_issue"
+                            keys={[
+                                {type: "account", value: op[1].from_account, arg: "account"},
+                                {type: "asset", value: op[1].asset_id, arg: "asset"},
+                                {type: "amount", value: {amount: op[1].amount, asset_id: "1.3.0"}, arg: "amount"}
+                            ]}                                    
+                        />
                     </span>
                 );
                 break;
@@ -472,8 +456,13 @@ class Operation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.asset_settle" />
-                        &nbsp;<FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
+                        <TranslateWithLinks
+                            string="operation.asset_settle"
+                            keys={[
+                                {type: "account", value: op[1].account, arg: "account"},
+                                {type: "amount", value: op[1].amount, arg: "amount"}
+                            ]}                                    
+                        />
                     </span>
                 );
                 break;
@@ -482,16 +471,14 @@ class Operation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.asset_global_settle" />
-                        &nbsp;{this.linkToAsset(op[1].asset_to_settle)}
-                        &nbsp;<Translate component="span" content="transaction.at" />
-                        &nbsp;<FormattedPrice
-                                style={{fontWeight: "bold"}}
-                                quote_amount={op[1].price.quote.amount}
-                                quote_asset={op[1].price.quote.asset_id}
-                                base_asset={op[1].price.base.asset_id}
-                                base_amount={op[1].price.base.amount}
-                            />
+                        <TranslateWithLinks
+                            string="operation.asset_global_settle"
+                            keys={[
+                                {type: "account", value: op[1].account, arg: "account"},
+                                {type: "asset", value: op[1].asset_to_settle, arg: "asset"},
+                                {type: "price", value: op[1].price, arg: "price"}
+                            ]}                                    
+                        />
                     </span>
                 );
                 break;
@@ -504,7 +491,7 @@ class Operation extends React.Component {
                             string="operation.publish_feed"
                             keys={[
                                 {type: "account", value: op[1].publisher, arg: "account"},
-                                {type: "price", value: {base: op[1].feed.settlement_price.base, quote: op[1].feed.settlement_price.quote}, arg: "price"}
+                                {type: "price", value: op[1].feed.settlement_price, arg: "price"}
                             ]}                                    
                         />
                     </span>
@@ -514,8 +501,12 @@ class Operation extends React.Component {
             case "witness_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.witness_create" />
-                        &nbsp;{this.linkToAccount(op[1].witness_account)}
+                        <TranslateWithLinks
+                            string="operation.witness_create"
+                            keys={[
+                                {type: "account", value: op[1].witness_account, arg: "account"}
+                            ]}                                    
+                        />
                     </span>
                 );
 
@@ -524,8 +515,12 @@ class Operation extends React.Component {
             case "witness_update":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.witness_update" />
-                        &nbsp;{this.linkToAccount(op[1].witness_account)}
+                        <TranslateWithLinks
+                            string="operation.witness_update"
+                            keys={[
+                                {type: "account", value: op[1].witness_account, arg: "account"}
+                            ]}                                    
+                        />
                     </span>
                 );
 
@@ -644,7 +639,7 @@ class Operation extends React.Component {
                                 string="operation.fill_order"
                                 keys={[
                                     {type: "account", value: op[1].account_id, arg: "account"},
-                                    {type: "amount", value: {amount: receivedAmount, asset_id: op[1].receives.asset_id}, arg: "received"},
+                                    {type: "amount", value: {amount: receivedAmount, asset_id: op[1].receives.asset_id}, arg: "received", decimalOffset: op[1].receives.asset_id === "1.3.0" ? 3 : null},
                                     {type: "price", value: {base: o.pays, quote: o.receives}, arg: "price"}
                                 ]}                                    
                             />
@@ -656,14 +651,6 @@ class Operation extends React.Component {
                 column = (
                     <span>
                         <Translate component="span" content="transaction.global_parameters_update" />
-                    </span>
-                );
-                break;
-
-            case "file_write":
-                column = (
-                    <span>
-                        <Translate component="span" content="transaction.file_write" />
                     </span>
                 );
                 break;
@@ -691,68 +678,6 @@ class Operation extends React.Component {
                         />
                     </span>
                 );
-                break;
-
-            case "bond_create_offer":
-                column = (
-                    <span>
-                        <Translate component="span" content="transaction.bond_create_offer" />
-                        &nbsp;<FormattedAsset amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                    </span>
-                );
-                break;
-
-            case "bond_cancel_offer":
-                column = (
-                    <span>
-                        <Translate component="span" content="transaction.bond_cancel_offer" />
-                        &nbsp;{op[1].offer_id}
-                    </span>
-                );
-                break;
-
-            case "bond_accept_offer":
-                if (current === op[1].lender) {
-                    column = (
-                        <span>
-                            <Translate component="span" content="transaction.bond_accept_offer" />
-                            &nbsp;<FormattedAsset amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} />
-                            <Translate component="span" content="transaction.to" />
-                            &nbsp;{this.linkToAccount(op[1].borrower)}
-                        </span>
-                    );
-                } else if (current === op[1].borrower) {
-                    column = (
-                        <span>
-                            <Translate component="span" content="transaction.bond_accept_offer" />
-                            &nbsp;<FormattedAsset amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} />
-                            <Translate component="span" content="transaction.from" />
-                            &nbsp;{this.linkToAccount(op[1].lender)}
-                        </span>
-                    );
-                }
-                break;
-
-            case "bond_claim_collateral":
-                if (current === op[1].lender) {
-                    column = (
-                        <span>
-                            <Translate component="span" content="transaction.bond_pay_collateral" />
-                            &nbsp;<FormattedAsset amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} />
-                            <Translate component="span" content="transaction.to" />
-                            &nbsp;{this.linkToAccount(op[1].claimer)}
-                        </span>
-                    );
-                } else if (current === op[1].claimer) {
-                    column = (
-                        <span>
-                            <Translate component="span" content="transaction.bond_claim_collateral" />
-                            &nbsp;<FormattedAsset amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} />
-                            <Translate component="span" content="transaction.from" />
-                            &nbsp;{this.linkToAccount(op[1].lender)}
-                        </span>
-                    );
-                }
                 break;
 
             case "worker_create":
