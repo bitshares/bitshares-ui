@@ -28,10 +28,6 @@
         locked_tip: "Cüzdan kilidi kapalı.<br/>Açmak için tıkla.",
         unlocked_tip: "Cüzdan kilidi açık .<br/>Kapamak için tıkla."
     },
-    operation: {
-        pending: "bekleyen %(blocks)s blok",
-        no_recent: "Yakında işlem yok"
-    },
     propose: "teklif et",
     cancel: "iptal et",
     account: {
@@ -276,6 +272,35 @@
         close: "Kapalı",
         memo_unlock: "Bu memoyu görebilmek için cüzdanın kilidini açın"
     },
+    operation: {
+        pending: "bekleyen %(blocks)s blok",
+        no_recent: "Yakında işlem yok",
+        pending: "pending %(blocks)s blocks",
+        no_recent: "No recent transactions",
+        reg_account: "{registrar} registered the account {new_account}",
+        transfer: "{from} sent {amount} to {to}",
+        proposal_create: "{account} created a proposed transaction",
+        proposal_update: "{account} updated a proposed transaction",
+        proposal_delete: "{account} deleted a proposed transaction",
+        fill_order: "{account} bought {received} at {price}",
+        vesting_balance_withdraw: "{account} withdrew vesting balance of {amount}",
+        balance_claim: "{account} claimed a balance of {amount}",
+        publish_feed: "{account} published feed price of {price}",
+        set_proxy: "{account} set {proxy} as their voting proxy",
+        update_account: "{account} updated their account data",
+        limit_order_sell: "{account} placed an order to sell {amount} at {price}",
+        limit_order_buy: "{account} placed an order to buy {amount} at {price}",
+        call_order_update: "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
+        asset_reserve: "{account} reserved {amount}",
+        asset_issue: "{account} issued {amount} to {to}",
+        asset_create: "{account} created the asset {asset}",
+        asset_update: "{account} updated the asset {asset}",
+        lifetime_upgrade_account: "{account} was upgraded to lifetime member",
+        annual_upgrade_account: "{account} was upgraded to annual member",
+        unlisted_by: "{lister} unlisted the account {listee}",
+        whitelisted_by: "{lister} whitelisted the account {listee}",
+        blacklisted_by: "{lister} blacklisted the account {listee}"
+    },
     transaction: {
         confirm: "Lütfen işlemi teyit et",
         broadcast_success: "İşlem yayınlanmıştır",
@@ -296,8 +321,6 @@
         coll_ratio: "Başlangıç teminat oranı",
         coll_maint: "Teminat sürdürme oranı",
         "create_key": "Açık anahtar oluşturuldu",
-        reg_account: "Hesabı kaydetti",
-        was_reg_account: "kaydı yapıldı, yapan :",
         create_asset: "aktifi oluşturdu",
         limit_order_sell: "%(sell_amount)s miktarında satış emri verdi, şu fiyattan: ",
         limit_order_buy: "%(buy_amount)s miktarında alış emri verdi, şu fiyattan: ",

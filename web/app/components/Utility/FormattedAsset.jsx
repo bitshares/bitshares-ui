@@ -105,15 +105,21 @@ class FormattedAsset extends React.Component {
         return (
                 <span className={colorClass}  >
                 {!hide_amount ?
-                  <FormattedNumber
-                    value={this.props.exact_amount ? amount : amount / precision}
-                    minimumFractionDigits={0}
-                    maximumFractionDigits={decimals}
+                    <FormattedNumber
+                        value={this.props.exact_amount ? amount : amount / precision}
+                        minimumFractionDigits={0}
+                        maximumFractionDigits={decimals}
                     />
                 : null}
-                {!hide_asset && (this.props.assetInfo ? <Popover isOpen={this.state.isPopoverOpen} onOuterAction={this.closePopover} body={currency_popover_body}>
-                    <span>&nbsp;<span className="currency click-for-help" onClick={this.togglePopover}>{asset.symbol}</span></span>
-                </Popover> : <span>&nbsp;<span className="currency" onClick={this.togglePopover}>{asset.symbol}</span></span>)}
+                {!hide_asset && (this.props.assetInfo ? (
+                    <Popover
+                        isOpen={this.state.isPopoverOpen}
+                        onOuterAction={this.closePopover}
+                        body={currency_popover_body}
+                    >
+                        <span className="currency click-for-help" onClick={this.togglePopover}> {asset.symbol}</span>
+                    </Popover>) :
+                    <span className="currency" onClick={this.togglePopover}> {asset.symbol}</span>)}
                 </span>
         );
     }

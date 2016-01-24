@@ -431,6 +431,31 @@ var Utils = {
         const head_block_time = new Date(dynGlobalObject.get("time") + "+00:00");
         const seconds_below = (head_block - block_number) * block_interval;
         return new Date(head_block_time - seconds_below * 1000);
+    },
+
+    get_translation_parts(str) {
+        let result = [];
+        let toReplace = {};
+        let re = /{(.*?)}/g; 
+        let interpolators = str.split(re);
+        // console.log("split:", str.split(re)); 
+        return str.split(re);
+        // var str = '{{azazdaz}} {{azdazd}}';
+        // var m;
+         
+        // while ((m = re.exec(str)) !== null) {
+        //     if (m.index === re.lastIndex) {
+        //         re.lastIndex++;
+        //     }
+        //     console.log("m:", m);
+        //     // View your result using the m-variable.
+        //     // eg m[0] etc.
+        //     // 
+        //     toReplace[m[1]] = m[0]
+        //     result.push(m[1])
+        // }
+
+        // return result;
     }
 
 };
