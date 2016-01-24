@@ -10,6 +10,10 @@ class SettingsActions {
         this.dispatch(value);
     }
 
+    changeMarketDirection(value) {
+        this.dispatch(value);
+    }
+
     addStarMarket(quote, base) {
         this.dispatch({quote, base});
     }

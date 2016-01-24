@@ -26,6 +26,10 @@ class SettingsStore {
             cardView: true
         });
 
+        this.marketDirections = Immutable.Map({
+
+        });
+
         this.starredMarkets = Immutable.Map([
             [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
             [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
@@ -84,6 +88,7 @@ class SettingsStore {
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
+            onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
             onAddStarAccount: SettingsActions.addStarAccount,
@@ -111,6 +116,12 @@ class SettingsStore {
         if (this._lsGet("viewSettings_v1")) {
             this.viewSettings = Immutable.Map(JSON.parse(this._lsGet("viewSettings_v1")));
         }
+
+        if (this._lsGet("marketDirections")) {
+            this.marketDirections = Immutable.Map(JSON.parse(this._lsGet("marketDirections")));
+        }
+
+
     }
 
     getSetting(setting) {
@@ -135,6 +146,14 @@ class SettingsStore {
         }
 
         this._lsSet("viewSettings_v1", this.viewSettings.toJS());
+    }
+
+    onChangeMarketDirection(payload) {
+        for (key in payload) {
+            this.marketDirections = this.marketDirections.set(key, payload[key]);
+        }
+
+        this._lsSet("marketDirections", this.marketDirections.toJS());
     }
 
     _lsGet(key) {
