@@ -8,7 +8,7 @@ import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
-import PriceChart from "./PriceChart";
+import PriceChartD3 from "./PriceChartD3";
 import DepthHighChart from "./DepthHighChart";
 import {debounce, cloneDeep} from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
@@ -209,8 +209,8 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = ReactDOM.findDOMNode(this.refs.center);
-        Ps.initialize(centerContainer);
+        // let centerContainer = ReactDOM.findDOMNode(this.refs.center);
+        // Ps.initialize(centerContainer);
         SettingsActions.changeViewSetting({
             lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
@@ -1123,10 +1123,13 @@ class Exchange extends React.Component {
                         </div>
                         <div ref="center">
                         {!this.state.showDepthChart ? (
-                            <div className="grid-block shrink" id="market-charts" style={{marginTop: 0}}>
+                            <div
+                                className="grid-block shrink"
+                                id="market-charts"
+                                style={{marginTop: 0, paddingLeft: 20}}>
                                 {/* Price history chart */}
 
-                                <PriceChart
+                                <PriceChartD3
                                     priceData={this.props.priceData}
                                     volumeData={this.props.volumeData}
                                     base={base}
@@ -1140,13 +1143,6 @@ class Exchange extends React.Component {
                                     indicatorSettings={indicatorSettings}
                                     bucketSize={bucketSize}
                                     latest={latestPrice}
-                                />
-                                <IndicatorModal
-                                    ref="indicators"
-                                    indicators={indicators}
-                                    indicatorSettings={indicatorSettings}
-                                    onChangeIndicator={this._changeIndicator.bind(this)}
-                                    onChangeSetting={this._changeIndicatorSetting.bind(this)}
                                 />
                             </div>) : (
                             <div className="grid-block no-overflow no-padding shrink" >
