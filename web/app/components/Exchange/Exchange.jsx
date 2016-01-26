@@ -1121,7 +1121,7 @@ class Exchange extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div ref="center">
+                        <div ref="center" style={{overflowY: "auto"}}>
                         {!this.state.showDepthChart ? (
                             <div
                                 className="grid-block shrink"

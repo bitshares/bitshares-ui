@@ -330,6 +330,10 @@ class MarketsStore {
 
         let open, high, low, close, volume;
 
+        let addTime = (time, i, bucketSize) => {
+            return new Date(time.getTime() + i * bucketSize * 1000);
+        }
+
         for (let i = 0; i < this.priceHistory.length; i++) {
             let date = new Date(this.priceHistory[i].key.open + "+00:00");
             if (this.quoteAsset.get("id") === this.priceHistory[i].key.quote) {
@@ -351,40 +355,43 @@ class MarketsStore {
         }
 
         // max buckets returned is 200, if we get less, fill in the gaps starting at the first data point
-        // let priceLength = prices.length;
-        // if (priceLength > 0 && priceLength < 200) {
-        //     let now = (new Date()).getTime();
-        //     let firstDate = prices[0][0];
+        let priceLength = prices.length;
+        if (priceLength > 0 && priceLength < 200) {
+            let now = new Date().getTime();
+            let firstDate = prices[0].date;
+            // ensure there's a final entry close to the current time
+            let i = 1;
+            while (addTime(prices[0].date, i, this.bucketSize).getTime() < now) {
+                i++;
+            }
+            let finalDate = addTime(prices[0].date, i - 1, this.bucketSize);
+            if (prices[priceLength - 1].date !== finalDate) {
+                if (priceLength === 1) {
+                    prices.push({date: addTime(finalDate, -1, this.bucketSize), open: prices[0].close, high: prices[0].close, low: prices[0].close, close: prices[0].close, volume: 0});
+                    prices.push({date: finalDate, open: prices[0].close, high: prices[0].close, low: prices[0].close, close: prices[0].close, volume: 0});
+                    volumeData.push([addTime(finalDate, -1, this.bucketSize), 0]);
+                } else {
+                    prices.push({date: finalDate, open: prices[priceLength - 1].close, high: prices[priceLength - 1].close, low: prices[priceLength - 1].close, close: prices[priceLength - 1].close, volume: 0});
+                }
+                volumeData.push([finalDate, 0]);
+            }
 
-        //     // ensure there's a final entry close to the current time
-        //     let i = 1;
-        //     while (prices[0].date + i * this.bucketSize * 1000 < now) {
-        //         i++;
-        //     }
-        //     let finalDate = prices[0].date + (i - 1) * this.bucketSize * 1000;
+            // Loop over the data and fill in any blank time periods
+            for (let ii = 0; ii < prices.length - 1; ii++) {
 
-        //     if (prices[priceLength - 1].date !== finalDate) {
-        //         if (priceLength === 1) {
-        //             prices.push({date: finalDate - this.bucketSize * 1000, open: prices[0][4], high: prices[0][4], low: prices[0][4], close: prices[0][4], volume: 0});
-        //             prices.push({date: finalDate, open: prices[0][4], high: prices[0][4], low: prices[0][4], close: prices[0][4], volume: 0});
-        //             volumeData.push([finalDate - this.bucketSize * 1000, 0]);
-        //         } else {
-        //             prices.push({date: finalDate, open: prices[priceLength - 1][4], high: prices[priceLength - 1][4], low: prices[priceLength - 1][4], close: prices[priceLength - 1][4], volume: 0});
-        //         }
-        //         volumeData.push([finalDate, 0]);
-        //     }
+                // If next date is beyond one bucket up
+                if (prices[ii+1].date.getTime() !== (addTime(prices[ii].date, 1, this.bucketSize).getTime())) {
+                    
+                    // Break if next date is beyond now
+                    if (addTime(prices[ii].date, 1, this.bucketSize).getTime() > now) {
+                        break;
+                    }
 
-        //     // fill in
-        //     for (let ii = 0; ii < prices.length - 1; ii++) {
-        //         if (prices[ii+1].date !== (prices[ii].date + this.bucketSize * 1000)) {
-        //             if (prices[ii].date + this.bucketSize * 1000 > now) {
-        //                 break;
-        //             }
-        //             prices.splice(ii + 1, 0, {date: prices[ii][0] + this.bucketSize * 1000, open: prices[ii][4], high: prices[ii][4], low: prices[ii][4], close: prices[ii][4], volume: 0});
-        //             volumeData.splice(ii + 1, 0, [prices[ii][0] + this.bucketSize * 1000, 0]);
-        //         }
-        //     };
-        // }
+                    prices.splice(ii + 1, 0, {date: addTime(prices[ii].date, 1, this.bucketSize), open: prices[ii].close, high: prices[ii].close, low: prices[ii].close, close: prices[ii].close, volume: 0});
+                    volumeData.splice(ii + 1, 0, [addTime(prices[ii].date, 1, this.bucketSize), 0]);
+                }
+            };
+        }
 
         this.priceData = prices;
         this.volumeData = volumeData;
