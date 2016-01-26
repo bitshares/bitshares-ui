@@ -36,12 +36,13 @@ class CandleStickChartWithZoomPan extends React.Component {
                 width={width - 20}
                 height={600}
                 margin={margin}
-                dataTransform={[ { transform: StockscaleTransformer } ]}
                 data={priceData}
                 type="hybrid"
+                xScale={d3.time.scale()}
             >
                 <Chart
                     id={1}
+                    xAccessor={(d) => d.date}
                     yMousePointerDisplayLocation="right"
                     yMousePointerDisplayFormat={(y) => y.toFixed(pricePrecision)} 
                     padding={{ top: 10, right: 0, bottom: 20, left: 0 }}
@@ -49,7 +50,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                 >
                     <YAxis axisAt="right" orient="right" ticks={5} {...yGrid} tickStroke="#FFFFFF"/>
                     <DataSeries id={0} yAccessor={CandlestickSeries.yAccessor} >
-                        <CandlestickSeries />
+                        <CandlestickSeries wickStroke={{ up: "#6BA583", down: "#db0000" }} fill={{ up: "#6BA583", down: "#db0000" }}/>
                     </DataSeries>
                     <DataSeries id={1} indicator={SMA} options={{ period: 20, pluck: "close" }}>
                         <LineSeries/>
@@ -65,6 +66,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                 <CurrentCoordinate forChart={1} forDataSeries={2} />
                 <CurrentCoordinate forChart={1} forDataSeries={3} />
                 <Chart
+                    xAccessor={(d) => d.date}
                     id={2}
                     yMousePointerDisplayLocation="left"
                     yMousePointerDisplayFormat={d3.format(".4s")}
@@ -80,6 +82,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                     </DataSeries>
                 </Chart>
                 <Chart
+                    xAccessor={(d) => d.date}
                     id={3}
                     yMousePointerDisplayLocation="right"
                     yMousePointerDisplayFormat={(y) => y.toFixed(2)}
@@ -102,10 +105,11 @@ class CandleStickChartWithZoomPan extends React.Component {
                     <EdgeIndicator displayFormat={(y) => y.toFixed(pricePrecision)} itemType="first" orient="left" edgeAt="left" forChart={1} forDataSeries={3} />
                 </EdgeContainer>
                 <MouseCoordinates xDisplayFormat={d3.time.format("%Y-%m-%d")} type="crosshair" />
-                <EventCapture mouseMove={true} zoom={true} pan={true} mainChart={1} defaultFocus={false} />                <TooltipContainer>
-                    <OHLCTooltip forChart={1} origin={[-40, 0]}/>
-                    <MovingAverageTooltip forChart={1} onClick={(e) => console.log(e)} origin={[-38, 15]}/>
-                    <MACDTooltip forChart={3} origin={[-38, 15]}/>
+                <EventCapture mouseMove={true} zoom={true} pan={true} mainChart={1} defaultFocus={false} />                
+                <TooltipContainer>
+                    <OHLCTooltip forChart={1} origin={[-40, 0]} yPrecision={pricePrecision}/>
+                    <MovingAverageTooltip forChart={1} onClick={(e) => console.log(e)} origin={[-38, 15]} yPrecision={pricePrecision}/>
+                    <MACDTooltip forChart={3} origin={[-38, 15]} yPrecision={pricePrecision}/>
                 </TooltipContainer>
 
             </ChartCanvas>

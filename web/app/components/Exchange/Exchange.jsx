@@ -1126,7 +1126,7 @@ class Exchange extends React.Component {
                             <div
                                 className="grid-block shrink"
                                 id="market-charts"
-                                style={{marginTop: 0, paddingLeft: 20}}>
+                                style={{marginTop: 0}}>
                                 {/* Price history chart */}
 
                                 <PriceChartD3
