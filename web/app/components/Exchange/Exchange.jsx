@@ -477,13 +477,14 @@ class Exchange extends React.Component {
     }
 
     _buyPriceChanged(base, quote, e) {
-        let price = this._getBuyPrice(e.target.value);
+        let amount = this._limitByPrecision(e.target.value, base);
+        let price = this._getBuyPrice(amount);
 
         this.setState({
             buyPrice: price,
-            displayBuyPrice: e.target.value,
+            displayBuyPrice: amount,
             buyTotal: this._limitByPrecision(this.getBuyTotal(price, this.state.buyAmount), base),
-            depthLine: e.target.value
+            depthLine: amount
         });
     }
 
@@ -525,13 +526,14 @@ class Exchange extends React.Component {
     }
 
     _sellPriceChanged(base, quote, e) {
-        let price = this._getSellPrice(e.target.value);
+        let amount = this._limitByPrecision(e.target.value, base);
+        let price = this._getSellPrice(amount);
 
         this.setState({
             sellPrice: price,
-            displaySellPrice: e.target.value,
+            displaySellPrice: amount,
             sellTotal: this._limitByPrecision(this.getSellTotal(price, this.state.sellAmount), base),
-            depthLine: e.target.value
+            depthLine: amount
         });
     }
 
@@ -686,7 +688,9 @@ class Exchange extends React.Component {
     }
 
     _getBuyPrice(price) {
-        let ratio = market_utils.priceToObject(price, "bid");
+        let nominator = utils.get_satoshi_amount(price, this.props.baseAsset)
+        let denominator = utils.get_satoshi_amount(1, this.props.quoteAsset);
+        
         let {baseAsset, quoteAsset} = this.props;
         let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
         let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
@@ -694,18 +698,18 @@ class Exchange extends React.Component {
         return {
             base: {
                  asset_id: baseAsset.get("id"),
-                 amount: ratio.base * quotePrecision
+                 amount: denominator
             },
             quote: {
                 asset_id: quoteAsset.get("id"),
-                amount: ratio.quote * basePrecision
+                amount: nominator
             }
         };
     }
 
     _getDisplayPrice(type, priceObject) {
         let {quoteAsset, baseAsset} = this.props;
-        let precision =  Math.max(10, quoteAsset.get("precision") + baseAsset.get("precision"));
+        let precision =  Math.min(8, quoteAsset.get("precision") + baseAsset.get("precision"));
         let price;
 
         switch (type) {
@@ -727,19 +731,22 @@ class Exchange extends React.Component {
     }
 
     _getSellPrice(price) {
-        let ratio = market_utils.priceToObject(price, "ask");
+        let nominator = utils.get_satoshi_amount(price, this.props.baseAsset)
+        let denominator = utils.get_satoshi_amount(1, this.props.quoteAsset);
+        
         let {baseAsset, quoteAsset} = this.props;
+
         let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
         let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
 
         return {
             base: {
                  asset_id: this.props.quoteAsset.get("id"),
-                 amount: ratio.base * basePrecision
+                 amount: nominator
             },
             quote: {
                 asset_id: this.props.baseAsset.get("id"),
-                amount: ratio.quote * quotePrecision
+                amount: denominator
             }
         };
     }

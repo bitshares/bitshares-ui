@@ -26,6 +26,12 @@ class SettingsStore {
             cardView: false
         });
 
+        this.marketDirections = Immutable.Map({
+
+        });
+
+        this.hiddenAssets = Immutable.List([]);
+
         this.starredMarkets = Immutable.Map([
             [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
             [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
@@ -62,10 +68,7 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws",
-                "wss://bitshares.dacplay.org:8089",
-                "ws://185.82.203.92:8090", //RiverHead
-                "ws://128.199.143.47:2016", //Harvey
-                "ws://139.196.37.179:8090" //BTSDac
+                "wss://bitshares.dacplay.org:8089/ws"
             ],
             unit: [
                 CORE_ASSET,
@@ -87,12 +90,14 @@ class SettingsStore {
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
+            onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
             onAddStarAccount: SettingsActions.addStarAccount,
             onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
-            onRemoveWS: SettingsActions.removeWS
+            onRemoveWS: SettingsActions.removeWS,
+            onHideAsset: SettingsActions.hideAsset
         });
 
         if (this._lsGet("settings_v3")) {
@@ -114,6 +119,16 @@ class SettingsStore {
         if (this._lsGet("viewSettings_v1")) {
             this.viewSettings = Immutable.Map(JSON.parse(this._lsGet("viewSettings_v1")));
         }
+
+        if (this._lsGet("marketDirections")) {
+            this.marketDirections = Immutable.Map(JSON.parse(this._lsGet("marketDirections")));
+        }
+
+        if (this._lsGet("hiddenAssets")) {
+            this.hiddenAssets = Immutable.List(JSON.parse(this._lsGet("hiddenAssets")));
+        }
+
+
     }
 
     getSetting(setting) {
@@ -138,6 +153,26 @@ class SettingsStore {
         }
 
         this._lsSet("viewSettings_v1", this.viewSettings.toJS());
+    }
+
+    onChangeMarketDirection(payload) {
+        for (key in payload) {
+            this.marketDirections = this.marketDirections.set(key, payload[key]);
+        }
+
+        this._lsSet("marketDirections", this.marketDirections.toJS());
+    }
+
+    onHideAsset(payload) {
+        if (payload.id) {
+            if (!payload.status) {
+                this.hiddenAssets = this.hiddenAssets.delete(this.hiddenAssets.indexOf(payload.id));
+            } else {
+                this.hiddenAssets = this.hiddenAssets.push(payload.id);
+            }
+        }
+
+        this._lsSet("hiddenAssets", this.hiddenAssets.toJS());
     }
 
     _lsGet(key) {

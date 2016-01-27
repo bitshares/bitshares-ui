@@ -27,9 +27,6 @@ module.exports = {
         locked_tip: "Geldbörse ist gesperrt. Klicken zum Entsperren.",
         unlocked_tip: "Geldbörse ist entsperrt. Klicken zum Sperren."
     },
-    operation: {
-        pending: "pending %(blocks)s blocks"
-    },
     propose: "vorschlagen",
     cancel: "abbrechen",
     account: {
@@ -39,8 +36,29 @@ module.exports = {
         hour_24: "24hr Wechsel",
         recent: "Letzte Aktivität",
         name: "Konto Name",
+        id: "Konto ID",
         more: "mehr",
         deposit_withdraw: "Aufladen/Abheben",
+        as_collateral: "Kollateral",
+        open_orders: "Offene Order",
+        total_value: "Gesamtwert",
+        whitelist: {
+            title: "Weißliste",
+            black: "Schwarzliste",
+            add: "Zur Weißliste hinzufügen",
+            add_black: "Zur Schwarzliste hinzufügen",
+            empty: "%(account)s hat keine Konten in seiner Weißliste.",
+            empty_black: "%(account)s hat keine Konten in seiner Schwarzliste-",
+            white_by: "Weißgelisted durch",
+            black_by: "Schwarzgelisted durch",
+            empty_white_by: "Keine accounts haben %(account)s weißgelisted.",
+            empty_black_by: "Keine accounts haben %(account)s schwarzgelisted."
+        },
+        vesting: {
+            title: "Zusicherungen",
+            balance_number: "Guthaben #%(id)s",
+            no_balances: "Dieses Konto hat kein zugesichertes Guthaben"
+        },
         member: {
             stats: "Mitgliederstatistiken",
             join: "Beitritt am",
@@ -65,7 +83,13 @@ module.exports = {
             subscribe: "Jährliche Mitgliedschaft erwerben",
             expires: "endet",
             membership_expiration: "Ablauf der Mitgliedschaft",
-            fees_cashback: "Gebühren und Rückerstattung"
+            fees_cashback: "Gebühren und Rückerstattung",
+            coindays: "Coin-days",
+            earned: "Erworbene coin-days",
+            required: "Benötigte coin-days",
+            remaining: "Übriger Zusicherungswartezeit",
+            claim: "Guthaben beanspruchen",
+            available: "Zur Beanspruchung verfügbar"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -131,9 +155,9 @@ module.exports = {
             warning4: "Key is already in the list",
             action: "Action",
             acct_or_key:" Account/Key"
-
         },
         votes: {
+            proxy_short: "Proxy",
             workers_short: "Worker",
             proxy: "Proxy Konto",
             no_proxy: "Keine Vermittlung",
@@ -157,6 +181,7 @@ module.exports = {
             total_votes: "Gesamtstimmen",
             votes_against: "Gegenstimmen",
             daily_pay: "Tagessold",
+            daily: "täglich",
             max_pay: "Maximaler Tagessold",
             unclaimed: "nicht ausbezahlter Sold",
             status: {
@@ -164,7 +189,14 @@ module.exports = {
                 supported: "Pro",
                 rejected: "Contra",
                 neutral: "Neutral"
-            }
+            },
+            start: "Start Datum",
+            end: "End Datum",
+            creator: "Besitzer",
+            recycled: "Recycelt",
+            funding: "Auszahlend",
+            total_budget: "Gesamtes Worker Budget",
+            unused_budget: "Ungenutztes Worker Budget",
         },
         options: {
             num_witnesses : "Gewünschte Anzahl Witnesses",
@@ -198,13 +230,15 @@ module.exports = {
         pay_from: "Bezahlen von",
         existing_accounts: "Existierendes Konto",
         name_input: {
-            name_is_taken: "Account name is already taken.",
-            not_found: "Account not found.",
-            premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
-            premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
+            name_is_taken: "Kontoname bereits vergeben.",
+            not_found: "Konto nicht gefunden.",
+            premium_name_faucet: "Es handelt sich um einen Premiumnamen. Premiumnamen sind teurer und können nicht gratis durch das Faucet registriert werden. Nutzen Sie einen Namen der mindestens einen Bindestrich, eine Zahl, oder keine Vokal enthält.",
+            premium_name_warning: "Es handelt sich um einen Premiumnamen. Premiumnamen sind teurer. Günstige Namen enthalten mindestens einen Bindestrich, eine Zahl, oder keine Vokal enthält.",
         },
         propose_from: "Vorschlagen von",
-        settle: "Settle"
+        settle: "Settle",
+        "no_orders": "Keine offenen Order",
+        asset_details: "Asset Details"
     },
     pagination: {
         newer: "Jüngere",
@@ -234,12 +268,50 @@ module.exports = {
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
         see: "ÜBERWEISUNGSÜBERSICHT",
-        close: "SCHLIEßEN"
+        close: "SCHLIEßEN",
+        memo_unlock: "Entsperren um Memo zu lesen"
+    },
+    operation: {
+        pending: "schwebend %(blocks)s Blöcke",
+        no_recent: "keine kürzlichen Transaktionen",
+        reg_account: "{registrar} hat das Konto {newaccount} registriert",
+        transfer: "{from} hat {amount} an {to} gesendet",
+        proposal_create: "{account} hat Transaktion vorgeschlagen",
+        proposal_update: "{account} hat Transaktionsvorschlag geändert",
+        proposal_delete: "{account} hat Transaktionsvorschlag gelöscht",
+        fill_order: "{account} kaufte {received} für {price}",
+        vesting_balance_withdraw: "{account} hat zugesichertes Guthaben {amount} beansprucht",
+        balance_claim: "{account} hat Guthaben von {amount} beansprucht",
+        publish_feed: "{account} hat Preis-Feed von {price} veröffentlicht",
+        set_proxy: "{account} hat {proxy} als seinen Proxy eingestellt",
+        update_account: "{account} hat seine Kontodetails aktualisiert",
+        limit_order_sell: "{account} hat eine Verkaufsorder für {amount} bei {price} eingestellt",
+        limit_order_buy: "{account} hat eine Kaufsorder für {amount} bei {price} eingestellt",
+        limit_order_cancel: "{account} hat order #%(order)s zurückgezogen",
+        call_order_update: "{account} hat nun {debt} {debtSymbol} Schulden bei einem Kollateral von {collateral}",
+        asset_reserve: "{account} hat {amount} zurückgelegt",
+        asset_issue: "{account} hat {amount} an {to} herausgegeben",
+        asset_create: "{account} hat das Asset {asset} erzeugt",
+        asset_update: "{account} hat das Asset {asset} aktualisiert",
+        lifetime_upgrade_account: "{account} hat eine Lebenslange Mitgliedschaft gekauft",
+        annual_upgrade_account: "{account} hat ein Jahresabo gekauft",
+        unlisted_by: "{lister} hat {listee} von der Liste gestrichen",
+        whitelisted_by: "{lister} hat Kotno {listee} weißgelistet",
+        blacklisted_by: "{lister} hat Konto {listee} schwarzgelistet",
+        transfer_account: "Konto {account} wurde an {to} übertragen",
+        asset_update_feed_producers: "{account} hat die Feed-Erzeuger für {asset} aktualisiert",
+        asset_fund_fee_pool: "{account} hat {amount} in den Gebührenpool von  {asset} transferiert",
+        asset_settle: "{account} hat ein Settlement von {amount} beantragt",
+        asset_global_settle: "{account} hat ein globales Settlement von {asset} bei {price} beantragt",
+        witness_create: "{account} ist jetzt ein Witness",
+        witness_update: "{account} hat seine Witness aktualisiert",
+        witness_pay: "{account} hat Witness-Guthaben eingezogen.",
+        witness_receive: "Received witness from {witness}",
     },
     transaction: {
         confirm: "Bitte bestätigen Sie die Transaktion",
-        broadcast_success: "Transaktion wurde übermittelt'",
-        transaction_confirmed: "Transaction confirmed",
+        broadcast_success: "Transaktion wurde übermittelt",
+        transaction_confirmed: "Transaktion bestätigt",
         broadcast_fail: "Bei der Übermittlung der Transaction ist ein Fehler aufgetreten: %(message)s",
         broadcasting: "Übermittle Transaction..",
         broadcasting_short: "Übermittle..",
@@ -256,43 +328,15 @@ module.exports = {
         coll_ratio: "Anfängliche Sicherheit (Verhältnis)",
         coll_maint: "Unterhalt der Sicherheit (Verhältnis)",
         "create_key": "Ein öffentlicher Schlüssel wurde erzeugt",
-        reg_account: "Ein Konto wurde angelegt",
-        was_reg_account: "registriert von",
-        create_asset: "Neuen Asset erstellen",
-        limit_order: "Limit-Order für den Verkauf platziert",
-        limit_order_buy: "Limit-Order für den Ankauf platziert",
-        limit_order_cancel: "Limit-Order abgebrochen. ID:",
-        short_order: "Short-Order für Verkauf platziert",
-        short_order_cancel: "Short-Order abgebrochen. ID:",
         at: "für",
         coll_of: "mit einer Sicherheit bestehend aus",
-        call_order_update: "Call-Order aktualisiert",
-        lifetime_upgrade_account: "Kontostatus auf Lifetime Member aktualisiert.",
-        annual_upgrade_account: "Konto aktualisiert",
-        update_account: "Konto aktualisiert",
-        whitelist_account: "Konto zur Positivliste hinzugefügt",
-        whitelisted_by: "Wurde zur Postitivliste hinzugefügt von Konto",
-        transfer_account: "Das Konto wurde übertragen",
-        update_asset: "Das Asset wurde aktualisiert",
-        update_feed_producers: "Die Liste der Feed-Erzeuger wurde aktualisiert",
         feed_producer: "Werde Feed-Erzeuger für ein Asset",
         feed_price: "Feed Preis",
-        asset_issue: "Emittiert",
-        was_issued: "Wurde emittiert",
         by: "von",
         burn_asset: "Vernichtet",
         fund_pool: "Asset-Gebührenpool finanziert mit",
-        asset_settle: "Settlement erbeten für",
-        asset_global_settle: "Globales Settlement erbeten für",
-        publish_feed: "Neuer Feed wurde publiziert für Asset",
         committee_member_create: "Komitee Mitglied erstellen",
-        witness_create: "Neuer Witness wurde angelegt",
-        witness_update: "Witness wurde aktualisiert",
-        witness_pay: "Witnesslohn ausgezahlt an Konto",
-        witness_receive: "Received witness from witness", // FIXME: what?
-        proposal_create: "Ein Vorschlag wurde erzeugt",
-        proposal_update: "Ein Vorschlag wurde aktualisiert",
-        proposal_delete: "Ein Vorschlag wurde gelöscht",
+
         withdraw_permission_create: "Einzugsermächtigung wurde verliegen an Konto",
         withdraw_permission_update: "Einzugsermächtigung wurde aktualisiert für Konto",
         withdraw_permission_claim: "Einzugsermächtigung wurde eingefordert für Konto",
@@ -303,7 +347,6 @@ module.exports = {
         file_write: "Eine Datei wurde geschrieben",
         vesting_balance_create: "Ein Sperrfristguthaben wurde erzeugt",
         for: "für",
-        vesting_balance_withdraw: "Sperrfristguthaben wurde abgehoben",
         bond_create_offer: "Ein Bondangebot wurde erstellt",
         bond_cancel_offer: "Ein Bondangebot wurde abgebrochen",
         bond_accept_offer: "Ein Bondangebot wurde akzeptiert",
@@ -312,15 +355,15 @@ module.exports = {
         create_worker: "Ein Budgetpunkt wurde erzeugt. Bezahlung",
         custom: "Eine benutzerdefinierte Operation wurde definiert",
         order_id: "Anweisungskennung (ID)",
-        balance_claim: "Guthaben von %(balance_amount)s der Guthabenskennung (ID) #%(balance_id)s wurde beansprucht",
-        balance_owner: "Schlüssel des Guthabeneigentümers",
-        balance_id: "Guthabenskennung (ID)",
-        deposit_to: "Dem Konto gutgeschrieben",
-        claimed: "Ingesamt beantsprucht",
-        borrow_amount: "Leihbetrag",
-        funding_account: "Finanzierendes Konto",
-        delta_collateral: "Kollateral Änderungen",
-        delta_debt: "Schulden Änderungen",
+        asset_claim_fees: "Assetgebühren von %(balance_amount)s aus %(asset)s Gebührenpool entnommen.",
+        balance_owner: "Guthabeneigentümer",
+        balance_id: "Guthaben ID",
+        deposit_to: "In Konto einzahlen",
+        claimed: "Insgesamt beansprucht",
+        borrow_amount: "Schuld",
+        funding_account: "Bezahlendes Konto",
+        delta_collateral: "Änderung des Kollateral",
+        delta_debt: "Änderung der Schuld",
         new_url: "Webseite",
         publisher: "Publisher",
         market_fee: "Marktgebühr",
@@ -328,6 +371,8 @@ module.exports = {
         blinding_factor: "Blinding Faktor",
         outputs: "Ausgänge",
         inputs: "Eingänge",
+        settlement_date: "Settlement Datum",
+        asset_reserve: "Rücklagen",
         trxTypes: {
             transfer: "Überweisung",
             limit_order_create: "Limit-Order",
@@ -371,7 +416,8 @@ module.exports = {
             override_transfer: "Transaktion überschreiben",
             transfer_to_blind: "Transfer zu blinden Konten",
             blind_transfer: "Blind Transfer",
-            transfer_from_blind: "Transfer von blindem Konto"
+            transfer_from_blind: "Transfer von blindem Konto",
+            asset_claim_fees: "Gebühr für 'Asset beanspruchen'"
         },
         feeGroups : {
          general : "Allgemein",
@@ -391,6 +437,12 @@ module.exports = {
             symbol3 : "Symbol mit 3 Zeichen",
             symbol4 : "Sybmol mit 4 Zeichen",
             long_symbol : "Längere Symbol"
+        },
+        whitelist_states: {
+            no_listing: "Nicht gelistet",
+            white_listed: "weißgelistet",
+            black_listed: "schwarzgelistet",
+            white_and_black_listed: "scharz- und weißgelistet"
         }
     },
     explorer: {
@@ -413,6 +465,7 @@ module.exports = {
             trx_per_sec: "Trx/s",
             last_block: "Letzter Block",
             current_block: "Aktueller Block"
+
         },
         block: {
             title: "Block",
@@ -475,7 +528,10 @@ module.exports = {
                 fee_pool: "Gebühren Pool",
                 core_exchange_rate: "Kernhandelsrate",
                 pool_balance: "Pool Guthaben",
-                unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile"
+                unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile",
+                claim_fees: "Gebühren beanspruchen",
+                fund_text: "The Gebührenpool wird dazu genutzt Gebühren in %(core)s durch einen impliziten Wechsel von %(asset)s zu %(core)s zu finanzieren. Sollte der Gebührenpool trocken liegen, können Gebühren nicht länger in %(asset)s bezahlt werden sondern nur noch in %(core)s",
+                claim_text: "Der Assetherausgeben kann die zusammengetragenen Anteile hier beanspruchen"
             },
             permissions: {
                 title: "Befugnisse",
@@ -525,6 +581,13 @@ module.exports = {
         },
         account: {
             title: "Konto"
+        },
+        fees: {
+            type: "Gebührentyp",
+            fee: "Standartgebühr",
+            feeeq: "(äquivalent)",
+            feeltm: "Gebühr bei lebenslangem bzw. Jahresabo",
+            feeltmeq: "(äquivalent)",
         }
     },
     settings: {
@@ -539,7 +602,11 @@ module.exports = {
         connection: "API Anbindung",
         add_ws: "Websocket API hinzufügen",
         remove_ws: "Websocket API entfernen",
-        faucet_address: "Faucet Address"
+        faucet_address: "Faucet Address",
+        showSettles: "Settlements in der Depth-Chart anzeigen",
+        yes: "Ja",
+        no: "Nein",
+        walletLockTimeout: "Geldbörse automatische sperren (Sekunden)"
     },
     footer: {
         title: "Graphene",
@@ -591,8 +658,18 @@ module.exports = {
         period: "Periode (Tage)",
         overbought: "Overbought",
         oversold: "Oversold",
-        index: "Index"
-
+        index: "Index",
+        my_bids: "Meine Bids",
+        my_asks: "Meine Asks",
+        settle_orders: "Settlement Order",
+        asks: "Asks",
+        bids: "Bids",
+        no_data: "Keine Daten",
+        time: "Zeitintervall",
+        borrow: "Leihen",
+        no_balance: "Ungenügendes Guthaben",
+        invalid_amount: "Ungültiger Betrag",
+        invalid_price: "Ungültiger Preis"
     },
     fees: {
      title: "Gebühren"
@@ -703,6 +780,10 @@ module.exports = {
         address: "Abheben zu Adresse",
         submit: "Abheben"
       },
+      deposit : {
+        amount: "Einzahlungsbetrag",
+        submit: "Einzahlen"
+      },
       settle: {
         title: "Settlement für %(asset)s durchführen",
         amount: "Menge für das Settlement",
@@ -715,28 +796,31 @@ module.exports = {
         ws_status: "Websocket Verbindungsstatus",
         retry: "nocheinmal versuchen",
         connected: "verbunden",
-        not_connected: "Nicht verbunden"
+        not_connected: "Nicht verbunden",
+        browser: "Nicht unterstützter Browser",
+        browser_text: "Ihr Browser ist unzureichend mit dem BitShares Wallet getestet worden. Wir empfehlen Ihnen eine Sicherung ihrer Geldbörse durchzuführen und diese in dem Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
+        understand: "Verstanden!"
     },
     refcode: {
-        claim: "Claim",
-        claim_refcode: "Claim Referral Code",
+        claim: "Beantspruchen",
+        claim_refcode: "Referral Code einlösen",
         refcode_optional: "Referral Code (optional)",
-        enter_refcode: "Enter referral code"
+        enter_refcode: "Geben Sie den Referral Code ein"
     },
     gateway: {
         bridge: "Bridge",
         gateway: "Gateway",
         symbol: "Symbol",
-        deposit_to: "Deposit To",
-        balance: "Balance",
-        generate: "Generate",
-        deposit: "Deposit",
-        withdraw: "Withdraw",
-        inventory: "Inventory",
+        deposit_to: "Einzahlen auf",
+        balance: "Guthaben",
+        generate: "Generieren",
+        deposit: "Einzahlung",
+        withdraw: "Abhebung",
+        inventory: "Inventar",
         scan_qr: "Scan QR",
         transwiser: {
             gateway: "Transwiser",
-            visit_weidian: "Click to deposit",
+            visit_weidian: "Klicken für Einzahlung",
             deposit_title: "Deposit RMB to %(asset)s",
             withdraw_title: "Withdraw %(asset)s to RMB",
             alipay: "ALIPAY Account Name",
@@ -744,7 +828,7 @@ module.exports = {
             you_will_receive: "You will receive %(amount)s RMB"
         },
         meta: {
-            open_website: "Open Website"
+            open_website: "Webseite öffnen"
         }
     }
 };

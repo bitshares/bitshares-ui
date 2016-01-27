@@ -577,6 +577,17 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_wallet_type="egold"
                                 receive_asset="OPEN.EGD"
                                 receive_coin_type="open.egd" />
+                            <BlockTradesGatewayDepositRequest
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account}
+                                deposit_asset="BKS"
+                                deposit_asset_name="BlockShares"
+                                deposit_coin_type="bks"
+                                deposit_wallet_type="blockshares"
+                                receive_asset="OPEN.BKS"
+                                receive_coin_type="open.bks" />
                             </tbody>
                         </table>
                     </div>

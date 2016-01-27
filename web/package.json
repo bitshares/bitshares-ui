@@ -48,7 +48,7 @@
     "react-foundation-apps": "git+http://github.com/valzav/react-foundation-apps.git",
     "react-highcharts": "^6.0.0",
     "react-interpolate-component": "^0.8.0",
-    "react-intl": "^2.0.0-beta-1",
+    "react-intl": "^2.0.0-beta-2",
     "react-json-inspector": "6.0.0",
     "react-motion": "0.3.1",
     "react-notification-system": "^0.2.4",

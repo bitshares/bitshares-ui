@@ -18,12 +18,12 @@ class BlockTime extends React.Component {
         block_number: React.PropTypes.number.isRequired,
         globalObject: ChainTypes.ChainObject.isRequired,
         dynGlobalObject: ChainTypes.ChainObject.isRequired
-    }
+    };
 
     static defaultProps = {
         globalObject: "2.0.0",
         dynGlobalObject: "2.1.0"
-    }
+    };
 
     constructor(props) {
         super(props);

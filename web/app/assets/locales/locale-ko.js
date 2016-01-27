@@ -27,9 +27,6 @@ module.exports = {
         locked_tip: "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
         unlocked_tip: "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
     },
-    operation : {
-        pending: "승인대기 중... %(blocks)s 블록"
-    },
     account: {
         welcome: "비트쉐어 2.0 이용을 환영합니다",
         asset: "자산",
@@ -187,6 +184,33 @@ module.exports = {
         see: "내 전송내역 보기",
         close: "닫기"
     },
+    operation: {
+        pending: "승인대기 중... %(blocks)s 블록",
+        no_recent: "No recent transactions",
+        reg_account: "{registrar} registered the account {new_account}",
+        transfer: "{from} sent {amount} to {to}",
+        proposal_create: "{account} created a proposed transaction",
+        proposal_update: "{account} updated a proposed transaction",
+        proposal_delete: "{account} deleted a proposed transaction",
+        fill_order: "{account} bought {received} at {price}",
+        vesting_balance_withdraw: "{account} withdrew vesting balance of {amount}",
+        balance_claim: "{account} claimed a balance of {amount}",
+        publish_feed: "{account} published feed price of {price}",
+        set_proxy: "{account} set {proxy} as their voting proxy",
+        update_account: "{account} updated their account data",
+        limit_order_sell: "{account} placed an order to sell {amount} at {price}",
+        limit_order_buy: "{account} placed an order to buy {amount} at {price}",
+        call_order_update: "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
+        asset_reserve: "{account} reserved {amount}",
+        asset_issue: "{account} issued {amount} to {to}",
+        asset_create: "{account} created the asset {asset}",
+        asset_update: "{account} updated the asset {asset}",
+        lifetime_upgrade_account: "{account} was upgraded to lifetime member",
+        annual_upgrade_account: "{account} was upgraded to annual member",
+        unlisted_by: "{lister} unlisted the account {listee}",
+        whitelisted_by: "{lister} whitelisted the account {listee}",
+        blacklisted_by: "{lister} blacklisted the account {listee}"
+    },
     transaction: {
         confirm: "거래 확인",
         broadcast_success: "거래가 처리되었습니다",
@@ -207,8 +231,6 @@ module.exports = {
         coll_ratio: "초기 담보 비율",
         coll_maint: "담보 유지 비율",
         "create_key": "공개키 생성",
-        reg_account: "계정 등록",
-        was_reg_account: "계정이 등록됨. 등록자:",
         create_asset: "자산 생성",
         limit_order_sell: "주문번호 #%(num)s %(sell_amount)s 를 다음 가격에 매도 ",
         limit_order_buy: "주문번호 #%(num)s %(buy_amount)s 를 다음 가격에 매수 ",
