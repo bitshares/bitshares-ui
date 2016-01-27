@@ -37,6 +37,11 @@ class SettingsActions {
     removeWS(index) {
         this.dispatch(index);
     }
+
+    hideAsset(id, status) {
+
+        this.dispatch({id, status});
+    }
 }
 
 module.exports = alt.createActions(SettingsActions);
