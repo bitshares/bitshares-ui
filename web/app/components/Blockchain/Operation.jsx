@@ -65,15 +65,26 @@ class Row extends React.Component {
         this.context.history.pushState(null, `/block/${this.props.block}`);
     }
 
+    shouldComponentUpdate(nextProps) {
+        let {block, dynGlobalObject} = this.props;
+        let last_irreversible_block_num = dynGlobalObject.get("last_irreversible_block_num" );
+        if (nextProps.dynGlobalObject === this.props.dynGlobalObject) {
+            return false;
+        }
+        return block > last_irreversible_block_num;
+    }
+
     render() {
         let {block, fee, color, type, key, hideDate, hideFee, hideOpLabel} = this.props;
 
         let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
         let pending = null;
-        if( block > last_irreversible_block_num )
+        if( block > last_irreversible_block_num ) {
            pending = <span>(<Translate content="operation.pending" blocks={block - last_irreversible_block_num} />)</span>
+        }
 
         fee.amount = parseInt(fee.amount, 10);
+
         return (
                 <tr key={key}>
                     {hideOpLabel ? null : (
@@ -106,7 +117,7 @@ class Operation extends React.Component {
         hideFee: false,
         hideOpLabel: false,
         csvExportMode: false
-    }
+    };
 
     static propTypes = {
         op: React.PropTypes.array.isRequired,
@@ -115,7 +126,7 @@ class Operation extends React.Component {
         hideDate: React.PropTypes.bool,
         hideFee: React.PropTypes.bool,
         csvExportMode: React.PropTypes.bool
-    }
+    };
 
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
@@ -129,6 +140,13 @@ class Operation extends React.Component {
         return utils.is_object_id(symbol_or_id) ?
             <LinkToAssetById asset={symbol_or_id}/> :
             <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
+    }
+
+    shouldComponentUpdate(nextProps) {
+        if (!this.props.op || !nextProps.op) {
+            return false;
+        }
+        return !utils.are_equal_shallow(nextProps.op[1], this.props.op[1]);
     }
 
     render() {
