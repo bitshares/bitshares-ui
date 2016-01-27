@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------
+Release 2.0.160127
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Bridge support for OPEN.BKS
+- Better price precision on markets with low precision assets #692
+- Improved operations display, added more op translation
+- Simplify Exchange price handling, limit values to Satoshi amounts
+- Ability to hide/show assets in the Overview balance list #687
+- Some performance optimizations
+
+BUG FIXES:
+- Disappearing fee field in Transfer #678
+- TimeAgo not updating, and update react-intl version
+- Fix edge case in PriceChart update logic #669
+- Per market price display direction  #415
+- Update all memos when the wallet is unlocked #661
+
+---------------------------------------------------------------------
 Release 2.0.160121
 ---------------------------------------------------------------------
 
