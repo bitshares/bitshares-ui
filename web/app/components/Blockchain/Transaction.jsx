@@ -14,7 +14,9 @@ import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
 import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
+import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import MemoText from "./MemoText";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -32,6 +34,7 @@ class OpType extends React.Component {
     render() {
         let trxTypes = counterpart.translate("transaction.trxTypes");
         let labelClass = classNames("txtlabel", this.props.color || "info");
+        
         return (
             <tr>
                 <td>
@@ -120,35 +123,22 @@ class Transaction extends React.Component {
 
                     color = "success";
 
-                    let memo_text = null;
+                    let memo = null;
 
                     let lockedWallet = false;
                     if(op[1].memo) {
-                        let memo = op[1].memo;
-                        let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
-                        let to_private_key = PrivateKeyStore.getState().keys.get(memo.to)
-                        let private_key = from_private_key ? from_private_key : to_private_key;
-                        let public_key = from_private_key ? memo.to : memo.from;
-                        public_key = PublicKey.fromPublicKeyString(public_key)
-                        try {
-                            private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
-                        }
-                        catch(e) {
-                            lockedWallet = true;
-                            private_key = null;
-                        }
+                        let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
-                        try {
-                            memo_text = private_key ? Aes.decrypt_with_checksum(
-                                private_key,
-                                public_key,
-                                memo.nonce,
-                                memo.message
-                            ).toString("utf-8") : null;
-                        } catch(e) {
-                            console.log("transfer memo exception ...", e);
-                            memo_text = "*";
-                        }
+                        memo = text && isMine ? (
+                            <td>{text}</td>
+                        ) : !text && isMine ? (
+                            <td>
+                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <a href onClick={this._toggleLock.bind(this)}>
+                                    <Icon name="locked"/>
+                                </a>
+                            </td>
+                        ) : null;
                     }
 
                     rows.push(
@@ -170,24 +160,11 @@ class Transaction extends React.Component {
                         </tr>
                     );
 
-                    {memo_text ?
+                    {memo ?
                         rows.push(
                             <tr key="4">
                                 <td><Translate content="transfer.memo" /></td>
-                                <td>{memo_text}</td>
-                            </tr>
-                    ) : null}
-
-                    {op[1].memo && lockedWallet ?
-                        rows.push(
-                            <tr key="5">
-                                <td><Translate content="transfer.memo" /></td>
-                                <td>
-                                    <Translate content="transfer.memo_unlock" />&nbsp;
-                                    <a href onClick={this._toggleLock.bind(this)}>
-                                        <Icon name="locked"/>
-                                    </a>
-                                </td>
+                                {memo}
                             </tr>
                     ) : null}
 

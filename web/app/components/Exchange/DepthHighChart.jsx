@@ -115,7 +115,7 @@ class DepthHighChart extends React.Component {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/><span style="color:${this.series.color}">\u25CF</span>${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/><span style="color:${this.series.color}">\u25CF</span>${name}: <b>${utils.format_number(this.y, quote.get("precision"))} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"

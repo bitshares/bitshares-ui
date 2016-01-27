@@ -3,6 +3,7 @@ import alt from "../alt-instance";
 import BaseStore from "./BaseStore";
 import iDB from "../idb-instance";
 import idb_helper from "../idb-helper";
+import WalletDb from "./WalletDb";
 
 import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
@@ -30,8 +31,14 @@ class PrivateKeyStore extends BaseStore {
             onLoadDbData: PrivateKeyActions.loadDbData,
             onAddKey: PrivateKeyActions.addKey
         })
-        this._export("hasKey", "getPubkeys", "getTcomb_byPubkey",
-            "getPubkeys_having_PrivateKey", "addPrivateKeys_noindex");
+        this._export(
+            "hasKey",
+            "getPubkeys",
+            "getTcomb_byPubkey",
+            "getPubkeys_having_PrivateKey",
+            "addPrivateKeys_noindex",
+            "decodeMemo"
+        );
     }
     
     _getInitialState() {
@@ -200,6 +207,43 @@ class PrivateKeyStore extends BaseStore {
         state["privateKeyStorage_error_" + property] = error
         console.error("privateKeyStorage_error_" + property, error)
         this.setState(state)
+    }
+
+    decodeMemo(memo) {
+        let lockedWallet = false;
+        let memo_text, isMine = false;
+        let from_private_key = this.state.keys.get(memo.from)
+        let to_private_key = this.state.keys.get(memo.to)
+        let private_key = from_private_key ? from_private_key : to_private_key;
+        let public_key = from_private_key ? memo.to : memo.from;
+        public_key = PublicKey.fromPublicKeyString(public_key)
+
+        try {
+            private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
+        }
+        catch(e) {
+            // Failed because wallet is locked
+            lockedWallet = true;
+            private_key = null;
+            isMine = true;            
+        }
+
+        try {
+            memo_text = private_key ? Aes.decrypt_with_checksum(
+                private_key,
+                public_key,
+                memo.nonce,
+                memo.message
+            ).toString("utf-8") : null;
+        } catch(e) {
+            console.log("transfer memo exception ...", e);
+            memo_text = "*";
+        }
+
+        return {
+            text: memo_text,
+            isMine
+        }
     }
     
 }

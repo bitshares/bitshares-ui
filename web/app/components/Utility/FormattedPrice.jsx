@@ -4,6 +4,9 @@ import utils from "common/utils";
 import {PropTypes} from "react";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import AltContainer from "alt-container";
+import SettingsStore from "stores/SettingsStore";
+import SettingsActions from "actions/SettingsActions";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -24,29 +27,31 @@ class FormattedPrice extends React.Component {
         quote_asset: ChainTypes.ChainAsset.isRequired,
         base_amount: React.PropTypes.any,
         quote_amount: React.PropTypes.any,
-        invert: React.PropTypes.bool,
         decimals: React.PropTypes.number
-    };  
-
-    static defaultProps = {
-      invert: false
     };
 
-    constructor( props )
-    {
-       super(props)
-       this.state = { flipped: props.invert }
+    onFlip() {
+      let setting = {};
+      setting[this.props.marketId] = !this.props.marketDirections.get(this.props.marketId);
+      SettingsActions.changeMarketDirection(setting);
     }
 
-    onFlip() {
-       this.setState( {flipped: !this.state.flipped} )
+    shouldComponentUpdate(nextProps) {
+      return (
+        nextProps.marketDirections !== this.props.marketDirections ||
+        nextProps.base_amount !== this.props.base_amount ||
+        nextProps.quote_amount !== this.props.quote_amount ||
+        nextProps.decimals !== this.props.decimals
+      );
     }
 
     render() {
 
-        let {base_asset, quote_asset, base_amount, quote_amount} = this.props;
+        let {base_asset, quote_asset, base_amount, quote_amount, marketDirections, marketId} = this.props;
 
-        if( this.state.flipped ) {
+        let invertPrice = marketDirections.get(marketId);
+
+        if( invertPrice ) {
            let tmp = base_asset;
            base_asset = quote_asset;
            quote_asset = tmp;
@@ -87,5 +92,23 @@ class FormattedPrice extends React.Component {
     }
 }
 
-export default FormattedPrice;
+export default class FormattedPriceWrapper extends React.Component {
+
+  render() {
+    let marketId = this.props.quote_asset + "_" + this.props.base_asset;
+
+    return (
+      <AltContainer 
+        stores={[SettingsStore]}
+        inject={{
+          marketDirections: () => {
+              return SettingsStore.getState().marketDirections;
+          }
+        }}
+      >
+        <FormattedPrice {...this.props} marketId={marketId}/>
+      </AltContainer>
+    );
+  }
+}
 
