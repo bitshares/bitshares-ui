@@ -8,10 +8,6 @@ import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
 import BlockTime from "./BlockTime";
-import Aes from "ecc/aes";
-import PublicKey from "ecc/key_public";
-import PrivateKeyStore from "stores/PrivateKeyStore";
-import WalletDb from "stores/WalletDb";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
@@ -20,8 +16,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import ChainStore from "api/ChainStore";
 import account_constants from "chain/account_constants";
-import Icon from "../Icon/Icon";
-import WalletUnlockActions from "actions/WalletUnlockActions";
+import MemoText from "./MemoText";
 
 require("./operations.scss");
 
@@ -54,11 +49,11 @@ class Row extends React.Component {
 
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
-    }
+    };
 
     static defaultProps = {
         dynGlobalObject: "2.1.0"
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -122,10 +117,6 @@ class Operation extends React.Component {
         csvExportMode: React.PropTypes.bool
     }
 
-    // shouldComponentUpdate(nextProps) {
-    //     return utils.are_equal_shallow(nextProps.op, this.props.op);
-    // }
-
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
@@ -140,13 +131,6 @@ class Operation extends React.Component {
             <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
     }
 
-    _toggleLock(e) {
-        e.preventDefault();
-        WalletUnlockActions.unlock().then(() => {
-            this.forceUpdate();
-        })
-    }
-
     render() {
         let {op, current, block, hideFee} = this.props;
         let line = null, column = null, color = "info";
@@ -154,57 +138,15 @@ class Operation extends React.Component {
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
             case "transfer":
-                let memo_text = null;
-                let lockedWallet = false;
-                if(op[1].memo) {
-                    let memo = op[1].memo;
-                    let from_private_key = PrivateKeyStore.getState().keys.get(memo.from)
-                    let to_private_key = PrivateKeyStore.getState().keys.get(memo.to)
-                    let private_key = from_private_key ? from_private_key : to_private_key;
-                    let public_key = from_private_key ? memo.to : memo.from;
-                    public_key = PublicKey.fromPublicKeyString(public_key)
 
-                    try {
-                        private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
-                    }
-                    catch(e) {
-                        lockedWallet = true;
-                        private_key = null;
-                    }
-                    try {
-                        memo_text = private_key ? Aes.decrypt_with_checksum(
-                            private_key,
-                            public_key,
-                            memo.nonce,
-                            memo.message
-                        ).toString("utf-8") : null;
-                    } catch(e) {
-                        console.log("transfer memo exception ...", e);
-                        memo_text = "*";
-                    }
+                let memoComponent = null;
+
+                if(op[1].memo) {
+                    memoComponent = <MemoText memo={op[1].memo} />
                 }
 
                 color = "success";
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
-                let full_memo = memo_text;
-                if (memo_text && memo_text.length > 35) {
-
-                    memo_text = memo_text.substr(0, 35) + "...";
-                }
-
-                let memoComponent = op[1].memo && lockedWallet ? (
-                    <div className="memo">
-                        <Translate content="transfer.memo_unlock" />&nbsp;
-                        <a href onClick={this._toggleLock.bind(this)}>
-                            <Icon name="locked"/>
-                        </a>
-                    </div>) : memo_text ? (
-                        <div className="memo">
-                            <span data-tip={full_memo} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>
-                                {memo_text}
-                            </span>
-                        </div>
-                    ) : null;
 
                 column = (
                     <span key={"transfer_" + this.props.key} className="right-td">
@@ -226,9 +168,7 @@ class Operation extends React.Component {
                 color = "warning";
                 let o = op[1];
                 let isAsk = market_utils.isAskOp(op[1]);
-                // if (!inverted) {
-                //     isAsk = !isAsk;
-                // }
+
                 column = (
                         <span>
                             <TranslateWithLinks
