@@ -129,7 +129,7 @@ class Transaction extends React.Component {
                     if(op[1].memo) {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
-                        memo = text && isMine ? (
+                        memo = text ? (
                             <td>{text}</td>
                         ) : !text && isMine ? (
                             <td>
