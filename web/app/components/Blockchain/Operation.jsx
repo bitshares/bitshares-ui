@@ -721,6 +721,20 @@ class Operation extends React.Component {
                 )
                 break;
 
+            case "committee_member_update_global_parameters":
+                console.log("committee_member_update_global_parameters op:", op);
+                column = (
+                    <span>
+                        <TranslateWithLinks
+                            string="operation.committee_member_update_global_parameters"
+                            keys={[
+                                {type: "account", value: "1.2.0", arg: "account"}
+                            ]}                                                    
+                        />
+                    </span>
+                );
+                break;
+
             default:
                 console.log("unimplemented op:", op);
                 column = (

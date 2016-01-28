@@ -28,20 +28,6 @@
         locked_tip: "Wallet is locked.<br/>Click to unlock.",
         unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
-    proposal: {
-        transfer: "Transfer %(amount)s from %(from)s to %(to)s",
-        limit_order_create: "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
-        action: "Action",
-        expires: "Expires",
-        update: {
-            active_approvals_to_add: "Active approvals to add",
-            active_approvals_to_remove: "Active approvals to remove",
-            owner_approvals_to_add: "Owner approvals to add",
-            owner_approvals_to_remove: "Owner approvals to remove",
-            key_approvals_to_add: "Key approvals to add",
-            key_approvals_to_remove: "Key approvals to remove",
-        }
-    },
     propose: "Propose",
     cancel: "Cancel",
     account: {
@@ -325,6 +311,24 @@
         witness_update: "{account} update its witness info",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
+        committee_member_update_global_parameters: "{account} updated the global committee parameters"
+    },
+    proposal: {
+        transfer: "Transfer {amount} from {from} to {to}",
+        limit_order_create: "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+        limit_order_sell: "Place an order to sell {amount} at {price} for {account}",
+        limit_order_buy: "Place an order to buy {amount} at {price} for {account}",
+        committee_member_update_global_parameters: "Update committee global parameters by {account}",
+        action: "Action",
+        expires: "Expires",
+        update: {
+            active_approvals_to_add: "Active approvals to add",
+            active_approvals_to_remove: "Active approvals to remove",
+            owner_approvals_to_add: "Owner approvals to add",
+            owner_approvals_to_remove: "Owner approvals to remove",
+            key_approvals_to_add: "Key approvals to add",
+            key_approvals_to_remove: "Key approvals to remove",
+        }
     },
     transaction: {
         confirm: "Please confirm the transaction",
