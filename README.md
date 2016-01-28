@@ -1,40 +1,21 @@
-Graphene GUI
+Graphene-UI
 ============
 
-## Prerequisites
+### Getting started
 
-Graphene GUI depends on Node.js.
+Graphene-UI depends on Node.js. While it should work using versions as old as 0.12.x, it is recommended to use v5.x.
 
-On Ubuntu you can install Node.js via the following command:
+On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
+For Windows users there is [NVM-Windows](https://github.com/coreybutler/nvm-windows).
+
+To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 ```
-sudo apt-get install git nodejs-legacy npm
-```
-
-In order to use the GUI you will need to have a functioning witness node from the Graphene toolkit running with a websocket endpoint at localhost:8090. Instructions for this can be found here: https://github.com/cryptonomex/graphene 
-
-While waiting for the public testnet you may want to run a local chain, to do so add the following to your config.ini in ./witness_node_data_dir :
-
-```
-# Endpoint for websocket RPC to listen on
-rpc-endpoint = 127.0.0.1:8090
-
-# Enable block production, even if the chain is stale.
-enable-stale-production = true
-
-# ID of witness controlled by this node (e.g. "1.6.0", quotes are required, may specify multiple times)
-witness-id = "1.6.0"
-witness-id = "1.6.1"
-witness-id = "1.6.2"
-witness-id = "1.6.3"
-witness-id = "1.6.4"
-witness-id = "1.6.5"
-witness-id = "1.6.6"
-witness-id = "1.6.7"
-witness-id = "1.6.8"
-witness-id = "1.6.9"
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
+nvm install v5
+nvm use v5
 ```
 
-## Install
+Once you have Node installed, you can clone the repo:
 ```
 git clone https://github.com/cryptonomex/graphene-ui.git
 cd graphene-ui
@@ -48,55 +29,43 @@ cd ../ios; npm install
 cd ../web; npm install
 ```
 
-There is optional bloom filter that will greatly reduce the size of BTS 0.9.x wallet imports.  Go to the ./web folder and run:
+There is an optional bloom filter that will greatly reduce the size of BTS 0.9.x wallet imports.  Go to the ./web folder and run:
 ```
 wget https://github.com/bitshares/bitshares-js/releases/download/vBTS2_bloom_filter/bts_genesiskeys_bloom.dat -O app/assets/bts_genesiskeys_bloom.dat
 ```
 
-## Run it
+## Running the dev server
 
-Once all the packages have been installed you can launch the web gui by going to the ./web folder and running::
-
+Once all the packages have been installed you can start the development server by going to the ./web folder and running:
 ```
 npm start
 ```
 
-Once the compilation is done the GUI will be available in your browser at: localhost:8080
+Once the compilation is done the GUI will be available in your browser at: localhost:8080. Hot Reloading is enabled so the browser will live update as you edit the source files.
 
-A javascript CLI environment is also available in the ./cli folder. Some example commands:
+### Testnet
+By default graphene-ui connects to the live Bitshares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Api Connection, click the + button to add an api server. Enter the following address in the popup: ws://testnet.bitshares.eu:11011. From the dropdown, select the newly added server then click confirm. The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
 
+## Production
+If you'd like to host your own wallet somewhere, you should create a production build and host it using NGINX or Apache. In order to create a prod bundle, simply run the following command:
 ```
-// Transaction template:
-$g.wallet.template("account_upgrade")
-
-// Create a transaction:
-var tr = $g.wallet.new_transaction()
-tr.add_type_operation("account_upgrade", {"account_to_upgrade":"1.2.15","upgrade_to_lifetime_member":true})
-$g.wallet.sign_and_broadcast(tr) 
+npm run build
 ```
+This will create a bundle in the /dist folder that can be hosted with the web server of your choice.
 
-## Environment
-```
-export GRAPHENE_UI_HOME=$HOME/bitshares/graphene-ui
-export NODE_PATH="$NODE_PATH:$GRAPHENE_UI_HOME/dl/src:$GRAPHENE_UI_HOME/web/app"
-```
+## Contributing
+Graphene-UI is open source and anyone is free to contribute. PR's are welcomed and will be reviewed in a timely manner, and long-term contributors will be given access to the repo.
 
-## Testing
-Jest currently doesn't work with node (see https://github.com/facebook/jest/issues/243), so in order to run the tests you need to install iojs. Under Ubuntu instructions can be found here:
+If you would like to get involved, we have a Slack channel where you can ask questions and get help.
 
-[Nodesource Ubuntu io.js installation](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories "Nodesource iojs")
+For more info, please contact one of the following people:
 
-In order for jest to correctly follow paths it is necessary to add a local path to your NODE_PATH variable. Under Ubuntu, you can do so by running the following from the web directory:
+- fabian@bitshares.org
+- cass@bitshares.org
+- bitsharesblocks@gmail.com
+- valentine@cryptonomex.com
 
-```
-export NODE_PATH=$NODE_PATH:.
-```
-
-Tests are then run using 
-
-```
-npm test
-```
+There's also a very active [Telegram chatroom](https://web.telegram.org/#/im?p=g33416306)
 
 ## Development process
 
@@ -156,4 +125,19 @@ To install eslint and its dependencies, run:
 
 ```
 npm install -g eslint-config-airbnb eslint-plugin-react eslint babel-eslint
+```
+
+## Testing
+Jest currently doesn't work with node (see https://github.com/facebook/jest/issues/243), so in order to run the tests you need to install iojs. Under Ubuntu instructions can be found here:
+
+[Nodesource Ubuntu io.js installation](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories "Nodesource iojs")
+
+In order for jest to correctly follow paths it is necessary to add a local path to your NODE_PATH variable. Under Ubuntu, you can do so by running the following from the web directory:
+```
+export NODE_PATH=$NODE_PATH:.
+```
+
+Tests are then run using 
+```
+npm test
 ```

@@ -20,20 +20,14 @@ class AccountPage extends React.Component {
         account: "props.params.account_name"
     };
 
-    componentWillMount() {
-        let account = this.props.params.account_name;
-        let {linkedAccounts} = AccountStore.getState();
-        let {starredAccounts} = SettingsStore.getState();
-        if(account && linkedAccounts.get(account)) {
-            if (starredAccounts.size && !starredAccounts.has(account)) {
-                return;
-            }
-            AccountActions.setCurrentAccount(this.props.params.account_name);
+    componentDidMount() {
+        if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
+            AccountActions.setCurrentAccount(this.props.account.get("name"));
         }
     }
 
     render() {
-        let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account} = this.props;
+        let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
 
         let isMyAccount = AccountStore.isMyAccount(account);
 
@@ -57,7 +51,8 @@ class AccountPage extends React.Component {
                             settings,
                             wallet_locked,
                             account,
-                            isMyAccount
+                            isMyAccount,
+                            hiddenAssets
                         }
                     )}
                 </div>
@@ -77,6 +72,7 @@ class AccountPageStoreWrapper extends React.Component {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             searchAccounts: AccountStore.getState().searchAccounts,
             settings: SettingsStore.getState().settings,
+            hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
             myAccounts:  AccountStore.getState().myAccounts
         }

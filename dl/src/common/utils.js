@@ -31,9 +31,11 @@ var Utils = {
         if (decimalPosition === -1) {
             return parseInt(amount, 10) * assetPrecision;
         } else {
-            let amountLength = amount.length;
+            let amountLength = amount.length,
+                i;
             amount = amount.replace(".", "");
-            for (let i = 0; i < precision; i++) {
+            amount = amount.substr(0, decimalPosition + precision);
+            for (i = 0; i < precision; i++) {
                 decimalPosition += 1;
                 if (decimalPosition > amount.length) {
                     amount += "0";
@@ -134,7 +136,7 @@ var Utils = {
     },
 
     price_text: function(price, base, quote) {
-        let maxDecimals = 9;
+        let maxDecimals = 8;
         let priceText;
         let quoteID = quote.toJS ? quote.get("id") : quote.id;
         let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
@@ -143,7 +145,7 @@ var Utils = {
         if (quoteID === "1.3.0") {
             priceText = this.format_number(price, quotePrecision - 1);
         } else if (baseID === "1.3.0") {
-            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 1));
+            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 2));
         } else {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + basePrecision));
         }
@@ -316,6 +318,9 @@ var Utils = {
     },
 
     convertPrice: function(fromRate, toRate, fromID, toID) {
+        if (!fromRate || !toRate) {
+            return null;
+        }
         // Handle case of input simply being a fromAsset and toAsset
         if (fromRate.toJS && this.is_object_type(fromRate.get("id"), "asset")) {
             fromID = fromRate.get("id")
@@ -426,6 +431,31 @@ var Utils = {
         const head_block_time = new Date(dynGlobalObject.get("time") + "+00:00");
         const seconds_below = (head_block - block_number) * block_interval;
         return new Date(head_block_time - seconds_below * 1000);
+    },
+
+    get_translation_parts(str) {
+        let result = [];
+        let toReplace = {};
+        let re = /{(.*?)}/g; 
+        let interpolators = str.split(re);
+        // console.log("split:", str.split(re)); 
+        return str.split(re);
+        // var str = '{{azazdaz}} {{azdazd}}';
+        // var m;
+         
+        // while ((m = re.exec(str)) !== null) {
+        //     if (m.index === re.lastIndex) {
+        //         re.lastIndex++;
+        //     }
+        //     console.log("m:", m);
+        //     // View your result using the m-variable.
+        //     // eg m[0] etc.
+        //     // 
+        //     toReplace[m[1]] = m[0]
+        //     result.push(m[1])
+        // }
+
+        // return result;
     }
 
 };

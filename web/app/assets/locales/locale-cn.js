@@ -264,6 +264,33 @@ module.exports = {
         pay_from: "支付自",
         memo_unlock: "解锁钱包以查看交易备注"
     },
+    operation: {
+        pending: " %(blocks)s 个区块待定",
+        no_recent: "近期无交易",
+        reg_account: "{registrar} registered the account {new_account}",
+        transfer: "{from} sent {amount} to {to}",
+        proposal_create: "{account} created a proposed transaction",
+        proposal_update: "{account} updated a proposed transaction",
+        proposal_delete: "{account} deleted a proposed transaction",
+        fill_order: "{account} bought {received} at {price}",
+        vesting_balance_withdraw: "{account} withdrew vesting balance of {amount}",
+        balance_claim: "{account} claimed a balance of {amount}",
+        publish_feed: "{account} published feed price of {price}",
+        set_proxy: "{account} set {proxy} as their voting proxy",
+        update_account: "{account} updated their account data",
+        limit_order_sell: "{account} placed an order to sell {amount} at {price}",
+        limit_order_buy: "{account} placed an order to buy {amount} at {price}",
+        call_order_update: "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
+        asset_reserve: "{account} reserved {amount}",
+        asset_issue: "{account} issued {amount} to {to}",
+        asset_create: "{account} created the asset {asset}",
+        asset_update: "{account} updated the asset {asset}",
+        lifetime_upgrade_account: "{account} was upgraded to lifetime member",
+        annual_upgrade_account: "{account} was upgraded to annual member",
+        unlisted_by: "{lister} unlisted the account {listee}",
+        whitelisted_by: "{lister} whitelisted the account {listee}",
+        blacklisted_by: "{lister} blacklisted the account {listee}"
+    },
     transaction: {
         sent: "发送",
         to: "发往",
@@ -278,8 +305,6 @@ module.exports = {
         coll_ratio: "原始保证金率",
         coll_maint: "维持保证金率",
         create_key: "创建一个公钥",
-        reg_account: "注册账户",
-        was_reg_account: "注册账户，来自",
         create_asset: "资产创建",
         limit_order: "限价单",
         limit_order_buy: "提交限价买单 #%(num)s, 买入数量: %(buy_amount)s, 价格: ",
@@ -752,10 +777,6 @@ module.exports = {
         close: "平仓",
         update: "调整",
         call_limit: "Market Call Limit"
-    },
-    operation: {
-        pending: " %(blocks)s 个区块待定",
-        no_recent: "近期无交易"
     },
     modal: {
         issue: {

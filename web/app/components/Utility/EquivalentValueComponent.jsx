@@ -107,9 +107,9 @@ class ValueComponent extends React.Component {
             fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
         }
 
-        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromAsset, toStats && toStats.close ? toStats.close : toAsset, fromID, toID);
+        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromID === "1.3.0" ? fromAsset : null, toStats && toStats.close ? toStats.close : toID === "1.3.0" ? toAsset : null, fromID, toID);
 
-        let eqValue = utils.convertValue(price, amount, fromAsset, toAsset);
+        let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
         if (!eqValue) {
             return <span>n/a</span>
         }

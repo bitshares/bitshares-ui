@@ -11,12 +11,12 @@ import Translate from "react-translate-component";
 class DepthHighChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
+        let settleCheck = isNaN(nextProps.settlementPrice) ? false : nextProps.settlementPrice !== this.props.settlementPrice;
         return (
             !Immutable.is(nextProps.orders, this.props.orders) ||
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
-            // nextProps.plotLine !== this.props.plotLine ||
+            settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
-            nextProps.settlementPrice !== this.props.settlementPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
@@ -36,6 +36,7 @@ class DepthHighChart extends React.Component {
 
 
     render() {
+        console.log("depth chart render");
         let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
@@ -114,7 +115,7 @@ class DepthHighChart extends React.Component {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
                 formatter: function() {
                     let name = this.series.name.split(" ")[0];
-                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/><span style="color:${this.series.color}">\u25CF</span>${name}: <b>${utils.format_number(this.y, base.get("precision"))} ${quoteSymbol}</b>`;
+                    return `<span style="font-size: 90%;">${utils.format_number(this.x / power, base.get("precision"))} ${priceSymbol}</span><br/><span style="color:${this.series.color}">\u25CF</span>${name}: <b>${utils.format_number(this.y, quote.get("precision"))} ${quoteSymbol}</b>`;
                 },
                 style: {
                     color: "#FFFFFF"

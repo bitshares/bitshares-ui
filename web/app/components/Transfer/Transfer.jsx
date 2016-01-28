@@ -116,7 +116,7 @@ class Transfer extends React.Component {
             this.state.to_account.get("id"),
             parseInt(amount * precision, 10),
             asset.get("id"),
-            this.state.memo,
+            this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo,
             this.state.propose ? this.state.propose_account : null,
             this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
         ).then( () => {
@@ -163,6 +163,7 @@ class Transfer extends React.Component {
         // Estimate fee
         let globalObject = ChainStore.getObject("2.0.0");
         let fee = utils.estimateFee(propose ? "proposal_create" : "transfer", null, globalObject);
+
         if (from_account && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             asset_types = Object.keys(account_balances).sort(utils.sortID);
@@ -172,8 +173,12 @@ class Transfer extends React.Component {
                 let balanceObject = ChainStore.getObject(account_balances[key]);
                 if (balanceObject && balanceObject.get("balance") === 0) {
                     asset_types.splice(asset_types.indexOf(key), 1);
-                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                } if (asset) {
+                    if (fee_asset_types.indexOf(key) !== -1) {
+                        fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
+                    }
+                }
+
+                if (asset) {
                     if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
                         fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
                     }

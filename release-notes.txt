@@ -1,4 +1,48 @@
 ---------------------------------------------------------------------
+Release 2.0.160127
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Bridge support for OPEN.BKS
+- Better price precision on markets with low precision assets #692
+- Improved operations display, added more op translation
+- Simplify Exchange price handling, limit values to Satoshi amounts
+- Ability to hide/show assets in the Overview balance list #687
+- Some performance optimizations
+
+BUG FIXES:
+- Disappearing fee field in Transfer #678
+- TimeAgo not updating, and update react-intl version
+- Fix edge case in PriceChart update logic #669
+- Per market price display direction  #415
+- Update all memos when the wallet is unlocked #661
+
+---------------------------------------------------------------------
+Release 2.0.160121
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- USD, EUR, CNY fiat deposit/withdrawals via OpenLedger
+- Added OPEN.EMC and OPEN.EGD to OpenLedger bridge
+- Blocktrades support for TRADE.DASH/PPC/DOGE
+- Table View for Workers #632
+- Hide Workers with negative approval #632
+- UTF-8 memo support #624
+- Support for 'asset_reserve' operation
+- Show lifetime membership fees
+- Improved Fee Explorer: Cleanup, nicer tables, better translations
+- Allow users to browse the Exchange even without having an account
+
+BUG FIXES:
+- My History / History alignment #568
+- 'Missing Active Authority' permissions issue #676
+- Show correct selected connection in Settings
+- Allow shorting of prediction market assets, fix #667
+- Refactor AccountVoting worker view to table layout, fix #632
+- Fix 'span' as child of 'tr' error
+- Subtract fees for filled orders, show fees paid, fix #658
+
+---------------------------------------------------------------------
 Release 2.0.160106
 ---------------------------------------------------------------------
 

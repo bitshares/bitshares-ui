@@ -11,14 +11,27 @@ import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import ChainStore from "api/ChainStore";
+import SettingsActions from "actions/SettingsActions";
 
 class AccountOverview extends React.Component {
 
     constructor(props) {
         super();
         this.state = {
-            settleAsset: "1.3.0"
+            settleAsset: "1.3.0",
+            showHidden: false
         };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+
+        return (
+            nextProps.account !== this.props.account ||
+            nextProps.settings !== this.props.settings ||
+            nextProps.hiddenAssets !== this.props.hiddenAssets ||
+            nextState.settleAsset !== this.state.settleAsset ||
+            nextState.showHidden !== this.state.showHidden
+        )
     }
 
     _onSettleAsset(id, e) {
@@ -30,48 +43,103 @@ class AccountOverview extends React.Component {
         this.refs.settlement_modal.show();
     }
 
+    _hideAsset(asset, status) {
+        SettingsActions.hideAsset(asset, status)
+    }
+
+    _renderBalances(balanceList) {
+        let {settings, hiddenAssets} = this.props;
+        let preferredUnit = settings.get("unit") || "1.3.0";
+
+        let balances = [];
+        balanceList.forEach( balance => {
+            let balanceObject = ChainStore.getObject(balance);
+            let asset_type = balanceObject.get("asset_type"); 
+            let asset = ChainStore.getObject(asset_type);
+            let isBitAsset = asset && asset.has("bitasset_data_id");
+
+            const core_asset = ChainStore.getAsset("1.3.0");
+            
+            let assetInfoLinks = asset && <ul>
+                <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                <li><a href={`#/market/${asset.get("symbol")}_${core_asset?core_asset.get("symbol"):"BTS"}`}><Translate content="exchange.market"/></a></li>
+                {isBitAsset && <li><a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a></li>}
+            </ul>;
+
+            let includeAsset = !hiddenAssets.includes(asset_type);
+
+            balances.push(
+                <tr key={balance} style={{maxWidth: "100rem", backgroundColor: !includeAsset ? "#3E3E3E" : null}}>
+                    {/*isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline"><Translate content="account.settle" /></div></td> : <td></td>*/}
+                    <td style={{textAlign: "right"}}><BalanceComponent balance={balance} assetInfo={assetInfoLinks}/></td>
+                    {/*<td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>*/}
+                    <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
+                    <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td>
+                    <td style={{textAlign: "right"}}><div onClick={this._hideAsset.bind(this, asset_type, includeAsset)} className="button outline">{includeAsset ? "-" : "+"}</div></td>
+                </tr>
+            );
+        })
+
+        return balances;
+    }
+
+    _toggleHiddenAssets() {
+        this.setState({
+            showHidden: !this.state.showHidden
+        })
+    }
+
     render() {
-        let {account, settings} = this.props;
+        let {account, hiddenAssets} = this.props;
+        let {showHidden} = this.state;
+
         if (!account) {
             return null;
         }
+
         let call_orders = [];
         if (account.toJS && account.has("call_orders")) call_orders = account.get("call_orders").toJS();
-        let balances = [];
+        let includedBalances, hiddenBalances;
         let account_balances = account.get("balances");
-        let balanceList = Immutable.List();
+        let includedBalancesList = Immutable.List(), hiddenBalancesList = Immutable.List();
 
-        let preferredUnit = settings.get("unit") || "1.3.0";
         if (account_balances) {
-            account_balances.forEach( balance => {
-                let balanceAmount = ChainStore.getObject(balance);
-                if (!balanceAmount.get("balance")) {
-                    return null;
+            // Filter out balance objects that have not yet been retrieved by ChainStore
+            account_balances = account_balances.filter((a, key) => {
+                let balanceObject = ChainStore.getObject(a);
+                if (!balanceObject.get("balance")) {
+                    return false;
+                } else {
+                    return true;
                 }
-                let asset = ChainStore.getObject(balanceAmount.get("asset_type"));
-                let isBitAsset = asset && asset.has("bitasset_data_id");
+            });
 
-                const core_asset = ChainStore.getAsset("1.3.0");
-                let assetInfoLinks = asset && <ul>
-                    <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
-                    <li><a href={`#/market/${asset.get("symbol")}_${core_asset?core_asset.get("symbol"):"BTS"}`}><Translate content="exchange.market"/></a></li>
-                    {isBitAsset && <li><a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a></li>}
-                </ul>;
+            // Separate balances into hidden and included
+            account_balances.forEach((a, asset_type) => {
+                if (hiddenAssets.includes(asset_type)) {
+                    hiddenBalancesList = hiddenBalancesList.push(a);
+                } else {
+                    includedBalancesList = includedBalancesList.push(a);
+                }
+            });
 
-                balanceList = balanceList.push(balance);
-                balances.push(
-                    <tr key={balance} style={{maxWidth: "100rem"}}>
-                        {/*isBitAsset ? <td><div onClick={this._onSettleAsset.bind(this, asset.get("id"))} className="button outline"><Translate content="account.settle" /></div></td> : <td></td>*/}
-                        <td style={{textAlign: "right"}}><BalanceComponent balance={balance} assetInfo={assetInfoLinks}/></td>
-                        {/*<td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>*/}
-                        <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
-                        <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td>
-                    </tr>
-                );
-            })
+            includedBalances = this._renderBalances(includedBalancesList);
+            hiddenBalances = this._renderBalances(hiddenBalancesList);
         }
 
-        let totalBalance = balanceList.size ? <TotalBalanceValue balances={balanceList}/> : null;
+        if (hiddenBalances) {
+            let hiddenTotal = <TotalBalanceValue balances={hiddenBalancesList} />;
+            hiddenBalances.unshift(<tr><td colSpan="4"></td></tr>)
+            hiddenBalances.push(
+                <tr>
+                    <td></td>
+                    <td style={{textAlign: "right", fontWeight: "bold"}}>{hiddenTotal}</td>
+                    <td colSpan="2"></td>
+                </tr>
+            );
+        }
+
+        let totalBalance = includedBalancesList.size ? <TotalBalanceValue balances={includedBalancesList}/> : null;
 
         return (
             <div className="grid-content">
@@ -85,15 +153,28 @@ class AccountOverview extends React.Component {
                                 {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
                                 <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
+                                <th>{/* Hide button */}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {balances}
-                            {balanceList.size > 1 ? <tr>
+                            {includedBalances}
+                            {includedBalancesList.size > 1 ? <tr>
                                 <td></td>
-                                <td style={{textAlign: "right"}}>{totalBalance}</td>
-                                <td></td>
+                                <td style={{textAlign: "right", fontWeight: "bold"}}>{totalBalance}</td>
+                                <td colSpan="2"></td>
                             </tr> : null}
+                            {showHidden ? hiddenBalances : null}
+                            {hiddenBalancesList.size ? (
+                                <tr>
+                                    <td colSpan="4" style={{textAlign: "right"}}>
+                                        <div    
+                                            className="button outline"
+                                            onClick={this._toggleHiddenAssets.bind(this)}
+                                        >
+                                            <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 2})</span>
+                                        </div>
+                                    </td>
+                                </tr>) : null}
                         </tbody>
                     </table>
                     <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
