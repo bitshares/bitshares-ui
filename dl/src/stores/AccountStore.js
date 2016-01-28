@@ -9,11 +9,15 @@ import ChainStore from "api/ChainStore"
 import AccountRefsStore from "stores/AccountRefsStore"
 import AddressIndex from "stores/AddressIndex"
 import SettingsStore from "stores/SettingsStore"
+import ls from "common/localStorage";
+
+let accountStorage = new ls("__graphene__")
 
 /**
  *  This Store holds information about accounts in this wallet
  *
  */
+
 class AccountStore extends BaseStore {
     constructor() {
         super();
@@ -34,20 +38,39 @@ class AccountStore extends BaseStore {
     _getInitialState() {
         this.account_refs = null
         this.initial_account_refs_load = true // true until all undefined accounts are found
+
         return { 
             update: false,
             currentAccount: null,
             linkedAccounts: Immutable.Set(),
+            myIgnoredAccounts: Immutable.Set(),
+            unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts") || []),
             searchAccounts: Immutable.Map(),
             searchTerm: ""
         }
     }
+
+    _addIgnoredAccount(name) {
+        if (this.state.unFollowedAccounts.includes(name) && !this.state.myIgnoredAccounts.has(name)) {
+            this.state.myIgnoredAccounts = this.state.myIgnoredAccounts.add(name);
+        }
+
+        console.log("myIgnoredAccounts:", this.state.myIgnoredAccounts.toJS());
+    }
     
     loadDbData() {
-        var linkedAccounts = Immutable.Set().asMutable()
-        return iDB.load_data("linked_accounts").then(data => {
-            for (let a of data) { linkedAccounts.add(a.name); }
-            this.setState({ linkedAccounts: linkedAccounts.asImmutable() })
+        var linkedAccounts = Immutable.Set().asMutable();
+        
+        iDB.load_data("linked_accounts")
+        .then(data => {
+            for (let a of data) {
+                linkedAccounts.add(a.name);
+                this._addIgnoredAccount(a.name);
+            }
+
+            this.setState({
+                linkedAccounts: linkedAccounts.asImmutable()
+            });
         })
     }
     
@@ -71,7 +94,11 @@ class AccountStore extends BaseStore {
                     pending = true
                     return
                 }
-                if (account) linkedAccounts.add(account.get("name"))
+                if (account && !this.state.unFollowedAccounts.includes(account.get("name"))) {
+                    linkedAccounts.add(account.get("name"));
+                } else {
+                    this._addIgnoredAccount(account.get("name"));
+                }
             })
         })
         // console.log("AccountStore addAccountRefs linkedAccounts",this.state.linkedAccounts.size);
@@ -229,10 +256,18 @@ class AccountStore extends BaseStore {
         if( ! validation.is_account_name(name, true))
             throw new Error("Invalid account name: " + name)
         
+        // Link
         iDB.add_to_store("linked_accounts", {
             name
-        });
+        });        
         this.state.linkedAccounts = this.state.linkedAccounts.add(name);
+
+        // remove from unFollow
+        this.state.unFollowedAccounts = this.state.unFollowedAccounts.delete(name);
+        this.state.myIgnoredAccounts = this.state.myIgnoredAccounts.delete(name);
+        accountStorage.set("unfollowed_accounts", this.state.unFollowedAccounts);
+
+        // Update current account if only one account is linked
         if (this.state.linkedAccounts.size === 1) {
             this.setCurrentAccount(name);
         }
@@ -242,11 +277,41 @@ class AccountStore extends BaseStore {
         if( ! validation.is_account_name(name, true))
             throw new Error("Invalid account name: " + name)
         
+        // Unlink
         iDB.remove_from_store("linked_accounts", name);
         this.state.linkedAccounts = this.state.linkedAccounts.delete(name);
+
+        // Add to unFollow
+        this.state.unFollowedAccounts = this.state.unFollowedAccounts.add(name);
+        this.checkAccountRefs();
+        // Limit to maxEntries accounts
+        let maxEntries = 20;
+        if (this.state.unFollowedAccounts.size > maxEntries) {
+            this.state.unFollowedAccounts = this.state.unFollowedAccounts.takeLast(maxEntries);
+        }    
+             
+        accountStorage.set("unfollowed_accounts", this.state.unFollowedAccounts);        
+
+        // Update current account if no accounts are linked
         if (this.state.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
         }
+
+    }
+
+    checkAccountRefs() {
+        //  Simply add them to the linkedAccounts list (no need to persist them)
+        var account_refs = AccountRefsStore.getState().account_refs
+
+        account_refs.forEach(id => {
+            var account = ChainStore.getAccount(id)
+            if (account === undefined) {
+                return
+            }
+            if (account) {
+                this._addIgnoredAccount(account.get("name"));
+            }
+        })
     }
     
 }
@@ -284,3 +349,15 @@ function addressThreshold(authority) {
     }
     return available >= required ? "full" : available > 0 ? "partial" : "none"
 }
+
+    function lsGet(key) {
+        if (ls) {
+            return ls.getItem(STORAGE_KEY + key);
+        }
+    }
+
+    function lsSet(key, object) {
+        if (ls) {
+            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
+        }
+    }

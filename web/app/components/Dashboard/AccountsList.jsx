@@ -33,7 +33,8 @@ class AccountsList extends React.Component {
     };
 
     static defaultProps = {
-        width: 2000
+        width: 2000,
+        compact: false
     };
 
     constructor(props) {
@@ -218,10 +219,12 @@ class AccountsList extends React.Component {
 
         return (
             <div>
-                <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
-                    <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                </div>
+                {!this.props.compact ? (
+                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
+                        <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+                    </div>) : null}
                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
+                    {!this.props.compact ? (
                     <thead>
                         <tr>
                             <th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
@@ -231,7 +234,7 @@ class AccountsList extends React.Component {
                             {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
                             <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
                         </tr>
-                    </thead>
+                    </thead>) : null}
                     <tbody>
                         {accounts}
                     </tbody>

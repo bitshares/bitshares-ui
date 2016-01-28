@@ -45,6 +45,10 @@
         total_value: "Total value",
         show_hidden: "Show hidden assets",
         hide_hidden: "Hide hidden assets",
+        ignore: "Ignore",
+        unignore: "Unignore",
+        show_ignored: "Show ignored accounts",
+        hide_ignored: "Hide ignored accounts",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",
