@@ -197,7 +197,7 @@ class AccountOverview extends React.Component {
                         </tbody>
                     </table>
                 </div> : null}
-                {account.get("proposals").length ? 
+                {account.get("proposals").size ? 
                 <div className="content-block">
                     <h3><Translate content="explorer.proposals.title" account={account.get("id")} /></h3>
                     <Proposals accountList={Immutable.fromJS([account.get("id")])}/>
