@@ -157,7 +157,7 @@
             warning3: "Account is already in the list",
             warning4: "Key is already in the list",
             action: "Action",
-            acct_or_key:" Account/Key"
+            acct_or_key:" Account / Key / Address"
         },
         votes: {
             proxy_short: "Proxy",
