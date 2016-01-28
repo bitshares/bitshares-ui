@@ -350,7 +350,7 @@ class AccountDepositWithdraw extends React.Component {
                                 account={this.props.account} />
                     </div>
                     <div className="content-block">
-                        <h3><Translate content="gateway.bridge" /></h3>
+                        <h3><Translate content="gateway.gateway" /></h3>
                         <table className="table">
                             <thead>
                             <tr>
