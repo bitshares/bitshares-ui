@@ -310,6 +310,7 @@
         witness_update: "{account} update its witness info",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
+        worker_create: "{account} created a worker proposal with daily pay of {pay}"
     },
     transaction: {
         confirm: "Please confirm the transaction",
@@ -355,7 +356,6 @@
         bond_accept_offer: "Accepted bond offer of",
         bond_claim_collateral: "Claimed collateral of",
         bond_pay_collateral: "Paid collateral of",
-        create_worker: "Created a budget item with a pay of",
         custom: "Created a custom operation",
         order_id: "Order ID",
         asset_claim_fees: "claimed asset fees of %(balance_amount)s from %(asset)s fee pool",
