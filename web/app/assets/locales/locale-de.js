@@ -7,7 +7,6 @@ module.exports = {
         de: "Deutsch",
         es: "Español",
         tr: "Turkish"
-
     },
     header: {
         title: "Graphene UI",
@@ -84,7 +83,7 @@ module.exports = {
             subscribe: "Jährliche Mitgliedschaft erwerben",
             expires: "endet",
             membership_expiration: "Ablauf der Mitgliedschaft",
-            fees_cashback: "Gebühren und Rückerstattung"
+            fees_cashback: "Gebühren und Rückerstattung",
             coindays: "Coin-days",
             earned: "Erworbene coin-days",
             required: "Benötigte coin-days",
@@ -237,7 +236,7 @@ module.exports = {
             premium_name_warning: "Es handelt sich um einen Premiumnamen. Premiumnamen sind teurer. Günstige Namen enthalten mindestens einen Bindestrich, eine Zahl, oder keine Vokal enthält.",
         },
         propose_from: "Vorschlagen von",
-        settle: "Settle"
+        settle: "Settle",
         "no_orders": "Keine offenen Order",
         asset_details: "Asset Details"
     },
@@ -269,13 +268,13 @@ module.exports = {
         broadcast: "Deine Überweisung wurde gesendet",
         again: "WEITERE ÜBERWEISUNG",
         see: "ÜBERWEISUNGSÜBERSICHT",
-        close: "SCHLIEßEN"
+        close: "SCHLIEßEN",
         memo_unlock: "Entsperren um Memo zu lesen"
     },
     operation: {
         pending: "schwebend %(blocks)s Blöcke",
         no_recent: "keine kürzlichen Transaktionen",
-        reg_account: "{registrar} hat das Konto {newaccount} registriert"
+        reg_account: "{registrar} hat das Konto {newaccount} registriert",
         transfer: "{from} hat {amount} an {to} gesendet",
         proposal_create: "{account} hat Transaktion vorgeschlagen",
         proposal_update: "{account} hat Transaktionsvorschlag geändert",
@@ -417,7 +416,7 @@ module.exports = {
             override_transfer: "Transaktion überschreiben",
             transfer_to_blind: "Transfer zu blinden Konten",
             blind_transfer: "Blind Transfer",
-            transfer_from_blind: "Transfer von blindem Konto"
+            transfer_from_blind: "Transfer von blindem Konto",
             asset_claim_fees: "Gebühr für 'Asset beanspruchen'"
         },
         feeGroups : {
@@ -529,7 +528,7 @@ module.exports = {
                 fee_pool: "Gebühren Pool",
                 core_exchange_rate: "Kernhandelsrate",
                 pool_balance: "Pool Guthaben",
-                unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile"
+                unclaimed_issuer_income: "Nicht ausgezahlte Herausgeberanteile",
                 claim_fees: "Gebühren beanspruchen",
                 fund_text: "The Gebührenpool wird dazu genutzt Gebühren in %(core)s durch einen impliziten Wechsel von %(asset)s zu %(core)s zu finanzieren. Sollte der Gebührenpool trocken liegen, können Gebühren nicht länger in %(asset)s bezahlt werden sondern nur noch in %(core)s",
                 claim_text: "Der Assetherausgeben kann die zusammengetragenen Anteile hier beanspruchen"
@@ -603,7 +602,7 @@ module.exports = {
         connection: "API Anbindung",
         add_ws: "Websocket API hinzufügen",
         remove_ws: "Websocket API entfernen",
-        faucet_address: "Faucet Address"
+        faucet_address: "Faucet Address",
         showSettles: "Settlements in der Depth-Chart anzeigen",
         yes: "Ja",
         no: "Nein",
@@ -797,7 +796,7 @@ module.exports = {
         ws_status: "Websocket Verbindungsstatus",
         retry: "nocheinmal versuchen",
         connected: "verbunden",
-        not_connected: "Nicht verbunden"
+        not_connected: "Nicht verbunden",
         browser: "Nicht unterstützter Browser",
         browser_text: "Ihr Browser ist unzureichend mit dem BitShares Wallet getestet worden. Wir empfehlen Ihnen eine Sicherung ihrer Geldbörse durchzuführen und diese in dem Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
         understand: "Verstanden!"

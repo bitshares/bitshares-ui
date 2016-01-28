@@ -30,6 +30,8 @@ class SettingsStore {
 
         });
 
+        this.hiddenAssets = Immutable.List([]);
+
         this.starredMarkets = Immutable.Map([
             [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
             [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
@@ -94,7 +96,8 @@ class SettingsStore {
             onAddStarAccount: SettingsActions.addStarAccount,
             onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
-            onRemoveWS: SettingsActions.removeWS
+            onRemoveWS: SettingsActions.removeWS,
+            onHideAsset: SettingsActions.hideAsset
         });
 
         if (this._lsGet("settings_v3")) {
@@ -119,6 +122,10 @@ class SettingsStore {
 
         if (this._lsGet("marketDirections")) {
             this.marketDirections = Immutable.Map(JSON.parse(this._lsGet("marketDirections")));
+        }
+
+        if (this._lsGet("hiddenAssets")) {
+            this.hiddenAssets = Immutable.List(JSON.parse(this._lsGet("hiddenAssets")));
         }
 
 
@@ -154,6 +161,18 @@ class SettingsStore {
         }
 
         this._lsSet("marketDirections", this.marketDirections.toJS());
+    }
+
+    onHideAsset(payload) {
+        if (payload.id) {
+            if (!payload.status) {
+                this.hiddenAssets = this.hiddenAssets.delete(this.hiddenAssets.indexOf(payload.id));
+            } else {
+                this.hiddenAssets = this.hiddenAssets.push(payload.id);
+            }
+        }
+
+        this._lsSet("hiddenAssets", this.hiddenAssets.toJS());
     }
 
     _lsGet(key) {

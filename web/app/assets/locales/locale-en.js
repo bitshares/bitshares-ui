@@ -43,6 +43,8 @@
         as_collateral: "Collateral",
         open_orders: "Open orders",
         total_value: "Total value",
+        show_hidden: "Show hidden assets",
+        hide_hidden: "Hide hidden assets",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",

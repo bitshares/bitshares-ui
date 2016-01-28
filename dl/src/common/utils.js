@@ -145,7 +145,7 @@ var Utils = {
         if (quoteID === "1.3.0") {
             priceText = this.format_number(price, quotePrecision - 1);
         } else if (baseID === "1.3.0") {
-            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 1));
+            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 2));
         } else {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + basePrecision));
         }

@@ -27,7 +27,7 @@ class AccountPage extends React.Component {
     }
 
     render() {
-        let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account} = this.props;
+        let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
 
         let isMyAccount = AccountStore.isMyAccount(account);
 
@@ -51,7 +51,8 @@ class AccountPage extends React.Component {
                             settings,
                             wallet_locked,
                             account,
-                            isMyAccount
+                            isMyAccount,
+                            hiddenAssets
                         }
                     )}
                 </div>
@@ -71,6 +72,7 @@ class AccountPageStoreWrapper extends React.Component {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             searchAccounts: AccountStore.getState().searchAccounts,
             settings: SettingsStore.getState().settings,
+            hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
             myAccounts:  AccountStore.getState().myAccounts
         }
