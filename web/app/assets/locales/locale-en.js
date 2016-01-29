@@ -509,6 +509,7 @@
             title: "Assets",
             market: "SmartCoins",
             user: "User Issued Assets",
+            prediction: "Prediction market assets",
             symbol: "Symbol",
             id: "ID",
             issuer: "Issuer",

@@ -54,8 +54,6 @@ class AccountStore extends BaseStore {
         if (this.state.unFollowedAccounts.includes(name) && !this.state.myIgnoredAccounts.has(name)) {
             this.state.myIgnoredAccounts = this.state.myIgnoredAccounts.add(name);
         }
-
-        console.log("myIgnoredAccounts:", this.state.myIgnoredAccounts.toJS());
     }
     
     loadDbData() {

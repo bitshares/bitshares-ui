@@ -99,7 +99,7 @@ class Tabs extends React.Component {
         });
 
         return (
-            <div>
+            <div className={this.props.className}>
                 <div style={style} className={cnames("tabs", tabsClass)}>
                     {tabs}
                 </div>
