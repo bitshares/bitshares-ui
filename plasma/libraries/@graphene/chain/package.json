@@ -1,0 +1,29 @@
+{
+  "name": "@graphene/chain",
+  "version": "1.0.0",
+  "description": "Interface and data layer for the Graphene blockchain witness node",
+  "main": "index.js",
+  "scripts": {
+      "test": "mocha --compilers js:babel-core/register --recursive",
+      "test:watch": "npm test -- --watch"
+  },
+  "author": "",
+  "license": "BSD-2-Clause-FreeBSD",
+  "dependencies": {
+      "bigi": "^1.4.1",
+      "immutable": "^3.7.6",
+      "event-emitter": "^0.3.4"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "babel-cli": "^6.2.0",
+    "babel-core": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "mocha": "^2.3.4"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
