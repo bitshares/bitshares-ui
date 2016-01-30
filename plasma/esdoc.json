@@ -1,0 +1,9 @@
+{
+  "source": ".",
+  "includes": ["\\.(js|es6)$"],
+  "excludes": ["node_modules"],
+  "destination": "./out/esdoc",
+  "index": "./README.md",
+  "package": "./package.json",
+  "title": "Graphene Docs"
+}
