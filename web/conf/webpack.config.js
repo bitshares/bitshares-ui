@@ -7,6 +7,7 @@ require('es6-promise').polyfill();
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname, "..");
+function rpath(p) { return path.resolve(root_dir, p); }
 
 // FUNCTION TO EXTRACT CSS FOR PRODUCTION
 function extractForProduction(loaders) {
@@ -97,7 +98,7 @@ module.exports = function(options) {
         },
         resolve: {
             alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
-            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
+            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src"), rpath("../plasma/libraries")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
             modulesDirectories: ["node_modules"],
             fallback: [path.resolve(root_dir, "./node_modules")]

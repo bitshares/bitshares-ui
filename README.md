@@ -26,6 +26,7 @@ Before launching the GUI you will need to install the npm packages for each subd
 cd cli; npm install
 cd ../dl; npm install
 cd ../ios; npm install
+cd ../plasma; npm install
 cd ../web; npm install
 ```
 
