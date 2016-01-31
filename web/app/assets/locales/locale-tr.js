@@ -509,6 +509,7 @@
             title: "Aktifler",
             market: "AkıllıParalar",
             user: "Kullanıcı Aktifleri",
+            prediction: "Tahmin piyasası aktifleri",
             symbol: "Sembol",
             id: "Kimlik",
             issuer: "İhraç Eden",
