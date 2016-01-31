@@ -8,7 +8,7 @@ import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import MarketLink from "../Utility/MarketLink";
 
 class AccountOrders extends React.Component {

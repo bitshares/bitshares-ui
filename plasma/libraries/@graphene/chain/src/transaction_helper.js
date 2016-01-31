@@ -38,7 +38,7 @@ helper.to_json=function( tr, broadcast = false ) {
     return (function(tr, broadcast){
         var tr_object = ops.signed_transaction.toObject(tr);
         if (broadcast) {
-            var net = require('../rpc_api/ApiInstances').instance().network_api();
+            var net = require('@graphene/chain').Apis.instance().network_api();
             console.log('... tr_object', JSON.stringify(tr_object));
             return net.exec("broadcast_transaction", [tr_object]);
         } else {
@@ -72,7 +72,7 @@ helper.seconds_from_now=function(timeout_sec){
 
 /** 
     Print to the console a JSON representation of any object in 
-    serializer_operation_types.coffee
+    @graphene/serializer { types }
 */
 helper.template=function(serializer_operation_type_name, debug = {use_default: true, annotate: true}){
     var so = type[serializer_operation_type_name];

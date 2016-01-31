@@ -4,7 +4,7 @@ import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import Translate from "react-translate-component"
 import WalletActions from "actions/WalletActions"
 import WalletDb from "stores/WalletDb"
-import hash from "common/hash"
+import { hash } from "@graphene/ecc"
 import cname from "classnames"
 
 export default class BackupBrainkey extends Component {

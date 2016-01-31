@@ -1,11 +1,11 @@
 import React from "react";
 import Translate from "react-translate-component";
 import classnames from "classnames";
-import validation from "common/validation";
+import { validation } from "@graphene/chain";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";

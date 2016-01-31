@@ -1,9 +1,9 @@
 import alt from "../alt-instance";
 import iDB from "../idb-instance";
-import key from "common/key_utils"
+import { key } from "@graphene/ecc"
 import Immutable from "immutable"
 import BaseStore from "stores/BaseStore"
-import chain_config from "chain/config"
+import { chain_config } from "@graphene/chain"
 
 class AddressIndex extends BaseStore {
     

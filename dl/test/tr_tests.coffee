@@ -1,16 +1,11 @@
-PrivateKey = require '../src/ecc/key_private'
-PublicKey = require '../src/ecc/key_public'
-Signature = require '../src/ecc/signature'
-Aes = require 'ecc/aes'
-WebSocketRpc = require '../src/rpc_api/WebSocketRpc'
-GrapheneApi = require '../src/rpc_api/GrapheneApi'
+# import { Aes, PrivateKey, PublicKey, Signature } from "@graphene/ecc"
 
 #Promise = require '../src/common/Promise'
-ByteBuffer = require '../src/common/bytebuffer'
+ByteBuffer = require 'bytebuffer'
 secureRandom = require 'secure-random'
 assert = require 'assert'
 
-tr_helper = require '../src/chain/transaction_helper'
+tr_helper = require('@graphene/chain').transaction_helper
 th = require './test_helper'
 
 hash = require 'common/hash'

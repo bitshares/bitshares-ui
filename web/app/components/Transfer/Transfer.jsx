@@ -11,7 +11,7 @@ import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 
 class Transfer extends React.Component {
 

@@ -1,9 +1,9 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
+import { Apis } from "@graphene/chain";
 import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import big from "bignumber.js";
 
 let wallet_api = new WalletApi();

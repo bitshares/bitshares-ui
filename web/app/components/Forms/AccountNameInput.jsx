@@ -5,7 +5,7 @@ import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import BaseComponent from "../BaseComponent";
-import validation from "common/validation";
+import { validation } from "@graphene/chain";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 

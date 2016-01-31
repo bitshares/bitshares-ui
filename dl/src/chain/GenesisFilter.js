@@ -1,6 +1,4 @@
-import h from "common/hash"
-import config from "chain/config"
-import key_utils from "common/key_utils"
+import { key, hash } from "@graphene/ecc"
 
 var bts_genesiskeys_bloom_url = undefined
 try {
@@ -60,7 +58,7 @@ export default class GenesisFilter {
     inGenesis(pubkey_or_address) {
         if( ! this.bloom_buffer ) throw new Error("Call init() first")
         for(var hashes = 0; hashes < 3; hashes++) {
-            var hex = h.sha256( hashes + ':' + pubkey_or_address)
+            var hex = hash.sha256( hashes + ':' + pubkey_or_address)
             var bit_address = parseInt(hex.slice(-3).toString('hex'), 16) % this.bits_in_filter // 3090564
             // console.error("bit_address", bit_address.toString(16))
             var byte_address = bit_address >> 3 // 386320
@@ -104,10 +102,10 @@ export default class GenesisFilter {
                             status({ error: "missing_public_keys" })
                             return
                         }
-                        var key = keys.public_keys[k]
-                        if( /^GPH/.test(key) ) key = "BTS" + key.substring(3)
-                        if(this.inGenesis( key )) continue
-                        var addresses = key_utils.addresses(key, 'BTS')
+                        let k2 = keys.public_keys[k]
+                        if( /^GPH/.test(k2) ) k2 = "BTS" + k2.substring(3)
+                        if(this.inGenesis( k2 )) continue
+                        var addresses = key.addresses(k2, 'BTS')
                         var addy_found = false
                         for(var i = 0; i < addresses.length; i++) {
                             if(this.inGenesis( addresses[i] )) {

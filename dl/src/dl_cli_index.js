@@ -1,22 +1,19 @@
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 
-import PrivateKey from 'ecc/key_private'
-import PublicKey from 'ecc/key_public'
-import Aes from 'ecc/aes'
-import key from "common/key_utils"
+import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
 
 import WalletDb from 'stores/WalletDb'
 import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
 import PrivateKeyStore from 'stores/PrivateKeyStore'
-import ChainStore from "api/ChainStore"
+import { ChainStore } from "@graphene/chain"
 
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
-import chain_config from "chain/config"
+import { chain_config } from "@graphene/chain"
 
 module.exports = {
     

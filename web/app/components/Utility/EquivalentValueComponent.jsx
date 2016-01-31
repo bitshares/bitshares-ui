@@ -4,7 +4,7 @@ import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
 import MarketsActions from "actions/MarketsActions";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import connectToStores from "alt/utils/connectToStores";
 import MarketsStore from "stores/MarketsStore";
 

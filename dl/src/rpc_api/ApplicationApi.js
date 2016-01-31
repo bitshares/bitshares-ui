@@ -1,20 +1,13 @@
-var Aes = require('../ecc/aes');
-var PrivateKey = require('../ecc/key_private');
-var PublicKey = require('../ecc/key_public');
-var Long = require('bytebuffer').Long;
+import { ops } from "@graphene/serializer"
+import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
+import { TransactionBuilder, lookup, transaction_helper } from "@graphene/chain"
+import { ChainStore } from "@graphene/chain";
 
-var chain_types = require('../chain/chain_types');
-var chain_config = require('../chain/config');
-var helper = require('../chain/transaction_helper')
-var ops = require('../chain/signed_transaction');
-var type = require('../chain/serializer_operation_types')
-var key = require('../common/key_utils');
-var v = require('common/validation')
-
+import assert from "assert"
 import WalletUnlockActions from "../actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
-import lookup from "chain/lookup"
-import ChainStore from "api/ChainStore";
+
+var Long = require('bytebuffer').Long;
 
 class ApplicationApi {
     
@@ -27,9 +20,9 @@ class ApplicationApi {
         referrer_percent,
         broadcast = false
     ) {
-        var tr = new ops.signed_transaction();
-        v.required(registrar_id, "registrar_id")
-        v.required(referrer_id, "referrer_id")
+        var tr = new TransactionBuilder();
+        assert(registrar_id, "registrar_id")
+        assert(referrer_id, "referrer_id")
         var _registrar = lookup.account_id(registrar_id)
         var _referrer = lookup.account_id(referrer_id)
         return lookup.resolve().then(()=> {
@@ -134,7 +127,7 @@ class ApplicationApi {
                 fee_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
                fee_asset_id = "1.3.0";
 
-            var tr = new ops.signed_transaction()
+            var tr = new TransactionBuilder();
             var transfer_op = tr.get_type_operation("transfer", {
                 fee: {
                     amount: 0,

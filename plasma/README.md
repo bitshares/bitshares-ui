@@ -1,7 +1,7 @@
 Root development and deployment environment Graphene JavaScript libraries and programs.
 
-* [Programs](./programs)
-* [Libraries](./libraries)
+* [Wallet Server](./programs/wallet-server)
+* [Libraries](./libraries/@graphene)
 
 # Setup
 

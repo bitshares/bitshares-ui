@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";

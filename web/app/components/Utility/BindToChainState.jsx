@@ -1,6 +1,6 @@
 import React from "react";
 import _ from "lodash";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
 import LoadingIndicator from "../LoadingIndicator";

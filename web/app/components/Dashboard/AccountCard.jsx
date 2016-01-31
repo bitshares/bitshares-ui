@@ -5,7 +5,7 @@ import {Link, PropTypes} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import AccountStore from "stores/AccountStore";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 
 /**
  *  @brief displays the summary of a given account in a condenced view (for the dashboard)

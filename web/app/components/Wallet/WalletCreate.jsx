@@ -10,7 +10,7 @@ import WalletActions from "actions/WalletActions"
 import NotificationSystem from 'react-notification-system'
 import notify from 'actions/NotificationActions'
 import connectToStores from "alt/utils/connectToStores"
-import key from "common/key_utils"
+import { key } from "@graphene/ecc"
 import cname from "classnames"
 
 @connectToStores

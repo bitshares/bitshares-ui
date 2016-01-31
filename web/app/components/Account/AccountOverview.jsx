@@ -9,7 +9,7 @@ import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import SettingsActions from "actions/SettingsActions";
 
 class AccountOverview extends React.Component {

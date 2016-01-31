@@ -1,9 +1,7 @@
 import assert from "assert"
 
-import PublicKey from "ecc/key_public"
-import PrivateKey from "ecc/key_private"
-import ApiInstances from "rpc_api/ApiInstances"
-import ChainStore from "api/ChainStore"
+import { PrivateKey, PublicKey } from "@graphene/ecc"
+import { ChainStore, Apis } from "@graphene/chain"
 import th from "./test_helper"
 
 var _catch = th.log_error
@@ -23,7 +21,7 @@ describe( "ChainStore", ()=> {
     var api
         
     before( done => {
-        api = ApiInstances.instance()
+        api = Apis.instance()
         return api.init_promise.then( ()=> {
             ChainStore.init()
             done()

@@ -1,8 +1,8 @@
-import config from "chain/config";
+import { chain_config } from "@graphene/chain";
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import WalletDb from "stores/WalletDb";
@@ -224,7 +224,7 @@ class AccountDepositWithdraw extends React.Component {
 
         return (
 		<div className="grid-content">
-			<Tabs setting="depositWithdrawSettingsTab" defaultActiveTab={config.depositWithdrawDefaultActiveTab}>
+			<Tabs setting="depositWithdrawSettingsTab" defaultActiveTab={chain_config.depositWithdrawDefaultActiveTab}>
 
                 <Tabs.Tab title="BlockTrades">
                     <div className="content-block">

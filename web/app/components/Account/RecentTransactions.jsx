@@ -8,7 +8,8 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {operations} from "chain/chain_types";
+import {chain_types} from "@graphene/chain";
+let {operations} = chain_types;
 
 function compareOps(b, a) {
     if (a.block_num < b.block_num) return -1;

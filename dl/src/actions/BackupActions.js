@@ -1,14 +1,8 @@
 import alt from "alt-instance"
 import iDB from "idb-instance"
-
 import lzma from "lzma"
 import {saveAs} from "common/filesaver.js"
-
-import PrivateKey from 'ecc/key_private'
-import PublicKey from 'ecc/key_public'
-import Aes from 'ecc/aes'
-import key from "common/key_utils"
-
+import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
 import WalletActions from "actions/WalletActions"
 import WalletDb from "stores/WalletDb"
 

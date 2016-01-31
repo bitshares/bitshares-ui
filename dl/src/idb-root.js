@@ -1,5 +1,5 @@
 import idb_helper from "idb-helper"
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 
 const DB_VERSION_MAIN = 1
 const DB_PREFIX = "graphene_db"

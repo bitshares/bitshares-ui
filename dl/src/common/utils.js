@@ -1,7 +1,8 @@
 var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-import {object_type, operations} from "chain/chain_types";
+import {chain_types} from "@graphene/chain";
+let {object_type, operations} = chain_types;
 
 var Utils = {
     get_object_id: (obj_id) => {

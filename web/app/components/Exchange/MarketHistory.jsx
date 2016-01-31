@@ -12,7 +12,9 @@ import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import connectToStores from "alt/utils/connectToStores";
-import {operations} from "chain/chain_types";
+import {chain_types} from "@graphene/chain";
+
+let {operations} = chain_types;
 
 @connectToStores
 class MarketHistory extends React.Component {

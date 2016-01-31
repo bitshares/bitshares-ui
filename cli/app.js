@@ -2,7 +2,7 @@ var repl = require("repl");
 var repl_history = require("repl.history");
 var promisify = require("repl-promised").promisify;
 
-var Apis = require('../dl/src/rpc_api/ApiInstances');
+var Apis = require('@graphene/chain').Apis;
 var ApplicationApi = require('../dl/src/rpc_api/ApplicationApi');
 var WalletApi = require('../dl/src/rpc_api/WalletApi');
 var DebugApi = require('../dl/src/rpc_api/DebugApi');

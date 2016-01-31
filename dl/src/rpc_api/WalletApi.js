@@ -1,17 +1,15 @@
-var helper = require('../chain/transaction_helper')
-var ops = require('../chain/signed_transaction')
-var type = require('../chain/serializer_operation_types')
-var v = require('../chain/serializer_validation')
-import key from "../common/key_utils"
-import lookup from "chain/lookup"
-import chain_types from "chain/chain_types"
+import { key } from "@graphene/ecc"
+import { lookup } from "@graphene/chain"
+import { chain_types } from "@graphene/chain"
+import { TransactionBuilder } from "@graphene/chain"
+import { transaction_helper } from "@graphene/chain"
+import { Aes, PrivateKey } from "@graphene/ecc"
+import assert from "assert"
 
-var PrivateKey = require('../ecc/key_private')
 var ApplicationApi = require('./ApplicationApi')
 var WalletDb = require('../stores/WalletDb')
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
-import Aes from "ecc/aes"
 
 class WalletApi {
 
@@ -20,11 +18,11 @@ class WalletApi {
     }
     
     new_transaction() {
-        return new ops.signed_transaction()
+        return new TransactionBuilder();
     }
     
     sign_and_broadcast( tr, broadcast = true ) {
-        v.required(tr, "transaction")
+        assert(tr, "transaction")
         return WalletDb.process_transaction(
             tr,
             null, //signer_private_key,
@@ -34,7 +32,7 @@ class WalletApi {
     
     /** Console print any transaction object with zero default values. */
     template(transaction_object_name) {
-        var object = helper.template(
+        var object = transaction_helper.template(
             transaction_object_name, 
             {use_default: true, annotate: true}
         )
@@ -42,7 +40,7 @@ class WalletApi {
         console.error(JSON.stringify(object,null,4))
         
         // usable
-        object = helper.template(
+        object = transaction_helper.template(
             transaction_object_name, 
             {use_default: true, annotate: false}
         )

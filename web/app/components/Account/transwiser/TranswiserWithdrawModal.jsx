@@ -2,7 +2,7 @@ import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../../Utility/ChainTypes";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import BindToChainState from "../../Utility/BindToChainState";
 import utils from "common/utils";
 import BalanceComponent from "../../Utility/BalanceComponent";

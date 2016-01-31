@@ -3,7 +3,7 @@ var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
 var SettingsActions = require("../actions/SettingsActions");
 var market_utils = require("../common/market_utils");
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import utils from "common/utils";
 
 import {

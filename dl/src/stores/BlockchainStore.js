@@ -2,7 +2,7 @@ var Immutable = require("immutable");
 var alt = require("../alt-instance");
 var BlockchainActions = require("../actions/BlockchainActions");
 import BaseStore from "./BaseStore";
-import ChainStore from "../api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 
 import {
     Block

@@ -3,11 +3,12 @@ import Notification from "react-foundation-apps/src/notification";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Operation from "../Blockchain/Operation";
 import Immutable from "immutable";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {operations} from "chain/chain_types";
+import {chain_types} from "@graphene/chain";
 
+let {operations} = chain_types;
 let ops = Object.keys(operations);
 
 @BindToChainState({keep_updating: true})

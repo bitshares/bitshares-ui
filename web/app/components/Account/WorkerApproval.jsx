@@ -9,10 +9,10 @@ import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/ChainStore";
-import validation from "common/validation"
+import { ChainStore } from "@graphene/chain";
+import { validation } from "@graphene/chain"
 import AccountImage from "./AccountImage";
-import {FetchChainObjects} from "api/ChainStore";
+import {FetchChainObjects} from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";

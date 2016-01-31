@@ -1,5 +1,5 @@
 var WebSocket = require('ws')
-var Apis = require('../dl/src/rpc_api/ApiInstances');
+var Apis = require('@graphene/chain').Apis;
 
 var config = require( process.argv[2] ? process.argv[2] : './config.js' )
 

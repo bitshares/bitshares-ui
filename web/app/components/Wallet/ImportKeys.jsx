@@ -1,16 +1,16 @@
 import React, {Component, PropTypes} from "react";
 import ReactDOM from "react-dom";
-import PrivateKey from "ecc/key_private";
-import Address from "ecc/address"
-import Aes from "ecc/aes";
+import { PrivateKey } from "@graphene/ecc";
+import { Address } from "@graphene/ecc"
+import { Aes } from "@graphene/ecc";
 import alt from "alt-instance"
 import connectToStores from "alt/utils/connectToStores"
 import cname from "classnames"
-import config from "chain/config";
+import { chain_config } from "@graphene/chain";
 import notify from "actions/NotificationActions";
-import hash from "common/hash";
+import { hash } from "@graphene/ecc";
 
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletCreate from "components/Wallet/WalletCreate"
@@ -21,7 +21,7 @@ import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
 import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore"
-import PublicKey from "ecc/key_public";
+import { PublicKey } from "@graphene/ecc";
 
 import GenesisFilter from "chain/GenesisFilter"
 
@@ -400,7 +400,7 @@ export default class ImportKeys extends Component {
         
         var savePubkeyAccount = function (pubkey, account_name) {
             //replace BTS with GPH
-            pubkey = config.address_prefix + pubkey.substring(3)
+            pubkey = chain_config.address_prefix + pubkey.substring(3)
             var address = PublicKey.fromPublicKeyString(pubkey).toAddressString()
             var addresses = account_addresses[account_name] || []
             address = "BTS" + address.substring(3)
@@ -524,7 +524,7 @@ export default class ImportKeys extends Component {
                 continue
             }
             var account_name = account.account_name.trim()
-            var same_prefix_regex = new RegExp("^" + config.address_prefix)
+            var same_prefix_regex = new RegExp("^" + chain_config.address_prefix)
             for(let i = 0; i < account.encrypted_private_keys.length; i++) {
                 let encrypted_private = account.encrypted_private_keys[i]
                 let public_key_string = account.public_keys ?
@@ -561,7 +561,7 @@ export default class ImportKeys extends Component {
                             // This was creating a unresponsive chrome browser 
                             // but after the results were shown.  It was probably  
                             // caused by garbage collection.
-                            public_key_string = config.address_prefix +
+                            public_key_string = chain_config.address_prefix +
                                 public_key_string.substring(3)
                     }
                     this.state.imported_keys_public[public_key_string] = true

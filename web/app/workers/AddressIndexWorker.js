@@ -1,6 +1,5 @@
 
-var key = require('common/key_utils')
-var chain_config = require('chain/config')
+var key = require('@graphene/ecc').key
 
 onmessage = function(event) { try {
     console.log("AddressIndexWorker start");

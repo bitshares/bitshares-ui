@@ -1,6 +1,6 @@
 require("babel/polyfill");
-var key = require('common/key_utils')
-var Aes = require('ecc/aes')
+var key = require('@graphene/ecc').key
+var Aes = require('@graphene/ecc').Aes
 
 onmessage = function(event) { try {
     console.log("AesWorker start");

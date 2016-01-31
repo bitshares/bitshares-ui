@@ -4,8 +4,8 @@ import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
-import validation from "common/validation"
-import ChainStore from "api/ChainStore"
+import { validation } from "@graphene/chain"
+import { ChainStore } from "@graphene/chain"
 import AccountRefsStore from "stores/AccountRefsStore"
 import AddressIndex from "stores/AddressIndex"
 import SettingsStore from "stores/SettingsStore"

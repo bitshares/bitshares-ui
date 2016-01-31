@@ -6,7 +6,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import BlockchainStore from "stores/BlockchainStore";
-import ChainStore from "api/ChainStore"
+import { ChainStore } from "@graphene/chain"
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";

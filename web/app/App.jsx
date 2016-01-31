@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, Redirect} from "react-router";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
-import Apis from "rpc_api/ApiInstances";
+import { Apis } from "@graphene/chain";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
@@ -50,7 +50,7 @@ import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManagerStore from "stores/WalletManagerStore";

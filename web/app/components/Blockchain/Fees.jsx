@@ -8,8 +8,8 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import EquivalentValueComponent from "../Utility/EquivalentValueComponent";
-import {operations} from "chain/chain_types";
-
+import {chain_types} from "@graphene/chain";
+let {operations} = chain_types;
 let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids

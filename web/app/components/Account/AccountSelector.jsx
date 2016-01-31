@@ -1,14 +1,14 @@
 import React from "react";
 import utils from "common/utils";
-import validation from "common/validation";
+import { validation } from "@graphene/chain";
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
 import counterpart from "counterpart";
-import PublicKey from "ecc/key_public";
+import { PublicKey } from "@graphene/ecc";
 import Icon from "../Icon/Icon";
 
 /**

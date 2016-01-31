@@ -9,10 +9,10 @@ import AccountActions from "../src/actions/AccountActions"
 import WalletActions from "../src/actions/WalletActions"
 import WalletDb from "../src/stores/WalletDb"
 
-import ApiInstances from "../src/rpc_api/ApiInstances"
+import Apis from "@graphene/chain"
 import WalletApi from "../src/rpc_api/WalletApi"
 import ApplicationApi from "../src/rpc_api/ApplicationApi"
-import PrivateKey from "../src/ecc/key_private"
+import { PrivateKey} from "@graphene/ecc"
 
 import th from "./test_helper"
 import secureRandom from "secure-random"
@@ -30,7 +30,7 @@ describe( "wallet_actions", ()=> {
     //this.setTimeout(it(), 3 * 1000)
     
     beforeEach( done => {
-        api = ApiInstances.instance()
+        api = Apis.instance()
         api.init_promise.then( ()=>  {
             iDB.set_impl(fakeIndexedDB)
             var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()

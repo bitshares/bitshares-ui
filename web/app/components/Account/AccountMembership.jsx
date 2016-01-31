@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import LoadingIndicator from "../LoadingIndicator";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Statistics from "./Statistics";

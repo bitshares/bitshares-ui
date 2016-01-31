@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from "react"
 import cname from "classnames"
-import hash from "common/hash"
+import { hash } from "@graphene/ecc"
 import Translate from "react-translate-component";
 import dictionary from "common/dictionary_en"
 

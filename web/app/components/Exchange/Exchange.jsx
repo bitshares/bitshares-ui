@@ -18,7 +18,7 @@ import {Link} from "react-router";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import BindToChainState from "../Utility/BindToChainState";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";

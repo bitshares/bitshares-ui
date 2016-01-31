@@ -6,14 +6,14 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import utils from "common/utils";
-import PublicKey from "ecc/key_public";
+import { PublicKey } from "@graphene/ecc";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/ChainStore";
-import validation from "common/validation"
+import { ChainStore } from "@graphene/chain";
+import { validation } from "@graphene/chain"
 import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
-import {FetchChainObjects} from "api/ChainStore";
+import {FetchChainObjects} from "@graphene/chain";
 import AccountPermissionsList from "./AccountPermissionsList";
 import PubKeyInput from "../Forms/PubKeyInput";
 import Tabs, {Tab} from "../Utility/Tabs";

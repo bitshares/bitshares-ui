@@ -1,8 +1,8 @@
 import alt from "alt-instance"
 import connectToStores from "alt/utils/connectToStores"
-import key from "common/key_utils"
+import { key } from "@graphene/ecc"
 import Immutable from "immutable"
-import ChainStore from "api/ChainStore"
+import { ChainStore } from "@graphene/chain"
 import BaseStore from "stores/BaseStore"
 import BrainkeyActions from "actions/BrainkeyActions"
 

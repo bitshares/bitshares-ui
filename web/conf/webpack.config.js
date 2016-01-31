@@ -55,11 +55,11 @@ module.exports = function(options) {
     var config = {
         entry: {
             app: options.prod ?
-                path.resolve(root_dir, "app/Main.js") :
+                rpath("app/Main.js") :
                 [
                     "webpack-dev-server/client?http://localhost:8080",
                     "webpack/hot/only-dev-server",
-                    path.resolve(root_dir, "app/Main-dev.js")
+                    rpath("app/Main-dev.js")
                 ]
         },
         output: {
@@ -79,7 +79,7 @@ module.exports = function(options) {
                 },
                 { 
                     test: /\.js$/,
-                    exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
+                    exclude: [/node_modules/, rpath("../dl/node_modules")],
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true}
                 },
@@ -97,15 +97,15 @@ module.exports = function(options) {
             ]
         },
         resolve: {
-            alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
-            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src"), rpath("../plasma/libraries")],
+            alias: {bytebuffer: rpath("../dl/node_modules/bytebuffer")},
+            root: [rpath("./app"), rpath("../dl/src"), rpath("../plasma/libraries/chain"), rpath("../plasma/libraries")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
             modulesDirectories: ["node_modules"],
-            fallback: [path.resolve(root_dir, "./node_modules")]
+            fallback: [rpath("./node_modules")]
         },
         resolveLoader: {
             root: path.join(root_dir, "node_modules"),
-            fallback: [path.resolve(root_dir, "./node_modules")]
+            fallback: [rpath("./node_modules"), rpath("../plasma")]
         },
         plugins: plugins,
         root: outputPath,

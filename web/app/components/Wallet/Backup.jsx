@@ -13,9 +13,9 @@ import BackupActions, {backup, restore, decryptWalletBackup} from "actions/Backu
 import notify from "actions/NotificationActions"
 import {saveAs} from "common/filesaver.js"
 import cname from "classnames"
-import hash from "common/hash"
+import { hash } from "@graphene/ecc"
 import Translate from "react-translate-component";
-import chain_config from "chain/config"
+import { chain_config } from "@graphene/chain"
 
 class BackupBaseComponent extends Component {
     

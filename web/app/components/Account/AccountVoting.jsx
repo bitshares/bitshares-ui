@@ -9,11 +9,11 @@ import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/ChainStore";
-import validation from "common/validation"
+import { ChainStore } from "@graphene/chain";
+import { validation } from "@graphene/chain"
 import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
-import {FetchChainObjects} from "api/ChainStore";
+import {FetchChainObjects} from "@graphene/chain";
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";
 import HelpContent from "../Utility/HelpContent";

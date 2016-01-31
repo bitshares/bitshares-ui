@@ -2,19 +2,19 @@ import alt from "alt-instance"
 import BaseStore from "stores/BaseStore"
 
 import iDB from "idb-instance";
-import Apis from "rpc_api/ApiInstances"
-import key from "common/key_utils";
+import { Apis } from "@graphene/chain"
+import { key } from "@graphene/ecc"
 import idb_helper from "idb-helper";
 import _ from "lodash";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
-import PrivateKey from "ecc/key_private"
+import { PrivateKey } from "@graphene/ecc";
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
-import chain_config from "chain/config"
-import ChainStore from "api/ChainStore"
+import { chain_config } from "@graphene/chain"
+import { ChainStore } from "@graphene/chain"
 import AddressIndex from "stores/AddressIndex"
 
 var aes_private
@@ -72,7 +72,7 @@ class WalletDb extends BaseStore {
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
     }
     
-    /** @return ecc/PrivateKey or null */
+    /** @return PrivateKey or null */
     getPrivateKey(public_key) {
         if(! public_key) return null
         if(public_key.Q) public_key = public_key.toPublicKeyString()

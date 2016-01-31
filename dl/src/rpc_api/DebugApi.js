@@ -1,10 +1,7 @@
-//var helper = require('../chain/transaction_helper')
-//var ops = require('../chain/signed_transaction')
-var type = require('../chain/serializer_operation_types')
-var v = require('../chain/serializer_validation')
-var Serializer = require('../chain/serializer')
-var config = require('../chain/serializer_config')
-var PrivateKey = require('../ecc/key_private')
+import assert from "assert"
+import { PrivateKey } from "@graphene/ecc"
+
+var type = require('@graphene/chain').types
 var ApplicationApi = require('./ApplicationApi')
 
 class DebugApi {
@@ -14,9 +11,9 @@ class DebugApi {
     }
     
     type(operation_name) {
-        v.required(operation_name, "operation_name")
+        assert(operation_name, "operation_name")
         var operation_type = type[operation_name]
-        v.required(operation_type, "unknown operation name " + operation_name)
+        assert(operation_type, "unknown operation name " + operation_name)
         return operation_type
     }
     
@@ -27,15 +24,9 @@ class DebugApi {
     
     hex_dump(operation_name, object) {
         var operation_type = this.type(operation_name)
-        v.required(object, "transaction json object")
+        assert(object, "transaction json object")
         var operation = operation_type.fromObject(object)
-        var hex_dump = config.hex_dump
-        try {
-            config.hex_dump = true
-            return operation_type.toObject(operation)
-        } finally {
-            config.hex_dump = hex_dump
-        }
+        return operation_type.toObject(operation, { hex_dump: true })
     }
     
 }

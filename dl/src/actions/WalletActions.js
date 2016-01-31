@@ -2,17 +2,11 @@ import WalletDb from "stores/WalletDb"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import ApplicationApi from "../rpc_api/ApplicationApi"
-import PrivateKey from "../ecc/key_private"
-import Apis from "../rpc_api/ApiInstances"
-import ops from "../chain/signed_transaction"
-import chain_types from "../chain/chain_types"
-import lookup from "chain/lookup"
-import PublicKey from "ecc/key_public"
-import Address from "ecc/address"
+import { PrivateKey, PublicKey, Address } from "@graphene/ecc"
+import { TransactionBuilder, Apis, ops, chain_types, lookup } from "@graphene/chain"
 import alt from "alt-instance"
 import iDB from "idb-instance"
 import Immutable from "immutable"
-import config from "chain/config"
 import SettingsStore from "stores/SettingsStore"
 
 var application_api = new ApplicationApi()
@@ -121,7 +115,7 @@ class WalletActions {
     }
 
     claimVestingBalance(account, cvb) {
-        var tr = new ops.signed_transaction();
+        var tr = new TransactionBuilder();
 
         let balance = cvb.getIn(["balance", "amount"]),
             earned = cvb.getIn(["policy", 1, "coin_seconds_earned"]),
@@ -207,7 +201,7 @@ class WalletActions {
                 }
                 
                 //DEBUG console.log('... balance_claims',balance_claims)
-                var tr = new ops.signed_transaction()
+                var tr = new TransactionBuilder();
                 
                 for(let balance_claim of balance_claims) {
                     tr.add_type_operation("balance_claim", balance_claim)

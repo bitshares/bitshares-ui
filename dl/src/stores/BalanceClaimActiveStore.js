@@ -1,18 +1,16 @@
 import alt from "alt-instance"
 import Immutable from "immutable"
 
-import Address from "ecc/address"
-import PublicKey from "ecc/key_public"
-import key from "common/key_utils"
+import { Address, PublicKey } from "@graphene/ecc"
+import { key } from "@graphene/ecc"
 import BaseStore from "stores/BaseStore"
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 import iDB from "idb-instance"
-import config from "chain/config"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletActions from "actions/WalletActions"
-import ChainStore from "api/ChainStore"
+import { ChainStore } from "@graphene/chain"
 
 class BalanceClaimActiveStore extends BaseStore {
     
