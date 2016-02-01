@@ -66,6 +66,7 @@ import createBrowserHistory from 'history/lib/createHashHistory';
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
+import Chat from "./components/Chat/Chat";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -151,6 +152,7 @@ class App extends React.Component {
                     </div>
                     <Footer synced={this.state.synced}/>
                     <ReactTooltip place="top" type="dark" effect="solid"/>
+                    <Chat />
                 </div>
             );
         }

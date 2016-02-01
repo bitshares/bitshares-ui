@@ -838,5 +838,13 @@
         meta: {
             open_website: "Open Website"
         }
+    },
+    chat: {
+        title: "Trollbox",
+        button: "Chat",
+        send: "Send",
+        color: "Username color",
+        user: "Username",
+        done: "Done"
     }
 };
