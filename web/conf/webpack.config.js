@@ -81,7 +81,7 @@ module.exports = function(options) {
                     test: /\.js$/,
                     exclude: [/node_modules/, rpath("../dl/node_modules")],
                     loader: "babel-loader",
-                    query: {compact: false, cacheDirectory: true}
+                    query: {compact: false, cacheDirectory: true, presets: ['es2015', 'stage-0'] },
                 },
                 { test: /\.json/, loader: "json" },
                 { test: /\.coffee$/, loader: "coffee-loader" },
@@ -98,14 +98,14 @@ module.exports = function(options) {
         },
         resolve: {
             alias: {bytebuffer: rpath("../dl/node_modules/bytebuffer")},
-            root: [rpath("./app"), rpath("../dl/src"), rpath("../plasma/libraries/chain"), rpath("../plasma/libraries")],
+            root: [rpath("./app"), rpath("../dl/src"), rpath("../plasma/libraries")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
             modulesDirectories: ["node_modules"],
             fallback: [rpath("./node_modules")]
         },
         resolveLoader: {
             root: path.join(root_dir, "node_modules"),
-            fallback: [rpath("./node_modules"), rpath("../plasma")]
+            fallback: [rpath("./node_modules")]
         },
         plugins: plugins,
         root: outputPath,
