@@ -19,7 +19,7 @@
         logout: "Çıkış",
         settings: "Ayarlar",
         current: "Kullanılan Hesap",
-        create_account: "Hesap Oluştur",
+        create_account: "Oluştur",
         create_asset: "Aktif Oluştur",
         update_asset: "Aktif Güncelle",
         lock: "Kiliti Kapat",
@@ -39,7 +39,7 @@
         name: "Hesap adı",
         id: "Hesap Kimlik",
         more: "fazlası",
-        deposit_withdraw: "Yatır/Çek",
+        deposit_withdraw: "Yatır / Çek",
         as_collateral: "Teminat",
         open_orders: "Açık emirler",
         total_value: "Toplam değeri",
@@ -50,19 +50,19 @@
         show_ignored: "Yok sayılanı göster",
         hide_ignored: "Yok sayılanı gizle",
         whitelist: {
-            title: "Beyazliste",
-            black: "Karaliste",
+            title: "Beyaz Liste",
+            black: "Kara Liste",
             add: "Beyaz listeye ekle",
-            add_black: "Karalisteye ekle",
-            empty: "%(account)s herhangi bir hesabı beyazlisteye eklemedi.",
-            empty_black: "%(account)s herhangi bir hesabı karalisteye eklemedi.",
-            white_by: "Beyazlisteye alındı",
-            black_by: "Karalisteye alındı",
-            empty_white_by: "%(account)s adlı hesabı beyazlisteye alan olmadı.",
-            empty_black_by: "%(account)s adlı hesabı karalisteye alan olmadı."
+            add_black: "Kara listeye ekle",
+            empty: "%(account)s herhangi bir hesabı beyaz listeye eklemedi.",
+            empty_black: "%(account)s herhangi bir hesabı kara listeye eklemedi.",
+            white_by: "Beyaz listeye alındı",
+            black_by: "Kara listeye alındı",
+            empty_white_by: "%(account)s adlı hesabı beyaz listeye alan olmadı.",
+            empty_black_by: "%(account)s adlı hesabı kara listeye alan olmadı."
         },
         vesting: {
-            title: "Tutulan bakiyeler",
+            title: "Tutulan Bakiyeler",
             balance_number: "Bakiye #%(id)s",
             no_balances: "Bu hesaba ait tutulan bir bakiye yok"
         },
@@ -123,9 +123,9 @@
             new_issuer: "Yeni sahip hesabı",
             flags: "Bayraklar",
             charge_market_fee: "Piyasa ücretinin etkin kıl",
-            override_authority: "Aktifi ihraç eden geri kendine transfer edebilir",
+            override_authority: "Aktifi geri transfer edebilir",
             transfer_restricted: "İhrac eden tüm transferleri onlaylamak zorunda",
-            disable_confidential: "Özel işlemleri etkisizleştir",
+            disable_confidential: "Gizli işlemler etkisiz",
             white_list: "Tutanları beyaz-listelemeyi gerektir",
             witness_fed_asset: "Tanıkların fiyat beslemelerine müsade et",
             committee_fed_asset: "Kurul üyelerinin fiyat beslemelerine müsade et",
@@ -138,7 +138,7 @@
         },
         connections: {
             known: "Tarafından Tanınıyor",
-            "black": "Tarafından Karalistelenmiş"
+            "black": "Tarafından Kara listelenmiş"
         },
         perm: {
             active: "Etkin İzinler",
@@ -182,7 +182,7 @@
             add_committee: "Ekle",
             add_committee_label: "Kurul Üyesi",
             add_witness_label: "Tanık",
-            approve_worker: "Onayla",
+            approve_worker: "Kabul",
             reject_worker: "Reddet",
             worker_account: "Emekçi hesabı",
             total_votes: "Net oylar",
@@ -219,7 +219,7 @@
         history: "Geçmiş",
         payees: "Alıcılar",
         permissions: "İzinler",
-        voting: "Oylama",
+        voting: "Seçimler",
         orders: "Emirler",
         select_placeholder: "Hesap Seç...",
         errors: {
@@ -231,7 +231,7 @@
         collaterals: "Teminat Pozisyonları",
         eq_value: "Eş Değeri",
         percent: "Toplam arzın yüzdesi",
-        please_create_account: "Lütfen bir hesap açın",
+        please_create_account: "Lütfen bir hesap oluşturun",
         create_account: "Hesap oluştur",
         identicon: "Identicon",
         pay_from: "Buradan öde",
@@ -447,9 +447,9 @@
         },
         whitelist_states: {
             no_listing: "Listeleye alınmamış",
-            white_listed: "Beyazlisteye alınmış",
-            black_listed: "Karalisteye alınmış",
-            white_and_black_listed: "Beyazlisteye ve karalisteye alınmış"
+            white_listed: "Beyaz listeye alınmış",
+            black_listed: "Kara listeye alınmış",
+            white_and_black_listed: "Beyaz ve kara listeye alınmış"
         }
     },
     explorer: {
@@ -545,8 +545,8 @@
                 title: "İzinler",
                 max_market_fee: "Max piyasa ücreti",
                 max_supply: "Max arz",
-                blacklist_authorities: "Karaliste yetkiler",
-                blacklist_markets: "Karaliste piyasları",
+                blacklist_authorities: "Kara liste yetkiler",
+                blacklist_markets: "Kara liste piyasları",
                 whitelist_authorities: "Beyaz Liste yetkiler",
                 whitelist_markets: "Beyaz Liste piyasaları"
             },
@@ -694,7 +694,7 @@
     },
     wallet: {
         title: "Cüzdan",
-        confirm: "Parola (onayla)",
+        confirm: "Parola (teyit)",
         password: "Parola",
         existing_password: "Mevcut parola",
         change_password: "Parolayı Değiştir",
