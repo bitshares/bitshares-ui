@@ -1028,11 +1028,11 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical ps-container")} >
+                    <div className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
-                            <div className="grid-block overflow-visible">
+                            <div className="grid-block no-overflow">
                                 <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
                                     <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
                                 </div>
@@ -1121,7 +1121,7 @@ class Exchange extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div ref="center">
+                        <div className="grid-block vertical no-padding market-right-padding" id="CenterContent" ref="center">
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink" id="market-charts" style={{marginTop: 0}}>
                                 {/* Price history chart */}

@@ -95,7 +95,7 @@ class BuySell extends React.Component {
                                     <input type="number" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
                                 </div>
                                 <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
-                                    {base.get("symbol")}/{quote.get("symbol")}
+                                    {base.get("symbol")}
                                 </div>
                             </div>
 
@@ -145,8 +145,12 @@ class BuySell extends React.Component {
                                           <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceAmount === 0 ? 0 : balanceAmount - fee)}>{utils.format_number(balanceAmount, balancePrecision)}</span> {balanceSymbol}
                                       </div>
                                       <div className="buy-sell-info">
-                                          <div style={{display: "inline-block", minWidth: "7rem"}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</div>
-                                          {currentPrice ? <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}><PriceText price={currentPrice} quote={quote} base={base} />&nbsp;{base.get("symbol")}/{quote.get("symbol")}</span> : null}
+                                            <div style={{display: "inline-block", minWidth: "7rem"}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</div>
+                                            {currentPrice ? (
+                                            <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
+                                                <PriceText price={currentPrice} quote={quote} base={base} />
+                                                <span> {base.get("symbol")}</span>
+                                            </span>) : null}
                                       </div>
                                   </div>
                                     {disabledText ?

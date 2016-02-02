@@ -89,7 +89,9 @@ class OrderBook extends React.Component {
         super();
         this.state = {
             hasCentered: false,
-            flip: props.flipOrderBook
+            flip: props.flipOrderBook,
+            showAllBids: false,
+            showAllAsks: false
         };
     }
 
@@ -100,6 +102,8 @@ class OrderBook extends React.Component {
                 !Immutable.is(nextProps.calls, this.props.calls) ||
                 nextProps.horizontal !== this.props.horizontal ||
                 nextState.flip !== this.state.flip ||
+                nextState.showAllBids !== this.state.showAllBids ||
+                nextState.showAllAsks !== this.state.showAllAsks ||
                 nextProps.latest !== this.props.latest
             );
     }
@@ -118,7 +122,9 @@ class OrderBook extends React.Component {
             Ps.initialize(bidsContainer);
         } else {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
-            Ps.initialize(bidsContainer);            
+            Ps.initialize(bidsContainer);
+            let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
+            Ps.initialize(asksContainer);            
         }
     }
 
@@ -137,7 +143,9 @@ class OrderBook extends React.Component {
             Ps.update(bidsContainer);
         } else {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
-            Ps.update(bidsContainer);            
+            Ps.update(bidsContainer);         
+            let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
+            Ps.update(asksContainer);     
         }
     }
 
@@ -158,8 +166,22 @@ class OrderBook extends React.Component {
         this.setState({flip: !this.state.flip});
     }
 
+    _onToggleShowAll(type) {
+        if (type === "asks") {
+            this.setState({
+                showAllAsks: !this.state.showAllAsks
+            });
+        } else {
+            this.setState({
+                showAllBids: !this.state.showAllBids
+            });
+        }
+    }
+
     render() {
         let {combinedBids, combinedAsks, quote, base, quoteSymbol, baseSymbol, horizontal} = this.props;
+        let {showAllAsks, showAllBids} = this.state;
+
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
 
@@ -218,6 +240,7 @@ class OrderBook extends React.Component {
 
             let totalAskAmount = 0;
             let totalAskValue = 0;
+
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
             }).filter(a => {
@@ -257,29 +280,42 @@ class OrderBook extends React.Component {
                 } else {
                     return parseFloat(b.key) - parseFloat(a.key);
                 }
-            });
+            })
         }
 
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.get("precision")) : "0";
 
         if (this.props.horizontal) {
+            if (!showAllBids) {
+                bidRows.splice(13, bidRows.length);
+            }
+
+            if (!showAllAsks) {
+                askRows.splice(13, askRows.length);
+            }
+
             return (
-                    <div ref="hor_bids"  className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content" style={{maxHeight: "400px"}}>
+                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content">
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                             <div className="exchange-content-header"><Translate content="exchange.asks" /></div>
-                            <table className="table order-table table-hover text-right">
+                            <table className="table order-table table-hover text-right no-overflow">
                                 <thead>
                                     <tr key="top-header" className="top-header">
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
-                                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
                                     </tr>
                                 </thead>
-                                <tbody id="test" className="orderbook orderbook-top">
-                                    {askRows}
-                                </tbody>
                             </table>
+                            <div className="grid-block no-padding market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 299}}>
+                                <table className="table order-table table-hover text-right no-overflow">
+                                    <tbody className="orderbook orderbook-top">
+                                        {askRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {askRows.length > 13 ? <div className="orderbook-showall"><div onClick={this._onToggleShowAll.bind(this, "asks")} className="button outline"><Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} /></div></div> : null}
                         </div>
                         <div className="grid-block vertical align-center text-center no-padding shrink order-2">
                             <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem", paddingBottom: "1rem"}}>&#8646;</span>
@@ -287,19 +323,24 @@ class OrderBook extends React.Component {
                         </div>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
                             <div className="exchange-content-header"><Translate content="exchange.bids" /></div>
-                            <table className="table order-table table-hover text-right">
+                            <table className="table order-table table-hover text-right market-right-padding">
                                 <thead>
                                     <tr key="top-header" className="top-header">
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
-                                        <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                        <th style={{textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
+                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
                                     </tr>
                                 </thead>
-                                <tbody className="orderbook ps-container orderbook-bottom">
-                                    {bidRows}
-                                </tbody>
-                            </table>
+                            </table>    
+                            <div className="grid-block no-padding market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 299}}>
+                                <table className="table order-table table-hover text-right">
+                                    <tbody className="orderbook orderbook-bottom">
+                                        {bidRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {bidRows.length > 13 ? <div className="orderbook-showall"><div onClick={this._onToggleShowAll.bind(this, "bids")} className="button outline "><Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} /></div></div> : null}
                         </div>
                     </div>
             );

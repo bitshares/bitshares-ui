@@ -677,7 +677,10 @@
         borrow: "Borrow",
         no_balance: "Insufficient balance",
         invalid_amount: "Invalid amount",
-        invalid_price: "Invalid price"
+        invalid_price: "Invalid price",
+        show_bids: "Show all bids",
+        show_asks: "Show all asks",
+        hide: "Hide"        
     },
     fees: {
      title: "Fee Schedule"
