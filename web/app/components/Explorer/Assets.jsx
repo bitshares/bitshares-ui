@@ -140,7 +140,7 @@ class Assets extends React.Component {
                 <tr key={asset.id.split(".")[2]}>
                     <td style={{width: "80%"}}>
                         <div style={{paddingTop: 10, fontWeight: "bold"}}>
-                            {asset.symbol}
+                            <Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link>
                         </div>
                         {asset.options.description ? 
                         <div style={{padding: "10px 20px 5px 0", lineHeight: "18px"}}>
