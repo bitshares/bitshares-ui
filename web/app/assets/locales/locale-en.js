@@ -680,7 +680,8 @@
         invalid_price: "Invalid price",
         show_bids: "Show all bids",
         show_asks: "Show all asks",
-        hide: "Hide"        
+        hide: "Hide",
+        short: "Short"
     },
     fees: {
      title: "Fee Schedule"

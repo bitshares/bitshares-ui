@@ -32,7 +32,8 @@ class BuySell extends React.Component {
                 nextProps.balance !== this.props.balance ||
                 nextProps.account !== this.props.account ||
                 nextProps.className !== this.props.className ||
-                nextProps.fee !== this.props.fee
+                nextProps.fee !== this.props.fee ||
+                nextProps.isPredictionMarket !== this.props.isPredictionMarket
             );
     }
 
@@ -49,7 +50,7 @@ class BuySell extends React.Component {
     }
 
     render() {
-        let {type, quote, base, amountChange, fee,
+        let {type, quote, base, amountChange, fee, isPredictionMarket,
             priceChange, onSubmit, balance, totalPrecision, totalChange,
             balancePrecision, quotePrecision, currentPrice, currentPriceObject} = this.props;
         let amount, price, total;
@@ -65,16 +66,20 @@ class BuySell extends React.Component {
 
         let hasBalance = type === "bid" ? balanceAmount >= parseFloat(total) : balanceAmount >= parseFloat(amount);
 
-        let buttonText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
-        let disabled = !((balanceAmount > 0 && hasBalance) && amount > 0 && price > 0);
+        let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
+
+        let noBalance = isPredictionMarket ? false : !(balanceAmount > 0 && hasBalance);
+        let invalidPrice = !(price > 0);
+        let invalidAmount = !(amount >0);
+
+        let disabled = noBalance || invalidPrice || invalidAmount;
 
         let buttonClass = classNames("button buySellButton", type, {disabled: disabled});
         let balanceSymbol = type === "bid" ? base.get("symbol") : quote.get("symbol");
 
 
-        let noBalance = !(balanceAmount > 0 && hasBalance);
-        let invalidPrice = !(price > 0);
-        let invalidAmount = !(amount >0);
+
+
 
         let disabledText = invalidPrice ? counterpart.translate("exchange.invalid_price") :
                            invalidAmount ? counterpart.translate("exchange.invalid_amount") :
@@ -157,13 +162,12 @@ class BuySell extends React.Component {
                                         (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
                                             <input className={buttonClass} type="submit" value={buttonText} />
                                         </div>) :
-                                        (<div className="float-right">
+                                        (<div className="float-right" data-tip={""}>
                                             <input className={buttonClass} type="submit" value={buttonText} />
                                         </div>)
                                     }
 
                               </div>
-
                         </div>
 
                 </form>
