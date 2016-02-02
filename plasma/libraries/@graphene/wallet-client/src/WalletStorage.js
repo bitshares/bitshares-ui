@@ -166,7 +166,6 @@ export default class WalletStorage {
         if( this.private_key ) {
             throw new Error("logged_in")
         }
-        
         req(email, "email")
         req(username, "username")
         req(password, "password")

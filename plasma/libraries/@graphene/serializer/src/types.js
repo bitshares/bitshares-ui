@@ -7,7 +7,7 @@ var Serializer = require('./serializer');
 var v = require('./validation');
 var ObjectId = require('./object_id')
 var fp = require('./fast_parser');
-var chain_types = require('./chain_types')
+var chain_types = require('./ChainTypes')
 
 import { PublicKey, Address } from "@graphene/ecc"
 

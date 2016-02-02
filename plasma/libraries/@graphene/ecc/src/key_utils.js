@@ -84,24 +84,17 @@ module.exports = key = {
             throw new Error("expecting at least 32 bytes of entropy");
         }
         
-        var iterations = 0;
         var start_t = Date.now();
         
-        while (Date.now() - start_t < HASH_POWER_MILLS) {
-            var entropy = hash.sha256(entropy);
-            iterations += 1;
-        }
+        while (Date.now() - start_t < HASH_POWER_MILLS)
+            entropy = hash.sha256(entropy);
         
         var hash_array = [];
+        hash_array.push(entropy);
         
-        // Take CPU speed into consideration (add iterations)
-        hash_array.push(new Buffer(""+iterations));
-        hash_array.push(hash.sha256(entropy));
-        
-        /* Secure Random */
-        // Note, this is after hashing for 1 second. Helps to ensure the computer
-        // is not low on entropy.
+        // Hashing for 1 second may helps the computer is not low on entropy (this method may be called back-to-back).
         hash_array.push(secureRandom.randomBuffer(32));
+        
         return hash.sha256(Buffer.concat(hash_array));
     },
     

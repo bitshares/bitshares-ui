@@ -189,15 +189,11 @@ export default class TransactionBuilder {
     set_required_fees(asset_id){
         if (this.tr_buffer) { throw new Error("already finalized"); }
         if (!this.operations.length) { throw new Error("add operations first"); }
-        var operations = (() => {
-            var result = [];
-            var iterable = this.operations;
-            for (var i = 0, op; i < iterable.length; i++) {
-                op = iterable[i];
-                result.push(ops.operation.toObject(op));
-            }
-            return result;
-        })();
+        var operations = []
+        for (var i = 0, op; i < this.operations.length; i++) {
+            op = this.operations[i];
+            operations.push(ops.operation.toObject(op));
+        }
 
         if (!asset_id) {
             var op1_fee = operations[0][1].fee;
@@ -213,7 +209,7 @@ export default class TransactionBuilder {
         ];
 
         if (asset_id !== "1.3.0") {
-            // Never DO this, ChainStore.getAsset can return "undefined"
+            // Always expect the ChainStore to return null or undefined.  I have commented out these un-used lines; noting that this could have cause an exception:
             // var asset = ChainStore.getAsset(asset_id);
             // var fee_pool = asset.getIn(["dynamic", "fee_pool"]);
             promises.push(Apis.instance().db_api().exec( "get_required_fees", [operations, "1.3.0"]));
@@ -253,19 +249,19 @@ export default class TransactionBuilder {
             
             var asset_index = 0;
             var end = this.operations.length;
+            var set_fee = function(operation) {
+                operation.fee =  flat_assets[ asset_index++ ];
+                if (operation.proposed_ops) {
+                    return (() => {
+                        var result = [];
+                        for (var y = 0; 0 < operation.proposed_ops.length ? y < operation.proposed_ops.length : y > operation.proposed_ops.length; 0 < operation.proposed_ops.length ? y++ : y++) {
+                            result.push(set_fee(operation.proposed_ops[y].op[1]));
+                        }
+                        return result;
+                    })();
+                }
+            };
             for (var i = 0; 0 < end ? i < end : i > end; 0 < end ? i++ : i++) {
-                var set_fee = function(operation) {
-                    operation.fee =  flat_assets[ asset_index++ ];
-                    if (operation.proposed_ops) {
-                        return (() => {
-                            var result = [];
-                            for (var y = 0; 0 < operation.proposed_ops.length ? y < operation.proposed_ops.length : y > operation.proposed_ops.length; 0 < operation.proposed_ops.length ? y++ : y++) {
-                                result.push(set_fee(operation.proposed_ops[y].op[1]));
-                            }
-                            return result;
-                        })();
-                    }
-                };
                 set_fee(this.operations[i][1]);
             }
             //DEBUG console.log('... get_required_fees',operations,asset_id,flat_assets)

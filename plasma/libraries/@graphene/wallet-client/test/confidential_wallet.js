@@ -19,7 +19,7 @@ global.localStorage = require('localStorage')
 const storage = new LocalStoragePersistence("wallet_spec")
 
 let wallet, cw
-let create = (name = "a1", brainkey = "brainkey")=> cw.createBlindAccount(name, brainkey)
+let create = (name = "a1", brainkey = "brainkey", _cw = cw)=> _cw.createBlindAccount(name, brainkey)
 
 function initWallet() {
     storage.clear()
@@ -27,7 +27,7 @@ function initWallet() {
     cw = new ConfidentialWallet(wallet)
 }
 
-describe('Confidential Wallet', () => {
+describe('Confidential wallet', () => {
     
     beforeEach(()=> initWallet())
     
@@ -111,12 +111,12 @@ describe('Confidential Wallet', () => {
         
     })
     
-    it("Blind transfers", function () {
-        
+    it("account to blind transfers", function() {
+
         wallet.login(username, password, email, Apis.chainId())
         
-        create("alice", "alice-brain-key")
-        create("bob", "bob-brain-key")
+        create("alice", "alice-brain-key", cw)
+        create("bob", "bob-brain-key", cw)
         
         let key = PrivateKey.fromSeed("")
         cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "nathan" )
@@ -126,24 +126,46 @@ describe('Confidential Wallet', () => {
         
         return Promise.resolve()
         
-            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",1000]], true ))
+            // to single blind address
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",100]], true ))
             .then( tx => assert(tx.outputs, "tx.outputs") )
             
-            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",100], ["bob",10]], true ))
+            // to double blind addresses
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",10], ["bob",1]], true ))
             .then( tx => assert(tx.outputs, "tx.outputs") )
             
             .then( () => cw.getBlindBalances("alice") )
-            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "111000000" }) )
-            
-            .then( ()=> cw.blindHistory("alice") )
-            .then( receipts => assert(receipts.size > 0, "expecting receipt(s)") )
+            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "111" + "00000" }) )
             
             .then( ()=> cw.transferFromBlind("alice", "nathan", 1, "CORE", true) )
             .then( tx => assert(tx.outputs, "tx.outputs") )
             
-            .then( ()=> cw.blindTransfer("alice", "bob", 1, "CORE", true) )
+            .then( ()=> cw.blindHistory("alice") )
+            .then( receipts => assert(receipts.size > 0, "expecting receipt(s)") )
+    })
+    
+    it("blind to blind transfer", function() {
+    
+        wallet.login(username, password, email, Apis.chainId())
+        
+        create("alice", "alice-brain-key", cw)
+        create("bob", "bob-brain-key", cw)
+        
+        let key = PrivateKey.fromSeed("")
+        cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "nathan" )
+        
+        // must wait for a blocks...
+        this.timeout(30 * 1000)
+        
+        return Promise.resolve()
             
-            .then( res => console.log("work-in-progress result", res) )
+            // do this just to get some money
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",100]], true ))
+            .then( tx => assert(tx.outputs, "tx.outputs") )
+            
+            .then( ()=> cw.blindTransfer("alice", "bob", 1, "CORE", false) )
+            
+            // .then( res => console.log("work-in-progress result", res) )
         
     })
     
