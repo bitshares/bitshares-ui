@@ -17,6 +17,7 @@
   "homepage": "https://cryptonomex.com",
   "dependencies": {
     "ReconnectingWebSocket": "git+https://github.com/joewalnes/reconnecting-websocket.git",
+    "websocket": "^1.0.18",
     "bigi": "^1.4.1",
     "bs58": "^3.0.0",
     "bytebuffer": "^5.0.0",

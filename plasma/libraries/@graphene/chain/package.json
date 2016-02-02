@@ -10,9 +10,10 @@
   "author": "",
   "license": "BSD-2-Clause-FreeBSD",
   "dependencies": {
-      "bigi": "^1.4.1",
-      "immutable": "^3.7.6",
-      "event-emitter": "^0.3.4"
+    "bigi": "^1.4.1",
+    "websocket": "^1.0.18",
+    "immutable": "^3.7.6",
+    "event-emitter": "^0.3.4"
   },
   "devDependencies": {
     "assert": "^1.3.0",

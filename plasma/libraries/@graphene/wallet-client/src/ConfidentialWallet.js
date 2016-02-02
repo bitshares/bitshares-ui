@@ -351,14 +351,11 @@ export default class ConfidentialWallet {
                 
                 let out = {}, conf_output
                 
-                promises.push(
-                    Apis.crypto("child", to_public.toHex(), child)
-                    .then( child_public_hex =>{
-                        let derived_child = PublicKey.fromHex(child_public_hex)
-                        console.log("derived_child.toString()", derived_child.toString())
-                        out.owner = { weight_threshold: 1, key_auths: [[ derived_child.toString(), 1 ]],
-                            account_auths: [], address_auths: []}
-                    })
+                let derived_child = to_public.child( child )
+                out.owner = { weight_threshold: 1, key_auths: [[ derived_child.toString(), 1 ]],
+                    account_auths: [], address_auths: []}
+                    
+                promises.push( Promise.resolve()
                     .then( ()=> Apis.crypto("blind", blind_factor, amount.toString()))
                     .then( ret =>{ out.commitment = ret })
                     .then( ()=>
@@ -509,8 +506,7 @@ export default class ConfidentialWallet {
                 result.data = memo
                 
                 let child_public = child_private.toPublicKey()
-                console.log("bbal[0].owner", bbal[0].owner)
-                console.log("child_public.toString()", child_public.toString())
+
                 // for(let key_pair of bbal[0].owner.key_auths) {
                 //     let pubkey = key_pair[0]
                 //     if( pubkey === child_public.toString() ) {
@@ -630,8 +626,6 @@ function fetch_blinded_balances(callback) {
     let commitments = this.commitments()
     let p1 = Apis.db("get_blinded_balances", commitments.toJS()).then( bbal => {
         
-        console.log("bbal", bbal)
-        
         for(let i = 0; i < bbal.length; i++) {
             let bal = bbal[i]
             let receipt = receipts.get(i)
@@ -722,13 +716,13 @@ function blind_transfer_help(
         .then( ()=> this.fetch_blinded_balances( (bal, receipt, commitment) =>{
                 
             receipt = receipt.toJS()
-            console.log("blind_tr.fee.amount", (""+blind_tr.fee.amount).substring(-5), amount.toString().substring(-5), amount_with_fee.toString().substring(-5))
             let control_authority = receipt.control_authority
             
-            blind_tr.inputs.push({ commitment, owner: control_authority })
+            blind_tr.inputs.push({ commitment, owner: control_authority,
+                one_time_key: receipt.conf.one_time_key })
+            
             blinding_factors.push( receipt.data.blinding_factor )
             
-            console.log("receipt.amount.amount", receipt.amount.amount)
             available_amount = longAdd(available_amount, receipt.amount.amount)
             
             // return false to "break"
@@ -775,12 +769,11 @@ function blind_transfer_help(
                 
                 let to_out = { }
 
-                return Apis.crypto("child", to_key.toHex(), child).then( child_public_hex =>{
-                    let derived_child = PublicKey.fromHex(child_public_hex)
-                    to_out.owner = to_temp ? authority() :
-                        authority({ key_auths: [[ derived_child.toString(), 1 ]] })
-                })
+                let derived_child = to_key.child( child )
+                to_out.owner = to_temp ? authority() :
+                    authority({ key_auths: [[ derived_child.toString(), 1 ]] })
                 
+                return Promise.resolve()
                 .then( ()=> Apis.crypto("blind", blind_factor, amount.toString()))
                 .then( ret => to_out.commitment = ret )
                 
@@ -796,8 +789,9 @@ function blind_transfer_help(
                    } else {
                         
                         let change_out = {}
-                        
-                        // console.log("amount,change,amount_with_fee", amount.toString(),change.toString(),amount_with_fee.toString())
+                        let derived_child = from_key.child( from_child )
+                        change_out.owner =
+                            authority({ key_auths: [[ derived_child.toString(), 1 ]] })
                         
                         rp_promise = Apis.crypto(
                             "range_proof_sign",
@@ -805,12 +799,6 @@ function blind_transfer_help(
                             nonce, 0, 0, amount
                         )
                         .then( res => to_out.range_proof = res)
-                        
-                        .then( ()=> Apis.crypto("child", from_key.toHex(), from_child) )
-                        .then( res =>
-                            change_out.owner =
-                                authority({ key_auths: [[ PublicKey.fromHex(res).toString(), 1 ]] })
-                         )
                         
                         .then( ()=> Apis.crypto("blind", change_blind_factor, change) )
                         .then( res => change_out.commitment = res )
@@ -881,17 +869,15 @@ function blind_transfer_help(
                         
                         let tr = new TransactionBuilder()
                         tr.add_type_operation("blind_transfer", blind_tr)
+                        
                         let signer = this.getPrivateKey(from_key_or_label)
-                        if( signer ) tr.add_signer( signer )
-
-// console.log("blind_tr.inputs", blind_tr.inputs)
-                        for(let input of blind_tr.inputs) {
-                            for(let key of input.owner.key_auths) {
-                                console.log("key[0]", key[0])
-                                let k = this.getPrivateKey( key[0] )
-                                tr.add_signer( k )
-                            }
-                        }
+                        tr.add_signer(signer.child(from_child))
+                        // if( signer ) tr.add_signer( signer )
+                        
+                        // for(let input of blind_tr.inputs) {
+                        //     let one_time_key = input.one_time_key
+                        //     console.log("one_time_key", one_time_key)
+                        // }
                         
                         return tr.process_transaction(this, null, broadcast).then(()=> {
                             
@@ -941,7 +927,6 @@ function get_blind_transfer_fee(asset_id, operation_count = 2) {
     tr.add_type_operation("blind_transfer", object)
     return tr.set_required_fees(asset_id).then(()=>{
         let fee = tr.operations[0][1].fee
-        console.log("blind_transfer", object, fee)
         assert.equal( asset_id, fee.asset_id, "expecting fee asset_id to match" )
         return fee
     })

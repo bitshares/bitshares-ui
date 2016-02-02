@@ -37,7 +37,7 @@ describe('Confidential wallet', () => {
     
     // afterEach(()=> wallet.logout())
 
-    it('Keys', ()=> {
+    it('keys', ()=> {
         
         wallet.login(username, password, email, Apis.chainId())
         
@@ -77,7 +77,7 @@ describe('Confidential wallet', () => {
         assert( cw.getPublicKey("") === null, "fetch key should return null")
     })
     
-    it('Accounts', ()=> {
+    it('accounts', ()=> {
         
         assert.throws(create, /login/, "This test should require an unlocked wallet" )
         
@@ -165,31 +165,11 @@ describe('Confidential wallet', () => {
             
             .then( ()=> cw.blindTransfer("alice", "bob", 1, "CORE", false) )
             
+            .then( () => cw.getBlindBalances("bob") )
+            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "1" + "00000" }) )
+            
             // .then( res => console.log("work-in-progress result", res) )
         
     })
-    
-    it("Crypto matches witness_node", ()=> {
-        
-        let one_time_private = PrivateKey.fromHex("8fdfdde486f696fd7c6313325e14d3ff0c34b6e2c390d1944cbfe150f4457168")
-        let to_public = PublicKey.fromStringOrThrow("GPH7vbxtK1WaZqXsiCHPcjVFBewVj8HFRd5Z5XZDpN6Pvb2dZcMqK")
-        let secret = one_time_private.get_shared_secret( to_public )
-        let child = hash.sha256( secret )
-        
-        // Check everything above with `wdump((child));` from the witness_node:
-        assert.equal(child.toString('hex'), "1f296fa48172d9af63ef3fb6da8e369e6cc33c1fb7c164207a3549b39e8ef698")
-        
-        let nonce = hash.sha256( one_time_private.toBuffer() )
-        assert.equal(nonce.toString('hex'), "462f6c19ece033b5a3dba09f1e1d7935a5302e4d1eac0a84489cdc8339233fbf")
-        
-        
-        return Apis
-            .crypto("child", to_public.toHex(), child)
-            .then( child_public => assert.equal(
-                child_public,
-                PublicKey.fromStringOrThrow("GPH6XA72XARQCain961PCJnXiKYdEMrndNGago2PV5bcUiVyzJ6iL").toHex())
-            )
-    })
-        
     
 })

@@ -1,0 +1,2 @@
+// The bablerc file here prevents babel in the sub-projects from seeing ../.babelrc
+{}

@@ -115,30 +115,19 @@ class PublicKey {
         return base58.encode(addy);
     }
     
-    // /**
-    //     @arg {Buffer} 32 bytes (sha256 hash)
-    //     @return {PublicKey} computed from sha256 hash ( this.toBuffer() + offset )
-    // */
-    // child( offset ) {
-    //     assert(Buffer.isBuffer(offset), "Buffer required: offset")
-    //     assert.equal(offset.length, 32, "offset length")
-    // 
-    //     let concat = Buffer.concat([this.toBuffer(), offset])
-    //     let digest = hash.sha256( concat )
-    //     
-    //     let b = BigInteger.fromBuffer( digest )
-    //     
-    //     // ??? fc::ecc::public_key to_pub_key = to_key
-    //     // ??? out.owner       = authority( 1, public_key_type( to_pub_key.child( child ) ), 1 );
-    //     // ??? https://github.com/cryptonomex/secp256k1-zkp/blob/bd067945ead3b514fba884abd0de95fc4b5db9ae/src/secp256k1.c#L354-L377  
-    //     // ??? secp256k1_ec_pubkey_tweak_add
-    // 
-    //     //   this.Q
-    //     //   let d = BigInteger.fromBuffer( hash.sha256(concat) ) // private key
-    //     //   let Q = secp256k1.G.multiply(d) // convert to public key
-    //     //   return PublicKey.fromPoint(Q)
-    // 
-    // }
+    child( offset ) {
+        
+        assert(Buffer.isBuffer(offset), "Buffer required: offset")
+        assert.equal(offset.length, 32, "offset length")
+        
+        offset = Buffer.concat([ this.toBuffer(), offset ])
+        offset = hash.sha256( offset )
+        
+        let c = BigInteger.fromBuffer( offset )
+        let cG = secp256k1.G.multiply(c)
+        let Qprime = this.Q.add(cG)
+        return PublicKey.fromPoint(Qprime)
+    }
 
     /* <HEX> */
     
