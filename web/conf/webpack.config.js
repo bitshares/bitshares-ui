@@ -81,7 +81,7 @@ module.exports = function(options) {
                     test: /\.js$/,
                     exclude: [/node_modules/, rpath("../dl/node_modules")],
                     loader: "babel-loader",
-                    query: {compact: false, cacheDirectory: true, presets: ['es2015', 'stage-0'] },
+                    query: {compact: false, cacheDirectory: true }, //, presets: ['es2015', 'stage-0']
                 },
                 { test: /\.json/, loader: "json" },
                 { test: /\.coffee$/, loader: "coffee-loader" },

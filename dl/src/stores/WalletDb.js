@@ -4,6 +4,7 @@ import BaseStore from "stores/BaseStore"
 import iDB from "idb-instance";
 import { Apis } from "@graphene/chain"
 import { key } from "@graphene/ecc"
+import { suggest_brain_key } from "../common/brainkey"
 import idb_helper from "idb-helper";
 import _ from "lodash";
 
@@ -204,7 +205,7 @@ class WalletDb extends BaseStore {
             var local_aes_private = Aes.fromSeed( encryption_buffer )
             
             if( ! brainkey_plaintext)
-                brainkey_plaintext = key.suggest_brain_key()
+                brainkey_plaintext = suggest_brain_key()
             else
                 brainkey_plaintext = key.normalize_brain_key(brainkey_plaintext)
             var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )

@@ -131,17 +131,6 @@ describe("Crypto", function() {
         // DEBUG console.log('... password_aes',password_aes)
         assert(password_aes !== null);
     });
-
-    // convert to mnemonic encoding (perhaps put this as a separate library)
-    // graphene-ui has a full dictionary
-    // it("suggest_brain_key", function() {
-    //     this.timeout(1500);
-    //     var entropy = secureRandom.randomBuffer(32);
-    //     var brainkey = min_time_elapsed(function(){
-    //         return key.suggest_brain_key(entropy.toString('binary'));
-    //     });
-    //     assert.equal(16, brainkey.split(' ').length);
-    // });
     
 })
 

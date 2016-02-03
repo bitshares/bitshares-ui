@@ -98,17 +98,6 @@ module.exports = key = {
         return hash.sha256(Buffer.concat(hash_array));
     },
     
-    // /** @param1 string entropy of at least 32 bytes */
-    // suggest_brain_key(entropy = this.browserEntropy()) {
-    //     
-    //     var randomBuffer = this.random32ByteBuffer(entropy);
-    //     let private_key = PrivateKey.fromBuffer(randomBuffer)
-    //     
-    //     // todo: convert to mnemonic encoding (perhaps put this as a separate library)
-    //     // until then, graphene-ui does this using a full dictionary
-    //     
-    // },
-    
     get_random_key(entropy) {
         return PrivateKey.fromBuffer(this.random32ByteBuffer(entropy));
     },

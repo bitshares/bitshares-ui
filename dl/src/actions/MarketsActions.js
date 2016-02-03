@@ -4,6 +4,8 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
 import { chain_types } from "@graphene/chain";
 import { ChainStore } from "@graphene/chain";
+
+let operations = chain_types.operations
 let ops = Object.keys(operations);
 
 let subs = {};
@@ -11,7 +13,6 @@ let currentBucketSize;
 let wallet_api = new WalletApi();
 let marketStats = {};
 let statTTL = 60 * 2 * 1000; // 2 minutes
-let operations = chain_types.operations
 
 class MarketsActions {
 

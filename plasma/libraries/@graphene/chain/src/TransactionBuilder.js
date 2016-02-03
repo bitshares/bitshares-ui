@@ -11,8 +11,8 @@ var chain_types = require('./ChainTypes');
 var chain_config = require('./config');
 var lookup = require('./lookup');
 var helper = require('./transaction_helper');
-var ChainStore = (require('./ChainStore')).default;
 
+import ChainStore from "./ChainStore"
 
 export default class TransactionBuilder {
     

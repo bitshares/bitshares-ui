@@ -1,11 +1,14 @@
 import { List } from "immutable"
+import Apis from "./src/ApiInstances"
+import ChainStore from "./src/ChainStore"
+import TransactionBuilder from "./src/TransactionBuilder"
 
 module.exports = {
     
-    Apis: require("./src/ApiInstances").default,
-    ChainStore: require("./src/ChainStore").default,
-    TransactionBuilder: require("./src/TransactionBuilder").default,
-    FetchChainObjects: require("./src/ChainStore").default.FetchChainObjects,
+    Apis,
+    ChainStore,
+    TransactionBuilder,
+    FetchChainObjects: ChainStore.FetchChainObjects,
     
     chain_types: require("./src/ChainTypes"),
     number_utils: require("./src/number_utils"),
@@ -18,7 +21,6 @@ module.exports = {
     fetchChain: (methodName, objectIds, timeout = 1900) => {
         
         let chainStore = require("./src/ChainStore")
-        let ChainStore = chainStore.default
         let method = ChainStore[methodName]
         if( ! method ) throw new Error("ChainStore does not have method " + methodName)
         

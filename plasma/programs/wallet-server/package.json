@@ -41,7 +41,7 @@
     "repl-promised": "^0.1.0",
     "repl.history": "^0.1.3"
   },
-  "babel": {
+  "_babel": {
     "presets": [
       "es2015"
     ]

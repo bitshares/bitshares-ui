@@ -2,6 +2,7 @@ import React from "react"
 import Webcam from "lib/react-webcam"
 import { PrivateKey, key } from "@graphene/ecc"
 import qr from "common/qr-image"
+import { suggest_brain_key } from "common/brainkey"
 import { hash } from "@graphene/ecc"
 
 class KeyGenComponent extends React.Component {
@@ -21,7 +22,7 @@ class KeyGenComponent extends React.Component {
 class BrainKeyUi {
     
     create(entropy_string = "add mouse entropy...") {
-        return key.suggest_brain_key(
+        return suggest_brain_key(
             key.browserEntropy() +
             entropy_string
         )
