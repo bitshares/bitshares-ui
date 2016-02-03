@@ -24,21 +24,19 @@ export function suggest_brain_key(entropy = key.browserEntropy()) {
         
         // randomBuffer has 256 bits / 16 bits per word == 16 words
         var num = (randomBuffer[i]<<8) + randomBuffer[i+1];
-        // DEBUG 
-        console.log('... num',num.toString(16))
+        // DEBUG console.log('... num',num.toString(16))
 
         // convert into a number between 0 and 1 (inclusive)
         var rndMultiplier = num / Math.pow(2,16);
         var wordIndex = Math.round(dictionary_lines.length * rndMultiplier);
-        // DEBUG 
-        console.log('... i,num,rndMultiplier,wordIndex',i,num,rndMultiplier,wordIndex,dictionary_lines[wordIndex])
+        // DEBUG console.log('... i,num,rndMultiplier,wordIndex',i,num,rndMultiplier,wordIndex,dictionary_lines[wordIndex])
         
         brainkey.push(dictionary_lines[wordIndex]);
     }
-    // DEBUG
-    console.log("key.normalize_brain_key(brainkey.join(' '))", key.normalize_brain_key(brainkey.join(' ')))
+    // DEBUG console.log("key.normalize_brain_key(brainkey.join(' '))", key.normalize_brain_key(brainkey.join(' ')))
     return key.normalize_brain_key(brainkey.join(' '));
 }
+
 // convert to mnemonic encoding (perhaps put this as a separate library)
 // graphene-ui has a full dictionary
 // it("suggest_brain_key", function() {
