@@ -460,13 +460,14 @@ export default class ConfidentialWallet {
         result.amount = memo.amount
         result.memo = opt_memo
         
-        // console.log("memo", JSON.stringify(memo))
+        // 
+        console.log("memo", JSON.stringify(memo))
         
         // confirm the amount matches the commitment (verify the blinding factor)
         return Apis.crypto("blind", memo.blinding_factor, memo.amount.amount)
         .then( commtiment_test =>
             Apis.crypto("verify_sum", [commtiment_test], [memo.commitment], 0)
-            .then( result => assert(result, "verify_sum"))
+            .then( result => assert(result, "verify_sum " + result))
             .then( ()=> Apis.db("get_blinded_balances", [ memo.commitment ]))
             .then( bbal => {
                 
@@ -873,16 +874,22 @@ function update(callback) {
     })
 }
 
+/** Feeds need to be obtained in advance before calculating inputs and outputs. */
 function get_blind_transfer_fee(asset_id, operation_count = 2) {
-    let tr = new TransactionBuilder()
-    let object = blind_transfer.toObject({}, {use_default: true})
+    
+    // Create an empty but serilizable operation we can send to the server
+    // let object = blind_transfer.toObject({}, {use_default: true}) // 
+    
+    let object = blind_transfer_object.toJS()
     for(let i = 1; i < operation_count; i++)
         object.outputs.push( object.outputs[0] )
     
+    let tr = new TransactionBuilder()
     tr.add_type_operation("blind_transfer", object)
     return tr.set_required_fees(asset_id).then(()=>{
         let fee = tr.operations[0][1].fee
         assert.equal( asset_id, fee.asset_id, "expecting fee asset_id to match" )
+        console.log("fee", fee)
         return fee
     })
 }
@@ -995,3 +1002,4 @@ let authority = (data, weight_threshold = data ? 1 : 0)  =>
 //         }
 //     }
 // })
+let blind_transfer_object = fromJS( {"fee":{"amount":"0","asset_id":"1.3.0"},"inputs":[{"commitment":"0000000000000000000000000000000000000000000000000000000000000000","owner":{"weight_threshold":0,"account_auths":[["1.2.0",0]],"key_auths":[["GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM",0]],"address_auths":[["GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S",0]]}}],"outputs":[{"commitment":"0000000000000000000000000000000000000000000000000000000000000000","range_proof":"","owner":{"weight_threshold":0,"account_auths":[["1.2.0",0]],"key_auths":[["GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM",0]],"address_auths":[["GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S",0]]},"stealth_memo":{"one_time_key":"GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM","to":"GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM","encrypted_memo":""}}]})

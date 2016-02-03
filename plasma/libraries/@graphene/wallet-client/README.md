@@ -16,4 +16,18 @@ For the unit tests, you will need to `npm start` a programs/wallet-server config
 * [API](./src/ConfidentialWallet.js)
 
 # Commands
-Example: `npm run [test|test:watch]`
+Example:
+`npm test`
+
+Or: `npm run [test|test:watch]`
+
+# Developer Configuration Options
+```sh
+# Sample ./.npmrc (uncomment to enable)
+
+# @graphene/chain:socket_debug = true
+# @graphene/serializer:hex_dump = true
+
+# @graphene/chain:chain_debug = true
+# @graphene/wallet-client:socket_debug = true
+```

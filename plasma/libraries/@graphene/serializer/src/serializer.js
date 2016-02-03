@@ -100,6 +100,9 @@ class Serializer {
         var result = {};
         var field = null;
         try {
+            if( ! this.types )
+                return result;
+            
             var iterable = Object.keys(this.types);
             for (var i = 0, field; i < iterable.length; i++) {
                 field = iterable[i];

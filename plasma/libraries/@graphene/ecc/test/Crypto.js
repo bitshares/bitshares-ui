@@ -159,6 +159,36 @@ describe("derives", ()=> {
         "GPH6XA72XARQCain961PCJnXiKYdEMrndNGago2PV5bcUiVyzJ6iL",
         "derive child from private key"
     ))
+    
+    // "many keys" works, not really needed
+    // it("many keys", function() {
+    //     
+    //     this.timeout(10 * 1000)
+    //     
+    //     for (var i = 0; i < 10; i++) {
+    //         let privkey1 = key.get_random_key()
+    //         let privkey2 = key.get_random_key()
+    //         
+    //         let secret1 = one_time_private.get_shared_secret( privkey1.toPublicKey() )
+    //         let child1 = hash.sha256( secret1 )
+    //         
+    //         let secret2 = privkey2.get_shared_secret( privkey2.toPublicKey() )
+    //         let child2 = hash.sha256( secret2 )
+    //         
+    //         it("child from public", ()=> assert.equal(
+    //             privkey1.toPublicKey().child(child1).toString(),
+    //             privkey2.toPublicKey().child(child2).toString(),
+    //             "derive child public key"
+    //         ))
+    //         
+    //         it("child from private", ()=> assert.equal(
+    //             privkey1.child(child1).toString(),
+    //             privkey2.child(child2).toString(),
+    //             "derive child private key"
+    //         ))
+    //     }
+    //     
+    // })
 
 })
 

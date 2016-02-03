@@ -5,7 +5,6 @@ import { ChainStore } from "@graphene/chain"
 import { Apis } from "@graphene/chain"
 
 import LocalStoragePersistence from "../src/LocalStoragePersistence"
-// import { is, fromJS } from "immutable"
 
 import WalletStorage from "../src/WalletStorage"
 import ConfidentialWallet from "../src/ConfidentialWallet"
