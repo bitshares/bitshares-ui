@@ -186,8 +186,8 @@ class MyOpenOrders extends React.Component {
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     </table>
-                    <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 299}}>
-                        <table className="table order-table text-right table-hover">
+                    <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 300}}>
+                        <table style={{paddingBottom: 5}} className="table order-table text-right table-hover">
                             <tbody>
                                 {bids.length ? bids : emptyRow}
                             </tbody>
@@ -205,8 +205,8 @@ class MyOpenOrders extends React.Component {
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     </table>
 
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 299}}>
-                        <table className="table order-table text-right table-hover">
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 300}}>
+                        <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
                             <tbody>
                                 {asks.length ? asks : emptyRow}
                             </tbody>

@@ -286,6 +286,10 @@ class OrderBook extends React.Component {
         let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.get("precision")) : "0";
 
         if (this.props.horizontal) {
+
+            let totalBidsLength = bidRows.length;
+            let totalAsksLength = askRows.length;
+            console.log("totalBidsLength:", totalBidsLength);
             if (!showAllBids) {
                 bidRows.splice(13, bidRows.length);
             }
@@ -308,14 +312,20 @@ class OrderBook extends React.Component {
                                     </tr>
                                 </thead>
                             </table>
-                            <div className="grid-block no-padding market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 299}}>
-                                <table className="table order-table table-hover text-right no-overflow">
+                            <div className="grid-block market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 300}}>
+                                <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                     <tbody className="orderbook orderbook-top">
                                         {askRows}
                                     </tbody>
                                 </table>
                             </div>
-                            {askRows.length > 13 ? <div className="orderbook-showall"><div onClick={this._onToggleShowAll.bind(this, "asks")} className="button outline"><Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} /></div></div> : null}
+                            {totalAsksLength > 13 ? (
+                                <div className="orderbook-showall">
+                                    <div onClick={this._onToggleShowAll.bind(this, "asks")} className="button outline">
+                                        <Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} />
+                                        {!showAllAsks ? <span> ({totalAsksLength})</span> : null}
+                                    </div>
+                                </div>) : null}
                         </div>
                         <div className="grid-block vertical align-center text-center no-padding shrink order-2">
                             <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem", paddingBottom: "1rem"}}>&#8646;</span>
@@ -333,14 +343,20 @@ class OrderBook extends React.Component {
                                     </tr>
                                 </thead>
                             </table>    
-                            <div className="grid-block no-padding market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 299}}>
-                                <table className="table order-table table-hover text-right">
+                            <div className="grid-block market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 300}}>
+                                <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                     <tbody className="orderbook orderbook-bottom">
                                         {bidRows}
                                     </tbody>
                                 </table>
                             </div>
-                            {bidRows.length > 13 ? <div className="orderbook-showall"><div onClick={this._onToggleShowAll.bind(this, "bids")} className="button outline "><Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} /></div></div> : null}
+                            {totalBidsLength > 13 ? (
+                                <div className="orderbook-showall">
+                                    <div onClick={this._onToggleShowAll.bind(this, "bids")} className="button outline ">
+                                        <Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} />
+                                        {!showAllBids ? <span> ({totalBidsLength})</span> : null}
+                                    </div>
+                                </div>) : null}
                         </div>
                     </div>
             );
