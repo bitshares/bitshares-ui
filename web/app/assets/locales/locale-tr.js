@@ -507,7 +507,7 @@
         },
         assets: {
             title: "Aktifler",
-            market: "AkıllıParalar",
+            market: "Akıllı Paralar",
             user: "Kullanıcı Aktifleri",
             prediction: "Tahmin piyasası aktifleri",
             symbol: "Sembol",
@@ -677,7 +677,11 @@
         borrow: "Ödünç Al",
         no_balance: "Yetersiz bakiye",
         invalid_amount: "Geçersiz miktar",
-        invalid_price: "Geçersiz fiyat"
+        invalid_price: "Geçersiz fiyat",
+        show_bids: "Tüm alış fiyat göster",
+        show_asks: "Tüm satış fiyatlarını göster",
+        hide: "Gizle",
+        short: "Kısa"
     },
     fees: {
      title: "Ücret Tarifesi"
