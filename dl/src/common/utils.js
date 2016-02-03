@@ -457,7 +457,6 @@ var Utils = {
 
         // return result;
     }
-
 };
 
 export default Utils;

@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------
+Release 2.0.160203
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Support address authorities in account permissions #660
+- Ability to permanently ignore/unignore own accounts #697
+- Support SmartCoins/UIAs/Prediction Market in Assets Explorer
+- Support SmartCoins and Prediction Market Assets on Assets Creation page
+- Added show all button to orderbook
+- Better prediction markets support: one-click shorting, enforce market direction, set depth
+
+BUG FIXES:
+- Fix OpenLedger/ccedk's gateway mistakely labeled as a bridge #696
+- Fix pubkey lookup method #660
+- Fix Exchange scrolling issues
+- Fix Orderbook scroll bars appearing when not necessary
+- Fix some fee schedule bugs
+
+---------------------------------------------------------------------
 Release 2.0.160127
 ---------------------------------------------------------------------
 

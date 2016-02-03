@@ -9,42 +9,66 @@ import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
 import PrivateKeyView from "components/PrivateKeyView"
 import counterpart from "counterpart";
+import utils from "common/utils";
+import AddressIndex from "stores/AddressIndex"
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
         account: React.PropTypes.object,
         pubkey: React.PropTypes.string,
+        address: React.PropTypes.string,
         onRemoveItem: React.PropTypes.func.isRequired,
         weights: React.PropTypes.object
+    };
+
+    shouldComponentUpdate(nextProps) {
+        return !utils.are_equal_shallow(nextProps, this.props);
     }
-    onRemoveItem(item_id){
-        this.props.onRemoveItem(item_id);
+
+    _lookUpPubKeyForAddress(address) {
+        var addresses = AddressIndex.getState().addresses;
+        var pubkey = addresses.get(address);
+        console.log("pubkey:", pubkey);
+        return pubkey;
     }
+
     render() {
         let name, item_id, name_or_key;
+        let suffix = "_accounts";
+        let pubKey = this.props.pubkey;;
+
         if (this.props.account) {
             name = this.props.account.get("name");
             item_id = this.props.account.get("id");
             name_or_key = name;
-        } else {
+        } else if (pubKey) {
             name = item_id = this.props.pubkey;
             name_or_key = <PrivateKeyView pubkey={this.props.pubkey}>{this.props.pubkey}</PrivateKeyView>
+            suffix = "_keys";
+        } else if (this.props.address) {
+            pubKey = this._lookUpPubKeyForAddress(this.props.address);
+            item_id = this.props.address;
+            name_or_key = !pubKey ? this.props.address : <PrivateKeyView pubkey={pubKey}>{pubKey}</PrivateKeyView>;
+            suffix = "_addresses";
         }
+
         return (
             <tr key={name}>
                 <td>
-                    { this.props.account ?
+                { this.props.account ?
                     <AccountImage size={{height: 30, width: 30}} account={name}/>
-                    : <div className="account-image">
-                        <PrivateKeyView pubkey={this.props.pubkey}>
+                : pubKey ? (
+                    <div className="account-image">
+                        <PrivateKeyView pubkey={pubKey}>
                             <Icon name="key" size="1x"/>
-                        </PrivateKeyView></div>
-                    }
+                        </PrivateKeyView>
+                    </div>)
+                : null}
                 </td>
                 <td>{name_or_key}</td>
                 <td>{this.props.weights[item_id]}</td>
                 <td>
-                    <button className="button outline" onClick={this.onRemoveItem.bind(this, item_id)}>
+                    <button className="button outline" onClick={this.props.onRemoveItem.bind(this, item_id, suffix)}>
                         <Translate content="account.votes.remove_witness"/></button>
                 </td>
             </tr>
@@ -64,7 +88,7 @@ class AccountPermissionsList extends React.Component {
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         weights: React.PropTypes.object // weights: hash of {account id -> weight}
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -135,6 +159,10 @@ class AccountPermissionsList extends React.Component {
             return (<AccountPermissionRow key={key++} pubkey={k} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
         });
 
+        let address_rows = this.props.addresses.map(k => {
+            return (<AccountPermissionRow key={key++} address={k} weights={this.props.weights} onRemoveItem={this.props.onRemoveItem}/>)
+        });
+
         let error = this.state.error;
         if(!error && this.state.selected_item && this.props.accounts.indexOf(this.state.selected_item) !== -1)
             error = counterpart.translate("account.perm.warning3");
@@ -178,6 +206,7 @@ class AccountPermissionsList extends React.Component {
                     <tbody>
                     {account_rows}
                     {key_rows}
+                    {address_rows}
                     </tbody>
                 </table>
             </div>

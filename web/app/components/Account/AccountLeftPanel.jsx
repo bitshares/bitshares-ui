@@ -55,13 +55,13 @@ class AccountLeftPanel extends React.Component {
         let {account, linkedAccounts, isMyAccount} = this.props;
         let account_name = account.get("name");
         let linkBtn = null;
-        if (!isMyAccount) {
+        // if (!isMyAccount) {
             linkBtn = linkedAccounts.has(account_name) ?
                 <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
-                    content="account.unfollow"/></a> :
+                    content={`account.${!isMyAccount ? "unfollow" : "ignore"}`}/></a> :
                 <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate
-                    content="account.follow"/></a>;
-        }
+                    content={`account.${!isMyAccount ? "follow" : "unignore"}`}/></a>;
+        // }
         let settings       = counterpart.translate("header.settings");
         return (
             <div className="grid-block vertical account-left-panel no-padding no-overflow">

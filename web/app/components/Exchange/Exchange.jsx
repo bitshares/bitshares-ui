@@ -8,6 +8,7 @@ import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import {debounce, cloneDeep} from "lodash";
@@ -226,6 +227,12 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.baseAsset && nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
+            console.log(nextProps.baseAsset.get("symbol"), "is prediction market");
+            console.log("this.props:", this.props);
+            this.props.history.push(`market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`)
+        }
+
         if (nextProps.quoteAsset.toJS && nextProps.baseAsset.toJS) {
             // this._addMarket(nextProps.quoteAsset.get("symbol"), nextProps.baseAsset.get("symbol"));
             if (!this.state.sub) {
@@ -278,6 +285,33 @@ class Exchange extends React.Component {
         });
     }
 
+    _createPredictionShort(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
+        console.log("createPredictionShort:", buyAssetAmount, sellAssetAmount);
+        let coreAsset = ChainStore.getAsset("1.3.0");
+        let expiration = new Date();
+        // TODO: Add selector for expiry
+        expiration.setYear(expiration.getFullYear() + 5);
+        MarketsActions.createPredictionShort(
+            this.props.currentAccount.get("id"),
+            utils.get_satoshi_amount(sellAssetAmount, sellAsset),
+            sellAsset,
+            utils.get_satoshi_amount(buyAssetAmount, buyAsset),
+            utils.get_satoshi_amount(sellAssetAmount, coreAsset),
+            buyAsset,
+            expiration,
+            false, // fill or kill TODO: add fill or kill switch
+            feeID
+        ).then(result => {
+            if (result.error) {
+                if (result.error.message !== "wallet locked")
+                    notify.addNotification({
+                        message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
+                        level: "error"
+                    });
+            }
+        });
+    }
+
     _getFee(asset) {
         let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
 
@@ -306,7 +340,7 @@ class Exchange extends React.Component {
         }
     }
 
-    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, sellBalance, coreBalance, type, e) {
+    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, sellBalance, coreBalance, type, short = true, e) {
         e.preventDefault();
         let feeID; // = "1.3.0";
 
@@ -350,7 +384,9 @@ class Exchange extends React.Component {
             }
         }
 
-        if ((sellAssetAmount * sellPrecision) > sellBalance) {
+        let isPredictionMarket = sellAsset.getIn(["bitasset", "is_prediction_market"]);
+
+        if ((sellAssetAmount * sellPrecision) > sellBalance && !isPredictionMarket) {
             return notify.addNotification({
                 message: "Insufficient funds to place order. Required: " + sellAssetAmount + " " + sellAsset.get("symbol"),
                 level: "error"
@@ -364,6 +400,9 @@ class Exchange extends React.Component {
             });
         }
 
+        if (type === "sell" && isPredictionMarket && short) {
+            return this._createPredictionShort(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
+        }
         this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
     }
 
@@ -1000,6 +1039,15 @@ class Exchange extends React.Component {
         // Decimals
         let priceDecimals = Math.max(5, base ? base.get("precision") : 0);
 
+        let hasPrediction = base.getIn(["bitasset", "is_prediction_market"]) || quote.getIn(["bitasset", "is_prediction_market"]);
+
+        let description = null;
+
+        if (hasPrediction) {
+            description = quoteAsset.getIn(["options", "description"]);
+            description = assetUtils.parseDescription(description).main;
+        }
+
         return (
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
@@ -1030,13 +1078,24 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical ps-container")} >
+                    <div className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
                         <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
-                            <div className="grid-block overflow-visible">
+                            <div className="grid-block no-overflow">
                                 <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
-                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol"><Icon className={starClass} name="fi-star"/></span><Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}><span>{`${quoteSymbol} : ${baseSymbol}`}</span></Link>
+                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol">
+                                        <Icon className={starClass} name="fi-star"/>
+                                    </span>
+                                    {!hasPrediction ? (
+                                        <Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}>
+                                            <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                        </Link>) : (
+                                        <a className="market-symbol">
+                                            <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                        </a>
+                                        )}
+
                                 </div>
                                 <div className="grid-block vertical">
                                     <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>
@@ -1123,7 +1182,7 @@ class Exchange extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div ref="center">
+                        <div className="grid-block vertical no-padding market-right-padding" id="CenterContent" ref="center">
                         {!this.state.showDepthChart ? (
                             <div className="grid-block shrink" id="market-charts" style={{marginTop: 0}}>
                                 {/* Price history chart */}
@@ -1175,6 +1234,7 @@ class Exchange extends React.Component {
                                     SQP={showCallLimit ? squeezePrice : null}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
+                                    hasPrediction={hasPrediction}
                                 />
 
                             </div>)}
@@ -1183,6 +1243,8 @@ class Exchange extends React.Component {
 
                         {isNullAccount ? null : (
                             <div className="grid-block vertical shrink buy-sell">
+                            <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div>
+                            
                             <div className="grid-block small-vertical medium-horizontal align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
                                 <BuySell
@@ -1206,6 +1268,7 @@ class Exchange extends React.Component {
                                     currentPriceObject={lowestAsk.sell_price}
                                     account={currentAccount.get("name")}
                                     fee={buyFee}
+                                    isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
                                 /> : null}
                                 <ConfirmOrderModal
                                     type="buy"
@@ -1240,6 +1303,7 @@ class Exchange extends React.Component {
                                     account={currentAccount.get("name")}
                                     fee={sellFee}
                                     ref="sell"
+                                    isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
                                 /> : null}
                                 <ConfirmOrderModal
                                     type="sell"
@@ -1338,13 +1402,13 @@ class Exchange extends React.Component {
                             />
                         </div>
                     </div>
-                    {!isNullAccount && quoteIsBitAsset ?
+                    {!isNullAccount && quoteIsBitAsset  ?
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
                             account={currentAccount}
                          /> : null}
-                    {!isNullAccount && baseIsBitAsset ?
+                    {!isNullAccount && baseIsBitAsset ? 
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}

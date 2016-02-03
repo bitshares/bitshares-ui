@@ -21,6 +21,8 @@ import big from "bignumber.js";
 import cnames from "classnames";
 import assetUtils from "common/asset_utils";
 import Tabs, {Tab} from "../Utility/Tabs";
+import {BitAssetOptions} from "./AccountAssetCreate";
+import assetConstants from "chain/asset_constants";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
@@ -34,7 +36,7 @@ class AccountAssetUpdate extends React.Component {
 
     static defaultProps = {
         core: "1.3.0"
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -44,7 +46,7 @@ class AccountAssetUpdate extends React.Component {
 
     resetState(props) {
         let asset = props.asset.toJS();
-        let isBitAsset = asset.bitasset_id !== undefined;
+        let isBitAsset = asset.bitasset_data_id !== undefined;
         let precision = utils.get_asset_precision(asset.precision);
         let corePrecision = utils.get_asset_precision(props.core.get("precision"));
 
@@ -59,12 +61,13 @@ class AccountAssetUpdate extends React.Component {
             (new big(core_exchange_rate.base.amount)).div(precision).toString() :
             (new big(core_exchange_rate.base.amount)).div(corePrecision).toString();
 
+        console.log("isBitAsset:", isBitAsset);
 
-        let flagBooleans = assetUtils.getFlagBooleans(asset.options.flags);
-        let permissionBooleans = assetUtils.getFlagBooleans(asset.options.issuer_permissions);
+        let flagBooleans = assetUtils.getFlagBooleans(asset.options.flags, isBitAsset);
+        let permissionBooleans = assetUtils.getFlagBooleans(asset.options.issuer_permissions, isBitAsset);
         let flags = assetUtils.getFlags(flagBooleans);
         let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
-
+        console.log("permissions:", permissions, asset);
         asset.options.market_fee_percent /= 100;
 
         let coreRateQuoteAssetName = ChainStore.getAsset(core_exchange_rate.quote.asset_id).get("symbol");
@@ -75,7 +78,7 @@ class AccountAssetUpdate extends React.Component {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
                 market_fee_percent: asset.options.market_fee_percent,
-                description: asset.options.description
+                description: assetUtils.parseDescription(asset.options.description)
             },
             core_exchange_rate: core_exchange_rate,
             issuer: asset.issuer,
@@ -94,7 +97,9 @@ class AccountAssetUpdate extends React.Component {
             coreRateBaseAssetName: coreRateBaseAssetName,
             baseAssetInput: coreRateBaseAssetName,
             fundPoolAmount: 0,
-            claimFeesAmount: 0
+            claimFeesAmount: 0,
+            bitasset_opts: isBitAsset ? asset.bitasset.options : null,
+            original_bitasset_opts: isBitAsset ? props.asset.getIn(["bitasset", "options"]).toJS() : null
         };
     }
 
@@ -102,19 +107,24 @@ class AccountAssetUpdate extends React.Component {
 
     _updateAsset(e) {
         e.preventDefault();
-        let {update, issuer, new_issuer_account, core_exchange_rate, flagBooleans, permissionBooleans} = this.state;
+        let {update, issuer, new_issuer_account, core_exchange_rate, flagBooleans,
+            permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts} = this.state;
 
         let flags = assetUtils.getFlags(flagBooleans);
+        
         // Handle incorrect flag from genesis
         if (this.props.asset.getIn(["options", "flags"]) & 128 && !(this.props.asset.getIn(["options", "issuer_permissions"]) & 128)) {
             flags += 128;
         }
-        let permissions = assetUtils.getPermissions(permissionBooleans);
+        let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
 
         let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
         let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
 
-        AssetActions.updateAsset(issuer, new_issuer_account, update, core_exchange_rate, this.props.asset, flags, permissions).then(result => {
+        let description = JSON.stringify(update.description);
+        console.log("permissions:", permissions);
+        AssetActions.updateAsset(issuer, new_issuer_account, update, core_exchange_rate, this.props.asset,
+            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description).then(result => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account, this.props.asset.get("id"), update)
             setTimeout(() => {
                 AssetActions.getAsset(this.props.asset.get("id"));
@@ -136,6 +146,65 @@ class AccountAssetUpdate extends React.Component {
 
     _forcePositive(number) {
         return parseFloat(number) < 0 ? "0" : number;
+    }
+
+    _onUpdateDescription(value, e) {
+        let {update} = this.state;
+        let updateState = true;
+
+        switch (value) {
+            case "condition":
+                if (e.target.value.length > 60) {
+                    updateState = false;
+                    return;
+                }
+                update.description[value] = e.target.value;
+                break;
+
+            case "short_name":
+                if (e.target.value.length > 32) {
+                    updateState = false;
+                    return;
+                }
+                update.description[value] = e.target.value;
+                break;
+            
+            default:
+                update.description[value] = e.target.value;
+                break;
+        }
+
+        if (updateState) {
+            this.forceUpdate();
+            this._validateEditFields(update);
+        }
+    }
+
+    onChangeBitAssetOpts(value, e) {
+        let {bitasset_opts} = this.state;
+
+        switch (value) {
+            case "force_settlement_offset_percent":
+            case "maximum_force_settlement_volume":
+                bitasset_opts[value] = parseFloat(e.target.value) * assetConstants.GRAPHENE_1_PERCENT;
+                break;
+
+            case "feed_lifetime_sec":
+            case "force_settlement_delay_sec":
+                console.log(e.target.value, parseInt(parseFloat(e.target.value) * 60, 10));
+                bitasset_opts[value] = parseInt(parseFloat(e.target.value) * 60, 10);
+                break;
+
+            case "short_backing_asset":
+                bitasset_opts[value] = e;
+                break;
+
+            default:
+                bitasset_opts[value] = parseInt(e.target.value, 10);
+                break;
+        }
+
+        this.forceUpdate();
     }
 
     _onUpdateInput(value, e) {
@@ -300,7 +369,7 @@ class AccountAssetUpdate extends React.Component {
     render() {
         let {account, account_name, asset, core} = this.props;
         let {errors, isValid, update, assets, core_exchange_rate, flagBooleans,
-            permissionBooleans, fundPoolAmount, claimFeesAmount} = this.state;
+            permissionBooleans, fundPoolAmount, claimFeesAmount, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset update fee
         let symbol = asset.get("symbol");
@@ -316,7 +385,7 @@ class AccountAssetUpdate extends React.Component {
         let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
         let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
 
-        let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]));
+        let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]), asset.get("bitasset") !== undefined);
         
         // Loop over flags        
         let flags = [];
@@ -413,6 +482,8 @@ class AccountAssetUpdate extends React.Component {
             cerValid = true;
         }
 
+        let isPredictionMarketAsset = asset.getIn(["bitasset", "is_prediction_market"]);
+
         return (
             <div className="grid-block">
                 <div className="grid-content">
@@ -503,14 +574,75 @@ class AccountAssetUpdate extends React.Component {
                                         </div>
                                     </label>
 
-                                    <Translate component="h3" content="account.user_issued_assets.description" />
-                                    <label>
-                                        <textarea style={{height: "7rem"}} rows="1" value={update.description} onChange={this._onUpdateInput.bind(this, "description")} />
-                                    </label>
                                     {confirmButtons}
                                 </div>
                                 
                             </Tab>
+
+                            <Tab title="account.user_issued_assets.description">
+                                <div className="small-12 large-8 grid-content">
+                                    <Translate component="h3" content="account.user_issued_assets.description" />
+                                    <label>
+                                        <textarea
+                                            style={{height: "7rem"}}
+                                            rows="1"
+                                            value={update.description.main}
+                                            onChange={this._onUpdateDescription.bind(this, "main")}
+                                        />
+                                    </label>
+
+                                    <Translate component="h3" content="account.user_issued_assets.short" />
+                                    <label>
+                                        <input
+                                            type="text"
+                                            rows="1"
+                                            value={update.description.short_name}
+                                            onChange={this._onUpdateDescription.bind(this, "short_name")}
+                                        />
+                                    </label>
+
+                                    {isPredictionMarketAsset ? (
+                                    <div>
+
+
+                                        <Translate component="h3" content="account.user_issued_assets.condition" />
+                                        <label>
+                                            <input
+                                                type="text"
+                                                rows="1"
+                                                value={update.description.condition}
+                                                onChange={this._onUpdateDescription.bind(this, "condition")}
+                                            />
+                                        </label>
+
+                                        <Translate component="h3" content="account.user_issued_assets.expiry" />
+                                        <label>
+                                            <input
+                                                type="date"
+                                                value={update.description.expiry}
+                                                onChange={this._onUpdateDescription.bind(this, "expiry")}
+                                            />
+                                        </label>
+                                    </div>) : null}
+
+
+                                    {confirmButtons}
+                                </div>                                
+                            </Tab>
+
+
+                            {isBitAsset ? (
+                            <Tab title="account.user_issued_assets.bitasset_opts">
+                                <div className="small-12 large-8 grid-content">
+                                    <BitAssetOptions
+                                        bitasset_opts={bitasset_opts}
+                                        onUpdate={this.onChangeBitAssetOpts.bind(this)}
+                                        backingAsset={bitasset_opts.short_backing_asset}
+                                    />
+                                {confirmButtons}
+                                </div>
+                            </Tab>) : null}
+
                             <Tab title="account.user_issued_assets.update_owner">
                                 <div className="small-12 large-8 grid-content">
                                     <Translate component="h3" content="account.user_issued_assets.update_owner" />
@@ -533,8 +665,7 @@ class AccountAssetUpdate extends React.Component {
                                         tabIndex={1}
                                      />
                                     {confirmButtons}
-                                </div>
-                                
+                                </div>                                
                             </Tab>
 
                             <Tab title="account.permissions">

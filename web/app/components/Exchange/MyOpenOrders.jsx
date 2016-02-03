@@ -103,8 +103,10 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let orderContainer = ReactDOM.findDOMNode(this.refs.orders);
-        Ps.initialize(orderContainer);
+        let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
+        Ps.initialize(bidsContainer);
+        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+        Ps.initialize(asksContainer);   
     }
 
     _flipBuySell() {
@@ -115,9 +117,19 @@ class MyOpenOrders extends React.Component {
         this.setState({flip: !this.state.flip});
     }
 
+    componentDidUpdate(prevProps) {
+        let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
+        Ps.update(bidsContainer);         
+        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+        Ps.update(asksContainer);     
+    }
+
     render() {
         let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
         let bids = null, asks = null;
+
+        let emptyRow = <tr><td style={{textAlign: "center"}} colSpan="5"><Translate content="account.no_orders" /></td></tr>;
+
         if(orders.size > 0 && base && quote) {
             let cancel = counterpart.translate("account.perm.cancel");
 
@@ -149,43 +161,57 @@ class MyOpenOrders extends React.Component {
                 <div key="open_orders" className="grid-content text-center ps-container" ref="orders">
                     <table className="table order-table my-orders text-right table-hover">
                         <tbody>
+                            {emptyRow}
                         </tbody>
                     </table>
 
                     <table className="table order-table my-orders text-right table-hover">
                         <tbody>
+                            {emptyRow}
                         </tbody>
                 </table>
                 </div>
             );
         }
 
-        if (bids.length === 0 && asks.length ===0) {
-            return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
-        }
+        // if (bids.length === 0 && asks.length ===0) {
+        //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
+        // }
 
         return (
-            <div style={{maxHeight: "400px"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
+            <div style={{marginBottom: "2rem"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
                     <div className="exchange-content-header"><Translate content="exchange.my_bids" /></div>
+
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                        <tbody>
-                            {bids}
-                        </tbody>
                     </table>
+                    <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 300}}>
+                        <table style={{paddingBottom: 5}} className="table order-table text-right table-hover">
+                            <tbody>
+                                {bids.length ? bids : emptyRow}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
                 <div className="grid-block vertical align-center text-center no-padding shrink order-2">
                     <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
                 </div>
+                
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
                     <div className="exchange-content-header"><Translate content="exchange.my_asks" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                        <tbody>
-                            {asks}
-                        </tbody>
                     </table>
+
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 300}}>
+                        <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
+                            <tbody>
+                                {asks.length ? asks : emptyRow}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );
