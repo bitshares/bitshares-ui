@@ -8,6 +8,7 @@ import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import {debounce, cloneDeep} from "lodash";
@@ -1038,6 +1039,13 @@ class Exchange extends React.Component {
 
         let hasPrediction = base.getIn(["bitasset", "is_prediction_market"]) || quote.getIn(["bitasset", "is_prediction_market"]);
 
+        let description = null;
+
+        if (hasPrediction) {
+            description = quoteAsset.getIn(["options", "description"]);
+            description = assetUtils.parseDescription(description).main;
+        }
+
         return (
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
@@ -1148,14 +1156,14 @@ class Exchange extends React.Component {
                                                 </li>) : null}
                                          </ul>
                                          <ul className="market-stats stats bottom-stats">
-                                            {!isNullAccount && quoteIsBitAsset && !quoteAsset.getIn(["bitasset", "is_prediction_market"]) ? 
+                                            {!isNullAccount && quoteIsBitAsset ? 
                                                 (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowQuote.bind(this)}>
                                                     <div className="indicators">
                                                        <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
                                                     </div>
                                                 </li>) : null}
 
-                                            {!isNullAccount && baseIsBitAsset && !baseAsset.getIn(["bitasset", "is_prediction_market"]) ? 
+                                            {!isNullAccount && baseIsBitAsset ? 
                                                 (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowBase.bind(this)}>
                                                     <div className="indicators">
                                                        <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
@@ -1233,7 +1241,7 @@ class Exchange extends React.Component {
 
                         {isNullAccount ? null : (
                             <div className="grid-block vertical shrink buy-sell">
-                            <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{hasPrediction ? quoteAsset.getIn(["options", "description"]) : null}</div>
+                            <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div>
                             
                             <div className="grid-block small-vertical medium-horizontal align-spaced" style={{ flexGrow: "0" }} >
                                 {quote && base ?
@@ -1392,13 +1400,13 @@ class Exchange extends React.Component {
                             />
                         </div>
                     </div>
-                    {!isNullAccount && quoteIsBitAsset && !quoteAsset.getIn(["bitasset", "is_prediction_market"]) ?
+                    {!isNullAccount && quoteIsBitAsset  ?
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
                             account={currentAccount}
                          /> : null}
-                    {!isNullAccount && baseIsBitAsset && !baseAsset.getIn(["bitasset", "is_prediction_market"]) ? 
+                    {!isNullAccount && baseIsBitAsset ? 
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}

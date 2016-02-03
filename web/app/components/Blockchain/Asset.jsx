@@ -157,7 +157,9 @@ class Asset extends React.Component {
 
 
         // Add <a to any links included in the description
-        let desc = asset.options.description;
+        
+        let description = assetUtils.parseDescription(asset.options.description);
+        let desc = description.short_name ? description.short_name : description.main;
         let urlTest = /(http?):\/\/(www\.)?[a-z0-9\.:].*?(?=\s)/g;
 
         // Regexp needs a whitespace after a url, so add one to make sure

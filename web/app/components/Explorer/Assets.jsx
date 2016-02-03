@@ -7,6 +7,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Tabs, {Tab} from "../Utility/Tabs";
@@ -127,28 +128,35 @@ class Assets extends React.Component {
         let coreAsset = ChainStore.getAsset("1.3.0");
 
         let pm = assets.filter(a => {
+
+            let description = assetUtils.parseDescription(a.options.description);
+
             return (
                 a.bitasset_data &&
                 a.bitasset_data.is_prediction_market &&
-                (a.symbol.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1 || a.options.description.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1)
+                (a.symbol.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1 || description.main.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1)
             );
         }).map((asset) => {
 
             let marketID = asset.symbol + "_" + (coreAsset ? coreAsset.get("symbol") : "BTS");
             
+            let description = assetUtils.parseDescription(asset.options.description);
+
             return (
                 <tr key={asset.id.split(".")[2]}>
                     <td style={{width: "80%"}}>
                         <div style={{paddingTop: 10, fontWeight: "bold"}}>
                             <Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link>
+                            {description.condition ? <span> ({description.condition})</span> : null}
                         </div>
-                        {asset.options.description ? 
+                        {description ? 
                         <div style={{padding: "10px 20px 5px 0", lineHeight: "18px"}}>
-                            {asset.options.description}
+                            {description.main}
                         </div> : null}
                         <div style={{padding: "0 20px 5px 0", lineHeight: "18px"}}>
                             <LinkToAccountById account={asset.issuer} />
                             <span> - <FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></span>
+                            {description.expiry ? <span> - {description.expiry}</span> : null}
                         </div>
                     </td>
                     <td style={{width: "20%"}}>

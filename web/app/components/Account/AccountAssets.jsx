@@ -20,6 +20,7 @@ import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import IssueModal from "../Modal/IssueModal"
 import connectToStores from "alt/utils/connectToStores";
+import assetUtils from "common/asset_utils";
 
 @connectToStores
 class AccountAssets extends React.Component {
@@ -194,7 +195,8 @@ class AccountAssets extends React.Component {
             return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
         })
         .map(asset => {
-            let desc = asset.options.description;
+            let description = assetUtils.parseDescription(asset.options.description);
+            let desc = description.short_name ? description.short_name : description.main;
             if (desc.length > 100) {
                 desc = desc.substr(0, 100) + "...";
             }

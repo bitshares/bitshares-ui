@@ -134,7 +134,20 @@
             advanced: "Advanced",
             need_asset: "At least one of the two assets must be %(name)s",
             perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!",
-            issued_assets: "Issued Assets"
+            issued_assets: "Issued Assets",
+            short: "Short name (max 32 characters)",
+            condition: "Condition (max 60 characters)",
+            expiry: "Market resolution date",
+            decimals: "Number of decimal points",
+            mpa: "SmartCoin",
+            pm: "Binary prediction market",
+            bitasset_opts: "SmartCoin options",
+            feed_lifetime_sec: "Feed lifetime in minutes",
+            minimum_feeds: "Minimum number of feeds",
+            force_settlement_delay_sec: "Delay for forced settlements (minutes)",
+            force_settlement_offset_percent: "Percent offset of forced settlements",
+            maximum_force_settlement_volume: "Max force settle volume (percent)",
+            backing: "Short backing asset"
         },
         connections: {
             known: "Known by",
