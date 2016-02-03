@@ -677,7 +677,11 @@
         borrow: "Ödünç Al",
         no_balance: "Yetersiz bakiye",
         invalid_amount: "Geçersiz miktar",
-        invalid_price: "Geçersiz fiyat"
+        invalid_price: "Geçersiz fiyat",
+        show_bids: "Tüm alış fiyat göster",
+        show_asks: "Tüm satış fiyatlarını göster",
+        hide: "Gizle",
+        short: "Kısa"
     },
     fees: {
      title: "Ücret Tarifesi"
