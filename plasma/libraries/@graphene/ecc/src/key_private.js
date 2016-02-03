@@ -88,7 +88,7 @@ class PrivateKey {
         public_key = toPublic(public_key)
         var P = public_key.Q.multiply( this.d );
         var S = P.affineX.toBuffer({size: 32});
-        // SHA512 used in ECIES
+        // ECIES, adds an extra sha512
         return hash.sha512(S);
     }
     

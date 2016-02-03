@@ -127,21 +127,30 @@ describe('Confidential wallet', () => {
         return Promise.resolve()
         
             // to single blind address
-            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",100]], true ))
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice", 100]], true ))
             .then( tx => assert(tx.outputs, "tx.outputs") )
+            
+            .then( () => cw.getBlindBalances("alice") )
+            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "100" + "00000" }) )
             
             // to double blind addresses
             .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",10], ["bob",1]], true ))
             .then( tx => assert(tx.outputs, "tx.outputs") )
             
-            .then( () => cw.getBlindBalances("alice") )
-            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "111" + "00000" }) )
+            // .then( () => cw.getBlindBalances("alice") )
+            // .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "110" + "00000" }) )
+            // 
+            // .then( () => cw.getBlindBalances("bob") )
+            // .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "1" + "00000" }) )
             
             .then( ()=> cw.transferFromBlind("alice", "nathan", 1, "CORE", true) )
             .then( tx => assert(tx.outputs, "tx.outputs") )
             
-            .then( ()=> cw.blindHistory("alice") )
-            .then( receipts => assert(receipts.size > 0, "expecting receipt(s)") )
+            // .then( ()=> cw.blindHistory("alice") )
+            // .then( receipts => assert.equal(receipts.size, 3, "alice receipt(s)") )
+            // 
+            // .then( ()=> cw.blindHistory("nathan") )
+            // .then( receipts => assert.equal(receipts.size, 3, "nathan receipt(s)") )
     })
     
     it("blind to blind transfer", function() {
@@ -163,10 +172,10 @@ describe('Confidential wallet', () => {
             .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",100]], true ))
             .then( tx => assert(tx.outputs, "tx.outputs") )
             
-            .then( ()=> cw.blindTransfer("alice", "bob", 1, "CORE", false) )
+            .then( ()=> cw.blindTransfer("alice", "bob", 1, "CORE", true) )
             
-            .then( () => cw.getBlindBalances("bob") )
-            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "1" + "00000" }) )
+            // .then( () => cw.getBlindBalances("bob") )
+            // .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "1" + "00000" }) )
             
             // .then( res => console.log("work-in-progress result", res) )
         

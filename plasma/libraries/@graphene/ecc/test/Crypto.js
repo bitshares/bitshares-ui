@@ -143,7 +143,8 @@ describe("Crypto", function() {
     //     assert.equal(16, brainkey.split(' ').length);
     // });
     
-});
+})
+
 describe("derives", ()=> {
     
     let one_time_private = PrivateKey.fromHex("8fdfdde486f696fd7c6313325e14d3ff0c34b6e2c390d1944cbfe150f4457168")
@@ -171,6 +172,7 @@ describe("derives", ()=> {
     ))
 
 })
+
 var min_time_elapsed = function(f){
     var start_t = Date.now();
     var ret = f();

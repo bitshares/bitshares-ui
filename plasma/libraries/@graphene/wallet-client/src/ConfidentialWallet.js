@@ -11,47 +11,17 @@ let { stealth_memo_data, blind_transfer } = ops
 let { toImpliedDecimal } = number_utils
 let Long = ByteBuffer.Long
 
-// /**
-//     The commented data-structure is for documentation purposes..
-//     Serilizable persisterent state (JSON serilizable types only)..  
-// */
-// const empty_wallet = fromJS({
-//     public_name: t.Str,
-//     created: t.Dat,
-//     last_modified: t.Dat,
-//     backup_date: t.maybe(t.Dat),
-//     brainkey: t.maybe(t.Str),
-//     brainkey_sequence: t.Num,
-//     brainkey_backup_date: t.maybe(t.Dat),
-//     deposit_keys: t.maybe(t.Obj),
-//     chain_id: t.Str,
-//     
-//     // [blind_receipt,...]
-//     blind_receipts: [],
-//     
-//     keys:
-//         "pubkey": {
-//             //  No two keys can have the same label, no two labels can have the same key
-//             label: t.maybe(t.Str),
-//             import_account_names: t.maybe(t.Arr),
-//             brainkey_sequence: t.maybe(t.Num),
-//             private_wif: t.Str, // was: encrypted_key: t.Str
-//             index_address: false // Mark legacy keys for address indexing (addresses are calculated outside of this wallet backup)  
-//         }
-//         
-// })
-
 /** This class is used for stealth transfers */
 export default class ConfidentialWallet {
     
     constructor( walletStorage ) {
-        
+        // The walletStorage format is documented as comments at the bottom of this file..
         this.wallet = req(walletStorage, "walletStorage")
         
         // Convenience function to access the wallet object (ensure friendly return values)
         this.keys = () => this.wallet.wallet_object.getIn(["keys"], Map())
         this.blind_receipts = () => this.wallet.wallet_object.get("blind_receipts", List())
-        this.commitments = () => this.blind_receipts()
+        this.commitments = (receipts = this.blind_receipts()) => receipts
             .reduce( (r, receipt) => r.push(receipt.getIn(["data", "commitment"])), List())
         
         // BTS 1.0 addresses for shorts and balance claims
@@ -263,8 +233,6 @@ export default class ConfidentialWallet {
     getBlindBalances(pubkey_or_label) {
         
         this.assertLogin()
-        let public_key = this.getPublicKey( pubkey_or_label )
-        assert( public_key, "missing pubkey_or_label " + pubkey_or_label)
         
         let commitments = this.commitments()
         
@@ -272,7 +240,7 @@ export default class ConfidentialWallet {
             return Promise.resolve()
         
         let balances = Map().asMutable()
-        let p1 = this.fetch_blinded_balances( (bal, receipt)=> {
+        let p1 = this.fetch_blinded_balances( pubkey_or_label,  (bal, receipt)=> {
             let amount = receipt.getIn(["data", "amount"])
             balances.update(amount.get("asset_id"), 0, amt => longAdd(amt, amount.get("amount")).toString() )
         })
@@ -397,7 +365,8 @@ export default class ConfidentialWallet {
                 
                 bop.amount = { amount: total_amount.toString(), asset_id: asset.get("id") }
                 
-                return Apis.crypto("blind_sum", blinding_factors, blinding_factors.length)
+                return Apis
+                .crypto("blind_sum", blinding_factors, blinding_factors.length)
                 .then( res => bop.blinding_factor = res )
                 .then( ()=>{
                     
@@ -453,7 +422,7 @@ export default class ConfidentialWallet {
     */
     receiveBlindTransfer( confirmation_receipt, opt_from, opt_memo ) {
 
-        // console.log("confirmation_receipt", confirmation_receipt)
+        // console.log("confirmation_receipt", confirmation_receipt, opt_from, opt_memo )
 
         this.assertLogin()
         let conf = confirmation_receipt
@@ -465,10 +434,11 @@ export default class ConfidentialWallet {
         assert( to_private, "No private key for receiver: " + JSON.stringify( conf ))
 
         let secret = to_private.get_shared_secret( conf.one_time_key )
+        // console.log("TO secret.toString('hex')\t", secret.toString('hex'))
         let child = hash.sha256( secret )
         let child_private = PrivateKey.fromBuffer( child )
         let blind_factor = hash.sha256( child )
-        
+
         assert( typeof conf.encrypted_memo === "string", "Expecting HEX string for confirmation_receipt.encrypted_memo")
         let plain_memo = Aes.fromBuffer(secret).decryptHexToText( conf.encrypted_memo )
 
@@ -480,7 +450,7 @@ export default class ConfidentialWallet {
         if( memo.from ) {
             result.from_key = memo.from
             result.from_label = this.getKeyLabel( result.from_key )
-            if( result.from_label ) {
+            if( ! result.from_label ) {
                 result.from_label = opt_from
                 this.setKeyLabel( result.from_key, result.from_label )
             }
@@ -490,7 +460,7 @@ export default class ConfidentialWallet {
         result.amount = memo.amount
         result.memo = opt_memo
         
-        let memoString = () => JSON.stringify(memo)
+        // console.log("memo", JSON.stringify(memo))
         
         // confirm the amount matches the commitment (verify the blinding factor)
         return Apis.crypto("blind", memo.blinding_factor, memo.amount.amount)
@@ -500,20 +470,10 @@ export default class ConfidentialWallet {
             .then( ()=> Apis.db("get_blinded_balances", [ memo.commitment ]))
             .then( bbal => {
                 
-                assert( bbal.length, "commitment not found in blockchain " + memoString())
+                assert( bbal.length, "commitment not found in blockchain " )
                 
                 result.control_authority = bbal[0].owner
                 result.data = memo
-                
-                let child_public = child_private.toPublicKey()
-
-                // for(let key_pair of bbal[0].owner.key_auths) {
-                //     let pubkey = key_pair[0]
-                //     if( pubkey === child_public.toString() ) {
-                //         this.setKeyLabel( child_private )
-                //         break
-                //     }
-                // }
                 
                 this.setKeyLabel( child_private )
                 result.date = new Date().toISOString()
@@ -617,13 +577,19 @@ export default class ConfidentialWallet {
             amount = toImpliedDecimal(amount, asset.get("precision"))
             return this.blind_transfer_help(from_key_or_label, to_key_or_label, amount, asset_symbol, broadcast)
         })
+        
     }
 
 }
 
-function fetch_blinded_balances(callback) {
-    let receipts = this.blind_receipts()
-    let commitments = this.commitments()
+function fetch_blinded_balances(pubkey_or_label, callback) {
+    
+    let public_key = this.getPublicKey( pubkey_or_label )
+    assert( public_key, "missing pubkey_or_label " + pubkey_or_label)
+    
+    let pubkey = public_key.toString()
+    let receipts = this.blind_receipts().filter( r => r.get("to_key") === pubkey)
+    let commitments = this.commitments(receipts)
     let p1 = Apis.db("get_blinded_balances", commitments.toJS()).then( bbal => {
         
         for(let i = 0; i < bbal.length; i++) {
@@ -644,20 +610,6 @@ function fetch_blinded_balances(callback) {
     // have the caller wait on the API call only (not the wallet update)
     return p1
 }
-
-// const blind_receipt = fromJS({
-//     date: null,
-//     from_key: null,
-//     from_label: null,
-//     to_key: null,
-//     to_label: null,
-//     amount: null,// serializer_operations::asset
-//     memo: null,// String
-//     authority: null,
-//     stealth_memo_data: null,
-//     used: false,
-//     stealth_confirmation: null // serializer_operations::stealth_confirmation
-// })
 
 /**
     Short method to help form and send a blind transfer..
@@ -713,7 +665,7 @@ function blind_transfer_help(
         })
         
         .then( ()=>{ amount_with_fee = longAdd(amount, blind_tr.fee.amount) })
-        .then( ()=> this.fetch_blinded_balances( (bal, receipt, commitment) =>{
+        .then( ()=> this.fetch_blinded_balances(from_key_or_label, (bal, receipt, commitment) =>{
                 
             receipt = receipt.toJS()
             let control_authority = receipt.control_authority
@@ -858,9 +810,8 @@ function blind_transfer_help(
                         
                         let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )
                         conf_output.confirmation.encrypted_memo = Aes.fromBuffer(from_secret).encrypt( memo ).toString("hex")
-                        
-                        conf_output.auth = to_out.owner
                         conf_output.confirmation_receipt = conf_output.confirmation
+                        conf_output.auth = to_out.owner
 
                         confirm.outputs.push( conf_output )
                         
@@ -869,15 +820,19 @@ function blind_transfer_help(
                         
                         let tr = new TransactionBuilder()
                         tr.add_type_operation("blind_transfer", blind_tr)
-                        
-                        let signer = this.getPrivateKey(from_key_or_label)
-                        tr.add_signer(signer.child(from_child))
-                        // if( signer ) tr.add_signer( signer )
-                        
-                        // for(let input of blind_tr.inputs) {
-                        //     let one_time_key = input.one_time_key
-                        //     console.log("one_time_key", one_time_key)
-                        // }
+                        {
+                            let signer = this.getPrivateKey(from_key_or_label)
+                            if( ! signer )
+                                throw new Error("Missing private key for: " + from_key_or_label)
+                            
+                            for(let input of blind_tr.inputs) {
+                                let one_time_key = input.one_time_key
+                                console.log("one_time_key", one_time_key)
+                                let secret = signer.get_shared_secret( one_time_key )
+                                let child = hash.sha256( secret )
+                                tr.add_signer(signer.child(child))
+                            }
+                        }
                         
                         return tr.process_transaction(this, null, broadcast).then(()=> {
                             
@@ -980,3 +935,63 @@ let longSub = (a, b) => long("subtract", a, b)
 let authority = (data, weight_threshold = data ? 1 : 0)  =>
     fromJS({ weight_threshold, key_auths: [], account_auths: [], address_auths: [] })
     .merge(data).toJS()
+
+// The commented data-structure is for documentation purposes, it should be kept up-to-date it helps to read this code..
+// Serilizable persisterent state (JSON serilizable types only)..  This is the data kept in the walletStorage.  
+//
+// const empty_wallet = fromJS({
+//     public_name: t.Str,
+//     created: t.Dat,
+//     last_modified: t.Dat,
+//     backup_date: t.maybe(t.Dat),
+//     brainkey: t.maybe(t.Str),
+//     brainkey_sequence: t.Num,
+//     brainkey_backup_date: t.maybe(t.Dat),
+//     deposit_keys: t.maybe(t.Obj),
+//     chain_id: t.Str,
+//     
+//     // [blind_receipt,...]
+//     blind_receipts: [ {
+//         "control_authority": { // authority
+//           "weight_threshold": 1,
+//           "account_auths": [ ],
+//           "key_auths": [ [ "GPH6JuWYWHCsKmsMPpLh7WWsX2b2fZNDR6d4J8t1Umpkf5ppZjnCD", 1 ] ],
+//           "address_auths": [ ]
+//         },
+//         "conf": { // stealth_confirmation
+//           "one_time_key": "GPH6nUimjFJr37p6CTBof5sxV9edWxgz1CRN67wrkv3Sj3fNURjgz",
+//           "to": "GPH7vbxtK1WaZqXsiCHPcjVFBewVj8HFRd5Z5XZDpN6Pvb2dZcMqK",
+//           "encrypted_memo": "dbbd60b6fdd7...4441"
+//         },
+//         "data": { // stealth_memo_data
+//           "amount": {
+//             "amount": "10000000",
+//             "asset_id": "1.3.0"
+//           },
+//           "blinding_factor": "1c53d91afeee0e78a22c6b2b6b069552b787962998f3df4e1690a747c43066a4",
+//           "commitment": "03280e78d1bf73b0e850ba142db481bd9abb8320d6ed5e9612061a66c32a87bb9f",
+//           "check": 2482253067
+//         },
+//         "date": "2016-02-02T19:26:41.883Z",
+//         "to_label": "alice",
+//         "amount": {
+//           "amount": "10000000",
+//           "asset_id": "1.3.0"
+//         },
+//         "memo": "from @nathan",
+//         "to_key": "GPH7vbxtK1WaZqXsiCHPcjVFBewVj8HFRd5Z5XZDpN6Pvb2dZcMqK",
+//         "from_label": "@nathan",
+//         "used": false
+//       }
+//     ],
+//     keys: {
+//         "pubkey": {
+//             //  No two keys can have the same label, no two labels can have the same key
+//             label: t.maybe(t.Str),
+//             import_account_names: t.maybe(t.Arr),
+//             brainkey_sequence: t.maybe(t.Num),
+//             private_wif: t.Str, // was: encrypted_key: t.Str
+//             index_address: false // Mark legacy keys for address indexing (addresses are calculated outside of this wallet backup)  
+//         }
+//     }
+// })
