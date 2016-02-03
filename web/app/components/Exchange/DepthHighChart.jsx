@@ -20,7 +20,8 @@ class DepthHighChart extends React.Component {
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
-            nextProps.showCallLimit !== this.props.showCallLimit
+            nextProps.showCallLimit !== this.props.showCallLimit ||
+            nextProps.hasPrediction !== this.props.hasPrediction
         );
     }
 
@@ -180,12 +181,19 @@ class DepthHighChart extends React.Component {
         if (flatBids.length > 0 && flatAsks.length > 0) {
             let middleValue = (flatAsks[0][0] + flatBids[flatBids.length - 1][0]) / 2;
             let adjustedSpread = spread * power;
+            
             config.xAxis.min = middleValue * 0.45;
             config.xAxis.max = middleValue * 1.55;
+         
             if (adjustedSpread > 0 && adjustedSpread > middleValue) {
                 config.xAxis.min = Math.max(0, middleValue - 1.5 * adjustedSpread);
                 config.xAxis.max = middleValue + 1.5 * adjustedSpread;
             }
+        }
+
+        if (this.props.hasPrediction) {
+            config.xAxis.min = -0.05 * power;
+            config.xAxis.max = 1.05 * power;
         }
 
         // Add plotlines if defined

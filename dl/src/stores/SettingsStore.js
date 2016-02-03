@@ -185,7 +185,6 @@ class SettingsStore {
         if (ls) {
             ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
         }
-
     }
 
     onAddStarMarket(market) {

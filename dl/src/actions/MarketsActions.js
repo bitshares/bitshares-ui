@@ -246,6 +246,58 @@ class MarketsActions {
             });
     }
 
+    createPredictionShort(account, sellAmount, sellAsset, buyAmount, collateralAmount, buyAsset, expiration, isFillOrKill, fee_asset_id) {
+
+        var tr = wallet_api.new_transaction();
+
+        // let fee_asset_id = sellAsset.get("id");
+        if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
+           fee_asset_id = "1.3.0";
+        }
+
+        tr.add_type_operation("call_order_update", {
+            "fee": {
+                amount: 0,
+                asset_id: fee_asset_id
+            },
+            "funding_account": account,
+            "delta_collateral": {
+                "amount": collateralAmount,
+                "asset_id": "1.3.0"
+            },
+            "delta_debt": {
+                "amount": sellAmount,
+                "asset_id": sellAsset.get("id")
+            }
+        });
+
+        tr.add_type_operation("limit_order_create", {
+            fee: {
+                amount: 0,
+                asset_id: fee_asset_id
+            },
+            "seller": account,
+            "amount_to_sell": {
+                "amount": sellAmount,
+                "asset_id": sellAsset.get("id")
+            },
+            "min_to_receive": {
+                "amount": buyAmount,
+                "asset_id": buyAsset.get("id")
+            },
+            "expiration": expiration,
+            "fill_or_kill": isFillOrKill
+        });
+
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            return true;
+        })
+            .catch(error => {
+                console.log("order error:", error);
+                return {error};
+            });
+    }
+
     cancelLimitOrder(accountID, orderID) {
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {

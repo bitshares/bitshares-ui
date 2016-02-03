@@ -171,7 +171,13 @@ module.exports = {
             },
             clear_proxy: "移除投票代理",
             start: "开始时间",
-            end: "结束时间"
+            end: "结束时间",
+            daily: "每日",
+            creator: "创建者",
+            recycled: "循环",
+            funding: "注资",
+            total_budget: "预算总额",
+            unused_budget: "未使用预算"
         },
         options: {
             num_witnesses: "信任见证人",
@@ -235,7 +241,13 @@ module.exports = {
             title: "待解冻余额",
             balance_number: "余额 #%(id)s",
             no_balances: "该账户无待解冻余额"
-        }
+        },
+        show_hidden: "显示已忽略资产",
+        hide_hidden: "隐藏已忽略资产",
+        ignore: "忽略",
+        unignore: "取消忽略",
+        show_ignored: "显示已忽略账户",
+        hide_ignored: "显示已忽略账户"
     },
     transfer: {
         from: "来自",
@@ -267,29 +279,40 @@ module.exports = {
     operation: {
         pending: " %(blocks)s 个区块待定",
         no_recent: "近期无交易",
-        reg_account: "{registrar} registered the account {new_account}",
-        transfer: "{from} sent {amount} to {to}",
-        proposal_create: "{account} created a proposed transaction",
-        proposal_update: "{account} updated a proposed transaction",
-        proposal_delete: "{account} deleted a proposed transaction",
-        fill_order: "{account} bought {received} at {price}",
-        vesting_balance_withdraw: "{account} withdrew vesting balance of {amount}",
-        balance_claim: "{account} claimed a balance of {amount}",
-        publish_feed: "{account} published feed price of {price}",
-        set_proxy: "{account} set {proxy} as their voting proxy",
-        update_account: "{account} updated their account data",
-        limit_order_sell: "{account} placed an order to sell {amount} at {price}",
-        limit_order_buy: "{account} placed an order to buy {amount} at {price}",
-        call_order_update: "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
-        asset_reserve: "{account} reserved {amount}",
-        asset_issue: "{account} issued {amount} to {to}",
-        asset_create: "{account} created the asset {asset}",
-        asset_update: "{account} updated the asset {asset}",
-        lifetime_upgrade_account: "{account} was upgraded to lifetime member",
-        annual_upgrade_account: "{account} was upgraded to annual member",
-        unlisted_by: "{lister} unlisted the account {listee}",
-        whitelisted_by: "{lister} whitelisted the account {listee}",
-        blacklisted_by: "{lister} blacklisted the account {listee}"
+        reg_account: "{registrar} 注册了账户 {new_account}",
+        transfer: "{from} 发送 {amount} 到 {to}",
+        proposal_create: "{account} 创建了拟议交易",
+        proposal_update: "{account} 更新了拟议交易",
+        proposal_delete: "{account} 删除了拟议交易",
+        fill_order: "{account} 以 {price} 的价格购买了 {received}",
+        vesting_balance_withdraw: "{account} 提取了解冻金额 {amount}",
+        balance_claim: "{account} 领取了余额 {amount}",
+        publish_feed: "{account} 发布了喂价 {price}",
+        set_proxy: "{account} 设置 {proxy} 为他的投票代理",
+        update_account: "{account} 更新了它的账户信息",
+        limit_order_sell: "{account} 提交卖单，以 {price} 的价格卖出 {amount} ",
+        limit_order_buy: "{account} 提交买单，以 {price} 的价格买入 {amount} ",
+        call_order_update: "{account} 调整了 {debtSymbol} 债务 {debt} ，以及抵押 {collateral}",
+        asset_reserve: "{account} 保留了 {amount}",
+        asset_issue: "{account} 发行了 {amount} 到 {to}",
+        asset_create: "{account} 创建了资产 {asset}",
+        asset_update: "{account} 更新了资产 {asset}",
+        lifetime_upgrade_account: "{account} 升级到终身会员",
+        annual_upgrade_account: "{account} 升级到年度会员",
+        unlisted_by: "{lister} 将 {listee} 移出清单",
+        whitelisted_by: "{lister} 将 {listee} 加入白名单",
+        blacklisted_by: "{lister} 将 {listee} 加入黑名单",
+        limit_order_cancel: "{account} 取消了订单 #%(order)s",
+        transfer_account: "{account} 所有权转移到 {to}",
+        asset_update_feed_producers: "{account} 更新了资产 {asset} 的喂价者",
+        asset_fund_fee_pool: "{account} 向 {asset} 手续费池注入 {amount}",
+        asset_settle: "{account} 请求清算 {amount}",
+        asset_global_settle: "{account} 请求以 {price} 的价格进行全局清算 {asset}",
+        witness_create: "{account} 升级到见证人",
+        witness_update: "{account} 更新了见证人信息",
+        witness_pay: "提取见证人收入到账户",
+        witness_receive: "Received witness from witness",
+        worker_create: "{account} 创建了预算提案，请求每日支付 {pay}"
     },
     transaction: {
         sent: "发送",
@@ -459,7 +482,8 @@ module.exports = {
             white_listed: "加入白名单",
             black_listed: "加入黑名单",
             white_and_black_listed: "加入白/黑名单"
-        }
+        },
+        asset_reserve: "保留资产数量"
     },
     explorer: {
         accounts: {
@@ -520,7 +544,8 @@ module.exports = {
             symbol: "代码",
             id: "ID",
             issuer: "发行人",
-            precision: "精度"
+            precision: "精度",
+            prediction: "预测市场资产"
         },
         asset: {
             title: "资产",
@@ -595,6 +620,13 @@ module.exports = {
         },
         account: {
             title: "账户"
+        },
+        fees: {
+            type: "手续费类型",
+            fee: "标准手续费",
+            feeeq: "(相当于)",
+            feeltm: "终身/年度会员手续费",
+            feeltmeq: "(相当于)"
         }
     },
     settings: {
@@ -794,6 +826,10 @@ module.exports = {
             title: "请求清算资产%(asset)s",
             amount: "数量",
             submit: "清算资产"
+        },
+        deposit: {
+            amount: "充值数量",
+            submit: "充值"
         }
     },
     init_error: {

@@ -91,15 +91,20 @@ class Tabs extends React.Component {
         let activeContent = null;
 
         let tabs = React.Children.map(children, (child, index) => {
+            if (!child) {
+                return null;
+            }
             let isActive = index === this.state.activeTab;
             if (isActive) {
                 activeContent = child.props.children;
             }
             return React.cloneElement(child,{isActive: isActive, changeTab: this._changeTab.bind(this), index: index} )
-        });
+        }).filter(a => {
+            return a !== null;
+        })
 
         return (
-            <div>
+            <div className={this.props.className}>
                 <div style={style} className={cnames("tabs", tabsClass)}>
                     {tabs}
                 </div>
