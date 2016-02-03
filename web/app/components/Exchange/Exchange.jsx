@@ -340,7 +340,7 @@ class Exchange extends React.Component {
         }
     }
 
-    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, sellBalance, coreBalance, type, e) {
+    _createLimitOrderConfirm(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, sellBalance, coreBalance, type, short = true, e) {
         e.preventDefault();
         let feeID; // = "1.3.0";
 
@@ -400,7 +400,7 @@ class Exchange extends React.Component {
             });
         }
 
-        if (type === "sell" && isPredictionMarket) {
+        if (type === "sell" && isPredictionMarket && short) {
             return this._createPredictionShort(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
         }
         this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
