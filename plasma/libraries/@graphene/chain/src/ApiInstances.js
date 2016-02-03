@@ -45,29 +45,6 @@ class ApisInstance {
     /** @arg {string} connection .. */
     connect( connection_string ) {
         
-        // Graphene-ui code, move this to the app's init routine:
-        
-        // if (this.ws_rpc) return; // already connected
-        // let rpc_user, rpc_password;
-        // try { // For command-line support, all references to "window" go in the try catch
-        //     let rpc_host, rpc_port;
-        //     let args = window.location.hash.split("/");
-        //     if (args.length > 2) {
-        //         let parts = args[2].split(":");
-        //         rpc_user = parts[0];
-        //         rpc_password = parts[1];
-        //         rpc_host = parts[2];
-        //         rpc_port = parts[3];
-        //     }
-        //     if (rpc_host) {
-        //         let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        //         let port = rpc_port ? `:${rpc_port}` : "";
-        //         connection_string = `${protocol}${rpc_host}${port}`
-        //     }
-        // } catch (e) {}
-        // if (!connection_string) connection_string = SettingsStore.getSetting("connection");
-        //connection_string = "ws://localhost:8090";
-        
         console.log("INFO\tApiInstances\tconnect\t", connection_string);
         
         let rpc_user = "", rpc_password = ""
