@@ -507,7 +507,7 @@
         },
         assets: {
             title: "Aktifler",
-            market: "AkıllıParalar",
+            market: "Akıllı Paralar",
             user: "Kullanıcı Aktifleri",
             prediction: "Tahmin piyasası aktifleri",
             symbol: "Sembol",
