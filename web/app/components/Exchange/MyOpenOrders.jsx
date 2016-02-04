@@ -196,7 +196,9 @@ class MyOpenOrders extends React.Component {
                 </div>
 
                 <div className="grid-block vertical align-center text-center no-padding shrink order-2">
-                    <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
+                    <div>
+                        <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
+                    </div>
                 </div>
                 
                 <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>

@@ -195,8 +195,6 @@ class BorrowModalContent extends React.Component {
             isValid = false;
         }
 
-        console.log("errors:", errors, "isValid:", isValid);
-
         this.setState({errors, isValid});
     }
 

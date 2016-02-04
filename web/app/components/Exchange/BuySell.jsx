@@ -11,17 +11,18 @@ import FormattedFee from "../Utility/FormattedFee";
 
 @BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
+    
     static propTypes = {
         balance: ChainTypes.ChainObject,
         type: PropTypes.string,
         amountChange: PropTypes.func.isRequired,
         priceChange: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired
-    }
+    };
 
     static defaultProps = {
         type: "bid"
-    }
+    };
 
     shouldComponentUpdate(nextProps) {
         return (
@@ -33,7 +34,8 @@ class BuySell extends React.Component {
                 nextProps.account !== this.props.account ||
                 nextProps.className !== this.props.className ||
                 nextProps.fee !== this.props.fee ||
-                nextProps.isPredictionMarket !== this.props.isPredictionMarket
+                nextProps.isPredictionMarket !== this.props.isPredictionMarket ||
+                nextProps.feeAsset !== this.props.feeAsset
             );
     }
 
@@ -52,7 +54,8 @@ class BuySell extends React.Component {
     render() {
         let {type, quote, base, amountChange, fee, isPredictionMarket,
             priceChange, onSubmit, balance, totalPrecision, totalChange,
-            balancePrecision, quotePrecision, currentPrice, currentPriceObject} = this.props;
+            balancePrecision, quotePrecision, currentPrice, currentPriceObject,
+            feeAsset, feeAssets} = this.props;
         let amount, price, total;
 
         if (this.props.amount) amount = this.props.amount;
@@ -83,6 +86,14 @@ class BuySell extends React.Component {
                            noBalance ? counterpart.translate("exchange.no_balance") :
                            null;
 
+        // Fee asset selection
+        if( feeAssets[1].getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" && feeAssets[1].getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" ) {
+            feeAsset = feeAssets[0];
+            feeAssets.splice(1, 1);
+        }
+        let options = feeAssets.map(asset => {
+            return <option key={asset.get("id")} value={asset.get("id")}>{asset.get("symbol")}</option>;
+        });
 
         return (
             <div className={this.props.className + " middle-content"}>
@@ -133,8 +144,10 @@ class BuySell extends React.Component {
                                 <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                     <input disabled type="text" id="fee" value={fee} autoComplete="off"/>
                                 </div>
-                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
-                                    {balanceSymbol}
+                                <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: 1}}>
+                                    <select style={feeAssets.length === 1 ? {background: "none"} : null} disabled={feeAssets.length === 1} value={this.props.feeAsset.get("id")} className="form-control" onChange={this.props.onChangeFeeAsset}>
+                                        {options}
+                                    </select>
                                 </div>
 
                             </div>
