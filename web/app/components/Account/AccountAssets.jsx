@@ -207,9 +207,10 @@ class AccountAssets extends React.Component {
                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
                        <td>
-                          <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
+                          {!asset.bitasset_data_id ? (
+                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
                                 <Translate content="transaction.trxTypes.asset_issue" />
-                          </button>
+                          </button>) : null}
                       </td>
                        <td>
                           <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button outline">
