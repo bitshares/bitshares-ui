@@ -28,32 +28,50 @@ let MAX_SAFE_INT = new big("9007199254740991");
 class BitAssetOptions extends React.Component {
     
     static propTypes = {
-        backingAsset: ChainTypes.ChainAsset.isRequired
+        backingAsset: ChainTypes.ChainAsset.isRequired,
+        isUpdate: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        isUpdate: false
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            backingAsset: props.backingAsset.get("symbol")
+            backingAsset: props.backingAsset.get("symbol"),
+            error: null
         };
     }
 
     _onInputBackingAsset(asset) {
         this.setState({
-            backingAsset: asset.toUpperCase()
+            backingAsset: asset.toUpperCase(),
+            error: null
         });
     }
 
     _onFoundBackingAsset(asset) {
         if (asset) {
             if (asset.get("id") === "1.3.0" || (asset.get("bitasset_data_id") && !asset.getIn(["bitasset", "is_prediction_market"]))) {       
-                this.props.onUpdate("short_backing_asset", asset.get("id"));
+                if (asset.get("precision") !== this.props.assetPrecision) {
+                    this.setState({
+                        error: counterpart.translate("account.user_issued_assets.error_precision", {asset: this.props.assetSymbol})
+                    });
+                } else {
+                    this.props.onUpdate("short_backing_asset", asset.get("id"));
+                }
+            } else {
+                this.setState({
+                    error: counterpart.translate("account.user_issued_assets.error_invalid")
+                });
             }
         }
     }
 
     render() {
         let {bitasset_opts} = this.props;
+        let {error} = this.state;
 
         return (
             <div>
@@ -77,7 +95,7 @@ class BitAssetOptions extends React.Component {
                     <input type="number" value={bitasset_opts.maximum_force_settlement_volume / assetConstants.GRAPHENE_1_PERCENT} onChange={this.props.onUpdate.bind(this, "maximum_force_settlement_volume")}/>
                 </label>
 
-                <div className="grid-block no-margin small-12 medium-6">
+                <div className="grid-block no-margin small-12">
                     <AssetSelector
                         label="account.user_issued_assets.backing"
                         onChange={this._onInputBackingAsset.bind(this)}
@@ -87,6 +105,7 @@ class BitAssetOptions extends React.Component {
                         style={{width: "100%", paddingRight: "10px"}}
                         onFound={this._onFoundBackingAsset.bind(this)}
                     />
+                    {error ? <div className="content-block has-error">{error}</div> : null}
                 </div>
             </div>
         );
@@ -642,6 +661,8 @@ class AccountAssetCreate extends React.Component {
                                     bitasset_opts={bitasset_opts}
                                     onUpdate={this.onChangeBitAssetOpts.bind(this)}
                                     backingAsset={bitasset_opts.short_backing_asset}
+                                    assetPrecision={update.precision}
+                                    assetSymbol={update.symbol}
                                 />
                             </Tab>) : null}
 

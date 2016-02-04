@@ -638,6 +638,8 @@ class AccountAssetUpdate extends React.Component {
                                         bitasset_opts={bitasset_opts}
                                         onUpdate={this.onChangeBitAssetOpts.bind(this)}
                                         backingAsset={bitasset_opts.short_backing_asset}
+                                        assetPrecision={asset.get("precision")}
+                                        assetSymbol={asset.get("symbol")}
                                     />
                                 {confirmButtons}
                                 </div>

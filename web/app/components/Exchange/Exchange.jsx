@@ -1455,12 +1455,14 @@ class Exchange extends React.Component {
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
+                            backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={currentAccount}
                          /> : null}
                     {!isNullAccount && baseIsBitAsset ? 
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}
+                            backing_asset={baseAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={currentAccount}
                         /> : null}
                 {/* End of Second Vertical Block */}

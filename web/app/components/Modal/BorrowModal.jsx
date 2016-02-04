@@ -38,7 +38,7 @@ class BorrowModalContent extends React.Component {
         backing_balance: ChainTypes.ChainObject,
         call_orders: ChainTypes.ChainObjectsList,
         hasCallOrders: PropTypes.bool
-    }
+    };
 
     constructor(props) {
         super();
@@ -433,19 +433,19 @@ export default class ModalWrapper extends React.Component {
     }
 
     render() {
-
-        let modalId = "borrow_modal_" + this.props.quote_asset;
-        let accountBalance = this.props.account.get("balances").toJS();
+        let {quote_asset, backing_asset, account} = this.props;
+        let modalId = "borrow_modal_" + quote_asset;
+        let accountBalance = account.get("balances").toJS();
         let coreBalance, bitAssetBalance;
 
         if (accountBalance) {
             for (var id in accountBalance) {
 
-                if (id === "1.3.0") {
+                if (id === backing_asset) {
                     coreBalance = accountBalance[id];
                 }
 
-                if (id === this.props.quote_asset) {
+                if (id === quote_asset) {
                     bitAssetBalance = accountBalance[id];
                 }
             }
@@ -458,15 +458,15 @@ export default class ModalWrapper extends React.Component {
                 </Trigger>
                 <div className="grid-block vertical">
                     <BorrowModalContent
-                        {...this.props}
-                        quote_asset={this.props.quote_asset}
-                        call_orders={this.props.account.get("call_orders")}
-                        hasCallOrders={this.props.account.get("call_orders").size > 0}
+                        quote_asset={quote_asset}
+                        call_orders={account.get("call_orders")}
+                        hasCallOrders={account.get("call_orders").size > 0}
                         modalId={modalId}
                         bitasset_balance={bitAssetBalance}
                         backing_balance={coreBalance}
-                        backing_asset={"1.3.0"}
+                        backing_asset={backing_asset}
                         hide_help={this.state.smallScreen}
+                        account={account}
                     />
                 </div>
             </Modal>
