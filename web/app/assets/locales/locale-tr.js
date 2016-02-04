@@ -134,7 +134,20 @@
             advanced: "Gelişmiş",
             need_asset: " İki aktiften biri an azından %(name)s olmalıdır",
             perm_warning: "UYARI: İzinler yalnızca etkisiz hale getirilebilitler, bir kere etkisiziştiridiklerinde tekrar aktif hale getirilemezler!!",
-            issued_assets: "İhraç Edilmiş Aktifler"
+            issued_assets: "Piyasa Sürülen Aktifler",
+            short: "Kısa ad (max 32 harf)",
+            condition: "Durum (max 60 harf)",
+            expiry: "Piyasa çözülüm tarihi",
+            decimals: "Ondalık hane sayısı",
+            mpa: "Akıllı Para",
+            pm: "İki değerli tahmin piyasası",
+            bitasset_opts: "Akıllı Para tercihleri",
+            feed_lifetime_sec: "Dakika olarak yayın ömrü",
+            minimum_feeds: "En az yayın sayısı",
+            force_settlement_delay_sec: "Zorunlu hesaplaşma gecikmesi (dakika)",
+            force_settlement_offset_percent: "Zorunlu hesaplaşmanın yüzdelik sapması",
+            maximum_force_settlement_volume: "Max zorunlu mahsup hacmi (yüzde)",
+            backing: "Kısanın dayandığı aktif"
         },
         connections: {
             known: "Tarafından Tanınıyor",
