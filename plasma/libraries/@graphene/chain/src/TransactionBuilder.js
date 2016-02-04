@@ -216,6 +216,7 @@ export default class TransactionBuilder {
         }
 
         return Promise.all(promises).then( (results)=> {
+            
             var fees = results[0];
 
             if (asset_id !== "1.3.0") {
@@ -248,26 +249,30 @@ export default class TransactionBuilder {
             flatten(fees);
             
             var asset_index = 0;
-            var end = this.operations.length;
-            var set_fee = function(operation) {
-                operation.fee =  flat_assets[ asset_index++ ];
-                if (operation.proposed_ops) {
-                    return (() => {
-                        var result = [];
-                        for (var y = 0; 0 < operation.proposed_ops.length ? y < operation.proposed_ops.length : y > operation.proposed_ops.length; 0 < operation.proposed_ops.length ? y++ : y++) {
-                            result.push(set_fee(operation.proposed_ops[y].op[1]));
-                        }
-                        return result;
-                    })();
+            
+            var set_fee = operation => {
+                if( ! operation.fee || operation.fee.amount === 0
+                    || (operation.fee.amount.toString && operation.fee.amount.toString() === "0")// Long
+                ) {
+                    operation.fee = flat_assets[ asset_index ]
+                    console.log("new operation.fee", operation.fee)
+                } else {
+                    console.log("old operation.fee", operation.fee)
                 }
-            };
-            for (var i = 0; 0 < end ? i < end : i > end; 0 < end ? i++ : i++) {
-                set_fee(this.operations[i][1]);
+                asset_index++
+                if (operation.proposed_ops) {
+                    var result = [];
+                    for ( var y = 0; y < operation.proposed_ops.length; y++)
+                        result.push(set_fee(operation.proposed_ops[y].op[1]))
+                    
+                    return result;
+                }
             }
+            for( let i = 0; i < this.operations.length; i++)
+                set_fee(this.operations[i][1])
+            
             //DEBUG console.log('... get_required_fees',operations,asset_id,flat_assets)
-            return;
-        }
-        );
+        });
     }
 
     get_potential_signatures(){

@@ -1,2 +1,4 @@
-// The bablerc file here prevents babel in the sub-projects from seeing ../.babelrc
-{}
+// Note, the bablerc file here prevents babel in these sub-projects from seeing ../.babelrc
+{
+    "presets": ['es2015']
+}

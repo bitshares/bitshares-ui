@@ -657,7 +657,7 @@ function updateWallet(wallet_object = this.wallet_object, state = this.storage.s
             this.notify = true
             
             if( this.api == null || remote_copy !== true ) {
-                resolve()
+                resolve( wallet_object )
                 return
             }
             
@@ -717,7 +717,7 @@ function updateWallet(wallet_object = this.wallet_object, state = this.storage.s
                 })
             }
         })
-        resolve(p1)
+        resolve(p1.then( ()=> wallet_object ))
     })
 }
 

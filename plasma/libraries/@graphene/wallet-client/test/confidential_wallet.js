@@ -121,35 +121,77 @@ describe('Confidential wallet', () => {
         cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "nathan" )
         
         // must wait for a blocks...
-        this.timeout(30 * 1000)
-        
+        this.timeout(40 * 1000)
+
         return Promise.resolve()
         
-            // to single blind address
+            // single blind address
             .then( () => cw.transferToBlind( "nathan", "CORE", [["alice", 100]], true ))
-            .then( tx => assert(tx.outputs, "tx.outputs") )
+            // .then( conf => assert.equal(conf.trx.operations[0][1].fee.amount, 15 * 100000, "fee") )
+            // .then( tx => console.log(tx) )
             
-            .then( () => cw.getBlindBalances("alice") )
-            .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "100" + "00000" }) )
-            
-            // to double blind addresses
-            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",10], ["bob",1]], true ))
-            .then( tx => assert(tx.outputs, "tx.outputs") )
-            
-            // .then( () => cw.getBlindBalances("alice") )
-            // .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "110" + "00000" }) )
+            //     .then( () => cw.getBlindBalances("alice") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "100" + "00000" }) )
             // 
-            // .then( () => cw.getBlindBalances("bob") )
-            // .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "1" + "00000" }) )
+            // // two blind addresses
+            // .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",10], ["bob",10]], true ))
+            // 
+            //     .then( () => cw.getBlindBalances("alice") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "110" + "00000" }, "alice") )
+            //     
+            //     .then( () => cw.getBlindBalances("bob") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "10" + "00000" }, "bob") )
+            // 
+            // // blind to account
+            // .then( ()=> cw.blindTransfer("alice", "nathan", 1, "CORE", true) )
+            // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )
+            //     
+            //     // 110 - 15 fee - 1 === 94
+            //     .then( () => cw.getBlindBalances("alice") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "94" + "00000" }, "alice") )
+            // 
+            // // blind to blind
+            // .then( ()=> cw.blindTransfer("alice", "bob", 10, "CORE", true) )
+            // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )
+            //     
+            //     // 94 - 15 fee - 1 === 78
+            //     .then( () => cw.getBlindBalances("alice") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "69" + "00000" }, "alice") )
+            // 
+            //     .then( () => cw.getBlindBalances("bob") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "20" + "00000" }, "bob") )
+            // 
+            // // No change transaction (results in zero balance)
+            // .then( ()=> cw.blindTransfer("bob", "alice", 5, "CORE", true) )
+            // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )
+            // 
+            //     // 20 - 5 fee - 15 === 0
+            //     .then( () => cw.getBlindBalances("bob") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), {}, "bob") )
+            //     
+            //     then( () => cw.getBlindBalances("alice") )
+            //     .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "74" + "00000" }, "alice") )
+            // 
+            // blind to account
+            .then( ()=> cw.transferFromBlind("alice", "nathan", 59, "CORE", true) )
+            // .then( conf => assert.equal(conf.trx.operations[0][1].fee.amount, 15 * 100000, "fee") )
             
-            .then( ()=> cw.transferFromBlind("alice", "nathan", 1, "CORE", true) )
-            .then( tx => assert(tx.outputs, "tx.outputs") )
-            
+                .then( () => cw.getBlindBalances("alice") )
+                .then( balances => assert.deepEqual(balances.toJS(), {}, "alice") )
+                
+            // Test blindHistory
             // .then( ()=> cw.blindHistory("alice") )
-            // .then( receipts => assert.equal(receipts.size, 3, "alice receipt(s)") )
-            // 
+            // .then( receipts => assert(receipts.size, "alice receipt(s)") )
+            //     
+            // .then( ()=> cw.blindHistory("bob") )
+            // .then( receipts => assert(receipts.size, "bob receipt(s)") )
+            //     
             // .then( ()=> cw.blindHistory("nathan") )
-            // .then( receipts => assert.equal(receipts.size, 3, "nathan receipt(s)") )
+            // .then( receipts => assert(receipts, "nathan receipt(s)") )
+            
+            // DEBUG, Print the entire Wallet Object
+            // .then( ()=> console.log("INFO\twallet_object\t", JSON.stringify(cw.wallet.wallet_object, null, 4)) )
+            
     })
     
     it("blind to blind transfer", function() {

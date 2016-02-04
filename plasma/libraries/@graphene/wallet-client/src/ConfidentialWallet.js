@@ -1,13 +1,13 @@
 import assert from "assert"
-import { fromJS, Map, List } from "immutable"
+import { fromJS, Map, List, Set } from "immutable"
 import { PrivateKey, PublicKey, Aes, brainKey, hash, key } from "@graphene/ecc"
-import { fetchChain, config, Apis, TransactionBuilder, number_utils } from "@graphene/chain"
+import { fetchChain, config, chain_types, Apis, TransactionBuilder, number_utils } from "@graphene/chain"
 import { ops } from "@graphene/serializer"
 import AddressIndex from "./AddressIndex"
 
 import ByteBuffer from "bytebuffer"
 
-let { stealth_memo_data, blind_transfer } = ops
+let { stealth_memo_data, blind_transfer, transfer_from_blind } = ops
 let { toImpliedDecimal } = number_utils
 let Long = ByteBuffer.Long
 
@@ -34,6 +34,8 @@ export default class ConfidentialWallet {
         this.getPubkeys_having_PrivateKey = getPubkeys_having_PrivateKey.bind(this)
         this.blind_transfer_help = blind_transfer_help.bind(this)
         this.fetch_blinded_balances = fetch_blinded_balances.bind(this)
+        this.send_blind_tr = send_blind_tr.bind(this)
+        this.receive_blind_tr = receive_blind_tr.bind(this)
     }
     
     /**
@@ -231,14 +233,7 @@ export default class ConfidentialWallet {
         @return {Promise<Map<asset_id, amount>>} the total balance of all blinded commitments that can be claimed by given account key or label
     */
     getBlindBalances(pubkey_or_label) {
-        
         this.assertLogin()
-        
-        let commitments = this.commitments()
-        
-        if( ! commitments.size )
-            return Promise.resolve()
-        
         let balances = Map().asMutable()
         let p1 = this.fetch_blinded_balances( pubkey_or_label,  (bal, receipt)=> {
             let amount = receipt.getIn(["data", "amount"])
@@ -347,6 +342,7 @@ export default class ConfidentialWallet {
                             confirmation: {
                                 one_time_key: one_time_private.toPublicKey().toString(),
                                 to: to_public.toString(),
+                                owner: out.owner // allows wallet save before broadcasting (durable)
                             }
                         }
                         
@@ -363,31 +359,32 @@ export default class ConfidentialWallet {
             
             return Promise.all(promises).then(()=>{
                 
-                bop.amount = { amount: total_amount.toString(), asset_id: asset.get("id") }
+                let p
+                if( broadcast ) {
+                    // make sure the receipts are stored first before broadcasting (durable)
+                    let name = account.get("name")
+                    let receipts = []
+                    for(let out of confirm.outputs)
+                        receipts.push( out.confirmation_receipt )
+                    
+                    p = this.receiveBlindTransfer( receipts, "@"+name, "from @"+name )
+                }
                 
-                return Apis
-                .crypto("blind_sum", blinding_factors, blinding_factors.length)
+                return (p ? p : Promise.resolve())
+                .then( ()=> Apis.crypto("blind_sum", blinding_factors, blinding_factors.length) )
                 .then( res => bop.blinding_factor = res )
                 .then( ()=>{
+                    
+                    bop.amount = { amount: total_amount.toString(), asset_id: asset.get("id") }
                     
                     let tr = new TransactionBuilder()
                     bop.outputs = bop.outputs.sort((a, b)=> a.commitment > b.commitment)
                     tr.add_type_operation("transfer_to_blind", bop)
                     
                     return tr.process_transaction(this, null, broadcast).then(()=> {
-                        
-                        let promises = []
                         confirm.trx = tr.serialize()
-                        
-                        if( broadcast ) {
-                            for(let out of confirm.outputs) {
-                                let name = account.get("name")
-                                promises.push(
-                                    this.receiveBlindTransfer( out.confirmation_receipt, "@"+name, "from @"+name )
-                                )
-                            }
-                        }
-                        return Promise.all(promises).then(()=> confirm )
+                        // console.log("confirm trx2", JSON.stringify(confirm.outputs))
+                        return confirm
                     })
                 })
                 
@@ -413,78 +410,91 @@ export default class ConfidentialWallet {
     }
     
     /**
-        Given a confirmation receipt, this method will parse it for a blinded balance and confirm that it exists in the blockchain.  If it exists then it will report the amount received and who sent it.
+        Given a confirmation receipt, this method will parse it for a blinded balance and confirm that it exists in the blockchain.  If it exists then it will save it in the wallet then report the amount received and who sent it.
 
-        @arg {string} confirmation_receipt - a base58 encoded stealth confirmation
+        Checking the blockchain is optional.  This allows the wallet to save the receipt first before broadcasting.  In that case, confirmation_receipt.owner is provided and the get_blinded_balances API call is skipped.
+        
+        @arg {object|Array} confirmation_receipts - { one_time_key, to, encrypted_memo, [owner = null] } 
         @arg {string} opt_from - if not empty and the sender is a unknown public key, then the unknown public key will be given the label opt_from
         @arg {string} opt_memo
         @return {Promise<blind_receipt>}
     */
-    receiveBlindTransfer( confirmation_receipt, opt_from, opt_memo ) {
+    receiveBlindTransfer( confirmation_receipts, opt_from, opt_memo ) {
 
         // console.log("confirmation_receipt", confirmation_receipt, opt_from, opt_memo )
 
         this.assertLogin()
-        let conf = confirmation_receipt
-        assert( conf.to, "to is required")
         
-        let result = { conf }
-        
-        let to_private = this.getPrivateKey( conf.to )
-        assert( to_private, "No private key for receiver: " + JSON.stringify( conf ))
+        let receipt = conf => {
+            assert( conf.to, "to is required")
+            
+            let result = { conf : fromJS(conf).toJS() }
+            delete result.conf.owner // not stored, it is provided via get_blinded_balances(commitment)
+            
+            let to_private = this.getPrivateKey( conf.to )
+            assert( to_private, "No private key for receiver" )
 
-        let secret = to_private.get_shared_secret( conf.one_time_key )
-        // console.log("TO secret.toString('hex')\t", secret.toString('hex'))
-        let child = hash.sha256( secret )
-        let child_private = PrivateKey.fromBuffer( child )
-        let blind_factor = hash.sha256( child )
+            let secret = to_private.get_shared_secret( conf.one_time_key )
+            // console.log("TO secret.toString('hex')\t", secret.toString('hex'))
+            let child = hash.sha256( secret )
+            let child_private = PrivateKey.fromBuffer( child )
+            let blind_factor = hash.sha256( child )
 
-        assert( typeof conf.encrypted_memo === "string", "Expecting HEX string for confirmation_receipt.encrypted_memo")
-        let plain_memo = Aes.fromBuffer(secret).decryptHexToText( conf.encrypted_memo )
+            assert( typeof conf.encrypted_memo === "string", "Expecting HEX string for confirmation_receipt.encrypted_memo")
+            let plain_memo = Aes.fromBuffer(secret).decryptHexToText( conf.encrypted_memo )
 
-        let memo = stealth_memo_data.fromBuffer( plain_memo )
-        memo = stealth_memo_data.toObject(memo)
-        
-        result.to_key = conf.to
-        result.to_label = this.getKeyLabel( result.to_key )
-        if( memo.from ) {
-            result.from_key = memo.from
-            result.from_label = this.getKeyLabel( result.from_key )
-            if( ! result.from_label ) {
+            let memo = stealth_memo_data.fromBuffer( plain_memo )
+            memo = stealth_memo_data.toObject(memo)
+            
+            result.to_key = conf.to
+            result.to_label = this.getKeyLabel( result.to_key )
+            if( memo.from ) {
+                result.from_key = memo.from
+                result.from_label = this.getKeyLabel( result.from_key )
+                if( ! result.from_label ) {
+                    result.from_label = opt_from
+                    this.setKeyLabel( result.from_key, result.from_label )
+                }
+            } else {
                 result.from_label = opt_from
-                this.setKeyLabel( result.from_key, result.from_label )
             }
-        } else {
-            result.from_label = opt_from
+            result.amount = memo.amount
+            result.memo = opt_memo
+            
+            // checking the blockchain is optional
+            let bbal = conf.owner ? [{ owner: conf.owner }] : Apis.db("get_blinded_balances", [ memo.commitment ])
+            
+            // console.log("memo", JSON.stringify(memo))
+            
+            // confirm the amount matches the commitment (verify the blinding factor)
+            return Apis.crypto("blind", memo.blinding_factor, memo.amount.amount)
+            .then( commtiment_test =>
+                Apis.crypto("verify_sum", [commtiment_test], [memo.commitment], 0)
+                .then( result => assert(result, "verify_sum " + result))
+                .then( ()=> bbal )
+                .then( bbal => {
+                    
+                    assert( bbal.length, "commitment not found in blockchain " )
+                    
+                    result.control_authority = bbal[0].owner
+                    result.data = memo
+                    
+                    this.setKeyLabel( child_private )
+                    result.date = new Date().toISOString()
+                    return result
+                })
+            )
         }
-        result.amount = memo.amount
-        result.memo = opt_memo
-        
-        // 
-        console.log("memo", JSON.stringify(memo))
-        
-        // confirm the amount matches the commitment (verify the blinding factor)
-        return Apis.crypto("blind", memo.blinding_factor, memo.amount.amount)
-        .then( commtiment_test =>
-            Apis.crypto("verify_sum", [commtiment_test], [memo.commitment], 0)
-            .then( result => assert(result, "verify_sum " + result))
-            .then( ()=> Apis.db("get_blinded_balances", [ memo.commitment ]))
-            .then( bbal => {
-                
-                assert( bbal.length, "commitment not found in blockchain " )
-                
-                result.control_authority = bbal[0].owner
-                result.data = memo
-                
-                this.setKeyLabel( child_private )
-                result.date = new Date().toISOString()
-                return this
-                    .update( wallet => wallet.update( "blind_receipts", List(), r => r.push( fromJS(result) ) ))
-                    .then(()=> result)
-            })
-        )
+        let rp = [], receipts
+        // List([confirmation_receipts]).flatten().forEach( r => rp.push(receipt(r)) )
+        List(confirmation_receipts).forEach( r => rp.push(receipt(r)) )
+        return Promise.all(rp)
+            .then( res => receipts = res )
+            .then(() => this.update(
+                wallet => wallet.update("blind_receipts", List(), r => r.concat(fromJS(receipts)))
+            ))
+            .then( ()=> receipts )
     }
-
 
     /**
         Transfers funds from a set of blinded balances to a public account balance.
@@ -511,48 +521,54 @@ export default class ConfidentialWallet {
             if( ! asset ) return Promise.reject("unknown_asset")
             
             amount = toImpliedDecimal(amount, asset.get("precision"))
-            
-            let from_blind = {
-                inputs: [],
-                trx: {
-                    operations: []
-                }
-            }
-            
-            let blind_in
-            
+            let from_blind_fee
             return Promise.resolve()
-            
-            // .then( ()=> get_transfer_from_blind_fee(asset.get("id")) )
-            // .then( fee =>{
-            //     from_blind.fee = fee
-            //     blind_in = longAdd(fee.amount, amount)
-            // })
-            
-            .then( ()=>
+            .then( ()=> get_blind_transfer_fee(asset.get("id"), 0) )
+            .then( fee => from_blind_fee = fee )
+            .then( fee => longAdd(from_blind_fee, amount))
+            .then( amount_with_fee =>
                 this.blind_transfer_help(
                     from_blind_account_key_or_label, from_blind_account_key_or_label,
-                    amount, asset_symbol, false, true
+                    amount_with_fee, asset_symbol, false, true/*to_temp*/
                 )
             )
             .then( conf => {
-
-                assert( conf.outputs.length > 0 )
+    
+                assert( conf.outputs, "outputs are required" )
                 
-                from_blind.to = to_account.get("id")
-                from_blind.amount = { amount: amount.toString(), asset_id: asset.get("id") }
-                from_blind.fee = conf.fee
-                let decrypted_memo = conf.outputs[conf.outputs.length - 1].decrypted_memo
+                let last_output = conf.outputs[conf.outputs.length - 1]
+                let decrypted_memo = last_output.decrypted_memo
                 
-                from_blind.blinding_factor = decrypted_memo.blinding_factor
-                from_blind.inputs.push({
-                    commitment: decrypted_memo.commitment,
-                    authority: authority()
+                let from_blind = {
+                    fee: from_blind_fee,
+                    amount: { amount: amount.toString(), asset_id: asset.get("id") },
+                    to: to_account.get("id"),
+                    blinding_factor: decrypted_memo.blinding_factor,
+                    inputs: [{
+                        commitment: decrypted_memo.commitment,
+                        owner: authority(),
+                        one_time_key: last_output.confirmation.one_time_key//for signing
+                    }]
+                }
+                
+                let p1
+                if( broadcast )
+                    // make sure the receipts are stored first before broadcasting (durable)
+                    p1 = this.receive_blind_tr(conf.outputs, from_blind_account_key_or_label)
+                
+                return (p1 ? p1 : Promise.resolve()).then(()=>{
+                    let operations = conf.trx.operations
+                    operations.push( from_blind )
+                    // console.log("conf.trx", JSON.stringify(conf.trx))
+                    return this.send_blind_tr(
+                        operations,
+                        from_blind_account_key_or_label,
+                        broadcast
+                    ).then( tr => {
+                        conf.trx = tr
+                        return conf
+                    })
                 })
-                
-                // from_blind.fee  = fees->calculate_fee( from_blind, asset_obj->options.core_exchange_rate );
-                conf.trx.operations.push(from_blind)
-                return conf
             })
         })
     }
@@ -589,27 +605,48 @@ function fetch_blinded_balances(pubkey_or_label, callback) {
     assert( public_key, "missing pubkey_or_label " + pubkey_or_label)
     
     let pubkey = public_key.toString()
-    let receipts = this.blind_receipts().filter( r => r.get("to_key") === pubkey)
+    let receipts = this.blind_receipts()
+        .filter( r => r.get("to_key") === pubkey)
+        .filterNot( r => r.get("used") === true )
+    
+    let used = Set()
     let commitments = this.commitments(receipts)
     let p1 = Apis.db("get_blinded_balances", commitments.toJS()).then( bbal => {
         
-        for(let i = 0; i < bbal.length; i++) {
-            let bal = bbal[i]
-            let receipt = receipts.get(i)
+        // if( ! bbal.length )
+        //     console.log("INFO\tConfidentialWallet\tno blinded balances", pubkey_or_label, commitments.toJS())
+        
+        let bbalMap = List(bbal).reduce( (r, bal)=> r.set(bal.commitment, bal), Map())
+        
+        receipts.forEach( receipt => {
+            let commitment = receipt.getIn(["data", "commitment"])
+            let bal = bbalMap.get(commitment)
+            
+            // console.log("used", ! bal, receipt.get('amount'), '\t', pubkey_or_label)
+            
             if( ! bal ) {
-                receipt = receipt.set("used", true)
-                continue
+                used = used.add(commitment)
+                return
             }
-            let commitment = commitments.get(i)
             let ret = callback(bal, receipt, commitment)
             if( ret === false )
-                break
-        }
+                return false
+        })
     })
-    // update the wallet after the API call finishes
-    p1.then(()=> this.update(wallet => wallet.update("blind_receipts", ()=> receipts)) )
-    // have the caller wait on the API call only (not the wallet update)
-    return p1
+    
+    // update "used" in the wallet after the API call finishes
+    return p1.then(()=> {
+        
+        if( used.size ) return this.update(wallet => wallet
+            .update("blind_receipts", receipts => receipts.reduce( (r, receipt) =>
+                used.has( receipt.getIn(["data", "commitment"]) ) ?
+                    r.push(receipt.set("used", true)) :
+                    r.push(receipt)
+                , List()
+            ))
+        )
+        
+    })
 }
 
 /**
@@ -646,7 +683,7 @@ function blind_transfer_help(
         let [ asset ] = res
         if( ! asset ) return Promise.reject("unknown_asset")
         
-        var blind_tr = {
+        let blind_tr = {
             outputs: [],
             inputs: []
         }
@@ -667,16 +704,15 @@ function blind_transfer_help(
         
         .then( ()=>{ amount_with_fee = longAdd(amount, blind_tr.fee.amount) })
         .then( ()=> this.fetch_blinded_balances(from_key_or_label, (bal, receipt, commitment) =>{
-                
-            receipt = receipt.toJS()
-            let control_authority = receipt.control_authority
             
-            blind_tr.inputs.push({ commitment, owner: control_authority,
-                one_time_key: receipt.conf.one_time_key })
+            let control_authority = receipt.get("control_authority")
             
-            blinding_factors.push( receipt.data.blinding_factor )
+            blind_tr.inputs.push({ commitment, owner: control_authority.toJS(),
+                one_time_key: receipt.get("conf").get("one_time_key") })
             
-            available_amount = longAdd(available_amount, receipt.amount.amount)
+            blinding_factors.push( receipt.get("data").get("blinding_factor") )
+            
+            available_amount = longAdd(available_amount, receipt.get("amount").get("amount"))
             
             // return false to "break"
             // Break if the available_amount total is >= amount_with_fee
@@ -781,9 +817,11 @@ function blind_transfer_help(
                             conf_output.decrypted_memo.check = bufferToNumber(from_secret.slice(0, 4))
                             conf_output.confirmation.one_time_key = one_time_private.toPublicKey().toString()
                             conf_output.confirmation.to = from_key.toString()
+                            conf_output.confirmation.owner = change_out.owner
                             
+                            let from_aes = Aes.fromBuffer(from_secret)
                             let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )
-                            conf_output.confirmation.encrypted_memo = Aes.fromBuffer(from_secret).encrypt( memo ).toString("hex")
+                            conf_output.confirmation.encrypted_memo = from_aes.encrypt( memo ).toString("hex")
                             
                             conf_output.auth = change_out.owner
                             conf_output.confirmation_receipt = conf_output.confirmation
@@ -808,50 +846,30 @@ function blind_transfer_help(
                         conf_output.decrypted_memo.check   = bufferToNumber(secret.slice(0, 4))
                         conf_output.confirmation.one_time_key = one_time_private.toPublicKey().toString()
                         conf_output.confirmation.to = to_key.toString()
+                        conf_output.confirmation.owner = to_out.owner
                         
+                        let aes = Aes.fromBuffer(secret)
                         let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )
-                        conf_output.confirmation.encrypted_memo = Aes.fromBuffer(from_secret).encrypt( memo ).toString("hex")
-                        conf_output.confirmation_receipt = conf_output.confirmation
+                        conf_output.confirmation.encrypted_memo = aes.encrypt( memo ).toString("hex")
+                        
                         conf_output.auth = to_out.owner
-
+                        conf_output.confirmation_receipt = conf_output.confirmation
                         confirm.outputs.push( conf_output )
+
+                        let p1
+                        if( broadcast )
+                            // make sure the receipts are stored first before broadcasting (durable)
+                            p1 = this.receive_blind_tr(confirm.outputs, from_key_or_label)
                         
-                        blind_tr.outputs = blind_tr.outputs.sort((a, b)=> a.commitment > b.commitment)
-                        blind_tr.inputs = blind_tr.inputs.sort((a, b)=> a.commitment > b.commitment)
-                        
-                        let tr = new TransactionBuilder()
-                        tr.add_type_operation("blind_transfer", blind_tr)
-                        {
-                            let signer = this.getPrivateKey(from_key_or_label)
-                            if( ! signer )
-                                throw new Error("Missing private key for: " + from_key_or_label)
-                            
-                            for(let input of blind_tr.inputs) {
-                                let one_time_key = input.one_time_key
-                                console.log("one_time_key", one_time_key)
-                                let secret = signer.get_shared_secret( one_time_key )
-                                let child = hash.sha256( secret )
-                                tr.add_signer(signer.child(child))
-                            }
-                        }
-                        
-                        return tr.process_transaction(this, null, broadcast).then(()=> {
-                            
-                            let promises = []
-                            confirm.trx = tr.serialize()
-                            
-                            if( broadcast ) {
-                                for(let out of confirm.outputs) {
-                                    try {
-                                        let rec_promise = this.receiveBlindTransfer( out.confirmation_receipt, from_key_or_label, "" )
-                                        promises.push( rec_promise )
-                                    } catch(error) {
-                                        console.error("ERROR\tConfidentialWallet\tblind_transfer_help", error, "stack", error.stack)
-                                    }
-                                }
-                            }
-                            return Promise.all(promises).then(()=> confirm )
+                        return (p1 ? p1 : Promise.resolve()).then(()=>{
+                            return this.send_blind_tr([blind_tr], from_key_or_label, broadcast).then( tr => {
+                                confirm.trx = tr
+                                // confirm.inputs = blind_tr.inputs
+                                // console.log("blind_tr.inputs", JSON.stringify(blind_tr.inputs))
+                                return confirm
+                            })
                         })
+                        
                     })
                 })
             })
@@ -874,22 +892,74 @@ function update(callback) {
     })
 }
 
+function receive_blind_tr(outputs, from_key_or_label, op_memo = "") {
+    try {
+        let receipts = []
+        for(let out of outputs)
+            receipts.push( out.confirmation_receipt )
+
+        return this.receiveBlindTransfer( receipts, from_key_or_label, op_memo )
+        
+    } catch(error) {
+        console.error("ERROR\tConfidentialWallet\tblind_transfer_help", error, "stack", error.stack)
+        throw error
+    }
+}
+
+function send_blind_tr(ops, from_key_or_label, broadcast) {
+    
+    let tr = new TransactionBuilder()
+
+    for(let op of ops) {
+        
+        if( Array.isArray(op) ) {
+            op = op[1]
+        }
+        
+        assert(op.inputs, "inputs are required")
+        op.inputs = op.inputs.sort((a, b)=> a.commitment > b.commitment)
+        
+        let op_name = op.outputs ? "blind_transfer" : "transfer_from_blind"
+        if( op.outputs )
+            op.outputs = op.outputs.sort((a, b)=> a.commitment > b.commitment)
+
+        tr.add_type_operation(op_name, op)
+        {
+            let signer = this.getPrivateKey(from_key_or_label)
+            if( ! signer )
+                throw new Error("Missing private key for: " + from_key_or_label)
+            
+            for(let input of op.inputs) {
+                let one_time_key = input.one_time_key
+                if( ! one_time_key )
+                    continue
+                
+                let secret = signer.get_shared_secret( one_time_key )
+                let child = hash.sha256( secret )
+                tr.add_signer(signer.child(child))
+            }
+        }
+    }
+    // console.log("tr.operations", fromJS(tr.operations).toJS())
+    return tr.process_transaction(this, null, broadcast)
+}
+
 /** Feeds need to be obtained in advance before calculating inputs and outputs. */
-function get_blind_transfer_fee(asset_id, operation_count = 2) {
+function get_blind_transfer_fee(asset_id, output_count = 2) {
     
-    // Create an empty but serilizable operation we can send to the server
-    // let object = blind_transfer.toObject({}, {use_default: true}) // 
+    // Create an empty but serilizable operation to send to the server
+    let op = output_count === 0 ? transfer_from_blind : blind_transfer
+    let object = op.toObject({}, {use_default: true})
     
-    let object = blind_transfer_object.toJS()
-    for(let i = 1; i < operation_count; i++)
+    for(let i = 1; i < output_count; i++)
         object.outputs.push( object.outputs[0] )
     
     let tr = new TransactionBuilder()
-    tr.add_type_operation("blind_transfer", object)
+    tr.add_type_operation(op.operation_name, object)
     return tr.set_required_fees(asset_id).then(()=>{
         let fee = tr.operations[0][1].fee
         assert.equal( asset_id, fee.asset_id, "expecting fee asset_id to match" )
-        console.log("fee", fee)
+        // console.log("output_count, blind transfer fee", output_count, fee)
         return fee
     })
 }
@@ -914,7 +984,7 @@ let bufferToNumber = (buf, type = "Uint32") =>
 
 // TODO abstract enough to move to WalletStorage
 function getPubkeys_having_PrivateKey( pubkeys, addys = null ) {
-    var return_pubkeys = []
+    let return_pubkeys = []
     let keys = this.keys()
     if(pubkeys) {
         for(let pubkey of pubkeys) {
@@ -926,7 +996,7 @@ function getPubkeys_having_PrivateKey( pubkeys, addys = null ) {
     }
     if(addys) {
         for (let addy of addys) {
-            var pubkey = this.addressIndex.getPublicKey(addy)
+            let pubkey = this.addressIndex.getPublicKey(addy)
             return_pubkeys.push(pubkey)
         }
     }
@@ -1002,4 +1072,4 @@ let authority = (data, weight_threshold = data ? 1 : 0)  =>
 //         }
 //     }
 // })
-let blind_transfer_object = fromJS( {"fee":{"amount":"0","asset_id":"1.3.0"},"inputs":[{"commitment":"0000000000000000000000000000000000000000000000000000000000000000","owner":{"weight_threshold":0,"account_auths":[["1.2.0",0]],"key_auths":[["GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM",0]],"address_auths":[["GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S",0]]}}],"outputs":[{"commitment":"0000000000000000000000000000000000000000000000000000000000000000","range_proof":"","owner":{"weight_threshold":0,"account_auths":[["1.2.0",0]],"key_auths":[["GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM",0]],"address_auths":[["GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S",0]]},"stealth_memo":{"one_time_key":"GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM","to":"GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM","encrypted_memo":""}}]})
+// let blind_transfer_object = fromJS( {"fee":{"amount":"0","asset_id":"1.3.0"},"inputs":[{"commitment":"0000000000000000000000000000000000000000000000000000000000000000","owner":{"weight_threshold":0,"account_auths":[["1.2.0",0]],"key_auths":[["GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM",0]],"address_auths":[["GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S",0]]}}],"outputs":[{"commitment":"0000000000000000000000000000000000000000000000000000000000000000","range_proof":"","owner":{"weight_threshold":0,"account_auths":[["1.2.0",0]],"key_auths":[["GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM",0]],"address_auths":[["GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S",0]]},"stealth_memo":{"one_time_key":"GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM","to":"GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM","encrypted_memo":""}}]})

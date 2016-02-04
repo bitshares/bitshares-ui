@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --recursive",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "npm test -- --watch",
+    "debug": "node-debug _mocha --compilers js:babel-core/register --recursive"
   },
   "author": "",
   "license": "BSD-2-Clause-FreeBSD",
