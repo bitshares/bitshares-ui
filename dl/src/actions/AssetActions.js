@@ -164,7 +164,7 @@ class AssetActions {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
                 market_fee_percent: update.market_fee_percent * 100,
-                description: update.description,
+                description: description,
                 issuer_permissions: permissions,
                 flags: flags,
                 whitelist_authorities: asset.getIn(["options", "whitelist_authorities"]),
