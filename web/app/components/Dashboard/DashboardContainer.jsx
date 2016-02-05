@@ -22,6 +22,12 @@ class DashboardContainer extends React.Component {
                 },
                 myIgnoredAccounts: () => {
                     return AccountStore.getState().myIgnoredAccounts;
+                },
+                privateAccounts: () => {
+                    return AccountStore.getState().privateAccounts;
+                },
+                privateContacts: () => {
+                    return AccountStore.getState().privateContacts;
                 }
               }}>
                 <Dashboard/>

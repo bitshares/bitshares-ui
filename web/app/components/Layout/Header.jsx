@@ -25,14 +25,17 @@ class Header extends React.Component {
     }
 
     static getPropsFromStores() {
+        const account_store = AccountStore.getState();
+        const settings_store = SettingsStore.getState();
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
-            currentAccount: AccountStore.getState().currentAccount,
+            linkedAccounts: account_store.linkedAccounts,
+            currentAccount: account_store.currentAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
-            starredAccounts: SettingsStore.getState().starredAccounts
-        }
+            lastMarket: settings_store.viewSettings.get("lastMarket"),
+            starredAccounts: settings_store.starredAccounts,
+            multiAccountMode: settings_store.settings.get("multiAccountMode")
+        };
     }
 
     static contextTypes = {
@@ -67,6 +70,7 @@ class Header extends React.Component {
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
+            nextProps.multiAccountMode !== this.props.multiAccountMode ||
             nextState.active !== this.state.active
         );
     }
@@ -140,7 +144,7 @@ class Header extends React.Component {
                                 <TotalBalanceValue.AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
-        if (linkedAccounts.size > 1) {
+        if (this.props.multiAccountMode || linkedAccounts.size > 1) {
             linkToAccountOrDashboard = (
                 <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
                     <Translate component="span" content="header.dashboard" />

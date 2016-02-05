@@ -1,6 +1,7 @@
 import React from "react";
 import utils from "common/utils";
 import { validation } from "@graphene/chain";
+import AccountStore from "stores/AccountStore";
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
 import { ChainStore } from "@graphene/chain";
@@ -48,10 +49,11 @@ class AccountSelector extends React.Component {
     }
 
     getNameType(value) {
-        if(!value) return null;
-        if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
-        if(validation.is_account_name(value, true)) return "name";
-        if(this.props.allowPubKey && PublicKey.fromPublicKeyString(value)) return "pubkey";
+        if (!value) return null;
+        if (value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
+        if (value[0] === "~") return "private";
+        if (validation.is_account_name(value, true)) return "name";
+        if (this.props.allowPubKey && PublicKey.fromPublicKeyString(value)) return "pubkey";
         return null;
     }
 
@@ -65,18 +67,18 @@ class AccountSelector extends React.Component {
     }
 
     componentDidMount() {
-        if(this.props.onAccountChanged && this.props.account)
+        if (this.props.onAccountChanged && this.props.account)
             this.props.onAccountChanged(this.props.account);
     }
 
     componentWillReceiveProps(newProps) {
-        if(this.props.onAccountChanged && newProps.account !== this.props.account)
+        if (this.props.onAccountChanged && newProps.account !== this.props.account)
             this.props.onAccountChanged(newProps.account);
     }
 
     onAction(e) {
         e.preventDefault();
-        if(this.props.onAction && !this.getError() && !this.props.disableActionButton) {
+        if (this.props.onAction && !this.getError() && !this.props.disableActionButton) {
             if (this.props.account)
                 this.props.onAction(this.props.account);
             else if (this.getNameType(this.props.accountName) === "pubkey")
@@ -85,16 +87,21 @@ class AccountSelector extends React.Component {
     }
 
     render() {
+        const account_name = this.props.accountName;
         let error = this.getError();
-        let type = this.getNameType(this.props.accountName);
+        let type = this.getNameType(account_name);
         let lookup_display;
-        if (this.props.allowPubKey) {
-            if (type === "pubkey") lookup_display = "Public Key";
+        let identicon_account_name = null;
+        if (this.props.allowPubKey && type === "pubkey") {
+            lookup_display = "Public Key";
         } else if (this.props.account) {
+            identicon_account_name = account_name;
             if(type === "name") lookup_display = "#" + this.props.account.get("id").substring(4);
             else if (type === "id") lookup_display = this.props.account.get("name");
+        } else if (type === "private") {
+            lookup_display = AccountStore.getPrivateAccountType(account_name);
+            if (lookup_display) identicon_account_name = account_name;
         } else if (!error && this.props.accountName) error = counterpart.translate("account.errors.unknown");
-
         let member_status = null;
         if (this.props.account)
             member_status = counterpart.translate("account.member." + ChainStore.getAccountMemberStatus(this.props.account));
@@ -105,7 +112,7 @@ class AccountSelector extends React.Component {
             <div className="account-selector no-overflow" style={this.props.style}>
                 {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
                 <AccountImage size={{height: 80, width: 80}}
-                              account={this.props.account ? this.props.account.get('name') : null} custom_image={null}/>}
+                              account={identicon_account_name} custom_image={null}/>}
 
                 <div className="content-area">
                     <div className="header-area">
@@ -115,8 +122,8 @@ class AccountSelector extends React.Component {
                     <div className="input-area">
                       <span className="inline-label">
                       <input type="text"
-                             value={this.props.accountName}
-                             defaultValue={this.props.accountName}
+                             value={account_name}
+                             defaultValue={account_name}
                              placeholder={this.props.placeholder || counterpart.translate("account.name")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}

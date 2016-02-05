@@ -29,10 +29,12 @@ class AccountStore extends BaseStore {
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
-            // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
+            onAddPrivateAccount: AccountActions.addPrivateAccount,
+            onAddPrivateContact: AccountActions.addPrivateContact,
+            onRemovePrivateContact: AccountActions.removePrivateContact
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
-            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount");
+            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount", "getPrivateAccountType");
     }
     
     _getInitialState() {
@@ -46,7 +48,9 @@ class AccountStore extends BaseStore {
             myIgnoredAccounts: Immutable.Set(),
             unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts") || []),
             searchAccounts: Immutable.Map(),
-            searchTerm: ""
+            searchTerm: "",
+            privateAccounts: Immutable.Set(),
+            privateContacts: Immutable.Set()
         }
     }
 
@@ -311,7 +315,26 @@ class AccountStore extends BaseStore {
             }
         })
     }
-    
+
+    onAddPrivateAccount(name) {
+        this.state.privateAccounts = this.state.privateAccounts.add(name);
+    }
+
+    onAddPrivateContact(name) {
+        this.state.privateContacts = this.state.privateContacts.add(name);
+    }
+
+    onRemovePrivateContact(name) {
+        this.state.privateContacts = this.state.privateContacts.remove(name);
+    }
+
+    getPrivateAccountType(full_name) {
+        const name = full_name[0] === "~" ? full_name.slice(1) : full_name;
+        let res = null;
+        if (this.state.privateContacts.has(name)) res = "Private Contact";
+        else if (this.state.privateAccounts.has(name)) res = "Private Account";
+        return res;
+    }
 }
 
 export default alt.createStore(AccountStore, "AccountStore");

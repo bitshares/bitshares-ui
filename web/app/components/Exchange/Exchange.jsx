@@ -23,7 +23,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
-import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import ee from "emitter-instance";

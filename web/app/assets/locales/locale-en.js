@@ -37,6 +37,7 @@
         hour_24: "24hr Change",
         recent: "Recent activity",
         name: "Account name",
+        label: "Label",
         id: "Account ID",
         more: "see more",
         deposit_withdraw: "Deposit/Withdraw",
@@ -245,7 +246,10 @@
         propose_from: "Propose From",
         settle: "Settle",
         "no_orders": "No open orders",
-        asset_details: "Asset details"
+        asset_details: "Asset details",
+        private_key: "Private Key",
+        public_key: "Public Key",
+        receive: "Receive"
     },
     pagination: {
         newer: "Newer",
@@ -614,7 +618,8 @@
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
         no: "No",
-        walletLockTimeout: "Wallet auto-lock time (seconds)"
+        walletLockTimeout: "Wallet auto-lock time (seconds)",
+        multiAccountMode: "Multiple Accounts Mode"
     },
     footer: {
         title: "Graphene",

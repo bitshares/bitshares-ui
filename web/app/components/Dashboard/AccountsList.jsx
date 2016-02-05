@@ -17,7 +17,6 @@ import Icon from "../Icon/Icon";
 import { ChainStore } from "@graphene/chain";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
-import counterpart from "counterpart";
 
 let lastLookup = new Date();
 
@@ -25,7 +24,10 @@ let lastLookup = new Date();
 class AccountsList extends React.Component {
 
     static propTypes = {
-        accounts: ChainTypes.ChainAccountsList.isRequired
+        accounts: ChainTypes.ChainAccountsList.isRequired,
+        dashboardFilter: React.PropTypes.string,
+        myAccountsOnly: React.PropTypes.bool,
+        notMyAccountsOnly: React.PropTypes.bool
     };
 
     static contextTypes = {
@@ -34,7 +36,10 @@ class AccountsList extends React.Component {
 
     static defaultProps = {
         width: 2000,
-        compact: false
+        compact: false,
+        dashboardFilter: "",
+        myAccountsOnly: false,
+        notMyAccountsOnly: false
     };
 
     constructor(props) {
@@ -47,8 +52,7 @@ class AccountsList extends React.Component {
 
         this.state = {
             inverseSort: props.viewSettings.get("dashboardSortInverse") || true,
-            sortBy: props.viewSettings.get("dashboardSort") || "star",
-            dashboardFilter: props.viewSettings.get("dashboardFilter") || ""
+            sortBy: props.viewSettings.get("dashboardSort") || "star"
         };
 
     }
@@ -56,6 +60,7 @@ class AccountsList extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+            !nextProps.dashboardFilter !== this.props.dashboardFilter ||
             nextProps.width !== this.props.width ||
             !utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
             !utils.are_equal_shallow(nextState, this.state)
@@ -75,14 +80,6 @@ class AccountsList extends React.Component {
         this.context.history.pushState(null, `/account/${name}`);
     }
 
-    _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
-
-        SettingsActions.changeViewSetting({
-            dashboardFilter: e.target.value.toUpperCase()
-        });
-    }
-
     _setSort(field) {
         let inverse = field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort;
         this.setState({
@@ -98,7 +95,7 @@ class AccountsList extends React.Component {
 
     render() {
         let {width, starredAccounts} = this.props;
-        let {dashboardFilter, sortBy, inverseSort} = this.state;
+        let {sortBy, inverseSort} = this.state;
         let balanceList = Immutable.List();
 
         let starSort = function(a, b, inverse) {
@@ -120,12 +117,14 @@ class AccountsList extends React.Component {
                     return utils.sortText(aName, bName, !inverse);
                 }
             }
-        }
-        
+        };
+
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+            if (this.props.myAccountsOnly && !AccountStore.isMyAccount(a)) return false;
+            if (this.props.notMyAccountsOnly && AccountStore.isMyAccount(a)) return false;
+            return a.get("name").indexOf(this.props.dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -191,10 +190,10 @@ class AccountsList extends React.Component {
 
                 return (
                     <tr key={accountName}>
-                        <td onClick={this._onStar.bind(this, accountName, isStarred)}>
+                        {/*<td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
-                        </td>
-                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
+                        </td>*/}
+                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""}>
                             {accountName}
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
@@ -210,24 +209,19 @@ class AccountsList extends React.Component {
                             <TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
                         </td>
                     </tr>
-
                 )
             }
         });
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
+        if (accounts.length === 0) return null;
 
         return (
-            <div>
-                {!this.props.compact ? (
-                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
-                        <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                    </div>) : null}
-                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
-                    {!this.props.compact ? (
+            <div className="accounts-list">
+                <h4>{this.props.title}</h4>
+                <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
+                            {/*<th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>*/}
                             <th onClick={this._setSort.bind(this, 'name')} className="clickable"><Translate content="header.account" /></th>
                             <th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
                             {width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}

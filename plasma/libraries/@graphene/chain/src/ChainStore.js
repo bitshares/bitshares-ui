@@ -954,7 +954,7 @@ class ChainStore
       // if (!(object.id.split(".")[0] == 2) && !(object.id.split(".")[1] == 6)) {
       //   console.log( "update: ", object )
       // }
-      
+
       // DYNAMIC GLOBAL OBJECT
       if( object.id == "2.1.0" ) {
          object.participation = 100*(BigInteger(object.recent_slots_filled).bitCount() / 128.0)
@@ -1231,4 +1231,3 @@ function timeStringToDate(time_string) {
         time_string = time_string + "Z"
     return new Date(time_string)
 }
-

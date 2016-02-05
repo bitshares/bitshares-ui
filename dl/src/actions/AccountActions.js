@@ -111,6 +111,18 @@ class AccountActions {
     unlinkAccount(name) {
         this.dispatch(name);
     }
+
+    addPrivateAccount(name) {
+        this.dispatch(name);
+    }
+
+    addPrivateContact(name) {
+        this.dispatch(name);
+    }
+
+    removePrivateContact(name) {
+        this.dispatch(name);
+    }
 }
 
 export default alt.createActions(AccountActions);
