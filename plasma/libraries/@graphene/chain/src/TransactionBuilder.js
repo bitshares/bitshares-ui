@@ -297,11 +297,20 @@ export default class TransactionBuilder {
     }
 
     add_signer(private_key, public_key = private_key.toPublicKey()){
+        
+        assert(private_key.d, "required PrivateKey object")
+        
         if (this.signed) { throw new Error("already signed"); }
         if (!public_key.Q) {
             public_key = PublicKey.fromPublicKeyString(public_key);
         }
-        return this.signer_private_keys.push([private_key, public_key]);
+        // prevent duplicates
+        let spHex = private_key.toHex()
+        for(let sp of this.signer_private_keys) {
+            if(sp[0].toHex() === spHex)
+                return
+        }
+        this.signer_private_keys.push([private_key, public_key]);
     }
 
     sign(chain_id = Apis.instance().chain_id){

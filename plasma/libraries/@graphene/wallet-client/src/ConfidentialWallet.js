@@ -541,9 +541,12 @@ export default class ConfidentialWallet {
             
             let from_blind_fee
             return Promise.resolve()
-            .then( ()=> get_blind_transfer_fee(asset.get("id"), 0) )
+            
+            .then( () => get_blind_transfer_fee(asset.get("id"), 0) )
             .then( fee => from_blind_fee = fee )
-            .then( fee => longAdd(from_blind_fee, amount))
+            
+            .then( () => longAdd(from_blind_fee.amount, amount))
+            
             .then( amount_with_fee =>
                 this.blind_transfer_help(
                     from_blind_account_key_or_label, from_blind_account_key_or_label,
@@ -555,32 +558,32 @@ export default class ConfidentialWallet {
                 assert( conf.outputs, "outputs are required" )
                 
                 let last_output = conf.outputs[conf.outputs.length - 1]
-                let decrypted_memo = last_output.decrypted_memo
-                
                 let from_blind = {
                     fee: from_blind_fee,
                     amount: { amount: amount.toString(), asset_id: asset.get("id") },
                     to: to_account.get("id"),
-                    blinding_factor: decrypted_memo.blinding_factor,
+                    blinding_factor: last_output.decrypted_memo.blinding_factor,
                     inputs: [{
-                        commitment: decrypted_memo.commitment,
+                        commitment: last_output.decrypted_memo.commitment,
                         owner: authority(),
-                        one_time_key: last_output.confirmation.one_time_key//for signing
+                        // one_time_key added for signing
+                        // one_time_key: last_output.confirmation.one_time_key
                     }]
                 }
                 
                 let operations = conf.trx.operations
                 operations.push( from_blind )
+                
                 let p1
                 if( broadcast ) {
                     // make sure the receipts are stored first before broadcasting (durable)
-                    let cr = confirmation_receipts(conf.outputs).push({
+                    let cr = [{
                         // { to, one_time_key, encrypted_memo, [owner = null] } 
                         to: from_blind_account_key_or_label,
                         one_time_key: last_output.confirmation.one_time_key,
                         encrypted_memo: last_output.confirmation.encrypted_memo,
                         owner: last_output.confirmation.owner
-                    })
+                    }]
                     p1 = this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
                 }
                 return (p1 ? p1 : Promise.resolve()).then(()=>{
@@ -589,7 +592,8 @@ export default class ConfidentialWallet {
                     return this.send_blind_tr(
                         operations,
                         from_blind_account_key_or_label,
-                        broadcast
+                        broadcast,
+                        conf.one_time_keys
                     ).then( tr => {
                         conf.trx = tr
                         return conf
@@ -633,7 +637,7 @@ function fetch_blinded_balances(pubkey_or_label, callback) {
     let pubkey = public_key.toString()
     let receipts = this.blind_receipts()
         .filter( r => r.get("to_key") === pubkey)
-        .filterNot( r => r.get("used") === true )
+        // .filterNot( r => r.get("used") === true )// Not used is testing, this has implications
     
     let used = Set()
     let commitments = this.commitments(receipts)
@@ -692,8 +696,10 @@ function fetch_blinded_balances(pubkey_or_label, callback) {
     @property {string} outputs.label - "alice"
     @property {string} outputs.pub_key: "GPHAbc9Def..."
     @property {object} outputs.auth: {weight_threshold, ...}
+    
     @property {object} fee: {amount, asset_id}
     @property {object} trx: {ref_block_num, ...}
+    @property {array<string>} one_time_keys - for signing
     
     @return {Promise<ret>} 
 */
@@ -725,7 +731,7 @@ function blind_transfer_help(
             outputs: [],
             inputs: []
         }
-        
+        let one_time_keys = Set()
         let available_amount = Long.ZERO
         let blinding_factors = []
         
@@ -745,8 +751,12 @@ function blind_transfer_help(
             
             let control_authority = receipt.get("control_authority")
             
-            blind_tr.inputs.push({ commitment, owner: control_authority.toJS(),
-                one_time_key: receipt.get("conf").get("one_time_key") })
+            let one_time_key = receipt.get("conf").get("one_time_key")
+            //for signing
+            one_time_keys = one_time_keys.add( one_time_key )
+            
+            blind_tr.inputs.push({ commitment,
+                owner: control_authority.toJS(), one_time_key })
             
             blinding_factors.push( receipt.get("data").get("blinding_factor") )
             
@@ -870,11 +880,14 @@ function blind_transfer_help(
                     }
                     
                     return rp_promise.then(()=>{
+                        
                         blind_tr.outputs[0] = to_out
+                        
                         let conf_output = {
                             decrypted_memo: {},
                             confirmation: {}
                         }
+                        
                         conf_output.label = to_key_or_label
                         conf_output.pub_key = to_key.toString()
                         conf_output.decrypted_memo.from = from_key.toString()
@@ -892,17 +905,21 @@ function blind_transfer_help(
                         
                         conf_output.auth = to_out.owner
                         // conf_output.confirmation_receipt = conf_output.confirmation
+                        
+                        // transferFromBlind needs to_out as last
                         confirm.outputs.push( conf_output )
 
                         let p1
                         if( broadcast ) {
-                            // make sure the receipts are stored first before broadcasting (durable)
+                            // make sure the receipts are stored first before broadcasting
                             let cr = confirmation_receipts(confirm.outputs)
                             p1 = this.receiveBlindTransfer(cr, from_key_or_label)
                         }
                         return (p1 ? p1 : Promise.resolve()).then(()=>{
                             return this.send_blind_tr([blind_tr], from_key_or_label, broadcast).then( tr => {
                                 confirm.trx = tr
+                                confirm.one_time_keys = one_time_keys.toJS()
+                                
                                 return confirm
                             })
                         })
@@ -935,12 +952,12 @@ let confirmation_receipts = outputs => List(outputs)
         return r.push(out.confirmation)
     }, List())
 
-function send_blind_tr(ops, from_key_or_label, broadcast) {
+function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys) {
     
     let tr = new TransactionBuilder()
 
     for(let op of ops) {
-        
+
         if( Array.isArray(op) ) {
             op = op[1]
         }
@@ -954,22 +971,31 @@ function send_blind_tr(ops, from_key_or_label, broadcast) {
 
         tr.add_type_operation(op_name, op)
         {
-            let signer = this.getPrivateKey(from_key_or_label)
-            if( ! signer )
-                throw new Error("Missing private key for: " + from_key_or_label)
-            
-            for(let input of op.inputs) {
-                let one_time_key = input.one_time_key
-                if( ! one_time_key )
-                    continue
+            let signer
+            let sign = one_time_key => {
+                
+                if( ! signer) {
+                    signer = this.getPrivateKey(from_key_or_label)
+                }
+
+                if( ! signer )
+                    throw new Error("Missing private key for: " + from_key_or_label)
                 
                 let secret = signer.get_shared_secret( one_time_key )
                 let child = hash.sha256( secret )
                 tr.add_signer(signer.child(child))
             }
+            
+            for(let input of op.inputs)
+                if( input.one_time_key )
+                    sign( input.one_time_key )
+            
+            if( one_time_keys )
+                for(let one_time_key of one_time_keys)
+                    sign( one_time_key )
         }
     }
-    // console.log("tr.operations", fromJS(tr.operations).toJS())
+
     return tr.process_transaction(this, null, broadcast)
 }
 
