@@ -816,6 +816,12 @@
         amount: "Amount to settle",
         submit: "Settle asset"
       },
+      reserve: {
+        title: "Reserve (burn) asset",
+        amount: "Amount to reserve",
+        from: "Account to reserve from",
+        submit: "Reserve"
+      },
       ok: "OK"
     },
     init_error: {

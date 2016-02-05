@@ -1,7 +1,4 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
-import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -19,11 +16,12 @@ let wallet_api = new WalletApi();
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 
-@BindToChainState({keep_updating: true}) class IssueModal extends React.Component {
+@BindToChainState()
+export default class IssueModal extends React.Component {
 
     static propTypes = {
         asset_to_issue: ChainTypes.ChainAsset.isRequired
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -48,7 +46,6 @@ import AmountSelector from "../Utility/AmountSelector";
     }
 
     onSubmit() {
-        console.log("on submit");
         let precision = utils.get_asset_precision(this.props.asset_to_issue.get("precision"));
         let amount = this.state.amount.replace(/,/g, "");
         amount *= precision;
@@ -78,7 +75,7 @@ import AmountSelector from "../Utility/AmountSelector";
 
     render() {
         let asset_to_issue = this.props.asset_to_issue.get('id');
-        let submit_btn_class = this.state.to_id ? "button primary" : "button primary disabled";
+
         return ( <form className="grid-block vertical full-width-content">
             <div className="grid-container " style={{paddingTop: "2rem"}}>
                 <div className="content-block">
@@ -88,7 +85,8 @@ import AmountSelector from "../Utility/AmountSelector";
                         onAccountChanged={this.onToAccountChanged.bind(this)}
                         onChange={this.onToChanged.bind(this)}
                         account={this.state.to}
-                        tabIndex={2}/>
+                        tabIndex={1}
+                    />
                 </div>
                 <div className="content-block">
                     <AmountSelector label="modal.issue.amount"
@@ -96,12 +94,26 @@ import AmountSelector from "../Utility/AmountSelector";
                                     onChange={this.onAmountChanged.bind(this)}
                                     asset={ asset_to_issue  }
                                     assets={[asset_to_issue]}
-                                    tabIndex={1}/>
+                                    tabIndex={2}/>
                 </div>
-                <div className="content-block">
-                    <input type="submit" className={submit_btn_class}
-                           onClick={this.onSubmit.bind(this, this.state.to, this.state.amount )}
-                           value={counterpart.translate("modal.issue.submit")}/>
+                <div className="content-block button-group">
+                    <input
+                        type="submit"
+                        className="button success"
+                        onClick={this.onSubmit.bind(this, this.state.to, this.state.amount )}
+                        value={counterpart.translate("modal.issue.submit")}
+                        tabIndex={3}
+                    />
+
+                    <div
+                        className="button"
+                        onClick={this.props.onClose}
+                        tabIndex={4}
+                    >
+                        {counterpart.translate("cancel")}
+                    </div>
+
+
                 </div>
             </div>
         </form> );
