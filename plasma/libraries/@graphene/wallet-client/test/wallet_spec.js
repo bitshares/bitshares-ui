@@ -1,5 +1,5 @@
 import assert from "assert"
-import {Map} from "immutable"
+import { Map, is } from "immutable"
 import { encrypt, decrypt } from "../src/WalletActions"
 import {createToken} from '@graphene/time-token'
 import {Signature, PrivateKey, Aes, hash} from "@graphene/ecc"
@@ -8,6 +8,7 @@ import WalletStorage from "../src/WalletStorage"
 import WalletWebSocket from "../src/WalletWebSocket"
 import WalletApi from "../src/WalletApi"
 
+const chain_id = "abcdef"
 const username = "username"
 const password = "password"
 const email = "alice_spec@example.bitbucket"
@@ -18,7 +19,7 @@ const remote_url = process.env.npm_package_config_remote_url
 global.localStorage = require('localStorage')
 const storage = new LocalStoragePersistence("wallet_spec")
 
-describe('Single Wallet', () => {
+describe('Single wallet', () => {
     
     var wallet
 
@@ -39,13 +40,13 @@ describe('Single Wallet', () => {
     
     afterEach(()=> wallet.logout())
 
-    it('Server wallet', ()=> {
+    it('server', ()=> {
         
         wallet.useBackupServer(remote_url)
         wallet.keepRemoteCopy(true, code)
         
         let create = wallet
-            .login(email, username, password, "abcdef")
+            .login(email, username, password, chain_id)
             // create the initial wallet
             .then(()=> wallet.setState({ test_wallet: 'secret'}) )
             // update the wallet
@@ -61,12 +62,12 @@ describe('Single Wallet', () => {
         })
     })
     
-    it('Disk wallet', ()=> {
+    it('disk', ()=> {
         
         // Create a local wallet
         wallet.keepLocalCopy(true)
         let create = wallet
-            .login(email, username, password, "abcdef")
+            .login(email, username, password, chain_id)
             .then(()=> wallet.setState({ test_wallet: 'secret'}) )// create
             .then(()=> wallet.setState({ test_wallet: 'secret2'}) )// update
         
@@ -89,11 +90,11 @@ describe('Single Wallet', () => {
         })
     })
     
-    it('Memory wallet', ()=> {
+    it('memory', ()=> {
         // keepLocalCopy false may not be necessary (off is the default), however it will also delete anything on disk
         wallet.keepLocalCopy(false)
         let create = wallet
-            .login(email, username, password, "abcdef")
+            .login(email, username, password, chain_id)
             .then(()=> wallet.setState({ test_wallet: 'secret'}) )// create
             .then(()=> wallet.setState({ test_wallet: 'secret2'}) )// update
         
@@ -112,13 +113,14 @@ describe('Single Wallet', () => {
         })
     })
     
-    it('Password change', ()=> {
+    it('password', function() {
         
+        this.timeout(4000)
         wallet.useBackupServer(remote_url)
         wallet.keepRemoteCopy(true, code)
         
         let create = wallet
-            .login(email, username, password, "abcdef")
+            .login(email, username, password, chain_id)
             .then(()=> wallet.setState([]) )// create
         
         return create.then(()=> {
@@ -139,14 +141,14 @@ describe('Single Wallet', () => {
                 initWallet()
                 wallet.useBackupServer(remote_url)
                 
-                return wallet.login(email, username, password, "abcdef").then(()=>
+                return wallet.login(email, username, password, chain_id).then(()=>
                 
                     // now the wallet is not modified, the local copy matches the server
                     wallet.changePassword(email, username, password, "new_"+password).then(()=> {
                         
                         // check the new login
                         wallet.logout()
-                        return wallet.login(email, username, "new_"+password, "abcdef")
+                        return wallet.login(email, username, "new_"+password, chain_id)
                         
                     })
                     
@@ -155,12 +157,12 @@ describe('Single Wallet', () => {
         })
     })
     
-    it('Server offline updates', ()=> {
+    it('server offline updates', ()=> {
         
         wallet.useBackupServer(remote_url)
         wallet.keepRemoteCopy(true, code)
         
-        let create = wallet.login(email, username, password, "abcdef")
+        let create = wallet.login(email, username, password, chain_id)
             // create the initial wallet
             .then(()=> wallet.setState({ test_wallet: 'secret'}) )
         
@@ -196,7 +198,7 @@ describe('Single Wallet', () => {
     })
 })
 
-describe('Multi Wallet', () => {
+describe('Multi wallet', () => {
     
     beforeEach(()=>{
         // delete the test wallet
@@ -207,7 +209,7 @@ describe('Multi Wallet', () => {
         })
     })
     
-    it('Server conflict', () => {
+    it('server conflict', () => {
         return remoteWallet().then( wallet => {
             return wallet.setState({ test_wallet: ''})
                 // create a second wallet client (same email, same server wallet)
@@ -249,7 +251,7 @@ describe('Multi Wallet', () => {
     })
     
     /** Make updates to the same wallet back and forth across websockets (represents two devices). */
-    it('Server subscription update', ()=>{
+    it('server subscription update', ()=>{
         
         return new Promise( (resolve, reject) => {
             
@@ -328,7 +330,7 @@ function remoteWallet(emailParam = email) {
     let wallet = newWallet()
     wallet.useBackupServer(remote_url)
     wallet.keepRemoteCopy(true, code)
-    return wallet.login(emailParam, username, password, "abcdef").then(()=> wallet )
+    return wallet.login(emailParam, username, password, chain_id).then(()=> wallet )
 }
 
 function assertNoServerWallet(walletParam) {
@@ -350,7 +352,12 @@ function assertNoServerWallet(walletParam) {
 }
 
 function assertServerWallet(expectedWallet, walletParam) {
+    
     if( ! walletParam.private_key ) throw new Error("wallet locked")
+    
+    expectedWallet.chain_id = chain_id
+    expectedWallet = Map(expectedWallet)
+    
     let ws_rpc = new WalletWebSocket(remote_url)
     let api = new WalletApi(ws_rpc)
     let p1 = new Promise( (resolve, reject) => {
@@ -360,10 +367,17 @@ function assertServerWallet(expectedWallet, walletParam) {
                 assert(json.encrypted_data, 'No Server Wallet')
                 let backup_buffer = new Buffer(json.encrypted_data, 'base64')
                 let p3 = decrypt(backup_buffer, walletParam.private_key).then( wallet_object => {
-                    assert.equal(
-                        JSON.stringify(wallet_object,null,0),
-                        JSON.stringify(expectedWallet,null,0)
-                    )
+                    wallet_object = Map(wallet_object)
+                    
+                    // "is" will compare even if the key order is different
+                    if( ! is(expectedWallet, wallet_object) )
+                    
+                        // assert makes it easy to read the output
+                        assert.equal(
+                            JSON.stringify(wallet_object.toJS(),null,0),
+                            JSON.stringify(expectedWallet.toJS(),null,0)
+                        )
+                        
                 })
                 let p4 = api.fetchWalletUnsubscribe(public_key)
                 resolve(Promise.all([ p3, p4 ]))

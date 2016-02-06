@@ -239,16 +239,26 @@ export default class WalletStorage {
         The Immutable version of wallet_object ends up in `this.wallet_object` (synchronizing may be in progress)
         
         @arg {Immutable|object} wallet_object - mutable or immutable object .. no loops, only JSON serilizable data
+        
+        @arg {boolean} [merge = true] - this will deep merge (see ImmutableJs) the wallet_object parameter with the existing wallet.  This should be safer.  If something should be removed this must be turned off.
+        
         @throws {Error} - [wallet_locked, etc...]
+        
         @return {Promise} - resolve or reject on completion.  One may also monitor this.local_status and this.remote_status.
     */
-    setState( wallet_object )  {
-        if( ! this.private_key )
-            throw new Error("wallet_locked")
+    setState( wallet_object, merge = true )  {
         
+        if( merge )
+            wallet_object = this.wallet_object.mergeDeep(wallet_object)
+        
+        // The Immutable js merge seems to be very good at keeping object equality
         if(this.wallet_object === wallet_object) {
             return Promise.resolve()
         }
+        
+        if( ! this.private_key )
+            throw new Error("wallet_locked")
+        
         
         this.notify = true
         this.local_status = "Pending"
@@ -626,19 +636,19 @@ function forcePush(has_server_wallet, private_key) {
     // if( this.wallet_object ) is probably unnecessary, an unset empty_wallet is a empty Map.. Does not hurt to check though. 
     if( this.wallet_object && remote_copy === true ) {
         this.notify = true
-        //updateWallet updates storage
-        return this.updateWallet(this.wallet_object, state)
+        //updateWallet updates remote storage
+        return this.updateWallet()
     }
 }
 
 /** Create or update a wallet on the server.
 */
-function updateWallet(wallet_object = this.wallet_object, state = this.storage.state) {
+function updateWallet() {
+    let state = this.storage.state
+    let wallet_object = this.wallet_object
+    
     return new Promise( resolve => {
     
-        if( ! wallet_object )
-            throw new Error("Missing wallet_object")
-        
         if( ! this.private_key )
             throw new Error("login")
         

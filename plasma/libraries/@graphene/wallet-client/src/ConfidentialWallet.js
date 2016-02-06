@@ -1068,7 +1068,6 @@ let authority = (data, weight_threshold = data ? 1 : 0)  =>
     fromJS({ weight_threshold, key_auths: [], account_auths: [], address_auths: [] })
     .merge(data).toJS()
 
-// The commented data-structure is for documentation purposes, it should be kept up-to-date it helps to read this code..
 // Serilizable persisterent state (JSON serilizable types only)..  This is the data kept in the walletStorage.  
 //
 // const empty_wallet = fromJS({
@@ -1093,3 +1092,4 @@ let authority = (data, weight_threshold = data ? 1 : 0)  =>
 //         }
 //     }
 // })
+// The commented data-structure is for documentation purposes..

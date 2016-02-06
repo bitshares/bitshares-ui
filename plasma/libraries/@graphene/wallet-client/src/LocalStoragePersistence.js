@@ -42,6 +42,7 @@ export default class LocalStoragePersistence {
         if( newState === undefined || this.state === newState )
             return
         
+        // isEmpty test allows the initial emtpy state to change data-types: Map to List
         this.state = this.state.isEmpty() ? fromJS(newState) : this.state.merge(newState)
         if( this.saveToDisk )
             localStorage.setItem(this.STATE, JSON.stringify(this.state.toJS(),null,0))
