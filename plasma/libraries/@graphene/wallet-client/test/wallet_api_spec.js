@@ -119,9 +119,10 @@ describe('Wallet API client', () => {
             .then( json => assert.equal(json.statusText, "Not Found"))
     })
     
-    it('changePassword', ()=> {
+    it('changePassword', function() {
+        this.timeout(2000)
         return api.changePassword( local_hash, signature, encrypted_data2, signature2 ).then( json => {
-            assert.equal(json.local_hash, local_hash2.toString('base64'), 'local_hash')
+            assert.equal(json.local_hash, local_hash2.toString('base64'), 'local_hash did not match response: ' + json)
             assert(json.updated, 'updated')
         })
     })

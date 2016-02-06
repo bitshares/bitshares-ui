@@ -172,7 +172,8 @@ describe('Confidential wallet', () => {
                 .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "74" + "00000" }, "alice") )
             
             // blind to account
-            .then( ()=> cw.transferFromBlind("alice", "nathan", 59, "CORE", true) )
+            .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) )// with change
+            .then( ()=> cw.transferFromBlind("alice", "nathan", 9, "CORE", true) )// without change
             
                 .then( () => cw.getBlindBalances("alice") )
                 .then( balances => assert.deepEqual(balances.toJS(), {}, "alice") )

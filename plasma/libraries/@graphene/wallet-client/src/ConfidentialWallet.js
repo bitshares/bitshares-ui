@@ -410,8 +410,8 @@ export default class ConfidentialWallet {
         Checking the blockchain is optional.  This allows the wallet to save the receipt first before broadcasting.  In that case, confirmation_receipt.owner is provided and the get_blinded_balances API call is skipped.
         
         @arg {object|Array} confirmation_receipts - { to, one_time_key, encrypted_memo, [owner = null] } 
-        @arg {string} opt_from - this may be used as the `from_label` unless the memo has a `from`
-        @arg {string} opt_memo
+        @arg {string} opt_from - optional `from_label` unless a receeipt already has a from_label
+        @arg {string} opt_memo - optional memo to apply each receipt
         
         @typedef {object} blind_receipt
         @property {object} control_authority: {weight_threshold, ...}
@@ -423,15 +423,15 @@ export default class ConfidentialWallet {
         @property {string} data.commitment
         @property {number} data.check
         
-        @property {string} date - ISO
         @property {string} to_label - alice
-        @property {object} amount - same as data.amount
-        @property {string} memo - from opt_memo
         @property {string} to_key - "GPHAbc9Def..."
         @property {string} from_label - "bob" from memo or opt_from
-        @property {boolean} used - not present or `true` when spent
+        @property {object} amount - same as data.amount
+        @property {string} date - ISO
+        @property {string} memo - from opt_memo
+        @property {boolean} used - `true` when spent
         
-        @return {Promise<blind_receipt>}
+        @return {Promise< array<blind_receipt> >}
     */
     receiveBlindTransfer( confirmation_receipts, opt_from, opt_memo ) {
 
