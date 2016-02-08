@@ -528,7 +528,8 @@ class Exchange extends React.Component {
     }
 
     _buyPriceChanged(base, quote, e) {
-        let amount = this._limitByPrecision(e.target.value, base);
+        
+        let amount = this._limitByPrecision(e.target.value, {precision: Math.max(base.get("precision"), 5)});
         let price = this._getBuyPrice(amount);
 
         this.setState({
@@ -577,7 +578,7 @@ class Exchange extends React.Component {
     }
 
     _sellPriceChanged(base, quote, e) {
-        let amount = this._limitByPrecision(e.target.value, base);
+        let amount = this._limitByPrecision(e.target.value, {precision: Math.max(base.get("precision"), 5)});
         let price = this._getSellPrice(amount);
 
         this.setState({
