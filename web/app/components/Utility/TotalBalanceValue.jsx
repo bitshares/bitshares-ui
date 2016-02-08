@@ -207,11 +207,11 @@ class TotalValue extends React.Component {
         
         // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
         if (!inHeader) {
-            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>;
+            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("precision")}/>;
         } else {
             return (
                 <div data-tip={totalsTip} data-place="bottom" data-type="light" html data-html={true} >
-                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>
+                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("precision")}/>
                 </div>
 
             );

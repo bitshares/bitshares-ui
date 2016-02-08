@@ -84,6 +84,8 @@ class AccountAssetUpdate extends React.Component {
             issuer: asset.issuer,
             new_issuer_account: null,
             issuer_account_name: null,
+            new_funder_account: props.account.get("id"),
+            funder_account_name: props.account.get("name"),
             asset_to_update: asset.id,
             errors: {
                 max_supply: null
@@ -300,6 +302,19 @@ class AccountAssetUpdate extends React.Component {
         });
     }
 
+    onFunderAccountChanged(account) {
+        // console.log("onIssuerAccountChanged", account.get("symbol"));
+        this.setState({
+            new_funder_account: account ? account.get("id") : null
+        });
+    }
+
+    funderNameChanged(name) {
+        this.setState({
+            funder_account_name: name
+        });
+    }
+
     _onInputCoreAsset(type, asset) {
        
         if (type === "quote") {
@@ -352,7 +367,7 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onFundPool(e) {
-        AssetActions.fundPool(this.props.account.get("id"), this.props.core, this.props.asset, this.state.fundPoolAmount.replace( /,/g, "" ));
+        AssetActions.fundPool(this.state.new_funder_account, this.props.core, this.props.asset, this.state.fundPoolAmount.replace( /,/g, "" ));
     }
 
     _onClaimInput(asset) {
@@ -638,6 +653,8 @@ class AccountAssetUpdate extends React.Component {
                                         bitasset_opts={bitasset_opts}
                                         onUpdate={this.onChangeBitAssetOpts.bind(this)}
                                         backingAsset={bitasset_opts.short_backing_asset}
+                                        assetPrecision={asset.get("precision")}
+                                        assetSymbol={asset.get("symbol")}
                                     />
                                 {confirmButtons}
                                 </div>
@@ -737,10 +754,20 @@ class AccountAssetUpdate extends React.Component {
                                     <Translate component="p" content="explorer.asset.fee_pool.fund_text" asset={asset.get("symbol")} core={core.get("symbol")} />
 
                                     <div style={{paddingBottom: "1rem"}}>
-                                        <Translate content="explorer.asset.fee_pool.pool_balance" />:&nbsp;
+                                        <Translate content="explorer.asset.fee_pool.pool_balance" /><span>: </span>
                                         <FormattedAsset amount={asset.getIn(["dynamic", "fee_pool"])} asset={"1.3.0"} />
                                     </div>
-                                    
+                                        
+                                    <AccountSelector
+                                        label="transaction.funding_account"
+                                        accountName={this.state.funder_account_name}
+                                        onChange={this.funderNameChanged.bind(this)}
+                                        onAccountChanged={this.onFunderAccountChanged.bind(this)}
+                                        account={this.state.funder_account_name}
+                                        error={null}
+                                        tabIndex={1}
+                                     />
+
                                     <AmountSelector
                                         label="transfer.amount"
                                         display_balance={balanceText} 
@@ -749,7 +776,7 @@ class AccountAssetUpdate extends React.Component {
                                         asset={"1.3.0"}
                                         assets={["1.3.0"]}
                                         placeholder="0.0"
-                                        tabIndex={1}
+                                        tabIndex={2}
                                         style={{width: "100%", paddingLeft: "10px"}}
                                     />
                                 
@@ -767,7 +794,7 @@ class AccountAssetUpdate extends React.Component {
                                     </div>
 
                                     {/* Claim fees, disabled until witness node update gets pushed to openledger*/}
-                                    {/*
+                                    
                                     <Translate component="h3" content="transaction.trxTypes.asset_claim_fees" />
                                     <Translate component="p" content="explorer.asset.fee_pool.claim_text" asset={asset.get("symbol")} />
                                     <div style={{paddingBottom: "1rem"}}>
@@ -797,9 +824,9 @@ class AccountAssetUpdate extends React.Component {
                                         </button>
                                         <br/>
                                         <br/>
-                                        <p><Translate content="account.user_issued_assets.approx_fee" />: <FormattedFee opType="asset_claim_fees" /></p>
+                                        {/*<p><Translate content="account.user_issued_assets.approx_fee" />: <FormattedFee opType="asset_claim_fees" /></p>*/}
                                     </div>
-                                     */}
+                                     
                                 </div>
                             </Tab>
                         </Tabs>

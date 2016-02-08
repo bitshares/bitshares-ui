@@ -164,7 +164,7 @@ class AssetActions {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
                 market_fee_percent: update.market_fee_percent * 100,
-                description: update.description,
+                description: description,
                 issuer_permissions: permissions,
                 flags: flags,
                 whitelist_authorities: asset.getIn(["options", "whitelist_authorities"]),
@@ -372,7 +372,33 @@ class AssetActions {
                 }
             }, 200);
         }
+    }
 
+    reserveAsset(amount, assetId, payer) {
+        console.log("reserveAsset: ", amount, assetId);
+        
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("asset_reserve", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            "amount_to_reserve": {
+                "amount": amount,
+                "asset_id": assetId
+            },
+            payer,
+            "extensions": [
+            ]
+        });
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            console.log("asset reserve result:", result);
+            // this.dispatch(account_id);
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- reserveAsset error ----->", error);
+            return false;
+        });
     }
 }
 

@@ -905,9 +905,12 @@ class Transaction extends React.Component {
                     break;
 
                 case "asset_reserve":
+
                     rows.push(
                         <tr>
-                            <td style={{textTranform: "capitalize"}}><Translate component="span" content="transaction.by" /></td>
+                            <td style={{textTranform: "capitalize"}}>
+                                <Translate component="span" content="modal.reserve.from" />
+                            </td>
                             <td>{this.linkToAccount(op[1].payer)}</td>
                         </tr>
                     );

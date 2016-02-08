@@ -215,9 +215,10 @@ class MarketsActions {
 
         var tr = wallet_api.new_transaction();
 
-        // let fee_asset_id = sellAsset.get("id");
-        if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
+        let feeAsset = ChainStore.getAsset(fee_asset_id);
+        if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
            fee_asset_id = "1.3.0";
+           console.log("setting fee asset to CORE due to missing CER");
         }
 
         tr.add_type_operation("limit_order_create", {
