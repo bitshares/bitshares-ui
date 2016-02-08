@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------
+Release 2.0.160208
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Fee asset selection when trading on the exchange
+- Allow funding of fee pool by accounts other than the issuer
+- Enable fee claim operation
+- OpenLedger gateway support for OPEN.ETH
+
+BUG FIXES:
+- Add a react key to gateway assets to prevent rendering the wrong data when swtiching tabs in the deposit/withdraw screen
+- Include all orders when show all is active fix #727
+- Hide Issue Asset button for MPAs
+
+---------------------------------------------------------------------
 Release 2.0.160203
 ---------------------------------------------------------------------
 
