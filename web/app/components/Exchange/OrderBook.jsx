@@ -197,6 +197,9 @@ class OrderBook extends React.Component {
                 return b.price_full - a.price_full;
             })
             .filter(a => {
+                if (this.state.showAllBids) {
+                    return true;
+                }
                 return a.price_full >= high / 5
             })
             .map((order, index) => {
@@ -244,6 +247,9 @@ class OrderBook extends React.Component {
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
             }).filter(a => {
+                if (this.state.showAllAsks) {
+                    return true;
+                }
                 return a.price_full <= low * 5;
             }).map((order, index) => {
                 totalAskAmount += order.amount;
