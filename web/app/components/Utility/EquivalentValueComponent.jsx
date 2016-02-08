@@ -114,7 +114,7 @@ class ValueComponent extends React.Component {
             return <span>n/a</span>
         }
 
-        return <FormattedAsset amount={eqValue} asset={toID}/>;
+        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={toAsset.get("precision")}/>;
     }
 }
 

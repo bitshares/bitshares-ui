@@ -197,6 +197,9 @@ class OrderBook extends React.Component {
                 return b.price_full - a.price_full;
             })
             .filter(a => {
+                if (this.state.showAllBids) {
+                    return true;
+                }
                 return a.price_full >= high / 5
             })
             .map((order, index) => {
@@ -244,6 +247,9 @@ class OrderBook extends React.Component {
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
             }).filter(a => {
+                if (this.state.showAllAsks) {
+                    return true;
+                }
                 return a.price_full <= low * 5;
             }).map((order, index) => {
                 totalAskAmount += order.amount;
@@ -289,7 +295,7 @@ class OrderBook extends React.Component {
 
             let totalBidsLength = bidRows.length;
             let totalAsksLength = askRows.length;
-            console.log("totalBidsLength:", totalBidsLength);
+
             if (!showAllBids) {
                 bidRows.splice(13, bidRows.length);
             }
@@ -328,7 +334,9 @@ class OrderBook extends React.Component {
                                 </div>) : null}
                         </div>
                         <div className="grid-block vertical align-center text-center no-padding shrink order-2">
-                            <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem", paddingBottom: "1rem"}}>&#8646;</span>
+                            <div style={{paddingBottom: "1rem"}}>
+                                <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
+                            </div>
                             <button onClick={this.props.moveOrderBook} className="button outline"><Translate content="exchange.vertical" /></button>
                         </div>
                         <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
