@@ -58,7 +58,7 @@ describe('Single wallet', () => {
             assert.equal(wallet.wallet_object.get("test_wallet"), "secret2")
             
             // Wallet is on the server
-            return assertServerWallet({ test_wallet: 'secret2'}, wallet)
+            return assertServerWallet('secret2', wallet)
         })
     })
     
@@ -174,13 +174,13 @@ describe('Single wallet', () => {
             // does not delete wallet on the server (it was disconnect above)
             wallet.keepRemoteCopy(false)
             
-            return assertServerWallet({ test_wallet: 'secret'}, wallet)//still on server
+            return assertServerWallet('secret', wallet)//still on server
                 .then(()=> wallet.setState({ test_wallet: 'offline secret'}))//local change
                 .then(()=> wallet.setState({ test_wallet: 'offline secret2'}))//local change
                 .then(()=>{
                 
                 // the old wallet is still on the server
-                return assertServerWallet({ test_wallet: 'secret'}, wallet)//server unchanged
+                return assertServerWallet('secret', wallet)//server unchanged
                     .then(()=>{
                     
                     wallet.useBackupServer(remote_url)//configure to hookup again
@@ -190,7 +190,7 @@ describe('Single wallet', () => {
                         .then(()=>{
                         
                         // New wallet is on the server
-                        return assertServerWallet({ test_wallet: 'offline secret2'}, wallet)
+                        return assertServerWallet('offline secret2', wallet)
                     })
                 })
             })
@@ -351,12 +351,9 @@ function assertNoServerWallet(walletParam) {
     return p1.then(()=> ws_rpc.close())
 }
 
-function assertServerWallet(expectedWallet, walletParam) {
+function assertServerWallet(test_wallet, walletParam) {
     
     if( ! walletParam.private_key ) throw new Error("wallet locked")
-    
-    expectedWallet.chain_id = chain_id
-    expectedWallet = Map(expectedWallet)
     
     let ws_rpc = new WalletWebSocket(remote_url)
     let api = new WalletApi(ws_rpc)
@@ -367,17 +364,7 @@ function assertServerWallet(expectedWallet, walletParam) {
                 assert(json.encrypted_data, 'No Server Wallet')
                 let backup_buffer = new Buffer(json.encrypted_data, 'base64')
                 let p3 = decrypt(backup_buffer, walletParam.private_key).then( wallet_object => {
-                    wallet_object = Map(wallet_object)
-                    
-                    // "is" will compare even if the key order is different
-                    if( ! is(expectedWallet, wallet_object) )
-                    
-                        // assert makes it easy to read the output
-                        assert.equal(
-                            JSON.stringify(wallet_object.toJS(),null,0),
-                            JSON.stringify(expectedWallet.toJS(),null,0)
-                        )
-                        
+                    assert.equal( test_wallet, wallet_object.test_wallet )
                 })
                 let p4 = api.fetchWalletUnsubscribe(public_key)
                 resolve(Promise.all([ p3, p4 ]))

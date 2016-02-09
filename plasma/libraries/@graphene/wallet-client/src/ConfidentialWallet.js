@@ -74,6 +74,7 @@ export default class ConfidentialWallet {
     setKeyLabel( key, label = null, index_address = false, public_key = null ) {
         
         this.assertLogin()
+        
         assert( key, "key is required (a public or private key)" )
         
         let private_key
