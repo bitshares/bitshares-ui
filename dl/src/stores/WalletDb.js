@@ -349,6 +349,7 @@ class WalletDb extends BaseStore {
             var private_plainhex_array = []
             for(let private_key_obj of private_key_objs)
                 private_plainhex_array.push( private_key_obj.private_plainhex )
+            
             // var AesWorker = require("worker!workers/AesWorker")
             // var worker = new AesWorker
             // worker.postMessage({
@@ -356,7 +357,10 @@ class WalletDb extends BaseStore {
             //     key: aes_private.key, iv: aes_private.iv
             // })
             this.setState({ saving_keys: true }, ()=>{
-                this.wallet.wallet_object = this.wallet.wallet_object.withMutations( obj => {
+                
+                console.log("Preparing for private keys save")
+                
+                let wallet_object = this.wallet.wallet_object.withMutations( obj => {
                     let indexables = List().asMutable()
                     for(let i = 0; i < private_key_objs.length; i++) {
                         var private_key_obj = private_key_objs[i]
@@ -378,7 +382,7 @@ class WalletDb extends BaseStore {
                                 if( import_account_names )
                                     key.set("label", import_account_names.join(", "))
                                 
-                                // new wallets still need to know which keys require addresses
+                                // wallet restore needs to know which keys require addresses
                                 key.set("index_address", true)
                                 
                                 if( private_key )
@@ -393,7 +397,9 @@ class WalletDb extends BaseStore {
                     }
                     cwallet.addressIndex.add( indexables.asImmutable() )
                 })
-                resolve( wallet.setState(this.wallet.wallet_object) )
+                resolve( wallet.setState(wallet_object)
+                    .then(()=> this.setState({saving_keys: false}) )
+                )
             })
             // var _this = this
             // worker.onmessage = event => { try {
@@ -443,15 +449,12 @@ class WalletDb extends BaseStore {
         })
     }
     
-    saveKeys(private_keys, transaction, public_key_string) {
+    saveKeys(private_keys) {
         var promises = []
         for(let private_key_record of private_keys) {
             promises.push( this.saveKey(
                 private_key_record.private_key,
-                private_key_record.sequence,
-                null, //import_account_names
-                public_key_string,
-                transaction
+                private_key_record.sequence
             ))
         }
         return Promise.all(promises)
@@ -460,12 +463,10 @@ class WalletDb extends BaseStore {
     saveKey(
         private_key,
         brainkey_sequence,
-        import_account_names,
-        public_key_string,
-        transaction = this.transaction_update_keys()
+        import_account_names
     ) {
-        var private_cipherhex = aes_private.encryptToHex( private_key.toBuffer() )
-        var wallet = wallet.wallet_object
+        // var private_cipherhex = aes_private.encryptToHex( private_key.toBuffer() )
+        
         if( ! public_key_string) {
             //S L O W
             // console.log('WARN: public key was not provided, this may incur slow performance')
@@ -482,7 +483,7 @@ class WalletDb extends BaseStore {
             brainkey_sequence
         }
         var p1 = PrivateKeyActions.addKey(
-            private_key_object, transaction
+            private_key_object
         ).then((ret)=> {
             if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
             return ret

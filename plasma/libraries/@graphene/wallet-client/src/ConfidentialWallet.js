@@ -7,7 +7,7 @@ import AddressIndex from "./AddressIndex"
 
 import ByteBuffer from "bytebuffer"
 
-let { stealth_memo_data, blind_transfer, transfer_from_blind } = ops
+let { stealth_memo_data, stealth_confirmation, blind_transfer, transfer_from_blind } = ops
 let { toImpliedDecimal } = number_utils
 let Long = ByteBuffer.Long
 
@@ -253,7 +253,7 @@ export default class ConfidentialWallet {
     getBlindBalances(pubkey_or_label) {
         this.assertLogin()
         let balances = Map().asMutable()
-        let p1 = this.fetch_blinded_balances( pubkey_or_label,  (bal, receipt)=> {
+        let p1 = this.fetch_blinded_balances( pubkey_or_label, (bal, receipt)=> {
             let amount = receipt.getIn(["data", "amount"])
             balances.update(amount.get("asset_id"), 0, amt => longAdd(amt, amount.get("amount")).toString() )
         })
@@ -428,7 +428,8 @@ export default class ConfidentialWallet {
 
         Checking the blockchain is optional.  This allows the wallet to save the receipt first before broadcasting.  In that case, confirmation_receipt.owner is provided and the get_blinded_balances API call is skipped.
         
-        @arg {object|Array} confirmation_receipts - { to, one_time_key, encrypted_memo, [owner = null] } 
+        @arg {string|object|Array<string|object>} confirmation_receipt (HEX or JSON) - serilized stealth_confirmation operation: { to: optional(public_key), one_time_key: public_key, encrypted_memo: hex }
+        
         @arg {string} opt_from - optional `from_label` unless a receeipt already has a from_label
         @arg {string} opt_memo - optional memo to apply each receipt
         
@@ -479,7 +480,10 @@ export default class ConfidentialWallet {
             let memo = stealth_memo_data.fromBuffer( plain_memo )
             memo = stealth_memo_data.toObject(memo)
             
-            result.to_key = conf.to
+            let to_key = this.getPublicKey( conf.to )
+            if( to_key )
+                result.to_key = to_key.toString()
+            
             result.to_label = this.getKeyLabel( result.to_key )
             if( memo.from ) {
                 result.from_key = memo.from
@@ -494,10 +498,7 @@ export default class ConfidentialWallet {
             result.amount = memo.amount
             result.memo = opt_memo
             
-            // checking the blockchain is good but must be optional
-            let bbal_promise = conf.owner ?
-                [{ owner: conf.owner }] :
-                Apis.db("get_blinded_balances", [ memo.commitment ])
+            let owner = authority({ key_auths: [[ to_key.child(child).toString(), 1 ]] })
             
             // console.log("memo", JSON.stringify(memo))
             
@@ -506,12 +507,9 @@ export default class ConfidentialWallet {
             .then( commtiment_test =>
                 Apis.crypto("verify_sum", [commtiment_test], [memo.commitment], 0)
                 .then( result => assert(result, "verify_sum " + result))
-                .then( ()=> bbal_promise )
-                .then( bbal => {
+                .then( () => {
                     
-                    assert( bbal.length, "commitment not found in blockchain " + conf.owner)
-                    
-                    result.control_authority = bbal[0].owner
+                    result.control_authority = owner
                     result.data = memo
                     
                     this.setKeyLabel( child_private )
@@ -522,7 +520,16 @@ export default class ConfidentialWallet {
         }
         let rp = [], receipts
 
-        List(confirmation_receipts).forEach( r => rp.push(receipt(r)) )
+        if( ! Array.isArray( confirmation_receipts ) && ! List.isList(confirmation_receipts))
+            confirmation_receipts = [ confirmation_receipts ]
+        
+        List(confirmation_receipts).forEach( r =>{
+            if( typeof r === 'string' ) {
+                r = stealth_confirmation.fromHex(r)
+                r = stealth_confirmation.toObject(r)
+            }
+            rp.push( receipt(r) )
+        })
         
         return Promise.all(rp)
             .then( res => receipts = res )
@@ -576,7 +583,9 @@ export default class ConfidentialWallet {
     
                 assert( conf.outputs, "outputs are required" )
                 
+                // Sender's change address
                 let last_output = conf.outputs[conf.outputs.length - 1]
+                
                 let from_blind = {
                     fee: from_blind_fee,
                     amount: { amount: amount.toString(), asset_id: asset.get("id") },
@@ -593,16 +602,17 @@ export default class ConfidentialWallet {
                 let operations = conf.trx.operations
                 operations.push( from_blind )
                 
+                
                 let p1
-                if( broadcast ) {
+                if( broadcast && conf.outputs.length === 2 ) {
+                    let change_out = conf.outputs[0]
                     // make sure the receipts are stored first before broadcasting (durable)
-                    let cr = [{
+                    let cr = {
                         // { to, one_time_key, encrypted_memo, [owner = null] } 
-                        to: from_blind_account_key_or_label,
-                        one_time_key: last_output.confirmation.one_time_key,
-                        encrypted_memo: last_output.confirmation.encrypted_memo,
-                        owner: last_output.confirmation.owner
-                    }]
+                        to: this.getPublicKey(from_blind_account_key_or_label).toString(),
+                        one_time_key: change_out.confirmation.one_time_key,
+                        encrypted_memo: change_out.confirmation.encrypted_memo
+                    }
                     p1 = this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
                 }
                 return (p1 ? p1 : Promise.resolve()).then(()=>{
@@ -654,12 +664,14 @@ function fetch_blinded_balances(pubkey_or_label, callback) {
     assert( public_key, "missing pubkey_or_label " + pubkey_or_label)
     
     let pubkey = public_key.toString()
+
     let receipts = this.blind_receipts()
         .filter( r => r.get("to_key") === pubkey)
-        // .filterNot( r => r.get("used") === true )// Not used is testing, this has implications
+        // .filterNot( r => r.get("used") === true )// just for testing
     
     let used = Set()
     let commitments = this.commitments(receipts)
+    
     let p1 = Apis.db("get_blinded_balances", commitments.toJS()).then( bbal => {
         
         // if( ! bbal.length )
@@ -894,7 +906,6 @@ function blind_transfer_help(
                             conf_output.confirmation_receipt = conf_output.confirmation
                         
                             confirm.outputs.push( conf_output )
-                            
                         })
                     }
                     
@@ -938,7 +949,6 @@ function blind_transfer_help(
                             return this.send_blind_tr([blind_tr], from_key_or_label, broadcast).then( tr => {
                                 confirm.trx = tr
                                 confirm.one_time_keys = one_time_keys.toJS()
-                                
                                 return confirm
                             })
                         })

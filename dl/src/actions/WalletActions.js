@@ -50,13 +50,10 @@ class WalletActions {
         var active_private = WalletDb.generateNextKey()
         //var memo_private = WalletDb.generateNextKey()
         var updateWallet = ()=> {
-            var transaction = WalletDb.transaction_update_keys()
-            var p = WalletDb.saveKeys(
+            return WalletDb.saveKeys(
                 [ owner_private, active_private],
                 //[ owner_private, active_private, memo_private ],
-                transaction
             )
-            return p.catch( error => transaction.abort() )
         };
 
         let create_account = () => {

@@ -107,12 +107,19 @@ class PrivateKeyStore extends BaseStore {
         return return_pubkeys
     }
     
-    onAddKey({private_key_object, transaction, resolve}) {// resolve is deprecated
-        if(this.state.keys.has(private_key_object.pubkey)) {
+    /**
+        @arg private_key_object
+        @arg private_key_object.import_account_names,
+        @arg private_key_object.encrypted_key: private_cipherhex,
+        @arg private_key_object.pubkey: public_key_string,
+        @arg private_key_object.brainkey_sequence
+    */
+    onAddKey({private_key_object, resolve}) {// resolve is deprecated
+        if(cwallet.getPrivateKey(private_key_object.pubkey)) {
             resolve({result:"duplicate",id:null})
             return
         }
-        
+        return cwallet.setKeyLabel(
         this.pendingOperation()
         //console.log("... onAddKey private_key_object.pubkey", private_key_object.pubkey)
         

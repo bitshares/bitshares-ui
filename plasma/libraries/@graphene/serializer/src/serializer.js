@@ -139,6 +139,7 @@ class Serializer {
     }
     
     toHex(object) {
+        // return this.toBuffer(object).toString("hex")
         var b=this.toByteBuffer(object);
         return b.toHex();
     }

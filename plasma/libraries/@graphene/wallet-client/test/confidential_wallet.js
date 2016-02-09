@@ -34,8 +34,8 @@ describe('Confidential wallet', () => {
     before(()=> Apis.instance("ws://localhost:8090").init_promise)
     before(()=> ChainStore.init())
     
-    // afterEach(()=> wallet.logout())
-
+    afterEach(()=> wallet.logout())
+    
     it('keys', ()=> {
         
         wallet.login(username, password, email, Apis.chainId())
@@ -111,7 +111,7 @@ describe('Confidential wallet', () => {
     })
     
     it("account to blind transfers", function() {
-
+    
         wallet.login(username, password, email, Apis.chainId())
         
         create("alice", "alice-brain-key", cw)
@@ -122,7 +122,7 @@ describe('Confidential wallet', () => {
         
         // must wait for a blocks...
         this.timeout(40 * 1000)
-
+    
         return Promise.resolve()
         
             // single blind address
@@ -171,14 +171,6 @@ describe('Confidential wallet', () => {
                 then( () => cw.getBlindBalances("alice") )
                 .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "74" + "00000" }, "alice") )
             
-            // blind to account
-            .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) )// with change
-            .then( ()=> cw.transferFromBlind("alice", "nathan", 9, "CORE", true) )// without change
-            
-                .then( () => cw.getBlindBalances("alice") )
-                .then( balances => assert.deepEqual(balances.toJS(), {}, "alice") )
-                // .then( balances => console.log("balances", balances) )
-                
             // Test blindHistory
             .then( ()=> cw.blindHistory("alice") )
             .then( receipts => assert(receipts.size, "alice receipt(s)") )
@@ -188,6 +180,41 @@ describe('Confidential wallet', () => {
                 
             .then( ()=> cw.blindHistory("nathan") )
             .then( receipts => assert(receipts, "nathan receipt(s)") )
+            
+            // DEBUG, Print the entire Wallet Object
+            // .then( ()=> console.log("INFO\twallet_object\t", JSON.stringify(cw.wallet.wallet_object, null, 4)) )
+            
+    })
+    
+    it("from blind transfers", function() {
+    
+        wallet.login(username, password, email, Apis.chainId())
+        
+        create("alice", "alice-brain-key", cw)
+        
+        let key = PrivateKey.fromSeed("")
+        cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "nathan" )
+        
+        // must wait for a blocks...
+        this.timeout(20 * 1000)
+    
+        return Promise.resolve()
+        
+            // single blind address
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice", 100]], true ))
+            
+                .then( () => cw.getBlindBalances("alice") )
+                .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "100" + "00000" }) )
+            
+            // blind to account
+            .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) )// with change
+                .then( () => cw.getBlindBalances("alice") )
+                .then( balances => assert.deepEqual(balances.toJS(), {"1.3.0": "70" + "00000"}, "alice") )
+                // .then( balances => console.log("balances", balances) )
+            
+            .then( ()=> cw.transferFromBlind("alice", "nathan", 50, "CORE", true) )// without change
+                .then( () => cw.getBlindBalances("alice") )
+                .then( balances => assert.deepEqual(balances.toJS(), {}, "alice") )
             
             // DEBUG, Print the entire Wallet Object
             // .then( ()=> console.log("INFO\twallet_object\t", JSON.stringify(cw.wallet.wallet_object, null, 4)) )

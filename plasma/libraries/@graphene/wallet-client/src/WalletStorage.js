@@ -192,21 +192,22 @@ export default class WalletStorage {
         
         let public_key = private_key.toPublicKey()
         
-        if( this.storage.state.get("secret_encryption_pubkey") ) {
+        if(this.storage.state.get("secret_encryption_pubkey")) {
+            
             // check login (email, username, and password)
             if( this.storage.state.get("secret_encryption_pubkey") !== public_key.toString())
                 throw new Error( "invalid_password" )
             
-            if( chain_id && chain_id !=== this.storage.state.get("chain_id"))
+            if( chain_id && chain_id !== this.storage.state.get("chain_id"))
                 throw new Error( "missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
             
-            if( ! login )
+            if( ! unlock )
                 return Promise.resolve()
         
         } else {
             assert(chain_id, "provide the chainId on first login")
             
-            if( ! login )
+            if( ! unlock )
                 return Promise.resolve()
             
             // first login
