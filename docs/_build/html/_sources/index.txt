@@ -8,22 +8,22 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   :caption: The basics
 
    getting_started
 
+.. toctree::
+   :maxdepth: 2
    :caption: Project structure
-   structure
 
-   :caption: Help and licensing
+   structure
+   data_layer
+   components
+
+.. toctree::
+   :maxdepth: 2
+   :caption: General info
+
+   contributing
    license
    help
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
