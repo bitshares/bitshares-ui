@@ -11,7 +11,26 @@ let { stealth_memo_data, blind_transfer, transfer_from_blind } = ops
 let { toImpliedDecimal } = number_utils
 let Long = ByteBuffer.Long
 
-/** This class is used for stealth transfers */
+/** This class is used for stealth transfers.
+
+    Serilizable persisterent state (JSON serilizable types only)..  This is the data used by this class and kept in walletStorage.wallet_object:
+
+    ```js
+    const empty_wallet = fromJS({
+        blind_receipts: [ see this.receiveBlindTransfer()  ],
+        keys: {
+            "pubkey": {
+                //  No two keys can have the same label, no two labels can have the same key
+                label: t.maybe(t.Str),
+                import_account_names: t.maybe(t.Arr),
+                brainkey_sequence: t.maybe(t.Num),
+                private_wif: t.Str, // was: encrypted_key: t.Str
+                index_address: false // Mark legacy keys for address indexing (addresses are calculated outside of this wallet backup)  
+            }
+        }
+    })
+    ```
+ */
 export default class ConfidentialWallet {
     
     constructor( walletStorage ) {
@@ -1067,29 +1086,3 @@ let longSub = (a, b) => long("subtract", a, b)
 let authority = (data, weight_threshold = data ? 1 : 0)  =>
     fromJS({ weight_threshold, key_auths: [], account_auths: [], address_auths: [] })
     .merge(data).toJS()
-
-// Serilizable persisterent state (JSON serilizable types only)..  This is the data kept in the walletStorage.  
-//
-// const empty_wallet = fromJS({
-//     public_name: t.Str,
-//     created: t.Dat,
-//     last_modified: t.Dat,
-//     backup_date: t.maybe(t.Dat),
-//     brainkey: t.maybe(t.Str),
-//     brainkey_sequence: t.Num,
-//     brainkey_backup_date: t.maybe(t.Dat),
-//     deposit_keys: t.maybe(t.Obj),
-//     chain_id: t.Str,
-//     blind_receipts: [ see this.receiveBlindTransfer()  ],
-//     keys: {
-//         "pubkey": {
-//             //  No two keys can have the same label, no two labels can have the same key
-//             label: t.maybe(t.Str),
-//             import_account_names: t.maybe(t.Arr),
-//             brainkey_sequence: t.maybe(t.Num),
-//             private_wif: t.Str, // was: encrypted_key: t.Str
-//             index_address: false // Mark legacy keys for address indexing (addresses are calculated outside of this wallet backup)  
-//         }
-//     }
-// })
-// The commented data-structure is for documentation purposes..

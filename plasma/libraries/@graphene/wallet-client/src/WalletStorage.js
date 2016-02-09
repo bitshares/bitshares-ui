@@ -22,7 +22,7 @@ const inital_persistent_state = fromJS({
     // This is the last encrypted_wallet hash that was saved on the server (base64)
     remote_hash: null,
     
-    // This is the public key derived from the email+username+password ... This is considered private (email+username+password) is not nearly random enough for this to be public.
+    // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not nearly random enough for this to be public).
     secret_encryption_pubkey: null,
     
     // Wallet JSON string encrypted using the private key derived from email+username+password (base64)
@@ -38,6 +38,17 @@ const inital_persistent_state = fromJS({
 
 /**
     A Wallet is a place where private user information can be stored. This information is kept encrypted when on disk or stored on the remote server.
+    
+    Serilizable persisterent state (JSON serilizable types only)..  This is the data kept in the walletStorage.  
+
+    ```js
+    const empty_wallet = fromJS({
+        created: t.Dat,
+        last_modified: t.Dat,
+        backup_date: t.maybe(t.Dat),
+        chain_id: t.Str,
+    })
+    ```
     
     @see [Plasma Wallet API]{@link https://github.com/cryptonomex/graphene/wiki/Plasma---Wallet-API}
 */
@@ -156,12 +167,15 @@ export default class WalletStorage {
         @arg {string} email 
         @arg {string} username
         @arg {string} password
-        @arg {string} chain_id - required on first login.  The transaction layer checks this value to ensure wallet's can not cross-chains
+        @arg {string} chain_id - required on first login.  The transaction layer checks this value to ensure wallet's can not cross-chains.  Chain ID is validated if it is provided on subsequent logins.
+        
+        @arg {boolean} [unlock = true] - use false to check the password without unlocking.
         
         @throws {Error<string>} [email_required | username_required | password_required | invalid_password | logged_in ]
+        
         @return {Promise} - can be ignored unless one is interested in the remote wallet syncing
     */
-    login( email, username, password, chain_id = null ) {
+    login( email, username, password, chain_id = null, unlock = true ) {
 
         if( this.private_key ) {
             throw new Error("logged_in")
@@ -182,19 +196,38 @@ export default class WalletStorage {
             // check login (email, username, and password)
             if( this.storage.state.get("secret_encryption_pubkey") !== public_key.toString())
                 throw new Error( "invalid_password" )
+            
+            if( chain_id && chain_id !=== this.storage.state.get("chain_id"))
+                throw new Error( "missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
+            
+            if( ! login )
+                return Promise.resolve()
+        
         } else {
             assert(chain_id, "provide the chainId on first login")
+            
+            if( ! login )
+                return Promise.resolve()
+            
             // first login
-            this.storage.setState({
-                secret_encryption_pubkey: public_key.toString(),
-                chain_id
-            })
-            // Temporily stuff the chain_id into the wallet_object, this helps the caller in they may not want to wait for this.sync to resolve
-            this.wallet_object = this.wallet_object.set("chain_id", chain_id)
+            let dt = new Date().toISOString()
+            let init = {
+                chain_id,
+                created: dt,
+                last_modified: dt,
+                secret_encryption_pubkey: public_key.toString()
+            }
+            this.storage.setState(init)
+            
+            // Temporily stuff the state into the wallet_object, this helps the unit tests where waiting for this.sync to resolve is not required.
+            this.wallet_object = this.wallet_object.merge(init)
+            
             this.notify = true
         }
         
+        // unlock
         this.private_key = private_key
+        
         return this.notifyResolve( this.sync(private_key) )
     }
     
@@ -217,8 +250,10 @@ export default class WalletStorage {
             unsub = Promise.resolve()
         }
         
-        // useBackupServer() will close the connection 
-        return this.notifyResolve( unsub.then(()=> this.useBackupServer()) )
+        return this.notifyResolve( unsub
+            // useBackupServer() will close the connection (this does not change the configuration)
+            .then(()=> this.useBackupServer())
+        )
     }
     
     /**
@@ -234,22 +269,21 @@ export default class WalletStorage {
     /** 
         This method is used to update the wallet state. If the wallet is configured to keep synchronized with the remote wallet then the server will refer to a copy of the wallets revision history to ensure that no version is overwritten. If the local wallet ever falls on a fork an attempt to upload that wallet will cause the API call to fail; a reconcilation will be needed. After successfully storing the state on the server, save the state to local memory, and optionally disk.
         
+        A deep merge is used (see ImmutableJs).  This is less prone to loosing information.  If something should be removed you will need to update the wallet_object direclty then call setState to presist the change.
+        
         This method does not perform any updates if the wallet_object is the same (using Immutable.Js will help ensure that this will work).
         
         The Immutable version of wallet_object ends up in `this.wallet_object` (synchronizing may be in progress)
         
         @arg {Immutable|object} wallet_object - mutable or immutable object .. no loops, only JSON serilizable data
         
-        @arg {boolean} [merge = true] - this will deep merge (see ImmutableJs) the wallet_object parameter with the existing wallet.  This should be safer.  If something should be removed this must be turned off.
-        
         @throws {Error} - [wallet_locked, etc...]
         
         @return {Promise} - resolve or reject on completion.  One may also monitor this.local_status and this.remote_status.
     */
-    setState( wallet_object, merge = true )  {
+    setState( wallet_object )  {
         
-        if( merge )
-            wallet_object = this.wallet_object.mergeDeep(wallet_object)
+        wallet_object = this.wallet_object.mergeDeep(wallet_object)
         
         // The Immutable js merge seems to be very good at keeping object equality
         if(this.wallet_object === wallet_object) {
@@ -259,17 +293,26 @@ export default class WalletStorage {
         if( ! this.private_key )
             throw new Error("wallet_locked")
         
-        
         this.notify = true
         this.local_status = "Pending"
         this.wallet_object = fromJS(wallet_object)
+        this.wallet_object = this.wallet_object.set("last_modified", new Date().toISOString())
+        
+        let rollback_wallet = this.wallet_object
+        this.wallet_object = this.wallet_object.set("backup_date", new Date().toISOString())
         
         return this.notifyResolve(
             this.updateWallet().catch( error => {
                 console.log('ERROR\tWallet:'+this.instance+'\tsetState', error, 'stack', error.stack)
                 throw error
             })
-        )
+        ).catch( error =>{
+            
+            if( rollback_wallet )
+                this.wallet_object = rollback_wallet
+            
+            throw error
+        })
     }
     
     /**
@@ -346,6 +389,8 @@ export default class WalletStorage {
             new_password
         )
         let new_public_key = new_private_key.toPublicKey()
+        
+        this.wallet_object = this.wallet_object.set("last_modified", new Date().toISOString())
         
         return new Promise( (resolve, reject) => {
             encrypt(this.wallet_object, new_public_key).then( encrypted_data => {

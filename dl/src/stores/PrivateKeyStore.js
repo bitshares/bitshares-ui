@@ -14,6 +14,7 @@ import { ChainStore } from "@graphene/chain"
 
 import { hash } from "@graphene/ecc"
 
+let cwallet
 
 /** No need to wait on the promises returned by this store as long as
     this.state.privateKeyStorage_error == false and
@@ -33,11 +34,15 @@ class PrivateKeyStore extends BaseStore {
         this._export(
             "hasKey",
             "getPubkeys",
-            "getTcomb_byPubkey",
             "getPubkeys_having_PrivateKey",
             "addPrivateKeys_noindex",
-            "decodeMemo"
+            "decodeMemo",
+            "setConfidentialWallet"
         );
+    }
+    
+    setConfidentialWallet(confidential_wallet) {
+        cwallet = confidential_wallet
     }
     
     _getInitialState() {
@@ -100,13 +105,6 @@ class PrivateKeyStore extends BaseStore {
             }
         }
         return return_pubkeys
-    }
-    
-    getTcomb_byPubkey(public_key) {
-        if(! public_key) return null
-        if(public_key.Q)
-            public_key = public_key.toPublicKeyString()
-        return this.state.keys.get(public_key)
     }
     
     onAddKey({private_key_object, transaction, resolve}) {// resolve is deprecated
@@ -211,34 +209,34 @@ class PrivateKeyStore extends BaseStore {
     decodeMemo(memo) {
         let lockedWallet = false;
         let memo_text, isMine = false;
-        let from_private_key = this.state.keys.get(memo.from)
-        let to_private_key = this.state.keys.get(memo.to)
-        let private_key = from_private_key ? from_private_key : to_private_key;
-        let public_key = from_private_key ? memo.to : memo.from;
-        public_key = PublicKey.fromPublicKeyString(public_key)
-
         try {
-            private_key = WalletDb.decryptTcomb_PrivateKey(private_key);
+            let from_private_key = cwallet.getPrivateKey(memo.from)
+            let to_private_key = cwallet.getPrivateKey(memo.to)
+            let private_key = from_private_key ? from_private_key : to_private_key;
+            let public_key = from_private_key ? memo.to : memo.from;
+            
+            try {
+                memo_text = private_key ? Aes.decrypt_with_checksum(
+                    private_key,
+                    public_key,
+                    memo.nonce,
+                    memo.message
+                ).toString("utf-8") : null;
+            } catch(e) {
+                console.log("transfer memo exception ...", e);
+                memo_text = "*";
+            }
         }
         catch(e) {
+            // if not logged in
+            if( ! cwallet.wallet.private_key )
+                throw e
+            
             // Failed because wallet is locked
             lockedWallet = true;
-            private_key = null;
+            // private_key = null;
             isMine = true;            
         }
-
-        try {
-            memo_text = private_key ? Aes.decrypt_with_checksum(
-                private_key,
-                public_key,
-                memo.nonce,
-                memo.message
-            ).toString("utf-8") : null;
-        } catch(e) {
-            console.log("transfer memo exception ...", e);
-            memo_text = "*";
-        }
-
         return {
             text: memo_text,
             isMine

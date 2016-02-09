@@ -79,7 +79,7 @@ module.exports = function(options) {
                 },
                 { 
                     test: /\.js$/,
-                    exclude: [/node_modules/, rpath("../dl/node_modules")],
+                    exclude: [/node_modules/, rpath("../dl/node_modules"), rpath("../plasma/node_modules")],
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true }, //, presets: ['es2015', 'stage-0']
                 },

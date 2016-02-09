@@ -46,7 +46,7 @@ export default class TransactionBuilder {
         
         @arg {boolean} [broadcast = false]
     */
-    process_transaction(cwallet, signer_pubkeys = null, broadcast = false) {
+    process_transaction(cwallet, signer_pubkeys = null, broadcast = false, confirm = null) {
 
         let wallet_object = cwallet.wallet.wallet_object
         if(Apis.instance().chain_id !== wallet_object.get("chain_id"))
@@ -54,10 +54,10 @@ export default class TransactionBuilder {
                 wallet_object.get("chain_id") + ", but got " +
                 Apis.instance().chain_id)
         
-        // return WalletUnlockActions.unlock().then( () => {
         return this.set_required_fees().then(()=> {
             var signer_pubkeys_added = {}
             if(signer_pubkeys) {
+                
                 // Balance claims are by address, only the private
                 // key holder can know about these additional
                 // potential keys.
@@ -94,20 +94,9 @@ export default class TransactionBuilder {
                         this.add_signer(private_key, pubkey_string)
                     }
                 })
-            }).then(()=> {
-                if(broadcast) {
-                    if(this.confirm_transactions) {
-                        TransactionConfirmActions.confirm(tr)
-                        return Promise.resolve();
-                    }
-                    else
-                        return this.broadcast()
-                    
-                } else
-                    return this.serialize()
             })
+            .then(()=> broadcast ? this.broadcast() : this.serialize())
         })
-        // })
     }
     
     /** Typically this is called automatically just prior to signing.  Once finalized this transaction can not be changed. */

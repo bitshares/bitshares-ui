@@ -26,7 +26,7 @@ export default class WalletChangePassword extends Component {
     
     onAccept() {
         var {old_password, new_password} = this.state
-        WalletDb.changePassword(old_password, new_password, true/*unlock*/)
+        WalletDb.changePassword(old_password, new_password)
             .then(()=> {
                 notify.success("Password changed")
                 window.history.back()

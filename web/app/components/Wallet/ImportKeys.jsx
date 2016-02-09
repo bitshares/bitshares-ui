@@ -571,7 +571,10 @@ export default class ImportKeys extends Component {
                     for(let _name of account_names)
                         if(_name == account_name)
                             dup = true
-                    if(dup) continue
+                    
+                    if(dup)
+                        continue
+                    
                     account_names.push(account_name)
                     this.state.keys_to_account[private_plainhex] = {account_names, public_key_string}
                 } catch(e) {
@@ -610,7 +613,8 @@ export default class ImportKeys extends Component {
         var keys_to_account = this.state.keys_to_account
         for(let private_plainhex of Object.keys(keys_to_account)) {
             var {account_names, public_key_string} = keys_to_account[private_plainhex]
-            if( dups[public_key_string] ) delete keys_to_account[private_plainhex]
+            if( dups[public_key_string] )
+                delete keys_to_account[private_plainhex]
         }
         WalletUnlockActions.unlock().then(()=> {
             ImportKeysStore.importing(true)
