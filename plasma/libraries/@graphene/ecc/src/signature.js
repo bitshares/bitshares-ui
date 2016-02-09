@@ -46,7 +46,6 @@ class Signature {
         let Q, e, i;
         e = BigInteger.fromBuffer(sha256_buffer);
         i = this.i;
-        console.log("recoverPubkey,i", i)
         i -= 27;
         i = i & 3;
         Q = ecdsa.recoverPubKey(curve, e, this, i);

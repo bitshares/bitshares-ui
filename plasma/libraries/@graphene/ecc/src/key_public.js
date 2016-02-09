@@ -7,6 +7,9 @@ var hash = require('./hash');
 var config = require('../config');
 var assert = require('assert');
 
+var G = secp256k1.G
+var n = secp256k1.n
+
 class PublicKey {
 
     /** @param {ecurve.Point} public key */
@@ -124,8 +127,17 @@ class PublicKey {
         offset = hash.sha256( offset )
         
         let c = BigInteger.fromBuffer( offset )
-        let cG = secp256k1.G.multiply(c)
+        
+        if (c.compareTo(n) >= 0)
+            throw new Error("Child offset went out of bounds, try again")
+        
+        
+        let cG = G.multiply(c)
         let Qprime = this.Q.add(cG)
+        
+        if( secp256k1.isInfinity(Qprime) )
+            throw new Error("Child offset derived to an invalid key, try again")
+        
         return PublicKey.fromPoint(Qprime)
     }
 

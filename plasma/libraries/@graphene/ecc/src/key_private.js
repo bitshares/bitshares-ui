@@ -92,11 +92,20 @@ class PrivateKey {
         return hash.sha512(S);
     }
     
+    /** @throws {Error} - overflow of the key could not be derived */
     child( offset ) {
         offset = Buffer.concat([ this.toPublicKey().toBuffer(), offset ])
         offset = hash.sha256( offset )
         let c = BigInteger.fromBuffer(offset)
+        
+        if (c.compareTo(n) >= 0)
+            throw new Error("Child offset went out of bounds, try again")
+        
         let derived = this.d.add(c).mod(n)
+        
+        if( derived.signum() === 0 )
+            throw new Error("Child offset derived to an invalid key, try again")
+        
         return new PrivateKey( derived )
     }
     
