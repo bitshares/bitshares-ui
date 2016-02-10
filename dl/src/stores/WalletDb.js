@@ -457,8 +457,8 @@ class WalletDb extends BaseStore {
             })
         }
         return new Promise( resolve => {
-            
-            this.setState({ saving_keys: true })//, ()=>{
+
+            this.setState({ saving_keys: true })
             let wallet_object = importKeys( key_objects )
             
             AddressIndex.add( this.keys()
@@ -470,7 +470,7 @@ class WalletDb extends BaseStore {
             resolve( wallet.setState(wallet_object)
                 .then(()=> this.setState({saving_keys: false}) )
             )
-            // })
+
         })
     }
     

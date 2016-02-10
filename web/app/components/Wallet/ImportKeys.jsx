@@ -14,7 +14,8 @@ import { Apis } from "@graphene/chain"
 import WalletDb from "stores/WalletDb"
 import WalletUnlockStore from "stores/WalletUnlockStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import WalletCreate from "components/Wallet/WalletCreate"
+import WalletUnlock from "components/Wallet/WalletUnlock"
+
 import LoadingIndicator from "components/LoadingIndicator"
 import Translate from "react-translate-component";
 
@@ -73,30 +74,14 @@ export default class ImportKeys extends Component {
         this.setState(state, ()=> this.updateOnChange());
     }
     
-    unlock(e) {
-        e.preventDefault()
-        WalletUnlockActions.unlock()
+    render() {
+        return <WalletUnlock>{ this.main() }</WalletUnlock>
     }
     
-    render() {
+    main() {
         var keys_to_account = this.state.keys_to_account
         var key_count = Object.keys(keys_to_account).length
         var account_keycount = this.getImportAccountKeyCount(keys_to_account)
-        
-        if( WalletDb.isEmpty())
-        return <WalletCreate hideTitle={true}/>
-        
-        if( WalletDb.isLocked() )
-        return <div className="center-content" style={{width: "100%"}}>
-            <div className="button-group content-block">
-                <a href className="button success" onClick={this.unlock.bind(this)}>
-                    Unlock
-                </a>
-                <a href className="button secondary" onClick={this.onBack.bind(this)}>
-                    Cancel
-                </a>
-            </div>
-        </div>
         
         // Create wallet prior to the import keys (keeps layout clean)
         

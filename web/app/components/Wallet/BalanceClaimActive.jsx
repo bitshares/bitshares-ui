@@ -13,6 +13,7 @@ import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
 import WalletActions from "actions/WalletActions"
+import WalletUnlock from "components/Wallet/WalletUnlock"
 import MyAccounts from "components/Forms/MyAccounts"
 import Translate from "react-translate-component";
 
@@ -44,6 +45,11 @@ export default class BalanceClaimActive extends Component {
     }    
    
     render() {
+        return <WalletUnlock>{ this.main() }</WalletUnlock>
+    }
+
+    main() {
+        
         if( !this.props.account_refs.size) {
             return (
                 <div>
