@@ -12,15 +12,13 @@ import ConfidentialWallet from "../src/ConfidentialWallet"
 const username = "username"
 const password = "password"
 const email = "alice_spec@example.bitbucket"
-
-// Configure to use localStorage for the purpose of these tests...
-global.localStorage = require('localStorage')
 const storage = new LocalStoragePersistence("wallet_spec")
 
 let wallet, cw
 let create = (name = "a1", brainkey = "brainkey", _cw = cw)=> _cw.createBlindAccount(name, brainkey)
 
 function initWallet() {
+    console.log(1);
     storage.clear()
     wallet = new WalletStorage(storage)
     cw = new ConfidentialWallet(wallet)
@@ -34,7 +32,7 @@ describe('Confidential wallet', () => {
     before(()=> Apis.instance("ws://localhost:8090").init_promise)
     before(()=> ChainStore.init())
     
-    afterEach(()=> wallet.logout())
+    // afterEach(()=> wallet.logout())
     
     it('keys', ()=> {
         

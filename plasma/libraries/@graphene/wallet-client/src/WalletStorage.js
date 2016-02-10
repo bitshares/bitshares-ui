@@ -284,9 +284,10 @@ export default class WalletStorage {
     */
     setState( wallet_object )  {
         
+        // Immutable js merge is good at keeping object equality
         wallet_object = this.wallet_object.mergeDeep(wallet_object)
         
-        // The Immutable js merge seems to be very good at keeping object equality
+        // Still the same after merging?
         if(this.wallet_object === wallet_object) {
             return Promise.resolve()
         }

@@ -46,26 +46,21 @@ class WalletActions {
             //this.actions.brainKeyAccountCreateError( error )
             return Promise.reject( error )
         }
-        var owner_private = WalletDb.generateNextKey()
-        var active_private = WalletDb.generateNextKey()
-        //var memo_private = WalletDb.generateNextKey()
-        var updateWallet = ()=> {
-            return WalletDb.saveKeys(
-                [ owner_private, active_private],
-                //[ owner_private, active_private, memo_private ],
-            )
-        };
+        
+        let [ owner, active ] = WalletDb.getDeterministicKeys(2)
+        let updateWallet = ()=> WalletDb.importKeys([ owner, active ])
 
         let create_account = () => {
             return application_api.create_account(
-                owner_private.private_key.toPublicKey().toPublicKeyString(),
-                active_private.private_key.toPublicKey().toPublicKeyString(),
+                owner.private_key.toPublicKey().toString(),
+                active.private_key.toPublicKey().toString(),
                 account_name,
                 registrar, //registrar_id,
                 referrer, //referrer_id,
                 referrer_percent, //referrer_percent,
                 true //broadcast
-            ).then( () => updateWallet() )
+            )
+            .then( () => updateWallet() )
         };
 
         if(registrar) {
@@ -83,10 +78,10 @@ class WalletActions {
                 body: JSON.stringify({
                     "account": {
                         "name": account_name,
-                        "owner_key": owner_private.private_key.toPublicKey().toPublicKeyString(),
-                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString(),
-                        "memo_key": active_private.private_key.toPublicKey().toPublicKeyString(),
-                        //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
+                        "owner_key": owner.private_key.toPublicKey().toString(),
+                        "active_key": active.private_key.toPublicKey().toString(),
+                        "memo_key": active.private_key.toPublicKey().toString(),
+                        //"memo_key": memo.private_key.toPublicKey().toString(),
                         "refcode": refcode,
                         "referrer": window && window.BTSW ? BTSW.referrer : ""
                     }

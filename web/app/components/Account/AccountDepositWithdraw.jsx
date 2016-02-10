@@ -76,7 +76,7 @@ class MetaexchangeDepositRequest extends React.Component {
 					else
 						wallet.deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
 					
-					WalletDb._updateWallet();
+					WalletDb.update(wallet);
 				}));
 	}
 

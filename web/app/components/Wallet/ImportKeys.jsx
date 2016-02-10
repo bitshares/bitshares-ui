@@ -629,9 +629,9 @@ export default class ImportKeys extends Component {
         for(let private_plainhex of Object.keys(keys_to_account)) {
             var {account_names, public_key_string} = keys_to_account[private_plainhex]
             private_key_objs.push({
-                private_plainhex,
-                import_account_names: account_names,
-                public_key_string
+                private_wif: PrivateKey.fromHex(private_plainhex).toWif(),
+                import_account_names: account_names.join(", "),
+                public_key: public_key_string
             })
         }
         this.reset()

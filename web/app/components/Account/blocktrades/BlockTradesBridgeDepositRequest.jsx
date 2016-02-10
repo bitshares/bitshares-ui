@@ -309,7 +309,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         let name = this.props.account.get('name');
         this.constructSlotInWalletDb(wallet, name, input_coin_type, output_coin_type);
         wallet.deposit_keys[name][this.props.gateway][input_coin_type][output_coin_type].push(address);
-        WalletDb._updateWallet();
+        WalletDb.update(wallet);
     }
 
     getCachedOrGeneratedInputAddress(input_coin_type, output_coin_type)

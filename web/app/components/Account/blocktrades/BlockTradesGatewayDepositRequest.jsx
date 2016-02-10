@@ -93,7 +93,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         else
             wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name].push( receive_address );
 
-        WalletDb._updateWallet();
+        WalletDb.update(wallet);
 
         this.setState( {receive_address} );
     }

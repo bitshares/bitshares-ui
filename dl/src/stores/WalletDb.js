@@ -1,5 +1,6 @@
 import alt from "alt-instance"
 import BaseStore from "stores/BaseStore"
+import { List } from "immutable"
 
 import iDB from "idb-instance";
 import { Apis } from "@graphene/chain"
@@ -16,9 +17,10 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import { chain_config } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
-import AddressIndex from "stores/AddressIndex"
 
-import { LocalStoragePersistence, WalletStorage, ConfidentialWallet} from "@graphene/wallet-client"
+import {
+    LocalStoragePersistence, WalletStorage, ConfidentialWallet, AddressIndex
+} from "@graphene/wallet-client"
 
 var aes_private
 var transaction
@@ -27,7 +29,9 @@ var wallet, cwallet
 var TRACE = false
 const remote_url = "ws://localhost:9080/wallet_v1"
 
-/** Represents a single wallet and related indexedDb database operations. */
+/**
+    Represents a single wallet and related database operations.
+*/
 class WalletDb extends BaseStore {
     
     constructor() {
@@ -35,9 +39,9 @@ class WalletDb extends BaseStore {
         
         this.openWallet("default")
         
-        this.state = { wallet: null, saving_keys: false }
+        this.state = { saving_keys: false } // wallet: null, 
         
-        // Confirm only works when there is a UI (this disables for mocha unit tests)
+        // Confirm only works when there is a UI (this lets a mocha unit test disable it)
         this.confirm_transactions = true
         
         ChainStore.subscribe(this.checkNextGeneratedKey.bind(this))
@@ -45,36 +49,77 @@ class WalletDb extends BaseStore {
         
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
-        this._export(
-            "checkNextGeneratedKey","getWallet","onLock","isLocked","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData",
+        this._export( // "checkNextGeneratedKey","generateNextKey",
+            "getWallet","onLock","isLocked","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","update","loadDbData",
             "importKeysWorker"
         )
-
     }
+    
+    /** This method may be called again should the chain ID change */
+    loadDbData() {
+        this.openWallet()
+        return Promise.resolve()
+        // return idb_helper.cursor("wallet", cursor => {
+        //     if( ! cursor) return false
+        //     var wallet = cursor.value
+        //     // Convert anything other than a string or number back into its proper type
+        //     wallet.created = new Date(wallet.created)
+        //     wallet.last_modified = new Date(wallet.last_modified)
+        //     wallet.backup_date = wallet.backup_date ? new Date(wallet.backup_date):null
+        //     wallet.brainkey_backup_date = wallet.brainkey_backup_date ? new Date(wallet.brainkey_backup_date):null
+        //     try { WalletTcomb(wallet) } catch(e) {
+        //         console.log("WalletDb format error", e); }
+        //     wallet.wallet_object = wallet
+        //     this.setState({ wallet })
+        //     return false //stop iterating
+        // });
+    }
+    
+    keys(keys) {
+        return keys ? 
+            wallet.wallet_object.updateIn(["keys"], Map(), ks => ks.merge(keys)) :
+            wallet.wallet_object.getIn(["keys"], Map())
+    }
+    
+    // needed ?
+    // blind_receipts() {
+    //     return wallet.wallet_object.getIn(["blind_receipts"], Map())
+    // }
     
     /**
         Change or open a wallet, this may or may not be empty.  It is necessary to call onCreateWallet to complete this process.
     */
-    openWallet(name) {
-        let storage = new LocalStoragePersistence("wallet::" + name)
+    openWallet(name = "default") {
+        let storage = new LocalStoragePersistence(
+            "wallet::" + chain_config.address_prefix + "::" + name
+        )
         wallet = new WalletStorage(storage)
         cwallet = new ConfidentialWallet(wallet)
-        PrivateKeyStore.setConfidentialWallet(cwallet)
+        // PrivateKeyStore.setConfidentialWallet(cwallet)
     }
     
     /** Discover derived keys that are not in this wallet */
     checkNextGeneratedKey() {
+        
         if( ! wallet.private_key ) return // locked
         if( ! wallet.wallet_object.has("brainkey")) return // no brainkey
+        
         if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key)
             return // no change
+            
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
         // Helps to ensure we are looking at an un-used key
-        try { this.generateNextKey( false /*save*/ ) } catch(e) {
+        try { this.generateNextKey() } catch(e) {
             console.error(e) }
     }
     
-    /** @return null if locked or return a wallet object (regular object, not immutable) */
+    /**
+        Return a clone of the wallet's data object.  The modified wallet object can be passed back in to this.update(wallet_object).  Store only serilizable types in this object.
+        
+        Note, it is better to update the Immutable version read from WalletDb.wallet.wallet_object then mutated and passed back into this.update(wallet_object).  
+        
+        @return null if locked or return a mutable wallet object (regular object)
+    */
     getWallet() {
         return wallet.private_key ? wallet.wallet_object.toJS() : null
     }
@@ -104,20 +149,6 @@ class WalletDb extends BaseStore {
             : tr.process_transaction(cwallet, signer_pubkeys, broadcast)
         )
     }
-    
-    // transaction_update() {
-    //     var transaction = iDB.instance().db().transaction(
-    //         ["wallet"], "readwrite"
-    //     )
-    //     return transaction
-    // }
-    // 
-    // transaction_update_keys() {
-    //     var transaction = iDB.instance().db().transaction(
-    //         ["wallet", "private_keys"], "readwrite"
-    //     )
-    //     return transaction
-    // }
     
     getBrainKey() {
         if ( ! wallet.wallet_object.has("brainkey")) throw new Error("missing brainkey")
@@ -276,18 +307,42 @@ class WalletDb extends BaseStore {
         // })
     }
     
-    /** @throws "missing brainkey", "wallet locked"
+    /**
+        Creates the same set of keys until the keys are saved in the wallet (passed into WalletDb.importKeys).
+        
+        @arg {number} count
+        @return {array} - [{ private_key: PrivateKey, brainkey_sequence: number }]
+    */ 
+    getDeterministicKeys( count ) {
+        var brainkey = this.getBrainKey()
+        var sequence = wallet.get("brainkey_sequence") || 0
+        let keys = List()
+        for(let i = 0; i < count; i++)
+            keys = keys.push({
+                private_key: key.get_brainkey_private( brainkey, sequence + i ),
+                brainkey_sequence: sequence + i
+            })
+        return keys.toJS()
+    }
+    
+    /** 
+        Used in for Advanced mode for brainkey recovery.  This is bound to ChainStore events.
+        
+        @private
+        
+        @throws "missing brainkey", "wallet locked"
         @return { private_key, sequence }
     */
-    generateNextKey(save = true) {
+    generateNextKey() {
         var brainkey = this.getBrainKey()
-        var sequence = wallet.get("brainkey_sequence")
+        var sequence = wallet.get("brainkey_sequence") || 0
         var used_sequence = null
         
         // Skip ahead in the sequence if any keys are found in use
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
         this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead||0) + 1)
         
+        let keys = []
         for (var i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
             var private_key = key.get_brainkey_private( brainkey, i )
             var pubkey =
@@ -302,249 +357,222 @@ class WalletDb extends BaseStore {
                 used_sequence = i
                 console.log("WARN: Private key sequence " + used_sequence + " in-use. " + 
                     "I am saving the private key and will go onto the next one.")
-                this.saveKey( private_key, used_sequence )
+                keys.push({ private_key, brainkey_sequence: used_sequence })
             }
         }
-        if(used_sequence !== null) {
-            wallet.setState({
-                brainkey_sequence: used_sequence + 1
-            })
-        }
-        sequence = wallet.get("brainkey_sequence")
-        var private_key = key.get_brainkey_private( brainkey, sequence )
-        if( save ) {
-            // save deterministic private keys ( the user can delete the brainkey )
-            this.saveKey( private_key, sequence )
-            //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
-            this.incrementBrainKeySequence()
-        }
-        return { private_key, sequence }
-    }
-    
-    incrementBrainKeySequence( transaction ) {
-        // NOTE, this is incrementing in RAM right away this can't be out-of-sync
-        return wallet.setState({
-            brainkey_sequence: wallet.wallet_object.get("brainkey_sequence")
-        })
-        // var wallet = wallet.wallet_object
-        // wallet.brainkey_sequence ++
-        // // update last modified
-        // return this._updateWallet( transaction )
+        
+        // if(used_sequence !== null) {
+        //     wallet.setState({
+        //         brainkey_sequence: used_sequence + 1
+        //     })
+        // }
+        this.importKeys(keys)
+        
+        // sequence = wallet.get("brainkey_sequence")
+        // var private_key = key.get_brainkey_private( brainkey, sequence )
+        // if( save ) {
+        //     // save deterministic private keys ( the user can delete the brainkey )
+        //     this.saveKey( private_key, sequence )
+        //     //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
+        //     return wallet.setState({
+        //         brainkey_sequence: 1 + 0||wallet.wallet_object.get("brainkey_sequence")
+        //     })
+        // }
+        // return { private_key, sequence }
     }
     
     /**
-        @arg  {array} private_key_objs
-        @arg {string} private_key_objs.private_plainhex
-        @arg  {array} private_key_objs.import_account_names
-        @arg {string} private_key_objs.public_key_string
+        Bulk import of keys, making a single backup.  Keys may be indexed by address.
+        @arg {key_object|array<key_object>} key_objects
+        @typedef key_object
+        @property {string} key_object.public_key - must match key prefix for this chain
+        @property {string} key_object.private_wif
+        @property {string} key_object.import_account_names - comma separated list
+        @property {boolean} key_object.index_address - true or undefined.  Set truthy only if this could be a BTS 1.0 key having a legacy address format (Protoshares, etc.).  Unless true, the user may not see some shorts or balance claims.  A private key object is requred if this is used.
+        @property {boolean} key_object.brainkey_sequence
     */
-    importKeysWorker(private_key_objs) {
+    importKeys(key_objects) {
         
-        return new Promise( (resolve, reject) => {
-            var pubkeys = []
-            for(let private_key_obj of private_key_objs)
-                pubkeys.push( private_key_obj.public_key_string )
-            var addyIndexPromise = AddressIndex.add(pubkeys)
+        let importKeys = key_objects => {
             
-            var private_plainhex_array = []
-            for(let private_key_obj of private_key_objs)
-                private_plainhex_array.push( private_key_obj.private_plainhex )
+            if( ! Array.isArray(key_objects) && ! List.isList(key_objects))
+                key_objects = [ key_objects ]
             
-            // var AesWorker = require("worker!workers/AesWorker")
-            // var worker = new AesWorker
-            // worker.postMessage({
-            //     private_plainhex_array,
-            //     key: aes_private.key, iv: aes_private.iv
-            // })
-            this.setState({ saving_keys: true }, ()=>{
-                
-                console.log("Preparing for private keys save")
-                
-                let wallet_object = this.wallet.wallet_object.withMutations( obj => {
-                    let indexables = List().asMutable()
-                    for(let i = 0; i < private_key_objs.length; i++) {
-                        var private_key_obj = private_key_objs[i]
-                        
-                        let {import_account_names, public_key_string, private_plainhex} = private_key_obj
-                        
-                        let private_key = private_plainhex ? PrivateKey.fromHex(private_plainhex) : null
-                        
-                        if( ! public_key_string ) {
-                            assert(private_key, "Private key required")
-                            public_key_string = private_key.toPublicKey().toString() // S L O W
-                        } else {
-                            if(public_key_string.indexOf(chain_config.address_prefix) != 0)
-                                throw new Error("Public Key should start with " + chain_config.address_prefix)
-                        }
-                        obj.updateIn(["keys", public_key_string], Map(),
-                            key => key.withMutations( key =>{
-                                
-                                if( import_account_names )
-                                    key.set("label", import_account_names.join(", "))
-                                
-                                // wallet restore needs to know which keys require addresses
-                                key.set("index_address", true)
-                                
-                                if( private_key )
-                                    key.set("private_wif", private_key.toWif())
-                                
-                                if( index_address )
-                                    indexables.push(public_key)
-                                
-                                return key
-                            })
-                        )
+            return Map().withMutations( wallet_object => {
+                let max_brainkey_sequence = 0
+                List(key_objects).forEach( key_object => {
+                    
+                    let {public_key, private_wif, import_account_names, index_address, brainkey_sequence} = key_object
+                    
+                    if( ! private_wif ) {
+                        assert(key_object.private_key, "private_wif or private_key required")
+                        assert(key_object.private_key.d, "private_key must be of PrivateKey type")
+                        private_wif = key_object.private_key.toWif()
                     }
-                    cwallet.addressIndex.add( indexables.asImmutable() )
+                    
+                    if( key_object.brainkey_sequence !== undefined)
+                        max_brainkey_sequence = Math.max(max_brainkey_sequence, key_object.brainkey_sequence)
+                    
+                    if( ! public_key ) {
+                        assert(private_key, "Private key required")
+                        // toPublicKey  S L O W
+                        public_key = PrivateKey.fromWif(private_wif).toPublicKey().toString()
+                    } else {
+                        if(public_key.indexOf(chain_config.address_prefix) != 0)
+                            throw new Error("Public Key should start with " + chain_config.address_prefix)
+                    }
+                    
+                    if( index_address ) {
+                        assert(private_key, "private_key required to derive addresses")
+                    }
+                    
+                    let key = {public_key, private_wif, import_account_names, index_address, brainkey_sequence}
+                    wallet_object.setIn(["keys", public_key], Map(key))
                 })
+                if( max_brainkey_sequence !== undefined)
+                    // Always point to an unused key
+                    wallet_object.set("brainkey_sequence", 1 + max_brainkey_sequence)
+            })
+        }
+        return new Promise( resolve => {
+            this.setState({ saving_keys: true }, ()=>{
+                let wallet_object = importKeys( key_objects )
+                
+                AddressIndex.add( wallet_object.get("keys")
+                    .reduce( (r, pubkey, key) => key.has("index_address") ? r.add(pubkey) : r, List())
+                )
+                
+                wallet_object.get("keys")
+                    .forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )
+                    
                 resolve( wallet.setState(wallet_object)
                     .then(()=> this.setState({saving_keys: false}) )
                 )
             })
-            // var _this = this
-            // worker.onmessage = event => { try {
-            //     console.log("Preparing for private keys save");
-            //     var private_cipherhex_array = event.data
-            //     var enc_private_key_objs = []
-            //     for(let i = 0; i < private_key_objs.length; i++) {
-            //         var private_key_obj = private_key_objs[i]
-            //         var {import_account_names, public_key_string, private_plainhex} = private_key_obj
-            //         var private_cipherhex = private_cipherhex_array[i]
-            //         if( ! public_key_string) {
-            //             // console.log('WARN: public key was not provided, this will incur slow performance')
-            //             var private_key = PrivateKey.fromHex(private_plainhex)
-            //             var public_key = private_key.toPublicKey() // S L O W
-            //             public_key_string = public_key.toPublicKeyString()
-            //         } else
-            //             if(public_key_string.indexOf(chain_config.address_prefix) != 0)
-            //                 throw new Error("Public Key should start with " + chain_config.address_prefix)
-            //         
-            //         var private_key_object = {
-            //             import_account_names,
-            //             encrypted_key: private_cipherhex,
-            //             pubkey: public_key_string
-            //             // null brainkey_sequence
-            //         }
-            //         enc_private_key_objs.push(private_key_object)
-            //     }
-            //     console.log("Saving private keys", new Date().toString());
-            //     var transaction = _this.transaction_update_keys()
-            //     var insertKeysPromise = idb_helper.on_transaction_end(transaction)
-            //     try {
-            //         var duplicate_count = PrivateKeyStore
-            //             .addPrivateKeys_noindex(enc_private_key_objs, transaction )
-            //         if( private_key_objs.length != duplicate_count )
-            //             _this.setWalletModified(transaction)
-            //         _this.setState({saving_keys: false})
-            //         resolve(Promise.all([ insertKeysPromise, addyIndexPromise ]).then( ()=> {
-            //             console.log("Done saving keys", new Date().toString())
-            //             // return { duplicate_count }
-            //         }))
-            //     } catch(e) {
-            //         transaction.abort()
-            //         console.error(e)
-            //         reject(e)
-            //     }
-            // } catch( e ) { console.error('AesWorker.encrypt', e) }}
         })
     }
     
-    saveKeys(private_keys) {
-        var promises = []
-        for(let private_key_record of private_keys) {
-            promises.push( this.saveKey(
-                private_key_record.private_key,
-                private_key_record.sequence
-            ))
-        }
-        return Promise.all(promises)
-    }
+    // /**
+    //     @arg  {array} private_key_objs
+    //     @arg {string} private_key_objs.private_plainhex
+    //     @arg  {array} private_key_objs.import_account_names
+    //     @arg {string} private_key_objs.public_key_string
+    // */
+    // importKeysWorker(private_key_objs) {
+    //     var _this = this
+    //     worker.onmessage = event => { try {
+    //         console.log("Preparing for private keys save");
+    //         var private_cipherhex_array = event.data
+    //         var enc_private_key_objs = []
+    //         for(let i = 0; i < private_key_objs.length; i++) {
+    //             var private_key_obj = private_key_objs[i]
+    //             var {import_account_names, public_key_string, private_plainhex} = private_key_obj
+    //             var private_cipherhex = private_cipherhex_array[i]
+    //             if( ! public_key_string) {
+    //                 // console.log('WARN: public key was not provided, this will incur slow performance')
+    //                 var private_key = PrivateKey.fromHex(private_plainhex)
+    //                 var public_key = private_key.toPublicKey() // S L O W
+    //                 public_key_string = public_key.toPublicKeyString()
+    //             } else
+    //                 if(public_key_string.indexOf(chain_config.address_prefix) != 0)
+    //                     throw new Error("Public Key should start with " + chain_config.address_prefix)
+    //             
+    //             var private_key_object = {
+    //                 import_account_names,
+    //                 encrypted_key: private_cipherhex,
+    //                 pubkey: public_key_string
+    //                 // null brainkey_sequence
+    //             }
+    //             enc_private_key_objs.push(private_key_object)
+    //         }
+    //         console.log("Saving private keys", new Date().toString());
+    //         var transaction = _this.transaction_update_keys()
+    //         var insertKeysPromise = idb_helper.on_transaction_end(transaction)
+    //         try {
+    //             var duplicate_count = PrivateKeyStore
+    //                 .addPrivateKeys_noindex(enc_private_key_objs, transaction )
+    //             if( private_key_objs.length != duplicate_count )
+    //                 _this.setWalletModified(transaction)
+    //             _this.setState({saving_keys: false})
+    //             resolve(Promise.all([ insertKeysPromise, addyIndexPromise ]).then( ()=> {
+    //                 console.log("Done saving keys", new Date().toString())
+    //                 // return { duplicate_count }
+    //             }))
+    //         } catch(e) {
+    //             transaction.abort()
+    //             console.error(e)
+    //             reject(e)
+    //         }
+    //     } catch( e ) { console.error('AesWorker.encrypt', e) }}
+    // }
     
-    saveKey(
-        private_key,
-        brainkey_sequence,
-        import_account_names
-    ) {
-        // var private_cipherhex = aes_private.encryptToHex( private_key.toBuffer() )
-        
-        if( ! public_key_string) {
-            //S L O W
-            // console.log('WARN: public key was not provided, this may incur slow performance')
-            var public_key = private_key.toPublicKey()
-            public_key_string = public_key.toPublicKeyString()
-        } else 
-            if(public_key_string.indexOf(chain_config.address_prefix) != 0)
-                throw new Error("Public Key should start with " + chain_config.address_prefix)
-        
-        var private_key_object = {
-            import_account_names,
-            encrypted_key: private_cipherhex,
-            pubkey: public_key_string,
-            brainkey_sequence
-        }
-        var p1 = PrivateKeyActions.addKey(
-            private_key_object
-        ).then((ret)=> {
-            if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
-            return ret
-        })
-        return p1
-    }
+    // saveKeys(private_keys) {
+    //     var promises = []
+    //     for(let private_key_record of private_keys) {
+    //         promises.push( this.saveKey(
+    //             private_key_record.private_key,
+    //             private_key_record.sequence
+    //         ))
+    //     }
+    //     return Promise.all(promises)
+    // }
     
-    setWalletModified(transaction) {
-        return this._updateWallet( transaction )
+    // saveKey(
+    //     private_key,
+    //     brainkey_sequence,
+    //     import_account_names
+    // ) {
+    //     // var private_cipherhex = aes_private.encryptToHex( private_key.toBuffer() )
+    //     
+    //     if( ! public_key_string) {
+    //         //S L O W
+    //         // console.log('WARN: public key was not provided, this may incur slow performance')
+    //         var public_key = private_key.toPublicKey()
+    //         public_key_string = public_key.toPublicKeyString()
+    //     } else 
+    //         if(public_key_string.indexOf(chain_config.address_prefix) != 0)
+    //             throw new Error("Public Key should start with " + chain_config.address_prefix)
+    //     
+    //     var private_key_object = {
+    //         import_account_names,
+    //         encrypted_key: private_cipherhex,
+    //         pubkey: public_key_string,
+    //         brainkey_sequence
+    //     }
+    //     var p1 = PrivateKeyActions.addKey(
+    //         private_key_object
+    //     ).then((ret)=> {
+    //         if(TRACE) console.log('... WalletDb.saveKey result',ret.result)
+    //         return ret
+    //     })
+    //     return p1
+    // }
+    
+    setWalletModified() {
+        return wallet.setState(
+            wallet.wallet_object.set("backup_date", new Date().toISOString())
+        )
     }
     
     setBackupDate() {
-        var wallet = wallet.wallet_object
-        wallet.backup_date = new Date()
-        return this._updateWallet()
+        return wallet.setState(
+            wallet.wallet_object.set("backup_date", new Date().toISOString())
+        )
     }
     
     setBrainkeyBackupDate() {
-        var wallet = wallet.wallet_object
-        wallet.brainkey_backup_date = new Date()
-        return this._updateWallet()
+        return wallet.setState(
+            wallet.wallet_object.set("brainkey_backup_date", new Date().toISOString())
+        )
     }
     
     /** Saves wallet object to disk.  Always updates the last_modified date. */
-    _updateWallet(transaction = this.transaction_update()) {
-        var wallet = wallet.wallet_object
+    update(wallet_object) {
         if ( ! wallet) {
             reject("missing wallet")
             return
         }
-        //DEBUG console.log('... wallet',wallet)
-        var wallet_clone = _.cloneDeep( wallet )
-        wallet_clone.last_modified = new Date()
-        
-        WalletTcomb(wallet_clone) // validate
-        
-        var wallet_store = transaction.objectStore("wallet")
-        var p = idb_helper.on_request_end( wallet_store.put(wallet_clone) )
-        var p2 = idb_helper.on_transaction_end( transaction  ).then( () => {
-            wallet.wallet_object = wallet_clone
-            this.setState({ wallet: wallet_clone })
-        })
-        return Promise.all([p,p2])
-    }
-
-    /** This method may be called again should the main database change */
-    loadDbData() {
-        return idb_helper.cursor("wallet", cursor => {
-            if( ! cursor) return false
-            var wallet = cursor.value
-            // Convert anything other than a string or number back into its proper type
-            wallet.created = new Date(wallet.created)
-            wallet.last_modified = new Date(wallet.last_modified)
-            wallet.backup_date = wallet.backup_date ? new Date(wallet.backup_date):null
-            wallet.brainkey_backup_date = wallet.brainkey_backup_date ? new Date(wallet.brainkey_backup_date):null
-            try { WalletTcomb(wallet) } catch(e) {
-                console.log("WalletDb format error", e); }
-            wallet.wallet_object = wallet
-            this.setState({ wallet })
-            return false //stop iterating
-        });
+        return this.wallet.setState(wallet_object)
     }
     
 }

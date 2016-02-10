@@ -44,8 +44,10 @@ export default class ConfidentialWallet {
             .reduce( (r, receipt) => r.push(receipt.getIn(["data", "commitment"])), List())
         
         // BTS 1.0 addresses for shorts and balance claims
-        this.addressIndex = new AddressIndex()
-        // this.addressIndex.add( indexableKeys( this.keys() ))
+        // Update the index if needed
+        AddressIndex.add( this.keys()
+            .reduce( (r, pubkey, key) => key.has("index_address") ? r.add(pubkey) : r, List())
+        )
         
         // semi-private methods (outside of this API)
         this.update = update.bind(this)// update the wallet object
@@ -65,13 +67,11 @@ export default class ConfidentialWallet {
         
         @arg {string} [label = null] - string (like: GPHXyz...).  Required if a private key is not provided.  If provided, must be unique or this method will return false.
         
-        @arg {boolean} [index_address = false] - set truthy only if this could be a BTS 1.0 key having a legacy address format (Protoshares, etc.).  Unless true, the user may not see some shorts or balance claims.  A private key object is requred if this is used.
-        
-        @arg {PublicKey|string} public_key - this is provided for performanc gains where it is already known.  A private key object is requred if this is used.
+        @arg {PublicKey|string} public_key - this is provided for performanc gains where it is already known.  A private key object is requred if this is used.  This must be the public_key for the provided private_key although, be cautious, validation can not be performed (without the performance loss).
         
         @return {boolean} false if this label is already assigned, otherwise a wallet update is sent over to the WalletStorage object.
      */
-    setKeyLabel( key, label = null, index_address = false, public_key = null ) {
+    setKeyLabel( key, label = null, public_key = null ) {
         
         this.assertLogin()
         
@@ -93,10 +93,6 @@ export default class ConfidentialWallet {
         private_key = toString(private_key)
         public_key = toString(public_key)
 
-        if( index_address ) {
-            req(private_key, "private_key required to derive addresses")
-        }
-        
         if( ! label )
             req(private_key, "Label is required unless a private key is provided")
         
@@ -112,20 +108,14 @@ export default class ConfidentialWallet {
             wallet.updateIn(["keys", public_key], Map(),
                 key => key.withMutations( key =>{
                     if( label ) key.set("label", label)
-                    if( index_address )
-                        key.set("index_address", true)
                     
                     if( private_key )
                         key.set("private_wif", private_key)
-                    
-                    if( index_address )
-                        indexables.push(public_key)
                     
                     return key
                 })
             )
         )
-        this.addressIndex.add( indexables.asImmutable() )
         return true
     }
     
@@ -1067,7 +1057,6 @@ let bufferToNumber = (buf, type = "Uint32") =>
 // let indexableKeys = keys => keys
 //     .reduce( (r, key, pubkey) => key.get("index_address") ? r.push(pubkey) : r, List())
 
-// TODO abstract enough to move to WalletStorage
 function getPubkeys_having_PrivateKey( pubkeys, addys = null ) {
     let return_pubkeys = []
     let keys = this.keys()
@@ -1081,7 +1070,7 @@ function getPubkeys_having_PrivateKey( pubkeys, addys = null ) {
     }
     if(addys) {
         for (let addy of addys) {
-            let pubkey = this.addressIndex.getPublicKey(addy)
+            let pubkey = AddressIndex.getPublicKey(addy)
             return_pubkeys.push(pubkey)
         }
     }

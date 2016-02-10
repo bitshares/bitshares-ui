@@ -10,7 +10,7 @@ import Icon from "../Icon/Icon";
 import PrivateKeyView from "components/PrivateKeyView"
 import counterpart from "counterpart";
 import utils from "common/utils";
-import AddressIndex from "stores/AddressIndex"
+import { AddressIndex } from "@graphene/wallet-client"
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {

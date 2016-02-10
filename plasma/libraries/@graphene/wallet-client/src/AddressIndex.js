@@ -4,18 +4,26 @@ import { chain_config } from "@graphene/chain"
 import LocalStoragePersistence from "./LocalStoragePersistence"
 
 /**
-    Cache (for performance) for legacy addresses used for BTS 1.0 shorts and balance claims.
+    Disk Cache (for performance) for legacy addresses used for BTS 1.0 shorts and balance claims.
     
-    Map<string, string> - { "address": "public_key" } 
+    Singleton
+    
+    Call init if the chain ID changes after this object was constructed..
+    
+    this.storage.state: Map<string, array> - { "pubkey": ["addresses"] } 
 */
-export default class AddressIndex {
+class AddressIndex {
     
     constructor() {
-        this.storage = new LocalStoragePersistence("AddressIndex", true)
+        this.init()
+    }
+    
+    init() {
+        this.storage = new LocalStoragePersistence("AddressIndex::"+ chain_config.address_prefix, true)
     }
     
     /**
-        @arg {List<string>} ["pubkey1", ...]
+        @arg {List<string>|string} "pubkey1", ...
         @return {Promise}
     */
     add( pubkeys ) {
@@ -70,4 +78,7 @@ export default class AddressIndex {
         return array ? array[0] : null
     }
     
+    
 }
+
+export default new AddressIndex()

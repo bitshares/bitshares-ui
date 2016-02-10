@@ -7,7 +7,7 @@ import PrivateKeyStore from "./PrivateKeyStore"
 import { validation } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
 import AccountRefsStore from "stores/AccountRefsStore"
-import AddressIndex from "stores/AddressIndex"
+import { AddressIndex } from "@graphene/wallet-client"
 import SettingsStore from "stores/SettingsStore"
 import ls from "common/localStorage";
 

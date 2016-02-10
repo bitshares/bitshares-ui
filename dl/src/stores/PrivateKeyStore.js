@@ -8,7 +8,7 @@ import WalletDb from "./WalletDb";
 import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
-import AddressIndex from "stores/AddressIndex"
+import { AddressIndex } from "@graphene/wallet-client"
 import { Address, PublicKey } from "@graphene/ecc"
 import { ChainStore } from "@graphene/chain"
 
@@ -119,7 +119,8 @@ class PrivateKeyStore extends BaseStore {
             resolve({result:"duplicate",id:null})
             return
         }
-        return cwallet.setKeyLabel(
+        // return cwallet.setKeyLabel(
+        
         this.pendingOperation()
         //console.log("... onAddKey private_key_object.pubkey", private_key_object.pubkey)
         

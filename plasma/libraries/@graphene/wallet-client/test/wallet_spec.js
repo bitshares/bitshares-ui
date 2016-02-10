@@ -14,9 +14,6 @@ const password = "password"
 const email = "alice_spec@example.bitbucket"
 const code = createToken(hash.sha1(email, 'binary'))
 const remote_url = process.env.npm_package_config_remote_url
-
-// Configure to use localStorage for the purpose of these tests...
-global.localStorage = require('localStorage')
 const storage = new LocalStoragePersistence("wallet_spec")
 
 describe('Single wallet', () => {
