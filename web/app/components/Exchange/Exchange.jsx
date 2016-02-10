@@ -1071,11 +1071,12 @@ class Exchange extends React.Component {
         if (!coreAsset) {
             return null;
         }
+        console.log("preferCoreBuyFee:", this.state.preferCoreBuyFee);
         let sellFeeAsset = this.state.preferCoreSellFee ? coreAsset : quote !== coreAsset ? quote : base;
         let sellFee = utils.round_number(utils.get_asset_amount(this._getFee(sellFeeAsset), sellFeeAsset), sellFeeAsset);
         let sellFeeAssets = [coreAsset, quote === coreAsset ? base : quote];
 
-        let buyFeeAsset = this.state.preferCoreBuyFee ? coreAsset : base !== coreAsset ? base : base;
+        let buyFeeAsset = this.state.preferCoreBuyFee ? coreAsset : base !== coreAsset ? base : quote;
         let buyFee = utils.round_number(utils.get_asset_amount(this._getFee(buyFeeAsset), buyFeeAsset), buyFeeAsset);
         let buyFeeAssets = [coreAsset, base === coreAsset ? quote : base];
 
