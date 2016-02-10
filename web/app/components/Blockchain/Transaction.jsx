@@ -15,8 +15,8 @@ import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
 import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
-import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import WalletDb from "stores/WalletDb";
 import MemoText from "./MemoText";
 
 require("./operations.scss");
@@ -128,7 +128,7 @@ class Transaction extends React.Component {
 
                     let lockedWallet = false;
                     if(op[1].memo) {
-                        let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
+                        let {text, isMine} = WalletDb.decodeMemo(op[1].memo);
 
                         memo = text ? (
                             <td>{text}</td>

@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
 import iDB from "../idb-instance";
-import PrivateKeyStore from "./PrivateKeyStore"
+import WalletDb from "./WalletDb"
 import { validation } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
 import AccountRefsStore from "stores/AccountRefsStore"
@@ -345,7 +345,7 @@ function pubkeyThreshold(authority) {
     var required = authority.get("weight_threshold")
     var key_auths = authority.get("key_auths")
     for (let k of key_auths) {
-        if (PrivateKeyStore.hasKey(k.get(0))) {
+        if (WalletDb.keys().has(k.get(0))) {
             available += k.get(1)
         }
         if(available >= required) break
@@ -363,7 +363,7 @@ function addressThreshold(authority) {
     for (let k of address_auths) {
         var address = k.get(0)
         var pubkey = addresses.get(address)
-        if (PrivateKeyStore.hasKey(pubkey)) {
+        if (WalletDb.keys().has(pubkey)) {
             available += k.get(1)
         }
         if(available >= required) break

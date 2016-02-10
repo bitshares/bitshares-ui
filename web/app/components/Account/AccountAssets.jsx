@@ -17,7 +17,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import { validation } from "@graphene/chain";
 import classnames from "classnames";
 import counterpart from "counterpart";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletDb from "stores/WalletDb";
 import IssueModal from "../Modal/IssueModal"
 import connectToStores from "alt/utils/connectToStores";
 
@@ -186,7 +186,7 @@ class AccountAssets extends React.Component {
             return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
         }
        
-        let isMyAccount = PrivateKeyStore.hasKey(account.getIn(["owner", "key_auths", "0", "0"]));
+        let isMyAccount = WalletDb.keys().has(account.getIn(["owner", "key_auths", "0", "0"]));
         let myAssets = assets.filter(asset => {
             return asset.issuer === account.get("id");
         })

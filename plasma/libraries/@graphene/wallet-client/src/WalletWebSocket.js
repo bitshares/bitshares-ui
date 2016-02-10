@@ -14,7 +14,10 @@ export default class WalletWebSocket {
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
         this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
-        var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("ws");
+        
+        // var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("ws");
+        var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
+        
         this.web_socket = new WebSocketClient(ws_server_url);
         this.current_reject = null;
         this.on_reconnect = null;

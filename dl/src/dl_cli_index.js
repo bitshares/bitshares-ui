@@ -5,7 +5,6 @@ import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
 import WalletDb from 'stores/WalletDb'
 import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
-import PrivateKeyStore from 'stores/PrivateKeyStore'
 import { ChainStore } from "@graphene/chain"
 
 import BackupActions from "actions/BackupActions"
@@ -18,7 +17,7 @@ import { chain_config } from "@graphene/chain"
 module.exports = {
     
     PrivateKey, PublicKey, Aes, key,
-    WalletDb, WalletManagerStore, PrivateKeyStore,
+    WalletDb, WalletManagerStore,
     AccountStore, 
     BackupActions,
     WalletActions,

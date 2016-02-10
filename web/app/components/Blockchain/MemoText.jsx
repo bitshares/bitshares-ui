@@ -1,5 +1,5 @@
 import React from "react";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
@@ -31,7 +31,7 @@ class MemoText extends React.Component {
             return null;
         }
 
-        let {text, isMine} = PrivateKeyStore.decodeMemo(memo);
+        let {text, isMine} = WalletDb.decodeMemo(memo);
 
         if ( !text && isMine) {
             return (

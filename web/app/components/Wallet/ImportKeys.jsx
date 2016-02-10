@@ -11,7 +11,7 @@ import notify from "actions/NotificationActions";
 import { hash } from "@graphene/ecc";
 
 import { Apis } from "@graphene/chain"
-import PrivateKeyStore from "stores/PrivateKeyStore"
+import WalletDb from "stores/WalletDb"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletCreate from "components/Wallet/WalletCreate"
 import LoadingIndicator from "components/LoadingIndicator"
@@ -19,7 +19,6 @@ import Translate from "react-translate-component";
 
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
-import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore"
 import { PublicKey } from "@graphene/ecc";
 
@@ -599,7 +598,7 @@ export default class ImportKeys extends Component {
 
     _saveImport(e) {
         e.preventDefault()
-        var keys = PrivateKeyStore.getState().keys
+        var keys = WalletDb.keys()
         var dups = {}
         for(let public_key_string in this.state.imported_keys_public) {
             if( ! keys.has(public_key_string) ) continue
@@ -635,7 +634,7 @@ export default class ImportKeys extends Component {
             })
         }
         this.reset()
-        WalletDb.importKeysWorker( private_key_objs ).then( result => {
+        WalletDb.importKeys( private_key_objs ).then( result => {
             ImportKeysStore.importing(false)
             var import_count = private_key_objs.length
             notify.success(`Successfully imported ${import_count} keys.`)

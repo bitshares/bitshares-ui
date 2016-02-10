@@ -26,7 +26,7 @@
     "fs": "0.0.2",
     "immutable": "^3.7.6",
     "localStorage": "^1.0.3",
-    "lzma": "^2.1.6",
+    "lzma": "2.1.6",
     "secp256k1": "^2.0.7",
     "secure-random": "^1.1.1",
     "tls": "0.0.1",

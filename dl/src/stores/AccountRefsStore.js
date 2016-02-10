@@ -3,9 +3,8 @@ import iDB from "../idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
 import { ChainStore } from "@graphene/chain"
-import { chain_config } from "@graphene/chain"
-import PrivateKeyStore from "stores/PrivateKeyStore"
-import PrivateKeyActions from "actions/PrivateKeyActions"
+// import { chain_config } from "@graphene/chain"
+// import { LocalStoragePersistence } from "@graphene/wallet-client"
 
 /**
     Performance optimization for large wallets.  This needs to be loaded when the chain id becomes available or it changes.  Updates come via the ChainStore.
@@ -90,15 +89,15 @@ function updateNoAccountRefs() {
 }
 
 function loadNoAccountRefs() {
-    this.storage = new LocalStoragePersistence("AccountRefs::"+ chain_config.address_prefix, true)
-    return Immutable.Set(this.storage.getState())
-    // return iDB.root.getProperty("no_account_refs", [])
-    //     .then( array => Immutable.Set(array) )
+    // this.storage = new LocalStoragePersistence("AccountRefs::"+ chain_config.address_prefix, true)
+    // return Promise.resolve( Immutable.Set(this.storage.getState()) )
+    return iDB.root.getProperty("no_account_refs", [])
+        .then( array => Immutable.Set(array) )
 }
 
 function saveNoAccountRefs(no_account_refs) {
+    // this.storate.setState(array)
     var array = []
     for(let pubkey of no_account_refs) array.push(pubkey)
-    this.storate.setState(array)
-    // iDB.root.setProperty("no_account_refs", array)
+    iDB.root.setProperty("no_account_refs", array)
 }

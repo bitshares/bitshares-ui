@@ -1,22 +1,22 @@
 import alt from "alt-instance"
 import BaseStore from "stores/BaseStore"
-import { List } from "immutable"
+import { List, Map } from "immutable"
 
 import iDB from "idb-instance";
 import { Apis } from "@graphene/chain"
-import { key } from "@graphene/ecc"
+import { key, Aes } from "@graphene/ecc"
 import { suggest_brain_key } from "../common/brainkey"
 import idb_helper from "idb-helper";
 import _ from "lodash";
 
-import PrivateKeyStore from "stores/PrivateKeyStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
 import { PrivateKey } from "@graphene/ecc";
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import PrivateKeyActions from "actions/PrivateKeyActions"
 import { chain_config } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
+import assert from "assert"
 
 import {
     LocalStoragePersistence, WalletStorage, ConfidentialWallet, AddressIndex
@@ -50,15 +50,15 @@ class WalletDb extends BaseStore {
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
         this._export( // "checkNextGeneratedKey","generateNextKey",
-            "getWallet","onLock","isLocked","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","update","loadDbData",
-            "importKeysWorker"
+            "getWallet","onLock","isLocked","getPrivateKey","process_transaction","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","setWalletModified","setBackupDate","setBrainkeyBackupDate","loadDbData", "update","keys", "getDeterministicKeys", "importKeys", "binaryBackupRecommended", "decodeMemo"
         )
     }
     
     /** This method may be called again should the chain ID change */
     loadDbData() {
-        this.openWallet()
-        return Promise.resolve()
+        return iDB.root.getProperty("current_wallet", "default")
+            .then( current_wallet => this.openWallet(current_wallet) )
+        
         // return idb_helper.cursor("wallet", cursor => {
         //     if( ! cursor) return false
         //     var wallet = cursor.value
@@ -110,7 +110,7 @@ class WalletDb extends BaseStore {
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
         // Helps to ensure we are looking at an un-used key
         try { this.generateNextKey() } catch(e) {
-            console.error(e) }
+            console.error(e, "stack", e.stack) }
     }
     
     /**
@@ -223,8 +223,9 @@ class WalletDb extends BaseStore {
             })
             ```
             */
+            let chain_id = Apis.instance().chain_id
             resolve(Promise.resolve()
-                .then(()=> wallet.login(email, username, password)) //and sync
+                .then(()=> wallet.login(email, username, password, chain_id)) //and sync
                 .then(()=> assert(! wallet.wallet_object.get("backup_date"), "Wallet exists: " + public_name))
                 .then(()=> 
                     wallet.setState({
@@ -267,10 +268,12 @@ class WalletDb extends BaseStore {
             //     var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
             //     aes_private = Aes.fromSeed( encryption_plainbuffer )
             // }
-            wallet.login(email, username, password, null, unlock)
+            wallet.login(email, username, password, null/*chain_id*/, unlock)
             return true
         } catch(e) {
-            console.error(e)
+            if( ! /invalid_password/.test(e.toString()))
+                console.error(e, 'stack', e.stack)
+            
             return false
         }
     }
@@ -335,8 +338,8 @@ class WalletDb extends BaseStore {
     */
     generateNextKey() {
         var brainkey = this.getBrainKey()
-        var sequence = wallet.get("brainkey_sequence") || 0
-        var used_sequence = null
+        var sequence = wallet.wallet_object.get("brainkey_sequence") || 0
+        // var used_sequence = null
         
         // Skip ahead in the sequence if any keys are found in use
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
@@ -354,10 +357,10 @@ class WalletDb extends BaseStore {
             var next_key = ChainStore.getAccountRefsOfKey( pubkey )
             
             if(next_key && next_key.size) {
-                used_sequence = i
-                console.log("WARN: Private key sequence " + used_sequence + " in-use. " + 
+                // used_sequence = i
+                console.log("WARN: Private key sequence " + i + " in-use. " + 
                     "I am saving the private key and will go onto the next one.")
-                keys.push({ private_key, brainkey_sequence: used_sequence })
+                keys.push({ private_key, brainkey_sequence: i })
             }
         }
         
@@ -398,6 +401,8 @@ class WalletDb extends BaseStore {
             if( ! Array.isArray(key_objects) && ! List.isList(key_objects))
                 key_objects = [ key_objects ]
             
+            let binaryBackupRecommended = false
+            
             return Map().withMutations( wallet_object => {
                 let max_brainkey_sequence = 0
                 List(key_objects).forEach( key_object => {
@@ -412,6 +417,8 @@ class WalletDb extends BaseStore {
                     
                     if( key_object.brainkey_sequence !== undefined)
                         max_brainkey_sequence = Math.max(max_brainkey_sequence, key_object.brainkey_sequence)
+                    else
+                        binaryBackupRecommended = true
                     
                     if( ! public_key ) {
                         assert(private_key, "Private key required")
@@ -429,21 +436,24 @@ class WalletDb extends BaseStore {
                     let key = {public_key, private_wif, import_account_names, index_address, brainkey_sequence}
                     wallet_object.setIn(["keys", public_key], Map(key))
                 })
+                
                 if( max_brainkey_sequence !== undefined)
                     // Always point to an unused key
                     wallet_object.set("brainkey_sequence", 1 + max_brainkey_sequence)
+                
+                if(binaryBackupRecommended)
+                    CachedPropertyActions.set("backup_recommended", true)
             })
         }
         return new Promise( resolve => {
             this.setState({ saving_keys: true }, ()=>{
                 let wallet_object = importKeys( key_objects )
                 
-                AddressIndex.add( wallet_object.get("keys")
+                AddressIndex.add( this.keys()
                     .reduce( (r, pubkey, key) => key.has("index_address") ? r.add(pubkey) : r, List())
                 )
                 
-                wallet_object.get("keys")
-                    .forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )
+                this.keys().forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )
                     
                 resolve( wallet.setState(wallet_object)
                     .then(()=> this.setState({saving_keys: false}) )
@@ -564,6 +574,47 @@ class WalletDb extends BaseStore {
         return wallet.setState(
             wallet.wallet_object.set("brainkey_backup_date", new Date().toISOString())
         )
+    }
+    
+    binaryBackupRecommended() {
+        CachedPropertyActions.set("backup_recommended", true)
+    }
+    
+    decodeMemo(memo) {
+        let lockedWallet = false;
+        let memo_text, isMine = false;
+        try {
+            let from_private_key = cwallet.getPrivateKey(memo.from)
+            let to_private_key = cwallet.getPrivateKey(memo.to)
+            let private_key = from_private_key ? from_private_key : to_private_key;
+            let public_key = from_private_key ? memo.to : memo.from;
+            
+            try {
+                memo_text = private_key ? Aes.decrypt_with_checksum(
+                    private_key,
+                    public_key,
+                    memo.nonce,
+                    memo.message
+                ).toString("utf-8") : null;
+            } catch(e) {
+                console.log("transfer memo exception ...", e);
+                memo_text = "*";
+            }
+        }
+        catch(e) {
+            // if not logged in
+            if( ! cwallet.wallet.private_key )
+                throw e
+            
+            // Failed because wallet is locked
+            lockedWallet = true;
+            // private_key = null;
+            isMine = true;            
+        }
+        return {
+            text: memo_text,
+            isMine
+        }
     }
     
     /** Saves wallet object to disk.  Always updates the last_modified date. */

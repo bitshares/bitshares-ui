@@ -3,7 +3,6 @@ import WalletDb from "stores/WalletDb"
 import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
 import CachedPropertyStore from "stores/CachedPropertyStore"
-import PrivateKeyActions from "actions/PrivateKeyActions"
 import WalletActions from "actions/WalletActions"
 import { ChainStore } from "@graphene/chain"
 import BaseStore from "stores/BaseStore"
@@ -76,11 +75,14 @@ class WalletManagerStore extends BaseStore {
                 // Stores may reset when loadDbData is called
                 return iDB.init_instance().init_promise.then(()=>{
                     // Make sure the database is ready when calling CachedPropertyStore.reset() 
-                    CachedPropertyStore.reset() 
-                    return Promise.all([
-                        WalletDb.loadDbData().then(()=>AccountStore.loadDbData()),
-                        PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData())
-                    ]).then(()=>{
+                    CachedPropertyStore.reset()
+                    
+                    return Promise.resolve()
+                    .then(()=> WalletDb.loadDbData())
+                    .then(()=> AccountStore.loadDbData())
+                    // .then(()=> PrivateKeyActions.loadDbData())
+                    .then(()=> AccountRefsStore.loadDbData())
+                    .then(()=>{
                         // Update state here again to make sure listeners re-render
                         
                         if( ! create_wallet_password) {
@@ -99,7 +101,7 @@ class WalletManagerStore extends BaseStore {
                 })
             }))
         }).catch( error => {
-            console.error(error)
+            console.error(error, "stack", error.stack)
             return Promise.reject(error)
         })
         if(resolve) resolve(p)

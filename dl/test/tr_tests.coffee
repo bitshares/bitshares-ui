@@ -22,7 +22,6 @@ account_create = tr_op.account_create
 ApiInstances = require('../src/rpc_api/ApiInstances')
 WalletApi = require '../src/rpc_api/WalletApi'
 WalletDb = require 'stores/WalletDb'
-PrivateKeyStore = require "stores/PrivateKeyStore"
 ApplicationApi = require '../src/rpc_api/ApplicationApi'
 wallet = new WalletApi()
 app = new ApplicationApi()

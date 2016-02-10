@@ -9,8 +9,6 @@ import assert from "assert"
 var ApplicationApi = require('./ApplicationApi')
 var WalletDb = require('../stores/WalletDb')
 
-import PrivateKeyStore from "stores/PrivateKeyStore"
-
 class WalletApi {
 
     constructor() {

@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from "react";
 import connectToStores from "alt/utils/connectToStores"
 import Immutable from "immutable"
 
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletDb from "stores/WalletDb";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import FormattedAsset from "components/Utility/FormattedAsset";
@@ -29,7 +29,7 @@ export default class BalanceClaimSelector extends Component {
     static getPropsFromStores() {
         var props = BalanceClaimActiveStore.getState()
         var { balances, address_to_pubkey } = props
-        var private_keys = PrivateKeyStore.getState().keys
+        var keys = WalletDb.keys()
         var groupCountMap = Immutable.Map().asMutable()
         var groupCount = (group, distinct) => {
             var set = groupCountMap.get(group)
@@ -42,29 +42,37 @@ export default class BalanceClaimSelector extends Component {
         }
         if ( balances ) props.total_by_account_asset = balances
             .groupBy( v => {
+                
                 // K E Y S
                 var names = ""
                 var pubkey = address_to_pubkey.get(v.owner)
-                var private_key_object = private_keys.get(pubkey)
-                if(private_key_object && private_key_object.import_account_names)
+                var key = keys.get(pubkey)
+                
+                if(key && key.has("import_account_names"))
                     // Imported Account Names (just a visual aid, helps to auto select a real account)
-                    names = private_key_object.import_account_names.join(', ')
+                    names = key.get("import_account_names")
                 // Signing is very slow, further divide the groups based on the number of signatures required
                 var batch_number = Math.ceil( groupCount(Immutable.List([names, v.balance.asset_id]), v.owner) / 60 )
+                
                 var name_asset_key = Immutable.List([names, v.balance.asset_id, batch_number])
                 return name_asset_key
+                
             })
             .map( l => l.reduce( (r,v) => {
+                
                 // V A L U E S
                 v.public_key_string = address_to_pubkey.get(v.owner)
                 r.balances = r.balances.add(v)
+                
                 if(v.vested_balance != undefined) {
                     r.vesting.unclaimed += Number(v.vested_balance.amount)
                     r.vesting.total += Number(v.balance.amount)
                 } else {
                     r.unclaimed += Number(v.balance.amount)
                 }
+                
                 return r
+                
             }, {unclaimed:0, vesting: {unclaimed:0, total:0}, balances: Immutable.Set() }))
             .sortBy( k => k )
         return props

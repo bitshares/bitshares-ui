@@ -7,7 +7,7 @@ import cname from "classnames"
 import notify from "actions/NotificationActions"
 
 import LoadingIndicator from "components/LoadingIndicator";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletDb from "stores/WalletDb";
 import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
@@ -20,7 +20,7 @@ import Translate from "react-translate-component";
 export default class BalanceClaimActive extends Component {
     
     static getStores() {
-        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore]
+        return [BalanceClaimActiveStore, AccountRefsStore, WalletDb]
     }
     
     static getPropsFromStores() {
@@ -30,15 +30,13 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillMount() {
-        var keys = PrivateKeyStore.getState().keys
-        var keySeq = keys.keySeq()
+        var keySeq = WalletDb.keys().keySeq()
         BalanceClaimActiveActions.setPubkeys( keySeq )
         this.existing_keys = keySeq
     }
     
     componentWillReceiveProps(nextProps) {
-        var keys = PrivateKeyStore.getState().keys
-        var keySeq = keys.keySeq()
+        var keySeq = WalletDb.keys().keySeq()
         if( ! keySeq.equals(this.existing_keys)) {
             this.existing_keys = keySeq
             BalanceClaimActiveActions.setPubkeys( keySeq )

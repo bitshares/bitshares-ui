@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from "react";
 import connectToStores from "alt/utils/connectToStores"
 import Immutable from "immutable"
 import LoadingIndicator from "components/LoadingIndicator"
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletDb from "stores/WalletDb";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import FormattedAsset from "components/Utility/FormattedAsset";
@@ -17,7 +17,7 @@ export default class BalanceClaimByAsset extends Component {
     }
     
     static getStores() {
-        return [BalanceClaimActiveStore, PrivateKeyStore]
+        return [BalanceClaimActiveStore, WalletDb]
     }
     
     static getPropsFromStores() {
@@ -44,15 +44,13 @@ export default class BalanceClaimByAsset extends Component {
     }
     
     componentWillMount() {
-        var keys = PrivateKeyStore.getState().keys
-        var keySeq = keys.keySeq()
+        var keySeq = WalletDb.keys().keySeq()
         BalanceClaimActiveActions.setPubkeys( keySeq )
         this.existing_keys = keySeq
     }
     
     componentWillReceiveProps(nextProps) {
-        var keys = PrivateKeyStore.getState().keys
-        var keySeq = keys.keySeq()
+        var keySeq = WalletDb.keys().keySeq()
         if( ! keySeq.equals(this.existing_keys)) {
             this.existing_keys = keySeq
             BalanceClaimActiveActions.setPubkeys( keySeq )

@@ -46,7 +46,6 @@ import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/Exist
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
-import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
@@ -234,27 +233,32 @@ let willTransitionTo = (nextState, replaceState, callback) => {
         });
         return;
     }
+    
     Apis.instance().init_promise.then(() => {
+        
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
-        return Promise.all([db]).then(() => {
+        return db.then(() => {
+            
             console.log("db init done");
-            return Promise.all([
-                PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
-                WalletDb.loadDbData().then(() => {
-                    if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
-                        replaceState(null, "/create-account");
-                    }
-                    if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                        replaceState(null, "/dashboard");
-                    }
-                }).catch((error) => {
-                    console.error("----- WalletDb.willTransitionTo error ----->", error);
-                }),
-                WalletManagerStore.init()
-            ]).then(()=> {
-                callback();
+            
+            return Promise.resolve()
+            .then(()=> WalletDb.loadDbData())
+            .then(()=> AccountRefsStore.loadDbData())
+            .then(()=> {
+                if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
+                    replaceState(null, "/create-account");
+                }
+                if (nextState.location.pathname.indexOf("/auth/") === 0) {
+                    replaceState(null, "/dashboard");
+                }
+            }).catch((error) => {
+                console.error("----- WalletDb.willTransitionTo error ----->", error);
             })
+            .then(()=> WalletManagerStore.init())
+            .then(()=> callback());
+            
         });
+        
     }).catch( error => {
         console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
         if(error.name === "InvalidStateError") {
@@ -264,6 +268,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             callback();
         }
     })
+    
 };
 
 let routes = (
