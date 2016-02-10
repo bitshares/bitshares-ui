@@ -19,7 +19,7 @@ class AddressIndex {
     }
     
     init() {
-        this.storage = new LocalStoragePersistence("AddressIndex::"+ chain_config.address_prefix, true)
+        this.storage = new LocalStoragePersistence("AddressIndex::"+ chain_config.address_prefix)
     }
     
     /**

@@ -50,7 +50,7 @@ class WalletDb extends BaseStore {
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
         this._export( // "checkNextGeneratedKey","generateNextKey",
-            "getWallet","onLock","isLocked","getPrivateKey","process_transaction","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","setWalletModified","setBackupDate","setBrainkeyBackupDate","loadDbData", "update","keys", "getDeterministicKeys", "importKeys", "binaryBackupRecommended", "decodeMemo"
+            "getWallet","onLock","isLocked","getPrivateKey","process_transaction","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","setWalletModified","setBackupDate","setBrainkeyBackupDate","loadDbData", "update","keys", "isEmpty", "getDeterministicKeys", "importKeys", "binaryBackupRecommended", "decodeMemo", "hasDiskWallet"
         )
     }
     
@@ -98,6 +98,11 @@ class WalletDb extends BaseStore {
         // PrivateKeyStore.setConfidentialWallet(cwallet)
     }
     
+    hasDiskWallet(name) {
+        let key = "LocalStoragePersistence::wallet::" + chain_config.address_prefix
+        return localStorage.getItem(key) != null
+    }
+    
     /** Discover derived keys that are not in this wallet */
     checkNextGeneratedKey() {
         
@@ -121,7 +126,12 @@ class WalletDb extends BaseStore {
         @return null if locked or return a mutable wallet object (regular object)
     */
     getWallet() {
-        return wallet.private_key ? wallet.wallet_object.toJS() : null
+        let o = wallet.wallet_object
+        return wallet.private_key ? o.toJS() : null
+    }
+    
+    isEmpty() {
+        return wallet.isEmpty()
     }
     
     /** @return {Promise} resolve immediately or after a successful unsubscribe
@@ -169,7 +179,7 @@ class WalletDb extends BaseStore {
     ) {
         
         let email = ""
-        let username = "" // TODO
+        let username = ""
         
         return new Promise( (resolve, reject) => {
             if( typeof password !== 'string')
@@ -268,7 +278,8 @@ class WalletDb extends BaseStore {
             //     var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
             //     aes_private = Aes.fromSeed( encryption_plainbuffer )
             // }
-            wallet.login(email, username, password, null/*chain_id*/, unlock)
+            let chain_id = Apis.instance().chain_id
+            wallet.login(email, username, password, chain_id, unlock)
             return true
         } catch(e) {
             if( ! /invalid_password/.test(e.toString()))
@@ -446,19 +457,20 @@ class WalletDb extends BaseStore {
             })
         }
         return new Promise( resolve => {
-            this.setState({ saving_keys: true }, ()=>{
-                let wallet_object = importKeys( key_objects )
+            
+            this.setState({ saving_keys: true })//, ()=>{
+            let wallet_object = importKeys( key_objects )
+            
+            AddressIndex.add( this.keys()
+                .reduce( (r, pubkey, key) => key.has("index_address") ? r.add(pubkey) : r, List())
+            )
+            
+            this.keys().forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )
                 
-                AddressIndex.add( this.keys()
-                    .reduce( (r, pubkey, key) => key.has("index_address") ? r.add(pubkey) : r, List())
-                )
-                
-                this.keys().forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )
-                    
-                resolve( wallet.setState(wallet_object)
-                    .then(()=> this.setState({saving_keys: false}) )
-                )
-            })
+            resolve( wallet.setState(wallet_object)
+                .then(()=> this.setState({saving_keys: false}) )
+            )
+            // })
         })
     }
     

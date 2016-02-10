@@ -169,8 +169,9 @@ class CreateNewWallet extends Component {
         let errors = state.errors
         let wallet_names = WalletManagerStore.getState().wallet_names
         errors.wallet_public_name =
-            !wallet_names.has(state.wallet_public_name) ?
-            null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
+            wallet_names.has(state.wallet_public_name) && WalletDb.hasDiskWallet(state.wallet_public_name) ?
+            `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name` :
+            null
         
         var isValid = errors.wallet_public_name === null && state.valid_password !== null
         if(this.state.custom_brainkey && isValid)

@@ -1,4 +1,4 @@
-import { fromJS, Map } from "immutable"
+import { fromJS, Map, is } from "immutable"
 import { encrypt, decrypt } from "./WalletActions"
 import { PrivateKey, Signature, hash } from "@graphene/ecc"
 import WalletWebSocket from "./WalletWebSocket"
@@ -91,6 +91,10 @@ export default class WalletStorage {
         this.localHash = localHash.bind(this)
         this.notifyResolve = notifyResolve.bind(this)
         this.deleteWallet = deleteWallet.bind(this)
+    }
+    
+    isEmpty() {
+        return this.storage.state.isEmpty() || is(this.storage.state, inital_persistent_state)
     }
     
     /**

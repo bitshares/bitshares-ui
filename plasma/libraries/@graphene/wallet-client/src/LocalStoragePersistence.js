@@ -11,13 +11,13 @@ export default class LocalStoragePersistence {
         
         @arg {string} namespace unique to each object store.  Must contain only letters numbers a understore or dash.
         
-        @arg {boolean} [saveToDisk = false] - Should operations also update the disk?  Calls to this.clear() or this.setState() (for example) will operate on RAM (false) or RAM and disk (true).
+        @arg {boolean} [saveToDisk = true] - Should operations also update the disk?  Calls to this.clear() or this.setState() (for example) will operate on RAM (false) or RAM and disk (true).
     */
-    constructor(namespace, saveToDisk = false) {
+    constructor(namespace, saveToDisk = true) {
         if( ! /[a-z0-9_-]+/i.test( namespace )) throw new TypeError(
             "@arg {string} namespace unique to each wallet.  Must match /[a-z0-9_-]+/i.")
         const key = "LocalStoragePersistence::" + this.namespace
-        this.STATE = key + "::state"
+        this.STATE = key
         this.saveToDisk = saveToDisk
         let stateStr = localStorage.getItem(this.STATE)
         this.state = stateStr ? fromJS(JSON.parse(stateStr)) : Map()

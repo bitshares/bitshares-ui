@@ -44,13 +44,13 @@ class WalletUnlockModal extends React.Component {
                 WalletUnlockActions.cancel()
             } else if (msg === "open") {
                 this.refs.password_input.clear()
-                if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
-                    notify.error("This wallet was intended for a different block-chain; expecting " +
-                        WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
-                        Apis.instance().chain_id.substring(0,4).toUpperCase())
-                    ZfApi.publish(this.props.modalId, "close")
-                    return
-                }
+                // if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
+                //     notify.error("This wallet was intended for a different block-chain; expecting " +
+                //         WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
+                //         Apis.instance().chain_id.substring(0,4).toUpperCase())
+                //     ZfApi.publish(this.props.modalId, "close")
+                //     return
+                // }
                 modal.querySelector('[name="password"]').focus()
             }
         })

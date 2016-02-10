@@ -89,7 +89,7 @@ function updateNoAccountRefs() {
 }
 
 function loadNoAccountRefs() {
-    // this.storage = new LocalStoragePersistence("AccountRefs::"+ chain_config.address_prefix, true)
+    // this.storage = new LocalStoragePersistence("AccountRefs::"+ chain_config.address_prefix)
     // return Promise.resolve( Immutable.Set(this.storage.getState()) )
     return iDB.root.getProperty("no_account_refs", [])
         .then( array => Immutable.Set(array) )

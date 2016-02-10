@@ -74,13 +74,13 @@ class WalletManagerStore extends BaseStore {
                 BalanceClaimActiveStore.reset()
                 // Stores may reset when loadDbData is called
                 return iDB.init_instance().init_promise.then(()=>{
+                    
                     // Make sure the database is ready when calling CachedPropertyStore.reset() 
                     CachedPropertyStore.reset()
                     
                     return Promise.resolve()
                     .then(()=> WalletDb.loadDbData())
                     .then(()=> AccountStore.loadDbData())
-                    // .then(()=> PrivateKeyActions.loadDbData())
                     .then(()=> AccountRefsStore.loadDbData())
                     .then(()=>{
                         // Update state here again to make sure listeners re-render

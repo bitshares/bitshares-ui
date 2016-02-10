@@ -14,7 +14,7 @@ const password = "password"
 const email = "alice_spec@example.bitbucket"
 const code = createToken(hash.sha1(email, 'binary'))
 const remote_url = process.env.npm_package_config_remote_url
-const storage = new LocalStoragePersistence("wallet_spec")
+const storage = new LocalStoragePersistence("wallet_spec", false/*save*/)
 
 describe('Single wallet', () => {
     
@@ -74,7 +74,7 @@ describe('Single wallet', () => {
             assert.equal(wallet.wallet_object.get("test_wallet"), "secret2")
             
             // Verify the disk wallet exists
-            let testStorage = new LocalStoragePersistence("wallet_spec")
+            let testStorage = new LocalStoragePersistence("wallet_spec", false/*save*/)
             let json = testStorage.getState().toJS()
             assert(json.remote_hash == null, 'remote_hash')
             assert(json.encrypted_wallet,'encrypted_wallet')
@@ -101,7 +101,7 @@ describe('Single wallet', () => {
             assert.equal(wallet.wallet_object.get("test_wallet"), "secret2")
             
             // It is not on disk
-            let testStorage = new LocalStoragePersistence("wallet_spec")
+            let testStorage = new LocalStoragePersistence("wallet_spec", false/*save*/)
             let json = testStorage.getState().toJS()
             assert.equal("{}", JSON.stringify(json), "disk was not empty")
             
@@ -316,7 +316,7 @@ let assertSubscribe = (expected, label) => wallet =>{
 }
 
 function newWallet() {
-    let storage = new LocalStoragePersistence("wallet_spec")
+    let storage = new LocalStoragePersistence("wallet_spec", false/*save*/)
     storage.clear() // Clearing memory (ignore disk contents)
     return new WalletStorage(storage)
 }

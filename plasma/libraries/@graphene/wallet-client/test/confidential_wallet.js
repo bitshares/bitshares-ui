@@ -12,7 +12,7 @@ import ConfidentialWallet from "../src/ConfidentialWallet"
 const username = "username"
 const password = "password"
 const email = "alice_spec@example.bitbucket"
-const storage = new LocalStoragePersistence("wallet_spec")
+const storage = new LocalStoragePersistence("cwallet_spec", false/*save*/)
 
 let wallet, cw
 let create = (name = "a1", brainkey = "brainkey", _cw = cw)=> _cw.createBlindAccount(name, brainkey)

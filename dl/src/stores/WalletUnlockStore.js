@@ -10,7 +10,7 @@ class WalletUnlockStore {
     
     constructor() {
         this.bindActions(WalletUnlockActions)
-        this.state = {locked: true}
+        // this.state = {locked: true}
 
         this.walletLockTimeout = 60 * 10; // seconds (10 minutes)
         this.timeout = null;
@@ -36,7 +36,7 @@ class WalletUnlockStore {
             resolve()
             return
         }
-
+        
         this.setState({resolve, reject, locked: WalletDb.isLocked()});
     }
     
@@ -69,7 +69,6 @@ class WalletUnlockStore {
         }
     }
 
-
     _setLockTimeout() {
         this._clearLockTimeout();
         this.timeout = setTimeout(() => {
@@ -99,5 +98,5 @@ class WalletUnlockStore {
         }
     }
 }
-
-export default alt.createStore(WalletUnlockStore, 'WalletUnlockStore')
+let WalletUnlockStoreWrapped = alt.createStore(WalletUnlockStore, 'WalletUnlockStore')
+export default WalletUnlockStoreWrapped
