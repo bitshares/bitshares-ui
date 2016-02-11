@@ -147,7 +147,9 @@
             force_settlement_delay_sec: "Zorunlu hesaplaşma gecikmesi (dakika)",
             force_settlement_offset_percent: "Zorunlu hesaplaşmanın yüzdelik sapması",
             maximum_force_settlement_volume: "Max zorunlu mahsup hacmi (yüzde)",
-            backing: "Kısanın dayandığı aktif"
+            backing: "Kısanın dayandığı aktif",
+            error_precision: "Aktif %(asset)s ile aynı hassasiyete sahip değil",
+            error_invalid: "O aktif kullanılamaz"
         },
         connections: {
             known: "Tarafından Tanınıyor",
@@ -813,6 +815,12 @@
         title: "%(asset)s ödenmesini talep et",
         amount: "Ödenecek miktar",
         submit: "Aktif tasfiye et"
+      },
+      reserve: {
+        title: "Rezerv (yakılan) aktif",
+        amount: "Rezerv edilecek miktar",
+        from: "Rezerv yapılacak hesap",
+        submit: "Rezerv"
       },
       ok: "Tamam"
     },
