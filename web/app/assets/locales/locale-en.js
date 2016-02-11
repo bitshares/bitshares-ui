@@ -457,7 +457,7 @@
             membership_annual_fee : "Annual Membership",
             membership_lifetime_fee : "Lifetime Membership",
             symbol3 : "Symbols with 3 Characters",
-            symbol4 : "Sybmols with 4 Characters",
+            symbol4 : "Symbols with 4 Characters",
             long_symbol : "Longer Symbols"
         },
         whitelist_states: {
