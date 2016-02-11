@@ -159,34 +159,40 @@ class MarketHistory extends React.Component {
         let myHistoryClass = cnames(hc, {inactive: activeTab === "history"});
 
         return (
-            <div className="left-order-book no-padding no-overflow">
-                <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
-                    {isNullAccount ? null : (
-                        <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
-                            <Translate content="exchange.my_history" />
-                        </div>)}
-                    <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
-                        <Translate content="exchange.history" />
+            <div className="small-12 medium-5 no-padding no-overflow order-1">
+                <div className="exchange-bordered" style={{height: 400}}>
+                    <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
+                        {isNullAccount ? null : (
+                            <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
+                                <Translate content="exchange.my_history" />
+                            </div>)}
+                        <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
+                            <Translate content="exchange.history" />
+                        </div>
                     </div>
-                </div>
-                <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                    <table className="table order-table text-right market-right-padding">
-                        <thead>
-                            <tr>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
-                                <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                <th style={{textAlign: "right"}}><Translate content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /><br/><span style={{visibility: "hidden"}} className="header-sub-title">({quoteSymbol})</span></th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                <div className="table-container grid-content market-right-padding-only" ref="history">
-                    <table className="table order-table text-right market-right-padding">
-                        <tbody>
-                            {historyRows}
-                        </tbody>
-                    </table>
+                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                        <table className="table order-table text-right market-right-padding">
+                            <thead>
+                                <tr>
+                                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                                    <th style={{textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                                    <th style={{textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div
+                        className="table-container grid-block market-right-padding-only no-overflow"
+                        ref="history"
+                        style={{maxHeight: 326, overflow: "hidden"}}
+                    >
+                        <table className="table order-table text-right market-right-padding">
+                            <tbody>
+                                {historyRows}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );

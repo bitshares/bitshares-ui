@@ -1279,7 +1279,6 @@ class Exchange extends React.Component {
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
                                 />
-
                             </div>)}
 
                         {/* Buy/Sell forms */}
@@ -1381,7 +1380,19 @@ class Exchange extends React.Component {
 
                         {isNullAccount ? null : (
                             <div className="grid-block no-overflow shrink no-padding">
-                            {limit_orders.size > 0 && base && quote ? (
+                                <MarketHistory
+                                    className="no-padding no-overflow"
+                                    headerStyle={{paddingTop: 0}}
+                                    history={activeMarketHistory}
+                                    myHistory={currentAccount.get("history")}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    isNullAccount={isNullAccount}
+                                />
+
+                                {limit_orders.size > 0 && base && quote ? (
                                 <MyOpenOrders
                                     key="open_orders"
                                     orders={limit_orders}
@@ -1396,6 +1407,7 @@ class Exchange extends React.Component {
                         </div>)}
 
                         <div className="grid-block no-overflow shrink no-padding">
+
                             {settle_orders.size > 0 && base && quote &&
                             (base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
                                 <OpenSettleOrders
@@ -1419,20 +1431,7 @@ class Exchange extends React.Component {
                     {/* Right Column - Market History */}
                     <div className="grid-block shrink right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
                         {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical"  style={{flex: "1 1 50vh", borderBottom: "1px solid grey"}}>
-                            <MarketHistory
-                                className="left-order-book no-padding no-overflow"
-                                headerStyle={{paddingTop: 0}}
-                                history={activeMarketHistory}
-                                myHistory={currentAccount.get("history")}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                isNullAccount={isNullAccount}
-                            />
-                        </div>
-                        <div className="grid-block no-padding no-margin vertical" style={{flex: "0 1 50vh"}}>
+                        <div className="grid-block no-padding no-margin vertical"  style={{borderBottom: "1px solid grey"}}>
                             <MyMarkets
                                 className="left-order-book no-padding no-overflow"
                                 headerStyle={{paddingTop: 0}}
@@ -1447,6 +1446,34 @@ class Exchange extends React.Component {
                                 }
                                 current={marketID}
                             />
+                        </div>
+                        <div className="grid-block no-padding no-margin vertical shrink">
+                            <DepthHighChart
+                                    orders={limit_orders}
+                                    showCallLimit={showCallLimit}
+                                    call_orders={call_orders}
+                                    flat_asks={flat_asks}
+                                    flat_bids={flat_bids}
+                                    flat_calls={ showCallLimit ? flat_calls : []}
+                                    settles={settle_orders}
+                                    invertedCalls={invertedCalls}
+                                    totalBids={totalBids}
+                                    totalCalls={showCallLimit ? totalCalls : 0}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    height={200}
+                                    onClick={this._depthChartClick.bind(this, base, quote)}
+                                    plotLine={this.state.depthLine}
+                                    settlementPrice={settlementPrice}
+                                    spread={spread}
+                                    SQP={showCallLimit ? squeezePrice : null}
+                                    LCP={showCallLimit ? lowestCallPrice : null}
+                                    leftOrderBook={leftOrderBook}
+                                    hasPrediction={hasPrediction}
+                                    noText={true}
+                                />                                
                         </div>
                     </div>
                     {!isNullAccount && quoteIsBitAsset  ?
