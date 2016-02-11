@@ -126,12 +126,13 @@ class WalletDb extends BaseStore {
         
         let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
         let storage = new LocalStoragePersistence( key )
-        let w = new WalletStorage(storage)
-        let cw = new ConfidentialWallet(w)
+        let _wallet = new WalletStorage(storage)
+        let _cwallet = new ConfidentialWallet(_wallet)
         
         // No exceptions so update state:
-        wallet = w
-        cwallet = cw
+        wallet = _wallet
+        cwallet = _cwallet
+        
         this.setState({ current_wallet: wallet_name, wallet, cwallet }) // public
         iDB.root.setProperty("current_wallet", wallet_name)
     }

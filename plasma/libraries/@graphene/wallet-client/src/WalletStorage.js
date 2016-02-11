@@ -36,7 +36,7 @@ import assert from "assert"
         
         // This is the last encrypted_wallet hash that was saved on the server (base64)
         // True to stay in sync with the server (boolean)
-        remote_copy: boolean,
+        remote_copy: undefined,
         
         // An emailed token used to create a wallet for the 1st time (base58)
         remote_token: null,
@@ -197,6 +197,7 @@ export default class WalletStorage {
             password
         )
         
+        let disk
         let public_key = private_key.toPublicKey()
         
         if(this.storage.state.get("secret_encryption_pubkey")) {
@@ -211,6 +212,12 @@ export default class WalletStorage {
             if( ! unlock )
                 return Promise.resolve()
         
+            let encrypted_wallet = this.storage.state.get("encrypted_wallet")
+            let backup_buffer = new Buffer(encrypted_wallet, 'base64')
+            disk = decrypt(backup_buffer, private_key).then( wallet_object => {
+                this.wallet_object = fromJS( wallet_object )
+                // this.notify = true
+            })
         } else {
             assert(chain_id, "provide the chainId on first login")
             
@@ -236,7 +243,8 @@ export default class WalletStorage {
         // unlock
         this.private_key = private_key
         
-        return this.notifyResolve( this.sync(private_key) )
+        return (disk ? disk : Promise.resolve())
+            .then(()=> this.notifyResolve( this.sync(private_key) ))
     }
     
     /**
@@ -382,7 +390,7 @@ export default class WalletStorage {
         
         let original_local_hash = this.localHash()
         let remote_copy = this.storage.state.get("remote_copy")
-        if( remote_copy == true ) {
+        if( remote_copy === true ) {
             
             let remote_hash = this.storage.state.get("remote_hash")
             if( toBase64(original_local_hash) !== remote_hash ) {
@@ -412,7 +420,7 @@ export default class WalletStorage {
                 this.local_status = null
                 this.notify = true
                 
-                if( this.api == null || remote_copy != true ) {
+                if( this.api == null || remote_copy !== true ) {
                     resolve( this.notifyResolve() )
                     return
                 }
@@ -502,7 +510,7 @@ function sync(private_key = this.private_key) {
     if( this.ws_rpc.getSubscriptionId("fetchWallet", public_key.toString()) )
     {
         let remote_copy = this.storage.state.get("remote_copy")
-        if( remote_copy == false ) {
+        if( remote_copy === false ) {
             let local_hash = this.localHash()
             if(local_hash) {
                 let signature = Signature.signBufferSha256(local_hash, private_key)
@@ -648,7 +656,7 @@ function forcePull(server_wallet, private_key) {
     let remote_copy = state.get("remote_copy")
     let server_local_hash = new Buffer(server_wallet.local_hash, 'base64')
     
-    if( remote_copy == false ) {
+    if( remote_copy === false ) {
         let signature = Signature.signBufferSha256(server_local_hash, private_key)
         return this.deleteWallet( server_local_hash, signature )
     }
@@ -677,7 +685,7 @@ function forcePull(server_wallet, private_key) {
 function forcePush(has_server_wallet, private_key) {
     let state = this.storage.state
     let remote_copy = state.get("remote_copy")
-    if( remote_copy == false && has_server_wallet ) {
+    if( remote_copy === false && has_server_wallet ) {
         let remote_hash = state.get("remote_hash")
         if( ! remote_hash )
             throw new Error(this.instance + ":Delete error, is this wallet in-sync?")
@@ -688,7 +696,7 @@ function forcePush(has_server_wallet, private_key) {
         return this.deleteWallet( remote_hash_buffer, signature )
     }
     // if( this.wallet_object ) is probably unnecessary, an unset empty_wallet is a empty Map.. Does not hurt to check though. 
-    if( this.wallet_object && remote_copy == true ) {
+    if( this.wallet_object && remote_copy === true ) {
         this.notify = true
         //updateWallet updates remote storage
         return this.updateWallet()
@@ -720,7 +728,7 @@ function updateWallet() {
             this.local_status = null
             this.notify = true
             
-            if( this.api == null || remote_copy != true ) {
+            if( this.api == null || remote_copy !== true ) {
                 resolve( wallet_object )
                 return
             }
