@@ -50,6 +50,7 @@ import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import { ChainStore } from "@graphene/chain";
+import { AddressIndex } from "@graphene/wallet-client";
 import {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
@@ -244,14 +245,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             return Promise.resolve()
             .then(()=> WalletDb.loadDbData())
             .then(()=> AccountRefsStore.loadDbData())
-            // .then(()=> {
-            //     if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
-            //         replaceState(null, "/create-account");
-            //     }
-            //     if (nextState.location.pathname.indexOf("/auth/") === 0) {
-            //         replaceState(null, "/dashboard");
-            //     }
-            // })
+            .then(()=> AddressIndex.init())
             .catch((error) => {
                 console.error("----- WalletDb.willTransitionTo app error ----->", error, "stack", error.stack);
             })

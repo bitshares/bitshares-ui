@@ -82,12 +82,12 @@ class WalletDb extends BaseStore {
         let wallet_names = Set()
         
         // wallet_names
-        const prefix = "wallet::" + chain_config.address_prefix + "::"
+        const prefix = "LocalStoragePersistence::wallet::" + chain_config.address_prefix + "::"
         for(let i = 0; i < localStorage.length; i++) {
-            console.log('localStorage.key('+i+')', localStorage.key(i))
+            // console.log('localStorage.key('+i+')', localStorage.key(i))
             let key = localStorage.key(i)
             if(key.indexOf(prefix) === 0) 
-                wallet_names = wallet_names.add( key.substring(prefix.length()) )
+                wallet_names = wallet_names.add( key.substring(prefix.length) )
         }
         
         // legacy wallet_names (need convertion)
@@ -105,7 +105,7 @@ class WalletDb extends BaseStore {
         return Promise.all([ cur, leg ])
             .then( ()=>{
                 if(! wallet_names.has(current_wallet))
-                    current_wallet = undefined
+                    current_wallet = wallet_names.size ? wallet_names.first() : undefined
             })
             .then( ()=> this.setState({ current_wallet, wallet_names }) )
             .then( ()=> this.openWallet( current_wallet ))
@@ -116,7 +116,7 @@ class WalletDb extends BaseStore {
     */
     openWallet(wallet_name) {
         
-        if(! wallet_name || this.state.current_wallet == wallet_name)
+        if(! wallet_name)
             return
         
         if(this.legacy_wallet_names.has(wallet_name)) {
@@ -206,8 +206,7 @@ class WalletDb extends BaseStore {
     }
     
     isLocked() {
-        if( ! wallet) return
-        return wallet.private_key ? false : true
+        return ! ( wallet && wallet.private_key )
     }
     
     /** @return PrivateKey or null */
@@ -264,14 +263,6 @@ class WalletDb extends BaseStore {
                 // bugging them to back it up again.
                 brainkey_backup_date = new Date()
             }
-            // var password_aes = Aes.fromSeed( password )
-            
-            // var encryption_buffer = key.get_random_key().toBuffer()
-            // encryption_key is the global encryption key (does not change even if the passsword changes)
-            // var encryption_key = password_aes.encryptToHex( encryption_buffer )
-            // If unlocking, local_aes_private will become the global aes_private object
-            
-            // var local_aes_private = Aes.fromSeed( encryption_buffer )
             
             if( ! brainkey)
                 brainkey = suggest_brain_key()
@@ -310,6 +301,7 @@ class WalletDb extends BaseStore {
             wallet.login(email, username, password, chain_id, unlock)
             return true
         } catch(e) {
+            
             if( ! /invalid_password/.test(e.toString()))
                 console.error(e, 'stack', e.stack)
             
@@ -322,31 +314,6 @@ class WalletDb extends BaseStore {
         let username = ""
         let email = ""
         return wallet.changePassword( email, username, old_password, new_password )
-        // return new Promise( resolve => {
-        //     var wallet = wallet.wallet_object
-        //     if( ! this.validatePassword( old_password ))
-        //         throw new Error("wrong password")
-        //     
-        //     var old_password_aes = Aes.fromSeed( old_password )
-        //     var new_password_aes = Aes.fromSeed( new_password )
-        //     
-        //     if( ! wallet.encryption_key)
-        //         // This change pre-dates the live chain..
-        //         throw new Error("This wallet does not support the change password feature.")
-        //     var encryption_plainbuffer = old_password_aes.decryptHexToBuffer( wallet.encryption_key )
-        //     wallet.encryption_key = new_password_aes.encryptToHex( encryption_plainbuffer )
-        //     
-        //     var new_password_private = PrivateKey.fromSeed( new_password )
-        //     wallet.password_pubkey = new_password_private.toPublicKey().toPublicKeyString()
-        //     
-        //     if( unlock ) {
-        //         aes_private = Aes.fromSeed( encryption_plainbuffer )
-        //     } else {
-        //         // new password, make sure the wallet gets locked
-        //         aes_private = null
-        //     }
-        //     resolve( this.setWalletModified() )
-        // })
     }
     
     /**
@@ -378,7 +345,6 @@ class WalletDb extends BaseStore {
     generateNextKey() {
         var brainkey = this.getBrainKey()
         var sequence = wallet.wallet_object.get("brainkey_sequence") || 0
-        // var used_sequence = null
         
         // Skip ahead in the sequence if any keys are found in use
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
@@ -396,31 +362,13 @@ class WalletDb extends BaseStore {
             var next_key = ChainStore.getAccountRefsOfKey( pubkey )
             
             if(next_key && next_key.size) {
-                // used_sequence = i
                 console.log("WARN: Private key sequence " + i + " in-use. " + 
                     "I am saving the private key and will go onto the next one.")
                 keys.push({ private_key, brainkey_sequence: i })
             }
         }
-        
-        // if(used_sequence !== null) {
-        //     wallet.setState({
-        //         brainkey_sequence: used_sequence + 1
-        //     })
-        // }
-        this.importKeys(keys)
-        
-        // sequence = wallet.get("brainkey_sequence")
-        // var private_key = key.get_brainkey_private( brainkey, sequence )
-        // if( save ) {
-        //     // save deterministic private keys ( the user can delete the brainkey )
-        //     this.saveKey( private_key, sequence )
-        //     //TODO  .error( error => ErrorStore.onAdd( "wallet", "saveKey", error ))
-        //     return wallet.setState({
-        //         brainkey_sequence: 1 + 0||wallet.wallet_object.get("brainkey_sequence")
-        //     })
-        // }
-        // return { private_key, sequence }
+        if( keys.length )
+            this.importKeys(keys)
     }
     
     /**
@@ -498,7 +446,7 @@ class WalletDb extends BaseStore {
         )
         
         this.keys().forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )
-        this.keys().forEach( (key, pubkey) => console.log('imported',pubkey) )
+        // this.keys().forEach( (key, pubkey) => console.log('imported',pubkey) )
         return p
     }
     

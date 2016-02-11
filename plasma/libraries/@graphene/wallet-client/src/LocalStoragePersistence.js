@@ -22,6 +22,7 @@ export default class LocalStoragePersistence {
         this.STATE = key
         this.saveToDisk = saveToDisk
         let stateStr = localStorage.getItem(this.STATE)
+        console.log('stateStr', namespace, stateStr)
         this.state = stateStr ? fromJS(JSON.parse(stateStr)) : Map()
     }
     

@@ -158,12 +158,11 @@ export class ChangeActiveWallet extends WalletBaseComponent {
     }
 
     render() {
-        var state = WalletManagerStore.getState()
-        if(state.wallet_names.count() === 1)
+        if(this.props.wallet_names.count() === 1)
             return <label>{this.state.current_wallet}</label>
 
         var options = []
-        state.wallet_names.forEach( wallet_name => {
+        this.props.wallet_names.forEach( wallet_name => {
             options.push(<option key={wallet_name} value={wallet_name}>{wallet_name.toUpperCase()}</option>)
         })
 

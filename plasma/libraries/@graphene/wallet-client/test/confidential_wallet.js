@@ -6,6 +6,7 @@ import { Apis } from "@graphene/chain"
 
 import LocalStoragePersistence from "../src/LocalStoragePersistence"
 
+// import AddressIndex from "../src/AddressIndex"
 import WalletStorage from "../src/WalletStorage"
 import ConfidentialWallet from "../src/ConfidentialWallet"
 
@@ -18,7 +19,6 @@ let wallet, cw
 let create = (name = "a1", brainkey = "brainkey", _cw = cw)=> _cw.createBlindAccount(name, brainkey)
 
 function initWallet() {
-    console.log(1);
     storage.clear()
     wallet = new WalletStorage(storage)
     cw = new ConfidentialWallet(wallet)
@@ -61,13 +61,10 @@ describe('Confidential wallet', () => {
         }
         {
             let key = PrivateKey.fromSeed("seed2")
-            let index_address = true
-            assert( cw.setKeyLabel( key, "seed2 label", index_address, key.toPublicKey() ), "add labeled private key")
-            assert.equal( cw.addressIndex.storage.state.size, 1, "expecting addresses");
+            assert( cw.setKeyLabel( key, "seed2 label", key.toPublicKey() ), "add labeled private key")
             assert( cw.getPrivateKey( key.toPublicKey() ).d )
             assert( cw.getPrivateKey( key.toPublicKey().toString() ).d )
             assert( cw.getPrivateKey( "seed2 label" ).d )
-            
         }
         
         assert( cw.getKeyLabel("") === null, "fetch label should return null")
