@@ -369,10 +369,10 @@ export default class ConfidentialWallet {
             return Promise.all(promises).then(()=>{
                 
                 let p
+                let cr = confirmation_receipts(confirm.outputs)
                 if( broadcast ) {
                     // make sure the receipts are stored first before broadcasting
                     let name = account.get("name")
-                    let cr = confirmation_receipts(confirm.outputs)
                     p = this.receiveBlindTransfer( cr, "@"+name, "from @"+name )
                 }
                 
@@ -389,6 +389,9 @@ export default class ConfidentialWallet {
                     
                     return tr.process_transaction(this, null, broadcast).then(()=> {
                         confirm.trx = tr.serialize()
+                        confirm.confirmation_receipts = cr
+                            .reduce( (r, receipt)=>r.push(stealth_confirmation.toHex(receipt)) , List()).toJS()
+                        
                         // console.log("confirm trx2", JSON.stringify(confirm.outputs))
                         return confirm
                     })
@@ -509,7 +512,7 @@ export default class ConfidentialWallet {
                 })
             )
         }
-        let rp = [], receipts
+        let rp = []
 
         if( ! Array.isArray( confirmation_receipts ) && ! List.isList(confirmation_receipts))
             confirmation_receipts = [ confirmation_receipts ]
@@ -522,6 +525,7 @@ export default class ConfidentialWallet {
             rp.push( receipt(r) )
         })
         
+        let receipts
         return Promise.all(rp)
             .then( res => receipts = res )
             .then(() => this.update(
@@ -593,17 +597,17 @@ export default class ConfidentialWallet {
                 let operations = conf.trx.operations
                 operations.push( from_blind )
                 
-                
                 let p1
-                if( broadcast && conf.outputs.length === 2 ) {
+                let has_change = conf.outputs.length === 2
+                if( has_change ) {
                     let change_out = conf.outputs[0]
-                    // make sure the receipts are stored first before broadcasting (durable)
-                    let cr = {
+                    let cr = { // confirmation_receipt
                         // { to, one_time_key, encrypted_memo, [owner = null] } 
                         to: this.getPublicKey(from_blind_account_key_or_label).toString(),
                         one_time_key: change_out.confirmation.one_time_key,
                         encrypted_memo: change_out.confirmation.encrypted_memo
                     }
+                    // make sure the change is stored before broadcasting (durable)
                     p1 = this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
                 }
                 return (p1 ? p1 : Promise.resolve()).then(()=>{
@@ -616,6 +620,10 @@ export default class ConfidentialWallet {
                         conf.one_time_keys
                     ).then( tr => {
                         conf.trx = tr
+                        if( has_change )
+                            conf.confirmation_receipt = conf.confirmation_receipts[0]
+                        
+                        delete conf.confirmation_receipts
                         return conf
                     })
                 })
@@ -643,6 +651,12 @@ export default class ConfidentialWallet {
             if( ! asset ) return Promise.reject("unknown_asset")
             amount = toImpliedDecimal(amount, asset.get("precision"))
             return this.blind_transfer_help(from_key_or_label, to_key_or_label, amount, asset_symbol, broadcast)
+            .then( conf =>{
+                // Their may or may not be a change receipt.  Always return the last receipt
+                conf.confirmation_receipt = conf.confirmation_receipts[conf.confirmation_receipts.length - 1]
+                delete conf.confirmation_receipts
+                return conf
+            })
         })
         
     }
@@ -740,6 +754,9 @@ function blind_transfer_help(
     
     let from_key = this.getPublicKey(from_key_or_label)
     let to_key = this.getPublicKey(to_key_or_label)
+    
+    assert(from_key, "missing from_key_or_label: " + from_key_or_label)
+    assert(to_key, "missing to_key_or_label: " + to_key_or_label)
     
     let promises = []
     promises.push(fetchChain("getAsset", asset_symbol))
@@ -929,17 +946,20 @@ function blind_transfer_help(
                         
                         // transferFromBlind needs to_out as last
                         confirm.outputs.push( conf_output )
+                        let cr = confirmation_receipts(confirm.outputs)
 
                         let p1
                         if( broadcast ) {
                             // make sure the receipts are stored first before broadcasting
-                            let cr = confirmation_receipts(confirm.outputs)
                             p1 = this.receiveBlindTransfer(cr, from_key_or_label)
                         }
                         return (p1 ? p1 : Promise.resolve()).then(()=>{
                             return this.send_blind_tr([blind_tr], from_key_or_label, broadcast).then( tr => {
                                 confirm.trx = tr
                                 confirm.one_time_keys = one_time_keys.toJS()
+                                confirm.confirmation_receipts = cr
+                                    .reduce( (r, receipt)=>r.push(stealth_confirmation.toHex(receipt)) , List()).toJS()
+                                
                                 return confirm
                             })
                         })
