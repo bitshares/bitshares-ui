@@ -934,7 +934,6 @@ class Exchange extends React.Component {
 
     onChangeFeeAsset(type, e) {
         e.preventDefault();
-        console.log("onChangeFeeAsset:", e.target.value);
 
         if (type === "buy") {
             this.setState({
@@ -1071,7 +1070,7 @@ class Exchange extends React.Component {
         if (!coreAsset) {
             return null;
         }
-        console.log("preferCoreBuyFee:", this.state.preferCoreBuyFee);
+
         let sellFeeAsset = this.state.preferCoreSellFee ? coreAsset : quote !== coreAsset ? quote : base;
         let sellFee = utils.round_number(utils.get_asset_amount(this._getFee(sellFeeAsset), sellFeeAsset), sellFeeAsset);
         let sellFeeAssets = [coreAsset, quote === coreAsset ? base : quote];
@@ -1287,12 +1286,12 @@ class Exchange extends React.Component {
 
                         {isNullAccount ? null : (
                             <div className="grid-block vertical shrink buy-sell">
-                            <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div>
+                            {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
                             
-                            <div className="grid-block small-vertical medium-horizontal align-spaced" style={{ flexGrow: "0" }} >
+                            <div className="grid-block small-vertical medium-horizontal align-spaced">
                                 {quote && base ?
                                 <BuySell
-                                    className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-3 sell-form" : "order-1 buy-form")}
+                                    className={cnames("small-12 medium-6 no-padding", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
                                     type="bid"
                                     amount={buyAmount}
                                     price={displayBuyPrice}
@@ -1316,6 +1315,7 @@ class Exchange extends React.Component {
                                     feeAsset={buyFeeAsset}
                                     onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
                                     isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
+                                    onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
                                 /> : null}
                                 <ConfirmOrderModal
                                     type="buy"
@@ -1324,14 +1324,9 @@ class Exchange extends React.Component {
                                     diff={buyDiff}
                                 />
 
-                                <div className="grid-block vertical align-center text-center no-padding shrink order-2">
-                                    <div style={{cursor: "pointer"}} onClick={this._flipBuySell.bind(this)}>
-                                        <span style={{fontSize: "2rem"}}>&#8646;</span>
-                                    </div>
-                                </div>
                                 {quote && base ?
                                 <BuySell
-                                    className={cnames("small-12 medium-5 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-3 sell-form")}
+                                    className={cnames("small-12 medium-6 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
                                     type="ask"
                                     amount={sellAmount}
                                     price={displaySellPrice}
@@ -1355,6 +1350,7 @@ class Exchange extends React.Component {
                                     feeAsset={sellFeeAsset}
                                     onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
                                     isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
+                                    onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
                                 /> : null}
                                 <ConfirmOrderModal
                                     type="sell"

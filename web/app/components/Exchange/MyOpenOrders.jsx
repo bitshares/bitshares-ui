@@ -21,11 +21,11 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
-                    <th style={{textAlign: "right"}}></th>
+                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
+                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
+                    <th style={{minWidth: 91}}></th>
                 </tr>
             </thead>
         );
@@ -106,7 +106,7 @@ class MyOpenOrders extends React.Component {
         let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
         Ps.initialize(bidsContainer);
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
-        Ps.initialize(asksContainer);   
+        Ps.initialize(asksContainer);
     }
 
     _flipBuySell() {
@@ -140,9 +140,8 @@ class MyOpenOrders extends React.Component {
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
 
                 return b_price.full - a_price.full;
-            }).map(order => {
-
-                return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+            }).map((order, index) => {
+                return <OrderRow ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -180,39 +179,49 @@ class MyOpenOrders extends React.Component {
 
         return (
             <div style={{marginBottom: "2rem"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
-                <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
-                    <div className="exchange-content-header"><Translate content="exchange.my_bids" /></div>
+                <div className={classnames("small-12 medium-6", this.state.flip ? "order-1" : "order-2")}>
+                    <div className="exchange-bordered">
+                        <div className="exchange-content-header">
+                            <Translate content="exchange.my_bids" />
+                            {this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
+                        </div>
 
-                    <table className="table order-table text-right table-hover">
-                        <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                    </table>
-                    <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 300}}>
-                        <table style={{paddingBottom: 5}} className="table order-table text-right table-hover">
-                            <tbody>
-                                {bids.length ? bids : emptyRow}
-                            </tbody>
+                        <table className="table order-table text-right table-hover">
+                            <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         </table>
+                        <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 300}}>
+                            <table style={{paddingBottom: 5}} className="table order-table text-right table-hover">
+                                <tbody>
+                                    {bids.length ? bids : emptyRow}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <div className="grid-block vertical align-center text-center no-padding shrink order-2">
                     <div>
-                        <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
+                        
                     </div>
                 </div>
                 
-                <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
-                    <div className="exchange-content-header"><Translate content="exchange.my_asks" /></div>
-                    <table className="table order-table text-right table-hover">
-                        <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                    </table>
-
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 300}}>
-                        <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
-                            <tbody>
-                                {asks.length ? asks : emptyRow}
-                            </tbody>
+                <div className={classnames("small-12 medium-6", this.state.flip ? "order-2" : "order-1")}>
+                    <div className="exchange-bordered">
+                        <div className="exchange-content-header">
+                            <Translate content="exchange.my_asks" />
+                            {!this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
+                        </div>
+                        <table className="table order-table text-right table-hover">
+                            <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                         </table>
+
+                        <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 300}}>
+                            <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
+                                <tbody>
+                                    {asks.length ? asks : emptyRow}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

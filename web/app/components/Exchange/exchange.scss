@@ -27,11 +27,6 @@ $negative-color: #E1424A;
     .top-bar {
       border-bottom: 1px solid grey;
     }
-
-    .buy-sell {
-      border-top: 1px solid grey;
-      border-bottom: 1px solid grey;
-    }
   }
 }
 
@@ -40,8 +35,11 @@ $negative-color: #E1424A;
   font-size: 1.1rem;
   font-weight: 500;
   text-transform: uppercase;
-  padding-bottom: 0.25rem;
-  padding-top: 1rem;
+  padding-left: 10px;
+  padding-bottom: 0.35rem;
+  padding-top: 0.75rem;
+  background-color: #484848;
+  border-bottom: 1px solid #8c88ff;
 }
 
 .market-content {
@@ -141,6 +139,10 @@ p.order-table-title {
 .buySellButton {
   float: right;
   min-width: 4rem;
+}
+
+form.order-form {
+  padding: 10px;
 }
 
 .bid {
@@ -502,6 +504,22 @@ input[type=number]::-webkit-outer-spin-button {
 
 .change-down {
   color: $negative-color !important;
+}
+
+.exchange-bordered {
+  border: 1px solid rgba(183, 183, 183, 0.29);
+}
+
+.order-1 {
+  .exchange-bordered {
+    margin: 0 10px 0 10px;
+  }
+}
+
+.order-2 {
+  .exchange-bordered {
+    margin: 0 10px 0 10px;
+  }
 }
 
 .mymarkets-header {
