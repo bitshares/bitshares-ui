@@ -213,11 +213,13 @@ export default class WalletStorage {
                 return Promise.resolve()
         
             let encrypted_wallet = this.storage.state.get("encrypted_wallet")
-            let backup_buffer = new Buffer(encrypted_wallet, 'base64')
-            disk = decrypt(backup_buffer, private_key).then( wallet_object => {
-                this.wallet_object = fromJS( wallet_object )
-                // this.notify = true
-            })
+            if( encrypted_wallet ) {
+                let backup_buffer = new Buffer(encrypted_wallet, 'base64')
+                disk = decrypt(backup_buffer, private_key).then( wallet_object => {
+                    this.wallet_object = fromJS( wallet_object )
+                    // this.notify = true
+                })
+            }
         } else {
             assert(chain_id, "provide the chainId on first login")
             
