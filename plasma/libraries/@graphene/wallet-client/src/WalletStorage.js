@@ -120,7 +120,7 @@ export default class WalletStorage {
     useBackupServer( remote_url = this.storage.state.get("remote_url")) {
         // close (if applicable)
         let close = this.ws_rpc ? this.ws_rpc.close() : null
-        if(remote_url !== null) {
+        if(remote_url != null) {
             this.ws_rpc = new WalletWebSocket(remote_url)
             this.api = new WalletApi(this.ws_rpc)
             this.instance = this.ws_rpc.instance

@@ -115,7 +115,8 @@ export default class BalanceClaimActive extends Component {
     }
     
     onClaimBalance() {
-        WalletActions.importBalance( this.props.claim_account_name,
+        WalletActions.importBalance(
+            this.props.claim_account_name,
             this.props.selected_balances, true //broadcast
         ).catch((error)=> {
             console.error("claimBalance", error, "stack", error.stack)

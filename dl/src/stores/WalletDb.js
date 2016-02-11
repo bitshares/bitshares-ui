@@ -39,7 +39,8 @@ const remote_url = "ws://localhost:9080/wallet_v1"
         public_name: t.Str,
         brainkey: t.maybe(t.Str),
         brainkey_sequence: t.Num,
-        brainkey_backup_date: t.maybe(t.Dat)
+        brainkey_backup_date: t.maybe(t.Dat),
+        chain_id: t.Str
     })
     ```
 */
@@ -50,7 +51,7 @@ class WalletDb extends BaseStore {
         
         this.state = {
             saving_keys: false,
-            current_wallet: "default",
+            current_wallet: undefined,
             wallet_names: Set()
         } 
         
@@ -73,7 +74,7 @@ class WalletDb extends BaseStore {
     
     /** Loads the last active wallet. */
     loadDbData() {
-        // console.log('waldb load');
+        
         let current_wallet
         let cur = iDB.root.getProperty("current_wallet").then( c => current_wallet = c)
         
@@ -100,20 +101,29 @@ class WalletDb extends BaseStore {
                 }
             
         })
+        
         return Promise.all([ cur, leg ])
+            .then( ()=>{
+                if(! wallet_names.has(current_wallet))
+                    current_wallet = undefined
+            })
             .then( ()=> this.setState({ current_wallet, wallet_names }) )
-            .then( ()=> this.openWallet(current_wallet) )
-            // .then( ()=> console.log('waldb done'))
+            .then( ()=> this.openWallet( current_wallet ))
     }
     
     /**
         Change or open a wallet, this may or may not be empty.  It is necessary to call onCreateWallet to complete this process.
     */
-    openWallet(wallet_name = "default") {
+    openWallet(wallet_name) {
+        
+        if(! wallet_name || this.state.current_wallet == wallet_name)
+            return
+        
         if(this.legacy_wallet_names.has(wallet_name)) {
             console.error("WalletDb\tTODO convert legacy wallet")
             return
         }
+        
         let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
         let storage = new LocalStoragePersistence( key )
         let w = new WalletStorage(storage)
@@ -143,7 +153,7 @@ class WalletDb extends BaseStore {
         
         let current_wallet = this.state.current_wallet
         if(current_wallet === wallet_name) {
-            current_wallet = this.state.wallet_names.size ? this.state.wallet_names.first() : "default"
+            current_wallet = this.state.wallet_names.size ? this.state.wallet_names.first() : undefined
             iDB.root.setProperty("current_wallet", current_wallet)
         }
         
@@ -151,11 +161,10 @@ class WalletDb extends BaseStore {
         this.setState({ current_wallet, wallet_names })
     }
     
-    keys(keys) {
-        if(! wallet) return
-        return keys ? 
-            wallet.wallet_object.updateIn(["keys"], Map(), ks => ks.merge(keys)) :
-            wallet.wallet_object.getIn(["keys"], Map())
+    /** @return ConfidentialWallet.keys or emtpy map (wallet is locked or non-existent) */
+    keys() {
+        if(! wallet || ! wallet.wallet_object) return Map()
+        return wallet.wallet_object.getIn(["keys"], Map())
     }
     
     /** Discover derived keys that are not in this wallet */
@@ -186,8 +195,7 @@ class WalletDb extends BaseStore {
     }
     
     isEmpty() {
-        if( ! wallet) return
-        return wallet.isEmpty()
+        return ! wallet || wallet.isEmpty()
     }
     
     /** @return {Promise} resolve immediately or after a successful unsubscribe
@@ -271,16 +279,18 @@ class WalletDb extends BaseStore {
                 brainkey = key.normalize_brain_key(brainkey)
                 
             let chain_id = Apis.instance().chain_id
+            let wallet_names = this.state.wallet_names.add(this.state.current_wallet)
             resolve(Promise.resolve()
                 .then(()=> wallet.login(email, username, password, chain_id)) //login and sync
                 .then(()=> assert(! wallet.wallet_object.get("created"), "Wallet exists: " + this.state.current_name))
-                .then(()=> this.setState({ wallet_names: this.state.wallet_names.add(this.state.current_wallet) }) )
+                .then(()=> this.setState({ wallet_names }) )
                 .then(()=> 
                     wallet.setState({
                         public_name: this.state.current_wallet,
                         brainkey,
                         brainkey_sequence: 0,
-                        brainkey_backup_date
+                        brainkey_backup_date,
+                        chain_id
                     })
                 )
                 .catch( error => {

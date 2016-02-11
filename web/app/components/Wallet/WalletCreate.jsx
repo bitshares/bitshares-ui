@@ -168,7 +168,7 @@ class CreateNewWallet extends Component {
         let errors = state.errors
         let wallet_names = WalletDb.getState().wallet_names
         errors.wallet_public_name =
-            wallet_names.has(state.wallet_public_name)/* && WalletDb.hasDiskWallet(state.wallet_public_name)*/ ?
+            wallet_names.has(state.wallet_public_name) ?
             `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name` :
             null
         

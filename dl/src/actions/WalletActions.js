@@ -3,7 +3,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import ApplicationApi from "../rpc_api/ApplicationApi"
 import { PrivateKey, PublicKey, Address } from "@graphene/ecc"
-import { TransactionBuilder, Apis, ops, chain_types, lookup } from "@graphene/chain"
+import { TransactionBuilder, Apis, ops, chain_types, fetchChain } from "@graphene/chain"
 import alt from "alt-instance"
 import iDB from "idb-instance"
 import Immutable from "immutable"
@@ -143,15 +143,17 @@ class WalletActions {
             var db = Apis.instance().db_api()
             var address_publickey_map = {}
             
-            var account_lookup = lookup.account_id(account_name_or_id)
-            var unlock = WalletUnlockActions.unlock()
-            var plookup = lookup.resolve()
+            var account_lookup = fetchChain("getAccount", account_name_or_id)
+            // var account_lookup = lookup.account_id(account_name_or_id)
+            // var unlock = WalletUnlockActions.unlock()
+            // var plookup = lookup.resolve()
             
-            var p = Promise.all([ unlock, plookup ]).then( ()=> {
-                var account = account_lookup.resolve
+            // var p = Promise.all([ unlock, plookup ]).then( ()=> {
+            var p = account_lookup.then( account => {
+                // var account = account_lookup.resolve
                 //DEBUG 
                 console.log('... account',account)
-                if(account == void 0)
+                if(account == null)
                     return Promise.reject("Unknown account " + account_name_or_id)
                 
                 var balance_claims = []
@@ -180,7 +182,7 @@ class WalletActions {
                     signer_pubkeys[public_key_string] = true
                     balance_claims.push({
                         fee: { amount: "0", asset_id: "1.3.0"},
-                        deposit_to_account: account,
+                        deposit_to_account: account.get("id"),
                         balance_to_claim: balance.id,
                         balance_owner_key: public_key_string,
                         total_claimed: {

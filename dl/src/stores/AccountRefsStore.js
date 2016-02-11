@@ -56,9 +56,6 @@ export default alt.createStore(AccountRefsStore, "AccountRefsStore")
 
 function updateNoAccountRefs() {
     
-    if(! WalletDb.getState().wallet)
-        return
-    
     var account_refs = Immutable.Set()
     var no_account_refs = this.no_account_refs
     WalletDb.keys().forEach( (key, pubkey) => {
@@ -103,5 +100,6 @@ function saveNoAccountRefs(no_account_refs) {
     // this.storate.setState(array)
     var array = []
     for(let pubkey of no_account_refs) array.push(pubkey)
-    iDB.root.setProperty("no_account_refs", array)
+    if( array.length)
+        iDB.root.setProperty("no_account_refs", array)
 }

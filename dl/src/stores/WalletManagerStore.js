@@ -44,13 +44,13 @@ class WalletManagerStore extends BaseStore {
     /** This may result in a new wallet name being added, only in this case
         should a `create_wallet_password` and `brnkey` be provided.
     */
-    onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
+    onSetWallet({wallet_name, create_wallet_password, brnkey, resolve}) {
         var p = new Promise( resolve => {
             
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
                 throw new Error("Invalid wallet name")
             
-            if(WalletDb.getState().current_wallet === wallet_name) {
+            if(WalletDb.getState().current_wallet === wallet_name) {// && ! WalletDb.isEmpty()
                 resolve()
                 return
             }
@@ -77,10 +77,9 @@ class WalletManagerStore extends BaseStore {
                     // Update state here again to make sure listeners re-render
                     // this.setState({})
                     
-                    if( ! create_wallet_password)
-                        return
+                    if(create_wallet_password)
+                        return WalletDb.onCreateWallet( create_wallet_password, brnkey )
                     
-                    return WalletDb.onCreateWallet( create_wallet_password, brnkey )
                 })
             })
             resolve(p)
