@@ -36,8 +36,8 @@ $negative-color: #E1424A;
   font-weight: 500;
   text-transform: uppercase;
   padding-left: 10px;
-  padding-bottom: 0.35rem;
-  padding-top: 0.75rem;
+  padding-bottom: 0.55rem;
+  padding-top: 0.55rem;
   background-color: #484848;
   border-bottom: 1px solid #8c88ff;
 }
@@ -265,7 +265,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
 
 
 a.order-cancel {
-  font-size: 80%;
+  font-size: 90%;
   letter-spacing: 2px;
   padding-top: 0.01rem;
   padding-bottom: 0.01rem;
@@ -526,14 +526,15 @@ input[type=number]::-webkit-outer-spin-button {
   text-transform: uppercase;
   width: 50%;
   max-width: 300px;
-  text-align: center;
   font-size: 1.10rem;
-  padding: 10px 0;
+  padding-left: 10px;
+  padding-bottom: 0.55rem;
+  padding-top: 0.55rem;
   font-weight: 500;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  margin-bottom: 0.25rem;
   transition: border-color 0.3s ease 0s;
+  background-color: #484848;
 }
 
 .mymarkets-list {

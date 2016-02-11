@@ -70,7 +70,7 @@ class OrderRow extends React.Component {
                         />
                     </td>
                     <td className="text-right" style={{padding: "2px 5px"}}>
-                        <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
+                        <a style={{marginRight: "0"}} className="order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
                     </td>
@@ -103,8 +103,6 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
-        Ps.initialize(bidsContainer);
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
         Ps.initialize(asksContainer);
     }
@@ -118,8 +116,6 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
-        Ps.update(bidsContainer);         
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
         Ps.update(asksContainer);     
     }
@@ -173,55 +169,40 @@ class MyOpenOrders extends React.Component {
             );
         }
 
+        let rows = [];
+
+        if (asks.length) {
+            rows = rows.concat(asks);
+        }
+
+        if (bids.length) {
+            rows = rows.concat(bids);
+        }
+
+        console.log("rows:", rows);
+
         // if (bids.length === 0 && asks.length ===0) {
         //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
         // }
 
         return (
-            <div style={{marginBottom: "2rem"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
-                <div className={classnames("small-12 medium-6", this.state.flip ? "order-1" : "order-2")}>
-                    <div className="exchange-bordered">
-                        <div className="exchange-content-header">
-                            <Translate content="exchange.my_bids" />
-                            {this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
-                        </div>
+            <div style={{marginBottom: "2rem"}} key="open_orders" className="small-12 medium-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
 
-                        <table className="table order-table text-right table-hover">
-                            <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                        </table>
-                        <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 300}}>
-                            <table style={{paddingBottom: 5}} className="table order-table text-right table-hover">
-                                <tbody>
-                                    {bids.length ? bids : emptyRow}
-                                </tbody>
-                            </table>
-                        </div>
+                <div className="exchange-bordered small-12" style={{height: 400}}>
+                    <div className="exchange-content-header">
+                        <Translate content="exchange.my_orders" />
+                        {!this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
                     </div>
-                </div>
+                    <table className="table order-table text-right table-hover">
+                        <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
+                    </table>
 
-                <div className="grid-block vertical align-center text-center no-padding shrink order-2">
-                    <div>
-                        
-                    </div>
-                </div>
-                
-                <div className={classnames("small-12 medium-6", this.state.flip ? "order-2" : "order-1")}>
-                    <div className="exchange-bordered">
-                        <div className="exchange-content-header">
-                            <Translate content="exchange.my_asks" />
-                            {!this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
-                        </div>
-                        <table className="table order-table text-right table-hover">
-                            <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 324}}>
+                        <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
+                            <tbody>
+                                {rows.length ? rows : emptyRow}
+                            </tbody>
                         </table>
-
-                        <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 300}}>
-                            <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
-                                <tbody>
-                                    {asks.length ? asks : emptyRow}
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
