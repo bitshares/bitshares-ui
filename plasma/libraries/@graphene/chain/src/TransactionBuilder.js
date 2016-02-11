@@ -49,10 +49,10 @@ export default class TransactionBuilder {
     process_transaction(cwallet, signer_pubkeys = null, broadcast = false, confirm = null) {
 
         let wallet_object = cwallet.wallet.wallet_object
-        if(Apis.instance().chain_id !== wallet_object.get("chain_id"))
-            return Promise.reject("Mismatched chain_id; expecting " +
-                wallet_object.get("chain_id") + ", but got " +
-                Apis.instance().chain_id)
+        // if(Apis.instance().chain_id !== wallet_object.get("chain_id"))
+        //     return Promise.reject("Mismatched chain_id; expecting " +
+        //         wallet_object.get("chain_id") + ", but got " +
+        //         Apis.instance().chain_id)
         
         return this.set_required_fees().then(()=> {
             var signer_pubkeys_added = {}
