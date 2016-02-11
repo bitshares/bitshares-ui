@@ -6,57 +6,50 @@ import WalletApi from "./WalletApi"
 import assert from "assert"
 
 /**
-    Serilizable persisterent state (JSON serilizable types only).
-*/
-const persistent_state = fromJS({
-    
-    // ISO creation Date string from the browser
-    created: undefined,
-    
-    // Initially same as `created`
-    last_modified: undefined,
-    
-    // ISO Date of last binary backup download
-    backup_date: undefined,
-    
-    // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not nearly random enough for this to be public).
-    secret_encryption_pubkey: null,
-    
-    // Wallet JSON string encrypted using the private key derived from email+username+password (base64)
-    encrypted_wallet: null,
-    
-    // Server's REST URL
-    remote_url: null,
-    
-    // This is the last encrypted_wallet hash that was saved on the server (base64)
-    // True to stay in sync with the server (boolean)
-    remote_copy: undefined,
-    
-    // An emailed token used to create a wallet for the 1st time (base58)
-    remote_token: null,
-    
-    // Last remote hash found on the server for this wallet
-    remote_hash: null,
-    
-    // ISO Date string from the server
-    remote_created_date: null,
-    
-    // ISO Date string from the server
-    remote_updated_date: null
-    
-})
-
-/**
     A Wallet is a place where private user information can be stored. This information is kept encrypted when on disk or stored on the remote server.
     
     Serilizable persisterent state (JSON serilizable types only)..  This is the data kept in the walletStorage.  
 
     ```js
+    // Serilizable persisterent state (JSON serilizable types only).
     const empty_wallet = fromJS({
-        created: t.Dat,
-        last_modified: t.Dat,
-        backup_date: t.maybe(t.Dat),
-        chain_id: t.Str,
+        
+        // ISO creation Date string from the browser
+        created: undefined,
+        
+        // Initially same as `created`
+        last_modified: undefined,
+        
+        // ISO Date of last binary backup download
+        backup_date: undefined,
+        
+        chain_id: undefined,
+        
+        // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not nearly random enough for this to be public).
+        secret_encryption_pubkey: null,
+        
+        // Wallet JSON string encrypted using the private key derived from email+username+password (base64)
+        encrypted_wallet: null,
+        
+        // Server's REST URL
+        remote_url: null,
+        
+        // This is the last encrypted_wallet hash that was saved on the server (base64)
+        // True to stay in sync with the server (boolean)
+        remote_copy: undefined,
+        
+        // An emailed token used to create a wallet for the 1st time (base58)
+        remote_token: null,
+        
+        // Last remote hash found on the server for this wallet
+        remote_hash: null,
+        
+        // ISO Date string from the server
+        remote_created_date: null,
+        
+        // ISO Date string from the server
+        remote_updated_date: null
+        
     })
     ```
     

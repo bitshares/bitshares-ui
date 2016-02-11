@@ -66,7 +66,7 @@ export default class TransactionBuilder {
                     throw new Error("Missing signing key")
 
                 for(let pubkey_string of pubkeys) {
-                    var private_key = this.getPrivateKey(pubkey_string)
+                    var private_key = cwallet.getPrivateKey(pubkey_string)
                     this.add_signer(private_key, pubkey_string)
                     signer_pubkeys_added[pubkey_string] = true
                 }
