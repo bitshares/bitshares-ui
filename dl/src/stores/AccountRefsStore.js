@@ -41,7 +41,7 @@ class AccountRefsStore extends BaseStore {
         this.setState(this._getInitialState())
         return this.loadNoAccountRefs()
             .then( no_account_refs => this.no_account_refs = no_account_refs )
-            .then( ()=> this.chainStoreUpdate() )
+            .then( ()=> this.updateNoAccountRefs() )
     }
 
     chainStoreUpdate() {

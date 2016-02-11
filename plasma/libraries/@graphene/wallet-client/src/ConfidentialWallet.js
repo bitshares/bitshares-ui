@@ -13,6 +13,10 @@ let Long = ByteBuffer.Long
 
 /** This class is used for stealth transfers.
 
+    Anytime you send to an external stealth address, you will need to capture the `confirmation_receipt` hex in the returned promise.  This must be sent to the recipient so they may claim their balance.   
+    
+    separated out change_receipts and confirmation receipts.  So, only if your sending to another blind address do you need to grab the 1 and only "confirmation_receipt" .. The wallet should store everything so you normally would not need any change_receipts.
+
     Serilizable persisterent state (JSON serilizable types only)..  This is the data used by this class and kept in walletStorage.wallet_object:
 
     ```js

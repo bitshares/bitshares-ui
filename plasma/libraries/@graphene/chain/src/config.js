@@ -49,7 +49,7 @@ module.exports = _this = {
         }
         
         if (!_this.network_name) {
-            console.log("Unknown chain id", chain_id);
+            console.log("Unknown chain id (this may be a testnet)", chain_id);
         }
         
     }

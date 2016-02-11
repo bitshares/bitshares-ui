@@ -300,6 +300,7 @@ class WalletDb extends BaseStore {
         try {
             let chain_id = Apis.instance().chain_id
             wallet.login(email, username, password, chain_id, unlock)
+            AccountRefsStore.loadDbData()
             return true
         } catch(e) {
             
