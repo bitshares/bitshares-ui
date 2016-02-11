@@ -185,9 +185,12 @@ class OrderBook extends React.Component {
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
 
+        let totalBidValue = 0;
+        let totalAskValue = 0;
+
+
         if(base && quote) {
             let totalBidAmount = 0;
-            let totalBidValue = 0;
             high = combinedBids.length > 0 ? combinedBids.reduce((total, a) => {
                 return total < a.price_full ? a.price_full : total;
             }, 0) : 0;
@@ -242,7 +245,6 @@ class OrderBook extends React.Component {
             }, null) : 0;
 
             let totalAskAmount = 0;
-            let totalAskValue = 0;
 
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
@@ -306,65 +308,90 @@ class OrderBook extends React.Component {
 
             return (
                     <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content">
-                        <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
-                            <div className="exchange-content-header"><Translate content="exchange.asks" /></div>
-                            <table className="table order-table table-hover text-right no-overflow">
-                                <thead>
-                                    <tr key="top-header" className="top-header">
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <div className="grid-block market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 300}}>
-                                <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
-                                    <tbody className="orderbook orderbook-top">
-                                        {askRows}
-                                    </tbody>
+                        <div className={classnames("small-12 medium-6", this.state.flip ? "order-1" : "order-2")}>
+                            <div className="exchange-bordered">
+                                <div className="exchange-content-header">
+                                    <Translate content="exchange.asks" />
+                                    {this.state.flip ? (
+                                    <span>
+                                        <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
+                                        <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
+                                    </span>) : null}
+                                    <div style={{lineHeight: "24px", paddingRight: 10}} className="float-right header-sub-title">
+                                        <Translate content="exchange.total" />
+                                        <span>: </span>
+                                        {utils.format_number(totalAskValue, quote.get("precision"))}
+                                        <span> ({quoteSymbol})</span>
+                                    </div>
+                                </div>
+                                <table className="table order-table table-hover text-right no-overflow">
+                                    <thead>
+                                        <tr key="top-header" className="top-header">
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title"content="exchange.price" /></th>
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
+                                        </tr>
+                                    </thead>
                                 </table>
-                            </div>
-                            {totalAsksLength > 13 ? (
+                                <div className="grid-block market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 300}}>
+                                    <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
+                                        <tbody className="orderbook orderbook-top">
+                                            {askRows}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {totalAsksLength > 13 ? (
                                 <div className="orderbook-showall">
                                     <div onClick={this._onToggleShowAll.bind(this, "asks")} className="button outline">
                                         <Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} />
                                         {!showAllAsks ? <span> ({totalAsksLength})</span> : null}
                                     </div>
                                 </div>) : null}
-                        </div>
-                        <div className="grid-block vertical align-center text-center no-padding shrink order-2">
-                            <div style={{paddingBottom: "1rem"}}>
-                                <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
                             </div>
-                            <button onClick={this.props.moveOrderBook} className="button outline"><Translate content="exchange.vertical" /></button>
                         </div>
-                        <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
-                            <div className="exchange-content-header"><Translate content="exchange.bids" /></div>
-                            <table className="table order-table table-hover text-right market-right-padding">
-                                <thead>
-                                    <tr key="top-header" className="top-header">
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span></th>
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate content="exchange.total" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                    </tr>
-                                </thead>
-                            </table>    
-                            <div className="grid-block market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 300}}>
-                                <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
-                                    <tbody className="orderbook orderbook-bottom">
-                                        {bidRows}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {totalBidsLength > 13 ? (
+
+                        <div className={classnames("small-12 medium-6", this.state.flip ? "order-2" : "order-1")}>
+                            <div className="exchange-bordered">
+                                <div className="exchange-content-header">
+                                    <Translate content="exchange.bids" />
+                                    {!this.state.flip ? (
+                                    <span>
+                                        <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
+                                        <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
+                                    </span>) : null}
+                                    <div style={{lineHeight: "24px", paddingRight: 10}} className="float-right header-sub-title">
+                                        <Translate content="exchange.total" />
+                                        <span>: </span>
+                                        {utils.format_number(totalBidValue, base.get("precision"))}
+                                        <span> ({baseSymbol})</span>
+                                    </div>
+                                </div>
+                                <table className="table order-table table-hover text-right market-right-padding">
+                                    <thead>
+                                        <tr key="top-header" className="top-header">
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
+                                        </tr>
+                                    </thead>
+                                </table>    
+                                <div className="grid-block market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 300}}>
+                                    <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
+                                        <tbody className="orderbook orderbook-bottom">
+                                            {bidRows}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {totalBidsLength > 13 ? (
                                 <div className="orderbook-showall">
                                     <div onClick={this._onToggleShowAll.bind(this, "bids")} className="button outline ">
                                         <Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} />
                                         {!showAllBids ? <span> ({totalBidsLength})</span> : null}
                                     </div>
                                 </div>) : null}
+                            </div>
                         </div>
                     </div>
             );
