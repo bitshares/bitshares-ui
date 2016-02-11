@@ -28,8 +28,15 @@ class AddressIndex {
     */
     add( pubkeys ) {
         
+        pubkeys = List(pubkeys)
+        if( ! pubkeys.size )
+            return Promise.resolve()
+        
         let addresses = this.storage.getState()
-        pubkeys = List(pubkeys).filterNot( pubkey => addresses.has(pubkey))
+        pubkeys = pubkeys.filterNot( pubkey => addresses.has(pubkey))
+        if( ! pubkeys.size )
+            return Promise.resolve()
+        
         this.indexing = true
         try {
             var AddressIndexWorker = require("worker!./AddressIndexWorker")
@@ -53,25 +60,32 @@ class AddressIndex {
                         this.storage.setState( addresses )
                         resolve()
                     } catch( e ) {
-                        console.error('AddressIndex.add', e)
+                        this.indexing = false
+                        console.error("AddressIndexWorker.add.onmessage", e, "stack", e.stack)
                         reject(e)
                     }
                 }
             })
         } catch( error ) {
             // nodejs
-            pubkeys.forEach( pubkey => {
-                var address_array = key.addresses(pubkey)// S L O W
-                addresses = addresses.set(pubkey, List(address_array))
-            })
-            this.storage.setState( addresses )
+            try {
+                this.indexing = true
+                pubkeys.forEach( pubkey => {
+                    var address_array = key.addresses(pubkey)// S L O W
+                    addresses = addresses.set(pubkey, List(address_array))
+                })
+                this.storage.setState( addresses )
+            } catch( error ) {
+                console.error('AddressIndex.add', e, "stack", e.stack)
+                return Promise.reject( error )
+            }
             this.indexing = false
             return Promise.resolve()
         }
         
     }
     
-    getPublicKey( address ) {
+    getPubkey( address ) {
         let array = this.storage.state
             .findEntry( addresses => addresses.includes(address))
         

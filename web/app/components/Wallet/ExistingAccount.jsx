@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import {RouteHandler, Link} from "react-router";
 import connectToStores from "alt/utils/connectToStores";
-import WalletManagerStore from "stores/WalletManagerStore";
+import WalletDb from "stores/WalletDb";
 import BalanceClaimActive from "components/Wallet/BalanceClaimActive";
 import Translate from "react-translate-component";
 
 class ExistingAccountBaseComponent extends Component {
     static getStores() {
-        return [WalletManagerStore]
+        return [WalletDb]
     }
 
     static getPropsFromStores() {
-        var wallet = WalletManagerStore.getState()
+        var wallet = WalletDb.getState()
         return {wallet}
     }
 }

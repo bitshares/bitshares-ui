@@ -75,10 +75,10 @@ export default class ImportKeys extends Component {
     }
     
     render() {
-        return <WalletUnlock>{ this.main() }</WalletUnlock>
+        return <WalletUnlock>{ this.render_unlocked() }</WalletUnlock>
     }
     
-    main() {
+    render_unlocked() {
         var keys_to_account = this.state.keys_to_account
         var key_count = Object.keys(keys_to_account).length
         var account_keycount = this.getImportAccountKeyCount(keys_to_account)
@@ -635,7 +635,7 @@ export default class ImportKeys extends Component {
             var {account_names, public_key_string} = keys_to_account[private_plainhex]
             private_key_objs.push({
                 private_wif: PrivateKey.fromHex(private_plainhex).toWif(),
-                import_account_names: account_names.join(", "),
+                import_account_names: account_names.length ? account_names.join(", ") : undefined,
                 public_key: public_key_string
             })
         }

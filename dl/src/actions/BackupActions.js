@@ -91,7 +91,8 @@ export function createWalletBackup(
         })
     })
 }
-
+// import { WalletActions } from "@graphene/wallet-client"
+// let { encrypt, decrypt } = WalletActions
 export function decryptWalletBackup(backup_wif, backup_buffer) {
     return new Promise( (resolve, reject) => {
         if( ! Buffer.isBuffer(backup_buffer))

@@ -8,25 +8,35 @@ import assert from "assert"
 /**
     Serilizable persisterent state (JSON serilizable types only).
 */
-const inital_persistent_state = fromJS({
+const persistent_state = fromJS({
     
-    // True to stay in sync with the server (boolean)
-    remote_copy: undefined,
+    // ISO creation Date string from the browser
+    created: undefined,
     
-    // An emailed token used to create a wallet for the 1st time (base58)
-    remote_token: null,
+    // Initially same as `created`
+    last_modified: undefined,
     
-    // Server's REST URL
-    remote_url: null,
-    
-    // This is the last encrypted_wallet hash that was saved on the server (base64)
-    remote_hash: null,
+    // ISO Date of last binary backup download
+    backup_date: undefined,
     
     // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not nearly random enough for this to be public).
     secret_encryption_pubkey: null,
     
     // Wallet JSON string encrypted using the private key derived from email+username+password (base64)
     encrypted_wallet: null,
+    
+    // Server's REST URL
+    remote_url: null,
+    
+    // This is the last encrypted_wallet hash that was saved on the server (base64)
+    // True to stay in sync with the server (boolean)
+    remote_copy: undefined,
+    
+    // An emailed token used to create a wallet for the 1st time (base58)
+    remote_token: null,
+    
+    // Last remote hash found on the server for this wallet
+    remote_hash: null,
     
     // ISO Date string from the server
     remote_created_date: null,
@@ -71,10 +81,10 @@ export default class WalletStorage {
         this.wallet_object = Map()
         this.storage = storage
         this.subscribers = Map()
-        if( this.storage.state.isEmpty() ) {
-            // If storage were async, set this.local_status would be set upon completion
-            storage.setState( inital_persistent_state )
-        }
+        // if( this.storage.state.isEmpty() ) {
+        //     // If storage were async, set this.local_status would be set upon completion
+        //     storage.setState( inital_persistent_state )
+        // }
         this.local_status = null
         
         // enable the backup server if one is configured (see useBackupServer)
@@ -94,7 +104,7 @@ export default class WalletStorage {
     }
     
     isEmpty() {
-        return this.storage.state.isEmpty() || is(this.storage.state, inital_persistent_state)
+        return this.storage.state.isEmpty()// || is(this.storage.state, inital_persistent_state)
     }
     
     /**

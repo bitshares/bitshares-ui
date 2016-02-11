@@ -7,5 +7,5 @@ onmessage = function(event) { try {
     var results = []
     for(let pubkey of pubkeys) results.push( key.addresses(pubkey, address_prefix) )
     postMessage( results )
-    console.log("AddressIndexWorker done");
+    console.log("AddressIndexWorker done\t", results.length);
 } catch( e ) { console.error("AddressIndexWorker", e) } }

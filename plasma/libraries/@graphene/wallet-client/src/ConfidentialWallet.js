@@ -25,7 +25,7 @@ let Long = ByteBuffer.Long
                 import_account_names: t.maybe(t.Arr),
                 brainkey_sequence: t.maybe(t.Num),
                 private_wif: t.Str, // was: encrypted_key: t.Str
-                index_address: false // Mark legacy keys for address indexing (addresses are calculated outside of this wallet backup)  
+                index_address: undefined|true // Mark legacy keys for address indexing (addresses are calculated outside of this wallet backup)  
             }
         }
     })
@@ -46,7 +46,7 @@ export default class ConfidentialWallet {
         // BTS 1.0 addresses for shorts and balance claims
         // Update the index if needed
         AddressIndex.add( this.keys()
-            .reduce( (r, pubkey, key) => key.has("index_address") ? r.add(pubkey) : r, List())
+            .reduce( (r, key, pubkey) => key.get("index_address") ? r.add(pubkey) : r, List())
         )
         
         // semi-private methods (outside of this API)
@@ -1070,7 +1070,7 @@ function getPubkeys_having_PrivateKey( pubkeys, addys = null ) {
     }
     if(addys) {
         for (let addy of addys) {
-            let pubkey = AddressIndex.getPublicKey(addy)
+            let pubkey = AddressIndex.getPubkey(addy)
             return_pubkeys.push(pubkey)
         }
     }

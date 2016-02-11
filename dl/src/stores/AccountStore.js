@@ -359,10 +359,9 @@ function addressThreshold(authority) {
     var required = authority.get("weight_threshold")
     var address_auths = authority.get("address_auths")
     if( ! address_auths.size) return "none"
-    var addresses = AddressIndex.getState().addresses
     for (let k of address_auths) {
         var address = k.get(0)
-        var pubkey = addresses.get(address)
+        var pubkey = AddressIndex.getPubkey(address)
         if (WalletDb.keys().has(pubkey)) {
             available += k.get(1)
         }

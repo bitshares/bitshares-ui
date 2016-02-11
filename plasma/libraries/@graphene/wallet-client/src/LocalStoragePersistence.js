@@ -14,9 +14,11 @@ export default class LocalStoragePersistence {
         @arg {boolean} [saveToDisk = true] - Should operations also update the disk?  Calls to this.clear() or this.setState() (for example) will operate on RAM (false) or RAM and disk (true).
     */
     constructor(namespace, saveToDisk = true) {
+        
         if( ! /[a-z0-9_-]+/i.test( namespace )) throw new TypeError(
             "@arg {string} namespace unique to each wallet.  Must match /[a-z0-9_-]+/i.")
-        const key = "LocalStoragePersistence::" + this.namespace
+        
+        const key = "LocalStoragePersistence::" + namespace
         this.STATE = key
         this.saveToDisk = saveToDisk
         let stateStr = localStorage.getItem(this.STATE)

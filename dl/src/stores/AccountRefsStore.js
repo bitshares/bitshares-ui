@@ -55,8 +55,12 @@ class AccountRefsStore extends BaseStore {
 export default alt.createStore(AccountRefsStore, "AccountRefsStore")
 
 function updateNoAccountRefs() {
-    var no_account_refs = this.no_account_refs
+    
+    if(! WalletDb.getState().wallet)
+        return
+    
     var account_refs = Immutable.Set()
+    var no_account_refs = this.no_account_refs
     WalletDb.keys().forEach( (key, pubkey) => {
         if(no_account_refs.has(pubkey)) return
         var refs = ChainStore.getAccountRefsOfKey(pubkey)

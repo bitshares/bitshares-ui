@@ -1,6 +1,7 @@
 module.exports = {
-    WalletStorage: require('./src/WalletStorage'),
     ConfidentialWallet: require('./src/ConfidentialWallet'),
+    WalletActions: require('./src/WalletActions'),
+    WalletStorage: require('./src/WalletStorage'),
     AddressIndex: require('./src/AddressIndex'),
-    LocalStoragePersistence: require('./src/LocalStoragePersistence')
+    LocalStoragePersistence: require('./src/LocalStoragePersistence'),
 }

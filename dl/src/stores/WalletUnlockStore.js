@@ -10,7 +10,7 @@ class WalletUnlockStore {
     
     constructor() {
         this.bindActions(WalletUnlockActions)
-        // this.state = {locked: true}
+        this.state = {locked: true}
 
         this.walletLockTimeout = 60 * 10; // seconds (10 minutes)
         this.timeout = null;

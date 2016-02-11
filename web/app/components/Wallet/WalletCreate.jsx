@@ -5,7 +5,6 @@ import {BackupRestore} from "components/Wallet/Backup"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import PasswordConfirm from "components/Wallet/PasswordConfirm"
 import WalletDb from "stores/WalletDb"
-import WalletManagerStore from "stores/WalletManagerStore"
 import WalletActions from "actions/WalletActions"
 import NotificationSystem from 'react-notification-system'
 import notify from 'actions/NotificationActions'
@@ -17,7 +16,7 @@ import cname from "classnames"
 class WalletCreate extends Component {
 
     static getStores() {
-        return [WalletManagerStore];
+        return [WalletDb];
     }
     
     static getPropsFromStores() {
@@ -39,11 +38,11 @@ class WalletCreate extends Component {
 class CreateNewWallet extends Component {
     
     static getStores() {
-        return [WalletManagerStore]
+        return [WalletDb]
     }
     
     static getPropsFromStores() {
-        var wallet = WalletManagerStore.getState()
+        var wallet = WalletDb.getState()
         return wallet
     }
     
@@ -167,9 +166,9 @@ class CreateNewWallet extends Component {
     validate() {
         let state = this.state
         let errors = state.errors
-        let wallet_names = WalletManagerStore.getState().wallet_names
+        let wallet_names = WalletDb.getState().wallet_names
         errors.wallet_public_name =
-            wallet_names.has(state.wallet_public_name) && WalletDb.hasDiskWallet(state.wallet_public_name) ?
+            wallet_names.has(state.wallet_public_name)/* && WalletDb.hasDiskWallet(state.wallet_public_name)*/ ?
             `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name` :
             null
         

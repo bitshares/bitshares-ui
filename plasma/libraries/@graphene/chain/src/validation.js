@@ -43,7 +43,9 @@ export function is_object_id(obj_id) {
     return (match !== null && obj_id.split(".").length === 3)
 }
 
-let is_empty = value => value == null || value.length === 0
+export function is_empty(value) {
+    return value == null || value.length === 0
+}
 
 export function is_account_name_error(value, allow_too_short) {
     var i, label, len, length, ref, suffix;

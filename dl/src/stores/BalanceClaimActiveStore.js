@@ -74,7 +74,6 @@ class BalanceClaimActiveStore extends BaseStore {
     
     // param: Immutable Seq or array
     onSetPubkeys(pubkeys) {
-
         if( Array.isArray( pubkeys )) pubkeys = Immutable.Seq( pubkeys )
         if(this.pubkeys && this.pubkeys.equals( pubkeys )) return
         this.reset()

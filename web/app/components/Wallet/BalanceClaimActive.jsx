@@ -45,15 +45,11 @@ export default class BalanceClaimActive extends Component {
     }    
    
     render() {
-        return <WalletUnlock>{ this.main() }</WalletUnlock>
-    }
-
-    main() {
         
         if( !this.props.account_refs.size) {
             return (
                 <div>
-                    <h5><Translate content="wallet.no_balance" /></h5>
+                    <h5><WalletUnlock><Translate content="wallet.no_balance" /></WalletUnlock></h5>
                 </div>
             );
         }
@@ -72,7 +68,7 @@ export default class BalanceClaimActive extends Component {
         if( !this.props.balances || !this.props.balances.size) {
             return (
                 <div>
-                    <h5><Translate content="wallet.no_balance" /></h5>
+                    <h5><WalletUnlock><Translate content="wallet.no_balance" /></WalletUnlock></h5>
                 </div>
             );
         }
@@ -122,7 +118,7 @@ export default class BalanceClaimActive extends Component {
         WalletActions.importBalance( this.props.claim_account_name,
             this.props.selected_balances, true //broadcast
         ).catch((error)=> {
-            console.error("claimBalance", error)
+            console.error("claimBalance", error, "stack", error.stack)
             var message = error
             try { message = error.data.message } catch(e) {}
             notify.error("Error claiming balance: " + message)

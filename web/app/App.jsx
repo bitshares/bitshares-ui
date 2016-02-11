@@ -52,7 +52,6 @@ import Invoice from "./components/Transfer/Invoice";
 import { ChainStore } from "@graphene/chain";
 import {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
-import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
@@ -236,31 +235,32 @@ let willTransitionTo = (nextState, replaceState, callback) => {
     
     Apis.instance().init_promise.then(() => {
         
-        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
-        return db.then(() => {
+        let idb = window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB;
+        
+        return iDB.init_instance( idb ).init_promise.then(() => {
             
             console.log("db init done");
             
             return Promise.resolve()
             .then(()=> WalletDb.loadDbData())
             .then(()=> AccountRefsStore.loadDbData())
-            .then(()=> {
-                if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
-                    replaceState(null, "/create-account");
-                }
-                if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                    replaceState(null, "/dashboard");
-                }
-            }).catch((error) => {
-                console.error("----- WalletDb.willTransitionTo error ----->", error);
+            // .then(()=> {
+            //     if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
+            //         replaceState(null, "/create-account");
+            //     }
+            //     if (nextState.location.pathname.indexOf("/auth/") === 0) {
+            //         replaceState(null, "/dashboard");
+            //     }
+            // })
+            .catch((error) => {
+                console.error("----- WalletDb.willTransitionTo app error ----->", error, "stack", error.stack);
             })
-            .then(()=> WalletManagerStore.init())
             .then(()=> callback());
             
         });
         
     }).catch( error => {
-        console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
+        console.error("----- App.willTransitionTo database error ----->", error, "stack", error.stack);
         if(error.name === "InvalidStateError") {
             alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
         } else {

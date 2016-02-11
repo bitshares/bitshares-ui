@@ -149,7 +149,8 @@ class WalletActions {
             
             var p = Promise.all([ unlock, plookup ]).then( ()=> {
                 var account = account_lookup.resolve
-                //DEBUG console.log('... account',account)
+                //DEBUG 
+                console.log('... account',account)
                 if(account == void 0)
                     return Promise.reject("Unknown account " + account_name_or_id)
                 

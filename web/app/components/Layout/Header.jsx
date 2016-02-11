@@ -9,10 +9,9 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
-import WalletManagerStore from "stores/WalletManagerStore";
+import WalletDb from "stores/WalletDb";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import Immutable from "immutable";
@@ -21,7 +20,7 @@ import Immutable from "immutable";
 class Header extends React.Component {
 
     static getStores() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore]
+        return [AccountStore, WalletUnlockStore, WalletDb, SettingsStore]
     }
 
     static getPropsFromStores() {
@@ -30,8 +29,8 @@ class Header extends React.Component {
         return {
             linkedAccounts: account_store.linkedAccounts,
             currentAccount: account_store.currentAccount,
-            locked: WalletUnlockStore.getState().locked,
-            current_wallet: WalletManagerStore.getState().current_wallet,
+            locked: WalletDb.isLocked(),
+            current_wallet: WalletDb.getState().current_wallet,
             lastMarket: settings_store.viewSettings.get("lastMarket"),
             starredAccounts: settings_store.starredAccounts,
             multiAccountMode: settings_store.settings.get("multiAccountMode")

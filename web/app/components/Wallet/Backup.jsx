@@ -7,8 +7,8 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletActions from "actions/WalletActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletManagerStore from "stores/WalletManagerStore"
-import BackupStore from "stores/BackupStore"
 import WalletDb from "stores/WalletDb"
+import BackupStore from "stores/BackupStore"
 import BackupActions, {backup, restore, decryptWalletBackup} from "actions/BackupActions"
 import notify from "actions/NotificationActions"
 import {saveAs} from "common/filesaver.js"
@@ -20,11 +20,14 @@ import { chain_config } from "@graphene/chain"
 class BackupBaseComponent extends Component {
     
     static getStores() {
-        return [WalletManagerStore, BackupStore]
+        return [WalletManagerStore, WalletDb, BackupStore]
     }
     
     static getPropsFromStores() {
         var wallet = WalletManagerStore.getState()
+        var ww = WalletDb.getState()
+        wallet.current_wallet = ww.current_wallet
+        wallet.wallet_names = ww.wallet_names
         var backup = BackupStore.getState()
         return { wallet, backup }
     }
@@ -286,13 +289,13 @@ class Create extends BackupBaseComponent {
 class LastBackupDate extends Component {
     render() {
         var backup_date = WalletDb.getWallet().backup_date
-        var last_modified = WalletDb.getWallet().last_modified
+        var last_modified = new Date(WalletDb.getWallet().last_modified)
         var backup_time = backup_date ?
             <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
             <h4><Translate content="wallet.never_backed_up" /></h4>
         var needs_backup = null
         if( backup_date ) {
-            needs_backup = last_modified.getTime() > backup_date.getTime() ?
+            needs_backup = last_modified.getTime() > new Date(backup_date).getTime() ?
                 <h4><Translate content="wallet.need_backup" /></h4>:
                 <h4 className="success"><Translate content="wallet.noneed_backup" /></h4>
         }

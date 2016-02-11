@@ -24,30 +24,30 @@ let Block = t.struct({
     witness_signature: t.Str
 }, "Block");
 
-let WalletTcomb = t.struct({
-    public_name: t.Str,
-    created: t.Dat,
-    last_modified: t.Dat,
-    backup_date: t.maybe(t.Dat),
-    password_pubkey: t.Str,
-    encryption_key: t.Str,
-    encrypted_brainkey: t.maybe(t.Str),
-    brainkey_pubkey: t.Str,
-    brainkey_sequence: t.Num,
-    brainkey_backup_date: t.maybe(t.Dat),
-    deposit_keys: t.maybe(t.Obj),
-    // password_checksum: t.Str,
-    chain_id: t.Str
-}, "WalletTcomb");
-
-let PrivateKeyTcomb = t.struct({
-    id: t.maybe(t.Num),
-    pubkey: t.Str,
-    label: t.maybe(t.Str),
-    import_account_names: t.maybe(t.Arr),
-    brainkey_sequence: t.maybe(t.Num),
-    encrypted_key: t.Str
-}, "PrivateKeyTcomb");
+// let WalletTcomb = t.struct({
+//     public_name: t.Str,
+//     created: t.Dat,
+//     last_modified: t.Dat,
+//     backup_date: t.maybe(t.Dat),
+//     password_pubkey: t.Str,
+//     encryption_key: t.Str,
+//     encrypted_brainkey: t.maybe(t.Str),
+//     brainkey_pubkey: t.Str,
+//     brainkey_sequence: t.Num,
+//     brainkey_backup_date: t.maybe(t.Dat),
+//     deposit_keys: t.maybe(t.Obj),
+//     // password_checksum: t.Str,
+//     chain_id: t.Str
+// }, "WalletTcomb");
+// 
+// let PrivateKeyTcomb = t.struct({
+//     id: t.maybe(t.Num),
+//     pubkey: t.Str,
+//     label: t.maybe(t.Str),
+//     import_account_names: t.maybe(t.Arr),
+//     brainkey_sequence: t.maybe(t.Num),
+//     encrypted_key: t.Str
+// }, "PrivateKeyTcomb");
 
 //let PublicKeyTcomb = t.struct({
 //    id: t.maybe(t.Num),
@@ -89,9 +89,9 @@ let CallOrder = t.struct({
 module.exports = {
     Asset: Asset,
     Block: Block,
-    WalletTcomb: WalletTcomb,
+    // WalletTcomb: WalletTcomb,
     //PublicKeyTcomb: PublicKeyTcomb,
-    PrivateKeyTcomb: PrivateKeyTcomb,
+    // PrivateKeyTcomb: PrivateKeyTcomb,
     LimitOrder: LimitOrder,
     ShortOrder: ShortOrder,
     CallOrder: CallOrder,
