@@ -368,15 +368,11 @@ export default class ConfidentialWallet {
             
             return Promise.all(promises).then(()=>{
                 
-                let p
                 let cr = confirmation_receipts(confirm.outputs)
-                if( broadcast ) {
-                    // make sure the receipts are stored first before broadcasting
-                    let name = account.get("name")
-                    p = this.receiveBlindTransfer( cr, "@"+name, "from @"+name )
-                }
+                let name = account.get("name")
                 
-                return (p ? p : Promise.resolve())
+                return Promise.resolve()
+                .then( ()=> this.receiveBlindTransfer( cr, "@"+name, "from @"+name ))
                 .then( ()=> Apis.crypto("blind_sum", blinding_factors, blinding_factors.length) )
                 .then( res => bop.blinding_factor = res )
                 .then( ()=>{
@@ -621,7 +617,7 @@ export default class ConfidentialWallet {
                     ).then( tr => {
                         conf.trx = tr
                         if( has_change )
-                            conf.confirmation_receipt = conf.confirmation_receipts[0]
+                            conf.change_receipt = conf.confirmation_receipts[0]
                         
                         delete conf.confirmation_receipts
                         return conf
@@ -653,7 +649,11 @@ export default class ConfidentialWallet {
             return this.blind_transfer_help(from_key_or_label, to_key_or_label, amount, asset_symbol, broadcast)
             .then( conf =>{
                 // Their may or may not be a change receipt.  Always return the last receipt
-                conf.confirmation_receipt = conf.confirmation_receipts[conf.confirmation_receipts.length - 1]
+                let cs = conf.confirmation_receipts
+                if(cs.length === 2)
+                    conf.change_receipt = cs[0]
+                
+                conf.confirmation_receipt = cs[ cs.length - 1 ] // the last one
                 delete conf.confirmation_receipts
                 return conf
             })
@@ -949,7 +949,7 @@ function blind_transfer_help(
                         let cr = confirmation_receipts(confirm.outputs)
 
                         let p1
-                        if( broadcast ) {
+                        if( ! to_temp ) {
                             // make sure the receipts are stored first before broadcasting
                             p1 = this.receiveBlindTransfer(cr, from_key_or_label)
                         }

@@ -136,10 +136,11 @@ describe('Confidential wallet', () => {
             .then( () => cw.getBlindBalances("bob") )
             .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "10" + "00000" }, "bob") )
         
-        // Test blindHistory
+        // blindHistory
         .then( ()=> cw.blindHistory("alice") )
         .then( receipts => assert.equal(receipts.size, 2, "alice receipt(s)") )
             
+        // blindHistory
         .then( ()=> cw.blindHistory("bob") )
         .then( receipts => assert.equal(receipts.size, 1, "bob receipt(s)") )
             
@@ -157,7 +158,8 @@ describe('Confidential wallet', () => {
         
         // must wait for a blocks...
         this.timeout(40 * 1000)
-    
+        let tx
+        
         return Promise.resolve()
         
         // single blind address (for preparation)
@@ -167,16 +169,18 @@ describe('Confidential wallet', () => {
             .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "60" + "00000" }) )
         
         // blind to account (with change)
-        .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) )
-        .then( tx => assert(tx.confirmation_receipt, "alice's unspent change confirmation_receipt"))
+        .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) ).then(t => tx = t)
+        .then( ()=> assert( ! tx.confirmation_receipt, "confirmation_receipt"))
+        .then( ()=> assert( tx.change_receipt, "change_receipt"))
         // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )// FIXME fee should be 20
             
             .then( () => cw.getBlindBalances("alice") )
             .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "30" + "00000" }, "alice") )
         
         // blind to account (without change)
-        .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) )
-        .then( tx => assert( ! tx.confirmation_receipt, "alice has unspent change confirmation_receipt"))
+        .then( ()=> cw.transferFromBlind("alice", "nathan", 10, "CORE", true) ).then(t => tx = t)
+        .then( ()=> assert( ! tx.confirmation_receipt, "confirmation_receipt"))
+        .then( ()=> assert( ! tx.change_receipt, "change_receipt"))
         // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )// FIXME fee should be 20
             
             .then( () => cw.getBlindBalances("alice") )
@@ -196,6 +200,8 @@ describe('Confidential wallet', () => {
         // must wait for a blocks...
         this.timeout(30 * 1000)
         
+        let tx
+        
         return Promise.resolve()
             
         // do this just to get some money
@@ -203,9 +209,10 @@ describe('Confidential wallet', () => {
         .then( tx => assert(tx.outputs, "tx.outputs") )
         
         // blind to blind (with change)
-        .then( ()=> cw.blindTransfer("alice", "bob", 5, "CORE", true) )
-        // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )
-        .then( tx => assert(tx.confirmation_receipt, "confirmation_receipt"))
+        .then( ()=> cw.blindTransfer("alice", "bob", 5, "CORE", true) ).then(t => tx = t)
+        .then( ()=> assert.equal(tx.fee.amount, 15 * 100000, "fee") )
+        .then( ()=> assert(tx.confirmation_receipt, "confirmation_receipt"))
+        .then( ()=> assert(tx.change_receipt, "change_receipt"))
         
             .then( () => cw.getBlindBalances("alice") )
             .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "20" + "00000" }) )
@@ -214,9 +221,10 @@ describe('Confidential wallet', () => {
             .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "5" + "00000" }) )
         
         // blind to blind (without change)
-        .then( ()=> cw.blindTransfer("alice", "bob", 5, "CORE", true) )
-        .then( tx => assert(tx.confirmation_receipt, "confirmation_receipt"))
-        // .then( tx => assert.equal(tx.fee.amount, 15 * 100000, "fee") )
+        .then( ()=> cw.blindTransfer("alice", "bob", 5, "CORE", true) ).then(t => tx = t)
+        .then( ()=> assert.equal(tx.fee.amount, 15 * 100000, "fee") )
+        .then( ()=> assert(tx.confirmation_receipt, "confirmation_receipt"))
+        .then( ()=> assert( ! tx.change_receipt, "change_receipt"))
         
             .then( () => cw.getBlindBalances("alice") )
             .then( balances => assert.deepEqual(balances.toJS(), {}) )
