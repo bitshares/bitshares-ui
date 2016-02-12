@@ -46,7 +46,7 @@ class AccountActions {
     }
 
     /**
-     *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
+     *  TODO:  This is a function of the wallet_api and has no business being part of AccountActions
      */
     transfer(from_account, to_account, amount, asset, memo, propose_account, fee_asset_id = "1.3.0") {
         try {
@@ -65,7 +65,7 @@ class AccountActions {
     }
     
     /**
-     *  This method exists ont he AccountActions because after creating the account via the wallet, the account needs
+     *  This method exists on the AccountActions because after creating the account via the wallet, the account needs
      *  to be linked and added to the local database.
      */
     createAccount(

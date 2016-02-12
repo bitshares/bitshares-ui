@@ -439,6 +439,10 @@ class ChainStore
     *  @return the account object if it does exist
     */
    getAccount( name_or_id ) {
+      
+      if( !name_or_id )
+         return null
+      
       if( typeof name_or_id === 'object' )
       {
          if( name_or_id.id ) return this.getAccount( name_or_id.id );

@@ -46,9 +46,10 @@ export default class TransactionBuilder {
         
         @arg {boolean} [broadcast = false]
     */
-    process_transaction(cwallet, signer_pubkeys = null, broadcast = false, confirm = null) {
+    process_transaction(cwallet, signer_pubkeys = null, broadcast = false) {
 
         let wallet_object = cwallet.wallet.wallet_object
+        // FIXME
         // if(Apis.instance().chain_id !== wallet_object.get("chain_id"))
         //     return Promise.reject("Mismatched chain_id; expecting " +
         //         wallet_object.get("chain_id") + ", but got " +
@@ -112,19 +113,18 @@ export default class TransactionBuilder {
                 this.ref_block_num = r[0].head_block_number & 0xFFFF;
                 this.ref_block_prefix =  new Buffer(r[0].head_block_id, 'hex').readUInt32LE(4);
                 //DEBUG console.log("ref_block",@ref_block_num,@ref_block_prefix,r)
-                return lookup.resolve().then(()=> {
-                    var iterable = this.operations;
-                    for (var i = 0, op; i < iterable.length; i++) {
-                        op = iterable[i];
-                        if (op[1]["finalize"]) {
-                            op[1].finalize();
-                        }
+                
+                var iterable = this.operations;
+                for (var i = 0, op; i < iterable.length; i++) {
+                    op = iterable[i];
+                    if (op[1]["finalize"]) {
+                        op[1].finalize();
                     }
-                    this.tr_buffer = ops.transaction.toBuffer(this);
-                    return;
-                });
+                }
+                this.tr_buffer = ops.transaction.toBuffer(this);
+                
             }));
-            return;
+            
         });
     }
     

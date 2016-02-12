@@ -1,6 +1,6 @@
 import { ops } from "@graphene/serializer"
 import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
-import { TransactionBuilder, lookup, transaction_helper } from "@graphene/chain"
+import { TransactionBuilder, fetchChain, transaction_helper } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain";
 
 import assert from "assert"
@@ -15,24 +15,33 @@ class ApplicationApi {
         owner_pubkey,
         active_pubkey,
         new_account_name,
-        registrar_id,
-        referrer_id,
+        registrar,
+        referrer,
         referrer_percent,
         broadcast = false
     ) {
-        var tr = new TransactionBuilder();
-        assert(registrar_id, "registrar_id")
-        assert(referrer_id, "referrer_id")
-        var _registrar = lookup.account_id(registrar_id)
-        var _referrer = lookup.account_id(referrer_id)
-        return lookup.resolve().then(()=> {
+        
+        assert(registrar, "registrar")
+        assert(referrer, "referrer")
+        
+        return Promise.all([
+            fetchChain("getAccount", registrar),
+            fetchChain("getAccount", referrer),
+        ])
+        .then( res => {
+            let [ chain_registrar, chain_referrer ] = res
+            
+            assert(chain_registrar, "missing registrar: " + registrar)
+            assert(chain_referrer, "missing referrer: " + referrer)
+            
+            var tr = new TransactionBuilder();
             tr.add_type_operation("account_create", {
                 fee: {
                     amount: 0,
                     asset_id: 0
                 },
-                "registrar": _registrar.resolve,
-                "referrer": _referrer.resolve,
+                "registrar": registrar.get("id"),
+                "referrer": referrer.get("id"),
                 "referrer_percent": referrer_percent,
                 "name": new_account_name,
                 "owner": {
@@ -55,11 +64,7 @@ class ApplicationApi {
                     "votes": [ ]
                 }
             })
-            return WalletDb.process_transaction(
-                tr,
-                null, //signer_private_keys,
-                broadcast
-            )
+            return WalletDb.process_transaction( tr, null /*signer_private_keys*/, broadcast )
         })
     }
     
@@ -75,54 +80,84 @@ class ApplicationApi {
         broadcast = true,
         encrypt_memo = true,
         optional_nonce = null,
-        sign = true,
+        // sign = true,
         propose_account = null,
         fee_asset_id = "1.3.0"
     }) {
+        
         var memo_sender = propose_account || from_account
-        var memo_from_public, memo_to_public
-        if( memo && encrypt_memo  ) {
-            memo_from_public = lookup.memo_public_key(memo_sender)
-            memo_to_public = lookup.memo_public_key(to_account)
-        }
-        var asset_id_lookup = lookup.asset_id(asset)
-        var propose_acount_id = propose_account ? lookup.account_id(propose_account) : null
-        var lookup_promise = lookup.resolve()
-        var unlock_promise = WalletUnlockActions.unlock()
-        return Promise.all([lookup_promise, unlock_promise]).then(()=> {
-            var asset_id = asset_id_lookup.resolve
-            if( propose_account ) propose_acount_id = propose_acount_id.resolve
+        
+        // var unlock_promise = WalletUnlockActions.unlock()
+        
+        return Promise.all([
+            fetchChain("getAccount", from_account),
+            fetchChain("getAccount", to_account),
+            fetchChain("getAccount", memo_sender),
+            fetchChain("getAccount", propose_account),
+            fetchChain("getAsset", asset),
+            fetchChain("getAsset", fee_asset_id)
+        ])
+        .then( res => {
+            
+            let [
+                chain_from, chain_to, chain_memo_sender, chain_propose_account,
+                chain_asset, chain_fee_asset
+            ] = res
+            
+            assert(chain_from, "missing from_account: " + from_account)
+            assert(chain_to, "missing to_account: " + to_account)
+            assert(chain_asset, "missing asset: " + chain_asset)
+            
+            assert( !propose_account || chain_propose_account, "missing propose_account: " + propose_account)
+            var propose_acount_id = propose_account ? chain_propose_account.get("id") : null
+            
+            var memo_from_public, memo_to_public
+            if( memo && encrypt_memo  ) {
+                
+                memo_from_public = chain_memo_sender.getIn(["options","memo_key"])
+                
+                // The 1s are base58 for all zeros (null)
+                if( /111111111111111111111/.test(memo_from_public))
+                    memo_from_public = null
+                    
+                memo_to_public = chain_to.getIn(["options","memo_key"])
+                if( /111111111111111111111/.test(memo_to_public))
+                    memo_to_public = null
+            }
+            
             var memo_from_privkey
             if(encrypt_memo && memo ) {
-                var from_public = memo_from_public.resolve
                 memo_from_privkey =
-                    WalletDb.getPrivateKey(from_public)
+                    WalletDb.getPrivateKey(memo_from_public)
                 
                 if(! memo_from_privkey)
                     throw new Error("Missing private memo key for sender: " + memo_sender)
             }
+            
             var memo_object
-            if(memo && memo_to_public.resolve && memo_from_public.resolve) {
+            if(memo && memo_to_public && memo_from_public) {
+                
                 var nonce = optional_nonce == null ?
-                    helper.unique_nonce_uint64() :
+                    transaction_helper.unique_nonce_uint64() :
                     optional_nonce
                 
                 memo_object = {
-                    from: memo_from_public.resolve,
-                    to: memo_to_public.resolve,
+                    from: memo_from_public,
+                    to: memo_to_public,
                     nonce,
                     message: (encrypt_memo) ?
                         Aes.encrypt_with_checksum(
                             memo_from_privkey,
-                            memo_to_public.resolve,
+                            memo_to_public,
                             nonce,
                             memo
                         ) :
                         Buffer.isBuffer(memo) ? memo.toString("utf-8") : memo
                 }
             }
-            let fee_asset = ChainStore.getAsset( fee_asset_id ).toJS();
-            // let fee_asset_id = asset_id;
+            
+            // Allow user to choose asset with which to pay fees #356
+            let fee_asset = chain_fee_asset.toJS();
             if( fee_asset.options.core_exchange_rate.base.asset_id == "1.3.0" &&
                 fee_asset.options.core_exchange_rate.quote.asset_id == "1.3.0" )
                fee_asset_id = "1.3.0";
@@ -133,11 +168,12 @@ class ApplicationApi {
                     amount: 0,
                     asset_id: fee_asset_id
                 },
-                from: lookup.account_id(from_account),
-                to: lookup.account_id(to_account),
-                amount: { amount, asset_id}, //lookup.asset_id(
+                from: chain_from.get("id"),
+                to: chain_to.get("id"),
+                amount: { amount, asset_id: chain_asset.get("id") },
                 memo: memo_object
             })
+            
             if( propose_account )
                 tr.add_type_operation("proposal_create", {
                     proposed_ops: [{ op: transfer_op }],
@@ -146,13 +182,11 @@ class ApplicationApi {
             else
                 tr.add_operation( transfer_op )
             
-            return WalletDb.process_transaction(
-                tr,
-                null, //signer_private_keys,
-                broadcast,
-                sign
-            )
+            return WalletDb.process_transaction( tr, null /*signer_private_keys*/, broadcast )
+            
         })
+        
+        
     }
 
 }

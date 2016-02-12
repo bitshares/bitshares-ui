@@ -15,7 +15,6 @@ module.exports = {
     transaction_helper: require("./src/transaction_helper"),
     validation: require("./src/validation"),
     chain_config: require("./src/config"),
-    lookup: require("./src/lookup"),
     
     /** Helper function for FetchChainObjects */
     fetchChain: (methodName, objectIds, timeout = 1900) => {

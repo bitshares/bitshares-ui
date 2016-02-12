@@ -142,17 +142,10 @@ class WalletActions {
             
             var db = Apis.instance().db_api()
             var address_publickey_map = {}
-            
             var account_lookup = fetchChain("getAccount", account_name_or_id)
-            // var account_lookup = lookup.account_id(account_name_or_id)
-            // var unlock = WalletUnlockActions.unlock()
-            // var plookup = lookup.resolve()
-            
-            // var p = Promise.all([ unlock, plookup ]).then( ()=> {
+
             var p = account_lookup.then( account => {
-                // var account = account_lookup.resolve
-                //DEBUG 
-                console.log('... account',account)
+                //DEBUG console.log('... account',account)
                 if(account == null)
                     return Promise.reject("Unknown account " + account_name_or_id)
                 
