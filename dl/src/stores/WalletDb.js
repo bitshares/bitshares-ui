@@ -65,7 +65,7 @@ class WalletDb extends BaseStore {
         this.keys = ()=> map(wallet, "keys")
         this.deposit_keys = ()=> map(wallet, "deposit_keys")
         this.data = ()=> !( wallet && wallet.wallet_object) ? Map() : wallet.wallet_object
-        this.prop = name => this.data().get(name)
+        this.prop = (name, default_value) => this.data().has(name) ? this.data().get(name) : default_value
         
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
@@ -279,12 +279,19 @@ class WalletDb extends BaseStore {
                 brainkey = key.normalize_brain_key(brainkey)
                 
             let chain_id = Apis.instance().chain_id
-            let wallet_names = this.state.wallet_names.add(this.state.current_wallet)
             resolve(Promise.resolve()
+            
                 .then(()=> wallet.login(email, username, password, chain_id)) //login and sync
-                .then(()=> assert(! wallet.wallet_object.get("created"), "Wallet exists: " + this.state.current_name))
-                .then(()=> this.setState({ wallet_names }) )
-                .then(()=> 
+                
+                .then(()=> assert(wallet.wallet_object.get("created"),
+                    "Wallet exists: " + this.state.current_wallet))
+                
+                .then(()=> {
+                    let wallet_names = this.state.wallet_names.add(this.state.current_wallet)
+                    this.setState({ wallet_names })
+                })
+                
+                .then(()=>
                     wallet.setState({
                         public_name: this.state.current_wallet,
                         brainkey,
@@ -306,9 +313,13 @@ class WalletDb extends BaseStore {
         let username = ""
         let email = ""
         try {
-            let chain_id = Apis.instance().chain_id
-            wallet.login(email, username, password, chain_id, unlock)
-            AccountRefsStore.loadDbData()
+            if( unlock ) {
+                let chain_id = Apis.instance().chain_id
+                wallet.login(email, username, password, chain_id)
+                AccountRefsStore.loadDbData()
+            } else {
+                wallet.validatePassword(email, username, password)
+            }
             return true
         } catch(e) {
             

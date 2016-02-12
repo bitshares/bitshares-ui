@@ -23,7 +23,8 @@ import assert from "assert"
         // ISO Date of last binary backup download
         backup_date: undefined,
         
-        chain_id: undefined,
+        // Set on first login
+        chain_id: "",
         
         // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not nearly random enough for this to be public).
         secret_encryption_pubkey: null,
@@ -176,15 +177,12 @@ export default class WalletStorage {
         @arg {string} password
         @arg {string} chain_id - required on first login.  The transaction layer checks this value to ensure wallet's can not cross-chains.  Chain ID is validated if it is provided on subsequent logins.
         
-        @arg {boolean} [unlock = true] - use false to check the password without unlocking.
-        
-        @throws {Error<string>} [email_required | username_required | password_required | invalid_password | logged_in ]
+        @throws {Error<string>} [email_required | username_required | password_required | invalid_password ]
         
         @return {Promise} - can be ignored unless one is interested in the remote wallet syncing
     */
-    login( email, username, password, chain_id = null, unlock = true ) {
+    login( email, username, password, chain_id = null ) {
 
-        
         req(email, "email")
         req(username, "username")
         req(password, "password")
@@ -206,11 +204,8 @@ export default class WalletStorage {
                 throw new Error( "invalid_password" )
             
             if( chain_id && chain_id !== this.storage.state.get("chain_id"))
-                throw new Error( "missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
+                throw new Error( "Missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
             
-            if( ! unlock )
-                return Promise.resolve()
-        
             let encrypted_wallet = this.storage.state.get("encrypted_wallet")
             if( encrypted_wallet ) {
                 let backup_buffer = new Buffer(encrypted_wallet, 'base64')
@@ -220,6 +215,7 @@ export default class WalletStorage {
                 })
             }
         } else {
+            
             // first login
             
             assert(chain_id, "Chain ID is required on first login")
@@ -239,11 +235,31 @@ export default class WalletStorage {
             this.notify = true
         }
         
-        if( unlock )
-            this.private_key = private_key
+        this.private_key = private_key
         
         return (disk ? disk : Promise.resolve())
             .then(()=> this.notifyResolve( this.sync(private_key) ))
+    }
+    
+    validatePassword( email, username, password ) {
+        
+        req(email, "email")
+        req(username, "username")
+        req(password, "password")
+        
+        let pw_pubkey = this.storage.state.get("secret_encryption_pubkey")
+        assert(pw_pubkey, "Login first to setup this wallet")
+        
+        let private_key = PrivateKey.fromSeed(
+            email.trim().toLowerCase() + "\t" +
+            username.trim().toLowerCase() + "\t" +
+            password
+        )
+        
+        let public_key = private_key.toPublicKey()
+        
+        if( pw_pubkey !== public_key.toString())
+            throw new Error( "invalid_password" )
     }
     
     /**

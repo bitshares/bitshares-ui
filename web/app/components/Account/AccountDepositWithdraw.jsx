@@ -68,7 +68,7 @@ class MetaexchangeDepositRequest extends React.Component {
 					let name = this.props.account.get('name');
                     
 					let deposit_keys = WalletDb.deposit_keys()
-                        .updateIn([this.props.gateway, this.state.base_symbol, name], ()=> reply)
+                        .updateIn([this.props.gateway, this.state.base_symbol, name], ()=> reply);
 					
 					// if( !deposit_keys[this.props.gateway] )
 					// 	deposit_keys[this.props.gateway] = {}
@@ -77,9 +77,9 @@ class MetaexchangeDepositRequest extends React.Component {
 					// else
 					// 	deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
                     
-					let data = WalletDb.data().set("deposit_keys", deposit_keys)
+					let data = WalletDb.data().set("deposit_keys", deposit_keys);
 					WalletDb.update(data);
-                    debugger // check me
+                    
 				}));
 	}
 

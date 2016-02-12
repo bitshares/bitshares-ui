@@ -60,7 +60,8 @@ class WithdrawModalMetaexchange extends React.Component {
 		}
    }
    
-    // FIXME this method does not update...  Please use instead the new call: WalletDb.deposit_keys()
+    // FIXME this method does not update...
+	// Search for an example using: WalletDb.deposit_keys() with WalletDb.update(...)
 	updateWithdrawalAddress()
 	{
 		var withdrawAddress = null
