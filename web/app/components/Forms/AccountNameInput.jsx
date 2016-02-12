@@ -4,12 +4,12 @@ import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import BaseComponent from "../BaseComponent";
 import validation from "common/validation";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import AltContainer from "alt-container";
 
-class AccountNameInput extends BaseComponent {
+class AccountNameInput extends React.Component {
 
     static propTypes = {
         id: PropTypes.string,
@@ -22,11 +22,14 @@ class AccountNameInput extends BaseComponent {
         cheapNameOnly: PropTypes.bool
     };
 
-    constructor(props) {
-        super(props, AccountStore);
-        this.state.value = null;
-        this.state.error = null;
-        this.state.existing_account = false;
+    constructor() {
+        super();
+        this.state = {
+            value: null,
+            error: null,
+            existing_account: false
+        };
+
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
     }
@@ -36,14 +39,14 @@ class AccountNameInput extends BaseComponent {
             || nextState.error !== this.state.error
             || nextState.account_name !== this.state.account_name
             || nextState.existing_account !== this.state.existing_account
-            || nextState.searchAccounts !== this.state.searchAccounts
+            || nextProps.searchAccounts !== this.props.searchAccounts
     }
 
     componentDidUpdate() {
         if (this.props.onChange) this.props.onChange({valid: !this.getError()});
     }
 
-    value() {
+    getValue() {
         return this.state.value;
     }
 
@@ -69,7 +72,7 @@ class AccountNameInput extends BaseComponent {
         if (this.state.error) {
             error = this.state.error;
         } else if (this.props.accountShouldExist || this.props.accountShouldNotExist) {
-            let account = this.state.searchAccounts.find(a => a === this.state.value);
+            let account = this.props.searchAccounts.find(a => a === this.state.value);
             if (this.props.accountShouldNotExist && account) {
                 error = counterpart.translate("account.name_input.name_is_taken");
             }
@@ -132,4 +135,23 @@ class AccountNameInput extends BaseComponent {
     }
 }
 
-export default AccountNameInput;
+export default class StoreWrapper extends React.Component {
+
+    render() {
+
+        return (
+            <AltContainer stores={[AccountStore]}
+                inject={{
+                        searchAccounts: () => {
+                            return AccountStore.getState().searchAccounts;
+                        }
+                    }}
+            >
+                <AccountNameInput
+                    ref="nameInput"
+                    {...this.props}
+                />
+            </AltContainer>
+        )
+    }
+}
