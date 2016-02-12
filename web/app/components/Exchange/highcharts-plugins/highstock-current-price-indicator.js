@@ -128,6 +128,8 @@ import utils from "common/utils";
                     .attr({
                     fill: options.backgroundColor,
                     stroke: options.borderColor,
+                    height: 15,
+                    y: y - (height / 2) - 3,                  
                     zIndex: 1,
                         'stroke-width': 1
                 })
@@ -146,13 +148,14 @@ import utils from "common/utils";
 
                 // adjust
                 label.animate({
+                    x: x + 5,
                     y: y + (height / 4)
                 }, 0);
             } else {
 
                 currentPriceIndicator.label.animate({
                     text: utils.format_number(currentPrice, options.precision),
-                    x: x,
+                    x: x + 5,
                     y: y
                 }, 0);
 
@@ -160,7 +163,7 @@ import utils from "common/utils";
 
                 currentPriceIndicator.box.animate({
                     x: x,
-                    y: y - (height / 2)
+                    y: y - (height / 2) - 3
                 }, 0);
 
                 currentPriceIndicator.line.animate({
