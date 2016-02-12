@@ -11,7 +11,7 @@ import AccountActions from "actions/AccountActions";
 import Icon from "../../Icon/Icon";
 import TimeAgo from "../../Utility/TimeAgo";
 import HelpContent from "../../Utility/HelpContent";
-import WalletDb from "stores/WalletDb";
+// import WalletDb from "stores/WalletDb";
 import WithdrawModal from "../../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";

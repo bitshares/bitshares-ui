@@ -104,7 +104,6 @@ describe( "wallet_actions", ()=> {
         helper.test_wallet( suffix ).then(()=>{
             WalletDb.onLock()
             assert( WalletDb.isLocked(), "isLocked" )
-            assert( WalletDb.getWallet() != null )
             WalletDb.validatePassword( "password", true )
             assert( ! WalletDb.isLocked() )
             assert( WalletDb.getBrainKey() == "brainkey" + suffix )

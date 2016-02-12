@@ -9,7 +9,6 @@ var Long = ByteBuffer.Long;
 
 var chain_types = require('./ChainTypes');
 var chain_config = require('./config');
-var lookup = require('./lookup');
 var helper = require('./transaction_helper');
 
 import ChainStore from "./ChainStore"

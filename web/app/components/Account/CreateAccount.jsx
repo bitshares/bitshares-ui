@@ -56,7 +56,7 @@ class CreateAccount extends React.Component {
     isValid() {
         let first_account = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
-        if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
+        if (WalletDb.isLocked()) valid = valid && this.state.validPassword;
         if (!first_account) valid = valid && this.state.registrar_account;
         return valid;
     }
@@ -130,7 +130,7 @@ class CreateAccount extends React.Component {
         e.preventDefault();
         if (!this.isValid()) return;
         let account_name = this.refs.account_name.value();
-        if (WalletDb.getWallet()) {
+        if ( !WalletDb.isLocked()) {
             this.createAccount(account_name);
         } else {
             let password = this.refs.password.value();
@@ -228,7 +228,7 @@ class CreateAccount extends React.Component {
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
 
-                                {WalletDb.getWallet() ?
+                                { ! WalletDb.isLocked() ?
                                     null :
                                     <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
                                 }

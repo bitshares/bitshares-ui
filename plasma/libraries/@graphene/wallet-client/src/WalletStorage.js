@@ -184,9 +184,7 @@ export default class WalletStorage {
     */
     login( email, username, password, chain_id = null, unlock = true ) {
 
-        if( this.private_key ) {
-            throw new Error("logged_in")
-        }
+        
         req(email, "email")
         req(username, "username")
         req(password, "password")
@@ -197,7 +195,8 @@ export default class WalletStorage {
             password
         )
         
-        let disk
+        let disk // Initial storage decrypt promise
+        
         let public_key = private_key.toPublicKey()
         
         if(this.storage.state.get("secret_encryption_pubkey")) {
@@ -217,16 +216,14 @@ export default class WalletStorage {
                 let backup_buffer = new Buffer(encrypted_wallet, 'base64')
                 disk = decrypt(backup_buffer, private_key).then( wallet_object => {
                     this.wallet_object = fromJS( wallet_object )
-                    // this.notify = true
+                    this.notify = true
                 })
             }
         } else {
-            assert(chain_id, "provide the chainId on first login")
-            
-            if( ! unlock )
-                return Promise.resolve()
-            
             // first login
+            
+            assert(chain_id, "Chain ID is required on first login")
+            
             let dt = new Date().toISOString()
             let init = {
                 chain_id,
@@ -242,8 +239,8 @@ export default class WalletStorage {
             this.notify = true
         }
         
-        // unlock
-        this.private_key = private_key
+        if( unlock )
+            this.private_key = private_key
         
         return (disk ? disk : Promise.resolve())
             .then(()=> this.notifyResolve( this.sync(private_key) ))

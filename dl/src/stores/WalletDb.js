@@ -61,16 +61,24 @@ class WalletDb extends BaseStore {
         ChainStore.subscribe(this.checkNextGeneratedKey.bind(this))
         this.generateNextKey_pubcache = []
         
+        // short-cuts into the wallet's data object
+        this.keys = ()=> map(wallet, "keys")
+        this.deposit_keys = ()=> map(wallet, "deposit_keys")
+        this.data = ()=> !( wallet && wallet.wallet_object) ? Map() : wallet.wallet_object
+        this.prop = name => this.data().get(name)
+        
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
-        this._export( // "checkNextGeneratedKey","generateNextKey",
-            "openWallet", "getWallet", "update", "isEmpty", "importKeys", "keys","getBrainKey","deleteWallet",
+        this._export(
+            "openWallet", "getWallet", "update", "isEmpty", "importKeys","getBrainKey","deleteWallet",
+            "keys", "deposit_keys", "data", "prop",
             "process_transaction", "decodeMemo","getPrivateKey","getDeterministicKeys",
             "onLock","isLocked","onCreateWallet","validatePassword","changePassword",
             "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended",
             "loadDbData",
         )
     }
+    
     
     /** Loads the last active wallet. */
     loadDbData() {
@@ -162,12 +170,6 @@ class WalletDb extends BaseStore {
         this.setState({ current_wallet, wallet_names })
     }
     
-    /** @return ConfidentialWallet.keys or emtpy map (wallet is locked or non-existent) */
-    keys() {
-        if(! wallet || ! wallet.wallet_object) return Map()
-        return wallet.wallet_object.getIn(["keys"], Map())
-    }
-    
     /** Discover derived keys that are not in this wallet */
     checkNextGeneratedKey() {
         
@@ -184,16 +186,22 @@ class WalletDb extends BaseStore {
             console.error(e, "stack", e.stack) }
     }
     
+    
     /**
-        Return a clone of the wallet's data object.  The modified wallet object can be passed back in to this.update(wallet_object).  Store only serilizable types in this object.
+        Return a mutable clone of the wallet's data object.  The modified wallet object can be passed back in to this.update(wallet_object) for merging.
         
-        Note, it is better to update the Immutable version read from WalletDb.wallet.wallet_object then mutated and passed back into this.update(wallet_object).  
+        @deprecated use Immutable functions like WalletDb.data() instead (see constructor for short-hand functions).  If updating, it is better to update the Immutable version `WalletDb.data()` then mutate and passed back into this.update(wallet_object).  
+        
+        Store only serilizable types in this object.
         
         @return null if locked or return a mutable wallet object (regular object)
     */
     getWallet() {
-        return wallet && wallet.private_key ? wallet.wallet_object.toJS() : null
+        if( ! wallet ) return null
+        if( ! wallet.wallet_object ) return null
+        return wallet.wallet_object.toJS()
     }
+    
     
     isEmpty() {
         return ! wallet || wallet.isEmpty()
@@ -550,14 +558,10 @@ class WalletDb extends BaseStore {
             }
         }
         catch(e) {
-            // if not logged in
-            if( ! cwallet.wallet.private_key )
-                throw e
-            
             // Failed because wallet is locked
             lockedWallet = true;
             // private_key = null;
-            isMine = true;            
+            isMine = true;
         }
         return {
             text: memo_text,
@@ -588,4 +592,15 @@ export default WalletDbWrapped
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)
     throw new Error(error)
+}
+
+/**
+    @arg {string} name of a Map within the wallet
+    
+    @return Immuable Map from the wallets data object or an emtpy map if locked or non-existent)
+*/
+function map(wallet, name) {
+    assert( name, "name is required")
+    if(! wallet || ! wallet.wallet_object) return Map()
+    return wallet.wallet_object.get(name, Map())
 }

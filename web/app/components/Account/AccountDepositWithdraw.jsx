@@ -65,18 +65,21 @@ class MetaexchangeDepositRequest extends React.Component {
 					
 					this.setState( {deposit_address:reply.deposit_address, memo:reply.memo} );
 					
-					let wallet = WalletDb.getWallet();
 					let name = this.props.account.get('name');
+                    
+					let deposit_keys = WalletDb.deposit_keys()
+                        .updateIn([this.props.gateway, this.state.base_symbol, name], ()=> reply)
 					
-					if( !wallet.deposit_keys ) wallet.deposit_keys = {}
-					if( !wallet.deposit_keys[this.props.gateway] )
-						wallet.deposit_keys[this.props.gateway] = {}
-					if( !wallet.deposit_keys[this.props.gateway][this.state.base_symbol] )
-						wallet.deposit_keys[this.props.gateway][this.state.base_symbol] = {}
-					else
-						wallet.deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
-					
-					WalletDb.update(wallet);
+					// if( !deposit_keys[this.props.gateway] )
+					// 	deposit_keys[this.props.gateway] = {}
+					// if( !deposit_keys[this.props.gateway][this.state.base_symbol] )
+					// 	deposit_keys[this.props.gateway][this.state.base_symbol] = {}
+					// else
+					// 	deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
+                    
+					let data = WalletDb.data().set("deposit_keys", deposit_keys)
+					WalletDb.update(data);
+                    debugger // check me
 				}));
 	}
 
@@ -102,14 +105,8 @@ class MetaexchangeDepositRequest extends React.Component {
 
 	getMetaLink()
 	{
-		let wallet = WalletDb.getWallet();
-		var withdrawAddr = "";
-		
-		try
-		{
-			withdrawAddr = wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'];
-		}
-		catch (Error) {}
+		var withdrawAddr = WalletDb.deposit_keys()
+            .getIn([this.props.gateway, this.state.base_symbol, 'withdraw_address'], "");
 		
 		return this.marketPath + this.props.symbol_pair.replace('_','/')+'?receiving_address='+encodeURIComponent(this.props.account.get('name')+','+withdrawAddr);
 	}
@@ -118,17 +115,16 @@ class MetaexchangeDepositRequest extends React.Component {
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return <tr><td></td><td></td><td></td><td></td></tr>;
 			
-        let wallet = WalletDb.getWallet();
-        
         if( !this.state.deposit_address )  
 		{
-			try
-			{
-				let reply = wallet.deposit_keys[this.props.gateway][this.state.base_symbol][this.props.account.get('name')];
+			let reply = WalletDb.deposit_keys()
+                .getIn([this.props.gateway, this.state.base_symbol, this.props.account.get('name')]);
+            
+            //  wallet.deposit_keys[this.props.gateway][this.state.base_symbol][this.props.account.get('name')];
+            if( reply ) {
 				this.state.deposit_address = reply.deposit_address;
 				this.state.memo = reply.memo;
-			}
-			catch (Error) {}
+            }
         }
         if( !this.state.deposit_address )
 		{ 

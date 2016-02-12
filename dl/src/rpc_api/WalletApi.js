@@ -1,5 +1,4 @@
 import { key } from "@graphene/ecc"
-import { lookup } from "@graphene/chain"
 import { chain_types } from "@graphene/chain"
 import { TransactionBuilder } from "@graphene/chain"
 import { transaction_helper } from "@graphene/chain"

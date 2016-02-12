@@ -43,7 +43,7 @@ export function backup(backup_pubkey) {
 
 /** No click backup.. Works great, but not used (yet?) */
 // export function backupToBin(
-//     backup_pubkey = WalletDb.getWallet().password_pubkey,
+//     backup_pubkey = WalletDb.prop("password_pubkey"),
 //     saveAsCallback = saveAs
 // ) {
 //     backup(backup_pubkey).then( contents => {

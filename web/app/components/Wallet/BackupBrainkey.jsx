@@ -1,6 +1,7 @@
 import React, {Component} from "react"
 import {FormattedDate} from "react-intl"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
+import WalletUnlock from "components/Wallet/WalletUnlock"
 import Translate from "react-translate-component"
 import WalletActions from "actions/WalletActions"
 import WalletDb from "stores/WalletDb"
@@ -24,8 +25,12 @@ export default class BackupBrainkey extends Component {
     }
     
     render() {
+        return <WalletUnlock>{ this.render_unlocked() }</WalletUnlock>
+    }
+    
+    render_unlocked() {
         var content
-        var brainkey_backup_date = WalletDb.getWallet().brainkey_backup_date
+        var brainkey_backup_date = WalletDb.prop("brainkey_backup_date")
         var brainkey_backup_time = brainkey_backup_date ?
             <h3><Translate content="wallet.verified" /> <FormattedDate value={brainkey_backup_date}/></h3>:
             <h3><Translate content="wallet.brainkey_not_verified" /></h3>

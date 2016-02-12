@@ -262,7 +262,7 @@ class Create extends BackupBaseComponent {
         var has_backup = !!this.props.backup.contents
         if( has_backup ) return <div>{this.props.children}</div>
         
-        var ready = WalletDb.getWallet() != null
+        var ready = ! WalletDb.isLocked()
         
         return <div>
             <div onClick={this.onCreateBackup.bind(this)}
@@ -273,6 +273,7 @@ class Create extends BackupBaseComponent {
     }
     
     onCreateBackup() {
+        // FIXME
         var backup_pubkey = WalletDb.getWallet().password_pubkey
         backup(backup_pubkey).then( contents => {
             var name = this.props.wallet.current_wallet
@@ -288,8 +289,8 @@ class Create extends BackupBaseComponent {
 
 class LastBackupDate extends Component {
     render() {
-        var backup_date = WalletDb.getWallet().backup_date
-        var last_modified = new Date(WalletDb.getWallet().last_modified)
+        var backup_date = WalletDb.prop("backup_date")
+        var last_modified = new Date(WalletDb.prop("last_modified"))
         var backup_time = backup_date ?
             <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
             <h4><Translate content="wallet.never_backed_up" /></h4>
