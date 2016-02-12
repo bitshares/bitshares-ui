@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Contributing &mdash; Graphene UI 2.0.160203 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Graphene UI 2.0.160203 documentation" href="index.html"/>
+        <link rel="next" title="License" href="license.html"/>
+        <link rel="prev" title="Components" href="components.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Graphene UI
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.160203
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">The basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Project structure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">General overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_layer.html">Data layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Components</a></li>
+</ul>
+<p class="caption"><span class="caption-text">General info</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-process">Development process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#categorization-of-issues">Categorization of issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#milestones">Milestones</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sunday">Sunday</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wednesday">Wednesday</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thursday">Thursday</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#coding-style-guideline">Coding style guideline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Graphene UI</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/contributing.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>Graphene-UI is open source and anyone is free to contribute. PR&#8217;s are welcomed and will be reviewed in a timely manner, and long-term contributors will be given access to the repo.</p>
+<p>If you would like to get involved, we have a Slack channel where you can ask questions and get help.</p>
+<div class="section" id="development-process">
+<h2>Development process<a class="headerlink" href="#development-process" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Bugs are always worked before enhancements</li>
+<li>Developers should work each issue according to a numbered branch corresponding to the issue using <code class="docutils literal"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">123</span></code></li>
+</ul>
+<p>Github issues are being used to track bugs and feature requests.</p>
+<ul class="simple">
+<li>Project Coordinator (&#64;wmbutler) reads through new issues and requests clarification if needed</li>
+<li>Issues get assigned to Milestones</li>
+<li>Milestones are typically 1 week long ending on Wednesday</li>
+<li>All devs are expected to install <a class="reference external" href="https://zenhub.io">Zenhub</a>. Zenhub creates viewable pipelines and allows for issue estimation. Estimates are based on anticipated hours to complete.</li>
+</ul>
+<div class="section" id="categorization-of-issues">
+<h3>Categorization of issues<a class="headerlink" href="#categorization-of-issues" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>New issues</strong> have not been categorized yet or are tagged as question when seeking clarification.</li>
+<li><strong>Backlog issues</strong> have been assigned to a Milestone and are waiting for a dev to estimate and claim.</li>
+<li><strong>In Progress issues</strong> are being actively worked on.</li>
+<li><strong>Testing issues</strong> are waiting for independent tests. (Methodology fully defined as of yet, so devs test their own work for now)</li>
+<li><strong>Closed issues</strong> are complete</li>
+</ul>
+</div>
+</div>
+<div class="section" id="milestones">
+<h2>Milestones<a class="headerlink" href="#milestones" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Project Coordinator announces the number of issues and requests them to be claimed and estimated</li>
+<li>Presents a burndown chart for the week</li>
+</ul>
+<div class="section" id="sunday">
+<h3>Sunday<a class="headerlink" href="#sunday" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Project Coordinator summarizes progress with burndown chart</li>
+<li>Ensures that all items are claimed and estimated</li>
+<li>Escalates to &#64;valzav for unestimated and/or unclaimed items</li>
+</ul>
+</div>
+<div class="section" id="wednesday">
+<h3>Wednesday<a class="headerlink" href="#wednesday" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Testing is completed</li>
+<li>Release notes completed by &#64;valzav</li>
+<li>Project Coordinator announces release on bitsharestalk and provides link to release notes</li>
+</ul>
+</div>
+<div class="section" id="thursday">
+<h3>Thursday<a class="headerlink" href="#thursday" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Incomplete items are moved to new Milestone</li>
+<li>Old Milestone is closed</li>
+<li>New Milestone is activated (rinse lather repeat)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="coding-style-guideline">
+<h2>Coding style guideline<a class="headerlink" href="#coding-style-guideline" title="Permalink to this headline">¶</a></h2>
+<p>Our style guideline is based on <a class="reference external" href="https://github.com/airbnb/javascript">Airbnb JavaScript Style Guide</a>, with few exceptions:</p>
+<ul class="simple">
+<li>Strings are double quoted</li>
+<li>Additional trailing comma (in arrays and objects declaration) is optional</li>
+<li>4 spaces tabs</li>
+<li>Spaces inside curly braces are optional</li>
+</ul>
+<p>We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.</p>
+<p>To install eslint and its dependencies, run:</p>
+<div class="highlight-python"><div class="highlight"><pre>npm install -g eslint-config-airbnb eslint-plugin-react eslint babel-eslint
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Jest currently doesn&#8217;t work with node (see <a class="reference external" href="https://github.com/facebook/jest/issues/243">https://github.com/facebook/jest/issues/243</a>), so in order to run the tests you need to install iojs. Under Ubuntu instructions can be found here:</p>
+<p><a class="reference external" href="https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories">Nodesource</a> Ubuntu io.js installation.</p>
+<p>In order for jest to correctly follow paths it is necessary to add a local path to your NODE_PATH variable. Under Ubuntu, you can do so by running the following from the web directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>export NODE_PATH=$NODE_PATH:.
+</pre></div>
+</div>
+<p>Tests are then run using:</p>
+<div class="highlight-python"><div class="highlight"><pre>npm test
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="components.html" class="btn btn-neutral" title="Components" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Sigve Kvalsvik.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.160203',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

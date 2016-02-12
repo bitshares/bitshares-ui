@@ -1,6 +1,7 @@
 import React from "react";
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import {PropTypes} from "react";
 import {Link} from "react-router";
 import ChainTypes from "./ChainTypes";
@@ -88,8 +89,10 @@ class FormattedAsset extends React.Component {
 
         }
 
-        var issuer = ChainStore.getObject(asset.issuer);
-        var issuerName = issuer ? issuer.get('name') : '';
+        let issuer = ChainStore.getObject(asset.issuer);
+        let issuerName = issuer ? issuer.get('name') : '';
+
+        let description = assetUtils.parseDescription(asset.options.description);
 
         const currency_popover_body = !hide_asset && this.props.assetInfo && <div>
             <HelpContent
@@ -97,7 +100,7 @@ class FormattedAsset extends React.Component {
                 alt_path="assets/Asset"
                 section="summary"
                 symbol={asset.symbol}
-                description={asset.options.description}
+                description={description.main}
                 issuer={issuerName}/>
             {this.props.assetInfo}
         </div>;

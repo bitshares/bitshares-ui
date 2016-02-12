@@ -25,7 +25,7 @@ class TransactionConfirm extends React.Component {
     };
 
     static getPropsFromStores() {
-        return {...TransactionConfirmStore.getState()}
+        return TransactionConfirmStore.getState();
     };
 
     shouldComponentUpdate(nextProps) {
@@ -48,6 +48,7 @@ class TransactionConfirm extends React.Component {
 
     onConfirmClick(e) {
         e.preventDefault();
+
         if(this.props.propose) {
             TransactionConfirmActions.close();
             var propose_options = {
@@ -78,6 +79,7 @@ class TransactionConfirm extends React.Component {
         if ( !this.props.transaction || this.props.closed ) {return null; }
         let button_group, header, confirmButtonClass = "button";
         if(this.props.propose && ! this.props.fee_paying_account) confirmButtonClass += " disabled";
+
         if(this.props.error || this.props.included) {
             header = this.props.error ? (
                 <div className="modal-header has-error">

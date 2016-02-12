@@ -36,6 +36,7 @@ export default class PrivateKeyView extends Component {
     render() {
         var modalId = "key_view_modal" + this.props.pubkey
         var keys = PrivateKeyStore.getState().keys
+
         var has_private = keys.has(this.props.pubkey)
         if( ! has_private) return <span>{this.props.children}</span>
         var key = keys.get(this.props.pubkey)

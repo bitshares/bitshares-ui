@@ -20,8 +20,97 @@ import cnames from "classnames";
 import assetUtils from "common/asset_utils";
 import Tabs, {Tab} from "../Utility/Tabs";
 import AmountSelector from "../Utility/AmountSelector";
+import assetConstants from "chain/asset_constants";
 
 let MAX_SAFE_INT = new big("9007199254740991");
+
+@BindToChainState()
+class BitAssetOptions extends React.Component {
+    
+    static propTypes = {
+        backingAsset: ChainTypes.ChainAsset.isRequired,
+        isUpdate: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        isUpdate: false
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            backingAsset: props.backingAsset.get("symbol"),
+            error: null
+        };
+    }
+
+    _onInputBackingAsset(asset) {
+        this.setState({
+            backingAsset: asset.toUpperCase(),
+            error: null
+        });
+    }
+
+    _onFoundBackingAsset(asset) {
+        if (asset) {
+            if (asset.get("id") === "1.3.0" || (asset.get("bitasset_data_id") && !asset.getIn(["bitasset", "is_prediction_market"]))) {       
+                if (asset.get("precision") !== this.props.assetPrecision) {
+                    this.setState({
+                        error: counterpart.translate("account.user_issued_assets.error_precision", {asset: this.props.assetSymbol})
+                    });
+                } else {
+                    this.props.onUpdate("short_backing_asset", asset.get("id"));
+                }
+            } else {
+                this.setState({
+                    error: counterpart.translate("account.user_issued_assets.error_invalid")
+                });
+            }
+        }
+    }
+
+    render() {
+        let {bitasset_opts} = this.props;
+        let {error} = this.state;
+
+        return (
+            <div>
+                <label><Translate content="account.user_issued_assets.feed_lifetime_sec" />
+                    <input type="number" value={bitasset_opts.feed_lifetime_sec / 60} onChange={this.props.onUpdate.bind(this, "feed_lifetime_sec")}/>
+                </label>
+
+                <label><Translate content="account.user_issued_assets.minimum_feeds" />
+                    <input type="number" value={bitasset_opts.minimum_feeds} onChange={this.props.onUpdate.bind(this, "minimum_feeds")}/>
+                </label>
+
+                <label><Translate content="account.user_issued_assets.force_settlement_delay_sec" />
+                    <input type="number" value={bitasset_opts.force_settlement_delay_sec / 60} onChange={this.props.onUpdate.bind(this, "force_settlement_delay_sec")}/>
+                </label>
+
+                <label><Translate content="account.user_issued_assets.force_settlement_offset_percent" />
+                    <input type="number" value={bitasset_opts.force_settlement_offset_percent / assetConstants.GRAPHENE_1_PERCENT} onChange={this.props.onUpdate.bind(this, "force_settlement_offset_percent")}/>
+                </label>
+
+                <label><Translate content="account.user_issued_assets.maximum_force_settlement_volume" />
+                    <input type="number" value={bitasset_opts.maximum_force_settlement_volume / assetConstants.GRAPHENE_1_PERCENT} onChange={this.props.onUpdate.bind(this, "maximum_force_settlement_volume")}/>
+                </label>
+
+                <div className="grid-block no-margin small-12">
+                    <AssetSelector
+                        label="account.user_issued_assets.backing"
+                        onChange={this._onInputBackingAsset.bind(this)}
+                        asset={this.state.backingAsset}
+                        assetInput={this.state.backingAsset}
+                        tabIndex={1}
+                        style={{width: "100%", paddingRight: "10px"}}
+                        onFound={this._onFoundBackingAsset.bind(this)}
+                    />
+                    {error ? <div className="content-block has-error">{error}</div> : null}
+                </div>
+            </div>
+        );
+    }
+}
 
 @BindToChainState()
 class AccountAssetCreate extends React.Component {
@@ -48,10 +137,11 @@ class AccountAssetCreate extends React.Component {
         let precision = utils.get_asset_precision(4);
         let corePrecision = utils.get_asset_precision(props.core.get("precision"));
 
-        let flagBooleans = assetUtils.getFlagBooleans(0);
-        let permissionBooleans = assetUtils.getFlagBooleans(79);
-        let flags = assetUtils.getFlags(flagBooleans);
-        let permissions = assetUtils.getPermissions(permissionBooleans);
+        let {flagBooleans, permissionBooleans} = this._getPermissions({isBitAsset});
+        
+        // let flags = assetUtils.getFlags(flagBooleans);
+        // let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
+        // console.log("all permissions:", permissionBooleans, permissions)
 
         let coreRateBaseAssetName = ChainStore.getAsset("1.3.0").get("symbol");
 
@@ -60,10 +150,10 @@ class AccountAssetCreate extends React.Component {
             update: {
                 symbol: "",
                 precision: 4,
-                max_supply: 0,
+                max_supply: 100000,
                 max_market_fee: 0,
                 market_fee_percent: 0,
-                description: ""
+                description: {main: ""}
             },
             errors: {
                 max_supply: null
@@ -72,6 +162,7 @@ class AccountAssetCreate extends React.Component {
             flagBooleans: flagBooleans,
             permissionBooleans: permissionBooleans,
             isBitAsset: isBitAsset,
+            is_prediction_market: false,
             core_exchange_rate: {
                 quote: {
                     asset_id: null,
@@ -81,21 +172,41 @@ class AccountAssetCreate extends React.Component {
                     asset_id: "1.3.0",
                     amount: 1
                 }
+            },
+            bitasset_opts: {
+                "feed_lifetime_sec" : 60 * 60 * 24,
+                "minimum_feeds" : 7,
+                "force_settlement_delay_sec" : 60 * 60 * 24,
+                "force_settlement_offset_percent" : 1 * assetConstants.GRAPHENE_1_PERCENT,
+                "maximum_force_settlement_volume" : 20 * assetConstants.GRAPHENE_1_PERCENT,
+                "short_backing_asset" : "1.3.0"
             }
         };
     }
 
+    _getPermissions(state) {
+        let flagBooleans = assetUtils.getFlagBooleans(0, state.isBitAsset);
+        let permissionBooleans = assetUtils.getFlagBooleans("all", state.isBitAsset);
 
+        return {
+            flagBooleans,
+            permissionBooleans
+        }
+    }
 
     _createAsset(e) {
         e.preventDefault();
-        let {update, flagBooleans, permissionBooleans, core_exchange_rate} = this.state;
+        let {update, flagBooleans, permissionBooleans, core_exchange_rate,
+            isBitAsset, is_prediction_market, bitasset_opts} = this.state;
+        
         let {account} = this.props;
+        console.log("_createAsset:", permissionBooleans);
+        let flags = assetUtils.getFlags(flagBooleans, isBitAsset);
+        let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
+        console.log("flags:", flags);
+        let description = JSON.stringify(update.description);
 
-        let flags = assetUtils.getFlags(flagBooleans);
-        let permissions = assetUtils.getPermissions(permissionBooleans);
-
-        AssetActions.createAsset(account.get("id"), update, flags, permissions, core_exchange_rate).then(result => {
+        AssetActions.createAsset(account.get("id"), update, flags, permissions, core_exchange_rate, isBitAsset, is_prediction_market, bitasset_opts, description).then(result => {
             console.log("... AssetActions.updateAsset(account_id, update)", account.get("id"),  update, flags, permissions)
         });
     }
@@ -114,6 +225,65 @@ class AccountAssetCreate extends React.Component {
 
     _forcePositive(number) {
         return parseFloat(number) < 0 ? "0" : number;
+    }
+
+    _onUpdateDescription(value, e) {
+        let {update} = this.state;
+        let updateState = true;
+
+        switch (value) {
+            case "condition":
+                if (e.target.value.length > 60) {
+                    updateState = false;
+                    return;
+                }
+                update.description[value] = e.target.value;
+                break;
+
+            case "short_name":
+                if (e.target.value.length > 32) {
+                    updateState = false;
+                    return;
+                }
+                update.description[value] = e.target.value;
+                break;
+            
+            default:
+                update.description[value] = e.target.value;
+                break;
+        }
+
+        if (updateState) {
+            this.forceUpdate();
+            this._validateEditFields(update);
+        }
+    }
+
+    onChangeBitAssetOpts(value, e) {
+        let {bitasset_opts} = this.state;
+
+        switch (value) {
+            case "force_settlement_offset_percent":
+            case "maximum_force_settlement_volume":
+                bitasset_opts[value] = parseFloat(e.target.value) * assetConstants.GRAPHENE_1_PERCENT;
+                break;
+
+            case "feed_lifetime_sec":
+            case "force_settlement_delay_sec":
+                console.log(e.target.value, parseInt(parseFloat(e.target.value) * 60, 10));
+                bitasset_opts[value] = parseInt(parseFloat(e.target.value) * 60, 10);
+                break;
+
+            case "short_backing_asset":
+                bitasset_opts[value] = e;
+                break;
+
+            default:
+                bitasset_opts[value] = e.target.value;
+                break;
+        }
+
+        this.forceUpdate();
     }
 
     _onUpdateInput(value, e) {
@@ -254,10 +424,31 @@ class AccountAssetCreate extends React.Component {
         this.forceUpdate();
     }
 
+    _onToggleBitAsset() {
+        let {update} = this.state;
+        this.state.isBitAsset = !this.state.isBitAsset;
+        if (!this.state.isBitAsset) {
+            this.state.is_prediction_market = false;
+        }
+
+        let {flagBooleans, permissionBooleans} = this._getPermissions(this.state);
+        this.state.flagBooleans = flagBooleans;
+        this.state.permissionBooleans = permissionBooleans;
+
+        this.forceUpdate();
+    }
+
+    _onTogglePM() {
+        this.state.is_prediction_market = !this.state.is_prediction_market;
+        this.state.update.precision = this.props.core.get("precision");
+        this.state.core_exchange_rate.base.asset_id = this.props.core.get("id");
+        this.forceUpdate();
+    }
+
     render() {
         let {account, account_name, globalObject, core} = this.props;
         let {errors, isValid, update, assets, flagBooleans, permissionBooleans,
-            core_exchange_rate} = this.state;
+            core_exchange_rate, is_prediction_market, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset creation fee from the symbol character length
         let symbolLength = update.symbol.length, createFee = "N/A";
@@ -339,9 +530,38 @@ class AccountAssetCreate extends React.Component {
                                 </label>
                                 { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
 
-                                <label><Translate content="account.user_issued_assets.precision" />
+                                <label><Translate content="account.user_issued_assets.decimals" />
                                     <input type="number" value={update.precision} onChange={this._onUpdateInput.bind(this, "precision")} />
                                 </label>
+
+                                <table className="table" style={{width: "inherit"}}>
+                                    <tbody>
+                                        <tr>
+                                            <td style={{border: "none"}}><Translate content={"account.user_issued_assets.mpa"} />:</td>
+                                            <td style={{border: "none"}}>
+                                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onToggleBitAsset.bind(this)}>
+                                                    <input type="checkbox" checked={isBitAsset} />
+                                                    <label />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                {isBitAsset ? (
+                                <table className="table" style={{width: "inherit"}}>
+                                    <tbody>
+                                        <tr>
+                                            <td style={{border: "none"}}><Translate content={"account.user_issued_assets.pm"} />:</td>
+                                            <td style={{border: "none"}}>
+                                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onTogglePM.bind(this)}>
+                                                    <input type="checkbox" checked={is_prediction_market} />
+                                                    <label />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>) : null}
 
                                 {/* CER */}
                                 <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
@@ -385,13 +605,66 @@ class AccountAssetCreate extends React.Component {
                                         </h5> 
                                     </div>
                                 </label>
-
-                                <Translate component="h3" content="account.user_issued_assets.description" />
-                                <label>
-                                    <textarea style={{height: "7rem"}} rows="1" value={update.description} onChange={this._onUpdateInput.bind(this, "description")} />
-                                </label>
                             </div>
                         </Tab>
+
+                        <Tab title="account.user_issued_assets.description">
+                            <div className="small-12 large-8 grid-content">
+                                <Translate component="h3" content="account.user_issued_assets.description" />
+                                <label>
+                                    <textarea
+                                        style={{height: "7rem"}}
+                                        rows="1"
+                                        value={update.description.main}
+                                        onChange={this._onUpdateDescription.bind(this, "main")}
+                                    />
+                                </label>
+
+                                <Translate component="h3" content="account.user_issued_assets.short" />
+                                <label>
+                                    <input
+                                        type="text"
+                                        rows="1"
+                                        value={update.description.short_name}
+                                        onChange={this._onUpdateDescription.bind(this, "short_name")}
+                                    />
+                                </label>
+
+                                {is_prediction_market ? (
+                                <div>
+                                    <Translate component="h3" content="account.user_issued_assets.condition" />
+                                    <label>
+                                        <input
+                                            type="text"
+                                            rows="1"
+                                            value={update.description.condition}
+                                            onChange={this._onUpdateDescription.bind(this, "condition")}
+                                        />
+                                    </label>
+
+                                    <Translate component="h3" content="account.user_issued_assets.expiry" />
+                                    <label>
+                                        <input
+                                            type="date"
+                                            value={update.description.expiry}
+                                            onChange={this._onUpdateDescription.bind(this, "expiry")}
+                                        />
+                                    </label>
+                                </div>) : null}
+
+                            </div>                                
+                        </Tab>
+
+                        {isBitAsset ? (
+                            <Tab title="account.user_issued_assets.bitasset_opts">
+                                <BitAssetOptions
+                                    bitasset_opts={bitasset_opts}
+                                    onUpdate={this.onChangeBitAssetOpts.bind(this)}
+                                    backingAsset={bitasset_opts.short_backing_asset}
+                                    assetPrecision={update.precision}
+                                    assetSymbol={update.symbol}
+                                />
+                            </Tab>) : null}
 
                         <Tab title="account.permissions">
                             <div className="small-12 large-6 grid-content">
@@ -462,5 +735,7 @@ class AccountAssetCreate extends React.Component {
     }
 
 }
+
+AccountAssetCreate.BitAssetOptions = BitAssetOptions;
 
 export default AccountAssetCreate;

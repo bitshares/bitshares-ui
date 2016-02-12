@@ -16,7 +16,9 @@ module.exports = {
         "override_authority",
         "transfer_restricted",
         "disable_confidential"
-    ]
+    ],
+    GRAPHENE_100_PERCENT: 10000,
+    GRAPHENE_1_PERCENT: 10000 / 100
 }
 
 /*

@@ -627,8 +627,16 @@ class Operation extends React.Component {
             case "worker_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.create_worker" />
-                        &nbsp;<FormattedAsset amount={op[1].daily_pay} asset={"1.3.0"} />
+                        <TranslateWithLinks
+                            string="operation.worker_create"
+                            keys={[
+                                {type: "account", value: op[1].owner, arg: "account"},
+                                {type: "amount", value: {amount: op[1].daily_pay, asset_id: "1.3.0"}, arg: "pay"}
+                            ]}
+                            params={{
+                                name: op[1].name
+                            }}                               
+                        />
                     </span>
                 );
                 break;

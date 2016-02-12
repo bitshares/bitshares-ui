@@ -33,7 +33,8 @@ class AccountsList extends React.Component {
     };
 
     static defaultProps = {
-        width: 2000
+        width: 2000,
+        compact: false
     };
 
     constructor(props) {
@@ -140,48 +141,55 @@ class AccountsList extends React.Component {
                     break;
             }
         }).map(account => {
+
             if (account) {
                 let collateral = 0, debt = {}, openOrders = {};
                 balanceList = balanceList.clear();
 
                 let accountName = account.get("name");
 
-                account.get("orders").forEach( (orderID, key) => {
-                    let order = ChainStore.getObject(orderID);
-                    if (order) {
-                        let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
-                        if (!openOrders[orderAsset]) {
-                            openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
-                        } else {
-                            openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
+                if (account.get("orders")) {
+                    account.get("orders").forEach( (orderID, key) => {
+                        let order = ChainStore.getObject(orderID);
+                        if (order) {
+                            let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
+                            if (!openOrders[orderAsset]) {
+                                openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
+                            } else {
+                                openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 // console.log("openOrders:", openOrders);
 
-                account.get("call_orders").forEach( (callID, key) => {
-                    let position = ChainStore.getObject(callID);
-                    if (position) {
-                        collateral += parseInt(position.get("collateral"), 10);
+                if (account.get("call_orders")) {
+                    account.get("call_orders").forEach( (callID, key) => {
+                        let position = ChainStore.getObject(callID);
+                        if (position) {
+                            collateral += parseInt(position.get("collateral"), 10);
 
-                        let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
-                        if (!debt[debtAsset]) {
-                            debt[debtAsset] = parseInt(position.get("debt"), 10);
-                        } else {
-                            debt[debtAsset] += parseInt(position.get("debt"), 10);
+                            let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
+                            if (!debt[debtAsset]) {
+                                debt[debtAsset] = parseInt(position.get("debt"), 10);
+                            } else {
+                                debt[debtAsset] += parseInt(position.get("debt"), 10);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 let account_balances = account.get("balances");
-                account_balances.forEach( balance => {
-                    let balanceAmount = ChainStore.getObject(balance);
-                    if (!balanceAmount || !balanceAmount.get("balance")) {
-                        return null;
-                    }
-                    balanceList = balanceList.push(balance);
-                });
+                if (account.get("balances")) {
+                    account_balances.forEach( balance => {
+                        let balanceAmount = ChainStore.getObject(balance);
+                        if (!balanceAmount || !balanceAmount.get("balance")) {
+                            return null;
+                        }
+                        balanceList = balanceList.push(balance);
+                    });
+                }
 
                 let isMyAccount = AccountStore.isMyAccount(account);
 
@@ -218,10 +226,12 @@ class AccountsList extends React.Component {
 
         return (
             <div>
-                <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
-                    <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                </div>
+                {!this.props.compact ? (
+                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
+                        <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+                    </div>) : null}
                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
+                    {!this.props.compact ? (
                     <thead>
                         <tr>
                             <th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
@@ -231,7 +241,7 @@ class AccountsList extends React.Component {
                             {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
                             <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
                         </tr>
-                    </thead>
+                    </thead>) : null}
                     <tbody>
                         {accounts}
                     </tbody>

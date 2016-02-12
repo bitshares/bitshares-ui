@@ -130,7 +130,7 @@ class Transaction extends React.Component {
                     if(op[1].memo) {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
-                        memo = text && isMine ? (
+                        memo = text ? (
                             <td>{text}</td>
                         ) : !text && isMine ? (
                             <td>
@@ -487,7 +487,7 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr>
                             <td><Translate component="span" content="explorer.block.common_options" /></td>
-                            <td><Inspector data={ op[1].common_options } search={false} /></td>
+                            <td><Inspector data={ op[1] } search={false} /></td>
                         </tr>
                     );
 
@@ -495,6 +495,7 @@ class Transaction extends React.Component {
 
                 case "asset_update":
                 case "asset_update_bitasset":
+                    console.log("op:", op);
                     color = "warning";
 
                     rows.push(
@@ -517,19 +518,21 @@ class Transaction extends React.Component {
                             </tr>
                         );
                         }
-                    rows.push(
-                        <tr>
-                            <td><Translate component="span" content="markets.core_rate" /></td>
-                            <td>
-                                <FormattedPrice
-                                    base_asset={op[1].new_options.core_exchange_rate.base.asset_id}
-                                    quote_asset={op[1].new_options.core_exchange_rate.quote.asset_id}
-                                    base_amount={op[1].new_options.core_exchange_rate.base.amount}
-                                    quote_amount={op[1].new_options.core_exchange_rate.quote.amount}
-                                />
-                            </td>
-                        </tr>
-                    );
+                    if (op[1].new_options.core_exchange_rate) {
+                        rows.push(
+                            <tr>
+                                <td><Translate component="span" content="markets.core_rate" /></td>
+                                <td>
+                                    <FormattedPrice
+                                        base_asset={op[1].new_options.core_exchange_rate.base.asset_id}
+                                        quote_asset={op[1].new_options.core_exchange_rate.quote.asset_id}
+                                        base_amount={op[1].new_options.core_exchange_rate.base.amount}
+                                        quote_amount={op[1].new_options.core_exchange_rate.quote.amount}
+                                    />
+                                </td>
+                            </tr>
+                        );
+                    }
 
                     rows.push(
                         <tr>
@@ -996,9 +999,12 @@ class Transaction extends React.Component {
                     break;
 
                 case "asset_reserve":
+
                     rows.push(
                         <tr>
-                            <td style={{textTranform: "capitalize"}}><Translate component="span" content="transaction.by" /></td>
+                            <td style={{textTranform: "capitalize"}}>
+                                <Translate component="span" content="modal.reserve.from" />
+                            </td>
                             <td>{this.linkToAccount(op[1].payer)}</td>
                         </tr>
                     );

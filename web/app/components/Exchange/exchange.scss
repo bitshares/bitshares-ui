@@ -27,11 +27,6 @@ $negative-color: #E1424A;
     .top-bar {
       border-bottom: 1px solid grey;
     }
-
-    .buy-sell {
-      border-top: 1px solid grey;
-      border-bottom: 1px solid grey;
-    }
   }
 }
 
@@ -40,8 +35,11 @@ $negative-color: #E1424A;
   font-size: 1.1rem;
   font-weight: 500;
   text-transform: uppercase;
-  padding-bottom: 0.25rem;
-  padding-top: 1rem;
+  padding-left: 10px;
+  padding-bottom: 0.55rem;
+  padding-top: 0.55rem;
+  background-color: #484848;
+  border-bottom: 1px solid #8c88ff;
 }
 
 .market-content {
@@ -141,6 +139,10 @@ p.order-table-title {
 .buySellButton {
   float: right;
   min-width: 4rem;
+}
+
+form.order-form {
+  padding: 10px;
 }
 
 .bid {
@@ -263,7 +265,7 @@ tr.top-header, tr.bottom-header, tr.spread-row {
 
 
 a.order-cancel {
-  font-size: 80%;
+  font-size: 90%;
   letter-spacing: 2px;
   padding-top: 0.01rem;
   padding-bottom: 0.01rem;
@@ -417,6 +419,19 @@ li.stat.clickable:hover {
     padding: 0 0 0 5px;
     min-width: 5rem;
     background-color: lighten($light-panel-bg-color, 12%);
+
+    > select {
+      padding: 0;
+      margin: 0;
+      height: 1.75rem;
+      line-height: 1.75rem;
+      background-color: lighten($light-panel-bg-color, 12%);
+      background: lighten($light-panel-bg-color, 12%) url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E") right 10px center no-repeat;
+      background-size: 8px 8px;
+      border: none;
+      color: white;
+      font-size: 12px;
+    }
 }
 
 .account-drop-down {
@@ -491,18 +506,35 @@ input[type=number]::-webkit-outer-spin-button {
   color: $negative-color !important;
 }
 
+.exchange-bordered {
+  border: 1px solid rgba(183, 183, 183, 0.29);
+}
+
+.order-1 {
+  .exchange-bordered {
+    margin: 0 10px 0 10px;
+  }
+}
+
+.order-2 {
+  .exchange-bordered {
+    margin: 0 10px 0 10px;
+  }
+}
+
 .mymarkets-header {
   text-transform: uppercase;
   width: 50%;
   max-width: 300px;
-  text-align: center;
   font-size: 1.10rem;
-  padding: 10px 0;
+  padding-left: 10px;
+  padding-bottom: 0.55rem;
+  padding-top: 0.55rem;
   font-weight: 500;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  margin-bottom: 0.25rem;
   transition: border-color 0.3s ease 0s;
+  background-color: #484848;
 }
 
 .mymarkets-list {
@@ -539,4 +571,13 @@ tr.activeMarket {
   z-index: 999;
   text-transform: uppercase;
   font-size: 2rem;
+}
+
+.market-right-padding {
+  padding-right: 15px !important;
+}
+
+.orderbook-showall {
+  text-align: center;
+  padding: 5px 0;
 }

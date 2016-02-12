@@ -45,6 +45,10 @@
         total_value: "Total value",
         show_hidden: "Show hidden assets",
         hide_hidden: "Hide hidden assets",
+        ignore: "Ignore",
+        unignore: "Unignore",
+        show_ignored: "Show ignored accounts",
+        hide_ignored: "Hide ignored accounts",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",
@@ -130,7 +134,22 @@
             advanced: "Advanced",
             need_asset: "At least one of the two assets must be %(name)s",
             perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!",
-            issued_assets: "Issued Assets"
+            issued_assets: "Issued Assets",
+            short: "Short name (max 32 characters)",
+            condition: "Condition (max 60 characters)",
+            expiry: "Market resolution date",
+            decimals: "Number of decimal points",
+            mpa: "SmartCoin",
+            pm: "Binary prediction market",
+            bitasset_opts: "SmartCoin options",
+            feed_lifetime_sec: "Feed lifetime in minutes",
+            minimum_feeds: "Minimum number of feeds",
+            force_settlement_delay_sec: "Delay for forced settlements (minutes)",
+            force_settlement_offset_percent: "Percent offset of forced settlements",
+            maximum_force_settlement_volume: "Max force settle volume (percent)",
+            backing: "Short backing asset",
+            error_precision: "That asset does not have the same precision as %(asset)s",
+            error_invalid: "That asset may not be used"
         },
         connections: {
             known: "Known by",
@@ -157,7 +176,7 @@
             warning3: "Account is already in the list",
             warning4: "Key is already in the list",
             action: "Action",
-            acct_or_key:" Account/Key"
+            acct_or_key:" Account / Key / Address"
         },
         votes: {
             proxy_short: "Proxy",
@@ -311,7 +330,8 @@
         witness_update: "{account} update its witness info",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
-        committee_member_update_global_parameters: "{account} updated the global committee parameters"
+        committee_member_update_global_parameters: "{account} updated the global committee parameters",
+        worker_create: "{account} created a worker proposal with daily pay of {pay}"
     },
     proposal: {
         transfer: "Transfer {amount} from {from} to {to}",
@@ -373,7 +393,6 @@
         bond_accept_offer: "Accepted bond offer of",
         bond_claim_collateral: "Claimed collateral of",
         bond_pay_collateral: "Paid collateral of",
-        create_worker: "Created a budget item with a pay of",
         custom: "Created a custom operation",
         order_id: "Order ID",
         asset_claim_fees: "claimed asset fees of %(balance_amount)s from %(asset)s fee pool",
@@ -456,7 +475,7 @@
             membership_annual_fee : "Annual Membership",
             membership_lifetime_fee : "Lifetime Membership",
             symbol3 : "Symbols with 3 Characters",
-            symbol4 : "Sybmols with 4 Characters",
+            symbol4 : "Symbols with 4 Characters",
             long_symbol : "Longer Symbols"
         },
         whitelist_states: {
@@ -523,6 +542,7 @@
             title: "Assets",
             market: "SmartCoins",
             user: "User Issued Assets",
+            prediction: "Prediction market assets",
             symbol: "Symbol",
             id: "ID",
             issuer: "Issuer",
@@ -667,7 +687,7 @@
         market_name: "My Markets",
         quote_supply: "Quote supply",
         base_supply: "Base supply",
-        more: "All markets",
+        more: "Find markets",
         volume_24: "24hr Volume",
         change: "Change",
         confirm: "Your order is %(diff)s% away from the current price, are you sure?",
@@ -682,6 +702,7 @@
         index: "Index",
         my_bids: "My bids",
         my_asks: "My asks",
+        my_orders: "My orders",
         settle_orders: "Settle orders",
         asks: "Asks",
         bids: "Bids",
@@ -690,7 +711,11 @@
         borrow: "Borrow",
         no_balance: "Insufficient balance",
         invalid_amount: "Invalid amount",
-        invalid_price: "Invalid price"
+        invalid_price: "Invalid price",
+        show_bids: "Show all bids",
+        show_asks: "Show all asks",
+        hide: "Hide",
+        short: "Short"
     },
     fees: {
      title: "Fee Schedule"
@@ -809,6 +834,12 @@
         title: "Request settlement of %(asset)s",
         amount: "Amount to settle",
         submit: "Settle asset"
+      },
+      reserve: {
+        title: "Reserve (burn) asset",
+        amount: "Amount to reserve",
+        from: "Account to reserve from",
+        submit: "Reserve"
       },
       ok: "OK"
     },

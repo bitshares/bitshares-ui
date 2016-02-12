@@ -93,7 +93,7 @@ class AccountMembership extends React.Component {
                                <a href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
                                    <Translate content="account.member.upgrade_lifetime"/>
                                </a> &nbsp; &nbsp;
-                               {member_status === "annual" ? null :
+                               {true || member_status === "annual" ? null :
                                <a href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
                                    <Translate content="account.member.subscribe"/>
                                </a>}
