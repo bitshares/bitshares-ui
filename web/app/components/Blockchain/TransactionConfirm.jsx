@@ -8,18 +8,23 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import BaseComponent from "../BaseComponent";
+import connectToStores from "alt/utils/connectToStores";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 
-class TransactionConfirm extends BaseComponent {
+@connectToStores
+class TransactionConfirm extends React.Component {
     
-    constructor(props) {
-        super(props, TransactionConfirmStore);
-    }
+    static getStores() {
+        return [TransactionConfirmStore]
+    };
+
+    static getPropsFromStores() {
+        return TransactionConfirmStore.getState();
+    };
 
     componentDidUpdate() {
-        if(!this.state.closed) {
+        if(!this.props.closed) {
             ZfApi.publish("transaction_confirm_modal", "open");
         } else {
             ZfApi.publish("transaction_confirm_modal", "close");
@@ -28,7 +33,7 @@ class TransactionConfirm extends BaseComponent {
 
     onConfirmClick(e) {
         e.preventDefault();
-        TransactionConfirmActions.broadcast(this.state.transaction);
+        TransactionConfirmActions.broadcast(this.props.transaction);
     }
 
     onCloseClick(e) {
@@ -37,21 +42,21 @@ class TransactionConfirm extends BaseComponent {
     }
 
     render() {
-        if ( !this.state.transaction || this.state.closed ) {return null; }
+        if ( !this.props.transaction || this.props.closed ) {return null; }
 
         let button_group, header;
-        if(this.state.error || this.state.included) {
-            header = this.state.error ? (
+        if(this.props.error || this.props.included) {
+            header = this.props.error ? (
                 <div className="modal-header has-error">
                     <Translate component="h3" content="transaction.broadcast_fail" />
-                    <h6>{this.state.error}</h6>
+                    <h6>{this.props.error}</h6>
                 </div>
                 ) :
                 (
                 <div className="modal-header">
                     <div className="float-left"><Icon name="checkmark-circle" size="4x" className="success"/></div>
                     <Translate component="h3" content="transaction.transaction_confirmed" />
-                    <h6>#{this.state.trx_id}@{this.state.trx_block_num}</h6>
+                    <h6>#{this.props.trx_id}@{this.props.trx_block_num}</h6>
                 </div>
             );
             button_group = (
@@ -59,7 +64,7 @@ class TransactionConfirm extends BaseComponent {
                     <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a>
                 </div>
             );
-        } else if (this.state.broadcast) {
+        } else if (this.props.broadcast) {
             header = (
                 <div className="modal-header">
                     <Translate component="h3" content="transaction.broadcast_success" />
@@ -71,7 +76,7 @@ class TransactionConfirm extends BaseComponent {
                     <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a>
                 </div>
             );
-        } else if (this.state.broadcasting) {
+        } else if (this.props.broadcasting) {
             header = (
                 <div className="modal-header">
                     <Translate component="h3" content="transaction.broadcasting" />
@@ -98,13 +103,13 @@ class TransactionConfirm extends BaseComponent {
 
         return (
             <div ref="transactionConfirm">
-                <Modal id="transaction_confirm_modal" ref="modal" overlay={true} overlayClose={!this.state.broadcasting}>
-                    {!this.state.broadcasting ? <a href className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</a> : null}
+                <Modal id="transaction_confirm_modal" ref="modal" overlay={true} overlayClose={!this.props.broadcasting}>
+                    {!this.props.broadcasting ? <a href className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</a> : null}
                     {header}
                     <div style={{maxHeight: "60vh", overflowY:'auto', overflowX: "hidden"}}>
                         <Transaction
                             key={Date.now()}
-                            trx={this.state.transaction.serialize()}
+                            trx={this.props.transaction.serialize()}
                             index={0}
                             no_links={true}/>
                     </div>
