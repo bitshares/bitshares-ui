@@ -150,7 +150,7 @@ export default class WalletStorage {
         
         @arg {boolean} save - Add or delete remote backups or `undefined` (do neither)
         @arg {string} token - Code obtained via `wallet.api.requestCode(email)`.  Only required for the first remote backup (from any computer). 
-        @throws {Error} ["remote_url required"|"login"]
+        @throws {Error} ["remote_url required"|"wallet is locked"]
         @return {Promise} - only important if the wallet is communicating with the server
     */
     keepRemoteCopy( save = true, token = this.storage.state.get("remote_token") ) {
@@ -293,7 +293,7 @@ export default class WalletStorage {
         @return {Promise} {Immutable} wallet_object or `undefined` if locked
     */
     getState() {
-        if( ! this.private_key ) return Promise.reject("login")
+        if( ! this.private_key ) return Promise.reject("wallet is locked")
         return this.notifyResolve( this.sync().then(()=> this.wallet_object ))
     }
 
@@ -727,7 +727,7 @@ function updateWallet() {
     return new Promise( resolve => {
     
         if( ! this.private_key )
-            throw new Error("login")
+            throw new Error("wallet is locked")
         
         let pubkey = state.get("secret_encryption_pubkey")
         let remote_copy = state.get("remote_copy")

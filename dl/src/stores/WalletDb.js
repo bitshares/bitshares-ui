@@ -67,6 +67,7 @@ class WalletDb extends BaseStore {
         this.data = ()=> !( wallet && wallet.wallet_object) ? Map() : wallet.wallet_object
         this.prop = (name, default_value) => this.data().has(name) ? this.data().get(name) : default_value
         
+        
         // WalletDb use to be a plan old javascript class (not an Alt store) so
         // for now many methods need to be exported...
         this._export(
@@ -160,13 +161,14 @@ class WalletDb extends BaseStore {
             localStorage.removeItem("LocalStoragePersistence::" + key)
         }
         
+        let wallet_names = this.state.wallet_names.remove(wallet_name)
+        
         let current_wallet = this.state.current_wallet
         if(current_wallet === wallet_name) {
-            current_wallet = this.state.wallet_names.size ? this.state.wallet_names.first() : undefined
+            current_wallet = wallet_names.size ? wallet_names.first() : undefined
             iDB.root.setProperty("current_wallet", current_wallet)
         }
         
-        let wallet_names = this.state.wallet_names.remove(wallet_name)
         this.setState({ current_wallet, wallet_names })
     }
     
@@ -190,15 +192,14 @@ class WalletDb extends BaseStore {
     /**
         Return a mutable clone of the wallet's data object.  The modified wallet object can be passed back in to this.update(wallet_object) for merging.
         
-        @deprecated use Immutable functions like WalletDb.data() instead (see constructor for short-hand functions).  If updating, it is better to update the Immutable version `WalletDb.data()` then mutate and passed back into this.update(wallet_object).  
+        Programmers should instead use Immutable data from functions like WalletDb.data() (see constructor for short-hand functions).  If updating, it is better to update the Immutable version `WalletDb.data()` and passed back into this.update(data).  
         
         Store only serilizable types in this object.
         
         @return null if locked or return a mutable wallet object (regular object)
     */
     getWallet() {
-        if( ! wallet ) return null
-        if( ! wallet.wallet_object ) return null
+        if( this.isLocked() ) return null
         return wallet.wallet_object.toJS()
     }
     
@@ -220,7 +221,7 @@ class WalletDb extends BaseStore {
     
     /** @return PrivateKey or null */
     getPrivateKey(public_key) {
-        if(! wallet) return
+        if(! cwallet) return
         if(! public_key) return null
         return cwallet.getPrivateKey(public_key)
     }
@@ -236,9 +237,7 @@ class WalletDb extends BaseStore {
     }
     
     getBrainKey() {
-        if(! wallet) return
-        if(! wallet.wallet_object.has("brainkey")) throw new Error("missing brainkey")
-        if(! wallet.private_key) throw new Error("wallet locked")
+        assertLogin()
         return wallet.wallet_object.get("brainkey")
     }
     
@@ -614,4 +613,9 @@ function map(wallet, name) {
     assert( name, "name is required")
     if(! wallet || ! wallet.wallet_object) return Map()
     return wallet.wallet_object.get(name, Map())
+}
+
+function assertLogin() {
+    if( ! wallet || ! wallet.private_key )
+        throw new Error("wallet is locked")
 }

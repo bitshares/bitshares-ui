@@ -1067,7 +1067,7 @@ let isDigits = value => value === "numeric" || /^[0-9]+$/.test(value)
 
 function assertLogin() {
     if( ! this.wallet.private_key )
-        throw new Error("login")
+        throw new Error("wallet is locked")
 }
 
 var toString = data => data == null ? data :
