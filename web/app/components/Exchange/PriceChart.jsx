@@ -373,7 +373,7 @@ class PriceChart extends React.Component {
                         enabled: priceSeriesData.length > 0 && marketReady,
                         style: {
                             color: '#ffffff',
-                            fontSize: '12px'
+                            fontSize: '10px'
                         },
                         x: -30,
                         y: 0,
