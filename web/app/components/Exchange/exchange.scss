@@ -35,18 +35,16 @@ div.exchange-content-header {
   font-size: 1.1rem;
   font-weight: 500;
   text-transform: uppercase;
-  padding-left: 10px;
-  padding-bottom: 0.55rem;
-  padding-top: 0.55rem;
+  padding: 0.55rem 10px;
   background-color: #484848 !important;
   border-bottom: 1px solid #8c88ff;
   
   &.bid {
-    border-bottom: 1px solid #50D2C2;
+    border-bottom: 1px solid $bid-color;
   }
 
   &.ask {
-    border-bottom: 1px solid #E3745B;
+    border-bottom: 1px solid $ask-color;
   }
 }
 
@@ -239,21 +237,12 @@ tr.top-header, tr.bottom-header, tr.spread-row {
 }
 
 .bid-total {
-  font-size: 90%;
-  position: absolute;
-  top: 5px;
-  left: 25px;
-  color: $bid-color;
-  z-index: 50;
+  font-size: 1.1rem;
+  color: $bid-color;  
 }
 
-.ask-total {
-  font-size: 90%;
-  position: absolute;
-  top: 5px;
-  right: 25px;
+.ask-total { 
   color: $ask-color;
-  z-index: 50;
 }
 
 .chart-label {

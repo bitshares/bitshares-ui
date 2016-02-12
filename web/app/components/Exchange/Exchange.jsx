@@ -1244,7 +1244,25 @@ class Exchange extends React.Component {
                                     indicatorSettings={indicatorSettings}
                                     bucketSize={bucketSize}
                                     latest={latestPrice}
-                                />
+                                >
+                                    <div className="float-right">
+                                    <ul className="market-stats stats bottom-stats">
+                                        <li className="stat" style={{minHeight: "2rem"}}>
+                                            <span>
+                                                <span><Translate content="exchange.time" />:</span>
+                                                <span>{bucketOptions}</span>
+                                                <span></span>
+                                            </span>
+                                        </li>
+                                        <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
+                                            <div className="indicators">
+                                                <Translate content="header.settings" />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    </div>
+
+                                </PriceChart>
                                 <IndicatorModal
                                     ref="indicators"
                                     indicators={indicators}
@@ -1278,6 +1296,7 @@ class Exchange extends React.Component {
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
+                                    noFrame={false}
                                 />
                             </div>)}
 
@@ -1429,7 +1448,7 @@ class Exchange extends React.Component {
 
 
                     {/* Right Column - Market History */}
-                    <div className="grid-block shrink right-column no-overflow vertical" style={{paddingTop: 0, paddingRight: "0.5rem"}}>
+                    <div className="grid-block shrink right-column no-overflow vertical" style={{paddingTop: 0, minWidth: 358}}>
                         {/* Market History */}
                         <div className="grid-block no-padding no-margin vertical"  style={{borderBottom: "1px solid grey"}}>
                             <MyMarkets
