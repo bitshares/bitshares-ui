@@ -12,15 +12,21 @@ class PrivateKeyInput extends React.Component {
 
     static propTypes = {
         onChange: PropTypes.func,
-        onEnter: PropTypes.func
+        onEnter: PropTypes.func,
+        publicKeyOnly: PropTypes.bool
+    };
+
+    static defaultProps = {
+        publicKeyOnly: false
     };
 
     constructor(props) {
         super(props);
         this.state = { private_key: "", public_key: "", error: null };
-        this._handleChange = this._handleChange.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
         this._onCreatePrivateKey = this._onCreatePrivateKey.bind(this);
+        this._onPrivateKeyChange = this._onPrivateKeyChange.bind(this);
+        this._onPublicKeyChange = this._onPublicKeyChange.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -59,11 +65,19 @@ class PrivateKeyInput extends React.Component {
         //if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
     }
 
-    _handleChange(e) {
+    _onPrivateKeyChange(e) {
         e.preventDefault();
         var private_key = e.target.value.toUpperCase();
         this.setState({ private_key });
+        this.props.onChange({ private_key, public_key: this.state.public_key });
         //this.validateKey(value);
+    }
+
+    _onPublicKeyChange(e) {
+        e.preventDefault();
+        var public_key = e.target.value.toUpperCase();
+        this.setState({ public_key });
+        this.props.onChange({ private_key: this.state.private_key, public_key });
     }
 
     _onKeyDown(e) {
@@ -80,12 +94,12 @@ class PrivateKeyInput extends React.Component {
         const label_content_key = this.props.privateKeyMode ? "account.private_key" : "account.public_key";
         return (
             <div>
-                <div className={class_name}>
+                {!this.props.publicKeyOnly && <div className={class_name}>
                     <label>
                         <Translate content="account.private_key"/>
                         <span className="inline-label">
                            <input name="private-key" type="text" autoComplete="off"
-                               onChange={this._handleChange} onKeyDown={this._onKeyDown}
+                               onChange={this._onPrivateKeyChange} onKeyDown={this._onKeyDown}
                                value={this.state.private_key}
                            />
                         <button className="button" onClick={this._onCreatePrivateKey}>
@@ -94,11 +108,11 @@ class PrivateKeyInput extends React.Component {
                         </span>
                     </label>
                     <div className="facolor-error">{this.state.error}</div>
-                </div>
+                </div>}
                 <div className="form-group">
                     <label>
                         <Translate content="account.public_key"/>
-                        <input type="text" onKeyDown={this._onKeyDown} value={this.state.public_key}/>
+                        <input type="text" onKeyDown={this._onKeyDown} value={this.state.public_key} onChange={this._onPublicKeyChange} />
                     </label>
                 </div>
             </div>

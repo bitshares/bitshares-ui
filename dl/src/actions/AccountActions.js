@@ -113,11 +113,15 @@ class AccountActions {
     }
 
     addPrivateAccount(name) {
+        const cwallet = WalletDb.getState().cwallet;
+        cwallet.createBlindAccount(name, WalletDb.getBrainKey() + name);
         this.dispatch(name);
     }
 
-    addPrivateContact(name) {
-        this.dispatch(name);
+    addPrivateContact(label, public_key) {
+        const cwallet = WalletDb.getState().cwallet;
+        cwallet.setKeyLabel(public_key, label);
+        this.dispatch(label);
     }
 
     removePrivateContact(name) {

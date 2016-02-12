@@ -7,35 +7,38 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountNameInput from "../Forms/AccountNameInput";
 import AccountSelect from "../Forms/AccountSelect";
 import Translate from "react-translate-component";
+import PrivateKeyInput from "../Forms/PrivateKeyInput";
 
 class CreatePrivateContactModal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {label: ""};
+        this.state = { label: "", public_key: "" };
         this._onCreateClick = this._onCreateClick.bind(this);
         this._onLabelChange = this._onLabelChange.bind(this);
+        this._onKeyChange = this._onKeyChange.bind(this);
     }
 
     clear() {
         this.refs.label.clear();
-        this.setState({label: ""});
+        this.setState({ label: "" });
     }
 
     _onCreateClick() {
         console.log("-- CreatePrivateContactModal._onCreateClick -->");
-        AccountActions.addPrivateContact(this.state.label);
+        AccountActions.addPrivateContact(this.state.label, this.state.public_key);
         ZfApi.publish("add_private_contact_modal", "close");
     }
 
     _onLabelChange({value}) {
         if (!value) return;
         console.log("-- CreatePrivateAccountModal._onLabelChange -->", value);
-        this.setState({label: value});
+        this.setState({ label: value });
     }
 
-    _onPayFromChange(account) {
-        console.log("-- CreatePrivateContactModal._onPayFromChange -->", account);
+    _onKeyChange({ private_key, public_key }) {
+        console.log("-- CreatePrivateContactModal._onPayFromChange -->", public_key);
+        this.setState({ public_key });
     }
 
     render() {
@@ -54,10 +57,7 @@ class CreatePrivateContactModal extends React.Component {
                     />
                 </div>
                 <div className="full-width-content form-group">
-                    <label><Translate content="account.pay_from" /></label>
-                    <AccountSelect account_names={my_accounts}
-                        onChange={this._onPayFromChange.bind(this)}
-                    />
+                    <PrivateKeyInput ref="key" onChange={this._onKeyChange} publicKeyOnly />
                 </div>
                 <div className="button-group">
                     <a className="button" href onClick={this._onCreateClick}>Create Contact</a>

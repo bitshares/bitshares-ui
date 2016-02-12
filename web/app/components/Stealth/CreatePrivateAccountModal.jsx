@@ -18,7 +18,7 @@ class CreatePrivateAccountModal extends React.Component {
 
     clear() {
         this.refs.label.clear();
-        this.refs.key.clear();
+        //this.refs.key.clear();
         this.setState({label: ""});
     }
 
@@ -40,7 +40,7 @@ class CreatePrivateAccountModal extends React.Component {
     }
 
     render() {
-        const submit_btn_class = !this.state.label || !this.refs.label.valid() || !this.state.key ? "button disabled" : "button";
+        const submit_btn_class = !this.state.label || !this.refs.label.valid() ? "button disabled" : "button";
 
         return (<Modal id="add_private_account_modal" overlay>
             <Trigger close="add_private_account_modal">
@@ -55,7 +55,7 @@ class CreatePrivateAccountModal extends React.Component {
                         labelMode
                     />
                 </div>
-                <PrivateKeyInput ref="key" onChange={this._onKeyChange} />
+                {/*<PrivateKeyInput ref="key" onChange={this._onKeyChange} />*/}
                 <div className="button-group">
                     <a className={submit_btn_class} href onClick={this._onCreateClick}>Create Account</a>
                     <Trigger close="add_private_account_modal"><a href className="secondary button">Cancel</a></Trigger>

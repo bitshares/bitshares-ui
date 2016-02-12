@@ -69,10 +69,21 @@ class AccountStore extends BaseStore {
                 linkedAccounts.add(a.name);
                 this._addIgnoredAccount(a.name);
             }
-
             this.setState({
                 linkedAccounts: linkedAccounts.asImmutable()
             });
+        });
+
+        var privateAccounts = Immutable.Set().asMutable();
+        iDB.load_data("private_accounts").then(data => {
+            for (let a of data) { privateAccounts.add(a.name); }
+            this.setState({ privateAccounts: privateAccounts.asImmutable() });
+        })
+
+        var privateContacts = Immutable.Set().asMutable();
+        iDB.load_data("private_contacts").then(data => {
+            for (let a of data) { privateContacts.add(a.name); }
+            this.setState({ privateContacts: privateContacts.asImmutable() });
         })
     }
     
@@ -317,14 +328,17 @@ class AccountStore extends BaseStore {
     }
 
     onAddPrivateAccount(name) {
+        iDB.add_to_store("private_accounts", { name });
         this.state.privateAccounts = this.state.privateAccounts.add(name);
     }
 
     onAddPrivateContact(name) {
+        iDB.add_to_store("private_contacts", { name });
         this.state.privateContacts = this.state.privateContacts.add(name);
     }
 
     onRemovePrivateContact(name) {
+        iDB.remove_from_store("private_contacts", name);
         this.state.privateContacts = this.state.privateContacts.remove(name);
     }
 

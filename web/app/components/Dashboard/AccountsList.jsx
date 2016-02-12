@@ -228,7 +228,7 @@ class AccountsList extends React.Component {
                             {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
                             <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
                         </tr>
-                    </thead>) : null}
+                    </thead>
                     <tbody>
                         {accounts}
                     </tbody>
