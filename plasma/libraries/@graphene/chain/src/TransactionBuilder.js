@@ -46,10 +46,11 @@ export default class TransactionBuilder {
         @arg {boolean} [broadcast = false]
     */
     process_transaction(cwallet, signer_pubkeys = null, broadcast = false) {
-
-        if(Apis.instance().chain_id !== WalletDb.prop("chain_id"))
+        
+        let wallet_object = cwallet.wallet.wallet_object
+        if(Apis.instance().chain_id !== wallet_object.get("chain_id"))
             return Promise.reject("Mismatched chain_id; expecting " +
-                WalletDb.prop("chain_id") + ", but got " +
+                wallet_object.get("chain_id") + ", but got " +
                 Apis.instance().chain_id)
         
         return this.set_required_fees().then(()=> {
