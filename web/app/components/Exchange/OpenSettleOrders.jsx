@@ -90,7 +90,6 @@ class OpenSettleOrders extends React.Component {
         let activeOrders = null;
 
         if(orders.size > 0 && base && quote) {
-
             activeOrders = orders
             .sort((a, b) => {
                 return a.settlement_date > b.settlement_date;
@@ -99,31 +98,27 @@ class OpenSettleOrders extends React.Component {
             }).toArray();
 
         } else {
-            return (
-                <div key="open_orders" className="grid-content text-center ps-container" ref="orders">
-                    <table className="table order-table my-orders text-right table-hover">
-                        <tbody>
-                        </tbody>
-                    </table>
-
-                    <table className="table order-table my-orders text-right table-hover">
-                        <tbody>
-                        </tbody>
-                </table>
-                </div>
-            );
+            return null;
         }
 
         return (
-            <div style={{maxHeight: "400px", borderBottom: "1px solid grey"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
-                <div className="small-12 medium-6" style={{paddingBottom: "1rem"}}>
-                    <div className="exchange-content-header"><Translate content="exchange.settle_orders" /></div>
-                    <table className="table order-table text-right table-hover">
-                        <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                        <tbody>
-                            {activeOrders}
-                        </tbody>
-                    </table>
+            <div                
+                key="open_orders"
+                className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"                
+            >
+                <div className="small-6" style={{paddingBottom: "1rem"}}>
+                    <div className="exchange-content-header">
+                        <Translate content="exchange.settle_orders" />
+                    </div>
+
+                    <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="orders">
+                        <table className="table order-table text-right table-hover">
+                            <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
+                            <tbody>
+                                {activeOrders}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );

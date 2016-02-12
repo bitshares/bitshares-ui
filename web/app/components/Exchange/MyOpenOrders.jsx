@@ -181,8 +181,6 @@ class MyOpenOrders extends React.Component {
             rows = rows.concat(bids);
         }
 
-        console.log("rows:", rows);
-
         // if (bids.length === 0 && asks.length ===0) {
         //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
         // }
