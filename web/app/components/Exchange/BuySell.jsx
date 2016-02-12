@@ -98,7 +98,7 @@ class BuySell extends React.Component {
         return (
             <div className={this.props.className + " middle-content"}>
                 <div className="exchange-bordered">
-                    <div className="exchange-content-header">
+                    <div className={"exchange-content-header " + type}>
                         <span>{`${buttonText} ${quote.get("symbol")}`}</span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                     </div>

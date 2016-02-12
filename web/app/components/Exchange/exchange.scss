@@ -30,7 +30,7 @@ $negative-color: #E1424A;
   }
 }
 
-.exchange-content-header {
+div.exchange-content-header {
   color: white;
   font-size: 1.1rem;
   font-weight: 500;
@@ -38,8 +38,16 @@ $negative-color: #E1424A;
   padding-left: 10px;
   padding-bottom: 0.55rem;
   padding-top: 0.55rem;
-  background-color: #484848;
+  background-color: #484848 !important;
   border-bottom: 1px solid #8c88ff;
+  
+  &.bid {
+    border-bottom: 1px solid #50D2C2;
+  }
+
+  &.ask {
+    border-bottom: 1px solid #E3745B;
+  }
 }
 
 .market-content {

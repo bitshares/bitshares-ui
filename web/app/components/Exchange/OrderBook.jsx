@@ -186,12 +186,14 @@ class OrderBook extends React.Component {
         let high = 0, low = 0;
 
         let totalBidValue = 0;
-        let totalAskValue = 0;
+        let totalAskAmount = 0;
 
+        let totalAsks = 0, totalBids = 0;
 
         if(base && quote) {
             let totalBidAmount = 0;
             high = combinedBids.length > 0 ? combinedBids.reduce((total, a) => {
+                totalBids += a.value;
                 return total < a.price_full ? a.price_full : total;
             }, 0) : 0;
 
@@ -238,13 +240,14 @@ class OrderBook extends React.Component {
             });
 
             low = combinedAsks.length > 0 ? combinedAsks.reduce((total, a) => {
+                totalAsks += a.amount;
                 if (!total) {
                     return a.price_full;
                 }
                 return total > a.price_full ? a.price_full : total;
             }, null) : 0;
 
-            let totalAskAmount = 0;
+            let totalAskValue = 0;
 
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
@@ -310,7 +313,7 @@ class OrderBook extends React.Component {
                     <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content">
                         <div className={classnames("small-12 medium-6", this.state.flip ? "order-1" : "order-2")}>
                             <div className="exchange-bordered">
-                                <div className="exchange-content-header">
+                                <div className="exchange-content-header ask">
                                     <Translate content="exchange.asks" />
                                     {this.state.flip ? (
                                     <span>
@@ -320,7 +323,7 @@ class OrderBook extends React.Component {
                                     <div style={{lineHeight: "24px", paddingRight: 10}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
-                                        {utils.format_number(totalAskValue, quote.get("precision"))}
+                                        {utils.format_number(totalAsks, quote.get("precision"))}
                                         <span> ({quoteSymbol})</span>
                                     </div>
                                 </div>
@@ -353,7 +356,7 @@ class OrderBook extends React.Component {
 
                         <div className={classnames("small-12 medium-6", this.state.flip ? "order-2" : "order-1")}>
                             <div className="exchange-bordered">
-                                <div className="exchange-content-header">
+                                <div className="exchange-content-header bid">
                                     <Translate content="exchange.bids" />
                                     {!this.state.flip ? (
                                     <span>
@@ -363,7 +366,7 @@ class OrderBook extends React.Component {
                                     <div style={{lineHeight: "24px", paddingRight: 10}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
-                                        {utils.format_number(totalBidValue, base.get("precision"))}
+                                        {utils.format_number(totalBids, base.get("precision"))}
                                         <span> ({baseSymbol})</span>
                                     </div>
                                 </div>
