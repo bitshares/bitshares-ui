@@ -42,7 +42,9 @@ class OrderRow extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.for_sale !== this.props.order.for_sale ||
-            nextProps.order.id !== this.props.order.id
+            nextProps.order.id !== this.props.order.id ||
+            nextProps.quote !== this.props.quote ||
+            nextProps.base !== this.props.base
         );
     }
 
