@@ -320,7 +320,7 @@ class OrderBook extends React.Component {
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
                                         <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
                                     </span>) : null}
-                                    <div style={{lineHeight: "24px", paddingRight: 10}} className="float-right header-sub-title">
+                                    <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
                                         {utils.format_number(totalAsks, quote.get("precision"))}
@@ -363,7 +363,7 @@ class OrderBook extends React.Component {
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
                                         <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
                                     </span>) : null}
-                                    <div style={{lineHeight: "24px", paddingRight: 10}} className="float-right header-sub-title">
+                                    <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
                                         {utils.format_number(totalBids, base.get("precision"))}
