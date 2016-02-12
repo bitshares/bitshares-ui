@@ -536,6 +536,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .mymarkets-list {
   padding-top: 0.55rem;
+  padding-left: 0;
   font-size: 0.75rem;
 }
 
@@ -559,6 +560,7 @@ table thead tr th.mymarkets-header {
 
 tr.activeMarket {
   color: #4C85D8;
+  background-color: #404040
 }
 
 .no-data {
