@@ -4,6 +4,8 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
 import ChainStore from "api/ChainStore";
+import marketUtils from "common/market_utils";
+
 let ops = Object.keys(operations);
 
 let subs = {};
@@ -62,21 +64,39 @@ class MarketsActions {
 
         let subID = quote.get("id") + "_" + base.get("id");
 
-        let isMarketAsset = false, marketAsset, inverted = false;
+        let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(quote, base);
 
-        if (quote.get("bitasset") && base.get("id") === "1.3.0") {
-            isMarketAsset = true;
-            marketAsset = {id: quote.get("id")}
-        } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
-            inverted = true;
-            isMarketAsset = true;
-            marketAsset = {id: base.get("id")};
-        }
+        let lastLimitOrder = null;
 
         let subscription = (subResult) => {
+
+            let hasLimitOrder = false;
+            let onlyLimitOrder = true;
+            let hasFill = false;
+
+            // We get two notifications for each limit order created, ignore the second one
+            if (subResult.length === 1 && subResult[0].length === 1 && subResult[0][0] === lastLimitOrder) {
+                return; 
+            }
+            
+            // Check whether the market had a fill order, and whether it only has a new limit order
+            subResult.forEach(result => {
+                if (result.length === 1 && result[0].split(".")[1] === "7") {
+                    lastLimitOrder = result[0];
+                    hasLimitOrder = true;
+                } else {
+                    onlyLimitOrder = false;
+                }
+                
+                if (result[0].length === 2 && result[0][0] && result[0][0][0] === 4) {
+                    hasFill = true;
+                }
+            });
+
             let callPromise = null,
                 settlePromise = null;
 
+            // Only check for call and settle orders if either the base or quote is the CORE asset
             if (isMarketAsset) {
                 callPromise = Apis.instance().db_api().exec("get_call_orders", [
                     marketAsset.id, 100
@@ -92,21 +112,25 @@ class MarketsActions {
             startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
             endDate.setDate(endDate.getDate() + 1);
             startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
+
+            // Selectively call the different market api calls depending on the type
+            // of operations received in the subscription update
             Promise.all([
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.get("id"), quote.get("id"), 100
                     ]),
-                    callPromise,
-                    settlePromise,
-                    Apis.instance().history_api().exec("get_market_history", [
+                    onlyLimitOrder ? null : callPromise,
+                    onlyLimitOrder ? null : settlePromise,
+                    !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ]),
-                    Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                    Apis.instance().history_api().exec("get_market_history", [
+                    !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
+                    !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])
                 ])
                 .then(results => {
+                    console.log("promise results:", results);
                     this.dispatch({
                         limits: results[0],
                         calls: results[1],
@@ -164,7 +188,7 @@ class MarketsActions {
                     ])
                 ])
                 .then((results) => {
-                    // console.log("market subscription success:", results[0], results);
+
                     subs[subID] = true;
 
                     this.dispatch({
@@ -218,7 +242,6 @@ class MarketsActions {
         let feeAsset = ChainStore.getAsset(fee_asset_id);
         if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
            fee_asset_id = "1.3.0";
-           console.log("setting fee asset to CORE due to missing CER");
         }
 
         tr.add_type_operation("limit_order_create", {
@@ -325,6 +348,21 @@ class MarketsActions {
 
     callOrderUpdate(order) {
         this.dispatch(order);
+    }
+
+    feedUpdate(asset) {
+        this.dispatch(asset);
+    }
+
+    settleOrderUpdate(asset) {
+        Apis.instance().db_api().exec("get_settle_orders", [
+            asset, 100
+        ]).then(result => {
+
+            this.dispatch({
+                settles: result
+            });
+        })
     }
 
 }

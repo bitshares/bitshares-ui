@@ -227,23 +227,23 @@ class DepthHighChart extends React.Component {
             });
         }
 
-        if (this.props.SQP) {
-            config.xAxis.plotLines.push({
-                color: "#B6B6B6",
-                id: "plot_line",
-                dashStyle: "longdash",
-                value: this.props.SQP * power,
-                label: {
-                    text: counterpart.translate("exchange.squeeze"),
-                    style: {
-                        color: "#DADADA",
-                        fontWeight: "bold"
-                    }
-                },
-                width: 2,
-                zIndex: 5
-            });
-        }
+        // if (this.props.SQP) {
+        //     config.xAxis.plotLines.push({
+        //         color: "#B6B6B6",
+        //         id: "plot_line",
+        //         dashStyle: "longdash",
+        //         value: this.props.SQP * power,
+        //         label: {
+        //             text: counterpart.translate("exchange.squeeze"),
+        //             style: {
+        //                 color: "#DADADA",
+        //                 fontWeight: "bold"
+        //             }
+        //         },
+        //         width: 2,
+        //         zIndex: 5
+        //     });
+        // }
 
 
         if (this.props.settlementPrice) {

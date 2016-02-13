@@ -37,7 +37,7 @@ import OpenSettleOrders from "./OpenSettleOrders";
 require("./exchange.scss");
 
 let emitter = ee.emitter();
-let callListener, limitListener, newCallListener;
+let callListener, limitListener, newCallListener, feedUpdateListener, settleOrderListener;
 
 Highcharts.setOptions({
     global: {
@@ -212,6 +212,15 @@ class Exchange extends React.Component {
         emitter.on('cancel-order', limitListener = MarketsActions.cancelLimitOrderSuccess);
         emitter.on('close-call', callListener = MarketsActions.closeCallOrderSuccess);
         emitter.on('call-order-update', newCallListener = MarketsActions.callOrderUpdate);
+        emitter.on('bitasset-update', feedUpdateListener = MarketsActions.feedUpdate);
+        emitter.on('settle-order-update', settleOrderListener = (object) => {
+            let {isMarketAsset, marketAsset} = market_utils.isMarketAsset(this.props.quoteAsset, this.props.baseAsset);
+            console.log("settle-order-update:", object, "isMarketAsset:", isMarketAsset, "marketAsset:", marketAsset);
+
+            if (isMarketAsset && marketAsset.id === object.balance.asset_id) {
+               MarketsActions.settleOrderUpdate(marketAsset.id);
+            }
+        });
     }
 
     componentDidMount() {
@@ -234,7 +243,7 @@ class Exchange extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.baseAsset && nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
             console.log(nextProps.baseAsset.get("symbol"), "is prediction market");
-            console.log("this.props:", this.props);
+            // console.log("this.props:", this.props);
             this.props.history.push(`market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`)
         }
 
@@ -263,6 +272,7 @@ class Exchange extends React.Component {
         emitter.off('cancel-order', limitListener);
         emitter.off('close-call', callListener);
         emitter.off('call-order-update', newCallListener);
+        emitter.off('bitasset-update', feedUpdateListener);
     }
 
     _createPredictionShort(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
@@ -805,7 +815,8 @@ class Exchange extends React.Component {
 
     _parseMarket() {
         let {bids, asks, calls, invertedCalls} = this.props;
-        let {showCallLimit} = this._getSettlementInfo;
+
+        let {showCallLimit} = this._getSettlementInfo();
         let combinedAsks, combinedBids, highestBid, lowestAsk;
 
         if (calls.length && invertedCalls) {
@@ -883,7 +894,7 @@ class Exchange extends React.Component {
                         }
                     }, null);
                     squeezePrice = settlementPrice / short_squeeze;
-                    showCallLimit = highestBid < lowestCallPrice && lowestCallPrice > squeezePrice;
+                    showCallLimit = lowestCallPrice > settlementPrice;
                 } else {
                     lowestAsk = asks.reduce((total, ask) => {
                         if (!total) {
@@ -894,7 +905,7 @@ class Exchange extends React.Component {
                     }, null);
 
                     squeezePrice = settlementPrice * short_squeeze;
-                    showCallLimit = lowestAsk > lowestCallPrice && lowestCallPrice < squeezePrice;
+                    showCallLimit = lowestCallPrice < settlementPrice;
                 }
             }
         }
@@ -997,7 +1008,7 @@ class Exchange extends React.Component {
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
-        let {combinedAsks, combinedBids, spread, lowestAsk, highestBid} = this._parseMarket(showCallLimit);
+        let {combinedAsks, combinedBids, spread, lowestAsk, highestBid} = this._parseMarket();
 
         // Latest price
         if (activeMarketHistory.size) {
@@ -1292,7 +1303,7 @@ class Exchange extends React.Component {
                                     plotLine={this.state.depthLine}
                                     settlementPrice={settlementPrice}
                                     spread={spread}
-                                    SQP={showCallLimit ? squeezePrice : null}
+                                    SQP={showCallLimit ? null : null}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
