@@ -31,28 +31,31 @@ export function encrypt(wallet_object, backup_pubkey) {
     @return {Promise} {object} wallet_object
 */
 export function decrypt(backup_buffer, private_key) {
+    
+    if( ! Buffer.isBuffer(backup_buffer))
+        backup_buffer = new Buffer(backup_buffer, 'binary')
+    
+    var public_key
+    try {
+        public_key = PublicKey.fromBuffer(backup_buffer.slice(0, 33))
+    } catch(e) {
+        console.error(e, "stack", e.stack)
+        throw new Error("Invalid backup file")
+    }
+    
+    backup_buffer = backup_buffer.slice(33)
+    try {
+        
+        backup_buffer = Aes.decrypt_with_checksum(
+            private_key, public_key, null/*nonce*/, backup_buffer)
+        
+    } catch(error) {
+        console.error("Error decrypting wallet", error, error.stack)
+        throw new Error("invalid_decryption_key")
+        return
+    }
+    
     return new Promise( (resolve, reject) => {
-        if( ! Buffer.isBuffer(backup_buffer))
-            backup_buffer = new Buffer(backup_buffer, 'binary')
-        
-        var public_key
-        try {
-            public_key = PublicKey.fromBuffer(backup_buffer.slice(0, 33))
-        } catch(e) {
-            console.error(e, e.stack)
-            throw new Error("Invalid backup file")
-        }
-        
-        backup_buffer = backup_buffer.slice(33)
-        try {
-            backup_buffer = Aes.decrypt_with_checksum(
-                private_key, public_key, null/*nonce*/, backup_buffer)
-        } catch(error) {
-            console.error("Error decrypting wallet", error, error.stack)
-            reject("invalid_decryption_key")
-            return
-        }
-        
         try {
             lzma.decompress(backup_buffer, wallet_string => {
                 try {

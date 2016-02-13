@@ -24,6 +24,7 @@ const local_hash2 = hash.sha256(encrypted_data2)
 const signature2 = Signature.signBufferSha256(local_hash2, private_key2)
 const signature_key1_enc2 = Signature.signBufferSha256(local_hash2, private_key)
 
+console.log("WARN\ttest/wallet_api_spec.js tests depend on server state (run entire file)");
 
 // This may be commented out because it spams the inbox...
 

@@ -73,7 +73,7 @@ describe('Confidential wallet', () => {
     
     it('accounts', ()=> {
         
-        assert.throws(create, /login/, "This test should require an unlocked wallet" )
+        assert.throws(create, /locked/, "This test should require an unlocked wallet" )
         
         // unlock
         wallet.login(username, password, email, Apis.chainId())

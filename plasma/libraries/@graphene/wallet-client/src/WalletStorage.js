@@ -1,5 +1,5 @@
 import { fromJS, Map, is } from "immutable"
-import { encrypt, decrypt } from "./WalletActions"
+import { encrypt, decrypt } from "./Backup"
 import { PrivateKey, Signature, hash } from "@graphene/ecc"
 import WalletWebSocket from "./WalletWebSocket"
 import WalletApi from "./WalletApi"
@@ -7,12 +7,15 @@ import assert from "assert"
 
 /**
     A Wallet is a place where private user information can be stored. This information is kept encrypted when on disk or stored on the remote server.
-    
-    Serilizable persisterent state (JSON serilizable types only)..  This is the data kept in the walletStorage.  
 
+    This class creates these fields inside of the encrypted wallet object:
+    
     ```js
     // Serilizable persisterent state (JSON serilizable types only).
-    const empty_wallet = fromJS({
+    const wallet = fromJS({
+        
+        // Set on first login
+        chain_id: "",
         
         // ISO creation Date string from the browser
         created: undefined,
@@ -20,14 +23,13 @@ import assert from "assert"
         // Initially same as `created`
         last_modified: undefined,
         
-        // ISO Date of last binary backup download
-        backup_date: undefined,
-        
-        // Set on first login
-        chain_id: "",
-        
-        // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not nearly random enough for this to be public).
-        secret_encryption_pubkey: null,
+    })
+    ```
+    
+    This is the data kept in the storage object.  Note, the storage object may be configured for RAM only or RAM and disk.
+    
+    ```js
+    const state = fromJS({
         
         // Wallet JSON string encrypted using the private key derived from email+username+password (base64)
         encrypted_wallet: null,
@@ -49,7 +51,10 @@ import assert from "assert"
         remote_created_date: null,
         
         // ISO Date string from the server
-        remote_updated_date: null
+        remote_updated_date: null,
+        
+        // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not random enough to be public).
+        private_encryption_pubkey: null,
         
     })
     ```
@@ -113,7 +118,7 @@ export default class WalletStorage {
     */
     useBackupServer( remote_url = this.storage.state.get("remote_url")) {
         // close (if applicable)
-        let close = this.ws_rpc ? this.ws_rpc.close() : null
+        let close = this.ws_rpc ? this.ws_rpc.close() : Promise.resolve()
         if(remote_url != null) {
             this.ws_rpc = new WalletWebSocket(remote_url)
             this.api = new WalletApi(this.ws_rpc)
@@ -127,7 +132,7 @@ export default class WalletStorage {
             this.notify = true
             this.storage.setState({ remote_url })
         }
-        return this.notifyResolve(Promise.resolve(close))
+        return this.notifyResolve( close )
     }
     
     /**
@@ -187,58 +192,73 @@ export default class WalletStorage {
         req(username, "username")
         req(password, "password")
         
-        let private_key = PrivateKey.fromSeed(
+        this.private_key = PrivateKey.fromSeed(
             email.trim().toLowerCase() + "\t" +
             username.trim().toLowerCase() + "\t" +
             password
         )
         
-        let disk // Initial storage decrypt promise
+        // `sync` will check the server (if configured) and sync up this.storage and this.wallet_object
         
-        let public_key = private_key.toPublicKey()
+        this.notify = true
         
-        if(this.storage.state.get("secret_encryption_pubkey")) {
+        // if there is a local wallet, get it ready first
+        let encrypted_wallet = this.storage.state.get("encrypted_wallet")
+        if( encrypted_wallet ) {
+            
+            console.log("INFO\tWalletStorage\tlogin", "local wallet")
             
             // check login (email, username, and password)
-            if( this.storage.state.get("secret_encryption_pubkey") !== public_key.toString())
+            let public_key = this.private_key.toPublicKey()
+            if( this.storage.state.get("private_encryption_pubkey") !== public_key.toString())
                 throw new Error( "invalid_password" )
             
             if( chain_id && chain_id !== this.storage.state.get("chain_id"))
                 throw new Error( "Missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
             
-            let encrypted_wallet = this.storage.state.get("encrypted_wallet")
-            if( encrypted_wallet ) {
-                let backup_buffer = new Buffer(encrypted_wallet, 'base64')
-                disk = decrypt(backup_buffer, private_key).then( wallet_object => {
-                    this.wallet_object = fromJS( wallet_object )
-                    this.notify = true
-                })
-            }
-        } else {
+            // Set this up so sync will have a wallet ready to look at
+            let backup_buffer = new Buffer(encrypted_wallet, 'base64')
+            return decrypt(backup_buffer, this.private_key).then( wallet_object => {
+                
+                // Unlock and get in sync
+                this.wallet_object = fromJS( wallet_object )
+                return this.notifyResolve(this.sync())
+                
+            })
             
-            // first login
-            
-            assert(chain_id, "Chain ID is required on first login")
-            
-            let dt = new Date().toISOString()
-            let init = {
-                chain_id,
-                created: dt,
-                last_modified: dt,
-                secret_encryption_pubkey: public_key.toString()
-            }
-            this.storage.setState(init)
-            
-            // Temporily stuff the state into the wallet_object, this helps the unit tests where waiting for this.sync to resolve is not required.
-            this.wallet_object = this.wallet_object.merge(init)
-            
-            this.notify = true
         }
         
-        this.private_key = private_key
-        
-        return (disk ? disk : Promise.resolve())
-            .then(()=> this.notifyResolve( this.sync(private_key) ))
+        // new wallet locally, is there one on the server?
+        return this.notifyResolve( this.sync().then(()=>{
+            
+            console.log("INFO\tWalletStorage\tlogin", this.wallet_object.has("created") ? "downloaded new wallet": "new wallet")
+            
+            if( ! this.wallet_object.has("created") ) {
+                
+                // this really is a new wallet
+                
+                assert(chain_id, "Chain ID is required on first login")
+            
+                let public_key = this.private_key.toPublicKey()
+                this.storage.setState({
+                    private_encryption_pubkey: public_key.toString()
+                })
+                
+                let dt = new Date().toISOString()
+                this.wallet_object = fromJS({
+                    chain_id,
+                    created: dt,
+                    last_modified: dt
+                })
+                
+                return encrypt(this.wallet_object, public_key).then( encrypted_data => {
+                    this.storage.setState({
+                        encrypted_wallet: encrypted_data.toString('base64')
+                    })
+                    return this.notifyResolve(this.sync())
+                })
+            }
+        }))
     }
     
     validatePassword( email, username, password ) {
@@ -247,7 +267,7 @@ export default class WalletStorage {
         req(username, "username")
         req(password, "password")
         
-        let pw_pubkey = this.storage.state.get("secret_encryption_pubkey")
+        let pw_pubkey = this.storage.state.get("private_encryption_pubkey")
         assert(pw_pubkey, "Login first to setup this wallet")
         
         let private_key = PrivateKey.fromSeed(
@@ -330,21 +350,12 @@ export default class WalletStorage {
         this.wallet_object = fromJS(wallet_object)
         this.wallet_object = this.wallet_object.set("last_modified", new Date().toISOString())
         
-        let rollback_wallet = this.wallet_object
-        this.wallet_object = this.wallet_object.set("backup_date", new Date().toISOString())
-        
         return this.notifyResolve(
             this.updateWallet().catch( error => {
                 console.log('ERROR\tWallet:'+this.instance+'\tsetState', error, 'stack', error.stack)
                 throw error
             })
-        ).catch( error =>{
-            
-            if( rollback_wallet )
-                this.wallet_object = rollback_wallet
-            
-            throw error
-        })
+        )
     }
     
     /**
@@ -383,7 +394,7 @@ export default class WalletStorage {
     */
     changePassword( email, username, old_password, new_password ) {
         
-        if( ! this.storage.state.get("secret_encryption_pubkey") )
+        if( ! this.storage.state.get("private_encryption_pubkey") )
             throw new Error("wallet_empty")
         
         req(email, "email")
@@ -400,11 +411,12 @@ export default class WalletStorage {
         let old_public_key = old_private_key.toPublicKey()
         
         // check login
-        if( this.storage.state.get("secret_encryption_pubkey") !== old_public_key.toString())
+        if( this.storage.state.get("private_encryption_pubkey") !== old_public_key.toString())
             throw new Error( "invalid_password" )
         
         let original_local_hash = this.localHash()
         let remote_copy = this.storage.state.get("remote_copy")
+        
         if( remote_copy === true ) {
             
             let remote_hash = this.storage.state.get("remote_hash")
@@ -430,7 +442,7 @@ export default class WalletStorage {
                 // Save locally first
                 this.storage.setState({
                     encrypted_wallet: encrypted_data.toString('base64'),
-                    secret_encryption_pubkey: new_public_key.toString()
+                    private_encryption_pubkey: new_public_key.toString()
                 })
                 this.local_status = null
                 this.notify = true
@@ -515,6 +527,7 @@ function notifySubscribers() {
     @private
 */
 function sync(private_key = this.private_key) {
+
     // Wallet is locked OR it is an offline wallet
     if( ! private_key || ! this.api )
         return Promise.resolve()
@@ -525,7 +538,8 @@ function sync(private_key = this.private_key) {
     if( this.ws_rpc.getSubscriptionId("fetchWallet", public_key.toString()) )
     {
         let remote_copy = this.storage.state.get("remote_copy")
-        if( remote_copy === false ) {
+        let remote_hash = this.storage.state.get("remote_hash")
+        if( remote_copy === false && remote_hash ) {
             let local_hash = this.localHash()
             if(local_hash) {
                 let signature = Signature.signBufferSha256(local_hash, private_key)
@@ -535,6 +549,7 @@ function sync(private_key = this.private_key) {
         return Promise.resolve()
     }
     let remote_hash = this.storage.state.get("remote_hash")
+    
     // No subscription, fetch and subscribe to future wallet updates
     return fetchWallet.bind(this)(private_key, remote_hash)
 }
@@ -547,10 +562,11 @@ function fetchWallet(private_key, local_hash) {
 
     let local_hash_buffer = local_hash ? new Buffer(local_hash, 'base64') : null
 
-    // for the server wallet's callback
+    // Create `resolve` for the server wallet's callback
     return new Promise( resolve => {
         
-        // This promise can't server as the return value, we are only after the error and instead need the callback to "resolve"
+        // Rely on the callback to "resolve"
+        // This promise can't server as the return value, we are only after the error.
         this.api.fetchWallet(public_key, local_hash_buffer, server_wallet => {
             
             // A subscribe callback does not have a statusText 
@@ -729,7 +745,7 @@ function updateWallet() {
         if( ! this.private_key )
             throw new Error("wallet is locked")
         
-        let pubkey = state.get("secret_encryption_pubkey")
+        let pubkey = state.get("private_encryption_pubkey")
         let remote_copy = state.get("remote_copy")
         
         let p1 = encrypt(wallet_object, pubkey).then( encrypted_data => {

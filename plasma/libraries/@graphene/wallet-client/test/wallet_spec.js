@@ -1,6 +1,6 @@
 import assert from "assert"
 import { Map, is } from "immutable"
-import { encrypt, decrypt } from "../src/WalletActions"
+import { encrypt, decrypt } from "../src/Backup"
 import {createToken} from '@graphene/time-token'
 import {Signature, PrivateKey, Aes, hash} from "@graphene/ecc"
 import LocalStoragePersistence from "../src/LocalStoragePersistence"
@@ -31,11 +31,11 @@ describe('Single wallet', () => {
             return wallet1.keepRemoteCopy(false) // delete
                 .then(()=> wallet1.logout())
                 .then(()=> initWallet())
-                .catch( error=>{ console.error("wallet_spec\tbeforeEach", error); throw error })
+                // .catch( error=>{ console.error("wallet_spec\tbeforeEach", error.stack); throw error })
         })
     })
-    
-    afterEach(()=> wallet.logout())
+
+    afterEach(()=> wallet ? wallet.logout():null)
 
     it('server', ()=> {
         
@@ -78,7 +78,7 @@ describe('Single wallet', () => {
             let json = testStorage.getState().toJS()
             assert(json.remote_hash == null, 'remote_hash')
             assert(json.encrypted_wallet,'encrypted_wallet')
-            assert(json.secret_encryption_pubkey,'secret_encryption_pubkey')
+            assert(json.private_encryption_pubkey,'private_encryption_pubkey')
             wallet.keepLocalCopy(false)// clean-up (delete it from disk)
             
             // It is not on the server
@@ -121,6 +121,8 @@ describe('Single wallet', () => {
             .then(()=> wallet.setState([]) )// create
         
         return create.then(()=> {
+            
+            console.log('wallet.wallet_object.has("encrypted_wallet")', wallet.wallet_object.has("encrypted_wallet"))
             
             assert.throws(()=> wallet.changePassword(email, username, "invalid_"+password, "new_"+password), /invalid_password/, "invalid_password")
             
@@ -252,41 +254,47 @@ describe('Multi wallet', () => {
         
         return new Promise( (resolve, reject) => {
             
-            // Create two remote wallets, same wallet but different connections (different devices)
-            let main = Promise.all([ remoteWallet(), remoteWallet() ]).then( result =>{
-                
-                let [ wallet1, wallet2 ] = result
+            // Create two remote wallets, same wallet but different connections (different devices).
+            // The wallets have to be created serially so the second wallet will see the first wallet
+            let wallet1, wallet2
+            let main = Promise.resolve()
+            .then( ()=> remoteWallet()).then( w1 => wallet1 = w1)
+            .then( ()=> remoteWallet()).then( w2 => wallet2 = w2)
+            .then( ()=>{
                 
                 let p1 = new Promise( r1 =>{
                     let p2 = new Promise( r2 =>{
                         
-                        let secret1 = assertSubscribe("secret", 1)
-                        let secret2 = assertSubscribe("secret", 2)
+                        let s1 = assertSubscribe("secret", 1)
+                        let s2 = assertSubscribe("secret", 2)
                         
-                        wallet1.subscribe( secret1, r1 )
-                        wallet2.subscribe( secret2, r2 )
+                        wallet1.subscribe( s1, r1 )
+                        wallet2.subscribe( s2, r2 )
                         
-                        let setter = wallet1.setState({ test_wallet: 'secret' })
-                        setter.then(()=>Promise.all([ p1, p2 ])).then(()=>{
+                        wallet1.setState({ test_wallet: 'secret' })
+                        
+                        // p1, p2 will check the wallets during the subscribe events
+                        .then(()=>Promise.all([ p1, p2 ])) 
+                        
+                        .then(()=>{
                             
-                            wallet1.unsubscribe( secret1 )
-                            wallet2.unsubscribe( secret2 )
+                            wallet1.unsubscribe( s1 )
+                            wallet2.unsubscribe( s2 )
                             
                             let p3 = new Promise( r3 =>{
                                 let p4 = new Promise( r4 =>{
                                     
-                                    let secret3 = assertSubscribe("secretB", 3)
-                                    let secret4 = assertSubscribe("secretB", 4)
+                                    let s3 = assertSubscribe("secretB", 3)
+                                    let s4 = assertSubscribe("secretB", 4)
                                     
-                                    wallet1.subscribe( secret3, r3 )
-                                    wallet2.subscribe( secret4, r4 )
+                                    wallet1.subscribe( s3, r3 )
+                                    wallet2.subscribe( s4, r4 )
                                     
-                                    let setter2 = wallet2.setState({ test_wallet: 'secretB' })
-                                    
-                                    setter2.then(()=>Promise.all([ p3, p4 ])).then(()=>{
+                                    wallet2.setState({ test_wallet: 'secretB' }).then(()=>Promise.all([ p3, p4 ]))
+                                    .then(()=>{
                                         
-                                        wallet1.unsubscribe( secret3 )
-                                        wallet2.unsubscribe( secret4 )
+                                        wallet1.unsubscribe( s3 )
+                                        wallet2.unsubscribe( s4 )
                                         
                                         resolve( Promise.all([ wallet1.logout(), wallet2.logout() ]))
                                     
@@ -327,7 +335,9 @@ function remoteWallet(emailParam = email) {
     let wallet = newWallet()
     wallet.useBackupServer(remote_url)
     wallet.keepRemoteCopy(true, code)
-    return wallet.login(emailParam, username, password, chain_id).then(()=> wallet )
+    return wallet.login(emailParam, username, password, chain_id)
+        // .then(()=> console.log(111) )
+        .then(()=> wallet )
 }
 
 function assertNoServerWallet(walletParam) {
