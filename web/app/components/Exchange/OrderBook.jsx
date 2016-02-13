@@ -8,6 +8,8 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
+import Transition from 'react-motion-ui-pack'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class OrderBookRowVertical extends React.Component {
     constructor() {
@@ -91,7 +93,8 @@ class OrderBook extends React.Component {
             hasCentered: false,
             flip: props.flipOrderBook,
             showAllBids: false,
-            showAllAsks: false
+            showAllAsks: false,
+            animateEnter: false
         };
     }
 
@@ -104,7 +107,8 @@ class OrderBook extends React.Component {
                 nextState.flip !== this.state.flip ||
                 nextState.showAllBids !== this.state.showAllBids ||
                 nextState.showAllAsks !== this.state.showAllAsks ||
-                nextProps.latest !== this.props.latest
+                nextProps.latest !== this.props.latest ||
+                nextState.animateEnter !== this.state.animateEnter
             );
     }
 
@@ -126,6 +130,13 @@ class OrderBook extends React.Component {
             let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
             Ps.initialize(asksContainer);            
         }
+
+        setTimeout(() => {
+            this.setState({
+                animateEnter: true
+            });    
+        }, 200);
+        
     }
 
     componentDidUpdate(prevProps) {
@@ -339,9 +350,16 @@ class OrderBook extends React.Component {
                                 </table>
                                 <div className="grid-block market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
-                                        <tbody className="orderbook orderbook-top">
+                                        <ReactCSSTransitionGroup
+                                            className="orderbook orderbook-top"
+                                            component="tbody"
+                                            transitionName="aninumber"
+                                            transitionEnterTimeout={300}
+                                            transitionEnter={this.state.animateEnter}
+                                            transitionLeave={false}
+                                        >
                                             {askRows}
-                                        </tbody>
+                                        </ReactCSSTransitionGroup>
                                     </table>
                                 </div>
                                 {totalAsksLength > 13 ? (
@@ -382,9 +400,16 @@ class OrderBook extends React.Component {
                                 </table>    
                                 <div className="grid-block market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
-                                        <tbody className="orderbook orderbook-bottom">
+                                        <ReactCSSTransitionGroup
+                                            className="orderbook orderbook-bottom"
+                                            transitionEnterTimeout={300}
+                                            transitionEnter={this.state.animateEnter}
+                                            transitionLeave={false}
+                                            component="tbody"
+                                            transitionName="aninumber"
+                                        >
                                             {bidRows}
-                                        </tbody>
+                                        </ReactCSSTransitionGroup>
                                     </table>
                                 </div>
                                 {totalBidsLength > 13 ? (

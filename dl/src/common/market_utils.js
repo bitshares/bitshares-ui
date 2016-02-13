@@ -334,6 +334,25 @@ class MarketUtils {
         }
     }
 
+    static isMarketAsset(quote, base) {
+        let isMarketAsset = false, marketAsset, inverted = false;
+
+        if (quote.get("bitasset") && base.get("id") === "1.3.0") {
+            isMarketAsset = true;
+            marketAsset = {id: quote.get("id")}
+        } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
+            inverted = true;
+            isMarketAsset = true;
+            marketAsset = {id: base.get("id")};
+        }
+
+        return {
+            isMarketAsset,
+            marketAsset,
+            inverted
+        };
+    }
+
 }
 
 export default MarketUtils;
