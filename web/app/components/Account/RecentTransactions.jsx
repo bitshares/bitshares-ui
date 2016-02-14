@@ -9,6 +9,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import {operations} from "chain/chain_types";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 function compareOps(b, a) {
     if (a.block_num < b.block_num) return -1;
@@ -144,9 +145,12 @@ class RecentTransactions extends React.Component {
                         <th><Translate content="account.votes.info" /></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <TransitionWrapper
+                        component="tbody"
+                        transitionName="newrow"
+                    >
                         {display_history}
-                    </tbody>
+                    </TransitionWrapper>
                 </table>
                 {this.props.showMore && historyCount > 20 && limit < historyCount ? (
                     <div className="account-info more-button">

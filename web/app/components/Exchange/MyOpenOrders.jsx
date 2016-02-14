@@ -12,6 +12,7 @@ import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 class TableHeader extends React.Component {
 
@@ -199,9 +200,12 @@ class MyOpenOrders extends React.Component {
 
                     <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 324}}>
                         <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
-                            <tbody>
+                            <TransitionWrapper
+                                component="tbody"
+                                transitionName="newrow"
+                            >
                                 {rows.length ? rows : emptyRow}
-                            </tbody>
+                            </TransitionWrapper>
                         </table>
                     </div>
                 </div>

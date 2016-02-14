@@ -147,8 +147,6 @@ class BorrowModalContent extends React.Component {
             collateral_ratio: amount / (this.state.short_amount / feed_price)
         }
 
-        console.log("amount:", amount, "newState:", newState);
-
         this.setState(newState);
         this._validateFields(newState);
         this._setUpdatedPosition(newState);

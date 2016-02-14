@@ -18,6 +18,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Icon from "../Icon/Icon";
 import Ps from "perfect-scrollbar";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 require("../Blockchain/json-inspector.scss");
 
@@ -54,16 +55,20 @@ class Blocks extends React.Component {
         globalObject: ChainTypes.ChainObject.isRequired,
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired
-    }
+    };
 
     static defaultProps = {
         globalObject: "2.0.0",
         dynGlobalObject: "2.1.0",
         coreAsset: "1.3.0"
-    }
+    };
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            animateEnter: false
+        };
     }
 
     _getBlock(height, maxBlock) {
@@ -77,6 +82,10 @@ class Blocks extends React.Component {
 
         if (nextProps.latestBlocks.size === 0) {
             return this._getInitialBlocks();
+        } else if (!this.state.animateEnter) {
+            this.setState({
+                animateEnter: true
+            });
         }
 
         let maxBlock = nextProps.dynGlobalObject.get("head_block_number");
@@ -154,7 +163,6 @@ class Blocks extends React.Component {
             })
             .take(20)
             .map((block) => {
-
                 return (
                         <tr key={block.id}>
                             <td><Link to={`/block/${block.id}`}>#{utils.format_number(block.id, 0)}</Link></td>
@@ -167,7 +175,9 @@ class Blocks extends React.Component {
                         </tr>
                     );
             }).toArray();
+
             let trxIndex = 0;
+            
             transactions = latestTransactions.take(20)
             .map((trx) => {
 
@@ -322,9 +332,7 @@ class Blocks extends React.Component {
                             </table>
                             <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="operations">
                                 <table className="table">
-                                    <tbody>
-                                        {transactions}
-                                    </tbody>
+                                    {transactions}
                                 </table>
                             </div>
                         </div>
@@ -343,9 +351,12 @@ class Blocks extends React.Component {
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <TransitionWrapper
+                                    component="tbody"
+                                    transitionName="newrow"
+                                >
                                     {blocks}
-                                </tbody>
+                                </TransitionWrapper>
                             </table>
                             </div>
                         </div>

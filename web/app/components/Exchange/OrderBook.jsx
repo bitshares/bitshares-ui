@@ -8,36 +8,24 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
-import Transition from 'react-motion-ui-pack'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 class OrderBookRowVertical extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            hasChanged: false
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.order.amount !== this.props.order.amount || nextProps.order.price_full !== this.props.order.price_full) {
-            this.setState({hasChanged: true});
-        } else {
-            this.setState({hasChanged: false});
-        }
+    
+    shouldComponentUpdate(nextProps) {
+        return (
+            nextProps.order.price_full !== this.props.order.price_full ||
+            nextProps.order.amount !== this.props.order.amount
+        )
     }
 
     render() {
-
         let {order, quote, base, type, final} = this.props;
-        let changeClass = null;
-        if (this.state.hasChanged) {
-            changeClass = "order-change";
-        }
+
         let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall";
 
         return (
-            <tr key={order.price_full} onClick={this.props.onClick} className={classnames({"final-row": final} ,changeClass)}>
+            <tr key={order.price_full} onClick={this.props.onClick} className={classnames({"final-row": final})}>
                 <td>{utils.format_number(order.value, base.get("precision") - 1)}</td>
                 <td>{utils.format_number(order.amount, quote.get("precision") - 1)}</td>
                 <td className={integerClass}>
@@ -49,31 +37,21 @@ class OrderBookRowVertical extends React.Component {
 }
 
 class OrderBookRowHorizontal extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            hasChanged: false
-        };
-    }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.order.amount !== this.props.order.amount || nextProps.order.price_full !== this.props.order.price_full) {
-            this.setState({hasChanged: true});
-        } else {
-            this.setState({hasChanged: false});
-        }
+
+    shouldComponentUpdate(nextProps) {
+        return (
+            nextProps.order.price_full !== this.props.order.price_full ||
+            nextProps.order.amount !== this.props.order.amount
+        )
     }
 
     render() {
-
         let {order, quote, base, type} = this.props;
-        let changeClass = null;
-        if (this.state.hasChanged) {
-            changeClass = "order-change";
-        }
+
         let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
         return (
-            <tr key={order.price_full} onClick={this.props.onClick} className={changeClass}>
+            <tr onClick={this.props.onClick} >
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
                 </td>
@@ -131,11 +109,9 @@ class OrderBook extends React.Component {
             Ps.initialize(asksContainer);            
         }
 
-        setTimeout(() => {
-            this.setState({
-                animateEnter: true
-            });    
-        }, 200);
+        this.setState({
+            animateEnter: true
+        });    
         
     }
 
@@ -350,16 +326,13 @@ class OrderBook extends React.Component {
                                 </table>
                                 <div className="grid-block market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
-                                        <ReactCSSTransitionGroup
+                                        <TransitionWrapper
                                             className="orderbook orderbook-top"
                                             component="tbody"
-                                            transitionName="aninumber"
-                                            transitionEnterTimeout={300}
-                                            transitionEnter={this.state.animateEnter}
-                                            transitionLeave={false}
+                                            transitionName="newrow"
                                         >
                                             {askRows}
-                                        </ReactCSSTransitionGroup>
+                                        </TransitionWrapper>
                                     </table>
                                 </div>
                                 {totalAsksLength > 13 ? (
@@ -400,16 +373,13 @@ class OrderBook extends React.Component {
                                 </table>    
                                 <div className="grid-block market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
-                                        <ReactCSSTransitionGroup
+                                        <TransitionWrapper
                                             className="orderbook orderbook-bottom"
-                                            transitionEnterTimeout={300}
-                                            transitionEnter={this.state.animateEnter}
-                                            transitionLeave={false}
                                             component="tbody"
-                                            transitionName="aninumber"
+                                            transitionName="newrow"                                            
                                         >
                                             {bidRows}
-                                        </ReactCSSTransitionGroup>
+                                        </TransitionWrapper>
                                     </table>
                                 </div>
                                 {totalBidsLength > 13 ? (
@@ -439,7 +409,11 @@ class OrderBook extends React.Component {
                     </div>
                     <div className="table-container grid-content market-right-padding-only" ref="orderbook_container" style={{overflow: "hidden"}}>
                         <table className="table order-table table-hover text-right">
-                            <tbody id="test" className="orderbook ps-container orderbook-top">
+                            <TransitionWrapper
+                                className="orderbook ps-container orderbook-top"
+                                component="tbody"
+                                transitionName="newrow"                                            
+                            >
                                 {askRows}
                                 <tr onClick={this._centerView.bind(this)} key="spread" className="orderbook-latest-price" ref="centerRow">
                                     <td colSpan="3" className="text-center spread">
@@ -447,7 +421,7 @@ class OrderBook extends React.Component {
                                     </td>
                                 </tr>
                                 {bidRows}
-                            </tbody>
+                            </TransitionWrapper>
                         </table>
                     </div>
                     <div style={{width: "100%", borderTop: "1px solid grey"}} className="align-center grid-block footer shrink bottom-header">
