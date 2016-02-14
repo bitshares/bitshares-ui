@@ -108,6 +108,10 @@ td.orderHistoryCall {
     > tbody > tr > td {
         font-size: 0.75rem;
     }
+
+    > tbody > tr:nth-of-type(even) {
+      background-color: #3C3C3C;
+    }
 }
 
 .my-orders {
@@ -580,5 +584,14 @@ tr.activeMarket {
   text-align: center;
   padding: 5px 0;
   border-top: 1px solid #444;
+}
 
+.newrow-enter.newrow-enter-active {
+  animation: flash 1.25s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes flash {
+  0%   { background-color: #6B6B6B;}
+  100% { background-color: transparent;}
 }
