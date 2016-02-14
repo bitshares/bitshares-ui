@@ -158,10 +158,19 @@ class OrderBook extends React.Component {
             this.setState({
                 showAllAsks: !this.state.showAllAsks
             });
+
+            if (this.state.showAllAsks) {
+                this.refs.hor_asks.scrollTop = 0;
+            }
+
         } else {
             this.setState({
                 showAllBids: !this.state.showAllBids
             });
+
+            if (this.state.showAllBids) {
+                this.refs.hor_bids.scrollTop = 0;
+            }
         }
     }
 
@@ -324,7 +333,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>
-                                <div className="grid-block market-right-padding" ref="hor_asks" style={{overflow: "hidden", maxHeight: 300}}>
+                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                         <TransitionWrapper
                                             className="orderbook orderbook-top"
@@ -361,7 +370,7 @@ class OrderBook extends React.Component {
                                         <span> ({baseSymbol})</span>
                                     </div>
                                 </div>
-                                <table className="table order-table table-hover text-right market-right-padding">
+                                <table className="table order-table table-hover text-right">
                                     <thead>
                                         <tr key="top-header" className="top-header">
                                             <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
@@ -371,7 +380,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>    
-                                <div className="grid-block market-right-padding" ref="hor_bids" style={{overflow: "hidden", maxHeight: 300}}>
+                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             className="orderbook orderbook-bottom"
