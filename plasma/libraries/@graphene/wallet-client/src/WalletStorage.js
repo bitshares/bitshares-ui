@@ -214,18 +214,17 @@ export default class WalletStorage {
             if( this.storage.state.get("private_encryption_pubkey") !== public_key.toString())
                 throw new Error( "invalid_password" )
             
-            if( chain_id && chain_id !== this.storage.state.get("chain_id"))
-                throw new Error( "Missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
-            
             // Set this up so sync will have a wallet ready to look at
             let backup_buffer = new Buffer(encrypted_wallet, 'base64')
             return decrypt(backup_buffer, this.private_key).then( wallet_object => {
                 
-                // Unlock and get in sync
-                this.notify = true
-                this.wallet_object = this.wallet_object.mergeDeep(fromJS( wallet_object ))
-                return this.notifyResolve(this.sync())
+                if( chain_id && chain_id !== wallet_object.chain_id)
+                    throw new Error( "Missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
                 
+                // A merge is a bit safer incase the user updated the wallet before this login completes
+                this.wallet_object = this.wallet_object.mergeDeep(wallet_object)
+                this.notify = true
+                return this.notifyResolve(this.sync())
             })
             
         }
@@ -243,8 +242,16 @@ export default class WalletStorage {
             this.storage.setState({
                 private_encryption_pubkey: public_key.toString()
             })
+            
+            assert(chain_id, "Chain ID is required on first login")
+            
+            let public_key = this.private_key.toPublicKey()
+            
+            // server wallet or not, the password is defined (same pubkey on the server)
+            this.storage.setState({
+                private_encryption_pubkey: public_key.toString()
+            })
             if( ! this.wallet_object.has("created") ) {
-                
                 // this really is a new wallet
                 let dt = new Date().toISOString()
                 this.wallet_object = this.wallet_object.merge({
@@ -252,19 +259,9 @@ export default class WalletStorage {
                     created: dt,
                     last_modified: dt
                 })
-                
                 return this.notifyResolve(this.updateWallet())
-                
-                // return encrypt(this.wallet_object, public_key).then( encrypted_data => {
-                //     this.storage.setState({
-                //         encrypted_wallet: encrypted_data.toString('base64')
-                //     })
-                //     
-                //     let push = forcePush.bind(this)(false, this.private_key)
-                //     return this.notifyResolve(push)
-                // })
             }
-            this.notifyResolve()
+            return this.notifyResolve()
         })
     }
     
@@ -557,7 +554,7 @@ function sync(private_key = this.private_key) {
         return Promise.resolve()
     }
     let remote_hash = this.storage.state.get("remote_hash")
-    
+  
     // No subscription, fetch and subscribe to future wallet updates
     return fetchWallet.bind(this)(private_key, remote_hash)
 }
@@ -601,7 +598,6 @@ function fetchWalletCallback(server_wallet, private_key) {
             
             server_wallet.statusText = statusText
         }
-        
         if( this.remote_status != server_wallet.statusText ) {
             this.remote_status = server_wallet.statusText
             this.notify = true

@@ -57,97 +57,81 @@ describe('Single wallet', () => {
         
         // Create a local wallet
         wallet.keepLocalCopy(true)
-        let create = wallet
-            .login(email, username, password, chain_id)
-            .then(()=> wallet.setState({ test_wallet: 'secret'}) )// create
-            .then(()=> wallet.setState({ test_wallet: 'secret2'}) )// update
         
-        return create.then(()=>{
-            
-            // Wallet is in memory
-            assert.equal(wallet.wallet_object.get("test_wallet"), "secret2")
-            
-            // Verify the disk wallet exists
+        return Promise.resolve() // create a wallet
+        .then( ()=> wallet.login(email, username, password, chain_id))
+        .then( ()=> wallet.setState({ test_wallet: 'secret'}))
+        
+        // Wallet is in memory
+        .then( ()=>{ assert.equal(wallet.wallet_object.get("test_wallet"), "secret") })
+        
+        // Verify the disk wallet exists
+        .then( ()=>{
             let testStorage = new LocalStoragePersistence("wallet_spec", false/*save*/)
             let json = testStorage.getState().toJS()
             assert(json.remote_hash == null, 'remote_hash')
             assert(json.encrypted_wallet,'encrypted_wallet')
             assert(json.private_encryption_pubkey,'private_encryption_pubkey')
             wallet.keepLocalCopy(false)// clean-up (delete it from disk)
-            
-            // It is not on the server
-            return assertNoServerWallet(wallet)
-            
         })
+        
+        // It is not on the server
+        .then( ()=> assertNoServerWallet(wallet) )
     })
     
     it('memory', ()=> {
         
         // keepLocalCopy false will also delete anything on disk
         wallet.keepLocalCopy(false)
-        let create = wallet
-            .login(email, username, password, chain_id)
-            .then(()=> wallet.setState({ test_wallet: 'secret'}) )// create
-            .then(()=> wallet.setState({ test_wallet: 'secret2'}) )// update
         
-        return create.then(()=> {
-            
-            // Wallet is in memory
-            assert.equal(wallet.wallet_object.get("test_wallet"), "secret2")
-            
-            // It is not on disk
+        return Promise.resolve() // create a wallet
+        .then( ()=> wallet.login(email, username, password, chain_id))
+        .then( ()=> wallet.setState({ test_wallet: 'secret'}))
+        
+        // Wallet is in memory
+        .then( ()=>{ assert.equal(wallet.wallet_object.get("test_wallet"), "secret") })
+        
+        // It is not on disk
+        .then( ()=>{
             let testStorage = new LocalStoragePersistence("wallet_spec", false/*save*/)
             let json = testStorage.getState().toJS()
             assert.equal("{}", JSON.stringify(json), "disk was not empty")
-            
-            // It is not on the server
-            return assertNoServerWallet(wallet)
         })
+        
+        // It is not on the server
+        .then( ()=> assertNoServerWallet(wallet) )
     })
     
-    it('password', function() {
+    it("password", function() {
         
-        this.timeout(4000)
+        this.timeout(5000)
         wallet.useBackupServer(remote_url)
         wallet.keepRemoteCopy(true, code)
         
-        let create = wallet
-            .login(email, username, password, chain_id)
+        return Promise.resolve()
+        .then( ()=> wallet.login(email, username, password, chain_id) )
         
-        return create.then(()=> {
-            
-            // console.log('wallet.storage.state', JSON.stringify(wallet.storage.state,null,4))
-            
-            assert.throws(()=> wallet.changePassword(email, username, "invalid_"+password, "new_"+password), /invalid_password/, "invalid_password")
-            
-            // disconnect and modify locally only
-            wallet.useBackupServer(null)
-            
-            return wallet.setState([]).then(()=>{
-                
-                // make sure we can't change the password (remote_copy is still true)
-                assert.throws(()=> wallet.changePassword(email, username, password, "new_"+password), /wallet_modified/, "wallet_modified")
-                
-                wallet.logout()
-                
-                // reset the wallet so it will download the wallet (original remote_hash must match)
-                initWallet()
-                wallet.useBackupServer(remote_url)
-                
-                return wallet.login(email, username, password, chain_id).then(()=>
-                
-                    // now the wallet is not modified, the local copy matches the server
-                    wallet.changePassword(email, username, password, "new_"+password).then(()=> {
-                        
-                        // check the new login
-                        wallet.logout()
-                        return wallet.login(email, username, "new_"+password, chain_id)
-                        
-                    })
-                    
-                )
-            })
+        .then( ()=>{ assert.throws(()=> wallet.changePassword(email, username, "invalid_"+password, "new_"+password), /invalid_password/, "invalid_password") })
+        
+        // Trigger a wallet modified exception.
+        // Unsubscribe and disconnect, then modify locally only
+        .then( ()=>{ wallet.useBackupServer(null) })
+        .then( ()=> wallet.setState({ test_wallet: 'two' }) )
+        .then( ()=>{ assert.throws(()=> wallet.changePassword(email, username, password, "new_"+password), /wallet_modified/, "wallet_modified") })
+        
+        // Recover from the wallet_modified exception
+        .then( ()=> wallet.logout() )
+        .then( ()=>{
+            // reset the wallet so it will download the wallet (original remote_hash must match)
+            initWallet()
+            wallet.useBackupServer(remote_url)
         })
+        .then( ()=> wallet.login(email, username, password, chain_id) )
+        
+        // now the wallet is not modified, the local copy matches the server
+        .then( ()=> wallet.changePassword(email, username, password, "new_"+password) )
+        .then( ()=> wallet.logout() )
+        .then( ()=> wallet.login(email, username, "new_"+password, chain_id) )
     })
     
     it('server offline updates', ()=> {
