@@ -20,10 +20,19 @@ class Transfer extends React.Component {
         this.state = Transfer.getInitialState();
         let {query} = this.props.location;
 
-        if(query.from) this.state.from_name = query.from;
-        if(query.to) this.state.to_name = query.to;
+        if(query.from) {
+            this.state.from_name = query.from;
+            ChainStore.getAccount(query.from);
+        }
+        if(query.to) {
+            this.state.to_name = query.to;
+            ChainStore.getAccount(query.to);
+        }
         if(query.amount) this.state.amount = query.amount;
-        if(query.asset) this.state.asset_id = query.asset;
+        if(query.asset) {
+            this.state.asset_id = query.asset;
+            this.state.asset = ChainStore.getAsset(query.asset);
+        }
         if(query.memo) this.state.memo = query.memo;
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name && query.to !== currentAccount) this.state.from_name = currentAccount;
@@ -42,18 +51,21 @@ class Transfer extends React.Component {
             memo: "",
             error: null,
             propose: false,
-            propose_account: ""
+            propose_account: "",
+            feeAsset: null,
+            fee_asset_id: "1.3.0"
+
         };
     };
 
     componentWillMount() {
         this.nestedRef = null;
     }
-    
+   
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
-        this.setState({from_name,asset,amount, error: null, propose: false, propose_account: ""})
+        this.setState({from_name, error: null, propose: false, propose_account: ""})
     }
 
     toChanged(to_name) {
@@ -69,12 +81,17 @@ class Transfer extends React.Component {
     }
 
     onAmountChanged(fee_asset_types, {amount, asset}) {
-        this.setState({amount, asset, error: null});
-
-        if (this.state.asset !== asset && fee_asset_types.indexOf(asset.get("id")) !== -1) {
-            this.setState({feeAsset: asset});
-            this.nestedRef.onChange({target: {value: asset.get("id")}});
+        if (!asset || !amount) {
+            return;
         }
+        this.setState({amount, asset, asset_id: asset.get("id"), error: null});
+
+        // if (this.state.asset !== asset && fee_asset_types.indexOf(asset.get("id")) !== -1) {
+            // this.setState({feeAsset: asset});
+            // if (this.nestedRef) {
+            //     this.nestedRef.onChange({target: {value: asset.get("id")}});
+            // }
+        // }
     }
 
     onFeeChanged({amount, asset}) {
@@ -146,9 +163,9 @@ class Transfer extends React.Component {
     render() {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
-            amount, error, to_name, from_name, memo, feeAsset} = this.state;
-
+            amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
         let from_my_account = AccountStore.isMyAccount(from_account)
+        from_my_account = true
         if(from_account && ! from_my_account && ! propose ) {
             from_error = counterpart.translate("account.errors.not_yours");
         }
@@ -183,7 +200,8 @@ class Transfer extends React.Component {
 
             // Finish fee estimation
             let core = ChainStore.getObject("1.3.0");
-            if (feeAsset && feeAsset.get("id") !== "1.3.0") {
+
+            if (feeAsset && feeAsset.get("id") !== "1.3.0" && core) {
                 let price = utils.convertPrice(core, feeAsset);
                 fee = utils.convertValue(price, fee, core, feeAsset);
             }
@@ -198,6 +216,13 @@ class Transfer extends React.Component {
             } else {
                 balance = "No funds";
             }
+        } else {
+            let core = ChainStore.getObject("1.3.0");
+            fee_asset_types = ["1.3.0"];
+            if (core) {
+                fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
+            }
+
         }
         let propose_incomplete = propose && ! propose_account
         let submitButtonClass = "button";
@@ -255,8 +280,7 @@ class Transfer extends React.Component {
                                         disabled={true}
                                         amount={fee}
                                         onChange={this.onFeeChanged.bind(this)}
-                                        asset={fee_asset_types.length > 0 && feeAsset ? feeAsset.get("id") : ( asset_id ? asset_id : fee_asset_types[0])}
-                                        assetValue={feeAsset ? feeAsset.get("id") : "1.3.0"}
+                                        asset={fee_asset_types.length > 0 && feeAsset ? feeAsset.get("id") : ( fee_asset_id ? fee_asset_id : fee_asset_types[0])}
                                         assets={fee_asset_types}
                                         tabIndex={tabIndex++}                                        
                                         />

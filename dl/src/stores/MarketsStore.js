@@ -784,7 +784,6 @@ class MarketsStore {
     }
 
     updateSettleOrders(result) {
-        console.log("updateSettleOrders:", result);
         if (result.settles && result.settles.length) {
             this.activeMarketSettles = this.activeMarketSettles.clear();
 
