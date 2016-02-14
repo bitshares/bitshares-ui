@@ -130,7 +130,6 @@ class MarketsActions {
                     ])
                 ])
                 .then(results => {
-                    console.log("promise results:", results);
                     this.dispatch({
                         limits: results[0],
                         calls: results[1],
