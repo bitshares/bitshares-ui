@@ -353,7 +353,7 @@ Types.set = function(st_operation){
             var ref;
             if (ref = typeof o, ['string', 'number'].indexOf(ref) >= 0) {
                 if (dup_map[o] !== undefined) {
-                    throw new Error("duplicate");
+                    throw new Error("duplicate (set)");
                 }
                 dup_map[o] = true;
             }
@@ -704,7 +704,7 @@ Types.map = function(key_st_operation, value_st_operation){
             }
             if (ref = typeof o[0], ['number', 'string'].indexOf(ref) >= 0) {
                 if (dup_map[o[0]] !== undefined) {
-                    throw new Error("duplicate");
+                    throw new Error("duplicate (map)");
                 }
                 dup_map[o[0]] = true;
             }

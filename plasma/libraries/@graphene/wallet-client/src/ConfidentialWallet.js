@@ -108,6 +108,7 @@ export default class ConfidentialWallet {
                 return false
         }
         let indexables = List().asMutable()
+        
         this.update(wallet =>
             wallet.updateIn(["keys", public_key], Map(),
                 key => key.withMutations( key =>{
@@ -265,7 +266,7 @@ export default class ConfidentialWallet {
         @return {Promise} reject ["unknown_from_account"|"unknown_asset"] resolve<object> blind_confirmation
     */
     transferToBlind( from_account_id_or_name, asset_symbol, to_amounts, broadcast = false ) {
-         
+
         this.assertLogin()
         assert.equal(typeof from_account_id_or_name, "string", "from_account_id_or_name")
         assert.equal(typeof asset_symbol, "string", "asset_symbol")
@@ -977,7 +978,7 @@ function blind_transfer_help(
 
 // required
 function req(data, field_name) {
-    if( data == null ) throw "Missing required field: " + field_name
+    if( data == null ) throw new Error("Missing required field: " + field_name)
     return data
 }
 

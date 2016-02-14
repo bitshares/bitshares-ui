@@ -34,14 +34,14 @@ describe("types", function() {
         var bool_set = type.set(type.bool);
         // Note, 1,0 sorts to 0,1
         assert.equal("020001", Convert(bool_set).toHex([1,0]));
-        th.error("duplicate", function() { return Convert(bool_set).toHex([1,1]); });
+        th.error("duplicate (set)", function() { return Convert(bool_set).toHex([1,1]); });
         
     });
     
     it("map", function() {
         var bool_map = type.map(type.bool, type.bool);
         assert.equal("0200000101", Convert(bool_map).toHex([[1,1],[0,0]]));
-        th.error("duplicate", function() { return Convert(bool_map).toHex([[1,1],[1,1]]); });
+        th.error("duplicate (map)", function() { return Convert(bool_map).toHex([[1,1],[1,1]]); });
         
     })
     

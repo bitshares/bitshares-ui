@@ -27,7 +27,7 @@ describe('Single wallet', () => {
     
     // Ensure there is no wallet on the server
     beforeEach(()=>{
-        return remoteWallet().then( wallet1 => {
+        return remoteWallet(email, false/*create*/).then( wallet1 => {
             return wallet1.keepRemoteCopy(false) // delete
                 .then(()=> wallet1.logout())
                 .then(()=> initWallet())
@@ -35,28 +35,22 @@ describe('Single wallet', () => {
         })
     })
 
-    afterEach(()=> wallet ? wallet.logout():null)
+    // afterEach(()=> wallet ? wallet.logout():null)
 
     it('server', ()=> {
         
         wallet.useBackupServer(remote_url)
         wallet.keepRemoteCopy(true, code)
         
-        let create = wallet
-            .login(email, username, password, chain_id)
-            // create the initial wallet
-            .then(()=> wallet.setState({ test_wallet: 'secret'}) )
-            // update the wallet
-            .then(()=> wallet.setState({ test_wallet: 'secret2'}) )
+        return Promise.resolve() // create a wallet
+        .then( ()=> wallet.login(email, username, password, chain_id))
+        .then( ()=> wallet.setState({ test_wallet: 'secret'}))
         
-        return create.then(()=>{
-            
-            // Wallet is in memory
-            assert.equal(wallet.wallet_object.get("test_wallet"), "secret2")
-            
-            // Wallet is on the server
-            return assertServerWallet('secret2', wallet)
-        })
+        // Wallet is in memory
+        .then( ()=> assert.equal(wallet.wallet_object.get("test_wallet"), "secret"))
+        
+        // Wallet is on the server
+        .then( ()=> assertServerWallet('secret', wallet))
     })
     
     it('disk', ()=> {
@@ -88,7 +82,8 @@ describe('Single wallet', () => {
     })
     
     it('memory', ()=> {
-        // keepLocalCopy false may not be necessary (off is the default), however it will also delete anything on disk
+        
+        // keepLocalCopy false will also delete anything on disk
         wallet.keepLocalCopy(false)
         let create = wallet
             .login(email, username, password, chain_id)
@@ -118,11 +113,10 @@ describe('Single wallet', () => {
         
         let create = wallet
             .login(email, username, password, chain_id)
-            .then(()=> wallet.setState([]) )// create
         
         return create.then(()=> {
             
-            console.log('wallet.wallet_object.has("encrypted_wallet")', wallet.wallet_object.has("encrypted_wallet"))
+            // console.log('wallet.storage.state', JSON.stringify(wallet.storage.state,null,4))
             
             assert.throws(()=> wallet.changePassword(email, username, "invalid_"+password, "new_"+password), /invalid_password/, "invalid_password")
             
@@ -169,6 +163,7 @@ describe('Single wallet', () => {
             
             // disconnect from the backup server
             wallet.useBackupServer(null)
+            
             
             // does not delete wallet on the server (it was disconnect above)
             wallet.keepRemoteCopy(false)
@@ -292,11 +287,11 @@ describe('Multi wallet', () => {
                                     
                                     wallet2.setState({ test_wallet: 'secretB' }).then(()=>Promise.all([ p3, p4 ]))
                                     .then(()=>{
-                                        
                                         wallet1.unsubscribe( s3 )
                                         wallet2.unsubscribe( s4 )
                                         
-                                        resolve( Promise.all([ wallet1.logout(), wallet2.logout() ]))
+                                        // resolve( Promise.all([ wallet1.logout(), wallet2.logout() ]))
+                                        resolve()
                                     
                                     }).catch( error => reject(error))
                                     
@@ -330,13 +325,12 @@ function newWallet() {
 }
 
 /** @return {Promise} resolves after remote wallet login */
-function remoteWallet(emailParam = email) {
+function remoteWallet(emailParam = email, create = true) {
     let code = createToken(hash.sha1(emailParam, 'binary'))
     let wallet = newWallet()
     wallet.useBackupServer(remote_url)
-    wallet.keepRemoteCopy(true, code)
+    wallet.keepRemoteCopy(true, create ? code : null)
     return wallet.login(emailParam, username, password, chain_id)
-        // .then(()=> console.log(111) )
         .then(()=> wallet )
 }
 

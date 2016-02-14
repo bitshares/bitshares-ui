@@ -39,6 +39,6 @@ export default class RateLimit {
 
 // required
 function req(data, field_name) {
-    if( data == null ) throw "Missing required field: " + field_name
+    if( data == null ) throw new Error("Missing required field: " + field_name)
     return data
 }

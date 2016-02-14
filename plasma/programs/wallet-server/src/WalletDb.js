@@ -23,7 +23,7 @@ export function createWallet(encrypted_data, signature, email_sha1, walletNotify
     return Wallet.findOne({ where: { $or:[{email_sha1},{public_key}] } }).then( wallet =>{
         let local_hash = lh.toString('base64')
         if( wallet )
-            throw { message: 'duplicate', local_hash, created: wallet.createdAt }
+            throw { message: 'wallet already exists', local_hash, created: wallet.createdAt }
         
         return Wallet.create({
             public_key, email_sha1, encrypted_data,

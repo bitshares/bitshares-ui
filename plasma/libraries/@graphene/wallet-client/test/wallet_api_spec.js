@@ -63,7 +63,7 @@ describe('Wallet API client', () => {
             .then( json =>{ asert(false, 'should not happen') })
             .catch( error =>{
                 assert.equal(error.statusText, "Bad Request")
-                assert.equal(error.message, "duplicate", error)
+                assert.equal(error.message, "wallet already exists", error)
                 assert(error.local_hash, "local_hash")
                 assert(error.created, "created")
             })

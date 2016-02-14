@@ -42,6 +42,6 @@ export function deleteWallet({ local_hash, signature }) {
 var invalidEmail = email => ! email || ! /^[^ ^@.]+@[a-z0-9][\.a-z0-9_-]*\.[a-z0-9]{2,}$/i.test( email )
 
 function req(data, field_name) {
-    if( data == null ) throw "Missing required field: " + field_name
+    if( data == null ) throw new Error("Missing required field: " + field_name)
     return data
 }

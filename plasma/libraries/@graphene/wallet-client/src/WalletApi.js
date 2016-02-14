@@ -106,7 +106,7 @@ export default class WalletApi {
     }
 
     /** 
-        @arg {Buffer|string} original_local_hash - binary hash of the wallet being replaced.  A bad request will occure if this does not match.
+        @arg {Buffer|string} original_local_hash - binary hash of the wallet being replaced.  A bad request will occur if this does not match.
         @arg {Buffer|string} encrypted_data - binary
         @arg {Signature|string} signature - binary
         @return {Promise} { local_hash: "base64 sha256 encrypted_data",
@@ -199,7 +199,7 @@ var toString = data => data == null ? data :
 
 // required
 function req(data, field_name) {
-    if( data == null ) throw "Missing required field: " + field_name
+    if( data == null ) throw new Error("Missing required field: " + field_name)
     return data
 }
 
