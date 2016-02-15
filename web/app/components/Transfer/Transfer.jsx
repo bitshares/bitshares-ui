@@ -14,12 +14,15 @@ import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import { ChainStore } from "@graphene/chain";
 import TransferReceiptModal from "../Stealth/TransferReceiptModal";
+import connectToStores from "alt/utils/connectToStores";
+import WalletDb from "stores/WalletDb";
 
+@connectToStores
 class Transfer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = Transfer.getInitialState();
+        this.state = this._getInitialState();
         let {query} = this.props.location;
 
         if(query.from) this.state.from_name = query.from;
@@ -32,7 +35,7 @@ class Transfer extends React.Component {
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
-    static getInitialState() {
+    _getInitialState() {
         return {
             from_name: "",
             to_name: "",
@@ -47,6 +50,15 @@ class Transfer extends React.Component {
             propose_account: ""
         };
     };
+    
+    static getStores() {
+        // WalletDb will notify on lock and unlock
+        return [WalletDb]
+    }
+
+    static getPropsFromStores() {
+        return {}
+    }
 
     componentWillMount() {
         this.nestedRef = null;
