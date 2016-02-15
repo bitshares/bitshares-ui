@@ -243,14 +243,6 @@ export default class WalletStorage {
                 private_encryption_pubkey: public_key.toString()
             })
             
-            assert(chain_id, "Chain ID is required on first login")
-            
-            let public_key = this.private_key.toPublicKey()
-            
-            // server wallet or not, the password is defined (same pubkey on the server)
-            this.storage.setState({
-                private_encryption_pubkey: public_key.toString()
-            })
             if( ! this.wallet_object.has("created") ) {
                 // this really is a new wallet
                 let dt = new Date().toISOString()
