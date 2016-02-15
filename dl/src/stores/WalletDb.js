@@ -213,6 +213,7 @@ class WalletDb extends BaseStore {
     onLock() {
         if( ! wallet) return
         return wallet.logout()
+        .then( ()=> this.setState({lock_event: Date.now()}) )
     }
     
     isLocked() {
@@ -313,9 +314,12 @@ class WalletDb extends BaseStore {
         let email = ""
         try {
             if( unlock ) {
+                
                 let chain_id = Apis.instance().chain_id
                 wallet.login(email, username, password, chain_id)
-                AccountRefsStore.loadDbData()
+                .then( ()=> AccountRefsStore.loadDbData() )
+                .then( ()=> this.setState({lock_event: Date.now()}) )
+                
             } else {
                 wallet.validatePassword(email, username, password)
             }
