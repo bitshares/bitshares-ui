@@ -80,10 +80,6 @@ export default class WalletStorage {
         this.wallet_object = Map()
         this.storage = storage
         this.subscribers = Map()
-        // if( this.storage.state.isEmpty() ) {
-        //     // If storage were async, set this.local_status would be set upon completion
-        //     storage.setState( inital_persistent_state )
-        // }
         this.local_status = null
         
         // enable the backup server if one is configured (see useBackupServer)
@@ -103,7 +99,7 @@ export default class WalletStorage {
     }
     
     isEmpty() {
-        return this.storage.state.isEmpty()// || is(this.storage.state, inital_persistent_state)
+        return this.storage.state.isEmpty()
     }
     
     /**

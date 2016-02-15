@@ -393,25 +393,27 @@ class DecryptBackup extends BackupBaseComponent {
             this.state.backup_password || ""
         )
         
-        let decrypt = private_key2 =>
+        let backupDecrypt = private_key2 =>
         Backup.decrypt(this.props.backup.contents, private_key2).then( wallet_object => {
             this.setState({verified: true})
             if(this.props.saveWalletObject)
                 BackupStore.setWalletObjct(wallet_object)
         })
         
-        console.log('this.state.backup_password', this.state.backup_password)
-        console.log('this.props.backup.contents.length', this.props.backup.contents.length)
+        // console.log('this.state.backup_password', this.state.backup_password)
+        // console.log('this.props.backup.contents.length', this.props.backup.contents.length)
         
         try {
-            return decrypt(private_key)
+            return backupDecrypt(private_key)
+            
         } catch( error ) {
             
             // try the legacy format
             private_key = PrivateKey.fromSeed(this.state.backup_password || "")
             
             try {
-                return decrypt(private_key)
+                return backupDecrypt(private_key)
+                
             } catch( error ) {
                 console.error("Error verifying wallet " + this.props.backup.name,
                     error, error.stack)

@@ -65,7 +65,8 @@ class Aes {
             // A null or empty string nonce will not effect the hash
             new Buffer(""+nonce), 
             new Buffer(S.toString('hex'))
-        ]));
+        ]))
+        
         var planebuffer = aes.decrypt(message);
         if (!(planebuffer.length >= 4)) {
             throw new Error("Invalid key, could not decrypt message(1)");

@@ -99,16 +99,13 @@ class WalletDb extends BaseStore {
                 wallet_names = wallet_names.add( key.substring(prefix.length) )
         }
         
-        // legacy wallet_names (need convertion)
+        // legacy wallet_names
         this.legacy_wallet_names = Set()
         let leg = iDB.root.getProperty("wallet_names", []).then( legacy_wallet_names => {
-            
-            for(let name of legacy_wallet_names)
-                if(! wallet_names.has(name)) { 
-                    wallet_names = wallet_names.add(name) // all wallets
-                    this.legacy_wallet_names = this.legacy_wallet_names.add(name)
-                }
-            
+            for(let name of legacy_wallet_names) {
+                wallet_names = wallet_names.add(name)
+                this.legacy_wallet_names = this.legacy_wallet_names.add(name)
+            }
         })
         
         return Promise.all([ cur, leg ])
@@ -128,11 +125,6 @@ class WalletDb extends BaseStore {
         if(! wallet_name)
             return
         
-        if(this.legacy_wallet_names.has(wallet_name)) {
-            console.error("WalletDb\tTODO convert legacy wallet")
-            return
-        }
-        
         let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
         let storage = new LocalStoragePersistence( key )
         let _wallet = new WalletStorage(storage)
@@ -151,10 +143,10 @@ class WalletDb extends BaseStore {
             throw new Error("Can't delete wallet '"+ wallet_name + "', does not exist")
         
         if(this.legacy_wallet_names.has(wallet_name)) {
-            this.legacy_wallet_names = this.legacy_wallet_names.remove(wallet_name)
             var database_name = iDB.getDatabaseName(wallet_name)
             iDB.impl.deleteDatabase(database_name)
             iDB.root.setProperty("wallet_names", this.legacy_wallet_names)
+            this.legacy_wallet_names = this.legacy_wallet_names.remove(wallet_name)
         }
         else {
             let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
@@ -312,11 +304,26 @@ class WalletDb extends BaseStore {
     validatePassword( password, unlock = false ) {
         let username = ""
         let email = ""
+        
+        // Check after wallet.login...
+        let is_legacy = ()=> this.legacy_wallet_names.has(this.state.current_wallet) &&
+            // Has not been converted already.
+            wallet.wallet_object.get("created") === wallet.wallet_object.get("last_modified")
+        
+        let legacy_upgrade = ()=> {
+            console.error("WalletDb\tconverting legacy wallet " + this.state.current_wallet)
+            let private_key = PrivateKey.fromSeed(password || "")
+            return iDB.legacyBackup().then( legacy_wallet => {
+                
+                console.log('legacy_wallet', legacy_wallet)
+            })
+        }
+        
         try {
             if( unlock ) {
-                
                 let chain_id = Apis.instance().chain_id
                 wallet.login(email, username, password, chain_id)
+                .then( ()=> is_legacy() ? legacy_upgrade() : null )
                 .then( ()=> AccountRefsStore.loadDbData() )
                 .then( ()=> this.setState({lock_event: Date.now()}) )
                 

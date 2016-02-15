@@ -38,6 +38,8 @@ export function decrypt(backup_buffer, private_key) {
     var public_key
     try {
         public_key = PublicKey.fromBuffer(backup_buffer.slice(0, 33))
+        // console.log('backup public_key', public_key.toString())
+        
     } catch(e) {
         console.error(e, "stack", e.stack)
         throw new Error("Invalid backup file")
