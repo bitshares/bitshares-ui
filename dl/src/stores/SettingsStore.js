@@ -76,7 +76,8 @@ class SettingsStore {
                 "USD",
                 "CNY",
                 "BTC",
-                "EUR"
+                "EUR",
+                "GBP"
             ],
             showSettles: [
                 {translate: "yes"},
