@@ -172,16 +172,20 @@ class BuySell extends React.Component {
                                     <table className="float-left">
                                         <tbody>
                                           <tr className="buy-sell-info">
-                                              <td>{this.props.account}:&nbsp;</td>
-                                              <td style={{textAlign: "right", borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>{utils.format_number(balanceAmount, balancePrecision)} {balanceSymbol}</td>
+                                                <td><Translate content="exchange.balance" />:</td>
+                                                <td style={{paddingLeft: 5, textAlign: "right"}}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>{utils.format_number(balanceAmount, balancePrecision)} {balanceSymbol}</span>
+                                                </td>
                                           </tr>
                                           
                                           <tr className="buy-sell-info">
                                                 <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
-                                                <td style={{paddingTop: 5, verticalAlign: "bottom", textAlign: "right", borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
+                                                <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
                                                     <PriceText price={currentPrice} quote={quote} base={base} />
                                                     <span> {base.get("symbol")}</span>
+                                                    </span>
                                                 </td>) : null}
                                         </tr>
                                         </tbody>
