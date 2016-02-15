@@ -182,8 +182,8 @@ class DepthHighChart extends React.Component {
             let middleValue = (flatAsks[0][0] + flatBids[flatBids.length - 1][0]) / 2;
             let adjustedSpread = spread * power;
             
-            config.xAxis.min = middleValue * 0.45;
-            config.xAxis.max = middleValue * 1.55;
+            config.xAxis.min = middleValue * (this.props.noFrame ? 0.8 : 0.50);
+            config.xAxis.max = middleValue * (this.props.noFrame ? 1.2 : 1.50);
          
             if (adjustedSpread > 0 && adjustedSpread > middleValue) {
                 config.xAxis.min = Math.max(0, middleValue - 1.5 * adjustedSpread);
