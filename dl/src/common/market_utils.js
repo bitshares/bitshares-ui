@@ -32,10 +32,15 @@ class MarketUtils {
         return op.amount_to_sell.asset_id !== op.fee.asset_id;
     }
 
-    static limitByPrecision(value, asset) {
-
-        let precision = utils.get_asset_precision(asset.toJS ? asset.get("precision") : asset.precision);
-        value = Math.floor(value * precision) / precision;
+    static limitByPrecision(value, asset, floor = true) {
+        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
+        let valueString = value.toString();
+        let splitString = valueString.split(".");
+        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
+            return value;
+        }
+        let precision = utils.get_asset_precision(assetPrecision);
+        value = floor ? Math.floor(value * precision) / precision : Math.round(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;
         }

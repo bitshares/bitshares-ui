@@ -4,6 +4,7 @@ import {PropTypes} from "react";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
+import market_utils from "common/market_utils";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
@@ -194,6 +195,7 @@ class OrderBook extends React.Component {
             }, 0) : 0;
 
             let bidCount = combinedBids.length - 1;
+
             bidRows = combinedBids.sort((a, b) => {
                 return b.price_full - a.price_full;
             })
@@ -204,7 +206,8 @@ class OrderBook extends React.Component {
                 return a.price_full >= high / 5
             })
             .map((order, index) => {
-                totalBidAmount += order.amount;
+                totalBidAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
+                console.log("totalBidAmount:", totalBidAmount, order.amount);
                 totalBidValue += order.value;
                 order.totalValue = totalBidValue;
                 order.totalAmount = totalBidAmount;
@@ -253,7 +256,8 @@ class OrderBook extends React.Component {
                 }
                 return a.price_full <= low * 5;
             }).map((order, index) => {
-                totalAskAmount += order.amount;
+                totalAskAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
+                // totalAskAmount += order.amount;
                 totalAskValue += order.value;
                 order.totalValue = totalAskValue;
                 order.totalAmount = totalAskAmount;
