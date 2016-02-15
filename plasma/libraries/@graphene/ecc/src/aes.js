@@ -75,8 +75,8 @@ class Aes {
         var checksum = planebuffer.slice(0, 4);
         var plaintext = planebuffer.slice(4);
         
-        // DEBUG console.log('... checksum',checksum.toString('hex'))
-        // DEBUG console.log('... plaintext',plaintext)
+        // console.log('... checksum',checksum.toString('hex'))
+        // console.log('... plaintext',plaintext.toString())
         
         var new_checksum = hash.sha256(plaintext);
         new_checksum = new_checksum.slice(0, 4);

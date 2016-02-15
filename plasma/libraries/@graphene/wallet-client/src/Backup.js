@@ -50,9 +50,7 @@ export function decrypt(backup_buffer, private_key) {
             private_key, public_key, null/*nonce*/, backup_buffer)
         
     } catch(error) {
-        console.error("Error decrypting wallet", error, error.stack)
         throw new Error("invalid_decryption_key")
-        return
     }
     
     return new Promise( (resolve, reject) => {

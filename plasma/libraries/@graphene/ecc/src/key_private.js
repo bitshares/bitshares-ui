@@ -83,14 +83,31 @@ class PrivateKey {
         return this.d.toBuffer(32);
     }
     
+    
     /** ECIES */
-    get_shared_secret(public_key){
+    get_shared_secret(public_key) {
         public_key = toPublic(public_key)
-        var P = public_key.Q.multiply( this.d );
-        var S = P.affineX.toBuffer({size: 32});
-        // ECIES, adds an extra sha512
-        return hash.sha512(S);
+        let KB = public_key.toUncompressed().toBuffer()
+        let KBP = Point.fromAffine(
+            secp256k1,
+            BigInteger.fromBuffer( KB.slice( 1,33 )), // x
+            BigInteger.fromBuffer( KB.slice( 33,65 )) // y
+        )
+        let r = this.toBuffer()
+        let P = KBP.multiply(BigInteger.fromBuffer(r))
+        let S = P.affineX.toBuffer({size: 32})
+        // SHA512 used in ECIES
+        return hash.sha512(S)
     }
+    
+    // /** ECIES (does not always match the Point.fromAffine version above) */
+    // get_shared_secret(public_key){
+    //     public_key = toPublic(public_key)
+    //     var P = public_key.Q.multiply( this.d );
+    //     var S = P.affineX.toBuffer({size: 32});
+    //     // ECIES, adds an extra sha512
+    //     return hash.sha512(S);
+    // }
     
     /** @throws {Error} - overflow of the key could not be derived */
     child( offset ) {

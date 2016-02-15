@@ -126,9 +126,6 @@ class WalletActions {
         });
 
         return WalletDb.process_transaction(tr, null, true)
-        .then(result => {
-            
-        })
         .catch(err => {
             console.log("vesting_balance_withdraw err:", err);
         })
@@ -198,9 +195,8 @@ class WalletActions {
                 // the transaction will expire.  This will increase the timeout...
                 tr.set_expire_seconds( (15 * 60) + balance_claims.length)
                 
-                return WalletDb.process_transaction(
-                    tr, Object.keys(signer_pubkeys), broadcast ).then(
-                        result=> { this.dispatch(); return result })
+                return WalletDb.process_transaction(tr, Object.keys(signer_pubkeys), broadcast )
+                .then( result=> { this.dispatch(); return result })
             })
             resolve(p)
         })

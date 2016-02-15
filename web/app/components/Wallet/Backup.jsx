@@ -3,15 +3,17 @@ import {FormattedDate} from "react-intl"
 import {Link} from "react-router";
 import Inspector from "react-json-inspector";
 import connectToStores from "alt/utils/connectToStores"
+import WalletUnlock from "components/Wallet/WalletUnlock"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletActions from "actions/WalletActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletManagerStore from "stores/WalletManagerStore"
 import WalletDb from "stores/WalletDb"
 import BackupStore from "stores/BackupStore"
-import BackupActions, {backup, restore, decryptWalletBackup} from "actions/BackupActions"
-import notify from "actions/NotificationActions"
+// import BackupActions, {backup, restore} from "actions/BackupActions"
+import { Backup } from "@graphene/wallet-client"
 import {saveAs} from "common/filesaver.js"
+import notify from "actions/NotificationActions"
 import cname from "classnames"
 import { hash } from "@graphene/ecc"
 import Translate from "react-translate-component";
@@ -42,13 +44,15 @@ export class BackupCreate extends BackupBaseComponent {
         return <span>
 
             <h3><Translate content="wallet.create_backup" /></h3>
-
-            <Create>
-                <NameSizeModified/>
-                <Sha1/>
-                <Download/>
-                <Reset/>
-            </Create>
+            
+            <WalletUnlock>
+                <Create>
+                    <NameSizeModified/>
+                    <Sha1/>
+                    <Download/>
+                    <Reset/>
+                </Create>
+            </WalletUnlock>
             
         </span>
     }
@@ -273,18 +277,16 @@ class Create extends BackupBaseComponent {
     }
     
     onCreateBackup() {
-        // FIXME
-        var backup_pubkey = WalletDb.getWallet().password_pubkey
-        backup(backup_pubkey).then( contents => {
-            var name = this.props.wallet.current_wallet
-            var address_prefix = chain_config.address_prefix.toLowerCase()
-            if(name.indexOf(address_prefix) !== 0)
-                name = address_prefix + "_" + name
-            name = name + ".bin"
-            BackupActions.incommingBuffer({name, contents})
-        })
+        let { current_wallet, wallet } = WalletDb.getState()
+        let name = current_wallet
+        var address_prefix = chain_config.address_prefix.toLowerCase()
+        if(name.indexOf(address_prefix) !== 0)
+            name = address_prefix + "_" + name
+        name = name + ".bin"
+        let contents = new Buffer(wallet.storage.state.get("encrypted_wallet"), "base64")
+        BackupActions.incommingBuffer({name, contents})
     }
-    
+
 }
 
 class LastBackupDate extends Component {
@@ -381,21 +383,61 @@ class DecryptBackup extends BackupBaseComponent {
     }
     
     onPassword() {
-        var private_key = PrivateKey.fromSeed(this.state.backup_password || "")
-        var contents = this.props.backup.contents
-        decryptWalletBackup(private_key.toWif(), contents).then( wallet_object => {
+
+        let email = ""
+        let username = ""
+        
+        let private_key = PrivateKey.fromSeed(
+            email.trim().toLowerCase() + "\t" +
+            username.trim().toLowerCase() + "\t" +
+            this.state.backup_password || ""
+        )
+        
+        let decrypt = private_key2 =>
+        Backup.decrypt(this.props.backup.contents, private_key2).then( wallet_object => {
             this.setState({verified: true})
             if(this.props.saveWalletObject)
                 BackupStore.setWalletObjct(wallet_object)
-            
-        }).catch( error => {
-            console.error("Error verifying wallet " + this.props.backup.name,
-                error, error.stack)
-            if(error === "invalid_decryption_key")
-                notify.error("Invalid Password")
-            else
-                notify.error(""+error)
         })
+        
+        console.log('this.state.backup_password', this.state.backup_password)
+        console.log('this.props.backup.contents.length', this.props.backup.contents.length)
+        
+        try {
+            return decrypt(private_key)
+        } catch( error ) {
+            
+            // try the legacy format
+            private_key = PrivateKey.fromSeed(this.state.backup_password || "")
+            
+            try {
+                return decrypt(private_key)
+            } catch( error ) {
+                console.error("Error verifying wallet " + this.props.backup.name,
+                    error, error.stack)
+                if( /invalid_decryption_key/.test(error.toString()) )
+                    notify.error("Invalid Password")
+                else
+                    notify.error(""+error)
+            }
+        }
+        
+        // private_key = PrivateKey.fromSeed(this.state.backup_password || "")
+        // 
+        // var contents = this.props.backup.contents
+        // decrypt(contents, private_key).then( wallet_object => {
+        //     this.setState({verified: true})
+        //     if(this.props.saveWalletObject)
+        //         BackupStore.setWalletObjct(wallet_object)
+        //     
+        // }).catch( error => {
+        //     console.error("Error verifying wallet " + this.props.backup.name,
+        //         error, error.stack)
+        //     if(error === "invalid_decryption_key")
+        //         notify.error("Invalid Password")
+        //     else
+        //         notify.error(""+error)
+        // })
     }
     
     formChange(event) {

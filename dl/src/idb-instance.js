@@ -219,7 +219,7 @@ var iDB = (function () {
                 .catch( error => { console.error(error); throw error })
         },
         
-        backup: function (store_names = WALLET_BACKUP_STORES) {
+        legacyBackup: function (store_names = WALLET_BACKUP_STORES) {
             var promises = []
             for (var store_name of store_names) {
                 promises.push(this.load_data(store_name))
@@ -240,21 +240,22 @@ var iDB = (function () {
                 return obj
             })
         },
-        restore: function(wallet_name, object) {
-            var database_name = getDatabaseName(wallet_name)
-            return openDatabase(database_name).then( db => {
-                var store_names = Object.keys(object)
-                var trx = db.transaction(store_names, "readwrite")
-                for(let store_name of store_names) {
-                    var store = trx.objectStore(store_name)
-                    var records = object[store_name]
-                    for(let record of records) {
-                        store.put(record)
-                    }
-                }
-                return idb_helper.on_transaction_end(trx)
-            })
-        }
+        
+        // restore: function(wallet_name, object) {
+        //     var database_name = getDatabaseName(wallet_name)
+        //     return openDatabase(database_name).then( db => {
+        //         var store_names = Object.keys(object)
+        //         var trx = db.transaction(store_names, "readwrite")
+        //         for(let store_name of store_names) {
+        //             var store = trx.objectStore(store_name)
+        //             var records = object[store_name]
+        //             for(let record of records) {
+        //                 store.put(record)
+        //             }
+        //         }
+        //         return idb_helper.on_transaction_end(trx)
+        //     })
+        // }
     };
 
 })();

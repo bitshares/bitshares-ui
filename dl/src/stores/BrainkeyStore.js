@@ -1,5 +1,4 @@
 import alt from "alt-instance"
-import connectToStores from "alt/utils/connectToStores"
 import { key } from "@graphene/ecc"
 import Immutable from "immutable"
 import { ChainStore } from "@graphene/chain"
