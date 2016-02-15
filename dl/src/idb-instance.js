@@ -54,7 +54,8 @@ var openDatabase = function(database_name = this.getDatabaseName()) {
         };
 
         openRequest.onsuccess = function (e) {
-            // DEBUG console.log('... openRequest.onsuccess ' + database_name, e.target.result)
+            // DEBUG 
+            console.log('... openRequest.onsuccess ' + database_name, e.target.result)
             var db = e.target.result
             iDB.database_name = database_name
             idb_helper.set_graphene_db(db)
@@ -231,7 +232,7 @@ var iDB = (function () {
                     var store_name = store_names[i]
                     if( store_name === "wallet" ) {
                         var wallet_array = results[i]
-                        // their should be only 1 wallet per database
+                        // there should be only 1 wallet per database
                         for(let wallet of wallet_array)
                             wallet.backup_date = new Date().toISOString()
                     }

@@ -48,47 +48,43 @@ class WalletManagerStore extends BaseStore {
         should a `create_wallet_password` and `brnkey` be provided.
     */
     onSetWallet({wallet_name, create_wallet_password, brnkey, resolve}) {
-        var p = new Promise( resolve => {
             
-            if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
-                throw new Error("Invalid wallet name")
-            
-            if(WalletDb.getState().current_wallet === wallet_name) {// && ! WalletDb.isEmpty()
-                resolve()
-                return
-            }
-            
+        if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
+            throw new Error("Invalid wallet name")
+        
+        if(WalletDb.getState().current_wallet === wallet_name) {// && ! WalletDb.isEmpty()
+            if(resolve) resolve()
+            return
+        }
+        
+        let p = iDB.root.setProperty("current_wallet", wallet_name)
+        .then(()=>{
             // The database must be closed and re-opened first before the current
             // application code can initialize its new state.
             iDB.close()
             ChainStore.clearCache()
             BalanceClaimActiveStore.reset()
+        })
+        .then(()=> iDB.init_instance().init_promise )
+        .then(()=> {
             
             // Stores may reset when loadDbData is called
-            var p = iDB.init_instance().init_promise.then(()=>{
-                
-                // Make sure the database is ready when calling CachedPropertyStore.reset() 
-                CachedPropertyStore.reset()
-                
-                WalletDb.openWallet(wallet_name)
-                
-                return Promise.resolve()
-                .then(()=> AccountStore.loadDbData())
-                .then(()=> AccountRefsStore.loadDbData())
-                .then(()=>{
-                    
-                    // Update state here again to make sure listeners re-render
-                    // this.setState({})
-                    
-                    if(create_wallet_password)
-                        return WalletDb.onCreateWallet( create_wallet_password, brnkey )
-                    
-                })
-            })
-            resolve(p)
+            // Make sure the database is ready when calling CachedPropertyStore.reset() 
+            CachedPropertyStore.reset()
+            WalletDb.openWallet(wallet_name)
         })
-        if(resolve)
-            resolve(p)
+        .then(()=> AccountStore.loadDbData())
+        .then(()=> AccountRefsStore.loadDbData())
+        .then(()=>{
+            
+            // Update state here again to make sure listeners re-render
+            // this.setState({})
+            
+            if(create_wallet_password)
+                return WalletDb.onCreateWallet( create_wallet_password, brnkey )
+            
+        })
+        if(resolve) resolve(p)
     }
     
     /** Pending new wallet name (not the current_wallet).. Used by the components during a pending wallet create. */

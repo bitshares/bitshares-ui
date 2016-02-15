@@ -1,12 +1,10 @@
 import { Apis } from "@graphene/chain"
-
+import { ChainStore } from "@graphene/chain"
 import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
 
 import WalletDb from 'stores/WalletDb'
 import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
-import AccountRefsStore from "stores/AccountRefsStore"
-import { ChainStore } from "@graphene/chain"
 
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"
@@ -15,6 +13,9 @@ import alt from 'alt-instance'
 import iDB from 'idb-instance'
 import { chain_config } from "@graphene/chain"
 
+import AccountRefsStore from "stores/AccountRefsStore"
+import { AddressIndex } from "@graphene/wallet-client"
+
 module.exports = {
     
     PrivateKey, PublicKey, Aes, key,
@@ -22,9 +23,11 @@ module.exports = {
     AccountStore, 
     BackupActions,
     WalletActions,
-    AccountRefsStore,
     ChainStore,
     chain_config,
+    
+    // Debugging, these may be removed
+    AccountRefsStore, AddressIndex,
     
     alt, iDB,  Apis,
     db: ()=> Apis.instance().db_api(),

@@ -50,7 +50,7 @@ export default class ConfidentialWallet {
         // BTS 1.0 addresses for shorts and balance claims
         // Update the index if needed
         AddressIndex.add( this.keys()
-            .reduce( (r, key, pubkey) => key.get("index_address") ? r.add(pubkey) : r, List())
+            .reduce( (r, key, pubkey) => key.get("index_address") ? r.push(pubkey) : r, List())
         )
         
         // semi-private methods (outside of this API)

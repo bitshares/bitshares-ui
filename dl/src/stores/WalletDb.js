@@ -448,7 +448,7 @@ class WalletDb extends BaseStore {
                     }
                     
                     if( index_address ) {
-                        assert(private_key, "private_key required to derive addresses")
+                        assert(private_wif, "private key required to derive addresses")
                     }
                     
                     let key = {public_key, private_wif, brainkey_sequence}
@@ -473,7 +473,7 @@ class WalletDb extends BaseStore {
             .then(()=> this.setState({saving_keys: false}) )
         
         AddressIndex.add( this.keys()
-            .reduce( (r, key, pubkey) => key.get("index_address") ? r.add(pubkey) : r, List())
+            .reduce( (r, key, pubkey) => key.get("index_address") ? r.push(pubkey) : r, List())
         )
         
         this.keys().forEach( (key, pubkey) => ChainStore.getAccountRefsOfKey(pubkey) )

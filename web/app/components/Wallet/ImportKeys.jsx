@@ -636,7 +636,8 @@ export default class ImportKeys extends Component {
             private_key_objs.push({
                 private_wif: PrivateKey.fromHex(private_plainhex).toWif(),
                 import_account_names: account_names.length ? account_names.join(", ") : undefined,
-                public_key: public_key_string
+                public_key: public_key_string,
+                index_address: true
             })
         }
         
