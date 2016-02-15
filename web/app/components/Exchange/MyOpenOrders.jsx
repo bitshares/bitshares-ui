@@ -140,7 +140,7 @@ class MyOpenOrders extends React.Component {
 
                 return b_price.full - a_price.full;
             }).map((order, index) => {
-                return <OrderRow ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow date={new Date(order.expiration).getTime()} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -151,7 +151,7 @@ class MyOpenOrders extends React.Component {
 
                 return a_price.full - b_price.full;
             }).map(order => {
-                return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow date={new Date(order.expiration).getTime()} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -181,6 +181,10 @@ class MyOpenOrders extends React.Component {
         if (bids.length) {
             rows = rows.concat(bids);
         }
+
+        rows.sort((a, b) => {
+            return b.props.date - a.props.date;
+        })
 
         // if (bids.length === 0 && asks.length ===0) {
         //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
