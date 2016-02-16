@@ -5,6 +5,7 @@ import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
 import ChainStore from "api/ChainStore";
 import marketUtils from "common/market_utils";
+import Immutable from "immutable";
 
 let ops = Object.keys(operations);
 
@@ -14,10 +15,26 @@ let wallet_api = new WalletApi();
 let marketStats = {};
 let statTTL = 60 * 2 * 1000; // 2 minutes
 
+let cancelBatchIDs = Immutable.List();
+let dispatchCancelTimeout = null;
+let cancelBatchTime = 500;
+
+let subBatchResults = Immutable.List();
+let dispatchSubTimeout = null;
+let subBatchTime = 500;
+
+function clearBatchTimeouts() {
+    clearTimeout(dispatchCancelTimeout);
+    clearTimeout(dispatchSubTimeout);
+    dispatchCancelTimeout = null;
+    dispatchSubTimeout = null;
+}
+
 class MarketsActions {
 
     changeBase(market) {
         this.dispatch(market);
+        clearBatchTimeouts();
     }
 
     changeBucketSize(size) {
@@ -61,90 +78,109 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize) {
-
+        clearBatchTimeouts();
         let subID = quote.get("id") + "_" + base.get("id");
 
         let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(quote, base);
 
-        let lastLimitOrder = null;
+        // let lastLimitOrder = null;
 
         let subscription = (subResult) => {
 
-            let hasLimitOrder = false;
-            let onlyLimitOrder = true;
-            let hasFill = false;
+            if (!dispatchSubTimeout) {
+                subBatchResults = subBatchResults.concat(subResult);
 
-            // We get two notifications for each limit order created, ignore the second one
-            if (subResult.length === 1 && subResult[0].length === 1 && subResult[0][0] === lastLimitOrder) {
-                return; 
+                dispatchSubTimeout = setTimeout(() => {
+                    let hasLimitOrder = false;
+                    let onlyLimitOrder = true;
+                    let hasFill = false;
+
+                    // // We get two notifications for each limit order created, ignore the second one
+                    // if (subResult.length === 1 && subResult[0].length === 1 && subResult[0][0] === lastLimitOrder) {
+                    //     return; 
+                    // }
+                    
+                    // Check whether the market had a fill order, and whether it only has a new limit order
+                    subBatchResults.forEach(result => {
+                       
+                        result.forEach(notification => {
+                            if (typeof notification === "string") {
+                                let split = notification.split(".");
+                                if (split.length >= 2 && split[1] === "7") {
+                                    hasLimitOrder = true;
+                                } else {
+                                    onlyLimitOrder = false;
+                                }
+                            } else {
+                                onlyLimitOrder = false;
+                                if (notification.length === 2 && notification[0] && notification[0][0] === 4) {
+                                    hasFill = true;
+                                }
+                            }
+                        })                       
+                        
+                    });
+
+                    let callPromise = null,
+                        settlePromise = null;
+
+                    // Only check for call and settle orders if either the base or quote is the CORE asset
+                    if (isMarketAsset) {
+                        callPromise = Apis.instance().db_api().exec("get_call_orders", [
+                            marketAsset.id, 100
+                        ]);
+                        settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
+                            marketAsset.id, 100
+                        ]);
+                    }
+
+                    let startDate = new Date();
+                    let endDate = new Date();
+                    let startDateShort = new Date();
+                    startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
+                    endDate.setDate(endDate.getDate() + 1);
+                    startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
+
+                    // Selectively call the different market api calls depending on the type
+                    // of operations received in the subscription update
+                    Promise.all([
+                            Apis.instance().db_api().exec("get_limit_orders", [
+                                base.get("id"), quote.get("id"), 100
+                            ]),
+                            onlyLimitOrder ? null : callPromise,
+                            onlyLimitOrder ? null : settlePromise,
+                            !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
+                                base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                            ]),
+                            !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
+                            !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
+                                base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                            ])
+                        ])
+                        .then(results => {
+                            this.dispatch({
+                                limits: results[0],
+                                calls: results[1],
+                                settles: results[2],
+                                price: results[3],
+                                history: results[4],
+                                recent: results[5],
+                                market: subID,
+                                base: base,
+                                quote: quote,
+                                inverted: inverted
+                            });
+                        }).catch((error) => {
+                            console.log("Error in MarketsActions.subscribeMarket: ", error);
+                        });
+
+                    subBatchResults = subBatchResults.clear();
+                    dispatchSubTimeout = null;
+                }, subBatchTime)
+            } else {
+                subBatchResults = subBatchResults.concat(subResult);
             }
             
-            // Check whether the market had a fill order, and whether it only has a new limit order
-            subResult.forEach(result => {
-                if (result.length === 1 && result[0].split(".")[1] === "7") {
-                    lastLimitOrder = result[0];
-                    hasLimitOrder = true;
-                } else {
-                    onlyLimitOrder = false;
-                }
-                
-                if (result[0].length === 2 && result[0][0] && result[0][0][0] === 4) {
-                    hasFill = true;
-                }
-            });
-
-            let callPromise = null,
-                settlePromise = null;
-
-            // Only check for call and settle orders if either the base or quote is the CORE asset
-            if (isMarketAsset) {
-                callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                    marketAsset.id, 100
-                ]);
-                settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                    marketAsset.id, 100
-                ]);
-            }
-
-            let startDate = new Date();
-            let endDate = new Date();
-            let startDateShort = new Date();
-            startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
-            endDate.setDate(endDate.getDate() + 1);
-            startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
-
-            // Selectively call the different market api calls depending on the type
-            // of operations received in the subscription update
-            Promise.all([
-                    Apis.instance().db_api().exec("get_limit_orders", [
-                        base.get("id"), quote.get("id"), 100
-                    ]),
-                    onlyLimitOrder ? null : callPromise,
-                    onlyLimitOrder ? null : settlePromise,
-                    !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
-                        base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ]),
-                    !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                    !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
-                        base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ])
-                ])
-                .then(results => {
-                    this.dispatch({
-                        limits: results[0],
-                        calls: results[1],
-                        settles: results[2],
-                        price: results[3],
-                        history: results[4],
-                        recent: results[5],
-                        market: subID,
-                        base: base,
-                        quote: quote,
-                        inverted: inverted
-                    });
-                }).catch((error) => {
-                    console.log("Error in MarketsActions.subscribeMarket: ", error);
-                });
         };
 
         if (!subs[subID] || currentBucketSize !== bucketSize) {
@@ -212,11 +248,13 @@ class MarketsActions {
     }
 
     clearMarket() {
+        clearBatchTimeouts();
         this.dipatch();
     }
 
     unSubscribeMarket(quote, base) {
         let subID = quote + "_" + base;
+        clearBatchTimeouts();
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
                     quote, base
@@ -338,7 +376,18 @@ class MarketsActions {
     }
 
     cancelLimitOrderSuccess(orderID) {
-        this.dispatch(orderID);
+        if (!dispatchCancelTimeout) {
+            cancelBatchIDs = cancelBatchIDs.push(orderID);
+            dispatchCancelTimeout = setTimeout(() => {
+                this.dispatch(cancelBatchIDs.toJS());
+                cancelBatchIDs = cancelBatchIDs.clear();
+                dispatchCancelTimeout = null;
+            }, cancelBatchTime);
+        } else {
+            cancelBatchIDs = cancelBatchIDs.push(orderID);
+            return false;
+        }
+        // this.dispatch(orderID);
     }
 
     closeCallOrderSuccess(orderID) {
