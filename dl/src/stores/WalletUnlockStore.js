@@ -30,7 +30,6 @@ class WalletUnlockStore {
     onUnlock({resolve, reject}) {
         //DEBUG console.log('... onUnlock setState', WalletDb.isLocked())
         //
-    
         this._setLockTimeout();
         if( ! WalletDb.isLocked()) {
             resolve()
@@ -96,6 +95,12 @@ class WalletUnlockStore {
                 return null;
             }
         }
+    }
+
+    onUnlocked() {
+    }
+
+    onLocked() {
     }
 }
 let WalletUnlockStoreWrapped = alt.createStore(WalletUnlockStore, 'WalletUnlockStore')

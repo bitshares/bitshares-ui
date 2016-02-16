@@ -2,8 +2,8 @@ import { Apis } from "@graphene/chain"
 import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
 
-const DB_VERSION = 3 // Initial value was 1
-const DB_PREFIX = "graphene_v3"
+const DB_VERSION = 4 // Initial value was 1
+const DB_PREFIX = "graphene_v4"
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
@@ -25,6 +25,9 @@ var upgrade = function(db, oldVersion) {
         // Cache only, do not backup...
         db.createObjectStore("private_accounts", { keyPath: "name" })
         db.createObjectStore("private_contacts", { keyPath: "name" })
+    }
+    if (oldVersion < 4) {
+        db.createObjectStore("my_accounts", { keyPath: "name" })
     }
 }
 

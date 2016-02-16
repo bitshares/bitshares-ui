@@ -11,9 +11,9 @@ class WalletUnlockActions {
         return new Promise( (resolve, reject) => {
             this.dispatch({resolve, reject})
         }).then( was_unlocked => {
-            //DEBUG  console.log('... WalletUnlockStore\tmodal unlock')
-            if(was_unlocked)
-                WrappedWalletUnlockActions.change()
+            WrappedWalletUnlockActions.unlocked();
+            //if(was_unlocked)
+            //    WrappedWalletUnlockActions.change()
         })
     }
     
@@ -21,8 +21,9 @@ class WalletUnlockActions {
         return new Promise( resolve => {
             this.dispatch({resolve})
         }).then( was_unlocked => {
-            if(was_unlocked)
-                WrappedWalletUnlockActions.change()
+            WrappedWalletUnlockActions.locked();
+            //if(was_unlocked)
+            //    WrappedWalletUnlockActions.change()
         })
     }
     
@@ -33,7 +34,14 @@ class WalletUnlockActions {
     change() {
         this.dispatch()
     }
-    
+
+    unlocked() {
+        this.dispatch();
+    }
+
+    locked() {
+        this.dispatch();
+    }
 }
 
 var WrappedWalletUnlockActions = alt.createActions(WalletUnlockActions)

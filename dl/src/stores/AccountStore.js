@@ -10,6 +10,7 @@ import AccountRefsStore from "stores/AccountRefsStore"
 import { AddressIndex } from "@graphene/wallet-client"
 import SettingsStore from "stores/SettingsStore"
 import ls from "common/localStorage";
+import WalletUnlockActions from "../actions/WalletUnlockActions";
 
 let accountStorage = new ls("__graphene__")
 
@@ -31,7 +32,8 @@ class AccountStore extends BaseStore {
             onAccountSearch: AccountActions.accountSearch,
             onAddPrivateAccount: AccountActions.addPrivateAccount,
             onAddPrivateContact: AccountActions.addPrivateContact,
-            onRemovePrivateContact: AccountActions.removePrivateContact
+            onRemovePrivateContact: AccountActions.removePrivateContact,
+            onWalletUnlocked: WalletUnlockActions.unlocked
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
             "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount", "getPrivateAccountType");
@@ -45,6 +47,7 @@ class AccountStore extends BaseStore {
             update: false,
             currentAccount: null,
             linkedAccounts: Immutable.Set(),
+            myAccounts: Immutable.Set(),
             myIgnoredAccounts: Immutable.Set(),
             unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts") || []),
             searchAccounts: Immutable.Map(),
@@ -74,6 +77,12 @@ class AccountStore extends BaseStore {
             });
         });
 
+        var myAccounts = Immutable.Set().asMutable();
+        iDB.load_data("my_accounts").then(data => {
+            for (let a of data) { myAccounts.add(a.name); }
+            this.setState({ myAccounts: myAccounts.asImmutable() });
+        })
+
         var privateAccounts = Immutable.Set().asMutable();
         iDB.load_data("private_accounts").then(data => {
             for (let a of data) { privateAccounts.add(a.name); }
@@ -95,7 +104,7 @@ class AccountStore extends BaseStore {
     }
     
     addAccountRefs() {
-        //  Simply add them to the linkedAccounts list (no need to persist them)
+        //  Simply add them to the linkedAccounts list and persist them do iDB for the sake of caching
         var account_refs = AccountRefsStore.getState().account_refs
         if( ! this.initial_account_refs_load && this.account_refs === account_refs) return
         this.account_refs = account_refs
@@ -107,10 +116,21 @@ class AccountStore extends BaseStore {
                     pending = true
                     return
                 }
-                if (account && !this.state.unFollowedAccounts.includes(account.get("name"))) {
-                    linkedAccounts.add(account.get("name"));
-                } else {
-                    this._addIgnoredAccount(account.get("name"));
+                if (account) {
+                    const name = account.get("name");
+                    if (!this.state.unFollowedAccounts.includes(name)) {
+                        if (!this.state.linkedAccounts.includes(name)) {
+                            iDB.add_to_store("linked_accounts", {name});
+                            this.state.linkedAccounts = this.state.linkedAccounts.add(account.get("name"));
+                        }
+                        const auth = this.getMyAuthorityForAccount(account);
+                        if ((auth === "full" || auth === "partial") && !this.state.myAccounts.includes(name)) {
+                            iDB.add_to_store("my_accounts", {name});
+                            this.state.myAccounts = this.state.myAccounts.add(account.get("name"));
+                        }
+                    } else {
+                        this._addIgnoredAccount(account.get("name"));
+                    }
                 }
             })
         })
@@ -121,6 +141,8 @@ class AccountStore extends BaseStore {
     }
     
     getMyAccounts() {
+        if (WalletDb.isLocked()) return this.state.myAccounts.toArray();
+
         var accounts = []
         for(let account_name of this.state.linkedAccounts) {
             var account = ChainStore.getAccount(account_name)
@@ -137,7 +159,7 @@ class AccountStore extends BaseStore {
                 this.state.update = true
                 continue
             } 
-            if(auth === "full") {
+            if(auth === "full" || auth === "partial") {
                 accounts.push(account_name)
             }
         }
@@ -196,6 +218,9 @@ class AccountStore extends BaseStore {
     }
 
     isMyAccount(account) {
+        if (!account) return false;
+        if (WalletDb.isLocked() && this.state.myAccounts.includes(account.get("name"))) return true;
+
         let authority = this.getMyAuthorityForAccount(account);
         if( authority === undefined ) return undefined
         return authority === "partial" || authority === "full";
@@ -348,6 +373,10 @@ class AccountStore extends BaseStore {
         if (this.state.privateContacts.has(name)) res = "Private Contact";
         else if (this.state.privateAccounts.has(name)) res = "Private Account";
         return res;
+    }
+
+    onWalletUnlocked() {
+
     }
 }
 
