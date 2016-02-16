@@ -53,8 +53,9 @@ import assert from "assert"
         // ISO Date string from the server
         remote_updated_date: null,
         
-        // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not random enough to be public).
-        private_encryption_pubkey: null,
+        // This is the public key derived from the email+username+password ... This could be brute forced, so consider this private (email+username+password is not random enough to be public). 
+        // Removed, instead passwords are checked by trying to decrypt the wallet.
+        // private_encryption_pubkey: null,
         
     })
     ```
@@ -207,15 +208,15 @@ export default class WalletStorage {
             
             // check login (email, username, and password)
             let public_key = this.private_key.toPublicKey()
-            if( this.storage.state.get("private_encryption_pubkey") !== public_key.toString())
-                throw new Error( "invalid_password" )
+            // if( this.storage.state.get("private_encryption_pubkey") !== public_key.toString())
+            //     throw new Error( "invalid_password" )
             
             // Set this up so sync will have a wallet ready to look at
             let backup_buffer = new Buffer(encrypted_wallet, 'base64')
             return decrypt(backup_buffer, this.private_key).then( wallet_object => {
                 
                 if( chain_id && chain_id !== wallet_object.chain_id)
-                    throw new Error( "Missmatched chain id, wallet has " + this.storage.state.get("chain_id") + " but login is expecting " + chain_id )
+                    throw new Error( "Missmatched chain id, wallet has " + wallet_object.chain_id + " but login is expecting " + chain_id )
                 
                 // A merge is a bit safer incase the user updated the wallet before this login completes
                 this.wallet_object = this.wallet_object.mergeDeep(wallet_object)
@@ -230,48 +231,25 @@ export default class WalletStorage {
             
             // console.log("INFO\tWalletStorage\tlogin", this.wallet_object.has("created") ? "downloaded new wallet": "new wallet")
             
-            assert(chain_id, "Chain ID is required on first login")
+            // Need a chain_id from somewhere
+            if( ! this.wallet_object.has("chain_id"))
+                assert(chain_id, "Chain ID is required on first login")
             
-            let public_key = this.private_key.toPublicKey()
+            if( chain_id && this.wallet_object.has("chain_id"))
+                if(this.wallet_object.get("chain_id") !== chain_id)
+                    throw new Error("Missmatched chain id, wallet has " + this.wallet_object.get("chain_id") + " but login is expecting " + chain_id)
             
+            // let public_key = this.private_key.toPublicKey()
             // server wallet or not, the password is defined (same pubkey on the server)
-            this.storage.setState({
-                private_encryption_pubkey: public_key.toString()
-            })
+            // this.storage.setState({
+            //     private_encryption_pubkey: public_key.toString()
+            // })
             
-            if( ! this.wallet_object.has("created") ) {
-                // this really is a new wallet
-                let dt = new Date().toISOString()
-                this.wallet_object = this.wallet_object.merge({
-                    chain_id,
-                    created: dt,
-                    last_modified: dt
-                })
-                return this.notifyResolve(this.updateWallet())
-            }
-            return this.notifyResolve()
+            let w = this.wallet_object
+            let dt = new Date().toISOString()
+            this.wallet_object = Map({ chain_id, created: dt, last_modified: dt }).merge(this.wallet_object)
+            return w === this.wallet_object ? this.notifyResolve() : this.notifyResolve(this.updateWallet())
         })
-    }
-    
-    validatePassword( email, username, password ) {
-        
-        req(email, "email")
-        req(username, "username")
-        req(password, "password")
-        
-        let pw_pubkey = this.storage.state.get("private_encryption_pubkey")
-        assert(pw_pubkey, "Login first to setup this wallet")
-        
-        let private_key = PrivateKey.fromSeed(
-            email.trim().toLowerCase() + "\t" +
-            username.trim().toLowerCase() + "\t" +
-            password
-        )
-        
-        let public_key = private_key.toPublicKey()
-        
-        if( pw_pubkey !== public_key.toString())
-            throw new Error( "invalid_password" )
     }
     
     /**
@@ -402,12 +380,13 @@ export default class WalletStorage {
             old_password
         )
         
-        let old_public_key = old_private_key.toPublicKey()
-        
         // check login
-        if( this.storage.state.get("private_encryption_pubkey") !== old_public_key.toString())
-            throw new Error( "invalid_password" )
+        // if( this.storage.state.get("private_encryption_pubkey") !== old_public_key.toString())
+        //     throw new Error( "invalid_password" )
+        let backup_buffer = new Buffer(this.storage.state.get("encrypted_wallet"), 'base64')
+        decrypt(backup_buffer, old_private_key)
         
+        let old_public_key = old_private_key.toPublicKey()
         let original_local_hash = this.localHash()
         let remote_copy = this.storage.state.get("remote_copy")
         
@@ -434,7 +413,7 @@ export default class WalletStorage {
                 // Save locally first
                 this.storage.setState({
                     encrypted_wallet: encrypted_data.toString('base64'),
-                    private_encryption_pubkey: new_public_key.toString()
+                    // private_encryption_pubkey: new_public_key.toString()
                 })
                 this.local_status = null
                 this.notify = true

@@ -4,6 +4,7 @@ import iDBRoot from "idb-root"
 
 const DB_VERSION = 4 // Initial value was 1
 const DB_PREFIX = "graphene_v4"
+
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
@@ -57,8 +58,7 @@ var openDatabase = function(database_name = this.getDatabaseName()) {
         };
 
         openRequest.onsuccess = function (e) {
-            // DEBUG 
-            console.log('... openRequest.onsuccess ' + database_name, e.target.result)
+            // DEBUG console.log('... openRequest.onsuccess ' + database_name, e.target.result)
             var db = e.target.result
             iDB.database_name = database_name
             idb_helper.set_graphene_db(db)

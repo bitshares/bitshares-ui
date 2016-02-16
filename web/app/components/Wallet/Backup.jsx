@@ -8,7 +8,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletActions from "actions/WalletActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletManagerStore from "stores/WalletManagerStore"
-import WalletDb from "stores/WalletDb"
+import WalletDb, { legacyUpgrade } from "stores/WalletDb"
 import BackupStore from "stores/BackupStore"
 // import BackupActions, {backup, restore} from "actions/BackupActions"
 import { Backup } from "@graphene/wallet-client"
@@ -386,15 +386,20 @@ class DecryptBackup extends BackupBaseComponent {
 
         let email = ""
         let username = ""
+        let password = this.state.backup_password || ""
         
         let private_key = PrivateKey.fromSeed(
             email.trim().toLowerCase() + "\t" +
             username.trim().toLowerCase() + "\t" +
-            this.state.backup_password || ""
+            password
         )
         
         let backupDecrypt = private_key2 =>
-        Backup.decrypt(this.props.backup.contents, private_key2).then( wallet_object => {
+        Backup.decrypt(this.props.backup.contents, private_key2).then( restored_object => {
+            
+            let wallet_object = Array.isArray(restored_object.wallet) ?
+                legacyUpgrade(password, restored_object) : restored_object
+            
             this.setState({verified: true})
             if(this.props.saveWalletObject)
                 BackupStore.setWalletObjct(wallet_object)
@@ -409,7 +414,7 @@ class DecryptBackup extends BackupBaseComponent {
         } catch( error ) {
             
             // try the legacy format
-            private_key = PrivateKey.fromSeed(this.state.backup_password || "")
+            private_key = PrivateKey.fromSeed(password)
             
             try {
                 return backupDecrypt(private_key)
@@ -423,23 +428,6 @@ class DecryptBackup extends BackupBaseComponent {
                     notify.error(""+error)
             }
         }
-        
-        // private_key = PrivateKey.fromSeed(this.state.backup_password || "")
-        // 
-        // var contents = this.props.backup.contents
-        // decrypt(contents, private_key).then( wallet_object => {
-        //     this.setState({verified: true})
-        //     if(this.props.saveWalletObject)
-        //         BackupStore.setWalletObjct(wallet_object)
-        //     
-        // }).catch( error => {
-        //     console.error("Error verifying wallet " + this.props.backup.name,
-        //         error, error.stack)
-        //     if(error === "invalid_decryption_key")
-        //         notify.error("Invalid Password")
-        //     else
-        //         notify.error(""+error)
-        // })
     }
     
     formChange(event) {

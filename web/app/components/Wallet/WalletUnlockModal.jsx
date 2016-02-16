@@ -70,22 +70,14 @@ class WalletUnlockModal extends React.Component {
         e.preventDefault()
         var password = this.refs.password_input.value()
         this.setState({password_error: null})
-        WalletDb.validatePassword(
-            password || "",
-            true //unlock
-        )
-        if (WalletDb.isLocked()) {
-            this.setState({password_error: true})
-            return false
-        }
-        else {
+        WalletDb.login( password || "" ).then(()=>{
             this.refs.password_input.clear()
             ZfApi.publish(this.props.modalId, "close")
             this.props.resolve()
             WalletUnlockActions.change()
             this.setState({password_input_reset: Date.now(), password_error: false})
-        }
-        return false
+        })
+        .catch( error =>{ this.setState({password_error: true}) })
     }
     
     render() {

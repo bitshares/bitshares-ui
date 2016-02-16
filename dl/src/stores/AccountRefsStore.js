@@ -45,7 +45,12 @@ class AccountRefsStore extends BaseStore {
     }
 
     chainStoreUpdate() {
-        if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key) return
+        let key_map = WalletDb.keys()
+        if(
+            this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key &&
+            key_map === this.last_key_map
+        ) return
+        this.last_key_map = key_map
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
         this.updateNoAccountRefs()
     }
@@ -83,21 +88,18 @@ function updateNoAccountRefs() {
         // console.log("AccountRefsStore account_refs",account_refs.size);
         this.setState({account_refs})
     }
-    if(!this.no_account_refs.equals(no_account_refs)) {
+    if( ! this.no_account_refs.equals(no_account_refs)) {
         this.no_account_refs = no_account_refs
         this.saveNoAccountRefs(no_account_refs)
     }
 }
 
 function loadNoAccountRefs() {
-    // this.storage = new LocalStoragePersistence("AccountRefs::"+ chain_config.address_prefix)
-    // return Promise.resolve( Immutable.Set(this.storage.getState()) )
     return iDB.root.getProperty("no_account_refs", [])
         .then( array => Immutable.Set(array) )
 }
 
 function saveNoAccountRefs(no_account_refs) {
-    // this.storate.setState(array)
     var array = []
     for(let pubkey of no_account_refs) array.push(pubkey)
     if( array.length)

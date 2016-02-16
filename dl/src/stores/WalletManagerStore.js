@@ -34,7 +34,7 @@ class WalletManagerStore extends BaseStore {
     /** This will change the current wallet the newly restored wallet. */
     onRestore({wallet_name, wallet_object}) {
         
-        console.log('wallet_name, wallet_object', wallet_name, wallet_object)
+        console.log('WalletManagerStore\tonRestore', wallet_name)
         
         // iDB.restore(wallet_name, wallet_object).then( () => {
         //     return this.onSetWallet({wallet_name})

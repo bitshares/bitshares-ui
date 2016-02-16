@@ -69,11 +69,11 @@ class WalletPassword extends Component {
     }
     
     onPassword() {
-        if( WalletDb.validatePassword(this.state.password) ) {
+        WalletDb.login(this.state.password).then(()=>{
             this.setState({ verified: true })
             this.props.onValid(this.state.password)
-        } else
-            notify.error("Invalid Password")
+        })
+        .catch( error =>{ notify.error("Invalid Password") })
     }
     
     formChange(event) {

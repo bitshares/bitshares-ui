@@ -49,6 +49,7 @@ export default class ConfidentialWallet {
         
         // BTS 1.0 addresses for shorts and balance claims
         // Update the index if needed
+        // The TransactionBuilder needs this info, it calls this.getPubkeys_having_PrivateKey
         AddressIndex.add( this.keys()
             .reduce( (r, key, pubkey) => key.get("index_address") ? r.push(pubkey) : r, List())
         )

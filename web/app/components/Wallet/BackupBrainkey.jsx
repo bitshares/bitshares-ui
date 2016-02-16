@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import connectToStores from "alt/utils/connectToStores";
 import {FormattedDate} from "react-intl"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import WalletUnlock from "components/Wallet/WalletUnlock"
@@ -8,7 +9,16 @@ import WalletDb from "stores/WalletDb"
 import { hash } from "@graphene/ecc"
 import cname from "classnames"
 
+@connectToStores
 export default class BackupBrainkey extends Component {
+    
+    static getStores() {
+        return [WalletDb]
+    }
+
+    static getPropsFromStores() {
+        return {}
+    }
     
     constructor() {
         super()
@@ -17,22 +27,21 @@ export default class BackupBrainkey extends Component {
     
     _getInitialState() {
         return {
-            password: null,
             brainkey: null,
-            invalid_password: false,
             verify: false
         }
     }
     
     render() {
         return <WalletUnlock>{ this.render_unlocked() }</WalletUnlock>
+        // return <WalletUnlock renderUnlocked={this.render_unlocked.bind(this)}/>
     }
     
     render_unlocked() {
         var content
         var brainkey_backup_date = WalletDb.prop("brainkey_backup_date")
         var brainkey_backup_time = brainkey_backup_date ?
-            <h3><Translate content="wallet.verified" /> <FormattedDate value={brainkey_backup_date}/></h3>:
+            <h3><Translate content="wallet.verified" /> <FormattedDate value={new Date(brainkey_backup_date)}/></h3>:
             <h3><Translate content="wallet.brainkey_not_verified" /></h3>
 
         if(this.state.verified) {
@@ -80,25 +89,17 @@ export default class BackupBrainkey extends Component {
                 <Translate content="wallet.brainkey_w3" />
             </span>
         }
-
+        
         if(!content) {
-            var valid = this.state.password && this.state.password !== ""
             content = <span>
-                <h3><Translate content="wallet.backup_brainkey" /></h3>
-                <label><Translate content="wallet.enter_password" /></label>
+                {brainkey_backup_time}
                 <form onSubmit={this.onSubmit.bind(this)} className="name-form" noValidate>
-                    <input type="password" id="password" onChange={this.onPassword.bind(this)}/>
-                    <p>
-                        {this.state.invalid_password ?
-                            <span className="error">Invalid password</span>:
-                            <span><Translate content="wallet.pwd4brainkey" /></span>}
-                    </p>
-                    <div>{brainkey_backup_time}<br/></div>
                     <button className="button success"><Translate content="wallet.show_brainkey" /></button>
                     <button className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></button>
                 </form>
             </span>
         }
+        
         return <div className="grid-block vertical" style={{overflowY: 'hidden'}}>
             <div className="grid-container">
                 <div className="grid-content no-overflow">
@@ -130,16 +131,7 @@ export default class BackupBrainkey extends Component {
     
     onSubmit(e) {
         e.preventDefault()
-        var was_locked = WalletDb.isLocked()
-        if(WalletDb.validatePassword(this.state.password, true)) {
-            var brainkey = WalletDb.getBrainKey()
-            if(was_locked) WalletDb.onLock()
-            this.setState({ brainkey })
-        } else 
-            this.setState({ invalid_password: true })
-    }
-
-    onPassword(event) {
-        this.setState({ password: event.target.value, invalid_password: false })
+        var brainkey = WalletDb.getBrainKey()
+        this.setState({ brainkey })
     }
 }
