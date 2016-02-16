@@ -2,25 +2,25 @@
 
 // variables
 
-$light-text-color: #3F2E55;
-$dark-text-color: #3F2E55;
-$primary-text-color: #3F2E55;
-$secondary-text-color: darken($primary-text-color, 20%);
-$link-text-color: #aeabff;
-$error-text-color: #E3745B;
+$light-text-color: #FFF;
+$dark-text-color: #000;
+$primary-text-color: #000;
+$secondary-text-color: lighten($primary-text-color, 20%);
+$link-text-color: #4A90E2;
+$error-text-color: #FE3939;
 
 $bg-color: #FFF;
-$panel-bg-color: #e5e6e4;
+$panel-bg-color: #0472a7;
 $light-panel-bg-color: #FFF;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
-$button-bg-color: #8c88ff;
-$secondary-button-bg-color: #999999;
+$button-bg-color: #04C959;
+$secondary-button-bg-color: $error-text-color;
 
 $alert-color: $error-text-color;
 $info-color: #A0A4B8;
 $success-color: #21D19F;
-$warning-color: #f35b92;
-$fee-color: #7f055e;
+$warning-color: lighten($error-text-color, 20%);
+$fee-color: #000;
 
 // general
 
@@ -94,21 +94,21 @@ label, label > span {
 }
 
 .action-sheet {
-  @include color($light-text-color, $super-light-panel-bg-color);
+  @include color($primary-text-color, $super-light-panel-bg-color);
   &::after {
     border-bottom-color: $super-light-panel-bg-color;
   }
   > ul > li > a {
-    color: $light-text-color;
+    color: $primary-text-color;
     border-top-color: $panel-bg-color;
     &:hover {
-      @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+      @include color($primary-text-color, lighten($super-light-panel-bg-color, 4%));
     }
   }
 }
 
 .reactTooltip.type-dark {
-  @include color($light-text-color, $super-light-panel-bg-color);
+  @include color($primary-text-color, $super-light-panel-bg-color);
   &.place-bottom:after {
     border-bottom-color: $super-light-panel-bg-color;
   }
@@ -132,7 +132,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal {
-  @include color($light-text-color, $light-panel-bg-color);
+  @include color($primary-text-color, $light-panel-bg-color);
   .close-button {
     color: $secondary-text-color;
     &:hover {
@@ -150,15 +150,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .footer {
-  @include color($secondary-text-color, $panel-bg-color);
+  @include color($light-text-color, darken($panel-bg-color, 20%));
 }
 
 .panel-left {
-  @include color($dark-text-color, $light-panel-bg-color);
+  @include color($dark-text-color, $bg-color);
   .block-list li > a {
     color: $light-text-color;
     &:hover {
-      background-color: darken($light-panel-bg-color, 4%);
+      background-color: darken($bg-color, 4%);
     }
   }
 }
@@ -169,16 +169,20 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .menu-group.primary {
-  background-color: darken($panel-bg-color, 20%);
-  .menu-bar {
-  background-color: darken($panel-bg-color, 20%);
-  }
+    background-color: darken($panel-bg-color, 20%);
+    .menu-bar {
+    background-color: darken($panel-bg-color, 20%);
+    li > a:hover, li > a:active {
+    color: #fff;
+    background-color: #57BDFD;
+     }
+    }
     .button {
     background-color: darken($panel-bg-color, 20%);
     &:hover {
-    background-color: lighten($panel-bg-color, 80%);
+    background-color: #57BDFD !important;
+     }
     }
-  }
 }
 
 
@@ -188,7 +192,7 @@ h1, h2, h3, h4, h5, h6 {
   .left-column {
     border-top-color: $bg-color;
     border-bottom-color: $bg-color;
-    background-color: lighten($panel-bg-color, 4%);
+    background-color: $bg-color;
 
   }
 
@@ -222,21 +226,21 @@ h1, h2, h3, h4, h5, h6 {
 .button {
   background-color: $button-bg-color;
   &:hover, &:focus, &:active {
-    background-color: lighten($button-bg-color, 4%) !important;
+    background-color: lighten($button-bg-color, 4%);
   }
   &.outline {
-    color: lighten($primary-text-color, 40%);
+    color: $primary-text-color;
     &:hover {
-      color: $light-text-color;
-      border-color: $light-text-color;
+      color: lighten($primary-text-color, 40%);
+      border-color: lighten($primary-text-color, 40%);
     }
   }
 }
 
 .button.secondary {
-  @include color($dark-text-color, $secondary-button-bg-color);
+  @include color($light-text-color, $secondary-button-bg-color);
   &:hover, &:focus, &:active {
-    @include color(lighten($dark-text-color, 4%), lighten($secondary-button-bg-color, 4%), true);
+    @include color(lighten($light-text-color, 4%), lighten($secondary-button-bg-color, 4%), true);
   }
 }
 
@@ -244,14 +248,20 @@ h1, h2, h3, h4, h5, h6 {
   background-color: $panel-bg-color;
 }
 
-.grp-menu-item button {
+.grp-menu-item {
+  color: $light-text-color;
+  .button {
   &:hover, &:focus, &:active {
-    background-color: #4c4c4c !important;
+    background-color: $link-text-color;
+    }
   }
 }
 
+
+
+
 .header .logo {
-  color: $secondary-text-color;
+  color: $light-text-color;
 }
 
 // cards
@@ -270,10 +280,10 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .card {
-  @include color($primary-text-color, $panel-bg-color);
-  background-color: $panel-bg-color;
+  @include color($primary-text-color, $bg-color);
+  background-color: $bg-color;
   &:hover {
-    background-color: lighten($panel-bg-color, 4%);
+    background-color: #57BDFD;
     > h4 {
       background-color: lighten($light-panel-bg-color, 4%);
     }
@@ -314,7 +324,7 @@ h1, h2, h3, h4, h5, h6 {
     color: $secondary-text-color;
   }
   li > a:hover, li > label:hover, li select:hover, li.active > a {
-    color: $light-text-color;
+    color: $secondary-text-color;
     background-color: lighten($bg-color, 4%);
   }
   li:first-child {
@@ -322,7 +332,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   header {
     color: $secondary-text-color;
-    background-color: $panel-bg-color;
+    background-color: $bg-color;
   }
 }
 
@@ -371,7 +381,8 @@ div.buy-sell-box {
     color: $secondary-text-color;
     &.is-active {
       color: $primary-text-color;
-      border-bottom-color: $button-bg-color;
+      font-weight: bold;
+      border-bottom-color: #57BDFD;
     }
     &:hover, &:focus, &:active {
       color: $primary-text-color;
@@ -384,9 +395,9 @@ div.buy-sell-box {
 // Exchange
 
 .depthchart {
-  background-color: $bg-color;
+  background-color: #000;
   &:hover {
-  background-color: $bg-color;
+  background-color: #000;
   }
   &.area {
     color: #FFF;
@@ -399,7 +410,7 @@ td.orderHistoryAsk {
 }
 
 td.orderHistoryBid {
-  color: $success-color;
+  color: $button-bg-color;
   font-weight: bold;
 }
 
@@ -413,7 +424,7 @@ td.orderHistoryBid {
     color: $secondary-text-color;
   }
   .my-account h5, td.my-account {
-    color: $info-color;
+    color: $dark-text-color;
   }
 }
 
@@ -427,13 +438,13 @@ td.orderHistoryBid {
 
   > li > a:hover, > li > label:hover, > li select:hover {
     color: $light-text-color;
-    background-color: $panel-bg-color;
+    background-color: #57BDFD;
     border-top: none;
   }
   > li > a.active {
     color: $light-text-color;
-    background-color: darken($panel-bg-color, 4%);
-    border-left-color: darken($button-bg-color, 4%);
+    background-color: #57BDFD;
+    border-left-color: darken($panel-bg-color, 20%);
   }
 }
 

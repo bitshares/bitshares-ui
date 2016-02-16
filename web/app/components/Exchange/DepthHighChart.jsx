@@ -87,7 +87,7 @@ class DepthHighChart extends React.Component {
         let config = {
             chart: {
                 type: "area",
-                backgroundColor: "rgba(255, 0, 0, 0)",
+                backgroundColor: "rgba(0, 0, 0, 1)",
                 spacing: [10, 0, 5, 0]
             },
             title: {
@@ -248,14 +248,14 @@ class DepthHighChart extends React.Component {
 
         if (this.props.settlementPrice) {
             config.xAxis.plotLines.push({
-                color: "#7B1616",
+                color: "#848484",
                 id: "plot_line",
                 dashStyle: "solid",
                 value: this.props.settlementPrice * power,
                 label: {
                     text: counterpart.translate("explorer.block.settlement_price"),
                     style: {
-                        color: "#DADADA",
+                        color: "#848484",
                         fontWeight: "bold"
                     }
                 },
@@ -269,7 +269,7 @@ class DepthHighChart extends React.Component {
                 config.series.push({
                     name: `Call ${quoteSymbol}`,
                     data: flatCalls,
-                    color: "#BBBF2B"
+                    color: "#57BDFD"
                 })
                 if (this.props.invertedCalls) {
                     totalAsks += totalCalls;
@@ -321,7 +321,7 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Bid ${quoteSymbol}`,
                 data: flatBids,
-                color: "#50D2C2"
+                color: "#04C959"
             })
         }
 
@@ -329,7 +329,7 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Ask ${quoteSymbol}`,
                 data: flatAsks,
-                color: "#E3745B"
+                color: "#fe3939"
             });
         }
 

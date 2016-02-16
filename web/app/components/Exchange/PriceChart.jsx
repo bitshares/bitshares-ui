@@ -205,8 +205,8 @@ class PriceChart extends React.Component {
         let priceSeriesData = _.cloneDeep(priceData);
         let currentIndicator = this.getIndicators(this.props);
 
-        let positiveColor = "rgba(110, 193, 5, 0.80)";
-        let negativeColor = "rgba(225, 66, 74, 0.80)";
+        let positiveColor = "rgba(4, 201, 89, 1)";
+        let negativeColor = "rgba(254, 57, 57, 1)";
         
         if (!priceSeriesData.length && latest) {
             let now = (new Date).getTime();
@@ -236,7 +236,7 @@ class PriceChart extends React.Component {
 
         let config = {
             chart: {
-                backgroundColor: "rgba(255, 0, 0, 0)",
+                backgroundColor: "rgba(0, 0, 0, 1)",
                 dataGrouping: {
                     enabled: false
                 },

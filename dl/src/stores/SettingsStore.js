@@ -15,8 +15,8 @@ class SettingsStore {
 
         this.settings = Immutable.Map({
             locale: "en",
-            connection: "wss://bitshares.openledger.info/ws",
-            faucet_address: "https://bitshares.openledger.info",
+            connection: "wss://bts.bitcash.org/ws",
+            faucet_address: "https://bts.bitcash.org",
             unit: CORE_ASSET,
             showSettles: false,
             walletLockTimeout: 60 * 10
@@ -67,8 +67,7 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
-                "wss://bitshares.openledger.info/ws",
-                "wss://bitshares.dacplay.org:8089/ws"
+                "wss://bts.bitcash.org/ws"
             ],
             unit: [
                 CORE_ASSET,

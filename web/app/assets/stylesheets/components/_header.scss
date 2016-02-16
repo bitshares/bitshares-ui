@@ -22,12 +22,17 @@
     display: list-item;
     padding: 0;
     > a {
+      color: #fff;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
       @include breakpoint(large) {
         padding-left: 1.75rem;
         padding-right: 1.75rem;
       }
+      &:hover {
+      background: #57BDFD;
+      color: #fff;
+      } 
     }
   }
 }
@@ -43,7 +48,7 @@
   flex-wrap: nowrap;
   align-items: center;
   .button:hover {
-    background: #414141 !important;
+    background: #57BDFD;
   }
   > a, .button {
     color: #fff !important;
@@ -54,7 +59,7 @@
     }
     font-size: 1rem;
     &:hover {
-      background: #414141;
+      background: #57BDFD;
       color: #fff;
     }
   }

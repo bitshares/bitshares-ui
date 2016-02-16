@@ -1,9 +1,9 @@
-$bid-color: #50D2C2;
-$ask-color: #E3745B;
-$call-color: #BBBF2B;
-$light-panel-bg-color: #353742;
-$positive-color: #6EC105;
-$negative-color: #E1424A;
+$bid-color: #04C959;
+$ask-color: #fe3939;
+$call-color: #57BDFD;
+$light-panel-bg-color: #0472a7;
+$positive-color: #04C959;
+$negative-color: #fe3939;
 
 .market-layout {
   > .grid-block {
@@ -36,7 +36,7 @@ $negative-color: #E1424A;
 }
 
 .exchange-content-header {
-  color: white;
+  color: black;
   font-size: 1.1rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -63,7 +63,7 @@ td.orderHistoryBid {
   }
 
   > span.price-decimal, > span > span.price-decimal {
-    color: #e0e0e0;
+    color: #000;
     opacity: 0.6;
   }
 }
@@ -75,7 +75,7 @@ td.orderHistoryAsk {
   }
 
   > span.price-decimal, > span >span.price-decimal {
-    color: #e0e0e0;
+    color: #000;
     opacity: 0.6;
   }
 }
@@ -87,7 +87,7 @@ td.orderHistoryCall {
   }
 
   > span.price-decimal, > span >span.price-decimal {
-    color: #e0e0e0;
+    color: #000;
     opacity: 0.6;
   }
 }
@@ -201,7 +201,7 @@ p.order-table-title {
 
 .orderbook-latest-price {
     td {
-      background-color: #4C4C4C !important;
+      background-color: #57BDFD;
       border-bottom: 1px solid grey !important;
       border-top: 1px solid grey !important;
       padding: 10px 0 !important;
@@ -275,7 +275,7 @@ a.order-cancel {
 }
 
 li.stat.clickable:hover {
-  background-color: #4C4C4C;
+  background-color: #57BDFD;
 }
 
 .market-stats {
@@ -293,7 +293,7 @@ li.stat.clickable:hover {
 
 .market-stats .stat .value {
   font-size: 0.75rem;
-  color: #000;
+  color: #000 !important;
   letter-spacing: normal;
 }
 
@@ -364,19 +364,22 @@ li.stat.clickable:hover {
 }
 
 .active-bucket {
+  color: #fff !important;
   font-size: 0.75rem !important;
-  background-color: lighten($light-panel-bg-color, 12%);
+  background-color: #57BDFD;
   text-transform: uppercase;
 }
 
 .bucket-option {
+  color: #000 !important;
   cursor: pointer;
   text-transform: none !important;
   padding-right: 0.5rem;
 }
 
 .bucket-option:hover {
-  background-color: #4C4C4C;
+  color: #fff !important;
+  background-color: #57BDFD;
 }
 
 .buy-sell-row {
@@ -417,19 +420,6 @@ li.stat.clickable:hover {
     padding: 0 0 0 5px;
     min-width: 5rem;
     background-color: lighten($light-panel-bg-color, 12%);
-
-    > select {
-      padding: 0;
-      margin: 0;
-      height: 1.75rem;
-      line-height: 1.75rem;
-      background-color: lighten($light-panel-bg-color, 12%);
-      background: lighten($light-panel-bg-color, 12%) url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E") right 10px center no-repeat;
-      background-size: 8px 8px;
-      border: none;
-      color: white;
-      font-size: 12px;
-    }
 }
 
 .account-drop-down {
@@ -489,7 +479,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .header-sub-title {
   font-size: 80%;
-  color: white;
+  color: #000;
 }
 
 .market-right-padding-only {
@@ -511,12 +501,20 @@ input[type=number]::-webkit-outer-spin-button {
   text-align: center;
   font-size: 1.10rem;
   padding: 10px 0;
-  font-weight: 500;
+  font-weight: bold;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   margin-bottom: 0.25rem;
   transition: border-color 0.3s ease 0s;
-}
+  border-bottom-color: #57BDFD;  
+
+  &.inactive {  
+      font-weight: 500;
+      border-bottom-color: transparent;
+   }
+}   
+ 
+
 
 .mymarkets-list {
   padding-top: 0.55rem;
@@ -534,7 +532,7 @@ table thead tr th.mymarkets-header {
 }
 
 .gold-star > svg > path {
-  fill: #CC9F00;
+  fill: #04C959;
 }
 
 .grey-star > svg > path {
@@ -552,6 +550,15 @@ tr.activeMarket {
   z-index: 999;
   text-transform: uppercase;
   font-size: 2rem;
+}
+
+.market-right-padding {
+  padding-right: 15px !important;
+}
+
+.orderbook-showall {
+  text-align: center;
+  padding: 5px 0;
 }
 
 .market-right-padding {
