@@ -16,6 +16,7 @@ import { ChainStore } from "@graphene/chain";
 import TransferReceiptModal from "../Stealth/TransferReceiptModal";
 import connectToStores from "alt/utils/connectToStores";
 import WalletDb from "stores/WalletDb";
+import {number_utils} from "@graphene/chain";
 
 @connectToStores
 class Transfer extends React.Component {
@@ -47,7 +48,9 @@ class Transfer extends React.Component {
             memo: "",
             error: null,
             propose: false,
-            propose_account: ""
+            propose_account: "",
+            blind_balances: null,
+            transfer_receipt: null
         };
     };
     
@@ -67,7 +70,20 @@ class Transfer extends React.Component {
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
-        this.setState({from_name,asset,amount, error: null, propose: false, propose_account: ""})
+
+        if (from_name && from_name.length > 2 && from_name[0] === "~") {
+            const from = from_name.slice(1);
+            console.log("-- Transfer.render from -->", from);
+            try {
+                WalletDb.getState().cwallet.getBlindBalances(from).then(res => {
+                    console.log("-- getBlindBalances -->", res.toJS());
+                    this.setState({blind_balances: res.toJS()});
+                });
+            } catch (error) {
+                console.log("-- getBlindBalances error -->", error);
+            }
+        }
+        this.setState({from_name,asset,amount, error: null, propose: false, propose_account: "", blind_balances: null})
     }
 
     toChanged(to_name) {
@@ -125,22 +141,53 @@ class Transfer extends React.Component {
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.amount.replace( /,/g, "" )
-        AccountActions.transfer(
-            this.state.from_account.get("id"),
-            this.state.to_account.get("id"),
-            parseInt(amount * precision, 10),
-            asset.get("id"),
-            this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo,
-            this.state.propose ? this.state.propose_account : null,
-            this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
-        ).then( () => {
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
-            TransactionConfirmStore.listen(this.onTrxIncluded);
-        }).catch( e => {
-            let msg = e.message ? e.message.split( '\n' )[1] : null;
-            console.log( "error: ", e, msg)
-            this.setState({error: msg})
-        } );
+
+        const from_account_type = AccountStore.getAccountType(this.state.from_name);
+        const to_account_type = AccountStore.getAccountType(this.state.to_name);
+
+        console.log("-- Transfer.onSubmit -->", from_account_type, to_account_type);
+
+        if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
+            // transferToBlind
+            const cwallet = WalletDb.getState().cwallet;
+            console.log("-- transferToBlind cwallet : -->", cwallet);
+            const to = this.state.to_name.slice(1);
+            cwallet.transferToBlind(this.state.from_account.get("id"), asset.get("id"), [[to, parseFloat(amount)]], true)
+            .then(res => {
+                console.log("-- transferToBlind res -->", res);
+            }).catch(error => {
+                console.error("-- transferToBlind error -->", error);
+            })
+        } else if (from_account_type === "Private Account" || from_account_type == "Private Contact") {
+            // transferFromBlind
+            const cwallet = WalletDb.getState().cwallet;
+            const from = this.state.from_name.slice(1);
+            cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
+            .then(res => {
+                console.log("-- transferFromBlind res -->", res);
+                this.setState({transfer_receipt: res.change_receipt});
+                ZfApi.publish("transfer_receipt_modal", "open")
+            }).catch(error => {
+                console.error("-- transferFromBlind error -->", error);
+            })
+        } else {
+            AccountActions.transfer(
+                this.state.from_account.get("id"),
+                this.state.to_account.get("id"),
+                parseInt(amount * precision, 10),
+                asset.get("id"),
+                this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo,
+                this.state.propose ? this.state.propose_account : null,
+                this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
+            ).then( () => {
+                TransactionConfirmStore.unlisten(this.onTrxIncluded);
+                TransactionConfirmStore.listen(this.onTrxIncluded);
+            }).catch( e => {
+                let msg = e.message ? e.message.split( '\n' )[1] : null;
+                console.log( "error: ", e, msg)
+                this.setState({error: msg})
+            } );
+        }
     }
 
     setNestedRef(ref) {
@@ -176,6 +223,7 @@ class Transfer extends React.Component {
         
         if (from_account && !from_error) {
             let account_balances = from_account.get("balances").toJS();
+            console.log("-- account_balances -->", account_balances);
             asset_types = Object.keys(account_balances).sort(utils.sortID);
             fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
             for (let key in account_balances) {
@@ -212,10 +260,17 @@ class Transfer extends React.Component {
             } else {
                 balance = "No funds";
             }
+        } else if (this.state.from_name && this.state.from_name[0] === "~" && this.state.blind_balances) {
+            asset_types = Object.keys(this.state.blind_balances).sort(utils.sortID);
         }
+
         let propose_incomplete = propose && ! propose_account
         let submitButtonClass = "button";
-        if(!from_account || !to_account || !amount || amount === "0"|| !asset || from_error || propose_incomplete)
+
+        if(
+            !(from_account || (from_name && from_name[0] === "~"))
+            || !(to_account || (to_name && to_name[0] === "~"))
+            || !amount || amount === "0"|| !asset || from_error || propose_incomplete)
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
@@ -307,10 +362,8 @@ class Transfer extends React.Component {
 
                     {/* TODO: show remaining balance */}
 
-                    <a className="float-right" href onClick={(e) => {e.preventDefault(); ZfApi.publish("transfer_receipt_modal", "open")} }>Show Transfer Receipt</a>
-
                 </div>
-                <TransferReceiptModal value="fdlksjf ldksjflkdsjflkdsj dslkjf lksdjflksd fkljsd klsdl"/>
+                <TransferReceiptModal value={this.state.transfer_receipt}/>
             </form>
             <div className="grid-content medium-6 right-column">
                 <div className="grid-content">

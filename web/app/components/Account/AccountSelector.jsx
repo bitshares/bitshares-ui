@@ -99,7 +99,7 @@ class AccountSelector extends React.Component {
             if(type === "name") lookup_display = "#" + this.props.account.get("id").substring(4);
             else if (type === "id") lookup_display = this.props.account.get("name");
         } else if (type === "private") {
-            lookup_display = AccountStore.getPrivateAccountType(account_name);
+            lookup_display = AccountStore.getAccountType(account_name);
             if (lookup_display) identicon_account_name = account_name;
         } else if (!error && this.props.accountName) error = counterpart.translate("account.errors.unknown");
         let member_status = null;

@@ -36,7 +36,7 @@ class AccountStore extends BaseStore {
             onWalletUnlocked: WalletUnlockActions.unlocked
         });
         this._export("loadDbData", "tryToSetCurrentAccount", "onCreateAccount",
-            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount", "getPrivateAccountType");
+            "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount", "getAccountType");
     }
     
     _getInitialState() {
@@ -367,11 +367,13 @@ class AccountStore extends BaseStore {
         this.state.privateContacts = this.state.privateContacts.remove(name);
     }
 
-    getPrivateAccountType(full_name) {
+    getAccountType(full_name) {
         const name = full_name[0] === "~" ? full_name.slice(1) : full_name;
         let res = null;
         if (this.state.privateContacts.has(name)) res = "Private Contact";
         else if (this.state.privateAccounts.has(name)) res = "Private Account";
+        else if (this.state.myAccounts.has(name)) res = "My Account";
+        else if (this.state.linkedAccounts.has(name)) res = "Linked Account";
         return res;
     }
 
