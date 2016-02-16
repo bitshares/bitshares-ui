@@ -165,7 +165,7 @@ class Transfer extends React.Component {
         let {propose, from_account, to_account, asset, asset_id, propose_account,
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
         let from_my_account = AccountStore.isMyAccount(from_account)
-        from_my_account = true
+
         if(from_account && ! from_my_account && ! propose ) {
             from_error = counterpart.translate("account.errors.not_yours");
         }
