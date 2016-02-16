@@ -102,12 +102,12 @@ describe( "wallet_actions", ()=> {
     //     var suffix = secureRandom.randomBuffer(2).toString('hex').toLowerCase()
     //     var public_name = "default_" + suffix
     //     helper.test_wallet( suffix ).then(()=>{
-    //         WalletDb.onLock()
+    //         WalletDb.logout()
     //         assert( WalletDb.isLocked(), "isLocked" )
     //         WalletDb.validatePassword( "password", true )
     //         assert( ! WalletDb.isLocked() )
     //         assert( WalletDb.getBrainKey() == "brainkey" + suffix )
-    //         WalletDb.onLock()
+    //         WalletDb.logout()
     //         done()
     //     }).catch(_catch)
     // })

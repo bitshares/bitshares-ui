@@ -51,7 +51,7 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import { ChainStore } from "@graphene/chain";
 import { AddressIndex } from "@graphene/wallet-client";
-import {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
+import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";

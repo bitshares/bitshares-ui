@@ -1,3 +1,4 @@
+import { fromJS } from "immutable"
 import React, {PropTypes, Component} from "react"
 import {FormattedDate} from "react-intl"
 import {Link} from "react-router";
@@ -58,26 +59,26 @@ export class BackupCreate extends BackupBaseComponent {
     }
 }
 
-@connectToStores
-export class BackupVerify extends BackupBaseComponent {
-    render() {
-        return <span>
-
-            <h3><Translate content="wallet.verify_prior_backup" /></h3>
-
-            <Upload>
-                <NameSizeModified/>
-                <DecryptBackup saveWalletObject={true}>
-                    <h4><Translate content="wallet.verified" /></h4>
-                    <WalletObjectInspector
-                        walletObject={this.props.backup.wallet_object}/>
-                </DecryptBackup>
-                <Reset/>
-            </Upload>
-        
-        </span>
-    }
-}
+// @connectToStores
+// export class BackupVerify extends BackupBaseComponent {
+//     render() {
+//         return <span>
+// 
+//             <h3><Translate content="wallet.verify_prior_backup" /></h3>
+// 
+//             <Upload>
+//                 <NameSizeModified/>
+//                 <DecryptBackup saveWalletObject={true}>
+//                     <h4><Translate content="wallet.verified" /></h4>
+//                     <WalletObjectInspector
+//                         walletObject={this.props.backup.wallet_object}/>
+//                 </DecryptBackup>
+//                 <Reset/>
+//             </Upload>
+//         
+//         </span>
+//     }
+// }
 
 // layout is a small project
 // class WalletObjectInspector extends Component {
@@ -93,6 +94,10 @@ export class BackupVerify extends BackupBaseComponent {
 
 @connectToStores
 export class BackupRestore extends BackupBaseComponent {
+    
+    static propTypes = {
+        wallet: React.PropTypes.object
+    }
     
     constructor() {
         super()
@@ -113,56 +118,63 @@ export class BackupRestore extends BackupBaseComponent {
             <Upload>
                 <NameSizeModified/>
                 <DecryptBackup saveWalletObject={true}>
-                    <NewWalletName>
-                        <Restore/>
-                    </NewWalletName>
+                    <NewWalletName newNameFunc={this.onNewName.bind(this)}/>
                 </DecryptBackup>
                 <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
             </Upload>
         </span>
+                    //     <Restore/>
+                    // </NewWalletName>
     }
     
-}
-
-@connectToStores
-class Restore extends BackupBaseComponent {
-    
-    constructor() {
-        super()
-        this.state = { }
-    }
-    
-    isRestored() {
-        var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
-        return has_new_wallet
-    }
-    
-    render() {
-        var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = this.isRestored()
-        
-        if(has_new_wallet)
-            return <span>
-                <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
-                <div>{this.props.children}</div>
-            </span>
-        
-        return <span>
-            <h3><Translate content="wallet.ready_to_restore" /></h3>
-            <div className="button success"
-                onClick={this.onRestore.bind(this)}><Translate content="wallet.restore_wallet_of" name={new_wallet} /></div>
-        </span>
-    }
-    
-    onRestore() {
+    onNewName(new_wallet) {
         WalletActions.restore(
-            this.props.wallet.new_wallet,
-            this.props.backup.wallet_object
+            new_wallet,
+            this.props.backup.wallet_object,
+            this.props.wallet.password
         )
     }
-    
 }
+
+// @connectToStores
+// class Restore extends BackupBaseComponent {
+//     
+//     constructor() {
+//         super()
+//         this.state = { }
+//     }
+//     
+//     isRestored() {
+//         var new_wallet = this.props.wallet.new_wallet
+//         var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
+//         return has_new_wallet
+//     }
+//     
+//     render() {
+//         var new_wallet = this.props.wallet.new_wallet
+//         var has_new_wallet = this.isRestored()
+//         
+//         if(has_new_wallet)
+//             return <span>
+//                 <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
+//                 <div>{this.props.children}</div>
+//             </span>
+//         
+//         return <span>
+//             <h3><Translate content="wallet.ready_to_restore" /></h3>
+//             <div className="button success"
+//                 onClick={this.onRestore.bind(this)}><Translate content="wallet.restore_wallet_of" name={new_wallet} /></div>
+//         </span>
+//     }
+//     
+//     onRestore() {
+//         WalletActions.restore(
+//             this.props.wallet.new_wallet,
+//             this.props.backup.wallet_object
+//         )
+//     }
+//     
+// }
 
 @connectToStores
 class NewWalletName extends BackupBaseComponent {
@@ -178,14 +190,17 @@ class NewWalletName extends BackupBaseComponent {
     componentWillMount() {
         var has_current_wallet = !!this.props.wallet.current_wallet
         if( ! has_current_wallet) {
-            WalletManagerStore.setNewWallet("default")
+            WalletManagerStore.setState({ new_wallet: "default" })
             this.setState({accept: true})
         }
         if( has_current_wallet && this.props.backup.name && ! this.state.new_wallet) {
-            // begning of the file name might make a good wallet name
-            var new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
-            if( new_wallet )
-                this.setState({new_wallet})
+            let new_wallet = this.props.wallet.new_wallet
+            if( ! new_wallet)
+                // Should not happen.
+                // Begning of the file name might make a good wallet name
+                new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
+            
+            this.setState({new_wallet})
         }
     }
     
@@ -211,7 +226,8 @@ class NewWalletName extends BackupBaseComponent {
     
     onAccept() {
         this.setState({accept: true})
-        WalletManagerStore.setNewWallet(this.state.new_wallet)
+        WalletManagerStore.setState({ new_wallet: this.state.new_wallet })
+        this.props.newNameFunc(this.state.new_wallet)
     }
     
     formChange(event) {
@@ -398,8 +414,14 @@ class DecryptBackup extends BackupBaseComponent {
         Backup.decrypt(this.props.backup.contents, private_key2).then( restored_object => {
             
             let wallet_object = Array.isArray(restored_object.wallet) ?
-                legacyUpgrade(password, restored_object) : restored_object
+                legacyUpgrade(password, restored_object) : fromJS(restored_object)
             
+            // if(wallet_object.has("public_name"))
+            WalletManagerStore.setState({
+                new_wallet: wallet_object.get("public_name"),
+                password
+            })
+        
             this.setState({verified: true})
             if(this.props.saveWalletObject)
                 BackupStore.setWalletObjct(wallet_object)

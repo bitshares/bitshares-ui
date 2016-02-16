@@ -45,7 +45,7 @@ class WalletUnlockStore {
             resolve()
             return
         }
-        WalletDb.onLock()
+        WalletDb.logout()
         this.setState({resolve:null, reject:null, locked: WalletDb.isLocked()})
         resolve()
     }
@@ -73,7 +73,7 @@ class WalletUnlockStore {
         this.timeout = setTimeout(() => {
             if (!WalletDb.isLocked()) {
                 console.log("auto locking after", this.walletLockTimeout, "s");
-                WalletDb.onLock()
+                WalletDb.logout()
                 this.setState({locked: true})
             };
         }, this.walletLockTimeout * 1000);

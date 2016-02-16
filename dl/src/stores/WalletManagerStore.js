@@ -4,7 +4,7 @@ import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
 import CachedPropertyStore from "stores/CachedPropertyStore"
 import WalletActions from "actions/WalletActions"
-import { ChainStore } from "@graphene/chain"
+import { ChainStore, Apis } from "@graphene/chain"
 import BaseStore from "stores/BaseStore"
 import iDB from "idb-instance"
 import Immutable from "immutable"
@@ -22,7 +22,7 @@ class WalletManagerStore extends BaseStore {
             onSetBackupDate: WalletActions.setBackupDate,
             onSetBrainkeyBackupDate: WalletActions.setBrainkeyBackupDate
         })
-        super._export("setNewWallet", "onDeleteWallet")
+        super._export("setState", "onDeleteWallet")
     }
     
     _getInitialState() {
@@ -32,16 +32,24 @@ class WalletManagerStore extends BaseStore {
     }
     
     /** This will change the current wallet the newly restored wallet. */
-    onRestore({wallet_name, wallet_object}) {
+    onRestore({ wallet_name, wallet_object, password }) {
         
-        console.log('WalletManagerStore\tonRestore', wallet_name)
+        console.log('WalletManagerStore\trestore', wallet_name)
         
-        // iDB.restore(wallet_name, wallet_object).then( () => {
-        //     return this.onSetWallet({wallet_name})
-        // }).catch( error => {
-        //     console.error(error)
-        //     return Promise.reject(error)
-        // })
+        if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
+            throw new Error("Invalid wallet name")
+        
+        let email = ""
+        let username = ""
+        
+        WalletDb.logout()
+        let { wallet } = WalletDb.openWallet(wallet_name)
+        
+        wallet_object = wallet_object.set("public_name", wallet_name)// if different
+        wallet.wallet_object = wallet_object
+        
+        wallet.login(email, username, password, Apis.chainId())
+        .then(()=> this.onSetWallet({ wallet_name }))
     }
     
     /** This may result in a new wallet name being added, only in this case
@@ -51,11 +59,6 @@ class WalletManagerStore extends BaseStore {
             
         if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
             throw new Error("Invalid wallet name")
-        
-        if(WalletDb.getState().current_wallet === wallet_name) {// && ! WalletDb.isEmpty()
-            if(resolve) resolve()
-            return
-        }
         
         let p = iDB.root.setProperty("current_wallet", wallet_name)
         .then(()=>{
@@ -88,8 +91,8 @@ class WalletManagerStore extends BaseStore {
     }
     
     /** Pending new wallet name (not the current_wallet).. Used by the components during a pending wallet create. */
-    setNewWallet(new_wallet) {
-        this.setState({new_wallet})
+    setState(state) {
+        this.setState(state)
     }
     
     onDeleteWallet(delete_wallet_name) {

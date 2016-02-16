@@ -74,7 +74,7 @@ class WalletDb extends BaseStore {
             "openWallet", "getWallet", "update", "isEmpty", "importKeys","getBrainKey","deleteWallet",
             "keys", "deposit_keys", "data", "prop",
             "process_transaction", "decodeMemo","getPrivateKey","getDeterministicKeys",
-            "onLock","isLocked","onCreateWallet","login","changePassword",
+            "logout","isLocked","onCreateWallet","login","changePassword",
             "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended",
             "loadDbData",
         )
@@ -129,17 +129,23 @@ class WalletDb extends BaseStore {
             return
         }
         
+        if( wallet_name === this.state.current_wallet)
+            return { wallet }
+        
+        console.log("WalletDb\topenWallet", wallet_name);
         let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
         let storage = new LocalStoragePersistence( key )
         let _wallet = new WalletStorage(storage)
         let _cwallet = new ConfidentialWallet(_wallet)
         
         // No exceptions so update state:
-        wallet = _wallet
         cwallet = _cwallet
-        
-        this.setState({ current_wallet: wallet_name, wallet, cwallet }) // public
+        wallet = _wallet
+        let wallet_names = this.state.wallet_names.add(wallet_name)
+        this.setState({ current_wallet: wallet_name, wallet_names, wallet, cwallet }) // public
         iDB.root.setProperty("current_wallet", wallet_name)
+        
+        return { wallet }
     }
     
     deleteWallet(wallet_name) {
@@ -208,10 +214,9 @@ class WalletDb extends BaseStore {
     
     /** @return {Promise} resolve immediately or after a successful unsubscribe
     */
-    onLock() {
+    logout() {
         if( ! wallet) return
-        return wallet.logout()
-        .then( ()=> this.setState({lock_event: Date.now()}) )
+        return wallet.logout().then( ()=> this.setState({lock_event: Date.now()}) )
     }
     
     isLocked() {
@@ -330,7 +335,7 @@ class WalletDb extends BaseStore {
         }
         
         return Promise.resolve()
-        .then( ()=> is_legacy() ? legacy_upgrade() : wallet.login(email, username, password) )
+        .then( ()=> is_legacy() ? legacy_upgrade() : wallet.login(email, username, password, Apis.chainId()) )
         .then( ()=> AccountRefsStore.loadDbData() )
         .then( ()=> this.setState({lock_event: Date.now()}) )
     }

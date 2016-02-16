@@ -15,9 +15,9 @@ var application_api = new ApplicationApi()
 class WalletActions {
 
     /** Restore and make active a new wallet_object. */
-    restore(wallet_name = "default", wallet_object) {
+    restore(wallet_name = "default", wallet_object, password) {
         wallet_name = wallet_name.toLowerCase()
-        this.dispatch({wallet_name, wallet_object})
+        this.dispatch({wallet_name, wallet_object, password})
     }
     
     /** Make an existing wallet active or create a wallet (and make it active).
