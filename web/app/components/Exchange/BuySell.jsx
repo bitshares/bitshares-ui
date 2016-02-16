@@ -95,10 +95,19 @@ class BuySell extends React.Component {
             return <option key={asset.get("id")} value={asset.get("id")}>{asset.get("symbol")}</option>;
         });
 
+        // Subtract fee from amount to sell
+        let balanceToAdd;
+
+        if (this.props.feeAsset.get("symbol") === balanceSymbol) {
+            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;  
+        } else {
+            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount;
+        } 
+
         return (
             <div className={this.props.className + " middle-content"}>
                 <div className="exchange-bordered">
-                    <div className="exchange-content-header">
+                    <div className={"exchange-content-header " + type}>
                         <span>{`${buttonText} ${quote.get("symbol")}`}</span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                     </div>
@@ -159,37 +168,47 @@ class BuySell extends React.Component {
                             </div>
                             <div>
                                 <div className="grid-content clear-fix no-padding">
-                                    <div className="float-left">
-                                          <div className="buy-sell-info">
-                                              <div style={{display: "inline-block", minWidth: "7rem"}}>{this.props.account}:&nbsp;</div>
-                                              <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceAmount === 0 ? 0 : balanceAmount - fee)}>{utils.format_number(balanceAmount, balancePrecision)}</span> {balanceSymbol}
-                                          </div>
-                                          <div className="buy-sell-info">
-                                                <div style={{display: "inline-block", minWidth: "7rem"}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</div>
+
+                                    <table className="float-left">
+                                        <tbody>
+                                          <tr className="buy-sell-info">
+                                                <td><Translate content="exchange.balance" />:</td>
+                                                <td style={{paddingLeft: 5, textAlign: "right"}}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>{utils.format_number(balanceAmount, balancePrecision)} {balanceSymbol}</span>
+                                                </td>
+                                          </tr>
+                                          
+                                          <tr className="buy-sell-info">
+                                                <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
-                                                <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
+                                                <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
                                                     <PriceText price={currentPrice} quote={quote} base={base} />
                                                     <span> {base.get("symbol")}</span>
-                                                </span>) : null}
-                                          </div>
-                                      </div>
-                                        {disabledText ?
-                                            (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
-                                                <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, true)} value={buttonText} />
-                                            </div>) :
-                                            (<div className="float-right" data-tip={""}>
-                                                <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, true)} value={buttonText} />
-                                            </div>)
-                                        }
+                                                    </span>
+                                                </td>) : null}
+                                        </tr>
+                                        </tbody>
+                                    </table>
 
-                                        {disabledText && isPredictionMarket ?
-                                            (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
-                                                <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, false)} value={forceSellText} />
-                                            </div>) : isPredictionMarket ?
-                                            (<div className="float-right" data-tip={""}>
-                                                <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, false)} value={forceSellText} />
-                                            </div>) : null
-                                        }
+                                    {/* BUY/SELL button */}
+                                    {disabledText ?
+                                        (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                            <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, true)} value={buttonText} />
+                                        </div>) :
+                                        (<div className="float-right" data-tip={""}>
+                                            <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, true)} value={buttonText} />
+                                        </div>)
+                                    }
+
+                                    {disabledText && isPredictionMarket ?
+                                        (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                            <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, false)} value={forceSellText} />
+                                        </div>) : isPredictionMarket ?
+                                        (<div className="float-right" data-tip={""}>
+                                            <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, false)} value={forceSellText} />
+                                        </div>) : null
+                                    }
 
                                   </div>
                             </div>

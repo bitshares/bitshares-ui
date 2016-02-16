@@ -12,6 +12,7 @@ import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 class TableHeader extends React.Component {
 
@@ -42,7 +43,9 @@ class OrderRow extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.for_sale !== this.props.order.for_sale ||
-            nextProps.order.id !== this.props.order.id
+            nextProps.order.id !== this.props.order.id ||
+            nextProps.quote !== this.props.quote ||
+            nextProps.base !== this.props.base
         );
     }
 
@@ -137,7 +140,7 @@ class MyOpenOrders extends React.Component {
 
                 return b_price.full - a_price.full;
             }).map((order, index) => {
-                return <OrderRow ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow date={new Date(order.expiration).getTime()} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -148,7 +151,7 @@ class MyOpenOrders extends React.Component {
 
                 return a_price.full - b_price.full;
             }).map(order => {
-                return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow date={new Date(order.expiration).getTime()} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -179,7 +182,9 @@ class MyOpenOrders extends React.Component {
             rows = rows.concat(bids);
         }
 
-        console.log("rows:", rows);
+        rows.sort((a, b) => {
+            return b.props.date - a.props.date;
+        })
 
         // if (bids.length === 0 && asks.length ===0) {
         //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
@@ -199,9 +204,12 @@ class MyOpenOrders extends React.Component {
 
                     <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 324}}>
                         <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
-                            <tbody>
+                            <TransitionWrapper
+                                component="tbody"
+                                transitionName="newrow"
+                            >
                                 {rows.length ? rows : emptyRow}
-                            </tbody>
+                            </TransitionWrapper>
                         </table>
                     </div>
                 </div>

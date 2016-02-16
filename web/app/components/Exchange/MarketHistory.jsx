@@ -13,6 +13,7 @@ import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import connectToStores from "alt/utils/connectToStores";
 import {operations} from "chain/chain_types";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 @connectToStores
 class MarketHistory extends React.Component {
@@ -188,9 +189,12 @@ class MarketHistory extends React.Component {
                         style={{maxHeight: 326, overflow: "hidden"}}
                     >
                         <table className="table order-table text-right market-right-padding">
-                            <tbody>
+                            <TransitionWrapper
+                                component="tbody"
+                                transitionName="newrow"
+                            >
                                 {historyRows}
-                            </tbody>
+                            </TransitionWrapper>
                         </table>
                     </div>
                 </div>

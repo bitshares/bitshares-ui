@@ -352,26 +352,28 @@ class PriceChart extends React.Component {
                     top: "0%",
                     height: "80%",
                     offset: 5,
+                    lineWidth: 1,
+                    lineColor: "rgba(183, 183, 183, 0.29)",
                     gridLineWidth: 0,
                     plotLines: [],
                     crosshair: {
                         snap: false
                     },
                     startOnTick: false,
-                    endOnTick: false,
+                    endOnTick: true,
                     showLastLabel: true,
                     maxPadding: 0,
                     currentPriceIndicator: {
                         precision: base.get("precision"),
-                        backgroundColor: '#000000',
+                        backgroundColor: '#C38B8B',
                         borderColor: '#000000',
-                        lineColor: '#000000',
+                        lineColor: '#C38B8B',
                         lineDashStyle: 'Solid',
                         lineOpacity: 0.6,
                         enabled: priceSeriesData.length > 0 && marketReady,
                         style: {
                             color: '#ffffff',
-                            fontSize: '12px'
+                            fontSize: '10px'
                         },
                         x: -30,
                         y: 0,
@@ -405,6 +407,8 @@ class PriceChart extends React.Component {
                     height: "20%",
                     offset: 5,
                     gridLineWidth: 0,
+                    lineWidth: 1,
+                    lineColor: "rgba(183, 183, 183, 0.29)",
                     title: {
                         text: null,
                         style: {
@@ -467,13 +471,16 @@ class PriceChart extends React.Component {
 
         let boxHeight = 20;
 
-
-
         return (
-            <div className="grid-content no-padding no-overflow">
-                {!priceSeriesData.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
-                <div style={{paddingTop: 0, paddingBottom: "0.5rem"}}>
-                    {priceSeriesData && volumeData ? <Highcharts ref="chart" config={config}/> : null}
+            <div className="grid-content no-padding no-overflow middle-content">
+                <div className="exchange-bordered" style={{margin: 10}}>
+                    <div className="exchange-content-header">
+                        <Translate content="exchange.price_history" />
+                    </div>
+                    {!priceSeriesData.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
+                    <div style={{paddingTop: 0, paddingBottom: "0.5rem"}}>
+                        {priceSeriesData && volumeData ? <Highcharts ref="chart" config={config}/> : null}
+                    </div>
                 </div>
             </div>
         );

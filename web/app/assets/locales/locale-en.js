@@ -660,7 +660,7 @@
         order_depth: "Market Depth",
         history: "All History",
         my_history: "My History",
-        balance: "Your balance",
+        balance: "Balance",
         lowest_ask: "Lowest ask",
         highest_bid: "Highest bid",
         total: "Total",
