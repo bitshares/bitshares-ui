@@ -266,20 +266,34 @@ class MarketsStore {
         this.marketReady = true;
     }
 
-    onCancelLimitOrderSuccess(orderID) {
-        if (orderID && this.activeMarketLimits.has(orderID)) {
-            this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
+    onCancelLimitOrderSuccess(cancellations) {
+
+        if (cancellations && cancellations.length) {
+
+            let didUpdate = false;
+            cancellations.forEach(orderID => {
+                if (orderID && this.activeMarketLimits.has(orderID)) {
+                    didUpdate = true;
+                    this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
+                }
+            })
+
             if (this.activeMarketLimits.size === 0) {
                 this.bids = [];
                 this.flat_bids = [];
                 this.asks = [];
                 this.flat_asks = [];
             }
-            // Update orderbook
-            this._orderBook();
 
-            // Update depth chart data
-            this._depthChart();
+            if (didUpdate) {
+                // Update orderbook
+                this._orderBook();
+
+                // Update depth chart data
+                this._depthChart();
+            }
+        } else {
+            return false;
         }
     }
 
@@ -295,6 +309,8 @@ class MarketsStore {
 
             // Update depth chart data
             this._depthChart();
+        } else {
+            return false;
         }
     }
 
@@ -315,6 +331,8 @@ class MarketsStore {
                 this._depthChart();
             }
 
+        } else {
+            return false;
         }
     }
 
@@ -337,6 +355,8 @@ class MarketsStore {
             this.calls = this.constructCalls(this.activeMarketCalls);
             // Update depth chart data
             this._depthChart();
+        } else {
+            return false;
         }
     }
 
