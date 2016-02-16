@@ -207,7 +207,7 @@ class OrderBook extends React.Component {
             })
             .map((order, index) => {
                 totalBidAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
-                console.log("totalBidAmount:", totalBidAmount, order.amount);
+
                 totalBidValue += order.value;
                 order.totalValue = totalBidValue;
                 order.totalAmount = totalBidAmount;
@@ -256,7 +256,7 @@ class OrderBook extends React.Component {
                 }
                 return a.price_full <= low * 5;
             }).map((order, index) => {
-                totalAskAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
+                totalAskAmount = market_utils.limitByPrecision(totalAskAmount + order.amount, base);
                 // totalAskAmount += order.amount;
                 totalAskValue += order.value;
                 order.totalValue = totalAskValue;
