@@ -109,6 +109,7 @@ export class BackupRestore extends BackupBaseComponent {
     render() {
         var new_wallet = this.props.wallet.new_wallet
         var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
+        // FIXME restored
         var restored = has_new_wallet
         
         return <span>
@@ -120,11 +121,11 @@ export class BackupRestore extends BackupBaseComponent {
                 <DecryptBackup saveWalletObject={true}>
                     <NewWalletName newNameFunc={this.onNewName.bind(this)}/>
                 </DecryptBackup>
-                {restored ?
+                {/*restored ?
                 <span>
                     <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
                     <div>{this.props.children}</div>
-                </span>:null}
+                </span>:null*/}
                 <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
             </Upload>
         </span>
@@ -140,46 +141,6 @@ export class BackupRestore extends BackupBaseComponent {
         )
     }
 }
-
-// @connectToStores
-// class Restore extends BackupBaseComponent {
-//     
-//     constructor() {
-//         super()
-//         this.state = { }
-//     }
-//     
-//     isRestored() {
-//         var new_wallet = this.props.wallet.new_wallet
-//         var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
-//         return has_new_wallet
-//     }
-//     
-//     render() {
-//         var new_wallet = this.props.wallet.new_wallet
-//         var has_new_wallet = this.isRestored()
-//         
-//         if(has_new_wallet)
-//             return <span>
-//                 <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
-//                 <div>{this.props.children}</div>
-//             </span>
-//         
-//         return <span>
-//             <h3><Translate content="wallet.ready_to_restore" /></h3>
-//             <div className="button success"
-//                 onClick={this.onRestore.bind(this)}><Translate content="wallet.restore_wallet_of" name={new_wallet} /></div>
-//         </span>
-//     }
-//     
-//     onRestore() {
-//         WalletActions.restore(
-//             this.props.wallet.new_wallet,
-//             this.props.backup.wallet_object
-//         )
-//     }
-//     
-// }
 
 @connectToStores
 class NewWalletName extends BackupBaseComponent {
@@ -409,52 +370,61 @@ class DecryptBackup extends BackupBaseComponent {
         let username = ""
         let password = this.state.backup_password || ""
         
+        let backupDecrypt = private_key => new Promise( (resolve, reject) =>{
+            try {resolve(
+                Backup.decrypt(this.props.backup.contents, private_key).then( restored_object => {
+                    
+                    if(restored_object.chain_id && restored_object.chain_id !== Apis.chainId()) {
+                        throw new Error("Missmatched chain id")
+                    }
+                    
+                    let wallet_object = Array.isArray(restored_object.wallet) ?
+                        legacyUpgrade(password, restored_object) : fromJS(restored_object)
+                    
+                    WalletManagerStore.setState({
+                        new_wallet: wallet_object.get("public_name"),
+                        password
+                    })
+                
+                    this.setState({verified: true})
+                    if(this.props.saveWalletObject)
+                        BackupStore.setWalletObjct(wallet_object)
+                })
+            )} catch( error ) {
+                reject( error )
+            }
+        })
+        
+        let notifyError = error => {
+            console.error("Backup\trestore error wallet: " + this.props.backup.name, error, "stack", error.stack)
+            
+            if( /invalid_password/.test(error.toString()) )
+                notify.error("Invalid Password")
+            
+            else if( /Missmatched chain id/.test(error.toString()) )
+                notify.error("This is not a " + (chain_config.network_name ? chain_config.network_name : chain_config.address_prefix) + " wallet.")
+        }
+        
         let private_key = PrivateKey.fromSeed(
             email.trim().toLowerCase() + "\t" +
             username.trim().toLowerCase() + "\t" +
             password
         )
         
-        let backupDecrypt = private_key2 =>
-        Backup.decrypt(this.props.backup.contents, private_key2).then( restored_object => {
+        // recent encryption key (and internal JSON format)
+        return backupDecrypt(private_key).catch( error => {
             
-            let wallet_object = Array.isArray(restored_object.wallet) ?
-                legacyUpgrade(password, restored_object) : fromJS(restored_object)
-            
-            // if(wallet_object.has("public_name"))
-            WalletManagerStore.setState({
-                new_wallet: wallet_object.get("public_name"),
-                password
-            })
-        
-            this.setState({verified: true})
-            if(this.props.saveWalletObject)
-                BackupStore.setWalletObjct(wallet_object)
-        })
-        
-        // console.log('this.state.backup_password', this.state.backup_password)
-        // console.log('this.props.backup.contents.length', this.props.backup.contents.length)
-        
-        try {
-            return backupDecrypt(private_key)
-            
-        } catch( error ) {
-            
-            // try the legacy format
-            private_key = PrivateKey.fromSeed(password)
-            
-            try {
-                return backupDecrypt(private_key)
-                
-            } catch( error ) {
-                console.error("Error verifying wallet " + this.props.backup.name,
-                    error, error.stack)
-                if( /invalid_decryption_key/.test(error.toString()) )
-                    notify.error("Invalid Password")
-                else
-                    notify.error(""+error)
+            if( ! /invalid_password/.test(error.toString()) ) {
+                notifyError(error)
+                return
             }
-        }
+            
+            // try the legacy encryption key (and JSON format, they are one in the same)
+            private_key = PrivateKey.fromSeed(password)
+            return backupDecrypt(private_key).catch( error => {
+                notifyError(error)
+            })
+        })
     }
     
     formChange(event) {

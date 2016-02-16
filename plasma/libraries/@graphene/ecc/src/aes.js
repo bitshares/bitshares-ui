@@ -44,7 +44,10 @@ class Aes {
         @arg {string|Buffer} message - Encrypted message containing a checksum
         @return {Buffer}
     */
-    static decrypt_with_checksum(private_key, public_key, nonce = "", message) {
+    static decrypt_with_checksum(private_key, public_key, nonce, message) {
+        
+        if( nonce == null ) // null or undefined
+            nonce = ""
         
         if (!Buffer.isBuffer(message)) {
             message = new Buffer(message, 'hex');
@@ -54,11 +57,11 @@ class Aes {
         
         // D E B U G
         // console.log('decrypt_with_checksum', {
-        //     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
-        //     pub: public_key.toPublicKeyString()
-        //     nonce: nonce
-        //     message: message
-        //     S: S
+        //     priv_to_pub: private_key.toPublicKey().toPublicKeyString(),
+        //     pub: public_key.toPublicKeyString(),
+        //     nonce: nonce,
+        //     message: message.length,
+        //     S: S.toString('hex')
         // })
         
         var aes = Aes.fromSeed(Buffer.concat([
@@ -93,7 +96,10 @@ class Aes {
     /** Identical to {@link decrypt_with_checksum} but used to encrypt.  Should not throw an error.
         @return {Buffer} message - Encrypted message which includes a checksum
     */
-    static encrypt_with_checksum(private_key, public_key, nonce = "", message) {
+    static encrypt_with_checksum(private_key, public_key, nonce, message) {
+        
+        if( nonce == null) // null or undefined
+            nonce = ""
         
         if (!Buffer.isBuffer(message)) {
             message = new Buffer(message, 'binary');
