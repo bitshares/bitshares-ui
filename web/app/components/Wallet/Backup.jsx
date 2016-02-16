@@ -30,7 +30,6 @@ class BackupBaseComponent extends Component {
         var wallet = WalletManagerStore.getState()
         var ww = WalletDb.getState()
         wallet.current_wallet = ww.current_wallet
-        wallet.wallet_names = ww.wallet_names
         var backup = BackupStore.getState()
         return { wallet, backup }
     }
@@ -108,7 +107,7 @@ export class BackupRestore extends BackupBaseComponent {
     
     render() {
         var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
+        var has_new_wallet = WalletDb.getState().wallet_names.has(new_wallet)
         // FIXME restored
         var restored = has_new_wallet
         
@@ -176,7 +175,7 @@ class NewWalletName extends BackupBaseComponent {
         
         var has_wallet_name = !!this.state.new_wallet
         var has_wallet_name_conflict = has_wallet_name ?
-            this.props.wallet.wallet_names.has(this.state.new_wallet) : false
+            WalletDb.getState().wallet_names.has(this.state.new_wallet) : false
         var name_ready = ! has_wallet_name_conflict && has_wallet_name
         
         return <span>

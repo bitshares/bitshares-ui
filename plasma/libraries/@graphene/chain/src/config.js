@@ -1,5 +1,9 @@
 var _this;
 
+import { ecc_config } from "@graphene/ecc"
+
+ecc_config.address_prefix = "GPH";
+
 module.exports = _this = {
     core_asset: "CORE",
     address_prefix: "GPH",
@@ -41,6 +45,7 @@ module.exports = _this = {
                 
                 if (network.address_prefix) {
                     _this.address_prefix = network.address_prefix;
+                    ecc_config.address_prefix = network.address_prefix;
                 }
                 
                 console.log("Configured for", network_name, network);

@@ -576,7 +576,6 @@ export function legacyUpgrade(password, legacy_backup) {
     
     let password_private = PrivateKey.fromSeed( password || "" )
     let password_pubkey = password_private.toPublicKey().toString()
-    console.log('legacy_wallet', legacy_wallet)
     if(legacy_wallet.password_pubkey !== password_pubkey)
         throw new Error("invalid_password")
     

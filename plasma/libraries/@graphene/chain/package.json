@@ -13,7 +13,9 @@
     "bigi": "^1.4.1",
     "websocket": "^1.0.18",
     "immutable": "^3.7.6",
-    "event-emitter": "^0.3.4"
+    "event-emitter": "^0.3.4",
+    "@graphene/ecc": "^1.0.0",
+    "@graphene/serializer": "^1.0.0"
   },
   "devDependencies": {
     "assert": "^1.3.0",

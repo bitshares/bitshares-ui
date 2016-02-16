@@ -7,5 +7,6 @@ module.exports = {
     Signature: require("./src/signature"),
     brainKey: require("./src/brain_key"),
     hash: require("./src/hash"),
-    key: require("./src/key_utils")
+    key: require("./src/key_utils"),
+    ecc_config: require("./config")
 }
