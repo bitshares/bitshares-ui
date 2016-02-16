@@ -1,8 +1,12 @@
+import SettingsStore from "stores/SettingsStore";
+{ // Setup connection
+    let connection_string = SettingsStore.getSetting("connection");
+    Apis.instance(connection_string)
+}
 import React from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, Redirect} from "react-router";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
-import SettingsStore from "stores/SettingsStore";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
@@ -79,29 +83,6 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {loading: true, synced: false};
-        { // Setup connection
-            let connection_string
-            let rpc_user, rpc_password;
-            try { // For command-line support, all references to "window" go in the try catch
-                let rpc_host, rpc_port;
-                let args = window.location.hash.split("/");
-                if (args.length > 2) {
-                    let parts = args[2].split(":");
-                    rpc_user = parts[0];
-                    rpc_password = parts[1];
-                    rpc_host = parts[2];
-                    rpc_port = parts[3];
-                }
-                if (rpc_host) {
-                    let protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-                    let port = rpc_port ? `:${rpc_port}` : "";
-                    connection_string = `${protocol}${rpc_host}${port}`
-                }
-            } catch (e) {}
-            if (!connection_string) connection_string = SettingsStore.getSetting("connection");
-            connection_string = "ws://localhost:8090";
-            Apis.instance(connection_string)
-        }
     }
 
     componentWillUnmount() {

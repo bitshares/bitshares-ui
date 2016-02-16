@@ -78,7 +78,10 @@ class ApisInstance {
             return Promise.all([db_promise,
                 this._network_api.init(),
                 this._history_api.init(),
-                this._crypto_api.init()]);
+                this._crypto_api.init()
+                // Temporary squash crypto API error until the API is upgraded everywhere
+                .catch(e=>console.error("ApiInstance\tCrypto API Error", e))
+            ]);
         });
     }
     

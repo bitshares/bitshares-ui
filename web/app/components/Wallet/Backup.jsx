@@ -120,6 +120,11 @@ export class BackupRestore extends BackupBaseComponent {
                 <DecryptBackup saveWalletObject={true}>
                     <NewWalletName newNameFunc={this.onNewName.bind(this)}/>
                 </DecryptBackup>
+                {restored ?
+                <span>
+                    <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
+                    <div>{this.props.children}</div>
+                </span>:null}
                 <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
             </Upload>
         </span>
