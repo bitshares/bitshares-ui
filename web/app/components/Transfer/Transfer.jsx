@@ -17,6 +17,13 @@ import TransferReceiptModal from "../Stealth/TransferReceiptModal";
 import connectToStores from "alt/utils/connectToStores";
 import WalletDb from "stores/WalletDb";
 import {number_utils} from "@graphene/chain";
+import FormattedAsset from "../Utility/FormattedAsset";
+
+const AssetBalance = ({onClick, balance, asset_id}) => {
+    console.log("-- AssetBalance -->", onClick, balance, asset_id);
+    const balance_value = utils.is_object_id(balance) ? <BalanceComponent balance={balance}/> : <FormattedAsset amount={balance} asset={asset_id}/>;
+    return <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={onClick}><Translate component="span" content="transfer.available"/>: {balance_value}</span>
+};
 
 @connectToStores
 class Transfer extends React.Component {
@@ -73,7 +80,6 @@ class Transfer extends React.Component {
 
         if (from_name && from_name.length > 2 && from_name[0] === "~") {
             const from = from_name.slice(1);
-            console.log("-- Transfer.render from -->", from);
             try {
                 WalletDb.getState().cwallet.getBlindBalances(from).then(res => {
                     console.log("-- getBlindBalances -->", res.toJS());
@@ -194,14 +200,19 @@ class Transfer extends React.Component {
         this.nestedRef = ref;
     }
 
-    _setTotal(asset_id, balance_id, fee, fee_asset_id, e) {
-        let balanceObject = ChainStore.getObject(balance_id);
+    _setTotal(asset_id, balance_amount_or_id, fee, fee_asset_id, e) {
+        let amount;
         let transferAsset = ChainStore.getObject(asset_id);
         let feeAsset = ChainStore.getObject(fee_asset_id);
-        if (balanceObject) {
-            let amount = (utils.get_asset_amount(balanceObject.get("balance"), transferAsset) - (asset_id === fee_asset_id ? fee : 0)).toString();
-            this.setState({amount});
+        if (utils.is_object_id(balance_amount_or_id)) {
+            let balanceObject = ChainStore.getObject(balance_amount_or_id);
+            if (balanceObject) {
+                amount = (utils.get_asset_amount(balanceObject.get("balance"), transferAsset) - (asset_id === fee_asset_id ? fee : 0)).toString();
+            }
+        } else {
+            amount = (utils.get_asset_amount(parseInt(balance_amount_or_id), transferAsset) - (asset_id === fee_asset_id ? fee : 0)).toString();
         }
+        if (amount) { this.setState({amount}); }
     }
 
     render() {
@@ -221,14 +232,13 @@ class Transfer extends React.Component {
         let globalObject = ChainStore.getObject("2.0.0");
         let fee = utils.estimateFee("transfer", null, globalObject);
         
-        if (from_account && !from_error) {
-            let account_balances = from_account.get("balances").toJS();
-            console.log("-- account_balances -->", account_balances);
+        if ((from_account || (this.state.from_name && this.state.from_name[0] === "~" && this.state.blind_balances)) && !from_error) {
+            let account_balances = from_account ? from_account.get("balances").toJS() : this.state.blind_balances;
             asset_types = Object.keys(account_balances).sort(utils.sortID);
             fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
             for (let key in account_balances) {
                 let asset = ChainStore.getObject(key);
-                let balanceObject = ChainStore.getObject(account_balances[key]);
+                let balanceObject = utils.is_object_id(account_balances[key]) ? ChainStore.getObject(account_balances[key]) : null;
                 if (balanceObject && balanceObject.get("balance") === 0) {
                     asset_types.splice(asset_types.indexOf(key), 1);
                     if (fee_asset_types.indexOf(key) !== -1) {
@@ -256,12 +266,11 @@ class Transfer extends React.Component {
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
-                balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+                // balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+                balance = <AssetBalance onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)} balance={account_balances[current_asset_id]} asset_id={current_asset_id} />;
             } else {
                 balance = "No funds";
             }
-        } else if (this.state.from_name && this.state.from_name[0] === "~" && this.state.blind_balances) {
-            asset_types = Object.keys(this.state.blind_balances).sort(utils.sortID);
         }
 
         let propose_incomplete = propose && ! propose_account
