@@ -69,39 +69,82 @@ class OrderBook extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            hasCentered: false,
+            scrollToBottom: true,
             flip: props.flipOrderBook,
             showAllBids: false,
-            showAllAsks: false,
-            animateEnter: false
+            showAllAsks: false
         };
+
+        this._updateHeight = this._updateHeight.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-                !Immutable.is(nextProps.orders, this.props.orders) ||
-                !Immutable.is(nextProps.calls, this.props.calls) ||
-                !Immutable.is(nextProps.calls, this.props.calls) ||
-                nextProps.horizontal !== this.props.horizontal ||
-                nextState.flip !== this.state.flip ||
-                nextState.showAllBids !== this.state.showAllBids ||
-                nextState.showAllAsks !== this.state.showAllAsks ||
-                nextProps.latest !== this.props.latest ||
-                nextState.animateEnter !== this.state.animateEnter
-            );
+            !Immutable.is(nextProps.orders, this.props.orders) ||
+            !Immutable.is(nextProps.calls, this.props.calls) ||
+            !Immutable.is(nextProps.calls, this.props.calls) ||
+            nextProps.horizontal !== this.props.horizontal ||
+            nextProps.latest !== this.props.latest ||
+            !utils.are_equal_shallow(nextState, this.state)
+        );
     }
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.marketReady) {
             this.setState({
-                hasCentered: false
+                scrollToBottom: true
+            });
+        }
+
+        // Change of market or direction
+        if (nextProps.base !== this.props.base || nextProps.quote !== this.props.quote) {
+            this.setState({
+                scrollToBottom: true
+            });
+
+            if (this.refs.askTransition) {
+                this.refs.askTransition.resetAnimation();
+            }
+
+            if (this.refs.bidTransition) {
+                this.refs.bidTransition.resetAnimation();
+            }
+        }
+    }
+
+    _updateHeight() {
+        if (!this.props.horizontal) {
+            let containerHeight = this.refs.orderbook_container.offsetHeight;
+            let priceHeight = this.refs.center_text.offsetHeight;
+            let asksHeight = this.refs.asksWrapper.offsetHeight;
+            this.setState({
+                vertAsksHeight: 2 + Math.floor((containerHeight - priceHeight) / 2),
+                vertBidsHeight: containerHeight - priceHeight - asksHeight - 2
             });
         }
     }
 
+    componentWillMount() {
+        window.addEventListener("resize", this._updateHeight, false);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this._updateHeight, false);
+    }
+    
     componentDidMount() {
+
         if (!this.props.horizontal) {
-            let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
+            let containerHeight = this.refs.orderbook_container.offsetHeight;
+            let priceHeight = this.refs.center_text.offsetHeight;
+
+            this.setState({
+                vertAsksHeight: Math.floor((containerHeight - priceHeight) / 2)
+            });
+
+            let asksContainer = ReactDOM.findDOMNode(this.refs.vert_asks);
+            Ps.initialize(asksContainer);
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.vert_bids);
             Ps.initialize(bidsContainer);
         } else {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
@@ -110,24 +153,16 @@ class OrderBook extends React.Component {
             Ps.initialize(asksContainer);            
         }
 
-        this.setState({
-            animateEnter: true
-        });    
-        
     }
 
     componentDidUpdate(prevProps) {
         if (!this.props.horizontal) {
-            let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
-            let centerRow = ReactDOM.findDOMNode(this.refs.centerRow);
-
-            if (this.props.marketReady && !this.state.hasCentered || (prevProps.quote !== this.props.quote) ) {
-                this._centerView();
-                this.setState({hasCentered: true});
-                setTimeout(() => {
-                    this._centerView();
-                }, 250);
-            }
+            let asksContainer = ReactDOM.findDOMNode(this.refs.vert_asks);
+            Ps.update(asksContainer);
+            if (this.state.scrollToBottom) {
+                asksContainer.scrollTop = asksContainer.scrollHeight;
+            };
+            let bidsContainer = ReactDOM.findDOMNode(this.refs.vert_bids);
             Ps.update(bidsContainer);
         } else {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
@@ -137,13 +172,19 @@ class OrderBook extends React.Component {
         }
     }
 
-    _centerView() {
-        let bidsContainer = ReactDOM.findDOMNode(this.refs.orderbook_container);
-        let centerRow = ReactDOM.findDOMNode(this.refs.centerRow);
-        let outer = bidsContainer.getBoundingClientRect();
-        let center = centerRow.getBoundingClientRect();
-        bidsContainer.scrollTop += (center.top + center.height / 2) - (outer.height / 2);
-        Ps.update(bidsContainer);
+    _onBidScroll(e) {
+
+        if (e.target.scrollTop < (e.target.scrollHeight - this.state.vertAsksHeight)) {
+            if (this.state.scrollToBottom) {
+                this.setState({
+                    scrollToBottom: false
+                });
+            }
+        } else {
+            this.setState({
+                scrollToBottom: false
+            });
+        }
     }
 
     _flipBuySell() {
@@ -340,6 +381,7 @@ class OrderBook extends React.Component {
                                 <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                         <TransitionWrapper
+                                            ref="askTransition"
                                             className="orderbook orderbook-top"
                                             component="tbody"
                                             transitionName="newrow"
@@ -387,6 +429,7 @@ class OrderBook extends React.Component {
                                 <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
+                                            ref="bidTransition"
                                             className="orderbook orderbook-bottom"
                                             component="tbody"
                                             transitionName="newrow"                                            
@@ -407,9 +450,10 @@ class OrderBook extends React.Component {
                     </div>
             );
         } else {
+            // Vertical orderbook
             return (
                 <div className="left-order-book no-padding no-overflow">
-                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                    <div className="grid-block shrink left-orderbook-header">
                         <table className="table expand order-table table-hover text-right">
                             <thead>
                                 <tr>
@@ -420,22 +464,46 @@ class OrderBook extends React.Component {
                             </thead>
                         </table>
                     </div>
-                    <div className="table-container grid-content market-right-padding-only" ref="orderbook_container" style={{overflow: "hidden"}}>
-                        <table className="table order-table table-hover text-right">
-                            <TransitionWrapper
-                                className="orderbook ps-container orderbook-top"
-                                component="tbody"
-                                transitionName="newrow"                                            
-                            >
-                                {askRows}
-                                <tr onClick={this._centerView.bind(this)} key="spread" className="orderbook-latest-price" ref="centerRow">
-                                    <td colSpan="3" className="text-center spread">
-                                        {this.props.latest ? <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /> {baseSymbol}/{quoteSymbol}</span> : null}
-                                    </td>
-                                </tr>
-                                {bidRows}
-                            </TransitionWrapper>
-                        </table>
+                    <div className="grid-block vertical no-padding" ref="orderbook_container" style={{width: "100%"}}>
+                            <div id="asksWrapper" style={{overflow:"hidden"}} ref="asksWrapper">
+                                <div onScroll={this._onBidScroll.bind(this)} className="grid-block" ref="vert_asks" style={{overflow: "hidden", maxHeight: this.state.vertAsksHeight || 300}}>
+                                    <div style={{paddingRight: 10, width: "100%", height: "100%", display: "table-cell", verticalAlign: "bottom"}}>
+                                        <table style={{position: "relative", bottom: 0}} className="table order-table table-hover text-right">
+                                            <TransitionWrapper
+                                                ref="askTransition"
+                                                className="orderbook ps-container orderbook-top"
+                                                component="tbody"
+                                                transitionName="newrow"                                            
+                                            >
+                                                {askRows}
+                                            </TransitionWrapper>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ref="center_text" style={{minHeight: 35}}>
+                                    <div key="spread" className="orderbook-latest-price" ref="centerRow">
+                                        <div className="text-center spread">
+                                            {this.props.latest ? <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /> {baseSymbol}/{quoteSymbol}</span> : null}
+                                        </div>
+                                    </div>
+                            </div>
+                            <div id="bidsWrapper" style={{overflow:"hidden"}}>
+                                <div className="grid-block" ref="vert_bids" style={{overflow: "hidden", height: this.state.vertBidsHeight || 300}}>
+                                <div style={{paddingRight: 10, width: "100%", height: "100%", display: "table-cell", verticalAlign: "top"}}>
+                                    <table className="table order-table table-hover text-right">
+                                        <TransitionWrapper
+                                            ref="bidTransition"
+                                            className="orderbook ps-container orderbook-top"
+                                            component="tbody"
+                                            transitionName="newrow"                                            
+                                        >
+                                            {bidRows}
+                                        </TransitionWrapper>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
                     </div>
                     <div style={{width: "100%", borderTop: "1px solid grey"}} className="align-center grid-block footer shrink bottom-header">
                         <div onClick={this.props.moveOrderBook} className="button outline">
