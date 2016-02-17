@@ -40,8 +40,8 @@ class ApplicationApi {
                     amount: 0,
                     asset_id: 0
                 },
-                "registrar": registrar.get("id"),
-                "referrer": referrer.get("id"),
+                "registrar": chain_registrar.get("id"),
+                "referrer": chain_referrer.get("id"),
                 "referrer_percent": referrer_percent,
                 "name": new_account_name,
                 "owner": {

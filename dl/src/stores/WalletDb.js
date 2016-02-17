@@ -367,7 +367,7 @@ class WalletDb extends BaseStore {
     */ 
     getDeterministicKeys( count ) {
         var brainkey = this.getBrainKey()
-        var sequence = wallet.get("brainkey_sequence") || 0
+        var sequence = wallet.wallet_object.get("brainkey_sequence") || 0
         let keys = List()
         for(let i = 0; i < count; i++)
             keys = keys.push({
@@ -550,7 +550,7 @@ let importKeyWalletObject = (wallet_object, key_objects) => {
                 binaryBackupRecommended = true
             
             if( ! public_key ) {
-                assert(private_key, "Private key required")
+                assert(private_wif, "Private key required")
                 // toPublicKey  S L O W
                 public_key = PrivateKey.fromWif(private_wif).toPublicKey().toString()
             } else {
