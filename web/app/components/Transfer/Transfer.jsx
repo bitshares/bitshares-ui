@@ -20,7 +20,6 @@ import {number_utils} from "@graphene/chain";
 import FormattedAsset from "../Utility/FormattedAsset";
 
 const AssetBalance = ({onClick, balance, asset_id}) => {
-    console.log("-- AssetBalance -->", onClick, balance, asset_id);
     const balance_value = utils.is_object_id(balance) ? <BalanceComponent balance={balance}/> : <FormattedAsset amount={balance} asset={asset_id}/>;
     return <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={onClick}><Translate component="span" content="transfer.available"/>: {balance_value}</span>
 };
@@ -75,21 +74,23 @@ class Transfer extends React.Component {
     }
     
     fromChanged(from_name) {
-        let asset = undefined
-        let amount = undefined
-
+        let asset = undefined;
+        let amount = undefined;
         if (from_name && from_name.length > 2 && from_name[0] === "~") {
             const from = from_name.slice(1);
+            const cwallet = WalletDb.getState().cwallet;
             try {
-                WalletDb.getState().cwallet.getBlindBalances(from).then(res => {
+                cwallet.getBlindBalances(from).then(res => {
                     console.log("-- getBlindBalances -->", res.toJS());
                     this.setState({blind_balances: res.toJS()});
                 });
+                console.log("-- blindHistory -->", cwallet.blindHistory(from).toJS());
             } catch (error) {
                 console.log("-- getBlindBalances error -->", error);
             }
         }
-        this.setState({from_name,asset,amount, error: null, propose: false, propose_account: "", blind_balances: null})
+        let new_state = {from_name, asset, amount, error: null, propose: false, propose_account: "", blind_balances: null};
+        this.setState(new_state)
     }
 
     toChanged(to_name) {
@@ -150,12 +151,12 @@ class Transfer extends React.Component {
 
         const from_account_type = AccountStore.getAccountType(this.state.from_name);
         const to_account_type = AccountStore.getAccountType(this.state.to_name);
+        const cwallet = WalletDb.getState().cwallet;
 
         console.log("-- Transfer.onSubmit -->", from_account_type, to_account_type);
 
         if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
             // transferToBlind
-            const cwallet = WalletDb.getState().cwallet;
             console.log("-- transferToBlind cwallet : -->", cwallet);
             const to = this.state.to_name.slice(1);
             cwallet.transferToBlind(this.state.from_account.get("id"), asset.get("id"), [[to, parseFloat(amount)]], true)
@@ -164,19 +165,30 @@ class Transfer extends React.Component {
             }).catch(error => {
                 console.error("-- transferToBlind error -->", error);
             })
+        } else if ((from_account_type === "Private Account" || from_account_type == "Private Contact") && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
+            // transfer from blind to blind
+            const from = this.state.from_name.slice(1);
+            const to = this.state.to_name.slice(1);
+            cwallet.blindTransfer(from, to, parseFloat(amount), asset.get("id"), true)
+            .then(res => {
+                console.log("-- blindTransfer res -->", res);
+                this.setState({transfer_receipt: res.change_receipt});
+                ZfApi.publish("transfer_receipt_modal", "open");
+            }).catch(error => {
+                console.error("-- blindTransfer error -->", error);
+            })
         } else if (from_account_type === "Private Account" || from_account_type == "Private Contact") {
             // transferFromBlind
-            const cwallet = WalletDb.getState().cwallet;
             const from = this.state.from_name.slice(1);
             cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
-            .then(res => {
-                console.log("-- transferFromBlind res -->", res);
-                this.setState({transfer_receipt: res.change_receipt});
-                ZfApi.publish("transfer_receipt_modal", "open")
-            }).catch(error => {
+                .then(res => {
+                    console.log("-- transferFromBlind res -->", res);
+                    this.setState({transfer_receipt: res.change_receipt});
+                    ZfApi.publish("transfer_receipt_modal", "open");
+                }).catch(error => {
                 console.error("-- transferFromBlind error -->", error);
             })
-        } else {
+        }else {
             AccountActions.transfer(
                 this.state.from_account.get("id"),
                 this.state.to_account.get("id"),
@@ -283,6 +295,7 @@ class Transfer extends React.Component {
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
+        console.log("-- Transfer.render -->", from_account);
         accountsList = accountsList.add(from_account)
         let tabIndex = 1
 

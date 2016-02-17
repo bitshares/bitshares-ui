@@ -53,10 +53,10 @@ class AccountLeftPanel extends React.Component {
         this.context.history.pushState(null, "/create-account");
     }
 
-    onReceiveClick(e) {
-        e.preventDefault();
-        ZfApi.publish("receive_funds_modal", "open");
-    }
+    //onReceiveClick(e) {
+    //    e.preventDefault();
+    //    ZfApi.publish("receive_funds_modal", "open");
+    //}
 
     render() {
         let {account, linkedAccounts, isMyAccount} = this.props;
@@ -83,7 +83,6 @@ class AccountLeftPanel extends React.Component {
                             <div className="grid-container no-margin">
                                 { linkBtn }
                                 <Link className="button outline block-button" to={`/transfer/?to=${account_name}`}><Translate content="account.pay"/></Link>
-                                {isMyAccount && <a style={{marginTop: "1rem"}} className="button outline block-button" href onClick={this.onReceiveClick}><Translate content="account.receive"/></a>}
                             </div>
                         </div>
                         <section className="block-list">
@@ -107,7 +106,7 @@ class AccountLeftPanel extends React.Component {
                         <a href data-tip="Create New Account" data-place="top" onClick={this.onCreateAccountClick.bind(this)}><Icon name="plus-circle"/></a>
                     </div>
                 </div> : null}
-                <ReceiveFundsModal />
+                {/*<ReceiveFundsModal />*/}
             </div>
         );
     }

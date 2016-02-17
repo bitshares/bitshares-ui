@@ -67,7 +67,7 @@ class PrivateKeyInput extends React.Component {
 
     _onPrivateKeyChange(e) {
         e.preventDefault();
-        var private_key = e.target.value.toUpperCase();
+        var private_key = e.target.value;
         this.setState({ private_key });
         this.props.onChange({ private_key, public_key: this.state.public_key });
         //this.validateKey(value);
@@ -75,7 +75,7 @@ class PrivateKeyInput extends React.Component {
 
     _onPublicKeyChange(e) {
         e.preventDefault();
-        var public_key = e.target.value.toUpperCase();
+        var public_key = e.target.value;
         this.setState({ public_key });
         this.props.onChange({ private_key: this.state.private_key, public_key });
     }

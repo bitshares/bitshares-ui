@@ -14,6 +14,8 @@ import CreatePrivateAccountModal from "../Stealth/CreatePrivateAccountModal";
 import CreatePrivateContactModal from "../Stealth/CreatePrivateContactModal";
 import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
+import WalletDb from "stores/WalletDb";
+import ReceiveFundsModal from "../Stealth/ReceiveFundsModal";
 
 class Dashboard extends React.Component {
 
@@ -107,11 +109,17 @@ class Dashboard extends React.Component {
     }
 
     _copyToClipboard(name, e) {
+        console.log("-- Dashboard._copyToClipboard -->", name);
         e.preventDefault();
         const el =  this.refs["$name$" + name];
         this._selectElementText(el);
         document.execCommand("copy");
         window.getSelection().removeAllRanges();
+    }
+
+    _onReceiveClick(e) {
+        e.preventDefault();
+        ZfApi.publish("receive_funds_modal", "open");
     }
 
     render() {
@@ -153,21 +161,22 @@ class Dashboard extends React.Component {
                         <AccountsList title="Public Accounts" accounts={public_accounts} width={width} dashboardFilter={df} myAccountsOnly/>
                     </div>
                     {!private_accounts.isEmpty() && <div ref="container" className="content-block">
-                        {/* <button className="button outline float-right" onClick={this._addPrivateAccount} data-tip="Add Private Account" data-type="light">+</button> */}
+                        <button className="button outline float-right" onClick={this._onReceiveClick} data-tip="Add Private Account" data-type="light"><Translate content="account.receive"/></button>
                         <h4>Private Accounts</h4>
                         <table className="table table-hover">
                             <thead>
                             <tr>
                                 <th><Translate content="header.account" /></th>
-                                <th width="48px">COPY</th>
+                                <th>Public Key</th>
                             </tr>
                             </thead>
                             <tbody>
                             {
                                 private_accounts.filter(name => name.indexOf(df) !== -1).map(name => {
+                                    const private_key = WalletDb.isLocked() ? "(locked)" : WalletDb.getState().cwallet.getPublicKey(name).toString();
                                     return (<tr key={name}>
-                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name}</td>
-                                        <td><a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td ref={"$name$" + private_key}>{private_key} <a href onClick={this._copyToClipboard.bind(this, private_key)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
                                     </tr>);
                                 })
                             }
@@ -211,7 +220,7 @@ class Dashboard extends React.Component {
 
                 <CreatePrivateAccountModal ref="CreatePrivateAccountModal"/>
                 <CreatePrivateContactModal ref="CreatePrivateContactModal"/>
-
+                <ReceiveFundsModal />
             </div>);
     }
 }
