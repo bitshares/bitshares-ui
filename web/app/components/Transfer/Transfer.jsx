@@ -200,10 +200,14 @@ class Transfer extends React.Component {
 
             // Finish fee estimation
             let core = ChainStore.getObject("1.3.0");
-
             if (feeAsset && feeAsset.get("id") !== "1.3.0" && core) {
-                let price = utils.convertPrice(core, feeAsset);
+
+                let price = utils.convertPrice(core, feeAsset.getIn(["options", "core_exchange_rate"]).toJS(), null, feeAsset.get("id"));
                 fee = utils.convertValue(price, fee, core, feeAsset);
+
+                if (parseInt(fee, 10) !== fee) {
+                    fee += 1; // Add 1 to round up;
+                }
             }
             if (core) {
                 fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
