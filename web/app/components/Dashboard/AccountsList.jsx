@@ -201,19 +201,19 @@ class AccountsList extends React.Component {
                         <td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
                         </td>
-                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
                             {accountName}
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} openOrders={openOrders}/>
                         </td>
-                        {width >= 750 ? <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
+                        {width >= 750 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} collateral={collateral}/>
                         </td> : null}
-                        {width >= 1200 ? <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
+                        {width >= 1200 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} debt={debt}/>
                         </td> : null}
-                        <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
                         </td>
                     </tr>
