@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import connectToStores from "alt/utils/connectToStores";
 import {FormattedDate} from "react-intl"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
+import VerifyPassword from "components/Wallet/VerifyPassword"
 import WalletUnlock from "components/Wallet/WalletUnlock"
 import Translate from "react-translate-component"
 import WalletActions from "actions/WalletActions"
@@ -41,8 +42,8 @@ export default class BackupBrainkey extends Component {
         var content
         var brainkey_backup_date = WalletDb.prop("brainkey_backup_date")
         var brainkey_backup_time = brainkey_backup_date ?
-            <h3><Translate content="wallet.verified" /> <FormattedDate value={new Date(brainkey_backup_date)}/></h3>:
-            <h3><Translate content="wallet.brainkey_not_verified" /></h3>
+            <h4><Translate content="wallet.verified" /> <FormattedDate value={new Date(brainkey_backup_date)}/></h4>:
+            <h4><Translate content="wallet.brainkey_not_verified" /></h4>
 
         if(this.state.verified) {
             var sha1 = hash.sha1(this.state.brainkey).toString('hex').substring(0,4)
@@ -93,10 +94,9 @@ export default class BackupBrainkey extends Component {
         if(!content) {
             content = <span>
                 {brainkey_backup_time}
-                <form onSubmit={this.onSubmit.bind(this)} className="name-form" noValidate>
-                    <button className="button success"><Translate content="wallet.show_brainkey" /></button>
-                    <button className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></button>
-                </form>
+                <h3><Translate content="wallet.show_brainkey" /></h3>
+                <VerifyPassword onValid={this.onVerify.bind(this)}> </VerifyPassword>
+                <button className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></button>
             </span>
         }
         
@@ -125,12 +125,11 @@ export default class BackupBrainkey extends Component {
     }
     
     onBack(e) {
-        e.preventDefault()
+        if(e) e.preventDefault()
         window.history.back()
     }
     
-    onSubmit(e) {
-        e.preventDefault()
+    onVerify(e) {
         var brainkey = WalletDb.getBrainKey()
         this.setState({ brainkey })
     }
