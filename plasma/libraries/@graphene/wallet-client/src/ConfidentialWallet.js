@@ -4,9 +4,9 @@ import { PrivateKey, PublicKey, Aes, brainKey, hash, key } from "@graphene/ecc"
 import { fetchChain, config, chain_types, Apis, TransactionBuilder, number_utils } from "@graphene/chain"
 import { ops } from "@graphene/serializer"
 import AddressIndex from "./AddressIndex"
-
 import ByteBuffer from "bytebuffer"
 
+var bs58 = require("bs58")
 let { stealth_memo_data, stealth_confirmation, blind_transfer, transfer_from_blind } = ops
 let { toImpliedDecimal } = number_utils
 let Long = ByteBuffer.Long
@@ -392,7 +392,7 @@ export default class ConfidentialWallet {
                     return tr.process_transaction(this, null, broadcast).then(()=> {
                         confirm.trx = tr.serialize()
                         confirm.confirmation_receipts = cr
-                            .reduce( (r, receipt)=>r.push(stealth_confirmation.toHex(receipt)) , List()).toJS()
+                            .reduce( (r, receipt)=>r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
                         
                         // console.log("confirm trx2", JSON.stringify(confirm.outputs))
                         return confirm
@@ -521,7 +521,7 @@ export default class ConfidentialWallet {
         
         List(confirmation_receipts).forEach( r =>{
             if( typeof r === 'string' ) {
-                r = stealth_confirmation.fromHex(r)
+                r = stealth_confirmation.fromBuffer(bs58.decode(r))
                 r = stealth_confirmation.toObject(r)
             }
             rp.push( receipt(r) )
@@ -964,7 +964,8 @@ function blind_transfer_help(
                                 confirm.trx = tr
                                 confirm.one_time_keys = one_time_keys.toJS()
                                 confirm.confirmation_receipts = cr
-                                    .reduce( (r, receipt)=>r.push(stealth_confirmation.toHex(receipt)) , List()).toJS()
+                                    .reduce( (r, receipt)=>
+                                        r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
                                 
                                 return confirm
                             })
