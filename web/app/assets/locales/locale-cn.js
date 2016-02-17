@@ -112,7 +112,22 @@ module.exports = {
             advanced: "高级设定",
             need_asset: "这两个资产中至少有一个必须为 %(name)s",
             perm_warning: "警告：有些设定的禁用操作不可逆，生效后将无法重新启用。",
-            issued_assets: "我发行的资产"
+            issued_assets: "我发行的资产",
+            "short": "短名 (最多32个字符)",
+            condition: "条件 (最多60个字符)",
+            expiry: "市场裁决日期",
+            decimals: "小数点后位数",
+            mpa: "智能币 SmartCoin",
+            pm: "二元预测市场",
+            bitasset_opts: "智能币 SmartCoin 选项",
+            feed_lifetime_sec: "喂价有效时间（分钟）",
+            minimum_feeds: "最少喂价数量",
+            force_settlement_delay_sec: "强制清算发生前延迟时间（分钟）",
+            force_settlement_offset_percent: "强制清算价格偏离百分比",
+            maximum_force_settlement_volume: "强制清算最大数量（百分比）",
+            backing: "做空时可抵押的资产类型",
+            error_precision: "该资产的精度不同于 %(asset)s",
+            error_invalid: "该资产不能使用"
         },
         perm: {
             active: "活跃权限",
@@ -713,7 +728,12 @@ module.exports = {
         borrow: "借入",
         no_balance: "余额不足",
         invalid_amount: "数量错误",
-        invalid_price: "价格错误"
+        invalid_price: "价格错误",
+        my_orders: "我的订单",
+        show_bids: "显示所有买单",
+        show_asks: "显示所有卖单",
+        hide: "隐藏",
+        "short": "做空"
     },
     markets: {
         title: "交易所",
@@ -830,6 +850,12 @@ module.exports = {
         deposit: {
             amount: "充值数量",
             submit: "充值"
+        },
+        reserve: {
+            title: "储备（销毁）资产",
+            amount: "数量",
+            from: "账户",
+            submit: "储备"
         }
     },
     init_error: {
