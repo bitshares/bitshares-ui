@@ -193,7 +193,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                     // This is a client that uses unique deposit addresses to select the output
                     deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
                 }
-                else
+                else if (receive_address) 
                 {
                     // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
                     deposit_address_fragment = (<span><code>{receive_address.inputAddress}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.inputMemo}</code><button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
