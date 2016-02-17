@@ -98,15 +98,25 @@ class PriceChart extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.reflowChart(500);
+    }
+
     componentWillReceiveProps(nextProps) {
         let height = ReactDOM.findDOMNode(this).offsetHeight;
         this.setState({offsetHeight: height - 10});
 
         if (this.refs.chart && nextProps.verticalOrderbook !== this.props.verticalOrderbook) {
-            setTimeout(() => {
-                this.refs.chart.chart.reflow();
-            }, 100);
+            this.reflowChart(100);
         }
+    }
+
+    reflowChart(timeout) {
+        setTimeout(() => {
+            if (this.refs.chart) {
+                this.refs.chart.chart.reflow();
+            }
+        }, timeout);   
     }
 
     getIndicators(props, select = false) {
