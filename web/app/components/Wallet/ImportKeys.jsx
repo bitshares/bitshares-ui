@@ -83,20 +83,10 @@ export default class ImportKeys extends Component {
         var key_count = Object.keys(keys_to_account).length
         var account_keycount = this.getImportAccountKeyCount(keys_to_account)
         
-        // Create wallet prior to the import keys (keeps layout clean)
-        
-        if( this.props.importing ) {
-            return <div>
-                <h3><Translate content="wallet.import_keys" /></h3>
-                <div className="center-content">
-                    <LoadingIndicator type="circle"/>
-                </div>
-            </div>
-        }
-        
         var filtering = this.state.genesis_filtering
         var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
         var account_rows = null
+        
         if(this.state.genesis_filter_status.length) {
             account_rows = []
             for(let status of this.state.genesis_filter_status) {
@@ -126,6 +116,45 @@ export default class ImportKeys extends Component {
                     </tr>);
             }
         }
+        
+        // 2 column generic table for account_rows 
+        account_rows = <div>
+            { account_rows ? 
+            <div>
+                { ! account_rows.length ? "No Accounts" :
+                <div>
+                    <table className="table center-content">
+                        <thead>
+                            <tr>
+                                <th style={{textAlign: "center"}}>Account</th>
+                                <th style={{textAlign: "center"}}># of keys</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {account_rows}
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>}
+            </div> : null}
+            <br/>
+        </div>
+            
+        if( this.state.genesis_filtering ) {
+            
+            // This is being called every 40 keys or so when the filter triggers a state update.  React was not rendering this however (probably because the worker thread keeps things too busy).
+            let last = this.state.genesis_filter_status.length - 1
+            console.log("ImportKeys\tGenesis filter", JSON.stringify(this.state.genesis_filter_status[last]))
+            
+            return <div>
+                <h3><Translate content="wallet.import_keys" /></h3>
+                <div className="center-content">
+                    <LoadingIndicator type="circle"/>
+                </div>
+                { account_rows }
+            </div>
+        }
+        
         return (
             <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
@@ -141,25 +170,7 @@ export default class ImportKeys extends Component {
                     }
                 </div>
                 
-                { account_rows ? 
-                <div>
-                    { ! account_rows.length ? "No Accounts" :
-                    <div>
-                        <table className="table center-content">
-                            <thead>
-                                <tr>
-                                    <th style={{textAlign: "center"}}>Account</th>
-                                    <th style={{textAlign: "center"}}># of keys</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {account_rows}
-                            </tbody>
-                        </table>
-                        <br/>
-                    </div>}
-                </div> : null}
-                <br/>
+                { account_rows }
                     
                 { ! import_ready && ! this.state.genesis_filter_initalizing ?
                 <div>
@@ -275,13 +286,14 @@ export default class ImportKeys extends Component {
                     // This is the only chance to encounter a large file, 
                     // try this format first.
                     this._parseImportKeyUpload(json_contents, file.name, update_state => {
-                        // console.log("update_state", update_state)
+                        
                         this.setState(update_state, ()=> {
                             if( update_state.genesis_filter_finished ) {
                                 // try empty password, also display "Enter import file password"
                                 this._passwordCheck()
                             }
                         })
+                        
                     })
                 } catch(e) {
                     //DEBUG console.log("... _parseImportKeyUpload",e)
@@ -327,7 +339,7 @@ export default class ImportKeys extends Component {
                 genesis_filter_finished: true, genesis_filtering: false })
             return
         }
-        this.setState({ genesis_filter_initalizing: true }, ()=>// setTimeout(()=>
+        this.setState({ genesis_filter_initalizing: true }, ()=>
             genesis_filter.init(()=> {
                 var filter_status = this.state.genesis_filter_status
                 
