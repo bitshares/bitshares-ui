@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------
+Release 2.0.160217
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Big trade page make over
+
+BUG FIXES:
+- Exchange buy fee selection
+- Remove link to BTS:BTS market in asset popover, fix asset description #709
+- Disable annual membership upgrade #730
+- Fix My Orders not updating when flipping the market
+- Fix Orderbook totals calculation
+- Fix current price indicator not repositioning after window resize
+- Fix fee subtraction when clicking on current balance
+- Fix margin call mechanics, add dynamic update support for settle orders and feed price changes, improve market data fetching logic
+- Fix number parsing for call orders and homogenize presentation with asks/bids/calls
+- Fix vertical orderbook positioning and scrolling
+- Link to /overview from Dashboard, change Orders to Open orders, #707 and #736
+- Fix transfer fee mismatch #738
+- Fix a bug in BlockTradesGatewayDepositRequest and change BridgeDepositRequest input types to 'number' #733
+- Fix Blocktrades input and select colors #733
+
+
+---------------------------------------------------------------------
 Release 2.0.160208
 ---------------------------------------------------------------------
 
