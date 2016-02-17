@@ -212,12 +212,13 @@ form.order-form {
 }
 
 .orderbook-latest-price {
-    td {
+    div {
       background-color: #4C4C4C !important;
       border-bottom: 1px solid grey !important;
       border-top: 1px solid grey !important;
       padding: 10px 0 !important;
       font-weight: bold;
+      font-size: 13px;
     }
 }
 

@@ -95,7 +95,7 @@ class MarketUtils {
             buy.amount = parseInt(buy.amount, 10);
         }
         let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision)
-        let price = utils.price_to_text(fullPrice, quote, base);
+        let price = utils.price_to_text(fullPrice, order.call_price ? base : quote, order.call_price ? quote : base);
 
         let amount, value;
 
