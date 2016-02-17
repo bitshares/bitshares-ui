@@ -7,8 +7,8 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
-import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
+import { TransactionBuilder } from "@graphene/chain";
 import { ChainStore } from "@graphene/chain";
 import { validation } from "@graphene/chain"
 import AccountImage from "./AccountImage";
@@ -22,8 +22,6 @@ import Tabs, {Tab} from "../Utility/Tabs";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-
-let wallet_api = new WalletApi()
 
 @BindToChainState()
 class AccountVoting extends React.Component {
@@ -134,7 +132,7 @@ class AccountVoting extends React.Component {
                 .concat(this.state.vote_ids.filter( id => id.split(":")[0] === "2" ).toArray() )
                 .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
             // console.log("updated_account: ", updated_account);
-            var tr = wallet_api.new_transaction();
+            var tr = new TransactionBuilder();
             tr.add_type_operation("account_update", updated_account);
             WalletDb.process_transaction(tr, null, true);
         });

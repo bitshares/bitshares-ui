@@ -2,15 +2,14 @@ import alt from "../alt-instance";
 import utils from "../common/utils";
 import AccountApi from "../api/accountApi";
 
-import WalletApi from "../rpc_api/WalletApi";
 import ApplicationApi from "../rpc_api/ApplicationApi";
 import WalletDb from "../stores/WalletDb";
 import WalletActions from "../actions/WalletActions";
+import { TransactionBuilder } from "@graphene/chain"
 
 let accountSubs = {};
 let accountLookup = {};
 let accountSearch = {};
-let wallet_api = new WalletApi();
 let application_api = new ApplicationApi()
 let inProgress = {};
 
@@ -45,9 +44,6 @@ class AccountActions {
         this.dispatch(name);
     }
 
-    /**
-     *  TODO:  This is a function of the wallet_api and has no business being part of AccountActions
-     */
     transfer(from_account, to_account, amount, asset, memo, propose_account, fee_asset_id = "1.3.0") {
         try {
             return application_api.transfer({
@@ -92,7 +88,7 @@ class AccountActions {
      *  be linked.  
      */
     upgradeAccount(account_id, lifetime) {
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
         tr.add_type_operation("account_upgrade", {
             "fee": {
                 amount: 0,

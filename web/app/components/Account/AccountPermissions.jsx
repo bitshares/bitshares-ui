@@ -7,7 +7,6 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import utils from "common/utils";
 import { PublicKey } from "@graphene/ecc";
-import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
 import { ChainStore } from "@graphene/chain";
 import { validation } from "@graphene/chain"
@@ -19,8 +18,7 @@ import PubKeyInput from "../Forms/PubKeyInput";
 import Tabs, {Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import RecentTransactions from "./RecentTransactions";
-
-let wallet_api = new WalletApi()
+import { TransactionBuilder } from "@graphene/chain";
 
 class AccountPermissions extends React.Component {
 
@@ -120,7 +118,7 @@ class AccountPermissions extends React.Component {
             updated_account.new_options.memo_key = s.memo_key;
         }
         //console.log("-- AccountPermissions.onPublish -->", updated_account);
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
         tr.add_type_operation("account_update", updated_account);
         WalletDb.process_transaction(tr, null, true);
     }

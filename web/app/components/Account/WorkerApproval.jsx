@@ -7,8 +7,6 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
-import WalletApi from "rpc_api/WalletApi";
-// import WalletDb from "stores/WalletDb"
 import { ChainStore } from "@graphene/chain";
 import { validation } from "@graphene/chain"
 import AccountImage from "./AccountImage";

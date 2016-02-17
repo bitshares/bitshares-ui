@@ -10,7 +10,6 @@ import WalletActions from "../src/actions/WalletActions"
 import WalletDb from "../src/stores/WalletDb"
 
 import Apis from "@graphene/chain"
-import WalletApi from "../src/rpc_api/WalletApi"
 import ApplicationApi from "../src/rpc_api/ApplicationApi"
 import { PrivateKey} from "@graphene/ecc"
 

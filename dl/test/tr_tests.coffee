@@ -20,10 +20,8 @@ key_create =  tr_op.key_create
 account_create = tr_op.account_create
 
 ApiInstances = require('../src/rpc_api/ApiInstances')
-WalletApi = require '../src/rpc_api/WalletApi'
 WalletDb = require 'stores/WalletDb'
 ApplicationApi = require '../src/rpc_api/ApplicationApi'
-wallet = new WalletApi()
 app = new ApplicationApi()
 
 helper = require "./test_helper"
@@ -56,30 +54,30 @@ describe "tr_tests", ->
         api.close()
         done()
     
-    #it "update account transaction", ->
-    it "wallet.transfer nomemo", (done)->
-        helper.test_wallet().then (suffix)=>
-            wallet.transfer(
-                "1.2.15", "1.2.14", 1, "1.3.0", memo = null
-                broadcast, encrypt_memo = no
-            ).then (result)->
-                #th.print_result result
-                #th.print_hex ""
-                done()
-            .catch th.log_error
-        return
-    
-    it "wallet.transfer encmemo", (done)->
-        helper.test_wallet().then (suffix)=>
-            wallet.transfer(
-                "1.2.15", "1.2.14", 1, "1.3.0", memo = "memo"
-                broadcast
-            ).then (result)->
-                #th.print_result result
-                #th.print_hex ""
-                done()
-            .catch th.log_error
-        return
+    # #it "update account transaction", ->
+    # it "wallet.transfer nomemo", (done)->
+    #     helper.test_wallet().then (suffix)=>
+    #         wallet.transfer(
+    #             "1.2.15", "1.2.14", 1, "1.3.0", memo = null
+    #             broadcast, encrypt_memo = no
+    #         ).then (result)->
+    #             #th.print_result result
+    #             #th.print_hex ""
+    #             done()
+    #         .catch th.log_error
+    #     return
+    # 
+    # it "wallet.transfer encmemo", (done)->
+    #     helper.test_wallet().then (suffix)=>
+    #         wallet.transfer(
+    #             "1.2.15", "1.2.14", 1, "1.3.0", memo = "memo"
+    #             broadcast
+    #         ).then (result)->
+    #             #th.print_result result
+    #             #th.print_hex ""
+    #             done()
+    #         .catch th.log_error
+    #     return
     
     # Aes.encrypt data is not matching c++
     it "wallet encmemo_format", ()->
