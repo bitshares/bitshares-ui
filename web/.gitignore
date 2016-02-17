@@ -2,7 +2,6 @@
 node_modules
 bower_components
 bundle
-assets
 app/assets/bts_genesiskeys_bloom.dat
 stats-dev.json
 stats-prod.json
