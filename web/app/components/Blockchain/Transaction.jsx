@@ -892,7 +892,6 @@ class Transaction extends React.Component {
                     break;
 
                 case "proposal_create":
-                    var key = 1;
                     console.log("op:", op);
                     var expiration_date = new Date(op[1].expiration_time+'Z')
                     var has_review_period = op[1].review_period_seconds !== undefined
