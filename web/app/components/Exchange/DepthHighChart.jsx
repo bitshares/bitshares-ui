@@ -29,16 +29,26 @@ class DepthHighChart extends React.Component {
     //     super();
     //     this.state = {offsetHeight: null};
     // }
+    
+    componentDidMount() {
+        this.reflowChart(500);
+    }
 
     componentWillReceiveProps(nextProps) {
         // let height = ReactDOM.findDOMNode(this).offsetHeight;
         // this.setState({offsetHeight: height - 10});
         // 
         if (this.refs.depthChart && nextProps.verticalOrderbook !== this.props.verticalOrderbook) {
-            setTimeout(() => {
-                this.refs.depthChart.chart.reflow();
-            }, 100);
+            this.reflowChart(100);
         }
+    }
+
+    reflowChart(timeout) {
+        setTimeout(() => {
+            if (this.refs.depthChart) {
+                this.refs.depthChart.chart.reflow();
+            }
+        }, timeout);   
     }
 
 
