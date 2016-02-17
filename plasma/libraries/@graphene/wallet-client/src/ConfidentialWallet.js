@@ -80,7 +80,10 @@ export default class ConfidentialWallet {
         
         this.assertLogin()
         
-        assert( key, "key is required (a public or private key)" )
+        assert( key, "key is required (public key or PrivateKey object)" )
+        
+        if(typeof key === "string")
+            public_key = PublicKey.fromStringOrThrow(key)
         
         let private_key
         if(key.d) {
@@ -426,7 +429,7 @@ export default class ConfidentialWallet {
         
         @arg {string|object|Array<string|object>} confirmation_receipt (HEX or JSON) - serilized stealth_confirmation operation: { to: optional(public_key), one_time_key: public_key, encrypted_memo: hex }
         
-        @arg {string} opt_from - optional `from_label` unless a receeipt already has a from_label
+        @arg {string} opt_from - optional `from_label` unless the wallet already has a label assigned to the from_key
         @arg {string} opt_memo - optional memo to apply each receipt
         
         @typedef {object} blind_receipt
