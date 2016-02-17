@@ -13,7 +13,7 @@ class BackupStore extends BaseStore {
             onIncommingBuffer: BackupActions.incommingBuffer,
             onReset: BackupActions.reset
         })
-        this._export("setWalletObjct")
+        this._export("setWalletObject")
     }
     
     _getInitialState() {
@@ -28,7 +28,7 @@ class BackupStore extends BaseStore {
         }
     }
     
-    setWalletObjct(wallet_object) {
+    setWalletObject(wallet_object) {
         this.setState({wallet_object})
     }
     

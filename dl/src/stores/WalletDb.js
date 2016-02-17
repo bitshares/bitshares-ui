@@ -123,13 +123,13 @@ class WalletDb extends BaseStore {
     openWallet(wallet_name) {
         
         if(! wallet_name) {
-            this.setState({ current_wallet: undefined, wallet: undefined, cwallet: undefined })
             wallet = undefined
             cwallet = undefined
+            this.setState({ current_wallet: undefined, wallet, cwallet })
             return
         }
         
-        if( wallet_name === this.state.current_wallet)
+        if( wallet_name === this.state.current_wallet && wallet != null )
             return { wallet }
         
         console.log("WalletDb\topenWallet", wallet_name);
@@ -589,13 +589,16 @@ export function legacyUpgrade(password, legacy_backup) {
         brainkey: aes.decryptHexToText(legacy_wallet.encrypted_brainkey),
         backup_date: dt(legacy_wallet.backup_date),
         brainkey_backup_date: dt(legacy_wallet.brainkey_backup_date),
-        brainkey_sequence: legacy_wallet.brainkey_sequence,
+        // Remove brainkey_sequence (so it will re-calculate) until "WARN empty key" below is resolved 
+        //brainkey_sequence: legacy_wallet.brainkey_sequence, 
     })
     let keys = []
     for(let key of legacy_backup.private_keys) {
-        let private_buf = new Buffer(aes.decryptHex(key.encrypted_key), 'hex')
-        if(private_buf.length === 0)
-            console.log("WalletDb\tWARN empty key", "position " + keys.length)
+        let private_buf = aes.decryptHexToBuffer(key.encrypted_key)
+        if(private_buf.length === 0) {
+            console.log("WalletDb\tWARN empty key", "position " + keys.length, key)
+            continue
+        }
         keys.push({
             public_key: key.pubkey,
             private_key: private_buf.length === 0 ? undefined: PrivateKey.fromBuffer(private_buf),
@@ -604,6 +607,7 @@ export function legacyUpgrade(password, legacy_backup) {
             index_address: key.brainkey_sequence == null
         })
     }
+    console.log("WalletDb\tCollected keys", keys.length, "of", legacy_backup.private_keys.length)
     let { wallet_object, binaryBackupRecommended } = importKeyWalletObject( new_wallet, keys )
     if(legacy_wallet.deposit_keys)
         wallet_object = wallet_object.set("deposit_keys", fromJS(legacy_wallet.deposit_keys))

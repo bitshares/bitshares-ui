@@ -50,6 +50,13 @@ class WalletManagerStore extends BaseStore {
         
         wallet.login(email, username, password, Apis.chainId())
         .then(()=> this.onSetWallet({ wallet_name }))
+        .then(()=> this.setState({ restored_wallet_name: wallet_name }))
+        .catch( error =>{
+            this.setState({ restore_error: error })
+            
+            throw error
+        })
+        .then(()=> this.setState({ restore_error: null }))
     }
     
     /** This may result in a new wallet name being added, only in this case
@@ -87,7 +94,7 @@ class WalletManagerStore extends BaseStore {
                 return WalletDb.onCreateWallet( create_wallet_password, brnkey )
             
         })
-        if(resolve) resolve(p)
+        return resolve ? resolve(p) : p
     }
     
     /** Pending new wallet name (not the current_wallet).. Used by the components during a pending wallet create. */

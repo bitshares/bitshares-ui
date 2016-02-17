@@ -1,5 +1,6 @@
-import { fromJS } from "immutable"
 import React, {PropTypes, Component} from "react"
+import ReactDOM from "react-dom"
+import { fromJS } from "immutable"
 import {FormattedDate} from "react-intl"
 import {Link} from "react-router";
 import Inspector from "react-json-inspector";
@@ -11,7 +12,6 @@ import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletManagerStore from "stores/WalletManagerStore"
 import WalletDb, { legacyUpgrade } from "stores/WalletDb"
 import BackupStore from "stores/BackupStore"
-// import BackupActions, {backup, restore} from "actions/BackupActions"
 import { Backup } from "@graphene/wallet-client"
 import {saveAs} from "common/filesaver.js"
 import notify from "actions/NotificationActions"
@@ -19,6 +19,7 @@ import cname from "classnames"
 import { hash } from "@graphene/ecc"
 import Translate from "react-translate-component";
 import { chain_config } from "@graphene/chain"
+import LoadingIndicator from "components/LoadingIndicator"
 
 class BackupBaseComponent extends Component {
     
@@ -105,11 +106,19 @@ export class BackupRestore extends BackupBaseComponent {
         }
     }
     
+    componentWillReceiveProps(nextProps) {
+        if(this.state.restoring)
+            if(nextProps.wallet.restored_wallet_name != null ||
+                nextProps.wallet.restore_error != null)
+                this.setState({ restoring: false })
+    }
+    
     render() {
         var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = WalletDb.getState().wallet_names.has(new_wallet)
-        // FIXME restored
-        var restored = has_new_wallet
+        var has_new_wallet = !!new_wallet
+        // WalletDb.getState().wallet_names.has(new_wallet)
+        
+        var restored = has_new_wallet && new_wallet === this.props.wallet.restored_wallet_name 
         
         return <span>
 
@@ -117,26 +126,30 @@ export class BackupRestore extends BackupBaseComponent {
             {(new FileReader).readAsBinaryString ? null : <p className="error">Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.</p>}
             <Upload>
                 <NameSizeModified/>
-                <DecryptBackup saveWalletObject={true}>
+                <DecryptBackup>
                     <NewWalletName newNameFunc={this.onNewName.bind(this)}/>
                 </DecryptBackup>
-                {/*restored ?
+                {restored ?
                 <span>
                     <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
                     <div>{this.props.children}</div>
-                </span>:null*/}
+                </span>:null}
+                {this.state.restoring ? <div className="center-content"> <LoadingIndicator type="circle"/><br/></div>:null}
+                {this.props.wallet.restore_error ? <p className="error">{this.props.wallet.restore_error}</p>:null}
                 <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
             </Upload>
         </span>
-                    //     <Restore/>
-                    // </NewWalletName>
     }
     
     onNewName(new_wallet) {
-        WalletActions.restore(
-            new_wallet,
-            this.props.backup.wallet_object,
-            this.props.wallet.password
+        // Prior to this DecryptBackup gave us this.props.backup.wallet_object
+        // next, see WalletManagerStore.onRestore
+        this.setState({ restoring: true }, ()=>
+            WalletActions.restore(
+                new_wallet,
+                this.props.backup.wallet_object,
+                this.props.wallet.password
+            )
         )
     }
 }
@@ -153,20 +166,11 @@ class NewWalletName extends BackupBaseComponent {
     }
     
     componentWillMount() {
-        var has_current_wallet = !!this.props.wallet.current_wallet
-        if( ! has_current_wallet) {
-            WalletManagerStore.setState({ new_wallet: "default" })
-            this.setState({accept: true})
-        }
-        if( has_current_wallet && this.props.backup.name && ! this.state.new_wallet) {
-            let new_wallet = this.props.wallet.new_wallet
-            if( ! new_wallet)
-                // Should not happen.
-                // Begning of the file name might make a good wallet name
-                new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
-            
-            this.setState({new_wallet})
-        }
+        this.setState({new_wallet: this.props.wallet.new_wallet})
+    }
+    
+    componentDidMount() {
+        ReactDOM.findDOMNode(this.refs.neww).focus()
     }
     
     render() {
@@ -180,22 +184,26 @@ class NewWalletName extends BackupBaseComponent {
         
         return <span>
             <h5><Translate content="wallet.new_wallet_name" /></h5>
-            <input type="text" id="new_wallet"
-                onChange={this.formChange.bind(this)}
-                value={this.state.new_wallet} />
+            <form onSubmit={this.onAccept.bind(this)}>
+                <input type="text" id="new_wallet" ref="neww"
+                    onChange={this.formChange.bind(this)}
+                    value={this.state.new_wallet} />
+            </form>
             <p>{ has_wallet_name_conflict ? <Translate content="wallet.wallet_exist" /> : null}</p>
             <div className={cname("button success", {disabled: ! name_ready})}
                 onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
         </span>
     }
     
-    onAccept() {
+    onAccept(event) {
+        event.preventDefault()
         this.setState({accept: true})
         WalletManagerStore.setState({ new_wallet: this.state.new_wallet })
         this.props.newNameFunc(this.state.new_wallet)
     }
     
     formChange(event) {
+        event.preventDefault()
         var key_id = event.target.id
         var value = event.target.value
         if(key_id === "new_wallet") {
@@ -228,7 +236,8 @@ class Download extends BackupBaseComponent {
             onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></span>
     }
     
-    onDownload() {
+    onDownload(e) {
+        if(e) e.preventDefault()
         var blob = new Blob([ this.props.backup.contents ], {
             type: "application/octet-stream; charset=us-ascii"})
         
@@ -257,7 +266,8 @@ class Create extends BackupBaseComponent {
         </div>
     }
     
-    onCreateBackup() {
+    onCreateBackup(e) {
+        if(e) e.preventDefault()
         let { current_wallet, wallet } = WalletDb.getState()
         let name = current_wallet
         var address_prefix = chain_config.address_prefix.toLowerCase()
@@ -293,6 +303,10 @@ class LastBackupDate extends Component {
 @connectToStores
 class Upload extends BackupBaseComponent {
     
+    componentDidMount() {
+        ReactDOM.findDOMNode(this.refs.bfile).focus()
+    }
+    
     render() {
         if(
             this.props.backup.contents &&
@@ -306,7 +320,7 @@ class Upload extends BackupBaseComponent {
 
         return <span>
             <input type="file" id="backup_input_file" style={{ border: 'solid' }}
-                onChange={this.onFileUpload.bind(this)} />
+                onChange={this.onFileUpload.bind(this)} ref="bfile" />
             { is_invalid ? <h5><Translate content="wallet.invalid_format" /></h5> : null }
         </span>
     }
@@ -334,10 +348,6 @@ class NameSizeModified extends BackupBaseComponent {
 @connectToStores
 class DecryptBackup extends BackupBaseComponent {
     
-    static propTypes = {
-        saveWalletObject: PropTypes.bool
-    }
-    
     constructor() {
         super()
         this.state = this._getInitialState()
@@ -350,49 +360,58 @@ class DecryptBackup extends BackupBaseComponent {
         }
     }
     
+    componentDidMount() {
+        ReactDOM.findDOMNode(this.refs.pw).focus()
+    }
+    
     render() {
         if(this.state.verified) return <span>{this.props.children}</span>
         return <span>
             <label><Translate content="wallet.enter_password" /></label>
-            <input type="password" id="backup_password"
-                onChange={this.formChange.bind(this)}
-                value={this.state.backup_password}/>
+            <form onSubmit={this.onPassword.bind(this)}>
+                <input type="password" id="backup_password" ref="pw"
+                    onChange={this.formChange.bind(this)}
+                    value={this.state.backup_password}/>
+            </form>
             <Sha1/>
+            {/* be cautious about wrapping span (in a form for example), span has another button on the same line from a different component */}
             <span className="button success"
                 onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>
         </span>
     }
     
-    onPassword() {
-
+    onPassword(e) {
+        if(e) e.preventDefault()
+        
         let email = ""
         let username = ""
         let password = this.state.backup_password || ""
         
-        let backupDecrypt = private_key => new Promise( (resolve, reject) =>{
-            try {resolve(
-                Backup.decrypt(this.props.backup.contents, private_key).then( restored_object => {
-                    
-                    if(restored_object.chain_id && restored_object.chain_id !== Apis.chainId()) {
-                        throw new Error("Missmatched chain id")
-                    }
-                    
-                    let wallet_object = Array.isArray(restored_object.wallet) ?
-                        legacyUpgrade(password, restored_object) : fromJS(restored_object)
-                    
-                    WalletManagerStore.setState({
-                        new_wallet: wallet_object.get("public_name"),
-                        password
-                    })
+        let backupDecrypt = private_key => Promise.resolve().then(()=>
+
+            Backup.decrypt(this.props.backup.contents, private_key).then( restored_object => {
+
+                if(restored_object.chain_id && restored_object.chain_id !== Apis.chainId()) {
+                    throw new Error("Missmatched chain id")
+                }
                 
-                    this.setState({verified: true})
-                    if(this.props.saveWalletObject)
-                        BackupStore.setWalletObjct(wallet_object)
+                let wallet_object = Array.isArray(restored_object.wallet) ?
+                    legacyUpgrade(password, restored_object) : fromJS(restored_object)
+                
+                WalletManagerStore.setState({
+                    new_wallet: wallet_object.get("public_name"),
+                    password
                 })
-            )} catch( error ) {
-                reject( error )
-            }
-        })
+                
+                BackupStore.setWalletObject(wallet_object)
+            
+                // verified releases DecryptBackup so children like BackupRestore will appear
+                this.setState({verified: true})
+                
+                // Next, Backup.jsx {BackupRestore} will review and edit wallet name then call BackupRestore.onNewName  which calls: WalletActions.restore => WalletManagerStore.onRestore
+                
+            })
+        )
         
         let notifyError = error => {
             console.error("Backup\trestore error wallet: " + this.props.backup.name, error, "stack", error.stack)
@@ -455,7 +474,8 @@ class Reset extends BackupBaseComponent {
             onClick={this.onReset.bind(this)}>{label}</span>
     }
     
-    onReset() {
+    onReset(e) {
+        if(e) e.preventDefault()
         BackupActions.reset()
         window.history.back()
     }

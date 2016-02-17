@@ -190,7 +190,7 @@ export default class WalletStorage {
         req(username, "username")
         req(password, "password")
         
-        this.private_key = PrivateKey.fromSeed(
+        let private_key = PrivateKey.fromSeed(
             email.trim().toLowerCase() + "\t" +
             username.trim().toLowerCase() + "\t" +
             password
@@ -207,19 +207,20 @@ export default class WalletStorage {
             // console.log("INFO\tWalletStorage\tlogin", "local wallet")
             
             // check login (email, username, and password)
-            let public_key = this.private_key.toPublicKey()
+            let public_key = private_key.toPublicKey()
             // if( this.storage.state.get("private_encryption_pubkey") !== public_key.toString())
             //     throw new Error( "invalid_password" )
             
-            // Set this up so sync will have a wallet ready to look at
+            // Setup wallet_object so sync will have something too look at
             let backup_buffer = new Buffer(encrypted_wallet, 'base64')
-            return decrypt(backup_buffer, this.private_key).then( wallet_object => {
+            return decrypt(backup_buffer, private_key).then( wallet_object => {
                 
                 if( chain_id && chain_id !== wallet_object.chain_id)
                     throw new Error( "Missmatched chain id, wallet has " + wallet_object.chain_id + " but login is expecting " + chain_id )
                 
                 // A merge is a bit safer incase the user updated the wallet before this login completes
                 this.wallet_object = this.wallet_object.mergeDeep(wallet_object)
+                this.private_key = private_key // unlock
                 this.notify = true
                 return this.notifyResolve(this.sync())
             })
@@ -227,7 +228,8 @@ export default class WalletStorage {
         }
         
         // new wallet locally, is there one on the server?
-        return this.sync().then(()=>{
+        
+        return this.sync(private_key).then(()=>{
             
             // console.log("INFO\tWalletStorage\tlogin", this.wallet_object.has("created") ? "downloaded new wallet": "new wallet")
             
@@ -248,6 +250,7 @@ export default class WalletStorage {
             let w = this.wallet_object
             let dt = new Date().toISOString()
             this.wallet_object = Map({ chain_id, created: dt, last_modified: dt }).merge(this.wallet_object)
+            this.private_key = private_key // unlock
             return w === this.wallet_object ? this.notifyResolve() : this.notifyResolve(this.updateWallet())
         })
     }
