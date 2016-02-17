@@ -593,13 +593,15 @@ export function legacyUpgrade(password, legacy_backup) {
     })
     let keys = []
     for(let key of legacy_backup.private_keys) {
+        let private_buf = new Buffer(aes.decryptHex(key.encrypted_key), 'hex')
+        if(private_buf.length === 0)
+            console.log("WalletDb\tWARN empty key", "position " + keys.length)
         keys.push({
-            private_key: PrivateKey.fromBuffer(
-                new Buffer(aes.decryptHex(key.encrypted_key), 'hex')),
-            import_account_names: key.import_account_names.join(", "),
-            brainkey_sequence: key.brainkey_sequence,
             public_key: key.pubkey,
-            index_address: true
+            private_key: private_buf.length === 0 ? undefined: PrivateKey.fromBuffer(private_buf),
+            import_account_names: key.import_account_names ? key.import_account_names.join(", ") : "",
+            brainkey_sequence: key.brainkey_sequence,
+            index_address: key.brainkey_sequence == null
         })
     }
     let { wallet_object, binaryBackupRecommended } = importKeyWalletObject( new_wallet, keys )
