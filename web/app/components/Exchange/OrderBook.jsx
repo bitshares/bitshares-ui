@@ -453,13 +453,19 @@ class OrderBook extends React.Component {
             // Vertical orderbook
             return (
                 <div className="left-order-book no-padding no-overflow">
-                    <div className="grid-block shrink left-orderbook-header">
+                    <div className="grid-block shrink left-orderbook-header" style={{paddingRight: 15, zIndex: 10}}>
                         <table className="table expand order-table table-hover text-right">
                             <thead>
                                 <tr>
-                                    <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                    <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                    <th style={{textAlign: "right", "borderBottomColor": "#777"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
+                                    <th style={{paddingBottom: 8, textAlign: "right", "borderBottomColor": "#777"}}>
+                                        <span className="header-sub-title">{baseSymbol}</span>
+                                    </th>
+                                    <th style={{paddingBottom: 8, textAlign: "right", "borderBottomColor": "#777"}}>
+                                        <span className="header-sub-title">{quoteSymbol}</span>
+                                    </th>
+                                    <th style={{paddingBottom: 8, textAlign: "right", "borderBottomColor": "#777"}}>
+                                        <Translate className="header-sub-title" content="exchange.price" />
+                                    </th>
                                 </tr>
                             </thead>
                         </table>
