@@ -1246,6 +1246,7 @@ class Exchange extends React.Component {
                                     indicatorSettings={indicatorSettings}
                                     bucketSize={bucketSize}
                                     latest={latestPrice}
+                                    verticalOrderbook={leftOrderBook}
                                 >
                                     <div className="float-right">
                                     <ul className="market-stats stats bottom-stats">
@@ -1299,6 +1300,7 @@ class Exchange extends React.Component {
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
                                     noFrame={false}
+                                    verticalOrderbook={leftOrderBook}
                                 />
                             </div>)}
 
