@@ -850,6 +850,12 @@ module.exports = {
         deposit: {
             amount: "充值数量",
             submit: "充值"
+        },
+        reserve: {
+            title: "储备（销毁）资产",
+            amount: "数量",
+            from: "账户",
+            submit: "储备"
         }
     },
     init_error: {
