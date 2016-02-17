@@ -30,10 +30,16 @@ class DepthHighChart extends React.Component {
     //     this.state = {offsetHeight: null};
     // }
 
-    // componentWillReceiveProps() {
-    //     let height = ReactDOM.findDOMNode(this).offsetHeight;
-    //     this.setState({offsetHeight: height - 10});
-    // }
+    componentWillReceiveProps(nextProps) {
+        // let height = ReactDOM.findDOMNode(this).offsetHeight;
+        // this.setState({offsetHeight: height - 10});
+        // 
+        if (this.refs.depthChart && nextProps.verticalOrderbook !== this.props.verticalOrderbook) {
+            setTimeout(() => {
+                this.refs.depthChart.chart.reflow();
+            }, 100);
+        }
+    }
 
 
     render() {
@@ -367,7 +373,7 @@ class DepthHighChart extends React.Component {
                             {this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</span>}                        
                         </div>
                         {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
-                        {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}
+                        {flatBids || flatAsks || flatCalls ? <Highstock ref="depthChart" config={config}/> : null}
                     </div>
                 </div>
             );
