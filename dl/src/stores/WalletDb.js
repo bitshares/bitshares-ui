@@ -589,14 +589,13 @@ export function legacyUpgrade(password, legacy_backup) {
         brainkey: aes.decryptHexToText(legacy_wallet.encrypted_brainkey),
         backup_date: dt(legacy_wallet.backup_date),
         brainkey_backup_date: dt(legacy_wallet.brainkey_backup_date),
-        // Remove brainkey_sequence (so it will re-calculate) until "WARN empty key" below is resolved 
-        //brainkey_sequence: legacy_wallet.brainkey_sequence, 
+        brainkey_sequence: legacy_wallet.brainkey_sequence, 
     })
     let keys = []
     for(let key of legacy_backup.private_keys) {
         let private_buf = aes.decryptHexToBuffer(key.encrypted_key)
         if(private_buf.length === 0) {
-            console.log("WalletDb\tWARN empty key", "position " + keys.length, key)
+            console.log("WalletDb\tWARN empty key", "position " + keys.length)
             continue
         }
         keys.push({

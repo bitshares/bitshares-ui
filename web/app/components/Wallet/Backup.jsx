@@ -101,7 +101,7 @@ export class BackupRestore extends BackupBaseComponent {
     
     constructor() {
         super()
-        this.state = {
+        this.state = this.initial_state = {
             newWalletName: null
         }
     }
@@ -111,6 +111,11 @@ export class BackupRestore extends BackupBaseComponent {
             if(nextProps.wallet.restored_wallet_name != null ||
                 nextProps.wallet.restore_error != null)
                 this.setState({ restoring: false })
+    }
+    
+    componentWillUnmount() {
+        this.setState(this.state.initial_state)
+        WalletManagerStore.setState({ restoring: false, restored_wallet_name: null, restore_error: null})
     }
     
     render() {
@@ -159,7 +164,7 @@ class NewWalletName extends BackupBaseComponent {
     
     constructor() {
         super()
-        this.state = {
+        this.state = this.initial_state = {
             new_wallet: null,
             accept: false
         }
@@ -171,6 +176,11 @@ class NewWalletName extends BackupBaseComponent {
     
     componentDidMount() {
         ReactDOM.findDOMNode(this.refs.neww).focus()
+    }
+    
+    componentWillUnmount() {
+        this.setState(this.state.initial_state)
+        WalletManagerStore.setState({ new_wallet: null })
     }
     
     render() {
@@ -362,6 +372,11 @@ class DecryptBackup extends BackupBaseComponent {
     
     componentDidMount() {
         ReactDOM.findDOMNode(this.refs.pw).focus()
+    }
+    
+    componentWillUnmount() {
+        this.setState(this._getInitialState())
+        WalletManagerStore.setState({ new_wallet: null, password: null })
     }
     
     render() {
