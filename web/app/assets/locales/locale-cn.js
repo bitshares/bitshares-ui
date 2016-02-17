@@ -728,7 +728,12 @@ module.exports = {
         borrow: "借入",
         no_balance: "余额不足",
         invalid_amount: "数量错误",
-        invalid_price: "价格错误"
+        invalid_price: "价格错误",
+        my_orders: "我的订单",
+        show_bids: "显示所有买单",
+        show_asks: "显示所有卖单",
+        hide: "隐藏",
+        "short": "做空"
     },
     markets: {
         title: "交易所",
