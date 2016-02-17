@@ -643,7 +643,7 @@ class MarketsStore {
             change = noTrades ? 0 : Math.round(10000 * (close - open) / open) / 100;
         }
 
-        if (recent && recent.length) {
+        if (recent && recent.length && recent.length > 1) {
             let order = recent[1].op;
             let paysAsset, receivesAsset, isAsk = false;
 
