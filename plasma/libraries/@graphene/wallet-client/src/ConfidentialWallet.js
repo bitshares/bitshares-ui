@@ -521,7 +521,7 @@ export default class ConfidentialWallet {
         
         List(confirmation_receipts).forEach( r =>{
             if( typeof r === 'string' ) {
-                r = stealth_confirmation.fromBuffer(bs58.decode(r))
+                r = stealth_confirmation.fromBuffer(new Buffer(bs58.decode(r), "binary"))
                 r = stealth_confirmation.toObject(r)
             }
             rp.push( receipt(r) )
@@ -1070,7 +1070,7 @@ let isDigits = value => value === "numeric" || /^[0-9]+$/.test(value)
 
 function assertLogin() {
     if( ! this.wallet.private_key )
-        throw new Error("wallet is locked")
+        throw new Error("Wallet is locked")
 }
 
 var toString = data => data == null ? data :

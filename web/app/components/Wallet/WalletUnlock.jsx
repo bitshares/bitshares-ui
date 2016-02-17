@@ -21,7 +21,8 @@ export default class WalletUnlock extends Component {
     }
     
     // static propTypes = {
-    //     UNTESTED If your component depends on WalletDb state changes, then because react assembles all components in the jsx first (even when they may not render), your component may need to monitor the WalletDb store or provide a render function in the renderUnlocked property.
+    //     Untested: renderUnlocked
+    //     If your component depends on WalletDb state changes, then because react assembles all components in the jsx first (even when they may not render), your component may need to monitor the WalletDb store or provide a render function in the renderUnlocked property.
     //     renderUnlocked: React.PropTypes.func
     // }
     

@@ -74,7 +74,7 @@ class WalletDb extends BaseStore {
             "openWallet", "getWallet", "update", "isEmpty", "importKeys","getBrainKey","deleteWallet",
             "keys", "deposit_keys", "data", "prop",
             "process_transaction", "decodeMemo","getPrivateKey","getDeterministicKeys",
-            "logout","isLocked","onCreateWallet","login","changePassword",
+            "logout","isLocked","onCreateWallet","login","changePassword","verifyPassword",
             "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended",
             "loadDbData",
         )
@@ -311,6 +311,18 @@ class WalletDb extends BaseStore {
         })
     }
     
+    /**
+        @return {boolean} true if password matches
+        @throws {Error} "Wallet is locked" (if locked)
+    */
+    verifyPassword( password ) {
+        assertLogin()
+        let email = ""
+        let username = ""
+        
+        return wallet.verifyPassword(email, username, password)
+    }
+    
     login( password ) {
         
         assert(this.isLocked(), "Wallet is already unlocked")
@@ -477,7 +489,7 @@ class WalletDb extends BaseStore {
             }
         }
         catch(e) {
-            // Failed because wallet is locked
+            // Failed because Wallet is locked
             lockedWallet = true;
             // private_key = null;
             isMine = true;
@@ -627,5 +639,5 @@ function map(wallet, name) {
 
 function assertLogin() {
     if( ! wallet || ! wallet.private_key )
-        throw new Error("wallet is locked")
+        throw new Error("Wallet is locked")
 }

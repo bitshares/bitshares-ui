@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom"
 import React, {PropTypes, Component} from "react"
 import Translate from "react-translate-component"
 import Immutable from "immutable"
@@ -8,6 +9,10 @@ export default class PasswordConfirm extends Component {
     static propTypes = {
         // Called everytime a valid password is provided and matches a confirmed password
         onValid: PropTypes.func.isRequired
+    }
+    
+    componentDidMount() {
+        ReactDOM.findDOMNode(this.refs.PasswordConfirm_pw).focus()
     }
     
     constructor() {
@@ -27,15 +32,17 @@ export default class PasswordConfirm extends Component {
             "grid-content", "no-overflow", {"has-error": errors.size})}>
             <div>
                 <Translate component="label" content="wallet.password" />
-                <input type="password" id="password"
+                <input type="password" id="password" ref="PasswordConfirm_pw"
                     onChange={this.formChange.bind(this)}
-                    value={this.state.password}/>
+                    value={this.state.password}
+                    tabIndex={1}/>
             </div>
             <div>
                 <Translate component="label" content="wallet.confirm" />
                 <input type="password" id="confirm"
                     onChange={this.formChange.bind(this)}
-                    value={this.state.confirm}/>
+                    value={this.state.confirm}
+                    tabIndex={2}/>
             </div>
             <div>{errors.get("password_match") || errors.get("password_length")}</div>
             <br/>

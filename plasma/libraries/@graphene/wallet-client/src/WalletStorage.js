@@ -152,7 +152,7 @@ export default class WalletStorage {
         
         @arg {boolean} save - Add or delete remote backups or `undefined` (do neither)
         @arg {string} token - Code obtained via `wallet.api.requestCode(email)`.  Only required for the first remote backup (from any computer). 
-        @throws {Error} ["remote_url required"|"wallet is locked"]
+        @throws {Error} ["remote_url required"|"Wallet is locked"]
         @return {Promise} - only important if the wallet is communicating with the server
     */
     keepRemoteCopy( save = true, token = this.storage.state.get("remote_token") ) {
@@ -281,12 +281,32 @@ export default class WalletStorage {
     }
     
     /**
+        @return {boolean} true if password matches
+        @throws {Error} "Wallet is locked" (if locked)
+    */
+    verifyPassword( email, username, password) {
+        if( ! this.private_key ) return Promise.reject("Wallet is locked")
+        
+        req(email, "email")
+        req(username, "username")
+        req(password, "password")
+        
+        let private_key = PrivateKey.fromSeed(
+            email.trim().toLowerCase() + "\t" +
+            username.trim().toLowerCase() + "\t" +
+            password
+        )
+        
+        return private_key.toWif() === this.private_key.toWif()
+    }
+    
+    /**
         This method returns the wallet_object representing the state of the wallet.  It is only valid if the wallet has successfully logged in.  If the wallet is known to be in a consistent state (after a login for example) one may instead access the object directly `this.wallet_object` instead.
         
         @return {Promise} {Immutable} wallet_object or `undefined` if locked
     */
     getState() {
-        if( ! this.private_key ) return Promise.reject("wallet is locked")
+        if( ! this.private_key ) return Promise.reject("Wallet is locked")
         return this.notifyResolve( this.sync().then(()=> this.wallet_object ))
     }
 
@@ -357,6 +377,8 @@ export default class WalletStorage {
     }
     
     /**
+        Change password and leave the wallet unlocked with the new password.  You must be logged in to change the password.
+        
         @arg {string} email 
         @arg {string} username
         @arg {string} old_password
@@ -368,6 +390,8 @@ export default class WalletStorage {
         @return {Promise} - can be ignored unless one is interested in the remote wallet syncing.
     */
     changePassword( email, username, old_password, new_password ) {
+        
+        if( ! this.private_key ) throw new Error("Wallet is locked")
         
         if( ! this.storage.state.get("encrypted_wallet") )
             throw new Error("wallet_empty")
@@ -384,10 +408,8 @@ export default class WalletStorage {
         )
         
         // check login
-        // if( this.storage.state.get("private_encryption_pubkey") !== old_public_key.toString())
-        //     throw new Error( "invalid_password" )
-        let backup_buffer = new Buffer(this.storage.state.get("encrypted_wallet"), 'base64')
-        decrypt(backup_buffer, old_private_key)
+        if(old_private_key.toWif() !== this.private_key.toWif())
+            throw new Error("invalid_password")
         
         let old_public_key = old_private_key.toPublicKey()
         let original_local_hash = this.localHash()
@@ -422,6 +444,7 @@ export default class WalletStorage {
                 this.notify = true
                 
                 if( this.api == null || remote_copy !== true ) {
+                    this.private_key = new_private_key // unlock
                     resolve( this.notifyResolve() )
                     return
                 }
@@ -449,6 +472,7 @@ export default class WalletStorage {
                     })
                     this.notify = true
                 })
+                this.private_key = new_private_key // unlock
                 resolve( this.notifyResolve( changePromise ))
             }).catch( error => reject(error))
         })
@@ -716,7 +740,7 @@ function forcePush(has_server_wallet, private_key) {
 function updateWallet() {
     return new Promise( resolve => {
         if( ! this.private_key )
-            throw new Error("wallet is locked")
+            throw new Error("Wallet is locked")
         
         let public_key = this.private_key.toPublicKey()
         let remote_copy = this.storage.state.get("remote_copy")

@@ -40,7 +40,7 @@ import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "components/Layout/MobileMenu";
-import LoadingIndicator from "./components/LoadingIndicator";
+import LoadingIndicator from "components/LoadingIndicator";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal"
 import NotificationSystem from "react-notification-system";
@@ -221,7 +221,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
         
         return iDB.init_instance( idb ).init_promise.then(() => {
             
-            console.log("db init done");
+            // console.log("db init done");
             
             return Promise.resolve()
             .then(()=> WalletDb.loadDbData())

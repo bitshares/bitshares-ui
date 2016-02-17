@@ -51,7 +51,7 @@ export function decrypt(backup_buffer, private_key) {
     try {
         
         backup_buffer = Aes.decrypt_with_checksum(
-            private_key, public_key, null/*nonce*/, backup_buffer)
+            private_key, public_key, undefined/*nonce*/, backup_buffer)
         
     } catch(error) {
         if(/Invalid key/.test(error.toString()))

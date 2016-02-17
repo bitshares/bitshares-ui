@@ -46,6 +46,8 @@ class Aes {
     */
     static decrypt_with_checksum(private_key, public_key, nonce, message) {
         
+        // Warning: Do not put `nonce = ""` in the arguments, in es6 this will not convert "null" into an emtpy string
+        
         if( nonce == null ) // null or undefined
             nonce = ""
         
@@ -57,7 +59,7 @@ class Aes {
         
         // D E B U G
         // console.log('decrypt_with_checksum', {
-        //     priv_to_pub: private_key.toPublicKey().toPublicKeyString(),
+        //     priv_to_pub: private_key.toPublicKey().toString(),
         //     pub: public_key.toPublicKeyString(),
         //     nonce: nonce,
         //     message: message.length,
@@ -98,6 +100,8 @@ class Aes {
     */
     static encrypt_with_checksum(private_key, public_key, nonce, message) {
         
+        // Warning: Do not put `nonce = ""` in the arguments, in es6 this will not convert "null" into an emtpy string
+        
         if( nonce == null) // null or undefined
             nonce = ""
         
@@ -109,11 +113,11 @@ class Aes {
         
         // D E B U G
         // console.log('encrypt_with_checksum', {
-        //     priv_to_pub: private_key.toPublicKey().toPublicKeyString()
+        //     priv_to_pub: private_key.toPublicKey().toString()
         //     pub: public_key.toPublicKeyString()
         //     nonce: nonce
-        //     message: message
-        //     S: S
+        //     message: message.length
+        //     S: S.toString('hex')
         // })
         
         var aes = Aes.fromSeed(Buffer.concat([
