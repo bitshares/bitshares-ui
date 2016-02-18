@@ -134,7 +134,22 @@
             advanced: "Advanced",
             need_asset: "At least one of the two assets must be %(name)s",
             perm_warning: "WARNING: Permissions may only be disabled, once disabled they may not be reactivated!!",
-            issued_assets: "Issued Assets"
+            issued_assets: "Issued Assets",
+            short: "Short name (max 32 characters)",
+            condition: "Condition (max 60 characters)",
+            expiry: "Market resolution date",
+            decimals: "Number of decimal points",
+            mpa: "SmartCoin",
+            pm: "Binary prediction market",
+            bitasset_opts: "SmartCoin options",
+            feed_lifetime_sec: "Feed lifetime in minutes",
+            minimum_feeds: "Minimum number of feeds",
+            force_settlement_delay_sec: "Delay for forced settlements (minutes)",
+            force_settlement_offset_percent: "Percent offset of forced settlements",
+            maximum_force_settlement_volume: "Max force settle volume (percent)",
+            backing: "Short backing asset",
+            error_precision: "That asset does not have the same precision as %(asset)s",
+            error_invalid: "That asset may not be used"
         },
         connections: {
             known: "Known by",
@@ -442,7 +457,7 @@
             membership_annual_fee : "Annual Membership",
             membership_lifetime_fee : "Lifetime Membership",
             symbol3 : "Symbols with 3 Characters",
-            symbol4 : "Sybmols with 4 Characters",
+            symbol4 : "Symbols with 4 Characters",
             long_symbol : "Longer Symbols"
         },
         whitelist_states: {
@@ -627,7 +642,7 @@
         order_depth: "Market Depth",
         history: "All History",
         my_history: "My History",
-        balance: "Your balance",
+        balance: "Balance",
         lowest_ask: "Lowest ask",
         highest_bid: "Highest bid",
         total: "Total",
@@ -654,7 +669,7 @@
         market_name: "My Markets",
         quote_supply: "Quote supply",
         base_supply: "Base supply",
-        more: "All markets",
+        more: "Find markets",
         volume_24: "24hr Volume",
         change: "Change",
         confirm: "Your order is %(diff)s% away from the current price, are you sure?",
@@ -669,6 +684,7 @@
         index: "Index",
         my_bids: "My bids",
         my_asks: "My asks",
+        my_orders: "My orders",
         settle_orders: "Settle orders",
         asks: "Asks",
         bids: "Bids",
@@ -677,7 +693,11 @@
         borrow: "Borrow",
         no_balance: "Insufficient balance",
         invalid_amount: "Invalid amount",
-        invalid_price: "Invalid price"
+        invalid_price: "Invalid price",
+        show_bids: "Show all bids",
+        show_asks: "Show all asks",
+        hide: "Hide",
+        short: "Short"
     },
     fees: {
      title: "Fee Schedule"
@@ -796,6 +816,12 @@
         title: "Request settlement of %(asset)s",
         amount: "Amount to settle",
         submit: "Settle asset"
+      },
+      reserve: {
+        title: "Reserve (burn) asset",
+        amount: "Amount to reserve",
+        from: "Account to reserve from",
+        submit: "Reserve"
       },
       ok: "OK"
     },

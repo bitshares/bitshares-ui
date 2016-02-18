@@ -61,7 +61,7 @@ class AccountOverview extends React.Component {
             
             let assetInfoLinks = asset && <ul>
                 <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
-                <li><a href={`#/market/${asset.get("symbol")}_${core_asset?core_asset.get("symbol"):"BTS"}`}><Translate content="exchange.market"/></a></li>
+                {asset.get("id") !== "1.3.0" ? <li><a href={`#/market/${asset.get("symbol")}_${core_asset?core_asset.get("symbol"):"BTS"}`}><Translate content="exchange.market"/></a></li> : null}
                 {isBitAsset && <li><a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a></li>}
             </ul>;
 
@@ -139,7 +139,7 @@ class AccountOverview extends React.Component {
         }
 
         let totalBalance = includedBalancesList.size ? <TotalBalanceValue balances={includedBalancesList}/> : null;
-        console.log("account:", account.toJS());
+
         return (
             <div className="grid-content">
                 <div className="content-block small-12">

@@ -104,7 +104,7 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        AccountActions.setCurrentAccount(account_name);
+        AccountActions.setCurrentAccount.defer(account_name);
     }
 
     render() {

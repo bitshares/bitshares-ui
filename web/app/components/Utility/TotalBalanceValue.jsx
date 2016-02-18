@@ -121,9 +121,12 @@ class TotalValue extends React.Component {
             fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
         }
 
-
-
-        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromID === "1.3.0" ? fromAsset : null, toStats && toStats.close ? toStats.close : toID === "1.3.0" ? toAsset : null, fromID, toID);
+        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close :
+                                       fromID === "1.3.0" || fromAsset.has("bitasset") ? fromAsset : null,
+                                       toStats && toStats.close ? toStats.close :
+                                       (toID === "1.3.0" || toAsset.has("bitasset")) ? toAsset : null,
+                                       fromID,
+                                       toID);
 
         return price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
     }
@@ -141,9 +144,12 @@ class TotalValue extends React.Component {
     render() {
         let {fromAssets, toAsset, balances, marketStats, collateral, debt, openOrders, inHeader} = this.props;
         let coreAsset = ChainStore.getAsset("1.3.0");
+        
         if (!coreAsset || !toAsset) {
             return null;
         }
+
+
         let assets = {};
         fromAssets.forEach(asset => {
             if (asset) {
@@ -198,8 +204,9 @@ class TotalValue extends React.Component {
         for (let asset in assetValues) {
             if (assets[asset] && assetValues[asset]) {
                 let symbol = assets[asset].get("symbol");
-                let amount = utils.format_asset(assetValues[asset], toAsset );
-                totalsTip = totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount}</td></tr>`;
+                let amount = utils.get_asset_amount(assetValues[asset], toAsset);
+                amount = utils.format_number(amount, Math.abs(amount) > 100 ? 0 : 2);
+                totalsTip = totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount} ${toAsset.get("symbol")}</td></tr>`;
             }
         }
 
@@ -207,11 +214,11 @@ class TotalValue extends React.Component {
         
         // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
         if (!inHeader) {
-            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>;
+            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("precision")}/>;
         } else {
             return (
                 <div data-tip={totalsTip} data-place="bottom" data-type="light" html data-html={true} >
-                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")}/>
+                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("precision")}/>
                 </div>
 
             );

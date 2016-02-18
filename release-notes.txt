@@ -1,4 +1,38 @@
 ---------------------------------------------------------------------
+Release 2.0.160208
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Fee asset selection when trading on the exchange
+- Allow funding of fee pool by accounts other than the issuer
+- Enable fee claim operation
+- OpenLedger gateway support for OPEN.ETH
+
+BUG FIXES:
+- Add a react key to gateway assets to prevent rendering the wrong data when swtiching tabs in the deposit/withdraw screen
+- Include all orders when show all is active fix #727
+- Hide Issue Asset button for MPAs
+
+---------------------------------------------------------------------
+Release 2.0.160203
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Support address authorities in account permissions #660
+- Ability to permanently ignore/unignore own accounts #697
+- Support SmartCoins/UIAs/Prediction Market in Assets Explorer
+- Support SmartCoins and Prediction Market Assets on Assets Creation page
+- Added show all button to orderbook
+- Better prediction markets support: one-click shorting, enforce market direction, set depth
+
+BUG FIXES:
+- Fix OpenLedger/ccedk's gateway mistakely labeled as a bridge #696
+- Fix pubkey lookup method #660
+- Fix Exchange scrolling issues
+- Fix Orderbook scroll bars appearing when not necessary
+- Fix some fee schedule bugs
+
+---------------------------------------------------------------------
 Release 2.0.160127
 ---------------------------------------------------------------------
 

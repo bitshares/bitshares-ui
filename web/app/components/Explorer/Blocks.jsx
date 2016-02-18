@@ -18,6 +18,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Icon from "../Icon/Icon";
 import Ps from "perfect-scrollbar";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 require("../Blockchain/json-inspector.scss");
 
@@ -54,16 +55,20 @@ class Blocks extends React.Component {
         globalObject: ChainTypes.ChainObject.isRequired,
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired
-    }
+    };
 
     static defaultProps = {
         globalObject: "2.0.0",
         dynGlobalObject: "2.1.0",
         coreAsset: "1.3.0"
-    }
+    };
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            animateEnter: false
+        };
     }
 
     _getBlock(height, maxBlock) {
@@ -77,6 +82,10 @@ class Blocks extends React.Component {
 
         if (nextProps.latestBlocks.size === 0) {
             return this._getInitialBlocks();
+        } else if (!this.state.animateEnter) {
+            this.setState({
+                animateEnter: true
+            });
         }
 
         let maxBlock = nextProps.dynGlobalObject.get("head_block_number");
@@ -154,7 +163,6 @@ class Blocks extends React.Component {
             })
             .take(20)
             .map((block) => {
-
                 return (
                         <tr key={block.id}>
                             <td><Link to={`/block/${block.id}`}>#{utils.format_number(block.id, 0)}</Link></td>
@@ -167,7 +175,9 @@ class Blocks extends React.Component {
                         </tr>
                     );
             }).toArray();
+
             let trxIndex = 0;
+            
             transactions = latestTransactions.take(20)
             .map((trx) => {
 
@@ -180,7 +190,7 @@ class Blocks extends React.Component {
                             result={trx.operation_results[opIndex++]}
                             block={trx.block_num}
                             hideFee={true}
-                            hideOpLabel={true}
+                            hideOpLabel={false}
                             current={"1.2.0"}
                         />
                     );
@@ -308,9 +318,10 @@ class Blocks extends React.Component {
                 </div>
 
             {/* Fourth row: transactions and blocks */ }
-                <div className="grid-block no-overflow" style={{minHeight: "400px"}}>
-                    <div className="grid-block small-12 medium-6 vertical no-overflow">
-                        <div className="grid-content" ref="operations">
+                <div className="grid-block no-overflow">
+                    
+                    <div className="grid-block small-12 medium-6 vertical no-overflow" style={{paddingBottom: 0}}>
+                        <div className="grid-block vertical no-overflow">
                             <h3><Translate content="account.recent" /> </h3>
                             <table className="table">
                                 <thead>
@@ -318,15 +329,18 @@ class Blocks extends React.Component {
                                         <th><Translate content="account.votes.info" /></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {transactions}
-                                </tbody>
                             </table>
+                            <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="operations">
+                                <table className="table">
+                                    {transactions}
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <div className="grid-block medium-6 show-for-medium vertical no-overflow">
-                        <div className="grid-content" ref="blocks">
+                    <div className="grid-block medium-6 show-for-medium vertical no-overflow" style={{paddingBottom: 0}}>
+                        <div className="grid-block vertical no-overflow">
                             <h3><Translate component="span" content="explorer.blocks.recent" /></h3>
+                            <div className="grid-block vertical" style={{maxHeight: "438px", overflow: "hidden", }} ref="blocks">
                             <table className="table">
                                 <thead>
                                     <tr>
@@ -337,10 +351,14 @@ class Blocks extends React.Component {
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <TransitionWrapper
+                                    component="tbody"
+                                    transitionName="newrow"
+                                >
                                     {blocks}
-                                </tbody>
+                                </TransitionWrapper>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>

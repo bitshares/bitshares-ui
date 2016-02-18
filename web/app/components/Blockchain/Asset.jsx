@@ -157,7 +157,9 @@ class Asset extends React.Component {
 
 
         // Add <a to any links included in the description
-        let desc = asset.options.description;
+        
+        let description = assetUtils.parseDescription(asset.options.description);
+        let desc = description.short_name ? description.short_name : description.main;
         let urlTest = /(http?):\/\/(www\.)?[a-z0-9\.:].*?(?=\s)/g;
 
         // Regexp needs a whitespace after a url, so add one to make sure
@@ -238,6 +240,10 @@ class Asset extends React.Component {
                             <td> <Translate content="explorer.asset.summary.issuer"/> </td>
                             <td> <LinkToAccountById account={asset.issuer}/> </td>
                         </tr>
+                        <tr>
+                            <td> <Translate content="explorer.assets.precision"/> </td>
+                            <td> {asset.precision} </td>
+                        </tr>
                         {currentSupply}
                         {stealthSupply}
                         {marketFee}
@@ -255,7 +261,6 @@ class Asset extends React.Component {
     renderPriceFeed(asset) {
         var title = (<Translate content="explorer.asset.price_feed.title"/>);
         var bitAsset = asset.bitasset;
-
         if (!('current_feed' in bitAsset))
             return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
@@ -266,6 +271,7 @@ class Asset extends React.Component {
 
                 <table className="table key-value-table table-hover"  style={{ padding:"1.2rem"}}>
                     <tbody>
+
                         <tr>
                             <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
                             <td> {this.formattedPrice(currentFeed.settlement_price)} </td>
@@ -386,7 +392,7 @@ class Asset extends React.Component {
     renderPriceFeedData(asset) {
 
         var bitAsset = asset.bitasset;
-        if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0) {
+        if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0 || bitAsset.is_prediction_market) {
             return '';
         }
 

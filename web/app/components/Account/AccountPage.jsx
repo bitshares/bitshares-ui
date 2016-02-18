@@ -22,7 +22,7 @@ class AccountPage extends React.Component {
 
     componentDidMount() {
         if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
-            AccountActions.setCurrentAccount(this.props.account.get("name"));
+            AccountActions.setCurrentAccount.defer(this.props.account.get("name"));
         }
     }
 

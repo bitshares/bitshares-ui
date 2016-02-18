@@ -20,23 +20,40 @@ class DepthHighChart extends React.Component {
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
-            nextProps.showCallLimit !== this.props.showCallLimit
+            nextProps.showCallLimit !== this.props.showCallLimit ||
+            nextProps.hasPrediction !== this.props.hasPrediction
         );
     }
 
-    constructor() {
-        super();
-        this.state = {offsetHeight: null};
+    // constructor() {
+    //     super();
+    //     this.state = {offsetHeight: null};
+    // }
+    
+    componentDidMount() {
+        this.reflowChart(500);
     }
 
-    componentWillReceiveProps() {
-        let height = ReactDOM.findDOMNode(this).offsetHeight;
-        this.setState({offsetHeight: height - 10});
+    componentWillReceiveProps(nextProps) {
+        // let height = ReactDOM.findDOMNode(this).offsetHeight;
+        // this.setState({offsetHeight: height - 10});
+        // 
+        if (this.refs.depthChart && nextProps.verticalOrderbook !== this.props.verticalOrderbook) {
+            this.reflowChart(100);
+        }
+    }
+
+    reflowChart(timeout) {
+        setTimeout(() => {
+            if (this.refs.depthChart) {
+                this.refs.depthChart.chart.reflow();
+            }
+        }, timeout);   
     }
 
 
     render() {
-        console.log("depth chart render");
+
         let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
@@ -180,12 +197,19 @@ class DepthHighChart extends React.Component {
         if (flatBids.length > 0 && flatAsks.length > 0) {
             let middleValue = (flatAsks[0][0] + flatBids[flatBids.length - 1][0]) / 2;
             let adjustedSpread = spread * power;
-            config.xAxis.min = middleValue * 0.45;
-            config.xAxis.max = middleValue * 1.55;
+            
+            config.xAxis.min = middleValue * (this.props.noFrame ? 0.8 : 0.50);
+            config.xAxis.max = middleValue * (this.props.noFrame ? 1.2 : 1.50);
+         
             if (adjustedSpread > 0 && adjustedSpread > middleValue) {
                 config.xAxis.min = Math.max(0, middleValue - 1.5 * adjustedSpread);
                 config.xAxis.max = middleValue + 1.5 * adjustedSpread;
             }
+        }
+
+        if (this.props.hasPrediction) {
+            config.xAxis.min = -0.05 * power;
+            config.xAxis.max = 1.05 * power;
         }
 
         // Add plotlines if defined
@@ -219,23 +243,23 @@ class DepthHighChart extends React.Component {
             });
         }
 
-        if (this.props.SQP) {
-            config.xAxis.plotLines.push({
-                color: "#B6B6B6",
-                id: "plot_line",
-                dashStyle: "longdash",
-                value: this.props.SQP * power,
-                label: {
-                    text: counterpart.translate("exchange.squeeze"),
-                    style: {
-                        color: "#DADADA",
-                        fontWeight: "bold"
-                    }
-                },
-                width: 2,
-                zIndex: 5
-            });
-        }
+        // if (this.props.SQP) {
+        //     config.xAxis.plotLines.push({
+        //         color: "#B6B6B6",
+        //         id: "plot_line",
+        //         dashStyle: "longdash",
+        //         value: this.props.SQP * power,
+        //         label: {
+        //             text: counterpart.translate("exchange.squeeze"),
+        //             style: {
+        //                 color: "#DADADA",
+        //                 fontWeight: "bold"
+        //             }
+        //         },
+        //         width: 2,
+        //         zIndex: 5
+        //     });
+        // }
 
 
         if (this.props.settlementPrice) {
@@ -327,11 +351,11 @@ class DepthHighChart extends React.Component {
 
         
 
-        // Fix the height if defined, if not use offsetHeight
+        // Fix the height if defined, else use 400px;
         if (this.props.height) {
             config.chart.height = this.props.height;
-        } else if (this.state.offsetHeight) {
-            config.chart.height = this.state.offsetHeight;
+        } else {
+            config.chart.height = "400px";
         }
 
         // Add onClick event listener if defined
@@ -341,14 +365,29 @@ class DepthHighChart extends React.Component {
             };
         }
 
-        return (
-            <div className="grid-content no-overflow middle-content">
-                {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
-                <p className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</p>
-                <p className="ask-total">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</p>
-                {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}
-            </div>
-        );
+        if (this.props.noFrame) {
+            return (
+                <div className="grid-content no-overflow no-padding">
+                        {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
+                        {this.props.noText ? null : <p className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</p>}
+                        {this.props.noText ? null : <p className="ask-total">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</p>}
+                        {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}
+                </div>
+            );
+        } else {
+            return (
+                <div className="grid-content no-overflow no-padding middle-content">
+                    <div className="exchange-bordered" style={{margin: 10}}>
+                        <div className="exchange-content-header">
+                            {this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</span>}
+                            {this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</span>}                        
+                        </div>
+                        {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
+                        {flatBids || flatAsks || flatCalls ? <Highstock ref="depthChart" config={config}/> : null}
+                    </div>
+                </div>
+            );
+        }
     }
 }
 
@@ -357,7 +396,9 @@ DepthHighChart.defaultProps = {
     flat_asks: [],
     orders: {},
     quoteSymbol: "",
-    baseSymbol: ""
+    baseSymbol: "",
+    noText: false,
+    noFrame: true
 };
 
 DepthHighChart.propTypes = {
