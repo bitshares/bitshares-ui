@@ -32,7 +32,7 @@ export default class WalletWebSocket {
             }
             // Warning, onerror callback is over-written on each request.  Be cautious to dulicate some logic here.
             this.web_socket.onerror = evt => {
-                console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt.toString())
+                console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt)
                 if(this.update_rpc_connection_status_callback)
                     this.update_rpc_connection_status_callback("error");
                 
@@ -144,9 +144,13 @@ export default class WalletWebSocket {
         @private
     */
     request(id, method, params) {
-        if(SOCKET_DEBUG)
-            console.log("[WalletWebSocket:"+this.instance+"] ----- call ---- >", id, method, params);
-        
+        if(SOCKET_DEBUG) {
+            if(this.last_instance != this.instance){
+                this.last_instance = this.instance
+                console.log()
+            }
+            console.log("WalletWebSocket("+this.instance+") ----- call "+id+" ---- >", method, "\t", JSON.stringify(params));
+        }
         return this.connect_promise.then(()=> {
             return new Promise( (resolve, reject) => {
                 let time = new Date()
@@ -168,9 +172,13 @@ export default class WalletWebSocket {
 
     /** @private */
     listener(response) {
-        if(SOCKET_DEBUG)
-            console.log("[WalletWebSocket:"+this.instance+"] <--- reply ---- <", response.id, response);
-        
+        if(SOCKET_DEBUG) {
+            if(this.last_instance != this.instance){
+                this.last_instance = this.instance
+                console.log()
+            }
+            console.log("WalletWebSocket("+this.instance+") <--- reply "+(response.id||" ")+" ---- <", JSON.stringify(response));
+        }
         let sub = false,
             callback = null;
 

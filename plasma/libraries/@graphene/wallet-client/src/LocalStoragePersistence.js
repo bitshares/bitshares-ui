@@ -61,6 +61,7 @@ export default class LocalStoragePersistence {
     clear() {
         if( this.saveToDisk ) localStorage.removeItem(this.STATE)
         this.state = Map()
+        return this
     }
     
 }

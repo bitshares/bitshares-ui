@@ -40,13 +40,14 @@ describe('Confidential wallet', () => {
         .then(()=>{
         
             let public_key = PrivateKey.fromSeed("").toPublicKey().toString()
+            let public_key2 = PrivateKey.fromSeed("2").toPublicKey().toString()
             
             assert( cw.setKeyLabel( public_key, "label"), "add key and label")
             assert.equal( cw.getKeyLabel(public_key), "label" )
             
             assert( cw.setKeyLabel( public_key, "label2" ), "rename label")
             assert.equal( cw.getKeyLabel(public_key), "label2" )
-            assert( ! cw.setKeyLabel( "public_key2", "label2"), "label already assigned")
+            assert( ! cw.setKeyLabel( public_key2, "label2"), "label already assigned")
             
             assert.equal( cw.getKeyLabel(public_key), "label2", "fetch label")
             assert.equal( cw.getPublicKey("label2"), public_key, "fetch key")

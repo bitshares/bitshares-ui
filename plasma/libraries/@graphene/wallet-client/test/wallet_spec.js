@@ -12,38 +12,60 @@ const chain_id = "abcdef"
 const username = "username"
 const password = "password"
 const email = "alice_spec@example.bitbucket"
-const code = createToken(hash.sha1(email, 'binary'))
 const remote_url = process.env.npm_package_config_remote_url
-const storage = new LocalStoragePersistence("wallet_spec", false/*save*/)
+
+const storage = ()=> new LocalStoragePersistence("wallet_spec", false/*save*/).clear()
+const code = (e = email) => createToken(hash.sha1(e, 'binary'))
+
+const localWallet = ()=> {
+    let storage = new LocalStoragePersistence("wallet_spec", false/*save*/)
+    storage.clear() // Clearing memory (ignore disk contents)
+    return new WalletStorage(storage)
+}
+const remoteWallet = (e = email, remote_copy = true)=> {
+    let wallet
+    return Promise.resolve()
+    .then(()=> wallet = localWallet())
+    .then(()=> wallet.useBackupServer(remote_url))
+    .then(()=> wallet.login(e, username, password, chain_id) )
+    .then(()=> wallet.keepRemoteCopy(true, remote_copy ? code(e) : undefined) )
+    .then(()=> wallet )
+}
 
 describe('Single wallet', () => {
     
-    var wallet
+    let wallet
 
-    function initWallet() {
-        storage.clear()
-        wallet = new WalletStorage(storage)
-    }
-    
     // Ensure there is no wallet on the server
-    beforeEach(()=>{
-        return remoteWallet(email, false/*create*/).then( wallet1 => {
-            return wallet1.keepRemoteCopy(false) // delete
-                .then(()=> wallet1.logout())
-                .then(()=> initWallet())
-                // .catch( error=>{ console.error("wallet_spec\tbeforeEach", error.stack); throw error })
-        })
+    beforeEach(()=> Promise.resolve()
+        .then(()=> wallet = localWallet())
+        .then(()=> wallet.useBackupServer(remote_url))
+        .then(()=> wallet.keepRemoteCopy(false))//delete
+        .then(()=> wallet.login(email, username, password, chain_id) )//delete
+        .then(()=> wallet.logout())
+        .then(()=> wallet = localWallet())
+        // .catch( error=>{ console.error("wallet_spec\tbeforeEach", error.stack); throw error })
+    )
+    
+
+    afterEach(()=> wallet ? wallet.logout() : null)
+
+    it("login then sync", ()=> {
+        
+        return Promise.resolve()
+        .then(()=> wallet.useBackupServer(remote_url) )
+        .then(()=> wallet.login(email, username, password, chain_id) )
+        .then(()=> wallet.keepRemoteCopy(true, code()) )
+        .then(()=> assert(wallet.storage.state.has("remote_hash"), "remote_hash") )
     })
-
-    // afterEach(()=> wallet ? wallet.logout():null)
-
+    
     it('server', ()=> {
         
         wallet.useBackupServer(remote_url)
-        wallet.keepRemoteCopy(true, code)
         
         return Promise.resolve() // create a wallet
         .then( ()=> wallet.login(email, username, password, chain_id))
+        .then( ()=> wallet.keepRemoteCopy(true, code()))
         .then( ()=> wallet.setState({ test_wallet: 'secret'}))
         
         // Wallet is in memory
@@ -106,10 +128,10 @@ describe('Single wallet', () => {
         
         this.timeout(5000)
         wallet.useBackupServer(remote_url)
-        wallet.keepRemoteCopy(true, code)
         
         return Promise.resolve()
         .then( ()=> wallet.login(email, username, password, chain_id) )
+        .then( ()=> wallet.keepRemoteCopy(true, code()) )
         
         .then( ()=>{ assert.throws(()=> wallet.changePassword(email, username, "invalid_"+password, "new_"+password), /invalid_password/, "invalid_password") })
         
@@ -123,7 +145,7 @@ describe('Single wallet', () => {
         .then( ()=> wallet.logout() )
         .then( ()=>{
             // reset the wallet so it will download the wallet (original remote_hash must match)
-            initWallet()
+            wallet = localWallet()
             wallet.useBackupServer(remote_url)
         })
         .then( ()=> wallet.login(email, username, password, chain_id) )
@@ -137,17 +159,16 @@ describe('Single wallet', () => {
     it('server offline updates', ()=> {
         
         wallet.useBackupServer(remote_url)
-        wallet.keepRemoteCopy(true, code)
         
         let create = wallet.login(email, username, password, chain_id)
             // create the initial wallet
+            .then(()=> wallet.keepRemoteCopy(true, code()) )
             .then(()=> wallet.setState({ test_wallet: 'secret'}) )
         
         return create.then(()=>{
             
             // disconnect from the backup server
             wallet.useBackupServer(null)
-            
             
             // does not delete wallet on the server (it was disconnect above)
             wallet.keepRemoteCopy(false)
@@ -187,51 +208,74 @@ describe('Multi wallet', () => {
         })
     })
     
+    it('synchronizes', function() {
+        this.timeout(4000)
+        let w1, w2
+        return Promise.resolve()
+        .then( ()=> remoteWallet()).then(w => w1 = w)
+        .then( ()=> remoteWallet()).then(w => w2 = w)
+        
+        .then( ()=> w1.setState({ test_wallet: "1" }) )
+        .then( ()=> w2.getState()).then(w => assert.equal(w.get("test_wallet"), "1") )
+        .then( ()=> w1.getState()).then(w => assert.equal(w.get("test_wallet"), "1") )
+        .then( ()=> assert.deepEqual(w1.localHash().toString("base64"), w2.localHash().toString("base64")) )
+        
+        .then( ()=> w2.setState({ test_wallet: "2" }) )
+        // .then( ()=> w1.getState()).then(w => console.log(w.toJS()) )
+        .then( ()=> w1.getState()).then(w => assert.equal(w.get("test_wallet"), "2") )
+        
+    })
+    
     it('server conflict', function() {
         this.timeout(4000)
-        return remoteWallet().then( wallet => {
-            return wallet.setState({ test_wallet: ''})
+        return remoteWallet().then( wallet1 => {
+            return wallet1.setState({ test_wallet: ''})
                 // create a second wallet client (same email, same server wallet)
                 .then(()=> remoteWallet()).then( wallet2 => {
                 
                 // bring both clients offline
-                wallet.useBackupServer(null)
+                wallet1.useBackupServer(null)
                 wallet2.useBackupServer(null)
                 
-                return wallet.setState({ test_wallet: 'secret' })
+                return wallet1.setState({ test_wallet: 'secret' })
                     .then(()=> wallet2.setState({ test_wallet: 'secret2' }))
+                    .then(()=> wallet1.useBackupServer(remote_url))
+                    .then(()=> wallet2.useBackupServer(remote_url))
                     .then(()=> {
                     
                     // bring clients online
-                    wallet.useBackupServer(remote_url)
+                    wallet1.useBackupServer(remote_url)
                     wallet2.useBackupServer(remote_url)
                     
                     // 1st one to update wins
-                    return wallet.getState().then( wallet_object => {
+                    return wallet1.getState().then( wallet_object => {
                         
                         // Be sure the wallet synced up
                         assert.equal(wallet_object.get("test_wallet"), 'secret')
-                        assert.equal(wallet.wallet_object.get("test_wallet"), 'secret')
+                        assert.equal(wallet1.wallet_object.get("test_wallet"), 'secret')
                         
                         // Cause a conflict updating 2nd client
                         return wallet2.getState()
-                            .then( ()=> assert(false, '2nd client should not update'))
-                            .catch( error => {
-                                
-                                assert.equal(wallet2.remote_status, "Conflict")
-                                assert(/^Conflict/.test(error), 'Expecting conflict ' + error)
-                                
-                            })
+                        .then( ()=> assert(false, '2nd client should not update'))
+                        .catch( error => {
+                            
+                            assert.equal(wallet2.remote_status, "Conflict")
+                            assert(/Conflict/.test(error.toString()), 'Expecting conflict ' + error)
+                            // still the same before the conflict
+                            assert.equal(wallet2.wallet_object.get("test_wallet"), 'secret2')
+                            
+                        })
                         
                     })
                 }).then(()=> wallet2.logout())
-            }).then(()=> wallet.logout())
+            }).then(()=> wallet1.logout())
         })
     })
     
+    
     /** Make updates to the same wallet back and forth across websockets (represents two devices). */
-    it('server subscription update', ()=>{
-        
+    it('server subscription update', function() {
+        this.timeout(4000)
         return new Promise( (resolve, reject) => {
             
             // Create two remote wallets, same wallet but different connections (different devices).
@@ -291,32 +335,15 @@ describe('Multi wallet', () => {
             })
             main.catch( error => reject(error))
         })
-        
     })
-    
 })
 
 let assertSubscribe = (expected, label) => wallet =>{
     // console.log("assertWalletEqual",label, expected)
     assert(wallet, 'wallet ' + label)
     assert(wallet.wallet_object, 'wallet_object ' + label)
-    assert.equal(wallet.wallet_object.get("test_wallet"), expected, label)
-}
-
-function newWallet() {
-    let storage = new LocalStoragePersistence("wallet_spec", false/*save*/)
-    storage.clear() // Clearing memory (ignore disk contents)
-    return new WalletStorage(storage)
-}
-
-/** @return {Promise} resolves after remote wallet login */
-function remoteWallet(emailParam = email, create = true) {
-    let code = createToken(hash.sha1(emailParam, 'binary'))
-    let wallet = newWallet()
-    wallet.useBackupServer(remote_url)
-    wallet.keepRemoteCopy(true, create ? code : null)
-    return wallet.login(emailParam, username, password, chain_id)
-        .then(()=> wallet )
+    let got = wallet.wallet_object.get("test_wallet")
+    assert.equal(got, expected, `${label}: expected "${expected}", got "${got}"`)
 }
 
 function assertNoServerWallet(walletParam) {

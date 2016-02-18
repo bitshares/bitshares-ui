@@ -389,7 +389,7 @@ class WalletDb extends BaseStore {
         var brainkey = this.getBrainKey()
         var sequence = wallet.wallet_object.get("brainkey_sequence") || 0
         
-        // Skip ahead in the sequence if any keys are found in use
+        // Skip ahead in the sequence if any keys are found in use.
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
         this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead||0) + 1)
         
@@ -406,7 +406,7 @@ class WalletDb extends BaseStore {
             var next_key = ChainStore.getAccountRefsOfKey( pubkey )
             
             if(next_key && next_key.size) {
-                console.log("WARN: Private key sequence " + i + " in-use. " + 
+                console.log("WalletDb\tPrivate key sequence " + i + " in-use. " + 
                     "I am saving the private key and will go onto the next one.")
                 keys.push({ private_key, brainkey_sequence: i })
             }
