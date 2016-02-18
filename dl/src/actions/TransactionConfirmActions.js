@@ -10,6 +10,8 @@ class TransactionConfirmActions {
     broadcast(transaction) {
         this.dispatch();
 
+        if (transaction.type === "blind") return transaction.broadcast();
+
         let broadcast_timeout = setTimeout(() => {
             this.actions.error("Your transaction has expired without being confirmed, please try again later.");
         }, chain_config.expire_in_secs * 2000);
@@ -42,6 +44,10 @@ class TransactionConfirmActions {
 
     error(msg) {
         this.dispatch({error: msg});
+    }
+
+    confirmBlind(transaction) {
+        this.dispatch({transaction});
     }
 
 }

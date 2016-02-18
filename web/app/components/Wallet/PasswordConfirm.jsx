@@ -35,7 +35,8 @@ export default class PasswordConfirm extends Component {
                 <input type="password" id="password" ref="PasswordConfirm_pw"
                     onChange={this.formChange.bind(this)}
                     value={this.state.password}
-                    tabIndex={1}/>
+                    tabIndex={1}
+                    autoComplete="off" />
             </div>
             <div>
                 <Translate component="label" content="wallet.confirm" />

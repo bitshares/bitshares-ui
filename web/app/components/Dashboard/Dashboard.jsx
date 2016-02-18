@@ -37,23 +37,19 @@ class Dashboard extends React.Component {
 
 
     componentDidMount() {
-        let c = ReactDOM.findDOMNode(this.refs.container);
-        ps.initialize(c);
-        let t = ReactDOM.findDOMNode(this.refs.transactions);
-        ps.initialize(t);
+        //let c = ReactDOM.findDOMNode(this.refs.container);
+        //ps.initialize(c);
+        //let t = ReactDOM.findDOMNode(this.refs.transactions);
+        //ps.initialize(t);
+        this._setWidth();
+        window.addEventListener("resize", this._setWidth, false);
     }
 
     componentDidUpdate() {
-        let c = ReactDOM.findDOMNode(this.refs.container);
-        ps.update(c);
-        let t = ReactDOM.findDOMNode(this.refs.transactions);
-        ps.update(t);        
-    }
-
-    componentDidMount() {
-        this._setWidth();
-
-        window.addEventListener("resize", this._setWidth, false);
+        //let c = ReactDOM.findDOMNode(this.refs.container);
+        //ps.update(c);
+        //let t = ReactDOM.findDOMNode(this.refs.transactions);
+        //ps.update(t);
     }
 
     componentWillUnmount() {

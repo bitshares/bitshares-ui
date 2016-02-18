@@ -10,6 +10,7 @@ import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import { ChainStore } from "@graphene/chain";
@@ -142,53 +143,90 @@ class Transfer extends React.Component {
         this.setState({ propose_account });
     }
 
+    isBlindTransfer(from, to) {
+        let account_type = AccountStore.getAccountType(from);
+        if (account_type === "Private Account" || account_type == "Private Contact") return true;
+        account_type = AccountStore.getAccountType(to);
+        return account_type === "Private Account" || account_type == "Private Contact";
+    }
+
+    blindTransfer(amount, asset) {
+        const from_account_type = AccountStore.getAccountType(this.state.from_name);
+        const to_account_type = AccountStore.getAccountType(this.state.to_name);
+        const cwallet = WalletDb.getState().cwallet;
+
+        console.log("-- Transfer.blindTransfer -->", from_account_type, to_account_type);
+
+        const trx = {
+            type: "blind",
+            from: this.state.from_name,
+            from_type: from_account_type,
+            to: this.state.to_name,
+            to_type: to_account_type,
+            amount: amount,
+            asset: asset.get("symbol")
+        }
+
+        if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
+            // transfer from public to blind
+            const to = this.state.to_name.slice(1);
+            trx.broadcast = () => {
+                TransactionConfirmActions.wasBroadcast();
+                cwallet.transferToBlind(this.state.from_account.get("id"), asset.get("id"), [[to, parseFloat(amount)]], true)
+                    .then(res => {
+                        console.log("-- transferToBlind res -->", res);
+                        TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
+                    }).catch(error => {
+                        console.error("-- transferToBlind error -->", error);
+                        TransactionConfirmActions.error(error.message);
+                    })
+            }
+        } else if ((from_account_type === "Private Account" || from_account_type == "Private Contact") && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
+            // transfer from blind to blind
+            const from = this.state.from_name.slice(1);
+            const to = this.state.to_name.slice(1);
+            trx.broadcast = () => {
+                TransactionConfirmActions.wasBroadcast();
+                cwallet.blindTransfer(from, to, parseFloat(amount), asset.get("id"), true)
+                    .then(res => {
+                        console.log("-- blindTransfer res -->", res);
+                        TransactionConfirmActions.close();
+                        this.setState({transfer_receipt: res.change_receipt});
+                        ZfApi.publish("transfer_receipt_modal", "open");
+                    }).catch(error => {
+                        console.error("-- blindTransfer error -->", error);
+                        TransactionConfirmActions.error(error.message);
+                    })
+            }
+        } else if (from_account_type === "Private Account" || from_account_type == "Private Contact") {
+            // transfer from blind to public
+            const from = this.state.from_name.slice(1);
+            trx.broadcast = () => {
+                TransactionConfirmActions.wasBroadcast();
+                cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
+                    .then(res => {
+                        console.log("-- transferFromBlind res -->", res);
+                        TransactionConfirmActions.close();
+                        this.setState({transfer_receipt: res.change_receipt});
+                        ZfApi.publish("transfer_receipt_modal", "open");
+                    }).catch(error => {
+                       console.error("-- transferFromBlind error -->", error);
+                    })
+            }
+        }
+
+        TransactionConfirmActions.confirmBlind(trx);
+    }
+
     onSubmit(e) {
         e.preventDefault();
         this.setState({error: null});
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.amount.replace( /,/g, "" )
-
-        const from_account_type = AccountStore.getAccountType(this.state.from_name);
-        const to_account_type = AccountStore.getAccountType(this.state.to_name);
-        const cwallet = WalletDb.getState().cwallet;
-
-        console.log("-- Transfer.onSubmit -->", from_account_type, to_account_type);
-
-        if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
-            // transferToBlind
-            console.log("-- transferToBlind cwallet : -->", cwallet);
-            const to = this.state.to_name.slice(1);
-            cwallet.transferToBlind(this.state.from_account.get("id"), asset.get("id"), [[to, parseFloat(amount)]], true)
-            .then(res => {
-                console.log("-- transferToBlind res -->", res);
-            }).catch(error => {
-                console.error("-- transferToBlind error -->", error);
-            })
-        } else if ((from_account_type === "Private Account" || from_account_type == "Private Contact") && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
-            // transfer from blind to blind
-            const from = this.state.from_name.slice(1);
-            const to = this.state.to_name.slice(1);
-            cwallet.blindTransfer(from, to, parseFloat(amount), asset.get("id"), true)
-            .then(res => {
-                console.log("-- blindTransfer res -->", res);
-                this.setState({transfer_receipt: res.change_receipt});
-                ZfApi.publish("transfer_receipt_modal", "open");
-            }).catch(error => {
-                console.error("-- blindTransfer error -->", error);
-            })
-        } else if (from_account_type === "Private Account" || from_account_type == "Private Contact") {
-            // transferFromBlind
-            const from = this.state.from_name.slice(1);
-            cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
-                .then(res => {
-                    console.log("-- transferFromBlind res -->", res);
-                    this.setState({transfer_receipt: res.change_receipt});
-                    ZfApi.publish("transfer_receipt_modal", "open");
-                }).catch(error => {
-                console.error("-- transferFromBlind error -->", error);
-            })
-        }else {
+        if (this.isBlindTransfer(this.state.from_name, this.state.to_name)) {
+            this.blindTransfer(amount, asset);
+        } else {
             AccountActions.transfer(
                 this.state.from_account.get("id"),
                 this.state.to_account.get("id"),
@@ -231,6 +269,8 @@ class Transfer extends React.Component {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
             amount, error, to_name, from_name, memo, feeAsset} = this.state;
+
+        const blind_transfer = this.isBlindTransfer(from_name, to_name);
 
         let from_my_account = AccountStore.isMyAccount(from_account)
         if(from_account && ! from_my_account && ! propose ) {
@@ -295,7 +335,6 @@ class Transfer extends React.Component {
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
-        console.log("-- Transfer.render -->", from_account);
         accountsList = accountsList.add(from_account)
         let tabIndex = 1
 
@@ -336,11 +375,11 @@ class Transfer extends React.Component {
                                         tabIndex={tabIndex++}/>
                     </div>
                     {/*  M E M O  */}
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
+                    {!blind_transfer && <div className="content-block" style={{paddingLeft: "96px"}}>
                         <label><Translate component="span" content="transfer.memo"/></label>
                         <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
                         {/*<div>{memo_error}</div>*/}
-                    </div>
+                    </div>}
 
                     {/*  F E E   */}
                     <div className="content-block" style={{paddingLeft: "96px"}}>

@@ -121,6 +121,8 @@ class AccountActions {
     }
 
     removePrivateContact(name) {
+        const cwallet = WalletDb.getState().cwallet;
+        // TODO: cwallet.deleteKeyLabel(public_key, label);
         this.dispatch(name);
     }
 }

@@ -52,14 +52,20 @@ class TransactionConfirmStore {
     onWasIncluded(res) {
         //console.log("-- TransactionConfirmStore.onWasIncluded -->", this.state);
         let state = this.state;
-        this.setState({
+        let new_state = {
             error: null,
             broadcasting: false,
             broadcast: true,
             included: true,
-            trx_id: res[0].id,
-            trx_block_num: res[0].block_num,
-            broadcasted_transaction: this.state.transaction});
+            broadcasted_transaction: state.transaction
+        };
+        if (state.transaction.type && state.transaction.type === "blind") {
+            new_state.trx_id = res;
+        } else {
+            new_state.trx_id = res[0].id;
+            new_state.trx_block_num = res[0].block_num;
+        }
+        this.setState(new_state);
     }
 
     onError({ error }) {
@@ -70,6 +76,13 @@ class TransactionConfirmStore {
     reset() {
         //console.log("-- TransactionConfirmStore.reset -->");
         this.state = this.getInitialState();
+    }
+
+    onConfirmBlind({transaction}) {
+        let init_state = this.getInitialState();
+        let state = {...init_state, transaction: transaction, closed: false, broadcasted_transaction: null}
+        console.log("-- TransactionConfirmStore.onConfirm -->", state);
+        this.setState(state);
     }
 
 }

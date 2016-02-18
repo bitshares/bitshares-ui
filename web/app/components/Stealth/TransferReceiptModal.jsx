@@ -42,13 +42,13 @@ class TransferReceiptModal extends React.Component {
                 <a href="#" className="close-button">&times;</a>
             </Trigger>
             <h3>Transfer Receipt</h3>
-            <a href className="float-right" onClick={this._copyToClipboard} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a>
             <div style={{paddingTop: "1rem"}}>
                 <div className="form-group">
-                    <textarea ref="t_receipt" id="t_receipt" rows="4" cols="50" value={this.props.value} autoFocus readOnly onClick={this._selectAndCopy} />
+                    <textarea ref="t_receipt" id="t_receipt" rows="5" cols="50" value={this.props.value} autoFocus readOnly onClick={this._selectAndCopy} />
                 </div>
                 <div className="button-group">
                     <Trigger close="transfer_receipt_modal"><a href className="button">Close</a></Trigger>
+                    <button className="button outline" onClick={this._copyToClipboard}>Copy to Clipboard</button>
                 </div>
             </div>
         </Modal>);
