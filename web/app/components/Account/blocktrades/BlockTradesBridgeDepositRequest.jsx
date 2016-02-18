@@ -619,11 +619,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let estimated_output_amount_text = this.state.deposit_estimated_output_amount || "calculating";
 
                 let deposit_input_amount_edit_box = 
-                        <input type="other"
+                        <input type="number"
                                value={estimated_input_amount_text}
                                onChange={this.onInputAmountChanged.bind(this, "deposit") } />;
                 let deposit_output_amount_edit_box = 
-                        <input type="other"
+                        <input type="number"
                                value={estimated_output_amount_text}
                                onChange={this.onOutputAmountChanged.bind(this, "deposit") } />;
                 
@@ -695,13 +695,13 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let estimated_input_amount_text = this.state.withdraw_estimated_input_amount || "calculating";
 
                 let withdraw_input_amount_edit_box = 
-                    <input type="other"
+                    <input type="number"
                            value={estimated_input_amount_text}
                            onChange={this.onInputAmountChanged.bind(this, "withdraw") } />;
 
                 let estimated_output_amount_text = this.state.withdraw_estimated_output_amount || "calculating";
                 let withdraw_output_amount_edit_box = 
-                    <input type="other"
+                    <input type="number"
                            value={estimated_output_amount_text}
                            onChange={this.onOutputAmountChanged.bind(this, "withdraw") } />;
 

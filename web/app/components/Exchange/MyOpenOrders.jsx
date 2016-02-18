@@ -12,6 +12,7 @@ import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 class TableHeader extends React.Component {
 
@@ -21,11 +22,11 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transaction.expiration" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
-                    <th style={{textAlign: "right"}}></th>
+                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
+                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
+                    <th style={{minWidth: 91}}></th>
                 </tr>
             </thead>
         );
@@ -42,7 +43,9 @@ class OrderRow extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.for_sale !== this.props.order.for_sale ||
-            nextProps.order.id !== this.props.order.id
+            nextProps.order.id !== this.props.order.id ||
+            nextProps.quote !== this.props.quote ||
+            nextProps.base !== this.props.base
         );
     }
 
@@ -70,7 +73,7 @@ class OrderRow extends React.Component {
                         />
                     </td>
                     <td className="text-right" style={{padding: "2px 5px"}}>
-                        <a style={{marginRight: "0"}} className="tiny button outline order-cancel" onClick={this.props.onCancel}>
+                        <a style={{marginRight: "0"}} className="order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
                     </td>
@@ -103,10 +106,8 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
-        Ps.initialize(bidsContainer);
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
-        Ps.initialize(asksContainer);   
+        Ps.initialize(asksContainer);
     }
 
     _flipBuySell() {
@@ -118,8 +119,6 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        let bidsContainer = ReactDOM.findDOMNode(this.refs.bids);
-        Ps.update(bidsContainer);         
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
         Ps.update(asksContainer);     
     }
@@ -140,9 +139,8 @@ class MyOpenOrders extends React.Component {
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
 
                 return b_price.full - a_price.full;
-            }).map(order => {
-
-                return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+            }).map((order, index) => {
+                return <OrderRow date={new Date(order.expiration).getTime()} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -153,7 +151,7 @@ class MyOpenOrders extends React.Component {
 
                 return a_price.full - b_price.full;
             }).map(order => {
-                return <OrderRow key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow date={new Date(order.expiration).getTime()} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -174,44 +172,44 @@ class MyOpenOrders extends React.Component {
             );
         }
 
+        let rows = [];
+
+        if (asks.length) {
+            rows = rows.concat(asks);
+        }
+
+        if (bids.length) {
+            rows = rows.concat(bids);
+        }
+
+        rows.sort((a, b) => {
+            return b.props.date - a.props.date;
+        })
+
         // if (bids.length === 0 && asks.length ===0) {
         //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
         // }
 
         return (
-            <div style={{marginBottom: "2rem"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
-                <div className={classnames("small-12 medium-5", this.state.flip ? "order-1" : "order-3")}>
-                    <div className="exchange-content-header"><Translate content="exchange.my_bids" /></div>
+            <div style={{marginBottom: "2rem"}} key="open_orders" className="small-12 medium-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
 
-                    <table className="table order-table text-right table-hover">
-                        <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                    </table>
-                    <div className="grid-block no-padding market-right-padding" ref="bids" style={{overflow: "hidden", maxHeight: 300}}>
-                        <table style={{paddingBottom: 5}} className="table order-table text-right table-hover">
-                            <tbody>
-                                {bids.length ? bids : emptyRow}
-                            </tbody>
-                        </table>
+                <div className="exchange-bordered small-12" style={{height: 400}}>
+                    <div className="exchange-content-header">
+                        <Translate content="exchange.my_orders" />
+                        {!this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
                     </div>
-                </div>
-
-                <div className="grid-block vertical align-center text-center no-padding shrink order-2">
-                    <div>
-                        <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "2rem"}}>&#8646;</span>
-                    </div>
-                </div>
-                
-                <div className={classnames("small-12 medium-5", this.state.flip ? "order-3" : "order-1")}>
-                    <div className="exchange-content-header"><Translate content="exchange.my_asks" /></div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     </table>
 
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 300}}>
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 324}}>
                         <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
-                            <tbody>
-                                {asks.length ? asks : emptyRow}
-                            </tbody>
+                            <TransitionWrapper
+                                component="tbody"
+                                transitionName="newrow"
+                            >
+                                {rows.length ? rows : emptyRow}
+                            </TransitionWrapper>
                         </table>
                     </div>
                 </div>

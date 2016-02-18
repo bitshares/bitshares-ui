@@ -23,11 +23,11 @@ class CreateAccount extends React.Component {
 
     static getStores() {
         return [AccountStore]
-    }
+    };
 
     static getPropsFromStores() {
         return {}
-    }
+    };
 
     constructor() {
         super();
@@ -41,6 +41,8 @@ class CreateAccount extends React.Component {
             show_identicon: false
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
+
+        this.accountNameInput = null;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -129,7 +131,7 @@ class CreateAccount extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         if (!this.isValid()) return;
-        let account_name = this.refs.account_name.value();
+        let account_name = this.accountNameInput.getValue();
         if (WalletDb.getWallet()) {
             this.createAccount(account_name);
         } else {
@@ -224,7 +226,7 @@ class CreateAccount extends React.Component {
                     <div className="content-block center-content">
                         <div style={{width: '21em'}}>
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
-                                <AccountNameInput ref="account_name" cheapNameOnly={first_account}
+                                <AccountNameInput ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}} cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true}/>
 

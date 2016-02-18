@@ -86,7 +86,8 @@ import utils from "common/utils";
         options = merge(true, defaultOptions, options);
 
         width = priceYAxis.opposite ? (marginRight ? marginRight : 40) : (marginLeft ? marginLeft : 40);
-        x = priceYAxis.opposite ? chartWidth - width : marginLeft;
+        
+        x = priceYAxis.opposite ? (chartWidth - width) : marginLeft;
         y = priceYAxis.toPixels(currentPrice);
 
         if (!x || !y) {
@@ -127,6 +128,8 @@ import utils from "common/utils";
                     .attr({
                     fill: options.backgroundColor,
                     stroke: options.borderColor,
+                    height: 15,
+                    y: y - (height / 2) - 3,                  
                     zIndex: 1,
                         'stroke-width': 1
                 })
@@ -145,18 +148,22 @@ import utils from "common/utils";
 
                 // adjust
                 label.animate({
+                    x: x + 5,
                     y: y + (height / 4)
                 }, 0);
             } else {
+
                 currentPriceIndicator.label.animate({
                     text: utils.format_number(currentPrice, options.precision),
+                    x: x + 5,
                     y: y
                 }, 0);
 
                 height = currentPriceIndicator.label.getBBox().height;
 
                 currentPriceIndicator.box.animate({
-                    y: y - (height / 2)
+                    x: x,
+                    y: y - (height / 2) - 3
                 }, 0);
 
                 currentPriceIndicator.line.animate({

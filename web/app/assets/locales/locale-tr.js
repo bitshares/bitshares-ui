@@ -31,7 +31,7 @@
     propose: "teklif et",
     cancel: "iptal et",
     account: {
-        welcome: "Graphene'e Hoşgeldiniz",
+        welcome: "Blokzinciri'ne Hoşgeldiniz",
         asset: "Aktif",
         market_value: "Piyasa Değeri",
         hour_24: "24 Saat",
@@ -147,7 +147,9 @@
             force_settlement_delay_sec: "Zorunlu hesaplaşma gecikmesi (dakika)",
             force_settlement_offset_percent: "Zorunlu hesaplaşmanın yüzdelik sapması",
             maximum_force_settlement_volume: "Max zorunlu mahsup hacmi (yüzde)",
-            backing: "Kısanın dayandığı aktif"
+            backing: "Kısanın dayandığı aktif",
+            error_precision: "Aktif %(asset)s ile aynı hassasiyete sahip değil",
+            error_invalid: "O aktif kullanılamaz"
         },
         connections: {
             known: "Tarafından Tanınıyor",
@@ -667,7 +669,7 @@
         market_name: "Piyasalarım",
         quote_supply: "Karşıt arzı",
         base_supply: "Taban arzı",
-        more: "Tüm piyasalar",
+        more: "Piyasalar bul",
         volume_24: "24 Saat",
         change: "Değişim",
         confirm: "Verdiğiniz emir şimdiki fiyattan %(diff)s% kadar farklı, emin misiniz?",
@@ -682,6 +684,7 @@
         index: "Indeks",
         my_bids: "Alış Fiyatlarım",
         my_asks: "Satış Fiyatlarım",
+        my_orders: "Emirlerim",
         settle_orders: "Emirleri öde",
         asks: "Satış Fiyatları",
         bids: "Alış Fiyatları",
@@ -813,6 +816,12 @@
         title: "%(asset)s ödenmesini talep et",
         amount: "Ödenecek miktar",
         submit: "Aktif tasfiye et"
+      },
+      reserve: {
+        title: "Rezerv (yakılan) aktif",
+        amount: "Rezerv edilecek miktar",
+        from: "Rezerv yapılacak hesap",
+        submit: "Rezerv"
       },
       ok: "Tamam"
     },

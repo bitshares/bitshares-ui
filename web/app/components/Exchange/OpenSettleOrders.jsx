@@ -76,8 +76,9 @@ class OpenSettleOrders extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-                nextProps.currentAccount !== this.props.currentAccount ||
-                !Immutable.is(nextProps.orders, this.props.orders)            );
+            nextProps.currentAccount !== this.props.currentAccount ||
+            nextProps.orders !== this.props.orders 
+        );
     }
 
     componentDidMount() {
@@ -87,43 +88,50 @@ class OpenSettleOrders extends React.Component {
 
     render() {
         let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol, settlementPrice} = this.props;
+
         let activeOrders = null;
 
         if(orders.size > 0 && base && quote) {
+            let index = 0;
+
+            let offset_percent = 100;
+            if (orders.first().balance.asset_id === quote.get("id")) {
+                offset_percent -= quote.getIn(["bitasset", "options", "force_settlement_offset_percent"]) / 100;
+            } else {
+                offset_percent -= base.getIn(["bitasset", "options", "force_settlement_offset_percent"]) / 100;
+            }
 
             activeOrders = orders
             .sort((a, b) => {
                 return a.settlement_date > b.settlement_date;
             }).map((order, key) => {
-                return <SettleOrderRow key={order} settlementPrice={settlementPrice} order={order} base={base} quote={quote}/>;
+                return <SettleOrderRow key={index++} settlementPrice={settlementPrice * offset_percent / 100} order={order} base={base} quote={quote}/>;
             }).toArray();
 
         } else {
-            return (
-                <div key="open_orders" className="grid-content text-center ps-container" ref="orders">
-                    <table className="table order-table my-orders text-right table-hover">
-                        <tbody>
-                        </tbody>
-                    </table>
-
-                    <table className="table order-table my-orders text-right table-hover">
-                        <tbody>
-                        </tbody>
-                </table>
-                </div>
-            );
+            return null;
         }
 
         return (
-            <div style={{maxHeight: "400px", borderBottom: "1px solid grey"}} key="open_orders" className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content" ref="orders">
-                <div className="small-12 medium-6" style={{paddingBottom: "1rem"}}>
-                    <div className="exchange-content-header"><Translate content="exchange.settle_orders" /></div>
-                    <table className="table order-table text-right table-hover">
-                        <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                        <tbody>
-                            {activeOrders}
-                        </tbody>
-                    </table>
+            <div                
+                key="open_orders"
+                className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"                
+            >
+                <div className="small-6 order-1" style={{paddingBottom: "1rem"}}>
+                    <div className="exchange-bordered">
+                        <div className="exchange-content-header">
+                            <Translate content="exchange.settle_orders" />
+                        </div>
+
+                        <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="orders">
+                            <table className="table order-table text-right table-hover">
+                                <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
+                                <tbody>
+                                    {activeOrders}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

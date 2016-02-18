@@ -318,6 +318,7 @@ var Utils = {
     },
 
     convertPrice: function(fromRate, toRate, fromID, toID) {
+
         if (!fromRate || !toRate) {
             return null;
         }
@@ -331,7 +332,6 @@ var Utils = {
             toID = toRate.get("id");
             toRate = toRate.get("bitasset") ? toRate.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : toRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
-
 
         let fromRateQuoteID = fromRate.quote.asset_id;
         let toRateQuoteID = toRate.quote.asset_id;

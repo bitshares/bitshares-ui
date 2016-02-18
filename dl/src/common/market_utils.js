@@ -32,10 +32,15 @@ class MarketUtils {
         return op.amount_to_sell.asset_id !== op.fee.asset_id;
     }
 
-    static limitByPrecision(value, asset) {
-
-        let precision = utils.get_asset_precision(asset.toJS ? asset.get("precision") : asset.precision);
-        value = Math.floor(value * precision) / precision;
+    static limitByPrecision(value, asset, floor = true) {
+        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
+        let valueString = value.toString();
+        let splitString = valueString.split(".");
+        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
+            return value;
+        }
+        let precision = utils.get_asset_precision(assetPrecision);
+        value = floor ? Math.floor(value * precision) / precision : Math.round(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;
         }
@@ -90,7 +95,7 @@ class MarketUtils {
             buy.amount = parseInt(buy.amount, 10);
         }
         let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision)
-        let price = utils.price_to_text(fullPrice, quote, base);
+        let price = utils.price_to_text(fullPrice, order.call_price ? base : quote, order.call_price ? quote : base);
 
         let amount, value;
 
@@ -332,6 +337,25 @@ class MarketUtils {
         } else {
             throw "Unknown type";
         }
+    }
+
+    static isMarketAsset(quote, base) {
+        let isMarketAsset = false, marketAsset, inverted = false;
+
+        if (quote.get("bitasset") && base.get("id") === "1.3.0") {
+            isMarketAsset = true;
+            marketAsset = {id: quote.get("id")}
+        } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
+            inverted = true;
+            isMarketAsset = true;
+            marketAsset = {id: base.get("id")};
+        }
+
+        return {
+            isMarketAsset,
+            marketAsset,
+            inverted
+        };
     }
 
 }

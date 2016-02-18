@@ -68,14 +68,16 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws",
-                "wss://bitshares.dacplay.org:8089/ws"
+                "wss://bitshares.dacplay.org:8089/ws",
+                "wss://dele-puppy.com/ws"
             ],
             unit: [
                 CORE_ASSET,
                 "USD",
                 "CNY",
                 "BTC",
-                "EUR"
+                "EUR",
+                "GBP"
             ],
             showSettles: [
                 {translate: "yes"},

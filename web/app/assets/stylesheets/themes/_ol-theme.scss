@@ -415,16 +415,6 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
   }
 }
 
-td.orderHistoryAsk {
- color: $alert-color;
- font-weight: bold;
-}
-
-td.orderHistoryBid {
-  color: $success-color;
-  font-weight: bold;
-}
-
 .buy-sell-box {
   background-color: lighten($light-panel-bg-color, 12%);
 }

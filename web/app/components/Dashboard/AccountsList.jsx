@@ -141,48 +141,55 @@ class AccountsList extends React.Component {
                     break;
             }
         }).map(account => {
+
             if (account) {
                 let collateral = 0, debt = {}, openOrders = {};
                 balanceList = balanceList.clear();
 
                 let accountName = account.get("name");
 
-                account.get("orders").forEach( (orderID, key) => {
-                    let order = ChainStore.getObject(orderID);
-                    if (order) {
-                        let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
-                        if (!openOrders[orderAsset]) {
-                            openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
-                        } else {
-                            openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
+                if (account.get("orders")) {
+                    account.get("orders").forEach( (orderID, key) => {
+                        let order = ChainStore.getObject(orderID);
+                        if (order) {
+                            let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
+                            if (!openOrders[orderAsset]) {
+                                openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
+                            } else {
+                                openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 // console.log("openOrders:", openOrders);
 
-                account.get("call_orders").forEach( (callID, key) => {
-                    let position = ChainStore.getObject(callID);
-                    if (position) {
-                        collateral += parseInt(position.get("collateral"), 10);
+                if (account.get("call_orders")) {
+                    account.get("call_orders").forEach( (callID, key) => {
+                        let position = ChainStore.getObject(callID);
+                        if (position) {
+                            collateral += parseInt(position.get("collateral"), 10);
 
-                        let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
-                        if (!debt[debtAsset]) {
-                            debt[debtAsset] = parseInt(position.get("debt"), 10);
-                        } else {
-                            debt[debtAsset] += parseInt(position.get("debt"), 10);
+                            let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
+                            if (!debt[debtAsset]) {
+                                debt[debtAsset] = parseInt(position.get("debt"), 10);
+                            } else {
+                                debt[debtAsset] += parseInt(position.get("debt"), 10);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 let account_balances = account.get("balances");
-                account_balances.forEach( balance => {
-                    let balanceAmount = ChainStore.getObject(balance);
-                    if (!balanceAmount || !balanceAmount.get("balance")) {
-                        return null;
-                    }
-                    balanceList = balanceList.push(balance);
-                });
+                if (account.get("balances")) {
+                    account_balances.forEach( balance => {
+                        let balanceAmount = ChainStore.getObject(balance);
+                        if (!balanceAmount || !balanceAmount.get("balance")) {
+                            return null;
+                        }
+                        balanceList = balanceList.push(balance);
+                    });
+                }
 
                 let isMyAccount = AccountStore.isMyAccount(account);
 
@@ -194,19 +201,19 @@ class AccountsList extends React.Component {
                         <td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
                         </td>
-                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
                             {accountName}
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} openOrders={openOrders}/>
                         </td>
-                        {width >= 750 ? <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
+                        {width >= 750 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} collateral={collateral}/>
                         </td> : null}
-                        {width >= 1200 ? <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
+                        {width >= 1200 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} debt={debt}/>
                         </td> : null}
-                        <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
                         </td>
                     </tr>

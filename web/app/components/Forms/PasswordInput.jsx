@@ -10,8 +10,15 @@ class PasswordInput extends Component {
         onChange: PropTypes.func,
         onEnter: PropTypes.func,
         confirmation: PropTypes.bool,
-        wrongPassword: PropTypes.bool
-    }
+        wrongPassword: PropTypes.bool,
+        noValidation: PropTypes.bool
+    };
+
+    static defaultProps = {
+        confirmation: false,
+        wrongPassword: false,
+        noValidation: false
+    };
     
     constructor() {
         super();
@@ -69,7 +76,7 @@ class PasswordInput extends Component {
         let password_error = null, confirmation_error = null;
         if(this.state.wrong || this.props.wrongPassword) password_error = <div>Incorrect password</div>;
         else if(this.state.error) password_error = <div>{this.state.error}</div>;
-        if (!password_error && (this.state.value.length > 0 && this.state.value.length < 8))
+        if (!this.props.noValidation && !password_error && (this.state.value.length > 0 && this.state.value.length < 8))
             password_error = "Password must be 8 characters or more";
         if(this.state.doesnt_match) confirmation_error = <div>Confirmation doesn't match Password</div>;
         let password_class_name = classNames("form-group", {"has-error": password_error});
