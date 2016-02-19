@@ -191,7 +191,7 @@ class Transfer extends React.Component {
                     .then(res => {
                         console.log("-- blindTransfer res -->", res);
                         TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.change_receipt});
+                        this.setState({transfer_receipt: res.confirmation_receipt});
                         ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- blindTransfer error -->", error);
@@ -207,7 +207,7 @@ class Transfer extends React.Component {
                     .then(res => {
                         console.log("-- transferFromBlind res -->", res);
                         TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.change_receipt});
+                        this.setState({transfer_receipt: res.confirmation_receipt});
                         ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                        console.error("-- transferFromBlind error -->", error);
