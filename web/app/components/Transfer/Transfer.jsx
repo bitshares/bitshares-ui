@@ -57,6 +57,7 @@ class Transfer extends React.Component {
             propose: false,
             propose_account: "",
             blind_balances: null,
+            blind_history: null,
             transfer_receipt: null
         };
     };
@@ -82,10 +83,9 @@ class Transfer extends React.Component {
             const cwallet = WalletDb.getState().cwallet;
             try {
                 cwallet.getBlindBalances(from).then(res => {
-                    console.log("-- getBlindBalances -->", res.toJS());
-                    this.setState({blind_balances: res.toJS()});
+                    console.log("-- getBlindBalances -->", res.toJS(), cwallet.blindHistory(from).toJS());
+                    this.setState({blind_balances: res.toJS(), blind_history: cwallet.blindHistory(from).toJS()});
                 });
-                console.log("-- blindHistory -->", cwallet.blindHistory(from).toJS());
             } catch (error) {
                 console.log("-- getBlindBalances error -->", error);
             }
@@ -433,6 +433,7 @@ class Transfer extends React.Component {
                         limit={25}
                         compactView={true}
                         filter="transfer"
+                        blindHistory={this.state.blind_history}
                     />
                 </div>
             </div>

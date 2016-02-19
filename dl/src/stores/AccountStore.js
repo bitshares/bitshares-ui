@@ -374,6 +374,8 @@ class AccountStore extends BaseStore {
         else if (this.state.privateAccounts.has(name)) res = "Private Account";
         else if (this.state.myAccounts.has(name)) res = "My Account";
         else if (this.state.linkedAccounts.has(name)) res = "Linked Account";
+        else if (full_name[0] === "~") return null;
+        else return "Public Account";
         return res;
     }
 
