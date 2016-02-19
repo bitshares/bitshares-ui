@@ -1227,6 +1227,7 @@ export function FetchChainObjects(method, object_ids, timeout) {
     });
 
 }
+chain_store.FetchChainObjects = FetchChainObjects
 
 function timeStringToDate(time_string) {
     if( ! time_string) return new Date("1970-01-01T00:00:00.000Z")

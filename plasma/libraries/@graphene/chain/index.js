@@ -19,14 +19,13 @@ module.exports = {
     /** Helper function for FetchChainObjects */
     fetchChain: (methodName, objectIds, timeout = 1900) => {
         
-        let chainStore = require("./src/ChainStore")
         let method = ChainStore[methodName]
         if( ! method ) throw new Error("ChainStore does not have method " + methodName)
         
         let arrayIn = Array.isArray(objectIds)
         if( ! arrayIn ) objectIds = [ objectIds ]
         
-        return chainStore.FetchChainObjects(method, List(objectIds), timeout)
+        return ChainStore.FetchChainObjects(method, List(objectIds), timeout)
             .then( res => arrayIn ? res : res.get(0) )
     }
     
