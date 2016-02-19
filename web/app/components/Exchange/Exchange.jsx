@@ -1247,6 +1247,7 @@ class Exchange extends React.Component {
                                     bucketSize={bucketSize}
                                     latest={latestPrice}
                                     verticalOrderbook={leftOrderBook}
+                                    theme={this.props.settings.get("themes")}
                                 >
                                     <div className="float-right">
                                     <ul className="market-stats stats bottom-stats">
@@ -1301,6 +1302,7 @@ class Exchange extends React.Component {
                                     hasPrediction={hasPrediction}
                                     noFrame={false}
                                     verticalOrderbook={leftOrderBook}
+                                    theme={this.props.settings.get("themes")}
                                 />
                             </div>)}
 
@@ -1496,6 +1498,7 @@ class Exchange extends React.Component {
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
                                     noText={true}
+                                    theme={this.props.settings.get("themes")}
                                 />                                
                         </div>
                     </div>

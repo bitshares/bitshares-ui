@@ -629,7 +629,11 @@
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
         no: "No",
-        walletLockTimeout: "Wallet auto-lock time (seconds)"
+        walletLockTimeout: "Wallet auto-lock time (seconds)",
+        themes: "Theme",
+        "darkTheme": "Dark theme",
+        "lightTheme": "Light theme",
+        "olDarkTheme": "Openledger dark"
     },
     footer: {
         title: "Graphene",

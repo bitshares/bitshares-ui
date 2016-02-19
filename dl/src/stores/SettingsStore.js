@@ -19,7 +19,8 @@ class SettingsStore {
             faucet_address: "https://bitshares.openledger.info",
             unit: CORE_ASSET,
             showSettles: false,
-            walletLockTimeout: 60 * 10
+            walletLockTimeout: 60 * 10,
+            themes: "darkTheme"
         });
 
         this.viewSettings =  Immutable.Map({
@@ -82,6 +83,11 @@ class SettingsStore {
             showSettles: [
                 {translate: "yes"},
                 {translate: "no"}
+            ],
+            themes: [
+                "darkTheme",
+                "lightTheme",
+                "olDarkTheme"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
