@@ -32,7 +32,7 @@ $row-accent-color: #FFFFFF;
 $header-color: #DCDCDC;
 
 .lightTheme {
-  @include colour-scheme(
+  @include theme(
     $primary-text-color,
     $bg-color,
     $dark-text-color,

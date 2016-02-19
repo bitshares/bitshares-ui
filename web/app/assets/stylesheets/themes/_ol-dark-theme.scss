@@ -32,7 +32,7 @@ $row-accent-color: #3C3C3C;
 $header-color: #484848;
 
 .olDarkTheme {
-  @include colour-scheme(
+  @include theme(
     $primary-text-color,
     $bg-color,
     $dark-text-color,
