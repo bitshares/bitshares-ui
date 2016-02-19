@@ -8,6 +8,7 @@ class Serializer {
     constructor(operation_name, types) {
         this.operation_name = operation_name
         this.types = types
+        Serializer.printDebug = true
     }
         
     fromByteBuffer(b) {
@@ -38,7 +39,8 @@ class Serializer {
                     object[field] = type.fromByteBuffer(b);
                 } catch (e) {
                     console.error(`Error reading ${this.operation_name}.${field} in data:`);
-                    b.printDebug();
+                    if(Serializer.printDebug)
+                        b.printDebug();
                     throw e;
                 }
             }

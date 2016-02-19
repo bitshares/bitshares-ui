@@ -196,20 +196,17 @@ describe('Confidential wallet', () => {
     
     
     it("blind to blind", function() {
+        // must wait for a blocks...
+        this.timeout(30 * 1000)
     
         return wallet.login(username, password, email, Apis.chainId())
         .then(()=>{
             
             create("alice", "alice-brain-key", cw)
             create("bob", "bob-brain-key", cw)
-            
             cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "@nathan" )
             
-            // must wait for a blocks...
-            this.timeout(30 * 1000)
-            
             let tx
-            
             return Promise.resolve()
                 
             // do this just to get some money
@@ -239,6 +236,27 @@ describe('Confidential wallet', () => {
             
                 .then( () => cw.getBlindBalances("bob") )
                 .then( balances => assert.deepEqual(balances.toJS(), { "1.3.0": "10" + "00000" }) )
+        })
+    })
+    
+    it("blind to blind (external)", function() {
+        // must wait for a blocks...
+        this.timeout(10 * 1000)
+        
+        return Promise.resolve()
+        .then(()=> wallet.login(username, password, email, Apis.chainId()) )
+        .then(()=>{
+
+            create("alice", "alice-brain-key", cw)
+            cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "@nathan" )
+            cw.setKeyLabel( PrivateKey.fromSeed("carol").toPublicKey(), "carol")
+            
+            return Promise.resolve()
+            // get some money
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",40]], true ))
+            // blind to external (no private key for recipient)
+            .then( ()=> cw.blindTransfer("alice", "carol", 25, "CORE", true) )
+            
         })
     })
     

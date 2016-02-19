@@ -2,7 +2,7 @@ import assert from "assert"
 import { fromJS, Map, List, Set } from "immutable"
 import { PrivateKey, PublicKey, Aes, brainKey, hash, key } from "@graphene/ecc"
 import { fetchChain, config, chain_types, Apis, TransactionBuilder, number_utils } from "@graphene/chain"
-import { ops } from "@graphene/serializer"
+import { ops, Serializer } from "@graphene/serializer"
 import AddressIndex from "./AddressIndex"
 import ByteBuffer from "bytebuffer"
 
@@ -327,6 +327,10 @@ export default class ConfidentialWallet {
                 let nonce = hash.sha256( one_time_private.toBuffer() )
                 let blind_factor = hash.sha256( child )
                 
+                // allows the wallet to store and decrypt the receipt
+                // Store ones own receipts (fails in "blind to blind (external)")
+                // this.setKeyLabel(one_time_private)
+                
                 blinding_factors.push( blind_factor.toString("hex") )
                 total_amount = longAdd(total_amount, amount)
                 
@@ -335,7 +339,7 @@ export default class ConfidentialWallet {
                 let derived_child = to_public.child( child )
                 out.owner = { weight_threshold: 1, key_auths: [[ derived_child.toString(), 1 ]],
                     account_auths: [], address_auths: []}
-                    
+                
                 promises.push( Promise.resolve()
                     .then( ()=> Apis.crypto("blind", blind_factor, amount.toString()))
                     .then( ret =>{ out.commitment = ret })
@@ -353,9 +357,10 @@ export default class ConfidentialWallet {
                             pub_key: to_public.toString(),
                             decrypted_memo: {
                                 amount: { amount: amount.toString(), asset_id: asset.get("id") },
-                                blinding_factor: blind_factor,
-                                commitment: new Buffer(out.commitment, "hex"),
-                                check: bufferToNumber(secret.slice(0, 4)) 
+                                blinding_factor: blind_factor.toString("hex"),
+                                commitment: out.commitment,
+                                check: bufferToNumber(secret.slice(0, 4)),
+                                from: one_time_private.toPublicKey().toString()
                             },
                             confirmation: {
                                 one_time_key: one_time_private.toPublicKey().toString(),
@@ -363,7 +368,7 @@ export default class ConfidentialWallet {
                                 owner: out.owner // allows wallet save before broadcasting (durable)
                             }
                         }
-                        
+                        // console.log('4 bufferToNumber', bufferToNumber(secret.slice(0, 4)))
                         let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )
                         conf_output.confirmation.encrypted_memo = Aes.fromBuffer(secret).encrypt( memo ).toString("hex")
                         // conf_output.confirmation_receipt = conf_output.confirmation
@@ -377,11 +382,10 @@ export default class ConfidentialWallet {
             
             return Promise.all(promises).then(()=>{
                 
-                let cr = confirmation_receipts(confirm.outputs)
                 let name = account.get("name")
                 
                 return Promise.resolve()
-                .then( ()=> this.receiveBlindTransfer( cr, "@"+name, "from @"+name ))
+                .then( ()=> this.receiveBlindTransfer( confirm.outputs, "@"+name, "from @"+name ))
                 .then( ()=> Apis.crypto("blind_sum", blinding_factors, blinding_factors.length) )
                 .then( res => bop.blinding_factor = res )
                 .then( ()=>{
@@ -394,7 +398,7 @@ export default class ConfidentialWallet {
                     
                     return tr.process_transaction(this, null, broadcast).then(()=> {
                         confirm.trx = tr.serialize()
-                        confirm.confirmation_receipts = cr
+                        confirm.confirmation_receipts = confirmation_receipts(confirm.outputs)
                             .reduce( (r, receipt)=>r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
                         
                         // console.log("confirm trx2", JSON.stringify(confirm.outputs))
@@ -459,27 +463,64 @@ export default class ConfidentialWallet {
         this.assertLogin()
         
         let receipt = conf => {
-            if( ! conf.to) assert( conf.to, "to is required\t" + conf)
+            
+            // This conf.from_key -> opt_from in an array allows the receipts to be batched (this triggers a wallet backup). This should only needed if the wallet wants to store its own receipts sent out to external addresses.
+            // Store ones own receipts fails, the "from_secret" can't be calculated
+            if( conf.from_key && ! opt_from ) {
+                //Caller may store the one_time_key in the wallet and provide the public version here
+                opt_from = conf.from_key
+            }
+
+            if(conf.confirmation)
+                conf = conf.confirmation
+            
+            if( ! conf.to) assert( conf.to, "to is required" )
             
             let result = { conf : fromJS(conf).toJS() }
+            
             delete result.conf.owner // not stored, it is provided via get_blinded_balances(commitment)
             
             let to_private = this.getPrivateKey( conf.to )
-            assert( to_private, "No private key for receiver " + conf.to )
-
-            let secret = to_private.get_shared_secret( conf.one_time_key )
-            // console.log("TO secret.toString('hex')\t", secret.toString('hex'))
-            let child = hash.sha256( secret )
-            let child_private = PrivateKey.fromBuffer( child )
-            let blind_factor = hash.sha256( child )
 
             assert( typeof conf.encrypted_memo === "string", "Expecting HEX string for confirmation_receipt.encrypted_memo")
-            let plain_memo = Aes.fromBuffer(secret).decryptHexToText( conf.encrypted_memo )
-
-            let memo = stealth_memo_data.fromBuffer( plain_memo )
-            memo = stealth_memo_data.toObject(memo)
+            assert( typeof conf.one_time_key === "string", "Expecting Public Key string for confirmation_receipt.one_time_key")
             
+            let memo, secret, memo_error = []
+            function decr(secr) {
+                // console.log('d bufferToNumber', bufferToNumber(secr.slice(0, 4)))
+                try {
+                    let plain_memo = Aes.fromBuffer(secr).decryptHexToText( conf.encrypted_memo )
+                    let m = stealth_memo_data.fromBuffer( plain_memo )
+                    if(m.check != bufferToNumber(secr.slice(0, 4)))
+                        throw "mismatch"
+                    memo = stealth_memo_data.toObject(m)
+                    secret = secr
+                    return true
+                } catch(error) {
+                    memo_error.push("wrong key" + (error === " (check mismatch)" ? error : " (parsing error)"))
+                    return false
+                }
+            }
+            let from_private
             let to_key = this.getPublicKey( conf.to )
+            
+            // Turn off parsing error debug, the "check" is inside of the memo so we will get debug parsing errors
+            // console.log('opt_from,to_key', opt_from, !!to_key, !!this.getPrivateKey( opt_from ))
+            Serializer.printDebug = false
+            if(
+                ! (to_private && decr(to_private.get_shared_secret(conf.one_time_key)) )
+            &&
+                ! ((from_private = this.getPrivateKey( opt_from )) && to_key && decr(from_private.get_shared_secret(to_key)) )
+            ) {
+                Serializer.printDebug = true
+                // Both wallets (the cli_wallet and js wallet) do not save receipts coming from the wallet.  They should save receipts that were sent to a spendable key in the wallet.  The code may play it safe and try to save all receipts.  This error may be commented out after beta.
+                console.log("ConfidentialWallet\tUnable to decrypt memo", JSON.stringify(memo_error))
+                throw new Error("Unable to decrypt memo." + (to_private == null && from_private == null ? "  Missing keys" : ""))
+            }
+            
+            let child = hash.sha256( secret )
+            let child_private = PrivateKey.fromBuffer( child )
+            
             if( to_key )
                 result.to_key = to_key.toString()
             
@@ -517,17 +558,23 @@ export default class ConfidentialWallet {
                 })
             )
         }
-        let rp = []
 
         if( ! Array.isArray( confirmation_receipts ) && ! List.isList(confirmation_receipts))
             confirmation_receipts = [ confirmation_receipts ]
         
+        let rp = []
         List(confirmation_receipts).forEach( r =>{
             if( typeof r === 'string' ) {
                 r = stealth_confirmation.fromBuffer(new Buffer(bs58.decode(r), "binary"))
                 r = stealth_confirmation.toObject(r)
             }
-            rp.push( receipt(r) )
+            try {
+                rp.push( receipt(r) )
+            } catch( error ) {
+                let rr = fromJS(r).toJS()
+                try { delete rr.confirmation.encrypted_memo } catch(e){} // verbose
+                console.log("Import receipt error", JSON.stringify(rr.confirmation))
+            }
         })
         
         let receipts
@@ -827,6 +874,10 @@ function blind_transfer_help(
             let nonce = hash.sha256( one_time_private.toBuffer() )
             let blind_factor
             
+            // Saving this one_time_key will allow the wallet to store ones own receipts.
+            // Store ones own receipts (fails in "blind to blind (external)")
+            // this.setKeyLabel( one_time_private )
+            
             let from_secret = one_time_private.get_shared_secret( from_key )
             let from_child = hash.sha256( from_secret )
             let from_nonce = hash.sha256( nonce )
@@ -881,7 +932,7 @@ function blind_transfer_help(
                         rp_promise = Apis.crypto(
                             "range_proof_sign",
                             0, to_out.commitment, blind_factor,
-                            nonce, 0, 0, amount
+                            nonce, 0, 0, amount.toString()
                         )
                         .then( res => to_out.range_proof = res)
                         
@@ -914,6 +965,7 @@ function blind_transfer_help(
                             conf_output.confirmation.one_time_key = one_time_private.toPublicKey().toString()
                             conf_output.confirmation.to = from_key.toString()
                             conf_output.confirmation.owner = change_out.owner
+                            // console.log('b bufferToNumber', bufferToNumber(from_secret.slice(0, 4)))
                             
                             let from_aes = Aes.fromBuffer(from_secret)
                             let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )
@@ -938,10 +990,11 @@ function blind_transfer_help(
                         conf_output.label = to_key_or_label
                         conf_output.pub_key = to_key.toString()
                         conf_output.decrypted_memo.from = from_key.toString()
-                        conf_output.decrypted_memo.amount = { amount, asset_id: asset.get("id") }
+                        conf_output.decrypted_memo.amount = { amount: amount.toString(), asset_id: asset.get("id") }
                         conf_output.decrypted_memo.blinding_factor = blind_factor.toString("hex")
                         conf_output.decrypted_memo.commitment = to_out.commitment
-                        conf_output.decrypted_memo.check   = bufferToNumber(secret.slice(0, 4))
+                        conf_output.decrypted_memo.check = bufferToNumber(secret.slice(0, 4))
+                        // console.log('2 bufferToNumber', bufferToNumber(from_secret.slice(0, 4)))
                         conf_output.confirmation.one_time_key = one_time_private.toPublicKey().toString()
                         conf_output.confirmation.to = to_key.toString()
                         conf_output.confirmation.owner = to_out.owner
@@ -955,18 +1008,16 @@ function blind_transfer_help(
                         
                         // transferFromBlind needs to_out as last
                         confirm.outputs.push( conf_output )
-                        let cr = confirmation_receipts(confirm.outputs)
-
                         let p1
                         if( ! to_temp ) {
                             // make sure the receipts are stored first before broadcasting
-                            p1 = this.receiveBlindTransfer(cr, from_key_or_label)
+                            p1 = this.receiveBlindTransfer(confirm.outputs, from_key_or_label)
                         }
                         return (p1 ? p1 : Promise.resolve()).then(()=>{
                             return this.send_blind_tr([blind_tr], from_key_or_label, broadcast).then( tr => {
                                 confirm.trx = tr
                                 confirm.one_time_keys = one_time_keys.toJS()
-                                confirm.confirmation_receipts = cr
+                                confirm.confirmation_receipts = confirmation_receipts(confirm.outputs)
                                     .reduce( (r, receipt)=>
                                         r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
                                 
