@@ -43,9 +43,9 @@ class SettingsActions {
         this.dispatch({id, status});
     }
 
-    changeBase(index, value) {
-        this.dispatch({index, value});
-    }
+    // changeBase(index, value) {
+    //     this.dispatch({index, value});
+    // }
 }
 
 module.exports = alt.createActions(SettingsActions);
