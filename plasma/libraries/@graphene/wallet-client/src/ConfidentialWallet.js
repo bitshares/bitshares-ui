@@ -41,6 +41,10 @@ export default class ConfidentialWallet {
         // The walletStorage format is documented as comments at the bottom of this file..
         this.wallet = req(walletStorage, "walletStorage")
         
+        // Graphene-UI uses a transaction confirmation dialog and will replace this function.
+        this.process_transaction = (tr, broadcast) =>
+            WalletDb.process_transaction(tr, null/*signer keys*/, broadcast)
+        
         // Convenience function to access the wallet object (ensure friendly return values)
         this.keys = () => this.wallet.wallet_object.getIn(["keys"], Map())
         this.blind_receipts = () => this.wallet.wallet_object.get("blind_receipts", List())
@@ -396,7 +400,7 @@ export default class ConfidentialWallet {
                     bop.outputs = bop.outputs.sort((a, b)=> a.commitment > b.commitment)
                     tr.add_type_operation("transfer_to_blind", bop)
                     
-                    return tr.process_transaction(this, null, broadcast).then(()=> {
+                    return this.process_transaction(tr, broadcast).then(()=> {
                         confirm.trx = tr.serialize()
                         confirm.confirmation_receipts = confirmation_receipts(confirm.outputs)
                             .reduce( (r, receipt)=>r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
@@ -1097,7 +1101,7 @@ function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys) {
         }
     }
 
-    return tr.process_transaction(this, null, broadcast)
+    return this.process_transaction(tr, broadcast)
 }
 
 /** Feeds need to be obtained in advance before calculating inputs and outputs. */

@@ -138,6 +138,10 @@ class WalletDb extends BaseStore {
         let _wallet = new WalletStorage(storage)
         let _cwallet = new ConfidentialWallet(_wallet)
         
+        // Transaction confirmations
+        _cwallet.process_transaction = (tr, broadcast) =>
+            WalletDb.process_transaction( tr, null /*signer_private_keys*/, true )
+        
         // No exceptions so update state:
         cwallet = _cwallet
         wallet = _wallet
