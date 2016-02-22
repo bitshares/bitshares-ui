@@ -191,9 +191,9 @@ class MyOpenOrders extends React.Component {
         // }
 
         return (
-            <div style={{marginBottom: "2rem"}} key="open_orders" className="small-12 medium-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
+            <div style={{marginBottom: "15px"}} key="open_orders" className="small-12 medium-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
 
-                <div className="exchange-bordered small-12" style={{height: 400}}>
+                <div className="exchange-bordered small-12" style={{height: 390}}>
                     <div className="exchange-content-header">
                         <Translate content="exchange.my_orders" />
                         {!this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}

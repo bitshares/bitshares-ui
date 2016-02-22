@@ -701,7 +701,8 @@
         show_bids: "Show all bids",
         show_asks: "Show all asks",
         hide: "Hide",
-        short: "Short"
+        short: "Short",
+        others: "Others"
     },
     fees: {
      title: "Fee Schedule"

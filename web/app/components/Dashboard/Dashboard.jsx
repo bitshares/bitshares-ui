@@ -13,6 +13,7 @@ class Dashboard extends React.Component {
         super();
         this.state = {
             width: null,
+            height: null,
             showIgnored: false
         };
 

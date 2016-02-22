@@ -44,15 +44,14 @@ $negative-color: #E1424A;
 
 .order-table {
 	width: 100%;
-	> caption {
-		padding-bottom: 1.25rem;
-	}
     > thead > tr > th {
-        font-size: 0.9rem;
+        font-size: 14px;
+        padding: 5px 5px;
     }
 
     > tbody > tr > td {
-        font-size: 0.75rem;
+        font-size: 12px;
+        padding-bottom: 4px;
     }
 }
 
@@ -412,7 +411,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .middle-content {
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 
 .market-right-padding-only {
@@ -449,10 +448,24 @@ input[type=number]::-webkit-outer-spin-button {
   transition: border-color 0.3s ease 0s;
 }
 
+.mymarkets-base-select {
+  margin: 0;
+  padding: 0;
+  height: inherit;
+  font-size: inherit;
+}
+
 .mymarkets-list {
-  padding-top: 0.55rem;
-  padding-left: 0;
+  padding: 0;
   font-size: 0.75rem;
+  .table > thead tr th {
+    font-size: 0.75rem;
+  }
+
+  .table > tbody tr td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 }
 
 table thead tr th.mymarkets-header {
@@ -501,3 +514,4 @@ table thead tr th.mymarkets-header {
   0%   { background-color: #6B6B6B;}
   100% { background-color: transparent;}
 }
+

@@ -749,5 +749,14 @@
     .label {
       background-color: $panel-bg-color;
     }
+
+    .mymarkets-group-header {
+      background-color: $panel-bg-color;
+      padding: 8px 35px;
+      border-bottom: 1px solid grey;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
       
 }

@@ -144,7 +144,6 @@ class App extends React.Component {
     // }
 
     render() {
-        console.log("app state:", this.state);
         if (this.props.location.pathname === "/init-error") { // temporary, until we implement right offline mode
             return (
                 <div className="grid-frame vertical">
