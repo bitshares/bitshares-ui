@@ -434,6 +434,16 @@ var Utils = {
         return new Date(head_block_time - seconds_below * 1000);
     },
 
+    calc_block_num(block_time, globalObject, dynGlobalObject) {
+        if (!globalObject || !dynGlobalObject) return 0;
+        const block_interval = globalObject.get("parameters").get("block_interval");
+        const head_block_number =  dynGlobalObject.get("head_block_number");
+        const head_block_time = new Date(dynGlobalObject.get("time") + "+00:00");
+        const blocks_diff = (head_block_time - block_time)/1000/block_interval;
+        const res = head_block_number - blocks_diff;
+        return res < 0 || res > head_block_number ? head_block_number : res;
+    },
+
     get_translation_parts(str) {
         let result = [];
         let toReplace = {};

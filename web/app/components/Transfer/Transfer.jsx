@@ -175,7 +175,10 @@ class Transfer extends React.Component {
                 cwallet.transferToBlind(this.state.from_account.get("id"), asset.get("id"), [[to, parseFloat(amount)]], true)
                     .then(res => {
                         console.log("-- transferToBlind res -->", res);
-                        TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
+                        //TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
+                        TransactionConfirmActions.close();
+                        this.setState({transfer_receipt: res.confirmation_receipt});
+                        ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- transferToBlind error -->", error);
                         TransactionConfirmActions.error(error.message);
@@ -206,11 +209,10 @@ class Transfer extends React.Component {
                 cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
                     .then(res => {
                         console.log("-- transferFromBlind res -->", res);
-                        TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipt});
-                        ZfApi.publish("transfer_receipt_modal", "open");
+                        TransactionConfirmActions.wasIncluded(res.confirmation_receipt);
                     }).catch(error => {
-                       console.error("-- transferFromBlind error -->", error);
+                        console.error("-- transferFromBlind error -->", error);
+                        TransactionConfirmActions.error(error.message);
                     })
             }
         }

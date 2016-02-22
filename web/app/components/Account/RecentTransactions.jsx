@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import {IntlProvider} from "react-intl";
+import {Link} from "react-router";
 import intlData from "../Utility/intlData";
 import Translate from "react-translate-component";
 import {saveAs} from "common/filesaver.js";
@@ -9,21 +10,28 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import utils from "common/utils";
-import {chain_types} from "@graphene/chain";
+import counterpart from "counterpart";
+import {chain_types, ChainStore} from "@graphene/chain";
+import TimeAgo from "../Utility/TimeAgo";
+
 let {operations} = chain_types;
 
 const BlindTransferRow = ({t}) => {
+    const date = new Date(t.date);
     return (
         <tr>
             <td className="right-td" style={{padding: "8px 5px"}}>
-                <TranslateWithLinks
+                <div><TranslateWithLinks
                     string="operation.transfer"
                     keys={[
                         {type: "account", value: t.from_label, arg: "from"},
                         {type: "amount", value: t.amount, arg: "amount", decimalOffset: t.amount.asset_id === "1.3.0" ? 5 : null},
                         {type: "account", value: t.to_label, arg: "to"}
                     ]}
-                />
+                /></div>
+                <div style={{fontSize: 14, paddingTop: 5}}>
+                    <span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${t.block_num}`}>{utils.format_number(t.block_num, 0)}</Link></span>
+                    &nbsp;- <span className="time"><TimeAgo time={date}/></span></div>
             </td>
         </tr>
     );
@@ -124,9 +132,21 @@ class RecentTransactions extends React.Component {
         let {accountsList, compactView, filter} = this.props;
         let {limit} = this.state;
         let current_account_id = accountsList.length === 1 && accountsList[0] ? accountsList[0].get("id") : null;
-        let history = this._getHistory(accountsList, filter).sort(compareOps);
 
-        if (this.props.blindHistory) history = [...this.props.blindHistory, ...history];
+        let history = this._getHistory(accountsList, filter);
+        //if (this.props.blindHistory) history = [...this.props.blindHistory, ...history];
+
+        const globalObject = ChainStore.getObject("2.0.0");
+        const dynGlobalObject = ChainStore.getObject("2.1.0");
+        const blindHistory = this.props.blindHistory ? this.props.blindHistory.map(t => {
+            t.block_num = utils.calc_block_num(new Date(t.date), globalObject, dynGlobalObject);
+            t.trx_in_block = t.date;
+            return t;
+        }) : [];
+        history = [...blindHistory, ...history].sort(compareOps);
+
+
+
         //console.log("-- RecentTransactions.render -->", history);
         let historyCount = history.length;
 
