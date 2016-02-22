@@ -1304,12 +1304,58 @@ class Exchange extends React.Component {
                                     verticalOrderbook={leftOrderBook}
                                     theme={this.props.settings.get("themes")}
                                 />
-                            </div>)}
+                            </div>)}                        
 
-                        {/* Buy/Sell forms */}
+                        {!leftOrderBook ? <div className="grid-block small-12" style={{overflow: "hidden"}}>
+                            <OrderBook
+                                orders={limit_orders}
+                                calls={call_orders}
+                                invertedCalls={invertedCalls}
+                                combinedBids={combinedBids}
+                                combinedAsks={combinedAsks}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                                onClick={this._orderbookClick.bind(this, base, quote)}
+                                horizontal={!leftOrderBook}
+                                moveOrderBook={this._moveOrderBook.bind(this)}
+                                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
+                            />
+                    </div> : null}
+
+                    {isNullAccount ? null : (
+                            <div className="grid-block no-overflow shrink no-padding">
+                                <MarketHistory
+                                    className="no-padding no-overflow"
+                                    headerStyle={{paddingTop: 0}}
+                                    history={activeMarketHistory}
+                                    myHistory={currentAccount.get("history")}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    isNullAccount={isNullAccount}
+                                />
+
+                                {limit_orders.size > 0 && base && quote ? (
+                                <MyOpenOrders
+                                    key="open_orders"
+                                    orders={limit_orders}
+                                    currentAccount={currentAccount.get("id")}
+                                    base={base}
+                                    quote={quote}
+                                    baseSymbol={baseSymbol}
+                                    quoteSymbol={quoteSymbol}
+                                    onCancel={this._cancelLimitOrder.bind(this)}
+                                    flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
+                                />) : null}
+                        </div>)}
+
+                    {/* Buy/Sell forms */}
 
                         {isNullAccount ? null : (
-                            <div className="grid-block vertical shrink buy-sell">
+                            <div className="grid-block vertical shrink buy-sell middle-content">
                             {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
                             
                             <div className="grid-block small-vertical medium-horizontal align-spaced">
@@ -1383,52 +1429,6 @@ class Exchange extends React.Component {
                                     diff={sellDiff}
                                 />
                             </div>
-                        </div>)}
-
-                        {!leftOrderBook ? <div className="grid-block small-12" style={{overflow: "hidden"}}>
-                            <OrderBook
-                                orders={limit_orders}
-                                calls={call_orders}
-                                invertedCalls={invertedCalls}
-                                combinedBids={combinedBids}
-                                combinedAsks={combinedAsks}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                onClick={this._orderbookClick.bind(this, base, quote)}
-                                horizontal={!leftOrderBook}
-                                moveOrderBook={this._moveOrderBook.bind(this)}
-                                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
-                            />
-                    </div> : null}
-
-                        {isNullAccount ? null : (
-                            <div className="grid-block no-overflow shrink no-padding">
-                                <MarketHistory
-                                    className="no-padding no-overflow"
-                                    headerStyle={{paddingTop: 0}}
-                                    history={activeMarketHistory}
-                                    myHistory={currentAccount.get("history")}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    isNullAccount={isNullAccount}
-                                />
-
-                                {limit_orders.size > 0 && base && quote ? (
-                                <MyOpenOrders
-                                    key="open_orders"
-                                    orders={limit_orders}
-                                    currentAccount={currentAccount.get("id")}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    onCancel={this._cancelLimitOrder.bind(this)}
-                                    flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
-                                />) : null}
                         </div>)}
 
                         <div className="grid-block no-overflow shrink no-padding">
