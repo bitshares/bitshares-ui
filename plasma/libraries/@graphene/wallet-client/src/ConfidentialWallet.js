@@ -43,7 +43,7 @@ export default class ConfidentialWallet {
         
         // Graphene-UI uses a transaction confirmation dialog and will replace this function.
         this.process_transaction = (tr, broadcast) =>
-            WalletDb.process_transaction(tr, null/*signer keys*/, broadcast)
+            tr.process_transaction(this, null/*signer keys*/, broadcast)
         
         // Convenience function to access the wallet object (ensure friendly return values)
         this.keys = () => this.wallet.wallet_object.getIn(["keys"], Map())

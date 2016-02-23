@@ -140,7 +140,7 @@ class WalletDb extends BaseStore {
         
         // Transaction confirmations
         _cwallet.process_transaction = (tr, broadcast) =>
-            WalletDb.process_transaction( tr, null /*signer_private_keys*/, true )
+            this.process_transaction( tr, null /*signer_private_keys*/, true )
         
         // No exceptions so update state:
         cwallet = _cwallet
