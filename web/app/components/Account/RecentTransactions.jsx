@@ -140,8 +140,6 @@ class RecentTransactions extends React.Component {
         let history = this._getHistory(accountsList, filter).sort(compareOps);
         let historyCount = history.length;
 
-        console.log("maxHeight:", maxHeight, "headerHeight", headerHeight);
-
         style = style ? style : {};
         style.width = "100%";
         style.height = "100%";

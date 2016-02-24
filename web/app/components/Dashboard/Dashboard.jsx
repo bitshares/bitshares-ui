@@ -52,8 +52,6 @@ class Dashboard extends React.Component {
         let width = window.innerWidth;
         let height = this.refs.wrapper.offsetHeight;
 
-        console.log("innerHeight:", height, "wrapper height:", this.refs.wrapper.offsetHeight);
-
         if (width !== this.state.width || height !== this.state.height) {
             this.setState({width, height});
         }
