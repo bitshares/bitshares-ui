@@ -3,6 +3,7 @@ import connectToStores from "alt/utils/connectToStores";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
+import AuthStore from "stores/AuthStore";
 import AccountNameInput from "../Forms/AccountNameInput";
 import AuthInput from "./../Forms/AuthInput";
 import WalletDb from "stores/WalletDb";
@@ -22,11 +23,11 @@ import {TransitionMotion, spring} from 'react-motion';
 class CreateAccount extends React.Component {
 
     static getStores() {
-        return [AccountStore];
+        return [AccountStore, AuthStore];
     }
 
     static getPropsFromStores() {
-        return {};
+        return { auth: AuthStore.getState() };
     }
 
     constructor() {
@@ -34,19 +35,23 @@ class CreateAccount extends React.Component {
         this.state = {
             validAccountName: false,
             accountName: "",
-            validPassword: false,
             registrar_account: null,
             loading: false,
             hide_refcode: true,
             show_identicon: false
         };
+        this.validPassword = false;
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        
+        let validChanged = this.validPassword !== this.props.auth.valid;
+        this.validPassword = this.props.auth.valid;
+        
         return nextState.validAccountName !== this.state.validAccountName ||
             nextState.accountName !== this.state.accountName ||
-            nextState.validPassword !== this.state.validPassword ||
+            validChanged ||
             nextState.registrar_account !== this.state.registrar_account ||
             nextState.loading !== this.state.loading ||
             nextState.hide_refcode !== this.state.hide_refcode ||
@@ -56,7 +61,7 @@ class CreateAccount extends React.Component {
     isValid() {
         let first_account = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
-        if (WalletDb.isLocked()) valid = valid && this.state.validPassword;
+        if (WalletDb.isLocked()) valid = valid && this.validPassword;
         if (!first_account) valid = valid && this.state.registrar_account;
         return valid;
     }
@@ -67,10 +72,6 @@ class CreateAccount extends React.Component {
         if(e.value !== undefined) state.accountName = e.value;
         if (!this.state.show_identicon) state.show_identicon = true;
         this.setState(state);
-    }
-
-    onPasswordChange(e) {
-        this.setState({validPassword: e.valid});
     }
 
     onFinishConfirm(confirm_store_state) {
@@ -110,10 +111,10 @@ class CreateAccount extends React.Component {
         });
     }
 
-    createWallet(password) {
+    createWallet() {
         return WalletActions.setWallet(
             "default", //wallet name
-            password
+            this.props.auth
         ).then(()=> {
             console.log("Congratulations, your wallet was successfully created.");
         }).catch(err => {
@@ -133,8 +134,7 @@ class CreateAccount extends React.Component {
         if ( !WalletDb.isLocked()) {
             this.createAccount(account_name);
         } else {
-            let password = this.refs.password.value();
-            this.createWallet(password).then(() => this.createAccount(account_name));
+            this.createWallet().then(() => this.createAccount(account_name));
         }
     }
 
@@ -230,7 +230,7 @@ class CreateAccount extends React.Component {
 
                                 { ! WalletDb.isLocked() ?
                                     null :
-                                    <AuthInput ref="password" hasConfirm={true} onChange={this.onPasswordChange.bind(this)}/>
+                                    <AuthInput hasConfirm={WalletDb.isEmpty()} />
                                 }
                                 {
                                     first_account ? null : (

@@ -703,6 +703,7 @@
         password: "Password",
         existing_password: "Existing Password",
         change_password: "Change Password",
+        password_changed: "Password changed",
         password_length: "Password is too short",
         password_match: "Confirmation doesn't match",
         invalid_password: "Incorrect password",

@@ -17,23 +17,40 @@ class AuthStore extends BaseStore {
         this.state = init()
         this.clear = ()=> this.setState(init())
         this.componentWillUnmount = ()=> this.setState(init())
-        this._export("update", "clear", "setup", "login", "changePassword")
+        this._export("update", "clear", "setup", "login",
+            "changePassword", "verifyPassword")
     }
     
+    /** @return {Promise} */
     login() {
         if( ! this.state.valid ) return Promise.reject()
         let { password, email, username } = this.state
         return WalletDb
             .login({ password, email, username })
+            .catch( error =>{
+                if(/invalid_password/.test(error)) {
+                    this.setState({ password_error: "invalid_password" })
+                }
+                throw error
+            })
+    }
+    
+    /** @return undefined */
+    changePassword() {
+        if( ! this.state.valid ) return
+        WalletDb
+            .changePassword( this.state )
             .catch( error => this.setState({ password_error: "invalid_password" }))
     }
     
-    changePassword() {
-        if( ! this.state.valid ) return
-        let { password, email, username } = this.state
-        WalletDb
-            .changePassword({ password, email, username })
-            .catch( error => this.setState({ password_error: "invalid_password" }))
+    /** @return {boolean} */
+    verifyPassword() {
+        if( ! this.state.valid ) return false
+        if( ! WalletDb.verifyPassword( this.state )) {
+            this.setState({ password_error: "invalid_password" })
+            return false
+        }
+        return true
     }
     
     setup({ hasConfirm, hasUsername, hasEmail }) {
@@ -84,7 +101,8 @@ class AuthStore extends BaseStore {
         confirm = confirm.trim()
         password = password.trim()
         
-        var password_error = null
+        var password_error
+        
         // Don't report until typing begins
         if(password.length !== 0 && password.length < 8)
             password_error = "password_length"

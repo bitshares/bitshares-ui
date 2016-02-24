@@ -43,6 +43,7 @@ export default class AuthInput extends Component {
         hasUsername: false,
         hasEmail: false,
         shouldFocus: true,
+        authError: false,
     }
     
     static getStores() {
@@ -69,20 +70,13 @@ export default class AuthInput extends Component {
             ReactDOM.findDOMNode(this.refs.auth_password).focus()
     }
     
-    // componentWillReceiveProps(nextProps) {
-    //     console.log('AuthInput nextProps', nextProps)
-    //     if( nextProps.onValid) {
-    //         if( nextProps.valid ) {
-    //             let { email, username, password } = nextProps
-    //             nextProps.onValid({ email, username, password })
-    //         } else {
-    //             nextProps.onValid(null)
-    //         }
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        let { hasConfirm, hasUsername, hasEmail } = this.props
+        AuthStore.setup({ hasConfirm, hasUsername, hasEmail })
+    }
     
     componentWillUnmount() {
-        // console.log("AuthStore.clear");
+        // console.log("AuthInput clear store");
         AuthStore.clear()
     }
     
@@ -98,13 +92,15 @@ export default class AuthInput extends Component {
     
     passwordForm({password, confirm, password_valid, password_error}) {
         
-        let password_class_name = cname("form-group", {"has-error": password_error === "password_length" });
-        let password_confirmation_class_name = cname("form-group", {"has-error": password_error === "password_match" });
+        // let password_class_name = cname("form-group", {"has-error": password_error === "password_length" });
+        // let password_confirmation_class_name = cname("form-group", {"has-error": password_error === "password_match" });
+        if( ! password_error && this.props.authError ) password_error = "invalid_password"
         
         let passwordChange = event => AuthStore.update({ password: event.target.value })
         let confirmChange = event => AuthStore.update({ confirm: event.target.value })
 
-        return <div className={cname("grid-content", "no-overflow", {"has-error": password_error != null })}>
+        // "grid-content", "no-overflow", 
+        return <div className={cname("form-group", {"has-error": password_error != null })}>
         
             {/*  P A S S W O R D  */}
             <div>
@@ -125,11 +121,6 @@ export default class AuthInput extends Component {
             </p>
             
         </div>
-
-        // "password_length": "Password must be 8 characters or more"
-        // "password_match": "Confirmation doesn't match"
-        // "password_incorrect": "Incorrect password"
-
     }
     
     emailForm({ email }) {
@@ -163,7 +154,7 @@ export default class AuthInput extends Component {
 }
 
 // import AltContainer from "alt-container"
-// export default class Container extends Component {
+// export default class Atl extends Component {
 //     render() {
 //         return (
 //             <AltContainer store={AuthStore}>

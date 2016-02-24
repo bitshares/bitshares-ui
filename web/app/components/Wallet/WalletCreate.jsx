@@ -86,7 +86,7 @@ class CreateNewWallet extends Component {
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <AuthInput />
+                <AuthInput hasConfirm={true} />
                 { has_wallet ? (
                     <div className="grid-content no-overflow">
                         <br/>
@@ -151,6 +151,7 @@ class CreateNewWallet extends Component {
 
     onSubmit(e) {
         e.preventDefault()
+        e.stopPropagation()
         var wallet_name = this.state.wallet_public_name
         WalletActions.setWallet(wallet_name, this.props.auth, this.state.brnkey)
         this.setState({create_submitted: true})
