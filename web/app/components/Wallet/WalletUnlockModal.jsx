@@ -17,8 +17,23 @@ import WalletUnlockStore from "stores/WalletUnlockStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import { Apis } from "@graphene/chain"
 
+
+export default class Atl extends React.Component {
+    render() {
+        return (
+            <AltContainer stores={{ unlock: WalletUnlockStore, auth: AuthStore }}>
+                <WalletUnlockModal {...this.props}/>
+            </AltContainer>
+        )
+    }
+}
+
 class WalletUnlockModal extends React.Component {
 
+    static defaultProps = {
+        modalId: "unlock_wallet_modal2"
+    }
+    
     constructor() {
         super()
         this.state = this._getInitialState()
@@ -28,7 +43,8 @@ class WalletUnlockModal extends React.Component {
     _getInitialState() {
         return {
             password_error: null,
-            authInput_reset: Date.now()
+            authInput_reset: Date.now(),
+            unlocking: false
         }
     }
     
@@ -43,9 +59,9 @@ class WalletUnlockModal extends React.Component {
             if(name !== this.props.modalId)
                 return
             if(msg === "close") {
-                //if(this.props.reject) this.props.reject()
-                AuthStore.clear()
+                // if(this.props.unlock.reject) this.props.unlock.reject()
                 WalletUnlockActions.cancel()
+                AuthStore.clear()
             } else if (msg === "open") {
                 
             }
@@ -53,41 +69,33 @@ class WalletUnlockModal extends React.Component {
     }
     
     componentDidUpdate() {
-        //DEBUG 
-        console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
-        if(this.props.resolve) {
+        //DEBUG console.log('WalletUnlockModal componentDidUpdate this.props.unlock.resolve', this.props.unlock.resolve)
+        if(this.props.unlock.resolve) {
             if (WalletDb.isLocked())
                 ZfApi.publish(this.props.modalId, "open")
             else {
-                this.props.resolve()
+                this.props.unlock.resolve()
             }
         }
     }
     
-    // componentWillReceiveProps(nextProps) {
-    //     console.log('this.props, nextProps', this.props, nextProps)
-    // }
-
     onPasswordEnter(e) {
         e.preventDefault()
-        console.log('this.auth', this.auth)
-        if( ! this.auth ) return
-        this.setState({password_error: null})
-        let { password, email, username } = this.auth
-        AuthStore.login( password, email, username ).then(()=>{
-            AuthStore.clear()
-            ZfApi.publish(this.props.modalId, "close")
-            this.props.resolve()
-            WalletUnlockActions.change()
-            this.setState({authInput_reset: Date.now(), password_error: false})
-        })
-        .catch( error =>{ this.setState({password_error: true}) })
+        this.setState({password_error: null, unlocking: true}, ()=>
+            AuthStore.login().then(()=>{
+                AuthStore.clear()
+                ZfApi.publish(this.props.modalId, "close")
+                this.props.unlock.resolve()
+                WalletUnlockActions.change()
+                this.setState({authInput_reset: Date.now(), password_error: false, unlocking: false})
+            })
+            .catch( error =>{ this.setState({password_error: true, unlocking: false}) })
+        )
     }
     
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
         let unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
-        let authValid = auth => this.auth = auth
 
         // Modal overlayClose must be false pending a fix that allows us to detect
         // this event and clear the password (via this.refs.authInput.clear())
@@ -101,10 +109,9 @@ class WalletUnlockModal extends React.Component {
                 <h3><Translate content="header.unlock" /> {unlock_what}</h3>
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     <AuthInput key={this.state.authInput_reset}
-                        hasConfirm={false} onValid={authValid.bind(this)}
-                        authError={this.state.password_error}/>
+                        hasConfirm={false} authError={this.state.password_error}/>
                     <div className="button-group">
-                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
+                        <button className={cname("button", {disabled: this.state.unlocking || !this.props.auth.valid}) } onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
                         <Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
@@ -113,21 +120,4 @@ class WalletUnlockModal extends React.Component {
             </Modal>
         )
     }
-    
-    
 }
-
-WalletUnlockModal.defaultProps = {
-    modalId: "unlock_wallet_modal2"
-}
-
-class WalletUnlockModalContainer extends React.Component {
-    render() {
-        return (
-            <AltContainer store={WalletUnlockStore}>
-                <WalletUnlockModal/>
-            </AltContainer>
-        )
-    }
-}
-export default WalletUnlockModalContainer

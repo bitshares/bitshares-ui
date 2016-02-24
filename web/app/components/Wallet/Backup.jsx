@@ -101,9 +101,10 @@ export class BackupRestore extends BackupBaseComponent {
     
     constructor() {
         super()
-        this.state = this.initial_state = {
+        this.init = ()=> ({
             newWalletName: null
-        }
+        })
+        this.state = this.init()
     }
     
     componentWillReceiveProps(nextProps) {
@@ -114,7 +115,7 @@ export class BackupRestore extends BackupBaseComponent {
     }
     
     componentWillUnmount() {
-        this.setState(this.state.initial_state)
+        this.setState(this.init())
         WalletManagerStore.setState({ restoring: false, restored_wallet_name: null, restore_error: null})
     }
     
@@ -164,10 +165,11 @@ class NewWalletName extends BackupBaseComponent {
     
     constructor() {
         super()
-        this.state = this.initial_state = {
+        this.init = ()=> ({
             new_wallet: null,
             accept: false
-        }
+        })
+        this.state = this.init()
     }
     
     componentWillMount() {
@@ -179,7 +181,7 @@ class NewWalletName extends BackupBaseComponent {
     }
     
     componentWillUnmount() {
-        this.setState(this.state.initial_state)
+        this.setState(this.init())
         WalletManagerStore.setState({ new_wallet: null })
     }
     

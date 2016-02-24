@@ -8,6 +8,8 @@ import WalletUnlock from "components/Wallet/WalletUnlock"
 import LoadingIndicator from "components/LoadingIndicator"
 import VerifyPassword from "components/Wallet/VerifyPassword"
 
+
+
 export default class WalletChangePassword extends Component {
     
     constructor() {

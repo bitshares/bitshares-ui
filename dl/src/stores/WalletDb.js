@@ -256,13 +256,10 @@ class WalletDb extends BaseStore {
     // }
     
     /** Call openWallet first, unless creating the default wallet */
-    onCreateWallet( password, brainkey ) {
-        
-        let email = ""
-        let username = ""
+    onCreateWallet( auth, brainkey ) {
         
         return new Promise( (resolve, reject) => {
-            if( typeof password !== 'string')
+            if( auth == null)
                 throw new Error("password string is required")
             
             var brainkey_backup_date
@@ -289,7 +286,7 @@ class WalletDb extends BaseStore {
             let chain_id = Apis.instance().chain_id
             resolve(Promise.resolve()
             
-                .then(()=> wallet.login(email, username, password, chain_id)) //login and sync
+                .then(()=> wallet.login(auth.email, auth.username, auth.password, chain_id)) //login and sync
                 
                 .then(()=> assert(wallet.wallet_object.get("created"),
                     "Wallet exists: " + this.state.current_wallet))
@@ -320,12 +317,12 @@ class WalletDb extends BaseStore {
         @return {boolean} true if password matches
         @throws {Error} "Wallet is locked"
     */
-    verifyPassword( password, email = "", username = "" ) {
+    verifyPassword({ password, email = "", username = "" }) {
         assertLogin()
         return wallet.verifyPassword(email, username, password)
     }
     
-    login( password, email = "", username = "" ) {
+    login({ password, email = "", username = "" }) {
         
         assert(this.isLocked(), "Wallet is already unlocked")
         
@@ -346,14 +343,18 @@ class WalletDb extends BaseStore {
         }
         
         return Promise.resolve()
-        .then( ()=> is_legacy() ? legacy_upgrade() : wallet.login(email, username, password, Apis.chainId()) )
+        .then( ()=> 
+            is_legacy() ?
+                legacy_upgrade() :
+                wallet.login(email, username, password, Apis.chainId())
+        )
         .then( ()=> AccountRefsStore.loadDbData() )
         .then( ()=> this.setState({locked: false }) )
     }
     
     /** This will unlock the wallet (if successful). */
-    changePassword( old_password, new_password ) {
-        return wallet.changePassword( old_password, new_password )
+    changePassword({ password, email, username }) {
+        return wallet.changePassword( password, email, username )
     }
     
     /**

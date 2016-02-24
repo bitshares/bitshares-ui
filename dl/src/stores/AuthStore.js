@@ -8,22 +8,23 @@ class AuthStore extends BaseStore {
     
     constructor() {
         super()
-        this.componentWillUnmount = ()=> this.setState(this.initial_state)
-        this.state = this.initial_state = {
+        const init = ()=> ({
             password: "", confirm: "", password_error: null,
             username: "", username_error: "",
             email: "", email_error: null,
             valid: false
-        }
-        this.clear = ()=> this.setState(this.initial_state)
+        })
+        this.state = init()
+        this.clear = ()=> this.setState(init())
+        this.componentWillUnmount = ()=> this.setState(init())
         this._export("update", "clear", "setup", "login", "changePassword")
     }
     
     login() {
-        if( ! this.state.valid ) return
+        if( ! this.state.valid ) return Promise.reject()
         let { password, email, username } = this.state
         return WalletDb
-            .login( password, email, username )
+            .login({ password, email, username })
             .catch( error => this.setState({ password_error: "invalid_password" }))
     }
     
@@ -31,7 +32,7 @@ class AuthStore extends BaseStore {
         if( ! this.state.valid ) return
         let { password, email, username } = this.state
         WalletDb
-            .changePassword( password, email, username )
+            .changePassword({ password, email, username })
             .catch( error => this.setState({ password_error: "invalid_password" }))
     }
     

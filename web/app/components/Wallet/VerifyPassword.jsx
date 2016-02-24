@@ -3,9 +3,22 @@ import React, {PropTypes, Component} from "react"
 import Translate from "react-translate-component"
 import notify from "actions/NotificationActions"
 import WalletDb from "stores/WalletDb"
+import AuthStore from "stores/AuthStore"
 import AuthInput from "components/Forms/AuthInput"
+import AltContainer from "alt-container"
 
-export default class VerifyPassword extends Component {
+
+export default class Alt extends Component {
+    render() {
+        return (
+            <AltContainer store={AuthStore} inject={{auth: AuthStore.getState()}}>
+                <VerifyPassword  {...this.props}/>
+            </AltContainer>
+        )
+    }
+}
+
+class VerifyPassword extends Component {
     
     static propTypes = {
         onValid: React.PropTypes.func
@@ -14,21 +27,15 @@ export default class VerifyPassword extends Component {
     constructor() {
         super()
         this.state = this.init_state = {
-            password: null,
             verified: false,
             password_error: false,
             password_input_reset: Date.now(),
-            confirmation_matches: false
         }
     }
     
     componentWillUnmount() {
         this.setState(this.init_state)
     }
-    
-    // componentDidMount() {
-    //     ReactDOM.findDOMNode(this.refs.VerifyPassword_AuthInput).focus()
-    // }
     
     render() {
         if(this.state.verified) return <span>{this.props.children}</span>
@@ -38,9 +45,8 @@ export default class VerifyPassword extends Component {
             <label><Translate content="wallet.existing_password"/></label>
             <form onSubmit={this.onPassword.bind(this)}>
                 <AuthInput
-                    hasConfirmation={true}
+                    hasConfirmation={false}
                     key={this.state.password_input_reset}
-                    onValid={this.onAuthInputChange.bind(this)}
                     authError={this.state.password_error}/>
             </form>
             <span className="button success"
@@ -48,25 +54,13 @@ export default class VerifyPassword extends Component {
         </span>
     }
     
-    onAuthInputChange(auth) {
-        this.setState({ confirmation_matches: auth.valid, auth })
-    }
-
     onPassword(e) {
         if(e) e.preventDefault()
-        let { password, email, username } = this.state.auth
-        if(WalletDb.verifyPassword(password, email, username)) {
+        if( ! this.props.auth.valid) return
+        if(WalletDb.verifyPassword(this.props.auth)) {
             this.setState({ password_error: false, verified: true, password_input_reset: Date.now() })
-            if(this.props.onValid)
-                this.props.onValid(password)
         } else
-            this.setState({ password_error: true })//notify.error("Invalid Password")
+            this.setState({ password_error: true })
     }
-    
-    // formChange(event) {
-    //     var state = {}
-    //     state[event.target.id] = event.target.value
-    //     this.setState(state)
-    // }
     
 }

@@ -1,6 +1,6 @@
 import { checkToken, expire_min } from "@graphene/time-token"
 import emailToken from "./EmailToken"
-import * as WalletDb from "./WalletDb"
+import * as WalletServerDb from "./WalletServerDb"
 import {Wallet} from "./db/models.js"
 import { hash } from "@graphene/ecc"
 
@@ -31,7 +31,7 @@ export default function reducer(state, action) {
                     break
                 }
                 var email_sha1 = result.seed
-                reply( WalletDb.createWallet(encrypted_data, signature, email_sha1, wallet => walletNotify(wallet)) )
+                reply( WalletServerDb.createWallet(encrypted_data, signature, email_sha1, wallet => walletNotify(wallet)) )
                 break
             case 'fetchWallet':
                 var { public_key, local_hash } = action
@@ -53,14 +53,14 @@ export default function reducer(state, action) {
                 break
             case 'saveWallet':
                 var { original_local_hash, encrypted_data, signature } = action
-                reply( WalletDb.saveWallet(original_local_hash, encrypted_data, signature,
+                reply( WalletServerDb.saveWallet(original_local_hash, encrypted_data, signature,
                     wallet => walletNotify(wallet)) )
                 break
             case 'changePassword':
-                reply( WalletDb.changePassword(action, wallet => walletNotify(wallet)) )
+                reply( WalletServerDb.changePassword(action, wallet => walletNotify(wallet)) )
                 break
             case 'deleteWallet':
-                reply( WalletDb.deleteWallet(action, wallet => walletNotify(wallet)) )
+                reply( WalletServerDb.deleteWallet(action, wallet => walletNotify(wallet)) )
                 break
             default:
                 reply("Not Implemented")

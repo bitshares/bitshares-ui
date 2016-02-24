@@ -55,7 +55,7 @@ export default class AuthInput extends Component {
     
     constructor(props) {
         super(props)
-        this.clear = ()=> AuthStore.clear()
+        // this.clear = ()=> AuthStore.clear()
     }
     
     componentWillMount() {
@@ -69,20 +69,20 @@ export default class AuthInput extends Component {
             ReactDOM.findDOMNode(this.refs.auth_password).focus()
     }
     
-    componentWillReceiveProps(nextProps) {
-        console.log('AuthInput nextProps', nextProps)
-        if( nextProps.onValid) {
-            if( nextProps.valid ) {
-                let { email, username, password } = nextProps
-                nextProps.onValid({ email, username, password })
-            } else {
-                nextProps.onValid(null)
-            }
-        }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     console.log('AuthInput nextProps', nextProps)
+    //     if( nextProps.onValid) {
+    //         if( nextProps.valid ) {
+    //             let { email, username, password } = nextProps
+    //             nextProps.onValid({ email, username, password })
+    //         } else {
+    //             nextProps.onValid(null)
+    //         }
+    //     }
+    // }
     
     componentWillUnmount() {
-        console.log("AuthStore.clear");
+        // console.log("AuthStore.clear");
         AuthStore.clear()
     }
     
@@ -121,7 +121,7 @@ export default class AuthInput extends Component {
             </div> :null}
             
             <p className="grid-content has-error">
-                <Translate content={ password_error }/>
+                <Translate content={ password_error ? "wallet." + password_error : null }/>
             </p>
             
         </div>
@@ -160,39 +160,6 @@ export default class AuthInput extends Component {
         </div>
     }
     
-    // onKeyDown(e) {
-    //     if(this.state.valid && this.props.onEnter && e.keyCode === 13) this.props.onEnter(e);
-    // }
-    
-    // valid() {
-    //     return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= 8;
-    // }
-
-    // checkPasswordConfirmation() {
-    //     let confirmation = ReactDOM.findDOMNode(this.refs.confirm_password).value;
-    //     let password = ReactDOM.findDOMNode(this.refs.password).value;
-    //     this.state.doesnt_match = confirmation && password !== confirmation;
-    //     this.setState({doesnt_match: this.state.doesnt_match});
-    // }
-
-    // onChange(e) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     let confirmation = this.props.confirmation ? ReactDOM.findDOMNode(this.refs.confirm_password).value : true;
-    //     let password = ReactDOM.findDOMNode(this.refs.password).value;
-    //     let email = ReactDOM.findDOMNode(this.refs.auth_email).value;
-    //     if(this.props.confirmation) this.checkPasswordConfirmation();
-    //     let state = {
-    //         valid: !this.state.error && !this.state.wrong
-    //         && !(this.props.confirmation && this.state.doesnt_match)
-    //         && confirmation && password.length >= 8,
-    //         value: password,
-    //         email
-    //     };
-    //     if (this.props.onChange) this.props.onChange(state);
-    //     this.setState(state);
-    // }
-
 }
 
 // import AltContainer from "alt-container"

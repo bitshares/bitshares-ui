@@ -60,9 +60,9 @@ class WalletManagerStore extends BaseStore {
     }
     
     /** This may result in a new wallet name being added, only in this case
-        should a `create_wallet_password` and `brnkey` be provided.
+        should a `create_wallet_auth` and `brnkey` be provided.
     */
-    onSetWallet({wallet_name, create_wallet_password, brnkey, resolve}) {
+    onSetWallet({wallet_name, create_wallet_auth, brnkey, resolve}) {
             
         if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
             throw new Error("Invalid wallet name")
@@ -90,8 +90,8 @@ class WalletManagerStore extends BaseStore {
             // Update state here again to make sure listeners re-render
             // this.setState({})
             
-            if(create_wallet_password)
-                return WalletDb.onCreateWallet( create_wallet_password, brnkey )
+            if(create_wallet_auth)
+                return WalletDb.onCreateWallet( create_wallet_auth, brnkey )
             
         })
         return resolve ? resolve(p) : p

@@ -21,13 +21,13 @@ class WalletActions {
     }
     
     /** Make an existing wallet active or create a wallet (and make it active).
-        If <b>wallet_name</b> does not exist, provide a <b>create_wallet_password</b>.
+        If <b>wallet_name</b> does not exist, provide a <b>create_wallet_auth</b>.
     */
-    setWallet(wallet_name, create_wallet_password, brnkey) {
+    setWallet(wallet_name, create_wallet_auth, brnkey) {
         WalletUnlockActions.lock()
         if( ! wallet_name) wallet_name = "default"
         return new Promise( resolve => {
-            this.dispatch({wallet_name, create_wallet_password, brnkey, resolve})
+            this.dispatch({wallet_name, create_wallet_auth, brnkey, resolve})
         })
     }
     

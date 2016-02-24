@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import {BackupRestore} from "components/Wallet/Backup"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import AuthInput from "components/Forms/AuthInput"
+import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
 import NotificationSystem from 'react-notification-system'
@@ -38,11 +39,12 @@ class WalletCreate extends Component {
 class CreateNewWallet extends Component {
     
     static getStores() {
-        return [WalletDb]
+        return [WalletDb, AuthStore]
     }
     
     static getPropsFromStores() {
         var wallet = WalletDb.getState()
+        wallet.auth = AuthStore.getState()
         return wallet
     }
     
@@ -54,7 +56,6 @@ class CreateNewWallet extends Component {
         super()
         this.state = { 
             wallet_public_name: "default",
-            valid_password: null,
             errors: {},
             isValid: false,
             create_submitted: false,
@@ -85,7 +86,7 @@ class CreateNewWallet extends Component {
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <AuthInput onValid={this.onPassword.bind(this)}/>
+                <AuthInput />
                 { has_wallet ? (
                     <div className="grid-content no-overflow">
                         <br/>
@@ -123,12 +124,6 @@ class CreateNewWallet extends Component {
         window.history.back()
     }
     
-    onPassword(valid_password) {
-        this.state.valid_password = valid_password
-        this.setState({ valid_password })
-        this.validate()
-    }
-    
     onCustomBrainkey() {
         this.setState({ custom_brainkey: true })
     }
@@ -138,11 +133,26 @@ class CreateNewWallet extends Component {
         this.setState({ brnkey })
         this.validate()
     }
+    
+    validate() {
+        let state = this.state
+        let errors = state.errors
+        let wallet_names = WalletDb.getState().wallet_names
+        errors.wallet_public_name =
+            wallet_names.has(state.wallet_public_name) ?
+            `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name` :
+            null
+        
+        var isValid = errors.wallet_public_name === null && this.props.auth.valid !== null
+        if(this.state.custom_brainkey && isValid)
+            isValid = this.state.brnkey !== null
+        this.setState({ isValid, errors })
+    }
 
     onSubmit(e) {
         e.preventDefault()
         var wallet_name = this.state.wallet_public_name
-        WalletActions.setWallet(wallet_name, this.state.valid_password, this.state.brnkey)
+        WalletActions.setWallet(wallet_name, this.props.auth, this.state.brnkey)
         this.setState({create_submitted: true})
     }
     
@@ -161,21 +171,6 @@ class CreateNewWallet extends Component {
         this.state[key_id] = value
         this.setState(this.state)
         this.validate()
-    }
-    
-    validate() {
-        let state = this.state
-        let errors = state.errors
-        let wallet_names = WalletDb.getState().wallet_names
-        errors.wallet_public_name =
-            wallet_names.has(state.wallet_public_name) ?
-            `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name` :
-            null
-        
-        var isValid = errors.wallet_public_name === null && state.valid_password !== null
-        if(this.state.custom_brainkey && isValid)
-            isValid = this.state.brnkey !== null
-        this.setState({ isValid, errors })
     }
     
     onDone() {
