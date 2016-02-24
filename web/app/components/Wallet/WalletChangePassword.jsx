@@ -3,7 +3,7 @@ import Translate from "react-translate-component"
 import notify from "actions/NotificationActions"
 import cname from "classnames"
 import WalletDb from "stores/WalletDb"
-import PasswordConfirm from "./PasswordConfirm"
+import AuthInput from "components/Forms/AuthInput"
 import WalletUnlock from "components/Wallet/WalletUnlock"
 import LoadingIndicator from "components/LoadingIndicator"
 import VerifyPassword from "components/Wallet/VerifyPassword"
@@ -33,7 +33,7 @@ export default class WalletChangePassword extends Component {
             <h3><Translate content="wallet.change_password"/></h3>
             <VerifyPassword onValid={this.onOldPassword.bind(this)}>
                 <form onSubmit={this.onAccept.bind(this)}>
-                    <PasswordConfirm onValid={this.onNewPassword.bind(this)}/>
+                    <AuthInput onEnter={this.onNewPassword.bind(this)}/>
                 </form>
                 {this.state.loading ? <div className="center-content"><LoadingIndicator type="circle"/><br/></div>:null}
                 <div className={cname("button success", {disabled: ! ready})}
@@ -47,9 +47,9 @@ export default class WalletChangePassword extends Component {
     
     onAccept(e) {
         if(e) e.preventDefault()
-        var {old_password, new_password} = this.state
+        var {prev, next} = this.state
         this.setState({ loading: true }, ()=>{
-            WalletDb.changePassword(old_password, new_password)
+            WalletDb.changePassword(prev, next)
             .then(()=> {
                 this.setState(this.init_state)
                 notify.success("Password changed")
@@ -64,8 +64,8 @@ export default class WalletChangePassword extends Component {
             })
         })
     }
-    onOldPassword(old_password) { this.setState({ old_password }) }
-    onNewPassword(new_password) { this.setState({ new_password }) }
+    onOldPassword({ email, username, password }) { this.setState({ prev: { email, username, password }}) }
+    onNewPassword({ email, username, password }) { this.setState({ next: { email, username, password }}) }
 }
 
 class Reset extends Component {

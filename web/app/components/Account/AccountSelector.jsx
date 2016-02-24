@@ -110,10 +110,11 @@ class AccountSelector extends React.Component {
 
         return (
             <div className="account-selector no-overflow" style={this.props.style}>
+                
                 {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
                 <AccountImage size={{height: 80, width: 80}}
                               account={identicon_account_name} custom_image={null}/>}
-
+                
                 <div className="content-area">
                     <div className="header-area">
                         {error ? null : <div className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></div>}
@@ -141,6 +142,7 @@ class AccountSelector extends React.Component {
                         <span>{error}</span>
                     </div>
                 </div>
+
             </div>
         )
 

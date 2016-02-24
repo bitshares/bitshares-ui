@@ -52,7 +52,8 @@ class WalletDb extends BaseStore {
         this.state = {
             saving_keys: false,
             current_wallet: undefined,
-            wallet_names: Set()
+            wallet_names: Set(),
+            locked: true,
         } 
         
         // Confirm only works when there is a UI (this lets a mocha unit test disable it)
@@ -220,7 +221,7 @@ class WalletDb extends BaseStore {
     */
     logout() {
         if( ! wallet) return
-        return wallet.logout().then( ()=> this.setState({lock_event: Date.now()}) )
+        return wallet.logout().then( ()=> this.setState({ locked: true }) )
     }
     
     isLocked() {
@@ -317,22 +318,16 @@ class WalletDb extends BaseStore {
     
     /**
         @return {boolean} true if password matches
-        @throws {Error} "Wallet is locked" (if locked)
+        @throws {Error} "Wallet is locked"
     */
-    verifyPassword( password ) {
+    verifyPassword( password, email = "", username = "" ) {
         assertLogin()
-        let email = ""
-        let username = ""
-        
         return wallet.verifyPassword(email, username, password)
     }
     
-    login( password ) {
+    login( password, email = "", username = "" ) {
         
         assert(this.isLocked(), "Wallet is already unlocked")
-        
-        let email = ""
-        let username = ""
         
         // Check after wallet.login...
         let is_legacy = ()=>
@@ -353,14 +348,12 @@ class WalletDb extends BaseStore {
         return Promise.resolve()
         .then( ()=> is_legacy() ? legacy_upgrade() : wallet.login(email, username, password, Apis.chainId()) )
         .then( ()=> AccountRefsStore.loadDbData() )
-        .then( ()=> this.setState({lock_event: Date.now()}) )
+        .then( ()=> this.setState({locked: false }) )
     }
     
-    /** This may will unlock the wallet. */
+    /** This will unlock the wallet (if successful). */
     changePassword( old_password, new_password ) {
-        let username = ""
-        let email = ""
-        return wallet.changePassword( email, username, old_password, new_password )
+        return wallet.changePassword( old_password, new_password )
     }
     
     /**

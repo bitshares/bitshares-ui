@@ -58,6 +58,7 @@ import { AddressIndex } from "@graphene/wallet-client";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
+import RemoteBackups from "./components/Wallet/RemoteBackups";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
@@ -276,6 +277,7 @@ let routes = (
             <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
             <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
         </Route>
+        <Route name="remote-backups" path="remote-backups(/:token)" component={RemoteBackups} onEnter={RemoteBackups.onEnter}/>
         <Route name="create-wallet" path="create-wallet" component={WalletCreate}/>
         <Route name="console" path="console" component={Console}/>
         <Route name="transfer" path="transfer" component={Transfer}/>

@@ -1,4 +1,5 @@
 import assert from "assert"
+import rfc822Email from "./rfc822Email"
 
 /**
     A protocol between the web browser and the server for storing and retrieving data.  Unless documented otherwise, all methods return a Promise (future) that will resolve on success or reject on error.
@@ -36,7 +37,7 @@ export default class WalletApi {
         @return {Promise} object { status: 200, statusText: "OK", expire_min: 10 }
     */
     requestCode(email) {
-        if( invalidEmail(email) ) throw new Error("invalid email " + email)
+        if( ! rfc822Email(email) ) throw new Error("invalid email " + email)
         let params = { email }
         return this.ws_rpc.call("requestCode", params) 
             .then( json => {
@@ -174,11 +175,6 @@ export default class WalletApi {
     Example: 2015-11-11T19:43:58.181Z
     @type {string}
 */
-
-// No spaces, only one @ symbol, any character for the email name (not completely complient but safe),
-// only valid domain name characters...  Single letter domain is allowed, top level domain has at
-// least 2 characters.
-export var invalidEmail = email => ! email || ! /^[^ ^@.]+@[a-z0-9][\.a-z0-9_-]*\.[a-z0-9]{2,}$/i.test( email )
 
 // @return {string} binary
 // var toBinary = data => data == null ? data :

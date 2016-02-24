@@ -4,13 +4,15 @@ import cname from "classnames"
 import Trigger from "react-foundation-apps/src/trigger"
 import Modal from "react-foundation-apps/src/modal"
 import ZfApi from "react-foundation-apps/src/utils/foundation-api"
-import PasswordInput from "../Forms/PasswordInput"
+import AuthInput from "../Forms/AuthInput"
 import notify from "actions/NotificationActions"
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 
 import AltContainer from "alt-container";
+import connectToStores from "alt/utils/connectToStores"
 import WalletDb from "stores/WalletDb"
+import AuthStore from "stores/AuthStore"
 import WalletUnlockStore from "stores/WalletUnlockStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import { Apis } from "@graphene/chain"
@@ -26,11 +28,12 @@ class WalletUnlockModal extends React.Component {
     _getInitialState() {
         return {
             password_error: null,
-            password_input_reset: Date.now()
+            authInput_reset: Date.now()
         }
     }
     
     reset() {
+        AuthStore.clear()
         this.setState(this._getInitialState())
     }
 
@@ -41,51 +44,53 @@ class WalletUnlockModal extends React.Component {
                 return
             if(msg === "close") {
                 //if(this.props.reject) this.props.reject()
+                AuthStore.clear()
                 WalletUnlockActions.cancel()
             } else if (msg === "open") {
-                this.refs.password_input.clear()
-                // if(Apis.instance().chain_id !== WalletDb.prop("chain_id")) {
-                //     notify.error("This wallet was intended for a different block-chain; expecting " +
-                //         WalletDb.prop("chain_id", "").substring(0,4).toUpperCase() + ", but got " +
-                //         Apis.instance().chain_id.substring(0,4).toUpperCase())
-                //     ZfApi.publish(this.props.modalId, "close")
-                //     return
-                // }
-                modal.querySelector('[name="password"]').focus()
+                
             }
         })
     }
     
     componentDidUpdate() {
-        //DEBUG console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
+        //DEBUG 
+        console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
         if(this.props.resolve) {
             if (WalletDb.isLocked())
                 ZfApi.publish(this.props.modalId, "open")
-            else 
+            else {
                 this.props.resolve()
+            }
         }
     }
+    
+    // componentWillReceiveProps(nextProps) {
+    //     console.log('this.props, nextProps', this.props, nextProps)
+    // }
 
     onPasswordEnter(e) {
         e.preventDefault()
-        var password = this.refs.password_input.value()
+        console.log('this.auth', this.auth)
+        if( ! this.auth ) return
         this.setState({password_error: null})
-        WalletDb.login( password || "" ).then(()=>{
-            this.refs.password_input.clear()
+        let { password, email, username } = this.auth
+        AuthStore.login( password, email, username ).then(()=>{
+            AuthStore.clear()
             ZfApi.publish(this.props.modalId, "close")
             this.props.resolve()
             WalletUnlockActions.change()
-            this.setState({password_input_reset: Date.now(), password_error: false})
+            this.setState({authInput_reset: Date.now(), password_error: false})
         })
         .catch( error =>{ this.setState({password_error: true}) })
     }
     
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
-        var unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
-        
+        let unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
+        let authValid = auth => this.auth = auth
+
         // Modal overlayClose must be false pending a fix that allows us to detect
-        // this event and clear the password (via this.refs.password_input.clear())
+        // this event and clear the password (via this.refs.authInput.clear())
         // https://github.com/akiran/react-foundation-apps/issues/34
         return ( 
             // U N L O C K
@@ -95,10 +100,9 @@ class WalletUnlockModal extends React.Component {
                 </Trigger>
                 <h3><Translate content="header.unlock" /> {unlock_what}</h3>
                 <form onSubmit={this.onPasswordEnter} noValidate>
-                    <PasswordInput ref="password_input"
-                        onEnter={this.onPasswordEnter}
-                        key={this.state.password_input_reset}
-                        wrongPassword={this.state.password_error}/>
+                    <AuthInput key={this.state.authInput_reset}
+                        hasConfirm={false} onValid={authValid.bind(this)}
+                        authError={this.state.password_error}/>
                     <div className="button-group">
                         <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
                         <Trigger close={this.props.modalId}>
@@ -109,6 +113,7 @@ class WalletUnlockModal extends React.Component {
             </Modal>
         )
     }
+    
     
 }
 

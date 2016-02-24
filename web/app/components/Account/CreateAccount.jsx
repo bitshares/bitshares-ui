@@ -4,7 +4,7 @@ import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AccountNameInput from "../Forms/AccountNameInput";
-import PasswordInput from "./../Forms/PasswordInput";
+import AuthInput from "./../Forms/AuthInput";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
@@ -230,7 +230,7 @@ class CreateAccount extends React.Component {
 
                                 { ! WalletDb.isLocked() ?
                                     null :
-                                    <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
+                                    <AuthInput ref="password" hasConfirm={true} onChange={this.onPasswordChange.bind(this)}/>
                                 }
                                 {
                                     first_account ? null : (

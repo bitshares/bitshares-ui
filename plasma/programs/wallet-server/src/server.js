@@ -59,7 +59,7 @@ export default function createServer() {
         
         ws.on('message', msg => {
             
-            // be carefull, an exception here will crash the server!
+            // be carefull, an exception here (before the "try") will crash the server!
             
             let id
             let wsType = ws // standared non-subscription reply
@@ -72,8 +72,8 @@ export default function createServer() {
                     return
                 }
                 
-                if( ws.upgradeReq.url !== "/wallet_v1") {
-                    wsResponse(wsType, id, "Bad Request", { error: "Unknown URL" })
+                if( ws.upgradeReq.url !== "/") {
+                    wsResponse(wsType, id, "Bad Request", { error: "Unknown URL: " + ws.upgradeReq.url})
                     return
                 }
             

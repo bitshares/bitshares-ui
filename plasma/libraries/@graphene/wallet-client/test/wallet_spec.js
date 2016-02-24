@@ -133,13 +133,13 @@ describe('Single wallet', () => {
         .then( ()=> wallet.login(email, username, password, chain_id) )
         .then( ()=> wallet.keepRemoteCopy(true, code()) )
         
-        .then( ()=>{ assert.throws(()=> wallet.changePassword(email, username, "invalid_"+password, "new_"+password), /invalid_password/, "invalid_password") })
+        .then( ()=>{ assert.throws(()=> wallet.changePassword("invalid_"+password, "new_"+password), /invalid_password/, "invalid_password") })
         
         // Trigger a wallet modified exception.
         // Unsubscribe and disconnect, then modify locally only
         .then( ()=>{ wallet.useBackupServer(null) })
         .then( ()=> wallet.setState({ test_wallet: 'two' }) )
-        .then( ()=>{ assert.throws(()=> wallet.changePassword(email, username, password, "new_"+password), /wallet_modified/, "wallet_modified") })
+        .then( ()=>{ assert.throws(()=> wallet.changePassword(password, "new_"+password), /wallet_modified/, "wallet_modified") })
         
         // Recover from the wallet_modified exception
         .then( ()=> wallet.logout() )
@@ -151,7 +151,7 @@ describe('Single wallet', () => {
         .then( ()=> wallet.login(email, username, password, chain_id) )
         
         // now the wallet is not modified, the local copy matches the server
-        .then( ()=> wallet.changePassword(email, username, password, "new_"+password) )
+        .then( ()=> wallet.changePassword(password, "new_"+password) )
         .then( ()=> wallet.logout() )
         .then( ()=> wallet.login(email, username, "new_"+password, chain_id) )
     })

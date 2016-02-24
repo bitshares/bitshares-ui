@@ -5,7 +5,7 @@ class WalletUnlockActions {
     /** If you get resolved then the wallet is or was just unlocked.  If you get
         rejected then the wallet is still locked.
         
-        @return nothing .. Just test for resolve() or reject() 
+        @return test for resolve() or reject() 
     */
     unlock() {
         return new Promise( (resolve, reject) => {

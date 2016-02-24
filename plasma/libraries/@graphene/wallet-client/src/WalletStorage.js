@@ -147,7 +147,7 @@ export default class WalletStorage {
     /**
         Configure the wallet to save its data on the remote server. If this is set to false, then it will be removed from the server. If it is set to true, then it will be uploaded to the server. If the wallet is not currently saved on the server a token will be required to allow the creation of the new wallet's data on the remote server.
         
-        The default is <b>undefined</b> (neither upload nor remove).  Subscribers are notified if the configuration changes.
+        If any parameter is `null`, no changes will take place.  Subscribers are notified if the configuration changes.
         
         The upload or delete operation may be deferred pending: {@link this.login} and {@link this.useBackupServer}
         
@@ -159,7 +159,7 @@ export default class WalletStorage {
     keepRemoteCopy( remote_copy = true, remote_token = this.storage.state.get("remote_token") ) {
         
         if( remote_copy === this.storage.state.get("remote_copy") && remote_token === this.storage.state.get("remote_token"))
-            return
+            return Promise.resolve()
         
         if( remote_copy === true && ! this.storage.state.get("remote_url"))
             throw new Error(this.instance+":configuration_error, remote_copy without remote_url")
@@ -170,7 +170,10 @@ export default class WalletStorage {
         }
         
         this.notify = true
-        this.storage.setState({ remote_copy, remote_token })
+        let state = {}
+        if( remote_copy !== null) state.remote_copy = remote_copy
+        if( remote_token !== null) state.remote_token = remote_token
+        this.storage.setState(state)
         return this.notifyResolve( this.sync() )
     }
     
@@ -398,43 +401,34 @@ export default class WalletStorage {
     /**
         Change password and leave the wallet unlocked with the new password.  You must be logged in to change the password.
         
-        @arg {string} email 
+        @arg {string} password
+        @arg {string} email
         @arg {string} username
-        @arg {string} old_password
-        @arg {string} new_password
-        @throws {Error} [
-            email_required | username_required | old_password_required |
-            invalid_password | new_password_required | wallet_empty
-        ]
-        @return {Promise} - can be ignored unless one is interested in the remote wallet syncing.
-    */
-    changePassword( email, username, old_password, new_password ) {
         
+        @throws {Error} [ email_required | username_required | invalid_password | password_required | wallet_empty ]
+        @return {Promise} - can be ignored unless interested in the remote wallet syncing.
+        
+    */
+    changePassword( password, email = "", username = "") {
+        
+        req(password, "password")
+
         if( ! this.private_key ) throw new Error("Wallet is locked")
         
         if( ! this.storage.state.get("encrypted_wallet") )
             throw new Error("wallet_empty")
         
-        req(email, "email")
-        req(username, "username")
-        req(old_password, "old_password")
-        req(old_password, "new_password")
-        
-        let old_private_key = PrivateKey.fromSeed(
+        let new_private_key = PrivateKey.fromSeed(
             email.trim().toLowerCase() + "\t" +
             username.trim().toLowerCase() + "\t" +
-            old_password
+            password
         )
         
-        // check login
-        if(old_private_key.toWif() !== this.private_key.toWif())
-            throw new Error("invalid_password")
-        
         let weak_password = email.trim() == "" || username.trim() == ""
-        assert(! weak_password || ! this.storage.state.get("remote_copy"),
+        assert( ! weak_password || ! this.storage.state.get("remote_copy"),
             "Remote copies are enabled, but an email or username is missing from this wallet's encryption key.")
         
-        let old_public_key = old_private_key.toPublicKey()
+        let old_public_key = this.private_key.toPublicKey()
         let original_local_hash = this.localHash()
         let remote_copy = this.storage.state.get("remote_copy")
         
@@ -446,11 +440,6 @@ export default class WalletStorage {
             }
         }
         
-        let new_private_key = PrivateKey.fromSeed(
-            email.trim().toLowerCase() + "\t" +
-            username.trim().toLowerCase() + "\t" +
-            new_password
-        )
         let new_public_key = new_private_key.toPublicKey()
         
         this.wallet_object = this.wallet_object.merge({

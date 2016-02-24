@@ -3,7 +3,7 @@ import React, {Component} from "react"
 import Translate from "react-translate-component";
 import {BackupRestore} from "components/Wallet/Backup"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
-import PasswordConfirm from "components/Wallet/PasswordConfirm"
+import AuthInput from "components/Forms/AuthInput"
 import WalletDb from "stores/WalletDb"
 import WalletActions from "actions/WalletActions"
 import NotificationSystem from 'react-notification-system'
@@ -85,7 +85,7 @@ class CreateNewWallet extends Component {
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <PasswordConfirm onValid={this.onPassword.bind(this)}/>
+                <AuthInput onValid={this.onPassword.bind(this)}/>
                 { has_wallet ? (
                     <div className="grid-content no-overflow">
                         <br/>
