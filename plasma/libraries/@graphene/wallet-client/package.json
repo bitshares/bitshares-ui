@@ -4,7 +4,7 @@
   "description": "Client library for arbitrary wallet object synchronization.  This package is a sync layer and sycn related storage, it does not defined or store the wallet.",
   "main": "index.js",
   "config": {
-    "remote_url": "ws://localhost:9080/wallet_v1",
+    "remote_url": "ws://localhost:9080",
     "socket_debug": false,
     "@graphene/local-secret:secret": "test"
   },

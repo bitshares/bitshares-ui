@@ -7,7 +7,7 @@ npm install
 For the unit tests, you will need to `npm start` a programs/wallet-server configured with the same secret (@graphene/local-secret:secret = 'test').
 ```sh
 # Sample ./.npmrc
-@graphene/wallet-client:remote_url = ws://localhost:9080/wallet_v1
+@graphene/wallet-client:remote_url = ws://localhost:9080
 @graphene/local-secret:secret = 'test'
 ```
 
