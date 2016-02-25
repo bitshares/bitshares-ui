@@ -280,7 +280,8 @@
         again: "MAKE ANOTHER TRANSFER",
         see: "SEE MY TRANSFERS",
         close: "Close",
-        memo_unlock: "Unlock your wallet in order to see this memo"
+        memo_unlock: "Unlock your wallet in order to see this memo",
+        pubkey_unlock: "Unlock your wallet in order to see this key"
     },
     operation: {
         pending: "pending %(blocks)s blocks",

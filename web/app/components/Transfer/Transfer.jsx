@@ -170,54 +170,54 @@ class Transfer extends React.Component {
         if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
             // transfer from public to blind
             const to = this.state.to_name.slice(1);
-            trx.broadcast = () => {
-                TransactionConfirmActions.wasBroadcast();
+            //trx.broadcast = () => {
+                //TransactionConfirmActions.wasBroadcast();
                 cwallet.transferToBlind(this.state.from_account.get("id"), asset.get("id"), [[to, parseFloat(amount)]], true)
                     .then(res => {
                         console.log("-- transferToBlind res -->", res);
                         //TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
-                        TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipt});
-                        ZfApi.publish("transfer_receipt_modal", "open");
+                        //TransactionConfirmActions.close();
+                        //this.setState({transfer_receipt: res.confirmation_receipt});
+                        //ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- transferToBlind error -->", error);
-                        TransactionConfirmActions.error(error.message);
+                        //TransactionConfirmActions.error(error.message);
                     })
-            }
+            //}
         } else if ((from_account_type === "Private Account" || from_account_type == "Private Contact") && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
             // transfer from blind to blind
             const from = this.state.from_name.slice(1);
             const to = this.state.to_name.slice(1);
-            trx.broadcast = () => {
-                TransactionConfirmActions.wasBroadcast();
+            //trx.broadcast = () => {
+                //TransactionConfirmActions.wasBroadcast();
                 cwallet.blindTransfer(from, to, parseFloat(amount), asset.get("id"), true)
                     .then(res => {
                         console.log("-- blindTransfer res -->", res);
-                        TransactionConfirmActions.close();
+                        //TransactionConfirmActions.close();
                         this.setState({transfer_receipt: res.confirmation_receipt});
                         ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- blindTransfer error -->", error);
-                        TransactionConfirmActions.error(error.message);
+                        //TransactionConfirmActions.error(error.message);
                     })
-            }
+            //}
         } else if (from_account_type === "Private Account" || from_account_type == "Private Contact") {
             // transfer from blind to public
             const from = this.state.from_name.slice(1);
-            trx.broadcast = () => {
-                TransactionConfirmActions.wasBroadcast();
+            //trx.broadcast = () => {
+                //TransactionConfirmActions.wasBroadcast();
                 cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
                     .then(res => {
                         console.log("-- transferFromBlind res -->", res);
-                        TransactionConfirmActions.wasIncluded(res.confirmation_receipt);
+                        //TransactionConfirmActions.wasIncluded(res.confirmation_receipt);
                     }).catch(error => {
                         console.error("-- transferFromBlind error -->", error);
-                        TransactionConfirmActions.error(error.message);
+                        //TransactionConfirmActions.error(error.message);
                     })
-            }
+            //}
         }
 
-        TransactionConfirmActions.confirmBlind(trx);
+        //TransactionConfirmActions.confirmBlind(trx);
     }
 
     onSubmit(e) {
@@ -275,7 +275,7 @@ class Transfer extends React.Component {
         const blind_transfer = this.isBlindTransfer(from_name, to_name);
 
         let from_my_account = AccountStore.isMyAccount(from_account)
-        if(from_account && ! from_my_account && ! propose ) {
+        if (from_account && !from_my_account && !propose) {
             from_error = counterpart.translate("account.errors.not_yours");
         }
 

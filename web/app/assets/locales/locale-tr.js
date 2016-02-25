@@ -276,7 +276,8 @@
         again: "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
         see: "TRANSFER İŞLEMLERİMİ GÖR",
         close: "Kapalı",
-        memo_unlock: "Bu memoyu görebilmek için cüzdanın kilidini açın"
+        memo_unlock: "Bu memoyu görebilmek için cüzdanın kilidini açın",
+        pubkey_unlock: "Unlock your wallet in order to see this key"
     },
     operation: {
         pending: "bekleyen %(blocks)s blok",

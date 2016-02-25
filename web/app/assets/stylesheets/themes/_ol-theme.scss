@@ -577,6 +577,9 @@ td.orderHistoryBid {
 
 .memo {
   color: $secondary-text-color;
+  svg > path {
+    fill: $secondary-text-color;
+  }
 }
 
 .help-content {

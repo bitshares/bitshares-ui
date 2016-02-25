@@ -269,7 +269,8 @@ module.exports = {
         again: "WEITERE ÜBERWEISUNG",
         see: "ÜBERWEISUNGSÜBERSICHT",
         close: "SCHLIEßEN",
-        memo_unlock: "Entsperren um Memo zu lesen"
+        memo_unlock: "Entsperren um Memo zu lesen",
+        pubkey_unlock: "Unlock your wallet in order to see this key"
     },
     operation: {
         pending: "schwebend %(blocks)s Blöcke",

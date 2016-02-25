@@ -16,6 +16,7 @@ import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
 import WalletDb from "stores/WalletDb";
 import ReceiveFundsModal from "../Stealth/ReceiveFundsModal";
+import PubKey from "../Utility/PubKey";
 
 class Dashboard extends React.Component {
 
@@ -169,10 +170,9 @@ class Dashboard extends React.Component {
                             <tbody>
                             {
                                 private_accounts.filter(name => name.indexOf(df) !== -1).map(name => {
-                                    const private_key = WalletDb.isLocked() ? "(locked)" : WalletDb.getState().cwallet.getPublicKey(name).toString();
                                     return (<tr key={name}>
                                         <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
-                                        <td ref={"$name$" + private_key}>{private_key} <a href onClick={this._copyToClipboard.bind(this, private_key)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name).toString()}/></td>
                                     </tr>);
                                 })
                             }
@@ -186,7 +186,7 @@ class Dashboard extends React.Component {
                             <thead>
                                 <tr>
                                     <th><Translate content="header.account" /></th>
-                                    <th width="48px">COPY</th>
+                                    <th>PUBLIC KEY</th>
                                     <th width="48px">REMOVE</th>
                                 </tr>
                             </thead>
@@ -194,8 +194,8 @@ class Dashboard extends React.Component {
                             {
                                 private_contacts.filter(name => name.indexOf(df) !== -1).map(name => {
                                     return (<tr key={name}>
-                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name}</td>
-                                        <td><a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name).toString()}/></td>
                                         <td><button className="button outline" onClick={this._removePrivateContact.bind(this, name)} data-tip="Remove Contact" data-type="light">-</button></td>
                                     </tr>);
                                 })
