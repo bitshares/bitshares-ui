@@ -28,7 +28,8 @@ class ValueComponent extends React.Component {
 
     static defaultProps = {
         toAsset: "1.3.0",
-        fullPrecision: true
+        fullPrecision: true,
+        noDecimals: false
     };
 
     constructor() {
@@ -114,7 +115,7 @@ class ValueComponent extends React.Component {
             return <span>n/a</span>
         }
 
-        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={toAsset.get("precision")}/>;
+        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={this.props.noDecimals ? toAsset.get("precision") : 0}/>;
     }
 }
 
@@ -147,7 +148,7 @@ class BalanceValueComponent extends React.Component {
         let amount = Number(this.props.balance.get("balance"));
         let fromAsset = this.props.balance.get("asset_type");
             
-        return <ValueStoreWrapper amount={amount} fromAsset={fromAsset} toAsset={this.props.toAsset}/>;
+        return <ValueStoreWrapper amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }
 
