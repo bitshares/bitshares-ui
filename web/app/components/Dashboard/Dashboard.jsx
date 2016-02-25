@@ -13,17 +13,20 @@ class Dashboard extends React.Component {
         super();
         this.state = {
             width: null,
+            height: null,
             showIgnored: false
         };
 
-        this._setWidth = this._setWidth.bind(this);
+        this._setDimensions = this._setDimensions.bind(this);
     }
 
     componentDidMount() {
         let c = ReactDOM.findDOMNode(this.refs.container);
         ps.initialize(c);
-        let t = ReactDOM.findDOMNode(this.refs.transactions);
-        ps.initialize(t);
+
+        this._setDimensions();
+
+        window.addEventListener("resize", this._setDimensions, false);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -31,6 +34,7 @@ class Dashboard extends React.Component {
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
             nextState.width !== this.state.width ||
+            nextState.height !== this.state.height ||
             nextState.showIgnored !== this.state.showIgnored
         );
     }
@@ -38,24 +42,18 @@ class Dashboard extends React.Component {
     componentDidUpdate() {
         let c = ReactDOM.findDOMNode(this.refs.container);
         ps.update(c);
-        let t = ReactDOM.findDOMNode(this.refs.transactions);
-        ps.update(t);        
-    }
-
-    componentDidMount() {
-        this._setWidth();
-
-        window.addEventListener("resize", this._setWidth, false);
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._setWidth, false);
+        window.removeEventListener("resize", this._setDimensions, false);
     }
 
-    _setWidth() {
+    _setDimensions() {
         let width = window.innerWidth;
-        if (width !== this.state.width) {
-            this.setState({width});
+        let height = this.refs.wrapper.offsetHeight;
+
+        if (width !== this.state.width || height !== this.state.height) {
+            this.setState({width, height});
         }
     }
 
@@ -67,7 +65,7 @@ class Dashboard extends React.Component {
 
     render() {
         let {linkedAccounts, myIgnoredAccounts} = this.props;
-        let {width, showIgnored} = this.state;
+        let {width, height, showIgnored} = this.state;
 
         let names = this.props.linkedAccounts.toArray().sort();
         let ignored = this.props.myIgnoredAccounts.toArray().sort();
@@ -76,7 +74,7 @@ class Dashboard extends React.Component {
         let firstDiv = "grid-block no-overflow " + (width < 750 ? "" : "shrink");
 
         return (
-            <div className={outerClass}>
+            <div ref="wrapper" className={outerClass}>
                 <div className={firstDiv} style={{minWidth: "50%"}}>
                     <div ref="container" className="grid-content" style={{paddingLeft: "0.25rem", paddingRight: "0.25rem"}}>
                         <h4 style={{paddingLeft: "1rem"}}><Translate content="account.overview" /></h4>
@@ -97,8 +95,8 @@ class Dashboard extends React.Component {
                     </div>
                 </div>
                 <div className="grid-block right-column no-overflow">
-                    <div ref="transactions" className="grid-content" style={{paddingLeft: "0.5rem", paddingRight: "0.25rem"}}>
-                        <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
+                    <div className="grid-content no-overflow" style={{paddingLeft: "0.5rem", paddingRight: "0.25rem", paddingBottom: 0}}>
+                        <RecentTransactions maxHeight={height ? height - 20 - 5 : null} accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
                     </div>
                 </div>
             </div>);

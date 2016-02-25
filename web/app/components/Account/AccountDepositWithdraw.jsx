@@ -333,7 +333,7 @@ class AccountDepositWithdraw extends React.Component {
                                 url="https://api.blocktrades.us/v2"
                                 issuer_account="blocktrades"
                                 account={this.props.account}
-                                deposit_coin_type="peercoin"
+                                deposit_coin_type="ppc"
                                 deposit_asset_name="Peercoin"
                                 deposit_asset="PPC"
                                 deposit_wallet_type="peercoin"

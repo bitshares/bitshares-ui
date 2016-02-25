@@ -454,7 +454,8 @@ class MarketsStore {
                     price_int: price.int,
                     amount: amount,
                     type: "bid",
-                    sell_price: order.sell_price
+                    sell_price: order.sell_price,
+                    for_sale: order.for_sale
                 });
             });
 
@@ -464,6 +465,7 @@ class MarketsStore {
                     if (bids[i].price_full === bids[i + 1].price_full) {
                         bids[i].amount += bids[i + 1].amount;
                         bids[i].value += bids[i + 1].value;
+                        bids[i].for_sale += bids[i + 1].for_sale;
                         bids.splice(i + 1, 1);
                     }
                 }
@@ -493,7 +495,8 @@ class MarketsStore {
                     price_int: price.int,
                     amount: amount,
                     type: "ask",
-                    sell_price: order.sell_price
+                    sell_price: order.sell_price,
+                    for_sale: order.for_sale
                 });
             });
 
@@ -503,6 +506,7 @@ class MarketsStore {
                     if (asks[i].price_full === asks[i + 1].price_full) {
                         asks[i].amount += asks[i + 1].amount;
                         asks[i].value += asks[i + 1].value;
+                        asks[i].for_sale += asks[i + 1].for_sale;
                         asks.splice(i + 1, 1);
                     }
                 }

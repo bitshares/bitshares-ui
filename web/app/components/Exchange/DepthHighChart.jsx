@@ -7,6 +7,7 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
+import colors from "assets/colors";
 
 class DepthHighChart extends React.Component {
 
@@ -54,7 +55,7 @@ class DepthHighChart extends React.Component {
 
     render() {
 
-        let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote} = this.props;
+        let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote, theme} = this.props;
 
         let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
 
@@ -163,7 +164,7 @@ class DepthHighChart extends React.Component {
             xAxis: {
                 labels: {
                     style: {
-                        color: "#FFFFFF"
+                        color: colors[theme].primaryText
                     },
                     formatter: function () {return this.value / power; }
                 },
@@ -285,7 +286,7 @@ class DepthHighChart extends React.Component {
                 config.series.push({
                     name: `Call ${quoteSymbol}`,
                     data: flatCalls,
-                    color: "#BBBF2B"
+                    color: colors[theme].callColor
                 })
                 if (this.props.invertedCalls) {
                     totalAsks += totalCalls;
@@ -326,7 +327,7 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Settle ${quoteSymbol}`,
                 data: flat_settles,
-                color: "#4777A0"
+                color: colors[theme].settleColor
             })
 
         }
@@ -337,7 +338,7 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Bid ${quoteSymbol}`,
                 data: flatBids,
-                color: "#50D2C2"
+                color: colors[theme].bidColor
             })
         }
 
@@ -345,7 +346,7 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Ask ${quoteSymbol}`,
                 data: flatAsks,
-                color: "#E3745B"
+                color: colors[theme].askColor
             });
         }
 

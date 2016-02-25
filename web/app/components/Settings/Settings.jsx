@@ -40,6 +40,17 @@ class SettingsEntry extends React.Component {
 
                 break;
 
+            case "themes":
+                value = selected;
+                options = defaults.map(entry => {
+                    let translationKey = "settings." + entry;
+                    let value = counterpart.translate(translationKey);
+
+                    return <option key={entry} value={entry}>{value}</option>;
+                })
+
+                break;
+
             case "defaultMarkets":
                 options = null;
                 value = null;
@@ -164,6 +175,10 @@ class Settings extends React.Component {
                     cookies.set("graphene_locale", e.target.value, { expires: Infinity });
                     SettingsActions.changeSetting({setting: "locale", value: e.target.value });
                 }
+                break;
+
+            case "themes":
+                SettingsActions.changeSetting({setting: "themes", value: e.target.value });
                 break;
 
             case "defaultMarkets":

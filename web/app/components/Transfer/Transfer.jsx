@@ -80,18 +80,11 @@ class Transfer extends React.Component {
         this.setState({to_account, error: null})
     }
 
-    onAmountChanged(fee_asset_types, {amount, asset}) {
-        if (!asset || !amount) {
+    onAmountChanged({amount, asset}) {
+        if (!asset) {
             return;
         }
         this.setState({amount, asset, asset_id: asset.get("id"), error: null});
-
-        // if (this.state.asset !== asset && fee_asset_types.indexOf(asset.get("id")) !== -1) {
-            // this.setState({feeAsset: asset});
-            // if (this.nestedRef) {
-            //     this.nestedRef.onChange({target: {value: asset.get("id")}});
-            // }
-        // }
     }
 
     onFeeChanged({amount, asset}) {
@@ -261,21 +254,23 @@ class Transfer extends React.Component {
                                          tabIndex={tabIndex++}/>
                     </div>
                     {/*  A M O U N T   */}
+                    {from_error ? null : (
                     <div className="content-block" style={{paddingLeft: "96px"}}>
                         <AmountSelector label="transfer.amount"
                                         amount={amount}
-                                        onChange={this.onAmountChanged.bind(this, fee_asset_types)}
+                                        onChange={this.onAmountChanged.bind(this)}
                                         asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
                                         assets={asset_types}
                                         display_balance={balance}
                                         tabIndex={tabIndex++}/>
-                    </div>
+                    </div>)}
                     {/*  M E M O  */}
+                    {from_error ? null : (
                     <div className="content-block" style={{paddingLeft: "96px"}}>
                         <label><Translate component="span" content="transfer.memo"/></label>
                         <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
                         {/*<div>{memo_error}</div>*/}
-                    </div>
+                    </div>)}
 
                     {/*  F E E   */}
                     <div className="content-block" style={{paddingLeft: "96px"}}>

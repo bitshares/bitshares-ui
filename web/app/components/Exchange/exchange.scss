@@ -30,24 +30,6 @@ $negative-color: #E1424A;
   }
 }
 
-div.exchange-content-header {
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  padding: 0.55rem 10px;
-  background-color: #484848 !important;
-  border-bottom: 1px solid #8c88ff;
-  
-  &.bid {
-    border-bottom: 1px solid $bid-color;
-  }
-
-  &.ask {
-    border-bottom: 1px solid $ask-color;
-  }
-}
-
 .market-content {
   padding-left: 5px !important;
   padding-right: 5px !important;
@@ -60,53 +42,16 @@ div.exchange-content-header {
     padding: 0 0.625em 1.25em;
 }
 
-td.orderHistoryBid {
-  > span.price-integer, > span > span.price-integer {
-    font-weight: bold;
-    color: $bid-color;
-  }
-
-  > span.price-decimal, > span > span.price-decimal {
-    color: #e0e0e0;
-    opacity: 0.6;
-  }
-}
-
-td.orderHistoryAsk {
-  > span.price-integer, > span > span.price-integer {
-    font-weight: bold;
-    color: $ask-color;
-  }
-
-  > span.price-decimal, > span >span.price-decimal {
-    color: #e0e0e0;
-    opacity: 0.6;
-  }
-}
-
-td.orderHistoryCall {
-  > span.price-integer, > span > span.price-integer {
-    font-weight: bold;
-    color: $call-color;
-  }
-
-  > span.price-decimal, > span >span.price-decimal {
-    color: #e0e0e0;
-    opacity: 0.6;
-  }
-}
-
 .order-table {
 	width: 100%;
-	> caption {
-		padding-bottom: 1.25rem;
-	}
     > thead > tr > th {
-        font-size: 0.9rem;
+        font-size: 14px;
+        padding: 5px 5px;
     }
 
     > tbody > tr > td {
-        font-size: 0.75rem;
+        font-size: 12px;
+        padding-bottom: 4px;
     }
 
     > tbody > tr:nth-of-type(even) {
@@ -155,13 +100,7 @@ form.order-form {
   padding: 10px;
 }
 
-.bid {
-  background-color: $bid-color !important;
-}
 
-.ask {
-  background-color: $ask-color !important;
-}
 
 #market-charts {
   > div > div.tabs {
@@ -211,16 +150,7 @@ form.order-form {
   border-bottom: none !important;
 }
 
-.orderbook-latest-price {
-    div {
-      background-color: #4C4C4C !important;
-      border-bottom: 1px solid grey !important;
-      border-top: 1px solid grey !important;
-      padding: 10px 0 !important;
-      font-weight: bold;
-      font-size: 13px;
-    }
-}
+
 
 .left-orderbook-header {
   width: 100%;
@@ -322,12 +252,10 @@ li.stat.clickable:hover {
 
   > span {
     > span:first-of-type {
-      color: grey;
       padding-right: 5px;
     }
 
     > span:last-of-type {
-      color: #468EDE;
       padding-left: 5px;
     }
   }
@@ -487,24 +415,27 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .middle-content {
-  margin-bottom: 1rem;
-}
-
-.header-sub-title {
-  font-size: 80%;
-  color: white;
+  margin-bottom: 10px;
 }
 
 .market-right-padding-only {
   padding: 0 0.6rem 0 0 !important;
 }
 
-.change-up {
-  color: $positive-color !important;
+.exchange-bordered {
+  border: 1px solid rgba(183, 183, 183, 0.29);
 }
 
-.change-down {
-  color: $negative-color !important;
+.order-1 {
+  .exchange-bordered {
+    margin: 0 10px 0 10px;
+  }
+}
+
+.order-2 {
+  .exchange-bordered {
+    margin: 0 10px 0 10px;
+  }
 }
 
 .exchange-bordered {
@@ -526,7 +457,6 @@ input[type=number]::-webkit-outer-spin-button {
 .mymarkets-header {
   text-transform: uppercase;
   width: 50%;
-  max-width: 300px;
   font-size: 1.10rem;
   padding-left: 10px;
   padding-bottom: 0.55rem;
@@ -538,10 +468,24 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #484848;
 }
 
+.mymarkets-base-select {
+  margin: 0;
+  padding: 0;
+  height: inherit;
+  font-size: inherit;
+}
+
 .mymarkets-list {
-  padding-top: 0.55rem;
-  padding-left: 0;
+  padding: 0;
   font-size: 0.75rem;
+  .table > thead tr th {
+    font-size: 0.75rem;
+  }
+
+  .table > tbody tr td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 }
 
 table thead tr th.mymarkets-header {
@@ -560,11 +504,6 @@ table thead tr th.mymarkets-header {
 
 .grey-star > svg > path {
   fill: #878787;
-}
-
-tr.activeMarket {
-  color: #4C85D8;
-  background-color: #404040
 }
 
 .no-data {
@@ -595,3 +534,4 @@ tr.activeMarket {
   0%   { background-color: #6B6B6B;}
   100% { background-color: transparent;}
 }
+

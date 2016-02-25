@@ -489,7 +489,7 @@ class PriceChart extends React.Component {
         let boxHeight = 20;
 
         return (
-            <div className="grid-content no-padding no-overflow middle-content">
+            <div className="grid-content no-padding no-margin no-overflow middle-content">
                 <div className="exchange-bordered" style={{margin: 10}}>
                     <div className="exchange-content-header">
                         <Translate content="exchange.price_history" />

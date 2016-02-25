@@ -33,7 +33,7 @@ class QrScan extends React.Component {
     
     render() {
         return <div>
-            <a className="button" onclick="scanPicture()">SCAN</a>
+            <div className="button" onclick="scanPicture()">SCAN</div>
             <Webcam noAudio/>
         </div>
     }

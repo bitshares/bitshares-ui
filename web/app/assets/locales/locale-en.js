@@ -629,7 +629,11 @@
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
         no: "No",
-        walletLockTimeout: "Wallet auto-lock time (seconds)"
+        walletLockTimeout: "Wallet auto-lock time (seconds)",
+        themes: "Theme",
+        "darkTheme": "Dark theme",
+        "lightTheme": "Light theme",
+        "olDarkTheme": "Openledger dark"
     },
     footer: {
         title: "BitShares 2.0",
@@ -686,8 +690,8 @@
         my_asks: "My asks",
         my_orders: "My orders",
         settle_orders: "Settle orders",
-        asks: "Asks",
-        bids: "Bids",
+        asks: "Sell orders",
+        bids: "Buy orders",
         no_data: "No data",
         time: "Time interval",
         borrow: "Borrow",
@@ -697,7 +701,8 @@
         show_bids: "Show all bids",
         show_asks: "Show all asks",
         hide: "Hide",
-        short: "Short"
+        short: "Short",
+        others: "Others"
     },
     fees: {
      title: "Fee Schedule"
