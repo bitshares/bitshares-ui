@@ -450,7 +450,8 @@ class MarketsStore {
                     price_int: price.int,
                     amount: amount,
                     type: "bid",
-                    sell_price: order.sell_price
+                    sell_price: order.sell_price,
+                    for_sale: order.for_sale
                 });
             });
 
@@ -489,7 +490,8 @@ class MarketsStore {
                     price_int: price.int,
                     amount: amount,
                     type: "ask",
-                    sell_price: order.sell_price
+                    sell_price: order.sell_price,
+                    for_sale: order.for_sale
                 });
             });
 

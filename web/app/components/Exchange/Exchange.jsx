@@ -613,9 +613,11 @@ class Exchange extends React.Component {
         this.setState({flipBuySell: !this.state.flipBuySell});
     }
 
-    getSellAmount(price, total = 0) {
+    getSellAmount(price, total = 0, satAmount) {
         let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        let satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);    
+        if (!satAmount) {
+            satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);    
+        } 
         return ((satAmount / price.base.amount) * price.quote.amount) / amountPrecision;
     }
 
@@ -632,11 +634,13 @@ class Exchange extends React.Component {
         return ((satAmount / price.quote.amount) * price.base.amount) / amountPrecision;
     }
 
-    getBuyTotal(price, amount = 0) {
+    getBuyTotal(price, amount = 0, satAmount) {
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        let satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        if (!satAmount) {
+            satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);    
+        }
 
-        return ((satAmount / price.base.amount) * price.quote.amount) / totalPrecision;
+        return (Math.floor(0.5 + (satAmount / price.base.amount) * price.quote.amount)) / totalPrecision;
     }
 
     _toggleCharts() {
@@ -704,26 +708,26 @@ class Exchange extends React.Component {
         if (type === "bid") {
 
             let displaySellPrice = this._getDisplayPrice("ask", order.sell_price);
-
-            let total = this.getSellTotal(order.sell_price, value);
+            let sellAmount = this.getSellAmount(order.sell_price, null, order.for_sale);
 
             this.setState({
                 displaySellPrice: displaySellPrice,
                 sellPrice: order.sell_price,
                 sellAmount: value,
-                sellTotal: market_utils.limitByPrecision(total, base)
+                sellTotal: utils.get_asset_amount(order.for_sale, base)
             });
 
         } else if (type === "ask") {
 
             let displayBuyPrice = this._getDisplayPrice("bid", order.sell_price);
 
-            let total = this.getBuyTotal(order.sell_price, value);
+            // Calculate total
+            let total = this.getBuyTotal(order.sell_price, null, order.for_sale);
 
             this.setState({
                 displayBuyPrice: displayBuyPrice,
                 buyPrice: order.sell_price,
-                buyAmount: value,
+                buyAmount: utils.get_asset_amount(order.for_sale, quote),
                 buyTotal: market_utils.limitByPrecision(total, base)
             });
         }
