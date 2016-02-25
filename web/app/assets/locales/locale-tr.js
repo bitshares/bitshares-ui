@@ -629,7 +629,11 @@
         showSettles: "Ödeme emirlerini derinlik tablosunda gösterin ",
         yes: "Evet",
         no: "Hayır",
-        walletLockTimeout: "Cüzdan oto-kilit süresi (saniye)"
+        walletLockTimeout: "Cüzdan otomatik kitenme süresi (saniye)",
+        themes: "Tema",
+        "darkTheme": "Koyu tema",
+        "lightTheme": "Hafif tema",
+        "olDarkTheme": "Openledger koyu"
     },
     footer: {
         title: "OpenLedger",
@@ -642,7 +646,7 @@
         order_depth: "Piyasa Derinliği",
         history: "Tüm Geçmiş",
         my_history: "Geçmişim",
-        balance: "Bakiyeniz",
+        balance: "Bakiye",
         lowest_ask: "En düşük",
         highest_bid: "En yüksek",
         total: "Toplam",
@@ -686,8 +690,8 @@
         my_asks: "Satış Fiyatlarım",
         my_orders: "Emirlerim",
         settle_orders: "Emirleri öde",
-        asks: "Satış Fiyatları",
-        bids: "Alış Fiyatları",
+        asks: "Satış emirleri",
+        bids: "Alım emirleri",
         no_data: "Veri yok",
         time: "Zaman aralığı",
         borrow: "Ödünç Al",
@@ -697,7 +701,8 @@
         show_bids: "Tüm alış fiyat göster",
         show_asks: "Tümünü göster",
         hide: "Gizle",
-        short: "Kısa"
+        short: "Kısa",
+        others: "Diğerleri"
     },
     fees: {
      title: "Ücret Tarifesi"

@@ -10,6 +10,8 @@ import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import {operations} from "chain/chain_types";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import ReactDOM from "react-dom";
+import ps from "perfect-scrollbar";
 
 function compareOps(b, a) {
     if (a.block_num < b.block_num) return -1;
@@ -33,19 +35,45 @@ class RecentTransactions extends React.Component {
     static propTypes = {
         accountsList: ChainTypes.ChainAccountsList.isRequired,
         compactView: React.PropTypes.bool,
-        limit: React.PropTypes.number
+        limit: React.PropTypes.number,
+        maxHeight: React.PropTypes.number
+    };
+
+    static defaultProps = {
+        limit: 25,
+        maxHeight: 450
     };
 
     constructor(props) {
         super();
         this.state = {
             limit: props.limit ? Math.max(20, props.limit) : 20,
-            csvExport: false
+            csvExport: false,
+            headerHeight: 85
         };
+    }
+
+    componentDidMount() {
+        let t = ReactDOM.findDOMNode(this.refs.transactions);
+        ps.initialize(t);
+
+        this._setHeaderHeight();
+    }
+
+    _setHeaderHeight() {
+        let height = this.refs.header.offsetHeight;
+
+        if (height !== this.state.headerHeight) {
+            this.setState({
+                headerHeight: height
+            });
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if(!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
+        if(this.props.maxHeight !== nextProps.maxHeight) return true;
+        if(this.state.headerHeight !== nextState.headerHeight) return true;
         if (nextState.limit !== this.state.limit || nextState.csvExport !== this.state.csvExport) return true;
         for(let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
@@ -71,6 +99,11 @@ class RecentTransactions extends React.Component {
             var today = new Date();
             saveAs(blob, "btshist-" + today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate() + ".csv");
         }
+
+        let t = ReactDOM.findDOMNode(this.refs.transactions);
+        ps.update(t);
+
+        this._setHeaderHeight();
     }
 
     _onIncreaseLimit() {
@@ -101,11 +134,15 @@ class RecentTransactions extends React.Component {
     }
 
     render() {
-        let {accountsList, compactView, filter} = this.props;
-        let {limit} = this.state;
+        let {accountsList, compactView, filter, style, maxHeight} = this.props;
+        let {limit, headerHeight} = this.state;
         let current_account_id = accountsList.length === 1 && accountsList[0] ? accountsList[0].get("id") : null;
         let history = this._getHistory(accountsList, filter).sort(compareOps);
         let historyCount = history.length;
+
+        style = style ? style : {};
+        style.width = "100%";
+        style.height = "100%";
 
         const display_history = history.length ?
             history.slice(0, limit)
@@ -125,33 +162,46 @@ class RecentTransactions extends React.Component {
             }) : <tr><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>;
 
         return (
-            <div className="recent-transactions" style={this.props.style}>
-                {historyCount > 0 &&
-                    <button
-                        className="button outline float-right"
-                        onClick={this._downloadCSV.bind(this)}
-                        style={{marginTop: "0.5rem"}}
-                        data-tip="Download as CSV"
-                        data-place="left"
-                        data-type="light"
-                    >
-                        <span>CSV</span>
-                    </button>}
-                <h3><Translate content="account.recent" /></h3>
-                <table className={"table" + (compactView ? " compact" : "")}>
-                    <thead>
-                    <tr>
-                        {compactView ? null : <th><Translate content="explorer.block.op" /></th>}
-                        <th><Translate content="account.votes.info" /></th>
-                    </tr>
-                    </thead>
-                    <TransitionWrapper
-                        component="tbody"
-                        transitionName="newrow"
-                    >
-                        {display_history}
-                    </TransitionWrapper>
-                </table>
+            <div className="recent-transactions no-overflow" style={style}>
+                <div ref="header">
+                    {historyCount > 0 &&
+                        <button
+                            className="button outline float-right"
+                            onClick={this._downloadCSV.bind(this)}
+                            style={{marginTop: "0.5rem"}}
+                            data-tip="Download as CSV"
+                            data-place="left"
+                            data-type="light"
+                        >
+                            <span>CSV</span>
+                        </button>}
+                    <h3><Translate content="account.recent" /></h3>
+                    <table className={"table" + (compactView ? " compact" : "")}>
+                        <thead>
+                        <tr>
+                            {compactView ? null : <th style={{width: 200}}><Translate content="explorer.block.op" /></th>}
+                            <th><Translate content="account.votes.info" /></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <div
+                    className="grid-block no-margin"
+                    style={{
+                        padding: "0 10px 0 0",
+                        maxHeight: maxHeight - headerHeight 
+                    }}
+                    ref="transactions">
+                    <table className={"table" + (compactView ? " compact" : "")}>
+                        <TransitionWrapper
+                            component="tbody"
+                            transitionName="newrow"
+                        >
+                            {display_history}
+                        </TransitionWrapper>
+                    </table>
+                </div>
                 {this.props.showMore && historyCount > 20 && limit < historyCount ? (
                     <div className="account-info more-button">
                         <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>

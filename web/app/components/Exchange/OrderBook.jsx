@@ -117,10 +117,11 @@ class OrderBook extends React.Component {
             let containerHeight = this.refs.orderbook_container.offsetHeight;
             let priceHeight = this.refs.center_text.offsetHeight;
             let asksHeight = this.refs.asksWrapper.offsetHeight;
+
             this.setState({
-                vertAsksHeight: 2 + Math.floor((containerHeight - priceHeight) / 2),
+                vertAsksHeight: Math.floor((containerHeight - priceHeight) / 2),
                 vertBidsHeight: containerHeight - priceHeight - asksHeight - 2
-            });
+            }, this.psUpdate);
         }
     }
 
@@ -135,12 +136,7 @@ class OrderBook extends React.Component {
     componentDidMount() {
 
         if (!this.props.horizontal) {
-            let containerHeight = this.refs.orderbook_container.offsetHeight;
-            let priceHeight = this.refs.center_text.offsetHeight;
-
-            this.setState({
-                vertAsksHeight: Math.floor((containerHeight - priceHeight) / 2)
-            });
+            this._updateHeight();
 
             let asksContainer = ReactDOM.findDOMNode(this.refs.vert_asks);
             Ps.initialize(asksContainer);
@@ -152,10 +148,9 @@ class OrderBook extends React.Component {
             let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
             Ps.initialize(asksContainer);            
         }
-
     }
 
-    componentDidUpdate(prevProps) {
+    psUpdate() {
         if (!this.props.horizontal) {
             let asksContainer = ReactDOM.findDOMNode(this.refs.vert_asks);
             Ps.update(asksContainer);
@@ -170,6 +165,10 @@ class OrderBook extends React.Component {
             let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
             Ps.update(asksContainer);     
         }
+    }
+
+    componentDidUpdate(prevProps) {
+        this._updateHeight();
     }
 
     _onBidScroll(e) {
@@ -378,7 +377,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>
-                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
+                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 264}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                         <TransitionWrapper
                                             ref="askTransition"
@@ -426,7 +425,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>    
-                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
+                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 264}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
