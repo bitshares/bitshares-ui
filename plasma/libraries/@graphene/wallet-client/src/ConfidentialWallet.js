@@ -720,6 +720,40 @@ export default class ConfidentialWallet {
         })
         
     }
+    
+    /**
+        @arg {number|string} asset_name_id_or_symbol
+        @return {object} like { asset_id: "1.3.0", amount: 2000000 }
+    */
+    getFeeToAccount(asset_name_id_or_symbol = 0) {
+        let f1, f2, asset
+        return Promise.resolve()
+        
+        .then(()=> fetchChain("getAsset", asset_name_id_or_symbol)).then(_asset=> asset = _asset)
+        .then(()=> console.log(asset))
+        
+        .then(()=> get_blind_transfer_fee(asset.get("id"), 0)).then(_fee=> f1 = _fee)
+        .then(()=> get_blind_transfer_fee(asset.get("id"), 2)).then(_fee=> f2 = _fee)
+        .then(()=> assert(f1.asset_id, f2.asset_id, `Fee asset type mismatch, f1 ${f1}, f2 ${f2}`))
+        
+        .then(()=>({ asset_id: f1.asset_id, amount: parseInt(f1.amount) + parseInt(f2.amount) }) ) 
+    }
+    
+    /**
+        @arg {number|string} asset_name_id_or_symbol
+        @return {object} like { asset_id: "1.3.0", amount: 2000000 }
+    */
+    getFeeToBlind(asset_name_id_or_symbol = 0) {
+        let f1, asset
+        return Promise.resolve()
+        
+        .then(()=> fetchChain("getAsset", asset_name_id_or_symbol)).then(_asset=> asset = _asset)
+        .then(()=> assert(asset, "Asset not found: " + asset_name_id_or_symbol))
+        
+        .then(()=> get_blind_transfer_fee(asset.get("id"), 2)).then(_fee=> f1 = _fee)
+        
+        .then(()=>({ asset_id: f1.asset_id, amount: parseInt(f1.amount) }) ) 
+    }
 
 }
 
