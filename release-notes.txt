@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------
+Release 2.0.160225
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Add theming support and theme switch in Settings #576
+- Add scrolling to RecentTransactions
+- Add base groups to MyMarkets: BTS, BTC, USD or CNY + others
+
+BUG FIXES:
+- Fix BlockTrades select background color
+- Ensure vertical orderbook layout is correct on mount
+- Fix Fee schedule decimals issue
+- Allow user to delete last number in Transfer amount entry
+- Fix some styling issues after move to themes
+- Fix matching of orders when clicking on order in orderbook #586
+- Sum for_sale values when adding orders at same price
+
+---------------------------------------------------------------------
 Release 2.0.160217
 ---------------------------------------------------------------------
 
