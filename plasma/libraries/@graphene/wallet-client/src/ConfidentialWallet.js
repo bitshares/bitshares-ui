@@ -369,7 +369,8 @@ export default class ConfidentialWallet {
                             confirmation: {
                                 one_time_key: one_time_private.toPublicKey().toString(),
                                 to: to_public.toString(),
-                                owner: out.owner // allows wallet save before broadcasting (durable)
+                                owner: out.owner, // allows wallet save before broadcasting (durable)
+                                save_optional: true,
                             }
                         }
                         // console.log('4 bufferToNumber', bufferToNumber(secret.slice(0, 4)))
@@ -489,7 +490,7 @@ export default class ConfidentialWallet {
             assert( typeof conf.encrypted_memo === "string", "Expecting HEX string for confirmation_receipt.encrypted_memo")
             assert( typeof conf.one_time_key === "string", "Expecting Public Key string for confirmation_receipt.one_time_key")
             
-            let memo, secret, memo_error = []
+            let memo, secret
             function decr(secr) {
                 // console.log('d bufferToNumber', bufferToNumber(secr.slice(0, 4)))
                 try {
@@ -501,7 +502,7 @@ export default class ConfidentialWallet {
                     secret = secr
                     return true
                 } catch(error) {
-                    memo_error.push("wrong key" + (error === " (check mismatch)" ? error : " (parsing error)"))
+                    // console.log("wrong key" + (error === " (check mismatch)" ? error : " (parsing error)"))
                     return false
                 }
             }
@@ -518,8 +519,8 @@ export default class ConfidentialWallet {
             ) {
                 Serializer.printDebug = true
                 // Both wallets (the cli_wallet and js wallet) do not save receipts coming from the wallet.  They should save receipts that were sent to a spendable key in the wallet.  The code may play it safe and try to save all receipts.  This error may be commented out after beta.
-                console.log("ConfidentialWallet\tUnable to decrypt memo", JSON.stringify(memo_error))
-                throw new Error("Unable to decrypt memo." + (to_private == null && from_private == null ? "  Missing keys" : ""))
+                // console.log("ConfidentialWallet\tINFO Unable to decrypt memo", JSON.stringify(memo_error))
+                throw new Error("Unable to decrypt memo, " + (to_private == null && from_private == null ? "missing key" : "wrong key"))
             }
             
             let child = hash.sha256( secret )
@@ -572,20 +573,39 @@ export default class ConfidentialWallet {
                 r = stealth_confirmation.fromBuffer(new Buffer(bs58.decode(r), "binary"))
                 r = stealth_confirmation.toObject(r)
             }
-            try {
-                rp.push( receipt(r) )
-            } catch( error ) {
-                let rr = fromJS(r).toJS()
-                try { delete rr.confirmation.encrypted_memo } catch(e){} // verbose
-                console.log("Import receipt error", JSON.stringify(rr.confirmation))
-            }
+            rp.push(Promise.resolve()
+
+                // combine thrown exceptions and rejected promises
+                .then(()=> receipt(r))
+                .catch( error => {
+                    // Do not re-throw unless fatal
+                    // All promises must resolve for the wallet to update
+                    
+                    // If the receipt does not have a private key, the memo will the only and deciding error
+                    if( ! /Unable to decrypt memo/.test(error.toString()) )
+                        throw error
+                    
+                    // save_optional means: save if the account happens to be in this wallet, don't error if not.
+                    if( ! r.confirmation.save_optional ) throw error
+                    
+                    console.log( "ConfidentialWallet\tINFO skiped importing optional receipt (not mine)" )
+                    return null
+                })
+            )
         })
         
         let receipts
         return Promise.all(rp)
-            .then( res => receipts = res )
+            // Convert to Immutable.
+            // Remove nulls (this wallet did not accept the receipt).
+            .then( res => receipts = List(res).reduce( (r, el) => el ? r.push(fromJS(el)) : r, List()) )
+            
+            // Update the wallet
             .then(() => this.update(
-                wallet => wallet.update("blind_receipts", List(), r => r.concat(fromJS(receipts)))
+                wallet => wallet.update("blind_receipts", List(),
+                    // append receipts to blind_receipts
+                    blind_receipts => receipts.reduce((r, rr) => r ? r.push(rr) : r, blind_receipts)
+                )
             ))
             .then( ()=> receipts )
     }
@@ -1036,6 +1056,7 @@ function blind_transfer_help(
                         conf_output.confirmation.one_time_key = one_time_private.toPublicKey().toString()
                         conf_output.confirmation.to = to_key.toString()
                         conf_output.confirmation.owner = to_out.owner
+                        conf_output.confirmation.save_optional = true
                         
                         let aes = Aes.fromBuffer(secret)
                         let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )

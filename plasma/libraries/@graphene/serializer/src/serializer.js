@@ -38,9 +38,10 @@ class Serializer {
                     }
                     object[field] = type.fromByteBuffer(b);
                 } catch (e) {
-                    console.error(`Error reading ${this.operation_name}.${field} in data:`);
-                    if(Serializer.printDebug)
+                    if(Serializer.printDebug) {
+                        console.error(`Error reading ${this.operation_name}.${field} in data:`);
                         b.printDebug();
+                    }
                     throw e;
                 }
             }
