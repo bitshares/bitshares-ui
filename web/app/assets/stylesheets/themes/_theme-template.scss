@@ -357,7 +357,7 @@
       border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, select {
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
       background-color: #ddd;
       &:hover, &:focus, &:active {
         background-color: #ddd;

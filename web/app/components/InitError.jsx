@@ -75,7 +75,7 @@ class InitError extends React.Component {
                             </ul>
                         </section>
                         <br/>
-                        <a className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></a>
+                        <div className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>
                 </div>
