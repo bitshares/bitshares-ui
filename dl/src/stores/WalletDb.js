@@ -1,21 +1,23 @@
+import assert from "assert"
 import alt from "alt-instance"
 import BaseStore from "stores/BaseStore"
 import { List, Map, Set, fromJS } from "immutable"
+// import idb_helper from "idb-helper";
+// import _ from "lodash";
 
 import iDB from "idb-instance"
 import { Apis } from "@graphene/chain"
 import { key, Aes } from "@graphene/ecc"
 import { suggest_brain_key } from "../common/brainkey"
-import idb_helper from "idb-helper";
-import _ from "lodash";
 
 import { PrivateKey } from "@graphene/ecc";
+import { chain_config } from "@graphene/chain"
+import { ChainStore } from "@graphene/chain"
+
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import { chain_config } from "@graphene/chain"
-import { ChainStore } from "@graphene/chain"
-import assert from "assert"
+import BackupServerStore from "stores/BackupServerStore"
 
 import {
     LocalStoragePersistence, WalletStorage, ConfidentialWallet, AddressIndex
@@ -144,6 +146,7 @@ class WalletDb extends BaseStore {
             this.process_transaction( tr, null /*signer_private_keys*/, true )
         
         // No exceptions so update state:
+        BackupServerStore.setWallet(_wallet)
         cwallet = _cwallet
         wallet = _wallet
         let wallet_names = this.state.wallet_names.add(wallet_name)

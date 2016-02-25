@@ -17,6 +17,7 @@ export default class WalletUnlock extends Component {
     
     static getPropsFromStores() {
         return {
+            wallet_db: WalletDb.getState()
         }
     }
     
@@ -41,7 +42,7 @@ export default class WalletUnlock extends Component {
         return <div className="center-content" style={{width: "100%"}}>
             <div className="button-group content-block">
                 <a href className="button success" onClick={this.unlock.bind(this)}>
-                    Unlock
+                    Unlock {this.props.wallet_db.current_wallet}
                 </a>
                 <a href className="button secondary" onClick={this.back.bind(this)}>
                     Cancel

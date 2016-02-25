@@ -8,10 +8,10 @@ import assert from "assert"
 /**
     A Wallet is a place where private user information can be stored. This information is kept encrypted when on disk or stored on the remote server.
 
+    Anything in the encrypted wallet or storage must be JSON serilizable types only.
+
     This class creates these fields inside of the encrypted wallet object:
-    
     ```js
-    // Serilizable persisterent state (JSON serilizable types only).
     const wallet = fromJS({
         
         // Set on first login
@@ -22,6 +22,9 @@ import assert from "assert"
         
         // Initially same as `created`
         last_modified: undefined,
+        
+        // {boolean} weak_password - truthy if an empty string was used for the email or username
+        weak_password: null,
         
     })
     ```
@@ -85,7 +88,7 @@ export default class WalletStorage {
         // enable the backup server if one is configured (see useBackupServer)
         let remote_url = this.storage.state.get("remote_url")
         if( remote_url ) {
-            this.ws_rpc = new WalletWebSocket(remote_url)
+            this.ws_rpc = new WalletWebSocket(remote_url, status => this.socket_status = status)
             this.api = new WalletApi(this.ws_rpc)
             this.instance = this.ws_rpc.instance
         }
@@ -129,7 +132,7 @@ export default class WalletStorage {
         // close (if applicable)
         let p = this.ws_rpc ? this.ws_rpc.close() : null
         if(remote_url != null) {
-            this.ws_rpc = new WalletWebSocket(remote_url)
+            this.ws_rpc = new WalletWebSocket(remote_url,status => this.socket_status = status)
             this.api = new WalletApi(this.ws_rpc)
             this.instance = this.ws_rpc.instance
         } else {
@@ -376,8 +379,8 @@ export default class WalletStorage {
     }
     
     /**
-    *  Add a callback that will be called anytime this wallet is updated
-    *  @return {Promise} pass-through of the callback's return value exception
+    *  @arg {function} callback anytime this wallet is updated
+    *  @arg {Promise} resolve - for unit testing (this may be removed) 
     */
     subscribe( callback, resolve = null ) {
         if(this.subscribers.has(callback)) {

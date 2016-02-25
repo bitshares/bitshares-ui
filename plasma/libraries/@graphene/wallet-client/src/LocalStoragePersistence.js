@@ -21,20 +21,24 @@ export default class LocalStoragePersistence {
         const key = "LocalStoragePersistence::" + namespace
         this.STATE = key
         this.saveToDisk = saveToDisk
+        this.status = "error"
         let stateStr = localStorage.getItem(this.STATE)
         // console.log('stateStr', namespace, stateStr)
         this.state = stateStr ? fromJS(JSON.parse(stateStr)) : Map()
+        this.status = "ok"
     }
     
     /**
         @arg {boolean} [save = true] - True to save (and keep saving) or False to delete disk (and not re-save)
     */
     setSaveToDisk( save = true ) {
+        this.status = "error"
         if( save === true ) {
             localStorage.setItem(this.STATE, JSON.stringify(this.state.toJS(),null,0))
         } else if( save === false ) {
             localStorage.removeItem(this.STATE)
         }
+        this.status = "ok"
         this.saveToDisk = save
     }
     
@@ -47,10 +51,12 @@ export default class LocalStoragePersistence {
         
         // isEmpty test allows the initial emtpy state to change data-types: Map to List
         let prevState = this.state
+        this.status = "error"
         this.state = this.state.isEmpty() ? fromJS(newState) : this.state.merge(newState)
         if( this.saveToDisk && this.state !== prevState) {
             localStorage.setItem(this.STATE, JSON.stringify(this.state.toJS(),null,0))
         }
+        this.status = "ok"
     }
     
     getState() {
@@ -61,8 +67,10 @@ export default class LocalStoragePersistence {
         Ensures that memory is cleared.  If save to disk is enabled, persistent storage is also cleared.
     */
     clear() {
+        this.status = "error"
         if( this.saveToDisk ) localStorage.removeItem(this.STATE)
         this.state = Map()
+        this.status = "ok"
         return this
     }
     
