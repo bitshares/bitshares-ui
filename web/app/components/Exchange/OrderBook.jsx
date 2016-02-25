@@ -377,7 +377,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>
-                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
+                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 264}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                         <TransitionWrapper
                                             ref="askTransition"
@@ -425,7 +425,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>    
-                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 300}}>
+                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 264}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
