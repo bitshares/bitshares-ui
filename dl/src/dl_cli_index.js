@@ -8,6 +8,7 @@ import AccountStore from 'stores/AccountStore'
 
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"
+import WalletUnlockActions from "actions/WalletUnlockActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
@@ -20,9 +21,9 @@ module.exports = {
     
     PrivateKey, PublicKey, Aes, key,
     WalletDb, WalletManagerStore,
+    WalletActions, WalletUnlockActions,
     AccountStore, 
     BackupActions,
-    WalletActions,
     ChainStore,
     chain_config,
     
@@ -56,6 +57,6 @@ module.exports = {
             if(obj === "init") continue
             context[obj] = module.exports[obj]
         }
-    }
+    },
     
 }

@@ -433,6 +433,23 @@ export default class ConfidentialWallet {
     }
     
     /**
+        Usage:
+        ```js
+        let receipt = blindHistory("alice").toSeq().first()
+        let bs58_encoded_receipt = getEncodedReceipt(r.get("conf").toJS())
+        ````
+        @arg {object} data
+        @arg {string|PublicKey} data.encrypted_memo hex
+        @arg {string|PublicKey} data.one_time_key
+        @arg {string|PublicKey} [data.to = null]
+        @return {string} bs58_encoded_receipt
+        
+    */
+    getEncodedReceipt({encrypted_memo, one_time_key, to}) {
+        return bs58.encode(stealth_confirmation.toBuffer({encrypted_memo, one_time_key, to}))
+    }
+    
+    /**
         Given a confirmation receipt, this method will parse it for a blinded balance and confirm that it exists in the blockchain.  If it exists then it will save it in the wallet then report the amount received and who sent it.
 
         Checking the blockchain is optional.  This allows the wallet to save the receipt first before broadcasting.  In that case, confirmation_receipt.owner is provided and the get_blinded_balances API call is skipped.
@@ -763,14 +780,14 @@ export default class ConfidentialWallet {
     }
     
     /**
-        @arg {number|string} asset_name_id_or_symbol
+        @arg {number|string} asset_symbol_or_id
         @return {object} like { asset_id: "1.3.0", amount: 2000000 }
     */
-    getFeeToAccount(asset_name_id_or_symbol = 0) {
+    getFeeToAccount(asset_symbol_or_id = "1.3.0") {
         let f1, f2, asset
         return Promise.resolve()
         
-        .then(()=> fetchChain("getAsset", asset_name_id_or_symbol)).then(_asset=> asset = _asset)
+        .then(()=> fetchChain("getAsset", asset_symbol_or_id)).then(_asset=> asset = _asset)
         .then(()=> console.log(asset))
         
         .then(()=> get_blind_transfer_fee(asset.get("id"), 0)).then(_fee=> f1 = _fee)
@@ -781,15 +798,15 @@ export default class ConfidentialWallet {
     }
     
     /**
-        @arg {number|string} asset_name_id_or_symbol
+        @arg {number|string} asset_symbol_or_id
         @return {object} like { asset_id: "1.3.0", amount: 2000000 }
     */
-    getFeeToBlind(asset_name_id_or_symbol = 0) {
+    getFeeToBlind(asset_symbol_or_id = "1.3.0") {
         let f1, asset
         return Promise.resolve()
         
-        .then(()=> fetchChain("getAsset", asset_name_id_or_symbol)).then(_asset=> asset = _asset)
-        .then(()=> assert(asset, "Asset not found: " + asset_name_id_or_symbol))
+        .then(()=> fetchChain("getAsset", asset_symbol_or_id)).then(_asset=> asset = _asset)
+        .then(()=> assert(asset, "Asset not found: " + asset_symbol_or_id))
         
         .then(()=> get_blind_transfer_fee(asset.get("id"), 2)).then(_fee=> f1 = _fee)
         
