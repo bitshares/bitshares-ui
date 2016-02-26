@@ -1,5 +1,6 @@
 import alt from "alt-instance"
 import { fromJS } from "immutable"
+import { rfc822Email } from "@graphene/wallet-client"
 
 class BackupServerStore {
     
@@ -27,6 +28,15 @@ class BackupServerStore {
     
     update(state) {
         this.setState(state)
+        this.checkEmail(state)
+    }
+    
+    checkEmail({ email }) {
+        let email_valid = rfc822Email(email)
+        let email_error = email.length > 0 ?
+            email_valid ? null : "invalid_email" : null
+        
+        this.setState({ email_valid, email_error })
     }
     
     notify() {

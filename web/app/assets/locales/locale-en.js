@@ -30,6 +30,7 @@
     },
     propose: "propose",
     cancel: "cancel",
+    invalid_email: "Invalid email",
     account: {
         welcome: "Welcome to Graphene",
         asset: "Asset",
@@ -701,6 +702,10 @@
     },
     wallet: {
         title: "Wallet",
+        email: "Email",
+        confirm_email: "Confirm Email",
+        local_backup: "Local Backup",
+        server_backup: "Server Backup",
         confirm: "Password (confirm)",
         password: "Password",
         existing_password: "Existing Password",
