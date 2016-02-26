@@ -1076,7 +1076,7 @@ function blind_transfer_help(
                             p1 = ()=> this.receiveBlindTransfer(confirm.outputs, from_key_or_label)
                         }
                         // return (p1 ? p1 : Promise.resolve()).then(()=>{
-                        return this.send_blind_tr([blind_tr], from_key_or_label, broadcast, p1)
+                        return this.send_blind_tr([blind_tr], from_key_or_label, broadcast, null, p1)
                         .then( tr => {
                             confirm.trx = tr
                             confirm.one_time_keys = one_time_keys.toJS()
