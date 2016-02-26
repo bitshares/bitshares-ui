@@ -255,6 +255,7 @@ describe('Confidential wallet', () => {
             // get some money
             .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",40]], true ))
             // blind to external (no private key for recipient)
+            .then( ()=> console.log("alice -> carol") )
             .then( ()=> cw.blindTransfer("alice", "carol", 25, "CORE", true) )
             
         })

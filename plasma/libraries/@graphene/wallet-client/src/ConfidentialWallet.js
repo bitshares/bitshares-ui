@@ -371,7 +371,7 @@ export default class ConfidentialWallet {
                                 one_time_key: one_time_private.toPublicKey().toString(),
                                 to: to_public.toString(),
                                 owner: out.owner, // allows wallet save before broadcasting (durable)
-                                save_optional: true,
+                                external_receipt: true,
                             }
                         }
                         // console.log('4 bufferToNumber', bufferToNumber(secret.slice(0, 4)))
@@ -470,6 +470,8 @@ export default class ConfidentialWallet {
         
         let receipt = conf => {
             
+            // console.log('1 conf', JSON.stringify(conf,null,4))
+            
             // This conf.from_key -> opt_from in an array allows the receipts to be batched (this triggers a wallet backup). This should only needed if the wallet wants to store its own receipts sent out to external addresses.
             // Store ones own receipts fails, the "from_secret" can't be calculated
             if( conf.from_key && ! opt_from ) {
@@ -510,8 +512,8 @@ export default class ConfidentialWallet {
             let from_private
             let to_key = this.getPublicKey( conf.to )
             
-            // Turn off parsing error debug, the "check" is inside of the memo so we will get debug parsing errors
-            // console.log('opt_from,to_key', opt_from, !!to_key, !!this.getPrivateKey( opt_from ))
+            // Turn off parsing error debug, the "check" is inside of the memo so most often we will get debug parsing errors
+            // console.log('opt_from,to_key', opt_from, to_key.toString(), !!this.getPrivateKey( opt_from ))
             Serializer.printDebug = false
             if(
                 ! (to_private && decr(to_private.get_shared_secret(conf.one_time_key)) )
@@ -560,6 +562,7 @@ export default class ConfidentialWallet {
                     
                     this.setKeyLabel( child_private )
                     result.date = new Date().toISOString()
+                    // console.log('2 result', JSON.stringify(result, null, 4))
                     return result
                 })
             )
@@ -586,11 +589,26 @@ export default class ConfidentialWallet {
                     if( ! /Unable to decrypt memo/.test(error.toString()) )
                         throw error
                     
-                    // save_optional means: save if the account happens to be in this wallet, don't error if not.
-                    if( ! r.confirmation.save_optional ) throw error
+                    // external_receipt means: save if the account happens to be in this wallet, don't error if not.
+                    if( ! r.confirmation.external_receipt ) throw error
                     
-                    console.log( "ConfidentialWallet\tINFO skiped importing optional receipt" )
-                    return null
+                    console.log( "ConfidentialWallet\tINFO importing external receipt")
+                    
+                    // The wallet does not want to decrypt external receipts even when the one-time-key is recorded.  This will record them anyways.  This is probably better, decrypting the memo is not required and this saves the over-head of keeping one-time-keys.
+                    let external_receipt = {
+                        conf: r.confirmation,
+                        to_key: r.confirmation.to,
+                        to_label: r.label,
+                        from_key: r.decrypted_memo.from,
+                        from_label: this.getKeyLabel( r.decrypted_memo.from ),
+                        amount: r.decrypted_memo.amount,
+                        memo: opt_memo,
+                        control_authority: r.confirmation.owner,
+                        data: r.decrypted_memo,
+                        date: new Date().toISOString(),
+                    }
+                    // console.log('3 external_receipt', JSON.stringify(external_receipt, null, 4))
+                    return external_receipt
                 })
             )
         })
@@ -935,8 +953,8 @@ function blind_transfer_help(
             let nonce = hash.sha256( one_time_private.toBuffer() )
             let blind_factor
             
-            // Saving this one_time_key will allow the wallet to store ones own receipts.
-            // Store ones own receipts (fails in "blind to blind (external)")
+            // Saving this one_time_key may allow the wallet to decrypt sent receipt memos (this is probably not requied).  Also extra backup overhead here...
+            // (did not store in unit test: "blind to blind (external)")
             // this.setKeyLabel( one_time_private )
             
             let from_secret = one_time_private.get_shared_secret( from_key )
@@ -1018,6 +1036,7 @@ function blind_transfer_help(
                             
                             conf_output.label = from_key_or_label
                             conf_output.pub_key = from_key.toString()
+                            // conf_output.from_key = one_time_private.toPublicKey().toString()//trying to save "from blind" receipt 
                             conf_output.decrypted_memo.from = from_key.toString()
                             conf_output.decrypted_memo.amount = { amount: change.toString(), asset_id: asset.get("id") }
                             conf_output.decrypted_memo.blinding_factor = change_blind_factor.toString("hex")
@@ -1059,7 +1078,7 @@ function blind_transfer_help(
                         conf_output.confirmation.one_time_key = one_time_private.toPublicKey().toString()
                         conf_output.confirmation.to = to_key.toString()
                         conf_output.confirmation.owner = to_out.owner
-                        conf_output.confirmation.save_optional = true
+                        conf_output.confirmation.external_receipt = true
                         
                         let aes = Aes.fromBuffer(secret)
                         let memo = stealth_memo_data.toBuffer( conf_output.decrypted_memo )
