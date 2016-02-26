@@ -171,10 +171,11 @@ class AccountWhitelist extends React.Component {
         return (
 
             <div className="grid-content">
+                <div className="exchange-bordered">
                 <Tabs
+                    tabsClass="bordered-header"
                     setting="whitelistTab"
-                    style={{maxWidth: "800px"}}
-                    contentClass="grid-block shrink small-vertical medium-horizontal"
+                    contentClass="grid-content shrink small-vertical medium-horizontal"
                 >
                     <Tab title="account.whitelist.title">
                         <div style={{paddingBottom: "1rem"}} className="grid-content small-12">
@@ -257,6 +258,7 @@ class AccountWhitelist extends React.Component {
 
 
                 </Tabs>
+                </div>
             </div>
         )
     }

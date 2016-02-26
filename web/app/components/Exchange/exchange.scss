@@ -445,6 +445,7 @@ input[type=number]::-webkit-outer-spin-button {
   border-bottom-width: 1px;
   border-bottom-style: solid;
   transition: border-color 0.3s ease 0s;
+  overflow:hidden;
 }
 
 .mymarkets-base-select {

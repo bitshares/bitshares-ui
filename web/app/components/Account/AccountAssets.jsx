@@ -251,9 +251,11 @@ class AccountAssets extends React.Component {
 
         return (    
             <div className="grid-content">
-                    <div className="content-block">
-                        <h3><Translate content="account.user_issued_assets.issued_assets" /></h3>
-
+                                
+                    <div className="content-block exchange-bordered">
+                        <div className="exchange-content-header">
+                            <Translate content="account.user_issued_assets.issued_assets" />
+                        </div>
                         <div>
                             <table className="table">
                                 <thead>

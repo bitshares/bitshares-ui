@@ -224,7 +224,13 @@ class AccountDepositWithdraw extends React.Component {
 
         return (
 		<div className="grid-content">
-			<Tabs setting="depositWithdrawSettingsTab" defaultActiveTab={config.depositWithdrawDefaultActiveTab}>
+            <div className="exchange-bordered">
+			<Tabs
+                setting="depositWithdrawSettingsTab"
+                tabsClass="bordered-header"
+                defaultActiveTab={config.depositWithdrawDefaultActiveTab}
+                contentClass="grid-content"
+            >
 
                 <Tabs.Tab title="BlockTrades">
                     <div className="content-block">
@@ -731,6 +737,7 @@ class AccountDepositWithdraw extends React.Component {
                 </Tabs.Tab>
 
             </Tabs>
+            </div>
 		</div>
         )
     }

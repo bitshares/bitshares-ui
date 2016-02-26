@@ -232,100 +232,106 @@ class Transfer extends React.Component {
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
-            <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                <div className="grid-content no-overflow">
-                    {/*  F R O M  */}
-                    <div className="content-block">
-                        <AccountSelector label="transfer.from" ref="from"
-                                         accountName={from_name}
-                                         onChange={this.fromChanged.bind(this)}
-                                         onAccountChanged={this.onFromAccountChanged.bind(this)}
-                                         account={from_name}
-                                         error={from_error}
-                                         tabIndex={tabIndex++}/>
-                    </div>
-                    {/*  T O  */}
-                    <div className="content-block">
-                        <AccountSelector label="transfer.to"
-                                         accountName={to_name}
-                                         onChange={this.toChanged.bind(this)}
-                                         onAccountChanged={this.onToAccountChanged.bind(this)}
-                                         account={to_name}
-                                         tabIndex={tabIndex++}/>
-                    </div>
-                    {/*  A M O U N T   */}
-                    {from_error ? null : (
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <AmountSelector label="transfer.amount"
-                                        amount={amount}
-                                        onChange={this.onAmountChanged.bind(this)}
-                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
-                                        assets={asset_types}
-                                        display_balance={balance}
-                                        tabIndex={tabIndex++}/>
-                    </div>)}
-                    {/*  M E M O  */}
-                    {from_error ? null : (
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <label><Translate component="span" content="transfer.memo"/></label>
-                        <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
-                        {/*<div>{memo_error}</div>*/}
-                    </div>)}
+                <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+                    <div className="exchange-bordered">
+                        <div className="exchange-content-header" style={{marginBottom: 15}}>
+                            Transfer
+                        </div>
+                    <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
+                        
 
-                    {/*  F E E   */}
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <AmountSelector refCallback={this.setNestedRef.bind(this)}
-                                        label="transfer.fee"
-                                        disabled={true}
-                                        amount={fee}
-                                        onChange={this.onFeeChanged.bind(this)}
-                                        asset={fee_asset_types.length > 0 && feeAsset ? feeAsset.get("id") : ( fee_asset_id ? fee_asset_id : fee_asset_types[0])}
-                                        assets={fee_asset_types}
-                                        tabIndex={tabIndex++}                                        
-                                        />
-                    </div>
-                    
-                    {/* P R O P O S E   F R O M */}
-                    {propose ?
-                    <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
-                        <label><Translate content="account.propose_from" /></label>
-                        <AccountSelect account_names={AccountStore.getMyAccounts()}
-                            onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
-                    </div>:null}
+                        {/*  F R O M  */}
+                        <div className="content-block">
+                            <AccountSelector label="transfer.from" ref="from"
+                                             accountName={from_name}
+                                             onChange={this.fromChanged.bind(this)}
+                                             onAccountChanged={this.onFromAccountChanged.bind(this)}
+                                             account={from_name}
+                                             error={from_error}
+                                             tabIndex={tabIndex++}/>
+                        </div>
+                        {/*  T O  */}
+                        <div className="content-block">
+                            <AccountSelector label="transfer.to"
+                                             accountName={to_name}
+                                             onChange={this.toChanged.bind(this)}
+                                             onAccountChanged={this.onToAccountChanged.bind(this)}
+                                             account={to_name}
+                                             tabIndex={tabIndex++}/>
+                        </div>
+                        {/*  A M O U N T   */}
+                        {from_error ? null : (
+                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                            <AmountSelector label="transfer.amount"
+                                            amount={amount}
+                                            onChange={this.onAmountChanged.bind(this)}
+                                            asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                            assets={asset_types}
+                                            display_balance={balance}
+                                            tabIndex={tabIndex++}/>
+                        </div>)}
+                        {/*  M E M O  */}
+                        {from_error ? null : (
+                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                            <label><Translate component="span" content="transfer.memo"/></label>
+                            <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
+                            {/*<div>{memo_error}</div>*/}
+                        </div>)}
 
-                    {/*  S E N D  B U T T O N  */}
-                    {error ? <div className="content-block has-error">{error}</div> : null}
-                    <div style={{paddingLeft: "96px"}}>
+                        {/*  F E E   */}
+                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                            <AmountSelector refCallback={this.setNestedRef.bind(this)}
+                                            label="transfer.fee"
+                                            disabled={true}
+                                            amount={fee}
+                                            onChange={this.onFeeChanged.bind(this)}
+                                            asset={fee_asset_types.length > 0 && feeAsset ? feeAsset.get("id") : ( fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                            assets={fee_asset_types}
+                                            tabIndex={tabIndex++}                                        
+                                            />
+                        </div>
+                        
+                        {/* P R O P O S E   F R O M */}
                         {propose ?
-                        <span>
-                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                <Translate component="span" content="propose" />
-                            </button>
-                            <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
-                                <Translate component="span" content="cancel" />
-                            </button>
-                        </span>:<span>
-                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                <Translate component="span" content="transfer.send" />
-                            </button>
-                        </span>}
+                        <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
+                            <label><Translate content="account.propose_from" /></label>
+                            <AccountSelect account_names={AccountStore.getMyAccounts()}
+                                onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
+                        </div>:null}
+
+                        {/*  S E N D  B U T T O N  */}
+                        {error ? <div className="content-block has-error">{error}</div> : null}
+                        <div style={{paddingLeft: "96px"}}>
+                            {propose ?
+                            <span>
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="propose" />
+                                </button>
+                                <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
+                                    <Translate component="span" content="cancel" />
+                                </button>
+                            </span>:<span>
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="transfer.send" />
+                                </button>
+                            </span>}
+                        </div>
+                        </div>
+                        {/* TODO: show remaining balance */}
+
                     </div>
 
-                    {/* TODO: show remaining balance */}
-
+                </form>
+                <div className="grid-content medium-6 right-column">
+                    <div className="grid-content no-padding">
+                        <RecentTransactions
+                            accountsList={accountsList}
+                            limit={25}
+                            compactView={true}
+                            filter="transfer"
+                        />
+                    </div>
                 </div>
-
-            </form>
-            <div className="grid-content medium-6 right-column">
-                <div className="grid-content">
-                    <RecentTransactions
-                        accountsList={accountsList}
-                        limit={25}
-                        compactView={true}
-                        filter="transfer"
-                    />
-                </div>
-            </div>
             </div>
         );
     }

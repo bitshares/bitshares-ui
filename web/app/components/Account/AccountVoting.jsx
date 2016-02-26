@@ -327,7 +327,9 @@ class AccountVoting extends React.Component {
                         </button>) : null}
                 </div>
 
-                <Tabs setting="votingTab" style={{maxWidth: "800px"}}>
+
+                <div className="exchange-bordered">
+                <Tabs setting="votingTab" tabsClass="bordered-header" contentClass="grid-content">
 
                         <Tab title="account.votes.proxy_short">
                             <div className="content-block">
@@ -407,6 +409,7 @@ class AccountVoting extends React.Component {
                             </div>
                         </Tab>
                 </Tabs>
+                </div>
             </div>
         )
     }

@@ -83,13 +83,17 @@ class AccountOrders extends React.Component {
             if (marketOrders[market].length) {
                 tables.push(
                     <div key={market} style={marketIndex > 0 ? {paddingTop: "1rem"} : {}}>
-                    <h5><MarketLink quote={markets[market].quote.id} base={markets[market].base.id} /></h5>
-                    <table className="table table-striped text-right ">
-                        <TableHeader baseSymbol={markets[market].base.symbol} quoteSymbol={markets[market].quote.symbol}/>
-                        <tbody>
-                            {marketOrders[market]}
-                        </tbody>
-                    </table>
+                    <div className="exchange-bordered">
+                            <div className="exchange-content-header">
+                                <MarketLink quote={markets[market].quote.id} base={markets[market].base.id} />
+                            </div>
+                            <table className="table table-striped text-right ">
+                                <TableHeader baseSymbol={markets[market].base.symbol} quoteSymbol={markets[market].quote.symbol}/>
+                                <tbody>
+                                    {marketOrders[market]}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 );
                 marketIndex++;

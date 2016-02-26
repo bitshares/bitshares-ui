@@ -41,7 +41,7 @@ class RecentTransactions extends React.Component {
 
     static defaultProps = {
         limit: 25,
-        maxHeight: 450
+        maxHeight: 500
     };
 
     constructor(props) {
@@ -163,52 +163,49 @@ class RecentTransactions extends React.Component {
 
         return (
             <div className="recent-transactions no-overflow" style={style}>
-                <div ref="header">
-                    {historyCount > 0 &&
-                        <button
-                            className="button outline float-right"
-                            onClick={this._downloadCSV.bind(this)}
-                            style={{marginTop: "0.5rem"}}
-                            data-tip="Download as CSV"
-                            data-place="left"
-                            data-type="light"
-                        >
-                            <span>CSV</span>
-                        </button>}
-                    <h3><Translate content="account.recent" /></h3>
-                    <table className={"table" + (compactView ? " compact" : "")}>
-                        <thead>
-                        <tr>
-                            {compactView ? null : <th style={{width: 200}}><Translate content="explorer.block.op" /></th>}
-                            <th><Translate content="account.votes.info" /></th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-
-                <div
-                    className="grid-block no-margin"
-                    style={{
-                        padding: "0 10px 0 0",
-                        maxHeight: maxHeight - headerHeight 
-                    }}
-                    ref="transactions">
-                    <table className={"table" + (compactView ? " compact" : "")}>
-                        <TransitionWrapper
-                            component="tbody"
-                            transitionName="newrow"
-                        >
-                            {display_history}
-                        </TransitionWrapper>
-                    </table>
-                </div>
-                {this.props.showMore && historyCount > 20 && limit < historyCount ? (
-                    <div className="account-info more-button">
-                        <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
-                            <Translate content="account.more" />
-                        </button>
+                <div className="exchange-bordered">
+                    <div ref="header">
+                    
+                        <div className="exchange-content-header">
+                        {historyCount > 0 ?
+                            <div className="float-right">
+                                <a
+                                    onClick={this._downloadCSV.bind(this)}
+                                    data-tip="Download as CSV"
+                                    data-place="left"
+                                    data-type="light"
+                                >
+                                    <span>CSV</span>
+                                </a>
+                            </div> : null}
+                            <Translate content="account.recent" />
+                        </div>
+                        <table className={"table" + (compactView ? " compact" : "")}>
+                            <thead>
+                            <tr>
+                                {compactView ? null : <th style={{width: 200}}><Translate content="explorer.block.op" /></th>}
+                                <th><Translate content="account.votes.info" /></th>
+                            </tr>
+                            </thead>
+                        </table>
                     </div>
-                    ) : null}
+
+                    <div
+                        className="grid-block no-margin"
+                        style={{
+                            padding: "0 10px 0 0",
+                            maxHeight: maxHeight - headerHeight 
+                        }}
+                        ref="transactions">
+                        <table className={"table" + (compactView ? " compact" : "")}>
+                            <TransitionWrapper
+                                component="tbody"
+                                transitionName="newrow"
+                            >
+                                {display_history}
+                            </TransitionWrapper>
+                        </table>
+                    </div>
                 {
                     historyCount > 0 && this.state.csvExport &&
                     <div id="csv_export_container" style={{display: "none"}}>
@@ -234,6 +231,14 @@ class RecentTransactions extends React.Component {
                         }
                     </div>
                 }
+                </div>
+                {this.props.showMore && historyCount > 20 && limit < historyCount ? (
+                    <div className="account-info more-button">
+                        <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
+                            <Translate content="account.more" />
+                        </button>
+                    </div>
+                    ) : null}
             </div>
         );
     }
