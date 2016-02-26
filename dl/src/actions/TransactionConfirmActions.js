@@ -3,11 +3,11 @@ import { chain_config } from "@graphene/chain";
 
 class TransactionConfirmActions {
 
-    confirm(transaction) {
-        this.dispatch({transaction})
+    confirm(transaction, broadcast_confirmed_callback) {
+        this.dispatch({transaction, broadcast_confirmed_callback})
     }
 
-    broadcast(transaction) {
+    broadcast(transaction, broadcast_confirmed_callback = ()=> Promise.resolve()) {
         this.dispatch();
 
         if (transaction.type === "blind") return transaction.broadcast();
@@ -15,11 +15,14 @@ class TransactionConfirmActions {
         let broadcast_timeout = setTimeout(() => {
             this.actions.error("Your transaction has expired without being confirmed, please try again later.");
         }, chain_config.expire_in_secs * 2000);
-
-        transaction.broadcast(() => this.actions.wasBroadcast()).then( (res)=> {
-            clearTimeout(broadcast_timeout);
-            this.actions.wasIncluded(res);
-        }).catch( error => {
+        
+        broadcast_confirmed_callback()
+        .then(()=> transaction.broadcast(() =>
+            this.actions.wasBroadcast()).then((res)=> {
+                clearTimeout(broadcast_timeout);
+                this.actions.wasIncluded(res);
+            })
+        ).catch( error => {
             console.error(error)
             clearTimeout(broadcast_timeout);
             // messages of length 1 are local exceptions (use the 1st line)
@@ -27,7 +30,7 @@ class TransactionConfirmActions {
             let splitError = error.message.split( '\n' );
             let message = splitError[splitError.length === 1 ? 0 : 1];
             this.actions.error(message);
-        });
+        })
     }
 
     wasBroadcast(res){

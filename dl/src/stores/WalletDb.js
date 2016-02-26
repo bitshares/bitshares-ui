@@ -142,8 +142,8 @@ class WalletDb extends BaseStore {
         let _cwallet = new ConfidentialWallet(_wallet)
         
         // Transaction confirmations
-        _cwallet.process_transaction = (tr, broadcast) =>
-            this.process_transaction( tr, null /*signer_private_keys*/, true )
+        _cwallet.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
+            this.process_transaction( tr, null /*signer_private_keys*/, true, broadcast_confirmed_callback )
         
         // No exceptions so update state:
         BackupServerStore.setWallet(_wallet)
@@ -238,13 +238,16 @@ class WalletDb extends BaseStore {
         return cwallet.getPrivateKey(public_key)
     }
     
-    process_transaction(tr, signer_pubkeys, broadcast) {
+    process_transaction(tr, signer_pubkeys, broadcast, broadcast_confirmed_callback ) {
         return WalletUnlockActions.unlock().then( () =>
-            this.confirm_transactions ?
+            this.confirm_transactions ? // confirm_transactions off for unit tests
                 tr.process_transaction(cwallet, signer_pubkeys, false).then(()=>
-                    TransactionConfirmActions.confirm(tr)
+                    TransactionConfirmActions.confirm(tr, broadcast_confirmed_callback)
                 )
-            : tr.process_transaction(cwallet, signer_pubkeys, broadcast)
+            :
+            broadcast_confirmed_callback().then(()=>
+                tr.process_transaction(cwallet, signer_pubkeys, broadcast)
+            )
         )
     }
     

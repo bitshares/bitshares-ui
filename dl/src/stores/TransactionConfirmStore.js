@@ -20,13 +20,14 @@ class TransactionConfirmStore {
             trx_id: null,
             trx_block_num: null,
             closed: true,
-            broadcasted_transaction: null
+            broadcasted_transaction: null,
+            broadcast_confirmed_callback: null
         };
     }
 
-    onConfirm({transaction}) {
+    onConfirm({transaction, broadcast_confirmed_callback}) {
         let init_state = this.getInitialState();
-        let state = {...init_state, transaction: transaction, closed: false, broadcasted_transaction: null}
+        let state = {...init_state, transaction: transaction, closed: false, broadcasted_transaction: null, broadcast_confirmed_callback}
         //console.log("-- TransactionConfirmStore.onConfirm -->", state);
         this.setState(state);
     }
@@ -78,9 +79,9 @@ class TransactionConfirmStore {
         this.state = this.getInitialState();
     }
 
-    onConfirmBlind({transaction}) {
+    onConfirmBlind({transaction, broadcast_confirmed_callback}) {
         let init_state = this.getInitialState();
-        let state = {...init_state, transaction: transaction, closed: false, broadcasted_transaction: null}
+        let state = {...init_state, transaction: transaction, closed: false, broadcasted_transaction: null, broadcast_confirmed_callback}
         console.log("-- TransactionConfirmStore.onConfirm -->", state);
         this.setState(state);
     }

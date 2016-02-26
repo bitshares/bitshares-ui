@@ -42,8 +42,8 @@ export default class ConfidentialWallet {
         this.wallet = req(walletStorage, "walletStorage")
         
         // Graphene-UI uses a transaction confirmation dialog and will replace this function.
-        this.process_transaction = (tr, broadcast) =>
-            tr.process_transaction(this, null/*signer keys*/, broadcast)
+        this.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
+            tr.process_transaction(this, null/*signer keys*/, broadcast, broadcast_confirmed_callback)
         
         // Convenience function to access the wallet object (ensure friendly return values)
         this.keys = () => this.wallet.wallet_object.getIn(["keys"], Map())
@@ -388,9 +388,9 @@ export default class ConfidentialWallet {
             return Promise.all(promises).then(()=>{
                 
                 let name = account.get("name")
-                
+                let p1
                 return Promise.resolve()
-                .then( ()=> this.receiveBlindTransfer( confirm.outputs, "@"+name, "from @"+name ))
+                .then( ()=>{ p1 = ()=> this.receiveBlindTransfer( confirm.outputs, "@"+name, "from @"+name ) })
                 .then( ()=> Apis.crypto("blind_sum", blinding_factors, blinding_factors.length) )
                 .then( res => bop.blinding_factor = res )
                 .then( ()=>{
@@ -401,7 +401,7 @@ export default class ConfidentialWallet {
                     bop.outputs = bop.outputs.sort((a, b)=> a.commitment > b.commitment)
                     tr.add_type_operation("transfer_to_blind", bop)
                     
-                    return this.process_transaction(tr, broadcast).then(()=> {
+                    return this.process_transaction(tr, broadcast, p1).then(()=> {
                         confirm.trx = tr.serialize()
                         confirm.confirmation_receipts = confirmation_receipts(confirm.outputs)
                             .reduce( (r, receipt)=>r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
@@ -588,7 +588,7 @@ export default class ConfidentialWallet {
                     // save_optional means: save if the account happens to be in this wallet, don't error if not.
                     if( ! r.confirmation.save_optional ) throw error
                     
-                    console.log( "ConfidentialWallet\tINFO skiped importing optional receipt (not mine)" )
+                    console.log( "ConfidentialWallet\tINFO skiped importing optional receipt" )
                     return null
                 })
             )
@@ -684,25 +684,26 @@ export default class ConfidentialWallet {
                         encrypted_memo: change_out.confirmation.encrypted_memo
                     }
                     // make sure the change is stored before broadcasting (durable)
-                    p1 = this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
+                    p1 = ()=> this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
                 }
-                return (p1 ? p1 : Promise.resolve()).then(()=>{
+                // return (p1 ? p1 : Promise.resolve()).then(()=>{
                     
-                    // console.log("conf.trx", JSON.stringify(conf.trx))
-                    return this.send_blind_tr(
-                        operations,
-                        from_blind_account_key_or_label,
-                        broadcast,
-                        conf.one_time_keys
-                    ).then( tr => {
-                        conf.trx = tr
-                        if( has_change )
-                            conf.change_receipt = conf.confirmation_receipts[0]
-                        
-                        delete conf.confirmation_receipts
-                        return conf
-                    })
+                // console.log("conf.trx", JSON.stringify(conf.trx))
+                return this.send_blind_tr(
+                    operations,
+                    from_blind_account_key_or_label,
+                    broadcast,
+                    conf.one_time_keys,
+                    p1
+                ).then( tr => {
+                    conf.trx = tr
+                    if( has_change )
+                        conf.change_receipt = conf.confirmation_receipts[0]
+                    
+                    delete conf.confirmation_receipts
+                    return conf
                 })
+                // })
             })
         })
     }
@@ -1070,20 +1071,20 @@ function blind_transfer_help(
                         let p1
                         if( ! to_temp ) {
                             // make sure the receipts are stored first before broadcasting
-                            p1 = this.receiveBlindTransfer(confirm.outputs, from_key_or_label)
+                            p1 = ()=> this.receiveBlindTransfer(confirm.outputs, from_key_or_label)
                         }
-                        return (p1 ? p1 : Promise.resolve()).then(()=>{
-                            return this.send_blind_tr([blind_tr], from_key_or_label, broadcast).then( tr => {
-                                confirm.trx = tr
-                                confirm.one_time_keys = one_time_keys.toJS()
-                                confirm.confirmation_receipts = confirmation_receipts(confirm.outputs)
-                                    .reduce( (r, receipt)=>
-                                        r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
-                                
-                                return confirm
-                            })
+                        // return (p1 ? p1 : Promise.resolve()).then(()=>{
+                        return this.send_blind_tr([blind_tr], from_key_or_label, broadcast, p1)
+                        .then( tr => {
+                            confirm.trx = tr
+                            confirm.one_time_keys = one_time_keys.toJS()
+                            confirm.confirmation_receipts = confirmation_receipts(confirm.outputs)
+                                .reduce( (r, receipt)=>
+                                    r.push(bs58.encode(stealth_confirmation.toBuffer(receipt))) , List()).toJS()
+                            
+                            return confirm
                         })
-                        
+                        // })
                     })
                 })
             })
@@ -1112,7 +1113,7 @@ let confirmation_receipts = outputs => List(outputs)
         return r.push(out.confirmation)
     }, List())
 
-function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys) {
+function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys, broadcast_confirmed_callback) {
     
     let tr = new TransactionBuilder()
 
@@ -1156,7 +1157,7 @@ function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys) {
         }
     }
 
-    return this.process_transaction(tr, broadcast)
+    return this.process_transaction(tr, broadcast, broadcast_confirmed_callback)
 }
 
 /** Feeds need to be obtained in advance before calculating inputs and outputs. */
