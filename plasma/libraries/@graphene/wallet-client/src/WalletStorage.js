@@ -129,6 +129,9 @@ export default class WalletStorage {
         @return Promise - resolve after close or just resolve immediately
     */
     useBackupServer( remote_url = this.storage.state.get("remote_url")) {
+        if( remote_url && remote_url.trim() === "" )
+            remote_url = null
+        
         // close (if applicable)
         let p = this.ws_rpc ? this.ws_rpc.close() : null
         if(remote_url != null) {
