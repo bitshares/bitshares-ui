@@ -3,11 +3,11 @@ import { chain_config } from "@graphene/chain";
 
 class TransactionConfirmActions {
 
-    confirm(transaction, broadcast_confirmed_callback) {
-        this.dispatch({transaction, broadcast_confirmed_callback})
+    confirm(transaction) {
+        this.dispatch({transaction})
     }
 
-    broadcast(transaction, broadcast_confirmed_callback = ()=> Promise.resolve()) {
+    broadcast(transaction) {
         this.dispatch();
 
         if (transaction.type === "blind") return transaction.broadcast();
@@ -16,14 +16,23 @@ class TransactionConfirmActions {
             this.actions.error("Your transaction has expired without being confirmed, please try again later.");
         }, chain_config.expire_in_secs * 2000);
         
-        broadcast_confirmed_callback()
+        let tr_resolve = transaction.__resolve
+        let cb = transaction.__broadcast_confirmed_callback
+        
+        // broadcast_confirmed_callback (optional) will save the receipts and backup the wallet
+        cb ? cb() : Promise.resolve()
         .then(()=> transaction.broadcast(() =>
-            this.actions.wasBroadcast()).then((res)=> {
+            this.actions.wasBroadcast())
+            .then((res)=> {
                 clearTimeout(broadcast_timeout);
                 this.actions.wasIncluded(res);
             })
+            .then((res)=> tr_resolve ? tr_resolve(res) : res)
         ).catch( error => {
             console.error(error)
+            if(tr_promise)
+                tr_promise.reject(error)
+            
             clearTimeout(broadcast_timeout);
             // messages of length 1 are local exceptions (use the 1st line)
             // longer messages are remote API exceptions (use the 2nd line)
@@ -50,6 +59,7 @@ class TransactionConfirmActions {
     }
 
     confirmBlind(transaction) {
+        console.log('confirmBlind')
         this.dispatch({transaction});
     }
 

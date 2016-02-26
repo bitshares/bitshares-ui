@@ -43,7 +43,8 @@ export default class ConfidentialWallet {
         
         // Graphene-UI uses a transaction confirmation dialog and will replace this function.
         this.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
-            tr.process_transaction(this, null/*signer keys*/, broadcast, broadcast_confirmed_callback)
+            broadcast_confirmed_callback()
+            .then(()=> tr.process_transaction(this, null/*signer keys*/, broadcast))
         
         // Convenience function to access the wallet object (ensure friendly return values)
         this.keys = () => this.wallet.wallet_object.getIn(["keys"], Map())
@@ -599,8 +600,9 @@ export default class ConfidentialWallet {
             // Convert to Immutable.
             // Remove nulls (this wallet did not accept the receipt).
             .then( res => receipts = List(res).reduce( (r, el) => el ? r.push(fromJS(el)) : r, List()) )
-            
+
             // Update the wallet
+            .then(() => console.log( "ConfidentialWallet\tINFO saving " + receipts.size + " receipts" ))
             .then(() => this.update(
                 wallet => wallet.update("blind_receipts", List(),
                     // append receipts to blind_receipts

@@ -28,7 +28,7 @@ class TransactionConfirm extends BaseComponent {
 
     onConfirmClick(e) {
         e.preventDefault();
-        TransactionConfirmActions.broadcast(this.state.transaction, this.state.broadcast_confirmed_callback);
+        TransactionConfirmActions.broadcast(this.state.transaction);
     }
 
     onCloseClick(e) {
