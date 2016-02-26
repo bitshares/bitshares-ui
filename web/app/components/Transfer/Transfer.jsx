@@ -19,6 +19,8 @@ import connectToStores from "alt/utils/connectToStores";
 import WalletDb from "stores/WalletDb";
 import {number_utils} from "@graphene/chain";
 import FormattedAsset from "../Utility/FormattedAsset";
+import WalletUnlockStore from "stores/WalletUnlockStore";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 const AssetBalance = ({onClick, balance, asset_id}) => {
     const balance_value = utils.is_object_id(balance) ? <BalanceComponent balance={balance}/> : <FormattedAsset amount={balance} asset={asset_id}/>;
@@ -63,21 +65,24 @@ class Transfer extends React.Component {
     };
     
     static getStores() {
-        // WalletDb will notify on lock and unlock
-        return [WalletDb]
+        return [WalletUnlockStore]
     }
 
     static getPropsFromStores() {
-        return {}
+        return {wallet_locked: WalletUnlockStore.getState().locked}
     }
 
     componentWillMount() {
         this.nestedRef = null;
     }
-    
-    fromChanged(from_name) {
-        let asset = undefined;
-        let amount = undefined;
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.wallet_locked !== this.props.wallet_locked) {
+            this. queryBlindBalance(this.state.from_name);
+        }
+    }
+
+    queryBlindBalance(from_name) {
         if (from_name && from_name.length > 2 && from_name[0] === "~") {
             const from = from_name.slice(1);
             const cwallet = WalletDb.getState().cwallet;
@@ -90,8 +95,11 @@ class Transfer extends React.Component {
                 console.log("-- getBlindBalances error -->", error);
             }
         }
-        let new_state = {from_name, asset, amount, error: null, propose: false, propose_account: "", blind_balances: null};
-        this.setState(new_state)
+    }
+    
+    fromChanged(from_name) {
+        this.queryBlindBalance(from_name);
+        this.setState({from_name, asset: undefined, amount: undefined, error: null, propose: false, propose_account: "", blind_balances: null})
     }
 
     toChanged(to_name) {
@@ -267,6 +275,11 @@ class Transfer extends React.Component {
         if (amount) { this.setState({amount}); }
     }
 
+    _unlock(e) {
+        e.preventDefault();
+        WalletUnlockActions.unlock();
+    }
+
     render() {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
@@ -337,8 +350,10 @@ class Transfer extends React.Component {
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
-        accountsList = accountsList.add(from_account)
-        let tabIndex = 1
+        accountsList = accountsList.add(from_account);
+        let tabIndex = 1;
+
+        console.log("-- Transfer.render -->", this.props.wallet_locked);
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
@@ -366,6 +381,10 @@ class Transfer extends React.Component {
                                          allowPubKey
                         />
                     </div>
+                    {blind_transfer && this.props.wallet_locked &&
+                    <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <button className="button outline" onClick={this._unlock}>Unlock wallet to see balance</button>
+                    </div>}
                     {/*  A M O U N T   */}
                     <div className="content-block" style={{paddingLeft: "96px"}}>
                         <AmountSelector label="transfer.amount"
