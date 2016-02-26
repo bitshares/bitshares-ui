@@ -436,8 +436,8 @@ export default class ConfidentialWallet {
         Usage:
         ```js
         let receipt = blindHistory("alice").toSeq().first()
-        let bs58_encoded_receipt = getEncodedReceipt(r.get("conf").toJS())
-        ````
+        let bs58_encoded_receipt = getEncodedReceipt(receipt.get("conf").toJS())
+        ```
         @arg {object} data
         @arg {string|PublicKey} data.encrypted_memo hex
         @arg {string|PublicKey} data.one_time_key

@@ -5,7 +5,7 @@ class BackupServerStore {
     
     constructor() {
         this.init = ()=> ({
-            status: "unknown"
+            ui_status: "unknown"
         })
         this.state = this.init()
         this.exportPublicMethods({
@@ -15,10 +15,14 @@ class BackupServerStore {
     }
     
     setWallet(wallet) {// try {
-        if(this.wallet) this.wallet.unsubscribe(this.notify.bind(this))
+        this.state = this.init()
+        
+        if(this.wallet)
+            this.wallet.unsubscribe(this.notify.bind(this))
+        
         this.wallet = wallet
-        this.wallet.subscribe(this.notify.bind(this))
         this.notify()
+        this.wallet.subscribe(this.notify.bind(this))
     }// catch(error) { console.error(error) }}
     
     update(state) {
@@ -38,7 +42,7 @@ class BackupServerStore {
             weak_password, 
             ui_status
         })
-        console.log('BackupServerStore.state', this.state)
+        console.log('BackupServerStore\tstate', this.state)
     }
     
     

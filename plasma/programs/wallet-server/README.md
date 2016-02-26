@@ -45,6 +45,16 @@ Update `./.npmrc` with anything you need to change.  These properties have defau
 @graphene/wallet-server:log_debug  = false
 @graphene/wallet-server:sql_debug  = false
 ```
+
+```bash
+# Example MySql session
+mysql wallet_server -u root
+mysql> select count(*) from wallets;
+mysql> quit;
+Bye
+```
+
+
 See "config" in [package.json](./package.json)
 
 # Running for Developers

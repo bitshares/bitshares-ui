@@ -8,7 +8,6 @@ import AccountStore from 'stores/AccountStore'
 
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"
-import WalletUnlockActions from "actions/WalletUnlockActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
@@ -21,7 +20,7 @@ module.exports = {
     
     PrivateKey, PublicKey, Aes, key,
     WalletDb, WalletManagerStore,
-    WalletActions, WalletUnlockActions,
+    WalletActions,
     AccountStore, 
     BackupActions,
     ChainStore,

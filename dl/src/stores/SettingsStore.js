@@ -4,8 +4,6 @@ var SettingsActions = require("../actions/SettingsActions");
 var Immutable = require("immutable");
 var _ =require("lodash");
 
-import WalletDb from "stores/WalletDb"
-
 const STORAGE_KEY = "__graphene__";
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
@@ -18,8 +16,8 @@ class SettingsStore {
         this.settings = Immutable.Map({
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
-            backup_server: "ws://localhost:9080",
             faucet_address: "https://bitshares.openledger.info",
+            backup_server_url: "ws://localhost:9080",
             unit: CORE_ASSET,
             showSettles: false,
             walletLockTimeout: 60 * 10,
@@ -152,10 +150,6 @@ class SettingsStore {
         this._lsSet("settings_v3", this.settings.toJS());
         if (payload.setting === "walletLockTimeout") {
             this._lsSet("lockTimeout", payload.value);
-        }
-        if (payload.setting === "backup_server") {
-            let url = payload.value === "" ? null : payload.value
-            WalletDb.getState().wallet.useBackupServer(url)
         }
     }
 

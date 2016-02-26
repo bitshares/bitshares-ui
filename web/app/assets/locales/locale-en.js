@@ -616,7 +616,7 @@
         add_ws: "Add new websocket API",
         remove_ws: "Remove websocket API",
         faucet_address: "Faucet Address",
-        backup_server: "Backup Server",
+        backup_server_url: "Backup Server",
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
         no: "No",

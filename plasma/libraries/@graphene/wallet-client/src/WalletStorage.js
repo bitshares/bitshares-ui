@@ -395,7 +395,7 @@ export default class WalletStorage {
     */
     unsubscribe( callback ) {
         if( ! this.subscribers.has(callback)) {
-            console.error("[WalletStorage:"+this.instance+"\tUnsubscribe callback does not exists", callback)
+            // console.log("[WalletStorage:"+this.instance+"\tUnsubscribe callback does not exists")
             return
         }
         this.subscribers = this.subscribers.remove( callback )

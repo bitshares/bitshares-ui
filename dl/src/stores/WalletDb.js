@@ -18,6 +18,8 @@ import CachedPropertyActions from "actions/CachedPropertyActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import BackupServerStore from "stores/BackupServerStore"
+import SettingsActions from "actions/SettingsActions"
+import SettingsStore from "stores/SettingsStore"
 
 import {
     LocalStoragePersistence, WalletStorage, ConfidentialWallet, AddressIndex
@@ -58,6 +60,10 @@ class WalletDb extends BaseStore {
             locked: true,
         } 
         
+        this.bindListeners({
+            onChangeSetting: SettingsActions.changeSetting,
+        })
+        
         // Confirm only works when there is a UI (this lets a mocha unit test disable it)
         this.confirm_transactions = true
         
@@ -83,6 +89,13 @@ class WalletDb extends BaseStore {
         )
     }
     
+    onChangeSetting(payload) {
+        if (payload.setting === "backup_server_url") {
+            if( ! wallet ) return
+            let url = payload.value === "" ? null : payload.value
+            wallet.useBackupServer(url)
+        }
+    }
     
     /** Loads the last active wallet. */
     loadDbData() {
@@ -138,15 +151,18 @@ class WalletDb extends BaseStore {
         console.log("WalletDb\topenWallet", wallet_name);
         let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
         let storage = new LocalStoragePersistence( key )
-        let _wallet = new WalletStorage(storage)
-        let _cwallet = new ConfidentialWallet(_wallet)
         
+        let _wallet = new WalletStorage(storage)
+        BackupServerStore.setWallet(_wallet)
+        _wallet.useBackupServer(SettingsStore.getSetting("backup_server_url"))
+        
+        let _cwallet = new ConfidentialWallet(_wallet)
         // Transaction confirmations
         _cwallet.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
             this.process_transaction( tr, null /*signer_private_keys*/, true, broadcast_confirmed_callback )
         
+        
         // No exceptions so update state:
-        BackupServerStore.setWallet(_wallet)
         cwallet = _cwallet
         wallet = _wallet
         let wallet_names = this.state.wallet_names.add(wallet_name)
