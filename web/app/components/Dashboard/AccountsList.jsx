@@ -146,7 +146,7 @@ class AccountsList extends React.Component {
 
                 let accountName = account.get("name");
 
-                account.get("orders").forEach( (orderID, key) => {
+                account.get("orders") && account.get("orders").forEach( (orderID, key) => {
                     let order = ChainStore.getObject(orderID);
                     if (order) {
                         let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
@@ -160,7 +160,7 @@ class AccountsList extends React.Component {
 
                 // console.log("openOrders:", openOrders);
 
-                account.get("call_orders").forEach( (callID, key) => {
+                account.get("call_orders") && account.get("call_orders").forEach( (callID, key) => {
                     let position = ChainStore.getObject(callID);
                     if (position) {
                         collateral += parseInt(position.get("collateral"), 10);
@@ -175,7 +175,7 @@ class AccountsList extends React.Component {
                 });
 
                 let account_balances = account.get("balances");
-                account_balances.forEach( balance => {
+                account_balances && account_balances.forEach( balance => {
                     let balanceAmount = ChainStore.getObject(balance);
                     if (!balanceAmount || !balanceAmount.get("balance")) {
                         return null;

@@ -100,7 +100,7 @@ export default class AuthInput extends Component {
         let confirmChange = event => AuthStore.update({ confirm: event.target.value })
 
         // "grid-content", "no-overflow", 
-        return <div className={cname("form-group", {"has-error": password_error != null })}>
+        return <div className={cname("form-group no-margin", {"has-error": password_error != null })}>
         
             {/*  P A S S W O R D  */}
             <div>

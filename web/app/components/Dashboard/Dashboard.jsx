@@ -17,6 +17,8 @@ import Icon from "../Icon/Icon";
 import WalletDb from "stores/WalletDb";
 import ReceiveFundsModal from "../Stealth/ReceiveFundsModal";
 import PubKey from "../Utility/PubKey";
+import WalletUnlockStore from "stores/WalletUnlockStore";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 class Dashboard extends React.Component {
 
@@ -119,6 +121,17 @@ class Dashboard extends React.Component {
         ZfApi.publish("receive_funds_modal", "open");
     }
 
+    _onAddButtonClicked(active) {
+        console.log("-- Dashboard._onAddButtonClicked -->", active, WalletUnlockStore.getState().locked);
+        if (active && WalletUnlockStore.getState().locked) {
+            WalletUnlockActions.unlock().then(() => {
+                ZfApi.publish("action-sheet-add", active ? "open" : "close");
+            });
+        } else {
+            ZfApi.publish("action-sheet-add", active ? "open" : "close");
+        }
+    }
+
     render() {
         let {width} = this.state;
         let public_accounts = this.props.linkedAccounts.toList();
@@ -143,7 +156,7 @@ class Dashboard extends React.Component {
                     <div ref="container" className="content-block">
                         <div className="float-right">
                             <ActionSheet id="action-sheet-add">
-                                <ActionSheet.Button title="" setActiveState={active => ZfApi.publish("action-sheet-add", active ? "open" : "close")}>
+                                <ActionSheet.Button title="" setActiveState={this._onAddButtonClicked}>
                                     <a className="button outline">+</a>
                                 </ActionSheet.Button>
                                 <ActionSheet.Content>
@@ -172,7 +185,7 @@ class Dashboard extends React.Component {
                                 private_accounts.filter(name => name.indexOf(df) !== -1).map(name => {
                                     return (<tr key={name}>
                                         <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
-                                        <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name).toString()}/></td>
+                                        <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name)}/></td>
                                     </tr>);
                                 })
                             }
@@ -195,7 +208,7 @@ class Dashboard extends React.Component {
                                 private_contacts.filter(name => name.indexOf(df) !== -1).map(name => {
                                     return (<tr key={name}>
                                         <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
-                                        <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name).toString()}/></td>
+                                        <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name)}/></td>
                                         <td><button className="button outline" onClick={this._removePrivateContact.bind(this, name)} data-tip="Remove Contact" data-type="light">-</button></td>
                                     </tr>);
                                 })

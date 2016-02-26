@@ -368,6 +368,7 @@ class AccountStore extends BaseStore {
     }
 
     getAccountType(full_name) {
+        if (!full_name) return null;
         const name = full_name[0] === "~" ? full_name.slice(1) : full_name;
         let res = null;
         if (this.state.privateContacts.has(name)) res = "Private Contact";

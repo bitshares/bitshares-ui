@@ -24,7 +24,12 @@ class CreatePrivateAccountModal extends React.Component {
 
     _onCreateClick() {
         console.log("-- CreatePrivateAccountModal._onCreateClick -->");
-        AccountActions.addPrivateAccount(this.state.label);
+        try {
+            AccountActions.addPrivateAccount(this.state.label);
+        }
+        catch (error) {
+            alert(error);
+        }
         ZfApi.publish("add_private_account_modal", "close");
     }
 

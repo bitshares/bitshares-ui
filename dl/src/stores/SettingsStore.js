@@ -80,8 +80,8 @@ class SettingsStore {
                 "EUR"
             ],
             showSettles: [
-                {translate: "yes"},
-                {translate: "no"}
+                {translate: "no"},
+                {translate: "yes"}
             ],
             multiAccountMode: [
                 {translate: "no"},

@@ -64,6 +64,8 @@ class PubKey extends React.Component {
         }
 
         let value = this.props.getValue();
+        if (!value) value = "(missing)";
+        if (typeof value !== "string") value = value.toString();
 
         let full_value = value;
         if (value && !fullLength && value.length > 35) {
