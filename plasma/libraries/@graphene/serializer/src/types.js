@@ -9,7 +9,7 @@ var ObjectId = require('./object_id')
 var fp = require('./fast_parser');
 var chain_types = require('./ChainTypes')
 
-import { PublicKey, Address } from "@graphene/ecc"
+import { PublicKey, Address, ecc_config } from "@graphene/ecc"
 
 var Types = {}
 module.exports = Types
@@ -790,7 +790,7 @@ Types.public_key = {
     },
     toObject(object, debug = {}){
         if (debug.use_default && object === undefined) {
-            return "GPH859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM";
+            return ecc_config.address_prefix + "859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM";
         }
         v.required(object);
         return object.toString()
@@ -815,7 +815,7 @@ Types.address =
     },
     toObject(object, debug = {}){
         if (debug.use_default && object === undefined) {
-            return "GPH664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
+            return ecc_config.address_prefix + "664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
         }
         return Types.address._to_address(object).toString();
     }

@@ -1,6 +1,6 @@
 import { Apis } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
-import { Aes, PrivateKey, PublicKey, key } from "@graphene/ecc"
+import { Aes, PrivateKey, PublicKey, key, ecc_config } from "@graphene/ecc"
 
 import WalletDb from 'stores/WalletDb'
 import WalletManagerStore from 'stores/WalletManagerStore'
@@ -24,7 +24,7 @@ module.exports = {
     AccountStore, 
     BackupActions,
     ChainStore,
-    chain_config,
+    chain_config, ecc_config,
     
     // Debugging, these may be removed
     AccountRefsStore, AddressIndex,
