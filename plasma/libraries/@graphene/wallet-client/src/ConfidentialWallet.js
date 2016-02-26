@@ -42,7 +42,7 @@ export default class ConfidentialWallet {
         this.wallet = req(walletStorage, "walletStorage")
         
         // Graphene-UI uses a transaction confirmation dialog and will replace this function.
-        this.process_transaction = (tr, broadcast, broadcast_confirmed_callback = Promise.resolve()) =>
+        this.process_transaction = (tr, broadcast, broadcast_confirmed_callback = ()=> Promise.resolve()) =>
             broadcast_confirmed_callback()
             .then(()=> tr.process_transaction(this, null/*signer keys*/, broadcast))
         

@@ -260,13 +260,13 @@ class WalletDb extends BaseStore {
         @arg {boolean} broadcast to the blockchain
         @arg {function} [broadcast_confirmed_callback = null] returns a promise, called after user sees and confirms the transaction.  Returned promise must resolve or it will cancel the broadcast.
     */
-    process_transaction(tr, signer_pubkeys, broadcast, broadcast_confirmed_callback = Promise.resolve()) {
+    process_transaction(tr, signer_pubkeys, broadcast, broadcast_confirmed_callback = ()=> Promise.resolve()) {
         return WalletUnlockActions.unlock().then( () =>
             this.confirm_transactions ? // confirm_transactions off for unit tests
                 tr.process_transaction(cwallet, signer_pubkeys, false/* broadcast */).then(()=>
                     new Promise( resolve => {
-                        tr.__resolve = resolve
-                        tr.__broadcast_confirmed_callback = broadcast_confirmed_callback
+                        tr.__resolve = resolve;
+                        tr.__broadcast_confirmed_callback = broadcast_confirmed_callback;
                         TransactionConfirmActions.confirm(tr)
                     })
                 )

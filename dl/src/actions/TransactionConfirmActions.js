@@ -16,8 +16,8 @@ class TransactionConfirmActions {
             this.actions.error("Your transaction has expired without being confirmed, please try again later.");
         }, chain_config.expire_in_secs * 2000);
         
-        let tr_resolve = transaction.__resolve
-        let cb = transaction.__broadcast_confirmed_callback
+        let tr_resolve = transaction.__resolve;
+        let cb = transaction.__broadcast_confirmed_callback; // semi-colon required
         
         // broadcast_confirmed_callback (optional) will save the receipts and backup the wallet
         (cb ? cb() : Promise.resolve())
@@ -31,8 +31,8 @@ class TransactionConfirmActions {
         .then((res)=> tr_resolve ? tr_resolve(res) : res)
         .catch( error => {
             console.error(error)
-            if(tr_promise)
-                tr_promise.reject(error)
+            if(tr_resolve)
+                tr_resolve(Promise.reject(error))
             
             clearTimeout(broadcast_timeout);
             // messages of length 1 are local exceptions (use the 1st line)

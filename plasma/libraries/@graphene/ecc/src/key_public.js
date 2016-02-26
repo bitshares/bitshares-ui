@@ -69,7 +69,6 @@ class PublicKey {
         try {
             return PublicKey.fromStringOrThrow(public_key, address_prefix)
         } catch (e) {
-            console.error("ERROR\tPublicKey\tfromString", e, "stack", e.stack);
             return null;
         }
     }
