@@ -42,7 +42,7 @@ export default class ConfidentialWallet {
         this.wallet = req(walletStorage, "walletStorage")
         
         // Graphene-UI uses a transaction confirmation dialog and will replace this function.
-        this.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
+        this.process_transaction = (tr, broadcast, broadcast_confirmed_callback = Promise.resolve()) =>
             broadcast_confirmed_callback()
             .then(()=> tr.process_transaction(this, null/*signer keys*/, broadcast))
         
@@ -464,7 +464,7 @@ export default class ConfidentialWallet {
     */
     receiveBlindTransfer( confirmation_receipts, opt_from, opt_memo ) {
 
-        // console.log("confirmation_receipt", confirmation_receipt, opt_from, opt_memo )
+        // console.log("receiveBlindTransfer confirmation_receipt", confirmation_receipts, opt_from, opt_memo )
 
         this.assertLogin()
         
