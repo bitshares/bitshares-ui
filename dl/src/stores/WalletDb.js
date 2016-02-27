@@ -170,7 +170,13 @@ class WalletDb extends BaseStore {
         let wallet_names = this.state.wallet_names.add(wallet_name)
         this.setState({ current_wallet: wallet_name, wallet_names, wallet, cwallet }) // public
         iDB.root.setProperty("current_wallet", wallet_name)
-        
+        try {
+            // browser console references
+            window.wallet = wallet
+            window.cwallet = cwallet
+        } catch(error){
+            //nodejs:ReferenceError: window is not defined
+        }
         return { wallet }
     }
     
