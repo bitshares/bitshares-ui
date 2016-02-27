@@ -58,6 +58,8 @@ class VerifyPassword extends Component {
         if( ! this.props.auth.valid) return
         if(AuthStore.verifyPassword()) {
             this.setState({ verified: true, password_input_reset: Date.now() })
+            if(this.props.onValid)
+                this.props.onValid()
         } else
             this.setState({ verified: false })
     }
