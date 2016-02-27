@@ -110,6 +110,7 @@ class Exchange extends React.Component {
 
         return {
             history: [],
+            buySellOpen: ws.get("buySellOpen", true),
             buyAmount: 0,
             displaySellPrice: 0,
             displayBuyPrice: 0,
@@ -611,6 +612,14 @@ class Exchange extends React.Component {
         });
 
         this.setState({flipBuySell: !this.state.flipBuySell});
+    }
+
+    _toggleOpenBuySell() {
+        SettingsActions.changeViewSetting({
+            buySellOpen: !this.state.buySellOpen
+        });
+
+        this.setState({buySellOpen: !this.state.buySellOpen});
     }
 
     getSellAmount(price, total = 0, satAmount) {
@@ -1310,6 +1319,89 @@ class Exchange extends React.Component {
                                 />
                             </div>)}                        
 
+                        {/* Buy/Sell forms */}
+
+                        {isNullAccount ? null : (
+                            <div className="grid-block vertical shrink buy-sell middle-content">
+                            {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
+                            
+                            <div className="grid-block small-vertical medium-horizontal align-spaced">
+                                {quote && base ?
+                                <BuySell
+                                    isOpen={this.state.buySellOpen}
+                                    onToggleOpen={this._toggleOpenBuySell.bind(this)}
+                                    className={cnames("small-12 medium-6 no-padding", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
+                                    type="bid"
+                                    amount={buyAmount}
+                                    price={displayBuyPrice}
+                                    total={buyTotal}
+                                    quote={quote}
+                                    base={base}
+                                    amountChange={this._buyAmountChanged.bind(this, base, quote)}
+                                    priceChange={this._buyPriceChanged.bind(this, base, quote)}
+                                    setPrice={this._currentPriceClick.bind(this, base, quote)}
+                                    totalChange={this._buyTotalChanged.bind(this, base, quote)}
+                                    balance={baseBalance}
+                                    onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance, buyFeeAsset, "buy")}
+                                    balancePrecision={base.get("precision")}
+                                    quotePrecision={quote.get("precision")}
+                                    totalPrecision={base.get("precision")}
+                                    currentPrice={lowestAsk.price_full}
+                                    currentPriceObject={lowestAsk.sell_price}
+                                    account={currentAccount.get("name")}
+                                    fee={buyFee}
+                                    feeAssets={buyFeeAssets}
+                                    feeAsset={buyFeeAsset}
+                                    onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
+                                    isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
+                                    onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+                                /> : null}
+                                <ConfirmOrderModal
+                                    type="buy"
+                                    ref="buy"
+                                    onForce={this._forceBuy.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance)}
+                                    diff={buyDiff}
+                                />
+
+                                {quote && base ?
+                                <BuySell
+                                    isOpen={this.state.buySellOpen}
+                                    onToggleOpen={this._toggleOpenBuySell.bind(this)}
+                                    className={cnames("small-12 medium-6 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
+                                    type="ask"
+                                    amount={sellAmount}
+                                    price={displaySellPrice}
+                                    total={sellTotal}
+                                    quote={quote}
+                                    base={base}
+                                    amountChange={this._sellAmountChanged.bind(this, base, quote)}
+                                    priceChange={this._sellPriceChanged.bind(this, base, quote)}
+                                    setPrice={this._currentPriceClick.bind(this, base, quote)}
+                                    totalChange={this._sellTotalChanged.bind(this, base, quote)}
+                                    balance={quoteBalance}
+                                    onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellTotal, sellAmount, quoteBalance, coreBalance, sellFeeAsset, "sell")}
+                                    balancePrecision={quote.get("precision")}
+                                    quotePrecision={quote.get("precision")}
+                                    totalPrecision={base.get("precision")}
+                                    currentPrice={highestBid.price_full}
+                                    currentPriceObject={highestBid.sell_price}
+                                    account={currentAccount.get("name")}
+                                    fee={sellFee}
+                                    feeAssets={sellFeeAssets}
+                                    feeAsset={sellFeeAsset}
+                                    onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
+                                    isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
+                                    onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+                                /> : null}
+                                <ConfirmOrderModal
+                                    type="sell"
+                                    ref="sell"
+                                    onForce={this._forceSell.bind(this, base, quote, sellTotal, sellAmount, quoteBalance, coreBalance)}
+                                    diff={sellDiff}
+                                />
+                            </div>
+                        </div>)}
+
                         {!leftOrderBook ? <div className="grid-block small-12" style={{overflow: "hidden"}}>
                             <OrderBook
                                 orders={limit_orders}
@@ -1356,84 +1448,7 @@ class Exchange extends React.Component {
                                 />) : null}
                         </div>)}
 
-                    {/* Buy/Sell forms */}
-
-                        {isNullAccount ? null : (
-                            <div className="grid-block vertical shrink buy-sell middle-content">
-                            {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
-                            
-                            <div className="grid-block small-vertical medium-horizontal align-spaced">
-                                {quote && base ?
-                                <BuySell
-                                    className={cnames("small-12 medium-6 no-padding", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
-                                    type="bid"
-                                    amount={buyAmount}
-                                    price={displayBuyPrice}
-                                    total={buyTotal}
-                                    quote={quote}
-                                    base={base}
-                                    amountChange={this._buyAmountChanged.bind(this, base, quote)}
-                                    priceChange={this._buyPriceChanged.bind(this, base, quote)}
-                                    setPrice={this._currentPriceClick.bind(this, base, quote)}
-                                    totalChange={this._buyTotalChanged.bind(this, base, quote)}
-                                    balance={baseBalance}
-                                    onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance, buyFeeAsset, "buy")}
-                                    balancePrecision={base.get("precision")}
-                                    quotePrecision={quote.get("precision")}
-                                    totalPrecision={base.get("precision")}
-                                    currentPrice={lowestAsk.price_full}
-                                    currentPriceObject={lowestAsk.sell_price}
-                                    account={currentAccount.get("name")}
-                                    fee={buyFee}
-                                    feeAssets={buyFeeAssets}
-                                    feeAsset={buyFeeAsset}
-                                    onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
-                                    isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
-                                    onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                                /> : null}
-                                <ConfirmOrderModal
-                                    type="buy"
-                                    ref="buy"
-                                    onForce={this._forceBuy.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance)}
-                                    diff={buyDiff}
-                                />
-
-                                {quote && base ?
-                                <BuySell
-                                    className={cnames("small-12 medium-6 no-padding", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
-                                    type="ask"
-                                    amount={sellAmount}
-                                    price={displaySellPrice}
-                                    total={sellTotal}
-                                    quote={quote}
-                                    base={base}
-                                    amountChange={this._sellAmountChanged.bind(this, base, quote)}
-                                    priceChange={this._sellPriceChanged.bind(this, base, quote)}
-                                    setPrice={this._currentPriceClick.bind(this, base, quote)}
-                                    totalChange={this._sellTotalChanged.bind(this, base, quote)}
-                                    balance={quoteBalance}
-                                    onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellTotal, sellAmount, quoteBalance, coreBalance, sellFeeAsset, "sell")}
-                                    balancePrecision={quote.get("precision")}
-                                    quotePrecision={quote.get("precision")}
-                                    totalPrecision={base.get("precision")}
-                                    currentPrice={highestBid.price_full}
-                                    currentPriceObject={highestBid.sell_price}
-                                    account={currentAccount.get("name")}
-                                    fee={sellFee}
-                                    feeAssets={sellFeeAssets}
-                                    feeAsset={sellFeeAsset}
-                                    onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
-                                    isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
-                                    onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                                /> : null}
-                                <ConfirmOrderModal
-                                    type="sell"
-                                    ref="sell"
-                                    onForce={this._forceSell.bind(this, base, quote, sellTotal, sellAmount, quoteBalance, coreBalance)}
-                                    diff={sellDiff}
-                                />
-                            </div>
-                        </div>)}
+                    
 
                         <div className="grid-block no-overflow shrink no-padding">
 
