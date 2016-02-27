@@ -227,7 +227,7 @@ class AccountDepositWithdraw extends React.Component {
             <div className="exchange-bordered">
 			<Tabs
                 setting="depositWithdrawSettingsTab"
-                tabsClass="bordered-header"
+                tabsClass="bordered-header no-padding"
                 defaultActiveTab={config.depositWithdrawDefaultActiveTab}
                 contentClass="grid-content"
             >

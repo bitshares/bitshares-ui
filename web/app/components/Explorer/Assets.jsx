@@ -178,66 +178,68 @@ class Assets extends React.Component {
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
                     <div className="grid-block small-12 medium-10 medium-offset-1 main-content vertical">
-                        <Tabs
-                            setting="updateAssetTab"
-                            style={{maxWidth: "800px"}}
-                            className="grid-block vertical no-overflow no-padding"
-                            contentClass="grid-block vertical"
-                        >
-                            <Tab title="explorer.assets.market">
-                                <div className="grid-block shrink">
-                                    <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={this._onFilter.bind(this, "filterMPA")}></input>
-                                </div>
-                                <div className="grid-block" style={{paddingBottom: 20}}>
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                            <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                            <th><Translate component="span" content="markets.supply" /></th>
-                                        </tr>
-                                        </thead>
+                        <div className="generic-bordered-box">
+                            <Tabs
+                                tabsClass="no-padding bordered-header"
+                                setting="updateAssetTab"
+                                className="grid-block vertical no-overflow no-padding"
+                                contentClass="grid-block vertical"
+                            >
+                                <Tab title="explorer.assets.market">
+                                    <div className="grid-block shrink">
+                                        <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={this._onFilter.bind(this, "filterMPA")}></input>
+                                    </div>
+                                    <div className="grid-block" style={{paddingBottom: 20}}>
+                                        <table className="table">
+                                            <thead>
+                                            <tr>
+                                                <th><Translate component="span" content="explorer.assets.symbol" /></th>
+                                                <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                                <th><Translate component="span" content="markets.supply" /></th>
+                                            </tr>
+                                            </thead>
+                                                <tbody>
+                                                    {mia}
+                                                </tbody>
+                                        </table> 
+                                    </div>  
+                                </Tab>
+
+                                <Tab title="explorer.assets.user">
+                                    <div className="grid-block shrink">
+                                        <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={this._onFilter.bind(this, "filterUIA")}></input>
+                                    </div>
+                                    <div className="grid-block" style={{paddingBottom: 20}}>
+                                        <table className="table">
+                                            <thead>
+                                            <tr>
+                                                <th><Translate component="span" content="explorer.assets.symbol" /></th>
+                                                <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                                <th><Translate component="span" content="markets.supply" /></th>
+                                            </tr>
+                                            </thead>
+
                                             <tbody>
-                                                {mia}
+                                                {uia}
                                             </tbody>
-                                    </table> 
-                                </div>  
-                            </Tab>
+                                        </table>
+                                    </div>
+                                </Tab>
 
-                            <Tab title="explorer.assets.user">
-                                <div className="grid-block shrink">
-                                    <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={this._onFilter.bind(this, "filterUIA")}></input>
-                                </div>
-                                <div className="grid-block" style={{paddingBottom: 20}}>
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                            <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                            <th><Translate component="span" content="markets.supply" /></th>
-                                        </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            {uia}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Tab>
-
-                            <Tab title="explorer.assets.prediction">
-                                <div className="grid-block shrink">
-                                    <input style={{maxWidth: "500px"}} placeholder={counterpart.translate("markets.search").toUpperCase()} type="text" value={this.state.filterPM} onChange={this._onFilter.bind(this, "filterPM")}></input>
-                                </div>
-                                <div className="grid-block" style={{paddingBottom: 20}}>
-                                    <table className="table">
-                                        <tbody>
-                                            {pm}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Tab>
-                        </Tabs>                     
+                                <Tab title="explorer.assets.prediction">
+                                    <div className="grid-block shrink">
+                                        <input style={{maxWidth: "500px"}} placeholder={counterpart.translate("markets.search").toUpperCase()} type="text" value={this.state.filterPM} onChange={this._onFilter.bind(this, "filterPM")}></input>
+                                    </div>
+                                    <div className="grid-block" style={{paddingBottom: 20}}>
+                                        <table className="table">
+                                            <tbody>
+                                                {pm}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </Tab>
+                            </Tabs>       
+                        </div>              
                     </div>
                 </div>
             </div>

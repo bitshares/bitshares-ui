@@ -143,7 +143,7 @@ class AccountOverview extends React.Component {
         return (
             <div className="grid-content">
                 <div className="content-block small-12">
-                    <div className="general-bordered">
+                    <div className="generic-bordered-box">
                         <div className="exchange-content-header">
                             <Translate content="transfer.balances" />
                         </div>
@@ -185,7 +185,7 @@ class AccountOverview extends React.Component {
                 {call_orders.length > 0 ? (
 
                 <div className="content-block">
-                    <div className="general-bordered">
+                    <div className="generic-bordered-box">
                         <div className="exchange-content-header">
                             <Translate content="account.collaterals" />
                         </div>
@@ -212,6 +212,7 @@ class AccountOverview extends React.Component {
                         accountsList={Immutable.fromJS([account.get("id")])}
                         compactView={false}
                         showMore={true}
+                        fullHeight={true}
                     />
                 </div>
             </div>

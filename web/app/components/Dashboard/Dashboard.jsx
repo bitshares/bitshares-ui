@@ -76,30 +76,32 @@ class Dashboard extends React.Component {
         return (
             <div ref="wrapper" className={outerClass}>
                 <div className={firstDiv} style={{minWidth: "50%"}}>
-                    <div ref="container" className="grid-content" style={{paddingLeft: "0.25rem", paddingRight: "0.25rem"}}>
-                        <div className="exchange-bordered">
+                    <div ref="container" className="grid-content">
+                        <div className="generic-bordered-box">
                             <div className="exchange-content-header" style={{marginBottom: 15}}>
                                 <Translate content="account.overview" />
                             </div>
-                            <AccountsList accounts={Immutable.List(names)} width={width} />
-                            {myIgnoredAccounts.size ? 
-                                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
-                                    <tbody>
-                                        <tr>
-                                            <td colSpan={width < 750 ? "3" : "4"} style={{textAlign: "right"}}>
-                                                <div onClick={this._onToggleIgnored.bind(this)}className="button outline">
-                                                    <Translate content={`account.${ showIgnored ? "hide_ignored" : "show_ignored" }`} />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>                                
-                                </table> : null}
-                            {showIgnored ? <AccountsList compact accounts={Immutable.List(ignored)} width={width} /> : null}
+                            <div className="box-content">
+                                <AccountsList accounts={Immutable.List(names)} width={width} />
+                                {myIgnoredAccounts.size ? 
+                                    <table className="table table-hover" style={{fontSize: "0.85rem"}}>
+                                        <tbody>
+                                            <tr>
+                                                <td colSpan={width < 750 ? "3" : "4"} style={{textAlign: "right"}}>
+                                                    <div onClick={this._onToggleIgnored.bind(this)}className="button outline">
+                                                        <Translate content={`account.${ showIgnored ? "hide_ignored" : "show_ignored" }`} />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>                                
+                                    </table> : null}
+                                {showIgnored ? <AccountsList compact accounts={Immutable.List(ignored)} width={width} /> : null}
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="grid-block right-column no-overflow">
-                    <div className="grid-content no-overflow" style={{paddingLeft: "0.5rem", paddingRight: "0.25rem", paddingBottom: 0}}>
+                    <div className="grid-content no-overflow" style={{paddingBottom: 0}}>
                         <RecentTransactions maxHeight={height ? height - 20 - 5 : null} accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
                     </div>
                 </div>

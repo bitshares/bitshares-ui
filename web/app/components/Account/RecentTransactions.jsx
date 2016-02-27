@@ -36,12 +36,14 @@ class RecentTransactions extends React.Component {
         accountsList: ChainTypes.ChainAccountsList.isRequired,
         compactView: React.PropTypes.bool,
         limit: React.PropTypes.number,
-        maxHeight: React.PropTypes.number
+        maxHeight: React.PropTypes.number,
+        fullHeight: React.PropTypes.bool,
     };
 
     static defaultProps = {
         limit: 25,
-        maxHeight: 500
+        maxHeight: 500,
+        fullHeight: false
     };
 
     constructor(props) {
@@ -163,7 +165,7 @@ class RecentTransactions extends React.Component {
 
         return (
             <div className="recent-transactions no-overflow" style={style}>
-                <div className="exchange-bordered">
+                <div className="generic-bordered-box">
                     <div ref="header">
                     
                         <div className="exchange-content-header">
@@ -191,11 +193,10 @@ class RecentTransactions extends React.Component {
                     </div>
 
                     <div
-                        className="grid-block no-margin"
-                        style={{
-                            padding: "0 10px 0 0",
+                        className="box-content grid-block no-margin"
+                        style={!this.props.fullHeight ? {
                             maxHeight: maxHeight - headerHeight 
-                        }}
+                        } : null}
                         ref="transactions">
                         <table className={"table" + (compactView ? " compact" : "")}>
                             <TransitionWrapper
