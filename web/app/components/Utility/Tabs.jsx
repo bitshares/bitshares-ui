@@ -72,7 +72,7 @@ class Tabs extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.setting ? props.viewSettings.get(props.setting) || props.defaultActiveTab : props.defaultActiveTab
+            activeTab: props.setting ? props.viewSettings.get(props.setting, props.defaultActiveTab) : props.defaultActiveTab
         };
     }
 
