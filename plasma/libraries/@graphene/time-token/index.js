@@ -20,7 +20,7 @@ export function createToken(seed, include_seed = true) {
     const now = Math.floor( Date.now()/(100*1000) ) - 14484919
     const now_string = String( now )
     let newToken = crypto.createHash("sha1")
-        .update(local_secret)
+        .update(local_secret())
         .update(now_string)
         .update(seed)
         .digest('binary')
@@ -53,7 +53,7 @@ export function checkToken(token, seed = null) {
         return { valid: false,  seed: null, error: "expired" }
     }
     let token_verify = crypto.createHash("sha1")
-        .update(local_secret)
+        .update(local_secret())
         .update(then_string)
         .update(token_seed)
         .digest('binary')

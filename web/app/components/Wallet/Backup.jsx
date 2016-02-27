@@ -433,7 +433,7 @@ class DecryptBackup extends BackupBaseComponent {
         let notifyError = error => {
             console.error("Backup\trestore error wallet: " + this.props.backup.name, error, "stack", error.stack)
             
-            if( /invalid_password/.test(error.toString()) )
+            if( /invalid_auth/.test(error.toString()) )
                 notify.error("Invalid Password")
             
             else if( /Missmatched chain id/.test(error.toString()) )
@@ -449,7 +449,7 @@ class DecryptBackup extends BackupBaseComponent {
         // recent encryption key (and internal JSON format)
         return backupDecrypt(private_key).catch( error => {
             
-            if( ! /invalid_password/.test(error.toString()) ) {
+            if( ! /invalid_auth/.test(error.toString()) ) {
                 notifyError(error)
                 return
             }

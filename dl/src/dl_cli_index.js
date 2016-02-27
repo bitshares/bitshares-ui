@@ -8,6 +8,7 @@ import AccountStore from 'stores/AccountStore'
 
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"
+import SettingsActions from "actions/SettingsActions"
 
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
@@ -24,6 +25,7 @@ module.exports = {
     AccountStore, 
     BackupActions,
     ChainStore,
+    SettingsActions,
     chain_config, ecc_config,
     
     // Debugging, these may be removed

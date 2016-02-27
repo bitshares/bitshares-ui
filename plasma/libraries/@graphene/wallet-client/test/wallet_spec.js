@@ -133,7 +133,7 @@ describe('Single wallet', () => {
         .then( ()=> wallet.login(email, username, password, chain_id) )
         .then( ()=> wallet.keepRemoteCopy(true, code()) )
         
-        .then( ()=>{ assert.throws(()=> wallet.changePassword("invalid_"+password, "new_"+password), /invalid_password/, "invalid_password") })
+        .then( ()=>{ assert.throws(()=> wallet.changePassword("invalid_"+password, "new_"+password), /invalid_auth/, "invalid_auth") })
         
         // Trigger a wallet modified exception.
         // Unsubscribe and disconnect, then modify locally only

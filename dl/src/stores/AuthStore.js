@@ -2,23 +2,33 @@ import alt from "alt-instance"
 import BaseStore from "stores/BaseStore"
 import Immutable from "immutable"
 import { rfc822Email } from "@graphene/wallet-client"
+import { extractSeed } from "@graphene/time-token"
 import { validation } from "@graphene/chain"
+import WalletDb from "stores/WalletDb"
 
 class AuthStore extends BaseStore {
     
     constructor() {
         super()
         const init = ()=> ({
-            password: "", confirm: "", password_error: null,
+            password: "", confirm: "", password_error: null, auth_error: null,
             username: "", username_error: "",
             email: "", email_error: null,
             valid: false
         })
         this.state = init()
-        this.clear = ()=> this.setState(init())
-        this.componentWillUnmount = ()=> this.setState(init())
+        this.clear = ()=>{
+            this.setState(init())
+            this.defaultEmailFromToken()
+        }
         this._export("update", "clear", "setup", "login",
-            "changePassword", "verifyPassword")
+            "changePassword", "verifyPassword", "defaultEmailFromToken")
+    }
+    
+    defaultEmailFromToken() {
+        let email = emailFromToken()
+        if( email )
+            this.setState({ email })
     }
     
     /** @return {Promise} */
@@ -28,8 +38,8 @@ class AuthStore extends BaseStore {
         return WalletDb
             .login({ password, email, username })
             .catch( error =>{
-                if(/invalid_password/.test(error)) {
-                    this.setState({ password_error: "invalid_password" })
+                if(/invalid_auth/.test(error)) {
+                    this.setState({ auth_error: true })
                 }
                 throw error
             })
@@ -40,21 +50,21 @@ class AuthStore extends BaseStore {
         if( ! this.state.valid ) return
         WalletDb
             .changePassword( this.state )
-            .catch( error => this.setState({ password_error: "invalid_password" }))
+            .catch( error => this.setState({ auth_error: true }))
     }
     
     /** @return {boolean} */
     verifyPassword() {
         if( ! this.state.valid ) return false
         if( ! WalletDb.verifyPassword( this.state )) {
-            this.setState({ password_error: "invalid_password" })
+            this.setState({ auth_error: true })
             return false
         }
         return true
     }
     
-    setup({ hasConfirm, hasUsername, hasEmail }) {
-        this.config = { hasConfirm, hasUsername, hasEmail }
+    setup({ hasPassword, hasConfirm, hasUsername, hasEmail }) {
+        this.config = { hasPassword, hasConfirm, hasUsername, hasEmail }
     }
     
     update(state) {
@@ -74,8 +84,9 @@ class AuthStore extends BaseStore {
     }
     
     checkEmail({ email }) {
-        if( ! this.config.hasEmail ) {
-            return { email_valid: true, email_error: null }
+        if( ! this.config.hasEmail || email === "") {
+            this.setState({ email_valid: true, email_error: null })
+            return
         }
         let email_valid = rfc822Email(this.state.email)
         let email_error = email.length > 0 ?
@@ -85,8 +96,9 @@ class AuthStore extends BaseStore {
     }
     
     checkUsername({ username }) {
-        if( ! this.config.hasUsername ) {
-            return { username_valid: true, username_error: null }
+        if( ! this.config.hasUsername || username === "") {
+            this.setState({ username_valid: true, username_error: null })
+            return
         }
         let username_valid = validation.is_account_name(username)
         let username_error = username.length > 0 ?
@@ -101,6 +113,11 @@ class AuthStore extends BaseStore {
     */
     checkPassword({ password = "", confirm = null }) {
 
+        if( ! this.config.hasPassword ) {
+            this.setState({ password_valid: true, password_error: null })
+            return
+        }
+        
         confirm = confirm.trim()
         password = password.trim()
         
@@ -119,6 +136,15 @@ class AuthStore extends BaseStore {
         return { password, confirm, password_error, password_valid }
     }
     
+}
+
+function emailFromToken() {
+    let { wallet } = WalletDb.getState()
+    if(wallet && wallet.storage.state.has("remote_token")) {
+        let remote_token = wallet.storage.state.get("remote_token")
+        let email = extractSeed(remote_token)
+        return email
+    }
 }
 
 export var AuthStoreWrapped = alt.createStore(AuthStore, "AuthStore");

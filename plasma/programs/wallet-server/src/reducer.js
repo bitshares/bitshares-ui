@@ -13,7 +13,7 @@ export default function reducer(state, action) {
             case 'requestCode':
                 var { email } = action
                 // Embed the sha1 of the email, this is required to limit 1 wallet per email
-                let p = emailToken(email, hash.sha1(email.trim().toLowerCase(), 'binary'))
+                let p = emailToken(email, email.trim().toLowerCase())
                 p.on('close', (code, signal) =>{
                     if( code === 0 ) {
                         reply("OK", {expire_min: expire_min()})
@@ -30,7 +30,8 @@ export default function reducer(state, action) {
                     reply("Unauthorized", {message: result.error})
                     break
                 }
-                var email_sha1 = result.seed
+                let email = result.seed
+                var email_sha1 = hash.sha1(email)
                 reply( WalletServerDb.createWallet(encrypted_data, signature, email_sha1, wallet => walletNotify(wallet)) )
                 break
             case 'fetchWallet':

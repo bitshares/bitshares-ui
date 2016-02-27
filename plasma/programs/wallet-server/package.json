@@ -8,7 +8,7 @@
     "mail_from": "alice@example.com",
     "mail_subject": "Verify your wallet backup token",
     "mail_script": "./bin/email.sh",
-    "mail_token_url": "http://localhost:8080/#/remote-backups/${token}",
+    "mail_token_url": "http://localhost:8080/#/wallet/backup/server/${token}",
     "mysql_database": "wallet_server",
     "mysql_user": "root",
     "mysql_password": "",

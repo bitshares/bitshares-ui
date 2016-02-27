@@ -164,6 +164,9 @@ export default class WalletStorage {
     */
     keepRemoteCopy( remote_copy = true, remote_token = this.storage.state.get("remote_token") ) {
         
+        if( remote_copy != null)
+            assert.equal(typeof remote_copy, "boolean", "remote_copy")
+        
         if( remote_copy === this.storage.state.get("remote_copy") && remote_token === this.storage.state.get("remote_token"))
             return Promise.resolve()
         
@@ -195,7 +198,7 @@ export default class WalletStorage {
         @arg {string} password
         @arg {string} chain_id - required on first login.  The transaction layer checks this value to ensure wallet's can not cross-chains.  Chain ID is validated if it is provided on subsequent logins.
         
-        @throws {Error<string>} [email_required | username_required | password_required | invalid_password ]
+        @throws {Error<string>} [email_required | username_required | password_required ]
         
         @return {Promise} - can be ignored unless one is interested in the remote wallet syncing
     */
@@ -220,10 +223,10 @@ export default class WalletStorage {
             
             // console.log("INFO\tWalletStorage\tlogin", "local wallet")
             
-            // check login (email, username, and password)
             let public_key = private_key.toPublicKey()
+            // check login (email, username, and password)
             // if( this.storage.state.get("private_encryption_pubkey") !== public_key.toString())
-            //     throw new Error( "invalid_password" )
+            //     throw new Error( "invalid_auth" )
             
             // Setup wallet_object so sync will have something too look at
             let backup_buffer = new Buffer(encrypted_wallet, 'base64')
@@ -398,7 +401,7 @@ export default class WalletStorage {
     */
     unsubscribe( callback ) {
         if( ! this.subscribers.has(callback)) {
-            // console.log("[WalletStorage:"+this.instance+"\tUnsubscribe callback does not exists")
+            console.log("[WalletStorage:"+this.instance+"\tWARN Unsubscribe callback does not exists")
             return
         }
         this.subscribers = this.subscribers.remove( callback )
@@ -411,7 +414,7 @@ export default class WalletStorage {
         @arg {string} email
         @arg {string} username
         
-        @throws {Error} [ email_required | username_required | invalid_password | password_required | wallet_empty ]
+        @throws {Error} [ email_required | username_required | password_required | wallet_empty ]
         @return {Promise} - can be ignored unless interested in the remote wallet syncing.
         
     */

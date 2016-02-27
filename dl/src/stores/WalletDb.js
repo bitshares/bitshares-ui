@@ -89,7 +89,7 @@ class WalletDb extends BaseStore {
     }
     
     onChangeSetting(payload) {
-        if (payload.setting === "backup_server_url") {
+        if (payload.setting === "backup_server") {
             if( ! wallet ) return
             let url = payload.value === "" ? null : payload.value
             wallet.useBackupServer(url)
@@ -154,7 +154,7 @@ class WalletDb extends BaseStore {
         let _wallet = new WalletStorage(storage)
         BackupServerStore.setWallet(_wallet)
         try {
-            _wallet.useBackupServer(SettingsStore.getSetting("backup_server_url"))
+            _wallet.useBackupServer(SettingsStore.getSetting("backup_server"))
         }catch(error) { console.error(error); }
         
         let _cwallet = new ConfidentialWallet(_wallet)
@@ -626,7 +626,7 @@ export function legacyUpgrade(password, legacy_backup) {
     let password_private = PrivateKey.fromSeed( password || "" )
     let password_pubkey = password_private.toPublicKey().toString()
     if(legacy_wallet.password_pubkey !== password_pubkey)
-        throw new Error("invalid_password")
+        throw new Error("invalid_auth")
     
     console.info("WalletDb\tconverting legacy wallet")
     let aes = Aes.fromSeed( Aes.fromSeed( password ).decryptHexToBuffer( legacy_wallet.encryption_key ) )

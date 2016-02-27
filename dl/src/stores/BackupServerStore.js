@@ -15,16 +15,16 @@ class BackupServerStore {
         })
     }
     
-    setWallet(wallet) {// try {
+    setWallet(wallet) {
         this.state = this.init()
-        
-        if(this.wallet)
-            this.wallet.unsubscribe(this.notify.bind(this))
+        if(this.wallet && this._notify_subscription)
+            this.wallet.unsubscribe(this._notify_sub)
         
         this.wallet = wallet
         this.notify()
-        this.wallet.subscribe(this.notify.bind(this))
-    }// catch(error) { console.error(error) }}
+        this._notify_subscription = this.notify.bind(this)
+        this.wallet.subscribe(this._notify_subscription)
+    }
     
     update(state) {
         this.setState(state)
@@ -45,14 +45,14 @@ class BackupServerStore {
         let weak_password  = this.wallet.wallet_object.get("weak_password")
         
         let ui_status = remote_copy != null ? "configure" : "unknown"
-        
-        this.setState({ 
+        let state = { 
             socket_status, remote_status, local_status,
             remote_url, remote_copy, remote_token,
             weak_password, 
             ui_status
-        })
-        console.log('BackupServerStore\tstate', this.state)
+        }
+        this.setState(state)
+        console.log('BackupServerStore\tstate', state)
     }
     
     

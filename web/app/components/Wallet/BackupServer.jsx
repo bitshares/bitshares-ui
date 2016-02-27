@@ -6,8 +6,11 @@ import Translate from "react-translate-component";
 import AltContainer from "alt-container"
 import cname from "classnames"
 
-// import AuthInput from "components/Forms/AuthInput"
+import AuthInput from "components/Forms/AuthInput"
+import WalletUnlock from "components/Wallet/WalletUnlock"
+import VerifyPassword from "components/Wallet/VerifyPassword"
 import BackupServerStore from "stores/BackupServerStore"
+import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
 
 global.tabIndex = global.tabIndex || 0
@@ -15,11 +18,27 @@ global.tabIndex = global.tabIndex || 0
 export default class Atl extends Component {
     render() {
         return (
-            <AltContainer stores={{ backups: BackupServerStore, wallet_store: WalletDb }}>
+            <AltContainer stores={{ backups: BackupServerStore, wallet_store: WalletDb, auth: AuthStore }}>
                 <BackupServer/>
             </AltContainer>
         )
     }
+}
+
+/** Target for React Route's onEnter event. */
+export function readBackupToken(nextState, replaceState) {
+    let token = nextState.params.token
+    if( ! token )
+        return
+    
+    let path = nextState.location.pathname
+    path = path.replace(token, "")
+    replaceState(null, path)
+    let { wallet } = WalletDb.getState()
+    if( ! wallet )
+        console.error("BackupServer\tERROR Token parameter but their is no wallet");
+    
+    wallet.keepRemoteCopy(null/*Leave yes, no unchanged*/, token)
 }
 
 class BackupServer extends Component {
@@ -30,35 +49,61 @@ class BackupServer extends Component {
     static defaultProps = {
     }
     
+    // componentWillMount() {
+    //     BackupServerStore.update({ email: emailFromToken() })
+    // }
+    
     constructor() {
         super()
     }
     
     render() {
+        return <WalletUnlock>{ this.render_unlocked() }</WalletUnlock>
+    }
+    
+    render_unlocked() {
         const requestCode = ()=>
             this.props.wallet_store.wallet.api.requestCode(this.props.backups.email)
         
+        // let email_verified = this.props.backups.email === emailFromToken()
         return (
             <div>
                 <div>
                     <h4><Translate content="wallet.server_backup"/></h4>
-                    {this.emailForm()}
-                    <button 
-                        className={cname("button", {disabled: ! this.props.backups.email_valid}) }
-                        onClick={requestCode.bind(this)}><Translate content="wallet.confirm_email" />
-                    </button>
+                    <AltContainer stores={{ auth: AuthStore }}>
+                        <AuthInput hasEmail={true} hasPassword={false} hasUsername={false}/>
+                        {this.props.auth.email_verified ? <div>
+                            
+                            <h4>Harden your Wallet's Password</h4>
+                            
+                            <div>This will enable remote backups.  Your wallet must be unlocked with your email and a password.  You <b>must</b> know both to unlock your wallet.  Write it down, this information can not be recovered.  Future access to this email account is not required.</div>
+                            
+                            {/*<button className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></button>*/}
+                        </div>
+                        :
+                            <button 
+                                className={cname("button", {disabled: ! this.props.backups.email_valid}) }
+                                onClick={requestCode.bind(this)}><Translate content="wallet.email_code" />
+                            </button>
+                        }
+                    </AltContainer>
                 </div>
                 <br/>
                 <br/>
-                <Link to="wallet/backup/create"><label className="inline">
+                {/*<Link to="wallet/backup/create"><label className="inline">
                     <Translate content="wallet.local_backup"/>
-                </label></Link>
+                </label></Link>*/}
             </div>
         )
     }
     
+    changePassword() {
+        //AuthStore.getState().password
+    }
+    
     componentDidMount() {
-        ReactDOM.findDOMNode(this.refs.confirm_email).focus()
+        let em = ReactDOM.findDOMNode(this.refs.confirm_email)
+        if(em) em.focus()
     }
     
     emailForm() {

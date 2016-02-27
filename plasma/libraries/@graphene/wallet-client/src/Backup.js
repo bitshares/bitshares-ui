@@ -55,7 +55,7 @@ export function decrypt(backup_buffer, private_key) {
         
     } catch(error) {
         if(/Invalid key/.test(error.toString()))
-            throw new Error("invalid_password")
+            throw new Error("invalid_auth")
         
         throw error
     }

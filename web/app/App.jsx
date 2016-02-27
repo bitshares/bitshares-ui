@@ -56,10 +56,9 @@ import Invoice from "./components/Transfer/Invoice";
 import { ChainStore } from "@graphene/chain";
 import { AddressIndex } from "@graphene/wallet-client";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
-import BackupServer from "./components/Wallet/BackupServer";
+import BackupServer, { readBackupToken } from "./components/Wallet/BackupServer";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
-import RemoteBackups from "./components/Wallet/RemoteBackups";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
@@ -275,11 +274,10 @@ let routes = (
             <Route name="wmc-wallet-delete" path="delete" component={WalletDelete}/>
             <Route name="wmc-backup-verify-restore" path="backup/restore" component={BackupRestore}/>
             <Route name="wmc-backup-create" path="backup/create" component={BackupCreate}/>
-            <Route name="wmc-backup-create" path="backup/server" component={BackupServer}/>
+            <Route name="wmc-backup-create" path="backup/server(/:token)" component={BackupServer} onEnter={readBackupToken}/>
             <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
             <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
         </Route>
-        <Route name="remote-backups" path="remote-backups(/:token)" component={RemoteBackups} onEnter={RemoteBackups.onEnter}/>
         <Route name="create-wallet" path="create-wallet" component={WalletCreate}/>
         <Route name="console" path="console" component={Console}/>
         <Route name="transfer" path="transfer" component={Transfer}/>
