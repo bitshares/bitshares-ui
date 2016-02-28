@@ -90,13 +90,13 @@ class AccountMembership extends React.Component {
                                { member_status === "annual" ? null : (
                                   <HelpContent path="components/AccountMembership" section="annual" feesCashback={100 - network_fee - lifetime_fee} price={{amount: annual_cost, asset: core_asset}}/>
                                )}
-                               <a href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
+                               <div href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
                                    <Translate content="account.member.upgrade_lifetime"/>
-                               </a> &nbsp; &nbsp;
+                               </div> &nbsp; &nbsp;
                                {true || member_status === "annual" ? null :
-                               <a href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
+                               <div href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
                                    <Translate content="account.member.subscribe"/>
-                               </a>}
+                               </div>}
                             </div>
                        <br/><hr/>
                        </div>
