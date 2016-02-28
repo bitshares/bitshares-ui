@@ -30,7 +30,6 @@ var transaction
 var wallet, cwallet
 
 var TRACE = false
-const remote_url = "ws://localhost:9080"
 
 /**
     The Web Wallet User API (for the user-interface).

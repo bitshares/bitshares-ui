@@ -15,8 +15,9 @@ class SettingsStore {
 
         this.settings = Immutable.Map({
             locale: "en",
-            connection: "wss://bitshares.openledger.info/ws",
-            faucet_address: "https://bitshares.openledger.info",
+            //connection: "wss://bitshares.openledger.info/ws",
+            connection: "ws://testnet.bitshares.eu/ws",
+            faucet_address: "https://testnet.bitshares.eu",
             // backup_server_url: "ws://localhost:9080",
             unit: CORE_ASSET,
             showSettles: false,
@@ -69,6 +70,7 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
+                "ws://testnet.bitshares.eu/ws",
                 "wss://bitshares.openledger.info/ws",
                 "wss://bitshares.dacplay.org:8089/ws"
             ],
@@ -106,8 +108,8 @@ class SettingsStore {
             onHideAsset: SettingsActions.hideAsset
         });
 
-        if (this._lsGet("settings_v3")) {
-            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
+        if (this._lsGet("settings_v4")) {
+            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v4"))));
         }
 
         if (this._lsGet("starredMarkets")) {
@@ -147,7 +149,7 @@ class SettingsStore {
             payload.value
         );
 
-        this._lsSet("settings_v3", this.settings.toJS());
+        this._lsSet("settings_v4", this.settings.toJS());
         if (payload.setting === "walletLockTimeout") {
             this._lsSet("lockTimeout", payload.value);
         }
