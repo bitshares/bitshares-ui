@@ -1,15 +1,13 @@
 import alt from "alt-instance"
-import BaseStore from "stores/BaseStore"
 import Immutable from "immutable"
 import { rfc822Email } from "@graphene/wallet-client"
 import { extractSeed } from "@graphene/time-token"
 import { validation } from "@graphene/chain"
 import WalletDb from "stores/WalletDb"
 
-class AuthStore extends BaseStore {
+class AuthStore {
     
     constructor() {
-        super()
         const init = ()=> ({
             password: "", confirm: "", password_error: null, auth_error: null,
             username: "", username_error: "",
@@ -19,16 +17,34 @@ class AuthStore extends BaseStore {
         this.state = init()
         this.clear = ()=>{
             this.setState(init())
-            this.defaultEmailFromToken()
+            // this.defaultEmailFromToken()
         }
-        this._export("update", "clear", "setup", "login",
-            "changePassword", "verifyPassword", "defaultEmailFromToken")
+        this.exportPublicMethods({
+            defaults: this.defaults.bind(this),
+            useEmailFromToken: this.useEmailFromToken.bind(this),
+            login: this.login.bind(this),
+            changePassword: this.changePassword.bind(this),
+            verifyPassword: this.verifyPassword.bind(this),
+            setup: this.setup.bind(this),
+            update: this.update.bind(this),
+            clear: this.clear.bind(this),
+        })
     }
     
-    defaultEmailFromToken() {
+    defaults() {
+        let { wallet } = WalletDb.getState()
+        if(wallet.storage.state.has("email"))
+            this.setState({ email: wallet.storage.state.get("email") })
+        
+        if(wallet.storage.state.has("username"))
+            this.setState({ username: wallet.storage.state.get("username") })
+    }
+    
+    useEmailFromToken() {
         let email = emailFromToken()
+        let email_verified = this.state.email === emailFromToken()
         if( email )
-            this.setState({ email })
+            this.setState({ email, email_verified })
     }
     
     /** @return {Promise} */
@@ -63,15 +79,22 @@ class AuthStore extends BaseStore {
         return true
     }
     
-    setup({ hasPassword, hasConfirm, hasUsername, hasEmail }) {
-        this.config = { hasPassword, hasConfirm, hasUsername, hasEmail }
+    setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail }) {
+        this.config = { weak, hasPassword, hasConfirm, hasUsername, hasEmail }
     }
     
     update(state) {
         const new_state = {...this.state, ...state};
+        if(new_state.username)
+            new_state.username = new_state.username.toLowerCase()
+        
+        new_state.email_verified = this.state.email === emailFromToken()
+        new_state.auth_error = null
+        
         const check_email = this.checkEmail(new_state)
         const check_username = this.checkUsername(new_state)
         const check_password = this.checkPassword(new_state)
+        
         this.setState({
             ...state,
             ...check_email,
@@ -81,10 +104,11 @@ class AuthStore extends BaseStore {
                 check_password.password_valid &&
                 check_email.email_valid &&
                 check_username.username_valid })
+        // console.log('this.state', this.state, this.config)
     }
     
     checkEmail({ email }) {
-        if( ! this.config.hasEmail || email === "") {
+        if( ! this.config.hasEmail || (email === "" && this.config.weak)) {
             this.setState({ email_valid: true, email_error: null })
             return
         }
@@ -96,7 +120,7 @@ class AuthStore extends BaseStore {
     }
     
     checkUsername({ username }) {
-        if( ! this.config.hasUsername || username === "") {
+        if( ! this.config.hasUsername || (username === ""  && this.config.weak)) {
             this.setState({ username_valid: true, username_error: null })
             return
         }
@@ -117,9 +141,6 @@ class AuthStore extends BaseStore {
             this.setState({ password_valid: true, password_error: null })
             return
         }
-        
-        confirm = confirm.trim()
-        password = password.trim()
         
         var password_error
         // Don't report until typing begins

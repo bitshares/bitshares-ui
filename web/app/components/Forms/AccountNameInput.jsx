@@ -20,7 +20,8 @@ class AccountNameInput extends BaseComponent {
         accountShouldExist: PropTypes.bool,
         accountShouldNotExist: PropTypes.bool,
         cheapNameOnly: PropTypes.bool,
-        labelMode: PropTypes.bool
+        labelMode: PropTypes.bool,
+        focus: PropTypes.bool
     };
 
     constructor(props) {
@@ -38,6 +39,11 @@ class AccountNameInput extends BaseComponent {
             || nextState.account_name !== this.state.account_name
             || nextState.existing_account !== this.state.existing_account
             || nextState.searchAccounts !== this.state.searchAccounts
+    }
+    
+    componentDidMount() {
+        if(this.props.focus)
+            ReactDOM.findDOMNode(this.refs.input).focus();
     }
 
     componentDidUpdate() {
@@ -125,7 +131,7 @@ class AccountNameInput extends BaseComponent {
                 <input name="value" type="text" id={this.props.id} ref="input" autoComplete="off"
                        placeholder={this.props.placeholder} defaultValue={this.props.initial_value}
                        onChange={this.handleChange} onKeyDown={this.onKeyDown}
-                       value={this.state.account_name}/>
+                       value={this.state.account_name} tabIndex={1}/>
                 <div className="facolor-error">{error}</div>
                 <div className="facolor-warning">{error ? null : warning}</div>
             </div>

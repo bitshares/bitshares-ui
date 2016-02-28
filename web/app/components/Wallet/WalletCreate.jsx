@@ -86,7 +86,7 @@ class CreateNewWallet extends Component {
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <AuthInput hasConfirm={true} />
+                <AuthInput hasConfirm={true} hasEmail={false} hasUsername={false} />
                 { has_wallet ? (
                     <div className="grid-content no-overflow">
                         <br/>
@@ -105,7 +105,7 @@ class CreateNewWallet extends Component {
                         <br/>(Use a backup file instead)
                         <br/>&nbsp;
                     </div>:null}
-                    <button className={cname("button",{disabled: !(this.state.isValid)})}>
+                    <button className={cname("button",{disabled: !(this.state.isValid && this.props.auth.valid) })}>
                         <Translate content="wallet.create_wallet" /></button>
                     <button className="button secondary" onClick={this.onBack.bind(this)}>
                         <Translate content="wallet.cancel" /> </button>

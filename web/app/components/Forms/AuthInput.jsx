@@ -8,7 +8,7 @@ import cname from "classnames"
 import AccountSelector from "../Account/AccountSelector"
 import AuthStore from "stores/AuthStore"
 
-global.tabIndex = global.tabIndex || 0
+let tabIndex = 2 // AccountCreate -> AccountNameInput  is 1
 
 @connectToStores
 export default class AuthInput extends Component {
@@ -25,6 +25,10 @@ export default class AuthInput extends Component {
         // Display default auth error (invalid authentication)
         authError: PropTypes.bool,
         
+        // Require email and username (as well as password)
+        weak: PropTypes.bool,
+        
+        // Off to collect just an email (allows one to verify the email before password prompt)
         hasPassword: PropTypes.bool,
         
         // password re-entry ?
@@ -37,15 +41,16 @@ export default class AuthInput extends Component {
         hasEmail: PropTypes.bool,
         
         // Focus the top element after mounting
-        shouldFocus: PropTypes.bool,
+        focus: PropTypes.bool,
     }
     
     static defaultProps = {
+        weak: true, // support local only wallets by default..
         hasPassword: true,
         hasConfirm: false,
         hasUsername: true,
         hasEmail: true,
-        shouldFocus: true,
+        focus: true,
         authError: false,
     }
     
@@ -57,38 +62,26 @@ export default class AuthInput extends Component {
         return AuthStore.getState()
     }
     
-    constructor(props) {
-        super(props)
-        // this.clear = ()=> AuthStore.clear()
-    }
-    
-    componentWillMount() {
-        // console.log('this.props', this.props)
-        let { hasConfirm, hasUsername, hasEmail } = this.props
-        AuthStore.setup({ hasConfirm, hasUsername, hasEmail })
-    }
+    // componentWillMount() {
+    //     
+    // }
     
     componentDidMount() {
-        if( this.props.shouldFocus )
-            ReactDOM.findDOMNode(this.refs.auth_password).focus()
-        
-        AuthStore.defaultEmailFromToken()
+        if( this.props.focus ) this.focus()
+        // AuthStore.defaultEmailFromToken()
     }
     
-    componentWillReceiveProps(nextProps) {
-        let { hasPassword, hasConfirm, hasUsername, hasEmail } = this.props
-        AuthStore.setup({ hasPassword, hasConfirm, hasUsername, hasEmail })
-    }
-    
-    componentWillUnmount() {
-        // console.log("AuthInput clear store");
-        AuthStore.clear()
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     let { hasPassword, hasConfirm, hasUsername, hasEmail } = this.props
+    //     AuthStore.setup({ hasPassword, hasConfirm, hasUsername, hasEmail })
+    // }
     
     render() {
+        let { weak, hasPassword, hasConfirm, hasUsername, hasEmail } = this.props
+        AuthStore.setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail })
         return (
             <div>
-                { this.passwordForm(this.props) } <br/>
+                { this.props.hasPassword ? this.passwordForm(this.props) : null } <br/>
                 { this.props.hasEmail ? this.emailForm(this.props) : null}
                 { this.props.hasUsername ? this.usernameForm(this.props) : null}
                 <p className="has-error">
@@ -97,6 +90,17 @@ export default class AuthInput extends Component {
             </div>
         );
     }
+    
+    focus() { try {
+        if( this.props.focus ) {
+            if( this.props.hasPassword  )
+                ReactDOM.findDOMNode(this.refs.auth_password).focus()
+            else if( this.props.hasEmail )
+                ReactDOM.findDOMNode(this.refs.auth_email).focus()
+            else if( this.props.hasUsername )
+                ReactDOM.findDOMNode(this.refs.auth_username).focus()
+        }
+    } catch(e) {}}
     
     passwordForm({password, confirm, password_valid, password_error}) {
         
@@ -109,7 +113,7 @@ export default class AuthInput extends Component {
             {/*  P A S S W O R D  */}
             <div>
                 <Translate component="label" content="wallet.password" />
-                <input type="password" value={password} onChange={passwordChange.bind(this)} tabIndex={++global.tabIndex}
+                <input type="password" value={password} onChange={passwordChange.bind(this)} tabIndex={tabIndex++}
                     id="auth_password" ref="auth_password" autoComplete="off"/>
             </div>
             
@@ -117,7 +121,7 @@ export default class AuthInput extends Component {
             { this.props.hasConfirm ?
             <div>
                 <Translate component="label" content="wallet.confirm" />
-                <input type="password" value={confirm} onChange={confirmChange.bind(this)} id="auth_confirm" tabIndex={++global.tabIndex} />
+                <input type="password" value={confirm} onChange={confirmChange.bind(this)} id="auth_confirm" tabIndex={tabIndex++} />
             </div> :null}
             <p className="has-error">
                 <Translate content={ password_error ? "wallet." + password_error : null }/>
@@ -130,7 +134,7 @@ export default class AuthInput extends Component {
         return <div className={cname("form-group", "no-margin", {"has-error": false})}>
             <div>
                 <Translate component="label" content="wallet.email" />
-                <input id="email" type="text" value={email} onChange={emailChange.bind(this)} autoComplete="on" tabIndex={++global.tabIndex}/>
+                <input id="email" type="text" value={email} onChange={emailChange.bind(this)} autoComplete="on" tabIndex={tabIndex++} ref="auth_email"/>
             </div>
             { this.props.email_valid ? null :
             <p className="has-error">
@@ -143,8 +147,8 @@ export default class AuthInput extends Component {
         let userChange = event => AuthStore.update({ username: event.target.value })
         return <div className={cname("form-group", "no-margin", {"has-error": false})}>
             <div>
-                <Translate component="label" content="wallet.username" />
-                <input id="username" type="text" value={username} onChange={userChange.bind(this)} autoComplete="on" tabIndex={++global.tabIndex}/>
+                <Translate component="label" content="account.name" />
+                <input id="username" type="text" value={username} onChange={userChange.bind(this)} autoComplete="on" tabIndex={tabIndex++} ref="auth_username"/>
             </div>
             { this.props.username_valid ? null :
             <p className="has-error">

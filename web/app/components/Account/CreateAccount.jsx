@@ -92,6 +92,12 @@ class CreateAccount extends React.Component {
                 } else {
                     this.props.history.pushState(null, `/account/${name}/overview`);
                 }
+                
+                // defaults for the login 
+                let { email, username } = this.props.auth
+                let { wallet } = WalletDb.getState()
+                wallet.storage.setState({ email, username })
+                
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
                 let error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
@@ -221,11 +227,12 @@ class CreateAccount extends React.Component {
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
                                 <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
-                                                  accountShouldNotExist={true}/>
+                                                  accountShouldNotExist={true} focus={true}/>
 
+                                {/* BackupServer.jsx will verify the email before using. */}
                                 { ! WalletDb.isLocked() ?
                                     null :
-                                    <AuthInput hasConfirm={WalletDb.isEmpty()} />
+                                    <AuthInput hasConfirm={WalletDb.isEmpty()} hasUsername={false} hasEmail={false} focus={false}/>
                                 }
                                 {
                                     first_account ? null : (

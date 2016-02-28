@@ -28,10 +28,13 @@
         locked_tip: "Wallet is locked.<br/>Click to unlock.",
         unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
+    
     propose: "propose",
     cancel: "cancel",
     invalid_email: "Invalid email",
     invalid_username: "Invalid username",
+    i_agree: "I Agree",
+    
     account: {
         welcome: "Welcome to Graphene",
         asset: "Asset",
@@ -704,8 +707,8 @@
     wallet: {
         title: "Wallet",
         email: "Email",
-        username: "Username",
         confirm_email: "Confirm Email",
+        email_token: "Email a token",
         invalid_auth: "Incorrect authentication",
         local_backup: "Local Backup",
         server_backup: "Server Backup",
