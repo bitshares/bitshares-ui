@@ -121,15 +121,11 @@ class Dashboard extends React.Component {
         ZfApi.publish("receive_funds_modal", "open");
     }
 
-    _onAddButtonClicked(active) {
-        console.log("-- Dashboard._onAddButtonClicked -->", active, WalletUnlockStore.getState().locked);
-        if (active && WalletUnlockStore.getState().locked) {
-            WalletUnlockActions.unlock().then(() => {
-                ZfApi.publish("action-sheet-add", active ? "open" : "close");
-            });
-        } else {
-            ZfApi.publish("action-sheet-add", active ? "open" : "close");
-        }
+    _onAddButtonClicked(e) {
+        e.preventDefault();
+        WalletUnlockActions.unlock().then(() => {
+            ZfApi.publish("action-sheet-add", "toggle");
+        });
     }
 
     render() {
@@ -156,9 +152,7 @@ class Dashboard extends React.Component {
                     <div ref="container" className="content-block">
                         <div className="float-right">
                             <ActionSheet id="action-sheet-add">
-                                <ActionSheet.Button title="" setActiveState={this._onAddButtonClicked}>
-                                    <a className="button outline">+</a>
-                                </ActionSheet.Button>
+                                <a href className="button outline" onClick={this._onAddButtonClicked}>+</a>
                                 <ActionSheet.Content>
                                     <ul>
                                         <li><a href="#" onClick={this._addPublicAccount}>Add Public Account</a></li>

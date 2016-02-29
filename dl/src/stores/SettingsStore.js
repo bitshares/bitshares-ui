@@ -17,7 +17,7 @@ class SettingsStore {
             locale: "en",
             //connection: "wss://bitshares.openledger.info/ws",
             connection: "ws://testnet.bitshares.eu/ws",
-            faucet_address: "https://testnet.bitshares.eu",
+            faucet_address: "http://testnet.bitshares.eu",
             // backup_server_url: "ws://localhost:9080",
             unit: CORE_ASSET,
             showSettles: false,
